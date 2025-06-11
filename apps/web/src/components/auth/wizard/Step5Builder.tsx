@@ -1,7 +1,7 @@
 'use client';
 
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
+import { Label } from '@hive/ui/src/components/ui/label';
+import { Switch } from '@hive/ui/src/components/ui/switch';
 import { FlaskConical } from "lucide-react";
 
 interface Step5BuilderProps {
@@ -28,9 +28,13 @@ export function Step5Builder({ formData, updateFormData }: Step5BuilderProps) {
         <Switch
           id="builder-mode"
           checked={formData.isBuilder}
-          onCheckedChange={(checked) => updateFormData('isBuilder', checked)}
+          onCheckedChange={(checked: boolean) =>
+            updateFormData('isBuilder', checked)
+          }
         />
-        <Label htmlFor="builder-mode" className="text-lg">Join HiveLAB beta</Label>
+        <Label htmlFor="builder-mode" className="text-lg">
+          Join HiveLAB beta
+        </Label>
       </div>
     </div>
   );

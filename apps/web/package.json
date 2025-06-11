@@ -29,7 +29,8 @@
     "@hive/hooks": "workspace:*",
     "@hive/i18n": "workspace:*",
     "@hive/ui": "workspace:*",
-    "@tanstack/react-query": "^5.45.0"
+    "@tanstack/react-query": "^5.45.0",
+    "use-debounce": "^10.0.1"
   },
   "devDependencies": {
     "@types/node": "^20.12.12",

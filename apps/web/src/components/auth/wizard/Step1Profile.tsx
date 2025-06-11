@@ -1,4 +1,18 @@
-import { Input } from "@/components/ui/input";
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+
+import { Button } from '@hive/ui';
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@hive/ui';
+import { Input } from '@hive/ui';
+import { Textarea } from '@hive/ui';
 
 interface Step1ProfileProps {
   formData: {
