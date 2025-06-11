@@ -1,3 +1,14 @@
 {
-  "/(auth)/page": "app/(auth)/page.js"
+  "/_not-found/page": "app/_not-found/page.js",
+  "/(app)/feed/page": "app/(app)/feed/page.js",
+  "/(app)/profile/page": "app/(app)/profile/page.js",
+  "/(app)/settings/page": "app/(app)/settings/page.js",
+  "/(app)/u/[handle]/page": "app/(app)/u/[handle]/page.js",
+  "/(legal)/privacy-policy/page": "app/(legal)/privacy-policy/page.js",
+  "/(legal)/terms-of-service/page": "app/(legal)/terms-of-service/page.js",
+  "/(auth)/expired/page": "app/(auth)/expired/page.js",
+  "/(auth)/onboarding/page": "app/(auth)/onboarding/page.js",
+  "/(auth)/login/page": "app/(auth)/login/page.js",
+  "/(auth)/page": "app/(auth)/page.js",
+  "/(auth)/verify/page": "app/(auth)/verify/page.js"
 }

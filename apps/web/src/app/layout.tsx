@@ -1,10 +1,7 @@
-'use client';
-
-import type { Metadata } from 'next';
+import { type Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
-import { I18nProvider } from './i18n-provider';
-import { QueryProvider } from './query-provider';
+import { Providers } from './providers';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -21,9 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <I18nProvider>
-          <QueryProvider>{children}</QueryProvider>
-        </I18nProvider>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

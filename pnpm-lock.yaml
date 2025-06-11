@@ -175,6 +175,9 @@ importers:
       '@hive/typescript-config':
         specifier: workspace:*
         version: link:../config/typescript
+      '@types/node':
+        specifier: ^20.12.12
+        version: 20.19.0
       eslint:
         specifier: ^8.57.0
         version: 8.57.1

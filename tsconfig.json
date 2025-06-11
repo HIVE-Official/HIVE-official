@@ -2,9 +2,9 @@
   "compilerOptions": {
     "target": "es2015",
     "module": "commonjs",
-    "baseUrl": "src",
+    "baseUrl": ".",
     "paths": {
-      "lib/*": ["pages/*"]
+      "@/*": ["./src/*"]
     },
     "strict": true
   },
