@@ -82,19 +82,19 @@ _**Thesis:** To create a strategic, scalable entry point that allows for control
 _**User Flow:** A user's first interaction. They select their school. If active, they proceed to login. If not, they are funneled into a waitlist designed to build pre-launch hype._
 
 #### T1-D0.5: Foundational Decisions & Mandates
-- **[ ] Technical Decisions**
-  - [ ] **Data Store:** We will use Firestore for the `schools` collection due to its scalable querying and robust security rules, which are essential for managing public and private data.
-  - [ ] **Backend Logic:** The `joinWaitlist` action must be a single, atomic Cloud Function transaction. This ensures the waitlist count and the user's entry are never out of sync.
-- **[ ] Business Logic Decisions**
-  - [ ] **Waitlist Threshold:** The threshold to unlock a new school is `250` signups. This is a deliberate balance between achievability and demonstrating genuine demand.
-  - [ ] **Controlled Rollout:** The `status` field ('active' vs. 'waitlist') is our core mechanism for staggering the launch across different campuses without requiring new deployments.
-- **[ ] Brand-Aligned Micro-Features & UX**
-  - [ ] **Hype-Building Language:** All copy on the waitlist page must be energetic and exclusive (e.g., "Help unlock HIVE at your campus," "Be the first to know").
-  - [ ] **The Viral Multiplier:** We must address the "Waitlist Dead End." After joining, the page must transform into a gamified recruitment mission with a unique share link and progress bar. This turns every user into a potential evangelist.
-- **[ ] Dependencies & Risks**
-  - [ ] **Dependency:** The `/welcome` page UI is blocked until the `schools` collection schema is defined and seeded with initial data.
-  - [ ] **Risk:** Potential for waitlist spam/bots.
-  - [ ] **Mitigation:** The `joinWaitlist` function will have basic IP-based rate-limiting. We will monitor for abuse and add CAPTCHA if necessary.
+- **[x] Technical Decisions**
+  - [x] **Data Store:** We will use Firestore for the `schools` collection due to its scalable querying and robust security rules, which are essential for managing public and private data.
+  - [x] **Backend Logic:** The `joinWaitlist` action must be a single, atomic Cloud Function transaction. This ensures the waitlist count and the user's entry are never out of sync.
+- **[x] Business Logic Decisions**
+  - [x] **Waitlist Threshold:** The threshold to unlock a new school is `250` signups. This is a deliberate balance between achievability and demonstrating genuine demand.
+  - [x] **Controlled Rollout:** The `status` field ('active' vs. 'waitlist') is our core mechanism for staggering the launch across different campuses without requiring new deployments.
+- **[x] Brand-Aligned Micro-Features & UX**
+  - [x] **Hype-Building Language:** All copy on the waitlist page must be energetic and exclusive (e.g., "Help unlock HIVE at your campus," "Be the first to know").
+  - [x] **The Viral Multiplier:** We must address the "Waitlist Dead End." After joining, the page must transform into a gamified recruitment mission with a unique share link and progress bar. This turns every user into a potential evangelist.
+- **[x] Dependencies & Risks**
+  - [x] **Dependency:** The `/welcome` page UI is blocked until the `schools` collection schema is defined and seeded with initial data.
+  - [x] **Risk:** Potential for waitlist spam/bots.
+  - [x] **Mitigation:** The `joinWaitlist` function will have basic IP-based rate-limiting. We will monitor for abuse and add CAPTCHA if necessary.
 
 #### T1-D1: Data & Security
 - [ ] T1-S1A-D0-01: **Define `schools` Schema:** Define the Firestore schema for the `schools` collection. Fields must include `name`, `domain`, `status` ('active' | 'waitlist'), and `waitlistCount`.
