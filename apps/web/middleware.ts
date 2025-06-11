@@ -28,44 +28,34 @@ const config: AuthMiddlewareConfig = {
 };
 
 export async function middleware(request: NextRequest) {
-  return authMiddleware(request, {
-    ...config,
-    // After a successful login, redirect to the dashboard
-    handleValidToken: async ({ token, decodedToken }, headers) => {
-      if (request.nextUrl.pathname === config.loginPath) {
-        return NextResponse.redirect(new URL('/dashboard', request.url));
-      }
-      return NextResponse.next({
-        request: {
-          headers,
-        },
-      });
-    },
-    // If the token is invalid or expired, refresh it
-    handleInvalidToken: async (error) => {
-      console.log('Invalid token', error);
-      try {
-        const { idToken } = await getTokens(request.cookies, config);
-        // This will throw if the refresh token is invalid
-        const newDecodedToken = await config.authentication.verifyIdToken(idToken!);
-        
-        // If successful, a new cookie will be set in the response
-        return NextResponse.next();
-      } catch (e) {
-        console.log('Failed to refresh token', e);
-        return NextResponse.redirect(new URL(config.loginPath, request.url));
-      }
-    },
-    // If there is no token and the path is protected, redirect to login
-    handleIncompleteToken: async () => {
-      if (PROTECTED_PATHS.some(p => request.nextUrl.pathname.startsWith(p))) {
-        return NextResponse.redirect(new URL(config.loginPath, request.url));
-      }
-      return NextResponse.next();
-    },
-  });
+  const token = request.cookies.get('firebaseIdToken');
+  const { pathname } = request.nextUrl;
+
+  // Allow requests for auth pages, legal pages, and API routes
+  if (pathname.startsWith('/auth') || pathname.startsWith('/legal') || pathname.startsWith('/api')) {
+    return NextResponse.next();
+  }
+
+  // If no token and trying to access a protected route, redirect to login
+  if (!token) {
+    const loginUrl = new URL('/auth/login', request.url);
+    loginUrl.searchParams.set('redirect_to', pathname);
+    return NextResponse.redirect(loginUrl);
+  }
+
+  // If token exists, allow access
+  return NextResponse.next();
 }
 
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     * - assets (our static assets)
+     */
+    '/((?!_next/static|_next/image|favicon.ico|assets).*)',
+  ],
 }; 

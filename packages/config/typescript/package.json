@@ -1,0 +1,10 @@
+{
+  "name": "@hive/typescript-config",
+  "version": "0.1.0",
+  "private": true,
+  "files": [
+    "library.json",
+    "nextjs.json",
+    "react-library.json"
+  ]
+} 

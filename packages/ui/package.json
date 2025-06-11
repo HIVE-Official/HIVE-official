@@ -1,0 +1,28 @@
+{
+  "name": "@hive/ui",
+  "version": "0.0.0",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "eslint . --max-warnings 0",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
+  },
+  "devDependencies": {
+    "@hive/eslint-config": "workspace:*",
+    "@storybook/addon-actions": "^6.5.10",
+    "@storybook/addon-essentials": "^6.5.10",
+    "@storybook/addon-interactions": "^6.5.10",
+    "@storybook/addon-links": "^6.5.16",
+    "@storybook/addon-storyshots": "^6.5.16",
+    "@storybook/addon-storyshots-puppeteer": "^6.5.16",
+    "@storybook/addons": "^6.5.16",
+    "@storybook/builder-webpack5": "^6.5.16",
+    "@storybook/manager-webpack5": "^6.5.16",
+    "@storybook/react": "^6.5.10",
+    "@storybook/theming": "^6.5.10",
+    "storybook": "^6.5.10"
+  }
+} 

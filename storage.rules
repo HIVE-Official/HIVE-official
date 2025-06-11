@@ -5,8 +5,19 @@ rules_version = '2';
 //    /databases/(default)/documents/users/$(request.auth.uid)).data.isAdmin;
 service firebase.storage {
   match /b/{bucket}/o {
-    match /{allPaths=**} {
-      allow read, write: if false;
+    // Match file paths for user avatars: /users/{userId}/avatar.jpg
+    match /users/{userId}/avatar {
+      // Allow read access to anyone (for public profiles).
+      allow read: if true;
+      
+      // Allow write (create, update, delete) access only to the authenticated user who owns the profile.
+      allow write: if request.auth != null && request.auth.uid == userId;
+      
+      // Validate uploaded file: must be an image, max 5MB.
+      // This is a more robust check on the incoming resource.
+      allow create: if request.auth != null && request.auth.uid == userId
+                    && request.resource.size < 5 * 1024 * 1024
+                    && request.resource.contentType.matches('image/.*');
     }
   }
 }

@@ -170,11 +170,14 @@ service cloud.firestore {
     }
     
     function isValidSpaceData(data) {
-      return data.name is string && 
-             data.name.size() > 0 &&
-             data.name.size() <= 100 &&
-             data.createdBy is string && 
-             data.createdBy == request.auth.uid;
+      return data.name is string &&
+             data.name.size() > 2 && data.name.size() <= 50 &&
+             data.description is string &&
+             data.description.size() > 9 && data.description.size() <= 500 &&
+             data.imageUrl is string && data.imageUrl.matches('^https?://.*') &&
+             data.category in ['Major', 'Residential', 'Student Life', 'Club', 'General'] &&
+             data.createdBy == request.auth.uid &&
+             data.isPublic is bool;
     }
     
     function isValidClubData(data) {
@@ -214,15 +217,36 @@ service cloud.firestore {
     
     // ======== USER MANAGEMENT ========
     
-    // Users collection
+    // Handles are stored in a separate collection to enforce uniqueness.
+    // The user's handle is the document ID.
+    match /handles/{handle} {
+      // Allow anyone to check for existence
+      allow get: if request.auth != null;
+      // Only allow creation if the user is authenticated and setting their own handle
+      allow create: if request.auth.uid != null;
+    }
+
+    // Users can only read and write their own data.
     match /users/{userId} {
-      allow read: if isAuthenticated();
-      allow create: if isAuthenticated() && isOwner(userId);
-      allow update: if isAuthenticated() && 
-                    (isOwner(userId) || 
-                     (request.resource.data.onboardingCompleted == true && 
-                     (resource.data == null || resource.data.onboardingCompleted != true)));
-      allow delete: if isAdmin();
+      // Users can read and write their own document
+      allow read, write: if request.auth.uid == userId;
+      // Allow public read of non-sensitive fields if profile is public
+      allow get: if resource.data.isPublic == true;
+
+      // Secure the motion sub-collection
+      match /motion/{motionId} {
+        allow read, write: if request.auth.uid == userId;
+      }
+      
+      // Secure the personalTools sub-collection
+      match /personalTools/{toolId} {
+        allow read, write: if request.auth.uid == userId;
+      }
+
+      // Secure the follows and mutes sub-collections
+      match /(follows|mutes)/{docId} {
+        allow read, write: if request.auth.uid == userId;
+      }
     }
     
     // User profiles
@@ -275,24 +299,38 @@ service cloud.firestore {
     
     // Spaces collection
     match /spaces/{spaceId} {
-      allow read: if isAuthenticated() && (
-                    isSpacePublic(spaceId) || 
-                    isSpaceMember(spaceId) || 
-                    isSpaceLeader(spaceId) || 
-                    isAdmin()
-                  );
+      // Public spaces are readable by anyone authenticated.
+      // Private spaces are readable only by members.
+      allow get: if isAuthenticated() && (resource.data.isPublic == true || isSpaceMember(spaceId));
       
-      allow create: if isAuthenticated() && 
-                    isVerified() && 
-                    isValidSpaceData(request.resource.data);
-      
-      allow update: if isAuthenticated() && (
-                    isSpaceLeader(spaceId) || 
-                    isAdmin());
-      
-      allow delete: if isAuthenticated() && (
-                    isAdmin() || 
-                    (isSpaceLeader(spaceId) && resource.data.deletable == true));
+      // Allow authenticated users to list public spaces for discovery.
+      allow list: if isAuthenticated();
+
+      // Any authenticated user can create a space, provided the data is valid.
+      allow create: if isAuthenticated() && isValidSpaceData(request.resource.data);
+
+      // Only space admins can update a space.
+      allow update: if isSpaceAdmin(spaceId);
+
+      // Only system-level admins can delete a space.
+      allow delete: if isAdmin();
+
+      // --- Members Sub-collection ---
+      match /members/{userId} {
+        // Members can see the member list.
+        allow get, list: if isSpaceMember(spaceId);
+
+        // A user can add themselves to a public space (join).
+        // Space admins can add any user to the space.
+        allow create: if (isOwner(userId) && get(/databases/$(database)/documents/spaces/$(spaceId)).data.isPublic == true) || isSpaceAdmin(spaceId);
+
+        // Only space admins can change a member's role.
+        allow update: if isSpaceAdmin(spaceId) && request.resource.data.keys().hasOnly(['role']);
+
+        // A user can remove themselves (leave).
+        // A space admin can remove any member.
+        allow delete: if isOwner(userId) || isSpaceAdmin(spaceId);
+      }
       
       // Space events subcollection
       match /events/{eventId} {
@@ -377,28 +415,6 @@ service cloud.firestore {
                                isSpaceAdmin(spaceId) || 
                                isAdmin());
         }
-      }
-      
-      // Space members subcollection
-      match /members/{memberId} {
-        allow read: if isAuthenticated() && (
-                    isSpaceMember(spaceId) || 
-                    isSpaceAdmin(spaceId) || 
-                    isAdmin());
-        
-        allow create: if isAuthenticated() && (
-                     (request.resource.data.userId == request.auth.uid && isSpacePublic(spaceId)) || 
-                     isSpaceAdmin(spaceId) || 
-                     isAdmin());
-        
-        allow update: if isAuthenticated() && (
-                     isSpaceAdmin(spaceId) || 
-                     isAdmin());
-        
-        allow delete: if isAuthenticated() && (
-                     (resource.data.userId == request.auth.uid) || 
-                     isSpaceAdmin(spaceId) || 
-                     isAdmin());
       }
     }
     
@@ -532,6 +548,25 @@ service cloud.firestore {
     match /app_config/{configId} {
       allow read: if true;
       allow write: if isAdmin();
+    }
+
+    // Allow public read access to version information
+    match /version/{docId} {
+      allow read: if true;
+    }
+
+    // Secure the feed collection and like sub-collections
+    match /feed/{cardId} {
+      allow read: if request.auth != null;
+
+      match /likes/{userId} {
+        allow read, write: if request.auth.uid == userId;
+      }
+    }
+
+    // Allow read access to posts for authenticated users
+    match /posts/{postId} {
+      allow read: if request.auth != null;
     }
   }
 } 

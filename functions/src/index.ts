@@ -23,6 +23,21 @@ import * as eventStateTransitions from './events/state-transitions';
 
 // Import new space denormalization functions
 import * as spaceDenormalization from './spaces/denormalization';
+import * as autoJoin from './spaces/autoJoin';
+import * as claim from './spaces/claim';
+import * as pagination from './spaces/pagination';
+import * as membership from './spaces/membership';
+
+// Import profile functions
+import * as updateUserProfile from './profile/updateUserProfile';
+
+// Import feed functions
+import * as getFeed from './feed/getFeed';
+import * as interactions from './feed/interactions';
+import * as follow from './feed/follow';
+import * as mute from './feed/mute';
+import * as report from './feed/report';
+import * as sayHello from './feed/sayHello';
 
 // Export notification functions
 export * from "./notifications";
@@ -72,5 +87,31 @@ export const events = {
 
 export const spaces = {
   // Space denormalization functions
-  updateSpaceMemberCount: spaceDenormalization.updateSpaceMemberCount
+  updateSpaceMemberCount: spaceDenormalization.updateSpaceMemberCount,
+  autoJoinSpaces: autoJoin.autoJoinSpaces,
+  claimSpace: claim.claimSpace,
+  getSpaceContent: pagination.getSpaceContent,
+  joinSpace: membership.joinSpace,
+  leaveSpace: membership.leaveSpace
 };
+
+export const profile = {
+    updateUserProfile: updateUserProfile.updateUserProfile
+};
+
+export const feed = {
+    getFeed: getFeed.getFeed,
+    likeCard: interactions.likeCard,
+    followUser: follow.followUser,
+    unfollowUser: follow.unfollowUser,
+    muteUser: mute.muteUser,
+    unmuteUser: mute.unmuteUser,
+    reportContent: report.reportContent,
+    sayHello: sayHello.sayHello,
+};
+
+export * from "./auth/sendMagicLink";
+export * from "./auth/verifyMagicLink";
+export * from "./auth/checkHandleUniqueness";
+export * from "./auth/completeOnboarding";
+export * from "./auth/updateUserAvatar";
