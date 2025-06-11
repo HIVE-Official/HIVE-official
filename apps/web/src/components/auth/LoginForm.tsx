@@ -3,9 +3,10 @@
 import { useState } from "react";
 import { Mail, Loader2 } from "lucide-react";
 import { getFunctions, httpsCallable } from "firebase/functions";
-
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { Button, Input } from "@hive/ui";
 
 export function LoginForm() {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");

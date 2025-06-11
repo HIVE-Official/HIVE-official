@@ -11,7 +11,7 @@ import {
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@hive/ui";
 import { MoreHorizontal } from 'lucide-react';
 
 interface UserActionsProps {

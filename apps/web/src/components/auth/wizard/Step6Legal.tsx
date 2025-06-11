@@ -1,8 +1,7 @@
 'use client';
 
 import Link from "next/link";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
+import { Checkbox, Label } from "@hive/ui";
 
 interface Step6LegalProps {
   formData: {
