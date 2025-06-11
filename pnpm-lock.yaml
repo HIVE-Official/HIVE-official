@@ -81,6 +81,9 @@ importers:
       '@radix-ui/react-toast':
         specifier: ^1.2.14
         version: 1.2.14(@types/react-dom@18.3.7(@types/react@18.3.23))(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@tanstack/react-query':
+        specifier: ^5.45.0
+        version: 5.80.6(react@18.3.1)
       cookies-next:
         specifier: ^4.2.1
         version: 4.3.0
@@ -250,6 +253,12 @@ importers:
       '@storybook/theming':
         specifier: ^6.5.10
         version: 6.5.16(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      react:
+        specifier: ^18.2.0
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.2.0
+        version: 18.3.1(react@18.3.1)
       storybook:
         specifier: ^6.5.10
         version: 6.5.16(encoding@0.1.13)(eslint@8.57.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.8.3)

@@ -8,3 +8,4 @@ export declare const resources: {
     };
 };
 export default i18next;
+//# sourceMappingURL=index.d.ts.map

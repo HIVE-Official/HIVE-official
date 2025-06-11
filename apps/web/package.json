@@ -28,7 +28,8 @@
     "js-cookie": "^3.0.5",
     "@hive/hooks": "workspace:*",
     "@hive/i18n": "workspace:*",
-    "@hive/ui": "workspace:*"
+    "@hive/ui": "workspace:*",
+    "@tanstack/react-query": "^5.45.0"
   },
   "devDependencies": {
     "@types/node": "^20.12.12",

@@ -5,11 +5,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.resources = exports.defaultNS = void 0;
-const i18next_1 = __importDefault(require("i18next"));
-const react_i18next_1 = require("react-i18next");
-const i18next_browser_languagedetector_1 = __importDefault(require("i18next-browser-languagedetector"));
+var i18next_1 = __importDefault(require("i18next"));
+var react_i18next_1 = require("react-i18next");
+var i18next_browser_languagedetector_1 = __importDefault(require("i18next-browser-languagedetector"));
 // Import your translations
-const common_json_1 = __importDefault(require("./locales/en/common.json"));
+var common_json_1 = __importDefault(require("./locales/en/common.json"));
 exports.defaultNS = 'common';
 exports.resources = {
     en: {
