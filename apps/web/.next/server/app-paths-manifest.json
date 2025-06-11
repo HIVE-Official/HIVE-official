@@ -7,8 +7,8 @@
   "/(legal)/privacy-policy/page": "app/(legal)/privacy-policy/page.js",
   "/(legal)/terms-of-service/page": "app/(legal)/terms-of-service/page.js",
   "/(auth)/expired/page": "app/(auth)/expired/page.js",
-  "/(auth)/onboarding/page": "app/(auth)/onboarding/page.js",
   "/(auth)/login/page": "app/(auth)/login/page.js",
   "/(auth)/page": "app/(auth)/page.js",
+  "/(auth)/onboarding/page": "app/(auth)/onboarding/page.js",
   "/(auth)/verify/page": "app/(auth)/verify/page.js"
 }

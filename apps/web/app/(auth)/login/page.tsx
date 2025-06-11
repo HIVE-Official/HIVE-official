@@ -2,12 +2,10 @@
 
 import { FC } from 'react';
 import { motion } from 'framer-motion';
-import { LoginForm } from '@/components/auth/LoginForm';
+import { LoginForm, Button, Input } from '@hive/ui';
 import { fadeIn } from '@/lib/motion';
 import Image from "next/image";
 import { Mail } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 
 const LoginPage: FC = ({}) => {
   return (

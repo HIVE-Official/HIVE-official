@@ -25,13 +25,16 @@
     "@hookform/resolvers": "^3.6.0",
     "zod": "^3.23.8",
     "framer-motion": "^11.2.10",
-    "js-cookie": "^3.0.5"
+    "js-cookie": "^3.0.5",
+    "@hive/hooks": "workspace:*",
+    "@hive/i18n": "workspace:*",
+    "@hive/ui": "workspace:*"
   },
   "devDependencies": {
-    "@types/js-cookie": "^3.0.6",
     "@types/node": "^20.12.12",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
+    "@types/js-cookie": "^3.0.6",
     "eslint": "^8.57.0",
     "eslint-config-next": "14.2.3",
     "typescript": "^5.4.5"

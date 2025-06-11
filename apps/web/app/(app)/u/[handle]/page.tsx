@@ -5,8 +5,8 @@ import { getFirestore, collection, query, where, getDocs, limit, doc, getDoc } f
 import { UserProfile } from '@hive/validation';
 import Image from 'next/image';
 import { User } from 'lucide-react';
-import { useAuth } from '@/hooks/useAuth';
-import { UserActions } from '@/components/profile/UserActions';
+import { useAuth } from '@hive/hooks';
+import { UserActions } from '@hive/ui';
 
 const ProfileSkeleton = () => (
     <div className="p-8 animate-pulse max-w-2xl mx-auto">

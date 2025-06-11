@@ -1,12 +1,9 @@
 {
-  "compilerOptions": {
-    "target": "es2015",
-    "module": "commonjs",
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"]
-    },
-    "strict": true
-  },
-  "include": ["src/**/*", "lib/Navigation.tsx"]
+  "files": [],
+  "references": [
+    { "path": "apps/web" },
+    { "path": "packages/i18n" },
+    { "path": "packages/ui" },
+    { "path": "packages/hooks" }
+  ]
 } 

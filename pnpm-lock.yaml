@@ -63,6 +63,15 @@ importers:
       '@fontsource/space-grotesk':
         specifier: ^5.2.8
         version: 5.2.8
+      '@hive/hooks':
+        specifier: workspace:*
+        version: link:../../packages/hooks
+      '@hive/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
+      '@hive/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
       '@hookform/resolvers':
         specifier: ^3.6.0
         version: 3.10.0(react-hook-form@7.57.0(react@18.3.1))
@@ -162,6 +171,18 @@ importers:
         version: 5.8.3
 
   packages/config/typescript: {}
+
+  packages/hooks:
+    devDependencies:
+      '@hive/eslint-config':
+        specifier: workspace:*
+        version: link:../config/eslint
+      tsup:
+        specifier: ^8.0.2
+        version: 8.5.0(postcss@8.5.4)(typescript@5.8.3)
+      typescript:
+        specifier: ^5.4.5
+        version: 5.8.3
 
   packages/i18n:
     dependencies:
