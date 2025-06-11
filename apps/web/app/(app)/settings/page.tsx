@@ -2,7 +2,7 @@
 
 import { getAuth, signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
+import { Button } from "@hive/ui";
 import Cookies from 'js-cookie';
 
 export default function SettingsPage() {

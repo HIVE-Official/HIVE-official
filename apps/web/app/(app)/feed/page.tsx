@@ -1,7 +1,7 @@
 'use client';
 
-import { useFeed } from '@/hooks/useFeed';
-import { FeedCard } from '@/components/feed/FeedCard';
+import { useFeed } from '@hive/hooks';
+import { FeedCard } from '@hive/ui';
 
 const FeedSkeleton = () => (
     <div className="space-y-4 animate-pulse">

@@ -6,7 +6,7 @@ import { getFirestore, doc, getDoc } from 'firebase/firestore';
 import { UserProfile } from '@hive/validation';
 import Image from 'next/image';
 import { User, Edit } from 'lucide-react';
-import { EditProfileModal } from '@/components/profile/EditProfileModal';
+import { EditProfileModal } from '@hive/ui';
 
 // A simple loading skeleton component
 const ProfileSkeleton = () => (
