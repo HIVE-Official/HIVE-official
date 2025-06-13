@@ -1,0 +1,49 @@
+# HIVE Flutter Feature Architecture
+
+This document outlines the standard project structure for feature modules within the HIVE Flutter application to ensure consistency, scalability, and maintainability.
+
+## 1. Feature Module Structure
+
+All new feature development must follow a clean, three-layered architecture. Each feature directory inside `apps/mobile/lib/features/` should be organized as follows:
+
+```
+features/
+  ├── [feature_name]/
+  │   ├── data/
+  │   │   ├── datasources/  # Remote (e.g., API client) and local (e.g., cache) data sources
+  │   │   ├── models/       # DTOs for data serialization/deserialization
+  │   │   └── repositories/ # Implementation of the domain repositories
+  │   ├── domain/
+  │   │   ├── entities/     # Core business objects, independent of data or UI layers
+  │   │   ├── repositories/ # Abstract repository interfaces
+  │   │   └── usecases/     # Application-specific business rules and use cases
+  │   └── presentation/
+  │       ├── controllers/  # State management (e.g., Riverpod providers, Cubits)
+  │       ├── screens/      # The main widget for a full screen/page
+  │       └── widgets/      # Reusable UI components specific to this feature
+  └── ...
+```
+
+## 2. Layer Responsibilities
+
+### 2.1 Presentation Layer
+- **Contains:** Widgets, Screens, and State Management controllers (e.g., Riverpod Providers).
+- **Responsibility:** Everything related to the UI. It should be concerned with *how* to display data and handle user input.
+- **Dependencies:** Depends on the `domain` layer. It should **not** directly access the `data` layer. It invokes use cases from the domain layer to trigger business logic.
+
+### 2.2 Domain Layer
+- **Contains:** Entities, Repository Interfaces (Contracts), and Use Cases.
+- **Responsibility:** This is the core of the feature, containing the business logic. It is completely independent of any other layer. It should not know anything about the UI or the specific data sources.
+- **Dependencies:** None. This is the most isolated layer.
+
+### 2.3 Data Layer
+- **Contains:** Repository Implementations, Data Sources (API clients, database access), and Data Transfer Objects (DTOs/Models).
+- **Responsibility:** Responsible for retrieving and storing data from one or more sources (e.g., network, local database). It implements the repository interfaces defined in the `domain` layer.
+- **Dependencies:** Depends on the `domain` layer (to implement its interfaces).
+
+## 3. Guiding Principles
+
+- **Dependency Rule:** The presentation layer depends on the domain layer, and the data layer depends on the domain layer. The domain layer depends on nothing. Data should only flow inward: `Presentation -> Domain <- Data`.
+- **Single Responsibility:** Each file and class should have a single, clear purpose.
+- **File Naming:** Files should be named using `snake_case` and reflect their contents (e.g., `user_profile_screen.dart`, `auth_repository.dart`).
+- **`shared` Features:** Avoid using generic `shared` or `common` folders. If multiple features need to share a component or logic, extract it into its own well-defined package or a core feature module. The existing `lib/core` directory should be used for app-wide core functionalities.

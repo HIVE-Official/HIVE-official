@@ -41,7 +41,8 @@ export const calculatePlatformMetrics = functions.pubsub
       const oneMonthAgo = new Date(now.toMillis() - 30 * 24 * 60 * 60 * 1000);
 
       // Query total users
-      const totalUsersSnapshot = await db.collection("user_profiles").count().get();
+      const totalUsersSnapshot = await db.collection("user_profiles")
+          .count().get();
       const totalUsers = totalUsersSnapshot.data().count;
 
       // Query active users
@@ -88,7 +89,8 @@ export const calculatePlatformMetrics = functions.pubsub
       const totalPosts = totalPostsSnapshot.data().count;
 
       // Query total messages
-      const totalMessagesSnapshot = await db.collection("messages").count().get();
+      const totalMessagesSnapshot = await db.collection("messages")
+          .count().get();
       const messagesSent = totalMessagesSnapshot.data().count;
 
       // Compile metrics
@@ -189,6 +191,8 @@ export const trackContentView = functions.https.onCall(
 
 /**
  * Helper function to update content view count
+ * @param {string} contentType The type of content (e.g., "event", "post").
+ * @param {string} contentId The ID of the content document.
  */
 async function updateContentViewCount(
   contentType: string,
@@ -233,7 +237,10 @@ async function updateContentViewCount(
       timestamp: admin.firestore.FieldValue.serverTimestamp(),
     });
   } catch (error) {
-    logger.error(`Error updating view count for ${contentType}:${contentId}`, error);
+    logger.error(
+        `Error updating view count for ${contentType}:${contentId}`,
+        error
+    );
     // Don't throw the error as this is a non-critical operation
   }
 }
@@ -313,16 +320,19 @@ export const calculateTrendingContent = functions.pubsub
       });
 
       // Calculate engagement score for each content item
-      // Weight engagements differently (e.g., commenting is higher engagement than viewing)
+      // Weight engagements differently
+      // (e.g., commenting is higher engagement than viewing)
       for (const key in contentScores) {
-        const item = contentScores[key];
-        item.score = (
-          (item.views * 1) +
-          (item.likes * 2) +
-          (item.comments * 4) +
-          (item.shares * 5) +
-          (item.rsvps * 3)
-        );
+        if (Object.prototype.hasOwnProperty.call(contentScores, key)) {
+          const item = contentScores[key];
+          item.score = (
+            (item.views * 1) +
+            (item.likes * 2) +
+            (item.comments * 4) +
+            (item.shares * 5) +
+            (item.rsvps * 3)
+          );
+        }
       }
 
       // Convert to array and sort by score
@@ -441,7 +451,8 @@ export const calculateRetentionMetrics = functions.pubsub
         const activeInCohort = cohortUserIds.filter((id) => activeUserIds.has(id));
 
         // Calculate retention rate
-        const retentionRate = Math.round((activeInCohort.length / cohortUserIds.length) * 100) / 100;
+        const rawRetention = activeInCohort.length / cohortUserIds.length;
+        const retentionRate = Math.round(rawRetention * 100) / 100;
 
         retentionData.cohorts[window.label] = {
           cohortSize: cohortUserIds.length,
@@ -449,10 +460,13 @@ export const calculateRetentionMetrics = functions.pubsub
           retentionRate,
         };
 
-        logger.info(`${window.label} retention: ${retentionRate * 100}%`, {
-          cohortSize: cohortUserIds.length,
-          activeUsers: activeInCohort.length,
-        });
+        logger.info(
+            `${window.label} retention: ${retentionRate * 100}%`,
+            {
+              cohortSize: cohortUserIds.length,
+              activeUsers: activeInCohort.length,
+            }
+        );
       }
 
       // Store retention data

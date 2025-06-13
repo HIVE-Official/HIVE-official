@@ -1,15 +1,15 @@
-import * as functions from 'firebase-functions';
-import * as admin from 'firebase-admin';
+import * as functions from "firebase-functions";
+import * as admin from "firebase-admin";
 
 const db = admin.firestore();
 
 export const getSpaceContent = functions.https.onCall(async (data, context) => {
   if (!context.auth) {
-    throw new functions.https.HttpsError('unauthenticated', 'You must be logged in to view space content.');
+    throw new functions.https.HttpsError("unauthenticated", "You must be logged in to view space content.");
   }
 
-  const { spaceId, contentType, lastVisible } = data;
-  const { uid } = context.auth;
+  const {spaceId, contentType, lastVisible} = data;
+  const {uid} = context.auth;
 
   const pageSize = 10;
 
@@ -17,15 +17,15 @@ export const getSpaceContent = functions.https.onCall(async (data, context) => {
   const spaceDoc = await spaceRef.get();
 
   if (!spaceDoc.exists) {
-    throw new functions.https.HttpsError('not-found', 'The specified space does not exist.');
+    throw new functions.https.HttpsError("not-found", "The specified space does not exist.");
   }
-  
+
   const space = spaceDoc.data();
   if (!space.isPublic) {
-      const memberDoc = await spaceRef.collection('members').doc(uid).get();
-      if(!memberDoc.exists) {
-          throw new functions.https.HttpsError('permission-denied', 'You do not have permission to view this content.');
-      }
+    const memberDoc = await spaceRef.collection("members").doc(uid).get();
+    if (!memberDoc.exists) {
+      throw new functions.https.HttpsError("permission-denied", "You do not have permission to view this content.");
+    }
   }
 
   let query = db.collection(`spaces/${spaceId}/${contentType}`).limit(pageSize);
@@ -36,7 +36,7 @@ export const getSpaceContent = functions.https.onCall(async (data, context) => {
   }
 
   const snapshot = await query.get();
-  const docs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  const docs = snapshot.docs.map((doc) => ({id: doc.id, ...doc.data()}));
 
-  return { docs };
-}); 
+  return {docs};
+});

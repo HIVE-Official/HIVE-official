@@ -1,15 +1,15 @@
 import * as functions from "firebase-functions";
-import { getFirestore } from "firebase-admin/firestore";
+import {getFirestore} from "firebase-admin/firestore";
 import * as crypto from "crypto";
 
 // This would be a utility to send emails (e.g., using SendGrid, Mailgun)
 // For now, we'll just log it.
 async function sendEmail(email: string, subject: string, body: string) {
-  console.log(`---- SENDING EMAIL ----`);
+  console.log("---- SENDING EMAIL ----");
   console.log(`TO: ${email}`);
   console.log(`SUBJECT: ${subject}`);
   console.log(`BODY: ${body}`);
-  console.log(`-----------------------`);
+  console.log("-----------------------");
   return Promise.resolve();
 }
 
@@ -62,5 +62,5 @@ export const sendMagicLink = functions.https.onCall(async (data, context) => {
 
   await sendEmail(email, emailSubject, emailBody);
 
-  return { success: true, message: "Magic link sent successfully." };
-}); 
+  return {success: true, message: "Magic link sent successfully."};
+});

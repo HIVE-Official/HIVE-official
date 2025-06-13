@@ -1,2 +1,0 @@
-C:/Users/rhine/hive_ui/android/app/.cxx/RelWithDebInfo/6y1d2947/x86_64/CMakeFiles/edit_cache.dir
-C:/Users/rhine/hive_ui/android/app/.cxx/RelWithDebInfo/6y1d2947/x86_64/CMakeFiles/rebuild_cache.dir

@@ -109,6 +109,17 @@ service cloud.firestore {
              request.auth.uid in get(/databases/$(database)/documents/chats/$(chatId)).data.participantIds;
     }
     
+    // New helper functions for sub-collection based membership checks
+    function isMember(spaceId, userId) {
+      return isAuthenticated() && exists(/databases/$(database)/documents/spaces/$(spaceId)/members/$(userId));
+    }
+
+    function isBuilder(spaceId, userId) {
+      // Ensure the user is a member before trying to get their role.
+      return isMember(spaceId, userId) &&
+             get(/databases/$(database)/documents/spaces/$(spaceId)/members/$(userId)).data.role == 'builder';
+    }
+    
     // Rate limiting helper functions
     function isRateLimited(collectionName) {
       let userId = request.auth.uid;
@@ -299,37 +310,26 @@ service cloud.firestore {
     
     // Spaces collection
     match /spaces/{spaceId} {
-      // Public spaces are readable by anyone authenticated.
-      // Private spaces are readable only by members.
-      allow get: if isAuthenticated() && (resource.data.isPublic == true || isSpaceMember(spaceId));
-      
-      // Allow authenticated users to list public spaces for discovery.
-      allow list: if isAuthenticated();
+      // Public data is readable by any authenticated user for discovery.
+      allow get, list: if isAuthenticated();
 
-      // Any authenticated user can create a space, provided the data is valid.
-      allow create: if isAuthenticated() && isValidSpaceData(request.resource.data);
+      // Space creation and deletion are admin/backend-only tasks.
+      allow create, delete: if false;
 
-      // Only space admins can update a space.
-      allow update: if isSpaceAdmin(spaceId);
+      // Only a builder of the space can update it.
+      // They can only update specific, non-critical fields.
+      allow update: if isBuilder(spaceId, request.auth.uid) &&
+                      request.resource.data.diff(resource.data).affectedKeys()
+                        .hasOnly(['description', 'bannerUrl', 'status', 'updatedAt']);
 
-      // Only system-level admins can delete a space.
-      allow delete: if isAdmin();
-
-      // --- Members Sub-collection ---
+      // === Members Sub-collection ===
       match /members/{userId} {
-        // Members can see the member list.
-        allow get, list: if isSpaceMember(spaceId);
+        // Members can see who else is in the space. A user can check their own membership.
+        allow get, list: if isMember(spaceId, request.auth.uid);
 
-        // A user can add themselves to a public space (join).
-        // Space admins can add any user to the space.
-        allow create: if (isOwner(userId) && get(/databases/$(database)/documents/spaces/$(spaceId)).data.isPublic == true) || isSpaceAdmin(spaceId);
-
-        // Only space admins can change a member's role.
-        allow update: if isSpaceAdmin(spaceId) && request.resource.data.keys().hasOnly(['role']);
-
-        // A user can remove themselves (leave).
-        // A space admin can remove any member.
-        allow delete: if isOwner(userId) || isSpaceAdmin(spaceId);
+        // All membership changes (join, leave, role change) must go through a
+        // secure Cloud Function to ensure data integrity (e.g., memberCount updates).
+        allow create, update, delete: if false;
       }
       
       // Space events subcollection
@@ -567,6 +567,29 @@ service cloud.firestore {
     // Allow read access to posts for authenticated users
     match /posts/{postId} {
       allow read: if request.auth != null;
+    }
+
+    // ======== SCHOOLS ========
+
+    // The 'schools' collection is public-readable for the welcome screen,
+    // but should only be writable by admins.
+    match /schools/{schoolId} {
+      // Anyone can see the list of schools.
+      allow read: if true;
+      
+      // Only admins can create, update, or delete school documents.
+      allow write: if isAdmin();
+      
+      match /waitlist_entries/{entryId} {
+        // No one can read the waitlist entries directly from the client.
+        // This data should be considered private.
+        allow read: if false;
+        
+        // No one can write directly to the waitlist. 
+        // All waitlist joins must go through the `joinWaitlist` Cloud Function,
+        // which uses the Admin SDK and bypasses these rules.
+        allow write: if false;
+      }
     }
   }
 } 

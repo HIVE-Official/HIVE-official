@@ -7,6 +7,7 @@
 - AI/human marks tasks done by replacing [ ] with [x].
 - **Verification Protocol:** A task is only "done" when accompanied by verifiable evidence.
   - The AI must add a sub-bullet with `Evidence:` containing links to PRs, Storybook stories, test runs, or Vercel previews.
+  - For UI tasks, the human partner's primary role is to visually verify the component's quality, variants, and responsiveness in Storybook before approving the task. The AI will always provide many options. 
   - The human partner's role is to review this evidence to confirm completion.
 - All tasks must pass CI before being marked complete.
 
@@ -28,7 +29,8 @@
 - [x] FND-02: Set up Turborepo + pnpm workspace
 - [x] FND-03: Configure ESLint + Prettier + Husky
 - [x] FND-04: Set up GitHub Actions CI (lint, type-check, test)
-- [ ] FND-05: Configure Vercel deployment + preview URLs
+- [x] FND-05: Configure Vercel deployment + preview URLs
+  - Evidence: Staging environment configured and confirmed operational.
 - [ ] FND-06: Set up branch protection rules
 - [x] FND-07: Configure VSCode workspace settings
 
@@ -58,6 +60,7 @@
 
 ### Environment Strategy
 - [ ] FND-10: **Create separate Firebase projects** for `dev`, `staging`, and `prod`.
+  - Status: `dev` and `staging` projects are created and configured. `prod` is pending.
 - [ ] FND-11: **Implement secrets management solution** (e.g., Vercel Env Vars) to handle environment-specific keys.
 
 ### Developer Experience
@@ -97,13 +100,18 @@ _**User Flow:** A user's first interaction. They select their school. If active,
   - [x] **Mitigation:** The `joinWaitlist` function will have basic IP-based rate-limiting. We will monitor for abuse and add CAPTCHA if necessary.
 
 #### T1-D1: Data & Security
-- [ ] T1-S1A-D0-01: **Define `schools` Schema:** Define the Firestore schema for the `schools` collection. Fields must include `name`, `domain`, `status` ('active' | 'waitlist'), and `waitlistCount`.
-- [ ] T1-S1A-D0-02: **Seed `schools` Collection:** Populate the collection with "University at Buffalo" as `active` and 3-5 other schools as `waitlist` to test both flows.
-- [ ] T1-S1A-D0-03: **Define `waitlist_entries` Schema:** Define the schema for the `waitlist_entries` sub-collection under each school document.
-- [ ] T1-S1A-D0-04: **Implement Security Rules:** Write Firestore rules to make the `schools` collection publicly readable but writable only by admins. The `waitlist_entries` sub-collection should only be writable via the `joinWaitlist` function.
+- [x] T1-S1A-D0-01: **Define `schools` Schema:** Define the Firestore schema for the `schools` collection. Fields must include `name`, `domain`, `status` ('active' | 'waitlist'), and `waitlistCount`.
+  - Evidence: packages/core/src/domain/school.ts
+- [x] T1-S1A-D0-02: **Seed `schools` Collection:** Populate the collection with "University at Buffalo" as `active` and 3-5 other schools as `waitlist` to test both flows.
+  - Evidence: `firebase/scripts/seed-schools.ts`
+- [x] T1-S1A-D0-03: **Define `waitlist_entries` Schema:** Define the schema for the `waitlist_entries` sub-collection under each school document.
+  - Evidence: `packages/core/src/domain/waitlistEntry.ts`
+- [x] T1-S1A-D0-04: **Implement Security Rules:** Write Firestore rules to make the `schools` collection publicly readable but writable only by admins. The `waitlist_entries` sub-collection should only be writable via the `joinWaitlist` function.
+  - Evidence: `firestore.rules` (updated with school and waitlist rules)
 
 #### T1-D2: Domain Logic & Backend
-- [ ] T1-S1A-D1-01: **Implement `joinWaitlist` Function:** Create a callable Cloud Function that takes a school ID and email, validates the input, and transactionally increments the `waitlistCount` on the school document while adding the user's email to the `waitlist_entries` sub-collection.
+- [x] T1-S1A-D1-01: **Implement `joinWaitlist` Function:** Create a callable Cloud Function that takes a school ID and email, validates the input, and transactionally increments the `waitlistCount` on the school document while adding the user's email to the `waitlist_entries` sub-collection.
+  - Evidence: `functions/src/auth/joinWaitlist.ts`
 
 #### T1-D3: UI & Presentation (Page by Page)
 
@@ -381,220 +389,4 @@ _**Thesis:** To build the user-facing discovery and container components of a Sp
 
 - [ ] **Page: `/spaces` (Discovery Directory)**
     - [ ] T2-SPC-D2-01: Build the main page layout with a search bar and header.
-    - [ ] T2-SPC-D2-02: Implement the filter pills based on the `space_type` tags.
-    - [ ] T2-SPC-D2-03: Build the `SpaceCard` component to display individual spaces in a grid.
-    - [ ] T2-SPC-D2-04: Implement the initial alphabetical sort for displaying spaces.
-    - [ ] T2-SPC-D2-05: Ensure the entire page is accessible and responsive.
-
-- [ ] **Page: `/spaces/[id]` (Space Detail Page)**
-    - [ ] T2-SPC-D2-06: Build the immutable 6-surface layout (Pinned, Posts, Events, Tools, Chat, Members).
-    - [ ] T2-SPC-D2-07: Implement the `Pinned` surface, displaying the space's banner, name, and description.
-    - [ ] T2-SPC-D2-08: Implement the `Members` surface, displaying a grid of member profiles.
-    - [ ] T2-SPC-D2-09: Implement the logic to handle the `status` of a space:
-        - **Dormant:** Display a read-only preview and a prominent "Become a Builder" CTA.
-        - **Activated:** Show the full surfaces, with empty states for Posts, Events, and Tools.
-        - **Frozen:** Display a locked/frozen banner message.
-    - [ ] T2-SPC-D2-10: Create the "empty state" components for the Posts, Events, and Tools surfaces.
-
-#### T2-D4: Testing & DX
-- [ ] T2-SPC-D3-01: **Write Component Stories:** Create Storybook stories for the `SpaceCard` and the various states of the Space Detail Page.
-- [ ] T2-SPC-D3-02: **Write E2E Tests:** Create Playwright tests for discovering, joining, and viewing a space in both dormant and activated states.
-- [ ] T2-SPC-D3-03: **Write Documentation:** Document the Spaces data model and the component hierarchy.
-
-### T2-Slice: The Feed (`/`)
-_**Thesis:** To provide a dynamic, time-sensitive, and personalized view of campus activity, making the app immediately valuable and creating opportunities for low-friction interaction._
-
-#### T2-D0.5: Foundational Decisions & Mandates
-- **[ ] Technical Decisions**
-  - [ ] **Standardized Card Schema:** This is the most critical architectural decision. All content sources (posts, events, tools) must be transformed by their source-service into a single, standardized `FeedCard` format before being written to the feed collection. This decouples the feed from its data sources.
-  - [ ] **Backend-Driven Generation:** The user's feed is generated by a primary, paginated Cloud Function (`getFeed`). The client is not responsible for complex aggregation logic. This is essential for performance and security.
-  - [ ] **Frontend Virtualization:** The feed UI *must* use a list virtualization library (e.g., TanStack Virtual) to render the infinite scroll. Rendering thousands of DOM nodes is not an option.
-- **[ ] Business Logic Decisions**
-  - [ ] **Chronological Sort:** For vBETA, the feed is sorted strictly by reverse chronology. Algorithmic personalization is explicitly out of scope. This ensures a predictable and understandable user experience at launch.
-  - [ ] **Card Expiration:** All feed cards must have an `expiresAt` timestamp. A scheduled cron job is required to delete expired cards, ensuring the feed remains fresh and relevant.
-- **[ ] Brand-Aligned Micro-Features & UX**
-  - [ ] **Frictionless Interactions:** Core actions like 'like' must be optimistic UI updates that feel instant. More consequential actions like 'mute' or 'report' should be housed in a long-press context menu to keep the primary UI clean.
-  - [ ] **Content Diversity:** The vBETA feed must launch with a mix of card types (e.g., `AppNewsCard`, `BuilderSpotlightCard`, `CampusTipCard`) to ensure it feels vibrant and not monotonous, even with low initial user content.
-- **[ ] Dependencies & Risks**
-  - [ ] **Dependency:** The feed is an aggregator. It is fundamentally dependent on the Spaces, Tools, and Calendar slices being functional enough to produce content to display.
-  - [ ] **Risk:** A slow `getFeed` function will make the entire app feel broken, as it's the main screen.
-  - [ ] **Mitigation:** Aggressive performance testing and indexing on the `getFeed` function and its underlying Firestore queries.
-
-#### T2-D1: Data & Security
-- [ ] T2-FED-D0-01: **Define Core Feed Data Models:** Define the Firestore schemas for user-level interactions (`follows`, `mutes` in a sub-collection) and card-level interactions (`likes` in a sub-collection).
-- [ ] T2-FED-D0-02: **Define Standardized Card Schema:** Define the schema for a generic `FeedCard` document that all source types (posts, events, tools) will be transformed into. Key fields: `cardId`, `type`, `sourceId`, `timestamp`, `expiresAt`, `content`, `actor`.
-- [ ] T2-FED-D0-03: **Write & Test Security Rules:** Implement and unit-test Firestore security rules ensuring users can only modify their own interaction data (likes, mutes, follows).
-
-#### T2-D2: Domain Logic & Backend
-- [ ] T2-FED-D1-01: **Implement Card Lifecycle Cron Job:** Create a scheduled Cloud Function that runs periodically (e.g., every hour) to delete or archive feed cards that have passed their `expiresAt` timestamp. This is critical for keeping the feed fresh.
-- [ ] T2-FED-D1-02: **Implement Interaction Backend:** Create individual callable Cloud Functions to handle `like`, `follow`, `mute`, and the email-based `report` action. These functions should perform the necessary database operations and security checks.
-- [ ] T2-FED-D1-03: **Implement Core Feed Generation Engine:** Create a primary, paginated Cloud Function (`getFeed`) that serves as the main entry point for the feed.
-  - *Initial Implementation:* It will fetch content from the initial set of available sources (e.g., App News).
-  - *Future Work:* This function will be expanded in later slices to aggregate content from Tools, Events, etc.
-  - *Core Logic:* It must filter out content from muted spaces/users, transform all source data into the standardized `FeedCard` format, and sort cards chronologically, respecting any pinned items.
-
-#### T2-D3: UI & Presentation
-- [ ] T2-FED-D2-01: **Build Core Feed Layout & Data Hook:** Implement the main `/` page with a performant, virtualized infinite scroll container. Create the React hook (`useFeed`) to fetch paginated data from the `getFeed` backend function. Lazy-loading images is a requirement from the start.
-- [ ] T2-FED-D2-02: **Build Dynamic Card Renderer:** Create a primary `<FeedCard>` component that receives a card data object and dynamically renders the correct presentational component based on the card's `type` field.
-- [ ] T2-FED-D2-03: **Build All Card Components:** Create the individual, stateless React components for every card type specified in the vBETA plan: `FeaturedSpacesCard`, `ToolBuzzCard`, `UpcomingEventCard`, `AppNewsCard`, `NewContentCard`, `BuilderSpotlightCard`, and `CampusTipCard`.
-- [ ] T2-FED-D2-04: **Implement Interaction UI:** Wire up the frontend components to the interaction hooks: one-tap for `like`, a long-press context menu for `follow`/`mute`, and a 3-dot menu that includes the `report` action.
-
-#### T2-D4: Testing & DX
-- [ ] T2-FED-D3-01: **Write Backend Unit Tests:** Unit-test the core feed generation logic and each interaction function.
-- [ ] T2-FED-D3-02: **Write Component Storybook:** Create stories for each individual card component, mocking all its states (e.g., with/without image, long/short text, liked/not-liked).
-- [ ] T2-FED-D3-03: **Write E2E Test:** Create a Playwright test for the entire feed flow, including scrolling, liking, and muting a card.
-- [ ] T2-FED-D3-04: **Write Documentation:** Document the complete feed architecture, including the data models, card types, interaction logic, and the strategy for adding new content sources.
-
-### T2-Integration Points
-_These tasks require coordination with other teams and will be completed in Phase 3._
-
-- [ ] T2-INT-01: **Feed Tool Integration:** Connect the feed to display `ToolBuzzCard` when tools from Team 3 gain traction.
-- [ ] T2-INT-02: **Space Builder Integration:** Connect space builder requests to Team 1's admin approval system.
-- [ ] T2-INT-03: **Profile Space Display:** Provide API for Team 1 to fetch a user's joined spaces.
-- [ ] T2-INT-04: **Tool Placement in Spaces:** Create the integration points for Team 3's tools to be placed on space surfaces.
-
----
-
-## TEAM 3: Creation Engine
-
-### T3-Slice: HiveLAB — Tools & Builder Experience
-_**Thesis:** To provide Builders with the power to create and place interactive Tools, turning empty Spaces into living communities. Note: While initially builder-only, HiveLAB will expand to all users in future versions._
-
-#### T3-D0.5: Foundational Decisions & Mandates
-- **[ ] Technical Decisions**
-  - [ ] **Tool Definition:** A Tool will not be code. It will be a declarative JSON object that defines a layout of configured Element instances. This is a critical architectural decision for security and cross-platform portability.
-  - [ ] **Element Rendering:** A single, master `ToolRenderer` component will be responsible for parsing the Tool JSON and mapping the `type` field to the correct Element component.
-  - [ ] **Data Submission:** All interactive Tools will use the "Action Bus" model for data submission. A single `handleToolSubmission` Cloud Function will be the entry point for all tool interactions, which is vital for security and validation.
-  - [ ] **Future Expansion:** The HiveLAB architecture must be designed with the knowledge that it will eventually be available to all users, not just builders. This affects security rules, UI patterns, and feature gating.
-- **[ ] Business Logic Decisions**
-  - [ ] **Template-First Workflow:** We must address the "Ikea Manual" problem. The primary workflow in HiveLAB will not be starting from a blank canvas. It will be choosing from a gallery of pre-built, editable Tool Templates. "Start from Scratch" will be a secondary, expert-mode option.
-  - [ ] **Builder Analytics:** We must address the "Builder's Reward" problem. We will provide simple, inline analytics for Builders on their placed tools (e.g., Views, Interaction Count). This is essential for motivation and retention.
-  - [ ] **Feature Gating:** The system must be designed to support gradual feature rollout to non-builders, with clear upgrade paths and feature differentiation between personal tools and space tools.
-- **[ ] Brand-Aligned Micro-Features & UX**
-  - [ ] **The "Builder's Quest Log":** The Day-1 onboarding checklist must not disappear. It must be replaced by a persistent "Builder Quests" component, suggesting new tools to try and guiding them on their creation journey.
-  - [ ] **Future-Proof UI:** The HiveLAB interface must be designed to accommodate the future expansion to all users, with clear indicators of builder-exclusive features and a path to upgrade.
-- **[ ] Dependencies & Risks**
-  - [ ] **Dependency:** The entire HiveLAB composer is blocked until the core `ToolRenderer` component and the initial vBETA Element Kit are built.
-  - [ ] **Risk:** A Builder could create a confusing or poorly designed Tool.
-  - [ ] **Mitigation:** The Template-First workflow is the primary mitigation. By guiding builders toward well-designed starting points, we reduce the likelihood of poor-quality tools.
-  - [ ] **Risk:** Future expansion to all users could create confusion about tool ownership and permissions.
-  - [ ] **Mitigation:** Clear UI differentiation between personal tools and space tools, with explicit permission models for each.
-
-#### T3-D1: Data & Security
-- [ ] T3-HLC-D0-01: **Define `tools` and `placed_tools` Schemas:** Define the schemas for tool drafts owned by builders and for tool instances placed within a space.
-- [ ] T3-HLC-D0-02: **Define `space_templates` Schema:** Define the schema for the pre-packaged templates (e.g., "Academic Cohort").
-- [ ] T3-HLC-D0-03: **Write & Test Security Rules:** Implement rules ensuring only builders can create/edit their own tools and place them in spaces where they have the builder role.
-
-#### T3-D2: Domain Logic & Backend
-- [ ] T3-HLC-D1-01: **Implement Core Tool Logic:** Create backend functions for `saveTool`, `placeTool`, and `deleteTool`.
-- [ ] T3-HLC-D1-02: **Implement Template Logic:** Create a backend function `applyTemplate` that a builder can call to populate a space with a default set of tools.
-- [ ] T3-HLC-D1-03: **Seed Default Palette & Templates:** Populate the database with the initial set of tools and templates defined in the blueprint.
-
-### T3-Slice: Element Engine & vBETA Kit
-_**Thesis:** To build the atomic, HIVE-controlled building blocks that Builders will compose into Tools._
-
-#### T3-D3: Element Implementation
-- [ ] T3-HLC-D1.5-01: **Implement `handleToolSubmission` Function:** Create the single, generic Cloud Function that receives submissions from the Action Bus, validates the payload against the tool definition, and stores the response data.
-- [ ] T3-HLC-D1.5-02: **Build Core Tool Renderer:** Create the master React component that takes a Tool's JSON definition and maps element types to their corresponding components.
-- [ ] T3-HLC-D1.5-03: **Implement Action Bus:** Build the local event bus system within the Tool Renderer for handling state aggregation and submissions.
-- [ ] T3-HLC-D1.5-04: **Build `StaticText` Element:** Build the component and its Storybook story.
-- [ ] T3-HLC-D1.5-05: **Build `StaticImage` Element:** Build the component and its Storybook story.
-- [ ] T3-HLC-D1.5-06: **Build `Divider` Element:** Build the component and its Storybook story.
-- [ ] T3-HLC-D1.5-07: **Build `ShortTextInput` Element:** Build the component and its Storybook story.
-- [ ] T3-HLC-D1.5-08: **Build `LongTextInput` Element:** Build the component and its Storybook story.
-- [ ] T3-HLC-D1.5-09: **Build `MultipleChoice` Element:** Build the component and its Storybook story.
-- [ ] T3-HLC-D1.5-10: **Build `ImagePicker` Element:** Build the component and its Storybook story.
-- [ ] T3-HLC-D1.5-11: **Build `SubmitButton` Element:** Build the component and its Storybook story.
-- [ ] T3-HLC-D1.5-12: **Build `LinkButton` Element:** Build the component and its Storybook story.
-
-### T3-Slice: HiveLAB UI & Composer
-_**Thesis:** To build the visual interface where Builders create and manage their Tools._
-
-#### T3-D4: UI & Presentation (Page by Page)
-
-- [ ] **Component: Builder Day-1 Onboarding**
-    - [ ] T3-HLC-D2-01: Build the toast notification that appears when the builder role is granted.
-    - [ ] T3-HLC-D2-02: Build the modal overlay with the 3-step checklist for new builders.
-    - [ ] T3-HLC-D2-03: Implement the persistent checklist chip that remains until the 3 tasks are completed.
-
-- [ ] **Page: `/hivelab` (Tool Composer)**
-    - [ ] T3-HLC-D2-04: Build the basic composer UI, including the element library, canvas, and live preview.
-    - [ ] T3-HLC-D2-05: Build the "First-Tool Quickstart" wizard for the `Day-1 Flow`.
-    - [ ] T3-HLC-D2-06: Implement the UI for a builder to start from a template or a blank slate.
-
-- [ ] **Component: Tool Placement UI**
-    - [ ] T3-HLC-D2-07: Build the UI flow for placing a tool in a space.
-    - [ ] T3-HLC-D2-08: Add "Edit/Remove Tool" controls visible only to builders.
-
-#### T3-D5: Testing & DX
-- [ ] T3-HLC-D3-01: **Write E2E Tests:** Create a Playwright test for the complete Builder Day-1 Flow: getting the role, seeing the modal, and placing a first tool.
-- [ ] T3-HLC-D3-02: **Write Documentation:** Document the tool schemas and the builder onboarding flow.
-
-### T3-Slice: Default Tool Implementations
-_**Thesis:** To build the initial set of pre-made Tools that Builders can use immediately._
-
-#### T3-D6: Tool Implementations
-- [ ] T3-TOOL-01: **Build WelcomeBanner Tool:** Implement the JSON definition and any custom logic.
-- [ ] T3-TOOL-02: **Build PromptPost Tool:** Implement the JSON definition and submission logic.
-- [ ] T3-TOOL-03: **Build Pulse Tool:** Implement the JSON definition for one-question polls.
-- [ ] T3-TOOL-04: **Build EventCard Tool:** Implement the JSON definition for schedule + RSVP.
-- [ ] T3-TOOL-05: **Build PinnedLink Tool:** Implement the JSON definition for external links.
-- [ ] T3-TOOL-06: **Build JoinForm Tool:** Implement the JSON definition for gated entry.
-
-### T3-Integration Points
-_These tasks require coordination with other teams and will be completed in Phase 3._
-
-- [ ] T3-INT-01: **Tool Display in Spaces:** Integrate tool rendering with Team 2's space surfaces.
-- [ ] T3-INT-02: **Tool Activity in Feed:** Send tool interaction events to Team 2's feed system.
-- [ ] T3-INT-03: **Builder Profile Integration:** Provide API for Team 1 to display a user's created tools.
-- [ ] T3-INT-04: **Builder Role Check:** Integrate with Team 1's builder role system for access control.
-
----
-
-## Phase 3 – Integration & Polish
-
-### Cross-Team Integration
-- [ ] INT-01: **End-to-End User Flow Test:** Test the complete flow from school selection → login → onboarding → auto-join spaces → view feed.
-- [ ] INT-02: **Builder Journey Test:** Test the complete builder flow from opt-in → approval → tool creation → placement in space.
-- [ ] INT-03: **Data Consistency Audit:** Ensure all cross-team data references are consistent and properly secured.
-- [ ] INT-04: **Performance Optimization:** Profile and optimize the critical paths across all teams' work.
-
-### Documentation Consolidation
-- [ ] DOC-01: **Merge Team Documentation:** Consolidate all team-specific documentation into unified guides.
-- [ ] DOC-02: **API Documentation:** Document all cross-team APIs and integration points.
-- [ ] DOC-03: **Deployment Guide:** Create a comprehensive deployment guide covering all team components.
-
-### Final Quality Assurance
-- [ ] QA-01: **Security Audit:** Comprehensive security review of all Firebase rules and Cloud Functions.
-- [ ] QA-02: **Accessibility Audit:** Full WCAG 2.1 AA compliance check across all UI.
-- [ ] QA-03: **Performance Audit:** Core Web Vitals optimization for all key pages.
-- [ ] QA-04: **Cross-Browser Testing:** Test on Chrome, Safari, Firefox, and Edge.
-
-### Launch Preparation
-- [ ] LCH-01: **Production Environment Setup:** Configure all production Firebase projects and secrets.
-- [ ] LCH-02: **Monitoring Setup:** Configure Sentry, analytics, and alerting for all components.
-- [ ] LCH-03: **Backup Strategy:** Implement and test database backup procedures.
-- [ ] LCH-04: **Load Testing:** Stress test the system with expected launch traffic.
-- [ ] LCH-05: **Go/No-Go Review:** Final review of all completed tasks and launch readiness.
-
----
-
-## Post-Launch Iterations
-
-### Week 1 Patch
-- [ ] W1-01: **Bug Fixes:** Address any critical issues discovered at launch.
-- [ ] W1-02: **Performance Tuning:** Optimize based on real-world usage patterns.
-- [ ] W1-03: **First Element Drop:** Release 6-8 new Elements for HiveLAB.
-
-### Week 2 Enhancement
-- [ ] W2-01: **Trending Spaces Rail:** Add the trending spaces feature to discovery.
-- [ ] W2-02: **Builder Analytics Dashboard:** Enhanced analytics for builders.
-- [ ] W2-03: **Second Element Drop:** Release additional Elements based on builder feedback.
-
-### Future Roadmap Items
-- [ ] FUT-01: **Chat Surface Activation:** Enable the chat surface in spaces (v0.1.1).
-- [ ] FUT-02: **Direct Messaging:** Add DM functionality between users.
-- [ ] FUT-03: **Advanced Discovery:** Algorithmic space recommendations.
-- [ ] FUT-04: **Mobile Apps:** Native iOS and Android applications.
-- [ ] FUT-05: **Multi-Builder Support:** Allow multiple builders per space.
-- [ ] FUT-06: **Content Moderation Tools:** Advanced admin moderation capabilities.
+    - [ ] T2-SPC-D2-02: Implement the filter pills based on the `

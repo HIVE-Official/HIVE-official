@@ -1,9 +1,19 @@
 {
   "files": [],
   "references": [
-    { "path": "apps/web" },
-    { "path": "packages/i18n" },
-    { "path": "packages/ui" },
-    { "path": "packages/hooks" }
-  ]
+    { "path": "./apps/web/tsconfig.json" },
+    { "path": "./packages/ui/tsconfig.json" }
+  ],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@hive/core/*": ["packages/core/src/*"],
+      "@hive/hooks/*": ["packages/hooks/src/*"],
+      "@hive/ui/*": ["packages/ui/src/*"],
+      "@hive/config/*": ["packages/config/*"],
+      "@hive/tokens/*": ["packages/tokens/*"],
+      "@hive/utilities/*": ["packages/utilities/src/*"],
+      "@hive/validation/*": ["packages/validation/src/*"]
+    }
+  }
 } 

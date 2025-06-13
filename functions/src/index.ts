@@ -88,8 +88,8 @@ export const events = {
 export const spaces = {
   // Space denormalization functions
   updateSpaceMemberCount: spaceDenormalization.updateSpaceMemberCount,
-  autoJoinSpaces: autoJoin.autoJoinSpaces,
-  claimSpace: claim.claimSpace,
+  autoJoinOnCreate: autoJoin.autoJoinOnCreate,
+  requestBuilderRole: claim.requestBuilderRole,
   getSpaceContent: pagination.getSpaceContent,
   joinSpace: membership.joinSpace,
   leaveSpace: membership.leaveSpace
@@ -115,3 +115,4 @@ export * from "./auth/verifyMagicLink";
 export * from "./auth/checkHandleUniqueness";
 export * from "./auth/completeOnboarding";
 export * from "./auth/updateUserAvatar";
+export * from "./auth/joinWaitlist";

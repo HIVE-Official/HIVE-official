@@ -1,17 +1,17 @@
-import 'mocha';
-import * as sinon from 'sinon';
-import { expect } from 'chai';
-import * as admin from 'firebase-admin';
-import functionsTest from 'firebase-functions-test';
+import "mocha";
+import * as sinon from "sinon";
+import {expect} from "chai";
+import * as admin from "firebase-admin";
+import functionsTest from "firebase-functions-test";
 
 // Initialize the test environment
 const testEnv = functionsTest();
 
-describe('Auth Functions', () => {
+describe("Auth Functions", () => {
   let adminStub: sinon.SinonStub;
 
   before(() => {
-    adminStub = sinon.stub(admin, 'initializeApp');
+    adminStub = sinon.stub(admin, "initializeApp");
   });
 
   after(() => {
@@ -19,7 +19,7 @@ describe('Auth Functions', () => {
     testEnv.cleanup();
   });
 
-  describe('sendMagicLink', () => {
+  describe("sendMagicLink", () => {
     let sendMagicLink: any;
     let dbStub: sinon.SinonStub;
     let collectionStub: sinon.SinonStub;
@@ -29,38 +29,38 @@ describe('Auth Functions', () => {
     beforeEach(() => {
       // Stub Firestore
       setStub = sinon.stub().resolves();
-      docStub = sinon.stub().returns({ set: setStub });
-      collectionStub = sinon.stub().returns({ doc: docStub });
-      dbStub = sinon.stub(admin, 'firestore').get(() => () => ({ collection: collectionStub }));
-      
+      docStub = sinon.stub().returns({set: setStub});
+      collectionStub = sinon.stub().returns({doc: docStub});
+      dbStub = sinon.stub(admin, "firestore").get(() => () => ({collection: collectionStub}));
+
       // Import the function after stubbing
-      sendMagicLink = require('../authMagicLink').sendMagicLink;
+      sendMagicLink = require("../authMagicLink").sendMagicLink;
     });
 
     afterEach(() => {
       dbStub.restore();
     });
 
-    it('should send a magic link to a valid email', async () => {
+    it("should send a magic link to a valid email", async () => {
       const wrapped = testEnv.wrap(sendMagicLink);
-      const data = { email: 'test@example.com' };
+      const data = {email: "test@example.com"};
 
       const result = await wrapped(data);
 
       expect(result.success).to.be.true;
       expect(setStub.calledOnce).to.be.true;
-      expect(collectionStub.calledWith('magic_links')).to.be.true;
+      expect(collectionStub.calledWith("magic_links")).to.be.true;
     });
 
-    it('should fail for an invalid email', async () => {
+    it("should fail for an invalid email", async () => {
       const wrapped = testEnv.wrap(sendMagicLink);
-      const data = { email: 'invalid-email' };
+      const data = {email: "invalid-email"};
 
       try {
         await wrapped(data);
       } catch (e: any) {
-        expect(e.code).to.equal('invalid-argument');
+        expect(e.code).to.equal("invalid-argument");
       }
     });
   });
-}); 
+});

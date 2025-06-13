@@ -1,0 +1,165 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# HIVE Monorepo Architecture
+
+This document outlines the structure of the HIVE monorepo to guide AI-assisted development.
+
+## 1. Project Structure
+
+The repository is a `pnpm` workspace-based monorepo managed with `Turborepo`. The main directories are:
+
+- **`apps/`**: Contains consumer-facing applications.
+  - `apps/web`: The main Next.js web application.
+- **`packages/`**: Contains shared libraries and components.
+  - `packages/ui`: The core Storybook-driven UI component library. **All new UI components should go here.**
+  - `packages/hooks`: Shared React hooks (e.g., `useSpaces`).
+  - `packages/core`: Shared domain logic, types, and constants. Not framework-specific.
+  - `packages/config`: Shared configurations (ESLint, TypeScript).
+  - `packages/tokens`: Design tokens for styling.
+
+## 2. Path Aliases
+
+Path aliases are used to simplify imports.
+
+- **`@/*`**: Within each `app` or `package`, the `@` alias points to its own `src` directory.
+  - In `apps/web`, `@/components/foo` resolves to `apps/web/src/components/foo`.
+  - In `packages/ui`, `@/components/bar` resolves to `packages/ui/src/components/bar`.
+- **`@hive/*`**: Workspace packages are imported directly by their name, e.g., `@hive/hooks`.
+
+## 3. Storybook Configuration
+
+- The primary Storybook instance is located in [`packages/ui`](mdc:packages/ui/package.json).
+- It is configured via [`packages/ui/.storybook/main.ts`](mdc:packages/ui/.storybook/main.ts).
+- **Dependency Challenge**: Storybook's bundler (Vite) runs separately from the TypeScript compiler. For Storybook to resolve workspace package imports (e.g., `@hive/hooks`) or app imports (e.g., `apps/web` for integration stories), its Vite configuration must have its own set of aliases that mirror the `paths` in the root [`tsconfig.json`](mdc:tsconfig.json).
+- **Fixing Storybook import errors**: If Storybook fails to resolve an import like `@hive/hooks` or `apps/web`, ensure that `packages/ui/.storybook/main.ts`'s `viteFinal` alias configuration is in sync with the root `tsconfig.json` and includes an alias for the app.
+
+### 3.1 Common Issues and Solutions
+
+#### Version Mismatches
+- Always use exact versions for all Storybook packages to prevent conflicts
+- Keep all @storybook/* packages at the same version
+- When upgrading, upgrade all Storybook packages together
+- Current stable version: 8.6.x (as of March 2024)
+
+#### Import Resolution
+- Add all workspace package aliases in viteFinal config:
+```typescript
+viteFinal(config) {
+  return mergeConfig(config, {
+    resolve: {
+      alias: {
+        '@': resolve(__dirname, '../src'),
+        '@hive/core': resolve(__dirname, '../../core/src'),
+        '@hive/hooks': resolve(__dirname, '../../hooks/src'),
+        // Add all workspace packages here
+      }
+    }
+  });
+}
+```
+
+#### Story File Discovery
+- Story files must follow the pattern: `*.stories.@(js|jsx|ts|tsx)`
+- MDX files must be explicitly included in stories configuration
+- Ensure story files are in the correct directory structure:
+```typescript
+stories: [
+  '../src/**/*.mdx',
+  '../src/**/*.stories.@(js|jsx|ts|tsx)'
+],
+```
+
+#### Preview Configuration
+- Use preview.jsx/ts for global decorators and parameters
+- Always wrap stories in ThemeProvider for consistent styling
+- Configure backgrounds to match your theme:
+```typescript
+parameters: {
+  backgrounds: {
+    default: 'dark',
+    values: [
+      { name: 'dark', value: '#0A0A0A' },
+      { name: 'light', value: '#FFFFFF' },
+    ],
+  },
+}
+```
+
+#### Testing Utilities
+- Import test utilities from '@storybook/test':
+```typescript
+import { fn } from '@storybook/test';
+import { userEvent, within } from '@storybook/test';
+```
+- Use these for interaction testing in stories
+
+#### CSS and Styling
+- Import global styles in preview.jsx/ts
+- Use the same Tailwind configuration as the main app
+- Ensure all required CSS dependencies are available:
+```typescript
+// preview.jsx/ts
+import '../src/globals.css';
+```
+
+### 3.2 Troubleshooting Guide
+
+1. **Module Resolution Errors**
+   - Check viteFinal aliases in main.ts
+   - Verify package versions match across workspace
+   - Clear node_modules and reinstall dependencies
+
+2. **Story Loading Failures**
+   - Verify story file naming convention
+   - Check story file location matches stories glob pattern
+   - Ensure all required dependencies are installed
+
+3. **Styling Issues**
+   - Confirm globals.css is imported in preview
+   - Verify ThemeProvider is properly configured
+   - Check Tailwind configuration is accessible
+
+4. **Test Interaction Failures**
+   - Update @storybook/test imports
+   - Verify play function syntax
+   - Check interaction test dependencies
+
+5. **Performance Issues**
+   - Use build-storybook for production
+   - Implement proper code-splitting
+   - Optimize story loading patterns
+
+### 3.3 Best Practices
+
+1. **Story Organization**
+   - Group stories by feature/component
+   - Use consistent naming conventions
+   - Implement proper documentation
+
+2. **Component Testing**
+   - Write interaction tests
+   - Include edge cases
+   - Document expected behavior
+
+3. **Performance**
+   - Lazy load complex components
+   - Optimize imports
+   - Use proper build configuration
+
+4. **Documentation**
+   - Include component API documentation
+   - Add usage examples
+   - Document props and variants
+
+
+
+
+
+
+
+
+
+

@@ -1,6 +1,6 @@
-import * as functions from 'firebase-functions';
-import * as admin from 'firebase-admin';
-import * as nodemailer from 'nodemailer';
+import * as functions from "firebase-functions";
+import * as admin from "firebase-admin";
+import * as nodemailer from "nodemailer";
 import * as logger from "firebase-functions/logger";
 
 // Email templates
@@ -82,11 +82,11 @@ function createTransport() {
   // For development, use a test email account or a service like Mailtrap
   // In production, replace this with your actual email service configuration
   return nodemailer.createTransport({
-    host: functions.config().email?.host || 'smtp.mailtrap.io',
-    port: parseInt(functions.config().email?.port || '2525'),
+    host: functions.config().email?.host || "smtp.mailtrap.io",
+    port: parseInt(functions.config().email?.port || "2525"),
     auth: {
-      user: functions.config().email?.user || 'your-mailtrap-user',
-      pass: functions.config().email?.pass || 'your-mailtrap-password',
+      user: functions.config().email?.user || "your-mailtrap-user",
+      pass: functions.config().email?.pass || "your-mailtrap-password",
     },
   });
 }
@@ -99,16 +99,16 @@ async function sendVerificationEmail(
   code: string
 ): Promise<void> {
   const transport = createTransport();
-  
+
   const mailOptions = {
-    from: `"HIVE Support" <${functions.config().email?.from || 'noreply@hiveapp.example.com'}>`,
+    from: `"HIVE Support" <${functions.config().email?.from || "noreply@hiveapp.example.com"}>`,
     to: email,
-    subject: 'Verify Your HIVE Account',
+    subject: "Verify Your HIVE Account",
     html: EMAIL_VERIFICATION_TEMPLATE
-      .replace('{{code}}', code)
-      .replace('{{email}}', email),
+      .replace("{{code}}", code)
+      .replace("{{email}}", email),
   };
-  
+
   await transport.sendMail(mailOptions);
 }
 
@@ -116,40 +116,40 @@ async function sendVerificationEmail(
  * Cloud Function that sends verification emails when a new request is created
  */
 export const processEmailVerification = functions.firestore
-  .document('emailVerifications/{requestId}')
+  .document("emailVerifications/{requestId}")
   .onCreate(async (snapshot, context) => {
     const requestData = snapshot.data();
-    
+
     // Skip if already processed
-    if (requestData.status !== 'pending') {
+    if (requestData.status !== "pending") {
       return null;
     }
-    
+
     try {
       // Send the verification email
       await sendVerificationEmail(
         requestData.email,
         requestData.code
       );
-      
+
       // Update the request status
       await snapshot.ref.update({
-        status: 'sent',
+        status: "sent",
         sentAt: admin.firestore.FieldValue.serverTimestamp(),
       });
-      
-      return { success: true };
+
+      return {success: true};
     } catch (error) {
-      console.error('Error sending verification email:', error);
-      
+      console.error("Error sending verification email:", error);
+
       // Update the request status to error
       await snapshot.ref.update({
-        status: 'error',
+        status: "error",
         error: error.message,
         updatedAt: admin.firestore.FieldValue.serverTimestamp(),
       });
-      
-      return { success: false, error: error.message };
+
+      return {success: false, error: error.message};
     }
   });
 
@@ -159,14 +159,14 @@ export const processEmailVerification = functions.firestore
 export const submitVerificationCode = functions.https.onCall(async (data, context) => {
   // Ensure the user is authenticated.
   if (!context.auth) {
-    throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
+    throw new functions.https.HttpsError("unauthenticated", "The function must be called while authenticated.");
   }
 
   const code = data.code;
   const userId = context.auth.uid;
 
-  if (!code || typeof code !== 'string' || code.length === 0) {
-    throw new functions.https.HttpsError('invalid-argument', 'The function must be called with a valid "code" argument.');
+  if (!code || typeof code !== "string" || code.length === 0) {
+    throw new functions.https.HttpsError("invalid-argument", "The function must be called with a valid \"code\" argument.");
   }
 
   logger.info(`Verification code submission attempt by user ${userId}`);
@@ -176,17 +176,17 @@ export const submitVerificationCode = functions.https.onCall(async (data, contex
     const db = admin.firestore();
 
     // Find the pending verification request for this user with the matching code
-    const verificationQuery = await db.collection('emailVerifications')
-      .where('userId', '==', userId) // Ensure we check against the calling user
-      .where('code', '==', code)
-      .where('status', '==', 'sent') // Only match codes that were successfully sent
-      .where('expiresAt', '>', now) // Check expiration
+    const verificationQuery = await db.collection("emailVerifications")
+      .where("userId", "==", userId) // Ensure we check against the calling user
+      .where("code", "==", code)
+      .where("status", "==", "sent") // Only match codes that were successfully sent
+      .where("expiresAt", ">", now) // Check expiration
       .limit(1)
       .get();
 
     if (verificationQuery.empty) {
       logger.warn(`No valid pending verification found for code ${code} by user ${userId}`);
-      throw new functions.https.HttpsError('not-found', 'Invalid or expired verification code.');
+      throw new functions.https.HttpsError("not-found", "Invalid or expired verification code.");
     }
 
     const verificationDoc = verificationQuery.docs[0];
@@ -194,28 +194,27 @@ export const submitVerificationCode = functions.https.onCall(async (data, contex
 
     // Mark the verification request as completed
     await verificationRef.update({
-      status: 'completed',
+      status: "completed",
       completedAt: now,
     });
 
     // Trigger the role claim update to grant 'Verified' status (level 1)
     // This uses the existing claimUpdates trigger mechanism
-    await db.collection('claimUpdates').add({
+    await db.collection("claimUpdates").add({
       userId: userId,
       verificationLevel: 1, // Level 1 = Verified
       updatedAt: now,
-      reason: 'email_verification_completed'
+      reason: "email_verification_completed",
     });
 
     logger.info(`User ${userId} successfully verified email with code ${code}`);
-    return { success: true, message: 'Email successfully verified.' };
-
+    return {success: true, message: "Email successfully verified."};
   } catch (error) {
     logger.error(`Error verifying email for user ${userId}:`, error);
     if (error instanceof functions.https.HttpsError) {
       throw error; // Re-throw HttpsError
     }
-    throw new functions.https.HttpsError('internal', 'An error occurred while verifying the email code.');
+    throw new functions.https.HttpsError("internal", "An error occurred while verifying the email code.");
   }
 });
 
@@ -224,29 +223,29 @@ export const submitVerificationCode = functions.https.onCall(async (data, contex
  * Runs on a schedule (every day at midnight)
  */
 export const cleanupExpiredVerifications = functions.pubsub
-  .schedule('0 0 * * *')
+  .schedule("0 0 * * *")
   .onRun(async (context) => {
     const now = admin.firestore.Timestamp.now();
-    
+
     const expiredDocs = await admin.firestore()
-      .collection('emailVerifications')
-      .where('expiresAt', '<', now)
-      .where('status', '==', 'pending')
+      .collection("emailVerifications")
+      .where("expiresAt", "<", now)
+      .where("status", "==", "pending")
       .get();
-    
+
     const batch = admin.firestore().batch();
-    
+
     expiredDocs.forEach((doc) => {
       batch.update(doc.ref, {
-        status: 'expired',
+        status: "expired",
         updatedAt: admin.firestore.FieldValue.serverTimestamp(),
       });
     });
-    
+
     if (expiredDocs.size > 0) {
       await batch.commit();
       console.log(`Marked ${expiredDocs.size} expired verification requests`);
     }
-    
+
     return null;
-  }); 
+  });
