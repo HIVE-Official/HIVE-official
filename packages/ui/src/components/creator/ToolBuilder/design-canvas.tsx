@@ -3,9 +3,10 @@ import { useDrop } from 'react-dnd'
 import { cn } from '@/lib/utils'
 import { Tool, ElementInstance } from '@hive/core/domain/creation/tool'
 import { Element } from '@hive/core/domain/creation/element'
-import { ElementRenderer } from './ElementRenderer'
-import { SelectionBox } from './SelectionBox'
-import { ContextMenu } from './ContextMenu'
+// TODO: Implement these components
+// import { ElementRenderer } from './ElementRenderer'
+// import { SelectionBox } from './SelectionBox'
+// import { ContextMenu } from './ContextMenu'
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { 
@@ -345,23 +346,22 @@ export const DesignCanvas = forwardRef<HTMLDivElement, DesignCanvasProps>(({
                     onDoubleClick={(e) => handleElementDoubleClick(elementInstance.id, e)}
                     onContextMenu={(e) => handleContextMenu(e, elementInstance.id)}
                   >
-                    <ElementRenderer
-                      elementInstance={elementInstance}
-                      elementDefinition={elementDef}
-                      isSelected={selectedElementId === elementInstance.id}
-                      isPreview={false}
-                      onDrag={(newPosition) => handleElementDrag(elementInstance.id, newPosition)}
-                      onResize={(newSize) => handleElementResize(elementInstance.id, newSize)}
-                    />
+                    {/* TODO: Implement ElementRenderer component */}
+                    <div className="w-full h-full bg-muted border border-dashed border-muted-foreground/50 rounded flex items-center justify-center">
+                      <div className="text-center text-sm text-muted-foreground">
+                        <div className="font-medium">{elementDef.name}</div>
+                        <div className="text-xs">{elementInstance.id}</div>
+                      </div>
+                    </div>
 
-                    {/* Selection Box */}
+                    {/* TODO: Implement SelectionBox component */}
                     {selectedElementId === elementInstance.id && (
-                      <SelectionBox
-                        element={elementInstance}
-                        onMove={(newPosition) => handleElementDrag(elementInstance.id, newPosition)}
-                        onResize={(newSize) => handleElementResize(elementInstance.id, newSize)}
-                        isLocked={elementInstance.isLocked}
-                      />
+                      <div className="absolute inset-0 border-2 border-primary rounded pointer-events-none">
+                        <div className="absolute -top-1 -left-1 w-2 h-2 bg-primary rounded-full"></div>
+                        <div className="absolute -top-1 -right-1 w-2 h-2 bg-primary rounded-full"></div>
+                        <div className="absolute -bottom-1 -left-1 w-2 h-2 bg-primary rounded-full"></div>
+                        <div className="absolute -bottom-1 -right-1 w-2 h-2 bg-primary rounded-full"></div>
+                      </div>
                     )}
 
                     {/* Lock Indicator */}
@@ -389,16 +389,20 @@ export const DesignCanvas = forwardRef<HTMLDivElement, DesignCanvasProps>(({
         </div>
       </ScrollArea>
 
-      {/* Context Menu */}
+      {/* TODO: Implement ContextMenu component */}
       {contextMenu && (
-        <ContextMenu
-          x={contextMenu.x}
-          y={contextMenu.y}
-          elementId={contextMenu.elementId}
-          element={contextMenu.elementId ? tool.elements.find(el => el.id === contextMenu.elementId) : undefined}
-          onAction={handleContextMenuAction}
-          onClose={() => setContextMenu(null)}
-        />
+        <div 
+          className="fixed bg-background border rounded-md shadow-lg p-2 z-50"
+          style={{ left: contextMenu.x, top: contextMenu.y }}
+        >
+          <div className="text-sm text-muted-foreground">Context menu not implemented yet</div>
+          <button 
+            className="text-xs text-primary hover:underline"
+            onClick={() => setContextMenu(null)}
+          >
+            Close
+          </button>
+        </div>
       )}
     </div>
   )

@@ -6,10 +6,11 @@ import { Tool, ElementInstance } from '@hive/core/domain/creation/tool'
 import { Element } from '@hive/core/domain/creation/element'
 import { ElementLibrary } from './element-library'
 import { DesignCanvas } from './design-canvas'
-import { PropertiesPanel } from './PropertiesPanel'
-import { JsonViewer } from './JsonViewer'
-import { ToolPreview } from './ToolPreview'
-import { ToolHeader } from './ToolHeader'
+// TODO: Implement these components
+// import { PropertiesPanel } from './PropertiesPanel'
+// import { JsonViewer } from './JsonViewer'
+// import { ToolPreview } from './ToolPreview'
+// import { ToolHeader } from './ToolHeader'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable'
@@ -220,15 +221,27 @@ export const ToolBuilder: React.FC<ToolBuilderProps> = ({
     <DndProvider backend={HTML5Backend}>
       <div className={cn('flex flex-col h-screen bg-background', className)}>
         {/* Header */}
-        <ToolHeader
-          tool={currentTool}
-          isDirty={isDirty}
-          isSaving={isSaving}
-          onSave={handleSave}
-          onPreview={handlePreview}
-          onPublish={handlePublish}
-          onShare={() => onShare(currentTool)}
-        />
+        {/* TODO: Implement ToolHeader component */}
+        <div className="flex items-center justify-between px-4 py-2 border-b bg-background">
+          <div className="flex items-center gap-2">
+            <h1 className="text-lg font-semibold">{currentTool.name}</h1>
+            {isDirty && <span className="text-sm text-muted-foreground">(Unsaved)</span>}
+          </div>
+          <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm" onClick={handleSave} disabled={isSaving}>
+              <Save className="h-4 w-4 mr-2" />
+              {isSaving ? 'Saving...' : 'Save'}
+            </Button>
+            <Button variant="outline" size="sm" onClick={handlePreview}>
+              <Eye className="h-4 w-4 mr-2" />
+              Preview
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => onShare(currentTool)}>
+              <Share className="h-4 w-4 mr-2" />
+              Share
+            </Button>
+          </div>
+        </div>
 
         {/* Toolbar */}
         <div className="flex items-center justify-between px-4 py-2 border-b bg-muted/50">
@@ -344,19 +357,21 @@ export const ToolBuilder: React.FC<ToolBuilderProps> = ({
                 )}
 
                 {viewMode === 'preview' && (
-                  <ToolPreview
-                    tool={currentTool}
-                    elements={elementsMap}
-                    deviceMode={deviceMode}
-                  />
+                  <div className="flex items-center justify-center h-full bg-muted/20">
+                    <div className="text-center">
+                      <Eye className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+                      <p className="text-muted-foreground">Preview mode - ToolPreview component not implemented yet</p>
+                    </div>
+                  </div>
                 )}
 
                 {viewMode === 'code' && (
-                  <JsonViewer
-                    tool={currentTool}
-                    onToolUpdate={updateTool}
-                    readOnly={false}
-                  />
+                  <div className="flex items-center justify-center h-full bg-muted/20">
+                    <div className="text-center">
+                      <Code className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+                      <p className="text-muted-foreground">Code view - JsonViewer component not implemented yet</p>
+                    </div>
+                  </div>
                 )}
               </div>
             </ResizablePanel>
@@ -378,25 +393,21 @@ export const ToolBuilder: React.FC<ToolBuilderProps> = ({
                 </TabsList>
 
                 <TabsContent value="properties" className="h-full mt-0">
-                  <PropertiesPanel
-                    tool={currentTool}
-                    selectedElement={selectedElement}
-                    elementDefinition={selectedElement ? elementsMap.get(selectedElement.elementId) : undefined}
-                    onElementUpdate={updateElement}
-                    onToolUpdate={updateTool}
-                  />
+                  <div className="flex items-center justify-center h-full">
+                    <div className="text-center">
+                      <Settings className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
+                      <p className="text-sm text-muted-foreground">PropertiesPanel not implemented yet</p>
+                    </div>
+                  </div>
                 </TabsContent>
 
                 <TabsContent value="json" className="h-full mt-0">
-                  <JsonViewer
-                    tool={selectedElement ? { elements: [selectedElement] } : currentTool}
-                    onToolUpdate={selectedElement ? 
-                      (updates) => updateElement(selectedElement.id, updates.elements[0]) :
-                      updateTool
-                    }
-                    readOnly={false}
-                    compact
-                  />
+                  <div className="flex items-center justify-center h-full">
+                    <div className="text-center">
+                      <Code className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
+                      <p className="text-sm text-muted-foreground">JsonViewer not implemented yet</p>
+                    </div>
+                  </div>
                 </TabsContent>
               </Tabs>
             </ResizablePanel>
