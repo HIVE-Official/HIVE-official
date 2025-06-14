@@ -2,11 +2,11 @@
 
 import { useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { Button } from '@hive/ui/components/button';
-import { Input } from '@hive/ui/components/ui/input';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@hive/ui/components/ui/card';
-import { Label } from '@hive/ui/components/ui/label';
-import { Alert, AlertDescription } from '@hive/ui/components/ui/alert';
+import { Button } from '@hive/ui';
+import { Input } from '@hive/ui';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@hive/ui';
+import { Label } from '@hive/ui';
+import { Alert, AlertDescription } from '@hive/ui';
 import { Loader2, Mail, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 

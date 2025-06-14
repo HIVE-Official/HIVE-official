@@ -2,16 +2,21 @@
 export { Box } from './src/components/Box';
 export { Stack } from './src/components/Stack';
 export { Grid } from './src/components/Grid';
-export { Card } from './src/components/Card';
+export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent } from './src/components/Card';
 
 // Form Components
 export { Button } from './src/components/Button';
 export { Input } from './src/components/Input';
+export { Textarea } from './src/components/Textarea';
+export { Label } from './src/components/Label';
 export { WaitlistForm } from './src/components/WaitlistForm';
+
+// UI Elements
+export { Alert, AlertTitle, AlertDescription } from './src/components/Alert';
+export { Badge } from './src/components/Badge';
 
 // Typography & UI Elements
 export { Typography } from './src/components/Typography';
-export { Badge } from './src/components/Badge';
 
 // Creator Components
 export { ElementPicker, ElementCard } from './src/components/creator/ElementPicker';
