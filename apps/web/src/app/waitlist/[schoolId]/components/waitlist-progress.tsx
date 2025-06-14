@@ -1,6 +1,6 @@
 "use client";
 
-import { Progress } from "@hive/ui/components/progress";
+import { Progress } from "@hive/ui";
 
 type WaitlistProgressProps = {
   currentCount: number;

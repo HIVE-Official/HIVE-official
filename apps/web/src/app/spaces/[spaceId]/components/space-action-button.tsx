@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Button } from '@hive/ui/components/Button';
+import { Button } from '@hive/ui';
 import { type MemberRole } from '@hive/core/src/domain/firestore/member';
 import { useAuth } from '@hive/auth-logic/src/hooks/useAuth';
 import { Loader2, CheckCircle, UserPlus, LogOut, Crown } from 'lucide-react';

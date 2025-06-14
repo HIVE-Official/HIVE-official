@@ -14,6 +14,7 @@ export { WaitlistForm } from './src/components/WaitlistForm';
 // UI Elements
 export { Alert, AlertTitle, AlertDescription } from './src/components/Alert';
 export { Badge } from './src/components/Badge';
+export { Progress } from './src/components/Progress';
 
 // Typography & UI Elements
 export { Typography } from './src/components/Typography';
