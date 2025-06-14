@@ -6,7 +6,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from '../card';
+} from '../ui/card';
 import { cn } from '@/lib/utils';
 import { SchoolSearchInput } from './school-search-input';
 

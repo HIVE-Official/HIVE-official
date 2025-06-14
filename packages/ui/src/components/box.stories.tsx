@@ -4,7 +4,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { गति } from '../lib/motion';
 import { Stack } from './stack';
-import { Button } from './button';
+import { Button } from './ui/button';
 
 const meta: Meta<typeof Box> = {
     title: 'Components/Box',

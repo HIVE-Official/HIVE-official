@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Search } from 'lucide-react';
-import { Input } from '@/components/Input';
+import { Input } from '../ui/input';
 import { cn } from '@/lib/utils';
 
 // Mock data for schools, to be replaced by Firestore data in T1-S1A-D2-03

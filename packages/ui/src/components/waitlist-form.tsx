@@ -1,7 +1,7 @@
 import React from 'react';
-import { Card, CardContent, CardFooter, CardHeader } from './card';
-import { Button } from './button';
-import { Input } from './input';
+import { Card, CardContent, CardFooter, CardHeader } from './ui/card';
+import { Button } from './ui/button';
+import { Input } from './ui/input';
 import { Heading, Muted, Text } from './typography';
 import { motion, AnimatePresence } from 'framer-motion';
 import { गति } from '../lib/motion';
