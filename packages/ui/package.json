@@ -5,10 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "storybook dev -p 6006",
-    "build": "storybook build",
+    "build": "storybook build --disable-telemetry",
     "storybook": "storybook dev -p 6006",
     "lint": "eslint . --max-warnings 0",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build --disable-telemetry"
   },
   "devDependencies": {
     "@hive/eslint-config": "workspace:*",
