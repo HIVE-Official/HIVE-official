@@ -1,0 +1,5 @@
+{
+  "extends": "@hive/typescript-config/base.json",
+  "include": ["src", "vitest.config.ts"],
+  "exclude": ["dist", "build", "node_modules"]
+} 

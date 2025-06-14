@@ -2,6 +2,7 @@
   "extends": "../../packages/config/typescript/base.json",
   "compilerOptions": {
     "esModuleInterop": true,
+    "resolveJsonModule": true,
     "module": "commonjs",
     "target": "es2017",
     "outDir": "dist",

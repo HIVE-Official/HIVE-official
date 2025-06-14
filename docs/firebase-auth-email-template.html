@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Your magic link to HIVE</title>
+    <!--[if mso]>
+    <noscript>
+        <xml>
+            <o:OfficeDocumentSettings>
+                <o:PixelsPerInch>96</o:PixelsPerInch>
+            </o:OfficeDocumentSettings>
+        </xml>
+    </noscript>
+    <![endif]-->
+    <style>
+        /* Reset styles for email clients */
+        body, table, td, p, a, li, blockquote {
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+        table, td {
+            mso-table-lspace: 0pt;
+            mso-table-rspace: 0pt;
+        }
+        img {
+            -ms-interpolation-mode: bicubic;
+            border: 0;
+            height: auto;
+            line-height: 100%;
+            outline: none;
+            text-decoration: none;
+        }
+
+        /* Base styles */
+        body {
+            margin: 0 !important;
+            padding: 0 !important;
+            background-color: #0A0A0A !important;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #FFFFFF;
+        }
+
+        /* Container */
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #0A0A0A;
+        }
+
+        /* Header */
+        .header {
+            padding: 40px 20px 20px;
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #FFD700;
+            text-decoration: none;
+            letter-spacing: 2px;
+        }
+
+        /* Main content */
+        .content {
+            padding: 20px 40px;
+            text-align: center;
+        }
+
+        .greeting {
+            font-size: 18px;
+            color: #FFFFFF;
+            margin-bottom: 24px;
+            font-weight: 500;
+        }
+
+        .message {
+            font-size: 16px;
+            color: #CCCCCC;
+            margin-bottom: 32px;
+            line-height: 1.5;
+        }
+
+        /* CTA Button */
+        .cta-container {
+            margin: 32px 0;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 16px 32px;
+            background-color: #FFD700;
+            color: #0A0A0A !important;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .cta-button:hover {
+            background-color: #E6C200;
+            transform: translateY(-1px);
+        }
+
+        /* Footer */
+        .footer {
+            padding: 32px 40px 40px;
+            text-align: center;
+            border-top: 1px solid #1A1A1A;
+            margin-top: 32px;
+        }
+
+        .footer-text {
+            font-size: 14px;
+            color: #888888;
+            line-height: 1.4;
+            margin-bottom: 8px;
+        }
+
+        .support-link {
+            color: #FFD700;
+            text-decoration: none;
+        }
+
+        .support-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media only screen and (max-width: 600px) {
+            .content {
+                padding: 20px 24px;
+            }
+            
+            .greeting {
+                font-size: 16px;
+            }
+            
+            .message {
+                font-size: 15px;
+            }
+            
+            .cta-button {
+                padding: 14px 28px;
+                font-size: 15px;
+            }
+            
+            .footer {
+                padding: 24px 24px 32px;
+            }
+        }
+
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            .email-container {
+                background-color: #0A0A0A !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <!-- Header with HIVE logo -->
+        <div class="header">
+            <div class="logo">HIVE</div>
+        </div>
+
+        <!-- Main content -->
+        <div class="content">
+            <div class="greeting">
+                Hey %DISPLAY_NAME%—here's your instant pass back into HIVE.
+            </div>
+            
+            <div class="message">
+                Click the button below to securely sign in to your account. No password needed.
+            </div>
+
+            <!-- CTA Button -->
+            <div class="cta-container">
+                <a href="%LINK%" class="cta-button">
+                    Sign in to HIVE
+                </a>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-text">
+                This link expires in 15 minutes.
+            </div>
+            <div class="footer-text">
+                Need help? <a href="mailto:thehiveuni@gmail.com" class="support-link">ping thehiveuni@gmail.com</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

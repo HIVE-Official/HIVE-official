@@ -1,0 +1,166 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# HIVE Engineering Covenant: Strict Error Prevention & Linting Rules
+
+This document outlines the non-negotiable standards for engineering within the HIVE monorepo. All contributions, especially from AI, MUST adhere to these rules. The goal is to prevent common errors, ensure consistency, and maintain a high-quality, stable codebase.
+
+## 1. Core Tech Stack
+
+The AI must be aware of and use the correct versions and tools for the job.
+
+| Layer | Tooling & Versions (vBETA Baseline) |
+| :--- | :--- |
+| **Monorepo** | Turborepo 2.x · pnpm 9 (workspaces) |
+| **UI Runtime** | Next.js 14 (app-router) · React 19 RC |
+| **Build** | Vite (via `@storybook/react-vite`) & Next.js SWC |
+| **Language** | TypeScript 5 (strict mode) |
+| **Styling** | Tailwind 3.5 · shadcn/ui · Radix Primitives |
+| **Lint / Format** | ESLint 9 · Prettier 3 |
+| **Back End** | Firebase v11 SDK (Auth + Firestore) |
+| **Testing** | Vitest 1.x · Testing-Library |
+| **Docs** | Storybook 8.x |
+
+## 2. ESLint & Formatting
+
+The root ESLint configuration is located at [`.eslintrc.js`](mdc:.eslintrc.js). All code must pass linting with zero errors and zero warnings.
+
+**CI gate:** `pnpm lint` (which runs `eslint . --max-warnings 0`) must pass.
+
+### Required Presets & Rules
+
+The configuration must extend these presets:
+- `next/core-web-vitals`
+- `plugin:@typescript-eslint/strict-type-checked`
+- `plugin:react-hooks/recommended`
+- `plugin:tailwindcss/recommended`
+- `plugin:storybook/recommended`
+- `plugin:prettier/recommended`
+
+The `plugin:storybook/recommended` preset includes the following critical rules:
+
+| Rule ID (eslint-plugin-storybook) | What it flags | Auto-fix? |
+| :--- | :--- | :--- |
+| `storybook/no-uninstalled-addons` | Addon names in `main.*` that are not in `devDependencies` | — |
+| `storybook/prefer-pascal-case` | Story export names not in PascalCase | ✅ |
+| `storybook/story-exports` | `.stories.*` file contains zero story exports | — |
+| `storybook/default-exports` | Missing default export (i.e. `<Meta>` object) | ✅ |
+| `storybook/csf-component` | Default export missing `component:` | — |
+| `storybook/no-redundant-story-name`| `name:` duplicates export key | ✅ |
+| `storybook/no-title-property-in-meta`| Defining `title` inside `<Meta>` when CSF-3 auto-titles | ✅ |
+| `storybook/hierarchy-separator` | Deprecated `|` or `/` in titles | ✅ |
+| `storybook/await-interactions` | Missing `await` for `play` function interactions | ✅ |
+| `storybook/use-storybook-expect` | Using Jest/Vitest `expect` instead of `@storybook/test`'s | ✅ |
+
+### Stricter Rules
+
+The following rules must be enabled and set to `"error"`:
+- `@typescript-eslint/no-floating-promises`
+- `@typescript-eslint/consistent-type-imports` (with `"prefer": "type-imports"`)
+- `tailwindcss/no-custom-classname`
+- `react-hooks/exhaustive-deps`
+- `jsx-a11y/alt-text`
+
+## 3. TypeScript Configuration
+
+The root TypeScript configuration is at [`tsconfig.json`](mdc:tsconfig.json). Sanity is maintained by the following flags:
+
+| tsconfig flag | Why it prevents bugs |
+| :--- | :--- |
+| `"strict": true` | No implicit `any`, catches `undefined` states early. |
+| `"noUncheckedIndexedAccess": true` | Makes accessing optional properties safer. |
+| `"exactOptionalPropertyTypes": true` | Eliminates silent widening of types. |
+| `"importsNotUsedAsValues": "error"` | Forces `import type { … }` hygiene. |
+
+> **AI Directive:** Never introduce `as any` or `@ts-expect-error`. If an upstream type is broken, add a comment explaining the issue, reference a ticket, and use a typed alternative if possible.
+
+## 4. Styling (Tailwind / shadcn / Radix)
+
+- **Class Order:** The Prettier plugin `prettier-plugin-tailwindcss` MUST be used to auto-sort Tailwind classes on save.
+- **Design Tokens Only:** Use Tailwind's built-in scale (`text-sm`, `bg-primary`) or custom tokens from `tailwind.config.js`. No magic numbers (e.g., `top: 13px`).
+- **Accessible Primitives:** Always wrap Radix components (`Dialog`, `Popover`) with their `Portal` children exactly as shown in the official documentation to maintain accessibility.
+
+## 5. Next.js & React Runtime
+
+- **AI Directive:** All new components must default to **React Server Components**. Only add the `"use client"` directive when absolutely necessary (for hooks like `useState`, `useEffect`, event listeners, or context providers).
+
+| Common Pitfall | How CI/Lint Prevents It |
+| :--- | :--- |
+| Using deprecated `Metadata` import | ESLint rule `import/no-deprecated` + type-check error. |
+| Importing `fs` in a client component | Next.js build-time server/client boundary check. |
+| Using `any` in React Context | `@typescript-eslint/no-explicit-any`. |
+| Missing `key` in a list | React 19 DEV runtime error. |
+| Passing non-serialisable props from Server to Client | Next.js build error. |
+
+## 6. Monorepo & Workspace Integrity
+
+The monorepo pipeline is defined in [`turbo.json`](mdc:turbo.json).
+
+- **No Hoisting Cheats:** Every package that `imports` a dependency (e.g., `react`) must list it in its own [`package.json`](mdc:package.json).
+- **Version Consistency:** Keep dependency versions aligned across the workspace.
+
+## 7. Firebase / Firestore Defensive Rules
+
+- **AI Directive:** All data written to or read from Firestore **must** be validated with a `zod` schema. This ensures type safety between the server and client.
+- **Security Rules:** All database access patterns must have a corresponding test in the security rules test harness to prevent unauthorized access.
+- **No Secrets:** The `git-secrets` pre-commit hook is active to prevent committing service account keys or other secrets.
+
+## 8. Testing & Coverage
+
+- **Coverage:** Every package must meet or exceed **80% branch coverage** in Vitest.
+- **Visual Tests:** Storybook serves as our visual test suite. Chromatic runs on CI to catch visual regressions.
+- **RTL Only:** Use `react-testing-library` for component tests. The ESLint rule `testing-library/no-dom-import` is active to prevent direct DOM manipulation (e.g., `document.querySelector`).
+
+## 9. Cache-Busting Protocol
+
+If phantom errors appear (e.g., config warnings that shouldn't exist), follow this protocol:
+1.  **Delete Caches:** `rm -rf node_modules/.cache` and `find . -name ".vite-storybook" -type d -prune -exec rm -rf '{}' +`
+2.  **Kill Processes:** `pkill -f '(vite|storybook|next)'`
+3.  **Re-install & Re-build:** `pnpm install && pnpm turbo run build`
+
+## 10. Storybook-Specific Guardrails
+
+The following standards are critical for maintaining a stable Storybook environment.
+
+### Critical Build & Runtime Errors to Avoid
+
+| Error / Warning | Root Cause & Fix |
+| :--- | :--- |
+| **"Multiple main files detected"** | Another `.storybook/main.*` exists elsewhere. Storybook walks the tree up. **Fix:** Ensure only one `main.ts` exists in `packages/ui/.storybook`. |
+| **"Using a CommonJS config with Vite is deprecated"** | `main.js` or `postcss.config.js` is CommonJS. **Fix:** All config files must be ESM (`.ts`, `.js` with `"type": "module"`). Use `export default`. |
+| **Unresolved addon / "Accessing non-existent addons channel"** | Addon in `addons` array isn't installed or is typo'd. **Fix:** Install the addon or remove the entry from `main.ts`. |
+| **Peer-dependency mismatch** | `@storybook/*` packages have different versions (e.g., 8.6 vs 9.0). **Fix:** All `@storybook/*` packages must share the **exact same version**. |
+| **Build fails in CI with `Cannot find module 'react/package.json'`** | `react` is hoisted incorrectly. **Fix:** Ensure `react` and `react-dom` are explicit `devDependencies` in `packages/ui/package.json`. |
+| **Storybook won't start (no stories found)** | At least one `.stories.tsx` or `.mdx` file must exist. **Fix:** Create a placeholder story if none exist. |
+
+### AI Directives for Storybook
+
+1.  **Lock Versions**:
+    *   Ensure every `@storybook/*` dependency (including `eslint-plugin-storybook`) shares the **same major.minor tag**.
+2.  **One Config Only**:
+    *   There must be **exactly one** `.storybook/main.ts` in the monorepo, located at `packages/ui/.storybook/main.ts`.
+3.  **ESM Everywhere**:
+    *   All Storybook and Vite configuration files **must be ESM**. Do not use `module.exports` or `require()`.
+4.  **Addon Hygiene**:
+    *   Before adding an addon, confirm it exists on npm, matches the core Storybook version, and is added to `devDependencies`.
+5.  **Path Aliases**:
+    *   All monorepo path aliases (`@/`, `@hive/core`, etc.) **must be configured** in the `viteFinal` property in `packages/ui/.storybook/main.ts`.
+6.  **Story Writing Rules**:
+    *   Rely on CSF 3.0 auto-naming; do not use the `name:` property on stories.
+    *   **Always** `await` every user interaction inside a `play()` function.
+    *   Use `expect` from `@storybook/test`.
+
+## 11. The HIVE Lint Covenant: AI Checklist
+
+> When generating code for HIVE's repo, you're bound by the HIVE Lint Covenant:
+>
+> - Zero ESLint/TypeScript errors or warnings (`--max-warnings 0`).
+> - Tailwind tokens only; obey the Prettier tailwind-class sorter.
+> - One `.storybook/main.ts`, ESM only.
+> - Firestore writes must pass Zod validation.
+> - CI commands — `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm run storybook:build` — must stay green.
+> - Do not add a dependency unless you pin the exact version and ensure peer dependencies are met.
+
+

@@ -205,6 +205,134 @@ service cloud.firestore {
              data.timestamp is timestamp;
     }
     
+    // Post validation functions
+    function isValidPostData(data, spaceId) {
+      return data.authorId is string &&
+             data.authorId == request.auth.uid &&
+             data.spaceId is string &&
+             data.spaceId == spaceId &&
+             data.content is string &&
+             data.content.size() >= 1 &&
+             data.content.size() <= 2000 &&
+             data.type is string &&
+             data.type in ['text', 'image', 'poll', 'event', 'tool_share'] &&
+             data.visibility is string &&
+             data.visibility in ['public', 'members_only'] &&
+             data.status is string &&
+             data.status == 'active' &&
+             data.threadDepth is number &&
+             data.threadDepth >= 0 &&
+             data.threadDepth <= 3 && // Limit thread depth
+             isValidPostAuthor(data.author) &&
+             isValidPostMetrics(data.metrics);
+    }
+    
+    function isValidPostAuthor(author) {
+      return author.name is string &&
+             author.name.size() > 0 &&
+             author.handle is string &&
+             author.handle.size() > 0 &&
+             author.role is string &&
+             author.role in ['member', 'builder'];
+    }
+    
+    function isValidPostMetrics(metrics) {
+      return metrics.replyCount is number &&
+             metrics.replyCount >= 0 &&
+             metrics.likeCount is number &&
+             metrics.likeCount >= 0 &&
+             metrics.shareCount is number &&
+             metrics.shareCount >= 0 &&
+             metrics.viewCount is number &&
+             metrics.viewCount >= 0;
+    }
+    
+    function isValidPostUpdate(newData, oldData) {
+      // Only allow updating content, visibility, and metrics
+      let allowedFields = ['content', 'visibility', 'updatedAt', 'metrics'];
+      return newData.diff(oldData).affectedKeys().hasOnly(allowedFields) &&
+             // Content validation if being updated
+             (!newData.diff(oldData).affectedKeys().hasAny(['content']) ||
+              (newData.content is string && 
+               newData.content.size() >= 1 && 
+               newData.content.size() <= 2000)) &&
+             // Visibility validation if being updated
+             (!newData.diff(oldData).affectedKeys().hasAny(['visibility']) ||
+              newData.visibility in ['public', 'members_only']);
+    }
+    
+    function isValidModerationUpdate(newData, oldData) {
+      // Builders can only update status and moderation fields
+      let allowedFields = ['status', 'moderatedBy', 'moderatedAt', 'moderationReason', 'updatedAt'];
+      return newData.diff(oldData).affectedKeys().hasOnly(allowedFields) &&
+             newData.status in ['active', 'hidden', 'flagged'] &&
+             newData.moderatedBy == request.auth.uid;
+    }
+    
+    // Post validation functions
+    function isValidPostData(data, spaceId) {
+      return data.authorId is string &&
+             data.authorId == request.auth.uid &&
+             data.spaceId is string &&
+             data.spaceId == spaceId &&
+             data.content is string &&
+             data.content.size() >= 1 &&
+             data.content.size() <= 2000 &&
+             data.type is string &&
+             data.type in ['text', 'image', 'poll', 'event', 'tool_share'] &&
+             data.visibility is string &&
+             data.visibility in ['public', 'members_only'] &&
+             data.status is string &&
+             data.status == 'active' &&
+             data.threadDepth is number &&
+             data.threadDepth >= 0 &&
+             data.threadDepth <= 3 && // Limit thread depth
+             isValidPostAuthor(data.author) &&
+             isValidPostMetrics(data.metrics);
+    }
+    
+    function isValidPostAuthor(author) {
+      return author.name is string &&
+             author.name.size() > 0 &&
+             author.handle is string &&
+             author.handle.size() > 0 &&
+             author.role is string &&
+             author.role in ['member', 'builder'];
+    }
+    
+    function isValidPostMetrics(metrics) {
+      return metrics.replyCount is number &&
+             metrics.replyCount >= 0 &&
+             metrics.likeCount is number &&
+             metrics.likeCount >= 0 &&
+             metrics.shareCount is number &&
+             metrics.shareCount >= 0 &&
+             metrics.viewCount is number &&
+             metrics.viewCount >= 0;
+    }
+    
+    function isValidPostUpdate(newData, oldData) {
+      // Only allow updating content, visibility, and metrics
+      let allowedFields = ['content', 'visibility', 'updatedAt', 'metrics'];
+      return newData.diff(oldData).affectedKeys().hasOnly(allowedFields) &&
+             // Content validation if being updated
+             (!newData.diff(oldData).affectedKeys().hasAny(['content']) ||
+              (newData.content is string && 
+               newData.content.size() >= 1 && 
+               newData.content.size() <= 2000)) &&
+             // Visibility validation if being updated
+             (!newData.diff(oldData).affectedKeys().hasAny(['visibility']) ||
+              newData.visibility in ['public', 'members_only']);
+    }
+    
+    function isValidModerationUpdate(newData, oldData) {
+      // Builders can only update status and moderation fields
+      let allowedFields = ['status', 'moderatedBy', 'moderatedAt', 'moderationReason', 'updatedAt'];
+      return newData.diff(oldData).affectedKeys().hasOnly(allowedFields) &&
+             newData.status in ['active', 'hidden', 'flagged'] &&
+             newData.moderatedBy == request.auth.uid;
+    }
+    
     // ======== COLLECTION GROUP QUERIES ========
     
     // Enable collection group queries for spaces (important for discovery/onboarding)
@@ -239,10 +367,22 @@ service cloud.firestore {
 
     // Users can only read and write their own data.
     match /users/{userId} {
-      // Users can read and write their own document
-      allow read, write: if request.auth.uid == userId;
+      // Users can read their own document
+      allow read: if request.auth.uid == userId;
       // Allow public read of non-sensitive fields if profile is public
       allow get: if resource.data.isPublic == true;
+      
+      // User creation is only allowed through backend functions with proper validation
+      allow create: if false;
+      
+      // User updates must preserve critical immutable fields
+      allow update: if request.auth.uid == userId &&
+                   // schoolId cannot be changed once set
+                   (resource.data.schoolId == request.resource.data.schoolId) &&
+                   // handle cannot be changed once set
+                   (resource.data.handle == request.resource.data.handle) &&
+                   // uid cannot be changed
+                   (resource.data.uid == request.resource.data.uid);
 
       // Secure the motion sub-collection
       match /motion/{motionId} {
@@ -382,24 +522,25 @@ service cloud.firestore {
       
       // Space posts subcollection
       match /posts/{postId} {
-        allow read: if isAuthenticated() && (
-                    isSpaceMember(spaceId) || 
-                    isSpacePublic(spaceId));
+        // Allow reads for any member of the space.
+        allow get, list: if isMember(spaceId, request.auth.uid);
+
+        // Allow creation for any member of the space with comprehensive validation.
+        allow create: if isMember(spaceId, request.auth.uid) &&
+                         isValidPostData(request.resource.data, spaceId);
+
+        // Allow updates only by the original author with field restrictions.
+        allow update: if isOwner(resource.data.authorId) &&
+                         isValidPostUpdate(request.resource.data, resource.data);
+
+        // Allow deletion by the original author or a space builder.
+        allow delete: if isOwner(resource.data.authorId) || 
+                         isBuilder(spaceId, request.auth.uid);
         
-        allow create: if isAuthenticated() && 
-                     isSpaceMember(spaceId) && 
-                     request.resource.data.authorId == request.auth.uid;
-        
-        allow update: if isAuthenticated() && (
-                     resource.data.authorId == request.auth.uid || 
-                     isSpaceAdmin(spaceId) || 
-                     isAdmin());
-        
-        allow delete: if isAuthenticated() && (
-                     resource.data.authorId == request.auth.uid || 
-                     isSpaceAdmin(spaceId) || 
-                     isAdmin());
-        
+        // Moderation: Allow builders to update post status for moderation
+        allow update: if isBuilder(spaceId, request.auth.uid) &&
+                         isValidModerationUpdate(request.resource.data, resource.data);
+
         // Post comments subcollection
         match /comments/{commentId} {
           allow read: if isAuthenticated() && (
@@ -590,6 +731,91 @@ service cloud.firestore {
         // which uses the Admin SDK and bypasses these rules.
         allow write: if false;
       }
+    }
+
+    // ======== SPACES & MEMBERS ========
+
+    // Rules for the 'spaces' collection and its 'members' sub-collection.
+    match /spaces/{spaceId} {
+      // Allow any authenticated user to read space data for discovery.
+      allow get, list: if isAuthenticated();
+
+      // Creating and deleting spaces is an admin-only action, done via backend.
+      allow create, delete: if false;
+
+      // Allow users with the 'builder' role to update specific fields.
+      // They can only update the description and banner. Other fields are immutable.
+      allow update: if isBuilder(spaceId, request.auth.uid) &&
+                      request.resource.data.diff(resource.data).affectedKeys().hasOnly(['description', 'bannerUrl']);
+
+      // Rules for the 'members' sub-collection within each space.
+      match /members/{userId} {
+        // Any authenticated user can see who is a member of a space.
+        allow get, list: if isAuthenticated();
+
+        // Joining a space is handled by backend functions (auto-join).
+        // Users cannot join a space directly.
+        allow create: if false;
+
+        // A user can leave a space by deleting their own member document.
+        allow delete: if isOwner(userId);
+
+        // A user can update their own membership to request a builder role.
+        // They can only change their role from 'member' to 'requested_builder'.
+        allow update: if isOwner(userId) &&
+                        request.resource.data.role == 'requested_builder' &&
+                        resource.data.role == 'member';
+      }
+      
+      // Rules for the 'posts' sub-collection within each space.
+      match /posts/{postId} {
+        // Allow reads for any member of the space.
+        allow get, list: if isMember(spaceId, request.auth.uid);
+
+        // Allow creation for any member of the space with comprehensive validation.
+        allow create: if isMember(spaceId, request.auth.uid) &&
+                         isValidPostData(request.resource.data, spaceId);
+
+        // Allow updates only by the original author with field restrictions.
+        allow update: if isOwner(resource.data.authorId) &&
+                         isValidPostUpdate(request.resource.data, resource.data);
+
+        // Allow deletion by the original author or a space builder.
+        allow delete: if isOwner(resource.data.authorId) || 
+                         isBuilder(spaceId, request.auth.uid);
+        
+        // Moderation: Allow builders to update post status for moderation
+        allow update: if isBuilder(spaceId, request.auth.uid) &&
+                         isValidModerationUpdate(request.resource.data, resource.data);
+
+        // Post comments subcollection
+        match /comments/{commentId} {
+          allow read: if isAuthenticated() && (
+                      isSpaceMember(spaceId) || 
+                      isSpacePublic(spaceId));
+          
+          allow create: if isAuthenticated() && 
+                       isSpaceMember(spaceId) && 
+                       request.resource.data.authorId == request.auth.uid;
+          
+          allow update, delete: if isAuthenticated() && (
+                               resource.data.authorId == request.auth.uid || 
+                               isSpaceAdmin(spaceId) || 
+                               isAdmin());
+        }
+      }
+    }
+
+    // Rules for the Creation Engine
+    match /elements/{elementId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth.token.admin == true;
+    }
+
+    match /tools/{toolId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null;
+      allow update, delete: if request.auth.uid == resource.data.ownerId || request.auth.uid in resource.data.collaborators;
     }
   }
 } 

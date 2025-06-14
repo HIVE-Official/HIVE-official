@@ -10,6 +10,7 @@ const cardVariants = cva(
         default: "rounded-xl",
         sm: "rounded-sm",
         lg: "rounded-lg",
+        xl: "rounded-xl",
         full: "rounded-full",
       },
     },

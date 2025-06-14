@@ -23,13 +23,20 @@ import * as eventStateTransitions from './events/state-transitions';
 
 // Import new space denormalization functions
 import * as spaceDenormalization from './spaces/denormalization';
-import * as autoJoin from './spaces/autoJoin';
-import * as claim from './spaces/claim';
 import * as pagination from './spaces/pagination';
-import * as membership from './spaces/membership';
+
+// New space functions
+import * as onUserCreate from './spaces/onUserCreate';
+import * as leaveSpace from './spaces/leaveSpace';
+import * as requestBuilder from './spaces/requestBuilderRole';
+import * as pinPost from './spaces/pinPostToSpace';
+import * as featureTool from './spaces/featureToolInSpace';
 
 // Import profile functions
 import * as updateUserProfile from './profile/updateUserProfile';
+
+// Import creation functions
+import * as tool from './creation/tool';
 
 // Import feed functions
 import * as getFeed from './feed/getFeed';
@@ -38,6 +45,8 @@ import * as follow from './feed/follow';
 import * as mute from './feed/mute';
 import * as report from './feed/report';
 import * as sayHello from './feed/sayHello';
+import * as createPost from './feed/createPost';
+import * as managePost from './feed/managePost';
 
 // Export notification functions
 export * from "./notifications";
@@ -66,6 +75,9 @@ export const healthCheck = functions.https.onRequest((request, response) => {
   response.status(200).send("Firebase Functions for HIVE UI are running");
 });
 
+// Export the new trigger directly
+export const onUserCreateAutoJoin = onUserCreate.onUserCreateAutoJoin;
+
 // Export all functions
 export const verification = {
   // Email verification functions
@@ -77,22 +89,23 @@ export const verification = {
   updateUserRoleClaims: roleClaims.updateUserRoleClaims,
   processVerificationStatusChange: roleClaims.processVerificationStatusChange,
   requestVerifiedPlusClaim: roleClaims.requestVerifiedPlusClaim,
-  approveVerifiedPlusClaim: roleClaims.approveVerifiedPlusClaim
-};
-
-export const events = {
-  // Event state management functions
+  approveVerifiedPlusClaim: roleClaims.approveVerifiedPlusClaim,
   handleEventStateTransitions: eventStateTransitions.handleEventStateTransitions
 };
 
 export const spaces = {
   // Space denormalization functions
   updateSpaceMemberCount: spaceDenormalization.updateSpaceMemberCount,
-  autoJoinOnCreate: autoJoin.autoJoinOnCreate,
-  requestBuilderRole: claim.requestBuilderRole,
   getSpaceContent: pagination.getSpaceContent,
-  joinSpace: membership.joinSpace,
-  leaveSpace: membership.leaveSpace
+  leaveSpace: leaveSpace.leaveSpace,
+  requestBuilderRole: requestBuilder.requestBuilderRole,
+  pinPostToSpace: pinPost.pinPostToSpace,
+  featureToolInSpace: featureTool.featureToolInSpace,
+};
+
+export const creation = {
+  createTool: tool.createTool,
+  updateTool: tool.updateTool,
 };
 
 export const profile = {
@@ -104,10 +117,13 @@ export const feed = {
     likeCard: interactions.likeCard,
     followUser: follow.followUser,
     unfollowUser: follow.unfollowUser,
-    muteUser: mute.muteUser,
+    muteUser: mute.unmuteUser,
     unmuteUser: mute.unmuteUser,
     reportContent: report.reportContent,
     sayHello: sayHello.sayHello,
+    createPost: createPost.createPost,
+    editPost: managePost.editPost,
+    deletePost: managePost.deletePost,
 };
 
 export * from "./auth/sendMagicLink";

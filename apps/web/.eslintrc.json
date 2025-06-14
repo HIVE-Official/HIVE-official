@@ -1,0 +1,18 @@
+{
+  "extends": ["../../.eslintrc.js"],
+  "overrides": [
+    {
+      "files": ["src/app/legal/**/*.tsx", "src/app/profile/**/*.tsx"],
+      "rules": {
+        "react/no-unescaped-entities": "off"
+      }
+    },
+    {
+      "files": ["src/app/onboarding/**/*.tsx"],
+      "rules": {
+        "@next/next/no-img-element": "warn",
+        "react-hooks/exhaustive-deps": "warn"
+      }
+    }
+  ]
+} 

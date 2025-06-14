@@ -2,11 +2,16 @@
   "files": [],
   "references": [
     { "path": "./apps/web/tsconfig.json" },
-    { "path": "./packages/ui/tsconfig.json" }
+    { "path": "./packages/ui/tsconfig.json" },
+    { "path": "./packages/analytics/tsconfig.json" },
+    { "path": "./packages/core/tsconfig.json" }
   ],
   "compilerOptions": {
     "baseUrl": ".",
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
     "paths": {
+      "@hive/analytics/*": ["packages/analytics/src/*"],
       "@hive/core/*": ["packages/core/src/*"],
       "@hive/hooks/*": ["packages/hooks/src/*"],
       "@hive/ui/*": ["packages/ui/src/*"],

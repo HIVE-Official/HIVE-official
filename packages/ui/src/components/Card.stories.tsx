@@ -1,9 +1,9 @@
 import React from 'react';
-import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from './Card';
-import { Button } from './Button';
-import { Input } from './Input';
-import { Stack } from './Stack';
+import type { Meta, StoryObj } from '@storybook/react';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from './card';
+import { Button } from './button';
+import { Input } from './input';
+import { Stack } from './stack';
 
 const meta: Meta<typeof Card> = {
   title: 'Components/Card',

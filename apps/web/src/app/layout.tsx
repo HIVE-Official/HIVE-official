@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Space_Grotesk as SpaceGrotesk } from 'next/font/google';
 import { Providers } from './providers';
 import "./globals.css";
+import { WelcomeMatProvider } from '../components/welcome-mat-provider';
 
 const inter = Inter({ subsets: ["latin"] });
 const spaceGrotesk = SpaceGrotesk({
@@ -22,7 +23,11 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${spaceGrotesk.variable} dark`} style={{ colorScheme: 'dark' }}>
       <body>
-        <Providers>{children}</Providers>
+        <Providers>
+          <WelcomeMatProvider>
+            {children}
+          </WelcomeMatProvider>
+        </Providers>
       </body>
     </html>
   );

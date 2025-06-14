@@ -1,10 +1,10 @@
 import React from 'react';
-import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Box } from './Box';
+import { Box } from './box';
+import type { Meta, StoryObj } from '@storybook/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { गति } from '../lib/motion';
-import { Stack } from './Stack';
-import { Button } from './Button';
+import { Stack } from './stack';
+import { Button } from './button';
 
 const meta: Meta<typeof Box> = {
     title: 'Components/Box',

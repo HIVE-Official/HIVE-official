@@ -1,7 +1,7 @@
 ---
 description: 
 globs: 
-alwaysApply: false
+alwaysApply: true
 ---
 # HIVE Monorepo Architecture
 
@@ -31,128 +31,84 @@ Path aliases are used to simplify imports.
 
 ## 3. Storybook Configuration
 
-- The primary Storybook instance is located in [`packages/ui`](mdc:packages/ui/package.json).
-- It is configured via [`packages/ui/.storybook/main.ts`](mdc:packages/ui/.storybook/main.ts).
-- **Dependency Challenge**: Storybook's bundler (Vite) runs separately from the TypeScript compiler. For Storybook to resolve workspace package imports (e.g., `@hive/hooks`) or app imports (e.g., `apps/web` for integration stories), its Vite configuration must have its own set of aliases that mirror the `paths` in the root [`tsconfig.json`](mdc:tsconfig.json).
-- **Fixing Storybook import errors**: If Storybook fails to resolve an import like `@hive/hooks` or `apps/web`, ensure that `packages/ui/.storybook/main.ts`'s `viteFinal` alias configuration is in sync with the root `tsconfig.json` and includes an alias for the app.
+The primary Storybook instance is located in [`packages/ui`](mdc:packages/ui/package.json). For detailed standards, AI directives, and troubleshooting, refer to the **HIVE Engineering Covenant** rule file.
 
-### 3.1 Common Issues and Solutions
+## 4. Strict Storybook Standards & AI Guardrails
 
-#### Version Mismatches
-- Always use exact versions for all Storybook packages to prevent conflicts
-- Keep all @storybook/* packages at the same version
-- When upgrading, upgrade all Storybook packages together
-- Current stable version: 8.6.x (as of March 2024)
+To ensure a stable and maintainable Storybook environment, all AI contributions MUST adhere to the following rules. These are non-negotiable and will be enforced by CI.
 
-#### Import Resolution
-- Add all workspace package aliases in viteFinal config:
-```typescript
-viteFinal(config) {
-  return mergeConfig(config, {
-    resolve: {
-      alias: {
-        '@': resolve(__dirname, '../src'),
-        '@hive/core': resolve(__dirname, '../../core/src'),
-        '@hive/hooks': resolve(__dirname, '../../hooks/src'),
-        // Add all workspace packages here
-      }
-    }
-  });
-}
-```
+### 4.1 ESLint Rules (`plugin:storybook/recommended`)
 
-#### Story File Discovery
-- Story files must follow the pattern: `*.stories.@(js|jsx|ts|tsx)`
-- MDX files must be explicitly included in stories configuration
-- Ensure story files are in the correct directory structure:
-```typescript
-stories: [
-  '../src/**/*.mdx',
-  '../src/**/*.stories.@(js|jsx|ts|tsx)'
-],
-```
+The following rules are active and must pass for all story-related files.
 
-#### Preview Configuration
-- Use preview.jsx/ts for global decorators and parameters
-- Always wrap stories in ThemeProvider for consistent styling
-- Configure backgrounds to match your theme:
-```typescript
-parameters: {
-  backgrounds: {
-    default: 'dark',
-    values: [
-      { name: 'dark', value: '#0A0A0A' },
-      { name: 'light', value: '#FFFFFF' },
-    ],
-  },
-}
-```
+| Rule ID (eslint-plugin-storybook) | What it flags | Auto-fix? |
+| :--- | :--- | :--- |
+| `storybook/no-uninstalled-addons` | Addon names in `main.*` that are not in `devDependencies` | — |
+| `storybook/prefer-pascal-case` | Story export names not in PascalCase | ✅ |
+| `storybook/story-exports` | `.stories.*` file contains zero story exports | — |
+| `storybook/default-exports` | Missing default export (i.e. `<Meta>` object) | ✅ |
+| `storybook/csf-component` | Default export missing `component:` | — |
+| `storybook/no-redundant-story-name` | `name:` duplicates export key | ✅ |
+| `storybook/no-title-property-in-meta` | Defining `title` inside `<Meta>` when CSF-3 auto-titles | ✅ |
+| `storybook/hierarchy-separator` | Deprecated `|` or `/` in titles | ✅ |
+| `storybook/await-interactions` | Missing `await` for `play` function interactions | ✅ |
+| `storybook/use-storybook-expect` | Using Jest/Vitest `expect` instead of `@storybook/test`'s | ✅ |
 
-#### Testing Utilities
-- Import test utilities from '@storybook/test':
-```typescript
-import { fn } from '@storybook/test';
-import { userEvent, within } from '@storybook/test';
-```
-- Use these for interaction testing in stories
+### 4.2 Critical Build & Runtime Errors to Avoid
 
-#### CSS and Styling
-- Import global styles in preview.jsx/ts
-- Use the same Tailwind configuration as the main app
-- Ensure all required CSS dependencies are available:
-```typescript
-// preview.jsx/ts
-import '../src/globals.css';
-```
+These common errors will break the build or runtime environment. The AI must never re-introduce them.
 
-### 3.2 Troubleshooting Guide
+| Error / Warning | Root Cause & Fix |
+| :--- | :--- |
+| **"Multiple main files detected"** | Another `.storybook/main.*` exists elsewhere. Storybook walks the tree up. **Fix:** Ensure only one `main.ts` exists in `packages/ui/.storybook`. |
+| **"Using a CommonJS config with Vite is deprecated"** | `main.js` or `postcss.config.js` is CommonJS. **Fix:** All config files must be ESM (`.ts`, `.js` with `"type": "module"`). Use `export default`. |
+| **Unresolved addon / "Accessing non-existent addons channel"** | Addon in `addons` array isn't installed or is typo'd. **Fix:** Install the addon or remove the entry from `main.ts`. |
+| **Peer-dependency mismatch** | `@storybook/*` packages have different versions (e.g., 8.6 vs 9.0). **Fix:** All `@storybook/*` packages must share the **exact same version**. |
+| **Build fails in CI with `Cannot find module 'react/package.json'`** | `react` is hoisted incorrectly. **Fix:** Ensure `react` and `react-dom` are explicit `devDependencies` in `packages/ui/package.json`. |
+| **Storybook won't start (no stories found)** | At least one `.stories.tsx` or `.mdx` file must exist. **Fix:** Create a placeholder story if none exist. |
 
-1. **Module Resolution Errors**
-   - Check viteFinal aliases in main.ts
-   - Verify package versions match across workspace
-   - Clear node_modules and reinstall dependencies
+### 4.3 AI Directives for Storybook
 
-2. **Story Loading Failures**
-   - Verify story file naming convention
-   - Check story file location matches stories glob pattern
-   - Ensure all required dependencies are installed
+The AI MUST follow these directives when performing any work related to Storybook.
 
-3. **Styling Issues**
-   - Confirm globals.css is imported in preview
-   - Verify ThemeProvider is properly configured
-   - Check Tailwind configuration is accessible
+1.  **Lock Versions**:
+    *   Ensure every `@storybook/*` dependency (including `eslint-plugin-storybook`) shares the **same major.minor tag**.
+    *   If using `@next` or `@alpha` tags, they must all match.
 
-4. **Test Interaction Failures**
-   - Update @storybook/test imports
-   - Verify play function syntax
-   - Check interaction test dependencies
+2.  **One Config Only**:
+    *   There must be **exactly one** `.storybook/main.ts` in the monorepo, located at `packages/ui/.storybook/main.ts`. No stray `main.js` files or secondary configs are permitted.
 
-5. **Performance Issues**
-   - Use build-storybook for production
-   - Implement proper code-splitting
-   - Optimize story loading patterns
+3.  **ESM Everywhere**:
+    *   All Storybook and Vite configuration files (`main.ts`, `preview.ts`, `postcss.config.js`, `tailwind.config.js`) **must be ESM**. Do not use `module.exports` or `require()`.
 
-### 3.3 Best Practices
+4.  **Addon Hygiene Checklist**:
+    *   Before adding an addon, confirm it exists on npm, matches the core Storybook version, and is added to `devDependencies` in `packages/ui/package.json`.
+    *   Immediately remove any addon that causes the "addons channel" error.
 
-1. **Story Organization**
-   - Group stories by feature/component
-   - Use consistent naming conventions
-   - Implement proper documentation
+5.  **Path Aliases**:
+    *   All monorepo path aliases (`@/`, `@hive/core`, etc.) **must be configured** in the `viteFinal` property in `packages/ui/.storybook/main.ts`.
 
-2. **Component Testing**
-   - Write interaction tests
-   - Include edge cases
-   - Document expected behavior
+6.  **Story Writing Rules (Enforced by ESLint)**:
+    *   Every `.stories.tsx` file must have a `default` export (`const meta = ...; export default meta;`).
+    *   The `meta` object must define the `component`.
+    *   Every story file must export at least one named story in `PascalCase`.
+    *   Do not use the deprecated `storiesOf` API.
+    *   Do not use the `name:` property on stories; rely on CSF 3.0 auto-naming from the export key.
+    *   **Always** `await` every user interaction inside a `play()` function (e.g., `await userEvent.click(...)`).
+    *   Use `expect` from `@storybook/test`, not from other testing libraries.
 
-3. **Performance**
-   - Lazy load complex components
-   - Optimize imports
-   - Use proper build configuration
+7.  **CI Smoke Tests**:
+    *   `pnpm run test-storybook` (headless test runner) must pass.
+    *   `pnpm storybook build` must succeed with zero warnings.
+    *   Linting via `eslint --max-warnings 0` must pass.
 
-4. **Documentation**
-   - Include component API documentation
-   - Add usage examples
-   - Document props and variants
+8.  **Cache Busting Protocol**:
+    *   If phantom configuration warnings or unexplainable errors appear, the first step is to delete `node_modules/.cache` and `packages/ui/node_modules/.cache` before restarting Storybook.
+
+
+
+
+
 
 
 

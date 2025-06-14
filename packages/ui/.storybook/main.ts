@@ -31,6 +31,28 @@ const config: StorybookConfig = {
           '@hive/validation': path.resolve(__dirname, '../../validation/src'),
         },
       },
+      build: {
+        rollupOptions: {
+          onwarn(warning, warn) {
+            // Suppress "use client" directive warnings from third-party libraries
+            if (warning.code === 'MODULE_LEVEL_DIRECTIVE' && 
+                warning.message.includes('"use client"')) {
+              return;
+            }
+            // Suppress sourcemap warnings for components
+            if (warning.code === 'SOURCEMAP_ERROR') {
+              return;
+            }
+            // Suppress eval warnings from Storybook core (known issue)
+            if (warning.message.includes('Use of eval') && 
+                warning.message.includes('@storybook/core')) {
+              return;
+            }
+            warn(warning);
+          },
+        },
+        chunkSizeWarningLimit: 1000, // Increase chunk size limit
+      },
     });
   },
 };
