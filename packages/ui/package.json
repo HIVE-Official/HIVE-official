@@ -3,12 +3,25 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./styles.css": "./dist/styles.css"
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "dev": "storybook dev -p 6006",
-    "build": "storybook build --disable-telemetry",
+    "build": "tsc && tailwindcss -i ./src/styles.css -o ./dist/styles.css --minify",
+    "build-storybook": "storybook build --disable-telemetry",
     "storybook": "storybook dev -p 6006",
     "lint": "eslint . --max-warnings 0",
-    "build-storybook": "storybook build --disable-telemetry"
+    "clean": "rm -rf dist"
   },
   "devDependencies": {
     "@eslint/compat": "^1.2.4",
@@ -16,14 +29,14 @@
     "@eslint/js": "^9.28.0",
     "@hive/eslint-config": "workspace:*",
     "@hive/typescript-config": "workspace:*",
-    "@storybook/addon-actions": "8.6.14",
-    "@storybook/addon-essentials": "8.6.14",
-    "@storybook/addon-interactions": "8.6.14",
-    "@storybook/addon-links": "8.6.14",
-    "@storybook/blocks": "8.6.14",
-    "@storybook/react": "8.6.14",
-    "@storybook/react-vite": "8.6.14",
-    "@storybook/test": "8.6.14",
+    "@storybook/addon-actions": "8.4.7",
+    "@storybook/addon-essentials": "8.4.7",
+    "@storybook/addon-interactions": "8.4.7",
+    "@storybook/addon-links": "8.4.7",
+    "@storybook/blocks": "8.4.7",
+    "@storybook/react": "8.4.7",
+    "@storybook/react-vite": "8.4.7",
+    "@storybook/test": "8.4.7",
     "@types/eslint__js": "^8.42.3",
     "@types/lodash": "^4.17.7",
     "@types/node": "^20.19.0",
@@ -36,7 +49,7 @@
     "postcss": "^8.5.5",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "storybook": "8.6.14",
+    "storybook": "8.4.7",
     "tailwind-merge": "^2.6.0",
     "tailwindcss": "^3.4.17",
     "tailwindcss-animate": "^1.0.7",
@@ -60,6 +73,7 @@
     "lucide-react": "^0.411.0",
     "next-themes": "^0.4.6",
     "react-dnd": "^16.0.1",
-    "react-dnd-html5-backend": "^16.0.1"
+    "react-dnd-html5-backend": "^16.0.1",
+    "@tanstack/react-query": "^5.0.0"
   }
 }
