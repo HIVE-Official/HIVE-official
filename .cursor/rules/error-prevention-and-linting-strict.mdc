@@ -1,8 +1,3 @@
----
-description: 
-globs: 
-alwaysApply: true
----
 # 🚨 HIVE ENGINEERING COVENANT: MANDATORY ERROR PREVENTION 🚨
 
 ## ⚠️ CRITICAL: THIS DOCUMENT IS LAW ⚠️
@@ -46,6 +41,268 @@ Before claiming ANY task is complete, you **MUST** verify:
 ```
 
 **If ANY of these fail, the task is NOT complete.**
+
+---
+
+## 0. BUILD ENVIRONMENT PREREQUISITES (MANDATORY)
+
+**CRITICAL:** Before ANY development work, the build environment **MUST** be verified and functional. Infrastructure failures are **NOT** acceptable excuses for broken builds.
+
+### **🚨 INFRASTRUCTURE VERIFICATION CHECKLIST**
+
+**AI AGENTS: You MUST verify these prerequisites before proceeding:**
+
+```bash
+✅ node --version                 # Must be 20.x+ (LTS)
+✅ pnpm --version                 # Must be 9.x
+✅ pnpm install                   # Must complete without errors
+✅ pnpm turbo --version           # Turborepo must be accessible
+✅ ls node_modules/.bin/next      # Next.js binary must exist (Unix)
+✅ dir node_modules\.bin\next.cmd # Next.js binary must exist (Windows)
+```
+
+### **MANDATORY DEPENDENCY REQUIREMENTS**
+
+Each package **MUST** have these dependencies properly configured:
+
+| Package Type | Required Dependencies | Status |
+| :--- | :--- | :--- |
+| **Core Packages** | `@types/node`, `typescript`, `zod` | **MANDATORY** |
+| **React Packages** | `@types/react`, `@types/react-dom` | **MANDATORY** |
+| **Firebase Packages** | `firebase`, `firebase-admin` (if server-side) | **MANDATORY** |
+| **Next.js Apps** | `next`, `@types/node`, `typescript` | **MANDATORY** |
+
+### **TYPESCRIPT CONFIGURATION REQUIREMENTS**
+
+The base TypeScript configuration **MUST** include:
+
+```json
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "lib": ["DOM", "DOM.Iterable", "ES2017", "ES2020"],
+    "strict": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true
+  }
+}
+```
+
+**CRITICAL:** The `lib` array **MUST** include `ES2017` or later to support array methods like `includes()`.
+
+### **PLATFORM-SPECIFIC ISSUES & SOLUTIONS**
+
+#### **Windows + pnpm Issues**
+
+**PROBLEM:** Next.js binary resolution failures on Windows
+```
+Error: Cannot find module 'next\dist\bin\next'
+```
+
+**SOLUTIONS:**
+1. **Verify binary exists:** `dir node_modules\.bin\next.cmd`
+2. **Use npx as fallback:** `npx next build` instead of `pnpm next build`
+3. **Reinstall dependencies:** `rm -rf node_modules && pnpm install`
+4. **Check pnpm version:** Must be 9.x for proper Windows support
+
+#### **Firebase Import Resolution**
+
+**PROBLEM:** Firebase v11 module resolution failures
+```
+error TS2305: Module '"firebase/firestore"' has no exported member 'Timestamp'
+```
+
+**SOLUTIONS:**
+1. **Verify Firebase version:** Must be `^11.0.0`
+2. **Add missing dependencies:** `firebase-admin` for server-side code
+3. **Check import syntax:** Use correct Firebase v11 imports
+4. **Add Node.js types:** `@types/node` for server-side Firebase
+
+#### **TypeScript Target Issues**
+
+**PROBLEM:** Array methods not available
+```
+error TS2550: Property 'includes' does not exist on type 'string[]'
+```
+
+**SOLUTION:** Update `tsconfig.json` lib array to include `ES2017+`
+
+### **🚨 EMERGENCY BUILD RECOVERY PROTOCOL**
+
+If build fails with infrastructure errors, follow this **EXACT** sequence:
+
+```bash
+# 1. Clean everything
+rm -rf node_modules .turbo dist storybook-static
+rm -rf packages/*/node_modules packages/*/dist
+rm -rf apps/*/node_modules apps/*/.next
+
+# 2. Kill any running processes
+pkill -f "(vite|storybook|next|turbo)"
+
+# 3. Reinstall from scratch
+pnpm install --frozen-lockfile
+
+# 4. Verify critical binaries exist
+ls node_modules/.bin/next || echo "❌ Next.js binary missing"
+ls node_modules/.bin/turbo || echo "❌ Turbo binary missing"
+
+# 5. Test build pipeline
+pnpm build
+```
+
+### **DEPENDENCY INSTALLATION VERIFICATION**
+
+After `pnpm install`, verify these critical files exist:
+
+```bash
+✅ node_modules/.bin/next         # Next.js CLI
+✅ node_modules/.bin/turbo        # Turborepo CLI  
+✅ node_modules/.bin/eslint       # ESLint CLI
+✅ node_modules/.bin/tsc          # TypeScript compiler
+✅ packages/core/node_modules     # Core package deps
+✅ apps/web/node_modules          # Web app deps
+```
+
+### **AI DIRECTIVE: INFRASTRUCTURE FAILURES**
+
+**If you encounter infrastructure failures:**
+
+1. **STOP** - Do not proceed with code changes
+2. **DIAGNOSE** - Run the verification checklist above
+3. **FIX** - Apply the appropriate platform-specific solution
+4. **VERIFY** - Ensure all prerequisites pass
+5. **DOCUMENT** - Note what was broken and how it was fixed
+6. **PROCEED** - Only then continue with development work
+
+**NEVER** ignore infrastructure failures or work around them with hacks.
+
+### **🔥 CRITICAL LESSONS LEARNED: WINDOWS + PNPM + NEXT.JS**
+
+**INCIDENT SUMMARY:** December 2024 - Windows + pnpm + Next.js 15.3.3 binary corruption caused build failures that took extensive debugging to resolve.
+
+#### **ROOT CAUSE ANALYSIS**
+
+**PRIMARY ISSUE:** Next.js binary files were corrupted/missing in pnpm installation on Windows:
+- `node_modules/.bin/next.cmd` existed but pointed to missing `next/dist/bin/next`
+- `next/dist/build/output/log.js` module was missing
+- Windows + pnpm combination has known compatibility issues with binary resolution
+
+#### **WARNING SIGNS TO WATCH FOR**
+
+**🚨 IMMEDIATE RED FLAGS:**
+```bash
+Error: Cannot find module 'next\dist\bin\next'
+Error: Cannot find module 'next/dist/build/output/log'
+Error: spawn ENOENT (when running pnpm next build)
+```
+
+**🚨 SECONDARY INDICATORS:**
+- `pnpm next build` fails but `npx next@15.3.3 build` works
+- Binary files exist in `.bin` but target files are missing
+- Fresh `pnpm install` doesn't resolve the issue
+
+#### **MANDATORY PREVENTION PROTOCOL**
+
+**AI AGENTS: You MUST implement these checks:**
+
+1. **Binary Verification (Windows)**:
+   ```bash
+   # Verify Next.js binary chain is complete
+   dir node_modules\.bin\next.cmd
+   dir node_modules\.pnpm\next@*\node_modules\next\dist\bin\next
+   dir node_modules\.pnpm\next@*\node_modules\next\dist\build\output\log.js
+   ```
+
+2. **Fallback Command Strategy**:
+   ```bash
+   # Primary: Use pnpm (preferred)
+   pnpm next build
+   
+   # Fallback: Use npx if pnpm fails
+   npx next@15.3.3 build
+   
+   # Emergency: Direct node execution
+   node node_modules/next/dist/bin/next build
+   ```
+
+3. **Version Alignment Verification**:
+   ```bash
+   # Ensure all Next.js versions match across apps
+   grep -r "\"next\":" apps/*/package.json
+   # Should show identical versions (e.g., "^15.3.3")
+   ```
+
+#### **EMERGENCY RECOVERY STEPS**
+
+**If Next.js binary corruption is detected:**
+
+```bash
+# 1. Document the failure
+echo "Next.js binary corruption detected at $(date)" >> build-failures.log
+
+# 2. Clear pnpm cache completely
+pnpm store prune
+rm -rf node_modules/.pnpm
+
+# 3. Reinstall with explicit Next.js version
+pnpm remove next @types/node
+pnpm add next@15.3.3 @types/node@^20.0.0
+
+# 4. Verify binary chain
+ls -la node_modules/.bin/next*
+ls -la node_modules/.pnpm/next@*/node_modules/next/dist/bin/
+
+# 5. Test with both methods
+pnpm next build || npx next@15.3.3 build
+```
+
+#### **PLATFORM-SPECIFIC WORKAROUNDS**
+
+**Windows + pnpm Issues:**
+- **Use `npx` as primary fallback** for Next.js commands
+- **Avoid `pnpm dlx`** - it has binary resolution issues
+- **Pin exact Next.js versions** - avoid `^` ranges that can cause mismatches
+- **Use `--frozen-lockfile`** to prevent version drift
+
+**macOS/Linux + pnpm:**
+- Generally more stable, but still verify binary chains
+- Use `ls -la` instead of `dir` for verification
+
+#### **AI DIRECTIVE: NEXT.JS BUILD FAILURES**
+
+**When encountering Next.js build failures:**
+
+1. **NEVER** assume it's a code issue first
+2. **ALWAYS** verify binary integrity before debugging code
+3. **DOCUMENT** the exact error messages and platform details
+4. **TRY** npx fallback before attempting complex fixes
+5. **ESCALATE** to infrastructure recovery if binaries are corrupted
+
+#### **MONITORING & PREVENTION**
+
+**Add to CI/CD pipeline:**
+```yaml
+# Verify Next.js binary integrity
+- name: Verify Next.js Binary
+  run: |
+    ls -la node_modules/.bin/next || echo "❌ Next.js binary missing"
+    node -e "require('next/dist/bin/next')" || echo "❌ Next.js entry point broken"
+```
+
+**Add to development setup:**
+```bash
+# Add to package.json scripts for quick verification
+"verify-nextjs": "node -e \"console.log('Next.js binary OK:', !!require('next/dist/bin/next'))\""
+```
+
+#### **COST OF THIS INCIDENT**
+
+- **Time Lost:** ~2 hours of debugging infrastructure instead of building features
+- **Complexity Added:** Multiple workarounds and fallback strategies needed
+- **Risk Introduced:** Potential for similar failures in production deployments
+
+**This incident reinforces why infrastructure verification is MANDATORY before any development work.**
 
 ---
 
