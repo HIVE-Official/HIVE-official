@@ -1,19 +1,27 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { joinWaitlist } from "./join-waitlist";
 
-// Mock the firebase-admin module
+// Mock Firebase Admin
 const mockTransaction = {
   get: vi.fn(),
   create: vi.fn(),
   update: vi.fn(),
 };
 
-// Since this is a library, we mock the dependency it uses
-vi.mock("@hive/core/firebase-admin", () => ({
-  dbAdmin: {
-    collection: vi.fn().mockReturnThis(),
-    doc: vi.fn().mockReturnThis(),
+vi.mock("firebase-admin/firestore", () => ({
+  getFirestore: vi.fn(() => ({
+    collection: vi.fn(() => ({
+      doc: vi.fn(() => ({
+        collection: vi.fn(() => ({
+          doc: vi.fn(),
+        })),
+      })),
+    })),
     runTransaction: vi.fn((callback) => callback(mockTransaction)),
+  })),
+  FieldValue: {
+    serverTimestamp: vi.fn(() => "server-timestamp"),
+    increment: vi.fn((value) => `increment-${value}`),
   },
 }));
 

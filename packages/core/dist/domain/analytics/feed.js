@@ -218,7 +218,7 @@ export const createFeedEvent = (event, data) => {
     };
 };
 // Privacy-safe user ID hashing
-export const hashUserId = (userId, salt = 'hive-analytics') => {
+export const hashUserIdForFeed = (userId, salt = 'hive-analytics') => {
     // In production, use proper crypto hashing
     return btoa(`${salt}:${userId}`).replace(/[^a-zA-Z0-9]/g, '').substring(0, 16);
 };

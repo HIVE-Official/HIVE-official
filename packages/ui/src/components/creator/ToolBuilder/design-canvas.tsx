@@ -1,14 +1,16 @@
-import React, { forwardRef, useCallback, useState, useRef } from 'react'
+"use client"
+
+import React, { forwardRef, useCallback, useState, useRef, useEffect } from 'react'
 import { useDrop } from 'react-dnd'
-import { cn } from '@/lib/utils'
-import { Tool, ElementInstance } from '@hive/core/domain/creation/tool'
-import { Element } from '@hive/core/domain/creation/element'
+import { cn } from '../../../lib/utils'
+import { Tool } from '@hive/core/src/domain/creation/tool'
+import { Element, ElementInstance } from '@hive/core/src/domain/creation/element'
 // TODO: Implement these components
 // import { ElementRenderer } from './ElementRenderer'
 // import { SelectionBox } from './SelectionBox'
 // import { ContextMenu } from './ContextMenu'
-import { Button } from '@/components/ui/button'
-import { ScrollArea } from '@/components/ui/scroll-area'
+import { Button } from '../../ui/button'
+import { ScrollArea } from '../../ui/scroll-area'
 import { 
   Grid3X3, 
   Move, 
@@ -199,7 +201,7 @@ export const DesignCanvas = forwardRef<HTMLDivElement, DesignCanvasProps>(({
   }, [tool.elements, elements, onElementUpdate, onElementDuplicate, onElementDelete])
 
   // Keyboard shortcuts
-  React.useEffect(() => {
+  useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (!selectedElementId) return
 
@@ -259,7 +261,7 @@ export const DesignCanvas = forwardRef<HTMLDivElement, DesignCanvasProps>(({
       <div className="flex items-center justify-between p-2 border-b bg-background/95 backdrop-blur">
         <div className="flex items-center gap-2">
           <Button
-            variant={showGrid ? 'default' : 'ghost'}
+            variant={showGrid ? 'primary' : 'ghost'}
             size="sm"
             onClick={() => setShowGrid(!showGrid)}
           >

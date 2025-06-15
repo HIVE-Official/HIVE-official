@@ -2,13 +2,13 @@
 
 import { useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Input } from '@hive/ui/components/Input';
+import { Input } from '@hive/ui';
 import { Search, AlertCircle, Compass } from 'lucide-react';
 import { SpaceFilterPills } from './components/space-filter-pills';
 import { type SpaceType, type Space } from '@hive/core/src/domain/firestore/space';
 import { SpaceCard } from '@hive/ui/src/components/space-card';
-import { useDebounce } from '@hive/hooks/src/use-debounce';
-import { Button } from '@hive/ui/components/Button';
+import { useDebounce } from '@hive/hooks';
+import { Button } from '@hive/ui';
 
 async function fetchSpaces(filter: SpaceType | 'all', searchTerm: string): Promise<Space[]> {
   const params = new URLSearchParams();

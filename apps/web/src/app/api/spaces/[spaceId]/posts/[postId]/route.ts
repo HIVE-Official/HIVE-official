@@ -18,9 +18,10 @@ const ReactToPostSchema = z.object({
 // GET /api/spaces/[spaceId]/posts/[postId] - Get a specific post
 export async function GET(
   request: NextRequest,
-  { params }: { params: { spaceId: string; postId: string } }
+  { params }: { params: Promise<{ spaceId: string; postId: string }> }
 ) {
   try {
+    const { spaceId, postId } = await params;
     const user = await getCurrentUser();
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -29,7 +30,7 @@ export async function GET(
     // Check if user is member of the space
     const memberDoc = await db
       .collection('spaces')
-      .doc(params.spaceId)
+      .doc(spaceId)
       .collection('members')
       .doc(user.uid)
       .get();
@@ -41,9 +42,9 @@ export async function GET(
     // Get the post
     const postDoc = await db
       .collection('spaces')
-      .doc(params.spaceId)
+      .doc(spaceId)
       .collection('posts')
-      .doc(params.postId)
+      .doc(postId)
       .get();
 
     if (!postDoc.exists) {
@@ -78,9 +79,10 @@ export async function GET(
 // PATCH /api/spaces/[spaceId]/posts/[postId] - Edit a post
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { spaceId: string; postId: string } }
+  { params }: { params: Promise<{ spaceId: string; postId: string }> }
 ) {
   try {
+    const { spaceId, postId } = await params;
     const user = await getCurrentUser();
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -92,9 +94,9 @@ export async function PATCH(
     // Get the post
     const postDoc = await db
       .collection('spaces')
-      .doc(params.spaceId)
+      .doc(spaceId)
       .collection('posts')
-      .doc(params.postId)
+      .doc(postId)
       .get();
 
     if (!postDoc.exists) {
@@ -122,9 +124,9 @@ export async function PATCH(
     // Update the post
     await db
       .collection('spaces')
-      .doc(params.spaceId)
+      .doc(spaceId)
       .collection('posts')
-      .doc(params.postId)
+      .doc(postId)
       .update({
         ...validatedData,
         isEdited: true,
@@ -134,9 +136,9 @@ export async function PATCH(
     // Get updated post with author info
     const updatedPostDoc = await db
       .collection('spaces')
-      .doc(params.spaceId)
+      .doc(spaceId)
       .collection('posts')
-      .doc(params.postId)
+      .doc(postId)
       .get();
 
     const updatedPostData = updatedPostDoc.data()!;
@@ -172,9 +174,10 @@ export async function PATCH(
 // DELETE /api/spaces/[spaceId]/posts/[postId] - Delete a post
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { spaceId: string; postId: string } }
+  { params }: { params: Promise<{ spaceId: string; postId: string }> }
 ) {
   try {
+    const { spaceId, postId } = await params;
     const user = await getCurrentUser();
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -183,9 +186,9 @@ export async function DELETE(
     // Get the post
     const postDoc = await db
       .collection('spaces')
-      .doc(params.spaceId)
+      .doc(spaceId)
       .collection('posts')
-      .doc(params.postId)
+      .doc(postId)
       .get();
 
     if (!postDoc.exists) {
@@ -197,7 +200,7 @@ export async function DELETE(
     // Check permissions - author, space builders, or admins can delete
     const memberDoc = await db
       .collection('spaces')
-      .doc(params.spaceId)
+      .doc(spaceId)
       .collection('members')
       .doc(user.uid)
       .get();
@@ -212,37 +215,19 @@ export async function DELETE(
                      memberData.role === 'admin';
 
     if (!canDelete) {
-      return NextResponse.json({ 
-        error: 'Only the author, builders, or admins can delete this post' 
-      }, { status: 403 });
+      return NextResponse.json({ error: 'Insufficient permissions to delete this post' }, { status: 403 });
     }
 
-    // Soft delete - replace content with placeholder
-    const deletedByUser = await db.collection('users').doc(user.uid).get();
-    const deletedByName = deletedByUser.data()?.fullName || 'Unknown User';
-
+    // Soft delete the post
     await db
       .collection('spaces')
-      .doc(params.spaceId)
+      .doc(spaceId)
       .collection('posts')
-      .doc(params.postId)
+      .doc(postId)
       .update({
-        content: `Post removed by ${deletedByName}`,
         isDeleted: true,
         deletedAt: new Date(),
         deletedBy: user.uid,
-        updatedAt: new Date(),
-      });
-
-    // Schedule hard delete after 24 hours (in production, use Cloud Functions)
-    // For now, we'll just mark it for cleanup
-    await db
-      .collection('spaces')
-      .doc(params.spaceId)
-      .collection('posts')
-      .doc(params.postId)
-      .update({
-        hardDeleteAt: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours from now
       });
 
     return NextResponse.json({ message: 'Post deleted successfully' });
@@ -253,21 +238,25 @@ export async function DELETE(
   }
 }
 
-// POST /api/spaces/[spaceId]/posts/[postId]/react - React to a post
+// POST /api/spaces/[spaceId]/posts/[postId] - React to a post
 export async function POST(
   request: NextRequest,
-  { params }: { params: { spaceId: string; postId: string } }
+  { params }: { params: Promise<{ spaceId: string; postId: string }> }
 ) {
   try {
+    const { spaceId, postId } = await params;
     const user = await getCurrentUser();
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const body = await request.json();
+    const validatedData = ReactToPostSchema.parse(body);
+
     // Check if user is member of the space
     const memberDoc = await db
       .collection('spaces')
-      .doc(params.spaceId)
+      .doc(spaceId)
       .collection('members')
       .doc(user.uid)
       .get();
@@ -276,15 +265,12 @@ export async function POST(
       return NextResponse.json({ error: 'Not a member of this space' }, { status: 403 });
     }
 
-    const body = await request.json();
-    const { reaction, action } = ReactToPostSchema.parse(body);
-
     // Get the post
     const postRef = db
       .collection('spaces')
-      .doc(params.spaceId)
+      .doc(spaceId)
       .collection('posts')
-      .doc(params.postId);
+      .doc(postId);
 
     const postDoc = await postRef.get();
     if (!postDoc.exists) {
@@ -292,32 +278,44 @@ export async function POST(
     }
 
     const postData = postDoc.data()!;
-    const currentReactedUsers = postData.reactedUsers?.[reaction] || [];
-    const hasReacted = currentReactedUsers.includes(user.uid);
+    const { reaction, action } = validatedData;
 
-    if (action === 'add' && !hasReacted) {
+    // Update reactions
+    const currentReactions = postData.reactions || {};
+    const currentReactedUsers = postData.reactedUsers || {};
+
+    if (action === 'add') {
       // Add reaction
-      await postRef.update({
-        [`reactions.${reaction}`]: FieldValue.increment(1),
-        [`reactedUsers.${reaction}`]: FieldValue.arrayUnion(user.uid),
-        updatedAt: new Date(),
-      });
-    } else if (action === 'remove' && hasReacted) {
+      currentReactions[reaction] = (currentReactions[reaction] || 0) + 1;
+      
+      if (!currentReactedUsers[reaction]) {
+        currentReactedUsers[reaction] = [];
+      }
+      
+      if (!currentReactedUsers[reaction].includes(user.uid)) {
+        currentReactedUsers[reaction].push(user.uid);
+      }
+    } else {
       // Remove reaction
-      await postRef.update({
-        [`reactions.${reaction}`]: FieldValue.increment(-1),
-        [`reactedUsers.${reaction}`]: FieldValue.arrayRemove(user.uid),
-        updatedAt: new Date(),
-      });
+      currentReactions[reaction] = Math.max((currentReactions[reaction] || 0) - 1, 0);
+      
+      if (currentReactedUsers[reaction]) {
+        currentReactedUsers[reaction] = currentReactedUsers[reaction].filter(
+          (uid: string) => uid !== user.uid
+        );
+      }
     }
 
-    // Get updated post data
-    const updatedPostDoc = await postRef.get();
-    const updatedPostData = updatedPostDoc.data()!;
+    // Update the post
+    await postRef.update({
+      reactions: currentReactions,
+      reactedUsers: currentReactedUsers,
+      updatedAt: new Date(),
+    });
 
-    return NextResponse.json({
-      reactions: updatedPostData.reactions,
-      userReacted: updatedPostData.reactedUsers?.[reaction]?.includes(user.uid) || false,
+    return NextResponse.json({ 
+      message: `Reaction ${action}ed successfully`,
+      reactions: currentReactions 
     });
 
   } catch (error) {
@@ -328,7 +326,7 @@ export async function POST(
       }, { status: 400 });
     }
 
-    console.error('Error reacting to post:', error);
-    return NextResponse.json({ error: 'Failed to react to post' }, { status: 500 });
+    console.error('Error updating reaction:', error);
+    return NextResponse.json({ error: 'Failed to update reaction' }, { status: 500 });
   }
 } 

@@ -5,21 +5,22 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@hive/ui/components/card";
-import { dbAdmin } from "@hive/core/firebase-admin";
-import { School } from "@hive/core/domain/school";
+} from "@hive/ui";
+import { getFirestore } from 'firebase-admin/firestore';
+import { School } from "@hive/core/src/domain/school";
 import { WaitlistProgress } from "./components/waitlist-progress";
 import { WaitlistForm } from "./components/waitlist-form";
 
 type WaitlistPageProps = {
-  params: {
+  params: Promise<{
     schoolId: string;
-  };
+  }>;
 };
 
 async function getSchool(schoolId: string): Promise<School | null> {
   try {
-    const schoolDoc = await dbAdmin.collection("schools").doc(schoolId).get();
+    const db = getFirestore();
+    const schoolDoc = await db.collection("schools").doc(schoolId).get();
     if (!schoolDoc.exists) {
       return null;
     }
@@ -31,7 +32,8 @@ async function getSchool(schoolId: string): Promise<School | null> {
 }
 
 export default async function WaitlistPage({ params }: WaitlistPageProps) {
-  const school = await getSchool(params.schoolId);
+  const { schoolId } = await params;
+  const school = await getSchool(schoolId);
 
   if (!school) {
     notFound();

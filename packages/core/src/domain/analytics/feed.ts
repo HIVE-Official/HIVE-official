@@ -256,7 +256,7 @@ export const createFeedEvent = <T extends FeedAnalyticsEvent['event']>(
 }
 
 // Privacy-safe user ID hashing
-export const hashUserId = (userId: string, salt: string = 'hive-analytics'): string => {
+export const hashUserIdForFeed = (userId: string, salt: string = 'hive-analytics'): string => {
   // In production, use proper crypto hashing
   return btoa(`${salt}:${userId}`).replace(/[^a-zA-Z0-9]/g, '').substring(0, 16)
 }

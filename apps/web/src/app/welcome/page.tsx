@@ -4,7 +4,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@hive/ui/components/card";
+} from "@hive/ui";
 import { SchoolSearch } from "./components/school-search";
 
 export default function WelcomePage() {

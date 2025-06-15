@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { getAuth } from 'firebase-admin/auth';
-import { dbAdmin } from '@hive/core/src/firebase-admin';
+import { dbAdmin } from '@/lib/firebase-admin';
 
 const grantRoleSchema = z.object({
   targetUserId: z.string().min(1, 'Target user ID is required'),

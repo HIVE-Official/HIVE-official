@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { joinWaitlist } from "@hive/auth-logic";
+import { joinWaitlist } from "@/lib/join-waitlist";
 
 export async function POST(req: Request) {
   try {

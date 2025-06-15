@@ -1,22 +1,21 @@
-import { NextResponse } from 'next/server';
-import * as admin from 'firebase-admin';
-import { getFirebaseAdmin } from '@hive/firebase/server';
-import { type Post } from '@hive/core/src/domain/firestore/post';
+import { NextRequest, NextResponse } from 'next/server';
+import { dbAdmin } from '@/lib/firebase-admin';
+import { type Post } from '@hive/core';
 
 export async function GET(
   request: Request,
-  { params }: { params: { spaceId: string } },
+  { params }: { params: Promise<{ spaceId: string }> },
 ) {
+  let spaceId: string;
+  
   try {
-    getFirebaseAdmin();
-    const db = admin.firestore();
-    const { spaceId } = params;
+    ({ spaceId } = await params);
 
     if (!spaceId) {
       return NextResponse.json({ error: 'Space ID is required' }, { status: 400 });
     }
 
-    const postsRef = db.collection('spaces').doc(spaceId).collection('posts');
+    const postsRef = dbAdmin.collection('spaces').doc(spaceId).collection('posts');
     const snapshot = await postsRef.orderBy('createdAt', 'desc').limit(20).get();
 
     if (snapshot.empty) {
@@ -30,7 +29,7 @@ export async function GET(
 
     return NextResponse.json(posts, { status: 200 });
   } catch (error) {
-    console.error(`Error fetching feed for space ${params.spaceId}:`, error);
+    console.error(`Error fetching feed for space ${spaceId || 'unknown'}:`, error);
     return NextResponse.json({ error: 'Failed to fetch feed' }, { status: 500 });
   }
 } 

@@ -40,14 +40,14 @@ export function PostCard({ post, authorProfileUrl, currentUserId }: PostCardProp
           <AvatarFallback>{post.author.name.charAt(0)}</AvatarFallback>
         </Avatar> */}
         <div className="h-10 w-10 rounded-full bg-neutral-700 flex items-center justify-center text-white">
-            {post.author.name.charAt(0)}
+            {post.author?.fullName?.charAt(0) || '?'}
         </div>
       </a>
       <div className="flex-1">
         <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2 text-sm">
                 <a href={authorProfileUrl} className="font-bold text-white hover:underline">
-                    {post.author.name}
+                    {post.author?.fullName || 'Unknown User'}
                 </a>
                 <span className="text-neutral-500">·</span>
                 <span className="text-neutral-500">{timeAgo(postDate)}</span>

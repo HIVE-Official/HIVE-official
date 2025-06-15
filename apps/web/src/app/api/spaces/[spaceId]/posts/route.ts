@@ -40,9 +40,10 @@ const checkRateLimit = (userId: string): boolean => {
 // GET /api/spaces/[spaceId]/posts - Fetch posts for a space
 export async function GET(
   request: NextRequest,
-  { params }: { params: { spaceId: string } }
+  { params }: { params: Promise<{ spaceId: string }> }
 ) {
   try {
+    const { spaceId } = await params;
     const user = await getCurrentUser();
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -55,7 +56,7 @@ export async function GET(
     // Check if user is member of the space
     const memberDoc = await db
       .collection('spaces')
-      .doc(params.spaceId)
+      .doc(spaceId)
       .collection('members')
       .doc(user.uid)
       .get();
@@ -67,7 +68,7 @@ export async function GET(
     // Build query for posts
     let query = db
       .collection('spaces')
-      .doc(params.spaceId)
+      .doc(spaceId)
       .collection('posts')
       .orderBy('createdAt', 'desc')
       .limit(limit);
@@ -75,7 +76,7 @@ export async function GET(
     if (lastPostId) {
       const lastPostDoc = await db
         .collection('spaces')
-        .doc(params.spaceId)
+        .doc(spaceId)
         .collection('posts')
         .doc(lastPostId)
         .get();
@@ -90,7 +91,7 @@ export async function GET(
     // Get pinned posts separately (always show at top)
     const pinnedQuery = await db
       .collection('spaces')
-      .doc(params.spaceId)
+      .doc(spaceId)
       .collection('posts')
       .where('isPinned', '==', true)
       .orderBy('pinnedAt', 'desc')
@@ -157,9 +158,10 @@ export async function GET(
 // POST /api/spaces/[spaceId]/posts - Create a new post
 export async function POST(
   request: NextRequest,
-  { params }: { params: { spaceId: string } }
+  { params }: { params: Promise<{ spaceId: string }> }
 ) {
   try {
+    const { spaceId } = await params;
     const user = await getCurrentUser();
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -175,7 +177,7 @@ export async function POST(
     // Check if user is member of the space
     const memberDoc = await db
       .collection('spaces')
-      .doc(params.spaceId)
+      .doc(spaceId)
       .collection('members')
       .doc(user.uid)
       .get();
@@ -198,7 +200,7 @@ export async function POST(
     const postData = {
       ...validatedData,
       authorId: user.uid,
-      spaceId: params.spaceId,
+      spaceId: spaceId,
       createdAt: new Date(),
       updatedAt: new Date(),
       reactions: {
@@ -214,7 +216,7 @@ export async function POST(
 
     const postRef = await db
       .collection('spaces')
-      .doc(params.spaceId)
+      .doc(spaceId)
       .collection('posts')
       .add(postData);
 

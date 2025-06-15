@@ -2,19 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { type User } from '@hive/core/src/domain/firestore/user';
 import { type Space, type SpaceType } from '@hive/core/src/domain/firestore/space';
 import { UB_MAJORS } from '@hive/core/src/constants/majors';
-import { 
-  collection, 
-  doc, 
-  getDoc, 
-  getDocs, 
-  query, 
-  where, 
-  writeBatch, 
-  serverTimestamp,
-  limit,
-  increment
-} from 'firebase/firestore';
-import { db } from '@/lib/firebase';
+import { dbAdmin } from '@/lib/firebase-admin';
+import { FieldValue } from 'firebase-admin/firestore';
 
 /**
  * Auto-join a user to relevant spaces (major and residential).
@@ -33,10 +22,9 @@ export async function POST(request: NextRequest) {
     }
 
     // Get user data
-    const userDocRef = doc(db, 'users', userId);
-    const userDoc = await getDoc(userDocRef);
+    const userDoc = await dbAdmin.collection('users').doc(userId).get();
     
-    if (!userDoc.exists()) {
+    if (!userDoc.exists) {
       return NextResponse.json(
         { error: 'User not found' },
         { status: 404 }
@@ -55,26 +43,24 @@ export async function POST(request: NextRequest) {
     // Find if the user's major exists in our UB_MAJORS list
     const majorData = UB_MAJORS.find(m => m.name === user.major);
 
-    const batch = writeBatch(db);
+    const batch = dbAdmin.batch();
     const spacesJoined: string[] = [];
 
     // 1. Handle Major Space
-    const majorSpacesQuery = query(
-      collection(db, 'spaces'),
-      where('type', '==', 'major'),
-      where('tags', 'array-contains', { type: 'major', sub_type: user.major }),
-      limit(1)
-    );
-
-    const majorSpacesSnapshot = await getDocs(majorSpacesQuery);
+    const majorSpacesSnapshot = await dbAdmin.collection('spaces')
+      .where('type', '==', 'major')
+      .where('tags', 'array-contains', { type: 'major', sub_type: user.major })
+      .limit(1)
+      .get();
     
     let majorSpaceId: string;
     if (majorSpacesSnapshot.empty) {
       // Create the major space if it doesn't exist
       const spaceName = majorData ? `${majorData.name} Majors` : `${user.major} Majors`;
-      majorSpaceId = doc(collection(db, 'spaces')).id;
+      const majorSpaceRef = dbAdmin.collection('spaces').doc();
+      majorSpaceId = majorSpaceRef.id;
       
-      const newMajorSpace: Omit<Space, 'id'> = {
+      const newMajorSpace = {
         name: spaceName,
         name_lowercase: spaceName.toLowerCase(),
         description: `Connect with fellow ${user.major} students, share resources, and collaborate on projects.`,
@@ -86,49 +72,46 @@ export async function POST(request: NextRequest) {
           sub_type: user.major,
         }],
         status: 'activated',
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
+        createdAt: FieldValue.serverTimestamp(),
+        updatedAt: FieldValue.serverTimestamp(),
       };
 
-      const majorSpaceRef = doc(db, 'spaces', majorSpaceId);
       batch.set(majorSpaceRef, newMajorSpace);
     } else {
       majorSpaceId = majorSpacesSnapshot.docs[0].id;
     }
 
     // Add user to major space
-    const majorMemberRef = doc(db, 'spaces', majorSpaceId, 'members', userId);
+    const majorMemberRef = dbAdmin.collection('spaces').doc(majorSpaceId).collection('members').doc(userId);
     batch.set(majorMemberRef, {
       uid: userId,
       role: 'member',
-      joinedAt: serverTimestamp(),
+      joinedAt: FieldValue.serverTimestamp(),
     });
 
     // Update major space member count
-    const majorSpaceRef = doc(db, 'spaces', majorSpaceId);
+    const majorSpaceRef = dbAdmin.collection('spaces').doc(majorSpaceId);
     batch.update(majorSpaceRef, {
-      memberCount: increment(1),
-      updatedAt: serverTimestamp(),
+      memberCount: FieldValue.increment(1),
+      updatedAt: FieldValue.serverTimestamp(),
     });
 
     spacesJoined.push(majorSpaceId);
 
     // 2. Handle General Residential Space
-    const residentialSpacesQuery = query(
-      collection(db, 'spaces'),
-      where('type', '==', 'residential'),
-      where('tags', 'array-contains', { type: 'residential', sub_type: 'general' }),
-      limit(1)
-    );
-
-    const residentialSpacesSnapshot = await getDocs(residentialSpacesQuery);
+    const residentialSpacesSnapshot = await dbAdmin.collection('spaces')
+      .where('type', '==', 'residential')
+      .where('tags', 'array-contains', { type: 'residential', sub_type: 'general' })
+      .limit(1)
+      .get();
     
     let residentialSpaceId: string;
     if (residentialSpacesSnapshot.empty) {
       // Create a general residential space if it doesn't exist
-      residentialSpaceId = doc(collection(db, 'spaces')).id;
+      const residentialSpaceRef = dbAdmin.collection('spaces').doc();
+      residentialSpaceId = residentialSpaceRef.id;
       
-      const newResidentialSpace: Omit<Space, 'id'> = {
+      const newResidentialSpace = {
         name: 'UB Community',
         name_lowercase: 'ub community',
         description: 'A general community space for all UB students to connect, share experiences, and build friendships.',
@@ -140,29 +123,28 @@ export async function POST(request: NextRequest) {
           sub_type: 'general',
         }],
         status: 'activated',
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
+        createdAt: FieldValue.serverTimestamp(),
+        updatedAt: FieldValue.serverTimestamp(),
       };
 
-      const residentialSpaceRef = doc(db, 'spaces', residentialSpaceId);
       batch.set(residentialSpaceRef, newResidentialSpace);
     } else {
       residentialSpaceId = residentialSpacesSnapshot.docs[0].id;
     }
 
     // Add user to residential space
-    const residentialMemberRef = doc(db, 'spaces', residentialSpaceId, 'members', userId);
+    const residentialMemberRef = dbAdmin.collection('spaces').doc(residentialSpaceId).collection('members').doc(userId);
     batch.set(residentialMemberRef, {
       uid: userId,
       role: 'member',
-      joinedAt: serverTimestamp(),
+      joinedAt: FieldValue.serverTimestamp(),
     });
 
     // Update residential space member count
-    const residentialSpaceRef = doc(db, 'spaces', residentialSpaceId);
+    const residentialSpaceRef = dbAdmin.collection('spaces').doc(residentialSpaceId);
     batch.update(residentialSpaceRef, {
-      memberCount: increment(1),
-      updatedAt: serverTimestamp(),
+      memberCount: FieldValue.increment(1),
+      updatedAt: FieldValue.serverTimestamp(),
     });
 
     spacesJoined.push(residentialSpaceId);

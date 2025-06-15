@@ -1,8 +1,8 @@
 'use client';
 
-import { type SpaceType } from '@hive/core/src/domain/firestore/space';
-import { Button } from '@hive/ui/components/Button';
-import { cn } from '@hive/ui/lib/utils';
+import { type SpaceType } from '@hive/core';
+import { Button } from '@hive/ui';
+import { cn } from '@/lib/utils';
 
 const spaceFilters: { name: string; type: SpaceType | 'all' }[] = [
   { name: 'All', type: 'all' },

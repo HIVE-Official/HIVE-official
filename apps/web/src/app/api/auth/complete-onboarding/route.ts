@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { dbAdmin } from '@hive/core/src/firebase-admin';
+import { dbAdmin } from '@/lib/firebase-admin';
 import { getAuth } from 'firebase-admin/auth';
 import { type Timestamp } from 'firebase-admin/firestore';
 

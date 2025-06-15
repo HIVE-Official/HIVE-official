@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { getAuth } from 'firebase-admin/auth';
-import { dbAdmin } from '@hive/core/src/firebase-admin';
+import { dbAdmin } from '@/lib/firebase-admin';
 
 const membershipQuerySchema = z.object({
   limit: z.coerce.number().min(1).max(100).default(50),
@@ -15,10 +15,10 @@ const membershipQuerySchema = z.object({
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { spaceId: string } }
+  { params }: { params: Promise<{ spaceId: string }> }
 ) {
   try {
-    const { spaceId } = params;
+    const { spaceId } = await params;
     
     // Parse query parameters
     const url = new URL(request.url);

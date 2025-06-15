@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '../lib/utils';
 import { type Space } from '@hive/core/src/domain/firestore/space';
 import { Users, Building, Eye, EyeOff, Pause } from 'lucide-react';
 

@@ -713,7 +713,7 @@ export declare const createFeedEvent: <T extends FeedAnalyticsEvent["event"]>(ev
 }) => Extract<FeedAnalyticsEvent, {
     event: T;
 }>;
-export declare const hashUserId: (userId: string, salt?: string) => string;
+export declare const hashUserIdForFeed: (userId: string, salt?: string) => string;
 export declare const calculateEngagementScore: (reactions: number, views: number, postAge: number, // in hours
 spaceSize: number) => number;
 //# sourceMappingURL=feed.d.ts.map

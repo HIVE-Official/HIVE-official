@@ -11,9 +11,16 @@ export * from './ui/avatar';
 export * from './ui/dropdown-menu';
 export * from './ui/alert-dialog';
 
+// Layout Components
+export * from './stack';
+export * from './grid';
+export * from './box';
+
+// Typography Components
+export * from './typography';
+
 // Other Components
 export * from './space-card';
-export * from './member-list';
 
 // Creator Components
 export * from './creator';

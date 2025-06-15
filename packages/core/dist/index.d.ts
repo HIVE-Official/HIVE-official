@@ -6,6 +6,10 @@ export * from './domain/firestore/post';
 export * from './domain/firestore/space';
 export * from './domain/firestore/user';
 export * from './domain/auth/emailLink';
+export * from './domain/analytics/creation';
+export * from './domain/analytics/onboarding';
+export * from './domain/analytics/feed';
+export * from './domain/analytics/events';
 export type { Space } from './domain/space';
 export type { SpaceMember } from './domain/member';
 export type { WaitlistEntry } from './domain/waitlistEntry';
@@ -13,5 +17,4 @@ export type { School } from './domain/school';
 export * from './constants/majors';
 export * from './stores/useAppStore';
 export * from './firebase';
-export * from './firebase-admin';
 //# sourceMappingURL=index.d.ts.map

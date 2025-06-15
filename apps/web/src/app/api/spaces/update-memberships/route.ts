@@ -1,22 +1,34 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { 
-  collection, 
-  doc, 
-  getDoc, 
-  getDocs, 
-  query, 
-  where, 
-  writeBatch, 
-  serverTimestamp,
-  increment,
-  limit
-} from 'firebase/firestore';
-import { db } from '@/lib/firebase';
 import { getAuth } from 'firebase-admin/auth';
+import { getFirestore, FieldValue } from 'firebase-admin/firestore';
 import { type User } from '@hive/core/src/domain/firestore/user';
 import { type Space } from '@hive/core/src/domain/firestore/space';
 import { UB_MAJORS } from '@hive/core/src/constants/majors';
+
+// Server-side space type that allows FieldValue for timestamps
+interface ServerSpace {
+  name: string;
+  name_lowercase: string;
+  description: string;
+  memberCount: number;
+  schoolId: string;
+  type: 'major' | 'residential' | 'interest' | 'creative' | 'organization';
+  tags: Array<{
+    type: string;
+    sub_type: string;
+  }>;
+  status: 'dormant' | 'activated' | 'frozen';
+  createdAt: FieldValue;
+  updatedAt: FieldValue;
+}
+
+// Server-side member type that allows FieldValue for timestamps
+interface ServerMember {
+  uid: string;
+  role: 'member' | 'builder' | 'requested_builder';
+  joinedAt: FieldValue;
+}
 
 const updateMembershipsSchema = z.object({
   userId: z.string().min(1, 'User ID is required'),
@@ -69,11 +81,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Get Firestore instance
+    const db = getFirestore();
+
     // Get user data
-    const userDocRef = doc(db, 'users', userId);
-    const userDoc = await getDoc(userDocRef);
+    const userDocRef = db.collection('users').doc(userId);
+    const userDoc = await userDocRef.get();
     
-    if (!userDoc.exists()) {
+    if (!userDoc.exists) {
       return NextResponse.json(
         { error: 'User not found' },
         { status: 404 }
@@ -89,33 +104,27 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const batch = writeBatch(db);
+    const batch = db.batch();
     const changes: string[] = [];
 
     // Handle major change
     if (previousMajor && newMajor && previousMajor !== newMajor) {
       // Leave old major space
-      const oldMajorSpacesQuery = query(
-        collection(db, 'spaces'),
-        where('type', '==', 'major'),
-        where('tags', 'array-contains', { type: 'major', sub_type: previousMajor }),
-        limit(1)
-      );
-
-      const oldMajorSpacesSnapshot = await getDocs(oldMajorSpacesQuery);
+      const oldMajorSpacesQuery = db.collection('spaces').where('type', '==', 'major').where('tags', 'array-contains', { type: 'major', sub_type: previousMajor }).limit(1);
+      const oldMajorSpacesSnapshot = await oldMajorSpacesQuery.get();
       
       if (!oldMajorSpacesSnapshot.empty) {
         const oldSpaceId = oldMajorSpacesSnapshot.docs[0].id;
-        const oldMemberRef = doc(db, 'spaces', oldSpaceId, 'members', userId);
-        const oldSpaceRef = doc(db, 'spaces', oldSpaceId);
+        const oldMemberRef = db.collection('spaces').doc(oldSpaceId).collection('members').doc(userId);
+        const oldSpaceRef = db.collection('spaces').doc(oldSpaceId);
         
         // Check if user is actually a member before removing
-        const oldMemberDoc = await getDoc(oldMemberRef);
-        if (oldMemberDoc.exists()) {
+        const oldMemberDoc = await oldMemberRef.get();
+        if (oldMemberDoc.exists) {
           batch.delete(oldMemberRef);
           batch.update(oldSpaceRef, {
-            memberCount: increment(-1),
-            updatedAt: serverTimestamp(),
+            memberCount: FieldValue.increment(-1),
+            updatedAt: FieldValue.serverTimestamp(),
           });
           changes.push(`Left ${previousMajor} space`);
         }
@@ -124,22 +133,16 @@ export async function POST(request: NextRequest) {
       // Join new major space (create if needed)
       const majorData = UB_MAJORS.find(m => m.name === newMajor);
       
-      const newMajorSpacesQuery = query(
-        collection(db, 'spaces'),
-        where('type', '==', 'major'),
-        where('tags', 'array-contains', { type: 'major', sub_type: newMajor }),
-        limit(1)
-      );
-
-      const newMajorSpacesSnapshot = await getDocs(newMajorSpacesQuery);
+      const newMajorSpacesQuery = db.collection('spaces').where('type', '==', 'major').where('tags', 'array-contains', { type: 'major', sub_type: newMajor }).limit(1);
+      const newMajorSpacesSnapshot = await newMajorSpacesQuery.get();
       
       let newMajorSpaceId: string;
       if (newMajorSpacesSnapshot.empty) {
         // Create the major space if it doesn't exist
         const spaceName = majorData ? `${majorData.name} Majors` : `${newMajor} Majors`;
-        newMajorSpaceId = doc(collection(db, 'spaces')).id;
+        newMajorSpaceId = db.collection('spaces').doc().id;
         
-        const newMajorSpace: Omit<Space, 'id'> = {
+        const newMajorSpace: ServerSpace = {
           name: spaceName,
           name_lowercase: spaceName.toLowerCase(),
           description: `Connect with fellow ${newMajor} students, share resources, and collaborate on projects.`,
@@ -151,11 +154,11 @@ export async function POST(request: NextRequest) {
             sub_type: newMajor,
           }],
           status: 'activated',
-          createdAt: serverTimestamp(),
-          updatedAt: serverTimestamp(),
+          createdAt: FieldValue.serverTimestamp(),
+          updatedAt: FieldValue.serverTimestamp(),
         };
 
-        const newMajorSpaceRef = doc(db, 'spaces', newMajorSpaceId);
+        const newMajorSpaceRef = db.collection('spaces').doc(newMajorSpaceId);
         batch.set(newMajorSpaceRef, newMajorSpace);
         changes.push(`Created and joined ${newMajor} space`);
       } else {
@@ -164,18 +167,19 @@ export async function POST(request: NextRequest) {
       }
 
       // Add user to new major space
-      const newMajorMemberRef = doc(db, 'spaces', newMajorSpaceId, 'members', userId);
-      batch.set(newMajorMemberRef, {
+      const newMajorMemberRef = db.collection('spaces').doc(newMajorSpaceId).collection('members').doc(userId);
+      const newMember: ServerMember = {
         uid: userId,
         role: 'member',
-        joinedAt: serverTimestamp(),
-      });
+        joinedAt: FieldValue.serverTimestamp(),
+      };
+      batch.set(newMajorMemberRef, newMember);
 
       // Update new major space member count
-      const newMajorSpaceRef = doc(db, 'spaces', newMajorSpaceId);
+      const newMajorSpaceRef = db.collection('spaces').doc(newMajorSpaceId);
       batch.update(newMajorSpaceRef, {
-        memberCount: increment(1),
-        updatedAt: serverTimestamp(),
+        memberCount: FieldValue.increment(1),
+        updatedAt: FieldValue.serverTimestamp(),
       });
     }
 

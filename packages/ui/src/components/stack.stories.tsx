@@ -1,6 +1,6 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { Stack } from './stack';
+import { Stack } from '.';
 import { Box } from './box';
 
 const meta: Meta<typeof Stack> = {

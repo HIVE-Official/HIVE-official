@@ -1,22 +1,23 @@
 import { NextResponse } from 'next/server';
 import * as admin from 'firebase-admin';
-import { type Space } from '@hive/core/src/domain/firestore/space';
-import { getFirebaseAdmin } from '@hive/firebase/server';
+import { type Space } from '@hive/core';
+import { dbAdmin } from '@/lib/firebase-admin';
+import { NextRequest } from 'next/server';
 
 export async function GET(
-  request: Request,
-  { params }: { params: { spaceId: string } },
+  request: NextRequest,
+  { params }: { params: Promise<{ spaceId: string }> },
 ) {
+  let spaceId: string;
+  
   try {
-    getFirebaseAdmin();
-    const db = admin.firestore();
-    const { spaceId } = params;
+    ({ spaceId } = await params);
 
     if (!spaceId) {
       return NextResponse.json({ error: 'Space ID is required' }, { status: 400 });
     }
 
-    const spaceRef = db.collection('spaces').doc(spaceId);
+    const spaceRef = dbAdmin.collection('spaces').doc(spaceId);
     const doc = await spaceRef.get();
 
     if (!doc.exists) {
@@ -27,7 +28,7 @@ export async function GET(
 
     return NextResponse.json(space, { status: 200 });
   } catch (error) {
-    console.error(`Error fetching space ${params.spaceId}:`, error);
+    console.error(`Error fetching space ${spaceId || 'unknown'}:`, error);
     return NextResponse.json({ error: 'Failed to fetch space' }, { status: 500 });
   }
 } 

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAuth } from 'firebase-admin/auth';
-import { dbAdmin } from '@hive/core/src/firebase-admin';
+import { dbAdmin } from '@/lib/firebase-admin';
+import { getCurrentUser } from '@/lib/auth';
 
 /**
  * Get user's spaces with membership details

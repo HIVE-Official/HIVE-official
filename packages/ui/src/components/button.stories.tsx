@@ -11,7 +11,7 @@ const meta = {
   argTypes: {
     variant: {
       control: "select",
-      options: ["default", "destructive", "outline", "secondary", "ghost", "link"],
+      options: ["primary", "accent", "destructive", "outline", "secondary", "ghost", "link"],
     },
     size: {
       control: "select",
@@ -26,7 +26,14 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     children: "Button",
-    variant: "default",
+    variant: "primary",
+  },
+};
+
+export const Accent: Story = {
+  args: {
+    children: "Accent",
+    variant: "accent",
   },
 };
 

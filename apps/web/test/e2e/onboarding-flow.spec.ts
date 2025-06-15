@@ -74,9 +74,8 @@ test.describe('Onboarding Flow', () => {
     // Should redirect to main app
     await expect(page).toHaveURL('/feed')
     
-    // Verify welcome mat appears
-    await expect(page.locator('[data-testid="welcome-mat"]')).toBeVisible()
-    await expect(page.locator('[data-testid="welcome-mat"]')).toContainText('You\\'re in — welcome to HIVE!')
+    // Verify welcome message appears
+    await expect(page.locator('[data-testid="welcome-mat"]')).toContainText("You're in — welcome to HIVE!")
     
     // Verify user data was saved to Firestore
     // This would use Firebase Admin SDK in real implementation

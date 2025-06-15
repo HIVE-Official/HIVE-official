@@ -34,7 +34,7 @@ import {
   Wrench,
   Loader2,
 } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { cn } from '../../lib/utils'
 import { Post, PostType } from '@hive/core'
 
 interface PostCardProps {

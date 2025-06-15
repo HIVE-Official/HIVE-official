@@ -3,10 +3,10 @@ import { Card, CardContent, CardFooter, CardHeader } from './ui/card';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Heading, Muted, Text } from './typography';
-import { motion, AnimatePresence } from 'framer-motion';
+import { MotionDiv, AnimatePresence } from './framer-motion-proxy';
 import { गति } from '../lib/motion';
 import { CheckCircle } from 'lucide-react';
-import { Stack } from './stack';
+import { Stack } from '.';
 
 interface WaitlistFormProps {
   onSubmit: (email: string) => Promise<void>;
@@ -36,7 +36,7 @@ export const WaitlistForm: React.FC<WaitlistFormProps> = ({ onSubmit }) => {
     <Card className="w-[400px] overflow-hidden" radius="lg">
       <AnimatePresence mode="wait">
         {success ? (
-          <motion.div
+          <MotionDiv
             key="success"
             variants={गति.fadeIn}
             initial="initial"
@@ -49,9 +49,9 @@ export const WaitlistForm: React.FC<WaitlistFormProps> = ({ onSubmit }) => {
               <Heading level={3}>You&apos;re on the list!</Heading>
               <Text>We&apos;ll notify you at {email} when HIVE is ready.</Text>
             </Stack>
-          </motion.div>
+          </MotionDiv>
         ) : (
-          <motion.div
+          <MotionDiv
             key="form"
             variants={गति.fadeIn}
             initial="initial"
@@ -78,7 +78,7 @@ export const WaitlistForm: React.FC<WaitlistFormProps> = ({ onSubmit }) => {
                 </Button>
               </CardFooter>
             </form>
-          </motion.div>
+          </MotionDiv>
         )}
       </AnimatePresence>
     </Card>

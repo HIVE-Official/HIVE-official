@@ -1,12 +1,14 @@
+"use client"
+
 import React, { useState, useMemo } from 'react'
 import { useDrag } from 'react-dnd'
-import { cn } from '@/lib/utils'
-import { Element, ElementCategory } from '@hive/core/domain/creation/element'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Badge } from '@/components/ui/badge'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { ScrollArea } from '@/components/ui/scroll-area'
+import { cn } from '../../../lib/utils'
+import { Element, ElementCategory } from '@hive/core/src/domain/creation/element'
+import { Button } from '../../ui/button'
+import { Input } from '../../ui/input'
+import { Badge } from '../../ui/badge'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs'
+import { ScrollArea } from '../../ui/scroll-area'
 import { 
   Search, 
   Type, 

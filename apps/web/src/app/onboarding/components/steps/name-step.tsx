@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { User } from 'lucide-react';
-import { Input } from '@hive/ui/components/Input';
+import { Input } from '@hive/ui';
 import { OnboardingData } from '../onboarding-wizard';
 
 interface NameStepProps {

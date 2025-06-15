@@ -1,42 +1,47 @@
 // Layout Components
-export { Box } from './src/components/Box';
-export { Stack } from './src/components/Stack';
-export { Grid } from './src/components/Grid';
-export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent } from './src/components/Card';
+export { Box } from './src/components/box';
+export { Stack } from './src/components/stack';
+export { Grid } from './src/components/grid';
+export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent } from './src/components/ui/card';
 
 // Form Components
-export { Button } from './src/components/Button';
-export { Input } from './src/components/Input';
-export { Textarea } from './src/components/Textarea';
-export { Label } from './src/components/Label';
-export { WaitlistForm } from './src/components/WaitlistForm';
+export { Button } from './src/components/ui/button';
+export { Input } from './src/components/ui/input';
+export { Textarea } from './src/components/ui/textarea';
+export { Label } from './src/components/label';
+export { WaitlistForm } from './src/components/waitlist-form';
+export { Switch } from './src/components/ui/switch';
+export { Avatar, AvatarImage, AvatarFallback } from './src/components/ui/avatar';
 
 // UI Elements
-export { Alert, AlertTitle, AlertDescription } from './src/components/Alert';
-export { Badge } from './src/components/Badge';
-export { Progress } from './src/components/Progress';
+export { Alert, AlertTitle, AlertDescription } from './src/components/alert';
+export { Badge } from './src/components/ui/badge';
+export { Progress } from './src/components/progress';
+export { Tabs, TabsList, TabsTrigger, TabsContent } from './src/components/ui/tabs';
 
 // Typography & UI Elements
-export { Typography } from './src/components/Typography';
+export { Heading, Muted, Text } from './src/components/typography';
 
 // Creator Components
 export { ElementPicker, ElementCard } from './src/components/creator/ElementPicker';
 export type { ElementPickerProps, ElementCardProps } from './src/components/creator/ElementPicker';
-export { ToolBuilderCanvas, ElementInstance } from './src/components/creator/ToolBuilder';
+export { ToolBuilder, DesignCanvas, ElementLibrary } from './src/components/creator/ToolBuilder';
 export type { 
-  ToolBuilderCanvasProps, 
-  ElementInstanceProps, 
-  ElementInstanceType,
+  ToolBuilderProps,
+  DesignCanvasProps, 
+  ElementLibraryProps,
   CanvasState,
   DragData 
 } from './src/components/creator/ToolBuilder';
-export { ElementConfigPanel, PropertyInput, getElementConfigSchema, getAllElementConfigSchemas } from './src/components/creator/ElementConfig';
+export { getAllElementConfigSchemas, getElementConfigSchema } from './src/components/creator/ElementConfig';
 export type { 
-  ElementConfigPanelProps, 
   PropertyInputProps, 
   PropertySchema,
   ElementConfigSchema 
 } from './src/components/creator/ElementConfig';
+
+// Welcome Components
+export { WelcomeMat, useWelcomeMat } from './src/components/welcome/welcome-mat';
 
 // Theme Provider
 export { ThemeProvider } from './src/components/theme-provider'; 

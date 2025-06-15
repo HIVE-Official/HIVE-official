@@ -1,11 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button } from '@hive/ui/components/Button';
-import { Card } from '@hive/ui/components/Card';
+import { useAuth } from '@hive/hooks';
+import { Button, Card } from '@hive/ui';
 import { ArrowLeft, ArrowRight, Sparkles } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { MotionDiv, AnimatePresence } from '@hive/ui/components/framer-motion-proxy';
 
 // Step components
 import { WelcomeStep } from './steps/welcome-step';

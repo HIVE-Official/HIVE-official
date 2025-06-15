@@ -1,8 +1,7 @@
 'use client';
 
 import React, { useMemo } from 'react';
-import { cn } from '@/lib/utils';
-import type { ElementCardProps } from './types';
+import { cn } from '../../../lib/utils';
 import { 
   Type, 
   Image, 
@@ -38,43 +37,37 @@ const ELEMENT_ICONS = {
 
 interface ElementCardProps {
   element: Element;
-  onDragStart?: (element: Element) => void;
-  onSelect?: (element: Element) => void;
+  onSelect: (elementId: string) => void;
+  enableDrag?: boolean;
   className?: string;
 }
 
 export const ElementCard: React.FC<ElementCardProps> = ({
   element,
-  onDragStart,
   onSelect,
+  enableDrag = false,
   className,
 }) => {
   const handleDragStart = (e: React.DragEvent) => {
     e.dataTransfer.setData('application/json', JSON.stringify({
       elementId: element.id,
-      elementType: element.id
+      elementType: element.type
     }));
-    onDragStart?.(element);
   };
 
   const handleClick = () => {
-    onSelect?.(element);
+    onSelect(element.id);
   };
 
-  const IconComponent = ELEMENT_ICONS[element.id as keyof typeof ELEMENT_ICONS] || Type;
+  const IconComponent = ELEMENT_ICONS[element.type] || Type;
 
-  return (
-    <motion.div
-      className={cn(
-        'group relative flex flex-col items-center gap-2 p-3 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 cursor-pointer transition-colors',
-        className
-      )}
-      draggable
-      onDragStart={handleDragStart}
-      onClick={handleClick}
-      whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.98 }}
-    >
+  const cardClassName = cn(
+    'group relative flex flex-col items-center gap-2 p-3 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 cursor-pointer transition-colors',
+    className
+  );
+
+  const cardContent = (
+    <>
       <div className="flex items-center justify-center w-8 h-8 rounded-md bg-accent-gold/20 text-accent-gold">
         <IconComponent className="w-4 h-4" />
       </div>
@@ -85,6 +78,32 @@ export const ElementCard: React.FC<ElementCardProps> = ({
       </div>
       
       <div className="absolute inset-0 rounded-lg border-2 border-accent-gold opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+    </>
+  );
+
+  if (enableDrag) {
+    // Use regular div for drag functionality to avoid framer motion conflicts
+    return (
+      <div
+        className={cardClassName}
+        draggable={true}
+        onDragStart={handleDragStart}
+        onClick={handleClick}
+      >
+        {cardContent}
+      </div>
+    );
+  }
+
+  // Use motion.div for non-draggable cards
+  return (
+    <motion.div
+      className={cardClassName}
+      onClick={handleClick}
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
+    >
+      {cardContent}
     </motion.div>
   );
 }; 

@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Loader2, RefreshCw, AlertCircle } from 'lucide-react'
 import { FeedComposer } from './feed-composer'
 import { PostCard } from './post-card'
-import { cn } from '@/lib/utils'
+import { cn } from '../../lib/utils'
 import { Post } from '@hive/core'
 
 interface SpaceFeedProps {
@@ -51,30 +51,28 @@ export const SpaceFeed: React.FC<SpaceFeedProps> = ({
     hasNextPage,
     isFetchingNextPage,
     isLoading,
-    isError,
     error,
     refetch,
   } = useInfiniteQuery({
     queryKey: ['space-feed', spaceId],
-    queryFn: async ({ pageParam = null }) => {
+    queryFn: async ({ pageParam = '' }) => {
       const params = new URLSearchParams({
         limit: '20',
       })
       
       if (pageParam) {
-        params.append('lastPostId', pageParam)
+        params.append('lastPostId', pageParam as string)
       }
       
-      const response = await fetch(`/api/spaces/${spaceId}/posts?${params}`)
-      
+      const response = await fetch(`/api/spaces/${spaceId}/feed?${params}`)
       if (!response.ok) {
         throw new Error('Failed to fetch posts')
       }
-      
-      return response.json() as Promise<FeedResponse>
+      return response.json()
     },
-    getNextPageParam: (lastPage) => lastPage.hasMore ? lastPage.lastPostId : undefined,
-    staleTime: 30 * 1000, // 30 seconds
+    getNextPageParam: (lastPage: any) => lastPage.hasMore ? lastPage.lastPostId : undefined,
+    initialPageParam: '',
+    staleTime: 5 * 60 * 1000, // 5 minutes
     refetchInterval: 60 * 1000, // Refetch every minute for live updates
   })
   
@@ -269,7 +267,7 @@ export const SpaceFeed: React.FC<SpaceFeedProps> = ({
     }
   }
   
-  const allPosts = data?.pages.flatMap(page => page.posts) || []
+  const allPosts = data?.pages.flatMap((page: any) => page.posts) || []
   
   if (isLoading) {
     return (
@@ -286,7 +284,7 @@ export const SpaceFeed: React.FC<SpaceFeedProps> = ({
     )
   }
   
-  if (isError) {
+  if (error) {
     return (
       <div className={cn("space-y-4", className)}>
         <FeedComposer
@@ -363,12 +361,38 @@ export const SpaceFeed: React.FC<SpaceFeedProps> = ({
               <PostCard
                 post={post}
                 currentUser={currentUser}
-                onReact={(postId, reaction, action) =>
-                  reactMutation.mutate({ postId, reaction, action })
-                }
-                onDelete={(postId) => deleteMutation.mutate(postId)}
-                onPin={(postId, pin) => pinMutation.mutate({ postId, pin })}
-                onFlag={(postId, reason) => flagMutation.mutate({ postId, reason: reason || 'Inappropriate content' })}
+                onReact={async (postId, reaction, action) => {
+                  return new Promise<void>((resolve, reject) => {
+                    reactMutation.mutate({ postId, reaction, action }, {
+                      onSuccess: () => resolve(),
+                      onError: (error) => reject(error)
+                    })
+                  })
+                }}
+                onDelete={async (postId) => {
+                  return new Promise<void>((resolve, reject) => {
+                    deleteMutation.mutate(postId, {
+                      onSuccess: () => resolve(),
+                      onError: (error) => reject(error)
+                    })
+                  })
+                }}
+                onPin={async (postId, pin) => {
+                  return new Promise<void>((resolve, reject) => {
+                    pinMutation.mutate({ postId, pin }, {
+                      onSuccess: () => resolve(),
+                      onError: (error) => reject(error)
+                    })
+                  })
+                }}
+                onFlag={async (postId, reason) => {
+                  return new Promise<void>((resolve, reject) => {
+                    flagMutation.mutate({ postId, reason: reason || 'Inappropriate content' }, {
+                      onSuccess: () => resolve(),
+                      onError: (error) => reject(error)
+                    })
+                  })
+                }}
               />
             </div>
           ))}

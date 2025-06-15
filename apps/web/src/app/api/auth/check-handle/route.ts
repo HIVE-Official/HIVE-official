@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { dbAdmin } from '@hive/core/src/firebase-admin';
+import { dbAdmin } from '@/lib/firebase-admin';
 
 const checkHandleSchema = z.object({
   handle: z.string()

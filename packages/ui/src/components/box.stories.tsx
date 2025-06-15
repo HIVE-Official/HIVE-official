@@ -3,7 +3,7 @@ import { Box } from './box';
 import type { Meta, StoryObj } from '@storybook/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { गति } from '../lib/motion';
-import { Stack } from './stack';
+import { Stack } from '.';
 import { Button } from './ui/button';
 
 const meta: Meta<typeof Box> = {

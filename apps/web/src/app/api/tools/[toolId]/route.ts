@@ -10,15 +10,15 @@ import {
   getNextVersion,
   determineChangeType,
   validateToolStructure
-} from '@hive/core/domain/creation/tool'
-import { validateElementConfig } from '@hive/core/domain/creation/element'
+} from '@hive/core/src/domain/creation/tool'
+import { validateElementConfig } from '@hive/core/src/domain/creation/element'
 
 const db = getFirestore()
 
 // GET /api/tools/[toolId] - Get tool details
 export async function GET(
   request: NextRequest,
-  { params }: { params: { toolId: string } }
+  { params }: { params: Promise<{ toolId: string }> }
 ) {
   try {
     const authHeader = request.headers.get('authorization')
@@ -30,7 +30,8 @@ export async function GET(
     const decodedToken = await getAuth().verifyIdToken(token)
     const userId = decodedToken.uid
 
-    const toolDoc = await db.collection('tools').doc(params.toolId).get()
+    const { toolId } = await params
+    const toolDoc = await db.collection('tools').doc(toolId).get()
     
     if (!toolDoc.exists) {
       return NextResponse.json({ error: 'Tool not found' }, { status: 404 })
@@ -83,7 +84,7 @@ export async function GET(
 // PUT /api/tools/[toolId] - Update tool
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { toolId: string } }
+  { params }: { params: Promise<{ toolId: string }> }
 ) {
   try {
     const authHeader = request.headers.get('authorization')
@@ -95,7 +96,8 @@ export async function PUT(
     const decodedToken = await getAuth().verifyIdToken(token)
     const userId = decodedToken.uid
 
-    const toolDoc = await db.collection('tools').doc(params.toolId).get()
+    const { toolId } = await params
+    const toolDoc = await db.collection('tools').doc(toolId).get()
     
     if (!toolDoc.exists) {
       return NextResponse.json({ error: 'Tool not found' }, { status: 404 })
@@ -179,7 +181,7 @@ export async function PUT(
     await db.collection('analytics_events').add({
       eventType: 'tool_updated',
       userId: userId,
-      toolId: params.toolId,
+      toolId: toolId,
       spaceId: currentTool.spaceId || null,
       timestamp: now,
       metadata: {
@@ -219,7 +221,7 @@ export async function PUT(
 // DELETE /api/tools/[toolId] - Delete tool
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { toolId: string } }
+  { params }: { params: Promise<{ toolId: string }> }
 ) {
   try {
     const authHeader = request.headers.get('authorization')
@@ -231,7 +233,8 @@ export async function DELETE(
     const decodedToken = await getAuth().verifyIdToken(token)
     const userId = decodedToken.uid
 
-    const toolDoc = await db.collection('tools').doc(params.toolId).get()
+    const { toolId } = await params
+    const toolDoc = await db.collection('tools').doc(toolId).get()
     
     if (!toolDoc.exists) {
       return NextResponse.json({ error: 'Tool not found' }, { status: 404 })
@@ -247,7 +250,7 @@ export async function DELETE(
     // Check if tool is being used in any posts
     const postsSnapshot = await db.collectionGroup('posts')
       .where('type', '==', 'tool')
-      .where('toolId', '==', params.toolId)
+      .where('toolId', '==', toolId)
       .limit(1)
       .get()
 
@@ -281,7 +284,7 @@ export async function DELETE(
     await db.collection('analytics_events').add({
       eventType: 'tool_deleted',
       userId: userId,
-      toolId: params.toolId,
+      toolId: toolId,
       spaceId: tool.spaceId || null,
       timestamp: new Date(),
       metadata: {

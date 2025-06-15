@@ -1094,12 +1094,12 @@ export declare const ShareLinkCreatedEventSchema: z.ZodObject<{
     }, "strip", z.ZodTypeAny, {
         shareType: "view" | "edit" | "fork";
         hasExpiration: boolean;
-        shareMethod: "social" | "embed" | "direct_link";
+        shareMethod: "embed" | "direct_link" | "social";
         recipientCount?: number | undefined;
     }, {
         shareType: "view" | "edit" | "fork";
         hasExpiration: boolean;
-        shareMethod: "social" | "embed" | "direct_link";
+        shareMethod: "embed" | "direct_link" | "social";
         recipientCount?: number | undefined;
     }>>;
 }, "strip", z.ZodTypeAny, {
@@ -1114,7 +1114,7 @@ export declare const ShareLinkCreatedEventSchema: z.ZodObject<{
     metadata?: {
         shareType: "view" | "edit" | "fork";
         hasExpiration: boolean;
-        shareMethod: "social" | "embed" | "direct_link";
+        shareMethod: "embed" | "direct_link" | "social";
         recipientCount?: number | undefined;
     } | undefined;
     spaceId?: string | undefined;
@@ -1142,7 +1142,7 @@ export declare const ShareLinkCreatedEventSchema: z.ZodObject<{
     metadata?: {
         shareType: "view" | "edit" | "fork";
         hasExpiration: boolean;
-        shareMethod: "social" | "embed" | "direct_link";
+        shareMethod: "embed" | "direct_link" | "social";
         recipientCount?: number | undefined;
     } | undefined;
     spaceId?: string | undefined;

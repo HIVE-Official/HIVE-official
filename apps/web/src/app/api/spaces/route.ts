@@ -1,18 +1,16 @@
 import { NextResponse } from 'next/server';
 import * as admin from 'firebase-admin';
-import { type Space, type SpaceType } from '@hive/core/src/domain/firestore/space';
-import { getFirebaseAdmin } from '@hive/firebase/server';
+import { type Space, type SpaceType } from '@hive/core';
+import { dbAdmin } from '@/lib/firebase-admin';
 
 export async function GET(request: Request) {
   try {
-    getFirebaseAdmin();
-    const db = admin.firestore();
 
     const { searchParams } = new URL(request.url);
     const filterType = searchParams.get('type') as SpaceType | 'all' | null;
     const searchTerm = searchParams.get('q')?.toLowerCase() || null;
 
-    let query: admin.firestore.Query = db.collection('spaces');
+    let query: admin.firestore.Query = dbAdmin.collection('spaces');
 
     if (filterType && filterType !== 'all') {
       query = query.where('type', '==', filterType);

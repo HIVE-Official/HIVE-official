@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Camera, Upload, X } from 'lucide-react';
-import { Button } from '@hive/ui/components/Button';
+import { Button } from '@hive/ui';
 import { OnboardingData } from '../onboarding-wizard';
 
 interface PhotoStepProps {

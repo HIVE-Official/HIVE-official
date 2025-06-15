@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { dbAdmin } from '@hive/core/src/firebase-admin';
-import { getDefaultActionCodeSettings, validateEmailDomain } from '@hive/core/domain/auth/emailLink';
+import { dbAdmin } from '@/lib/firebase-admin';
+import { getDefaultActionCodeSettings, validateEmailDomain } from '@hive/core';
 import { getAuth } from 'firebase-admin/auth';
 
 const sendMagicLinkSchema = z.object({

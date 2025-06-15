@@ -15,7 +15,7 @@ import {
   Loader2,
   AlertCircle 
 } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { cn } from '../../lib/utils'
 import { CreatePost, PostType } from '@hive/core'
 
 interface FeedComposerProps {
@@ -238,7 +238,7 @@ export const FeedComposer: React.FC<FeedComposerProps> = ({
                 return (
                   <Button
                     key={type}
-                    variant={isSelected ? "default" : "outline"}
+                    variant={isSelected ? "primary" : "outline"}
                     size="sm"
                     onClick={() => setPostType(type as PostType)}
                     className="h-7 text-xs"

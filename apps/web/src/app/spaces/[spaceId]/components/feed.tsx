@@ -3,7 +3,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { type Post } from '@hive/core/src/domain/firestore/post';
 import { PostCard } from '@hive/ui/src/components/post-card';
-import { useUser } from '@clerk/nextjs';
+import { useAuth } from '@hive/hooks';
 import { Loader2 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -20,7 +20,7 @@ interface FeedProps {
 }
 
 export function Feed({ spaceId }: FeedProps) {
-  const { user } = useUser();
+  const { user } = useAuth();
   const { data: posts, isLoading, error } = useQuery<Post[]>({
     queryKey: ['feed', spaceId],
     queryFn: () => fetchFeed(spaceId),
@@ -46,7 +46,7 @@ export function Feed({ spaceId }: FeedProps) {
           <Link href={`/u/${post.author.name}`} key={post.id} className="block">
             <PostCard
               post={post}
-              currentUserId={user?.id}
+              currentUserId={user?.uid}
               authorProfileUrl={`/u/${post.author.name}`}
             />
           </Link>

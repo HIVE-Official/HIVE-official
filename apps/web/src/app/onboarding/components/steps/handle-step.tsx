@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { AtSign, Check, X, Loader2 } from 'lucide-react';
-import { Input } from '@hive/ui/components/input';
+import { Input } from '@hive/ui';
 import { OnboardingData } from '../onboarding-wizard';
 
 interface HandleStepProps {

@@ -1,9 +1,13 @@
+"use client"
+
 import React, { useState, useCallback, useRef, useEffect, useMemo } from 'react'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
-import { cn } from '@/lib/utils'
-import { Tool, ElementInstance } from '@hive/core/domain/creation/tool'
-import { Element } from '@hive/core/domain/creation/element'
+import { cn } from '../../../lib/utils'
+import { Button } from '../../ui/button'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs'
+import { Tool } from '@hive/core/src/domain/creation/tool'
+import { Element, ElementInstance } from '@hive/core/src/domain/creation/element'
 import { ElementLibrary } from './element-library'
 import { DesignCanvas } from './design-canvas'
 // TODO: Implement these components
@@ -11,9 +15,7 @@ import { DesignCanvas } from './design-canvas'
 // import { JsonViewer } from './JsonViewer'
 // import { ToolPreview } from './ToolPreview'
 // import { ToolHeader } from './ToolHeader'
-import { Button } from '@/components/ui/button'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable'
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '../../ui/resizable'
 import { 
   Eye, 
   Code, 
@@ -288,21 +290,21 @@ export const ToolBuilder: React.FC<ToolBuilderProps> = ({
               <>
                 <div className="flex items-center gap-1 border rounded-md">
                   <Button
-                    variant={deviceMode === 'desktop' ? 'default' : 'ghost'}
+                    variant={deviceMode === 'desktop' ? 'primary' : 'ghost'}
                     size="sm"
                     onClick={() => setDeviceMode('desktop')}
                   >
                     <Monitor className="h-4 w-4" />
                   </Button>
                   <Button
-                    variant={deviceMode === 'tablet' ? 'default' : 'ghost'}
+                    variant={deviceMode === 'tablet' ? 'primary' : 'ghost'}
                     size="sm"
                     onClick={() => setDeviceMode('tablet')}
                   >
                     <Tablet className="h-4 w-4" />
                   </Button>
                   <Button
-                    variant={deviceMode === 'mobile' ? 'default' : 'ghost'}
+                    variant={deviceMode === 'mobile' ? 'primary' : 'ghost'}
                     size="sm"
                     onClick={() => setDeviceMode('mobile')}
                   >

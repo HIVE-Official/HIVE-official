@@ -1,5 +1,5 @@
-import { dbAdmin } from "@hive/core/firebase-admin";
-import { School } from "@hive/core/domain/school";
+import { dbAdmin } from "@/lib/firebase-admin";
+import { School } from "@hive/core";
 import { NextResponse } from "next/server";
 
 export async function GET() {

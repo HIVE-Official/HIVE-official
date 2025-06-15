@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from '../ui/card';
-import { cn } from '@/lib/utils';
+import { cn } from '../../lib/utils';
 import { SchoolSearchInput } from './school-search-input';
 
 interface WelcomeCardProps {
@@ -31,11 +31,7 @@ const WelcomeCard = React.forwardRef<HTMLDivElement, WelcomeCardProps>(
       hidden: { opacity: 0, y: 20 },
       visible: { 
         opacity: 1, 
-        y: 0, 
-        transition: { 
-          duration: 0.6, 
-          ease: "easeOut"
-        } 
+        y: 0
       },
     };
 
@@ -43,12 +39,7 @@ const WelcomeCard = React.forwardRef<HTMLDivElement, WelcomeCardProps>(
       hidden: { opacity: 0, y: 20 },
       visible: { 
         opacity: 1, 
-        y: 0, 
-        transition: { 
-          duration: 0.6, 
-          ease: "easeOut", 
-          delay: 0.2 
-        } 
+        y: 0
       },
     };
 

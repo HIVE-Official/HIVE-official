@@ -34,6 +34,7 @@ const config: StorybookConfig = {
       },
       build: {
         rollupOptions: {
+          external: [],
           onwarn(warning, warn) {
             // Suppress "use client" directive warnings from third-party libraries
             if (warning.code === 'MODULE_LEVEL_DIRECTIVE' && 
@@ -47,6 +48,11 @@ const config: StorybookConfig = {
             // Suppress eval warnings from Storybook core (known issue)
             if (warning.message.includes('Use of eval') && 
                 warning.message.includes('@storybook/core')) {
+              return;
+            }
+            // Suppress external dependency warnings for workspace packages
+            if (warning.code === 'UNRESOLVED_IMPORT' && 
+                warning.message.includes('@hive/')) {
               return;
             }
             warn(warning);

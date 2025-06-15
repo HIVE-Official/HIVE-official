@@ -1,8 +1,8 @@
 'use client';
 
+import React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Button } from '@hive/ui/components/Button';
-import { Badge } from '@hive/ui/components/Badge';
+import { Button, Badge } from '@hive/ui';
 import { Users, ArrowLeft, AlertTriangle, Loader2, MapPin, Calendar } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -83,17 +83,24 @@ function SpaceStatusBadge({ status }: { status: Space['status'] }) {
   );
 }
 
-export default function SpaceDetailPage({ params }: { params: { spaceId: string } }) {
+export default function SpaceDetailPage({ params }: { params: Promise<{ spaceId: string }> }) {
+    const [spaceId, setSpaceId] = React.useState<string | null>(null);
+    
+    React.useEffect(() => {
+        params.then(({ spaceId }) => setSpaceId(spaceId));
+    }, [params]);
+    
     const { data: space, isLoading, error } = useQuery<Space>({
-        queryKey: ['space', params.spaceId],
-        queryFn: () => fetchSpaceById(params.spaceId),
+        queryKey: ['space', spaceId],
+        queryFn: () => fetchSpaceById(spaceId!),
+        enabled: !!spaceId,
         retry: (failureCount, error) => {
             if (error.message === 'Space not found') return false;
             return failureCount < 3;
         },
     });
 
-    if (isLoading) {
+    if (!spaceId || isLoading) {
         return <LoadingState />;
     }
 
@@ -167,7 +174,7 @@ export default function SpaceDetailPage({ params }: { params: { spaceId: string 
               </div>
               
               <div className="flex-shrink-0">
-                <SpaceActionButton spaceId={params.spaceId} />
+                <SpaceActionButton spaceId={spaceId!} />
               </div>
             </div>
           </div>

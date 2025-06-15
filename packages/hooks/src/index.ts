@@ -1,12 +1,15 @@
 // Auth hooks
-export { useAuth } from './useAuth';
+export { useAuth } from './use-auth';
 
 // Analytics hooks
-export { useAnalytics } from './useAnalytics';
-export { useCreationAnalytics } from './useCreationAnalytics';
+export { useAnalytics } from './use-analytics';
+export { useCreationAnalytics } from './use-creation-analytics';
 
 // Onboarding analytics
-export { useOnboardingAnalytics } from './useOnboardingAnalytics';
+export { useOnboardingAnalytics } from './use-onboarding-analytics';
 
 // Data fetching hooks
-export { useSpaces } from './useSpaces'; 
+export { useSpaces } from './use-spaces';
+
+// Utility hooks
+export { useDebounce } from './use-debounce'; 

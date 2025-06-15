@@ -3,15 +3,15 @@
   "references": [
     { "path": "./apps/web/tsconfig.json" },
     { "path": "./packages/ui/tsconfig.json" },
-    { "path": "./packages/analytics/tsconfig.json" },
-    { "path": "./packages/core/tsconfig.json" }
+    { "path": "./packages/core/tsconfig.json" },
+    { "path": "./packages/auth-logic/tsconfig.json" }
   ],
   "compilerOptions": {
     "baseUrl": ".",
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "paths": {
-      "@hive/analytics/*": ["packages/analytics/src/*"],
+      "@hive/auth-logic/*": ["packages/auth-logic/src/*"],
       "@hive/core/*": ["packages/core/src/*"],
       "@hive/hooks/*": ["packages/hooks/src/*"],
       "@hive/ui/*": ["packages/ui/src/*"],

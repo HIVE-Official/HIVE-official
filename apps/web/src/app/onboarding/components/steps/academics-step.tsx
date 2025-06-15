@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { GraduationCap, Search, ChevronDown } from 'lucide-react';
-import { Input } from '@hive/ui/components/Input';
+import { Input } from '@hive/ui';
 import { UB_MAJORS } from '@hive/core/src/constants/majors';
 import { OnboardingData } from '../onboarding-wizard';
 

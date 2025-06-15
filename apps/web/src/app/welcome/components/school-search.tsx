@@ -1,6 +1,6 @@
 "use client";
 
-import { Input } from "@hive/ui/components/input";
+import { Input } from "@hive/ui";
 import { Search } from "lucide-react";
 import { useEffect, useState, useRef } from "react";
 import { School } from "@hive/core/domain/school";

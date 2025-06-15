@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { getAuth } from 'firebase-admin/auth';
-import { dbAdmin } from '@hive/core/src/firebase-admin';
+import { dbAdmin } from '@/lib/firebase-admin';
+import { type Space } from '@hive/core/src/domain/firestore/space';
 
 const browseSpacesSchema = z.object({
   schoolId: z.string().optional(),
-  type: z.enum(['academic', 'general', 'interest', 'activity']).optional(),
+  type: z.enum(['major', 'residential', 'interest', 'creative', 'organization']).optional(),
   subType: z.string().optional(),
   limit: z.coerce.number().min(1).max(50).default(20),
   offset: z.coerce.number().min(0).default(0),
@@ -67,9 +68,9 @@ export async function GET(request: NextRequest) {
       query = query.where('type', '==', type);
     }
 
-    // Add subType filter if specified
+    // Add subType filter if specified (using tags array)
     if (subType) {
-      query = query.where('subType', '==', subType);
+      query = query.where('tags', 'array-contains', { type: type || 'interest', sub_type: subType });
     }
 
     // Execute the query
@@ -77,9 +78,9 @@ export async function GET(request: NextRequest) {
 
     // Convert to array and apply text search if needed
     let spaces = spacesSnapshot.docs.map(doc => ({
+      ...doc.data(),
       id: doc.id,
-      ...doc.data()
-    }));
+    })) as Space[];
 
     // Apply text search filter (case-insensitive)
     if (search) {
@@ -121,7 +122,7 @@ export async function GET(request: NextRequest) {
       name: space.name,
       description: space.description,
       type: space.type,
-      subType: space.subType,
+      tags: space.tags,
       status: space.status,
       memberCount: space.memberCount || 0,
       createdAt: space.createdAt,

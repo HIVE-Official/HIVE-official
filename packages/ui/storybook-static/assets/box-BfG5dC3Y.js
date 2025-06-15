@@ -1,1 +1,0 @@
-import{j as t}from"./jsx-runtime-CDt2p4po.js";import{r as e}from"./index-GiUgBvb1.js";import{c as m}from"./utils-CytzSlOG.js";const o=e.forwardRef(({className:r,...s},a)=>t.jsx("div",{ref:a,className:m(r),...s}));o.displayName="Box";o.__docgenInfo={description:"",methods:[],displayName:"Box"};export{o as B};

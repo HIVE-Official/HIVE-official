@@ -12,6 +12,13 @@ export * from './domain/firestore/user';
 // Domain types - Auth
 export * from './domain/auth/emailLink';
 
+// Domain types - Analytics
+// Note: Both creation and feed modules export hashUserId - use specific imports if needed
+export * from './domain/analytics/creation';
+export * from './domain/analytics/onboarding';
+export * from './domain/analytics/feed';
+export * from './domain/analytics/events';
+
 // Domain types - Other
 export type { Space } from './domain/space';
 export type { SpaceMember } from './domain/member';
@@ -24,6 +31,5 @@ export * from './constants/majors';
 // Stores
 export * from './stores/useAppStore';
 
-// Firebase configs
+// Firebase client config
 export * from './firebase';
-export * from './firebase-admin';

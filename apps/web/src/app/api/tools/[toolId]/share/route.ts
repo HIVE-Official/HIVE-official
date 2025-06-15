@@ -4,18 +4,19 @@ import { getFirestore } from 'firebase-admin/firestore'
 import { z } from 'zod'
 import { 
   ToolSchema, 
-  ShareToolSchema,
   canUserViewTool,
+  canUserEditTool,
+  ShareToolSchema,
   generateShareToken,
   createToolDefaults
-} from '@hive/core/domain/creation/tool'
+} from '@hive/core/src/domain/creation/tool'
 
 const db = getFirestore()
 
 // POST /api/tools/[toolId]/share - Create share link or fork tool
 export async function POST(
   request: NextRequest,
-  { params }: { params: { toolId: string } }
+  { params }: { params: Promise<{ toolId: string }> }
 ) {
   try {
     const authHeader = request.headers.get('authorization')
@@ -27,7 +28,8 @@ export async function POST(
     const decodedToken = await getAuth().verifyIdToken(token)
     const userId = decodedToken.uid
 
-    const toolDoc = await db.collection('tools').doc(params.toolId).get()
+    const { toolId } = await params
+    const toolDoc = await db.collection('tools').doc(toolId).get()
     
     if (!toolDoc.exists) {
       return NextResponse.json({ error: 'Tool not found' }, { status: 404 })
@@ -58,7 +60,7 @@ export async function POST(
       await db.collection('analytics_events').add({
         eventType: 'tool_shared',
         userId: userId,
-        toolId: params.toolId,
+        toolId: toolId,
         spaceId: originalTool.spaceId || null,
         timestamp: new Date(),
         metadata: {
@@ -122,7 +124,7 @@ export async function POST(
           ...element,
           id: `${element.id}_${Date.now()}` // Ensure unique IDs in the fork
         })),
-        originalToolId: params.toolId,
+        originalToolId: toolId,
         createdAt: now,
         updatedAt: now,
       }
@@ -155,7 +157,7 @@ export async function POST(
           spaceId: spaceId || null,
           timestamp: now,
           metadata: {
-            originalToolId: params.toolId,
+            originalToolId: toolId,
             originalToolName: originalTool.name,
             elementsCount: originalTool.elements.length
           }
@@ -163,7 +165,7 @@ export async function POST(
         db.collection('analytics_events').add({
           eventType: 'tool_fork_source',
           userId: originalTool.ownerId,
-          toolId: params.toolId,
+          toolId: toolId,
           spaceId: originalTool.spaceId || null,
           timestamp: now,
           metadata: {
@@ -211,7 +213,7 @@ export async function POST(
 // GET /api/tools/[toolId]/share - Get sharing information
 export async function GET(
   request: NextRequest,
-  { params }: { params: { toolId: string } }
+  { params }: { params: Promise<{ toolId: string }> }
 ) {
   try {
     const authHeader = request.headers.get('authorization')
@@ -223,7 +225,8 @@ export async function GET(
     const decodedToken = await getAuth().verifyIdToken(token)
     const userId = decodedToken.uid
 
-    const toolDoc = await db.collection('tools').doc(params.toolId).get()
+    const { toolId } = await params
+    const toolDoc = await db.collection('tools').doc(toolId).get()
     
     if (!toolDoc.exists) {
       return NextResponse.json({ error: 'Tool not found' }, { status: 404 })
@@ -238,7 +241,7 @@ export async function GET(
 
     // Get fork information
     const forksSnapshot = await db.collection('tools')
-      .where('originalToolId', '==', params.toolId)
+      .where('originalToolId', '==', toolId)
       .orderBy('createdAt', 'desc')
       .limit(10)
       .get()

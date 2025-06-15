@@ -1,17 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { 
-  collection, 
-  doc, 
-  getDoc, 
-  writeBatch, 
-  serverTimestamp,
-  increment
-} from 'firebase/firestore';
-import { db } from '@/lib/firebase';
 import { getAuth } from 'firebase-admin/auth';
+import { getFirestore, FieldValue } from 'firebase-admin/firestore';
 import { type Space } from '@hive/core/src/domain/firestore/space';
-import { type Member } from '@hive/core/src/domain/firestore/member';
+import { type Member, type MemberRole } from '@hive/core/src/domain/firestore/member';
+
+// Server-side member type that allows FieldValue for timestamps
+interface ServerMember {
+  uid: string;
+  role: MemberRole;
+  joinedAt: FieldValue;
+}
 
 const joinSpaceSchema = z.object({
   spaceId: z.string().min(1, 'Space ID is required'),
@@ -51,11 +50,14 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { spaceId } = joinSpaceSchema.parse(body);
 
+    // Get Firestore instance
+    const db = getFirestore();
+
     // Check if space exists and is joinable
-    const spaceDocRef = doc(db, 'spaces', spaceId);
-    const spaceDoc = await getDoc(spaceDocRef);
+    const spaceDocRef = db.collection('spaces').doc(spaceId);
+    const spaceDoc = await spaceDocRef.get();
     
-    if (!spaceDoc.exists()) {
+    if (!spaceDoc.exists) {
       return NextResponse.json(
         { error: 'Space not found' },
         { status: 404 }
@@ -80,10 +82,10 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if user is already a member
-    const memberDocRef = doc(db, 'spaces', spaceId, 'members', userId);
-    const memberDoc = await getDoc(memberDocRef);
+    const memberDocRef = db.collection('spaces').doc(spaceId).collection('members').doc(userId);
+    const memberDoc = await memberDocRef.get();
     
-    if (memberDoc.exists()) {
+    if (memberDoc.exists) {
       return NextResponse.json(
         { error: 'You are already a member of this space' },
         { status: 409 }
@@ -91,10 +93,10 @@ export async function POST(request: NextRequest) {
     }
 
     // Get user data to verify they're from the same school
-    const userDocRef = doc(db, 'users', userId);
-    const userDoc = await getDoc(userDocRef);
+    const userDocRef = db.collection('users').doc(userId);
+    const userDoc = await userDocRef.get();
     
-    if (!userDoc.exists()) {
+    if (!userDoc.exists) {
       return NextResponse.json(
         { error: 'User not found' },
         { status: 404 }
@@ -112,21 +114,21 @@ export async function POST(request: NextRequest) {
     }
 
     // Perform the join operation atomically
-    const batch = writeBatch(db);
+    const batch = db.batch();
 
     // Add user to members sub-collection
-    const newMember: Omit<Member, 'uid'> = {
+    const newMember: ServerMember = {
       uid: userId,
       role: 'member',
-      joinedAt: serverTimestamp(),
+      joinedAt: FieldValue.serverTimestamp(),
     };
 
     batch.set(memberDocRef, newMember);
 
     // Increment the space's member count
     batch.update(spaceDocRef, {
-      memberCount: increment(1),
-      updatedAt: serverTimestamp(),
+      memberCount: FieldValue.increment(1),
+      updatedAt: FieldValue.serverTimestamp(),
     });
 
     // Execute the transaction

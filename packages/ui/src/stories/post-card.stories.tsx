@@ -22,8 +22,10 @@ const basePost: Post = {
   id: 'post1',
   authorId: 'user123',
   author: {
-    name: 'Jane Doe',
-    avatarUrl: 'https://i.pravatar.cc/150?u=janedoe',
+    id: 'user123',
+    handle: 'janedoe',
+    fullName: 'Jane Doe',
+    photoURL: 'https://i.pravatar.cc/150?u=janedoe',
   },
   spaceId: 'space1',
   content: "Just attended the guest lecture on Quantum Computing, absolutely mind-blowing stuff! Anyone else catch it?",
@@ -34,7 +36,7 @@ const basePost: Post = {
 export const Default: Story = {
   args: {
     post: basePost,
-    authorProfileUrl: `/u/${basePost.author.name}`,
+    authorProfileUrl: `/u/${basePost.author?.fullName}`,
   },
 };
 
@@ -42,7 +44,7 @@ export const AuthorView: Story = {
   args: {
     post: basePost,
     currentUserId: 'user123',
-    authorProfileUrl: `/u/${basePost.author.name}`,
+    authorProfileUrl: `/u/${basePost.author?.fullName}`,
   },
 };
 
@@ -51,8 +53,10 @@ export const NoAvatar: Story = {
         post: {
             ...basePost,
             author: {
-                name: 'John Smith',
-                avatarUrl: undefined,
+                id: 'user456',
+                handle: 'johnsmith',
+                fullName: 'John Smith',
+                photoURL: undefined,
             },
         },
         authorProfileUrl: '/u/John%20Smith',

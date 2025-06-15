@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { getAuth } from 'firebase-admin/auth';
-import { dbAdmin } from '@hive/core/src/firebase-admin';
+import { dbAdmin } from '@/lib/firebase-admin';
 
 const lookupUserSchema = z.object({
   query: z.string().min(1, 'Search query is required'),
