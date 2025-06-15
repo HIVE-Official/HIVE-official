@@ -1,10 +1,12 @@
 import { useEffect, useRef, useCallback, useState } from 'react'
 import { useAnalytics } from './use-analytics'
-import { 
+import type { 
   FeedAnalyticsEvent, 
-  createFeedEvent, 
-  hashUserIdForFeed,
   FeedAnalyticsConfig 
+} from '@hive/core'
+import {
+  createFeedEvent, 
+  hashUserIdForFeed
 } from '@hive/core'
 
 interface UseFeedAnalyticsOptions {
@@ -133,25 +135,25 @@ export const useFeedAnalytics = ({
   }, [])
   
   // Flush event batch
-  const flushEvents = useCallback(async () => {
+  const flushEvents = useCallback(() => {
     if (eventBatchRef.current.length === 0) return
     
     const events = [...eventBatchRef.current]
     eventBatchRef.current = []
     
-          try {
-        // Send to analytics pipeline (same as Team 1)
-        track({
-          name: 'feed_analytics_batch',
-          properties: {
-            events,
-            spaceId,
-            userId: analyticsConfig.hashUserIds ? hashUserIdForFeed(userId) : userId,
-            batchSize: events.length,
-            timestamp: new Date(),
-          }
-        })
-      } catch (error) {
+    try {
+      // Send to analytics pipeline (same as Team 1)
+      track({
+        name: 'feed_analytics_batch',
+        properties: {
+          events,
+          spaceId,
+          userId: analyticsConfig.hashUserIds ? hashUserIdForFeed(userId) : userId,
+          batchSize: events.length,
+          timestamp: new Date(),
+        }
+      })
+    } catch (error) {
       console.error('Failed to flush analytics events:', error)
       // Re-add events to batch for retry
       eventBatchRef.current.unshift(...events)
@@ -198,22 +200,24 @@ export const useFeedAnalytics = ({
       activeTimeRef.current += Math.min(timeSinceLastHeartbeat, 30000)
     }
     
-    const event = createFeedEvent('space_heartbeat', {
+    lastHeartbeatRef.current = now
+    
+    // Send heartbeat event
+    const heartbeatEvent = createFeedEvent('space_heartbeat', {
       spaceId,
-      userId,
+      userId: analyticsConfig.hashUserIds ? hashUserIdForFeed(userId) : userId,
       metadata: {
         sessionId: sessionIdRef.current,
-        activeTime: isActive ? Math.min(timeSinceLastHeartbeat, 30000) : 0,
-        tabVisible: !document.hidden,
+        activeTime: activeTimeRef.current,
+        tabVisible: isActive,
         scrollPosition: window.scrollY,
         lastInteraction: lastInteractionRef.current,
       },
     })
     
-    addEventToBatch(event)
-    lastHeartbeatRef.current = now
-  }, [isSessionActive, spaceId, userId, addEventToBatch])
-  
+    addEventToBatch(heartbeatEvent)
+  }, [isSessionActive, analyticsConfig.hashUserIds, userId, spaceId, addEventToBatch])
+
   // Start session
   const startSession = useCallback(() => {
     if (isSessionActive) return
@@ -224,65 +228,96 @@ export const useFeedAnalytics = ({
     lastHeartbeatRef.current = new Date()
     activeTimeRef.current = 0
     
-    // Start heartbeat interval (every 30 seconds)
-    heartbeatIntervalRef.current = setInterval(sendHeartbeat, 30000)
+    // Start heartbeat
+    heartbeatIntervalRef.current = setInterval(sendHeartbeat, 30000) // Every 30 seconds
     
-    // Track interaction events
-    document.addEventListener('click', trackInteraction)
-    document.addEventListener('keydown', trackInteraction)
-    document.addEventListener('scroll', trackInteraction)
-    document.addEventListener('mousemove', trackInteraction)
-  }, [isSessionActive, generateSessionId, sendHeartbeat, trackInteraction])
-  
+    // Track session start with space heartbeat
+    const sessionStartEvent = createFeedEvent('space_heartbeat', {
+      spaceId,
+      userId: analyticsConfig.hashUserIds ? hashUserIdForFeed(userId) : userId,
+      metadata: {
+        sessionId: sessionIdRef.current,
+        activeTime: 0,
+        tabVisible: true,
+        scrollPosition: 0,
+        lastInteraction: lastInteractionRef.current,
+      },
+    })
+    
+    addEventToBatch(sessionStartEvent)
+  }, [isSessionActive, generateSessionId, sendHeartbeat, spaceId, userId, analyticsConfig.hashUserIds, addEventToBatch])
+
   // End session
   const endSession = useCallback(() => {
-    if (!isSessionActive) return
+    if (!isSessionActive || !sessionIdRef.current) return
     
-    // Send final heartbeat
-    sendHeartbeat()
-    
-    // Clear interval and event listeners
+    // Clear heartbeat
     if (heartbeatIntervalRef.current) {
       clearInterval(heartbeatIntervalRef.current)
       heartbeatIntervalRef.current = undefined
     }
     
-    document.removeEventListener('click', trackInteraction)
-    document.removeEventListener('keydown', trackInteraction)
-    document.removeEventListener('scroll', trackInteraction)
-    document.removeEventListener('mousemove', trackInteraction)
+    // Track session end with final heartbeat
+    const sessionEndEvent = createFeedEvent('space_heartbeat', {
+      spaceId,
+      userId: analyticsConfig.hashUserIds ? hashUserIdForFeed(userId) : userId,
+      metadata: {
+        sessionId: sessionIdRef.current,
+        activeTime: activeTimeRef.current,
+        tabVisible: false,
+        scrollPosition: window.scrollY,
+        lastInteraction: lastInteractionRef.current,
+      },
+    })
+    
+    addEventToBatch(sessionEndEvent)
     
     // Flush remaining events
     flushEvents()
     
     setIsSessionActive(false)
     sessionIdRef.current = undefined
-  }, [isSessionActive, sendHeartbeat, trackInteraction, flushEvents])
-  
+  }, [isSessionActive, spaceId, userId, analyticsConfig.hashUserIds, addEventToBatch, flushEvents])
+
   // Event tracking functions
-  const trackPostCreated = useCallback((data: Parameters<FeedAnalyticsHook['trackPostCreated']>[0]) => {
+  const trackPostCreated = useCallback((data: {
+    postId: string
+    postType: 'text' | 'image' | 'poll' | 'event' | 'toolshare'
+    contentLength: number
+    hasMentions: boolean
+    hasRichFormatting: boolean
+    draftTime?: number
+  }) => {
+    trackInteraction()
     const event = createFeedEvent('post_created', {
-      spaceId,
       postId: data.postId,
-      userId,
+      spaceId,
+      userId: analyticsConfig.hashUserIds ? hashUserIdForFeed(userId) : userId,
       metadata: {
         postType: data.postType,
         contentLength: data.contentLength,
         hasMentions: data.hasMentions,
         hasRichFormatting: data.hasRichFormatting,
         draftTime: data.draftTime,
-        composerSource: 'inline',
+        composerSource: 'inline' as const,
       },
     })
     addEventToBatch(event)
+  }, [trackInteraction, spaceId, userId, analyticsConfig.hashUserIds, addEventToBatch])
+
+  const trackPostReacted = useCallback((data: {
+    postId: string
+    reaction: 'heart'
+    action: 'add' | 'remove'
+    postAge: number
+    authorId: string
+    isOwnPost: boolean
+  }) => {
     trackInteraction()
-  }, [spaceId, userId, addEventToBatch, trackInteraction])
-  
-  const trackPostReacted = useCallback((data: Parameters<FeedAnalyticsHook['trackPostReacted']>[0]) => {
     const event = createFeedEvent('post_reacted', {
-      spaceId,
       postId: data.postId,
-      userId,
+      spaceId,
+      userId: analyticsConfig.hashUserIds ? hashUserIdForFeed(userId) : userId,
       metadata: {
         reaction: data.reaction,
         action: data.action,
@@ -292,14 +327,21 @@ export const useFeedAnalytics = ({
       },
     })
     addEventToBatch(event)
+  }, [trackInteraction, spaceId, userId, analyticsConfig.hashUserIds, addEventToBatch])
+
+  const trackPostViewed = useCallback((data: {
+    postId: string
+    viewDuration: number
+    scrolledToEnd: boolean
+    authorId: string
+    postType: 'text' | 'image' | 'poll' | 'event' | 'toolshare'
+    postAge: number
+  }) => {
     trackInteraction()
-  }, [spaceId, userId, addEventToBatch, trackInteraction])
-  
-  const trackPostViewed = useCallback((data: Parameters<FeedAnalyticsHook['trackPostViewed']>[0]) => {
     const event = createFeedEvent('post_viewed', {
-      spaceId,
       postId: data.postId,
-      userId,
+      spaceId,
+      userId: analyticsConfig.hashUserIds ? hashUserIdForFeed(userId) : userId,
       metadata: {
         viewDuration: data.viewDuration,
         scrolledToEnd: data.scrolledToEnd,
@@ -309,13 +351,20 @@ export const useFeedAnalytics = ({
       },
     })
     addEventToBatch(event)
-  }, [spaceId, userId, addEventToBatch])
-  
-  const trackPostEdited = useCallback((data: Parameters<FeedAnalyticsHook['trackPostEdited']>[0]) => {
+  }, [trackInteraction, spaceId, userId, analyticsConfig.hashUserIds, addEventToBatch])
+
+  const trackPostEdited = useCallback((data: {
+    postId: string
+    editTime: number
+    contentLengthBefore: number
+    contentLengthAfter: number
+    editReason?: 'typo' | 'clarification' | 'addition' | 'other'
+  }) => {
+    trackInteraction()
     const event = createFeedEvent('post_edited', {
-      spaceId,
       postId: data.postId,
-      userId,
+      spaceId,
+      userId: analyticsConfig.hashUserIds ? hashUserIdForFeed(userId) : userId,
       metadata: {
         editTime: data.editTime,
         contentLengthBefore: data.contentLengthBefore,
@@ -324,14 +373,21 @@ export const useFeedAnalytics = ({
       },
     })
     addEventToBatch(event)
+  }, [trackInteraction, spaceId, userId, analyticsConfig.hashUserIds, addEventToBatch])
+
+  const trackPostDeleted = useCallback((data: {
+    postId: string
+    deletedBy: 'author' | 'builder' | 'admin'
+    postAge: number
+    hadReactions: boolean
+    reactionCount: number
+    deleteReason?: 'inappropriate' | 'spam' | 'mistake' | 'other'
+  }) => {
     trackInteraction()
-  }, [spaceId, userId, addEventToBatch, trackInteraction])
-  
-  const trackPostDeleted = useCallback((data: Parameters<FeedAnalyticsHook['trackPostDeleted']>[0]) => {
     const event = createFeedEvent('post_deleted', {
-      spaceId,
       postId: data.postId,
-      userId,
+      spaceId,
+      userId: analyticsConfig.hashUserIds ? hashUserIdForFeed(userId) : userId,
       metadata: {
         deletedBy: data.deletedBy,
         postAge: data.postAge,
@@ -341,13 +397,17 @@ export const useFeedAnalytics = ({
       },
     })
     addEventToBatch(event)
+  }, [trackInteraction, spaceId, userId, analyticsConfig.hashUserIds, addEventToBatch])
+
+  const trackSpaceJoined = useCallback((data: {
+    joinMethod: 'invite' | 'browse' | 'search' | 'auto'
+    referrerSpaceId?: string
+    invitedBy?: string
+  }) => {
     trackInteraction()
-  }, [spaceId, userId, addEventToBatch, trackInteraction])
-  
-  const trackSpaceJoined = useCallback((data: Parameters<FeedAnalyticsHook['trackSpaceJoined']>[0]) => {
     const event = createFeedEvent('space_joined', {
       spaceId,
-      userId,
+      userId: analyticsConfig.hashUserIds ? hashUserIdForFeed(userId) : userId,
       metadata: {
         joinMethod: data.joinMethod,
         referrerSpaceId: data.referrerSpaceId,
@@ -355,13 +415,19 @@ export const useFeedAnalytics = ({
       },
     })
     addEventToBatch(event)
+  }, [trackInteraction, spaceId, userId, analyticsConfig.hashUserIds, addEventToBatch])
+
+  const trackSpaceLeft = useCallback((data: {
+    membershipDuration: number
+    postsCreated: number
+    reactionsGiven: number
+    lastActiveAt: Date
+    leaveReason?: 'inactive' | 'content' | 'privacy' | 'other'
+  }) => {
     trackInteraction()
-  }, [spaceId, userId, addEventToBatch, trackInteraction])
-  
-  const trackSpaceLeft = useCallback((data: Parameters<FeedAnalyticsHook['trackSpaceLeft']>[0]) => {
     const event = createFeedEvent('space_left', {
       spaceId,
-      userId,
+      userId: analyticsConfig.hashUserIds ? hashUserIdForFeed(userId) : userId,
       metadata: {
         membershipDuration: data.membershipDuration,
         postsCreated: data.postsCreated,
@@ -371,13 +437,18 @@ export const useFeedAnalytics = ({
       },
     })
     addEventToBatch(event)
+  }, [trackInteraction, spaceId, userId, analyticsConfig.hashUserIds, addEventToBatch])
+
+  const trackBuilderAction = useCallback((data: {
+    action: 'pin_post' | 'unpin_post' | 'delete_post' | 'mute_user' | 'unmute_user'
+    targetId: string
+    targetType: 'post' | 'user'
+    reason?: string
+  }) => {
     trackInteraction()
-  }, [spaceId, userId, addEventToBatch, trackInteraction])
-  
-  const trackBuilderAction = useCallback((data: Parameters<FeedAnalyticsHook['trackBuilderAction']>[0]) => {
     const event = createFeedEvent('builder_action', {
       spaceId,
-      userId,
+      userId: analyticsConfig.hashUserIds ? hashUserIdForFeed(userId) : userId,
       metadata: {
         action: data.action,
         targetId: data.targetId,
@@ -386,13 +457,18 @@ export const useFeedAnalytics = ({
       },
     })
     addEventToBatch(event)
+  }, [trackInteraction, spaceId, userId, analyticsConfig.hashUserIds, addEventToBatch])
+
+  const trackFeedViewed = useCallback((data: {
+    postsVisible: number
+    scrollDepth: number
+    timeSpent: number
+    deviceType?: 'mobile' | 'tablet' | 'desktop'
+  }) => {
     trackInteraction()
-  }, [spaceId, userId, addEventToBatch, trackInteraction])
-  
-  const trackFeedViewed = useCallback((data: Parameters<FeedAnalyticsHook['trackFeedViewed']>[0]) => {
     const event = createFeedEvent('space_feed_viewed', {
       spaceId,
-      userId,
+      userId: analyticsConfig.hashUserIds ? hashUserIdForFeed(userId) : userId,
       metadata: {
         postsVisible: data.postsVisible,
         scrollDepth: data.scrollDepth,
@@ -401,42 +477,32 @@ export const useFeedAnalytics = ({
       },
     })
     addEventToBatch(event)
-  }, [spaceId, userId, addEventToBatch])
-  
-  // Cleanup on unmount
+  }, [trackInteraction, spaceId, userId, analyticsConfig.hashUserIds, addEventToBatch])
+
+  // Auto-start session on mount
   useEffect(() => {
-    return () => {
-      endSession()
-      if (batchTimeoutRef.current) {
-        clearTimeout(batchTimeoutRef.current)
-      }
-    }
-  }, [endSession])
-  
-  // Handle page visibility changes
-  useEffect(() => {
+    startSession()
+    
+    // Handle visibility change
     const handleVisibilityChange = () => {
       if (document.hidden) {
-        // Page is hidden, reduce heartbeat frequency or pause
-        if (heartbeatIntervalRef.current) {
-          clearInterval(heartbeatIntervalRef.current)
-          heartbeatIntervalRef.current = setInterval(sendHeartbeat, 60000) // 1 minute when hidden
-        }
+        endSession()
       } else {
-        // Page is visible, resume normal heartbeat
-        if (heartbeatIntervalRef.current) {
-          clearInterval(heartbeatIntervalRef.current)
-          heartbeatIntervalRef.current = setInterval(sendHeartbeat, 30000) // 30 seconds when visible
-        }
-        trackInteraction()
+        startSession()
       }
     }
     
     document.addEventListener('visibilitychange', handleVisibilityChange)
-    return () => document.removeEventListener('visibilitychange', handleVisibilityChange)
-  }, [sendHeartbeat, trackInteraction])
-  
+    
+    // Cleanup on unmount
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+      endSession()
+    }
+  }, [startSession, endSession])
+
   return {
+    // Event tracking
     trackPostCreated,
     trackPostReacted,
     trackPostViewed,
@@ -446,6 +512,8 @@ export const useFeedAnalytics = ({
     trackSpaceLeft,
     trackBuilderAction,
     trackFeedViewed,
+    
+    // Session management
     startSession,
     endSession,
     isSessionActive,

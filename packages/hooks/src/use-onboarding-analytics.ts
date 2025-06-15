@@ -1,6 +1,6 @@
 import { useCallback, useRef, useEffect } from 'react'
 import { useAnalytics } from './use-analytics'
-import type { OnboardingStepName, OnboardingFunnelEvent } from '@hive/core'
+import type { OnboardingStepName } from '@hive/core'
 
 interface OnboardingStepTiming {
   stepName: OnboardingStepName
@@ -11,7 +11,7 @@ interface OnboardingStepTiming {
 interface UseOnboardingAnalyticsReturn {
   trackOnboardingStarted: () => void
   trackStepStarted: (stepName: OnboardingStepName) => void
-  trackStepCompleted: (stepName: OnboardingStepName, data?: Record<string, any>) => void
+  trackStepCompleted: (stepName: OnboardingStepName, data?: Record<string, unknown>) => void
   trackStepSkipped: (stepName: OnboardingStepName, reason?: string) => void
   trackValidationError: (stepName: OnboardingStepName, field: string, error: string) => void
   trackOnboardingCompleted: (totalDuration: number, completedSteps: OnboardingStepName[]) => void
@@ -83,7 +83,7 @@ export const useOnboardingAnalytics = (): UseOnboardingAnalyticsReturn => {
     })
   }, [track])
 
-  const trackStepCompleted = useCallback((stepName: OnboardingStepName, data?: Record<string, any>) => {
+  const trackStepCompleted = useCallback((stepName: OnboardingStepName, data?: Record<string, unknown>) => {
     const now = Date.now()
     const timing = stepTimings.current.get(stepName)
     
@@ -215,8 +215,19 @@ export const useOnboardingAnalytics = (): UseOnboardingAnalyticsReturn => {
   }
 }
 
-// Helper function to get step index
+/**
+ * Get the index of an onboarding step for analytics
+ */
 function getStepIndex(stepName: OnboardingStepName): number {
-  const steps: OnboardingStepName[] = ['welcome', 'name', 'academics', 'handle', 'photo', 'builder', 'legal']
-  return steps.indexOf(stepName)
+  const stepOrder: OnboardingStepName[] = [
+    'welcome',
+    'name',
+    'academics',
+    'handle',
+    'photo',
+    'builder',
+    'legal'
+  ]
+  
+  return stepOrder.indexOf(stepName)
 } 

@@ -1,35 +1,39 @@
-import React from 'react';
-import { Card, CardContent, CardFooter, CardHeader } from './ui/card';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Heading, Muted, Text } from './typography';
-import { MotionDiv, AnimatePresence } from './framer-motion-proxy';
-import { गति } from '../lib/motion';
-import { CheckCircle } from 'lucide-react';
-import { Stack } from '.';
+import React from "react";
+import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { Heading, Muted, Text } from "./typography";
+import { MotionDiv, AnimatePresence } from "./framer-motion-proxy";
+import { गति } from "../lib/motion";
+import { CheckCircle } from "lucide-react";
+import { Stack } from ".";
 
+export default {};
 interface WaitlistFormProps {
   onSubmit: (email: string) => Promise<void>;
 }
 
 export const WaitlistForm: React.FC<WaitlistFormProps> = ({ onSubmit }) => {
-  const [email, setEmail] = React.useState('');
+  const [email, setEmail] = React.useState("");
   const [loading, setLoading] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
-  const [error, setError] = React.useState<string | null>(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
     setLoading(true);
-    try {
-      await onSubmit(email);
-      setSuccess(true);
-    } catch (err) {
-      setError('An error occurred. Please try again.');
-    } finally {
-      setLoading(false);
-    }
+
+    // Fire and forget with proper error handling
+    void onSubmit(email)
+      .then(() => {
+        setSuccess(true);
+      })
+      .catch((error) => {
+        console.error("Waitlist submission failed:", error);
+        // Handle error appropriately - maybe show a toast or error state
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   return (
@@ -60,7 +64,9 @@ export const WaitlistForm: React.FC<WaitlistFormProps> = ({ onSubmit }) => {
           >
             <CardHeader>
               <Heading level={2}>Join the Waitlist</Heading>
-              <Muted>Be the first to know when HIVE launches at your campus.</Muted>
+              <Muted>
+                Be the first to know when HIVE launches at your campus.
+              </Muted>
             </CardHeader>
             <form onSubmit={handleSubmit}>
               <CardContent>
@@ -83,4 +89,4 @@ export const WaitlistForm: React.FC<WaitlistFormProps> = ({ onSubmit }) => {
       </AnimatePresence>
     </Card>
   );
-}; 
+};

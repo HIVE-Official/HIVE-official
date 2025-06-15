@@ -1,149 +1,196 @@
 # HIVE UI
 
-[![Flutter Test](https://github.com/your-username/hive_ui/actions/workflows/flutter-test.yml/badge.svg)](https://github.com/your-username/hive_ui/actions/workflows/flutter-test.yml)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue.svg)](https://www.typescriptlang.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-14-black.svg)](https://nextjs.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC.svg)](https://tailwindcss.com/)
 
-A beautiful, modern Flutter application for event discovery and social networking.
+A beautiful, modern React/Next.js application for social discovery and networking.
 
 ## Overview
 
-HIVE UI is a Flutter-based mobile application that helps users discover, create, and engage with events. The application follows a clean architecture pattern and embraces a sleek dark theme with gold accents for a premium feel.
+HIVE UI is a Next.js-based web application that helps users discover, create, and engage with spaces and events. The application follows modern React patterns with TypeScript and embraces a sleek dark theme with gold accents for a premium feel.
 
 ## Features
 
-- **Event Discovery**: Browse events categorized by time (Today, This Week, Upcoming)
-- **Advanced Filtering**: Filter events by category, source, and search terms
-- **User Events**: Create, RSVP to, and repost events
-- **Social Integration**: Connect with clubs and event organizers
-- **Clean UI**: Enjoy a beautiful glassmorphic design with fluid animations
-- **Real-time Messaging**: Chat with users and groups with instant message delivery
-- **Deep Linking**: Open various content types within the app
+- **Space Discovery**: Browse and join spaces categorized by interests and communities
+- **Event Management**: Create, discover, and RSVP to events within spaces
+- **User Profiles**: Comprehensive profile management with authentication
+- **Real-time Features**: Live updates and notifications
+- **Modern UI**: Beautiful glassmorphic design with fluid animations built on Tailwind CSS
+- **Responsive Design**: Optimized for desktop, tablet, and mobile experiences
+- **TypeScript**: Full type safety throughout the application
 
 ## Architecture
 
-The application follows a clean architecture pattern with clear separation of concerns:
+The application follows modern React and Next.js patterns with a monorepo structure:
+
+### Tech Stack
+
+- **Framework**: Next.js 14 with App Router
+- **Language**: TypeScript 5 (strict mode)
+- **Styling**: Tailwind CSS + shadcn/ui
+- **State Management**: Zustand + React Query
+- **Authentication**: Firebase Auth
+- **Database**: Firestore
+- **UI Components**: Radix UI primitives with shadcn/ui
+- **Monorepo**: Turborepo + pnpm workspaces
 
 ### Layers
 
-- **Presentation**: UI components, screens, and state management
-- **Domain**: Business logic and entity models
-- **Data**: Repositories, services, and data sources
-
-### State Management
-
-- **Riverpod**: Used for dependency injection and state management
-- **AsyncValue**: Handles loading, error, and data states
-- **StateNotifierProvider**: Manages complex state with operations
+- **Apps**: Consumer-facing applications (web, admin)
+- **Packages**: Shared libraries and components
+- **UI Components**: Storybook-driven component library
+- **Business Logic**: Shared utilities and API clients
 
 ## Project Structure
 
 ```
-lib/
-├── components/           # Reusable UI components
-├── extensions/           # Extension methods
-├── models/               # Data models and entities
-├── pages/                # Screen implementations
-├── providers/            # Riverpod providers
-├── services/             # Business logic and API integration
-├── theme/                # App theme and styling
-└── main.dart             # Application entry point
+├── apps/
+│   ├── web/                 # Main Next.js application
+│   └── admin/               # Admin dashboard
+├── packages/
+│   ├── ui/                  # Shared UI components (Storybook)
+│   ├── hooks/               # Shared React hooks
+│   ├── core/                # Business logic and types
+│   ├── api-client/          # API client logic
+│   ├── auth-logic/          # Authentication logic
+│   ├── firebase/            # Firebase configuration
+│   └── tokens/              # Design tokens
+└── storybook/               # Storybook configuration
 ```
 
 ## UI Components
 
-### Feed Structure
+### Design System
 
-The main feed is organized into time-based sections:
+The application uses a consistent design system built with:
 
-1. **Today's Events**: Horizontal scrollable list of today's events
-2. **This Week's Events**: Horizontal scrollable list of events this week
-3. **Upcoming Events**: Vertical list of future events
+- **shadcn/ui**: Base component library
+- **Radix UI**: Accessible primitive components
+- **Tailwind CSS**: Utility-first styling
+- **Design Tokens**: Consistent spacing, colors, and typography
+
+### Key Features
+
+- **Dark Theme**: Sleek dark backgrounds with high contrast elements
+- **Gold Accents**: Highlights important actions and selected items
+- **Glassmorphism**: Frosted glass effects for cards and modals
+- **Responsive Design**: Mobile-first approach with desktop enhancements
 
 ### State Handling
 
 The application handles various states gracefully:
 
-- **Loading State**: Animated skeleton screens during data fetching
-- **Error State**: User-friendly error messages with retry options
-- **Empty State**: Informative placeholders when no content is available
-
-### UI Patterns
-
-- **Glassmorphism**: Frosted glass effect for cards and modals
-- **Gold Accents**: Highlights important actions and selected items
-- **Dark Theme**: Sleek black backgrounds with high contrast elements
+- **Loading States**: Skeleton screens and loading indicators
+- **Error Boundaries**: Graceful error handling with recovery options
+- **Empty States**: Informative placeholders when no content is available
+- **Optimistic Updates**: Immediate UI feedback for better UX
 
 ## Getting Started
 
 ### Prerequisites
 
-- Flutter SDK (2.8.0 or higher)
-- Dart SDK (2.15.0 or higher)
-- Android Studio or VS Code with Flutter plugins
+- Node.js 18.0 or higher
+- pnpm 9.x
+- Git
 
 ### Installation
 
 1. Clone the repository:
-   ```
+
+   ```bash
    git clone https://github.com/yourusername/hive_ui.git
+   cd hive_ui
    ```
 
 2. Install dependencies:
-   ```
-   cd hive_ui
-   flutter pub get
+
+   ```bash
+   pnpm install
    ```
 
-3. Run the application:
-   ```
-   flutter run
+3. Set up environment variables:
+
+   ```bash
+   cp .env.example .env.local
+   # Fill in your Firebase and other configuration
    ```
 
-### Windows Build with Firebase
+4. Start the development server:
 
-Building for Windows with Firebase requires additional steps due to compatibility issues with the Firebase plugins:
-
-1. Clean and get dependencies:
-   ```
-   flutter clean
-   flutter pub get
+   ```bash
+   pnpm dev
    ```
 
-2. Run the Firebase fix script:
-   ```
-   cd windows
-   .\fix_firebase_windows.bat
-   ```
-   
-   This script addresses common issues with Firebase plugins when building for Windows, including:
-   - Incorrect CMake configurations
-   - C++ variant compatibility issues
-   - Deprecated standard conversion warnings
+5. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-3. Build the Windows application:
-   ```
-   flutter build windows
-   ```
+### Development Commands
 
-See `windows/README.md` for detailed information about the fixes and troubleshooting.
+```bash
+# Start development server
+pnpm dev
+
+# Build for production
+pnpm build
+
+# Run linting
+pnpm lint
+
+# Run type checking
+pnpm typecheck
+
+# Run tests
+pnpm test
+
+# Start Storybook
+pnpm storybook
+
+# Clean all node_modules and build artifacts
+pnpm clean
+```
 
 ## Development Workflow
 
 ### Adding New Features
 
-1. Create model classes in the `/models` directory
-2. Implement services in the `/services` directory
-3. Create providers in the `/providers` directory
-4. Build UI components in the `/components` directory
-5. Assemble screens in the `/pages` directory
+1. Create components in `packages/ui/src/components/`
+2. Add business logic to `packages/core/`
+3. Create API clients in `packages/api-client/`
+4. Build pages in `apps/web/src/app/`
+5. Write Storybook stories for UI components
 
 ### Code Style
 
-The project follows the Dart style guide with some additional conventions:
+The project follows TypeScript and React best practices:
 
-- Use `PascalCase` for classes and enums
-- Use `camelCase` for variables, functions, and methods
-- Use `snake_case` for file names
-- Add documentation comments for all public APIs
+- **TypeScript**: Strict mode enabled with proper type definitions
+- **ESLint**: Enforced code quality and consistency
+- **Prettier**: Automatic code formatting
+- **Conventional Commits**: Structured commit messages
+
+### Component Development
+
+- All UI components should have corresponding Storybook stories
+- Use TypeScript interfaces for all props
+- Follow the HIVE design system and patterns
+- Ensure accessibility (WCAG 2.1 AA compliance)
+
+## Authentication & Authorization
+
+The application uses Firebase Auth with:
+
+- **Email/Password**: Standard authentication
+- **Social Login**: Google, Apple, and other providers
+- **Multi-Factor Authentication**: Enhanced security options
+- **Role-Based Access**: Different user roles and permissions
+
+## Deployment
+
+The application is deployed using:
+
+- **Vercel**: Main hosting platform for the web app
+- **Firebase**: Backend services and database
+- **GitHub Actions**: CI/CD pipeline for automated deployments
 
 ## License
 
@@ -151,33 +198,22 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Acknowledgements
 
-- [Flutter](https://flutter.dev/)
-- [Riverpod](https://riverpod.dev/)
-- [Material Design](https://material.io/design)
+- [Next.js](https://nextjs.org/)
+- [React](https://reactjs.org/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [shadcn/ui](https://ui.shadcn.com/)
+- [Radix UI](https://www.radix-ui.com/)
+- [Firebase](https://firebase.google.com/)
 
-### Messaging Features
+## Contributing
 
-The app now includes a full-featured real-time messaging system powered by Firebase:
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Make your changes following the coding standards
+4. Run tests and linting (`pnpm lint && pnpm typecheck && pnpm test`)
+5. Commit your changes (`git commit -m 'feat: add amazing feature'`)
+6. Push to the branch (`git push origin feature/amazing-feature`)
+7. Open a Pull Request
 
-- **Real-time updates**: Messages appear instantly without needing to refresh
-- **Chat creation**: Create direct messages or group chats
-- **Read receipts**: See when messages have been read by recipients
-- **Typing indicators**: See when someone is typing a response
-- **Media sharing**: Share images, videos, and files in conversations
-- **Message reactions**: React to messages with emojis
-
-### Deep Linking
-
-HIVE supports deep linking to various content types within the app:
-
-- Events: `hive://events/{id}` - Open event details
-- Spaces: `hive://spaces/{type}/spaces/{id}` - Open space details
-- Profiles: `hive://profiles/{id}` - View a user profile
-- Chats: `hive://messages/chat/{id}` - Open direct chat
-- Group Chats: `hive://messages/group/{id}` - Open group chat
-- Posts: `hive://posts/{id}` - View a specific post
-- Search: `hive://search?q={query}` - Open search results
-- Organizations: `hive://organizations/{id}` - View organization details
-- Event Check-ins: `hive://events/{id}/check-in` - Go to event check-in
-
-Links can be shared externally and will open the app to the correct content. Authentication is required for all deep links.
+Please ensure all tests pass and follow the established patterns before submitting a PR.

@@ -1,51 +1,57 @@
-'use client'
+"use client";
 
-import { Card, CardContent, CardHeader, CardTitle, Button } from '@hive/ui'
-import { Calendar, Clock, Users, Wrench, MessageSquare, TrendingUp } from 'lucide-react'
-import type { User } from '@hive/core'
+import { Card, CardContent, CardHeader, CardTitle, Button } from "@hive/ui";
+import {
+  Calendar,
+  Clock,
+  Users,
+  MessageSquare,
+  TrendingUp,
+} from "lucide-react";
+import type { User } from "@hive/core";
 
 interface ProfileActivityProps {
-  user: User
+  user: User;
 }
 
 // Mock activity data - will be replaced with real data from Team 2/3
 const mockActivities = [
   {
-    id: '1',
-    type: 'login',
-    description: 'Logged into HIVE',
+    id: "1",
+    type: "login",
+    description: "Logged into HIVE",
     timestamp: Date.now() - 1000 * 60 * 30, // 30 minutes ago
     icon: Clock,
   },
   {
-    id: '2', 
-    type: 'space_join',
-    description: 'Joined Computer Science Majors',
+    id: "2",
+    type: "space_join",
+    description: "Joined Computer Science Majors",
     timestamp: Date.now() - 1000 * 60 * 60 * 2, // 2 hours ago
     icon: Users,
   },
   {
-    id: '3',
-    type: 'post',
-    description: 'Posted in Computer Science Majors',
+    id: "3",
+    type: "post",
+    description: "Posted in Computer Science Majors",
     timestamp: Date.now() - 1000 * 60 * 60 * 24, // 1 day ago
     icon: MessageSquare,
   },
-]
+];
 
-export const ProfileActivity = ({ user }: ProfileActivityProps) => {
+export const ProfileActivity = ({ user: _user }: ProfileActivityProps) => {
   const formatTimeAgo = (timestamp: number) => {
-    const now = Date.now()
-    const diff = now - timestamp
-    const minutes = Math.floor(diff / (1000 * 60))
-    const hours = Math.floor(diff / (1000 * 60 * 60))
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24))
+    const now = Date.now();
+    const diff = now - timestamp;
+    const minutes = Math.floor(diff / (1000 * 60));
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
 
-    if (days > 0) return `${days}d ago`
-    if (hours > 0) return `${hours}h ago`
-    if (minutes > 0) return `${minutes}m ago`
-    return 'Just now'
-  }
+    if (days > 0) return `${days}d ago`;
+    if (hours > 0) return `${hours}h ago`;
+    if (minutes > 0) return `${minutes}m ago`;
+    return "Just now";
+  };
 
   return (
     <div className="space-y-6">
@@ -93,7 +99,7 @@ export const ProfileActivity = ({ user }: ProfileActivityProps) => {
         <CardContent>
           <div className="space-y-4">
             {mockActivities.map((activity) => {
-              const IconComponent = activity.icon
+              const IconComponent = activity.icon;
               return (
                 <div
                   key={activity.id}
@@ -103,15 +109,17 @@ export const ProfileActivity = ({ user }: ProfileActivityProps) => {
                     <IconComponent className="h-4 w-4 text-gold" />
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm text-gray-300">{activity.description}</p>
+                    <p className="text-sm text-gray-300">
+                      {activity.description}
+                    </p>
                     <p className="text-xs text-gray-500">
                       {formatTimeAgo(activity.timestamp)}
                     </p>
                   </div>
                 </div>
-              )
+              );
             })}
-            
+
             {/* Placeholder for more activities */}
             <div className="rounded-lg border border-dashed border-gray-600 p-6 text-center">
               <Calendar className="mx-auto h-8 w-8 text-gray-500" />
@@ -134,20 +142,24 @@ export const ProfileActivity = ({ user }: ProfileActivityProps) => {
         <CardContent>
           <div className="grid grid-cols-7 gap-2">
             {Array.from({ length: 7 }, (_, i) => {
-              const date = new Date()
-              date.setDate(date.getDate() - (6 - i))
-              const dayName = date.toLocaleDateString('en-US', { weekday: 'short' })
-              const dayNumber = date.getDate()
-              
+              const date = new Date();
+              date.setDate(date.getDate() - (6 - i));
+              const dayName = date.toLocaleDateString("en-US", {
+                weekday: "short",
+              });
+              const dayNumber = date.getDate();
+
               return (
                 <div
                   key={i}
                   className="rounded-lg border border-gray-700 p-3 text-center"
                 >
                   <div className="text-xs text-gray-400">{dayName}</div>
-                  <div className="text-lg font-semibold text-white">{dayNumber}</div>
+                  <div className="text-lg font-semibold text-white">
+                    {dayNumber}
+                  </div>
                   <div className="mt-1 h-2 w-full rounded-full bg-gray-700">
-                    <div 
+                    <div
                       className="h-full rounded-full bg-gold"
                       style={{ width: `${Math.random() * 100}%` }}
                     />
@@ -156,11 +168,11 @@ export const ProfileActivity = ({ user }: ProfileActivityProps) => {
                     {Math.floor(Math.random() * 5)} events
                   </div>
                 </div>
-              )
+              );
             })}
           </div>
         </CardContent>
       </Card>
     </div>
-  )
-} 
+  );
+};

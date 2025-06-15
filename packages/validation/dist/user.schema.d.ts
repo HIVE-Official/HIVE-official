@@ -1,0 +1,52 @@
+import { z } from "zod";
+export declare const UserProfileSchema: z.ZodObject<{
+    uid: z.ZodString;
+    email: z.ZodString;
+    handle: z.ZodString;
+    fullName: z.ZodString;
+    preferredName: z.ZodOptional<z.ZodString>;
+    major: z.ZodString;
+    gradYear: z.ZodString;
+    isBuilder: z.ZodDefault<z.ZodBoolean>;
+    isPublic: z.ZodDefault<z.ZodBoolean>;
+    avatarUrl: z.ZodOptional<z.ZodString>;
+    status: z.ZodDefault<z.ZodEnum<["active", "suspended", "deleted"]>>;
+    roles: z.ZodDefault<z.ZodArray<z.ZodString, "many">>;
+    reputation: z.ZodDefault<z.ZodNumber>;
+    createdAt: z.ZodAny;
+    lastSeen: z.ZodAny;
+}, "strip", z.ZodTypeAny, {
+    status: "active" | "suspended" | "deleted";
+    uid: string;
+    email: string;
+    handle: string;
+    fullName: string;
+    major: string;
+    gradYear: string;
+    isBuilder: boolean;
+    isPublic: boolean;
+    roles: string[];
+    reputation: number;
+    preferredName?: string | undefined;
+    avatarUrl?: string | undefined;
+    createdAt?: any;
+    lastSeen?: any;
+}, {
+    uid: string;
+    email: string;
+    handle: string;
+    fullName: string;
+    major: string;
+    gradYear: string;
+    status?: "active" | "suspended" | "deleted" | undefined;
+    preferredName?: string | undefined;
+    isBuilder?: boolean | undefined;
+    isPublic?: boolean | undefined;
+    avatarUrl?: string | undefined;
+    roles?: string[] | undefined;
+    reputation?: number | undefined;
+    createdAt?: any;
+    lastSeen?: any;
+}>;
+export type UserProfile = z.infer<typeof UserProfileSchema>;
+//# sourceMappingURL=user.schema.d.ts.map

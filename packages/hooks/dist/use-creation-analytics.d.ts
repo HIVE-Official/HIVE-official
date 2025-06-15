@@ -1,4 +1,4 @@
-import { CreationEventType } from '@hive/core';
+import type { CreationEventType } from '@hive/core';
 interface UseCreationAnalyticsOptions {
     toolId?: string;
     spaceId?: string;
@@ -23,7 +23,7 @@ export declare const useCreationAnalytics: (options?: UseCreationAnalyticsOption
     endBuilderSession: (exitReason?: "save" | "abandon" | "publish" | "share") => void;
     updateContext: (context: Partial<CreationAnalyticsContext>) => void;
     currentContext: CreationAnalyticsContext;
-    trackEvent: (eventType: CreationEventType, metadata?: Record<string, any>, context?: Partial<CreationAnalyticsContext>) => void;
+    trackEvent: (eventType: CreationEventType, metadata?: Record<string, unknown>, context?: Partial<CreationAnalyticsContext>) => void;
     trackToolCreated: (toolData: {
         toolId: string;
         toolName: string;

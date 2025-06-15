@@ -22,14 +22,15 @@ export const useCreationAnalytics = (options = {}) => {
     });
     // Load user preferences
     useEffect(() => {
-        const loadPreferences = async () => {
+        const loadPreferences = () => {
             if (!user)
                 return;
             try {
                 // In a real implementation, fetch from user profile or settings
                 const prefs = localStorage.getItem(`analytics_prefs_${user.uid}`);
                 if (prefs) {
-                    setUserPreferences(JSON.parse(prefs));
+                    const parsedPrefs = JSON.parse(prefs);
+                    setUserPreferences(parsedPrefs);
                 }
             }
             catch (error) {
@@ -76,7 +77,7 @@ export const useCreationAnalytics = (options = {}) => {
     // Auto-flush timer
     useEffect(() => {
         flushTimer.current = setInterval(() => {
-            flushEvents();
+            void flushEvents();
         }, flushInterval);
         return () => {
             if (flushTimer.current) {
@@ -87,7 +88,7 @@ export const useCreationAnalytics = (options = {}) => {
     // Flush on unmount
     useEffect(() => {
         return () => {
-            flushEvents(true);
+            void flushEvents(true);
         };
     }, [flushEvents]);
     // Track event
@@ -127,7 +128,7 @@ export const useCreationAnalytics = (options = {}) => {
         }
         // Flush if queue is full
         if (eventQueue.current.length >= batchSize) {
-            flushEvents();
+            void flushEvents();
         }
     }, [
         user,
@@ -168,7 +169,7 @@ export const useCreationAnalytics = (options = {}) => {
             elementsConfigured: 0,
         });
         setIsSessionActive(false);
-        flushEvents(true); // Force flush on session end
+        void flushEvents(true); // Force flush on session end
     }, [trackEvent, sessionStartTime, flushEvents]);
     // Tool lifecycle events
     const trackToolCreated = useCallback((toolData) => {

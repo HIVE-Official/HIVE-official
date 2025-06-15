@@ -1,62 +1,84 @@
-import { Metadata } from 'next'
-import { notFound } from 'next/navigation'
-import { ArrowLeft, Calendar, FileText } from 'lucide-react'
-import Link from 'next/link'
-import { Button } from '@hive/ui'
+import type { Metadata } from "next";
+import { ArrowLeft, Calendar, Scale } from "lucide-react";
+import Link from "next/link";
+import { Button } from "@hive/ui";
 
 // This would be replaced with actual MDX content loading in a real implementation
 // For now, we'll use a placeholder structure that demonstrates the intended format
 
 interface LegalDocument {
-  version: string
-  effectiveDate: string
-  title: string
-  content: React.ReactNode
+  version: string;
+  effectiveDate: string;
+  title: string;
+  content: React.ReactNode;
 }
 
 const CURRENT_TERMS: LegalDocument = {
-  version: '2025-01-15',
-  effectiveDate: 'January 15, 2025',
-  title: 'Terms of Service',
+  version: "2025-01-15",
+  effectiveDate: "January 15, 2025",
+  title: "Terms of Service",
   content: (
     <div className="prose prose-invert max-w-none">
       <div className="mb-8 rounded-lg border border-gold/20 bg-gold/5 p-6">
-        <h2 className="mt-0 text-xl font-semibold text-gold">TL;DR - The Essentials</h2>
+        <h2 className="mt-0 text-xl font-semibold text-gold">
+          TL;DR - The Essentials
+        </h2>
         <p className="mb-0 text-gray-300">
-          HIVE is your campus social platform. You keep ownership of what you create, we provide the space. 
-          Be respectful, follow community guidelines, and help us build something amazing together.
+          HIVE is your campus social platform. You keep ownership of what you
+          create, we provide the space. Be respectful, follow community
+          guidelines, and help us build something amazing together.
         </p>
       </div>
 
       <h2>1. Acceptance of Terms</h2>
       <p>
-        By accessing or using HIVE ("the Service"), you agree to be bound by these Terms of Service ("Terms"). 
-        If you disagree with any part of these terms, you may not access the Service.
+        By accessing or using HIVE ("the Service"), you agree to be bound by
+        these Terms of Service ("Terms"). If you disagree with any part of these
+        terms, you may not access the Service.
       </p>
 
       <h2>2. Description of Service</h2>
       <div className="mb-4 rounded border-l-4 border-gold/50 bg-gray-900/50 p-4">
-        <p className="mb-2 font-medium text-gold">TL;DR: HIVE connects students through Spaces, Tools, and social features.</p>
+        <p className="mb-2 font-medium text-gold">
+          TL;DR: HIVE connects students through Spaces, Tools, and social
+          features.
+        </p>
       </div>
       <p>
-        HIVE is a social platform designed for college students, providing features including but not limited to:
+        HIVE is a social platform designed for college students, providing
+        features including but not limited to:
       </p>
       <ul>
-        <li><strong>Spaces:</strong> Community groups organized around majors, interests, and residential areas</li>
-        <li><strong>Feed:</strong> Social posting and interaction within Spaces</li>
-        <li><strong>Profiles:</strong> Personal and public identity management</li>
-        <li><strong>Tools:</strong> Interactive elements and experiences created by users</li>
-        <li><strong>Analytics:</strong> Usage insights and engagement metrics</li>
-        <li><strong>Future Features:</strong> Additional social and productivity features as announced</li>
+        <li>
+          <strong>Spaces:</strong> Community groups organized around majors,
+          interests, and residential areas
+        </li>
+        <li>
+          <strong>Feed:</strong> Social posting and interaction within Spaces
+        </li>
+        <li>
+          <strong>Profiles:</strong> Personal and public identity management
+        </li>
+        <li>
+          <strong>Tools:</strong> Interactive elements and experiences created
+          by users
+        </li>
+        <li>
+          <strong>Analytics:</strong> Usage insights and engagement metrics
+        </li>
+        <li>
+          <strong>Future Features:</strong> Additional social and productivity
+          features as announced
+        </li>
       </ul>
 
       <h2>3. User Accounts and Eligibility</h2>
       <div className="mb-4 rounded border-l-4 border-gold/50 bg-gray-900/50 p-4">
-        <p className="mb-2 font-medium text-gold">TL;DR: Must be 13+ with a valid .edu email address.</p>
+        <p className="mb-2 font-medium text-gold">
+          TL;DR: Must be 13+ with a valid .edu email address.
+        </p>
       </div>
-      <p>
-        To use HIVE, you must:
-      </p>
+      <p>To use HIVE, you must:</p>
       <ul>
         <li>Be at least 13 years of age (COPPA compliance)</li>
         <li>Have a valid educational institution email address</li>
@@ -66,10 +88,13 @@ const CURRENT_TERMS: LegalDocument = {
 
       <h2>4. User-Generated Content and Intellectual Property</h2>
       <div className="mb-4 rounded border-l-4 border-gold/50 bg-gray-900/50 p-4">
-        <p className="mb-2 font-medium text-gold">TL;DR: You own your content, we get permission to display it.</p>
+        <p className="mb-2 font-medium text-gold">
+          TL;DR: You own your content, we get permission to display it.
+        </p>
       </div>
       <p>
-        You retain ownership of all intellectual property rights in content you create on HIVE, including:
+        You retain ownership of all intellectual property rights in content you
+        create on HIVE, including:
       </p>
       <ul>
         <li>Posts, comments, and other text content</li>
@@ -78,69 +103,117 @@ const CURRENT_TERMS: LegalDocument = {
         <li>Profile information and customizations</li>
       </ul>
       <p>
-        By posting content on HIVE, you grant us a non-exclusive, worldwide, royalty-free license to:
+        By posting content on HIVE, you grant us a non-exclusive, worldwide,
+        royalty-free license to:
       </p>
       <ul>
-        <li>Display, distribute, and promote your content within the Service</li>
-        <li>Create derivative works for technical purposes (e.g., formatting, compression)</li>
-        <li>Allow other users to interact with your content as intended by the Service features</li>
+        <li>
+          Display, distribute, and promote your content within the Service
+        </li>
+        <li>
+          Create derivative works for technical purposes (e.g., formatting,
+          compression)
+        </li>
+        <li>
+          Allow other users to interact with your content as intended by the
+          Service features
+        </li>
       </ul>
 
       <h2>5. Community Guidelines and Moderation</h2>
       <div className="mb-4 rounded border-l-4 border-gold/50 bg-gray-900/50 p-4">
-        <p className="mb-2 font-medium text-gold">TL;DR: Space builders moderate first, we have final say on serious violations.</p>
+        <p className="mb-2 font-medium text-gold">
+          TL;DR: Space builders moderate first, we have final say on serious
+          violations.
+        </p>
       </div>
-      <p>
-        HIVE maintains a safe and respectful environment through:
-      </p>
+      <p>HIVE maintains a safe and respectful environment through:</p>
       <ul>
-        <li><strong>Community Moderation:</strong> Space builders serve as first-line moderators for their communities</li>
-        <li><strong>Platform Oversight:</strong> HIVE reserves the right to review, remove, or restrict content that violates these Terms</li>
-        <li><strong>Escalation Process:</strong> Serious violations may result in account suspension or termination</li>
+        <li>
+          <strong>Community Moderation:</strong> Space builders serve as
+          first-line moderators for their communities
+        </li>
+        <li>
+          <strong>Platform Oversight:</strong> HIVE reserves the right to
+          review, remove, or restrict content that violates these Terms
+        </li>
+        <li>
+          <strong>Escalation Process:</strong> Serious violations may result in
+          account suspension or termination
+        </li>
       </ul>
       <p>
-        Prohibited content includes but is not limited to harassment, hate speech, spam, illegal activities, 
-        and content that violates others' intellectual property rights.
+        Prohibited content includes but is not limited to harassment, hate
+        speech, spam, illegal activities, and content that violates others'
+        intellectual property rights.
       </p>
 
       <h2>6. Tool Creation and Sharing</h2>
       <div className="mb-4 rounded border-l-4 border-gold/50 bg-gray-900/50 p-4">
-        <p className="mb-2 font-medium text-gold">TL;DR: Create awesome tools, but keep them safe and functional.</p>
+        <p className="mb-2 font-medium text-gold">
+          TL;DR: Create awesome tools, but keep them safe and functional.
+        </p>
       </div>
-      <p>
-        When creating and sharing Tools on HIVE:
-      </p>
+      <p>When creating and sharing Tools on HIVE:</p>
       <ul>
-        <li>Tools must not contain malicious code or security vulnerabilities</li>
-        <li>Tools must not violate other users' privacy or collect unauthorized data</li>
-        <li>HIVE may sandbox, restrict, or remove Tools that pose security or performance risks</li>
-        <li>You are responsible for the functionality and content of Tools you create</li>
+        <li>
+          Tools must not contain malicious code or security vulnerabilities
+        </li>
+        <li>
+          Tools must not violate other users' privacy or collect unauthorized
+          data
+        </li>
+        <li>
+          HIVE may sandbox, restrict, or remove Tools that pose security or
+          performance risks
+        </li>
+        <li>
+          You are responsible for the functionality and content of Tools you
+          create
+        </li>
       </ul>
 
       <h2>7. Privacy and Data Collection</h2>
       <div className="mb-4 rounded border-l-4 border-gold/50 bg-gray-900/50 p-4">
-        <p className="mb-2 font-medium text-gold">TL;DR: We collect minimal data, anonymize analytics, and respect your privacy.</p>
+        <p className="mb-2 font-medium text-gold">
+          TL;DR: We collect minimal data, anonymize analytics, and respect your
+          privacy.
+        </p>
       </div>
-      <p>
-        Our data practices include:
-      </p>
+      <p>Our data practices include:</p>
       <ul>
-        <li><strong>Analytics:</strong> Usage data is anonymized by default</li>
-        <li><strong>Opt-out Controls:</strong> Privacy controls and opt-out options are available</li>
-        <li><strong>Data Rights:</strong> EU users have GDPR rights, California users have CCPA rights</li>
-        <li><strong>Retention:</strong> Data is retained only as long as necessary for Service operation</li>
+        <li>
+          <strong>Analytics:</strong> Usage data is anonymized by default
+        </li>
+        <li>
+          <strong>Opt-out Controls:</strong> Privacy controls and opt-out
+          options are available
+        </li>
+        <li>
+          <strong>Data Rights:</strong> EU users have GDPR rights, California
+          users have CCPA rights
+        </li>
+        <li>
+          <strong>Retention:</strong> Data is retained only as long as necessary
+          for Service operation
+        </li>
       </ul>
       <p>
-        For complete details, see our <Link href="/legal/privacy" className="text-gold hover:text-gold/80">Privacy Policy</Link>.
+        For complete details, see our{" "}
+        <Link href="/legal/privacy" className="text-gold hover:text-gold/80">
+          Privacy Policy
+        </Link>
+        .
       </p>
 
       <h2>8. Account Suspension and Termination</h2>
       <div className="mb-4 rounded border-l-4 border-gold/50 bg-gray-900/50 p-4">
-        <p className="mb-2 font-medium text-gold">TL;DR: Serious or repeated violations may result in account restrictions.</p>
+        <p className="mb-2 font-medium text-gold">
+          TL;DR: Serious or repeated violations may result in account
+          restrictions.
+        </p>
       </div>
-      <p>
-        HIVE may suspend or terminate accounts for:
-      </p>
+      <p>HIVE may suspend or terminate accounts for:</p>
       <ul>
         <li>Violation of these Terms of Service</li>
         <li>Violation of Community Guidelines</li>
@@ -151,19 +224,24 @@ const CURRENT_TERMS: LegalDocument = {
 
       <h2>9. Limitation of Liability</h2>
       <p>
-        HIVE is provided "as is" without warranties of any kind. We are not liable for indirect, 
-        incidental, or consequential damages arising from your use of the Service.
+        HIVE is provided "as is" without warranties of any kind. We are not
+        liable for indirect, incidental, or consequential damages arising from
+        your use of the Service.
       </p>
 
       <h2>10. Changes to Terms</h2>
       <p>
-        We may update these Terms from time to time. Material changes will be communicated through 
-        the Service or via email. Continued use after changes constitutes acceptance of the new Terms.
+        We may update these Terms from time to time. Material changes will be
+        communicated through the Service or via email. Continued use after
+        changes constitutes acceptance of the new Terms.
       </p>
 
       <h2>11. Contact Information</h2>
       <p>
-        For questions about these Terms, contact us at: <a href="mailto:legal@hive.co" className="text-gold hover:text-gold/80">legal@hive.co</a>
+        For questions about these Terms, contact us at:{" "}
+        <a href="mailto:legal@hive.co" className="text-gold hover:text-gold/80">
+          legal@hive.co
+        </a>
       </p>
 
       <div className="mt-12 border-t border-gray-800 pt-8">
@@ -176,13 +254,14 @@ const CURRENT_TERMS: LegalDocument = {
         </div>
       </div>
     </div>
-  )
-}
+  ),
+};
 
 export const metadata: Metadata = {
-  title: 'Terms of Service | HIVE',
-  description: 'Terms of Service for HIVE - the social platform for college students.',
-}
+  title: "Terms of Service | HIVE",
+  description:
+    "Terms of Service for HIVE - the social platform for college students.",
+};
 
 export default function TermsOfServicePage() {
   return (
@@ -193,14 +272,18 @@ export default function TermsOfServicePage() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Link href="/">
-                <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-gray-400 hover:text-white"
+                >
                   <ArrowLeft className="mr-2 h-4 w-4" />
                   Back to HIVE
                 </Button>
               </Link>
               <div className="h-6 w-px bg-gray-700" />
               <div className="flex items-center gap-2 text-gray-400">
-                <FileText className="h-4 w-4" />
+                <Scale className="h-4 w-4" />
                 <span className="text-sm">Legal Document</span>
               </div>
             </div>
@@ -218,14 +301,13 @@ export default function TermsOfServicePage() {
             {CURRENT_TERMS.title}
           </h1>
           <p className="text-gray-400">
-            Version {CURRENT_TERMS.version} • Effective {CURRENT_TERMS.effectiveDate}
+            Version {CURRENT_TERMS.version} • Effective{" "}
+            {CURRENT_TERMS.effectiveDate}
           </p>
         </div>
 
-        <div className="text-gray-300">
-          {CURRENT_TERMS.content}
-        </div>
+        <div className="text-gray-300">{CURRENT_TERMS.content}</div>
       </div>
     </div>
-  )
-} 
+  );
+}

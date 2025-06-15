@@ -1,7 +1,7 @@
-import * as React from 'react';
-import { cn } from '../lib/utils';
-import { type Space } from '@hive/core/src/domain/firestore/space';
-import { Users, Building, Eye, EyeOff, Pause } from 'lucide-react';
+import * as React from "react";
+import { cn } from "../lib/utils";
+import { type Space } from "@hive/core/src/domain/firestore/space";
+import { Users, Building, EyeOff, Pause } from "lucide-react";
 
 interface SpaceCardProps {
   space: Space;
@@ -13,18 +13,18 @@ interface SpaceCardProps {
 const statusConfig = {
   activated: {
     icon: null,
-    label: 'Active',
-    className: 'bg-green-500/20 text-green-400',
+    label: "Active",
+    className: "bg-green-500/20 text-green-400",
   },
   dormant: {
     icon: Pause,
-    label: 'Coming Soon',
-    className: 'bg-yellow-500/20 text-yellow-400',
+    label: "Coming Soon",
+    className: "bg-yellow-500/20 text-yellow-400",
   },
   frozen: {
     icon: EyeOff,
-    label: 'View Only',
-    className: 'bg-red-500/20 text-red-400',
+    label: "View Only",
+    className: "bg-red-500/20 text-red-400",
   },
 } as const;
 
@@ -40,8 +40,8 @@ export function SpaceCard({ space, href, className, onClick }: SpaceCardProps) {
   const StatusIcon = statusInfo.icon;
 
   return (
-    <a 
-      href={href} 
+    <a
+      href={href}
       className={cn("group block", className)}
       onClick={handleClick}
       aria-label={`Visit ${space.name} space`}
@@ -50,7 +50,6 @@ export function SpaceCard({ space, href, className, onClick }: SpaceCardProps) {
         {/* Banner Section */}
         <div className="relative h-32 w-full overflow-hidden">
           {space.bannerUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
             <img
               src={space.bannerUrl}
               alt=""
@@ -60,13 +59,15 @@ export function SpaceCard({ space, href, className, onClick }: SpaceCardProps) {
             <div className="h-full w-full bg-neutral-800/50" />
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
-          
+
           {/* Status Badge */}
-          {space.status !== 'activated' && (
-            <div className={cn(
-              "absolute top-3 right-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium backdrop-blur-sm",
-              statusInfo.className
-            )}>
+          {space.status !== "activated" && (
+            <div
+              className={cn(
+                "absolute top-3 right-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium backdrop-blur-sm",
+                statusInfo.className
+              )}
+            >
               {StatusIcon && <StatusIcon className="w-3 h-3" />}
               {statusInfo.label}
             </div>
@@ -78,26 +79,31 @@ export function SpaceCard({ space, href, className, onClick }: SpaceCardProps) {
           <h3 className="truncate text-lg font-semibold text-white transition-colors duration-200 group-hover:text-yellow-400">
             {space.name}
           </h3>
-          
+
           {space.description && (
             <p className="mt-2 line-clamp-2 text-sm text-neutral-400 leading-relaxed">
               {space.description}
             </p>
           )}
-          
+
           {/* Metadata */}
           <div className="mt-4 flex items-center justify-between">
             <div className="flex items-center space-x-4 text-xs text-neutral-500">
               <div className="flex items-center">
                 <Users className="mr-1.5 h-4 w-4" />
-                <span>{space.memberCount.toLocaleString()} {space.memberCount === 1 ? 'Member' : 'Members'}</span>
+                <span>
+                  {space.memberCount.toLocaleString()}{" "}
+                  {space.memberCount === 1 ? "Member" : "Members"}
+                </span>
               </div>
               <div className="flex items-center">
                 <Building className="mr-1.5 h-4 w-4" />
-                <span className="capitalize">{space.type}</span>
+                <span className="capitalize">
+                  {space.tags.length > 0 ? space.tags[0].sub_type : space.type}
+                </span>
               </div>
             </div>
-            
+
             {/* Join Indicator */}
             <div className="opacity-0 transition-opacity duration-200 group-hover:opacity-100">
               <div className="flex items-center text-xs text-yellow-400 font-medium">
@@ -109,4 +115,4 @@ export function SpaceCard({ space, href, className, onClick }: SpaceCardProps) {
       </div>
     </a>
   );
-} 
+}

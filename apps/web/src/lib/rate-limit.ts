@@ -5,6 +5,6 @@ export function rateLimit(options: { windowMs: number; max: number }) {
   // Stub implementation - always allows requests for now
   // In production, this would implement proper rate limiting
   return {
-    check: async () => ({ success: true, remaining: options.max }),
+    check: () => ({ success: true, remaining: options.max }),
   };
-} 
+}

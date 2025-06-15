@@ -17,11 +17,14 @@ vi.mock("firebase-admin/firestore", () => ({
         })),
       })),
     })),
-    runTransaction: vi.fn((callback) => callback(mockTransaction)),
+    runTransaction: vi.fn(
+      (callback: (transaction: typeof mockTransaction) => Promise<unknown>) =>
+        callback(mockTransaction)
+    ),
   })),
   FieldValue: {
     serverTimestamp: vi.fn(() => "server-timestamp"),
-    increment: vi.fn((value) => `increment-${value}`),
+    increment: vi.fn((value: number) => `increment-${value}`),
   },
 }));
 
@@ -53,11 +56,17 @@ describe("joinWaitlist", () => {
 
   it("should throw an error if school does not exist", async () => {
     mockTransaction.get.mockResolvedValueOnce({ exists: false }); // school doc
-    await expect(joinWaitlist("test@buffalo.edu", "nonexistent")).rejects.toThrow("School not found.");
+    await expect(
+      joinWaitlist("test@buffalo.edu", "nonexistent")
+    ).rejects.toThrow("School not found.");
   });
-  
+
   it("should throw an error if email or schoolId is missing", async () => {
-    await expect(joinWaitlist("", "school1")).rejects.toThrow("Email and school ID are required.");
-    await expect(joinWaitlist("test@test.com", "")).rejects.toThrow("Email and school ID are required.");
+    await expect(joinWaitlist("", "school1")).rejects.toThrow(
+      "Email and school ID are required."
+    );
+    await expect(joinWaitlist("test@test.com", "")).rejects.toThrow(
+      "Email and school ID are required."
+    );
   });
-}); 
+});

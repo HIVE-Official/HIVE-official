@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 
 interface AnalyticsEvent {
   name: string;
-  properties?: Record<string, any>;
+  properties?: Record<string, unknown>;
 }
 
 export function useAnalytics() {
@@ -17,7 +17,7 @@ export function useAnalytics() {
     // Example: analytics.track(event.name, event.properties);
   }, []);
 
-  const identify = useCallback((userId: string, traits?: Record<string, any>) => {
+  const identify = useCallback((userId: string, traits?: Record<string, unknown>) => {
     if (process.env.NODE_ENV === 'development') {
       console.log('Analytics Identify:', { userId, traits });
     }
@@ -26,7 +26,7 @@ export function useAnalytics() {
     // Example: analytics.identify(userId, traits);
   }, []);
 
-  const page = useCallback((name: string, properties?: Record<string, any>) => {
+  const page = useCallback((name: string, properties?: Record<string, unknown>) => {
     if (process.env.NODE_ENV === 'development') {
       console.log('Analytics Page:', { name, properties });
     }

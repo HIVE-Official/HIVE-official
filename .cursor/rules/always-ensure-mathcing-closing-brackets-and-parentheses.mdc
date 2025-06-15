@@ -3,7 +3,7 @@ description:
 globs: 
 alwaysApply: true
 ---
-# HIVE UI Flutter Syntax and Linting Rules
+# HIVE UI React/TypeScript Syntax and Linting Rules
 
 ## 1. Syntax Completion
 
@@ -13,154 +13,177 @@ alwaysApply: true
 - Configure editor to automatically highlight matching brackets
 - Use code formatting before commits (Shift+Alt+F in VS Code)
 
-### 1.2 Widget Construction
-- When using complex widget trees, format your code with proper indentation
-- For widgets with many parameters, place each parameter on a new line
-- Always add a trailing comma after the last parameter to help with formatting:
-  ```dart
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: 200,
-      color: Colors.blue,
-      child: Text('Hello World'), // <- Trailing comma
+### 1.2 JSX/TSX Component Construction
+- When using complex JSX structures, format your code with proper indentation
+- For components with many props, place each prop on a new line
+- Always add a trailing comma after the last prop to help with formatting:
+  ```tsx
+  const MyComponent = () => {
+    return (
+      <Container
+        width="100%"
+        height={200}
+        className="bg-blue-500"
+        aria-label="Hello World"
+      >
+        <Text>Hello World</Text>
+      </Container>
     );
-  }
+  };
   ```
 
 ## 2. Required Parameters
 
-### 2.1 Widget Parameters
-- Always provide all required parameters for widgets
-- Common widgets with required parameters:
-  - `FutureBuilder` requires `future` and `builder`
-  - `StreamBuilder` requires `stream` and `builder`
-  - `ListView.builder` requires `itemBuilder` and usually `itemCount`
-  - `showDialog` requires `context` and `builder`
-  - `showModalBottomSheet` requires `context` and `builder`
+### 2.1 Component Props
+- Always provide all required props for components
+- Use TypeScript interfaces to define component props clearly
+- Common React patterns with required props:
+  - Custom hooks must return consistent types
+  - Event handlers should be properly typed
+  - Children props should use `React.ReactNode`
 
-### 2.2 Parameter Naming
-- Be precise with named parameters, check documentation if unsure
-- Common parameter naming issues:
-  - `onTap` vs `onPressed` vs `onSelect`
-  - `child` vs `children`
-  - `builder` vs `itemBuilder`
-  - `color` vs `backgroundColor` vs `foregroundColor`
+### 2.2 Prop Naming
+- Use camelCase for prop names (React convention)
+- Be precise with prop types, use TypeScript interfaces
+- Common naming patterns:
+  - `onClick` vs `onPress` vs `onSelect`
+  - `children` vs `content`
+  - `className` vs `style`
+  - `disabled` vs `isDisabled`
 
-## 3. Constant Values
+## 3. TypeScript Typing
 
-### 3.1 Const Correctness
-- Use `const` for widget constructors when all parameters are known at compile time
-- If a widget contains references to non-constant values, don't use `const`
-- Common mistake: using const with closures or function references
+### 3.1 Type Safety
+- Always use explicit types for function parameters and return values
+- Use `const` assertions where appropriate
+- Avoid `any` type - use proper TypeScript types
 
-### 3.2 Valid Constants
-- Only primitive types, collections of constants, and const constructors can be used with `const`
-- Never try to make these constant:
-  - Functions or closures
-  - Instance methods
-  - References to non-final variables
-  - References to objects created at runtime
+### 3.2 Valid Type Patterns
+- Use interface for object shapes, type for unions
+- Prefer type inference where TypeScript can determine types
+- Use generic types for reusable components:
+  ```tsx
+  interface ButtonProps<T = HTMLButtonElement> {
+    onClick: (event: React.MouseEvent<T>) => void;
+    children: React.ReactNode;
+    disabled?: boolean;
+  }
+  ```
 
 ## 4. Import Management
 
 ### 4.1 Managing Imports
 - Remove unused imports (VS Code shortcut: Alt+Shift+O)
-- Only import what you need
-- Organize imports regularly
+- Use absolute imports with path aliases (@/, @hive/*)
+- Group imports: external libraries, internal modules, relative imports
 
-### 4.2 Import Conflicts
-- Avoid duplicate functionality imports:
-  - Don't import both `dart:ui` and `package:flutter/material.dart`
-  - Don't import the same package with different paths
-- Use package alias to resolve name conflicts:
-  ```dart
-  import 'package:package1/models.dart' as models1;
-  import 'package:package2/models.dart' as models2;
+### 4.2 Import Best Practices
+- Use type-only imports when importing only for types:
+  ```tsx
+  import type { User } from '@/types/user';
+  import { getUserData } from '@/api/users';
   ```
+- Avoid circular dependencies
+- Use dynamic imports for code splitting when appropriate
 
 ## 5. Unused Code
 
 ### 5.1 Cleaning Unused Code
-- Remove unused variables, functions, and classes
-- Comment out code during development instead of leaving it in place
-- If keeping code for future reference, clearly mark it with `// TODO: ` comments
+- Remove unused variables, functions, and components
+- Use ESLint rules to catch unused imports and variables
+- Clean up console.logs before committing
 
 ### 5.2 Dead Code Prevention
-- Run Flutter analyze regularly to identify unused elements
-- Consider using a lint rule to highlight unused code
+- Run `pnpm lint` regularly to identify unused elements
+- Use TypeScript strict mode to catch potential issues
 - Review codebase periodically to remove accumulated dead code
 
-## 6. Async Context Usage
+## 6. Async Operations & Hooks
 
-### 6.1 BuildContext Safety
-- NEVER use BuildContext across async gaps without proper checks
-- Store needed data from the context before async operations
-- Always check `mounted` before using State.context after async operations
-- Extract Navigator operations to happen before async calls when possible
+### 6.1 useEffect Safety
+- Always clean up subscriptions and async operations
+- Use AbortController for fetch requests
+- Handle component unmounting properly:
+  ```tsx
+  useEffect(() => {
+    let isMounted = true;
+    
+    const fetchData = async () => {
+      try {
+        const data = await api.getData();
+        if (isMounted) {
+          setData(data);
+        }
+      } catch (error) {
+        if (isMounted) {
+          setError(error);
+        }
+      }
+    };
+    
+    fetchData();
+    
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+  ```
 
-### 6.2 Safe Patterns for Async UI
-- CORRECT pattern for async operations with context:
-  ```dart
-  void _handleAsyncOperation(BuildContext context) async {
-    // Store what you need from context
-    final navigator = Navigator.of(context);
-    
-    // Perform async operation
-    await Future.delayed(const Duration(seconds: 1));
-    
-    // Check if still mounted before using State.context
-    if (!mounted) return;
-    
-    // Now use the stored navigator
-    navigator.pop();
+### 6.2 Custom Hooks Patterns
+- Always return consistent types from custom hooks
+- Use proper dependency arrays in useEffect
+- Handle loading and error states explicitly
+
+## 7. Common React/Next.js Patterns
+
+### 7.1 Component Structure
+- Use React Server Components by default
+- Only use "use client" when necessary (hooks, event handlers, browser APIs)
+- Properly handle loading and error states:
+  ```tsx
+  import { Suspense } from 'react';
+  import { ErrorBoundary } from '@/components/ErrorBoundary';
+  
+  export default function Page() {
+    return (
+      <ErrorBoundary>
+        <Suspense fallback={<Loading />}>
+          <AsyncComponent />
+        </Suspense>
+      </ErrorBoundary>
+    );
   }
   ```
 
-### 6.3 Common Context Issues
-- Showing dialogs after async operations
-- Navigation after async operations
-- Accessing theme or media query after async operations
-- Using Scaffold.of(context) after async operations
-
-## 7. Common Flutter Widget Errors
-
-### 7.1 Widget Tree Issues
-- Column/Row with unbounded children
-  - Always constrain Columns/Rows inside a `SingleChildScrollView`, `Expanded`, or container with specific dimensions
-  - Scrollable widgets like `ListView` need height constraints when inside Column
-
-### 7.2 FutureBuilder/StreamBuilder
-- Always include proper error handling in builders
-- Always handle loading states
-- Example:
-  ```dart
-  FutureBuilder<String>(
-    future: fetchData(),
-    builder: (context, snapshot) {
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        return const CircularProgressIndicator();
-      } else if (snapshot.hasError) {
-        return Text('Error: ${snapshot.error}');
-      } else if (snapshot.hasData) {
-        return Text(snapshot.data!);
-      } else {
-        return const Text('No data');
-      }
-    },
-  )
-  ```
+### 7.2 State Management
+- Use useState for local component state
+- Use Zustand for global state when needed
+- Use React Query for server state management
 
 ## 8. Testing and Verification
 
 ### 8.1 Pre-Commit Checks
-- Run `flutter analyze` before committing code
-- Use lint tools integrated in your IDE
-- Consider using a pre-commit hook to enforce these checks
+- Run `pnpm lint` before committing code
+- Run `pnpm typecheck` to verify TypeScript types
+- Use Prettier for consistent formatting
 
 ### 8.2 Code Review Focus
 - Pay special attention to:
-  - Widget parameter completeness
-  - BuildContext usage with async operations
-  - Proper error handling
-  - Const correctness
+  - TypeScript type safety
+  - Proper prop typing
+  - useEffect dependency arrays
+  - Accessibility (aria-labels, semantic HTML)
+  - Performance (unnecessary re-renders)
+
+## 9. HIVE-Specific Standards
+
+### 9.1 Styling
+- Use Tailwind CSS classes exclusively
+- Follow the design system in packages/tokens
+- Use shadcn/ui components as base components
+
+### 9.2 Architecture
+- Follow the monorepo structure (apps/*, packages/*)
+- Use path aliases consistently
+- Keep components small and focused
+- Separate business logic from UI components

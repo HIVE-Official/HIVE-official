@@ -1,28 +1,34 @@
-'use client';
+"use client";
 
-import { useMemo, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { Input } from '@hive/ui';
-import { Search, AlertCircle, Compass } from 'lucide-react';
-import { SpaceFilterPills } from './components/space-filter-pills';
-import { type SpaceType, type Space } from '@hive/core/src/domain/firestore/space';
-import { SpaceCard } from '@hive/ui/src/components/space-card';
-import { useDebounce } from '@hive/hooks';
-import { Button } from '@hive/ui';
+import { useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { Input } from "@hive/ui";
+import { Search, AlertCircle, Compass } from "lucide-react";
+import { SpaceFilterPills } from "./components/space-filter-pills";
+import {
+  type SpaceType,
+  type Space,
+} from "@hive/core/src/domain/firestore/space";
+import { SpaceCard } from "@hive/ui";
+import { useDebounce } from "@hive/hooks";
+import { Button } from "@hive/ui";
 
-async function fetchSpaces(filter: SpaceType | 'all', searchTerm: string): Promise<Space[]> {
+async function fetchSpaces(
+  filter: SpaceType | "all",
+  searchTerm: string
+): Promise<Space[]> {
   const params = new URLSearchParams();
-  if (filter !== 'all') {
-    params.set('type', filter);
+  if (filter !== "all") {
+    params.set("type", filter);
   }
   if (searchTerm) {
-    params.set('q', searchTerm);
+    params.set("q", searchTerm);
   }
   const response = await fetch(`/api/spaces/browse?${params.toString()}`);
   if (!response.ok) {
-    throw new Error('Failed to fetch spaces');
+    throw new Error("Failed to fetch spaces");
   }
-  const data = await response.json();
+  const data = (await response.json()) as { spaces?: Space[] };
   return data.spaces || [];
 }
 
@@ -59,7 +65,8 @@ function ErrorState({ onRetry }: { onRetry: () => void }) {
         Failed to load spaces
       </h3>
       <p className="text-neutral-400 text-center mb-6 max-w-md">
-        We couldn&apos;t fetch the spaces right now. Please check your connection and try again.
+        We couldn&apos;t fetch the spaces right now. Please check your
+        connection and try again.
       </p>
       <Button
         onClick={onRetry}
@@ -72,27 +79,31 @@ function ErrorState({ onRetry }: { onRetry: () => void }) {
   );
 }
 
-function EmptyState({ searchTerm, activeFilter }: { 
-  searchTerm: string; 
-  activeFilter: SpaceType | 'all';
+function EmptyState({
+  searchTerm,
+  activeFilter,
+}: {
+  searchTerm: string;
+  activeFilter: SpaceType | "all";
 }) {
-  const isFiltered = activeFilter !== 'all' || searchTerm.length > 0;
-  
+  const isFiltered = activeFilter !== "all" || searchTerm.length > 0;
+
   return (
     <div className="flex flex-col items-center justify-center py-16 px-4">
       <Compass className="h-12 w-12 text-neutral-500 mb-4" />
       <h3 className="text-lg font-semibold text-white mb-2">
-        {isFiltered ? 'No spaces found' : 'No spaces yet'}
+        {isFiltered ? "No spaces found" : "No spaces yet"}
       </h3>
       <p className="text-neutral-400 text-center max-w-md">
-        {isFiltered 
-          ? 'Try adjusting your search terms or filters to find what you&apos;re looking for.'
-          : 'Spaces are being created. Check back soon to discover new communities.'
-        }
+        {isFiltered
+          ? "Try adjusting your search terms or filters to find what you&apos;re looking for."
+          : "Spaces are being created. Check back soon to discover new communities."}
       </p>
       {isFiltered && (
         <Button
-          onClick={() => window.location.reload()}
+          onClick={() => {
+            window.location.reload();
+          }}
           variant="ghost"
           className="mt-4 text-yellow-400 hover:text-yellow-300 hover:bg-yellow-400/10"
         >
@@ -104,28 +115,33 @@ function EmptyState({ searchTerm, activeFilter }: {
 }
 
 export default function SpacesDiscoveryPage() {
-  const [activeFilter, setActiveFilter] = useState<SpaceType | 'all'>('all');
-  const [searchTerm, setSearchTerm] = useState('');
+  const [activeFilter, setActiveFilter] = useState<SpaceType | "all">("all");
+  const [searchTerm, setSearchTerm] = useState("");
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
 
-  const { data: spaces, isLoading, error, refetch } = useQuery<Space[]>({
-    queryKey: ['spaces', activeFilter, debouncedSearchTerm],
+  const {
+    data: spaces,
+    isLoading,
+    error,
+    refetch,
+  } = useQuery<Space[]>({
+    queryKey: ["spaces", activeFilter, debouncedSearchTerm],
     queryFn: () => fetchSpaces(activeFilter, debouncedSearchTerm),
     staleTime: 30000, // 30 seconds
     retry: 2,
   });
 
-  const handleFilterChange = (filter: SpaceType | 'all') => {
+  const handleFilterChange = (filter: SpaceType | "all") => {
     setActiveFilter(filter);
   };
-  
+
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
   };
 
   const handleClearSearch = () => {
-    setSearchTerm('');
-    setActiveFilter('all');
+    setSearchTerm("");
+    setActiveFilter("all");
   };
 
   const renderContent = useMemo(() => {
@@ -139,8 +155,8 @@ export default function SpacesDiscoveryPage() {
 
     if (!spaces || spaces.length === 0) {
       return (
-        <EmptyState 
-          searchTerm={debouncedSearchTerm} 
+        <EmptyState
+          searchTerm={debouncedSearchTerm}
           activeFilter={activeFilter}
         />
       );
@@ -149,10 +165,10 @@ export default function SpacesDiscoveryPage() {
     return (
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {spaces.map((space) => (
-          <SpaceCard 
+          <SpaceCard
             key={space.id}
-            space={space} 
-            href={`/spaces/${space.id}`} 
+            space={space}
+            href={`/spaces/${space.id}`}
           />
         ))}
       </div>
@@ -167,7 +183,8 @@ export default function SpacesDiscoveryPage() {
             Discover Spaces
           </h1>
           <p className="mt-4 text-lg text-neutral-400">
-            Find communities, join conversations, and build with others at your campus.
+            Find communities, join conversations, and build with others at your
+            campus.
           </p>
         </header>
 
@@ -196,11 +213,11 @@ export default function SpacesDiscoveryPage() {
             )}
           </div>
         </div>
-        
+
         <div className="mb-8">
-          <SpaceFilterPills 
+          <SpaceFilterPills
             activeFilter={activeFilter}
-            onFilterChange={handleFilterChange} 
+            onFilterChange={handleFilterChange}
           />
         </div>
 
@@ -208,12 +225,11 @@ export default function SpacesDiscoveryPage() {
         {!isLoading && spaces && (
           <div className="mb-6">
             <p className="text-sm text-neutral-500">
-              {spaces.length === 0 
-                ? 'No spaces found'
-                : `${spaces.length} ${spaces.length === 1 ? 'space' : 'spaces'} found`
-              }
+              {spaces.length === 0
+                ? "No spaces found"
+                : `${spaces.length} ${spaces.length === 1 ? "space" : "spaces"} found`}
               {debouncedSearchTerm && ` for "${debouncedSearchTerm}"`}
-              {activeFilter !== 'all' && ` in ${activeFilter}`}
+              {activeFilter !== "all" && ` in ${activeFilter}`}
             </p>
           </div>
         )}
@@ -222,4 +238,4 @@ export default function SpacesDiscoveryPage() {
       </div>
     </div>
   );
-} 
+}

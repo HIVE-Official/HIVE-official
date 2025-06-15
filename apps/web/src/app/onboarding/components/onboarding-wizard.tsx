@@ -1,20 +1,20 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useAuth } from '@hive/hooks';
-import { Button, Card } from '@hive/ui';
-import { ArrowLeft, ArrowRight, Sparkles } from 'lucide-react';
-import { MotionDiv, AnimatePresence } from '@hive/ui/components/framer-motion-proxy';
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@hive/hooks";
+import { Button, Card } from "@hive/ui";
+import { ArrowLeft, ArrowRight, Sparkles } from "lucide-react";
+import { MotionDiv, AnimatePresence } from "@hive/ui";
 
 // Step components
-import { WelcomeStep } from './steps/welcome-step';
-import { NameStep } from './steps/name-step';
-import { AcademicsStep } from './steps/academics-step';
-import { HandleStep } from './steps/handle-step';
-import { PhotoStep } from './steps/photo-step';
-import { BuilderStep } from './steps/builder-step';
-import { LegalStep } from './steps/legal-step';
+import { WelcomeStep } from "./steps/welcome-step";
+import { NameStep } from "./steps/name-step";
+import { AcademicsStep } from "./steps/academics-step";
+import { HandleStep } from "./steps/handle-step";
+import { PhotoStep } from "./steps/photo-step";
+import { BuilderStep } from "./steps/builder-step";
+import { LegalStep } from "./steps/legal-step";
 
 // Simple Progress component
 function Progress({ value, className }: { value: number; className?: string }) {
@@ -37,18 +37,20 @@ export interface OnboardingData {
   profilePhoto?: string;
   isBuilder: boolean;
   hasConsented: boolean;
+  acceptedTerms: boolean;
+  acceptedPrivacy: boolean;
 }
 
 const TOTAL_STEPS = 7;
 
 const steps = [
-  { id: 'welcome', title: 'Welcome', component: WelcomeStep },
-  { id: 'name', title: 'Your Name', component: NameStep },
-  { id: 'academics', title: 'Academics', component: AcademicsStep },
-  { id: 'handle', title: 'Username', component: HandleStep },
-  { id: 'photo', title: 'Profile Photo', component: PhotoStep },
-  { id: 'builder', title: 'Builder Status', component: BuilderStep },
-  { id: 'legal', title: 'Terms & Privacy', component: LegalStep },
+  { id: "welcome", title: "Welcome", component: WelcomeStep },
+  { id: "name", title: "Your Name", component: NameStep },
+  { id: "academics", title: "Academics", component: AcademicsStep },
+  { id: "handle", title: "Username", component: HandleStep },
+  { id: "photo", title: "Profile Photo", component: PhotoStep },
+  { id: "builder", title: "Builder Status", component: BuilderStep },
+  { id: "legal", title: "Terms & Privacy", component: LegalStep },
 ];
 
 export function OnboardingWizard() {
@@ -56,35 +58,37 @@ export function OnboardingWizard() {
   const [currentStep, setCurrentStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [data, setData] = useState<OnboardingData>({
-    fullName: '',
-    major: '',
+    fullName: "",
+    major: "",
     graduationYear: new Date().getFullYear(),
-    handle: '',
+    handle: "",
     isBuilder: false,
     hasConsented: false,
+    acceptedTerms: false,
+    acceptedPrivacy: false,
   });
 
   const updateData = (newData: Partial<OnboardingData>) => {
-    setData(prev => ({ ...prev, ...newData }));
+    setData((prev) => ({ ...prev, ...newData }));
   };
 
   const canGoNext = () => {
     const step = steps[currentStep];
     switch (step.id) {
-      case 'welcome':
+      case "welcome":
         return true;
-      case 'name':
+      case "name":
         return data.fullName.trim().length > 0;
-      case 'academics':
+      case "academics":
         return data.major.length > 0;
-      case 'handle':
+      case "handle":
         return data.handle.length > 0;
-      case 'photo':
+      case "photo":
         return true; // Optional step
-      case 'builder':
+      case "builder":
         return true;
-      case 'legal':
-        return data.hasConsented;
+      case "legal":
+        return data.acceptedTerms && data.acceptedPrivacy;
       default:
         return false;
     }
@@ -96,45 +100,44 @@ export function OnboardingWizard() {
 
   const goNext = () => {
     if (currentStep < TOTAL_STEPS - 1 && canGoNext()) {
-      setCurrentStep(prev => prev + 1);
+      setCurrentStep((prev) => prev + 1);
     }
   };
 
   const goBack = () => {
     if (canGoBack()) {
-      setCurrentStep(prev => prev - 1);
+      setCurrentStep((prev) => prev - 1);
     }
   };
 
   const handleSubmit = async () => {
     if (!canGoNext()) return;
-    
+
     setIsSubmitting(true);
     try {
-      const response = await fetch('/api/auth/complete-onboarding', {
-        method: 'POST',
+      const response = await fetch("/api/auth/complete-onboarding", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to complete onboarding');
+        const errorData = (await response.json()) as { error?: string };
+        throw new Error(errorData.error || "Failed to complete onboarding");
       }
 
       // Show success animation
       setCurrentStep(TOTAL_STEPS); // Go to success state
-      
+
       // Redirect after delay
       setTimeout(() => {
-        router.push('/');
+        router.push("/");
       }, 3000);
-
     } catch (error) {
-      console.error('Onboarding error:', error);
-      alert(error instanceof Error ? error.message : 'Something went wrong');
+      console.error("Onboarding error:", error);
+      alert(error instanceof Error ? error.message : "Something went wrong");
     } finally {
       setIsSubmitting(false);
     }
@@ -147,37 +150,37 @@ export function OnboardingWizard() {
   if (currentStep >= TOTAL_STEPS) {
     return (
       <div className="min-h-screen flex items-center justify-center p-4">
-        <motion.div
+        <MotionDiv
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.5 }}
           className="text-center"
         >
-          <motion.div
+          <MotionDiv
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
             className="mx-auto w-24 h-24 bg-yellow-500/20 rounded-full flex items-center justify-center mb-6"
           >
             <Sparkles className="w-12 h-12 text-yellow-500" />
-          </motion.div>
-          <motion.h1
+          </MotionDiv>
+          <MotionDiv
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.4 }}
             className="text-3xl font-bold text-white mb-4"
           >
-            Welcome to HIVE, {data.fullName.split(' ')[0]}!
-          </motion.h1>
-          <motion.p
+            Welcome to HIVE, {data.fullName.split(" ")[0]}!
+          </MotionDiv>
+          <MotionDiv
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.6 }}
             className="text-zinc-400 text-lg"
           >
             Your profile is ready. Taking you to your new home...
-          </motion.p>
-        </motion.div>
+          </MotionDiv>
+        </MotionDiv>
       </div>
     );
   }
@@ -201,7 +204,7 @@ export function OnboardingWizard() {
 
           <div className="px-6 pt-0">
             <AnimatePresence mode="wait">
-              <motion.div
+              <MotionDiv
                 key={currentStep}
                 initial={{ x: 20, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
@@ -216,7 +219,7 @@ export function OnboardingWizard() {
                     onNext={goNext}
                   />
                 )}
-              </motion.div>
+              </MotionDiv>
             </AnimatePresence>
 
             {/* Navigation */}
@@ -237,7 +240,7 @@ export function OnboardingWizard() {
                   disabled={!canGoNext() || isSubmitting}
                   className="bg-yellow-500 hover:bg-yellow-600 text-black font-medium"
                 >
-                  {isSubmitting ? 'Creating your profile...' : 'Enter HIVE'}
+                  {isSubmitting ? "Creating your profile..." : "Enter HIVE"}
                   <Sparkles className="w-4 h-4 ml-2" />
                 </Button>
               ) : (
@@ -282,7 +285,7 @@ export function OnboardingWizard() {
                 <div>
                   <div className="text-sm text-zinc-500 mb-1">Name</div>
                   <div className="text-white font-medium">
-                    {data.fullName || 'Your name'}
+                    {data.fullName || "Your name"}
                   </div>
                 </div>
 
@@ -290,7 +293,7 @@ export function OnboardingWizard() {
                 <div>
                   <div className="text-sm text-zinc-500 mb-1">Handle</div>
                   <div className="text-yellow-500">
-                    @{data.handle || 'your-handle'}
+                    @{data.handle || "your-handle"}
                   </div>
                 </div>
 
@@ -298,7 +301,7 @@ export function OnboardingWizard() {
                 <div>
                   <div className="text-sm text-zinc-500 mb-1">Major</div>
                   <div className="text-zinc-300">
-                    {data.major || 'Your major'}
+                    {data.major || "Your major"}
                   </div>
                 </div>
 
@@ -315,4 +318,4 @@ export function OnboardingWizard() {
       </div>
     </div>
   );
-} 
+}

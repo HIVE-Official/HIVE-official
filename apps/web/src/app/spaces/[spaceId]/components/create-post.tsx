@@ -1,18 +1,30 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Button } from '@hive/ui';
-import { Card, CardContent } from '@hive/ui';
-import { Textarea } from '@hive/ui';
-import { Loader2, Send } from 'lucide-react';
+import { useState } from "react";
+import { Button } from "@hive/ui";
+import { Card, CardContent } from "@hive/ui";
+import { Textarea } from "@hive/ui";
+import { Loader2, Send } from "lucide-react";
+
+interface Post {
+  id: string;
+  content: string;
+  type: string;
+  createdAt: string;
+  author: {
+    id: string;
+    handle: string;
+    fullName: string;
+  };
+}
 
 interface CreatePostProps {
   spaceId: string;
-  onPostCreated: (post: any) => void;
+  onPostCreated: (_post: Post) => void;
 }
 
 export function CreatePost({ spaceId, onPostCreated }: CreatePostProps) {
-  const [content, setContent] = useState('');
+  const [content, setContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -22,25 +34,25 @@ export function CreatePost({ spaceId, onPostCreated }: CreatePostProps) {
     setIsSubmitting(true);
     try {
       const response = await fetch(`/api/spaces/${spaceId}/posts`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           content: content.trim(),
-          type: 'text',
+          type: "text",
         }),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to create post');
+        throw new Error("Failed to create post");
       }
 
-      const newPost = await response.json();
+      const newPost = (await response.json()) as Post;
       onPostCreated(newPost);
-      setContent('');
+      setContent("");
     } catch (error) {
-      console.error('Error creating post:', error);
+      console.error("Error creating post:", error);
     } finally {
       setIsSubmitting(false);
     }
@@ -80,4 +92,4 @@ export function CreatePost({ spaceId, onPostCreated }: CreatePostProps) {
       </CardContent>
     </Card>
   );
-} 
+}

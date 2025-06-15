@@ -1,9 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { z } from 'zod';
-import { getAuth } from 'firebase-admin/auth';
-import { getFirestore, FieldValue } from 'firebase-admin/firestore';
-import { type Space } from '@hive/core/src/domain/firestore/space';
-import { type Member, type MemberRole } from '@hive/core/src/domain/firestore/member';
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
+import { z } from "zod";
+import { getAuth } from "firebase-admin/auth";
+import { getFirestore, FieldValue } from "firebase-admin/firestore";
+import type { Space } from "@hive/core/src/domain/firestore/space";
+import type { MemberRole } from "@hive/core/src/domain/firestore/member";
 
 // Server-side member type that allows FieldValue for timestamps
 interface ServerMember {
@@ -13,7 +14,7 @@ interface ServerMember {
 }
 
 const joinSpaceSchema = z.object({
-  spaceId: z.string().min(1, 'Space ID is required'),
+  spaceId: z.string().min(1, "Space ID is required"),
 });
 
 /**
@@ -23,23 +24,23 @@ const joinSpaceSchema = z.object({
 export async function POST(request: NextRequest) {
   try {
     // Get the authorization header and verify the user
-    const authHeader = request.headers.get('authorization');
-    if (!authHeader?.startsWith('Bearer ')) {
+    const authHeader = request.headers.get("authorization");
+    if (!authHeader?.startsWith("Bearer ")) {
       return NextResponse.json(
-        { error: 'Missing or invalid authorization header' },
+        { error: "Missing or invalid authorization header" },
         { status: 401 }
       );
     }
 
-    const idToken = authHeader.split('Bearer ')[1];
+    const idToken = authHeader.split("Bearer ")[1];
     const auth = getAuth();
-    
+
     let decodedToken;
     try {
       decodedToken = await auth.verifyIdToken(idToken);
-    } catch (error) {
+    } catch (_error) {
       return NextResponse.json(
-        { error: 'Invalid or expired token' },
+        { error: "Invalid or expired token" },
         { status: 401 }
       );
     }
@@ -47,68 +48,68 @@ export async function POST(request: NextRequest) {
     const userId = decodedToken.uid;
 
     // Parse and validate request body
-    const body = await request.json();
+    const body = (await request.json()) as unknown;
     const { spaceId } = joinSpaceSchema.parse(body);
 
     // Get Firestore instance
     const db = getFirestore();
 
     // Check if space exists and is joinable
-    const spaceDocRef = db.collection('spaces').doc(spaceId);
+    const spaceDocRef = db.collection("spaces").doc(spaceId);
     const spaceDoc = await spaceDocRef.get();
-    
+
     if (!spaceDoc.exists) {
-      return NextResponse.json(
-        { error: 'Space not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Space not found" }, { status: 404 });
     }
 
     const space = spaceDoc.data() as Space;
-    
+
     // Check if space is in a joinable status
-    if (space.status === 'frozen') {
+    if (space.status === "frozen") {
       return NextResponse.json(
-        { error: 'This space is currently frozen and not accepting new members' },
+        {
+          error: "This space is currently frozen and not accepting new members",
+        },
         { status: 403 }
       );
     }
 
-    if (space.status === 'dormant') {
+    if (space.status === "dormant") {
       return NextResponse.json(
-        { error: 'This space is not yet active' },
+        { error: "This space is not yet active" },
         { status: 403 }
       );
     }
 
     // Check if user is already a member
-    const memberDocRef = db.collection('spaces').doc(spaceId).collection('members').doc(userId);
+    const memberDocRef = db
+      .collection("spaces")
+      .doc(spaceId)
+      .collection("members")
+      .doc(userId);
     const memberDoc = await memberDocRef.get();
-    
+
     if (memberDoc.exists) {
       return NextResponse.json(
-        { error: 'You are already a member of this space' },
+        { error: "You are already a member of this space" },
         { status: 409 }
       );
     }
 
     // Get user data to verify they're from the same school
-    const userDocRef = db.collection('users').doc(userId);
+    const userDocRef = db.collection("users").doc(userId);
     const userDoc = await userDocRef.get();
-    
+
     if (!userDoc.exists) {
-      return NextResponse.json(
-        { error: 'User not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    const userData = userDoc.data();
-    
+    const userData = userDoc.data() as { schoolId: string } | undefined;
+
     // Verify user is from the same school as the space
-    if (userData.schoolId !== space.schoolId) {
+    if (!userData || userData.schoolId !== space.schoolId) {
       return NextResponse.json(
-        { error: 'You can only join spaces from your school' },
+        { error: "You can only join spaces from your school" },
         { status: 403 }
       );
     }
@@ -119,7 +120,7 @@ export async function POST(request: NextRequest) {
     // Add user to members sub-collection
     const newMember: ServerMember = {
       uid: userId,
-      role: 'member',
+      role: "member",
       joinedAt: FieldValue.serverTimestamp(),
     };
 
@@ -136,27 +137,26 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      message: 'Successfully joined the space',
+      message: "Successfully joined the space",
       space: {
         id: spaceId,
         name: space.name,
         type: space.type,
       },
     });
-
   } catch (error) {
-    console.error('Error joining space:', error);
-    
+    console.error("Error joining space:", error);
+
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: 'Invalid request data', details: error.errors },
+        { error: "Invalid request data", details: error.errors },
         { status: 400 }
       );
     }
 
     return NextResponse.json(
-      { error: 'Failed to join space' },
+      { error: "Failed to join space" },
       { status: 500 }
     );
   }
-} 
+}

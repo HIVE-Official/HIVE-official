@@ -1,4 +1,5 @@
 // Core UI Components
+export default {}
 export * from './ui/button';
 export * from './ui/card';
 export * from './ui/input';
@@ -10,6 +11,9 @@ export * from './ui/scroll-area';
 export * from './ui/avatar';
 export * from './ui/dropdown-menu';
 export * from './ui/alert-dialog';
+export * from './alert';
+export * from './progress';
+export * from './label';
 
 // Layout Components
 export * from './stack';
@@ -21,6 +25,7 @@ export * from './typography';
 
 // Other Components
 export * from './space-card';
+export * from './post-card';
 
 // Creator Components
 export * from './creator';

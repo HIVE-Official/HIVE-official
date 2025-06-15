@@ -298,7 +298,7 @@ export const parseElementId = (elementId: ElementId): { name: string; version: n
 }
 
 export const createElementId = (name: string, version: number): ElementId => {
-  const id = `${name}-v${version}` as ElementId
+  const id = `${name}-v${version}`
   return ElementId.parse(id)
 }
 

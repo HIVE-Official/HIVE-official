@@ -6,8 +6,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@hive/ui";
-import { getFirestore } from 'firebase-admin/firestore';
-import { School } from "@hive/core/src/domain/school";
+import { getFirestore } from "firebase-admin/firestore";
+import type { School } from "@hive/core";
 import { WaitlistProgress } from "./components/waitlist-progress";
 import { WaitlistForm } from "./components/waitlist-form";
 
@@ -50,9 +50,13 @@ export default async function WaitlistPage({ params }: WaitlistPageProps) {
         </CardHeader>
         <CardContent className="flex w-full flex-col items-center gap-4">
           <WaitlistProgress currentCount={school.waitlistCount} />
-          <WaitlistForm schoolDomain={school.domain} schoolId={school.id} />
+          <WaitlistForm
+            schoolDomain={school.domain}
+            schoolId={school.id}
+            schoolName={school.name}
+          />
         </CardContent>
       </Card>
     </main>
   );
-} 
+}

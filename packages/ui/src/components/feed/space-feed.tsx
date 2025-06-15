@@ -1,274 +1,367 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react'
-import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { Card, CardContent } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Loader2, RefreshCw, AlertCircle } from 'lucide-react'
-import { FeedComposer } from './feed-composer'
-import { PostCard } from './post-card'
-import { cn } from '../../lib/utils'
-import { Post } from '@hive/core'
+import React, { useState, useCallback, useRef } from "react";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Loader2, RefreshCw, AlertCircle } from "lucide-react";
+import { FeedComposer } from "./feed-composer";
+import { PostCard } from "./post-card";
+import { cn } from "../../lib/utils";
+import type { Post } from "@hive/core";
+
+export default {};
+
+interface FeedUser {
+  id: string;
+  fullName: string;
+  handle: string;
+  photoURL?: string;
+  role?: "member" | "builder" | "admin";
+}
+
+interface FeedPost extends Post {
+  author: FeedUser;
+}
 
 interface SpaceFeedProps {
-  spaceId: string
-  currentUser: {
-    id: string
-    fullName: string
-    handle: string
-    photoURL?: string
-    role?: 'member' | 'builder' | 'admin'
-  }
-  className?: string
+  spaceId: string;
+  currentUser: FeedUser;
+  className?: string;
+  posts?: FeedPost[];
 }
 
 interface FeedResponse {
-  posts: (Post & {
-    author: {
-      id: string
-      fullName: string
-      handle: string
-      photoURL?: string
-      role?: 'member' | 'builder' | 'admin'
-    }
-  })[]
-  hasMore: boolean
-  lastPostId: string | null
+  posts: FeedPost[];
+  hasMore: boolean;
+  lastPostId: string | null;
+}
+
+interface InfiniteQueryData {
+  pages: FeedResponse[];
+  pageParams: (string | undefined)[];
+}
+
+interface ReactResponse {
+  success: boolean;
+  reactions?: {
+    heart: number;
+  };
+}
+
+interface DeleteResponse {
+  success: boolean;
+}
+
+interface ModerateResponse {
+  success: boolean;
 }
 
 export const SpaceFeed: React.FC<SpaceFeedProps> = ({
   spaceId,
   currentUser,
   className,
+  posts: _posts = [],
 }) => {
-  const [isRefreshing, setIsRefreshing] = useState(false)
-  const queryClient = useQueryClient()
-  const observerRef = useRef<IntersectionObserver>()
-  const lastPostElementRef = useRef<HTMLDivElement>()
-  
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const queryClient = useQueryClient();
+  const observerRef = useRef<IntersectionObserver>();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
   // Fetch posts with infinite scroll
-  const {
-    data,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    isLoading,
-    error,
-    refetch,
-  } = useInfiniteQuery({
-    queryKey: ['space-feed', spaceId],
-    queryFn: async ({ pageParam = '' }) => {
-      const params = new URLSearchParams({
-        limit: '20',
-      })
-      
-      if (pageParam) {
-        params.append('lastPostId', pageParam as string)
-      }
-      
-      const response = await fetch(`/api/spaces/${spaceId}/feed?${params}`)
-      if (!response.ok) {
-        throw new Error('Failed to fetch posts')
-      }
-      return response.json()
-    },
-    getNextPageParam: (lastPage: any) => lastPage.hasMore ? lastPage.lastPostId : undefined,
-    initialPageParam: '',
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    refetchInterval: 60 * 1000, // Refetch every minute for live updates
-  })
-  
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, refetch } =
+    useInfiniteQuery({
+      queryKey: ["space-feed", spaceId],
+      queryFn: async ({ pageParam = "" }) => {
+        const params = new URLSearchParams({
+          limit: "20",
+        });
+
+        if (pageParam) {
+          params.append("lastPostId", pageParam);
+        }
+
+        const response = await fetch(`/api/spaces/${spaceId}/feed?${params}`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch posts");
+        }
+        return response.json() as FeedResponse;
+      },
+      getNextPageParam: (lastPage: FeedResponse) =>
+        lastPage.hasMore ? lastPage.lastPostId : undefined,
+      initialPageParam: "",
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      refetchInterval: 60 * 1000, // Refetch every minute for live updates
+    });
+
   // Infinite scroll observer
-  const lastPostRef = useCallback((node: HTMLDivElement) => {
-    if (isFetchingNextPage) return
-    if (observerRef.current) observerRef.current.disconnect()
-    
-    observerRef.current = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting && hasNextPage) {
-        fetchNextPage()
-      }
-    })
-    
-    if (node) observerRef.current.observe(node)
-  }, [isFetchingNextPage, fetchNextPage, hasNextPage])
-  
+  const lastPostRef = useCallback(
+    (node: HTMLDivElement) => {
+      if (isFetchingNextPage) return;
+      if (observerRef.current) observerRef.current.disconnect();
+
+      observerRef.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasNextPage) {
+          void fetchNextPage();
+        }
+      });
+
+      if (node) observerRef.current.observe(node);
+    },
+    [isFetchingNextPage, fetchNextPage, hasNextPage]
+  );
+
   // React to post mutation
   const reactMutation = useMutation({
-    mutationFn: async ({ postId, reaction, action }: {
-      postId: string
-      reaction: 'heart'
-      action: 'add' | 'remove'
+    mutationFn: async ({
+      postId,
+      reaction,
+      action,
+    }: {
+      postId: string;
+      reaction: "heart";
+      action: "add" | "remove";
     }) => {
-      const response = await fetch(`/api/spaces/${spaceId}/posts/${postId}/react`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ reaction, action }),
-      })
-      
+      const response = await fetch(
+        `/api/spaces/${spaceId}/posts/${postId}/react`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ reaction, action }),
+        }
+      );
+
       if (!response.ok) {
-        throw new Error('Failed to react to post')
+        throw new Error("Failed to react to post");
       }
-      
-      return response.json()
+
+      return response.json() as Promise<ReactResponse>;
     },
     onSuccess: (data, variables) => {
       // Optimistically update the cache
-      queryClient.setQueryData(['space-feed', spaceId], (oldData: any) => {
-        if (!oldData) return oldData
-        
-        return {
-          ...oldData,
-          pages: oldData.pages.map((page: FeedResponse) => ({
-            ...page,
-            posts: page.posts.map(post => {
-              if (post.id === variables.postId) {
-                const newReactedUsers = [...(post.reactedUsers?.heart || [])]
-                
-                if (variables.action === 'add' && !newReactedUsers.includes(currentUser.id)) {
-                  newReactedUsers.push(currentUser.id)
-                } else if (variables.action === 'remove') {
-                  const index = newReactedUsers.indexOf(currentUser.id)
-                  if (index > -1) newReactedUsers.splice(index, 1)
+      queryClient.setQueryData(
+        ["space-feed", spaceId],
+        (oldData: InfiniteQueryData | undefined) => {
+          if (!oldData) return oldData;
+
+          return {
+            ...oldData,
+            pages: oldData.pages.map((page: FeedResponse) => ({
+              ...page,
+              posts: page.posts.map((post) => {
+                if (post.id === variables.postId) {
+                  const newReactedUsers = [...(post.reactedUsers?.heart || [])];
+
+                  if (
+                    variables.action === "add" &&
+                    !newReactedUsers.includes(currentUser.id)
+                  ) {
+                    newReactedUsers.push(currentUser.id);
+                  } else if (variables.action === "remove") {
+                    const index = newReactedUsers.indexOf(currentUser.id);
+                    if (index > -1) newReactedUsers.splice(index, 1);
+                  }
+
+                  return {
+                    ...post,
+                    reactions: {
+                      ...post.reactions,
+                      heart: newReactedUsers.length,
+                    },
+                    reactedUsers: {
+                      ...post.reactedUsers,
+                      heart: newReactedUsers,
+                    },
+                  };
                 }
-                
-                return {
-                  ...post,
-                  reactions: {
-                    ...post.reactions,
-                    heart: newReactedUsers.length,
-                  },
-                  reactedUsers: {
-                    ...post.reactedUsers,
-                    heart: newReactedUsers,
-                  },
-                }
-              }
-              return post
-            }),
-          })),
+                return post;
+              }),
+            })),
+          };
         }
-      })
+      );
     },
-  })
-  
+  });
+
   // Delete post mutation
   const deleteMutation = useMutation({
     mutationFn: async (postId: string) => {
       const response = await fetch(`/api/spaces/${spaceId}/posts/${postId}`, {
-        method: 'DELETE',
-      })
-      
+        method: "DELETE",
+      });
+
       if (!response.ok) {
-        throw new Error('Failed to delete post')
+        throw new Error("Failed to delete post");
       }
-      
-      return response.json()
+
+      return response.json() as Promise<DeleteResponse>;
     },
     onSuccess: (data, postId) => {
       // Update the cache to mark post as deleted
-      queryClient.setQueryData(['space-feed', spaceId], (oldData: any) => {
-        if (!oldData) return oldData
-        
-        return {
-          ...oldData,
-          pages: oldData.pages.map((page: FeedResponse) => ({
-            ...page,
-            posts: page.posts.map(post => {
-              if (post.id === postId) {
-                return {
-                  ...post,
-                  isDeleted: true,
-                  content: `Post removed by ${currentUser.fullName}`,
+      queryClient.setQueryData(
+        ["space-feed", spaceId],
+        (oldData: InfiniteQueryData | undefined) => {
+          if (!oldData) return oldData;
+
+          return {
+            ...oldData,
+            pages: oldData.pages.map((page: FeedResponse) => ({
+              ...page,
+              posts: page.posts.map((post) => {
+                if (post.id === postId) {
+                  return {
+                    ...post,
+                    isDeleted: true,
+                    content: `Post removed by ${currentUser.fullName}`,
+                  };
                 }
-              }
-              return post
-            }),
-          })),
+                return post;
+              }),
+            })),
+          };
         }
-      })
+      );
     },
-  })
-  
+  });
+
   // Pin post mutation
   const pinMutation = useMutation({
     mutationFn: async ({ postId, pin }: { postId: string; pin: boolean }) => {
-      const response = await fetch(`/api/spaces/${spaceId}/posts/${postId}/moderate`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
-          action: pin ? 'pin' : 'unpin',
-        }),
-      })
-      
+      const response = await fetch(
+        `/api/spaces/${spaceId}/posts/${postId}/moderate`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            action: pin ? "pin" : "unpin",
+          }),
+        }
+      );
+
       if (!response.ok) {
-        throw new Error('Failed to pin post')
+        throw new Error("Failed to pin post");
       }
-      
-      return response.json()
+
+      return response.json() as Promise<ModerateResponse>;
     },
     onSuccess: () => {
       // Refetch to get updated order (pinned posts go to top)
-      refetch()
+      void refetch();
     },
-  })
-  
+  });
+
   // Flag post mutation
   const flagMutation = useMutation({
-    mutationFn: async ({ postId, reason }: { postId: string; reason: string }) => {
-      const response = await fetch(`/api/spaces/${spaceId}/posts/${postId}/moderate`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
-          action: 'flag',
-          reason,
-        }),
-      })
-      
+    mutationFn: async ({
+      postId,
+      reason,
+    }: {
+      postId: string;
+      reason: string;
+    }) => {
+      const response = await fetch(
+        `/api/spaces/${spaceId}/posts/${postId}/moderate`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            action: "flag",
+            reason,
+          }),
+        }
+      );
+
       if (!response.ok) {
-        throw new Error('Failed to flag post')
+        throw new Error("Failed to flag post");
       }
-      
-      return response.json()
+
+      return response.json() as Promise<ModerateResponse>;
     },
     onSuccess: () => {
-      refetch()
+      void refetch();
     },
-  })
-  
-  const handlePostCreated = (newPost: any) => {
+  });
+
+  const handlePostCreated = (newPost: FeedPost) => {
     // Add new post to the top of the feed
-    queryClient.setQueryData(['space-feed', spaceId], (oldData: any) => {
-      if (!oldData) return { pages: [{ posts: [newPost], hasMore: false, lastPostId: null }] }
-      
-      const firstPage = oldData.pages[0]
-      return {
-        ...oldData,
-        pages: [
-          {
-            ...firstPage,
-            posts: [newPost, ...firstPage.posts],
-          },
-          ...oldData.pages.slice(1),
-        ],
+    queryClient.setQueryData(
+      ["space-feed", spaceId],
+      (oldData: InfiniteQueryData | undefined) => {
+        if (!oldData)
+          return {
+            pages: [{ posts: [newPost], hasMore: false, lastPostId: null }],
+            pageParams: [undefined],
+          };
+
+        const firstPage = oldData.pages[0];
+        return {
+          ...oldData,
+          pages: [
+            {
+              ...firstPage,
+              posts: [newPost, ...firstPage.posts],
+            },
+            ...oldData.pages.slice(1),
+          ],
+        };
       }
-    })
-  }
-  
+    );
+  };
+
   const handleRefresh = async () => {
-    setIsRefreshing(true)
+    setIsRefreshing(true);
     try {
-      await refetch()
+      await refetch();
     } finally {
-      setIsRefreshing(false)
+      setIsRefreshing(false);
     }
-  }
-  
-  const allPosts = data?.pages.flatMap((page: any) => page.posts) || []
-  
+  };
+
+  const allPosts =
+    data?.pages.flatMap((page: FeedResponse) => page.posts) || [];
+
+  const fetchMorePosts = useCallback(async (): Promise<{
+    hasMore: boolean;
+    lastPostId: string;
+  }> => {
+    try {
+      // Fetch logic with proper typing
+      const response = await fetch(`/api/spaces/${spaceId}/posts`);
+      const data = (await response.json()) as FeedResponse;
+
+      return {
+        hasMore: data.hasMore || false,
+        lastPostId: data.lastPostId || "",
+      };
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+      return { hasMore: false, lastPostId: "" };
+    }
+  }, [spaceId]);
+
+  const handleLoadMore = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      await fetchMorePosts();
+    } catch (error) {
+      console.error("Error loading more posts:", error);
+      setError("Failed to load more posts");
+    } finally {
+      setIsLoading(false);
+    }
+  }, [fetchMorePosts]);
+
+  // Removed unused handlers and memoized posts
+
   if (isLoading) {
     return (
       <div className={cn("space-y-4", className)}>
@@ -281,9 +374,9 @@ export const SpaceFeed: React.FC<SpaceFeedProps> = ({
           <Loader2 className="h-6 w-6 animate-spin" />
         </div>
       </div>
-    )
+    );
   }
-  
+
   if (error) {
     return (
       <div className={cn("space-y-4", className)}>
@@ -297,9 +390,12 @@ export const SpaceFeed: React.FC<SpaceFeedProps> = ({
             <AlertCircle className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
             <h3 className="text-lg font-semibold mb-2">Failed to load posts</h3>
             <p className="text-muted-foreground mb-4">
-              {error instanceof Error ? error.message : 'Something went wrong'}
+              {error instanceof Error ? error.message : "Something went wrong"}
             </p>
-            <Button onClick={handleRefresh} disabled={isRefreshing}>
+            <Button
+              onClick={() => void handleRefresh()}
+              disabled={isRefreshing}
+            >
               {isRefreshing ? (
                 <>
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
@@ -315,9 +411,9 @@ export const SpaceFeed: React.FC<SpaceFeedProps> = ({
           </CardContent>
         </Card>
       </div>
-    )
+    );
   }
-  
+
   return (
     <div className={cn("space-y-4", className)}>
       {/* Composer */}
@@ -326,21 +422,23 @@ export const SpaceFeed: React.FC<SpaceFeedProps> = ({
         currentUser={currentUser}
         onPostCreated={handlePostCreated}
       />
-      
+
       {/* Refresh Button */}
       <div className="flex justify-center">
         <Button
           variant="outline"
           size="sm"
-          onClick={handleRefresh}
+          onClick={() => void handleRefresh()}
           disabled={isRefreshing}
           className="gap-2"
         >
-          <RefreshCw className={cn("h-4 w-4", isRefreshing && "animate-spin")} />
-          {isRefreshing ? 'Refreshing...' : 'Refresh'}
+          <RefreshCw
+            className={cn("h-4 w-4", isRefreshing && "animate-spin")}
+          />
+          {isRefreshing ? "Refreshing..." : "Refresh"}
         </Button>
       </div>
-      
+
       {/* Posts */}
       {allPosts.length === 0 ? (
         <Card>
@@ -363,47 +461,56 @@ export const SpaceFeed: React.FC<SpaceFeedProps> = ({
                 currentUser={currentUser}
                 onReact={async (postId, reaction, action) => {
                   return new Promise<void>((resolve, reject) => {
-                    reactMutation.mutate({ postId, reaction, action }, {
-                      onSuccess: () => resolve(),
-                      onError: (error) => reject(error)
-                    })
-                  })
+                    reactMutation.mutate(
+                      { postId, reaction, action },
+                      {
+                        onSuccess: () => resolve(),
+                        onError: (error) => reject(error),
+                      }
+                    );
+                  });
                 }}
                 onDelete={async (postId) => {
                   return new Promise<void>((resolve, reject) => {
                     deleteMutation.mutate(postId, {
                       onSuccess: () => resolve(),
-                      onError: (error) => reject(error)
-                    })
-                  })
+                      onError: (error) => reject(error),
+                    });
+                  });
                 }}
                 onPin={async (postId, pin) => {
                   return new Promise<void>((resolve, reject) => {
-                    pinMutation.mutate({ postId, pin }, {
-                      onSuccess: () => resolve(),
-                      onError: (error) => reject(error)
-                    })
-                  })
+                    pinMutation.mutate(
+                      { postId, pin },
+                      {
+                        onSuccess: () => resolve(),
+                        onError: (error) => reject(error),
+                      }
+                    );
+                  });
                 }}
                 onFlag={async (postId, reason) => {
                   return new Promise<void>((resolve, reject) => {
-                    flagMutation.mutate({ postId, reason: reason || 'Inappropriate content' }, {
-                      onSuccess: () => resolve(),
-                      onError: (error) => reject(error)
-                    })
-                  })
+                    flagMutation.mutate(
+                      { postId, reason: reason || "Inappropriate content" },
+                      {
+                        onSuccess: () => resolve(),
+                        onError: (error) => reject(error),
+                      }
+                    );
+                  });
                 }}
               />
             </div>
           ))}
-          
+
           {/* Loading indicator for infinite scroll */}
           {isFetchingNextPage && (
             <div className="flex items-center justify-center py-4">
               <Loader2 className="h-5 w-5 animate-spin" />
             </div>
           )}
-          
+
           {/* End of feed indicator */}
           {!hasNextPage && allPosts.length > 0 && (
             <div className="text-center py-4 text-sm text-muted-foreground">
@@ -412,6 +519,14 @@ export const SpaceFeed: React.FC<SpaceFeedProps> = ({
           )}
         </div>
       )}
+
+      <Button
+        onClick={() => void handleLoadMore()}
+        disabled={isLoading}
+        className="w-full"
+      >
+        Load More Posts
+      </Button>
     </div>
-  )
-} 
+  );
+};

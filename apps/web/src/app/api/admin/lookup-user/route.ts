@@ -1,165 +1,217 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { z } from 'zod';
-import { getAuth } from 'firebase-admin/auth';
-import { dbAdmin } from '@/lib/firebase-admin';
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
+import { z } from "zod";
+import { getAuth } from "firebase-admin/auth";
+import { getFirestore } from "firebase-admin/firestore";
 
+// Validation schema
 const lookupUserSchema = z.object({
-  query: z.string().min(1, 'Search query is required'),
-  searchType: z.enum(['email', 'handle', 'auto'], {
-    errorMap: () => ({ message: 'Search type must be email, handle, or auto' })
-  }).default('auto')
+  query: z.string().min(1, "Search query is required"),
 });
+
+// User data interface
+interface UserData {
+  uid: string;
+  email?: string;
+  emailVerified?: boolean;
+  displayName?: string;
+  photoURL?: string;
+  disabled?: boolean;
+  metadata?: {
+    creationTime?: string;
+    lastSignInTime?: string;
+  };
+}
+
+// Firestore user document interface
+interface FirestoreUserData {
+  fullName?: string;
+  handle?: string;
+  schoolId?: string;
+  role?: string;
+  isBuilder?: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { query, searchType } = lookupUserSchema.parse(body);
+    // Parse and validate request body
+    const body = (await request.json()) as unknown;
+    const { query } = lookupUserSchema.parse(body);
 
-    // Get the requesting user's token to verify admin status
-    const authHeader = request.headers.get('Authorization');
-    if (!authHeader?.startsWith('Bearer ')) {
+    // Verify admin authentication
+    const authHeader = request.headers.get("authorization");
+    if (!authHeader?.startsWith("Bearer ")) {
       return NextResponse.json(
-        { error: 'Authorization header required' },
+        { error: "Authorization header required" },
         { status: 401 }
       );
     }
 
-    const token = authHeader.substring(7);
-    const auth = getAuth();
-    
-    // Verify the requesting user is an admin
-    const decodedToken = await auth.verifyIdToken(token);
-    if (!decodedToken.admin) {
+    const token = authHeader.split("Bearer ")[1];
+    if (!token) {
       return NextResponse.json(
-        { error: 'Admin access required' },
+        { error: "Invalid authorization format" },
+        { status: 401 }
+      );
+    }
+
+    const decodedToken = await getAuth().verifyIdToken(token);
+
+    // Check if current user is admin
+    const db = getFirestore();
+    const currentUserDoc = await db
+      .collection("users")
+      .doc(decodedToken.uid)
+      .get();
+    const currentUserData = currentUserDoc.data() as
+      | FirestoreUserData
+      | undefined;
+
+    if (!currentUserData || currentUserData.role !== "admin") {
+      return NextResponse.json(
+        { error: "Admin access required" },
         { status: 403 }
       );
     }
 
-    let userDoc = null;
-    let authUser = null;
-    let searchMethod = '';
-
-    // Auto-detect search type if not specified
-    const isEmail = query.includes('@');
-    const effectiveSearchType = searchType === 'auto' 
-      ? (isEmail ? 'email' : 'handle') 
-      : searchType;
+    let userData: UserData | null = null;
+    let firestoreData: FirestoreUserData | null = null;
 
     try {
-      if (effectiveSearchType === 'email') {
-        // Look up by email
+      // Try to lookup by email first
+      if (query.includes("@")) {
         try {
-          authUser = await auth.getUserByEmail(query);
-          userDoc = await dbAdmin.collection('users').doc(authUser.uid).get();
-          searchMethod = 'email';
-        } catch (error: any) {
-          if (error.code !== 'auth/user-not-found') {
-            throw error;
+          const userRecord = await getAuth().getUserByEmail(query);
+          userData = {
+            uid: userRecord.uid,
+            email: userRecord.email,
+            emailVerified: userRecord.emailVerified,
+            displayName: userRecord.displayName,
+            photoURL: userRecord.photoURL,
+            disabled: userRecord.disabled,
+            metadata: {
+              creationTime: userRecord.metadata.creationTime,
+              lastSignInTime: userRecord.metadata.lastSignInTime,
+            },
+          };
+        } catch (authError: unknown) {
+          const error = authError as { code?: string };
+          if (error.code !== "auth/user-not-found") {
+            throw authError;
           }
         }
       } else {
-        // Look up by handle
-        const handleDoc = await dbAdmin.collection('handles').doc(query.toLowerCase()).get();
-        
-        if (handleDoc.exists) {
-          const handleData = handleDoc.data();
-          userDoc = await dbAdmin.collection('users').doc(handleData!.userId).get();
-          
-          if (userDoc.exists) {
-            authUser = await auth.getUser(handleData!.userId);
-            searchMethod = 'handle';
+        // Try to lookup by UID
+        try {
+          const userRecord = await getAuth().getUser(query);
+          userData = {
+            uid: userRecord.uid,
+            email: userRecord.email,
+            emailVerified: userRecord.emailVerified,
+            displayName: userRecord.displayName,
+            photoURL: userRecord.photoURL,
+            disabled: userRecord.disabled,
+            metadata: {
+              creationTime: userRecord.metadata.creationTime,
+              lastSignInTime: userRecord.metadata.lastSignInTime,
+            },
+          };
+        } catch (authError: unknown) {
+          const error = authError as { code?: string };
+          if (error.code !== "auth/user-not-found") {
+            throw authError;
           }
         }
       }
 
-      if (!userDoc || !userDoc.exists || !authUser) {
-        return NextResponse.json(
-          { 
-            found: false, 
-            message: `No user found with ${effectiveSearchType}: ${query}` 
-          },
-          { status: 404 }
-        );
-      }
+      // If we found a user in Auth, get their Firestore data
+      if (userData) {
+        const userDoc = await db.collection("users").doc(userData.uid).get();
+        if (userDoc.exists) {
+          const docData = userDoc.data();
+          firestoreData = {
+            fullName: docData?.fullName,
+            handle: docData?.handle,
+            schoolId: docData?.schoolId,
+            role: docData?.role,
+            isBuilder: docData?.isBuilder,
+            createdAt: docData?.createdAt?.toDate(),
+            updatedAt: docData?.updatedAt?.toDate(),
+          };
+        }
+      } else {
+        // If not found by email/UID, try searching Firestore by handle or name
+        const usersRef = db.collection("users");
 
-      const userData = userDoc.data();
-      
-      // Get user's spaces
-      const spacesQuery = await dbAdmin
-        .collectionGroup('members')
-        .where('userId', '==', authUser.uid)
-        .get();
-      
-      const userSpaces = [];
-      for (const memberDoc of spacesQuery.docs) {
-        const spaceId = memberDoc.ref.parent.parent!.id;
-        const spaceDoc = await dbAdmin.collection('spaces').doc(spaceId).get();
-        
-        if (spaceDoc.exists) {
-          userSpaces.push({
-            id: spaceId,
-            name: spaceDoc.data()!.name,
-            role: memberDoc.data().role
-          });
+        // Search by handle
+        const handleQuery = await usersRef
+          .where("handle", "==", query)
+          .limit(1)
+          .get();
+        if (!handleQuery.empty) {
+          const doc = handleQuery.docs[0];
+          const docData = doc.data();
+
+          firestoreData = {
+            fullName: docData?.fullName,
+            handle: docData?.handle,
+            schoolId: docData?.schoolId,
+            role: docData?.role,
+            isBuilder: docData?.isBuilder,
+            createdAt: docData?.createdAt?.toDate(),
+            updatedAt: docData?.updatedAt?.toDate(),
+          };
+
+          // Get Auth data for this user
+          try {
+            const userRecord = await getAuth().getUser(doc.id);
+            userData = {
+              uid: userRecord.uid,
+              email: userRecord.email,
+              emailVerified: userRecord.emailVerified,
+              displayName: userRecord.displayName,
+              photoURL: userRecord.photoURL,
+              disabled: userRecord.disabled,
+              metadata: {
+                creationTime: userRecord.metadata.creationTime,
+                lastSignInTime: userRecord.metadata.lastSignInTime,
+              },
+            };
+          } catch (_authError) {
+            // User exists in Firestore but not in Auth (orphaned data)
+            console.warn(`User ${doc.id} exists in Firestore but not in Auth`);
+          }
         }
       }
 
-      // Get waitlist entries
-      const waitlistQuery = await dbAdmin
-        .collectionGroup('waitlist_entries')
-        .where('email', '==', authUser.email)
-        .get();
-      
-      const waitlistEntries = waitlistQuery.docs.map(doc => ({
-        schoolId: doc.ref.parent.parent!.id,
-        email: doc.data().email,
-        joinedAt: doc.data().joinedAt
-      }));
-
+      // Return combined data
       return NextResponse.json({
-        found: true,
-        searchMethod,
-        user: {
-          // Auth data
-          uid: authUser.uid,
-          email: authUser.email,
-          emailVerified: authUser.emailVerified,
-          disabled: authUser.disabled,
-          customClaims: authUser.customClaims || {},
-          creationTime: authUser.metadata.creationTime,
-          lastSignInTime: authUser.metadata.lastSignInTime,
-          
-          // Firestore data
-          ...userData,
-          
-          // Related data
-          spaces: userSpaces,
-          waitlistEntries
-        }
+        found: userData !== null || firestoreData !== null,
+        auth: userData,
+        profile: firestoreData,
       });
-
-    } catch (error) {
-      console.error('User lookup error:', error);
+    } catch (searchError) {
+      console.error("User lookup error:", searchError);
       return NextResponse.json(
-        { error: 'Error looking up user' },
+        { error: "Error searching for user" },
         { status: 500 }
       );
     }
-
   } catch (error) {
-    console.error('Lookup user error:', error);
+    console.error("Lookup user error:", error);
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: 'Invalid input', details: error.errors },
+        { error: "Invalid request data", details: error.errors },
         { status: 400 }
       );
     }
 
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: "Internal server error" },
       { status: 500 }
     );
   }
-} 
+}

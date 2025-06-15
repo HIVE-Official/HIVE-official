@@ -17,7 +17,8 @@ async function sendNotificationToUser(
 ): Promise<void> {
   try {
     // Get the user's FCM tokens from Firestore
-    const userDoc = await admin.firestore()
+    const userDoc = await admin
+      .firestore()
       .collection("users")
       .doc(userId)
       .get();
@@ -50,13 +51,13 @@ async function sendNotificationToUser(
       },
       data: {
         ...data,
-        click_action: "FLUTTER_NOTIFICATION_CLICK",
+        click_action: "FCM_PLUGIN_ACTIVITY",
       },
       // Configure Android specific options
       android: {
         priority: "high",
         notification: {
-          clickAction: "FLUTTER_NOTIFICATION_CLICK",
+          clickAction: "FCM_PLUGIN_ACTIVITY",
           sound: "default",
         },
       },
@@ -83,15 +84,19 @@ async function sendNotificationToUser(
       const invalidTokens: string[] = [];
 
       response.responses.forEach((resp, idx) => {
-        if (!resp.success &&
-            resp.error?.code === "messaging/registration-token-not-registered") {
+        if (
+          !resp.success &&
+          resp.error?.code === "messaging/registration-token-not-registered"
+        ) {
           invalidTokens.push(tokens[idx] as string);
         }
       });
 
       // Remove invalid tokens from the user's document
       if (invalidTokens.length > 0) {
-        logger.info(`Removing ${invalidTokens.length} invalid tokens for user ${userId}`);
+        logger.info(
+          `Removing ${invalidTokens.length} invalid tokens for user ${userId}`
+        );
 
         // Find token IDs to remove
         const tokensToRemove = Object.entries(userData.fcmTokens)
@@ -101,11 +106,16 @@ async function sendNotificationToUser(
         // Create update object to remove tokens
         const tokenUpdates: Record<string, admin.firestore.FieldValue> = {};
         tokensToRemove.forEach((tokenId) => {
-          tokenUpdates[`fcmTokens.${tokenId}`] = admin.firestore.FieldValue.delete();
+          tokenUpdates[`fcmTokens.${tokenId}`] =
+            admin.firestore.FieldValue.delete();
         });
 
         // Update the user document
-        await admin.firestore().collection("users").doc(userId).update(tokenUpdates);
+        await admin
+          .firestore()
+          .collection("users")
+          .doc(userId)
+          .update(tokenUpdates);
       }
     }
   } catch (error) {
@@ -115,8 +125,9 @@ async function sendNotificationToUser(
 }
 
 // Function to send a notification when a new message is created
-export const onNewMessage = functions.firestore
-  .onDocumentCreated("messages/{messageId}", async (event) => {
+export const onNewMessage = functions.firestore.onDocumentCreated(
+  "messages/{messageId}",
+  async (event) => {
     const snapshot = event.data;
     if (!snapshot) {
       logger.warn("No message data found");
@@ -129,7 +140,7 @@ export const onNewMessage = functions.firestore
       return null;
     }
 
-    const {receiverId, senderId, text, senderName} = messageData;
+    const { receiverId, senderId, text, senderName } = messageData;
 
     // Don't send notifications to the sender
     if (receiverId === senderId) {
@@ -141,23 +152,20 @@ export const onNewMessage = functions.firestore
     const body = text.length > 100 ? `${text.substring(0, 97)}...` : text;
 
     // Send the notification
-    await sendNotificationToUser(
-      receiverId,
-      title,
-      body,
-      {
-        type: "message",
-        messageId: event.params.messageId,
-        senderId,
-      }
-    );
+    await sendNotificationToUser(receiverId, title, body, {
+      type: "message",
+      messageId: event.params.messageId,
+      senderId,
+    });
 
     return null;
-  });
+  }
+);
 
 // Function to send a notification when a new event is created
-export const onNewEvent = functions.firestore
-  .onDocumentCreated("events/{eventId}", async (event) => {
+export const onNewEvent = functions.firestore.onDocumentCreated(
+  "events/{eventId}",
+  async (event) => {
     const snapshot = event.data;
     if (!snapshot) {
       logger.warn("No event data found");
@@ -171,7 +179,7 @@ export const onNewEvent = functions.firestore
     }
 
     // Get the members of the club/space that created the event
-    const {createdBy, title, description, clubId, spaceId} = eventData;
+    const { createdBy, title, description, clubId, spaceId } = eventData;
 
     // Determine which collection to query for members
     let memberCollection = "club_members";
@@ -189,13 +197,16 @@ export const onNewEvent = functions.firestore
 
     try {
       // Get all members of the club/space
-      const membersSnapshot = await admin.firestore()
+      const membersSnapshot = await admin
+        .firestore()
         .collection(memberCollection)
         .where("entityId", "==", entityId)
         .get();
 
       if (membersSnapshot.empty) {
-        logger.info(`No members found for ${memberCollection} with ID ${entityId}`);
+        logger.info(
+          `No members found for ${memberCollection} with ID ${entityId}`
+        );
         return null;
       }
 
@@ -211,9 +222,10 @@ export const onNewEvent = functions.firestore
 
         // Create notification content
         const notificationTitle = `New Event: ${title}`;
-        const notificationBody = description?.length > 100 ?
-          `${description.substring(0, 97)}...` :
-          (description || "Check out this new event!");
+        const notificationBody =
+          description?.length > 100
+            ? `${description.substring(0, 97)}...`
+            : description || "Check out this new event!";
 
         // Send the notification
         return sendNotificationToUser(
@@ -229,17 +241,21 @@ export const onNewEvent = functions.firestore
       });
 
       await Promise.all(notificationPromises);
-      logger.info(`Sent event notifications to ${notificationPromises.length} members`);
+      logger.info(
+        `Sent event notifications to ${notificationPromises.length} members`
+      );
     } catch (error) {
       logger.error("Error sending event notifications:", error);
     }
 
     return null;
-  });
+  }
+);
 
 // Function to send a notification when a user is invited to a club or space
-export const onNewInvitation = functions.firestore
-  .onDocumentCreated("invitations/{invitationId}", async (event) => {
+export const onNewInvitation = functions.firestore.onDocumentCreated(
+  "invitations/{invitationId}",
+  async (event) => {
     const snapshot = event.data;
     if (!snapshot) {
       logger.warn("No invitation data found");
@@ -252,7 +268,8 @@ export const onNewInvitation = functions.firestore
       return null;
     }
 
-    const {userId, invitedBy, invitedByName, entityName, entityType} = invitationData;
+    const { userId, invitedBy, invitedByName, entityName, entityType } =
+      invitationData;
 
     if (!userId || !invitedBy) {
       logger.warn("Missing required invitation fields");
@@ -269,17 +286,13 @@ export const onNewInvitation = functions.firestore
     const body = `${invitedByName || "Someone"} has invited you to join ${entityName || `their ${entityType}`}`;
 
     // Send the notification
-    await sendNotificationToUser(
-      userId,
-      title,
-      body,
-      {
-        type: "invitation",
-        invitationId: event.params.invitationId,
-        invitedBy,
-        entityType,
-      }
-    );
+    await sendNotificationToUser(userId, title, body, {
+      type: "invitation",
+      invitationId: event.params.invitationId,
+      invitedBy,
+      entityType,
+    });
 
     return null;
-  });
+  }
+);

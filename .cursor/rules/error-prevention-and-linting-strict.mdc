@@ -3,86 +3,242 @@ description:
 globs: 
 alwaysApply: true
 ---
-# HIVE Engineering Covenant: Strict Error Prevention & Linting Rules
+# 🚨 HIVE ENGINEERING COVENANT: MANDATORY ERROR PREVENTION 🚨
 
-This document outlines the non-negotiable standards for engineering within the HIVE monorepo. All contributions, especially from AI, MUST adhere to these rules. The goal is to prevent common errors, ensure consistency, and maintain a high-quality, stable codebase.
+## ⚠️ CRITICAL: THIS DOCUMENT IS LAW ⚠️
 
-## 1. Core Tech Stack
+**THIS IS NOT A SUGGESTION. THIS IS NOT A GUIDELINE. THIS IS MANDATORY.**
+
+Every AI agent, developer, and contributor working on the HIVE monorepo **MUST** follow these rules without exception. Violations will result in immediate rejection of code changes.
+
+---
+
+## 🔒 ENFORCEMENT PROTOCOL
+
+### **AI AGENTS: YOU ARE BOUND BY THIS COVENANT**
+
+As an AI working on HIVE, you **MUST**:
+
+1. **NEVER** introduce code that violates these rules
+2. **ALWAYS** run `pnpm lint --max-warnings 0` before claiming completion
+3. **IMMEDIATELY** fix any linting errors you encounter
+4. **REFUSE** to proceed with tasks if linting fails
+5. **VALIDATE** that all CI commands pass before marking work complete
+
+### **ZERO TOLERANCE POLICY**
+
+- ❌ **NO** `any` types without explicit justification
+- ❌ **NO** floating promises without proper error handling  
+- ❌ **NO** unsafe type assertions (`as any`, `@ts-expect-error`)
+- ❌ **NO** linting errors or warnings (`--max-warnings 0`)
+- ❌ **NO** bypassing TypeScript strict mode
+- ❌ **NO** untyped API responses or Firestore data
+
+### **MANDATORY VERIFICATION CHECKLIST**
+
+Before claiming ANY task is complete, you **MUST** verify:
+
+```bash
+✅ pnpm lint --max-warnings 0     # MUST pass with zero warnings
+✅ pnpm typecheck                 # MUST pass TypeScript compilation  
+✅ pnpm test                      # MUST pass all tests
+✅ pnpm build                     # MUST build successfully
+```
+
+**If ANY of these fail, the task is NOT complete.**
+
+---
+
+## 1. CORE TECH STACK (MANDATORY VERSIONS)
 
 The AI must be aware of and use the correct versions and tools for the job.
 
-| Layer | Tooling & Versions (vBETA Baseline) |
+| Layer | Required Tooling & Versions |
 | :--- | :--- |
 | **Monorepo** | Turborepo 2.x · pnpm 9 (workspaces) |
 | **UI Runtime** | Next.js 14 (app-router) · React 19 RC |
 | **Build** | Vite (via `@storybook/react-vite`) & Next.js SWC |
-| **Language** | TypeScript 5 (strict mode) |
+| **Language** | TypeScript 5 (strict mode) **MANDATORY** |
 | **Styling** | Tailwind 3.5 · shadcn/ui · Radix Primitives |
 | **Lint / Format** | ESLint 9 · Prettier 3 |
 | **Back End** | Firebase v11 SDK (Auth + Firestore) |
 | **Testing** | Vitest 1.x · Testing-Library |
 | **Docs** | Storybook 8.x |
 
-## 2. ESLint & Formatting
+## 2. ESLINT & FORMATTING (ZERO TOLERANCE)
+
+**MANDATORY RULE:** All code must pass `pnpm lint --max-warnings 0`
 
 The root ESLint configuration is located at [`.eslintrc.js`](mdc:.eslintrc.js). All code must pass linting with zero errors and zero warnings.
 
 **CI gate:** `pnpm lint` (which runs `eslint . --max-warnings 0`) must pass.
 
-### Required Presets & Rules
+### **Required ESLint Configuration**
 
-The configuration must extend these presets:
+The configuration **MUST** extend these presets:
 - `next/core-web-vitals`
 - `plugin:@typescript-eslint/strict-type-checked`
 - `plugin:react-hooks/recommended`
 - `plugin:tailwindcss/recommended`
-- `plugin:storybook/recommended`
 - `plugin:prettier/recommended`
 
-The `plugin:storybook/recommended` preset includes the following critical rules:
+### **🚨 CRITICAL FIX NEEDED: Storybook Rules Scoping**
 
-| Rule ID (eslint-plugin-storybook) | What it flags | Auto-fix? |
-| :--- | :--- | :--- |
-| `storybook/no-uninstalled-addons` | Addon names in `main.*` that are not in `devDependencies` | — |
-| `storybook/prefer-pascal-case` | Story export names not in PascalCase | ✅ |
-| `storybook/story-exports` | `.stories.*` file contains zero story exports | — |
-| `storybook/default-exports` | Missing default export (i.e. `<Meta>` object) | ✅ |
-| `storybook/csf-component` | Default export missing `component:` | — |
-| `storybook/no-redundant-story-name`| `name:` duplicates export key | ✅ |
-| `storybook/no-title-property-in-meta`| Defining `title` inside `<Meta>` when CSF-3 auto-titles | ✅ |
-| `storybook/hierarchy-separator` | Deprecated `|` or `/` in titles | ✅ |
-| `storybook/await-interactions` | Missing `await` for `play` function interactions | ✅ |
-| `storybook/use-storybook-expect` | Using Jest/Vitest `expect` instead of `@storybook/test`'s | ✅ |
+**CURRENT PROBLEM:** Storybook rules are incorrectly applied to all TypeScript files, causing hundreds of false positives.
 
-### Stricter Rules
+**MANDATORY FIX:** Storybook rules **MUST** only apply to `.stories.*` files:
 
-The following rules must be enabled and set to `"error"`:
+```javascript
+// WRONG (current configuration):
+extends: ['plugin:storybook/recommended']
+
+// CORRECT (required configuration):
+overrides: [
+  {
+    files: ['**/*.stories.@(js|jsx|ts|tsx)'],
+    extends: ['plugin:storybook/recommended']
+  }
+]
+```
+
+### **Mandatory Error-Level Rules**
+
+The following rules **MUST** be enabled and set to `"error"`:
 - `@typescript-eslint/no-floating-promises`
+- `@typescript-eslint/no-unsafe-assignment`
+- `@typescript-eslint/no-unsafe-member-access`
+- `@typescript-eslint/no-unsafe-call`
+- `@typescript-eslint/no-unsafe-return`
+- `@typescript-eslint/no-explicit-any`
 - `@typescript-eslint/consistent-type-imports` (with `"prefer": "type-imports"`)
+- `@typescript-eslint/no-unused-vars`
 - `tailwindcss/no-custom-classname`
 - `react-hooks/exhaustive-deps`
 - `jsx-a11y/alt-text`
 
-## 3. TypeScript Configuration
+## 3. TYPESCRIPT STRICT MODE (NON-NEGOTIABLE)
 
 The root TypeScript configuration is at [`tsconfig.json`](mdc:tsconfig.json). Sanity is maintained by the following flags:
 
-| tsconfig flag | Why it prevents bugs |
-| :--- | :--- |
-| `"strict": true` | No implicit `any`, catches `undefined` states early. |
-| `"noUncheckedIndexedAccess": true` | Makes accessing optional properties safer. |
-| `"exactOptionalPropertyTypes": true` | Eliminates silent widening of types. |
-| `"importsNotUsedAsValues": "error"` | Forces `import type { … }` hygiene. |
+| tsconfig flag | Why it prevents bugs | Status |
+| :--- | :--- | :--- |
+| `"strict": true` | No implicit `any`, catches `undefined` states early. | **MANDATORY** |
+| `"noUncheckedIndexedAccess": true` | Makes accessing optional properties safer. | **MANDATORY** |
+| `"exactOptionalPropertyTypes": true` | Eliminates silent widening of types. | **MANDATORY** |
+| `"importsNotUsedAsValues": "error"` | Forces `import type { … }` hygiene. | **MANDATORY** |
 
-> **AI Directive:** Never introduce `as any` or `@ts-expect-error`. If an upstream type is broken, add a comment explaining the issue, reference a ticket, and use a typed alternative if possible.
+### **🚨 AI DIRECTIVE: FORBIDDEN PRACTICES**
 
-## 4. Styling (Tailwind / shadcn / Radix)
+**AI AGENTS: YOU ARE ABSOLUTELY FORBIDDEN FROM:**
+
+1. **Using `any` type** - Use proper interfaces instead
+2. **Using `@ts-expect-error`** - Fix the underlying type issue
+3. **Using `as any`** type assertions - Use proper type guards
+4. **Ignoring TypeScript errors** - Fix them properly
+5. **Bypassing strict null checks** - Handle undefined/null explicitly
+
+**If an upstream type is broken, add a comment explaining the issue, reference a ticket, and use a typed alternative.**
+
+### **🚨 AI DIRECTIVE: REQUIRED PRACTICES**
+
+**AI AGENTS: YOU MUST:**
+
+1. **Define explicit interfaces** for all API responses
+2. **Use type guards** for runtime type checking  
+3. **Validate Firestore data** with Zod schemas
+4. **Handle undefined/null** cases explicitly
+5. **Type all function parameters** and return values
+
+## 4. API & FIRESTORE TYPE SAFETY (MANDATORY)
+
+### **Firestore Data Typing (REQUIRED)**
+
+**WRONG:**
+```typescript
+const userData = userDoc.data(); // Returns any!
+```
+
+**CORRECT:**
+```typescript
+interface UserData {
+  uid: string;
+  email: string;
+  fullName: string;
+  schoolId: string;
+}
+
+const userData = userDoc.data() as UserData | undefined;
+if (!userData) {
+  throw new Error('User data not found');
+}
+```
+
+### **API Response Typing (REQUIRED)**
+
+**WRONG:**
+```typescript
+const body = await request.json(); // Returns any!
+```
+
+**CORRECT:**
+```typescript
+const body = await request.json() as unknown;
+const validatedBody = createPostSchema.parse(body);
+```
+
+## 5. FIREBASE / FIRESTORE DEFENSIVE RULES
+
+- **AI Directive:** All data written to or read from Firestore **must** be validated with a `zod` schema. This ensures type safety between the server and client.
+- **Security Rules:** All database access patterns must have a corresponding test in the security rules test harness to prevent unauthorized access.
+- **No Secrets:** The `git-secrets` pre-commit hook is active to prevent committing service account keys or other secrets.
+
+## 6. ERROR HANDLING (MANDATORY PATTERNS)
+
+### **Floating Promises (ABSOLUTELY FORBIDDEN)**
+
+**WRONG:**
+```typescript
+someAsyncFunction(); // Floating promise - FORBIDDEN!
+```
+
+**CORRECT:**
+```typescript
+void someAsyncFunction().catch(console.error);
+// OR
+await someAsyncFunction();
+// OR  
+someAsyncFunction().catch(handleError);
+```
+
+### **Async Function Patterns (REQUIRED)**
+
+**WRONG:**
+```typescript
+async function fetchData() {
+  // No await - remove async!
+  return data;
+}
+```
+
+**CORRECT:**
+```typescript
+function fetchData() {
+  return data;
+}
+// OR
+async function fetchData() {
+  const result = await apiCall();
+  return result;
+}
+```
+
+## 7. STYLING (TAILWIND / SHADCN / RADIX)
 
 - **Class Order:** The Prettier plugin `prettier-plugin-tailwindcss` MUST be used to auto-sort Tailwind classes on save.
 - **Design Tokens Only:** Use Tailwind's built-in scale (`text-sm`, `bg-primary`) or custom tokens from `tailwind.config.js`. No magic numbers (e.g., `top: 13px`).
 - **Accessible Primitives:** Always wrap Radix components (`Dialog`, `Popover`) with their `Portal` children exactly as shown in the official documentation to maintain accessibility.
 
-## 5. Next.js & React Runtime
+## 8. NEXT.JS & REACT RUNTIME
 
 - **AI Directive:** All new components must default to **React Server Components**. Only add the `"use client"` directive when absolutely necessary (for hooks like `useState`, `useEffect`, event listeners, or context providers).
 
@@ -94,33 +250,60 @@ The root TypeScript configuration is at [`tsconfig.json`](mdc:tsconfig.json). Sa
 | Missing `key` in a list | React 19 DEV runtime error. |
 | Passing non-serialisable props from Server to Client | Next.js build error. |
 
-## 6. Monorepo & Workspace Integrity
+## 9. TESTING & COVERAGE
+
+- **Coverage:** Every package must meet or exceed **80% branch coverage** in Vitest.
+- **Visual Tests:** Storybook serves as our visual test suite. Chromatic runs on CI to catch visual regressions.
+- **RTL Only:** Use `react-testing-library` for component tests. The ESLint rule `testing-library/no-dom-import` is active to prevent direct DOM manipulation (e.g., `document.querySelector`).
+
+### **Test Type Safety (MANDATORY)**
+
+**WRONG:**
+```typescript
+const mockFn = jest.fn(); // Untyped mock
+```
+
+**CORRECT:**
+```typescript
+const mockFn = jest.fn<ReturnType, Parameters>();
+// OR
+const mockFn: jest.MockedFunction<typeof originalFn> = jest.fn();
+```
+
+## 10. MONOREPO & WORKSPACE INTEGRITY
 
 The monorepo pipeline is defined in [`turbo.json`](mdc:turbo.json).
 
 - **No Hoisting Cheats:** Every package that `imports` a dependency (e.g., `react`) must list it in its own [`package.json`](mdc:package.json).
 - **Version Consistency:** Keep dependency versions aligned across the workspace.
 
-## 7. Firebase / Firestore Defensive Rules
+## 11. IMPORT/EXPORT HYGIENE (MANDATORY)
 
-- **AI Directive:** All data written to or read from Firestore **must** be validated with a `zod` schema. This ensures type safety between the server and client.
-- **Security Rules:** All database access patterns must have a corresponding test in the security rules test harness to prevent unauthorized access.
-- **No Secrets:** The `git-secrets` pre-commit hook is active to prevent committing service account keys or other secrets.
+### **Type-Only Imports (REQUIRED)**
 
-## 8. Testing & Coverage
+**WRONG:**
+```typescript
+import { User, Space } from '@hive/core'; // Used only as types
+```
 
-- **Coverage:** Every package must meet or exceed **80% branch coverage** in Vitest.
-- **Visual Tests:** Storybook serves as our visual test suite. Chromatic runs on CI to catch visual regressions.
-- **RTL Only:** Use `react-testing-library` for component tests. The ESLint rule `testing-library/no-dom-import` is active to prevent direct DOM manipulation (e.g., `document.querySelector`).
+**CORRECT:**
+```typescript
+import type { User, Space } from '@hive/core';
+```
 
-## 9. Cache-Busting Protocol
+### **Unused Imports (FORBIDDEN)**
 
-If phantom errors appear (e.g., config warnings that shouldn't exist), follow this protocol:
-1.  **Delete Caches:** `rm -rf node_modules/.cache` and `find . -name ".vite-storybook" -type d -prune -exec rm -rf '{}' +`
-2.  **Kill Processes:** `pkill -f '(vite|storybook|next)'`
-3.  **Re-install & Re-build:** `pnpm install && pnpm turbo run build`
+**ALL** unused imports **MUST** be removed:
 
-## 10. Storybook-Specific Guardrails
+```typescript
+// WRONG:
+import { Button, Input, Card } from '@hive/ui'; // Card unused
+
+// CORRECT:
+import { Button, Input } from '@hive/ui';
+```
+
+## 12. STORYBOOK-SPECIFIC GUARDRAILS
 
 The following standards are critical for maintaining a stable Storybook environment.
 
@@ -152,15 +335,88 @@ The following standards are critical for maintaining a stable Storybook environm
     *   **Always** `await` every user interaction inside a `play()` function.
     *   Use `expect` from `@storybook/test`.
 
-## 11. The HIVE Lint Covenant: AI Checklist
+## 13. CACHE-BUSTING PROTOCOL
 
-> When generating code for HIVE's repo, you're bound by the HIVE Lint Covenant:
->
-> - Zero ESLint/TypeScript errors or warnings (`--max-warnings 0`).
-> - Tailwind tokens only; obey the Prettier tailwind-class sorter.
-> - One `.storybook/main.ts`, ESM only.
-> - Firestore writes must pass Zod validation.
-> - CI commands — `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm run storybook:build` — must stay green.
-> - Do not add a dependency unless you pin the exact version and ensure peer dependencies are met.
+If phantom errors appear (e.g., config warnings that shouldn't exist), follow this protocol:
+1.  **Delete Caches:** `rm -rf node_modules/.cache` and `find . -name ".vite-storybook" -type d -prune -exec rm -rf '{}' +`
+2.  **Kill Processes:** `pkill -f '(vite|storybook|next)'`
+3.  **Re-install & Re-build:** `pnpm install && pnpm turbo run build`
+
+---
+
+## 🚨 AI ENFORCEMENT PROTOCOL 🚨
+
+### **BEFORE WRITING ANY CODE**
+
+1. ✅ **Understand the task requirements**
+2. ✅ **Plan the implementation with proper types**
+3. ✅ **Identify all interfaces needed**
+4. ✅ **Plan error handling strategy**
+
+### **WHILE WRITING CODE**
+
+1. ✅ **Define interfaces before implementation**
+2. ✅ **Use type guards for runtime checks**
+3. ✅ **Handle all async operations properly**
+4. ✅ **Add proper error boundaries**
+
+### **AFTER WRITING CODE (MANDATORY)**
+
+1. ✅ **Run `pnpm lint --max-warnings 0`**
+2. ✅ **Run `pnpm typecheck`**
+3. ✅ **Fix ALL errors and warnings**
+4. ✅ **Verify build passes**
+5. ✅ **Test the implementation**
+
+### **BEFORE CLAIMING COMPLETION (MANDATORY)**
+
+**YOU MUST VERIFY ALL OF THESE PASS:**
+
+```bash
+pnpm lint --max-warnings 0  ✅ MUST PASS
+pnpm typecheck              ✅ MUST PASS
+pnpm test                   ✅ MUST PASS  
+pnpm build                  ✅ MUST PASS
+```
+
+**If ANY command fails, the task is NOT complete.**
+
+---
+
+## 🔥 THE HIVE LINT COVENANT 🔥
+
+**BY WORKING ON THIS CODEBASE, YOU AGREE TO:**
+
+> I will write type-safe, lint-clean code that passes all CI checks.
+> I will never introduce `any` types without explicit justification.
+> I will handle all async operations with proper error handling.
+> I will validate all external data with proper schemas.
+> I will run `pnpm lint --max-warnings 0` before claiming completion.
+> I will maintain the highest standards of code quality.
+
+**When generating code for HIVE's repo, you're bound by the HIVE Lint Covenant:**
+
+- ✅ Zero ESLint/TypeScript errors or warnings (`--max-warnings 0`).
+- ✅ Tailwind tokens only; obey the Prettier tailwind-class sorter.
+- ✅ One `.storybook/main.ts`, ESM only.
+- ✅ Firestore writes must pass Zod validation.
+- ✅ CI commands — `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm run storybook:build` — must stay green.
+- ✅ Do not add a dependency unless you pin the exact version and ensure peer dependencies are met.
+
+**VIOLATION OF THIS COVENANT IS GROUNDS FOR IMMEDIATE CODE REJECTION.**
+
+---
+
+## 🚨 EMERGENCY PROTOCOL 🚨
+
+**If you encounter existing violations (like the current 721 linting errors):**
+
+1. **STOP** - Do not proceed with new features
+2. **FIX** - Address the violations immediately  
+3. **VERIFY** - Ensure all CI commands pass
+4. **DOCUMENT** - Note what was fixed and why
+5. **PROCEED** - Only then continue with new work
+
+**Remember: Clean code is not just nice to have - it's mandatory for production readiness.**
 
 

@@ -1,6 +1,6 @@
 import { type Meta, type StoryObj } from '@storybook/react';
 import { SpaceCard } from '../components/space-card';
-import { type Space } from '@hive/core/src/domain/firestore/space';
+import { type Space } from '@hive/core';
 
 const meta: Meta<typeof SpaceCard> = {
   title: 'Components/SpaceCard',

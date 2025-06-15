@@ -67,11 +67,11 @@ export function useSpaces(): UseSpacesReturn {
   }, [isAuthenticated, user]);
 
   useEffect(() => {
-    fetchSpaces();
+    void fetchSpaces();
   }, [fetchSpaces]);
 
   const refetch = () => {
-    fetchSpaces();
+    void fetchSpaces();
   };
 
   return {

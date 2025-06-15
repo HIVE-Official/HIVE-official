@@ -1,4 +1,5 @@
-import { test, expect, Page } from '@playwright/test'
+import type { Page } from '@playwright/test';
+import { test, expect } from '@playwright/test'
 
 // Test data
 const TEST_TOOL = {
@@ -243,7 +244,7 @@ test.describe('Tool Builder - Happy Path', () => {
     
     // Verify tool is accessible via public URL
     const toolUrl = await page.locator('[data-testid="public-url"]').textContent()
-    await page.goto(toolUrl!)
+    await page.goto(toolUrl)
     await expect(page.locator('[data-testid="published-tool"]')).toBeVisible()
   })
 
@@ -263,7 +264,7 @@ test.describe('Tool Builder - Happy Path', () => {
     
     // Test share link in new tab
     const newPage = await page.context().newPage()
-    await newPage.goto(shareLink!)
+    await newPage.goto(shareLink)
     await expect(newPage.locator('[data-testid="shared-tool"]')).toBeVisible()
   })
 
@@ -280,7 +281,7 @@ test.describe('Tool Builder - Happy Path', () => {
     await page.goto('/auth/logout')
     await loginTestUser(page) // Would use different test user
     
-    await page.goto(shareLink!)
+    await page.goto(shareLink)
     await page.click('[data-testid="fork-tool"]')
     
     // Verify fork created

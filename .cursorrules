@@ -1,131 +1,192 @@
-# HIVE UI Coding Standards and Practices
+# HIVE UI React/TypeScript Coding Standards and Practices
 
 ## 1. Architecture and Structure
 
 ### 1.1 Project Organization
+
 - Follow clean architecture principles with clear separation of concerns
-- Organize feature code into self-contained modules under 'features/' directory
-- Use the following directory structure for features:
+- Organize feature code into self-contained modules under packages/
+- Use the monorepo structure:
   ```
-  features/
-    ├── feature_name/
-    │    ├── data/           # Data sources, repositories, and DTOs
-    │    ├── domain/         # Entities and use cases
-    │    └── presentation/   # UI components, controllers, and screens
+  apps/
+    ├── web/                 # Main Next.js application
+    └── admin/               # Admin dashboard
+  packages/
+    ├── ui/                  # Shared UI components (Storybook)
+    ├── hooks/               # Shared React hooks
+    ├── core/                # Business logic and types
+    ├── api-client/          # API client logic
+    └── auth-logic/          # Authentication logic
   ```
 
 ### 1.2 File Size and Structure
+
 - Limit files to a maximum of 300 lines of code
-- Extract large widgets into separate component files
+- Extract large components into smaller, focused components
 - One primary export per file
-- Name files according to their primary content (e.g., profile_page.dart for ProfilePage)
+- Use kebab-case for file names (e.g., user-profile.tsx)
 
 ## 2. Code Style and Syntax
 
 ### 2.1 Naming Conventions
-- Use PascalCase for classes, enums, and extensions
-- Use camelCase for variables, functions, and methods
-- Use snake_case for file and directory names
-- Use SCREAMING_SNAKE_CASE for constants and enums
+
+- Use PascalCase for React components and TypeScript interfaces
+- Use camelCase for variables, functions, and props
+- Use kebab-case for file and directory names
+- Use SCREAMING_SNAKE_CASE for constants and environment variables
 
 ### 2.2 Type Safety
-- Always declare explicit types for variables, parameters, and return values
-- Avoid using 'dynamic' or 'var' unless absolutely necessary
-- Create proper type definitions for complex data structures
-- Use nullable types (e.g., String?) only when nullability is intended
+
+- Always use TypeScript with strict mode enabled
+- Define explicit interface/type definitions for all props and function parameters
+- Avoid `any` type - use proper TypeScript types or `unknown`
+- Use type-only imports when importing only for types
 
 ### 2.3 Documentation
-- Add dartdoc comments for all public classes, methods, and properties
-- Include parameter and return documentation for functions
+
+- Add JSDoc comments for all exported functions and components
+- Include prop descriptions in component interfaces
 - Document complex logic with inline comments
-- Use `///` for documentation comments and `//` for implementation comments
+- Use `//` for implementation comments and `/** */` for JSDoc
 
 ## 3. UI Development
 
-### 3.1 Widget Design
-- Break down complex widgets into smaller, reusable components
-- Keep widget hierarchies flat to improve performance
-- Use const constructors wherever possible
-- Use key parameters for stateful widgets that may rebuild
+### 3.1 Component Design
+
+- Break down complex components into smaller, reusable components
+- Use React Server Components by default
+- Only use "use client" when necessary (hooks, event handlers, browser APIs)
+- Prefer composition over inheritance
 
 ### 3.2 Theme Consistency
-- Only use colors defined in AppColors
-- Follow the app's design guidelines for spacing, typography, and borders
-- Use the glassmorphism extensions for consistent UI treatments
-- Maintain the dark theme with gold accent aesthetic
+
+- Use Tailwind CSS classes exclusively
+- Follow the design tokens defined in packages/tokens
+- Use shadcn/ui components as base components
+- Maintain consistent spacing, typography, and color usage
 
 ### 3.3 Animation and Interaction
-- Use consistent duration values for animations (300-400ms is standard)
-- Include haptic feedback for interactive elements
-- Implement smooth transitions between states and screens
-- Use AnimationController and Tween for custom animations
+
+- Use Framer Motion for animations when needed
+- Keep animations subtle and purposeful
+- Ensure accessibility considerations for animations
+- Use CSS transitions for simple hover effects
 
 ## 4. State Management
 
-### 4.1 Riverpod Usage
-- Use StateProvider for simple state
-- Use StateNotifierProvider for complex state with operations
-- Use FutureProvider for async operations
-- Define providers at the top of the file or in a dedicated providers file
-- Properly type all providers
+### 4.1 State Strategy
+
+- Use useState for local component state
+- Use Zustand for global client state
+- Use React Query (TanStack Query) for server state
+- Use React Context sparingly (only for stable, infrequently changing data)
 
 ### 4.2 State Organization
-- Create dedicated state classes for complex features
-- Use immutable state objects with copyWith methods
-- Separate UI state from domain state
+
+- Keep state as close to where it's used as possible
+- Use custom hooks to encapsulate stateful logic
 - Handle loading, error, and success states explicitly
+- Use proper TypeScript types for all state
 
 ## 5. Performance Optimization
 
 ### 5.1 Rendering Optimization
-- Avoid expensive operations in build methods
-- Use caching for complex calculations
-- Minimize rebuilds by using const widgets and selective state updates
-- Profile and optimize performance-critical paths
+
+- Use React.memo for expensive components
+- Optimize re-renders with proper dependency arrays
+- Use useMemo and useCallback judiciously
+- Leverage Next.js Server Components for better performance
 
 ### 5.2 Resource Management
-- Properly dispose controllers and subscriptions
-- Use lazy loading for heavy resources
-- Implement pagination for long lists
-- Optimize image loading and caching
+
+- Use dynamic imports for code splitting
+- Optimize images with Next.js Image component
+- Implement proper cleanup in useEffect hooks
+- Use Suspense boundaries for better loading states
 
 ## 6. Testing
 
 ### 6.1 Test Coverage
-- Write unit tests for all business logic
-- Create widget tests for UI components
+
+- Write unit tests for utility functions and hooks
+- Create component tests using React Testing Library
 - Include integration tests for critical user flows
-- Mock external dependencies for testing
+- Use Vitest as the test runner
 
 ### 6.2 Test Structure
-- Follow the Arrange-Act-Assert pattern for unit tests
-- Use Given-When-Then for integration tests
-- Test edge cases and error handling
+
+- Follow the Arrange-Act-Assert pattern
+- Use descriptive test names
+- Mock external dependencies appropriately
+- Test user interactions, not implementation details
 
 ## 7. Error Handling
 
 ### 7.1 Exception Management
-- Use typed exceptions for different error scenarios
-- Implement graceful error recovery
-- Display user-friendly error messages
-- Log errors for debugging purposes
+
+- Use Error Boundaries for component error handling
+- Implement proper error states in components
+- Use typed error objects when possible
+- Log errors appropriately for debugging
 
 ### 7.2 Null Safety
-- Handle nullable values safely
-- Use the ?? operator or null-aware operators when appropriate
-- Check for null before accessing potentially null values
-- Provide default values for nullable parameters
 
-## 8. Refactoring Priorities
+- Handle undefined/null values with optional chaining
+- Use TypeScript's strict null checks
+- Provide fallback values where appropriate
+- Use type guards for runtime type checking
 
-### 8.1 Current Technical Debt
-- Break down large files (like profile_page.dart) into smaller component files
-- Standardize navigation approach across the app
-- Improve error handling and reporting
-- Enhance state management with more focused providers
+## 8. HIVE-Specific Standards
 
-### 8.2 Code Improvement Opportunities
-- Extract common UI patterns into reusable widgets
-- Implement comprehensive logging
-- Add accessibility features
-- Optimize performance for low-end devices 
+### 8.1 Styling
+
+- Use Tailwind CSS classes exclusively
+- Follow the HIVE design system (dark theme with gold accents)
+- Use consistent spacing scale (4, 8, 16, 24, 32px)
+- Ensure all components are accessible (WCAG 2.1 AA)
+
+### 8.2 API Integration
+
+- Use the shared API client from packages/api-client
+- Implement proper error handling for API calls
+- Use React Query for data fetching and caching
+- Type all API responses with TypeScript interfaces
+
+### 8.3 Authentication
+
+- Use the auth logic from packages/auth-logic
+- Implement proper loading states for auth operations
+- Handle auth errors gracefully
+- Follow Firebase Auth best practices
+
+## 9. Development Workflow
+
+### 9.1 Code Quality
+
+- Run `pnpm lint` before committing
+- Run `pnpm typecheck` to verify TypeScript
+- Use Prettier for consistent formatting
+- Follow the conventional commit format
+
+### 9.2 Storybook Development
+
+- Create stories for all reusable UI components
+- Document component variants and props
+- Use Storybook for visual testing
+- Follow CSF 3.0 format for stories
+
+## 10. Refactoring Priorities
+
+### 10.1 Current Focus Areas
+
+- Ensure all components use proper TypeScript typing
+- Standardize error handling patterns
+- Optimize bundle size and performance
+- Improve accessibility across all components
+
+### 10.2 Code Improvement Opportunities
+
+- Extract common patterns into custom hooks
+- Implement comprehensive error boundaries
+- Add proper loading states everywhere
+- Optimize for mobile responsiveness

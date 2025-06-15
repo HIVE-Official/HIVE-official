@@ -1,11 +1,18 @@
-'use client'
+"use client";
 
-import { Card, CardContent, CardHeader, CardTitle, Button } from '@hive/ui'
-import { Users, Wrench, Calendar, Activity, Plus, ArrowRight } from 'lucide-react'
-import type { User } from '@hive/core'
+import { Card, CardContent, CardHeader, CardTitle, Button } from "@hive/ui";
+import {
+  Users,
+  Wrench,
+  Calendar,
+  Activity,
+  Plus,
+  ArrowRight,
+} from "lucide-react";
+import type { User } from "@hive/core";
 
 interface ProfileOverviewProps {
-  user: User
+  user: User;
 }
 
 export const ProfileOverview = ({ user }: ProfileOverviewProps) => {
@@ -21,9 +28,7 @@ export const ProfileOverview = ({ user }: ProfileOverviewProps) => {
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
-            <p className="text-gray-300">
-              {user.currentStatus || 'Set your current status...'}
-            </p>
+            <p className="text-gray-300">Set your current status...</p>
             <Button variant="outline" size="sm" className="w-full">
               Update Status
             </Button>
@@ -104,7 +109,7 @@ export const ProfileOverview = ({ user }: ProfileOverviewProps) => {
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-gold">
-                {user.isBuilder ? 'Yes' : 'No'}
+                {user.isBuilder ? "Yes" : "No"}
               </div>
               <div className="text-sm text-gray-400">Builder Status</div>
             </div>
@@ -116,7 +121,11 @@ export const ProfileOverview = ({ user }: ProfileOverviewProps) => {
       <Card className="border-gray-700 bg-gray-900/50 md:col-span-2 lg:col-span-3">
         <CardHeader className="flex flex-row items-center justify-between pb-3">
           <CardTitle className="text-white">Recent Activity</CardTitle>
-          <Button variant="ghost" size="sm" className="text-gold hover:text-gold/80">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-gold hover:text-gold/80"
+          >
             View All
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
@@ -136,5 +145,5 @@ export const ProfileOverview = ({ user }: ProfileOverviewProps) => {
         </CardContent>
       </Card>
     </div>
-  )
-} 
+  );
+};

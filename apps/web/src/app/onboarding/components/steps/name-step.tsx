@@ -1,7 +1,7 @@
-import { motion } from 'framer-motion';
+import { MotionDiv } from '@hive/ui';
 import { User } from 'lucide-react';
 import { Input } from '@hive/ui';
-import { OnboardingData } from '../onboarding-wizard';
+import type { OnboardingData } from '../onboarding-wizard';
 
 interface NameStepProps {
   data: OnboardingData;
@@ -12,7 +12,7 @@ interface NameStepProps {
 // Simple Label component
 function Label({ htmlFor, className, children }: { htmlFor?: string; className?: string; children: React.ReactNode }) {
   return (
-    <label htmlFor={htmlFor} className={`text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 ${className}`}>
+    <label htmlFor={htmlFor} className={`text-sm font-medium leading-none ${className}`}>
       {children}
     </label>
   );
@@ -26,8 +26,12 @@ export function NameStep({ data, updateData, onNext }: NameStepProps) {
     }
   };
 
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    updateData({ fullName: e.target.value });
+  };
+
   return (
-    <motion.div
+    <MotionDiv
       initial={{ y: 20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       className="space-y-8"
@@ -40,7 +44,7 @@ export function NameStep({ data, updateData, onNext }: NameStepProps) {
           What&apos;s your name?
         </h2>
         <p className="text-zinc-400">
-          Your real name helps classmates recognize and connect with you.
+          This is how you'll appear to other students on HIVE.
         </p>
       </div>
 
@@ -54,10 +58,9 @@ export function NameStep({ data, updateData, onNext }: NameStepProps) {
             type="text"
             placeholder="Enter your full name"
             value={data.fullName}
-            onChange={(e) => updateData({ fullName: e.target.value })}
+            onChange={handleNameChange}
             className="bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 focus:border-yellow-500"
             autoFocus
-            required
           />
         </div>
 
@@ -66,10 +69,10 @@ export function NameStep({ data, updateData, onNext }: NameStepProps) {
             Privacy Note
           </h4>
           <p className="text-xs text-zinc-400">
-            Your name will be visible to other students at your school. You can update your privacy settings later.
+            Your name will be visible to other students in your spaces. You can always update this later in your profile settings.
           </p>
         </div>
       </form>
-    </motion.div>
+    </MotionDiv>
   );
 } 

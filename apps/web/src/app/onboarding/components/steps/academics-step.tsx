@@ -1,9 +1,9 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { GraduationCap, Search, ChevronDown } from 'lucide-react';
-import { Input } from '@hive/ui';
-import { UB_MAJORS } from '@hive/core/src/constants/majors';
-import { OnboardingData } from '../onboarding-wizard';
+import { useState } from "react";
+import { MotionDiv } from "@hive/ui";
+import { GraduationCap, Search, ChevronDown } from "lucide-react";
+import { Input } from "@hive/ui";
+import { UB_MAJORS } from "@hive/core";
+import type { OnboardingData } from "../onboarding-wizard";
 
 interface AcademicsStepProps {
   data: OnboardingData;
@@ -11,24 +11,40 @@ interface AcademicsStepProps {
   onNext: () => void;
 }
 
-function Label({ htmlFor, className, children }: { htmlFor?: string; className?: string; children: React.ReactNode }) {
+function Label({
+  htmlFor,
+  className,
+  children,
+}: {
+  htmlFor?: string;
+  className?: string;
+  children: React.ReactNode;
+}) {
   return (
-    <label htmlFor={htmlFor} className={`text-sm font-medium leading-none ${className}`}>
+    <label
+      htmlFor={htmlFor}
+      className={`text-sm font-medium leading-none ${className}`}
+    >
       {children}
     </label>
   );
 }
 
-export function AcademicsStep({ data, updateData, onNext }: AcademicsStepProps) {
-  const [searchQuery, setSearchQuery] = useState('');
+export function AcademicsStep({
+  data,
+  updateData,
+  onNext,
+}: AcademicsStepProps) {
+  const [searchQuery, setSearchQuery] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
-  
+
   const currentYear = new Date().getFullYear();
   const graduationYears = Array.from({ length: 7 }, (_, i) => currentYear + i);
 
-  const filteredMajors = UB_MAJORS.filter(major =>
-    major.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    major.school.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredMajors = UB_MAJORS.filter(
+    (major) =>
+      major.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      major.school.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -41,11 +57,11 @@ export function AcademicsStep({ data, updateData, onNext }: AcademicsStepProps) 
   const selectMajor = (major: string) => {
     updateData({ major });
     setShowDropdown(false);
-    setSearchQuery('');
+    setSearchQuery("");
   };
 
   return (
-    <motion.div
+    <MotionDiv
       initial={{ y: 20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       className="space-y-8"
@@ -84,8 +100,8 @@ export function AcademicsStep({ data, updateData, onNext }: AcademicsStepProps) 
               <button
                 type="button"
                 onClick={() => {
-                  updateData({ major: '' });
-                  setSearchQuery('');
+                  updateData({ major: "" });
+                  setSearchQuery("");
                   setShowDropdown(true);
                 }}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white"
@@ -94,7 +110,7 @@ export function AcademicsStep({ data, updateData, onNext }: AcademicsStepProps) 
               </button>
             )}
           </div>
-          
+
           {showDropdown && !data.major && (
             <div className="absolute z-10 w-full mt-1 bg-zinc-800 border border-zinc-700 rounded-md shadow-lg max-h-60 overflow-y-auto">
               {filteredMajors.length > 0 ? (
@@ -114,10 +130,10 @@ export function AcademicsStep({ data, updateData, onNext }: AcademicsStepProps) 
               )}
             </div>
           )}
-          
+
           {data.major && (
             <div className="text-sm text-zinc-400">
-              {UB_MAJORS.find(m => m.name === data.major)?.school}
+              {UB_MAJORS.find((m) => m.name === data.major)?.school}
             </div>
           )}
         </div>
@@ -127,7 +143,9 @@ export function AcademicsStep({ data, updateData, onNext }: AcademicsStepProps) 
           <div className="relative">
             <select
               value={data.graduationYear.toString()}
-              onChange={(e) => updateData({ graduationYear: parseInt(e.target.value) })}
+              onChange={(e) =>
+                updateData({ graduationYear: parseInt(e.target.value) })
+              }
               className="w-full bg-zinc-800 border border-zinc-700 text-white rounded-md px-3 py-2 pr-10 focus:border-yellow-500 focus:outline-none appearance-none"
             >
               {graduationYears.map((year) => (
@@ -141,14 +159,13 @@ export function AcademicsStep({ data, updateData, onNext }: AcademicsStepProps) 
         </div>
 
         <div className="bg-zinc-800/50 rounded-lg p-4">
-          <h4 className="text-sm font-medium text-white mb-2">
-            Why we ask
-          </h4>
+          <h4 className="text-sm font-medium text-white mb-2">Why we ask</h4>
           <p className="text-xs text-zinc-400">
-            Your major helps us recommend relevant spaces like study groups, project teams, and career-focused communities.
+            Your major helps us recommend relevant spaces like study groups,
+            project teams, and career-focused communities.
           </p>
         </div>
       </form>
-    </motion.div>
+    </MotionDiv>
   );
-} 
+}

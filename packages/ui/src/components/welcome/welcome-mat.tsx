@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { X, ArrowRight, Users } from 'lucide-react';
-import { cn } from '../../lib/utils';
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { X, ArrowRight, Users } from "lucide-react";
+import { cn } from "../../lib/utils";
 
 interface WelcomeMatProps {
   /** Whether to show the welcome mat */
@@ -34,23 +34,23 @@ export const WelcomeMat = ({
   };
 
   const handleExploreSpaces = () => {
-    window.location.href = '/spaces';
+    window.location.href = "/spaces";
   };
 
   const handleViewProfile = () => {
-    window.location.href = '/profile';
+    window.location.href = "/profile";
   };
 
   // Prevent body scroll when overlay is visible
   useEffect(() => {
     if (isVisible) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
     }
 
     return () => {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
     };
   }, [isVisible]);
 
@@ -61,10 +61,10 @@ export const WelcomeMat = ({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.3, ease: 'easeOut' }}
+          transition={{ duration: 0.3, ease: "easeOut" }}
           className={cn(
-            'fixed inset-0 z-50 flex items-center justify-center',
-            'bg-black/80 backdrop-blur-sm',
+            "fixed inset-0 z-50 flex items-center justify-center",
+            "bg-black/80 backdrop-blur-sm",
             className
           )}
           onClick={handleDismiss}
@@ -73,13 +73,13 @@ export const WelcomeMat = ({
             initial={{ scale: 0.9, opacity: 0, y: 20 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.9, opacity: 0, y: 20 }}
-            transition={{ duration: 0.4, ease: 'easeOut', delay: 0.1 }}
+            transition={{ duration: 0.4, ease: "easeOut", delay: 0.1 }}
             className={cn(
-              'relative mx-4 w-full max-w-md',
-              'rounded-2xl border border-white/10',
-              'bg-gradient-to-br from-zinc-900/95 to-black/95',
-              'p-8 shadow-2xl backdrop-blur-xl',
-              'ring-1 ring-white/5'
+              "relative mx-4 w-full max-w-md",
+              "rounded-2xl border border-white/10",
+              "bg-gradient-to-br from-zinc-900/95 to-black/95",
+              "p-8 shadow-2xl backdrop-blur-xl",
+              "ring-1 ring-white/5"
             )}
             onClick={(e) => e.stopPropagation()}
           >
@@ -87,10 +87,10 @@ export const WelcomeMat = ({
             <button
               onClick={handleDismiss}
               className={cn(
-                'absolute right-4 top-4 rounded-full p-2',
-                'text-zinc-400 transition-colors duration-200',
-                'hover:bg-white/10 hover:text-white',
-                'focus:outline-none focus:ring-2 focus:ring-yellow-500/50'
+                "absolute right-4 top-4 rounded-full p-2",
+                "text-zinc-400 transition-colors duration-200",
+                "hover:bg-white/10 hover:text-white",
+                "focus:outline-none focus:ring-2 focus:ring-yellow-500/50"
               )}
               aria-label="Dismiss welcome message"
             >
@@ -104,7 +104,7 @@ export const WelcomeMat = ({
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
-                  transition={{ duration: 0.5, delay: 0.3, type: 'spring' }}
+                  transition={{ duration: 0.5, delay: 0.3, type: "spring" }}
                   className="mb-4 text-4xl"
                 >
                   🚀
@@ -141,14 +141,14 @@ export const WelcomeMat = ({
                 <button
                   onClick={handleExploreSpaces}
                   className={cn(
-                    'flex w-full items-center justify-center gap-2 rounded-lg',
-                    'bg-gradient-to-r from-yellow-500 to-yellow-600',
-                    'px-6 py-3 font-semibold text-black',
-                    'transition-all duration-200',
-                    'hover:from-yellow-400 hover:to-yellow-500',
-                    'hover:shadow-lg hover:shadow-yellow-500/25',
-                    'focus:outline-none focus:ring-2 focus:ring-yellow-500/50',
-                    'active:scale-[0.98]'
+                    "flex w-full items-center justify-center gap-2 rounded-lg",
+                    "bg-gradient-to-r from-yellow-500 to-yellow-600",
+                    "px-6 py-3 font-semibold text-black",
+                    "transition-all duration-200",
+                    "hover:from-yellow-400 hover:to-yellow-500",
+                    "hover:shadow-lg hover:shadow-yellow-500/25",
+                    "focus:outline-none focus:ring-2 focus:ring-yellow-500/50",
+                    "active:scale-[0.98]"
                   )}
                 >
                   <Users className="h-4 w-4" />
@@ -159,9 +159,9 @@ export const WelcomeMat = ({
                 <button
                   onClick={handleViewProfile}
                   className={cn(
-                    'flex w-full items-center justify-center gap-2',
-                    'text-sm text-zinc-400 transition-colors duration-200',
-                    'hover:text-white focus:outline-none focus:text-white'
+                    "flex w-full items-center justify-center gap-2",
+                    "text-sm text-zinc-400 transition-colors duration-200",
+                    "hover:text-white focus:outline-none focus:text-white"
                   )}
                 >
                   View your profile
@@ -189,11 +189,11 @@ export const useWelcomeMat = () => {
   useEffect(() => {
     const checkWelcomeMatStatus = () => {
       try {
-        const dismissed = localStorage.getItem('welcomeMatDismissed');
+        const dismissed = localStorage.getItem("welcomeMatDismissed");
         const shouldShow = !dismissed;
         setIsVisible(shouldShow);
       } catch (error) {
-        console.warn('Failed to check welcome mat status:', error);
+        console.warn("Failed to check welcome mat status:", error);
         setIsVisible(false);
       } finally {
         setHasCheckedStorage(true);
@@ -205,10 +205,10 @@ export const useWelcomeMat = () => {
 
   const dismissWelcomeMat = () => {
     try {
-      localStorage.setItem('welcomeMatDismissed', 'true');
+      localStorage.setItem("welcomeMatDismissed", "true");
       setIsVisible(false);
     } catch (error) {
-      console.warn('Failed to save welcome mat dismissal:', error);
+      console.warn("Failed to save welcome mat dismissal:", error);
       setIsVisible(false);
     }
   };
@@ -218,4 +218,4 @@ export const useWelcomeMat = () => {
     dismissWelcomeMat,
     hasCheckedStorage,
   };
-}; 
+};

@@ -172,9 +172,19 @@ export const useOnboardingAnalytics = () => {
         trackOnboardingAbandoned,
     };
 };
-// Helper function to get step index
+/**
+ * Get the index of an onboarding step for analytics
+ */
 function getStepIndex(stepName) {
-    const steps = ['welcome', 'name', 'academics', 'handle', 'photo', 'builder', 'legal'];
-    return steps.indexOf(stepName);
+    const stepOrder = [
+        'welcome',
+        'name',
+        'academics',
+        'handle',
+        'photo',
+        'builder',
+        'legal'
+    ];
+    return stepOrder.indexOf(stepName);
 }
 //# sourceMappingURL=use-onboarding-analytics.js.map

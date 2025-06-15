@@ -3,7 +3,7 @@
 import { Input } from "@hive/ui";
 import { Search } from "lucide-react";
 import { useEffect, useState, useRef } from "react";
-import { School } from "@hive/core/domain/school";
+import type { School } from "@hive/core";
 import { useRouter } from "next/navigation";
 
 export function SchoolSearch() {

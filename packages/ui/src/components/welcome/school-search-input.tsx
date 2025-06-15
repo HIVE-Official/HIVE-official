@@ -4,6 +4,7 @@ import { Input } from '../ui/input';
 import { cn } from '../../lib/utils';
 
 // Mock data for schools, to be replaced by Firestore data in T1-S1A-D2-03
+export default {}
 const MOCK_SCHOOLS = [
   { id: '1', name: 'University at Buffalo' },
   { id: '2', name: 'Stony Brook University' },

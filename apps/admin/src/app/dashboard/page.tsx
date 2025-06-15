@@ -1,22 +1,22 @@
-import { Metadata } from 'next'
-import { redirect } from 'next/navigation'
-import { Card, CardContent, CardHeader, CardTitle } from '@hive/ui'
-import { UserLookup } from '../components/user-lookup'
-import { BuilderQueue } from '../components/builder-queue'
-import { FlagQueue } from '../components/flag-queue'
-import { MetricCards } from '../components/metric-cards'
-import { getCurrentAdmin } from '@/lib/auth'
+import { Metadata } from "next";
+import { redirect } from "next/navigation";
+import { Card, CardContent, CardHeader, CardTitle } from "@hive/ui";
+import { UserLookup } from "../../components/user-lookup";
+import { BuilderQueue } from "../../components/builder-queue";
+import { FlagQueue } from "../../components/flag-queue";
+import { MetricCards } from "../../components/metric-cards";
+import { getCurrentAdmin } from "@/lib/auth";
 
 export const metadata: Metadata = {
-  title: 'Admin Dashboard | HIVE',
-  description: 'HIVE administration and moderation tools.',
-}
+  title: "Admin Dashboard | HIVE",
+  description: "HIVE administration and moderation tools.",
+};
 
-export default async function AdminDashboard() {
-  const admin = await getCurrentAdmin()
-  
+export default function AdminDashboard() {
+  const admin = getCurrentAdmin();
+
   if (!admin) {
-    redirect('/auth/login')
+    redirect("/auth/login");
   }
 
   return (
@@ -71,5 +71,5 @@ export default async function AdminDashboard() {
         </div>
       </div>
     </div>
-  )
-} 
+  );
+}

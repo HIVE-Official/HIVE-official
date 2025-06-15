@@ -1,6 +1,6 @@
-import { motion } from 'framer-motion';
-import { Zap, Code, Palette, Users } from 'lucide-react';
-import { OnboardingData } from '../onboarding-wizard';
+import { MotionDiv } from "@hive/ui";
+import { Code, Zap, Users, Sparkles } from "lucide-react";
+import type { OnboardingData } from "../onboarding-wizard";
 
 interface BuilderStepProps {
   data: OnboardingData;
@@ -8,146 +8,146 @@ interface BuilderStepProps {
   onNext: () => void;
 }
 
-function Label({ htmlFor, className, children }: { htmlFor?: string; className?: string; children: React.ReactNode }) {
-  return (
-    <label htmlFor={htmlFor} className={`text-sm font-medium leading-none ${className}`}>
-      {children}
-    </label>
-  );
-}
-
-function Switch({ id, checked, onCheckedChange }: { 
-  id: string; 
-  checked: boolean; 
-  onCheckedChange: (checked: boolean) => void; 
-}) {
-  return (
-    <button
-      type="button"
-      id={id}
-      onClick={() => onCheckedChange(!checked)}
-      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-        checked ? 'bg-yellow-500' : 'bg-zinc-600'
-      }`}
-    >
-      <span
-        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-          checked ? 'translate-x-6' : 'translate-x-1'
-        }`}
-      />
-    </button>
-  );
-}
-
 export function BuilderStep({ data, updateData, onNext }: BuilderStepProps) {
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onNext();
+  };
+
+  const selectBuilderStatus = (isBuilder: boolean) => {
+    updateData({ isBuilder });
+  };
+
   return (
-    <motion.div
+    <MotionDiv
       initial={{ y: 20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       className="space-y-8"
     >
       <div className="text-center space-y-4">
-        <div className="mx-auto w-16 h-16 bg-yellow-500/20 rounded-full flex items-center justify-center">
-          <Zap className="w-8 h-8 text-yellow-500" />
+        <div className="mx-auto w-16 h-16 bg-purple-500/20 rounded-full flex items-center justify-center">
+          <Zap className="w-8 h-8 text-purple-500" />
         </div>
-        <h2 className="text-2xl font-bold text-white">
-          Are you a builder?
-        </h2>
+        <h2 className="text-2xl font-bold text-white">Are you a builder?</h2>
         <p className="text-zinc-400">
-          Builders can create interactive tools and widgets for the community. You can always change this later.
+          Builders create tools, apps, and interactive content for the HIVE
+          community.
         </p>
       </div>
 
-      <div className="space-y-8">
-        <div className="flex items-center justify-between p-6 bg-zinc-800/50 rounded-lg">
-          <div className="space-y-1">
-            <Label htmlFor="builder-toggle" className="text-white font-medium">
-              Enable builder mode
-            </Label>
-            <p className="text-sm text-zinc-400">
-              Get access to the tool creator and advanced features
-            </p>
-          </div>
-          <Switch
-            id="builder-toggle"
-            checked={data.isBuilder}
-            onCheckedChange={(checked) => updateData({ isBuilder: checked })}
-          />
-        </div>
-
+      <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="p-4 bg-zinc-800/30 rounded-lg space-y-3">
-            <div className="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center">
-              <Code className="w-5 h-5 text-blue-500" />
+          {/* Yes, I'm a builder */}
+          <button
+            type="button"
+            onClick={() => selectBuilderStatus(true)}
+            className={`p-6 rounded-lg border-2 transition-all text-left ${
+              data.isBuilder
+                ? "border-yellow-500 bg-yellow-500/10"
+                : "border-zinc-700 hover:border-zinc-600 bg-zinc-800/50"
+            }`}
+          >
+            <div className="space-y-4">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-yellow-500/20 rounded-full flex items-center justify-center">
+                  <Code className="w-5 h-5 text-yellow-500" />
+                </div>
+                <h3 className="font-semibold text-white">
+                  Yes, I&apos;m a builder!
+                </h3>
+              </div>
+              <p className="text-sm text-zinc-400">
+                I love creating tools, apps, or interactive content. I want to
+                share my creations with the community.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <span className="px-2 py-1 bg-yellow-500/20 text-yellow-500 text-xs rounded-full">
+                  Tool Creator
+                </span>
+                <span className="px-2 py-1 bg-blue-500/20 text-blue-500 text-xs rounded-full">
+                  Developer
+                </span>
+                <span className="px-2 py-1 bg-green-500/20 text-green-500 text-xs rounded-full">
+                  Innovator
+                </span>
+              </div>
             </div>
-            <h4 className="text-white font-medium">Create Tools</h4>
-            <p className="text-sm text-zinc-400">
-              Build interactive widgets, calculators, and utilities for your community
-            </p>
-          </div>
+          </button>
 
-          <div className="p-4 bg-zinc-800/30 rounded-lg space-y-3">
-            <div className="w-10 h-10 bg-green-500/20 rounded-lg flex items-center justify-center">
-              <Palette className="w-5 h-5 text-green-500" />
+          {/* No, I'm here to explore */}
+          <button
+            type="button"
+            onClick={() => selectBuilderStatus(false)}
+            className={`p-6 rounded-lg border-2 transition-all text-left ${
+              !data.isBuilder
+                ? "border-yellow-500 bg-yellow-500/10"
+                : "border-zinc-700 hover:border-zinc-600 bg-zinc-800/50"
+            }`}
+          >
+            <div className="space-y-4">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-blue-500/20 rounded-full flex items-center justify-center">
+                  <Users className="w-5 h-5 text-blue-500" />
+                </div>
+                <h3 className="font-semibold text-white">
+                  I&apos;m here to explore
+                </h3>
+              </div>
+              <p className="text-sm text-zinc-400">
+                I want to discover tools, connect with classmates, and engage
+                with the community.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <span className="px-2 py-1 bg-blue-500/20 text-blue-500 text-xs rounded-full">
+                  Explorer
+                </span>
+                <span className="px-2 py-1 bg-purple-500/20 text-purple-500 text-xs rounded-full">
+                  Connector
+                </span>
+                <span className="px-2 py-1 bg-pink-500/20 text-pink-500 text-xs rounded-full">
+                  Learner
+                </span>
+              </div>
             </div>
-            <h4 className="text-white font-medium">Custom Styling</h4>
-            <p className="text-sm text-zinc-400">
-              Design custom layouts and themes for your tools and spaces
-            </p>
-          </div>
-
-          <div className="p-4 bg-zinc-800/30 rounded-lg space-y-3">
-            <div className="w-10 h-10 bg-purple-500/20 rounded-lg flex items-center justify-center">
-              <Users className="w-5 h-5 text-purple-500" />
-            </div>
-            <h4 className="text-white font-medium">Community Impact</h4>
-            <p className="text-sm text-zinc-400">
-              Share your creations with students across campus
-            </p>
-          </div>
-
-          <div className="p-4 bg-zinc-800/30 rounded-lg space-y-3">
-            <div className="w-10 h-10 bg-orange-500/20 rounded-lg flex items-center justify-center">
-              <Zap className="w-5 h-5 text-orange-500" />
-            </div>
-            <h4 className="text-white font-medium">Early Access</h4>
-            <p className="text-sm text-zinc-400">
-              Get first access to new builder features and tools
-            </p>
-          </div>
+          </button>
         </div>
 
         {data.isBuilder && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-4"
+          <MotionDiv
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-gradient-to-r from-yellow-500/10 to-orange-500/10 border border-yellow-500/20 rounded-lg p-6"
           >
             <div className="flex items-start space-x-3">
-              <div className="w-6 h-6 bg-yellow-500/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                <Zap className="w-3 h-3 text-yellow-500" />
-              </div>
+              <Sparkles className="w-6 h-6 text-yellow-500 mt-1" />
               <div>
-                <h4 className="text-white font-medium mb-1">
-                  Welcome to the builder community!
+                <h4 className="font-semibold text-white mb-2">
+                  Welcome to the Builder Community!
                 </h4>
-                <p className="text-sm text-zinc-300">
-                  You&apos;ll have access to the tool creator in your dashboard. Start by exploring existing tools to get inspired, then create your first widget when you&apos;re ready.
+                <p className="text-sm text-zinc-300 mb-3">
+                  As a builder, you&apos;ll get access to:
                 </p>
+                <ul className="text-sm text-zinc-400 space-y-1">
+                  <li>• Tool creation and publishing platform</li>
+                  <li>• Builder-exclusive spaces and discussions</li>
+                  <li>• Analytics for your creations</li>
+                  <li>• Featured placement for quality tools</li>
+                </ul>
               </div>
             </div>
-          </motion.div>
+          </MotionDiv>
         )}
 
         <div className="bg-zinc-800/50 rounded-lg p-4">
           <h4 className="text-sm font-medium text-white mb-2">
-            No commitment required
+            Don&apos;t worry!
           </h4>
           <p className="text-xs text-zinc-400">
-            You can enable or disable builder mode anytime from your profile settings. This just helps us show you relevant features.
+            You can always change this later in your profile settings. This just
+            helps us customize your experience.
           </p>
         </div>
-      </div>
-    </motion.div>
+      </form>
+    </MotionDiv>
   );
-} 
+}

@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useAuth } from '@hive/auth-logic'
-import { 
+import type { 
   CreationAnalyticsEvent,
-  CreationEventType,
+  CreationEventType
+} from '@hive/core'
+import {
   createAnalyticsEvent,
   shouldTrackEvent,
-  batchAnalyticsEvents,
-  hashUserId
+  batchAnalyticsEvents
 } from '@hive/core'
 
 interface UseCreationAnalyticsOptions {
@@ -62,14 +63,15 @@ export const useCreationAnalytics = (options: UseCreationAnalyticsOptions = {}) 
 
   // Load user preferences
   useEffect(() => {
-    const loadPreferences = async () => {
+    const loadPreferences = () => {
       if (!user) return
 
       try {
         // In a real implementation, fetch from user profile or settings
         const prefs = localStorage.getItem(`analytics_prefs_${user.uid}`)
         if (prefs) {
-          setUserPreferences(JSON.parse(prefs))
+          const parsedPrefs = JSON.parse(prefs) as { analyticsOptOut?: boolean; anonymizeData?: boolean }
+          setUserPreferences(parsedPrefs)
         }
       } catch (error) {
         console.error('Failed to load analytics preferences:', error)
@@ -122,7 +124,7 @@ export const useCreationAnalytics = (options: UseCreationAnalyticsOptions = {}) 
   // Auto-flush timer
   useEffect(() => {
     flushTimer.current = setInterval(() => {
-      flushEvents()
+      void flushEvents()
     }, flushInterval)
 
     return () => {
@@ -135,14 +137,14 @@ export const useCreationAnalytics = (options: UseCreationAnalyticsOptions = {}) 
   // Flush on unmount
   useEffect(() => {
     return () => {
-      flushEvents(true)
+      void flushEvents(true)
     }
   }, [flushEvents])
 
   // Track event
   const trackEvent = useCallback((
     eventType: CreationEventType,
-    metadata?: Record<string, any>,
+    metadata?: Record<string, unknown>,
     context?: Partial<CreationAnalyticsContext>
   ) => {
     if (!shouldTrackEvent(eventType, userPreferences)) {
@@ -185,7 +187,7 @@ export const useCreationAnalytics = (options: UseCreationAnalyticsOptions = {}) 
 
     // Flush if queue is full
     if (eventQueue.current.length >= batchSize) {
-      flushEvents()
+      void flushEvents()
     }
   }, [
     user,
@@ -231,7 +233,7 @@ export const useCreationAnalytics = (options: UseCreationAnalyticsOptions = {}) 
     })
     
     setIsSessionActive(false)
-    flushEvents(true) // Force flush on session end
+    void flushEvents(true) // Force flush on session end
   }, [trackEvent, sessionStartTime, flushEvents])
 
   // Tool lifecycle events

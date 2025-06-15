@@ -1,6 +1,7 @@
 import React from 'react'
 import { cn } from '../../lib/utils'
 
+export default {}
 interface ScrollAreaProps {
   children: React.ReactNode
   className?: string

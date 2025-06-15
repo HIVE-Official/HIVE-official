@@ -7,7 +7,7 @@ const functions = getFunctions();
  * @param {string} spaceId The ID of the space to post in.
  * @param {string} content The text content of the post.
  */
-export const createPost = async (spaceId: string, content: string): Promise<any> => {
+export const createPost = async (spaceId: string, content: string): Promise<unknown> => {
   const createPostCallable = httpsCallable(functions, 'createPost');
   return await createPostCallable({ spaceId, content });
 }; 

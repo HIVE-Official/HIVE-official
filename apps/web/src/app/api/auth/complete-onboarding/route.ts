@@ -1,43 +1,65 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { z } from 'zod';
-import { dbAdmin } from '@/lib/firebase-admin';
-import { getAuth } from 'firebase-admin/auth';
-import { type Timestamp } from 'firebase-admin/firestore';
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
+import { z } from "zod";
+import { dbAdmin } from "@/lib/firebase-admin";
+import { getAuth } from "firebase-admin/auth";
+import { type Timestamp } from "firebase-admin/firestore";
 
 const completeOnboardingSchema = z.object({
-  fullName: z.string().min(1, 'Full name is required').max(100, 'Full name too long'),
-  major: z.string().min(1, 'Major is required'),
-  handle: z.string()
-    .min(3, 'Handle must be at least 3 characters')
-    .max(20, 'Handle must be at most 20 characters')
-    .regex(/^[a-zA-Z0-9_]+$/, 'Handle can only contain letters, numbers, and underscores'),
-  avatarUrl: z.string().url().optional().or(z.literal('')),
+  fullName: z
+    .string()
+    .min(1, "Full name is required")
+    .max(100, "Full name too long"),
+  major: z.string().min(1, "Major is required"),
+  handle: z
+    .string()
+    .min(3, "Handle must be at least 3 characters")
+    .max(20, "Handle must be at most 20 characters")
+    .regex(
+      /^[a-zA-Z0-9_]+$/,
+      "Handle can only contain letters, numbers, and underscores"
+    ),
+  avatarUrl: z.string().url().optional().or(z.literal("")),
   builderOptIn: z.boolean().default(false),
-  consentGiven: z.boolean().refine(val => val === true, 'Consent must be given'),
+  consentGiven: z
+    .boolean()
+    .refine((val) => val === true, "Consent must be given"),
 });
+
+interface UserData {
+  handle?: string;
+  fullName?: string;
+  major?: string;
+  avatarUrl?: string;
+  builderOptIn?: boolean;
+  consentGiven?: boolean;
+  consentGivenAt?: Timestamp;
+  onboardingCompletedAt?: Timestamp;
+  updatedAt?: Timestamp;
+}
 
 export async function POST(request: NextRequest) {
   try {
     // Get the authorization header
-    const authHeader = request.headers.get('authorization');
-    if (!authHeader?.startsWith('Bearer ')) {
+    const authHeader = request.headers.get("authorization");
+    if (!authHeader?.startsWith("Bearer ")) {
       return NextResponse.json(
-        { error: 'Missing or invalid authorization header' },
+        { error: "Missing or invalid authorization header" },
         { status: 401 }
       );
     }
 
-    const idToken = authHeader.split('Bearer ')[1];
+    const idToken = authHeader.split("Bearer ")[1];
     const auth = getAuth();
-    
+
     // Verify the ID token
     let decodedToken;
     try {
       decodedToken = await auth.verifyIdToken(idToken);
     } catch (error) {
-      console.error('Invalid ID token:', error);
+      console.error("Invalid ID token:", error);
       return NextResponse.json(
-        { error: 'Invalid or expired token' },
+        { error: "Invalid or expired token" },
         { status: 401 }
       );
     }
@@ -47,13 +69,13 @@ export async function POST(request: NextRequest) {
 
     if (!userEmail) {
       return NextResponse.json(
-        { error: 'Email not found in token' },
+        { error: "Email not found in token" },
         { status: 400 }
       );
     }
 
     // Parse and validate the request body
-    const body = await request.json();
+    const body = (await request.json()) as unknown;
     const onboardingData = completeOnboardingSchema.parse(body);
 
     // Normalize handle to lowercase
@@ -62,35 +84,43 @@ export async function POST(request: NextRequest) {
     // Use a transaction to ensure atomicity
     const result = await dbAdmin.runTransaction(async (transaction) => {
       // Check if user already exists
-      const userDoc = await transaction.get(dbAdmin.collection('users').doc(userId));
-      
+      const userDoc = await transaction.get(
+        dbAdmin.collection("users").doc(userId)
+      );
+
       if (!userDoc.exists) {
-        throw new Error('User not found');
+        throw new Error("User not found");
       }
 
-      const userData = userDoc.data();
-      
+      const userData = userDoc.data() as UserData | undefined;
+
+      if (!userData) {
+        throw new Error("User data not found");
+      }
+
       // Check if user has already completed onboarding
-      if (userData?.handle) {
-        throw new Error('Onboarding already completed');
+      if (userData.handle) {
+        throw new Error("Onboarding already completed");
       }
 
       // Check if handle is available
-      const handleDoc = await transaction.get(dbAdmin.collection('handles').doc(normalizedHandle));
-      
+      const handleDoc = await transaction.get(
+        dbAdmin.collection("handles").doc(normalizedHandle)
+      );
+
       if (handleDoc.exists) {
-        throw new Error('Handle is already taken');
+        throw new Error("Handle is already taken");
       }
 
       const now = new Date() as unknown as Timestamp;
 
       // Update user document
-      const updatedUserData = {
+      const updatedUserData: UserData = {
         ...userData,
         fullName: onboardingData.fullName,
         major: onboardingData.major,
         handle: normalizedHandle,
-        avatarUrl: onboardingData.avatarUrl || '',
+        avatarUrl: onboardingData.avatarUrl || "",
         builderOptIn: onboardingData.builderOptIn,
         consentGiven: onboardingData.consentGiven,
         consentGivenAt: now,
@@ -106,35 +136,47 @@ export async function POST(request: NextRequest) {
       };
 
       // Perform the writes
-      transaction.update(dbAdmin.collection('users').doc(userId), updatedUserData);
-      transaction.set(dbAdmin.collection('handles').doc(normalizedHandle), handleReservation);
+      transaction.update(
+        dbAdmin.collection("users").doc(userId),
+        updatedUserData as { [x: string]: any }
+      );
+      transaction.set(
+        dbAdmin.collection("handles").doc(normalizedHandle),
+        handleReservation
+      );
 
       return { updatedUserData, normalizedHandle };
     });
 
     // After successful onboarding, auto-join the user to relevant spaces
     try {
-      const autoJoinResponse = await fetch(`${request.url.split('/api')[0]}/api/spaces/auto-join`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ userId }),
-      });
+      const autoJoinResponse = await fetch(
+        `${request.url.split("/api")[0]}/api/spaces/auto-join`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ userId }),
+        }
+      );
 
       if (!autoJoinResponse.ok) {
-        console.warn('Auto-join failed, but onboarding succeeded:', await autoJoinResponse.text());
+        console.warn(
+          "Auto-join failed, but onboarding succeeded:",
+          await autoJoinResponse.text()
+        );
       } else {
-        const autoJoinResult = await autoJoinResponse.json();
-        console.log('Auto-join successful:', autoJoinResult);
+        const autoJoinResult = (await autoJoinResponse.json()) as unknown;
+        console.log("Auto-join successful:", autoJoinResult);
       }
     } catch (autoJoinError) {
-      console.warn('Auto-join error, but onboarding succeeded:', autoJoinError);
+      console.warn("Auto-join error, but onboarding succeeded:", autoJoinError);
     }
 
     return NextResponse.json({
       success: true,
-      message: 'Onboarding completed successfully',
+      message: "Onboarding completed successfully",
       user: {
         id: userId,
         fullName: result.updatedUserData.fullName,
@@ -143,43 +185,39 @@ export async function POST(request: NextRequest) {
         builderOptIn: result.updatedUserData.builderOptIn,
       },
     });
-
   } catch (error) {
-    console.error('Error completing onboarding:', error);
-    
+    console.error("Error completing onboarding:", error);
+
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: 'Invalid request data', details: error.errors },
+        { error: "Invalid request data", details: error.errors },
         { status: 400 }
       );
     }
 
     if (error instanceof Error) {
-      if (error.message === 'Handle is already taken') {
+      if (error.message === "Handle is already taken") {
         return NextResponse.json(
-          { error: 'Handle is already taken' },
+          { error: "Handle is already taken" },
           { status: 409 }
         );
       }
-      
-      if (error.message === 'Onboarding already completed') {
+
+      if (error.message === "Onboarding already completed") {
         return NextResponse.json(
-          { error: 'Onboarding already completed' },
+          { error: "Onboarding already completed" },
           { status: 409 }
         );
       }
-      
-      if (error.message === 'User not found') {
-        return NextResponse.json(
-          { error: 'User not found' },
-          { status: 404 }
-        );
+
+      if (error.message === "User not found") {
+        return NextResponse.json({ error: "User not found" }, { status: 404 });
       }
     }
 
     return NextResponse.json(
-      { error: 'Failed to complete onboarding' },
+      { error: "Failed to complete onboarding" },
       { status: 500 }
     );
   }
-} 
+}

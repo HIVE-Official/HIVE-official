@@ -2,7 +2,7 @@ import type { OnboardingStepName } from '@hive/core';
 interface UseOnboardingAnalyticsReturn {
     trackOnboardingStarted: () => void;
     trackStepStarted: (stepName: OnboardingStepName) => void;
-    trackStepCompleted: (stepName: OnboardingStepName, data?: Record<string, any>) => void;
+    trackStepCompleted: (stepName: OnboardingStepName, data?: Record<string, unknown>) => void;
     trackStepSkipped: (stepName: OnboardingStepName, reason?: string) => void;
     trackValidationError: (stepName: OnboardingStepName, field: string, error: string) => void;
     trackOnboardingCompleted: (totalDuration: number, completedSteps: OnboardingStepName[]) => void;

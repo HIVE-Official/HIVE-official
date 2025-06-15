@@ -1,4 +1,4 @@
-import { FeedAnalyticsConfig } from '@hive/core';
+import type { FeedAnalyticsConfig } from '@hive/core';
 interface UseFeedAnalyticsOptions {
     spaceId: string;
     userId: string;

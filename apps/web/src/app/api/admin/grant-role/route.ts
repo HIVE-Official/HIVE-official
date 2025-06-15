@@ -1,129 +1,104 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { z } from 'zod';
-import { getAuth } from 'firebase-admin/auth';
-import { dbAdmin } from '@/lib/firebase-admin';
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
+import { z } from "zod";
+import { getAuth } from "firebase-admin/auth";
+import { getFirestore } from "firebase-admin/firestore";
 
+// Validation schema
 const grantRoleSchema = z.object({
-  targetUserId: z.string().min(1, 'Target user ID is required'),
-  role: z.enum(['admin', 'builder'], {
-    errorMap: () => ({ message: 'Role must be either admin or builder' })
+  userId: z.string().min(1, "User ID is required"),
+  role: z.enum(["admin", "moderator", "builder"], {
+    errorMap: () => ({ message: "Role must be admin, moderator, or builder" }),
   }),
-  spaceId: z.string().optional(), // Required for builder role
 });
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { targetUserId, role, spaceId } = grantRoleSchema.parse(body);
+    // Parse and validate request body
+    const body = (await request.json()) as unknown;
+    const validatedData = grantRoleSchema.parse(body);
 
-    // Get the requesting user's token to verify admin status
-    const authHeader = request.headers.get('Authorization');
-    if (!authHeader?.startsWith('Bearer ')) {
+    const { userId, role } = validatedData;
+
+    // Verify admin authentication
+    const authHeader = request.headers.get("authorization");
+    if (!authHeader?.startsWith("Bearer ")) {
       return NextResponse.json(
-        { error: 'Authorization header required' },
+        { error: "Authorization header required" },
         { status: 401 }
       );
     }
 
-    const token = authHeader.substring(7);
-    const auth = getAuth();
-    
-    // Verify the requesting user is an admin
-    const decodedToken = await auth.verifyIdToken(token);
-    if (!decodedToken.admin) {
+    const token = authHeader.split("Bearer ")[1];
+    if (!token) {
       return NextResponse.json(
-        { error: 'Admin access required' },
+        { error: "Invalid authorization format" },
+        { status: 401 }
+      );
+    }
+
+    const decodedToken = await getAuth().verifyIdToken(token);
+
+    // Check if current user is admin
+    const db = getFirestore();
+    const currentUserDoc = await db
+      .collection("users")
+      .doc(decodedToken.uid)
+      .get();
+    const currentUserData = currentUserDoc.data() as
+      | { role?: string }
+      | undefined;
+
+    if (!currentUserData || currentUserData.role !== "admin") {
+      return NextResponse.json(
+        { error: "Admin access required" },
         { status: 403 }
       );
     }
 
-    // Get the target user
-    const targetUser = await auth.getUser(targetUserId);
-    if (!targetUser) {
-      return NextResponse.json(
-        { error: 'Target user not found' },
-        { status: 404 }
-      );
+    // Verify target user exists
+    const targetUserDoc = await db.collection("users").doc(userId).get();
+    if (!targetUserDoc.exists) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    // Get current custom claims
-    const currentClaims = targetUser.customClaims || {};
+    // Update user role
+    await db.collection("users").doc(userId).update({
+      role,
+      updatedAt: new Date(),
+      updatedBy: decodedToken.uid,
+    });
 
-    if (role === 'admin') {
-      // Grant admin role
-      await auth.setCustomUserClaims(targetUserId, {
-        ...currentClaims,
-        admin: true
-      });
+    // Set custom claims for Firebase Auth
+    await getAuth().setCustomUserClaims(userId, { role });
 
-      // Update user document
-      await dbAdmin.collection('users').doc(targetUserId).update({
-        isAdmin: true,
-        updatedAt: new Date()
-      });
-
-    } else if (role === 'builder') {
-      if (!spaceId) {
-        return NextResponse.json(
-          { error: 'Space ID required for builder role' },
-          { status: 400 }
-        );
-      }
-
-      // Verify the space exists
-      const spaceDoc = await dbAdmin.collection('spaces').doc(spaceId).get();
-      if (!spaceDoc.exists) {
-        return NextResponse.json(
-          { error: 'Space not found' },
-          { status: 404 }
-        );
-      }
-
-      // Grant builder role
-      await auth.setCustomUserClaims(targetUserId, {
-        ...currentClaims,
-        builder: true,
-        builderSpaces: [...(currentClaims.builderSpaces || []), spaceId]
-      });
-
-      // Update user document
-      await dbAdmin.collection('users').doc(targetUserId).update({
-        isBuilder: true,
-        updatedAt: new Date()
-      });
-
-      // Update the member's role in the space
-      await dbAdmin
-        .collection('spaces')
-        .doc(spaceId)
-        .collection('members')
-        .doc(targetUserId)
-        .update({
-          role: 'builder',
-          updatedAt: new Date()
-        });
-    }
+    // Log admin action
+    await db.collection("admin_logs").add({
+      action: "grant_role",
+      performedBy: decodedToken.uid,
+      targetUser: userId,
+      newRole: role,
+      timestamp: new Date(),
+      ip: request.headers.get("x-forwarded-for") || "unknown",
+    });
 
     return NextResponse.json({
       success: true,
-      message: `${role} role granted successfully`,
-      userId: targetUserId,
-      role
+      message: `Role ${role} granted to user ${userId}`,
     });
-
   } catch (error) {
-    console.error('Grant role error:', error);
+    console.error("Error granting role:", error);
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: 'Invalid input', details: error.errors },
+        { error: "Invalid request data", details: error.errors },
         { status: 400 }
       );
     }
 
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: "Internal server error" },
       { status: 500 }
     );
   }
-} 
+}

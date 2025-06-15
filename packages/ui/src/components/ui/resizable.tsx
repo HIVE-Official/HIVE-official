@@ -1,6 +1,7 @@
 import React from 'react'
 import { cn } from '../../lib/utils'
 
+export default {}
 interface ResizablePanelGroupProps {
   direction: 'horizontal' | 'vertical'
   children: React.ReactNode

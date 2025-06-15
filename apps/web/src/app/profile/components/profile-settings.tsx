@@ -1,11 +1,21 @@
-'use client'
+"use client";
 
-import { Card, CardContent, CardHeader, CardTitle, Button, Input, Textarea, Switch, Label } from '@hive/ui'
-import { Save, Shield, Bell, Eye, Trash2 } from 'lucide-react'
-import type { User } from '@hive/core'
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  Button,
+  Input,
+  Textarea,
+  Switch,
+  Label,
+} from "@hive/ui";
+import { Save, Shield, Bell, Eye, Trash2 } from "lucide-react";
+import type { User } from "@hive/core";
 
 interface ProfileSettingsProps {
-  user: User
+  user: User;
 }
 
 export const ProfileSettings = ({ user }: ProfileSettingsProps) => {
@@ -19,7 +29,9 @@ export const ProfileSettings = ({ user }: ProfileSettingsProps) => {
         <CardContent className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2">
             <div>
-              <Label htmlFor="fullName" className="text-gray-300">Full Name</Label>
+              <Label htmlFor="fullName" className="text-gray-300">
+                Full Name
+              </Label>
               <Input
                 id="fullName"
                 defaultValue={user.fullName}
@@ -27,7 +39,9 @@ export const ProfileSettings = ({ user }: ProfileSettingsProps) => {
               />
             </div>
             <div>
-              <Label htmlFor="handle" className="text-gray-300">Handle</Label>
+              <Label htmlFor="handle" className="text-gray-300">
+                Handle
+              </Label>
               <Input
                 id="handle"
                 defaultValue={user.handle}
@@ -36,12 +50,14 @@ export const ProfileSettings = ({ user }: ProfileSettingsProps) => {
               />
             </div>
           </div>
-          
+
           <div>
-            <Label htmlFor="bio" className="text-gray-300">Bio</Label>
+            <Label htmlFor="bio" className="text-gray-300">
+              Bio
+            </Label>
             <Textarea
               id="bio"
-              defaultValue={user.bio || ''}
+              defaultValue=""
               placeholder="Tell others about yourself..."
               className="mt-1 bg-gray-800 border-gray-600 text-white"
               rows={3}
@@ -50,19 +66,23 @@ export const ProfileSettings = ({ user }: ProfileSettingsProps) => {
 
           <div className="grid gap-4 md:grid-cols-2">
             <div>
-              <Label htmlFor="major" className="text-gray-300">Major</Label>
+              <Label htmlFor="major" className="text-gray-300">
+                Major
+              </Label>
               <Input
                 id="major"
-                defaultValue={user.major || ''}
+                defaultValue={user.major || ""}
                 className="mt-1 bg-gray-800 border-gray-600 text-white"
               />
             </div>
             <div>
-              <Label htmlFor="graduationYear" className="text-gray-300">Graduation Year</Label>
+              <Label htmlFor="graduationYear" className="text-gray-300">
+                Graduation Year
+              </Label>
               <Input
                 id="graduationYear"
                 type="number"
-                defaultValue={user.graduationYear || ''}
+                defaultValue={user.graduationYear || ""}
                 className="mt-1 bg-gray-800 border-gray-600 text-white"
                 min="2024"
                 max="2030"
@@ -93,7 +113,7 @@ export const ProfileSettings = ({ user }: ProfileSettingsProps) => {
                 Control who can see your profile information
               </p>
             </div>
-            <Switch defaultChecked />
+            <Switch checked={user.isPublic} />
           </div>
 
           <div className="flex items-center justify-between">
@@ -103,7 +123,7 @@ export const ProfileSettings = ({ user }: ProfileSettingsProps) => {
                 Let others see when you're active on HIVE
               </p>
             </div>
-            <Switch defaultChecked />
+            <Switch checked={true} />
           </div>
 
           <div className="flex items-center justify-between">
@@ -113,7 +133,7 @@ export const ProfileSettings = ({ user }: ProfileSettingsProps) => {
                 Help improve HIVE with anonymized usage data
               </p>
             </div>
-            <Switch defaultChecked={user.builderAnalyticsEnabled !== false} />
+            <Switch checked={user.builderAnalyticsEnabled !== false} />
           </div>
 
           <div className="flex items-center justify-between">
@@ -123,7 +143,7 @@ export const ProfileSettings = ({ user }: ProfileSettingsProps) => {
                 Show your builder badge on your profile
               </p>
             </div>
-            <Switch defaultChecked={user.isBuilder} />
+            <Switch checked={user.isBuilder} />
           </div>
         </CardContent>
       </Card>
@@ -144,7 +164,7 @@ export const ProfileSettings = ({ user }: ProfileSettingsProps) => {
                 Get notified about activity in your Spaces
               </p>
             </div>
-            <Switch defaultChecked />
+            <Switch checked={true} />
           </div>
 
           <div className="flex items-center justify-between">
@@ -154,7 +174,7 @@ export const ProfileSettings = ({ user }: ProfileSettingsProps) => {
                 Notifications when your Tools are used or updated
               </p>
             </div>
-            <Switch defaultChecked />
+            <Switch checked={true} />
           </div>
 
           <div className="flex items-center justify-between">
@@ -164,7 +184,7 @@ export const ProfileSettings = ({ user }: ProfileSettingsProps) => {
                 Summary of your HIVE activity each week
               </p>
             </div>
-            <Switch defaultChecked />
+            <Switch checked={true} />
           </div>
         </CardContent>
       </Card>
@@ -198,8 +218,8 @@ export const ProfileSettings = ({ user }: ProfileSettingsProps) => {
 
           <div className="border-t border-gray-700 pt-4">
             <div className="space-y-2">
-              <Button 
-                variant="destructive" 
+              <Button
+                variant="destructive"
                 className="w-full justify-start bg-red-600 hover:bg-red-700"
               >
                 <Trash2 className="mr-2 h-4 w-4" />
@@ -213,5 +233,5 @@ export const ProfileSettings = ({ user }: ProfileSettingsProps) => {
         </CardContent>
       </Card>
     </div>
-  )
-} 
+  );
+};

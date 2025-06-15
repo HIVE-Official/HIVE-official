@@ -10,6 +10,7 @@ import {
 import { cn } from '../../lib/utils';
 import { SchoolSearchInput } from './school-search-input';
 
+export default {}
 interface WelcomeCardProps {
   className?: string;
   onSchoolSelect?: (schoolId: string) => void;
