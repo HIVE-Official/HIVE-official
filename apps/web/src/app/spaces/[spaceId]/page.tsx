@@ -6,7 +6,7 @@ import { Button, Badge } from "@hive/ui";
 import { Users, ArrowLeft, AlertTriangle, Loader2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { type Space } from "@hive/core/src/domain/firestore/space";
+import { type Space } from "@hive/core";
 import { SpaceActionButton } from "./components/space-action-button";
 import { CreatePost } from "./components/create-post";
 import { Feed } from "./components/feed";

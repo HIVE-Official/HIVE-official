@@ -91,7 +91,6 @@ const DraggableElement: React.FC<DraggableElementProps> = ({
 
   return (
     <div
-      // @ts-ignore - Complex drag and drop ref typing issue
       ref={drag}
       onClick={handleClick}
       className={cn(

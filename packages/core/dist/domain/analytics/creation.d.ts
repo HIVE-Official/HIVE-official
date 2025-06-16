@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from "zod";
 export declare const CreationEventType: z.ZodEnum<["tool_created", "tool_updated", "tool_deleted", "tool_published", "tool_shared", "tool_forked", "tool_fork_source", "tool_opened", "tool_preview", "tool_exported", "element_added", "element_removed", "element_configured", "element_moved", "element_resized", "element_duplicated", "element_preset_used", "builder_session_start", "builder_session_end", "canvas_mode_changed", "device_mode_changed", "element_library_searched", "properties_panel_used", "json_viewer_used", "undo_action", "redo_action", "tool_instance_opened", "tool_instance_submitted", "tool_instance_abandoned", "tool_element_interacted", "tool_validation_error", "tool_data_saved", "share_link_created", "share_link_accessed", "tool_embedded", "tool_feed_posted"]>;
 export type CreationEventType = z.infer<typeof CreationEventType>;
 export declare const CreationAnalyticsEventSchema: z.ZodObject<{
@@ -49,7 +49,7 @@ export declare const CreationAnalyticsEventSchema: z.ZodObject<{
     toolName?: string | undefined;
     userIdHash?: string | undefined;
     toolVersion?: string | undefined;
-    toolStatus?: "draft" | "preview" | "published" | undefined;
+    toolStatus?: "preview" | "draft" | "published" | undefined;
     elementVersion?: number | undefined;
     viewport?: {
         width: number;
@@ -72,7 +72,7 @@ export declare const CreationAnalyticsEventSchema: z.ZodObject<{
     toolName?: string | undefined;
     userIdHash?: string | undefined;
     toolVersion?: string | undefined;
-    toolStatus?: "draft" | "preview" | "published" | undefined;
+    toolStatus?: "preview" | "draft" | "published" | undefined;
     elementVersion?: number | undefined;
     viewport?: {
         width: number;
@@ -153,7 +153,7 @@ export declare const ToolCreatedEventSchema: z.ZodObject<{
     toolName?: string | undefined;
     userIdHash?: string | undefined;
     toolVersion?: string | undefined;
-    toolStatus?: "draft" | "preview" | "published" | undefined;
+    toolStatus?: "preview" | "draft" | "published" | undefined;
     elementVersion?: number | undefined;
     viewport?: {
         width: number;
@@ -181,7 +181,7 @@ export declare const ToolCreatedEventSchema: z.ZodObject<{
     toolName?: string | undefined;
     userIdHash?: string | undefined;
     toolVersion?: string | undefined;
-    toolStatus?: "draft" | "preview" | "published" | undefined;
+    toolStatus?: "preview" | "draft" | "published" | undefined;
     elementVersion?: number | undefined;
     viewport?: {
         width: number;
@@ -269,7 +269,7 @@ export declare const ToolUpdatedEventSchema: z.ZodObject<{
     toolName?: string | undefined;
     userIdHash?: string | undefined;
     toolVersion?: string | undefined;
-    toolStatus?: "draft" | "preview" | "published" | undefined;
+    toolStatus?: "preview" | "draft" | "published" | undefined;
     elementVersion?: number | undefined;
     viewport?: {
         width: number;
@@ -299,7 +299,7 @@ export declare const ToolUpdatedEventSchema: z.ZodObject<{
     toolName?: string | undefined;
     userIdHash?: string | undefined;
     toolVersion?: string | undefined;
-    toolStatus?: "draft" | "preview" | "published" | undefined;
+    toolStatus?: "preview" | "draft" | "published" | undefined;
     elementVersion?: number | undefined;
     viewport?: {
         width: number;
@@ -401,7 +401,7 @@ export declare const ElementAddedEventSchema: z.ZodObject<{
     toolName?: string | undefined;
     userIdHash?: string | undefined;
     toolVersion?: string | undefined;
-    toolStatus?: "draft" | "preview" | "published" | undefined;
+    toolStatus?: "preview" | "draft" | "published" | undefined;
     elementVersion?: number | undefined;
     viewport?: {
         width: number;
@@ -433,7 +433,7 @@ export declare const ElementAddedEventSchema: z.ZodObject<{
     toolName?: string | undefined;
     userIdHash?: string | undefined;
     toolVersion?: string | undefined;
-    toolStatus?: "draft" | "preview" | "published" | undefined;
+    toolStatus?: "preview" | "draft" | "published" | undefined;
     elementVersion?: number | undefined;
     viewport?: {
         width: number;
@@ -517,7 +517,7 @@ export declare const ElementConfiguredEventSchema: z.ZodObject<{
     toolName?: string | undefined;
     userIdHash?: string | undefined;
     toolVersion?: string | undefined;
-    toolStatus?: "draft" | "preview" | "published" | undefined;
+    toolStatus?: "preview" | "draft" | "published" | undefined;
     elementVersion?: number | undefined;
     viewport?: {
         width: number;
@@ -546,7 +546,7 @@ export declare const ElementConfiguredEventSchema: z.ZodObject<{
     toolName?: string | undefined;
     userIdHash?: string | undefined;
     toolVersion?: string | undefined;
-    toolStatus?: "draft" | "preview" | "published" | undefined;
+    toolStatus?: "preview" | "draft" | "published" | undefined;
     elementVersion?: number | undefined;
     viewport?: {
         width: number;
@@ -605,7 +605,7 @@ export declare const BuilderSessionEventSchema: z.ZodObject<{
         elementsConfigured?: number | undefined;
         undoCount?: number | undefined;
         redoCount?: number | undefined;
-        modesUsed?: ("code" | "preview" | "design")[] | undefined;
+        modesUsed?: ("preview" | "code" | "design")[] | undefined;
         deviceModesUsed?: ("desktop" | "tablet" | "mobile")[] | undefined;
         exitReason?: "abandon" | "share" | "save" | "publish" | undefined;
     }, {
@@ -615,7 +615,7 @@ export declare const BuilderSessionEventSchema: z.ZodObject<{
         elementsConfigured?: number | undefined;
         undoCount?: number | undefined;
         redoCount?: number | undefined;
-        modesUsed?: ("code" | "preview" | "design")[] | undefined;
+        modesUsed?: ("preview" | "code" | "design")[] | undefined;
         deviceModesUsed?: ("desktop" | "tablet" | "mobile")[] | undefined;
         exitReason?: "abandon" | "share" | "save" | "publish" | undefined;
     }>>;
@@ -635,7 +635,7 @@ export declare const BuilderSessionEventSchema: z.ZodObject<{
         elementsConfigured?: number | undefined;
         undoCount?: number | undefined;
         redoCount?: number | undefined;
-        modesUsed?: ("code" | "preview" | "design")[] | undefined;
+        modesUsed?: ("preview" | "code" | "design")[] | undefined;
         deviceModesUsed?: ("desktop" | "tablet" | "mobile")[] | undefined;
         exitReason?: "abandon" | "share" | "save" | "publish" | undefined;
     } | undefined;
@@ -646,7 +646,7 @@ export declare const BuilderSessionEventSchema: z.ZodObject<{
     toolName?: string | undefined;
     userIdHash?: string | undefined;
     toolVersion?: string | undefined;
-    toolStatus?: "draft" | "preview" | "published" | undefined;
+    toolStatus?: "preview" | "draft" | "published" | undefined;
     elementVersion?: number | undefined;
     viewport?: {
         width: number;
@@ -668,7 +668,7 @@ export declare const BuilderSessionEventSchema: z.ZodObject<{
         elementsConfigured?: number | undefined;
         undoCount?: number | undefined;
         redoCount?: number | undefined;
-        modesUsed?: ("code" | "preview" | "design")[] | undefined;
+        modesUsed?: ("preview" | "code" | "design")[] | undefined;
         deviceModesUsed?: ("desktop" | "tablet" | "mobile")[] | undefined;
         exitReason?: "abandon" | "share" | "save" | "publish" | undefined;
     } | undefined;
@@ -679,7 +679,7 @@ export declare const BuilderSessionEventSchema: z.ZodObject<{
     toolName?: string | undefined;
     userIdHash?: string | undefined;
     toolVersion?: string | undefined;
-    toolStatus?: "draft" | "preview" | "published" | undefined;
+    toolStatus?: "preview" | "draft" | "published" | undefined;
     elementVersion?: number | undefined;
     viewport?: {
         width: number;
@@ -759,7 +759,7 @@ export declare const ToolInstanceOpenedEventSchema: z.ZodObject<{
     toolName?: string | undefined;
     userIdHash?: string | undefined;
     toolVersion?: string | undefined;
-    toolStatus?: "draft" | "preview" | "published" | undefined;
+    toolStatus?: "preview" | "draft" | "published" | undefined;
     elementVersion?: number | undefined;
     viewport?: {
         width: number;
@@ -787,7 +787,7 @@ export declare const ToolInstanceOpenedEventSchema: z.ZodObject<{
     toolName?: string | undefined;
     userIdHash?: string | undefined;
     toolVersion?: string | undefined;
-    toolStatus?: "draft" | "preview" | "published" | undefined;
+    toolStatus?: "preview" | "draft" | "published" | undefined;
     elementVersion?: number | undefined;
     viewport?: {
         width: number;
@@ -875,7 +875,7 @@ export declare const ToolInstanceSubmittedEventSchema: z.ZodObject<{
     toolName?: string | undefined;
     userIdHash?: string | undefined;
     toolVersion?: string | undefined;
-    toolStatus?: "draft" | "preview" | "published" | undefined;
+    toolStatus?: "preview" | "draft" | "published" | undefined;
     elementVersion?: number | undefined;
     viewport?: {
         width: number;
@@ -905,7 +905,7 @@ export declare const ToolInstanceSubmittedEventSchema: z.ZodObject<{
     toolName?: string | undefined;
     userIdHash?: string | undefined;
     toolVersion?: string | undefined;
-    toolStatus?: "draft" | "preview" | "published" | undefined;
+    toolStatus?: "preview" | "draft" | "published" | undefined;
     elementVersion?: number | undefined;
     viewport?: {
         width: number;
@@ -1011,7 +1011,7 @@ export declare const ToolElementInteractedEventSchema: z.ZodObject<{
     toolName?: string | undefined;
     userIdHash?: string | undefined;
     toolVersion?: string | undefined;
-    toolStatus?: "draft" | "preview" | "published" | undefined;
+    toolStatus?: "preview" | "draft" | "published" | undefined;
     elementVersion?: number | undefined;
     viewport?: {
         width: number;
@@ -1044,7 +1044,7 @@ export declare const ToolElementInteractedEventSchema: z.ZodObject<{
     toolName?: string | undefined;
     userIdHash?: string | undefined;
     toolVersion?: string | undefined;
-    toolStatus?: "draft" | "preview" | "published" | undefined;
+    toolStatus?: "preview" | "draft" | "published" | undefined;
     elementVersion?: number | undefined;
     viewport?: {
         width: number;
@@ -1124,7 +1124,7 @@ export declare const ShareLinkCreatedEventSchema: z.ZodObject<{
     toolName?: string | undefined;
     userIdHash?: string | undefined;
     toolVersion?: string | undefined;
-    toolStatus?: "draft" | "preview" | "published" | undefined;
+    toolStatus?: "preview" | "draft" | "published" | undefined;
     elementVersion?: number | undefined;
     viewport?: {
         width: number;
@@ -1152,7 +1152,7 @@ export declare const ShareLinkCreatedEventSchema: z.ZodObject<{
     toolName?: string | undefined;
     userIdHash?: string | undefined;
     toolVersion?: string | undefined;
-    toolStatus?: "draft" | "preview" | "published" | undefined;
+    toolStatus?: "preview" | "draft" | "published" | undefined;
     elementVersion?: number | undefined;
     viewport?: {
         width: number;
@@ -1236,7 +1236,7 @@ export declare const ToolForkedEventSchema: z.ZodObject<{
     toolName?: string | undefined;
     userIdHash?: string | undefined;
     toolVersion?: string | undefined;
-    toolStatus?: "draft" | "preview" | "published" | undefined;
+    toolStatus?: "preview" | "draft" | "published" | undefined;
     elementVersion?: number | undefined;
     viewport?: {
         width: number;
@@ -1265,7 +1265,7 @@ export declare const ToolForkedEventSchema: z.ZodObject<{
     toolName?: string | undefined;
     userIdHash?: string | undefined;
     toolVersion?: string | undefined;
-    toolStatus?: "draft" | "preview" | "published" | undefined;
+    toolStatus?: "preview" | "draft" | "published" | undefined;
     elementVersion?: number | undefined;
     viewport?: {
         width: number;
@@ -1512,7 +1512,7 @@ export declare const createAnalyticsEvent: (eventType: CreationEventType, contex
     sessionId: string;
     toolId?: string;
     elementId?: string;
-    metadata?: Record<string, any>;
+    metadata?: Record<string, unknown>;
 }) => CreationAnalyticsEvent;
 export declare const shouldTrackEvent: (eventType: CreationEventType, userPreferences?: {
     analyticsOptOut?: boolean;

@@ -1,7 +1,14 @@
 import * as functions from "firebase-functions";
-import * as admin from "firebase-admin";
+import {
+  FirebaseHttpsError,
+  firestore,
+  FieldValue,
+} from "../types/firebase";
 
-const db = admin.firestore();
+interface JoinWaitlistData {
+  schoolId: string;
+  email: string;
+}
 
 /**
  * A callable Cloud Function to allow a user to join a school's waitlist.
@@ -10,73 +17,46 @@ const db = admin.firestore();
  * the school's waitlist counter and adds the user's email to the waitlist
  * sub-collection atomically.
  *
- * @param data - The data passed to the function, expecting `schoolId` and `email`.
- * @param context - The context of the function call.
+ * @param request - The request object containing the data.
+ * @returns - An object indicating the success of the operation and a message.
  */
-export const joinWaitlist = functions.https.onCall(async (data, context) => {
-  const {schoolId, email} = data;
+export const joinWaitlist = functions.https.onCall(
+  async (request): Promise<{ success: boolean; message: string }> => {
+    // Extract data from request
+    const data = request.data as JoinWaitlistData;
+    const {schoolId, email} = data;
 
-  // 1. Input Validation
-  if (!schoolId || typeof schoolId !== "string") {
-    throw new functions.https.HttpsError(
-      "invalid-argument",
-      "The function must be called with a valid \"schoolId\" string."
-    );
-  }
-
-  if (!email || typeof email !== "string" || !email.includes("@")) {
-    throw new functions.https.HttpsError(
-      "invalid-argument",
-      "The function must be called with a valid \"email\" string."
-    );
-  }
-
-  const schoolRef = db.collection("schools").doc(schoolId);
-  const waitlistRef = schoolRef.collection("waitlist_entries").doc(email);
-
-  try {
-    // 2. Perform Transaction
-    await db.runTransaction(async (transaction) => {
-      const schoolDoc = await transaction.get(schoolRef);
-
-      if (!schoolDoc.exists) {
-        throw new functions.https.HttpsError("not-found", "School not found.");
-      }
-
-      const schoolData = schoolDoc.data();
-      if (schoolData?.status !== "waitlist") {
-        throw new functions.https.HttpsError("failed-precondition", "This school is not on the waitlist.");
-      }
-
-      const waitlistDoc = await transaction.get(waitlistRef);
-      if (waitlistDoc.exists) {
-        // User is already on the waitlist, return success without doing anything.
-        console.log(`User ${email} is already on the waitlist for ${schoolId}.`);
-        return;
-      }
-
-      // Increment waitlist count and add user to sub-collection
-      transaction.update(schoolRef, {
-        waitlistCount: admin.firestore.FieldValue.increment(1),
-      });
-
-      transaction.set(waitlistRef, {
-        email: email,
-        joinedAt: admin.firestore.FieldValue.serverTimestamp(),
-      });
-    });
-
-    console.log(`Successfully added ${email} to the waitlist for ${schoolId}.`);
-    return {success: true, message: "Successfully joined the waitlist!"};
-  } catch (error) {
-    console.error("Error joining waitlist:", error);
-    if (error instanceof functions.https.HttpsError) {
-      throw error; // Re-throw HttpsError
+    if (!schoolId || !email) {
+      throw new FirebaseHttpsError('invalid-argument', 'School ID and email are required');
     }
-    // For other errors, throw a generic internal error
-    throw new functions.https.HttpsError(
-      "internal",
-      "An unexpected error occurred while trying to join the waitlist."
-    );
+
+    try {
+      const db = firestore();
+
+      // Check if email already exists in waitlist
+      const existingEntry = await db.collection('waitlist')
+        .where('email', '==', email)
+        .where('schoolId', '==', schoolId)
+        .get();
+
+      if (!existingEntry.empty) {
+        throw new FirebaseHttpsError('already-exists', 'Email is already on the waitlist for this school');
+      }
+
+      // Add to waitlist
+      await db.collection('waitlist').add({
+        schoolId,
+        email,
+        joinedAt: FieldValue.serverTimestamp(),
+        status: 'pending'
+      });
+
+      return { success: true, message: 'Successfully joined waitlist' };
+    } catch (error) {
+      if (error instanceof FirebaseHttpsError) {
+        throw error;
+      }
+      throw new FirebaseHttpsError('internal', 'Failed to join waitlist');
+    }
   }
-});
+);

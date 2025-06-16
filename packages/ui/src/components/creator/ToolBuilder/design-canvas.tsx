@@ -91,31 +91,37 @@ export const DesignCanvas = forwardRef<HTMLDivElement, DesignCanvasProps>(
       DragItem,
       DropResult,
       { isOver: boolean; canDrop: boolean }
-    >(() => ({
-      accept: "element",
-      drop: (item, monitor) => {
-        const clientOffset = monitor.getClientOffset();
-        if (!clientOffset || !canvasRef.current) return;
+    >(
+      () => ({
+        accept: "element",
+        drop: (item, monitor) => {
+          const clientOffset = monitor.getClientOffset();
+          if (!clientOffset || !canvasRef.current) return;
 
-        const canvasRect = canvasRef.current.getBoundingClientRect();
-        const position = {
-          x: Math.max(0, clientOffset.x - canvasRect.left),
-          y: Math.max(0, clientOffset.y - canvasRect.top),
-        };
+          const canvasRect = canvasRef.current.getBoundingClientRect();
+          const position = {
+            x: Math.max(0, clientOffset.x - canvasRect.left),
+            y: Math.max(0, clientOffset.y - canvasRect.top),
+          };
 
-        // Snap to grid
-        const snappedPosition = {
-          x: Math.round(position.x / GRID_SIZE) * GRID_SIZE,
-          y: Math.round(position.y / GRID_SIZE) * GRID_SIZE,
-        };
+          // Snap to grid
+          const snappedPosition = {
+            x: Math.round(position.x / GRID_SIZE) * GRID_SIZE,
+            y: Math.round(position.y / GRID_SIZE) * GRID_SIZE,
+          };
 
-        return { position: snappedPosition };
-      },
-      collect: (monitor) => ({
-        isOver: monitor.isOver(),
-        canDrop: monitor.canDrop(),
+          // Call the onElementAdd callback
+          _onElementAdd(item.elementId, snappedPosition);
+
+          return { position: snappedPosition };
+        },
+        collect: (monitor) => ({
+          isOver: monitor.isOver(),
+          canDrop: monitor.canDrop(),
+        }),
       }),
-    }));
+      [_onElementAdd]
+    );
 
     // Combine refs
     const combinedRef = useCallback(

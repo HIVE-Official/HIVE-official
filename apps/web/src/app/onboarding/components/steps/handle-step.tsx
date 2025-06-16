@@ -34,16 +34,18 @@ type HandleStatus = "idle" | "checking" | "available" | "taken" | "invalid";
 export function HandleStep({ data, updateData, onNext }: HandleStepProps) {
   const [handleStatus, setHandleStatus] = useState<HandleStatus>("idle");
   const [checkTimeout, setCheckTimeout] = useState<NodeJS.Timeout | null>(null);
-  const [_availability, setAvailability] = useState<boolean | null>(null);
-  const [_isChecking, setIsChecking] = useState(false);
+  const [, setAvailability] = useState<"available" | "taken" | "checking">(
+    "available"
+  );
+  const [, setIsChecking] = useState(false);
 
-  const _isValidHandle = (handle: string) => {
+  const isValidHandle = (handle: string) => {
     return /^[a-zA-Z0-9_]{3,20}$/.test(handle);
   };
 
   const checkAvailability = async () => {
     if (!data.handle || data.handle.length < 3) {
-      setAvailability(null);
+      setAvailability("available");
       return;
     }
 
@@ -56,11 +58,15 @@ export function HandleStep({ data, updateData, onNext }: HandleStepProps) {
       });
 
       const result = (await response.json()) as { available: boolean };
-      setAvailability(result.available);
+      if (result.available) {
+        setAvailability("available");
+      } else {
+        setAvailability("taken");
+      }
     } catch (error) {
       // Log error for debugging
       void error;
-      setAvailability(null);
+      setAvailability("available");
     } finally {
       setIsChecking(false);
     }
@@ -81,7 +87,7 @@ export function HandleStep({ data, updateData, onNext }: HandleStepProps) {
       return;
     }
 
-    if (newHandle.length < 3) {
+    if (!isValidHandle(newHandle)) {
       setHandleStatus("invalid");
       return;
     }

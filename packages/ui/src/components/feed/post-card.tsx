@@ -107,13 +107,13 @@ export const PostCard: React.FC<PostCardProps> = ({
   const userHasReacted =
     post.reactedUsers?.heart?.includes(currentUser.id) || false;
 
-  // Check if post is within edit window (15 minutes)
-  const createdAt = new Date(post.createdAt);
+  // Calculate if the post can be edited (within edit window)
   const now = new Date();
-  const editWindowMs = 15 * 60 * 1000;
-  const isWithinEditWindow =
-    now.getTime() - createdAt.getTime() <= editWindowMs;
-  const canEditNow = canEdit && isWithinEditWindow;
+  const createdAt: Date =
+    post.createdAt instanceof Date ? post.createdAt : new Date(post.createdAt);
+  const editWindowMs = 15 * 60 * 1000; // 15 minutes
+  const canEditTime = now.getTime() - createdAt.getTime() <= editWindowMs;
+  const canEditNow = canEdit && canEditTime;
 
   const handleReact = async () => {
     if (isReacting) return;
@@ -167,7 +167,10 @@ export const PostCard: React.FC<PostCardProps> = ({
     );
   };
 
-  const TypeIcon = POST_TYPE_ICONS[post.type];
+  const TypeIcon =
+    (POST_TYPE_ICONS[post.type] as React.ComponentType<{
+      className?: string;
+    }>) || null;
 
   return (
     <>

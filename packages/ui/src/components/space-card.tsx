@@ -1,6 +1,6 @@
 import * as React from "react";
 import { cn } from "../lib/utils";
-import { type Space } from "@hive/core/src/domain/firestore/space";
+import { type Space } from "@hive/core";
 import { Users, Building, EyeOff, Pause } from "lucide-react";
 
 interface SpaceCardProps {
@@ -37,7 +37,9 @@ export function SpaceCard({ space, href, className, onClick }: SpaceCardProps) {
   };
 
   const statusInfo = statusConfig[space.status];
-  const StatusIcon = statusInfo.icon;
+  const StatusIcon = statusInfo.icon as React.ComponentType<{
+    className?: string;
+  }> | null;
 
   return (
     <a

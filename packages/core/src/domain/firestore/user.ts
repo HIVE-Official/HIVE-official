@@ -1,5 +1,5 @@
-import { type Timestamp } from 'firebase/firestore';
-import { z } from 'zod';
+import { type Timestamp } from "firebase/firestore";
+import { z } from "zod";
 
 /**
  * User data model for HIVE platform.
@@ -10,33 +10,33 @@ export interface User {
   id: string; // Auth UID
   uid: string; // Auth UID (duplicate for clarity in queries)
   email: string;
-  
+
   // Profile information
   fullName: string;
   handle: string; // Unique, immutable after creation
   avatarUrl?: string;
-  
+
   // Academic information
   major: string;
   graduationYear?: number;
   schoolId: string; // Immutable after creation
-  
+
   // Privacy & visibility
   isPublic: boolean; // Whether profile is publicly viewable
   consentGiven: boolean; // GDPR/privacy consent
-  
+
   // Builder program
   builderOptIn: boolean; // Opted into builder program
   isBuilder: boolean; // Approved as builder
-  
+
   // Analytics privacy controls
   builderAnalyticsEnabled: boolean; // For creation engine analytics opt-out
-  
+
   // System fields
   onboardingCompleted: boolean;
   isVerified: boolean; // Email verified
-  status: 'active' | 'suspended' | 'deleted';
-  
+  status: "active" | "suspended" | "deleted";
+
   // Timestamps
   createdAt: Timestamp;
   updatedAt: Timestamp;
@@ -49,13 +49,13 @@ export interface User {
 export interface MotionEntry {
   id: string;
   userId: string;
-  action: 'joined_space' | 'created_tool' | 'posted' | 'attended_event';
+  action: "joined_space" | "created_tool" | "posted" | "attended_event";
   details: {
     spaceId?: string;
     toolId?: string;
     postId?: string;
     eventId?: string;
-    [key: string]: any;
+    [key: string]: unknown;
   };
   timestamp: Timestamp;
 }
@@ -87,27 +87,27 @@ export const UserSchema = z.object({
   builderAnalyticsEnabled: z.boolean().default(true),
   onboardingCompleted: z.boolean().default(false),
   isVerified: z.boolean().default(false),
-  status: z.enum(['active', 'suspended', 'deleted']).default('active'),
+  status: z.enum(["active", "suspended", "deleted"]).default("active"),
   createdAt: z.number(),
   updatedAt: z.number(),
   lastActiveAt: z.number().optional(),
 });
 
-export const CreateUserSchema = UserSchema.omit({ 
+export const CreateUserSchema = UserSchema.omit({
   id: true,
-  uid: true, 
-  createdAt: true, 
+  uid: true,
+  createdAt: true,
   updatedAt: true,
   lastActiveAt: true,
 });
 
-export const UpdateUserSchema = UserSchema.partial().omit({ 
+export const UpdateUserSchema = UserSchema.partial().omit({
   id: true,
-  uid: true, 
-  handle: true, 
-  schoolId: true, 
-  createdAt: true 
+  uid: true,
+  handle: true,
+  schoolId: true,
+  createdAt: true,
 });
 
 export type CreateUserData = z.infer<typeof CreateUserSchema>;
-export type UpdateUserData = z.infer<typeof UpdateUserSchema>; 
+export type UpdateUserData = z.infer<typeof UpdateUserSchema>;

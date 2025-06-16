@@ -58,7 +58,7 @@ export const ToolBuilder: React.FC<ToolBuilderProps> = ({
   elements,
   onSave,
   onPreview,
-  onPublish: _onPublish,
+  onPublish,
   onShare,
   className,
 }) => {
@@ -240,13 +240,14 @@ export const ToolBuilder: React.FC<ToolBuilderProps> = ({
     onPreview(currentTool);
   };
 
-  // const handlePublish = async () => {
-  //   try {
-  //     await onPublish(currentTool);
-  //   } catch (error) {
-  //     console.error("Publish failed:", error);
-  //   }
-  // };
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const _onPublish = useCallback(async () => {
+    try {
+      await onPublish(currentTool);
+    } catch (error) {
+      console.error("Publish failed:", error);
+    }
+  }, [onPublish, currentTool]);
 
   // const selectedElement = selectedElementId
   //   ? currentTool.elements.find((el) => el.id === selectedElementId)
@@ -403,7 +404,7 @@ export const ToolBuilder: React.FC<ToolBuilderProps> = ({
                     onElementUpdate={updateElement}
                     onElementDelete={deleteElement}
                     onElementDuplicate={duplicateElement}
-                    // @ts-ignore - Complex prop interface mismatch
+                    // @ts-expect-error - Complex prop interface mismatch
                     onElementAdd={addElement}
                   />
                 )}

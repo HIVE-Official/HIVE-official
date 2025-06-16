@@ -38,7 +38,8 @@ export async function POST(request: NextRequest) {
     let decodedToken;
     try {
       decodedToken = await auth.verifyIdToken(idToken);
-    } catch (_error) {
+    } catch (authError) {
+      console.error("Token verification failed:", authError);
       return NextResponse.json(
         { error: "Invalid or expired token" },
         { status: 401 }
@@ -146,16 +147,8 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error("Error joining space:", error);
-
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: "Invalid request data", details: error.errors },
-        { status: 400 }
-      );
-    }
-
     return NextResponse.json(
-      { error: "Failed to join space" },
+      { error: "Failed to join space. Please try again." },
       { status: 500 }
     );
   }

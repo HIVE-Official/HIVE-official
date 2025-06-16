@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { type Space } from "@hive/core/src/domain/firestore/space";
+import { type Space } from "@hive/core";
 import { SpaceCard } from "@hive/ui";
 import { useAuth } from "@hive/hooks";
 // Removed unused Loader2 import

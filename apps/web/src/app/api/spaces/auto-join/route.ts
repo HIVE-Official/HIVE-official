@@ -1,8 +1,6 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { type User } from "@hive/core/src/domain/firestore/user";
-// Removed unused Space and SpaceType imports
-import { UB_MAJORS } from "@hive/core/src/constants/majors";
+import { type User, UB_MAJORS } from "@hive/core";
 import { dbAdmin } from "@/lib/firebase-admin";
 import { FieldValue } from "firebase-admin/firestore";
 

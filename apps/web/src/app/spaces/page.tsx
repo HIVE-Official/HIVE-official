@@ -5,10 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Input } from "@hive/ui";
 import { Search, AlertCircle, Compass } from "lucide-react";
 import { SpaceFilterPills } from "./components/space-filter-pills";
-import {
-  type SpaceType,
-  type Space,
-} from "@hive/core/src/domain/firestore/space";
+import { type SpaceType, type Space } from "@hive/core";
 import { SpaceCard } from "@hive/ui";
 import { useDebounce } from "@hive/hooks";
 import { Button } from "@hive/ui";

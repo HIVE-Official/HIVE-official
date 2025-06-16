@@ -3,6 +3,8 @@ import type { NextRequest } from "next/server";
 import { z } from "zod";
 import { dbAdmin } from "@/lib/firebase-admin";
 import { getAuth } from "firebase-admin/auth";
+import { getAuthTokenFromRequest } from "@/lib/auth";
+import { postCreationRateLimit } from "@/lib/rate-limit";
 
 const CreatePostSchema = z.object({
   content: z.string().min(1).max(2000),
@@ -20,30 +22,25 @@ const checkProfanity = (text: string): boolean => {
   return profanityWords.some((word) => text.toLowerCase().includes(word));
 };
 
-// Simple rate limiting - in production, use Redis or similar
-const checkRateLimit = (_userId: string): boolean => {
-  // For now, always allow - implement proper rate limiting later
-  return true;
-};
-
 // GET /api/spaces/[spaceId]/posts - Get posts for a space
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ spaceId: string }> }
+  { params }: { params: { spaceId: string } }
 ) {
   try {
-    const { spaceId } = await params;
-
-    // Get auth header and verify token
-    const authHeader = request.headers.get("authorization");
-    if (!authHeader?.startsWith("Bearer ")) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    // Get and validate auth token
+    const token = getAuthTokenFromRequest(request);
+    if (!token) {
+      return NextResponse.json(
+        { error: "Authentication required" },
+        { status: 401 }
+      );
     }
 
-    const token = authHeader.split("Bearer ")[1];
     const auth = getAuth();
     const decodedToken = await auth.verifyIdToken(token);
-    const userId = decodedToken.uid;
+
+    const { spaceId } = await params;
 
     const { searchParams } = new URL(request.url);
     const limit = Math.min(parseInt(searchParams.get("limit") || "20"), 50);
@@ -54,7 +51,7 @@ export async function GET(
       .collection("spaces")
       .doc(spaceId)
       .collection("members")
-      .doc(userId)
+      .doc(decodedToken.uid)
       .get();
 
     if (!memberDoc.exists) {
@@ -186,15 +183,24 @@ export async function POST(
     const token = authHeader.split("Bearer ")[1];
     const auth = getAuth();
     const decodedToken = await auth.verifyIdToken(token);
-    const userId = decodedToken.uid;
 
     // Check rate limiting
-    if (!checkRateLimit(userId)) {
+    const rateLimitResult = postCreationRateLimit(decodedToken.uid);
+    if (!rateLimitResult.success) {
       return NextResponse.json(
         {
           error: "Rate limit exceeded. Please wait before posting again.",
         },
-        { status: 429 }
+        {
+          status: 429,
+          headers: {
+            "X-RateLimit-Limit": rateLimitResult.limit.toString(),
+            "X-RateLimit-Remaining": rateLimitResult.remaining.toString(),
+            "X-RateLimit-Reset": new Date(
+              rateLimitResult.resetTime
+            ).toISOString(),
+          },
+        }
       );
     }
 
@@ -203,7 +209,7 @@ export async function POST(
       .collection("spaces")
       .doc(spaceId)
       .collection("members")
-      .doc(userId)
+      .doc(decodedToken.uid)
       .get();
 
     if (!memberDoc.exists) {
@@ -230,7 +236,7 @@ export async function POST(
     // Create post document
     const postData = {
       ...validatedData,
-      authorId: userId,
+      authorId: decodedToken.uid,
       spaceId: spaceId,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -252,14 +258,14 @@ export async function POST(
       .add(postData);
 
     // Get the created post with author info
-    const authorDoc = await db.collection("users").doc(userId).get();
+    const authorDoc = await db.collection("users").doc(decodedToken.uid).get();
     const author = authorDoc.data();
 
     const createdPost = {
       id: postRef.id,
       ...postData,
       author: {
-        id: userId,
+        id: decodedToken.uid,
         fullName: author?.fullName || "Unknown User",
         handle: author?.handle || "unknown",
         photoURL: author?.photoURL || null,

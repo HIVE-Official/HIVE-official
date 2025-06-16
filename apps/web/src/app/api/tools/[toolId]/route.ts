@@ -11,8 +11,8 @@ import {
   getNextVersion,
   determineChangeType,
   validateToolStructure,
-} from "@hive/core/src/domain/creation/tool";
-import { validateElementConfig } from "@hive/core/src/domain/creation/element";
+  validateElementConfig,
+} from "@hive/core";
 
 const db = getFirestore();
 

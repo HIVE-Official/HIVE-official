@@ -307,11 +307,11 @@ export declare const FeedAnalyticsEventSchema: z.ZodDiscriminatedUnion<"event", 
         referrerSpaceId: z.ZodOptional<z.ZodString>;
         invitedBy: z.ZodOptional<z.ZodString>;
     }, "strip", z.ZodTypeAny, {
-        joinMethod: "auto" | "search" | "invite" | "browse";
+        joinMethod: "search" | "auto" | "invite" | "browse";
         referrerSpaceId?: string | undefined;
         invitedBy?: string | undefined;
     }, {
-        joinMethod: "auto" | "search" | "invite" | "browse";
+        joinMethod: "search" | "auto" | "invite" | "browse";
         referrerSpaceId?: string | undefined;
         invitedBy?: string | undefined;
     }>;
@@ -319,7 +319,7 @@ export declare const FeedAnalyticsEventSchema: z.ZodDiscriminatedUnion<"event", 
     event: "space_joined";
     userId: string;
     metadata: {
-        joinMethod: "auto" | "search" | "invite" | "browse";
+        joinMethod: "search" | "auto" | "invite" | "browse";
         referrerSpaceId?: string | undefined;
         invitedBy?: string | undefined;
     };
@@ -329,7 +329,7 @@ export declare const FeedAnalyticsEventSchema: z.ZodDiscriminatedUnion<"event", 
     event: "space_joined";
     userId: string;
     metadata: {
-        joinMethod: "auto" | "search" | "invite" | "browse";
+        joinMethod: "search" | "auto" | "invite" | "browse";
         referrerSpaceId?: string | undefined;
         invitedBy?: string | undefined;
     };

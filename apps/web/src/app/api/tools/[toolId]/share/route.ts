@@ -9,7 +9,7 @@ import {
   ShareToolSchema,
   generateShareToken,
   createToolDefaults,
-} from "@hive/core/src/domain/creation/tool";
+} from "@hive/core";
 
 const db = getFirestore();
 

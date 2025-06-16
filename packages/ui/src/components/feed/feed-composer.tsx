@@ -16,7 +16,8 @@ import {
   SendIcon,
 } from "lucide-react";
 import { cn } from "../../lib/utils";
-import type { CreatePost, PostType } from "@hive/core";
+import type { CreatePost } from "@hive/core";
+import type { PostType } from "@hive/core";
 
 export default {};
 interface FeedComposerProps {
@@ -296,7 +297,9 @@ export const FeedComposer: React.FC<FeedComposerProps> = ({
               {/* Post Type Selector */}
               <div className="flex gap-2 flex-wrap">
                 {Object.entries(POST_TYPE_CONFIG).map(([type, config]) => {
-                  const Icon = config.icon;
+                  const Icon = config.icon as React.ComponentType<{
+                    className?: string;
+                  }>;
                   const isSelected = postType === type;
 
                   return (

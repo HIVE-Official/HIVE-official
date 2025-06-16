@@ -63,7 +63,7 @@ export const SpaceFeed: React.FC<SpaceFeedProps> = ({
   spaceId,
   currentUser,
   className,
-  posts: _posts = [],
+  // posts: _posts = [], // Not currently used - relying on API fetch instead
 }) => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const queryClient = useQueryClient();
@@ -88,7 +88,7 @@ export const SpaceFeed: React.FC<SpaceFeedProps> = ({
         if (!response.ok) {
           throw new Error("Failed to fetch posts");
         }
-        return response.json() as FeedResponse;
+        return response.json() as Promise<FeedResponse>;
       },
       getNextPageParam: (lastPage: FeedResponse) =>
         lastPage.hasMore ? lastPage.lastPostId : undefined,
@@ -390,7 +390,7 @@ export const SpaceFeed: React.FC<SpaceFeedProps> = ({
             <AlertCircle className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
             <h3 className="text-lg font-semibold mb-2">Failed to load posts</h3>
             <p className="text-muted-foreground mb-4">
-              {error instanceof Error ? error.message : "Something went wrong"}
+              {error || "Something went wrong"}
             </p>
             <Button
               onClick={() => void handleRefresh()}

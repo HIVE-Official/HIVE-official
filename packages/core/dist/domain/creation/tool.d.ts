@@ -325,7 +325,7 @@ export declare const ToolSchema: z.ZodObject<{
     elements: z.ZodArray<z.ZodObject<{
         id: z.ZodString;
         elementId: z.ZodString;
-        config: z.ZodAny;
+        config: z.ZodUnknown;
         position: z.ZodObject<{
             x: z.ZodNumber;
             y: z.ZodNumber;
@@ -358,7 +358,7 @@ export declare const ToolSchema: z.ZodObject<{
         order: number;
         isVisible: boolean;
         isLocked: boolean;
-        config?: any;
+        config?: unknown;
         parentId?: string | undefined;
     }, {
         id: string;
@@ -370,7 +370,7 @@ export declare const ToolSchema: z.ZodObject<{
             height?: number | undefined;
         };
         order: number;
-        config?: any;
+        config?: unknown;
         parentId?: string | undefined;
         isVisible?: boolean | undefined;
         isLocked?: boolean | undefined;
@@ -552,7 +552,7 @@ export declare const ToolSchema: z.ZodObject<{
     publishedAt: z.ZodOptional<z.ZodDate>;
     lastUsedAt: z.ZodOptional<z.ZodDate>;
 }, "strip", z.ZodTypeAny, {
-    status: "draft" | "preview" | "published";
+    status: "preview" | "draft" | "published";
     id: string;
     config: {
         backgroundColor: string;
@@ -615,7 +615,7 @@ export declare const ToolSchema: z.ZodObject<{
         order: number;
         isVisible: boolean;
         isLocked: boolean;
-        config?: any;
+        config?: unknown;
         parentId?: string | undefined;
     }[];
     metadata: {
@@ -654,12 +654,12 @@ export declare const ToolSchema: z.ZodObject<{
             height?: number | undefined;
         };
         order: number;
-        config?: any;
+        config?: unknown;
         parentId?: string | undefined;
         isVisible?: boolean | undefined;
         isLocked?: boolean | undefined;
     }[];
-    status?: "draft" | "preview" | "published" | undefined;
+    status?: "preview" | "draft" | "published" | undefined;
     config?: {
         backgroundColor?: string | undefined;
         theme?: "auto" | "light" | "dark" | undefined;
@@ -986,7 +986,7 @@ export declare const UpdateToolSchema: z.ZodObject<{
     elements: z.ZodOptional<z.ZodArray<z.ZodObject<{
         id: z.ZodString;
         elementId: z.ZodString;
-        config: z.ZodAny;
+        config: z.ZodUnknown;
         position: z.ZodObject<{
             x: z.ZodNumber;
             y: z.ZodNumber;
@@ -1019,7 +1019,7 @@ export declare const UpdateToolSchema: z.ZodObject<{
         order: number;
         isVisible: boolean;
         isLocked: boolean;
-        config?: any;
+        config?: unknown;
         parentId?: string | undefined;
     }, {
         id: string;
@@ -1031,7 +1031,7 @@ export declare const UpdateToolSchema: z.ZodObject<{
             height?: number | undefined;
         };
         order: number;
-        config?: any;
+        config?: unknown;
         parentId?: string | undefined;
         isVisible?: boolean | undefined;
         isLocked?: boolean | undefined;
@@ -1244,7 +1244,7 @@ export declare const UpdateToolSchema: z.ZodObject<{
         order: number;
         isVisible: boolean;
         isLocked: boolean;
-        config?: any;
+        config?: unknown;
         parentId?: string | undefined;
     }[] | undefined;
     metadata?: {
@@ -1297,7 +1297,7 @@ export declare const UpdateToolSchema: z.ZodObject<{
             height?: number | undefined;
         };
         order: number;
-        config?: any;
+        config?: unknown;
         parentId?: string | undefined;
         isVisible?: boolean | undefined;
         isLocked?: boolean | undefined;

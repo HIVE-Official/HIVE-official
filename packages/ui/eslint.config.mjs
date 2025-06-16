@@ -5,7 +5,6 @@ import js from "@eslint/js";
 import { FlatCompat } from "@eslint/eslintrc";
 import { fixupConfigRules } from "@eslint/compat";
 import tseslint from "typescript-eslint";
-import baseConfig from "@hive/eslint-config";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -22,10 +21,13 @@ const patchedStorybookConfig = fixupConfigRules([
 ]);
 
 export default [
-  // Extend base config
-  ...baseConfig,
+  // Base JavaScript config
+  js.configs.recommended,
 
-  // UI package specific configuration (NO Storybook rules here)
+  // TypeScript configs for non-story files
+  ...tseslint.configs.recommended,
+
+  // Main UI package files with TypeScript parsing
   {
     files: ["src/**/*.{js,jsx,ts,tsx}"],
     ignores: [
@@ -36,34 +38,46 @@ export default [
     languageOptions: {
       parser: tseslint.parser,
       parserOptions: {
-        project: "./tsconfig.json",
+        project: true,
         tsconfigRootDir: __dirname,
       },
     },
     rules: {
-      // Allow default exports for components
-      "import/no-default-export": "off",
-      // Disable Storybook rules for regular component files
-      "storybook/csf-component": "off",
-      "storybook/default-exports": "off",
-      "storybook/story-exports": "off",
+      "import/no-anonymous-default-export": "warn",
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        { argsIgnorePattern: "^_" },
+      ],
+      "@typescript-eslint/consistent-type-imports": [
+        "error",
+        { prefer: "type-imports" },
+      ],
+      // Allow some flexibility for UI package
+      "@typescript-eslint/no-explicit-any": "warn",
+      "@typescript-eslint/ban-ts-comment": "warn",
+      "@typescript-eslint/no-unsafe-assignment": "warn",
+      "@typescript-eslint/no-unsafe-member-access": "warn",
+      "@typescript-eslint/no-unsafe-call": "warn",
+      "@typescript-eslint/no-unsafe-return": "warn",
+      "@typescript-eslint/no-unsafe-argument": "warn",
     },
   },
 
-  // ONLY apply Storybook rules to story files
+  // Story files WITHOUT TypeScript project parsing to avoid config conflicts
   {
     files: ["**/*.stories.@(js|jsx|ts|tsx)"],
-    ...patchedStorybookConfig[0], // Apply the Storybook config
     languageOptions: {
       parser: tseslint.parser,
+      // NO project parsing for stories - they're excluded from tsconfig
       parserOptions: {
-        project: "./tsconfig.json",
-        tsconfigRootDir: __dirname,
+        ecmaVersion: "latest",
+        sourceType: "module",
+        ecmaFeatures: {
+          jsx: true,
+        },
       },
     },
     rules: {
-      // Merge existing rules with Storybook-specific rules
-      ...patchedStorybookConfig[0]?.rules,
       // Storybook specific rules
       "storybook/hierarchy-separator": "error",
       "storybook/default-exports": "error",
@@ -73,13 +87,16 @@ export default [
       "storybook/story-exports": "error",
       "storybook/await-interactions": "error",
       "storybook/use-storybook-expect": "error",
-      // Stories can have any structure
+      // Stories can have flexible structure
       "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/ban-ts-comment": "off",
+      "@typescript-eslint/consistent-type-imports": "off",
       "import/no-anonymous-default-export": "off",
+      "@typescript-eslint/no-unused-vars": "off",
     },
   },
 
-  // Ignore patterns specific to UI package
+  // Global ignore patterns
   {
     ignores: [
       "storybook-static/**",
@@ -89,8 +106,8 @@ export default [
       "postcss.config.js",
       "tailwind.config.js",
       "tailwind.config.ts",
-      "index.ts", // Root index file
-      "**/index.ts", // All index files
+      "*.config.*",
+      "node_modules/**",
     ],
   },
 ];

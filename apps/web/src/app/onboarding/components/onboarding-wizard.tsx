@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@hive/hooks";
 import { Button, Card } from "@hive/ui";
 import { ArrowLeft, ArrowRight, Sparkles } from "lucide-react";
 import { MotionDiv, AnimatePresence } from "@hive/ui";

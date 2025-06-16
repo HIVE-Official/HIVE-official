@@ -1,6 +1,11 @@
 import * as admin from "firebase-admin";
 import * as functions from "firebase-functions";
-import * as logger from "firebase-functions/logger";
+import {
+  logger,
+  type UserDocument,
+  getDocumentData,
+  firestore,
+} from "./types/firebase";
 
 /**
  * Sends a push notification to a specific user
@@ -17,19 +22,15 @@ async function sendNotificationToUser(
 ): Promise<void> {
   try {
     // Get the user's FCM tokens from Firestore
-    const userDoc = await admin
-      .firestore()
-      .collection("users")
-      .doc(userId)
-      .get();
+    const userDoc = await firestore().collection("users").doc(userId).get();
 
     if (!userDoc.exists) {
       logger.warn(`No user document found for userId: ${userId}`);
       return;
     }
 
-    const userData = userDoc.data();
-    if (!userData || !userData.fcmTokens) {
+    const userData = getDocumentData<UserDocument>(userDoc);
+    if (!userData?.fcmTokens) {
       logger.warn(`No FCM tokens found for userId: ${userId}`);
       return;
     }
@@ -111,17 +112,36 @@ async function sendNotificationToUser(
         });
 
         // Update the user document
-        await admin
-          .firestore()
-          .collection("users")
-          .doc(userId)
-          .update(tokenUpdates);
+        await firestore().collection("users").doc(userId).update(tokenUpdates);
       }
     }
   } catch (error) {
     logger.error("Error sending notification:", error);
     throw error;
   }
+}
+
+interface MessageData {
+  receiverId: string;
+  senderId: string;
+  text: string;
+  senderName?: string;
+}
+
+interface EventData {
+  createdBy: string;
+  title: string;
+  description?: string;
+  clubId?: string;
+  spaceId?: string;
+}
+
+interface InvitationData {
+  invitedUserId: string;
+  inviterUserId: string;
+  inviterName?: string;
+  spaceId?: string;
+  clubId?: string;
 }
 
 // Function to send a notification when a new message is created
@@ -134,7 +154,7 @@ export const onNewMessage = functions.firestore.onDocumentCreated(
       return null;
     }
 
-    const messageData = snapshot.data();
+    const messageData = getDocumentData<MessageData>(snapshot);
     if (!messageData) {
       logger.warn("No message data found");
       return null;
@@ -172,7 +192,7 @@ export const onNewEvent = functions.firestore.onDocumentCreated(
       return null;
     }
 
-    const eventData = snapshot.data();
+    const eventData = getDocumentData<EventData>(snapshot);
     if (!eventData) {
       logger.warn("No event data found");
       return null;
@@ -197,53 +217,40 @@ export const onNewEvent = functions.firestore.onDocumentCreated(
 
     try {
       // Get all members of the club/space
-      const membersSnapshot = await admin
-        .firestore()
+      const membersSnapshot = await firestore()
         .collection(memberCollection)
         .where("entityId", "==", entityId)
         .get();
 
-      if (membersSnapshot.empty) {
-        logger.info(
-          `No members found for ${memberCollection} with ID ${entityId}`
-        );
-        return null;
-      }
+      // Send notifications to all members except the creator
+      const notificationPromises = membersSnapshot.docs
+        .filter((doc) => {
+          const memberData = getDocumentData(doc);
+          return memberData && (memberData.userId as string) !== createdBy;
+        })
+        .map(async (doc) => {
+          const memberData = getDocumentData(doc);
+          if (!memberData) return;
 
-      // Prepare and send notifications to each member
-      const notificationPromises = membersSnapshot.docs.map(async (doc) => {
-        const memberData = doc.data();
-        const userId = memberData.userId;
+          const userId = memberData.userId as string;
+          const notificationTitle = `New Event: ${title}`;
+          const notificationBody =
+            description || "A new event has been created";
 
-        // Don't send notification to the event creator
-        if (userId === createdBy) {
-          return;
-        }
-
-        // Create notification content
-        const notificationTitle = `New Event: ${title}`;
-        const notificationBody =
-          description?.length > 100
-            ? `${description.substring(0, 97)}...`
-            : description || "Check out this new event!";
-
-        // Send the notification
-        return sendNotificationToUser(
-          userId,
-          notificationTitle,
-          notificationBody,
-          {
-            type: "event",
-            eventId: event.params.eventId,
-            entityId,
-          }
-        );
-      });
+          await sendNotificationToUser(
+            userId,
+            notificationTitle,
+            notificationBody,
+            {
+              type: "event",
+              eventId: event.params.eventId,
+              createdBy,
+            }
+          );
+        });
 
       await Promise.all(notificationPromises);
-      logger.info(
-        `Sent event notifications to ${notificationPromises.length} members`
-      );
+      logger.info(`Event notifications sent for event ${event.params.eventId}`);
     } catch (error) {
       logger.error("Error sending event notifications:", error);
     }
@@ -252,7 +259,7 @@ export const onNewEvent = functions.firestore.onDocumentCreated(
   }
 );
 
-// Function to send a notification when a user is invited to a club or space
+// Function to send a notification when a new invitation is created
 export const onNewInvitation = functions.firestore.onDocumentCreated(
   "invitations/{invitationId}",
   async (event) => {
@@ -262,36 +269,50 @@ export const onNewInvitation = functions.firestore.onDocumentCreated(
       return null;
     }
 
-    const invitationData = snapshot.data();
+    const invitationData = getDocumentData<InvitationData>(snapshot);
     if (!invitationData) {
       logger.warn("No invitation data found");
       return null;
     }
 
-    const { userId, invitedBy, invitedByName, entityName, entityType } =
+    const { invitedUserId, inviterUserId, inviterName, spaceId, clubId } =
       invitationData;
 
-    if (!userId || !invitedBy) {
-      logger.warn("Missing required invitation fields");
+    // Don't send notifications to the inviter
+    if (invitedUserId === inviterUserId) {
       return null;
     }
 
-    // Don't send notifications for self-invitations
-    if (userId === invitedBy) {
-      return null;
+    try {
+      // Get the name of the space/club being invited to
+      let entityName = "Unknown";
+      if (spaceId) {
+        const spaceDoc = await firestore()
+          .collection("spaces")
+          .doc(spaceId)
+          .get();
+        const spaceData = getDocumentData(spaceDoc);
+        entityName = (spaceData?.name as string) || "Space";
+      } else if (clubId) {
+        const clubDoc = await firestore().collection("clubs").doc(clubId).get();
+        const clubData = getDocumentData(clubDoc);
+        entityName = (clubData?.name as string) || "Club";
+      }
+
+      const title = "New Invitation";
+      const body = `${inviterName || "Someone"} invited you to join ${entityName}`;
+
+      await sendNotificationToUser(invitedUserId, title, body, {
+        type: "invitation",
+        invitationId: event.params.invitationId,
+        inviterUserId,
+        entityId: spaceId || clubId || "",
+      });
+
+      logger.info(`Invitation notification sent to user ${invitedUserId}`);
+    } catch (error) {
+      logger.error("Error sending invitation notification:", error);
     }
-
-    // Create notification content
-    const title = `Invitation to ${entityName || `a ${entityType}`}`;
-    const body = `${invitedByName || "Someone"} has invited you to join ${entityName || `their ${entityType}`}`;
-
-    // Send the notification
-    await sendNotificationToUser(userId, title, body, {
-      type: "invitation",
-      invitationId: event.params.invitationId,
-      invitedBy,
-      entityType,
-    });
 
     return null;
   }

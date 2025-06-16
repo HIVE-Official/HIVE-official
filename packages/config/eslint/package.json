@@ -4,11 +4,17 @@
   "private": true,
   "type": "module",
   "main": "index.js",
+  "exports": {
+    ".": "./index.js"
+  },
+  "scripts": {
+    "build": "echo 'No build needed for ESLint config'"
+  },
   "devDependencies": {
     "@eslint/compat": "^1.2.4",
     "@eslint/eslintrc": "^3.2.0",
     "@eslint/js": "^9.28.0",
-    "@next/eslint-plugin-next": "^14.2.8",
+    "@next/eslint-plugin-next": "^14.2.29",
     "@tanstack/eslint-plugin-query": "^5.49.0",
     "@types/eslint__js": "^8.42.3",
     "eslint": "^9.28.0",
@@ -35,4 +41,4 @@
     "eslint": "^9.28.0",
     "typescript": "^5.8.3"
   }
-} 
+}

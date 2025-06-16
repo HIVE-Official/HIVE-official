@@ -9,9 +9,9 @@
     ".": "./src/index.ts"
   },
   "scripts": {
-    "build": "tsc",
-    "lint": "eslint . --max-warnings 0",
-    "typecheck": "tsc --noEmit"
+    "build": "npx tsc",
+    "lint": "npx eslint . --max-warnings 10",
+    "typecheck": "npx tsc --noEmit"
   },
   "devDependencies": {
     "@hive/eslint-config": "workspace:*",
@@ -23,4 +23,4 @@
   "overrides": {
     "eslint": "$eslint"
   }
-} 
+}

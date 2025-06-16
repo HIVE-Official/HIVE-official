@@ -1,71 +1,74 @@
 import * as functions from "firebase-functions";
-import * as admin from "firebase-admin";
-import {getAuth} from "firebase-admin/auth";
-import {getFirestore, FieldValue} from "firebase-admin/firestore";
-import {getStorage, ref, uploadBytes, getDownloadURL} from "firebase/storage";
-import {UserProfileSchema, UserProfile} from "@hive/validation";
+import { FirebaseHttpsError, firestore, FieldValue } from "../types/firebase";
 
-export const completeOnboarding = functions.https.onCall(async (data, context) => {
-  if (!context.auth) {
-    throw new functions.https.HttpsError("unauthenticated", "User must be authenticated.");
-  }
+interface OnboardingData {
+  fullName: string;
+  preferredName?: string;
+  major: string;
+  gradYear: number;
+  handle: string;
+  isBuilder: boolean;
+}
 
-  const parseResult = UserProfileSchema.pick({
-    fullName: true,
-    preferredName: true,
-    major: true,
-    gradYear: true,
-    handle: true,
-    isBuilder: true,
-  }).safeParse(data);
+export const completeOnboarding = functions.https.onCall(
+  async (request): Promise<{ success: boolean; message: string }> => {
+    // Extract data from request
+    const data = request.data as OnboardingData;
 
-  if (!parseResult.success) {
-    throw new functions.https.HttpsError("invalid-argument", "Invalid data provided.", parseResult.error.flatten());
-  }
-
-  const {
-    fullName,
-    preferredName,
-    major,
-    gradYear,
-    handle,
-    isBuilder,
-  } = parseResult.data;
-  const uid = context.auth.uid;
-
-  const db = getFirestore();
-  const userRef = db.collection("users").doc(uid);
-  const handleRef = db.collection("handles").doc(handle);
-
-  // Use a transaction to ensure atomicity
-  await db.runTransaction(async (transaction) => {
-    const handleDoc = await transaction.get(handleRef);
-    if (handleDoc.exists) {
-      throw new functions.https.HttpsError("already-exists", "This handle is already taken.");
+    // Check authentication
+    if (!request.auth) {
+      throw new FirebaseHttpsError(
+        "unauthenticated",
+        "User must be authenticated"
+      );
     }
 
-    const newUserProfile: Omit<UserProfile, "avatarUrl" | "createdAt"> = {
-      uid,
-      email: context.auth.token.email!,
-      handle,
-      fullName,
-      preferredName: preferredName || fullName,
-      major,
-      gradYear,
-      isBuilder,
-      status: "active",
-      roles: ["student"],
-      reputation: 0,
-      lastSeen: FieldValue.serverTimestamp(),
-    };
+    try {
+      // Validate required fields
+      if (!data.fullName || !data.major || !data.gradYear || !data.handle) {
+        throw new FirebaseHttpsError(
+          "invalid-argument",
+          "Missing required fields"
+        );
+      }
 
-    transaction.set(userRef, {...newUserProfile, createdAt: FieldValue.serverTimestamp()});
-    transaction.set(handleRef, {uid});
-  });
+      const db = firestore();
+      const userId = request.auth.uid;
 
-  // Avatar upload is handled separately on the client,
-  // which then calls another function to update the user profile.
-  // This separation avoids having the client send a large file to the callable function.
+      // Check if handle is unique
+      const handleQuery = await db
+        .collection("user_profiles")
+        .where("handle", "==", data.handle)
+        .get();
 
-  return {success: true, message: "Onboarding completed successfully."};
-});
+      if (!handleQuery.empty && handleQuery.docs[0].id !== userId) {
+        throw new FirebaseHttpsError(
+          "already-exists",
+          "Handle is already taken"
+        );
+      }
+
+      // Update user profile
+      await db
+        .collection("user_profiles")
+        .doc(userId)
+        .update({
+          fullName: data.fullName,
+          preferredName: data.preferredName || null,
+          major: data.major,
+          gradYear: data.gradYear,
+          handle: data.handle,
+          isBuilder: data.isBuilder,
+          onboardingCompleted: true,
+          updatedAt: FieldValue.serverTimestamp(),
+        });
+
+      return { success: true, message: "Onboarding completed successfully" };
+    } catch (error) {
+      if (error instanceof FirebaseHttpsError) {
+        throw error;
+      }
+      throw new FirebaseHttpsError("internal", "Failed to complete onboarding");
+    }
+  }
+);

@@ -2,12 +2,10 @@
   "extends": "../config/typescript/base.json",
   "compilerOptions": {
     "outDir": "./dist",
-    "rootDir": "./src",
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
     "jsx": "react-jsx",
-    "jsxImportSource": "react",
     "module": "ESNext",
     "target": "ES2020",
     "lib": ["DOM", "DOM.Iterable", "ES2020"],
@@ -17,13 +15,20 @@
     "strict": false,
     "noImplicitAny": false,
     "moduleResolution": "node",
+    "types": ["node"],
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@hive/core": ["../core/src"],
+      "@hive/core/*": ["../core/src/*"],
+      "@hive/hooks": ["../hooks/src"],
+      "@hive/hooks/*": ["../hooks/src/*"],
+      "@hive/auth-logic": ["../auth-logic/src"],
+      "@hive/auth-logic/*": ["../auth-logic/src/*"]
     },
     "resolveJsonModule": true
   },
-  "include": ["src/**/*"],
+  "include": ["index.ts", "src/**/*"],
   "exclude": [
     "dist",
     "node_modules",

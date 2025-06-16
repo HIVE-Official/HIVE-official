@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from "zod";
 export declare const ElementCategory: z.ZodEnum<["Display & Layout", "Inputs & Choices", "Logic & Dynamics"]>;
 export type ElementCategory = z.infer<typeof ElementCategory>;
 export declare const ElementId: z.ZodString;
@@ -27,7 +27,7 @@ export declare const StyleConfigSchema: z.ZodObject<{
     padding?: number | undefined;
     margin?: number | undefined;
     fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-    fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+    fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
     textAlign?: "left" | "center" | "right" | undefined;
     width?: number | "auto" | "full" | undefined;
     height?: number | "auto" | "full" | undefined;
@@ -40,7 +40,7 @@ export declare const StyleConfigSchema: z.ZodObject<{
     padding?: number | undefined;
     margin?: number | undefined;
     fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-    fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+    fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
     textAlign?: "left" | "center" | "right" | undefined;
     width?: number | "auto" | "full" | undefined;
     height?: number | "auto" | "full" | undefined;
@@ -67,15 +67,15 @@ export declare const ConditionalRuleSchema: z.ZodObject<{
         type: z.ZodEnum<["show", "hide", "setValue", "setStyle", "trigger"]>;
         targetElementId: z.ZodOptional<z.ZodString>;
         targetProperty: z.ZodOptional<z.ZodString>;
-        value: z.ZodOptional<z.ZodAny>;
+        value: z.ZodOptional<z.ZodUnknown>;
     }, "strip", z.ZodTypeAny, {
         type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-        value?: any;
+        value?: unknown;
         targetElementId?: string | undefined;
         targetProperty?: string | undefined;
     }, {
         type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-        value?: any;
+        value?: unknown;
         targetElementId?: string | undefined;
         targetProperty?: string | undefined;
     }>, "many">;
@@ -89,7 +89,7 @@ export declare const ConditionalRuleSchema: z.ZodObject<{
     };
     actions: {
         type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-        value?: any;
+        value?: unknown;
         targetElementId?: string | undefined;
         targetProperty?: string | undefined;
     }[];
@@ -103,7 +103,7 @@ export declare const ConditionalRuleSchema: z.ZodObject<{
     };
     actions: {
         type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-        value?: any;
+        value?: unknown;
         targetElementId?: string | undefined;
         targetProperty?: string | undefined;
     }[];
@@ -132,7 +132,7 @@ export declare const TextBlockConfigSchema: z.ZodObject<{
         padding?: number | undefined;
         margin?: number | undefined;
         fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-        fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+        fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
         textAlign?: "left" | "center" | "right" | undefined;
         width?: number | "auto" | "full" | undefined;
         height?: number | "auto" | "full" | undefined;
@@ -145,7 +145,7 @@ export declare const TextBlockConfigSchema: z.ZodObject<{
         padding?: number | undefined;
         margin?: number | undefined;
         fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-        fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+        fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
         textAlign?: "left" | "center" | "right" | undefined;
         width?: number | "auto" | "full" | undefined;
         height?: number | "auto" | "full" | undefined;
@@ -172,15 +172,15 @@ export declare const TextBlockConfigSchema: z.ZodObject<{
             type: z.ZodEnum<["show", "hide", "setValue", "setStyle", "trigger"]>;
             targetElementId: z.ZodOptional<z.ZodString>;
             targetProperty: z.ZodOptional<z.ZodString>;
-            value: z.ZodOptional<z.ZodAny>;
+            value: z.ZodOptional<z.ZodUnknown>;
         }, "strip", z.ZodTypeAny, {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }, {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }>, "many">;
@@ -194,7 +194,7 @@ export declare const TextBlockConfigSchema: z.ZodObject<{
         };
         actions: {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }[];
@@ -208,7 +208,7 @@ export declare const TextBlockConfigSchema: z.ZodObject<{
         };
         actions: {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }[];
@@ -224,7 +224,7 @@ export declare const TextBlockConfigSchema: z.ZodObject<{
         padding?: number | undefined;
         margin?: number | undefined;
         fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-        fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+        fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
         textAlign?: "left" | "center" | "right" | undefined;
         width?: number | "auto" | "full" | undefined;
         height?: number | "auto" | "full" | undefined;
@@ -239,7 +239,7 @@ export declare const TextBlockConfigSchema: z.ZodObject<{
         };
         actions: {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }[];
@@ -255,7 +255,7 @@ export declare const TextBlockConfigSchema: z.ZodObject<{
         padding?: number | undefined;
         margin?: number | undefined;
         fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-        fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+        fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
         textAlign?: "left" | "center" | "right" | undefined;
         width?: number | "auto" | "full" | undefined;
         height?: number | "auto" | "full" | undefined;
@@ -270,7 +270,7 @@ export declare const TextBlockConfigSchema: z.ZodObject<{
         };
         actions: {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }[];
@@ -302,7 +302,7 @@ export declare const ImageBlockConfigSchema: z.ZodObject<{
         padding?: number | undefined;
         margin?: number | undefined;
         fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-        fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+        fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
         textAlign?: "left" | "center" | "right" | undefined;
         width?: number | "auto" | "full" | undefined;
         height?: number | "auto" | "full" | undefined;
@@ -315,7 +315,7 @@ export declare const ImageBlockConfigSchema: z.ZodObject<{
         padding?: number | undefined;
         margin?: number | undefined;
         fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-        fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+        fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
         textAlign?: "left" | "center" | "right" | undefined;
         width?: number | "auto" | "full" | undefined;
         height?: number | "auto" | "full" | undefined;
@@ -342,15 +342,15 @@ export declare const ImageBlockConfigSchema: z.ZodObject<{
             type: z.ZodEnum<["show", "hide", "setValue", "setStyle", "trigger"]>;
             targetElementId: z.ZodOptional<z.ZodString>;
             targetProperty: z.ZodOptional<z.ZodString>;
-            value: z.ZodOptional<z.ZodAny>;
+            value: z.ZodOptional<z.ZodUnknown>;
         }, "strip", z.ZodTypeAny, {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }, {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }>, "many">;
@@ -364,7 +364,7 @@ export declare const ImageBlockConfigSchema: z.ZodObject<{
         };
         actions: {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }[];
@@ -378,7 +378,7 @@ export declare const ImageBlockConfigSchema: z.ZodObject<{
         };
         actions: {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }[];
@@ -395,7 +395,7 @@ export declare const ImageBlockConfigSchema: z.ZodObject<{
         padding?: number | undefined;
         margin?: number | undefined;
         fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-        fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+        fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
         textAlign?: "left" | "center" | "right" | undefined;
         width?: number | "auto" | "full" | undefined;
         height?: number | "auto" | "full" | undefined;
@@ -410,7 +410,7 @@ export declare const ImageBlockConfigSchema: z.ZodObject<{
         };
         actions: {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }[];
@@ -428,7 +428,7 @@ export declare const ImageBlockConfigSchema: z.ZodObject<{
         padding?: number | undefined;
         margin?: number | undefined;
         fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-        fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+        fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
         textAlign?: "left" | "center" | "right" | undefined;
         width?: number | "auto" | "full" | undefined;
         height?: number | "auto" | "full" | undefined;
@@ -443,7 +443,7 @@ export declare const ImageBlockConfigSchema: z.ZodObject<{
         };
         actions: {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }[];
@@ -477,15 +477,15 @@ export declare const DividerConfigSchema: z.ZodObject<{
             type: z.ZodEnum<["show", "hide", "setValue", "setStyle", "trigger"]>;
             targetElementId: z.ZodOptional<z.ZodString>;
             targetProperty: z.ZodOptional<z.ZodString>;
-            value: z.ZodOptional<z.ZodAny>;
+            value: z.ZodOptional<z.ZodUnknown>;
         }, "strip", z.ZodTypeAny, {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }, {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }>, "many">;
@@ -499,7 +499,7 @@ export declare const DividerConfigSchema: z.ZodObject<{
         };
         actions: {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }[];
@@ -513,7 +513,7 @@ export declare const DividerConfigSchema: z.ZodObject<{
         };
         actions: {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }[];
@@ -533,7 +533,7 @@ export declare const DividerConfigSchema: z.ZodObject<{
         };
         actions: {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }[];
@@ -551,7 +551,7 @@ export declare const DividerConfigSchema: z.ZodObject<{
         };
         actions: {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }[];
@@ -586,7 +586,7 @@ export declare const StackConfigSchema: z.ZodObject<{
         padding?: number | undefined;
         margin?: number | undefined;
         fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-        fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+        fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
         textAlign?: "left" | "center" | "right" | undefined;
         width?: number | "auto" | "full" | undefined;
         height?: number | "auto" | "full" | undefined;
@@ -599,7 +599,7 @@ export declare const StackConfigSchema: z.ZodObject<{
         padding?: number | undefined;
         margin?: number | undefined;
         fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-        fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+        fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
         textAlign?: "left" | "center" | "right" | undefined;
         width?: number | "auto" | "full" | undefined;
         height?: number | "auto" | "full" | undefined;
@@ -626,15 +626,15 @@ export declare const StackConfigSchema: z.ZodObject<{
             type: z.ZodEnum<["show", "hide", "setValue", "setStyle", "trigger"]>;
             targetElementId: z.ZodOptional<z.ZodString>;
             targetProperty: z.ZodOptional<z.ZodString>;
-            value: z.ZodOptional<z.ZodAny>;
+            value: z.ZodOptional<z.ZodUnknown>;
         }, "strip", z.ZodTypeAny, {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }, {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }>, "many">;
@@ -648,7 +648,7 @@ export declare const StackConfigSchema: z.ZodObject<{
         };
         actions: {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }[];
@@ -662,7 +662,7 @@ export declare const StackConfigSchema: z.ZodObject<{
         };
         actions: {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }[];
@@ -681,7 +681,7 @@ export declare const StackConfigSchema: z.ZodObject<{
         padding?: number | undefined;
         margin?: number | undefined;
         fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-        fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+        fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
         textAlign?: "left" | "center" | "right" | undefined;
         width?: number | "auto" | "full" | undefined;
         height?: number | "auto" | "full" | undefined;
@@ -696,7 +696,7 @@ export declare const StackConfigSchema: z.ZodObject<{
         };
         actions: {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }[];
@@ -711,7 +711,7 @@ export declare const StackConfigSchema: z.ZodObject<{
         padding?: number | undefined;
         margin?: number | undefined;
         fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-        fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+        fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
         textAlign?: "left" | "center" | "right" | undefined;
         width?: number | "auto" | "full" | undefined;
         height?: number | "auto" | "full" | undefined;
@@ -726,7 +726,7 @@ export declare const StackConfigSchema: z.ZodObject<{
         };
         actions: {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }[];
@@ -744,15 +744,15 @@ export declare const ButtonConfigSchema: z.ZodObject<{
     onClick: z.ZodOptional<z.ZodObject<{
         type: z.ZodEnum<["navigate", "submit", "reset", "custom"]>;
         target: z.ZodOptional<z.ZodString>;
-        data: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodAny>>;
+        data: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnknown>>;
     }, "strip", z.ZodTypeAny, {
         type: "custom" | "navigate" | "submit" | "reset";
         target?: string | undefined;
-        data?: Record<string, any> | undefined;
+        data?: Record<string, unknown> | undefined;
     }, {
         type: "custom" | "navigate" | "submit" | "reset";
         target?: string | undefined;
-        data?: Record<string, any> | undefined;
+        data?: Record<string, unknown> | undefined;
     }>>;
     style: z.ZodOptional<z.ZodObject<{
         backgroundColor: z.ZodOptional<z.ZodString>;
@@ -776,7 +776,7 @@ export declare const ButtonConfigSchema: z.ZodObject<{
         padding?: number | undefined;
         margin?: number | undefined;
         fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-        fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+        fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
         textAlign?: "left" | "center" | "right" | undefined;
         width?: number | "auto" | "full" | undefined;
         height?: number | "auto" | "full" | undefined;
@@ -789,7 +789,7 @@ export declare const ButtonConfigSchema: z.ZodObject<{
         padding?: number | undefined;
         margin?: number | undefined;
         fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-        fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+        fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
         textAlign?: "left" | "center" | "right" | undefined;
         width?: number | "auto" | "full" | undefined;
         height?: number | "auto" | "full" | undefined;
@@ -816,15 +816,15 @@ export declare const ButtonConfigSchema: z.ZodObject<{
             type: z.ZodEnum<["show", "hide", "setValue", "setStyle", "trigger"]>;
             targetElementId: z.ZodOptional<z.ZodString>;
             targetProperty: z.ZodOptional<z.ZodString>;
-            value: z.ZodOptional<z.ZodAny>;
+            value: z.ZodOptional<z.ZodUnknown>;
         }, "strip", z.ZodTypeAny, {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }, {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }>, "many">;
@@ -838,7 +838,7 @@ export declare const ButtonConfigSchema: z.ZodObject<{
         };
         actions: {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }[];
@@ -852,7 +852,7 @@ export declare const ButtonConfigSchema: z.ZodObject<{
         };
         actions: {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }[];
@@ -871,7 +871,7 @@ export declare const ButtonConfigSchema: z.ZodObject<{
         padding?: number | undefined;
         margin?: number | undefined;
         fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-        fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+        fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
         textAlign?: "left" | "center" | "right" | undefined;
         width?: number | "auto" | "full" | undefined;
         height?: number | "auto" | "full" | undefined;
@@ -886,7 +886,7 @@ export declare const ButtonConfigSchema: z.ZodObject<{
         };
         actions: {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }[];
@@ -894,7 +894,7 @@ export declare const ButtonConfigSchema: z.ZodObject<{
     onClick?: {
         type: "custom" | "navigate" | "submit" | "reset";
         target?: string | undefined;
-        data?: Record<string, any> | undefined;
+        data?: Record<string, unknown> | undefined;
     } | undefined;
 }, {
     text: string;
@@ -907,7 +907,7 @@ export declare const ButtonConfigSchema: z.ZodObject<{
         padding?: number | undefined;
         margin?: number | undefined;
         fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-        fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+        fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
         textAlign?: "left" | "center" | "right" | undefined;
         width?: number | "auto" | "full" | undefined;
         height?: number | "auto" | "full" | undefined;
@@ -922,7 +922,7 @@ export declare const ButtonConfigSchema: z.ZodObject<{
         };
         actions: {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }[];
@@ -933,7 +933,7 @@ export declare const ButtonConfigSchema: z.ZodObject<{
     onClick?: {
         type: "custom" | "navigate" | "submit" | "reset";
         target?: string | undefined;
-        data?: Record<string, any> | undefined;
+        data?: Record<string, unknown> | undefined;
     } | undefined;
 }>;
 export declare const ChoiceSelectConfigSchema: z.ZodObject<{
@@ -976,7 +976,7 @@ export declare const ChoiceSelectConfigSchema: z.ZodObject<{
         padding?: number | undefined;
         margin?: number | undefined;
         fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-        fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+        fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
         textAlign?: "left" | "center" | "right" | undefined;
         width?: number | "auto" | "full" | undefined;
         height?: number | "auto" | "full" | undefined;
@@ -989,7 +989,7 @@ export declare const ChoiceSelectConfigSchema: z.ZodObject<{
         padding?: number | undefined;
         margin?: number | undefined;
         fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-        fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+        fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
         textAlign?: "left" | "center" | "right" | undefined;
         width?: number | "auto" | "full" | undefined;
         height?: number | "auto" | "full" | undefined;
@@ -1016,15 +1016,15 @@ export declare const ChoiceSelectConfigSchema: z.ZodObject<{
             type: z.ZodEnum<["show", "hide", "setValue", "setStyle", "trigger"]>;
             targetElementId: z.ZodOptional<z.ZodString>;
             targetProperty: z.ZodOptional<z.ZodString>;
-            value: z.ZodOptional<z.ZodAny>;
+            value: z.ZodOptional<z.ZodUnknown>;
         }, "strip", z.ZodTypeAny, {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }, {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }>, "many">;
@@ -1038,7 +1038,7 @@ export declare const ChoiceSelectConfigSchema: z.ZodObject<{
         };
         actions: {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }[];
@@ -1052,7 +1052,7 @@ export declare const ChoiceSelectConfigSchema: z.ZodObject<{
         };
         actions: {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }[];
@@ -1075,7 +1075,7 @@ export declare const ChoiceSelectConfigSchema: z.ZodObject<{
         padding?: number | undefined;
         margin?: number | undefined;
         fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-        fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+        fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
         textAlign?: "left" | "center" | "right" | undefined;
         width?: number | "auto" | "full" | undefined;
         height?: number | "auto" | "full" | undefined;
@@ -1090,7 +1090,7 @@ export declare const ChoiceSelectConfigSchema: z.ZodObject<{
         };
         actions: {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }[];
@@ -1112,7 +1112,7 @@ export declare const ChoiceSelectConfigSchema: z.ZodObject<{
         padding?: number | undefined;
         margin?: number | undefined;
         fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-        fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+        fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
         textAlign?: "left" | "center" | "right" | undefined;
         width?: number | "auto" | "full" | undefined;
         height?: number | "auto" | "full" | undefined;
@@ -1127,7 +1127,7 @@ export declare const ChoiceSelectConfigSchema: z.ZodObject<{
         };
         actions: {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }[];
@@ -1166,7 +1166,7 @@ export declare const TextInputConfigSchema: z.ZodObject<{
         padding?: number | undefined;
         margin?: number | undefined;
         fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-        fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+        fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
         textAlign?: "left" | "center" | "right" | undefined;
         width?: number | "auto" | "full" | undefined;
         height?: number | "auto" | "full" | undefined;
@@ -1179,7 +1179,7 @@ export declare const TextInputConfigSchema: z.ZodObject<{
         padding?: number | undefined;
         margin?: number | undefined;
         fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-        fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+        fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
         textAlign?: "left" | "center" | "right" | undefined;
         width?: number | "auto" | "full" | undefined;
         height?: number | "auto" | "full" | undefined;
@@ -1206,15 +1206,15 @@ export declare const TextInputConfigSchema: z.ZodObject<{
             type: z.ZodEnum<["show", "hide", "setValue", "setStyle", "trigger"]>;
             targetElementId: z.ZodOptional<z.ZodString>;
             targetProperty: z.ZodOptional<z.ZodString>;
-            value: z.ZodOptional<z.ZodAny>;
+            value: z.ZodOptional<z.ZodUnknown>;
         }, "strip", z.ZodTypeAny, {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }, {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }>, "many">;
@@ -1228,7 +1228,7 @@ export declare const TextInputConfigSchema: z.ZodObject<{
         };
         actions: {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }[];
@@ -1242,7 +1242,7 @@ export declare const TextInputConfigSchema: z.ZodObject<{
         };
         actions: {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }[];
@@ -1260,7 +1260,7 @@ export declare const TextInputConfigSchema: z.ZodObject<{
         padding?: number | undefined;
         margin?: number | undefined;
         fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-        fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+        fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
         textAlign?: "left" | "center" | "right" | undefined;
         width?: number | "auto" | "full" | undefined;
         height?: number | "auto" | "full" | undefined;
@@ -1275,7 +1275,7 @@ export declare const TextInputConfigSchema: z.ZodObject<{
         };
         actions: {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }[];
@@ -1296,7 +1296,7 @@ export declare const TextInputConfigSchema: z.ZodObject<{
         padding?: number | undefined;
         margin?: number | undefined;
         fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-        fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+        fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
         textAlign?: "left" | "center" | "right" | undefined;
         width?: number | "auto" | "full" | undefined;
         height?: number | "auto" | "full" | undefined;
@@ -1311,7 +1311,7 @@ export declare const TextInputConfigSchema: z.ZodObject<{
         };
         actions: {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }[];
@@ -1351,7 +1351,7 @@ export declare const RatingStarsConfigSchema: z.ZodObject<{
         padding?: number | undefined;
         margin?: number | undefined;
         fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-        fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+        fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
         textAlign?: "left" | "center" | "right" | undefined;
         width?: number | "auto" | "full" | undefined;
         height?: number | "auto" | "full" | undefined;
@@ -1364,7 +1364,7 @@ export declare const RatingStarsConfigSchema: z.ZodObject<{
         padding?: number | undefined;
         margin?: number | undefined;
         fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-        fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+        fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
         textAlign?: "left" | "center" | "right" | undefined;
         width?: number | "auto" | "full" | undefined;
         height?: number | "auto" | "full" | undefined;
@@ -1391,15 +1391,15 @@ export declare const RatingStarsConfigSchema: z.ZodObject<{
             type: z.ZodEnum<["show", "hide", "setValue", "setStyle", "trigger"]>;
             targetElementId: z.ZodOptional<z.ZodString>;
             targetProperty: z.ZodOptional<z.ZodString>;
-            value: z.ZodOptional<z.ZodAny>;
+            value: z.ZodOptional<z.ZodUnknown>;
         }, "strip", z.ZodTypeAny, {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }, {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }>, "many">;
@@ -1413,7 +1413,7 @@ export declare const RatingStarsConfigSchema: z.ZodObject<{
         };
         actions: {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }[];
@@ -1427,7 +1427,7 @@ export declare const RatingStarsConfigSchema: z.ZodObject<{
         };
         actions: {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }[];
@@ -1448,7 +1448,7 @@ export declare const RatingStarsConfigSchema: z.ZodObject<{
         padding?: number | undefined;
         margin?: number | undefined;
         fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-        fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+        fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
         textAlign?: "left" | "center" | "right" | undefined;
         width?: number | "auto" | "full" | undefined;
         height?: number | "auto" | "full" | undefined;
@@ -1463,7 +1463,7 @@ export declare const RatingStarsConfigSchema: z.ZodObject<{
         };
         actions: {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }[];
@@ -1479,7 +1479,7 @@ export declare const RatingStarsConfigSchema: z.ZodObject<{
         padding?: number | undefined;
         margin?: number | undefined;
         fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-        fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+        fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
         textAlign?: "left" | "center" | "right" | undefined;
         width?: number | "auto" | "full" | undefined;
         height?: number | "auto" | "full" | undefined;
@@ -1494,7 +1494,7 @@ export declare const RatingStarsConfigSchema: z.ZodObject<{
         };
         actions: {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }[];
@@ -1541,7 +1541,7 @@ export declare const CountdownTimerConfigSchema: z.ZodObject<{
         padding?: number | undefined;
         margin?: number | undefined;
         fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-        fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+        fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
         textAlign?: "left" | "center" | "right" | undefined;
         width?: number | "auto" | "full" | undefined;
         height?: number | "auto" | "full" | undefined;
@@ -1554,7 +1554,7 @@ export declare const CountdownTimerConfigSchema: z.ZodObject<{
         padding?: number | undefined;
         margin?: number | undefined;
         fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-        fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+        fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
         textAlign?: "left" | "center" | "right" | undefined;
         width?: number | "auto" | "full" | undefined;
         height?: number | "auto" | "full" | undefined;
@@ -1581,15 +1581,15 @@ export declare const CountdownTimerConfigSchema: z.ZodObject<{
             type: z.ZodEnum<["show", "hide", "setValue", "setStyle", "trigger"]>;
             targetElementId: z.ZodOptional<z.ZodString>;
             targetProperty: z.ZodOptional<z.ZodString>;
-            value: z.ZodOptional<z.ZodAny>;
+            value: z.ZodOptional<z.ZodUnknown>;
         }, "strip", z.ZodTypeAny, {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }, {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }>, "many">;
@@ -1603,7 +1603,7 @@ export declare const CountdownTimerConfigSchema: z.ZodObject<{
         };
         actions: {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }[];
@@ -1617,7 +1617,7 @@ export declare const CountdownTimerConfigSchema: z.ZodObject<{
         };
         actions: {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }[];
@@ -1634,7 +1634,7 @@ export declare const CountdownTimerConfigSchema: z.ZodObject<{
         padding?: number | undefined;
         margin?: number | undefined;
         fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-        fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+        fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
         textAlign?: "left" | "center" | "right" | undefined;
         width?: number | "auto" | "full" | undefined;
         height?: number | "auto" | "full" | undefined;
@@ -1649,7 +1649,7 @@ export declare const CountdownTimerConfigSchema: z.ZodObject<{
         };
         actions: {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }[];
@@ -1670,7 +1670,7 @@ export declare const CountdownTimerConfigSchema: z.ZodObject<{
         padding?: number | undefined;
         margin?: number | undefined;
         fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-        fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+        fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
         textAlign?: "left" | "center" | "right" | undefined;
         width?: number | "auto" | "full" | undefined;
         height?: number | "auto" | "full" | undefined;
@@ -1685,7 +1685,7 @@ export declare const CountdownTimerConfigSchema: z.ZodObject<{
         };
         actions: {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }[];
@@ -1727,7 +1727,7 @@ export declare const ProgressBarConfigSchema: z.ZodObject<{
         padding?: number | undefined;
         margin?: number | undefined;
         fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-        fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+        fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
         textAlign?: "left" | "center" | "right" | undefined;
         width?: number | "auto" | "full" | undefined;
         height?: number | "auto" | "full" | undefined;
@@ -1740,7 +1740,7 @@ export declare const ProgressBarConfigSchema: z.ZodObject<{
         padding?: number | undefined;
         margin?: number | undefined;
         fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-        fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+        fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
         textAlign?: "left" | "center" | "right" | undefined;
         width?: number | "auto" | "full" | undefined;
         height?: number | "auto" | "full" | undefined;
@@ -1767,15 +1767,15 @@ export declare const ProgressBarConfigSchema: z.ZodObject<{
             type: z.ZodEnum<["show", "hide", "setValue", "setStyle", "trigger"]>;
             targetElementId: z.ZodOptional<z.ZodString>;
             targetProperty: z.ZodOptional<z.ZodString>;
-            value: z.ZodOptional<z.ZodAny>;
+            value: z.ZodOptional<z.ZodUnknown>;
         }, "strip", z.ZodTypeAny, {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }, {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }>, "many">;
@@ -1789,7 +1789,7 @@ export declare const ProgressBarConfigSchema: z.ZodObject<{
         };
         actions: {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }[];
@@ -1803,7 +1803,7 @@ export declare const ProgressBarConfigSchema: z.ZodObject<{
         };
         actions: {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }[];
@@ -1824,7 +1824,7 @@ export declare const ProgressBarConfigSchema: z.ZodObject<{
         padding?: number | undefined;
         margin?: number | undefined;
         fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-        fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+        fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
         textAlign?: "left" | "center" | "right" | undefined;
         width?: number | "auto" | "full" | undefined;
         height?: number | "auto" | "full" | undefined;
@@ -1839,7 +1839,7 @@ export declare const ProgressBarConfigSchema: z.ZodObject<{
         };
         actions: {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }[];
@@ -1858,7 +1858,7 @@ export declare const ProgressBarConfigSchema: z.ZodObject<{
         padding?: number | undefined;
         margin?: number | undefined;
         fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-        fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+        fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
         textAlign?: "left" | "center" | "right" | undefined;
         width?: number | "auto" | "full" | undefined;
         height?: number | "auto" | "full" | undefined;
@@ -1873,7 +1873,7 @@ export declare const ProgressBarConfigSchema: z.ZodObject<{
         };
         actions: {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }[];
@@ -1904,28 +1904,28 @@ export declare const ConditionGateConfigSchema: z.ZodObject<{
     onTrue: z.ZodArray<z.ZodObject<{
         type: z.ZodEnum<["show", "hide", "setValue", "trigger"]>;
         targetElementId: z.ZodString;
-        value: z.ZodOptional<z.ZodAny>;
+        value: z.ZodOptional<z.ZodUnknown>;
     }, "strip", z.ZodTypeAny, {
         type: "show" | "hide" | "setValue" | "trigger";
         targetElementId: string;
-        value?: any;
+        value?: unknown;
     }, {
         type: "show" | "hide" | "setValue" | "trigger";
         targetElementId: string;
-        value?: any;
+        value?: unknown;
     }>, "many">;
     onFalse: z.ZodOptional<z.ZodArray<z.ZodObject<{
         type: z.ZodEnum<["show", "hide", "setValue", "trigger"]>;
         targetElementId: z.ZodString;
-        value: z.ZodOptional<z.ZodAny>;
+        value: z.ZodOptional<z.ZodUnknown>;
     }, "strip", z.ZodTypeAny, {
         type: "show" | "hide" | "setValue" | "trigger";
         targetElementId: string;
-        value?: any;
+        value?: unknown;
     }, {
         type: "show" | "hide" | "setValue" | "trigger";
         targetElementId: string;
-        value?: any;
+        value?: unknown;
     }>, "many">>;
     conditionalRules: z.ZodOptional<z.ZodArray<z.ZodObject<{
         id: z.ZodString;
@@ -1949,15 +1949,15 @@ export declare const ConditionGateConfigSchema: z.ZodObject<{
             type: z.ZodEnum<["show", "hide", "setValue", "setStyle", "trigger"]>;
             targetElementId: z.ZodOptional<z.ZodString>;
             targetProperty: z.ZodOptional<z.ZodString>;
-            value: z.ZodOptional<z.ZodAny>;
+            value: z.ZodOptional<z.ZodUnknown>;
         }, "strip", z.ZodTypeAny, {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }, {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }>, "many">;
@@ -1971,7 +1971,7 @@ export declare const ConditionGateConfigSchema: z.ZodObject<{
         };
         actions: {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }[];
@@ -1985,7 +1985,7 @@ export declare const ConditionGateConfigSchema: z.ZodObject<{
         };
         actions: {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }[];
@@ -2001,7 +2001,7 @@ export declare const ConditionGateConfigSchema: z.ZodObject<{
     onTrue: {
         type: "show" | "hide" | "setValue" | "trigger";
         targetElementId: string;
-        value?: any;
+        value?: unknown;
     }[];
     conditionalRules?: {
         id: string;
@@ -2013,7 +2013,7 @@ export declare const ConditionGateConfigSchema: z.ZodObject<{
         };
         actions: {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }[];
@@ -2021,7 +2021,7 @@ export declare const ConditionGateConfigSchema: z.ZodObject<{
     onFalse?: {
         type: "show" | "hide" | "setValue" | "trigger";
         targetElementId: string;
-        value?: any;
+        value?: unknown;
     }[] | undefined;
 }, {
     conditions: {
@@ -2033,7 +2033,7 @@ export declare const ConditionGateConfigSchema: z.ZodObject<{
     onTrue: {
         type: "show" | "hide" | "setValue" | "trigger";
         targetElementId: string;
-        value?: any;
+        value?: unknown;
     }[];
     conditionalRules?: {
         id: string;
@@ -2045,7 +2045,7 @@ export declare const ConditionGateConfigSchema: z.ZodObject<{
         };
         actions: {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }[];
@@ -2054,7 +2054,7 @@ export declare const ConditionGateConfigSchema: z.ZodObject<{
     onFalse?: {
         type: "show" | "hide" | "setValue" | "trigger";
         targetElementId: string;
-        value?: any;
+        value?: unknown;
     }[] | undefined;
 }>;
 export declare const PingTriggerConfigSchema: z.ZodObject<{
@@ -2066,16 +2066,16 @@ export declare const PingTriggerConfigSchema: z.ZodObject<{
         elementId: z.ZodOptional<z.ZodString>;
         url: z.ZodOptional<z.ZodString>;
         event: z.ZodOptional<z.ZodString>;
-        data: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodAny>>;
+        data: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnknown>>;
     }, "strip", z.ZodTypeAny, {
         type: "element" | "external" | "analytics";
-        data?: Record<string, any> | undefined;
+        data?: Record<string, unknown> | undefined;
         url?: string | undefined;
         elementId?: string | undefined;
         event?: string | undefined;
     }, {
         type: "element" | "external" | "analytics";
-        data?: Record<string, any> | undefined;
+        data?: Record<string, unknown> | undefined;
         url?: string | undefined;
         elementId?: string | undefined;
         event?: string | undefined;
@@ -2102,7 +2102,7 @@ export declare const PingTriggerConfigSchema: z.ZodObject<{
         padding?: number | undefined;
         margin?: number | undefined;
         fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-        fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+        fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
         textAlign?: "left" | "center" | "right" | undefined;
         width?: number | "auto" | "full" | undefined;
         height?: number | "auto" | "full" | undefined;
@@ -2115,7 +2115,7 @@ export declare const PingTriggerConfigSchema: z.ZodObject<{
         padding?: number | undefined;
         margin?: number | undefined;
         fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-        fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+        fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
         textAlign?: "left" | "center" | "right" | undefined;
         width?: number | "auto" | "full" | undefined;
         height?: number | "auto" | "full" | undefined;
@@ -2142,15 +2142,15 @@ export declare const PingTriggerConfigSchema: z.ZodObject<{
             type: z.ZodEnum<["show", "hide", "setValue", "setStyle", "trigger"]>;
             targetElementId: z.ZodOptional<z.ZodString>;
             targetProperty: z.ZodOptional<z.ZodString>;
-            value: z.ZodOptional<z.ZodAny>;
+            value: z.ZodOptional<z.ZodUnknown>;
         }, "strip", z.ZodTypeAny, {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }, {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }>, "many">;
@@ -2164,7 +2164,7 @@ export declare const PingTriggerConfigSchema: z.ZodObject<{
         };
         actions: {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }[];
@@ -2178,7 +2178,7 @@ export declare const PingTriggerConfigSchema: z.ZodObject<{
         };
         actions: {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }[];
@@ -2186,7 +2186,7 @@ export declare const PingTriggerConfigSchema: z.ZodObject<{
 }, "strip", z.ZodTypeAny, {
     target: {
         type: "element" | "external" | "analytics";
-        data?: Record<string, any> | undefined;
+        data?: Record<string, unknown> | undefined;
         url?: string | undefined;
         elementId?: string | undefined;
         event?: string | undefined;
@@ -2203,7 +2203,7 @@ export declare const PingTriggerConfigSchema: z.ZodObject<{
         padding?: number | undefined;
         margin?: number | undefined;
         fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-        fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+        fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
         textAlign?: "left" | "center" | "right" | undefined;
         width?: number | "auto" | "full" | undefined;
         height?: number | "auto" | "full" | undefined;
@@ -2218,7 +2218,7 @@ export declare const PingTriggerConfigSchema: z.ZodObject<{
         };
         actions: {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }[];
@@ -2226,7 +2226,7 @@ export declare const PingTriggerConfigSchema: z.ZodObject<{
 }, {
     target: {
         type: "element" | "external" | "analytics";
-        data?: Record<string, any> | undefined;
+        data?: Record<string, unknown> | undefined;
         url?: string | undefined;
         elementId?: string | undefined;
         event?: string | undefined;
@@ -2242,7 +2242,7 @@ export declare const PingTriggerConfigSchema: z.ZodObject<{
         padding?: number | undefined;
         margin?: number | undefined;
         fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-        fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+        fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
         textAlign?: "left" | "center" | "right" | undefined;
         width?: number | "auto" | "full" | undefined;
         height?: number | "auto" | "full" | undefined;
@@ -2257,7 +2257,7 @@ export declare const PingTriggerConfigSchema: z.ZodObject<{
         };
         actions: {
             type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-            value?: any;
+            value?: unknown;
             targetElementId?: string | undefined;
             targetProperty?: string | undefined;
         }[];
@@ -2290,7 +2290,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -2303,7 +2303,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -2330,15 +2330,15 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 type: z.ZodEnum<["show", "hide", "setValue", "setStyle", "trigger"]>;
                 targetElementId: z.ZodOptional<z.ZodString>;
                 targetProperty: z.ZodOptional<z.ZodString>;
-                value: z.ZodOptional<z.ZodAny>;
+                value: z.ZodOptional<z.ZodUnknown>;
             }, "strip", z.ZodTypeAny, {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }, {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }>, "many">;
@@ -2352,7 +2352,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -2366,7 +2366,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -2382,7 +2382,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -2397,7 +2397,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -2413,7 +2413,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -2428,7 +2428,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -2447,7 +2447,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -2462,7 +2462,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -2481,7 +2481,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -2496,7 +2496,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -2530,7 +2530,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -2543,7 +2543,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -2570,15 +2570,15 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 type: z.ZodEnum<["show", "hide", "setValue", "setStyle", "trigger"]>;
                 targetElementId: z.ZodOptional<z.ZodString>;
                 targetProperty: z.ZodOptional<z.ZodString>;
-                value: z.ZodOptional<z.ZodAny>;
+                value: z.ZodOptional<z.ZodUnknown>;
             }, "strip", z.ZodTypeAny, {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }, {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }>, "many">;
@@ -2592,7 +2592,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -2606,7 +2606,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -2623,7 +2623,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -2638,7 +2638,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -2656,7 +2656,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -2671,7 +2671,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -2692,7 +2692,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -2707,7 +2707,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -2728,7 +2728,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -2743,7 +2743,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -2779,15 +2779,15 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 type: z.ZodEnum<["show", "hide", "setValue", "setStyle", "trigger"]>;
                 targetElementId: z.ZodOptional<z.ZodString>;
                 targetProperty: z.ZodOptional<z.ZodString>;
-                value: z.ZodOptional<z.ZodAny>;
+                value: z.ZodOptional<z.ZodUnknown>;
             }, "strip", z.ZodTypeAny, {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }, {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }>, "many">;
@@ -2801,7 +2801,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -2815,7 +2815,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -2835,7 +2835,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -2853,7 +2853,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -2878,7 +2878,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -2899,7 +2899,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -2936,7 +2936,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -2949,7 +2949,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -2976,15 +2976,15 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 type: z.ZodEnum<["show", "hide", "setValue", "setStyle", "trigger"]>;
                 targetElementId: z.ZodOptional<z.ZodString>;
                 targetProperty: z.ZodOptional<z.ZodString>;
-                value: z.ZodOptional<z.ZodAny>;
+                value: z.ZodOptional<z.ZodUnknown>;
             }, "strip", z.ZodTypeAny, {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }, {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }>, "many">;
@@ -2998,7 +2998,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -3012,7 +3012,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -3031,7 +3031,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -3046,7 +3046,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -3061,7 +3061,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -3076,7 +3076,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -3102,7 +3102,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -3117,7 +3117,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -3135,7 +3135,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -3150,7 +3150,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -3170,15 +3170,15 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         onClick: z.ZodOptional<z.ZodObject<{
             type: z.ZodEnum<["navigate", "submit", "reset", "custom"]>;
             target: z.ZodOptional<z.ZodString>;
-            data: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodAny>>;
+            data: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnknown>>;
         }, "strip", z.ZodTypeAny, {
             type: "custom" | "navigate" | "submit" | "reset";
             target?: string | undefined;
-            data?: Record<string, any> | undefined;
+            data?: Record<string, unknown> | undefined;
         }, {
             type: "custom" | "navigate" | "submit" | "reset";
             target?: string | undefined;
-            data?: Record<string, any> | undefined;
+            data?: Record<string, unknown> | undefined;
         }>>;
         style: z.ZodOptional<z.ZodObject<{
             backgroundColor: z.ZodOptional<z.ZodString>;
@@ -3202,7 +3202,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -3215,7 +3215,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -3242,15 +3242,15 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 type: z.ZodEnum<["show", "hide", "setValue", "setStyle", "trigger"]>;
                 targetElementId: z.ZodOptional<z.ZodString>;
                 targetProperty: z.ZodOptional<z.ZodString>;
-                value: z.ZodOptional<z.ZodAny>;
+                value: z.ZodOptional<z.ZodUnknown>;
             }, "strip", z.ZodTypeAny, {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }, {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }>, "many">;
@@ -3264,7 +3264,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -3278,7 +3278,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -3297,7 +3297,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -3312,7 +3312,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -3320,7 +3320,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         onClick?: {
             type: "custom" | "navigate" | "submit" | "reset";
             target?: string | undefined;
-            data?: Record<string, any> | undefined;
+            data?: Record<string, unknown> | undefined;
         } | undefined;
     }, {
         text: string;
@@ -3333,7 +3333,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -3348,7 +3348,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -3359,7 +3359,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         onClick?: {
             type: "custom" | "navigate" | "submit" | "reset";
             target?: string | undefined;
-            data?: Record<string, any> | undefined;
+            data?: Record<string, unknown> | undefined;
         } | undefined;
     }>;
 }, "strip", z.ZodTypeAny, {
@@ -3378,7 +3378,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -3393,7 +3393,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -3401,7 +3401,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         onClick?: {
             type: "custom" | "navigate" | "submit" | "reset";
             target?: string | undefined;
-            data?: Record<string, any> | undefined;
+            data?: Record<string, unknown> | undefined;
         } | undefined;
     };
 }, {
@@ -3417,7 +3417,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -3432,7 +3432,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -3443,7 +3443,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         onClick?: {
             type: "custom" | "navigate" | "submit" | "reset";
             target?: string | undefined;
-            data?: Record<string, any> | undefined;
+            data?: Record<string, unknown> | undefined;
         } | undefined;
     };
 }>, z.ZodObject<{
@@ -3488,7 +3488,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -3501,7 +3501,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -3528,15 +3528,15 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 type: z.ZodEnum<["show", "hide", "setValue", "setStyle", "trigger"]>;
                 targetElementId: z.ZodOptional<z.ZodString>;
                 targetProperty: z.ZodOptional<z.ZodString>;
-                value: z.ZodOptional<z.ZodAny>;
+                value: z.ZodOptional<z.ZodUnknown>;
             }, "strip", z.ZodTypeAny, {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }, {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }>, "many">;
@@ -3550,7 +3550,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -3564,7 +3564,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -3587,7 +3587,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -3602,7 +3602,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -3624,7 +3624,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -3639,7 +3639,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -3668,7 +3668,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -3683,7 +3683,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -3708,7 +3708,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -3723,7 +3723,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -3764,7 +3764,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -3777,7 +3777,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -3804,15 +3804,15 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 type: z.ZodEnum<["show", "hide", "setValue", "setStyle", "trigger"]>;
                 targetElementId: z.ZodOptional<z.ZodString>;
                 targetProperty: z.ZodOptional<z.ZodString>;
-                value: z.ZodOptional<z.ZodAny>;
+                value: z.ZodOptional<z.ZodUnknown>;
             }, "strip", z.ZodTypeAny, {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }, {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }>, "many">;
@@ -3826,7 +3826,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -3840,7 +3840,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -3858,7 +3858,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -3873,7 +3873,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -3894,7 +3894,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -3909,7 +3909,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -3935,7 +3935,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -3950,7 +3950,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -3974,7 +3974,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -3989,7 +3989,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -4031,7 +4031,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -4044,7 +4044,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -4071,15 +4071,15 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 type: z.ZodEnum<["show", "hide", "setValue", "setStyle", "trigger"]>;
                 targetElementId: z.ZodOptional<z.ZodString>;
                 targetProperty: z.ZodOptional<z.ZodString>;
-                value: z.ZodOptional<z.ZodAny>;
+                value: z.ZodOptional<z.ZodUnknown>;
             }, "strip", z.ZodTypeAny, {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }, {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }>, "many">;
@@ -4093,7 +4093,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -4107,7 +4107,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -4128,7 +4128,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -4143,7 +4143,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -4159,7 +4159,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -4174,7 +4174,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -4203,7 +4203,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -4218,7 +4218,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -4237,7 +4237,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -4252,7 +4252,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -4301,7 +4301,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -4314,7 +4314,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -4341,15 +4341,15 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 type: z.ZodEnum<["show", "hide", "setValue", "setStyle", "trigger"]>;
                 targetElementId: z.ZodOptional<z.ZodString>;
                 targetProperty: z.ZodOptional<z.ZodString>;
-                value: z.ZodOptional<z.ZodAny>;
+                value: z.ZodOptional<z.ZodUnknown>;
             }, "strip", z.ZodTypeAny, {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }, {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }>, "many">;
@@ -4363,7 +4363,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -4377,7 +4377,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -4394,7 +4394,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -4409,7 +4409,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -4430,7 +4430,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -4445,7 +4445,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -4471,7 +4471,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -4486,7 +4486,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -4510,7 +4510,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -4525,7 +4525,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -4569,7 +4569,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -4582,7 +4582,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -4609,15 +4609,15 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 type: z.ZodEnum<["show", "hide", "setValue", "setStyle", "trigger"]>;
                 targetElementId: z.ZodOptional<z.ZodString>;
                 targetProperty: z.ZodOptional<z.ZodString>;
-                value: z.ZodOptional<z.ZodAny>;
+                value: z.ZodOptional<z.ZodUnknown>;
             }, "strip", z.ZodTypeAny, {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }, {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }>, "many">;
@@ -4631,7 +4631,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -4645,7 +4645,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -4666,7 +4666,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -4681,7 +4681,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -4700,7 +4700,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -4715,7 +4715,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -4743,7 +4743,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -4758,7 +4758,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -4780,7 +4780,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -4795,7 +4795,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -4828,28 +4828,28 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         onTrue: z.ZodArray<z.ZodObject<{
             type: z.ZodEnum<["show", "hide", "setValue", "trigger"]>;
             targetElementId: z.ZodString;
-            value: z.ZodOptional<z.ZodAny>;
+            value: z.ZodOptional<z.ZodUnknown>;
         }, "strip", z.ZodTypeAny, {
             type: "show" | "hide" | "setValue" | "trigger";
             targetElementId: string;
-            value?: any;
+            value?: unknown;
         }, {
             type: "show" | "hide" | "setValue" | "trigger";
             targetElementId: string;
-            value?: any;
+            value?: unknown;
         }>, "many">;
         onFalse: z.ZodOptional<z.ZodArray<z.ZodObject<{
             type: z.ZodEnum<["show", "hide", "setValue", "trigger"]>;
             targetElementId: z.ZodString;
-            value: z.ZodOptional<z.ZodAny>;
+            value: z.ZodOptional<z.ZodUnknown>;
         }, "strip", z.ZodTypeAny, {
             type: "show" | "hide" | "setValue" | "trigger";
             targetElementId: string;
-            value?: any;
+            value?: unknown;
         }, {
             type: "show" | "hide" | "setValue" | "trigger";
             targetElementId: string;
-            value?: any;
+            value?: unknown;
         }>, "many">>;
         conditionalRules: z.ZodOptional<z.ZodArray<z.ZodObject<{
             id: z.ZodString;
@@ -4873,15 +4873,15 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 type: z.ZodEnum<["show", "hide", "setValue", "setStyle", "trigger"]>;
                 targetElementId: z.ZodOptional<z.ZodString>;
                 targetProperty: z.ZodOptional<z.ZodString>;
-                value: z.ZodOptional<z.ZodAny>;
+                value: z.ZodOptional<z.ZodUnknown>;
             }, "strip", z.ZodTypeAny, {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }, {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }>, "many">;
@@ -4895,7 +4895,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -4909,7 +4909,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -4925,7 +4925,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         onTrue: {
             type: "show" | "hide" | "setValue" | "trigger";
             targetElementId: string;
-            value?: any;
+            value?: unknown;
         }[];
         conditionalRules?: {
             id: string;
@@ -4937,7 +4937,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -4945,7 +4945,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         onFalse?: {
             type: "show" | "hide" | "setValue" | "trigger";
             targetElementId: string;
-            value?: any;
+            value?: unknown;
         }[] | undefined;
     }, {
         conditions: {
@@ -4957,7 +4957,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         onTrue: {
             type: "show" | "hide" | "setValue" | "trigger";
             targetElementId: string;
-            value?: any;
+            value?: unknown;
         }[];
         conditionalRules?: {
             id: string;
@@ -4969,7 +4969,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -4978,7 +4978,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         onFalse?: {
             type: "show" | "hide" | "setValue" | "trigger";
             targetElementId: string;
-            value?: any;
+            value?: unknown;
         }[] | undefined;
     }>;
 }, "strip", z.ZodTypeAny, {
@@ -4994,7 +4994,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         onTrue: {
             type: "show" | "hide" | "setValue" | "trigger";
             targetElementId: string;
-            value?: any;
+            value?: unknown;
         }[];
         conditionalRules?: {
             id: string;
@@ -5006,7 +5006,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -5014,7 +5014,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         onFalse?: {
             type: "show" | "hide" | "setValue" | "trigger";
             targetElementId: string;
-            value?: any;
+            value?: unknown;
         }[] | undefined;
     };
 }, {
@@ -5029,7 +5029,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         onTrue: {
             type: "show" | "hide" | "setValue" | "trigger";
             targetElementId: string;
-            value?: any;
+            value?: unknown;
         }[];
         conditionalRules?: {
             id: string;
@@ -5041,7 +5041,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -5050,7 +5050,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         onFalse?: {
             type: "show" | "hide" | "setValue" | "trigger";
             targetElementId: string;
-            value?: any;
+            value?: unknown;
         }[] | undefined;
     };
 }>, z.ZodObject<{
@@ -5064,16 +5064,16 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             elementId: z.ZodOptional<z.ZodString>;
             url: z.ZodOptional<z.ZodString>;
             event: z.ZodOptional<z.ZodString>;
-            data: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodAny>>;
+            data: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnknown>>;
         }, "strip", z.ZodTypeAny, {
             type: "element" | "external" | "analytics";
-            data?: Record<string, any> | undefined;
+            data?: Record<string, unknown> | undefined;
             url?: string | undefined;
             elementId?: string | undefined;
             event?: string | undefined;
         }, {
             type: "element" | "external" | "analytics";
-            data?: Record<string, any> | undefined;
+            data?: Record<string, unknown> | undefined;
             url?: string | undefined;
             elementId?: string | undefined;
             event?: string | undefined;
@@ -5100,7 +5100,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -5113,7 +5113,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -5140,15 +5140,15 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 type: z.ZodEnum<["show", "hide", "setValue", "setStyle", "trigger"]>;
                 targetElementId: z.ZodOptional<z.ZodString>;
                 targetProperty: z.ZodOptional<z.ZodString>;
-                value: z.ZodOptional<z.ZodAny>;
+                value: z.ZodOptional<z.ZodUnknown>;
             }, "strip", z.ZodTypeAny, {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }, {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }>, "many">;
@@ -5162,7 +5162,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -5176,7 +5176,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -5184,7 +5184,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
     }, "strip", z.ZodTypeAny, {
         target: {
             type: "element" | "external" | "analytics";
-            data?: Record<string, any> | undefined;
+            data?: Record<string, unknown> | undefined;
             url?: string | undefined;
             elementId?: string | undefined;
             event?: string | undefined;
@@ -5201,7 +5201,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -5216,7 +5216,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -5224,7 +5224,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
     }, {
         target: {
             type: "element" | "external" | "analytics";
-            data?: Record<string, any> | undefined;
+            data?: Record<string, unknown> | undefined;
             url?: string | undefined;
             elementId?: string | undefined;
             event?: string | undefined;
@@ -5240,7 +5240,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -5255,7 +5255,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -5267,7 +5267,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
     config: {
         target: {
             type: "element" | "external" | "analytics";
-            data?: Record<string, any> | undefined;
+            data?: Record<string, unknown> | undefined;
             url?: string | undefined;
             elementId?: string | undefined;
             event?: string | undefined;
@@ -5284,7 +5284,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -5299,7 +5299,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -5310,7 +5310,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
     config: {
         target: {
             type: "element" | "external" | "analytics";
-            data?: Record<string, any> | undefined;
+            data?: Record<string, unknown> | undefined;
             url?: string | undefined;
             elementId?: string | undefined;
             event?: string | undefined;
@@ -5326,7 +5326,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             padding?: number | undefined;
             margin?: number | undefined;
             fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | undefined;
-            fontWeight?: "normal" | "medium" | "semibold" | "bold" | undefined;
+            fontWeight?: "bold" | "normal" | "medium" | "semibold" | undefined;
             textAlign?: "left" | "center" | "right" | undefined;
             width?: number | "auto" | "full" | undefined;
             height?: number | "auto" | "full" | undefined;
@@ -5341,7 +5341,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             };
             actions: {
                 type: "show" | "hide" | "setValue" | "setStyle" | "trigger";
-                value?: any;
+                value?: unknown;
                 targetElementId?: string | undefined;
                 targetProperty?: string | undefined;
             }[];
@@ -5354,7 +5354,7 @@ export declare const ElementPresetSchema: z.ZodObject<{
     name: z.ZodString;
     description: z.ZodString;
     elementType: z.ZodEnum<["textBlock", "imageBlock", "divider", "stack", "button", "choiceSelect", "textInput", "ratingStars", "countdownTimer", "progressBar", "conditionGate", "pingTrigger"]>;
-    config: z.ZodAny;
+    config: z.ZodUnknown;
     tags: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
     popularity: z.ZodDefault<z.ZodNumber>;
 }, "strip", z.ZodTypeAny, {
@@ -5363,14 +5363,14 @@ export declare const ElementPresetSchema: z.ZodObject<{
     description: string;
     elementType: "textBlock" | "imageBlock" | "divider" | "stack" | "button" | "choiceSelect" | "textInput" | "ratingStars" | "countdownTimer" | "progressBar" | "conditionGate" | "pingTrigger";
     popularity: number;
-    config?: any;
+    config?: unknown;
     tags?: string[] | undefined;
 }, {
     id: string;
     name: string;
     description: string;
     elementType: "textBlock" | "imageBlock" | "divider" | "stack" | "button" | "choiceSelect" | "textInput" | "ratingStars" | "countdownTimer" | "progressBar" | "conditionGate" | "pingTrigger";
-    config?: any;
+    config?: unknown;
     tags?: string[] | undefined;
     popularity?: number | undefined;
 }>;
@@ -5383,13 +5383,13 @@ export declare const ElementSchema: z.ZodObject<{
     icon: z.ZodString;
     version: z.ZodNumber;
     configSchema: z.ZodString;
-    defaultConfig: z.ZodAny;
+    defaultConfig: z.ZodUnknown;
     presets: z.ZodOptional<z.ZodArray<z.ZodObject<{
         id: z.ZodString;
         name: z.ZodString;
         description: z.ZodString;
         elementType: z.ZodEnum<["textBlock", "imageBlock", "divider", "stack", "button", "choiceSelect", "textInput", "ratingStars", "countdownTimer", "progressBar", "conditionGate", "pingTrigger"]>;
-        config: z.ZodAny;
+        config: z.ZodUnknown;
         tags: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
         popularity: z.ZodDefault<z.ZodNumber>;
     }, "strip", z.ZodTypeAny, {
@@ -5398,14 +5398,14 @@ export declare const ElementSchema: z.ZodObject<{
         description: string;
         elementType: "textBlock" | "imageBlock" | "divider" | "stack" | "button" | "choiceSelect" | "textInput" | "ratingStars" | "countdownTimer" | "progressBar" | "conditionGate" | "pingTrigger";
         popularity: number;
-        config?: any;
+        config?: unknown;
         tags?: string[] | undefined;
     }, {
         id: string;
         name: string;
         description: string;
         elementType: "textBlock" | "imageBlock" | "divider" | "stack" | "button" | "choiceSelect" | "textInput" | "ratingStars" | "countdownTimer" | "progressBar" | "conditionGate" | "pingTrigger";
-        config?: any;
+        config?: unknown;
         tags?: string[] | undefined;
         popularity?: number | undefined;
     }>, "many">>;
@@ -5429,14 +5429,14 @@ export declare const ElementSchema: z.ZodObject<{
     usageCount: number;
     createdAt: Date;
     updatedAt: Date;
-    defaultConfig?: any;
+    defaultConfig?: unknown;
     presets?: {
         id: string;
         name: string;
         description: string;
         elementType: "textBlock" | "imageBlock" | "divider" | "stack" | "button" | "choiceSelect" | "textInput" | "ratingStars" | "countdownTimer" | "progressBar" | "conditionGate" | "pingTrigger";
         popularity: number;
-        config?: any;
+        config?: unknown;
         tags?: string[] | undefined;
     }[] | undefined;
     deprecationMessage?: string | undefined;
@@ -5451,13 +5451,13 @@ export declare const ElementSchema: z.ZodObject<{
     configSchema: string;
     createdAt: Date;
     updatedAt: Date;
-    defaultConfig?: any;
+    defaultConfig?: unknown;
     presets?: {
         id: string;
         name: string;
         description: string;
         elementType: "textBlock" | "imageBlock" | "divider" | "stack" | "button" | "choiceSelect" | "textInput" | "ratingStars" | "countdownTimer" | "progressBar" | "conditionGate" | "pingTrigger";
-        config?: any;
+        config?: unknown;
         tags?: string[] | undefined;
         popularity?: number | undefined;
     }[] | undefined;
@@ -5472,7 +5472,7 @@ export type ElementPreset = z.infer<typeof ElementPresetSchema>;
 export declare const ElementInstanceSchema: z.ZodObject<{
     id: z.ZodString;
     elementId: z.ZodString;
-    config: z.ZodAny;
+    config: z.ZodUnknown;
     position: z.ZodObject<{
         x: z.ZodNumber;
         y: z.ZodNumber;
@@ -5505,7 +5505,7 @@ export declare const ElementInstanceSchema: z.ZodObject<{
     order: number;
     isVisible: boolean;
     isLocked: boolean;
-    config?: any;
+    config?: unknown;
     parentId?: string | undefined;
 }, {
     id: string;
@@ -5517,7 +5517,7 @@ export declare const ElementInstanceSchema: z.ZodObject<{
         height?: number | undefined;
     };
     order: number;
-    config?: any;
+    config?: unknown;
     parentId?: string | undefined;
     isVisible?: boolean | undefined;
     isLocked?: boolean | undefined;
@@ -5529,7 +5529,7 @@ export declare const parseElementId: (elementId: ElementId) => {
 };
 export declare const createElementId: (name: string, version: number) => ElementId;
 export declare const getLatestElementVersion: (elements: Element[], baseName: string) => Element | null;
-export declare const validateElementConfig: (element: Element, config: any) => boolean;
+export declare const validateElementConfig: (element: Element, config: unknown) => boolean;
 export declare const ELEMENT_LIMITS: {
     readonly MAX_ELEMENTS_PER_TOOL: 50;
     readonly MAX_NESTING_DEPTH: 3;

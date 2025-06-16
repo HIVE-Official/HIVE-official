@@ -1,7 +1,7 @@
-import { MotionDiv } from '@hive/ui';
-import { User } from 'lucide-react';
-import { Input } from '@hive/ui';
-import type { OnboardingData } from '../onboarding-wizard';
+import { MotionDiv } from "@hive/ui";
+import { User } from "lucide-react";
+import { Input } from "@hive/ui";
+import type { OnboardingData } from "../onboarding-wizard";
 
 interface NameStepProps {
   data: OnboardingData;
@@ -10,9 +10,20 @@ interface NameStepProps {
 }
 
 // Simple Label component
-function Label({ htmlFor, className, children }: { htmlFor?: string; className?: string; children: React.ReactNode }) {
+function Label({
+  htmlFor,
+  className,
+  children,
+}: {
+  htmlFor?: string;
+  className?: string;
+  children: React.ReactNode;
+}) {
   return (
-    <label htmlFor={htmlFor} className={`text-sm font-medium leading-none ${className}`}>
+    <label
+      htmlFor={htmlFor}
+      className={`text-sm font-medium leading-none ${className}`}
+    >
       {children}
     </label>
   );
@@ -44,7 +55,7 @@ export function NameStep({ data, updateData, onNext }: NameStepProps) {
           What&apos;s your name?
         </h2>
         <p className="text-zinc-400">
-          This is how you'll appear to other students on HIVE.
+          This is how you&apos;ll appear to other students on HIVE.
         </p>
       </div>
 
@@ -65,14 +76,13 @@ export function NameStep({ data, updateData, onNext }: NameStepProps) {
         </div>
 
         <div className="bg-zinc-800/50 rounded-lg p-4">
-          <h4 className="text-sm font-medium text-white mb-2">
-            Privacy Note
-          </h4>
+          <h4 className="text-sm font-medium text-white mb-2">Privacy Note</h4>
           <p className="text-xs text-zinc-400">
-            Your name will be visible to other students in your spaces. You can always update this later in your profile settings.
+            Your name will be visible to other students in your spaces. You can
+            always update this later in your profile settings.
           </p>
         </div>
       </form>
     </MotionDiv>
   );
-} 
+}

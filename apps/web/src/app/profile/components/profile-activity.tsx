@@ -39,7 +39,10 @@ const mockActivities = [
   },
 ];
 
-export const ProfileActivity = ({ user: _user }: ProfileActivityProps) => {
+export const ProfileActivity = ({ user }: ProfileActivityProps) => {
+  // TODO: Use user data for personalized activity
+  console.log("Profile activity for user:", user.uid);
+
   const formatTimeAgo = (timestamp: number) => {
     const now = Date.now();
     const diff = now - timestamp;

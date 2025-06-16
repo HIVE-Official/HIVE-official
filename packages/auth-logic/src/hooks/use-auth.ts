@@ -5,7 +5,7 @@ import type { User } from "firebase/auth";
 import { auth } from "../firebase-config";
 import { onAuthStateChanged } from "firebase/auth";
 
-interface AuthUser {
+export interface AuthUser {
   uid: string;
   email: string | null;
   fullName: string | null;
@@ -13,7 +13,7 @@ interface AuthUser {
   getIdToken: () => Promise<string>;
 }
 
-interface UseAuthReturn {
+export interface UseAuthReturn {
   user: AuthUser | null;
   isLoading: boolean;
   isAuthenticated: boolean;

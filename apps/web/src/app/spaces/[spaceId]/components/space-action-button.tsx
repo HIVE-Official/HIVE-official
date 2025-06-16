@@ -13,13 +13,14 @@ interface MembershipStatus {
 }
 
 function fetchMembershipStatus(
-  _spaceId: string,
-  _userId: string
+  spaceId: string,
+  userId: string
 ): Promise<MembershipStatus> {
   try {
     // For now, we'll assume users are auto-joined to spaces
     // In a real implementation, we'd check the user's membership in the space
     // This is a placeholder that always returns member status
+    console.log("Checking membership for:", { spaceId, userId });
     return Promise.resolve({
       isMember: true, // Placeholder - in vBETA users are auto-joined
       role: "member" as MemberRole,
@@ -29,18 +30,8 @@ function fetchMembershipStatus(
   }
 }
 
-async function _joinSpace(spaceId: string): Promise<void> {
-  const response = await fetch(`/api/spaces/join`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ spaceId }),
-  });
-
-  if (!response.ok) {
-    const error = (await response.json()) as { error?: string };
-    throw new Error(error.error || "Failed to join space");
-  }
-}
+// Note: joinSpace function removed since users are auto-joined in vBETA
+// TODO: Re-implement when manual joining is needed
 
 async function leaveSpace(spaceId: string): Promise<void> {
   const response = await fetch(`/api/spaces/leave`, {

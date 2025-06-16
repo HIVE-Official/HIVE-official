@@ -1,4 +1,4 @@
-import type { CreationEventType } from '@hive/core';
+import type { CreationEventType } from "@hive/core";
 interface UseCreationAnalyticsOptions {
     toolId?: string;
     spaceId?: string;
@@ -10,7 +10,7 @@ interface CreationAnalyticsContext {
     toolId?: string;
     toolName?: string;
     toolVersion?: string;
-    toolStatus?: 'draft' | 'preview' | 'published';
+    toolStatus?: "draft" | "preview" | "published";
     spaceId?: string;
     isSpaceTool?: boolean;
     elementId?: string;

@@ -252,7 +252,7 @@ export const getNextVersion = (currentVersion: string, changeType: 'major' | 'mi
     case 'patch':
       return `${major}.${minor}.${patch + 1}`
     default:
-      throw new Error(`Invalid change type: ${changeType}`)
+      throw new Error(`Invalid change type: ${changeType as string}`)
   }
 }
 

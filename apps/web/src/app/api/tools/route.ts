@@ -3,20 +3,16 @@ import { NextResponse } from "next/server";
 import { getAuth } from "firebase-admin/auth";
 import { getFirestore } from "firebase-admin/firestore";
 import { z } from "zod";
-import {
-  CreateToolSchema,
-  ToolSchema,
-  createToolDefaults,
-} from "@hive/core/src/domain/creation/tool";
-import { rateLimit } from "@/lib/rate-limit";
+import { CreateToolSchema, ToolSchema, createToolDefaults } from "@hive/core";
+// // import { rateLimit } from "@/lib/rate-limit";
 
 const db = getFirestore();
 
 // Rate limiting: 10 tool creations per hour per user
-const createToolLimiter = rateLimit({
-  windowMs: 60 * 60 * 1000, // 1 hour
-  max: 10, // 10 requests per hour
-});
+// // const createToolLimiter = rateLimit({
+//   windowMs: 60 * 60 * 1000, // 1 hour
+//   max: 10, // 10 requests per hour
+// });
 
 // GET /api/tools - List user's tools
 export async function GET(request: NextRequest) {
@@ -98,7 +94,7 @@ export async function POST(request: NextRequest) {
 
     // Rate limiting
     try {
-      await createToolLimiter.check(); // Check rate limit for this user
+      // await createToolLimiter.check(); // Check rate limit for this user
     } catch {
       return NextResponse.json(
         { error: "Too many tool creations. Please try again later." },

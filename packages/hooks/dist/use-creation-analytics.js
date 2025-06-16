@@ -1,10 +1,11 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { useAuth } from '@hive/auth-logic';
-import { createAnalyticsEvent, shouldTrackEvent, batchAnalyticsEvents } from '@hive/core';
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useAuth } from "./use-auth";
+import { createAnalyticsEvent, shouldTrackEvent, batchAnalyticsEvents, } from "@hive/core";
 export const useCreationAnalytics = (options = {}) => {
-    const { user } = useAuth();
+    const authResult = useAuth();
+    const user = authResult.user;
     const { toolId, spaceId, batchSize = 100, flushInterval = 30000, // 30 seconds
-    enableDebugLogging = false } = options;
+    enableDebugLogging = false, } = options;
     // Session management
     const [sessionId] = useState(() => crypto.randomUUID());
     const [sessionStartTime] = useState(() => Date.now());
@@ -34,7 +35,7 @@ export const useCreationAnalytics = (options = {}) => {
                 }
             }
             catch (error) {
-                console.error('Failed to load analytics preferences:', error);
+                console.error("Failed to load analytics preferences:", error);
             }
         };
         loadPreferences();
@@ -45,7 +46,9 @@ export const useCreationAnalytics = (options = {}) => {
             return;
         const now = Date.now();
         const timeSinceLastFlush = now - lastFlushTime.current;
-        if (!force && timeSinceLastFlush < flushInterval && eventQueue.current.length < batchSize) {
+        if (!force &&
+            timeSinceLastFlush < flushInterval &&
+            eventQueue.current.length < batchSize) {
             return;
         }
         const eventsToFlush = [...eventQueue.current];
@@ -55,11 +58,12 @@ export const useCreationAnalytics = (options = {}) => {
             const batches = batchAnalyticsEvents(eventsToFlush, batchSize);
             for (const batch of batches) {
                 // Send to analytics service
-                await fetch('/api/analytics/creation', {
-                    method: 'POST',
+                const idToken = user ? await user.getIdToken() : "";
+                await fetch("/api/analytics/creation", {
+                    method: "POST",
                     headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${await user?.getIdToken()}`,
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${idToken}`,
                     },
                     body: JSON.stringify({ events: batch }),
                 });
@@ -69,7 +73,7 @@ export const useCreationAnalytics = (options = {}) => {
             }
         }
         catch (error) {
-            console.error('Failed to flush analytics events:', error);
+            console.error("Failed to flush analytics events:", error);
             // Re-queue events on failure
             eventQueue.current.unshift(...eventsToFlush);
         }
@@ -124,7 +128,7 @@ export const useCreationAnalytics = (options = {}) => {
         }
         eventQueue.current.push(event);
         if (enableDebugLogging) {
-            console.log('Tracked creation event:', eventType, metadata);
+            console.log("Tracked creation event:", eventType, metadata);
         }
         // Flush if queue is full
         if (eventQueue.current.length >= batchSize) {
@@ -139,16 +143,16 @@ export const useCreationAnalytics = (options = {}) => {
         userPreferences,
         batchSize,
         enableDebugLogging,
-        flushEvents
+        flushEvents,
     ]);
     // Update context
     const updateContext = useCallback((context) => {
-        setCurrentContext(prev => ({ ...prev, ...context }));
+        setCurrentContext((prev) => ({ ...prev, ...context }));
     }, []);
     // Builder session tracking
     const startBuilderSession = useCallback((toolId, toolName) => {
         updateContext({ toolId, toolName });
-        trackEvent('builder_session_start', {
+        trackEvent("builder_session_start", {
             toolId,
             toolName,
             userAgent: navigator.userAgent,
@@ -159,9 +163,9 @@ export const useCreationAnalytics = (options = {}) => {
         });
         setIsSessionActive(true);
     }, [trackEvent, updateContext]);
-    const endBuilderSession = useCallback((exitReason = 'abandon') => {
+    const endBuilderSession = useCallback((exitReason = "abandon") => {
         const sessionDuration = (Date.now() - sessionStartTime) / 1000; // seconds
-        trackEvent('builder_session_end', {
+        trackEvent("builder_session_end", {
             sessionDuration,
             exitReason,
             elementsAdded: 0, // Would be tracked separately
@@ -176,9 +180,9 @@ export const useCreationAnalytics = (options = {}) => {
         updateContext({
             toolId: toolData.toolId,
             toolName: toolData.toolName,
-            toolStatus: 'draft'
+            toolStatus: "draft",
         });
-        trackEvent('tool_created', {
+        trackEvent("tool_created", {
             hasDescription: toolData.hasDescription,
             initialElementsCount: toolData.initialElementsCount,
             creationSource: toolData.creationSource,
@@ -186,11 +190,11 @@ export const useCreationAnalytics = (options = {}) => {
         });
     }, [trackEvent, updateContext]);
     const trackToolUpdated = useCallback((updateData) => {
-        trackEvent('tool_updated', updateData);
+        trackEvent("tool_updated", updateData);
     }, [trackEvent]);
     const trackToolPublished = useCallback((toolData) => {
-        updateContext({ toolStatus: 'published' });
-        trackEvent('tool_published', {
+        updateContext({ toolStatus: "published" });
+        trackEvent("tool_published", {
             elementsCount: toolData.elementsCount,
             finalVersion: toolData.finalVersion,
             buildDuration: (Date.now() - sessionStartTime) / 1000,
@@ -198,43 +202,50 @@ export const useCreationAnalytics = (options = {}) => {
     }, [trackEvent, updateContext, sessionStartTime]);
     // Element interaction events
     const trackElementAdded = useCallback((elementData) => {
-        trackEvent('element_added', elementData, {
+        trackEvent("element_added", elementData, {
             elementId: elementData.elementId,
             elementType: elementData.elementType,
         });
     }, [trackEvent]);
     const trackElementConfigured = useCallback((configData) => {
-        trackEvent('element_configured', configData, {
+        trackEvent("element_configured", configData, {
             elementId: configData.elementId,
             elementType: configData.elementType,
         });
     }, [trackEvent]);
     const trackElementRemoved = useCallback((elementData) => {
-        trackEvent('element_removed', elementData, {
+        trackEvent("element_removed", elementData, {
             elementId: elementData.elementId,
             elementType: elementData.elementType,
         });
     }, [trackEvent]);
     // Builder interaction events
     const trackCanvasModeChanged = useCallback((mode) => {
-        trackEvent('canvas_mode_changed', { mode, previousMode: currentContext.toolStatus });
+        trackEvent("canvas_mode_changed", {
+            mode,
+            previousMode: currentContext.toolStatus,
+        });
     }, [trackEvent, currentContext]);
     const trackDeviceModeChanged = useCallback((deviceMode) => {
-        trackEvent('device_mode_changed', { deviceMode });
+        trackEvent("device_mode_changed", { deviceMode });
     }, [trackEvent]);
     const trackElementLibrarySearched = useCallback((searchQuery, resultsCount) => {
-        trackEvent('element_library_searched', { searchQuery, resultsCount });
+        trackEvent("element_library_searched", { searchQuery, resultsCount });
     }, [trackEvent]);
     // Tool usage events (for end users)
     const trackToolInstanceOpened = useCallback((instanceData) => {
-        trackEvent('tool_instance_opened', instanceData, { toolId: instanceData.toolId });
+        trackEvent("tool_instance_opened", instanceData, {
+            toolId: instanceData.toolId,
+        });
     }, [trackEvent]);
     const trackToolInstanceSubmitted = useCallback((submissionData) => {
-        trackEvent('tool_instance_submitted', submissionData, { toolId: submissionData.toolId });
+        trackEvent("tool_instance_submitted", submissionData, {
+            toolId: submissionData.toolId,
+        });
     }, [trackEvent]);
     // Privacy controls
     const updatePrivacyPreferences = useCallback((preferences) => {
-        setUserPreferences(prev => ({ ...prev, ...preferences }));
+        setUserPreferences((prev) => ({ ...prev, ...preferences }));
         // Save to localStorage
         if (user) {
             localStorage.setItem(`analytics_prefs_${user.uid}`, JSON.stringify({ ...userPreferences, ...preferences }));

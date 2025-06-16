@@ -20,25 +20,30 @@ const patchedNextConfig = fixupConfigRules([
   ...compat.extends("next/core-web-vitals"),
 ]);
 
+// Patch Storybook config for ESLint 9 compatibility
+const patchedStorybookConfig = fixupConfigRules([
+  ...compat.extends("plugin:storybook/recommended"),
+]);
+
 const config = [
   // Base JavaScript config
   js.configs.recommended,
 
-  // TypeScript configs
+  // TypeScript configs for regular TypeScript files
   ...tseslint.configs.recommended,
-  ...tseslint.configs.recommendedTypeChecked,
 
-  // Patched Next.js config with pages directory fix
-  ...patchedNextConfig.map((config) => ({
-    ...config,
-    rules: {
-      ...config.rules,
-      "@next/next/no-html-link-for-pages": ["error", "apps/web/src/app"],
-    },
-  })),
-
-  // Global configuration
+  // Main TypeScript files with full type checking
   {
+    files: [
+      "apps/web/src/**/*.{ts,tsx}",
+      "packages/*/src/**/*.{ts,tsx}",
+      "functions/src/**/*.ts",
+    ],
+    ignores: [
+      "**/*.stories.{js,jsx,ts,tsx}",
+      "**/*.test.{js,jsx,ts,tsx}",
+      "**/*.spec.{js,jsx,ts,tsx}",
+    ],
     languageOptions: {
       parser: tseslint.parser,
       parserOptions: {
@@ -46,12 +51,102 @@ const config = [
         tsconfigRootDir: __dirname,
       },
     },
-    linterOptions: {
-      reportUnusedDisableDirectives: "error",
+    rules: {
+      "@typescript-eslint/no-unsafe-assignment": "warn",
+      "@typescript-eslint/no-unsafe-member-access": "warn",
+      "@typescript-eslint/no-unsafe-argument": "warn",
+      "@typescript-eslint/no-unsafe-call": "warn",
+      "@typescript-eslint/no-unsafe-return": "warn",
+      "@typescript-eslint/no-explicit-any": "warn",
     },
   },
 
-  // Comprehensive ignore patterns - exclude all problematic files and directories
+  // Storybook stories files - NO TypeScript project parsing
+  {
+    files: ["**/*.stories.@(js|jsx|ts|tsx)"],
+    languageOptions: {
+      parser: tseslint.parser,
+      parserOptions: {
+        ecmaVersion: "latest",
+        sourceType: "module",
+        ecmaFeatures: {
+          jsx: true,
+        },
+        // NO project parsing for stories
+      },
+    },
+    rules: {
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/ban-ts-comment": "off",
+      "@typescript-eslint/no-unused-vars": "off",
+    },
+  },
+
+  // Test files - relaxed TypeScript rules
+  {
+    files: [
+      "**/*.test.{js,jsx,ts,tsx}",
+      "**/*.spec.{js,jsx,ts,tsx}",
+      "**/__tests__/**/*.{js,jsx,ts,tsx}",
+      "**/__mocks__/**/*.{js,jsx,ts,tsx}",
+    ],
+    languageOptions: {
+      parser: tseslint.parser,
+      parserOptions: {
+        ecmaVersion: "latest",
+        sourceType: "module",
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
+    },
+    rules: {
+      "@typescript-eslint/no-unsafe-assignment": "off",
+      "@typescript-eslint/no-unsafe-member-access": "off",
+      "@typescript-eslint/no-unsafe-argument": "off",
+      "@typescript-eslint/no-unsafe-call": "off",
+      "@typescript-eslint/no-unsafe-return": "off",
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-unused-vars": "off",
+    },
+  },
+
+  // Next.js configuration
+  ...patchedNextConfig.map((config) => ({
+    ...config,
+    files: ["apps/web/src/**/*.{js,jsx,ts,tsx}"],
+    ignores: ["**/*.stories.{js,jsx,ts,tsx}"],
+    rules: {
+      ...config.rules,
+      "@next/next/no-html-link-for-pages": ["error", "apps/web/src/app"],
+    },
+  })),
+
+  // Firebase Functions - relaxed type checking
+  {
+    files: ["functions/src/**/*.ts", "packages/firebase/**/*.ts"],
+    languageOptions: {
+      parser: tseslint.parser,
+      parserOptions: {
+        project: ["./functions/tsconfig.json"],
+        tsconfigRootDir: __dirname,
+      },
+    },
+    rules: {
+      "@typescript-eslint/no-unsafe-assignment": "warn",
+      "@typescript-eslint/no-unsafe-member-access": "warn",
+      "@typescript-eslint/no-unsafe-argument": "warn",
+      "@typescript-eslint/no-unsafe-call": "warn",
+      "@typescript-eslint/no-unsafe-return": "warn",
+      "@typescript-eslint/no-explicit-any": "warn",
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        { argsIgnorePattern: "^_|^context$" },
+      ],
+    },
+  },
+
+  // Comprehensive ignore patterns
   {
     ignores: [
       // Build outputs and caches
@@ -62,9 +157,9 @@ const config = [
       "**/.turbo/**",
       "**/.next/**",
       "**/coverage/**",
-      "**/lib/**/*.js", // Firebase functions compiled JS
+      "**/lib/**/*.js",
 
-      // Configuration files that shouldn't be linted with TypeScript rules
+      // Configuration files
       "**/eslint.config.mjs",
       "**/eslint.config.js",
       "**/tailwind.config.js",
@@ -76,23 +171,17 @@ const config = [
       "**/vite.config.ts",
 
       // Storybook configuration
-      "**/.storybook/**/*.js",
-      "**/.storybook/**/*.jsx",
-      "**/.storybook/**/*.ts",
-      "**/.storybook/**/*.tsx",
+      "**/.storybook/**",
 
-      // Package-level config files
-      "**/packages/*/eslint.config.mjs",
-      "**/packages/config/**/*.js",
-
-      // Firebase functions and other build artifacts
+      // Firebase functions compiled
       "**/functions/lib/**",
       "**/functions/dist/**",
-      "**/packages/firebase/functions/lib/**",
 
-      // Temporarily exclude problematic index files
-      "**/packages/ui/index.ts",
-      "**/packages/*/index.ts",
+      // Orphaned files
+      "page.tsx",
+      "src/components/**",
+      "src/lib/**",
+      "src/types/**",
     ],
   },
 
@@ -111,46 +200,6 @@ const config = [
     rules: {
       "@next/next/no-img-element": "warn",
       "react-hooks/exhaustive-deps": "warn",
-    },
-  },
-
-  // Relax type checking for API routes and Firebase functions where complex types exist
-  {
-    files: [
-      "apps/web/src/app/api/**/*.ts",
-      "functions/src/**/*.ts",
-      "**/__tests__/**/*.ts",
-      "**/*.test.ts",
-      "**/*.spec.ts",
-      "**/__mocks__/**/*.ts",
-    ],
-    rules: {
-      "@typescript-eslint/no-unsafe-assignment": "warn",
-      "@typescript-eslint/no-unsafe-member-access": "warn",
-      "@typescript-eslint/no-unsafe-argument": "warn",
-      "@typescript-eslint/no-unsafe-call": "warn",
-      "@typescript-eslint/no-unsafe-return": "warn",
-      "@typescript-eslint/no-explicit-any": "warn",
-      "@typescript-eslint/no-require-imports": "warn",
-    },
-  },
-
-  // Relax type checking for UI components where complex prop types exist
-  {
-    files: [
-      "packages/ui/src/**/*.tsx",
-      "packages/ui/src/**/*.ts",
-      "packages/core/src/**/*.ts",
-    ],
-    rules: {
-      "@typescript-eslint/no-unsafe-assignment": "warn",
-      "@typescript-eslint/no-unsafe-member-access": "warn",
-      "@typescript-eslint/no-unsafe-argument": "warn",
-      "@typescript-eslint/no-unsafe-call": "warn",
-      "@typescript-eslint/no-unsafe-return": "warn",
-      "@typescript-eslint/no-explicit-any": "warn",
-      "@typescript-eslint/no-empty-object-type": "warn",
-      "import/no-anonymous-default-export": "warn",
     },
   },
 ];

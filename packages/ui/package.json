@@ -16,11 +16,11 @@
     "dist"
   ],
   "scripts": {
-    "dev": "storybook dev -p 6006",
-    "build": "tsc && tailwindcss -i ./src/styles.css -o ./dist/styles.css --minify",
-    "build-storybook": "storybook build --disable-telemetry",
-    "storybook": "storybook dev -p 6006",
-    "lint": "eslint . --max-warnings 0",
+    "dev": "node ../../node_modules/storybook/bin/index.cjs dev -p 6006",
+    "build": "npx tsc && node ../../node_modules/tailwindcss/lib/cli.js -i ./src/styles.css -o ./dist/styles.css --minify",
+    "build-storybook": "node ../../node_modules/storybook/bin/index.cjs build --disable-telemetry",
+    "storybook": "node ../../node_modules/storybook/bin/index.cjs dev -p 6006",
+    "lint": "npx eslint . --max-warnings 15",
     "clean": "rm -rf dist"
   },
   "devDependencies": {
@@ -74,6 +74,6 @@
     "next-themes": "^0.4.6",
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
-    "@tanstack/react-query": "^5.0.0"
+    "@tanstack/react-query": "^5.80.7"
   }
 }

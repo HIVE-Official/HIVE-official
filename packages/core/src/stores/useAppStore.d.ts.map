@@ -1,0 +1,1 @@
+{"version":3,"file":"useAppStore.d.ts","sourceRoot":"","sources":["useAppStore.ts"],"names":[],"mappings":"AAEA,KAAK,KAAK,GAAG,OAAO,GAAG,MAAM,GAAG,QAAQ,CAAC;AAEzC,UAAU,QAAQ;IAChB,KAAK,EAAE,KAAK,CAAC;IACb,QAAQ,EAAE,CAAC,KAAK,EAAE,KAAK,KAAK,IAAI,CAAC;CAClC;AAED,eAAO,MAAM,WAAW,uEAGrB,CAAC"}
