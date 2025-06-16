@@ -1,7 +1,6 @@
 import type { Element } from "@hive/core";
 import type { ConfigObject } from "../ElementConfig/types";
 
-export default {};
 
 export interface ElementInstance {
   /** Unique instance ID */

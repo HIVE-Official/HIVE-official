@@ -5,7 +5,6 @@ import { type Post } from "@hive/core";
 import { MoreHorizontal } from "lucide-react";
 
 // A simple utility to format time since a post was created
-export default {};
 function timeAgo(date: Date): string {
   const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
   let interval = seconds / 31536000;

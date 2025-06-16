@@ -38,7 +38,6 @@ import { cn } from "../../lib/utils";
 import type { Post } from "@hive/core";
 // import { PostType } from '@hive/core'
 
-export default {};
 interface PostCardProps {
   post: Post & {
     author: {

@@ -1,4 +1,3 @@
-export default {}
 export const गति = {
   fadeIn: {
     initial: { opacity: 0 },

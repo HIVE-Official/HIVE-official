@@ -12,7 +12,6 @@ import { PostCard } from "./post-card";
 import { cn } from "../../lib/utils";
 import type { Post } from "@hive/core";
 
-export default {};
 
 interface FeedUser {
   id: string;

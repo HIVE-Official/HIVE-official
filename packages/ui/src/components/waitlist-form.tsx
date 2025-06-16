@@ -8,7 +8,6 @@ import { गति } from "../lib/motion";
 import { CheckCircle } from "lucide-react";
 import { Stack } from ".";
 
-export default {};
 interface WaitlistFormProps {
   onSubmit: (email: string) => Promise<void>;
 }
