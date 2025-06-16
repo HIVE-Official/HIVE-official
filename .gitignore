@@ -122,6 +122,7 @@ firebase/serviceAccountKey.json
 
 # Firebase debug logs
 *.log
+lint-output.txt
 
 # Firebase cache
 .firebase/
