@@ -36,7 +36,7 @@ import * as featureTool from "./spaces/featureToolInSpace";
 import * as updateUserProfile from "./profile/updateUserProfile";
 
 // Import creation functions
-import * as tool from "./creation/tool";
+// import * as tool from "./creation/tool";
 
 // Import feed functions
 import * as getFeed from "./feed/getFeed";
@@ -81,16 +81,12 @@ export const onUserCreateAutoJoin = onUserCreate.onUserCreateAutoJoin;
 // Export all functions
 export const verification = {
   // Email verification functions
-  processEmailVerification: emailVerification.processEmailVerification,
-  submitVerificationCode: emailVerification.submitVerificationCode,
+  requestEmailVerification: emailVerification.requestEmailVerification,
   cleanupExpiredVerifications: emailVerification.cleanupExpiredVerifications,
 
   // Role claims functions
-  updateUserRoleClaims: roleClaims.updateUserRoleClaims,
-  processVerificationStatusChange: roleClaims.processVerificationStatusChange,
-  requestVerifiedPlusClaim: roleClaims.requestVerifiedPlusClaim,
-  approveVerifiedPlusClaim: roleClaims.approveVerifiedPlusClaim,
-  // handleEventStateTransitions: eventStateTransitions.handleEventStateTransitions // TEMPORARILY DISABLED
+  updateRoleClaims: roleClaims.updateRoleClaims,
+  setCustomClaims: roleClaims.setCustomClaims,
 };
 
 export const spaces = {
@@ -104,7 +100,6 @@ export const spaces = {
 };
 
 export const creation = {
-  // TEMPORARILY COMMENTED OUT - functions don't exist in tool module yet
   // createTool: tool.createTool,
   // updateTool: tool.updateTool,
 };
