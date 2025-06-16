@@ -178,7 +178,6 @@ const config = [
       "**/functions/dist/**",
 
       // Orphaned files
-      "page.tsx",
       "src/components/**",
       "src/lib/**",
       "src/types/**",
