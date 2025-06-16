@@ -15,38 +15,38 @@ import * as logger from "firebase-functions/logger";
 admin.initializeApp();
 
 // Import verification functions
-import * as emailVerification from './verification/email-verification';
-import * as roleClaims from './verification/role-claims';
+import * as emailVerification from "./verification/email-verification";
+import * as roleClaims from "./verification/role-claims";
 
 // Import event state management functions
-import * as eventStateTransitions from './events/state-transitions';
+// import * as eventStateTransitions from './events/state-transitions'; // TEMPORARILY DISABLED - missing module
 
 // Import new space denormalization functions
-import * as spaceDenormalization from './spaces/denormalization';
-import * as pagination from './spaces/pagination';
+import * as spaceDenormalization from "./spaces/denormalization";
+import * as pagination from "./spaces/pagination";
 
 // New space functions
-import * as onUserCreate from './spaces/onUserCreate';
-import * as leaveSpace from './spaces/leaveSpace';
-import * as requestBuilder from './spaces/requestBuilderRole';
-import * as pinPost from './spaces/pinPostToSpace';
-import * as featureTool from './spaces/featureToolInSpace';
+import * as onUserCreate from "./spaces/onUserCreate";
+import * as leaveSpace from "./spaces/leaveSpace";
+import * as requestBuilder from "./spaces/requestBuilderRole";
+import * as pinPost from "./spaces/pinPostToSpace";
+import * as featureTool from "./spaces/featureToolInSpace";
 
 // Import profile functions
-import * as updateUserProfile from './profile/updateUserProfile';
+import * as updateUserProfile from "./profile/updateUserProfile";
 
 // Import creation functions
-import * as tool from './creation/tool';
+import * as tool from "./creation/tool";
 
 // Import feed functions
-import * as getFeed from './feed/getFeed';
-import * as interactions from './feed/interactions';
-import * as follow from './feed/follow';
-import * as mute from './feed/mute';
-import * as report from './feed/report';
-import * as sayHello from './feed/sayHello';
-import * as createPost from './feed/createPost';
-import * as managePost from './feed/managePost';
+import * as getFeed from "./feed/getFeed";
+import * as interactions from "./feed/interactions";
+import * as follow from "./feed/follow";
+import * as mute from "./feed/mute";
+import * as report from "./feed/report";
+import * as sayHello from "./feed/sayHello";
+import * as createPost from "./feed/createPost";
+import * as managePost from "./feed/managePost";
 
 // Export notification functions
 export * from "./notifications";
@@ -84,13 +84,13 @@ export const verification = {
   processEmailVerification: emailVerification.processEmailVerification,
   submitVerificationCode: emailVerification.submitVerificationCode,
   cleanupExpiredVerifications: emailVerification.cleanupExpiredVerifications,
-  
+
   // Role claims functions
   updateUserRoleClaims: roleClaims.updateUserRoleClaims,
   processVerificationStatusChange: roleClaims.processVerificationStatusChange,
   requestVerifiedPlusClaim: roleClaims.requestVerifiedPlusClaim,
   approveVerifiedPlusClaim: roleClaims.approveVerifiedPlusClaim,
-  handleEventStateTransitions: eventStateTransitions.handleEventStateTransitions
+  // handleEventStateTransitions: eventStateTransitions.handleEventStateTransitions // TEMPORARILY DISABLED
 };
 
 export const spaces = {
@@ -104,26 +104,27 @@ export const spaces = {
 };
 
 export const creation = {
-  createTool: tool.createTool,
-  updateTool: tool.updateTool,
+  // TEMPORARILY COMMENTED OUT - functions don't exist in tool module yet
+  // createTool: tool.createTool,
+  // updateTool: tool.updateTool,
 };
 
 export const profile = {
-    updateUserProfile: updateUserProfile.updateUserProfile
+  updateUserProfile: updateUserProfile.updateUserProfile,
 };
 
 export const feed = {
-    getFeed: getFeed.getFeed,
-    likeCard: interactions.likeCard,
-    followUser: follow.followUser,
-    unfollowUser: follow.unfollowUser,
-    muteUser: mute.unmuteUser,
-    unmuteUser: mute.unmuteUser,
-    reportContent: report.reportContent,
-    sayHello: sayHello.sayHello,
-    createPost: createPost.createPost,
-    editPost: managePost.editPost,
-    deletePost: managePost.deletePost,
+  getFeed: getFeed.getFeed,
+  likeCard: interactions.likeCard,
+  followUser: follow.followUser,
+  unfollowUser: follow.unfollowUser,
+  muteUser: mute.unmuteUser,
+  unmuteUser: mute.unmuteUser,
+  reportContent: report.reportContent,
+  sayHello: sayHello.sayHello,
+  createPost: createPost.createPost,
+  editPost: managePost.editPost,
+  deletePost: managePost.deletePost,
 };
 
 export * from "./auth/sendMagicLink";

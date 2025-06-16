@@ -1,12 +1,24 @@
+import { onDocumentCreated } from "firebase-functions/v2/firestore";
 import {
   functions,
   firestore,
   logger,
   getDocumentData,
+  FieldValue,
+  Timestamp,
   type UserDocument,
   type SpaceDocument,
 } from "../types/firebase";
-import { UB_MAJORS } from "@hive/core/src/constants/majors";
+
+// Temporary major list since @hive/core is not available
+const UB_MAJORS = [
+  { name: "Computer Science" },
+  { name: "Engineering" },
+  { name: "Business" },
+  { name: "Biology" },
+  { name: "Psychology" },
+  // Add more as needed
+];
 
 type SpaceType = "major" | "residential" | "interest" | "club";
 
@@ -64,8 +76,8 @@ const createSpaceIfNeeded = async (
       },
     ],
     status: "activated",
-    createdAt: firestore().FieldValue.serverTimestamp(),
-    updatedAt: firestore().FieldValue.serverTimestamp(),
+    createdAt: FieldValue.serverTimestamp(),
+    updatedAt: FieldValue.serverTimestamp(),
   };
 
   const spaceRef = db.collection("spaces").doc(spaceId);
@@ -99,19 +111,25 @@ const addUserToSpace = (
   transaction.set(memberRef, {
     uid: userId,
     role: "member",
-    joinedAt: firestore().FieldValue.serverTimestamp(),
+    joinedAt: FieldValue.serverTimestamp(),
   });
 
   transaction.update(spaceRef, {
-    memberCount: firestore().FieldValue.increment(1),
+    memberCount: FieldValue.increment(1),
   });
 };
 
-export const onUserCreateAutoJoin = firestore()
-  .document("users/{userId}")
-  .onCreate(async (snap, context) => {
+export const onUserCreateAutoJoin = onDocumentCreated(
+  "users/{userId}",
+  async (event) => {
+    const snap = event.data;
+    if (!snap) {
+      logger.error("No document data found");
+      return;
+    }
+
     const userData = getDocumentData<UserDocument>(snap);
-    const userId = context.params.userId as string;
+    const userId = event.params?.userId as string;
 
     if (!userData) {
       logger.error(`User data was not found for user ID: ${userId}`);
@@ -216,4 +234,5 @@ export const onUserCreateAutoJoin = firestore()
         error as Error
       );
     }
-  });
+  }
+);

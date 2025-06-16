@@ -1,4 +1,5 @@
-import * as functions from "firebase-functions";
+import { onSchedule } from "firebase-functions/v2/scheduler";
+import { onCall, CallableRequest } from "firebase-functions/v2/https";
 import {
   admin,
   FirebaseHttpsError,
@@ -33,10 +34,12 @@ interface PlatformMetrics {
 /**
  * Scheduled function to calculate and store platform metrics (daily)
  */
-export const calculatePlatformMetrics = functions.pubsub
-  .schedule("0 1 * * *") // Run at 1:00 AM every day
-  .timeZone("America/New_York")
-  .onRun(async (): Promise<null> => {
+export const calculatePlatformMetrics = onSchedule(
+  {
+    schedule: "0 1 * * *", // Run at 1:00 AM every day
+    timeZone: "America/New_York",
+  },
+  async (): Promise<void> => {
     try {
       logger.info("Starting platform metrics calculation");
 
@@ -145,13 +148,11 @@ export const calculatePlatformMetrics = functions.pubsub
         monthlyActiveUsers,
         engagementRate,
       });
-
-      return null;
     } catch (error) {
       logger.error("Error calculating platform metrics", error);
-      return null;
     }
-  });
+  }
+);
 
 interface TrackContentViewData {
   contentId: string;
@@ -162,14 +163,21 @@ interface TrackContentViewData {
 /**
  * Function to track content views
  */
-export const trackContentView = functions.https.onCall(
-  async (data: TrackContentViewData, context: FunctionContext): Promise<{ success: boolean }> => {
+export const trackContentView = onCall<TrackContentViewData>(
+  async (
+    request: CallableRequest<TrackContentViewData>
+  ): Promise<{ success: boolean }> => {
     try {
       // Ensure the user is authenticated
-      assertAuthenticated(context);
+      if (!request.auth?.uid) {
+        throw new FirebaseHttpsError(
+          "unauthenticated",
+          "User must be authenticated to perform this action"
+        );
+      }
 
-      const userId = context.auth.uid;
-      const { contentId, contentType, metadata = {} } = data;
+      const userId = request.auth.uid;
+      const { contentId, contentType, metadata = {} } = request.data;
 
       if (!contentId || !contentType) {
         throw new FirebaseHttpsError(
@@ -270,10 +278,12 @@ async function updateContentViewCount(
 /**
  * Scheduled function to calculate trending content (runs every 3 hours)
  */
-export const calculateTrendingContent = functions.pubsub
-  .schedule("0 */3 * * *") // Run every 3 hours
-  .timeZone("America/New_York")
-  .onRun(async (): Promise<null> => {
+export const calculateTrendingContent = onSchedule(
+  {
+    schedule: "0 */3 * * *", // Run every 3 hours
+    timeZone: "America/New_York",
+  },
+  async (): Promise<void> => {
     try {
       logger.info("Starting trending content calculation");
 
@@ -400,21 +410,21 @@ export const calculateTrendingContent = functions.pubsub
 
       await batch.commit();
       logger.info("Trending content calculation completed");
-
-      return null;
     } catch (error) {
       logger.error("Error calculating trending content", error);
-      return null;
     }
-  });
+  }
+);
 
 /**
  * Function to generate retention metrics (runs weekly)
  */
-export const calculateRetentionMetrics = functions.pubsub
-  .schedule("0 2 * * 0") // Run at 2:00 AM every Sunday
-  .timeZone("America/New_York")
-  .onRun(async (): Promise<null> => {
+export const calculateRetentionMetrics = onSchedule(
+  {
+    schedule: "0 2 * * 0", // Run at 2:00 AM every Sunday
+    timeZone: "America/New_York",
+  },
+  async (): Promise<void> => {
     try {
       logger.info("Starting retention metrics calculation");
 
@@ -524,10 +534,8 @@ export const calculateRetentionMetrics = functions.pubsub
       });
 
       logger.info("Retention metrics calculation completed");
-
-      return null;
     } catch (error) {
       logger.error("Error calculating retention metrics", error);
-      return null;
     }
-  });
+  }
+);

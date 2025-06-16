@@ -1,76 +1,124 @@
-import * as functions from "firebase-functions";
-import {getFirestore, FieldValue} from "firebase-admin/firestore";
+import {
+  createHttpsFunction,
+  FunctionContext,
+  getFirestore,
+  FieldValue,
+  functions,
+} from "../types/firebase";
 
-export const followUser = functions.https.onCall(async (data, context) => {
-  if (!context.auth) {
-    throw new functions.https.HttpsError("unauthenticated", "User must be authenticated.");
-  }
+interface FollowUserData {
+  userIdToFollow: string;
+}
 
-  const {userIdToFollow} = data;
-  if (!userIdToFollow || typeof userIdToFollow !== "string") {
-    throw new functions.https.HttpsError("invalid-argument", "A valid userIdToFollow must be provided.");
-  }
+interface UnfollowUserData {
+  userIdToUnfollow: string;
+}
 
-  const uid = context.auth.uid;
-
-  if (uid === userIdToFollow) {
-    throw new functions.https.HttpsError("invalid-argument", "Users cannot follow themselves.");
-  }
-
-  const db = getFirestore();
-  const followerRef = db.collection("users").doc(uid);
-  const followedRef = db.collection("users").doc(userIdToFollow);
-  const followLinkRef = followerRef.collection("follows").doc(userIdToFollow);
-
-  return db.runTransaction(async (transaction) => {
-    const followDoc = await transaction.get(followLinkRef);
-
-    if (followDoc.exists) {
-      // Already following, so we can just return.
-      return {status: "already_following"};
+export const followUser = createHttpsFunction<FollowUserData>(
+  async (data: FollowUserData, context: FunctionContext) => {
+    if (!context.auth) {
+      throw new functions.https.HttpsError(
+        "unauthenticated",
+        "User must be authenticated."
+      );
     }
 
-    transaction.set(followLinkRef, {userId: userIdToFollow, followedAt: FieldValue.serverTimestamp()});
-    transaction.update(followerRef, {followingCount: FieldValue.increment(1)});
-    transaction.update(followedRef, {followersCount: FieldValue.increment(1)});
-
-    return {status: "success"};
-  });
-});
-
-export const unfollowUser = functions.https.onCall(async (data, context) => {
-  if (!context.auth) {
-    throw new functions.https.HttpsError("unauthenticated", "User must be authenticated.");
-  }
-
-  const {userIdToUnfollow} = data;
-  if (!userIdToUnfollow || typeof userIdToUnfollow !== "string") {
-    throw new functions.https.HttpsError("invalid-argument", "A valid userIdToUnfollow must be provided.");
-  }
-
-  const uid = context.auth.uid;
-
-  if (uid === userIdToUnfollow) {
-    throw new functions.https.HttpsError("invalid-argument", "Users cannot unfollow themselves.");
-  }
-
-  const db = getFirestore();
-  const followerRef = db.collection("users").doc(uid);
-  const followedRef = db.collection("users").doc(userIdToUnfollow);
-  const followLinkRef = followerRef.collection("follows").doc(userIdToUnfollow);
-
-  return db.runTransaction(async (transaction) => {
-    const followDoc = await transaction.get(followLinkRef);
-
-    if (!followDoc.exists) {
-      // Not following, so we can just return.
-      return {status: "not_following"};
+    const { userIdToFollow } = data;
+    if (!userIdToFollow || typeof userIdToFollow !== "string") {
+      throw new functions.https.HttpsError(
+        "invalid-argument",
+        "A valid userIdToFollow must be provided."
+      );
     }
 
-    transaction.delete(followLinkRef);
-    transaction.update(followerRef, {followingCount: FieldValue.increment(-1)});
-    transaction.update(followedRef, {followersCount: FieldValue.increment(-1)});
+    const uid = context.auth.uid;
 
-    return {status: "success"};
-  });
-});
+    if (uid === userIdToFollow) {
+      throw new functions.https.HttpsError(
+        "invalid-argument",
+        "Users cannot follow themselves."
+      );
+    }
+
+    const db = getFirestore();
+    const followerRef = db.collection("users").doc(uid);
+    const followedRef = db.collection("users").doc(userIdToFollow);
+    const followLinkRef = followerRef.collection("follows").doc(userIdToFollow);
+
+    return db.runTransaction(async (transaction) => {
+      const followDoc = await transaction.get(followLinkRef);
+
+      if (followDoc.exists) {
+        // Already following, so we can just return.
+        return { status: "already_following" };
+      }
+
+      transaction.set(followLinkRef, {
+        userId: userIdToFollow,
+        followedAt: FieldValue.serverTimestamp(),
+      });
+      transaction.update(followerRef, {
+        followingCount: FieldValue.increment(1),
+      });
+      transaction.update(followedRef, {
+        followersCount: FieldValue.increment(1),
+      });
+
+      return { status: "success" };
+    });
+  }
+);
+
+export const unfollowUser = createHttpsFunction<UnfollowUserData>(
+  async (data: UnfollowUserData, context: FunctionContext) => {
+    if (!context.auth) {
+      throw new functions.https.HttpsError(
+        "unauthenticated",
+        "User must be authenticated."
+      );
+    }
+
+    const { userIdToUnfollow } = data;
+    if (!userIdToUnfollow || typeof userIdToUnfollow !== "string") {
+      throw new functions.https.HttpsError(
+        "invalid-argument",
+        "A valid userIdToUnfollow must be provided."
+      );
+    }
+
+    const uid = context.auth.uid;
+
+    if (uid === userIdToUnfollow) {
+      throw new functions.https.HttpsError(
+        "invalid-argument",
+        "Users cannot unfollow themselves."
+      );
+    }
+
+    const db = getFirestore();
+    const followerRef = db.collection("users").doc(uid);
+    const followedRef = db.collection("users").doc(userIdToUnfollow);
+    const followLinkRef = followerRef
+      .collection("follows")
+      .doc(userIdToUnfollow);
+
+    return db.runTransaction(async (transaction) => {
+      const followDoc = await transaction.get(followLinkRef);
+
+      if (!followDoc.exists) {
+        // Not following, so we can just return.
+        return { status: "not_following" };
+      }
+
+      transaction.delete(followLinkRef);
+      transaction.update(followerRef, {
+        followingCount: FieldValue.increment(-1),
+      });
+      transaction.update(followedRef, {
+        followersCount: FieldValue.increment(-1),
+      });
+
+      return { status: "success" };
+    });
+  }
+);

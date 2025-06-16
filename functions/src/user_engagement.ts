@@ -1,349 +1,223 @@
 import {
+  createHttpsFunction,
+  FunctionContext,
+  getFirestore,
+  FieldValue,
+  Timestamp,
   functions,
-  firestore,
   logger,
-  getDocumentData,
+  onDocumentCreated,
+  onSchedule,
 } from "./types/firebase";
 
-// Interface for user activity data
-interface UserActivity {
-  userId: string;
-  timestamp: FirebaseFirestore.Timestamp;
-  action: string;
-  targetType?: string;
-  targetId?: string;
-  metadata?: Record<string, unknown>;
+interface EngagementData {
+  userId?: string;
+  contentId?: string;
+  action?: "view" | "like" | "comment" | "share";
 }
 
-// Interface for user engagement metrics
-interface UserEngagementMetrics {
-  lastActive: FirebaseFirestore.Timestamp;
-  activityCount: number;
-  eventEngagementCount: number;
-  spaceEngagementCount: number;
-  socialEngagementCount: number;
-  contentEngagementCount: number;
+interface UserEngagement {
+  userId: string;
+  totalViews: number;
+  totalLikes: number;
+  totalComments: number;
+  lastActive: typeof Timestamp;
   engagementScore: number;
-  streak: number;
-  lastStreakUpdate: FirebaseFirestore.Timestamp;
 }
 
 /**
- * Tracks a user activity and updates engagement metrics
+ * Track user engagement on document creation
  */
-export const trackUserActivity = firestore().onDocumentCreated(
-  "user_activities/{activityId}",
-  async (snapshot) => {
+export const trackEngagement = onDocumentCreated(
+  "feed/{postId}/interactions/{interactionId}",
+  async (event) => {
     try {
-      const activity = getDocumentData<UserActivity>(snapshot);
+      const interactionData = event.data?.data();
 
-      if (!activity || !activity.userId) {
-        logger.warn("Invalid activity data", { activityId: snapshot.id });
-        return null;
+      if (!interactionData?.userId || !interactionData?.type) {
+        logger.warn("Missing interaction data for engagement tracking");
+        return;
       }
 
-      logger.info("Processing user activity", {
-        userId: activity.userId,
-        action: activity.action,
-        targetType: activity.targetType,
-      });
+      const db = getFirestore();
+      const userId = interactionData.userId;
+      const interactionType = interactionData.type;
 
-      // Get current engagement metrics or initialize if not present
-      const db = firestore();
-      const metricsRef = db
-        .collection("user_engagement_metrics")
-        .doc(activity.userId);
+      // Update user engagement metrics
+      const userEngagementRef = db.collection("user_engagement").doc(userId);
 
-      const metricsDoc = await metricsRef.get();
-      const existingMetrics =
-        getDocumentData<UserEngagementMetrics>(metricsDoc);
-      const metrics: UserEngagementMetrics = existingMetrics || {
-        lastActive: activity.timestamp,
-        activityCount: 0,
-        eventEngagementCount: 0,
-        spaceEngagementCount: 0,
-        socialEngagementCount: 0,
-        contentEngagementCount: 0,
-        engagementScore: 0,
-        streak: 0,
-        lastStreakUpdate: activity.timestamp,
+      const updateData: any = {
+        lastActive: FieldValue.serverTimestamp(),
       };
 
-      // Update activity counts based on activity type
-      metrics.activityCount += 1;
-      metrics.lastActive = activity.timestamp;
-
-      // Update specific engagement counters based on target type
-      switch (activity.targetType) {
-        case "event":
-          metrics.eventEngagementCount += 1;
+      switch (interactionType) {
+        case "like":
+          updateData.totalLikes = FieldValue.increment(1);
           break;
-        case "space":
-        case "club":
-          metrics.spaceEngagementCount += 1;
-          break;
-        case "post":
         case "comment":
-          metrics.contentEngagementCount += 1;
+          updateData.totalComments = FieldValue.increment(1);
           break;
-        case "user":
-        case "friend_request":
-        case "message":
-          metrics.socialEngagementCount += 1;
+        case "view":
+          updateData.totalViews = FieldValue.increment(1);
           break;
       }
 
-      // Update user streak (consecutive days of activity)
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      const todayTimestamp = firestore().Timestamp.fromDate(today);
+      await userEngagementRef.set(updateData, { merge: true });
 
-      const lastUpdateDate = metrics.lastStreakUpdate.toDate();
-      lastUpdateDate.setHours(0, 0, 0, 0);
-      const lastUpdateTimestamp =
-        firestore().Timestamp.fromDate(lastUpdateDate);
-
-      const yesterday = new Date(today);
-      yesterday.setDate(yesterday.getDate() - 1);
-      const yesterdayTimestamp = firestore().Timestamp.fromDate(yesterday);
-
-      // If last activity was yesterday, increment streak
-      if (lastUpdateTimestamp.isEqual(yesterdayTimestamp)) {
-        metrics.streak += 1;
-      }
-      // If last activity was today, keep streak the same
-      else if (lastUpdateTimestamp.isEqual(todayTimestamp)) {
-        // No change to streak, already logged in today
-      }
-      // If last activity was before yesterday, reset streak
-      else if (lastUpdateTimestamp.seconds < yesterdayTimestamp.seconds) {
-        metrics.streak = 1; // Start a new streak
-      }
-
-      metrics.lastStreakUpdate = todayTimestamp;
-
-      // Calculate engagement score (weighted formula)
-      metrics.engagementScore = calculateEngagementScore(metrics);
-
-      // Update the metrics document
-      await metricsRef.set(metrics, { merge: true });
-
-      // Update user_profiles engagement summary
-      await db.collection("user_profiles").doc(activity.userId).update({
-        lastActive: activity.timestamp,
-        engagementScore: metrics.engagementScore,
-        streak: metrics.streak,
-      });
-
-      logger.info("Updated user engagement metrics", {
-        userId: activity.userId,
-        engagementScore: metrics.engagementScore,
-        streak: metrics.streak,
-      });
-
-      // Check for streak milestone achievements
-      await checkStreakAchievements(activity.userId, metrics.streak);
-
-      return null;
+      logger.info(
+        `Updated engagement for user ${userId}, action: ${interactionType}`
+      );
     } catch (error) {
-      logger.error("Error tracking user activity", error as Error);
-      return null;
+      logger.error("Error tracking engagement:", error);
     }
   }
 );
 
 /**
- * Calculate weighted engagement score based on various metrics
+ * Calculate engagement scores for all users
  */
-function calculateEngagementScore(metrics: UserEngagementMetrics): number {
-  // Calculate days since last activity
-  const lastActiveDate = metrics.lastActive.toDate();
-  const now = new Date();
-  const daysSinceActive = Math.floor(
-    (now.getTime() - lastActiveDate.getTime()) / (1000 * 60 * 60 * 24)
-  );
-
-  // Calculate recency factor (diminishes with inactivity)
-  const recencyFactor = Math.max(0, 1 - daysSinceActive / 30);
-
-  // Calculate weighted score (customize weights based on business priorities)
-  const score =
-    (metrics.eventEngagementCount * 1.2 +
-      metrics.spaceEngagementCount * 1.0 +
-      metrics.socialEngagementCount * 1.5 +
-      metrics.contentEngagementCount * 0.8 +
-      metrics.streak * 5) *
-    recencyFactor;
-
-  return Math.round(score * 10) / 10; // Round to 1 decimal place
-}
-
-/**
- * Check for streak-based achievements
- */
-async function checkStreakAchievements(
-  userId: string,
-  streak: number
-): Promise<void> {
-  try {
-    // Define streak milestones
-    const streakMilestones = [3, 7, 14, 30, 60, 90, 180, 365];
-
-    // Check if the current streak hits any milestone
-    const milestone = streakMilestones.find((m) => m === streak);
-    if (!milestone) {
-      return; // No milestone reached
-    }
-
-    logger.info(`User ${userId} reached streak milestone: ${milestone} days`);
-
-    // Create achievement entry
-    const db = firestore();
-    await db.collection("user_achievements").add({
-      userId,
-      type: "streak",
-      milestone,
-      achievedAt: firestore().FieldValue.serverTimestamp(),
-      title: `${milestone}-Day Streak`,
-      description: `Stayed active on HIVE for ${milestone} consecutive days`,
-      rewardPoints: calculateRewardPoints(milestone),
-    });
-
-    // Send a notification about the achievement
-    await db.collection("notifications").add({
-      userId,
-      type: "achievement",
-      title: "Streak Achievement Unlocked!",
-      body: `Congratulations! You've been active for ${milestone} consecutive days.`,
-      isRead: false,
-      createdAt: firestore().FieldValue.serverTimestamp(),
-    });
-  } catch (error) {
-    logger.error("Error checking streak achievements", error as Error);
-  }
-}
-
-/**
- * Calculate reward points based on milestone difficulty
- */
-function calculateRewardPoints(milestone: number): number {
-  // Exponential reward scaling
-  return Math.floor(10 * Math.pow(milestone / 7, 1.2));
-}
-
-/**
- * Triggered when a user profile is created, to initialize engagement metrics
- */
-export const initializeUserEngagementMetrics = firestore().onDocumentCreated(
-  "user_profiles/{userId}",
-  async (snapshot) => {
+export const calculateEngagementScores = onSchedule(
+  {
+    schedule: "every 24 hours",
+  },
+  async () => {
     try {
-      const userId = snapshot.id;
-      const now = firestore().FieldValue.serverTimestamp();
+      const db = getFirestore();
+      logger.info("Starting engagement score calculation");
 
-      // Initialize basic metrics
-      const initialMetrics: Partial<UserEngagementMetrics> = {
-        lastActive: now as FirebaseFirestore.Timestamp,
-        activityCount: 0,
-        eventEngagementCount: 0,
-        spaceEngagementCount: 0,
-        socialEngagementCount: 0,
-        contentEngagementCount: 0,
-        engagementScore: 0,
-        streak: 0,
-        lastStreakUpdate: now as FirebaseFirestore.Timestamp,
-      };
+      const engagementSnapshot = await db
+        .collection("user_engagement")
+        .limit(100)
+        .get();
+      let processedCount = 0;
 
-      // Create the initial metrics document
-      await firestore()
-        .collection("user_engagement_metrics")
-        .doc(userId)
-        .set(initialMetrics);
+      for (const doc of engagementSnapshot.docs) {
+        const data = doc.data() as UserEngagement;
 
-      logger.info("Initialized user engagement metrics", { userId });
+        // Simple engagement score calculation
+        const score =
+          data.totalViews * 1 + data.totalLikes * 3 + data.totalComments * 5;
 
-      // Log user's first activity
-      await firestore()
-        .collection("user_activities")
-        .add({
-          userId,
-          timestamp: now,
-          action: "account_created",
-          targetType: "profile",
-          targetId: userId,
-          metadata: {
-            isInitialActivity: true,
-          },
+        await doc.ref.update({
+          engagementScore: score,
+          lastCalculated: FieldValue.serverTimestamp(),
         });
 
-      return null;
+        processedCount++;
+      }
+
+      logger.info(`Calculated engagement scores for ${processedCount} users`);
     } catch (error) {
-      logger.error(
-        "Error initializing user engagement metrics",
-        error as Error
-      );
-      return null;
+      logger.error("Error calculating engagement scores:", error);
     }
   }
 );
 
 /**
- * Daily scheduled function to reset streaks for inactive users
+ * Get user engagement metrics
  */
-export const updateUserStreaks = functions.pubsub
-  .schedule("0 0 * * *") // Run at midnight every day
-  .timeZone("America/New_York")
-  .onRun(async () => {
-    try {
-      const db = firestore();
-      const yesterday = new Date();
-      yesterday.setDate(yesterday.getDate() - 1);
-      yesterday.setHours(0, 0, 0, 0);
+export const getUserEngagement = createHttpsFunction<EngagementData>(
+  async (data: EngagementData, context: FunctionContext) => {
+    if (!context.auth) {
+      throw new functions.https.HttpsError(
+        "unauthenticated",
+        "User must be authenticated."
+      );
+    }
 
-      // Get users whose lastStreakUpdate is before yesterday
-      const metricsSnapshot = await db
-        .collection("user_engagement_metrics")
-        .where("lastStreakUpdate", "<", yesterday)
-        .limit(500) // Process in batches to avoid timeout
+    const { userId = context.auth.uid } = data;
+
+    try {
+      const db = getFirestore();
+      const engagementDoc = await db
+        .collection("user_engagement")
+        .doc(userId)
         .get();
 
-      if (metricsSnapshot.empty) {
-        logger.info("No streaks to reset");
-        return null;
+      if (!engagementDoc.exists) {
+        return {
+          userId,
+          totalViews: 0,
+          totalLikes: 0,
+          totalComments: 0,
+          engagementScore: 0,
+        };
       }
 
-      // Update user streaks in batches
-      const batch = db.batch();
-      let updateCount = 0;
+      return engagementDoc.data();
+    } catch (error) {
+      logger.error("Error getting user engagement:", error);
+      throw new functions.https.HttpsError(
+        "internal",
+        "Failed to get engagement data."
+      );
+    }
+  }
+);
 
-      metricsSnapshot.forEach((doc) => {
-        const metrics = getDocumentData<UserEngagementMetrics>(doc);
-        if (!metrics) return;
+/**
+ * Update engagement when user performs an action
+ */
+export const updateEngagement = createHttpsFunction<EngagementData>(
+  async (data: EngagementData, context: FunctionContext) => {
+    if (!context.auth) {
+      throw new functions.https.HttpsError(
+        "unauthenticated",
+        "User must be authenticated."
+      );
+    }
 
-        // Reset streak if user was inactive yesterday
-        if (metrics.streak > 0) {
-          batch.update(doc.ref, {
-            streak: 0,
-            lastStreakUpdate: firestore().FieldValue.serverTimestamp(),
-          });
+    const uid = context.auth.uid;
+    const { action, contentId } = data;
 
-          // Also update the user profile
-          batch.update(db.collection("user_profiles").doc(doc.id), {
-            streak: 0,
-          });
+    if (!action || !contentId) {
+      throw new functions.https.HttpsError(
+        "invalid-argument",
+        "action and contentId are required."
+      );
+    }
 
-          updateCount++;
-        }
+    try {
+      const db = getFirestore();
+
+      // Record the engagement action
+      await db.collection("engagement_events").add({
+        userId: uid,
+        contentId,
+        action,
+        timestamp: FieldValue.serverTimestamp(),
       });
 
-      if (updateCount > 0) {
-        await batch.commit();
-        logger.info(`Reset streaks for ${updateCount} inactive users`);
+      // Update user engagement metrics
+      const updateData: any = {
+        lastActive: FieldValue.serverTimestamp(),
+      };
+
+      switch (action) {
+        case "view":
+          updateData.totalViews = FieldValue.increment(1);
+          break;
+        case "like":
+          updateData.totalLikes = FieldValue.increment(1);
+          break;
+        case "comment":
+          updateData.totalComments = FieldValue.increment(1);
+          break;
       }
 
-      return null;
+      await db
+        .collection("user_engagement")
+        .doc(uid)
+        .set(updateData, { merge: true });
+
+      logger.info(`Updated engagement for user ${uid}, action: ${action}`);
+      return { success: true };
     } catch (error) {
-      logger.error("Error updating user streaks", error as Error);
-      return null;
+      logger.error("Error updating engagement:", error);
+      throw new functions.https.HttpsError(
+        "internal",
+        "Failed to update engagement."
+      );
     }
-  });
+  }
+);
