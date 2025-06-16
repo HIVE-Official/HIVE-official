@@ -1,21 +1,46 @@
 import * as functions from "firebase-functions";
-import { getFirestore } from "firebase-admin/firestore";
+import { FirebaseHttpsError, firestore, FieldValue } from "../types/firebase";
 
-export const updateUserAvatar = functions.https.onCall(async (data, context) => {
-    if (!context.auth) {
-        throw new functions.https.HttpsError("unauthenticated", "User must be authenticated.");
+interface UpdateAvatarData {
+  avatarUrl: string;
+}
+
+export const updateUserAvatar = functions.https.onCall(
+  async (request): Promise<{ success: boolean; message: string }> => {
+    // Check authentication
+    if (!request.auth) {
+      throw new FirebaseHttpsError(
+        "unauthenticated",
+        "User must be authenticated"
+      );
     }
 
+    // Extract data from request
+    const data = request.data as UpdateAvatarData;
     const { avatarUrl } = data;
-    if (!avatarUrl || typeof avatarUrl !== 'string') {
-        throw new functions.https.HttpsError("invalid-argument", "Invalid avatar URL provided.");
+
+    if (!avatarUrl) {
+      throw new FirebaseHttpsError(
+        "invalid-argument",
+        "Avatar URL is required"
+      );
     }
-    
-    const uid = context.auth.uid;
-    const db = getFirestore();
-    const userRef = db.collection("users").doc(uid);
 
-    await userRef.update({ avatarUrl });
+    const uid = request.auth.uid;
 
-    return { success: true, message: "Avatar updated successfully." };
-}); 
+    try {
+      const db = firestore();
+
+      // Update user profile with new avatar
+      await db.collection("user_profiles").doc(uid).update({
+        avatarUrl,
+        updatedAt: FieldValue.serverTimestamp(),
+      });
+
+      return { success: true, message: "Avatar updated successfully" };
+    } catch (error) {
+      console.error("Error updating avatar:", error);
+      throw new FirebaseHttpsError("internal", "Failed to update avatar");
+    }
+  }
+);

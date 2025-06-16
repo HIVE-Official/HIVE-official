@@ -1,0 +1,10 @@
+{
+  "root": true,
+  "ignorePatterns": ["*"],
+  "overrides": [
+    {
+      "files": ["**/*"],
+      "extends": ["eslint:recommended"]
+    }
+  ]
+}

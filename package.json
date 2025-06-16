@@ -1,29 +1,30 @@
 {
-  "name": "hive-monorepo",
+  "name": "hive-ui",
+  "version": "1.0.0",
   "private": true,
+  "packageManager": "pnpm@9.1.1",
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
   "scripts": {
-    "build": "turbo build",
-    "dev": "turbo dev",
-    "lint": "turbo lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "test:e2e": "turbo run test:e2e",
+    "clean": "turbo run clean",
+    "storybook": "turbo run storybook",
+    "build-storybook": "turbo run build-storybook"
   },
   "devDependencies": {
-    "@repo/eslint-config": "*",
-    "@repo/typescript-config": "*",
-    "prettier": "^3.2.5",
-    "turbo": "latest"
+    "eslint-plugin-import": "^2.29.1",
+    "turbo": "^2.5.4"
   },
-  "packageManager": "pnpm@9.1.1",
-  "dependencies": {
-    "@radix-ui/react-context-menu": "^2.2.15",
-    "@radix-ui/react-dropdown-menu": "^2.1.15",
-    "@tanstack/react-query": "^5.80.6",
-    "@tanstack/react-query-devtools": "^5.80.6",
-    "firebase-admin": "^13.2.0",
-    "i18next": "^25.2.1",
-    "i18next-browser-languagedetector": "^8.2.0",
-    "lucide-react": "^0.514.0",
-    "react-i18next": "^15.5.2",
-    "zustand": "^5.0.5"
-  }
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "packages/config/*"
+  ]
 }

@@ -1,17 +1,17 @@
-import * as functions from 'firebase-functions';
-import * as admin from 'firebase-admin';
+import * as functions from "firebase-functions";
+import * as admin from "firebase-admin";
 import * as logger from "firebase-functions/logger";
 
 /**
  * Updates the public_member_count on a space document when members are added or removed.
- * 
+ *
  * Triggered on write to the members subcollection.
  */
 export const updateSpaceMemberCount = functions.firestore
-  .document('spaces/{spaceId}/members/{memberId}')
+  .document("spaces/{spaceId}/members/{memberId}")
   .onWrite(async (change, context) => {
     const spaceId = context.params.spaceId;
-    const spaceRef = admin.firestore().collection('spaces').doc(spaceId);
+    const spaceRef = admin.firestore().collection("spaces").doc(spaceId);
 
     // Determine if it's a creation or deletion
     const isCreate = change.after.exists && !change.before.exists;
@@ -33,13 +33,13 @@ export const updateSpaceMemberCount = functions.firestore
       // Update the count on the parent space document.
       // FieldValue.increment handles initialization if the field doesn't exist.
       await spaceRef.update({
-        public_member_count: admin.firestore.FieldValue.increment(incrementValue)
+        public_member_count: admin.firestore.FieldValue.increment(incrementValue),
       });
       logger.info(`Successfully updated member count for space ${spaceId} by ${incrementValue}.`);
-      return { success: true };
+      return {success: true};
     } catch (error) {
       logger.error(`Error updating member count for space ${spaceId}:`, error);
       // Optional: Add retry logic or more robust error handling if needed
-      return { success: false, error: error.message };
+      return {success: false, error: error.message};
     }
-  }); 
+  });

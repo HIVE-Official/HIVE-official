@@ -1,6 +1,14 @@
-import * as admin from "firebase-admin";
 import * as functions from "firebase-functions";
-import * as logger from "firebase-functions/logger";
+import {
+  admin,
+  FirebaseHttpsError,
+  FunctionContext,
+  assertAuthenticated,
+  logger,
+  firestore,
+  Timestamp,
+  FieldValue,
+} from "./types/firebase";
 
 /**
  * Interfaces for analytics
@@ -28,12 +36,12 @@ interface PlatformMetrics {
 export const calculatePlatformMetrics = functions.pubsub
   .schedule("0 1 * * *") // Run at 1:00 AM every day
   .timeZone("America/New_York")
-  .onRun(async () => {
+  .onRun(async (): Promise<null> => {
     try {
       logger.info("Starting platform metrics calculation");
 
-      const db = admin.firestore();
-      const now = admin.firestore.Timestamp.now();
+      const db = firestore();
+      const now = Timestamp.now();
 
       // Calculate time periods for active user metrics
       const oneDayAgo = new Date(now.toMillis() - 24 * 60 * 60 * 1000);
@@ -41,38 +49,50 @@ export const calculatePlatformMetrics = functions.pubsub
       const oneMonthAgo = new Date(now.toMillis() - 30 * 24 * 60 * 60 * 1000);
 
       // Query total users
-      const totalUsersSnapshot = await db.collection("user_profiles").count().get();
+      const totalUsersSnapshot = await db
+        .collection("user_profiles")
+        .count()
+        .get();
       const totalUsers = totalUsersSnapshot.data().count;
 
       // Query active users
-      const dailyActiveUsersSnapshot = await db.collection("user_profiles")
+      const dailyActiveUsersSnapshot = await db
+        .collection("user_profiles")
         .where("lastActive", ">", oneDayAgo)
-        .count().get();
+        .count()
+        .get();
       const dailyActiveUsers = dailyActiveUsersSnapshot.data().count;
 
-      const weeklyActiveUsersSnapshot = await db.collection("user_profiles")
+      const weeklyActiveUsersSnapshot = await db
+        .collection("user_profiles")
         .where("lastActive", ">", oneWeekAgo)
-        .count().get();
+        .count()
+        .get();
       const weeklyActiveUsers = weeklyActiveUsersSnapshot.data().count;
 
-      const monthlyActiveUsersSnapshot = await db.collection("user_profiles")
+      const monthlyActiveUsersSnapshot = await db
+        .collection("user_profiles")
         .where("lastActive", ">", oneMonthAgo)
-        .count().get();
+        .count()
+        .get();
       const monthlyActiveUsers = monthlyActiveUsersSnapshot.data().count;
 
       // Calculate engagement rate (DAU/MAU ratio)
-      const engagementRate = monthlyActiveUsers > 0 ?
-        Math.round((dailyActiveUsers / monthlyActiveUsers) * 100) / 100 :
-        0;
+      const engagementRate =
+        monthlyActiveUsers > 0
+          ? Math.round((dailyActiveUsers / monthlyActiveUsers) * 100) / 100
+          : 0;
 
       // Query total events
       const totalEventsSnapshot = await db.collection("events").count().get();
       const totalEvents = totalEventsSnapshot.data().count;
 
       // Query upcoming events
-      const upcomingEventsSnapshot = await db.collection("events")
+      const upcomingEventsSnapshot = await db
+        .collection("events")
         .where("startDate", ">", now)
-        .count().get();
+        .count()
+        .get();
       const upcomingEvents = upcomingEventsSnapshot.data().count;
 
       // Query total spaces
@@ -88,7 +108,10 @@ export const calculatePlatformMetrics = functions.pubsub
       const totalPosts = totalPostsSnapshot.data().count;
 
       // Query total messages
-      const totalMessagesSnapshot = await db.collection("messages").count().get();
+      const totalMessagesSnapshot = await db
+        .collection("messages")
+        .count()
+        .get();
       const messagesSent = totalMessagesSnapshot.data().count;
 
       // Compile metrics
@@ -130,41 +153,44 @@ export const calculatePlatformMetrics = functions.pubsub
     }
   });
 
+interface TrackContentViewData {
+  contentId: string;
+  contentType: string;
+  metadata?: Record<string, unknown>;
+}
+
 /**
  * Function to track content views
  */
 export const trackContentView = functions.https.onCall(
-  async (data, context) => {
+  async (data: TrackContentViewData, context: FunctionContext): Promise<{ success: boolean }> => {
     try {
       // Ensure the user is authenticated
-      if (!context.auth) {
-        throw new functions.https.HttpsError(
-          "unauthenticated",
-          "You must be logged in to track content views"
-        );
-      }
+      assertAuthenticated(context);
 
       const userId = context.auth.uid;
-      const {contentId, contentType, metadata = {}} = data;
+      const { contentId, contentType, metadata = {} } = data;
 
       if (!contentId || !contentType) {
-        throw new functions.https.HttpsError(
+        throw new FirebaseHttpsError(
           "invalid-argument",
           "Missing required parameters: contentId or contentType"
         );
       }
 
-      const timestamp = admin.firestore.FieldValue.serverTimestamp();
+      const timestamp = FieldValue.serverTimestamp();
 
       // Add to user activities collection
-      await admin.firestore().collection("user_activities").add({
-        userId,
-        action: `view_${contentType}`,
-        targetType: contentType,
-        targetId: contentId,
-        timestamp,
-        metadata,
-      });
+      await firestore()
+        .collection("user_activities")
+        .add({
+          userId,
+          action: `view_${contentType}`,
+          targetType: contentType,
+          targetId: contentId,
+          timestamp,
+          metadata,
+        });
 
       // Update view count for the content
       await updateContentViewCount(contentType, contentId);
@@ -176,13 +202,10 @@ export const trackContentView = functions.https.onCall(
         contentType,
       });
 
-      return {success: true};
+      return { success: true };
     } catch (error) {
       logger.error("Error tracking content view", error);
-      throw new functions.https.HttpsError(
-        "internal",
-        "Failed to track content view"
-      );
+      throw new FirebaseHttpsError("internal", "Failed to track content view");
     }
   }
 );
@@ -195,45 +218,51 @@ async function updateContentViewCount(
   contentId: string
 ): Promise<void> {
   try {
-    const db = admin.firestore();
+    const db = firestore();
     let collectionName: string;
 
     switch (contentType) {
-    case "event":
-      collectionName = "events";
-      break;
-    case "space":
-      collectionName = "spaces";
-      break;
-    case "club":
-      collectionName = "clubs";
-      break;
-    case "post":
-      collectionName = "posts";
-      break;
-    case "profile":
-      collectionName = "user_profiles";
-      break;
-    default:
-      logger.warn(`Unknown content type: ${contentType}`);
-      return;
+      case "event":
+        collectionName = "events";
+        break;
+      case "space":
+        collectionName = "spaces";
+        break;
+      case "club":
+        collectionName = "clubs";
+        break;
+      case "post":
+        collectionName = "posts";
+        break;
+      case "profile":
+        collectionName = "user_profiles";
+        break;
+      default:
+        logger.warn(`Unknown content type: ${contentType}`);
+        return;
     }
 
     // Update view count atomically
-    await db.collection(collectionName).doc(contentId).update({
-      viewCount: admin.firestore.FieldValue.increment(1),
-      lastViewed: admin.firestore.FieldValue.serverTimestamp(),
-    });
+    await db
+      .collection(collectionName)
+      .doc(contentId)
+      .update({
+        viewCount: FieldValue.increment(1),
+        lastViewed: FieldValue.serverTimestamp(),
+      });
 
     // Also update activity metrics
     await db.collection("content_metrics").add({
       contentId,
       contentType,
       action: "view",
-      timestamp: admin.firestore.FieldValue.serverTimestamp(),
+      timestamp: FieldValue.serverTimestamp(),
     });
   } catch (error) {
-    logger.error(`Error updating view count for ${contentType}:${contentId}`, error);
+    logger.error(
+      `Error updating view count for ${contentType}:${contentId}`,
+      error
+    );
     // Don't throw the error as this is a non-critical operation
   }
 }
@@ -244,17 +273,18 @@ async function updateContentViewCount(
 export const calculateTrendingContent = functions.pubsub
   .schedule("0 */3 * * *") // Run every 3 hours
   .timeZone("America/New_York")
-  .onRun(async () => {
+  .onRun(async (): Promise<null> => {
     try {
       logger.info("Starting trending content calculation");
 
       // Calculate time window (last 24 hours)
-      const db = admin.firestore();
-      const now = admin.firestore.Timestamp.now();
+      const db = firestore();
+      const now = Timestamp.now();
       const oneDayAgo = new Date(now.toMillis() - 24 * 60 * 60 * 1000);
 
       // Get recent content metrics
-      const metricsSnapshot = await db.collection("content_metrics")
+      const metricsSnapshot = await db
+        .collection("content_metrics")
         .where("timestamp", ">", oneDayAgo)
         .get();
 
@@ -263,26 +293,28 @@ export const calculateTrendingContent = functions.pubsub
         return null;
       }
 
+      interface ContentScore {
+        id: string;
+        type: string;
+        views: number;
+        likes: number;
+        comments: number;
+        shares: number;
+        rsvps: number;
+        score: number;
+      }
+
       // Aggregate metrics by content item
-      const contentScores: Record<string, {
-        id: string,
-        type: string,
-        views: number,
-        likes: number,
-        comments: number,
-        shares: number,
-        rsvps: number,
-        score: number
-      }> = {};
+      const contentScores: Record<string, ContentScore> = {};
 
       metricsSnapshot.forEach((doc) => {
-        const data = doc.data();
+        const data = doc.data() as Record<string, unknown>;
         const key = `${data.contentType}_${data.contentId}`;
 
         if (!contentScores[key]) {
           contentScores[key] = {
-            id: data.contentId,
-            type: data.contentType,
+            id: data.contentId as string,
+            type: data.contentType as string,
             views: 0,
             likes: 0,
             comments: 0,
@@ -293,44 +325,47 @@ export const calculateTrendingContent = functions.pubsub
         }
 
         // Increment metrics based on action type
-        switch (data.action) {
-        case "view":
-          contentScores[key].views += 1;
-          break;
-        case "like":
-          contentScores[key].likes += 1;
-          break;
-        case "comment":
-          contentScores[key].comments += 1;
-          break;
-        case "share":
-          contentScores[key].shares += 1;
-          break;
-        case "rsvp":
-          contentScores[key].rsvps += 1;
-          break;
+        switch (data.action as string) {
+          case "view":
+            contentScores[key].views += 1;
+            break;
+          case "like":
+            contentScores[key].likes += 1;
+            break;
+          case "comment":
+            contentScores[key].comments += 1;
+            break;
+          case "share":
+            contentScores[key].shares += 1;
+            break;
+          case "rsvp":
+            contentScores[key].rsvps += 1;
+            break;
         }
       });
 
       // Calculate engagement score for each content item
-      // Weight engagements differently (e.g., commenting is higher engagement than viewing)
+      // Weight engagements differently
+      // (e.g., commenting is higher engagement than viewing)
       for (const key in contentScores) {
-        const item = contentScores[key];
-        item.score = (
-          (item.views * 1) +
-          (item.likes * 2) +
-          (item.comments * 4) +
-          (item.shares * 5) +
-          (item.rsvps * 3)
-        );
+        if (Object.prototype.hasOwnProperty.call(contentScores, key)) {
+          const item = contentScores[key];
+          item.score =
+            item.views * 1 +
+            item.likes * 2 +
+            item.comments * 4 +
+            item.shares * 5 +
+            item.rsvps * 3;
+        }
       }
 
       // Convert to array and sort by score
-      const sortedContent = Object.values(contentScores)
-        .sort((a, b) => b.score - a.score);
+      const sortedContent = Object.values(contentScores).sort(
+        (a, b) => b.score - a.score
+      );
 
       // Group by content type
-      const trendingByType: Record<string, any[]> = {};
+      const trendingByType: Record<string, ContentScore[]> = {};
       for (const item of sortedContent) {
         if (!trendingByType[item.type]) {
           trendingByType[item.type] = [];
@@ -379,20 +414,20 @@ export const calculateTrendingContent = functions.pubsub
 export const calculateRetentionMetrics = functions.pubsub
   .schedule("0 2 * * 0") // Run at 2:00 AM every Sunday
   .timeZone("America/New_York")
-  .onRun(async () => {
+  .onRun(async (): Promise<null> => {
     try {
       logger.info("Starting retention metrics calculation");
 
-      const db = admin.firestore();
+      const db = firestore();
       const now = new Date();
 
       // Define time windows for cohort analysis
       const cohortWindows = [
-        {days: 7, label: "1_week"},
-        {days: 14, label: "2_week"},
-        {days: 30, label: "1_month"},
-        {days: 60, label: "2_month"},
-        {days: 90, label: "3_month"},
+        { days: 7, label: "1_week" },
+        { days: 14, label: "2_week" },
+        { days: 30, label: "1_month" },
+        { days: 60, label: "2_month" },
+        { days: 90, label: "3_month" },
       ];
 
       // Calculate week start for current cohort (start of current week)
@@ -403,14 +438,30 @@ export const calculateRetentionMetrics = functions.pubsub
       currentWeekStart.setHours(0, 0, 0, 0);
 
       // Get active users in the current week
-      const activeUsersThisWeek = await db.collection("user_profiles")
+      const activeUsersThisWeek = await db
+        .collection("user_profiles")
         .where("lastActive", ">", currentWeekStart)
         .get();
-      const activeUserIds = new Set(activeUsersThisWeek.docs.map((doc) => doc.id));
+      const activeUserIds = new Set(
+        activeUsersThisWeek.docs.map((doc) => doc.id)
+      );
+
+      interface RetentionData {
+        date: admin.firestore.Timestamp;
+        totalActiveUsers: number;
+        cohorts: Record<
+          string,
+          {
+            cohortSize: number;
+            activeUsers: number;
+            retentionRate: number;
+          }
+        >;
+      }
 
       // Analyze retention for each cohort window
-      const retentionData: Record<string, any> = {
-        date: admin.firestore.Timestamp.fromDate(now),
+      const retentionData: RetentionData = {
+        date: Timestamp.fromDate(now),
         totalActiveUsers: activeUserIds.size,
         cohorts: {},
       };
@@ -422,7 +473,8 @@ export const calculateRetentionMetrics = functions.pubsub
         cohortStartDate.setHours(0, 0, 0, 0);
 
         // Get users who signed up during the cohort window
-        const newUsersDuringWindow = await db.collection("user_profiles")
+        const newUsersDuringWindow = await db
+          .collection("user_profiles")
           .where("createdAt", ">=", cohortStartDate)
           .where("createdAt", "<", currentWeekStart)
           .get();
@@ -438,10 +490,13 @@ export const calculateRetentionMetrics = functions.pubsub
 
         // Calculate how many of these users are still active
         const cohortUserIds = newUsersDuringWindow.docs.map((doc) => doc.id);
-        const activeInCohort = cohortUserIds.filter((id) => activeUserIds.has(id));
+        const activeInCohort = cohortUserIds.filter((id) =>
+          activeUserIds.has(id)
+        );
 
         // Calculate retention rate
-        const retentionRate = Math.round((activeInCohort.length / cohortUserIds.length) * 100) / 100;
+        const rawRetention = activeInCohort.length / cohortUserIds.length;
+        const retentionRate = Math.round(rawRetention * 100) / 100;
 
         retentionData.cohorts[window.label] = {
           cohortSize: cohortUserIds.length,
@@ -456,13 +511,16 @@ export const calculateRetentionMetrics = functions.pubsub
       }
 
       // Store retention data
-      await db.collection("analytics").doc("retention").collection("weekly")
+      await db
+        .collection("analytics")
+        .doc("retention")
+        .collection("weekly")
         .add(retentionData);
 
       // Update latest retention document
       await db.collection("analytics").doc("retention").set({
         latest: retentionData,
-        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+        updatedAt: FieldValue.serverTimestamp(),
       });
 
       logger.info("Retention metrics calculation completed");

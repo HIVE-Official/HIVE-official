@@ -1,0 +1,51 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# HIVE AI Collaboration Guidelines
+
+This document outlines the operational protocol for working with the HIVE AI Product Architect. Adhering to these guidelines will maximize the quality of AI-generated code and streamline the development process. This is inspired by industry best practices for AI-assisted development.
+
+## 1. The Core Principle: AI as a Pair Programmer
+
+Treat the AI as a skilled but context-limited pair programmer. It excels at execution but relies entirely on the clarity and quality of the context provided. As noted in general AI best practices, providing comprehensive context is key to getting high-quality results.
+
+## 2. Prompting Protocol
+
+To ensure the AI has sufficient context, all development prompts should follow this structure:
+
+### 2.1. State the Objective Clearly
+- **Bad:** "Fix the login button."
+- **Good:** "The login button in the `AuthCard` component is not correctly triggering the `handleLogin` function on click. Please fix the `onClick` handler."
+
+### 2.2. Provide All Relevant Context
+- **Reference Files:** Explicitly mention all relevant files using the `@` symbol (e.g., `@apps/web/src/app/login/page.tsx`). As highlighted by AI development best practices, this is crucial for focusing the AI's attention.
+- **Reference Rules:** Refer to any applicable Cursor Rules that should guide the implementation (e.g., "This should follow the patterns in `@hive-monorepo-architecture.mdc`").
+
+### 2.3. Break Down Complex Tasks
+For any task larger than a trivial change, break it down into smaller, verifiable steps.
+- **Bad:** "Build the user profile page."
+- **Good:**
+    1.  "First, create the basic layout for the profile page at `apps/web/src/app/profile/page.tsx`."
+    2.  "Next, fetch user data from the `/api/user` endpoint within the new page."
+    3.  "Then, create a `UserProfileCard` component in `packages/ui` to display the user's name and email."
+    4.  "Finally, create a Storybook story for the `UserProfileCard` component."
+
+## 3. Writing "AI-Friendly" Code
+
+The structure of our code directly impacts the AI's ability to understand and modify it effectively. Following these principles makes the codebase more receptive to AI-driven development.
+
+- **Modularity:** Keep files and components small and focused on a single responsibility. This helps the AI's retrieval-augmented generation (RAG) system find the most relevant code snippets without being confused by unrelated logic in the same file.
+- **Clarity over Brevity:** Use descriptive variable and function names.
+- **Document the "Why":** Add comments to explain complex, non-obvious logic or business decisions. The "how" should be clear from the code, but the "why" provides essential context for the AI.
+
+## 4. Storybook-Driven UI Development
+
+To ensure visual consistency and robust testing, we will adhere to a strict Storybook-driven development process for all UI components.
+
+- **Mandatory Stories:** Every new UI component created within `packages/ui` **must** be accompanied by a corresponding `.stories.tsx` file.
+- **Comprehensive Variants:** The story should include controls and examples for all component variants (e.g., different states, sizes, colors).
+- **Verification:** A component is not considered "done" until its Storybook story has been reviewed and approved, as per our `checklist.md`'s verification protocol.
+
+This protocol ensures every component is a well-documented, independently verifiable artifact in our design system.

@@ -1,12 +1,35 @@
 {
+  "files": [],
+  "references": [
+    { "path": "./apps/web/tsconfig.json" },
+    { "path": "./apps/admin/tsconfig.json" },
+    { "path": "./packages/ui/tsconfig.json" },
+    { "path": "./packages/core/tsconfig.json" },
+    { "path": "./packages/auth-logic/tsconfig.json" },
+    { "path": "./packages/hooks/tsconfig.json" },
+    { "path": "./packages/validation/tsconfig.json" },
+    { "path": "./packages/utilities/tsconfig.json" },
+    { "path": "./packages/api-client/tsconfig.json" },
+    { "path": "./packages/tokens/tsconfig.json" },
+    { "path": "./packages/analytics/tsconfig.json" },
+    { "path": "./packages/i18n/tsconfig.json" }
+  ],
   "compilerOptions": {
-    "target": "es2015",
-    "module": "commonjs",
-    "baseUrl": "src",
+    "baseUrl": ".",
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
     "paths": {
-      "lib/*": ["pages/*"]
-    },
-    "strict": true
-  },
-  "include": ["src/**/*", "lib/Navigation.tsx"]
+      "@hive/auth-logic/*": ["packages/auth-logic/src/*"],
+      "@hive/core/*": ["packages/core/src/*"],
+      "@hive/hooks/*": ["packages/hooks/src/*"],
+      "@hive/ui/*": ["packages/ui/src/*"],
+      "@hive/config/*": ["packages/config/*"],
+      "@hive/tokens/*": ["packages/tokens/src/*"],
+      "@hive/utilities/*": ["packages/utilities/src/*"],
+      "@hive/validation/*": ["packages/validation/src/*"],
+      "@hive/api-client/*": ["packages/api-client/src/*"],
+      "@hive/analytics/*": ["packages/analytics/src/*"],
+      "@hive/i18n/*": ["packages/i18n/src/*"]
+    }
+  }
 } 

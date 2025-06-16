@@ -1,0 +1,46 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "ESLint: Restart ESLint Server",
+      "type": "shell",
+      "command": "${command:eslint.restart}",
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "silent",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "ESLint: Lint Current File",
+      "type": "shell",
+      "command": "npx",
+      "args": ["eslint", "${file}"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": [
+        {
+          "owner": "eslint",
+          "fileLocation": "absolute",
+          "pattern": {
+            "regexp": "^(.+):(\\d+):(\\d+):\\s+(warning|error)\\s+(.+)\\s+(.+)$",
+            "file": 1,
+            "line": 2,
+            "column": 3,
+            "severity": 4,
+            "message": 5,
+            "code": 6
+          }
+        }
+      ]
+    }
+  ]
+}

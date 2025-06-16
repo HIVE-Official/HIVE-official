@@ -1,0 +1,41 @@
+{
+  "extends": "../../packages/config/typescript/nextjs.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@hive/ui": ["../../packages/ui/src"],
+      "@hive/core": ["../../packages/core/src"],
+      "@hive/hooks": ["../../packages/hooks/src"],
+      "@hive/auth-logic": ["../../packages/auth-logic/src"],
+      "@hive/tokens": ["../../packages/tokens"],
+      "@hive/utilities": ["../../packages/utilities/src"],
+      "@hive/validation": ["../../packages/validation/src"]
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": false,
+    "noEmit": true,
+    "incremental": true,
+    "module": "esnext",
+    "esModuleInterop": true,
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "target": "ES2017",
+    "typeRoots": [
+      "../../node_modules/@types",
+      "../../node_modules",
+      "node_modules/@types"
+    ]
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
+}

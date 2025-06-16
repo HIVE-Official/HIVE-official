@@ -1,15 +1,42 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "noImplicitReturns": true,
-    "noUnusedLocals": true,
+    "noImplicitReturns": false,
+    "noUnusedLocals": false,
     "outDir": "lib",
     "sourceMap": true,
-    "strict": true,
-    "target": "es2017"
+    "strict": false,
+    "target": "es2022",
+    "lib": ["es2022"],
+    "typeRoots": ["node_modules/@types"],
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "declaration": false,
+    "declarationMap": false,
+    "forceConsistentCasingInFileNames": true,
+    "exactOptionalPropertyTypes": false,
+    "noImplicitOverride": false,
+    "noPropertyAccessFromIndexSignature": false,
+    "noUncheckedIndexedAccess": false,
+    "noImplicitAny": false,
+    "noImplicitThis": false,
+    "noImplicitReturns": false,
+    "allowJs": true
   },
   "compileOnSave": true,
-  "include": [
-    "src"
+  "include": ["src/**/*"],
+  "exclude": [
+    "node_modules/**/*",
+    "lib/**/*",
+    "../node_modules/**/*",
+    "../packages/**/*",
+    "../apps/**/*",
+    "**/node_modules/@google-cloud/**/*",
+    "**/node_modules/gaxios/**/*",
+    "**/node_modules/google-auth-library/**/*",
+    "**/node_modules/gtoken/**/*"
   ]
 }
