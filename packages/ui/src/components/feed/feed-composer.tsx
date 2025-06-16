@@ -19,7 +19,6 @@ import { cn } from "../../lib/utils";
 import type { CreatePost } from "@hive/core";
 import type { PostType } from "@hive/core";
 
-export default {};
 interface FeedComposerProps {
   spaceId: string;
   currentUser: {

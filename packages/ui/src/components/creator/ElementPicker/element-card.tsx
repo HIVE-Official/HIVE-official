@@ -2,7 +2,6 @@
 
 import React from "react";
 
-export default {};
 import { cn } from "../../../lib/utils";
 import {
   Type,

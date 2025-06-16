@@ -1,7 +1,6 @@
 import React from 'react'
 import { cn } from '../../lib/utils'
 
-export default {}
 interface AvatarProps {
   children: React.ReactNode
   className?: string

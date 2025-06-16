@@ -6,7 +6,6 @@ export type ConfigValue = string | number | boolean | null | undefined;
 // Define a type for config objects
 export type ConfigObject = Record<string, ConfigValue | ConfigValue[]>;
 
-export default {};
 
 export interface PropertySchema {
   /** Property key in the config object */

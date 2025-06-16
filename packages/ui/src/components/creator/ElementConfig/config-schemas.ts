@@ -1,7 +1,6 @@
 import type { ElementConfigSchema } from './types';
 
 // Configuration schemas for all element types
-export default {}
 export const ELEMENT_CONFIG_SCHEMAS: Record<string, ElementConfigSchema> = {
   textBlock: {
     elementType: 'textBlock',
