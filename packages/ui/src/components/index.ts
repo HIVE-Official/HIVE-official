@@ -41,3 +41,6 @@ export * from "./welcome";
 
 // Analytics Components
 export * from "./analytics-dashboard";
+
+// Safety Components
+export * from "./safety";

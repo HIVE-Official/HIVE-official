@@ -19,6 +19,9 @@ export * from "./domain/analytics/onboarding";
 export * from "./domain/analytics/feed";
 export * from "./domain/analytics/events";
 
+// Domain types - Safety
+export * from "./domain/safety";
+
 // Domain types - Other
 export type { SpaceMember } from "./domain/member";
 export type { WaitlistEntry } from "./domain/waitlistEntry";
