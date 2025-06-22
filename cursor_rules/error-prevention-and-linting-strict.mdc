@@ -1,0 +1,144 @@
+## 14. STORYBOOK COMPONENT INTERFACE HYGIENE (MANDATORY)
+
+**✅ PROVEN EFFECTIVE** - The following protocols prevent component interface mismatches:
+
+### **Component Props Interface Validation**
+
+**ENFORCED BY WORKING ESLINT + STORYBOOK CONFIG:**
+
+```typescript
+// ✅ CORRECT - Props match component interface exactly:
+interface ComponentProps {
+  elementInstance: ElementInstance;
+  elementDefinition: Element;
+  isSelected?: boolean;
+  isPreview?: boolean;
+  onSelect?: () => void;
+}
+
+// Story MUST match interface:
+export const Example: Story = {
+  args: {
+    elementInstance: mockInstance,  // ✅ Matches interface
+    elementDefinition: mockDef,     // ✅ Matches interface
+    isSelected: false,              // ✅ Matches interface
+    isPreview: false,               // ✅ Matches interface
+    onSelect: () => console.log(),  // ✅ Matches interface
+  },
+};
+
+// ❌ WRONG - Props don't match interface (causes runtime errors):
+export const Broken: Story = {
+  args: {
+    element: mockInstance,          // ❌ Should be 'elementInstance'
+    onClick: () => console.log(),   // ❌ Should be 'onSelect'
+    mode: "design",                 // ❌ Should be 'isPreview: boolean'
+  },
+};
+```
+
+### **Mandatory Storybook Validation Protocol**
+
+**AI AGENTS: YOU MUST VERIFY FOR EVERY COMPONENT STORY:**
+
+1. **Interface Alignment Check**:
+   ```bash
+   # Verify props in story match component interface exactly
+   grep -A 20 "interface.*Props" src/components/path/Component.tsx
+   grep -A 10 "args:" src/components/path/component.stories.tsx
+   ```
+
+2. **Runtime Error Prevention**:
+   ```typescript
+   // ALWAYS check for undefined prop access errors:
+   const config = (elementInstance?.config as ElementConfig) || {};
+   
+   // ❌ NEVER assume props exist:
+   const config = elementInstance.config; // Can cause "Cannot read properties of undefined"
+   ```
+
+3. **Story ArgTypes Validation**:
+   ```typescript
+   // ✅ ArgTypes MUST match component props:
+   const meta: Meta<typeof Component> = {
+     argTypes: {
+       onSelect: { action: "selected" },    // ✅ Matches prop name
+       isPreview: { control: "boolean" },   // ✅ Matches prop type
+       // ❌ onClick: { action: "clicked" }, // WRONG - doesn't exist in interface
+     },
+   };
+   ```
+
+### **Component Interface Anti-Patterns (FORBIDDEN)**
+
+**ESLINT CATCHES THESE VIOLATIONS:**
+
+```typescript
+// ❌ FORBIDDEN - Inconsistent prop naming:
+interface Props {
+  elementInstance: ElementInstance;
+}
+// Story using different name:
+args: { element: mockData } // Should be elementInstance
+
+// ❌ FORBIDDEN - Missing prop type safety:
+args: {
+  elementInstance: mockData as any,  // ESLint error
+}
+
+// ❌ FORBIDDEN - Callback prop mismatches:
+interface Props {
+  onSelect: () => void;
+}
+// Story with wrong callback:
+args: { onClick: () => {} }  // Should be onSelect
+```
+
+### **Storybook Error Recovery Protocol**
+
+**WHEN "Cannot read properties of undefined" ERRORS OCCUR:**
+
+1. **Immediate Diagnosis**:
+   ```bash
+   # Check component interface:
+   head -50 src/components/path/Component.tsx | grep -A 20 "interface.*Props"
+   
+   # Check story props:
+   head -100 src/components/path/component.stories.tsx | grep -A 20 "args:"
+   ```
+
+2. **Fix Prop Mismatches**:
+   ```typescript
+   // Update story to match interface exactly
+   // Change: element → elementInstance
+   // Change: onClick → onSelect  
+   // Change: mode → isPreview
+   ```
+
+3. **Verify Fix**:
+   ```bash
+   npx eslint src/components/path/ --max-warnings 0
+   # Storybook should reload automatically without errors
+   ```
+
+### **Integration with Existing Covenant**
+
+This section extends the existing **ZERO TOLERANCE POLICY** to include:
+
+- ❌ **NO** prop name mismatches between components and stories
+- ❌ **NO** undefined property access in components
+- ❌ **NO** `as any` type assertions in Storybook args
+- ❌ **NO** callback prop naming inconsistencies
+- ❌ **NO** interface violations in component stories
+
+**MANDATORY VERIFICATION UPDATED:**
+
+```bash
+✅ npx eslint . --max-warnings 15        # MUST pass with ≤15 warnings total
+✅ tsc --noEmit                          # MUST pass TypeScript compilation  
+✅ Test Storybook loads without errors   # NEW: All stories must render without runtime errors
+✅ pnpm test                             # MUST pass all tests
+✅ next build                            # MUST build successfully
+```
+
+**If Storybook has runtime errors, the task is NOT complete.**

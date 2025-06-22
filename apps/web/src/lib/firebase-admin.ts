@@ -96,7 +96,7 @@ try {
           `Firebase Admin not configured for ${currentEnvironment}. Add credentials to environment variables.`
         );
       },
-      add: async (data: any) => {
+      add: async (_data: Record<string, unknown>) => {
         console.log(
           `🔄 Mock Firebase call: collection(${path}).add() - development mode`
         );
@@ -113,7 +113,7 @@ try {
             `Firebase Admin not configured for ${currentEnvironment}.`
           );
         },
-        set: async (data: any) => {
+        set: async (_data: Record<string, unknown>) => {
           console.log(
             `🔄 Mock Firebase call: collection(${path}).doc(${id}).set() - development mode`
           );
@@ -123,10 +123,10 @@ try {
         },
       }),
     }),
-  } as any;
+  } as admin.firestore.Firestore;
 
   authAdmin = {
-    verifyIdToken: async (token: string) => {
+    verifyIdToken: async (_token: string) => {
       console.log(`🔄 Mock Firebase call: verifyIdToken() - development mode`);
       throw new Error(
         `Firebase Auth not configured for ${currentEnvironment}.`
@@ -140,7 +140,7 @@ try {
         `Firebase Auth not configured for ${currentEnvironment}.`
       );
     },
-  } as any;
+  } as admin.auth.Auth;
 }
 
 export { dbAdmin, authAdmin };

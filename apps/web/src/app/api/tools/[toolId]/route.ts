@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { getAuth } from "firebase-admin/auth";
-import { getFirestore } from "firebase-admin/firestore";
+import { getFirestore, Timestamp } from "firebase-admin/firestore";
 import { z } from "zod";
 import {
   UpdateToolSchema,
@@ -15,6 +15,14 @@ import {
 } from "@hive/core";
 
 const db = getFirestore();
+
+interface ToolVersion {
+  version: string;
+  changelog: string;
+  createdAt: Timestamp;
+  createdBy: string;
+  isStable: boolean;
+}
 
 // GET /api/tools/[toolId] - Get tool details
 export async function GET(
@@ -55,7 +63,7 @@ export async function GET(
     }
 
     // Get versions if user can edit
-    let versions: any[] = [];
+    let versions: ToolVersion[] = [];
     if (canUserEditTool(tool, userId)) {
       const versionsSnapshot = await toolDoc.ref
         .collection("versions")
@@ -63,10 +71,13 @@ export async function GET(
         .limit(10)
         .get();
 
-      versions = versionsSnapshot.docs.map((doc) => ({
-        version: doc.id,
-        ...doc.data(),
-      }));
+      versions = versionsSnapshot.docs.map(
+        (doc) =>
+          ({
+            version: doc.id,
+            ...doc.data(),
+          }) as ToolVersion
+      );
     }
 
     return NextResponse.json({
@@ -185,7 +196,7 @@ export async function PUT(
       const versionData = {
         version: newVersion,
         changelog: updateData.changelog || "Updated tool configuration",
-        createdAt: now,
+        createdAt: Timestamp.fromDate(now),
         createdBy: userId,
         isStable: false,
       };

@@ -41,8 +41,7 @@ export {
   ResizablePanelGroup,
 } from "./src/components/ui/resizable";
 
-// Typography & UI Elements
-export { Heading, Muted, Text } from "./src/components/typography";
+// Typography & UI Elements (exported from ui/typography via components/index.ts)
 
 // Creator Components
 export {
@@ -93,3 +92,7 @@ export {
   MotionDiv,
   AnimatePresence,
 } from "./src/components/framer-motion-proxy";
+
+// New exports
+export { Slider } from "./src/components/ui/slider";
+export { Separator } from "./src/components/ui/separator";

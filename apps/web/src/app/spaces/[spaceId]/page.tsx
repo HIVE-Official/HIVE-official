@@ -91,7 +91,7 @@ export default function SpaceDetailPage({
   const [spaceId, setSpaceId] = React.useState<string | null>(null);
 
   React.useEffect(() => {
-    params.then(({ spaceId }) => setSpaceId(spaceId));
+    void params.then(({ spaceId }) => setSpaceId(spaceId));
   }, [params]);
 
   const {

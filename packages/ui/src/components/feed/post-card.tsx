@@ -1,16 +1,18 @@
+"use client";
+
 import React, { useState } from "react";
 import { formatDistanceToNow } from "date-fns";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "../ui/card";
+import { Button } from "../ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Badge } from "../ui/badge";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "../ui/dropdown-menu";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,7 +22,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+} from "../ui/alert-dialog";
 import {
   Heart,
   MoreHorizontal,
@@ -38,7 +40,6 @@ import { cn } from "../../lib/utils";
 import type { Post } from "@hive/core";
 // import { PostType } from '@hive/core'
 
-export default {};
 interface PostCardProps {
   post: Post & {
     author: {

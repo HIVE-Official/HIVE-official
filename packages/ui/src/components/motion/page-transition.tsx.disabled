@@ -1,0 +1,210 @@
+"use client";
+
+import React, { useEffect, useState } from "react";
+import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
+
+// Import our motion tokens with proper typing
+import { motion as motionTokens } from "@hive/tokens/motion";
+
+interface PageTransitionProps {
+  children: React.ReactNode;
+  className?: string;
+  /** Override default page transition variant */
+  variant?: keyof typeof motionTokens.animations;
+  /** Disable transitions entirely (useful for reduced motion) */
+  disableTransitions?: boolean;
+  /** Enable shared layout animations between pages */
+  enableSharedLayout?: boolean;
+}
+
+interface PageMetadata {
+  /** Unique identifier for shared element animations */
+  layoutId?: string;
+  /** Page-specific background treatment */
+  background?: "default" | "canvas" | "elevated";
+  /** Page loading priority for performance */
+  priority?: "high" | "normal" | "low";
+}
+
+/**
+ * Production-grade page transition wrapper with HIVE brand motion
+ *
+ * Features:
+ * - Automatic route-based transitions
+ * - Shared element morphing between pages
+ * - Performance-optimized animations
+ * - Accessibility compliance (respects reduced motion)
+ * - HIVE brand timing and easing curves
+ */
+export function PageTransition({
+  children,
+  className,
+  variant = "pageEnter",
+  disableTransitions = false,
+  enableSharedLayout = true,
+}: PageTransitionProps) {
+  const pathname = usePathname();
+  const [isReducedMotion, setIsReducedMotion] = useState(false);
+
+  // Check for reduced motion preference
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setIsReducedMotion(mediaQuery.matches);
+
+    const handler = (e: MediaQueryListEvent) => setIsReducedMotion(e.matches);
+    mediaQuery.addEventListener("change", handler);
+    return () => mediaQuery.removeEventListener("change", handler);
+  }, []);
+
+  // Skip animations if disabled or reduced motion
+  const shouldAnimate = !disableTransitions && !isReducedMotion;
+
+  if (!shouldAnimate) {
+    return <div className={cn("min-h-screen", className)}>{children}</div>;
+  }
+
+  // Type-safe variant access
+  const transitionVariant = motionTokens.animations[variant];
+  if (!transitionVariant) {
+    console.warn(`Motion variant "${variant}" not found, using default`);
+    return <div className={cn("min-h-screen", className)}>{children}</div>;
+  }
+
+  return (
+    <LayoutGroup id={enableSharedLayout ? "page-layout" : undefined}>
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.div
+          key={pathname}
+          initial={transitionVariant.initial}
+          animate={transitionVariant.animate}
+          exit={transitionVariant.exit}
+          transition={transitionVariant.transition}
+          className={cn(
+            "min-h-screen",
+            // HIVE brand background treatment
+            "bg-black",
+            // Performance optimization
+            "will-change-transform",
+            className
+          )}
+          // Performance: Promote to GPU layer
+          style={{ backfaceVisibility: "hidden" }}
+        >
+          {children}
+        </motion.div>
+      </AnimatePresence>
+    </LayoutGroup>
+  );
+}
+
+/**
+ * Specialized page wrapper for different HIVE page types
+ */
+export function HivePage({
+  children,
+  metadata,
+  className,
+  ...props
+}: PageTransitionProps & { metadata?: PageMetadata }) {
+  const backgroundClass = {
+    default: "bg-black",
+    canvas: "bg-black",
+    elevated: "bg-zinc-900",
+  }[metadata?.background || "default"];
+
+  return (
+    <PageTransition className={cn(backgroundClass, className)} {...props}>
+      <div
+        className="relative z-10"
+        style={{
+          // Add subtle grain texture for HIVE brand
+          backgroundImage:
+            "radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.015) 1px, transparent 0)",
+          backgroundSize: "16px 16px",
+        }}
+      >
+        {children}
+      </div>
+    </PageTransition>
+  );
+}
+
+/**
+ * Shared element wrapper for morphing between pages
+ * Example: Profile avatar that morphs from feed card to profile header
+ */
+export function SharedElement({
+  layoutId,
+  children,
+  className,
+}: {
+  layoutId: string;
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <motion.div
+      layoutId={layoutId}
+      className={className}
+      transition={{
+        duration: 0.22,
+        ease: [0.22, 0.61, 0.36, 1], // HIVE standard easing
+      }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+/**
+ * Route-specific transition variants extending our base system
+ */
+export const hiveRouteTransitions = {
+  // Feed to Space transition (horizontal slide)
+  feedToSpace: {
+    initial: { opacity: 0, x: 20 },
+    animate: { opacity: 1, x: 0 },
+    exit: { opacity: 0, x: -20 },
+    transition: {
+      duration: 0.22,
+      ease: [0.22, 0.61, 0.36, 1],
+    },
+  },
+
+  // Modal overlay transitions
+  modalOverlay: {
+    initial: { opacity: 0 },
+    animate: { opacity: 1 },
+    exit: { opacity: 0 },
+    transition: {
+      duration: 0.18,
+      ease: [0.22, 0.61, 0.36, 1],
+    },
+  },
+
+  // Onboarding flow transitions (forward momentum)
+  onboardingStep: {
+    initial: { opacity: 0, y: 20, scale: 0.98 },
+    animate: { opacity: 1, y: 0, scale: 1 },
+    exit: { opacity: 0, y: -10, scale: 1.02 },
+    transition: {
+      duration: 0.24,
+      ease: [0.22, 0.61, 0.36, 1],
+    },
+  },
+
+  // Profile view transitions (elegant vertical)
+  profileView: {
+    initial: { opacity: 0, y: 30 },
+    animate: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: -20 },
+    transition: {
+      duration: 0.26,
+      ease: [0.22, 0.61, 0.36, 1],
+    },
+  },
+} as const;
+
+export type HiveRouteTransition = keyof typeof hiveRouteTransitions;

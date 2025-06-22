@@ -10,8 +10,8 @@ import React, {
 import { useDrop } from "react-dnd";
 import { cn } from "../../../lib/utils";
 import type { Tool, Element, ElementInstance } from "@hive/core";
+import { ElementRenderer } from "./ElementRenderer";
 // TODO: Implement these components
-// import { ElementRenderer } from './ElementRenderer'
 // import { SelectionBox } from './SelectionBox'
 // import { ContextMenu } from './ContextMenu'
 import { Button } from "../../ui/button";
@@ -406,13 +406,16 @@ export const DesignCanvas = forwardRef<HTMLDivElement, DesignCanvasProps>(
                         handleContextMenu(e, elementInstance.id)
                       }
                     >
-                      {/* TODO: Implement ElementRenderer component */}
-                      <div className="w-full h-full bg-muted border border-dashed border-muted-foreground/50 rounded flex items-center justify-center">
-                        <div className="text-center text-sm text-muted-foreground">
-                          <div className="font-medium">{elementDef.name}</div>
-                          <div className="text-xs">{elementInstance.id}</div>
-                        </div>
-                      </div>
+                      <ElementRenderer
+                        elementInstance={elementInstance}
+                        elementDefinition={elementDef}
+                        isSelected={selectedElementId === elementInstance.id}
+                        isPreview={false}
+                        onSelect={() => onElementSelect(elementInstance.id)}
+                        onUpdate={(updates) =>
+                          onElementUpdate(elementInstance.id, updates)
+                        }
+                      />
 
                       {/* TODO: Implement SelectionBox component */}
                       {selectedElementId === elementInstance.id && (

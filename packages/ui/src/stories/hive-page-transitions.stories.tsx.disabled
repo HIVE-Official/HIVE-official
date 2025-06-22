@@ -1,0 +1,4 @@
+// This story is disabled because it depends on page-transition components that are currently disabled
+// To re-enable, uncomment the page-transition exports in src/index.ts first
+
+export default {};

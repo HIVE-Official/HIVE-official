@@ -12,19 +12,14 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "strict": false,
-    "noImplicitAny": false,
     "moduleResolution": "node",
     "types": ["node"],
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@hive/core": ["../core/src"],
-      "@hive/core/*": ["../core/src/*"],
-      "@hive/hooks": ["../hooks/src"],
-      "@hive/hooks/*": ["../hooks/src/*"],
-      "@hive/auth-logic": ["../auth-logic/src"],
-      "@hive/auth-logic/*": ["../auth-logic/src/*"]
+      "@hive/core": ["../core/src/index.ts"],
+      "@hive/hooks": ["../hooks/src/index.ts"],
+      "@hive/auth-logic": ["../auth-logic/src/index.ts"]
     },
     "resolveJsonModule": true
   },

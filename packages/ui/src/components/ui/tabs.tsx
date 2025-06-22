@@ -1,132 +1,108 @@
 "use client";
 
-import React, { createContext, useContext, useState } from "react";
+import * as React from "react";
+import * as TabsPrimitive from "@radix-ui/react-tabs";
 import { cn } from "../../lib/utils";
 
-interface TabsContextType {
-  value: string;
-  onValueChange: (value: string) => void;
-}
+const Tabs = TabsPrimitive.Root;
 
-const TabsContext = createContext<TabsContextType | undefined>(undefined);
-
-const useTabsContext = () => {
-  const context = useContext(TabsContext);
-  if (!context) {
-    throw new Error("Tabs components must be used within a Tabs provider");
+const TabsList = React.forwardRef<
+  React.ElementRef<typeof TabsPrimitive.List>,
+  React.ComponentPropsWithoutRef<typeof TabsPrimitive.List> & {
+    /** Size variant for the tabs */
+    size?: "sm" | "md" | "lg";
+    /** Visual style variant */
+    variant?: "default" | "pills" | "underline";
   }
-  return context;
-};
+>(({ className, size = "md", variant = "default", ...props }, ref) => {
+  const sizeClasses = {
+    sm: "h-9 text-sm",
+    md: "h-10 text-sm",
+    lg: "h-12 text-base",
+  };
 
-interface TabsProps {
-  defaultValue?: string;
-  value?: string;
-  onValueChange?: (value: string) => void;
-  children: React.ReactNode;
-  className?: string;
-}
-
-export const Tabs: React.FC<TabsProps> = ({
-  defaultValue,
-  value: controlledValue,
-  onValueChange,
-  children,
-  className,
-}) => {
-  const [internalValue, setInternalValue] = useState(defaultValue || "");
-
-  const value = controlledValue !== undefined ? controlledValue : internalValue;
-  const handleValueChange = (newValue: string) => {
-    if (controlledValue === undefined) {
-      setInternalValue(newValue);
-    }
-    onValueChange?.(newValue);
+  const variantClasses = {
+    default:
+      "inline-flex items-center justify-center rounded-lg bg-white/5 p-1 text-text-muted",
+    pills: "inline-flex items-center justify-center gap-2 p-1 text-text-muted",
+    underline:
+      "inline-flex items-center justify-center border-b border-white/8 text-text-muted",
   };
 
   return (
-    <TabsContext.Provider value={{ value, onValueChange: handleValueChange }}>
-      <div className={cn("w-full", className)}>{children}</div>
-    </TabsContext.Provider>
+    <TabsPrimitive.List
+      ref={ref}
+      className={cn(variantClasses[variant], sizeClasses[size], className)}
+      {...props}
+    />
   );
-};
+});
+TabsList.displayName = TabsPrimitive.List.displayName;
 
-interface TabsListProps {
-  children: React.ReactNode;
-  className?: string;
-}
-
-export const TabsList: React.FC<TabsListProps> = ({ children, className }) => {
-  return (
-    <div
-      className={cn(
-        "inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground",
-        className
-      )}
-    >
-      {children}
-    </div>
-  );
-};
-
-interface TabsTriggerProps {
-  value: string;
-  children: React.ReactNode;
-  className?: string;
-  disabled?: boolean;
-}
-
-export const TabsTrigger: React.FC<TabsTriggerProps> = ({
-  value,
-  children,
-  className,
-  disabled = false,
-}) => {
-  const { value: activeValue, onValueChange } = useTabsContext();
-  const isActive = activeValue === value;
-
-  return (
-    <button
-      type="button"
-      disabled={disabled}
-      onClick={() => !disabled && onValueChange(value)}
-      className={cn(
-        "inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
-        isActive
-          ? "bg-background text-foreground shadow-sm"
-          : "hover:bg-background/50",
-        className
-      )}
-    >
-      {children}
-    </button>
-  );
-};
-
-interface TabsContentProps {
-  value: string;
-  children: React.ReactNode;
-  className?: string;
-}
-
-export const TabsContent: React.FC<TabsContentProps> = ({
-  value,
-  children,
-  className,
-}) => {
-  const { value: activeValue } = useTabsContext();
-
-  if (activeValue !== value) {
-    return null;
+const TabsTrigger = React.forwardRef<
+  React.ElementRef<typeof TabsPrimitive.Trigger>,
+  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger> & {
+    /** Size variant for the trigger */
+    size?: "sm" | "md" | "lg";
+    /** Visual style variant */
+    variant?: "default" | "pills" | "underline";
   }
+>(({ className, size = "md", variant = "default", ...props }, ref) => {
+  const sizeClasses = {
+    sm: "h-7 px-3 text-xs",
+    md: "h-8 px-4 text-sm",
+    lg: "h-10 px-6 text-base",
+  };
+
+  const variantClasses = {
+    default: cn(
+      "inline-flex items-center justify-center whitespace-nowrap rounded-md font-medium transition-all duration-150 ease-out",
+      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-gold focus-visible:ring-offset-2 focus-visible:ring-offset-bg-canvas",
+      "disabled:pointer-events-none disabled:opacity-50",
+      "hover:text-white",
+      "data-[state=active]:bg-white data-[state=active]:text-bg-canvas data-[state=active]:shadow-sm"
+    ),
+    pills: cn(
+      "inline-flex items-center justify-center whitespace-nowrap rounded-full font-medium transition-all duration-150 ease-out",
+      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-gold focus-visible:ring-offset-2 focus-visible:ring-offset-bg-canvas",
+      "disabled:pointer-events-none disabled:opacity-50",
+      "hover:text-white hover:bg-white/10",
+      "data-[state=active]:bg-accent-gold data-[state=active]:text-bg-canvas data-[state=active]:shadow-sm"
+    ),
+    underline: cn(
+      "inline-flex items-center justify-center whitespace-nowrap border-b-2 border-transparent font-medium transition-all duration-150 ease-out",
+      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-gold focus-visible:ring-offset-2 focus-visible:ring-offset-bg-canvas",
+      "disabled:pointer-events-none disabled:opacity-50",
+      "hover:text-white",
+      "data-[state=active]:border-accent-gold data-[state=active]:text-white"
+    ),
+  };
 
   return (
-    <div
-      className={cn(
-        "mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-        className
-      )}
-    >
-      {children}
-    </div>
+    <TabsPrimitive.Trigger
+      ref={ref}
+      className={cn(variantClasses[variant], sizeClasses[size], className)}
+      {...props}
+    />
   );
-};
+});
+TabsTrigger.displayName = TabsPrimitive.Trigger.displayName;
+
+const TabsContent = React.forwardRef<
+  React.ElementRef<typeof TabsPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Content>
+>(({ className, ...props }, ref) => (
+  <TabsPrimitive.Content
+    ref={ref}
+    className={cn(
+      "mt-6 ring-offset-bg-canvas transition-all duration-150 ease-out",
+      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-gold focus-visible:ring-offset-2",
+      "data-[state=active]:animate-in data-[state=active]:fade-in-0 data-[state=active]:slide-in-from-bottom-1",
+      className
+    )}
+    {...props}
+  />
+));
+TabsContent.displayName = TabsPrimitive.Content.displayName;
+
+export { Tabs, TabsList, TabsTrigger, TabsContent };

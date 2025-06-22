@@ -21,13 +21,32 @@ export interface User {
   graduationYear?: number;
   schoolId: string; // Immutable after creation
 
+  // Residential information (for auto-join)
+  dormitory?: string; // e.g., "East Hall"
+  roomNumber?: string;
+  housingType?: "on_campus" | "off_campus" | "commuter";
+
+  // Organization affiliations (for auto-join)
+  organizations: string[]; // e.g., ["Sustainability Club", "Computer Science Society"]
+  clubs: string[]; // Student clubs and societies
+  academicInterests: string[]; // Academic focus areas
+
   // Privacy & visibility
   isPublic: boolean; // Whether profile is publicly viewable
   consentGiven: boolean; // GDPR/privacy consent
+  showDormitory: boolean; // Privacy control for residential info
+  showOrganizations: boolean; // Privacy control for organizations
 
   // Builder program
   builderOptIn: boolean; // Opted into builder program
   isBuilder: boolean; // Approved as builder
+  builderApprovedAt?: Timestamp; // When builder status was granted
+  builderAchievements: {
+    toolsCreated: number;
+    totalEngagement: number;
+    invitesSent: number;
+    nextBadgeTarget?: string; // e.g., "next badge" progress
+  };
 
   // Analytics privacy controls
   builderAnalyticsEnabled: boolean; // For creation engine analytics opt-out
@@ -80,17 +99,38 @@ export const UserSchema = z.object({
   major: z.string(),
   graduationYear: z.number().optional(),
   schoolId: z.string(),
+  dormitory: z.string().optional(),
+  roomNumber: z.string().optional(),
+  housingType: z.enum(["on_campus", "off_campus", "commuter"]).optional(),
+  organizations: z.array(z.string()).default([]),
+  clubs: z.array(z.string()).default([]),
+  academicInterests: z.array(z.string()).default([]),
   isPublic: z.boolean().default(false),
   consentGiven: z.boolean(),
+  showDormitory: z.boolean().default(true),
+  showOrganizations: z.boolean().default(true),
   builderOptIn: z.boolean().default(false),
   isBuilder: z.boolean().default(false),
+  builderApprovedAt: z.union([z.date(), z.number()]).optional(),
+  builderAchievements: z
+    .object({
+      toolsCreated: z.number().default(0),
+      totalEngagement: z.number().default(0),
+      invitesSent: z.number().default(0),
+      nextBadgeTarget: z.string().optional(),
+    })
+    .default({
+      toolsCreated: 0,
+      totalEngagement: 0,
+      invitesSent: 0,
+    }),
   builderAnalyticsEnabled: z.boolean().default(true),
   onboardingCompleted: z.boolean().default(false),
   isVerified: z.boolean().default(false),
   status: z.enum(["active", "suspended", "deleted"]).default("active"),
-  createdAt: z.number(),
-  updatedAt: z.number(),
-  lastActiveAt: z.number().optional(),
+  createdAt: z.union([z.date(), z.number()]),
+  updatedAt: z.union([z.date(), z.number()]),
+  lastActiveAt: z.union([z.date(), z.number()]).optional(),
 });
 
 export const CreateUserSchema = UserSchema.omit({

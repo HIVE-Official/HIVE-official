@@ -1,0 +1,443 @@
+"use client";
+
+import React, { useState, useCallback, useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  Search,
+  Filter,
+  Users,
+  Clock,
+  Crown,
+  School,
+  Home,
+  Building,
+  Trophy,
+  BookOpen,
+  GraduationCap,
+} from "lucide-react";
+import type {
+  SpaceDiscoveryData,
+  DiscoveryFilters,
+  DiscoveryResult,
+} from "@hive/core";
+import { SpaceSection, SpaceStatus } from "@hive/core";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
+import { Badge } from "../ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
+
+/**
+ * Props for Space Discovery component
+ */
+export interface SpaceDiscoveryProps {
+  /** Discovery result data */
+  result?: DiscoveryResult;
+  /** Loading state */
+  isLoading?: boolean;
+  /** Error state */
+  error?: string;
+  /** Search and filter handlers */
+  onSearch?: (query: string) => void;
+  onFilter?: (filters: DiscoveryFilters) => void;
+  onJoinSpace?: (spaceId: string) => void;
+  onRequestJoin?: (spaceId: string) => void;
+  /** Current filters */
+  currentFilters?: DiscoveryFilters;
+  /** Whether user can create spaces */
+  canCreateSpace?: boolean;
+  onCreateSpace?: () => void;
+  spaces?: SpaceDiscoveryData[];
+  onSpaceClick?: (space: SpaceDiscoveryData) => void;
+  className?: string;
+}
+
+/**
+ * Section Configuration
+ */
+const SECTION_CONFIG = {
+  [SpaceSection.STUDENT_ORGS]: {
+    label: "Student Orgs",
+    icon: Trophy,
+    description: "Clubs, hobbies, and student-run communities",
+    color: "bg-blue-500/20",
+  },
+  [SpaceSection.GREEK_LIFE]: {
+    label: "Greek Life",
+    icon: Users,
+    description: "Fraternities, sororities, and Greek organizations",
+    color: "bg-purple-500/20",
+  },
+  [SpaceSection.UNIVERSITY_ORGS]: {
+    label: "University Orgs",
+    icon: BookOpen,
+    description: "Official university departments and programs",
+    color: "bg-green-500/20",
+  },
+  [SpaceSection.RESIDENTIAL]: {
+    label: "Residential",
+    icon: Home,
+    description: "Dorms, floors, and residential communities",
+    color: "bg-orange-500/20",
+  },
+  [SpaceSection.ACADEMIC]: {
+    label: "Academic",
+    icon: GraduationCap,
+    description: "Majors, courses, and academic cohorts",
+    color: "bg-red-500/20",
+  },
+};
+
+/**
+ * Status Badge Configuration
+ */
+const STATUS_CONFIG = {
+  [SpaceStatus.OPEN]: {
+    label: "Open",
+    color: "default",
+  },
+  [SpaceStatus.AUTO_JOIN]: {
+    label: "Auto Join",
+    color: "default",
+  },
+  [SpaceStatus.INVITE_ONLY]: {
+    label: "Invite Only",
+    color: "outline",
+  },
+  [SpaceStatus.PREVIEW_LOCKED]: {
+    label: "Preview",
+    color: "secondary",
+  },
+  [SpaceStatus.BUILDER_OPENING]: {
+    label: "Opening Soon",
+    color: "secondary",
+  },
+};
+
+/**
+ * Individual Space Card Component
+ */
+const SpaceCard: React.FC<{
+  space: SpaceDiscoveryData;
+  onJoin?: (spaceId: string) => void;
+  onRequestJoin?: (spaceId: string) => void;
+  onClick?: () => void;
+}> = ({ space, onJoin, onRequestJoin, onClick }) => {
+  const sectionConfig = SECTION_CONFIG[space.section];
+  const statusConfig = STATUS_CONFIG[space.status];
+  const IconComponent = sectionConfig.icon;
+
+  const handleAction = useCallback(() => {
+    if (
+      space.status === SpaceStatus.OPEN ||
+      space.status === SpaceStatus.AUTO_JOIN
+    ) {
+      onJoin?.(space.id);
+    } else if (
+      space.status === SpaceStatus.INVITE_ONLY &&
+      space.requiresApproval
+    ) {
+      onRequestJoin?.(space.id);
+    }
+  }, [space, onJoin, onRequestJoin]);
+
+  const canTakeAction = useMemo(() => {
+    return (
+      space.status === SpaceStatus.OPEN ||
+      space.status === SpaceStatus.AUTO_JOIN ||
+      (space.status === SpaceStatus.INVITE_ONLY && space.requiresApproval)
+    );
+  }, [space.status, space.requiresApproval]);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      whileHover={{ scale: 1.02 }}
+      transition={{ duration: 0.2 }}
+      onClick={onClick}
+    >
+      <Card className="h-full group hover:shadow-lg transition-shadow">
+        <CardHeader className="pb-3">
+          <div className="flex items-start justify-between">
+            <div className="flex items-center space-x-3">
+              {space.crestUrl ? (
+                <img
+                  src={space.crestUrl}
+                  alt={`${space.name} crest`}
+                  className="w-10 h-10 rounded-lg object-cover"
+                />
+              ) : (
+                <div
+                  className={`w-10 h-10 rounded-lg ${sectionConfig.color} flex items-center justify-center`}
+                >
+                  <IconComponent className="w-5 h-5 text-white" />
+                </div>
+              )}
+              <div className="flex-1 min-w-0">
+                <CardTitle className="text-lg font-semibold line-clamp-1">
+                  {space.name}
+                </CardTitle>
+                <div className="flex items-center space-x-2 mt-1">
+                  <Badge
+                    variant={statusConfig.color as any}
+                    className="text-xs"
+                  >
+                    {statusConfig.label}
+                  </Badge>
+                  <span className="text-xs text-muted-foreground">
+                    {sectionConfig.label}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </CardHeader>
+
+        <CardContent className="pb-3">
+          {space.description && (
+            <CardDescription className="line-clamp-2 mb-3">
+              {space.description}
+            </CardDescription>
+          )}
+
+          <div className="flex items-center justify-between text-sm text-muted-foreground">
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-1">
+                <Users className="w-4 h-4" />
+                <span>{space.memberCount}</span>
+              </div>
+              {space.lastActivity && (
+                <div className="flex items-center space-x-1">
+                  <Clock className="w-4 h-4" />
+                  <span>
+                    {new Date(space.lastActivity).toLocaleDateString()}
+                  </span>
+                </div>
+              )}
+            </div>
+            {space.discoveryScore > 0 && (
+              <div className="text-xs text-primary font-medium">
+                {Math.round(space.discoveryScore)}% match
+              </div>
+            )}
+          </div>
+        </CardContent>
+
+        <CardFooter className="pt-0">
+          <Button
+            onClick={handleAction}
+            disabled={!canTakeAction}
+            variant={canTakeAction ? "primary" : "outline"}
+            size="sm"
+            className="w-full"
+          >
+            {space.status === SpaceStatus.AUTO_JOIN && "Auto-Join"}
+            {space.status === SpaceStatus.OPEN && "Join Space"}
+            {space.status === SpaceStatus.INVITE_ONLY && "Request Access"}
+            {space.status === SpaceStatus.PREVIEW_LOCKED && "Preview Only"}
+            {space.status === SpaceStatus.BUILDER_OPENING && "Opening Soon"}
+          </Button>
+        </CardFooter>
+      </Card>
+    </motion.div>
+  );
+};
+
+/**
+ * Search and Filter Bar
+ */
+const SearchFilterBar: React.FC<{
+  onSearch?: (query: string) => void;
+  onFilter?: (filters: DiscoveryFilters) => void;
+  currentFilters?: DiscoveryFilters;
+}> = ({ onSearch, onFilter, currentFilters }) => {
+  const [searchQuery, setSearchQuery] = useState(currentFilters?.search || "");
+  const [showFilters, setShowFilters] = useState(false);
+
+  const handleSearchSubmit = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
+      onSearch?.(searchQuery);
+    },
+    [searchQuery, onSearch]
+  );
+
+  const handleFilterChange = useCallback(
+    (filterKey: keyof DiscoveryFilters, value: any) => {
+      const newFilters = {
+        ...currentFilters,
+        [filterKey]: value,
+      };
+      onFilter?.(newFilters);
+    },
+    [currentFilters, onFilter]
+  );
+
+  return (
+    <div className="space-y-4">
+      <form onSubmit={handleSearchSubmit} className="flex space-x-2">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            type="text"
+            placeholder="Search spaces by name or description..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10"
+          />
+        </div>
+        <Button type="submit" size="default">
+          Search
+        </Button>
+        <Button
+          type="button"
+          variant="outline"
+          size="default"
+          onClick={() => setShowFilters(!showFilters)}
+        >
+          <Filter className="w-4 h-4 mr-2" />
+          Filters
+        </Button>
+      </form>
+
+      <AnimatePresence>
+        {showFilters && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="bg-muted/50 rounded-lg p-4 space-y-4"
+          >
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label className="text-sm font-medium mb-2 block">
+                  Sort By
+                </label>
+                <select
+                  value={currentFilters?.sortBy || "relevance"}
+                  onChange={(e) => handleFilterChange("sortBy", e.target.value)}
+                  className="w-full p-2 border rounded-md"
+                >
+                  <option value="relevance">Relevance</option>
+                  <option value="activity">Recent Activity</option>
+                  <option value="members">Member Count</option>
+                  <option value="name">Name</option>
+                  <option value="newest">Newest</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="text-sm font-medium mb-2 block">Status</label>
+                <select
+                  value={currentFilters?.status?.[0] || ""}
+                  onChange={(e) =>
+                    handleFilterChange(
+                      "status",
+                      e.target.value ? [e.target.value] : []
+                    )
+                  }
+                  className="w-full p-2 border rounded-md"
+                >
+                  <option value="">All Status</option>
+                  <option value={SpaceStatus.OPEN}>Open to Join</option>
+                  <option value={SpaceStatus.INVITE_ONLY}>Invite Only</option>
+                  <option value={SpaceStatus.AUTO_JOIN}>Auto-Join</option>
+                </select>
+              </div>
+
+              <div className="flex items-center space-x-4 pt-6">
+                <label className="flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={currentFilters?.hasActivity || false}
+                    onChange={(e) =>
+                      handleFilterChange("hasActivity", e.target.checked)
+                    }
+                    className="mr-2"
+                  />
+                  <span className="text-sm">Recently Active</span>
+                </label>
+                <label className="flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={currentFilters?.isJoinable || false}
+                    onChange={(e) =>
+                      handleFilterChange("isJoinable", e.target.checked)
+                    }
+                    className="mr-2"
+                  />
+                  <span className="text-sm">Joinable</span>
+                </label>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
+
+/**
+ * Main Space Discovery Component with 5 canonical sections
+ */
+export const SpaceDiscovery: React.FC<SpaceDiscoveryProps> = ({
+  spaces = [],
+  onSpaceClick,
+  onJoinSpace,
+  className,
+}) => {
+  const groupedSpaces = React.useMemo(() => {
+    return Object.values(SpaceSection).reduce(
+      (acc, section) => {
+        acc[section] = spaces.filter((space) => space.section === section);
+        return acc;
+      },
+      {} as Record<SpaceSection, SpaceDiscoveryData[]>
+    );
+  }, [spaces]);
+
+  return (
+    <div className={`space-y-8 ${className}`}>
+      {Object.entries(groupedSpaces).map(([section, sectionSpaces]) => {
+        if (sectionSpaces.length === 0) return null;
+
+        const config = SECTION_CONFIG[section as SpaceSection];
+        const Icon = config.icon;
+
+        return (
+          <div key={section}>
+            <div className="flex items-center gap-3 mb-4">
+              <Icon className="h-5 w-5 text-amber-400" />
+              <div>
+                <h3 className="text-lg font-semibold text-white">
+                  {config.label}
+                </h3>
+                <p className="text-sm text-neutral-400">{config.description}</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {sectionSpaces.map((space) => (
+                <SpaceCard
+                  key={space.id}
+                  space={space}
+                  onClick={() => onSpaceClick?.(space)}
+                  onJoin={() => onJoinSpace?.(space.id)}
+                />
+              ))}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+};

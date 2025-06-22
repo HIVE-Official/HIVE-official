@@ -1,24 +1,186 @@
-// Typography design tokens
+// HIVE Design System - Typography Tokens
+// Font stack: Space Grotesk for headlines, Geist Sans Variable for body
 
 export const typography = {
+  // Font families - CORRECTED to match HIVE brand guidelines
   fontFamily: {
-    sans: ['Inter', 'system-ui', 'sans-serif'],
-    mono: ['JetBrains Mono', 'monospace'],
+    sans: ["Geist Sans Variable", "Geist Sans", "system-ui", "sans-serif"],
+    display: [
+      "Space Grotesk Variable",
+      "Space Grotesk",
+      "system-ui",
+      "sans-serif",
+    ],
+    mono: ["JetBrains Mono", "Consolas", "Monaco", "monospace"],
   },
-  fontSize: {
-    xs: '0.75rem',
-    sm: '0.875rem',
-    base: '1rem',
-    lg: '1.125rem',
-    xl: '1.25rem',
-    '2xl': '1.5rem',
-  },
+
+  // Font weights
   fontWeight: {
-    normal: '400',
-    medium: '500',
-    semibold: '600',
-    bold: '700',
+    light: "300",
+    normal: "400",
+    medium: "500",
+    semibold: "600",
+    bold: "700",
+  },
+
+  // Type scale - aligned with brand whitepaper
+  fontSize: {
+    // Display sizes - Space Grotesk Variable
+    display: {
+      size: "48px",
+      lineHeight: "56px",
+      fontWeight: "600",
+      fontFamily: "Space Grotesk Variable",
+      usage: "Hero headlines, marketing pages",
+    },
+
+    // Heading hierarchy - Space Grotesk Variable
+    h1: {
+      size: "32px",
+      lineHeight: "40px",
+      fontWeight: "600",
+      fontFamily: "Space Grotesk Variable",
+      usage: "Page titles, primary headings",
+    },
+    h2: {
+      size: "24px",
+      lineHeight: "32px",
+      fontWeight: "600",
+      fontFamily: "Space Grotesk Variable",
+      usage: "Section headers, secondary headings",
+    },
+    h3: {
+      size: "20px",
+      lineHeight: "28px",
+      fontWeight: "600",
+      fontFamily: "Space Grotesk Variable",
+      usage: "Subsection headers",
+    },
+    h4: {
+      size: "18px",
+      lineHeight: "26px",
+      fontWeight: "600",
+      fontFamily: "Space Grotesk Variable",
+      usage: "Card titles, minor headings",
+    },
+
+    // Body text - Geist Sans Variable
+    body: {
+      size: "16px",
+      lineHeight: "24px",
+      fontWeight: "400",
+      fontFamily: "Geist Sans Variable",
+      usage: "Body text, paragraphs, default text",
+    },
+    bodySmall: {
+      size: "14px",
+      lineHeight: "20px",
+      fontWeight: "400",
+      fontFamily: "Geist Sans Variable",
+      usage: "Smaller body text, captions",
+    },
+
+    // UI text - Geist Sans Variable
+    caption: {
+      size: "12px",
+      lineHeight: "18px",
+      fontWeight: "400",
+      fontFamily: "Geist Sans Variable",
+      usage: "Labels, metadata, micro-copy",
+    },
+    button: {
+      size: "14px",
+      lineHeight: "20px",
+      fontWeight: "500",
+      fontFamily: "Geist Sans Variable",
+      usage: "Button text, CTAs",
+    },
+
+    // Code text - JetBrains Mono
+    code: {
+      size: "14px",
+      lineHeight: "20px",
+      fontWeight: "400",
+      fontFamily: "JetBrains Mono",
+      usage: "Code snippets, technical content",
+    },
+  },
+
+  // Line height scale
+  lineHeight: {
+    none: "1",
+    tight: "1.25",
+    snug: "1.375",
+    normal: "1.5",
+    relaxed: "1.625",
+    loose: "2",
+  },
+
+  // Letter spacing values
+  letterSpacing: {
+    tight: "-0.025em",
+    normal: "0em",
+    wide: "0.025em",
   },
 } as const;
 
-export type TypographyToken = keyof typeof typography; 
+// Utility function to get font size with line height
+export const getFontSize = (key: keyof typeof typography.fontSize) => {
+  const font = typography.fontSize[key];
+  return {
+    fontSize: font.size,
+    lineHeight: font.lineHeight,
+    fontWeight: font.fontWeight,
+    fontFamily: font.fontFamily,
+  };
+};
+
+// Tailwind-compatible font size configuration
+export const tailwindFontSizes = {
+  display: ["48px", "56px"],
+  h1: ["32px", "40px"],
+  h2: ["24px", "32px"],
+  h3: ["20px", "28px"],
+  h4: ["18px", "26px"],
+  body: ["16px", "24px"],
+  "body-sm": ["14px", "20px"],
+  caption: ["12px", "18px"],
+  button: ["14px", "20px"],
+  code: ["14px", "20px"],
+} as const;
+
+// Type definitions
+export type FontSizeToken = keyof typeof typography.fontSize;
+export type FontWeightToken = keyof typeof typography.fontWeight;
+export type FontFamilyToken = keyof typeof typography.fontFamily;
+export type LineHeightToken = keyof typeof typography.lineHeight;
+export type LetterSpacingToken = keyof typeof typography.letterSpacing;
+
+// Typography usage guidelines
+export const typographyUsage = {
+  // Heading hierarchy
+  headings: {
+    display: "Hero sections, landing pages, marketing headers",
+    h1: "Page titles, primary content headers",
+    h2: "Section headers, main content divisions",
+    h3: "Subsection headers, card titles",
+    h4: "Minor headings, component titles",
+  },
+
+  // Body text guidelines
+  body: {
+    primary: "Main content, articles, descriptions",
+    secondary: "Supporting content, metadata",
+    small: "Fine print, disclaimers, helper text",
+  },
+
+  // UI text guidelines
+  interface: {
+    button: "Button labels, navigation items",
+    caption: "Timestamps, metadata, small labels",
+    code: "Code blocks, technical documentation",
+  },
+} as const;
+
+// Export for easy importing
+export default typography;

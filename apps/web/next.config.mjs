@@ -10,12 +10,12 @@ const nextConfig = {
   // Tell Next.js where to find the app directory
   distDir: ".next",
   eslint: {
-    // Disable ESLint during build due to Windows path resolution issues
-    ignoreDuringBuilds: true,
+    // Re-enable ESLint during build
+    ignoreDuringBuilds: false,
   },
   typescript: {
-    // Temporarily disable TypeScript checking during build due to Windows path issues
-    ignoreBuildErrors: true,
+    // Re-enable TypeScript checking during build
+    ignoreBuildErrors: false,
   },
   // SVG handling and workspace resolution
   webpack: (config, { isServer }) => {
@@ -28,17 +28,28 @@ const nextConfig = {
     // Resolve workspace packages using path resolution to source files
     config.resolve.alias = {
       ...config.resolve.alias,
-      "@hive/ui": path.resolve(__dirname, "../../packages/ui/src"),
       "@hive/core": path.resolve(__dirname, "../../packages/core/src"),
+      "@hive/ui": path.resolve(__dirname, "../../packages/ui/src"),
       "@hive/hooks": path.resolve(__dirname, "../../packages/hooks/src"),
       "@hive/auth-logic": path.resolve(
         __dirname,
         "../../packages/auth-logic/src"
       ),
+      "@": path.resolve(__dirname, "./src"),
     };
+
+    // Add proper module resolution for React
+    config.resolve.mainFields = ["browser", "module", "main"];
 
     return config;
   },
+  // Ensure proper React resolution
+  transpilePackages: [
+    "@hive/ui",
+    "@hive/core",
+    "@hive/hooks",
+    "@hive/auth-logic",
+  ],
 };
 
 export default nextConfig;

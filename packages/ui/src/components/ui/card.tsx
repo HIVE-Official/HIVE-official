@@ -1,44 +1,65 @@
-import * as React from "react"
-import { cn } from "../../lib/utils"
-import { cva, type VariantProps } from 'class-variance-authority';
+import * as React from "react";
+import { cn } from "../../lib/utils";
 
-export default {}
-const cardVariants = cva(
-  "border border-white/5 bg-white/5 p-6 shadow-3 transition-shadow",
-  {
-    variants: {
-      radius: {
-        default: "rounded-xl",
-        sm: "rounded-sm",
-        lg: "rounded-lg",
-        xl: "rounded-xl",
-        full: "rounded-full",
-      },
+export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
+  hoverable?: boolean;
+  elevation?: "1" | "2" | "3" | "4";
+  variant?: "default" | "glass" | "outline";
+}
+
+export const Card = React.forwardRef<HTMLDivElement, CardProps>(
+  (
+    {
+      className,
+      hoverable = false,
+      elevation = "1",
+      variant = "default",
+      ...props
     },
-    defaultVariants: {
-      radius: "default",
-    },
+    ref
+  ) => {
+    return (
+      <div
+        ref={ref}
+        className={cn(
+          // Base HIVE card styles
+          "relative rounded-hive border",
+
+          // Variant styles
+          {
+            // Default: Standard HIVE card
+            "bg-card text-card-foreground border-border": variant === "default",
+
+            // Glass: Subtle transparency effect
+            "bg-card/50 text-card-foreground border-border/50 backdrop-blur-sm":
+              variant === "glass",
+
+            // Outline: Border-only style
+            "bg-transparent text-foreground border-border content-transition":
+              variant === "outline",
+          },
+
+          // Elevation system (Vercel-style shadows)
+          {
+            "shadow-elevation-1": elevation === "1",
+            "shadow-elevation-2": elevation === "2",
+            "shadow-elevation-3": elevation === "3",
+            "shadow-elevation-4": elevation === "4",
+          },
+
+          // Hover states using HIVE motion system
+          hoverable && [
+            "cursor-pointer elevate", // HIVE utility class for card hover
+          ],
+
+          className
+        )}
+        {...props}
+      />
+    );
   }
 );
-
-export interface CardProps
-  extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof cardVariants> {}
-
-const Card = React.forwardRef<
-  HTMLDivElement,
-  CardProps
->(({ className, radius, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn(
-      cardVariants({ radius }),
-      className
-    )}
-    {...props}
-  />
-))
-Card.displayName = "Card"
+Card.displayName = "Card";
 
 const CardHeader = React.forwardRef<
   HTMLDivElement,
@@ -46,11 +67,11 @@ const CardHeader = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("flex flex-col space-y-1.5 p-0 pb-6", className)}
+    className={cn("flex flex-col space-y-2 p-6 pb-4", className)}
     {...props}
   />
-))
-CardHeader.displayName = "CardHeader"
+));
+CardHeader.displayName = "CardHeader";
 
 const CardTitle = React.forwardRef<
   HTMLParagraphElement,
@@ -59,13 +80,13 @@ const CardTitle = React.forwardRef<
   <h3
     ref={ref}
     className={cn(
-      "text-h2 font-display leading-none tracking-tight text-text-primary",
+      "text-h3 font-display font-semibold leading-tight tracking-tight text-foreground",
       className
     )}
     {...props}
   />
-))
-CardTitle.displayName = "CardTitle"
+));
+CardTitle.displayName = "CardTitle";
 
 const CardDescription = React.forwardRef<
   HTMLParagraphElement,
@@ -73,19 +94,19 @@ const CardDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn("text-sm text-text-muted", className)}
+    className={cn("text-sm text-muted-foreground leading-relaxed", className)}
     {...props}
   />
-))
-CardDescription.displayName = "CardDescription"
+));
+CardDescription.displayName = "CardDescription";
 
 const CardContent = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn("p-0", className)} {...props} />
-))
-CardContent.displayName = "CardContent"
+  <div ref={ref} className={cn("px-6 pb-6", className)} {...props} />
+));
+CardContent.displayName = "CardContent";
 
 const CardFooter = React.forwardRef<
   HTMLDivElement,
@@ -93,10 +114,14 @@ const CardFooter = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("flex items-center p-0 pt-6", className)}
+    className={cn(
+      "flex items-center justify-between px-6 py-4",
+      "border-t border-border/50 bg-muted/20",
+      className
+    )}
     {...props}
   />
-))
-CardFooter.displayName = "CardFooter"
+));
+CardFooter.displayName = "CardFooter";
 
-export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent } 
+export { CardHeader, CardFooter, CardTitle, CardDescription, CardContent };

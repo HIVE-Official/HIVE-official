@@ -39,13 +39,20 @@ export default async function WaitlistPage({ params }: WaitlistPageProps) {
     notFound();
   }
 
+  // UB-only launch validation
+  if (schoolId !== "suny-buffalo") {
+    notFound();
+  }
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-background p-4 sm:p-24">
-      <Card className="w-full max-w-md">
+    <main className="flex min-h-screen flex-col items-center justify-center bg-[#0A0A0A] p-4 sm:p-24">
+      <Card className="w-full max-w-md bg-zinc-900/95 border-zinc-800">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl">{school.name}</CardTitle>
-          <CardDescription>
-            Join the waitlist to bring HIVE to your campus!
+          <CardTitle className="text-2xl text-white font-display">
+            {school.name}
+          </CardTitle>
+          <CardDescription className="text-zinc-400 font-sans">
+            Join the founding UB community on HIVE!
           </CardDescription>
         </CardHeader>
         <CardContent className="flex w-full flex-col items-center gap-4">

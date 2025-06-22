@@ -21,7 +21,7 @@ export const db = getFirestore(app);
 // Initialize Analytics (only in browser and if supported)
 export let analytics: ReturnType<typeof getAnalytics> | null = null;
 if (typeof window !== "undefined") {
-  isSupported().then((supported) => {
+  void isSupported().then((supported) => {
     if (supported) {
       analytics = getAnalytics(app);
     }

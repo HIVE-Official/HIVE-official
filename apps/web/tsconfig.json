@@ -1,4 +1,5 @@
 {
+  "extends": "../../packages/config/typescript/nextjs.json",
   "compilerOptions": {
     "target": "ES2017",
     "lib": ["dom", "dom.iterable", "esnext"],
@@ -8,18 +9,35 @@
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
+    "baseUrl": ".",
     "plugins": [
       {
         "name": "next"
       }
     ],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@hive/ui": ["../../packages/ui/src/index.ts"],
+      "@hive/core": ["../../packages/core/src/index.ts"],
+      "@hive/hooks": ["../../packages/hooks/src/index.ts"],
+      "@hive/auth-logic": ["../../packages/auth-logic/src/index.ts"],
+      "@hive/api-client": ["../../packages/api-client/src"],
+      "@hive/api-client/*": ["../../packages/api-client/src/*"],
+      "@hive/validation": ["../../packages/validation/src"],
+      "@hive/validation/*": ["../../packages/validation/src/*"],
+      "@hive/analytics": ["../../packages/analytics/src"],
+      "@hive/analytics/*": ["../../packages/analytics/src/*"],
+      "@hive/utilities": ["../../packages/utilities/src"],
+      "@hive/utilities/*": ["../../packages/utilities/src/*"],
+      "@hive/tokens": ["../../packages/tokens/src"],
+      "@hive/tokens/*": ["../../packages/tokens/src/*"],
+      "@hive/i18n": ["../../packages/i18n/src"],
+      "@hive/i18n/*": ["../../packages/i18n/src/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

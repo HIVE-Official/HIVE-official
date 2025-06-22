@@ -32,7 +32,27 @@
     "outDir": "./dist",
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@hive/ui": ["../ui/src"],
+      "@hive/ui/*": ["../ui/src/*"],
+      "@hive/core": ["../core/src"],
+      "@hive/core/*": ["../core/src/*"],
+      "@hive/hooks": ["../hooks/src"],
+      "@hive/hooks/*": ["../hooks/src/*"],
+      "@hive/auth-logic": ["../auth-logic/src"],
+      "@hive/auth-logic/*": ["../auth-logic/src/*"],
+      "@hive/api-client": ["../api-client/src"],
+      "@hive/api-client/*": ["../api-client/src/*"],
+      "@hive/validation": ["../validation/src"],
+      "@hive/validation/*": ["../validation/src/*"],
+      "@hive/analytics": ["../analytics/src"],
+      "@hive/analytics/*": ["../analytics/src/*"],
+      "@hive/utilities": ["../utilities/src"],
+      "@hive/utilities/*": ["../utilities/src/*"],
+      "@hive/tokens": ["../tokens/src"],
+      "@hive/tokens/*": ["../tokens/src/*"],
+      "@hive/i18n": ["../i18n/src"],
+      "@hive/i18n/*": ["../i18n/src/*"]
     }
   },
   "include": ["src/**/*"],

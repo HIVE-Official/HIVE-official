@@ -2,6 +2,7 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { getAuth } from "firebase-admin/auth";
 import { dbAdmin } from "@/lib/firebase-admin";
+import type { Timestamp } from "firebase-admin/firestore";
 
 interface SpaceData {
   name: string;
@@ -11,13 +12,13 @@ interface SpaceData {
   status: string;
   memberCount?: number;
   schoolId: string;
-  createdAt: any;
-  updatedAt: any;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
 }
 
 interface MembershipData {
   role?: string;
-  joinedAt?: any;
+  joinedAt?: Timestamp;
   joinMethod?: string;
   joinReason?: string;
 }

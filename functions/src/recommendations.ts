@@ -241,3 +241,8 @@ export const updateRecommendations = onSchedule(
     }
   }
 );
+
+// Recommendation engine implementation
+// Currently disabled for vBETA - will be implemented post-launch
+
+export default {};

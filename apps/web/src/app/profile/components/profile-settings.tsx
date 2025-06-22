@@ -120,7 +120,7 @@ export const ProfileSettings = ({ user }: ProfileSettingsProps) => {
             <div>
               <Label className="text-gray-300">Show Activity Status</Label>
               <p className="text-sm text-gray-500">
-                Let others see when you're active on HIVE
+                Let others see when you&apos;re active on HIVE
               </p>
             </div>
             <Switch checked={true} />

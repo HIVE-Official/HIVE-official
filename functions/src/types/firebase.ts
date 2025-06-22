@@ -29,9 +29,9 @@ export const Timestamp = admin.firestore.Timestamp;
 export interface FunctionContext {
   auth?: {
     uid: string;
-    token?: any;
+    token?: unknown;
   };
-  rawRequest?: any;
+  rawRequest?: unknown;
 }
 
 // Document type interfaces
@@ -40,7 +40,7 @@ export interface UserDocument {
   email: string;
   fullName: string;
   createdAt: admin.firestore.Timestamp;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export interface SpaceDocument {
@@ -48,7 +48,7 @@ export interface SpaceDocument {
   name: string;
   createdAt: admin.firestore.Timestamp;
   memberCount: number;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export interface MemberDocument {
@@ -57,11 +57,11 @@ export interface MemberDocument {
   spaceId: string;
   role: string;
   joinedAt: admin.firestore.Timestamp;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 // Helper function to create HTTPS callable functions with proper v2 types
-export function createHttpsFunction<T = any, R = any>(
+export function createHttpsFunction<T = unknown, R = unknown>(
   handler: (data: T, context: FunctionContext) => Promise<R> | R
 ) {
   return onCall<T>(async (request: CallableRequest<T>): Promise<R> => {
@@ -85,7 +85,7 @@ export function assertAuthenticated(context: FunctionContext): string {
 }
 
 // Validation helper
-export function validateRequiredFields<T extends Record<string, any>>(
+export function validateRequiredFields<T extends Record<string, unknown>>(
   data: T,
   requiredFields: (keyof T)[]
 ): void {
@@ -104,14 +104,14 @@ export class FirebaseHttpsError extends functions.https.HttpsError {
   constructor(
     code: functions.https.FunctionsErrorCode,
     message: string,
-    details?: any
+    details?: unknown
   ) {
     super(code, message, details);
   }
 }
 
 // Helper to get document data with proper typing
-export function getDocumentData<T extends Record<string, any>>(
+export function getDocumentData<T extends Record<string, unknown>>(
   snapshot: admin.firestore.DocumentSnapshot
 ): T {
   const data = snapshot.data();
@@ -123,11 +123,14 @@ export function getDocumentData<T extends Record<string, any>>(
 
 // Simple logger
 export const logger = {
-  info: (message: string, data?: any) => console.log("[INFO]", message, data),
-  warn: (message: string, data?: any) => console.warn("[WARN]", message, data),
-  error: (message: string, data?: any) =>
+  info: (message: string, data?: unknown) =>
+    console.log("[INFO]", message, data),
+  warn: (message: string, data?: unknown) =>
+    console.warn("[WARN]", message, data),
+  error: (message: string, data?: unknown) =>
     console.error("[ERROR]", message, data),
-  debug: (message: string, data?: any) => console.log("[DEBUG]", message, data),
+  debug: (message: string, data?: unknown) =>
+    console.log("[DEBUG]", message, data),
 };
 
 export function handleFirebaseError(error: unknown): FirebaseHttpsError {

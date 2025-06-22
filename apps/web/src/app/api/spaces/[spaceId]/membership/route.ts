@@ -207,7 +207,7 @@ export async function GET(
         role: role || null,
       },
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Get space membership error:", error);
 
     if (error instanceof z.ZodError) {
@@ -217,7 +217,11 @@ export async function GET(
       );
     }
 
-    if (error.code === "auth/id-token-expired") {
+    if (
+      error instanceof Error &&
+      "code" in error &&
+      (error as { code: string }).code === "auth/id-token-expired"
+    ) {
       return NextResponse.json({ error: "Token expired" }, { status: 401 });
     }
 

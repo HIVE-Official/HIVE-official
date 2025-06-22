@@ -29,12 +29,14 @@ export function SchoolSearch() {
         const data: School[] = await response.json();
         setSchools(data);
       } catch (err) {
-        setError(err instanceof Error ? err.message : "An unknown error occurred");
+        setError(
+          err instanceof Error ? err.message : "An unknown error occurred"
+        );
       } finally {
         setLoading(false);
       }
     };
-    fetchSchools();
+    void fetchSchools();
   }, [schools.length]);
 
   useEffect(() => {
@@ -53,7 +55,9 @@ export function SchoolSearch() {
 
   const handleSchoolSelect = (school: School) => {
     if (school.status === "active") {
-      router.push(`/auth/login?schoolId=${school.id}&schoolName=${encodeURIComponent(school.name)}&domain=${encodeURIComponent(school.domain)}`);
+      router.push(
+        `/auth/login?schoolId=${school.id}&schoolName=${encodeURIComponent(school.name)}&domain=${encodeURIComponent(school.domain)}`
+      );
     } else {
       router.push(`/waitlist/${school.id}`);
     }
@@ -96,13 +100,23 @@ export function SchoolSearch() {
           role="combobox"
           aria-expanded={filteredSchools.length > 0 && query.length > 0}
           aria-controls="school-results"
-          aria-activedescendant={activeIndex >= 0 ? `school-item-${activeIndex}` : undefined}
+          aria-activedescendant={
+            activeIndex >= 0 ? `school-item-${activeIndex}` : undefined
+          }
         />
       </div>
-      
-      {loading && query && <p className="text-sm text-muted-foreground" aria-live="polite">Loading...</p>}
-      {error && query && <p className="text-sm text-destructive" aria-live="assertive">{error}</p>}
-      
+
+      {loading && query && (
+        <p className="text-sm text-muted-foreground" aria-live="polite">
+          Loading...
+        </p>
+      )}
+      {error && query && (
+        <p className="text-sm text-destructive" aria-live="assertive">
+          {error}
+        </p>
+      )}
+
       {query.trim() !== "" && !loading && (
         <div className="max-h-60 overflow-y-auto">
           {filteredSchools.length > 0 ? (
@@ -138,4 +152,4 @@ export function SchoolSearch() {
       )}
     </div>
   );
-} 
+}

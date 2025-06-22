@@ -3,7 +3,7 @@ declare let dbAdmin: admin.firestore.Firestore;
 declare let authAdmin: admin.auth.Auth;
 export { dbAdmin, authAdmin };
 export declare const db: admin.firestore.Firestore;
-export declare const auth: import("firebase-admin/lib/auth/auth").Auth;
+export declare const auth: admin.auth.Auth;
 export declare const isFirebaseConfigured: boolean;
 export declare const environmentInfo: {
     environment: "development" | "staging" | "production";

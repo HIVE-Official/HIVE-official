@@ -1,0 +1,70 @@
+import type { Meta, StoryObj } from "@storybook/react";
+import { CalendarWidget } from "@hive/profile/calendar-widget";
+
+const meta: Meta<typeof CalendarWidget> = {
+  title: "Profile/CalendarWidget",
+  component: CalendarWidget,
+  parameters: {
+    layout: "centered",
+    backgrounds: {
+      default: "dark",
+      values: [
+        { name: "dark", value: "#000000" },
+        { name: "light", value: "#ffffff" },
+      ],
+    },
+  },
+  decorators: [
+    (Story) => (
+      <div style={{ width: "500px", padding: "20px" }}>
+        <Story />
+      </div>
+    ),
+  ],
+  tags: ["autodocs"],
+};
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const Default: Story = {
+  args: {},
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Default calendar widget showing the current month with navigation controls.",
+      },
+    },
+  },
+};
+
+export const WithEvents: Story = {
+  args: {},
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Calendar widget with sample events displayed (this would show events from Firestore in the real app).",
+      },
+    },
+  },
+};
+
+export const Mobile: Story = {
+  args: {},
+  decorators: [
+    (Story) => (
+      <div style={{ width: "320px", padding: "16px" }}>
+        <Story />
+      </div>
+    ),
+  ],
+  parameters: {
+    docs: {
+      description: {
+        story: "Calendar widget optimized for mobile display.",
+      },
+    },
+  },
+};

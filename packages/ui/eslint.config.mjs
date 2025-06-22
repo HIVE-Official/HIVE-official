@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 import js from "@eslint/js";
 import { FlatCompat } from "@eslint/eslintrc";
 import { fixupConfigRules } from "@eslint/compat";
+import eslintPluginImport from "eslint-plugin-import";
 import tseslint from "typescript-eslint";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -21,11 +22,19 @@ const patchedStorybookConfig = fixupConfigRules([
 ]);
 
 export default [
+  {
+    plugins: {
+      import: eslintPluginImport,
+    },
+  },
   // Base JavaScript config
   js.configs.recommended,
 
   // TypeScript configs for non-story files
   ...tseslint.configs.recommended,
+
+  // Storybook recommended rules (includes plugin definition)
+  ...patchedStorybookConfig,
 
   // Main UI package files with TypeScript parsing
   {
@@ -43,7 +52,6 @@ export default [
       },
     },
     rules: {
-      "import/no-anonymous-default-export": "warn",
       "@typescript-eslint/no-unused-vars": [
         "warn",
         { argsIgnorePattern: "^_" },
@@ -91,7 +99,6 @@ export default [
       "@typescript-eslint/no-explicit-any": "off",
       "@typescript-eslint/ban-ts-comment": "off",
       "@typescript-eslint/consistent-type-imports": "off",
-      "import/no-anonymous-default-export": "off",
       "@typescript-eslint/no-unused-vars": "off",
     },
   },

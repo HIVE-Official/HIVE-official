@@ -1,0 +1,312 @@
+import type { Meta, StoryObj } from "@storybook/react";
+import { PostEditor } from "../components/feed/post-editor";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { action } from "@storybook/addon-actions";
+
+// Create a mock QueryClient for Storybook
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+    },
+  },
+});
+
+const meta: Meta<typeof PostEditor> = {
+  title: "Feed/PostEditor",
+  component: PostEditor,
+  decorators: [
+    (Story) => (
+      <QueryClientProvider client={queryClient}>
+        <div className="max-w-2xl mx-auto p-6 bg-background">
+          <Story />
+        </div>
+      </QueryClientProvider>
+    ),
+  ],
+  parameters: {
+    layout: "fullscreen",
+    docs: {
+      description: {
+        component:
+          "PostEditor component for creating and editing posts with support for multiple post types and rich content features.",
+      },
+    },
+  },
+  argTypes: {
+    type: {
+      control: "select",
+      options: [
+        "prompt-post",
+        "pulse",
+        "event-card",
+        "join-form",
+        "poll",
+        "media-post",
+      ],
+      description: "Type of post being created",
+    },
+    mode: {
+      control: "select",
+      options: ["inline", "modal", "expanded"],
+      description: "Editor display mode",
+    },
+    spaceId: {
+      control: "text",
+      description: "ID of the space context (optional)",
+    },
+    spaceName: {
+      control: "text",
+      description: "Name of the space context (optional)",
+    },
+    isSubmitting: {
+      control: "boolean",
+      description: "Whether the post is being submitted",
+    },
+    error: {
+      control: "text",
+      description: "Error message to display",
+    },
+  },
+};
+
+export default meta;
+type Story = StoryObj<typeof PostEditor>;
+
+// Mock submit handler
+const mockSubmit = action("onSubmit");
+const mockClose = action("onClose");
+const mockChange = action("onChange");
+const mockSuccess = action("onSuccess");
+
+/**
+ * Default PromptPost in inline mode
+ */
+export const Default: Story = {
+  args: {
+    type: "prompt-post",
+    mode: "inline",
+    onSubmit: mockSubmit,
+    onClose: mockClose,
+    onChange: mockChange,
+    onSuccess: mockSuccess,
+  },
+};
+
+/**
+ * PromptPost in modal mode with all features
+ */
+export const PromptPostModal: Story = {
+  args: {
+    type: "prompt-post",
+    mode: "modal",
+    onSubmit: mockSubmit,
+    onClose: mockClose,
+    onChange: mockChange,
+    onSuccess: mockSuccess,
+  },
+};
+
+/**
+ * Pulse post with character limit
+ */
+export const PulsePost: Story = {
+  args: {
+    type: "pulse",
+    mode: "modal",
+    onSubmit: mockSubmit,
+    onClose: mockClose,
+    onChange: mockChange,
+    onSuccess: mockSuccess,
+  },
+};
+
+/**
+ * Event Card with rich content support
+ */
+export const EventCard: Story = {
+  args: {
+    type: "event-card",
+    mode: "expanded",
+    onSubmit: mockSubmit,
+    onClose: mockClose,
+    onChange: mockChange,
+    onSuccess: mockSuccess,
+  },
+};
+
+/**
+ * Join Form for space invitations
+ */
+export const JoinForm: Story = {
+  args: {
+    type: "join-form",
+    mode: "modal",
+    spaceId: "space_example",
+    spaceName: "Computer Science Club",
+    onSubmit: mockSubmit,
+    onClose: mockClose,
+    onChange: mockChange,
+    onSuccess: mockSuccess,
+  },
+};
+
+/**
+ * Poll creation
+ */
+export const Poll: Story = {
+  args: {
+    type: "poll",
+    mode: "expanded",
+    onSubmit: mockSubmit,
+    onClose: mockClose,
+    onChange: mockChange,
+    onSuccess: mockSuccess,
+  },
+};
+
+/**
+ * Media Post for images/videos
+ */
+export const MediaPost: Story = {
+  args: {
+    type: "media-post",
+    mode: "expanded",
+    onSubmit: mockSubmit,
+    onClose: mockClose,
+    onChange: mockChange,
+    onSuccess: mockSuccess,
+  },
+};
+
+/**
+ * Space-only post with visibility controls
+ */
+export const SpaceOnlyPost: Story = {
+  args: {
+    type: "prompt-post",
+    mode: "modal",
+    spaceId: "space_cs_club",
+    spaceName: "CS Club",
+    onSubmit: mockSubmit,
+    onClose: mockClose,
+    onChange: mockChange,
+    onSuccess: mockSuccess,
+  },
+};
+
+/**
+ * Editor with existing content (editing)
+ */
+export const EditingExistingPost: Story = {
+  args: {
+    type: "prompt-post",
+    mode: "modal",
+    initialContent: {
+      type: "prompt-post",
+      content: {
+        text: "This is some existing content that I want to edit. It has @mentions and #hashtags and even a link: https://example.com",
+      },
+      visibility: "public",
+    },
+    onSubmit: mockSubmit,
+    onClose: mockClose,
+    onChange: mockChange,
+    onSuccess: mockSuccess,
+  },
+};
+
+/**
+ * Loading state during submission
+ */
+export const SubmittingPost: Story = {
+  args: {
+    type: "prompt-post",
+    mode: "modal",
+    isSubmitting: true,
+    onSubmit: mockSubmit,
+    onClose: mockClose,
+    onChange: mockChange,
+    onSuccess: mockSuccess,
+  },
+};
+
+/**
+ * Error state display
+ */
+export const WithError: Story = {
+  args: {
+    type: "prompt-post",
+    mode: "modal",
+    error:
+      "Failed to create post. Please check your internet connection and try again.",
+    onSubmit: mockSubmit,
+    onClose: mockClose,
+    onChange: mockChange,
+    onSuccess: mockSuccess,
+  },
+};
+
+/**
+ * Long content near character limit
+ */
+export const NearCharacterLimit: Story = {
+  args: {
+    type: "pulse",
+    mode: "modal",
+    initialContent: {
+      type: "pulse",
+      content: {
+        text: "This is a long pulse post that is approaching the character limit. It demonstrates how the character counter changes color and provides visual feedback as the user approaches the limit. This helps prevent users from writing too much content.",
+      },
+      visibility: "public",
+    },
+    onSubmit: mockSubmit,
+    onClose: mockClose,
+    onChange: mockChange,
+    onSuccess: mockSuccess,
+  },
+};
+
+/**
+ * Expanded mode with all features
+ */
+export const ExpandedMode: Story = {
+  args: {
+    type: "event-card",
+    mode: "expanded",
+    spaceId: "space_events",
+    spaceName: "University Events",
+    onSubmit: mockSubmit,
+    onClose: mockClose,
+    onChange: mockChange,
+    onSuccess: mockSuccess,
+  },
+};
+
+/**
+ * Interactive demo with all post types
+ */
+export const InteractiveDemo: Story = {
+  args: {
+    type: "prompt-post",
+    mode: "modal",
+    onSubmit: async (postData) => {
+      console.log("Submitting post:", postData);
+      mockSubmit(postData);
+      // Simulate API delay
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+    },
+    onClose: mockClose,
+    onChange: mockChange,
+    onSuccess: mockSuccess,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Interactive demo showing real submission flow with loading states.",
+      },
+    },
+  },
+};

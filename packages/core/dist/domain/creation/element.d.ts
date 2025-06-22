@@ -1809,8 +1809,8 @@ export declare const ProgressBarConfigSchema: z.ZodObject<{
         }[];
     }>, "many">>;
 }, "strip", z.ZodTypeAny, {
-    value: number;
     backgroundColor: string;
+    value: number;
     height: number;
     color: string;
     max: number;
@@ -1846,8 +1846,8 @@ export declare const ProgressBarConfigSchema: z.ZodObject<{
     }[] | undefined;
     label?: string | undefined;
 }, {
-    value?: number | undefined;
     backgroundColor?: string | undefined;
+    value?: number | undefined;
     height?: number | undefined;
     style?: {
         backgroundColor?: string | undefined;
@@ -4651,8 +4651,8 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             }[];
         }>, "many">>;
     }, "strip", z.ZodTypeAny, {
-        value: number;
         backgroundColor: string;
+        value: number;
         height: number;
         color: string;
         max: number;
@@ -4688,8 +4688,8 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }[] | undefined;
         label?: string | undefined;
     }, {
-        value?: number | undefined;
         backgroundColor?: string | undefined;
+        value?: number | undefined;
         height?: number | undefined;
         style?: {
             backgroundColor?: string | undefined;
@@ -4728,8 +4728,8 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
 }, "strip", z.ZodTypeAny, {
     type: "progressBar";
     config: {
-        value: number;
         backgroundColor: string;
+        value: number;
         height: number;
         color: string;
         max: number;
@@ -4768,8 +4768,8 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
 }, {
     type: "progressBar";
     config: {
-        value?: number | undefined;
         backgroundColor?: string | undefined;
+        value?: number | undefined;
         height?: number | undefined;
         style?: {
             backgroundColor?: string | undefined;

@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { POST } from "./route";
+import type { NextRequest } from "next/server";
 
 // Mock Firebase
 const mockFirebaseDb = {
@@ -44,7 +45,7 @@ describe("/api/spaces/auto-join", () => {
       body: JSON.stringify({}),
     });
 
-    const response = await POST(request as any);
+    const response = await POST(request as NextRequest);
     const data = await response.json();
 
     expect(response.status).toBe(400);
@@ -63,7 +64,7 @@ describe("/api/spaces/auto-join", () => {
       body: JSON.stringify({ userId: "test-user-id" }),
     });
 
-    const response = await POST(request as any);
+    const response = await POST(request as NextRequest);
     const data = await response.json();
 
     expect(response.status).toBe(404);
@@ -90,7 +91,7 @@ describe("/api/spaces/auto-join", () => {
       body: JSON.stringify({ userId: "test-user-id" }),
     });
 
-    const response = await POST(request as any);
+    const response = await POST(request as NextRequest);
     const data = await response.json();
 
     expect(response.status).toBe(400);

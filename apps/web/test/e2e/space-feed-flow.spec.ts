@@ -1,9 +1,24 @@
 import { test, expect } from '@playwright/test'
 import { setupTestUser, cleanupTestData } from './helpers/test-setup'
 
+interface TestUser {
+  id: string;
+  email: string;
+  fullName: string;
+  handle: string;
+}
+
+interface TestSpace {
+  id: string;
+  name: string;
+  description: string;
+  school: string;
+  category: string;
+}
+
 test.describe('Space Feed Flow', () => {
-  let testUser: any
-  let testSpace: any
+  let testUser: TestUser
+  let testSpace: TestSpace
   
   test.beforeEach(async ({ page }) => {
     // Setup test user and space
@@ -58,7 +73,9 @@ test.describe('Space Feed Flow', () => {
     // Extract space ID from URL
     const url = page.url()
     const spaceId = url.split('/spaces/')[1]
-    testSpace.id = spaceId
+    if (spaceId) {
+      testSpace.id = spaceId
+    }
     
     // Step 2: Verify feed composer is visible
     await expect(page.locator('[data-testid="feed-composer"]')).toBeVisible()

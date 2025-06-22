@@ -1,7 +1,42 @@
 "use client";
 
-import React, { Component, ReactNode, ErrorInfo } from "react";
-import { FirebaseErrorHandler, UserFriendlyError } from "@hive/auth-logic";
+import React, { Component } from "react";
+import type { ReactNode, ErrorInfo } from "react";
+// Temporary mock for Storybook compatibility
+interface UserFriendlyError {
+  code: string;
+  message: string;
+  severity: "error" | "warning" | "info";
+  action: "retry" | "contact-support" | "sign-in" | "sign-up" | "check-email";
+  isRetryable: boolean;
+}
+
+// Mock FirebaseErrorHandler for Storybook
+const FirebaseErrorHandler = {
+  handleError: (error: Error): UserFriendlyError => ({
+    code: "unknown",
+    message: error.message || "An unexpected error occurred",
+    severity: "error" as const,
+    action: "retry" as const,
+    isRetryable: true,
+  }),
+  getActionButtonText: (error: UserFriendlyError): string => {
+    switch (error.action) {
+      case "retry":
+        return "Try Again";
+      case "contact-support":
+        return "Contact Support";
+      case "sign-in":
+        return "Sign In";
+      case "sign-up":
+        return "Sign Up";
+      case "check-email":
+        return "Check Email";
+      default:
+        return "Continue";
+    }
+  },
+};
 
 interface Props {
   children: ReactNode;

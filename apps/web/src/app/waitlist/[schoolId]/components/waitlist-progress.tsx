@@ -4,20 +4,46 @@ import { Progress } from "@hive/ui";
 
 type WaitlistProgressProps = {
   currentCount: number;
-  threshold: number;
+  threshold?: number;
+  isManualActivation?: boolean;
 };
 
-const WAITLIST_THRESHOLD = 250;
+const DEFAULT_WAITLIST_THRESHOLD = 100; // Reduced for UB launch
 
-export function WaitlistProgress({ currentCount }: Omit<WaitlistProgressProps, 'threshold'>) {
-  const progressPercentage = (currentCount / WAITLIST_THRESHOLD) * 100;
+export function WaitlistProgress({
+  currentCount,
+  threshold = DEFAULT_WAITLIST_THRESHOLD,
+  isManualActivation = true,
+}: WaitlistProgressProps) {
+  const progressPercentage = Math.min((currentCount / threshold) * 100, 100);
 
   return (
-    <div className="w-full text-center">
-      <Progress value={progressPercentage} className="w-full" />
-      <p className="mt-2 text-sm font-medium">
-        {currentCount} / {WAITLIST_THRESHOLD} signed up
-      </p>
+    <div className="w-full text-center space-y-3">
+      <div className="space-y-2">
+        <div className="flex items-center justify-between text-sm font-sans">
+          <span className="text-zinc-400">Progress</span>
+          <span className="text-[#FFD700] font-medium">
+            {currentCount} / {threshold} students
+          </span>
+        </div>
+        <Progress value={progressPercentage} className="w-full h-2" />
+      </div>
+
+      {isManualActivation ? (
+        <div className="p-3 bg-[#FFD700]/5 border border-[#FFD700]/20 rounded-lg">
+          <p className="text-xs text-[#FFD700] font-medium font-display">
+            UB Founding Launch
+          </p>
+          <p className="text-xs text-zinc-400 mt-1 font-sans">
+            HIVE will launch when we have enough founding UB students to create
+            an amazing community
+          </p>
+        </div>
+      ) : (
+        <p className="text-sm text-zinc-400 font-sans">
+          HIVE launches automatically when we reach {threshold} students
+        </p>
+      )}
     </div>
   );
-} 
+}

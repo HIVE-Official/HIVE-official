@@ -15,8 +15,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../ui/tabs";
 import type { Tool, Element, ElementInstance } from "@hive/core";
 import { ElementLibrary } from "./element-library";
 import { DesignCanvas } from "./design-canvas";
+import { PropertiesPanel } from "./PropertiesPanel";
 // TODO: Implement these components
-// import { PropertiesPanel } from './PropertiesPanel'
 // import { JsonViewer } from './JsonViewer'
 // import { ToolPreview } from './ToolPreview'
 // import { ToolHeader } from './ToolHeader'
@@ -58,7 +58,7 @@ export const ToolBuilder: React.FC<ToolBuilderProps> = ({
   elements,
   onSave,
   onPreview,
-  onPublish,
+  onPublish: _onPublish,
   onShare,
   className,
 }) => {
@@ -240,14 +240,14 @@ export const ToolBuilder: React.FC<ToolBuilderProps> = ({
     onPreview(currentTool);
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const _onPublish = useCallback(async () => {
-    try {
-      await onPublish(currentTool);
-    } catch (error) {
-      console.error("Publish failed:", error);
-    }
-  }, [onPublish, currentTool]);
+  // Publish handler for future implementation
+  // const _onPublish = useCallback(async () => {
+  //   try {
+  //     await onPublish(currentTool);
+  //   } catch (error) {
+  //     console.error("Publish failed:", error);
+  //   }
+  // }, [onPublish, currentTool]);
 
   // const selectedElement = selectedElementId
   //   ? currentTool.elements.find((el) => el.id === selectedElementId)
@@ -450,14 +450,27 @@ export const ToolBuilder: React.FC<ToolBuilderProps> = ({
                 </TabsList>
 
                 <TabsContent value="properties" className="h-full mt-0">
-                  <div className="flex items-center justify-center h-full">
-                    <div className="text-center">
-                      <Settings className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
-                      <p className="text-sm text-muted-foreground">
-                        PropertiesPanel not implemented yet
-                      </p>
-                    </div>
-                  </div>
+                  <PropertiesPanel
+                    selectedElement={
+                      selectedElementId
+                        ? currentTool.elements.find(
+                            (el) => el.id === selectedElementId
+                          ) || null
+                        : null
+                    }
+                    elementDefinition={
+                      selectedElementId
+                        ? elementsMap.get(
+                            currentTool.elements.find(
+                              (el) => el.id === selectedElementId
+                            )?.elementId || ""
+                          ) || null
+                        : null
+                    }
+                    onElementUpdate={updateElement}
+                    onElementDelete={deleteElement}
+                    onElementDuplicate={duplicateElement}
+                  />
                 </TabsContent>
 
                 <TabsContent value="json" className="h-full mt-0">

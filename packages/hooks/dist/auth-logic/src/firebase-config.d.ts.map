@@ -1,0 +1,1 @@
+{"version":3,"file":"firebase-config.d.ts","sourceRoot":"","sources":["../../../../auth-logic/src/firebase-config.ts"],"names":[],"mappings":"AACA,OAAO,KAAK,EAAE,WAAW,EAAE,MAAM,cAAc,CAAC;AAEhD,OAAO,KAAK,EAAE,IAAI,EAAE,MAAM,eAAe,CAAC;AAsB1C,QAAA,IAAI,GAAG,EAAE,WAAW,GAAG,IAAW,CAAC;AACnC,QAAA,IAAI,IAAI,EAAE,IAAI,GAAG,IAAW,CAAC;AAgB7B,OAAO,EAAE,IAAI,EAAE,CAAC;AAChB,eAAe,GAAG,CAAC"}

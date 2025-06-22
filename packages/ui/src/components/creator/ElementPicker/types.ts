@@ -1,7 +1,5 @@
 import type { Element } from '@hive/core';
-
-export default {}
-export interface ElementPickerProps {
+export interface ElementPickerProps {
   /** Callback when an element is selected */
   onElementSelect: (elementId: string) => void;
   /** Optional CSS class name */

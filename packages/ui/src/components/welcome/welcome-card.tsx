@@ -1,46 +1,38 @@
-import * as React from 'react';
-import { motion } from 'framer-motion';
+"use client";
+
+import * as React from "react";
+import { motion } from "framer-motion";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '../ui/card';
-import { cn } from '../../lib/utils';
-import { SchoolSearchInput } from './school-search-input';
+} from "../ui/card";
+import { cn } from "../../lib/utils";
+import { SchoolSearchInput } from "./school-search-input";
+import { HiveLogo } from "../brand/hive-logo";
 
-export default {}
 interface WelcomeCardProps {
   className?: string;
   onSchoolSelect?: (schoolId: string) => void;
 }
 
-// A placeholder for the HIVE logomark.
-// The final implementation will use an <Image> component with the actual asset.
-const HiveLogoPlaceholder = () => (
-  <div
-    className="bg-accent-gold w-8 h-8 md:w-10 md:h-10"
-    aria-label="HIVE logomark"
-    role="img"
-  />
-);
-
 const WelcomeCard = React.forwardRef<HTMLDivElement, WelcomeCardProps>(
   ({ className, onSchoolSelect, ...props }, ref) => {
     const cardVariants = {
       hidden: { opacity: 0, y: 20 },
-      visible: { 
-        opacity: 1, 
-        y: 0
+      visible: {
+        opacity: 1,
+        y: 0,
       },
     };
 
     const logoVariants = {
       hidden: { opacity: 0, y: 20 },
-      visible: { 
-        opacity: 1, 
-        y: 0
+      visible: {
+        opacity: 1,
+        y: 0,
       },
     };
 
@@ -51,7 +43,7 @@ const WelcomeCard = React.forwardRef<HTMLDivElement, WelcomeCardProps>(
     return (
       <motion.div
         ref={ref}
-        className={cn('w-full max-w-md mx-auto', className)}
+        className={cn("w-full max-w-md mx-auto", className)}
         initial="hidden"
         animate="visible"
         variants={cardVariants}
@@ -61,7 +53,7 @@ const WelcomeCard = React.forwardRef<HTMLDivElement, WelcomeCardProps>(
           <CardHeader className="text-center space-y-4">
             <motion.div variants={logoVariants} className="mb-4">
               <div className="flex justify-center">
-                <HiveLogoPlaceholder />
+                <HiveLogo size="xl" className="mx-auto" />
               </div>
             </motion.div>
             <div className="space-y-2">
@@ -82,6 +74,6 @@ const WelcomeCard = React.forwardRef<HTMLDivElement, WelcomeCardProps>(
   }
 );
 
-WelcomeCard.displayName = 'WelcomeCard';
+WelcomeCard.displayName = "WelcomeCard";
 
-export { WelcomeCard }; 
+export { WelcomeCard };

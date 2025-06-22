@@ -2,13 +2,12 @@ import React from "react";
 import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { Heading, Muted, Text } from "./typography";
+import { Heading, Text } from "./ui/typography";
 import { MotionDiv, AnimatePresence } from "./framer-motion-proxy";
 import { गति } from "../lib/motion";
 import { CheckCircle } from "lucide-react";
 import { Stack } from ".";
 
-export default {};
 interface WaitlistFormProps {
   onSubmit: (email: string) => Promise<void>;
 }
@@ -37,7 +36,7 @@ export const WaitlistForm: React.FC<WaitlistFormProps> = ({ onSubmit }) => {
   };
 
   return (
-    <Card className="w-[400px] overflow-hidden" radius="lg">
+    <Card className="w-[400px] overflow-hidden shadow-lg">
       <AnimatePresence mode="wait">
         {success ? (
           <MotionDiv
@@ -48,10 +47,20 @@ export const WaitlistForm: React.FC<WaitlistFormProps> = ({ onSubmit }) => {
             exit="exit"
             className="p-6"
           >
-            <Stack align="center" gap={4}>
-              <CheckCircle className="w-12 h-12 text-success" />
-              <Heading level={3}>You&apos;re on the list!</Heading>
-              <Text>We&apos;ll notify you at {email} when HIVE is ready.</Text>
+            <Stack align="center" gap={6}>
+              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-accent-gold/20">
+                <CheckCircle className="w-8 h-8 text-accent-gold" />
+              </div>
+              <div className="text-center space-y-2">
+                <Heading level={3} className="text-white">
+                  You're on the list!
+                </Heading>
+                <Text className="text-white/60">
+                  We'll notify you at{" "}
+                  <span className="text-white font-medium">{email}</span> when
+                  HIVE is ready.
+                </Text>
+              </div>
             </Stack>
           </MotionDiv>
         ) : (
@@ -63,10 +72,12 @@ export const WaitlistForm: React.FC<WaitlistFormProps> = ({ onSubmit }) => {
             exit="exit"
           >
             <CardHeader>
-              <Heading level={2}>Join the Waitlist</Heading>
-              <Muted>
+              <Heading level={2} className="text-white">
+                Join the Waitlist
+              </Heading>
+              <Text className="text-white/60">
                 Be the first to know when HIVE launches at your campus.
-              </Muted>
+              </Text>
             </CardHeader>
             <form onSubmit={handleSubmit}>
               <CardContent>
@@ -76,11 +87,16 @@ export const WaitlistForm: React.FC<WaitlistFormProps> = ({ onSubmit }) => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   disabled={loading}
+                  required
                 />
               </CardContent>
               <CardFooter>
-                <Button className="w-full" type="submit" loading={loading}>
-                  Get Early Access
+                <Button
+                  className="w-full"
+                  type="submit"
+                  disabled={loading || !email}
+                >
+                  {loading ? "Joining..." : "Get Early Access"}
                 </Button>
               </CardFooter>
             </form>

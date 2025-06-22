@@ -59,12 +59,12 @@ export declare const RichTextContentSchema: z.ZodObject<{
         end: z.ZodNumber;
         url: z.ZodOptional<z.ZodString>;
     }, "strip", z.ZodTypeAny, {
-        type: "bold" | "link" | "italic";
+        type: "bold" | "italic" | "link";
         start: number;
         end: number;
         url?: string | undefined;
     }, {
-        type: "bold" | "link" | "italic";
+        type: "bold" | "italic" | "link";
         start: number;
         end: number;
         url?: string | undefined;
@@ -88,7 +88,7 @@ export declare const RichTextContentSchema: z.ZodObject<{
 }, "strip", z.ZodTypeAny, {
     text: string;
     formatting?: {
-        type: "bold" | "link" | "italic";
+        type: "bold" | "italic" | "link";
         start: number;
         end: number;
         url?: string | undefined;
@@ -102,7 +102,7 @@ export declare const RichTextContentSchema: z.ZodObject<{
 }, {
     text: string;
     formatting?: {
-        type: "bold" | "link" | "italic";
+        type: "bold" | "italic" | "link";
         start: number;
         end: number;
         url?: string | undefined;
@@ -124,17 +124,17 @@ export declare const ImageMetadataSchema: z.ZodObject<{
     height: z.ZodOptional<z.ZodNumber>;
     size: z.ZodNumber;
 }, "strip", z.ZodTypeAny, {
-    size: number;
     url: string;
+    size: number;
+    alt?: string | undefined;
     width?: number | undefined;
     height?: number | undefined;
-    alt?: string | undefined;
 }, {
-    size: number;
     url: string;
+    size: number;
+    alt?: string | undefined;
     width?: number | undefined;
     height?: number | undefined;
-    alt?: string | undefined;
 }>;
 export declare const PollMetadataSchema: z.ZodObject<{
     question: z.ZodString;
@@ -146,14 +146,14 @@ export declare const PollMetadataSchema: z.ZodObject<{
     options: string[];
     question: string;
     allowMultiple: boolean;
-    expiresAt?: Date | undefined;
     votes?: Record<string, string[]> | undefined;
+    expiresAt?: Date | undefined;
 }, {
     options: string[];
     question: string;
-    expiresAt?: Date | undefined;
     votes?: Record<string, string[]> | undefined;
     allowMultiple?: boolean | undefined;
+    expiresAt?: Date | undefined;
 }>;
 export declare const EventMetadataSchema: z.ZodObject<{
     title: z.ZodString;
@@ -203,14 +203,14 @@ export declare const PostAuthorSchema: z.ZodObject<{
     photoURL: z.ZodOptional<z.ZodString>;
     role: z.ZodOptional<z.ZodEnum<["member", "builder", "admin"]>>;
 }, "strip", z.ZodTypeAny, {
-    id: string;
     handle: string;
+    id: string;
     fullName: string;
     photoURL?: string | undefined;
     role?: "admin" | "member" | "builder" | undefined;
 }, {
-    id: string;
     handle: string;
+    id: string;
     fullName: string;
     photoURL?: string | undefined;
     role?: "admin" | "member" | "builder" | undefined;
@@ -246,14 +246,14 @@ export declare const PostSchema: z.ZodObject<{
         photoURL: z.ZodOptional<z.ZodString>;
         role: z.ZodOptional<z.ZodEnum<["member", "builder", "admin"]>>;
     }, "strip", z.ZodTypeAny, {
-        id: string;
         handle: string;
+        id: string;
         fullName: string;
         photoURL?: string | undefined;
         role?: "admin" | "member" | "builder" | undefined;
     }, {
-        id: string;
         handle: string;
+        id: string;
         fullName: string;
         photoURL?: string | undefined;
         role?: "admin" | "member" | "builder" | undefined;
@@ -268,12 +268,12 @@ export declare const PostSchema: z.ZodObject<{
             end: z.ZodNumber;
             url: z.ZodOptional<z.ZodString>;
         }, "strip", z.ZodTypeAny, {
-            type: "bold" | "link" | "italic";
+            type: "bold" | "italic" | "link";
             start: number;
             end: number;
             url?: string | undefined;
         }, {
-            type: "bold" | "link" | "italic";
+            type: "bold" | "italic" | "link";
             start: number;
             end: number;
             url?: string | undefined;
@@ -297,7 +297,7 @@ export declare const PostSchema: z.ZodObject<{
     }, "strip", z.ZodTypeAny, {
         text: string;
         formatting?: {
-            type: "bold" | "link" | "italic";
+            type: "bold" | "italic" | "link";
             start: number;
             end: number;
             url?: string | undefined;
@@ -311,7 +311,7 @@ export declare const PostSchema: z.ZodObject<{
     }, {
         text: string;
         formatting?: {
-            type: "bold" | "link" | "italic";
+            type: "bold" | "italic" | "link";
             start: number;
             end: number;
             url?: string | undefined;
@@ -330,17 +330,17 @@ export declare const PostSchema: z.ZodObject<{
         height: z.ZodOptional<z.ZodNumber>;
         size: z.ZodNumber;
     }, "strip", z.ZodTypeAny, {
-        size: number;
         url: string;
+        size: number;
+        alt?: string | undefined;
         width?: number | undefined;
         height?: number | undefined;
-        alt?: string | undefined;
     }, {
-        size: number;
         url: string;
+        size: number;
+        alt?: string | undefined;
         width?: number | undefined;
         height?: number | undefined;
-        alt?: string | undefined;
     }>>;
     pollMetadata: z.ZodOptional<z.ZodObject<{
         question: z.ZodString;
@@ -352,14 +352,14 @@ export declare const PostSchema: z.ZodObject<{
         options: string[];
         question: string;
         allowMultiple: boolean;
-        expiresAt?: Date | undefined;
         votes?: Record<string, string[]> | undefined;
+        expiresAt?: Date | undefined;
     }, {
         options: string[];
         question: string;
-        expiresAt?: Date | undefined;
         votes?: Record<string, string[]> | undefined;
         allowMultiple?: boolean | undefined;
+        expiresAt?: Date | undefined;
     }>>;
     eventMetadata: z.ZodOptional<z.ZodObject<{
         title: z.ZodString;
@@ -428,10 +428,8 @@ export declare const PostSchema: z.ZodObject<{
     updatedAt: z.ZodDate;
     hardDeleteAt: z.ZodOptional<z.ZodDate>;
 }, "strip", z.ZodTypeAny, {
-    type: "text" | "event" | "image" | "poll" | "toolshare";
+    type: "text" | "image" | "poll" | "event" | "toolshare";
     id: string;
-    createdAt: Date;
-    updatedAt: Date;
     spaceId: string;
     authorId: string;
     content: string;
@@ -445,9 +443,11 @@ export declare const PostSchema: z.ZodObject<{
     isEdited: boolean;
     isDeleted: boolean;
     isFlagged: boolean;
+    createdAt: Date;
+    updatedAt: Date;
     author?: {
-        id: string;
         handle: string;
+        id: string;
         fullName: string;
         photoURL?: string | undefined;
         role?: "admin" | "member" | "builder" | undefined;
@@ -455,7 +455,7 @@ export declare const PostSchema: z.ZodObject<{
     richContent?: {
         text: string;
         formatting?: {
-            type: "bold" | "link" | "italic";
+            type: "bold" | "italic" | "link";
             start: number;
             end: number;
             url?: string | undefined;
@@ -468,18 +468,18 @@ export declare const PostSchema: z.ZodObject<{
         }[] | undefined;
     } | undefined;
     imageMetadata?: {
-        size: number;
         url: string;
+        size: number;
+        alt?: string | undefined;
         width?: number | undefined;
         height?: number | undefined;
-        alt?: string | undefined;
     } | undefined;
     pollMetadata?: {
         options: string[];
         question: string;
         allowMultiple: boolean;
-        expiresAt?: Date | undefined;
         votes?: Record<string, string[]> | undefined;
+        expiresAt?: Date | undefined;
     } | undefined;
     eventMetadata?: {
         title: string;
@@ -505,15 +505,15 @@ export declare const PostSchema: z.ZodObject<{
     hardDeleteAt?: Date | undefined;
 }, {
     id: string;
-    createdAt: Date;
-    updatedAt: Date;
     spaceId: string;
     authorId: string;
     content: string;
-    type?: "text" | "event" | "image" | "poll" | "toolshare" | undefined;
+    createdAt: Date;
+    updatedAt: Date;
+    type?: "text" | "image" | "poll" | "event" | "toolshare" | undefined;
     author?: {
-        id: string;
         handle: string;
+        id: string;
         fullName: string;
         photoURL?: string | undefined;
         role?: "admin" | "member" | "builder" | undefined;
@@ -521,7 +521,7 @@ export declare const PostSchema: z.ZodObject<{
     richContent?: {
         text: string;
         formatting?: {
-            type: "bold" | "link" | "italic";
+            type: "bold" | "italic" | "link";
             start: number;
             end: number;
             url?: string | undefined;
@@ -534,18 +534,18 @@ export declare const PostSchema: z.ZodObject<{
         }[] | undefined;
     } | undefined;
     imageMetadata?: {
-        size: number;
         url: string;
+        size: number;
+        alt?: string | undefined;
         width?: number | undefined;
         height?: number | undefined;
-        alt?: string | undefined;
     } | undefined;
     pollMetadata?: {
         options: string[];
         question: string;
-        expiresAt?: Date | undefined;
         votes?: Record<string, string[]> | undefined;
         allowMultiple?: boolean | undefined;
+        expiresAt?: Date | undefined;
     } | undefined;
     eventMetadata?: {
         title: string;
@@ -595,12 +595,12 @@ export declare const CreatePostSchema: z.ZodEffects<z.ZodObject<{
             end: z.ZodNumber;
             url: z.ZodOptional<z.ZodString>;
         }, "strip", z.ZodTypeAny, {
-            type: "bold" | "link" | "italic";
+            type: "bold" | "italic" | "link";
             start: number;
             end: number;
             url?: string | undefined;
         }, {
-            type: "bold" | "link" | "italic";
+            type: "bold" | "italic" | "link";
             start: number;
             end: number;
             url?: string | undefined;
@@ -624,7 +624,7 @@ export declare const CreatePostSchema: z.ZodEffects<z.ZodObject<{
     }, "strip", z.ZodTypeAny, {
         text: string;
         formatting?: {
-            type: "bold" | "link" | "italic";
+            type: "bold" | "italic" | "link";
             start: number;
             end: number;
             url?: string | undefined;
@@ -638,7 +638,7 @@ export declare const CreatePostSchema: z.ZodEffects<z.ZodObject<{
     }, {
         text: string;
         formatting?: {
-            type: "bold" | "link" | "italic";
+            type: "bold" | "italic" | "link";
             start: number;
             end: number;
             url?: string | undefined;
@@ -657,17 +657,17 @@ export declare const CreatePostSchema: z.ZodEffects<z.ZodObject<{
         height: z.ZodOptional<z.ZodNumber>;
         size: z.ZodNumber;
     }, "strip", z.ZodTypeAny, {
-        size: number;
         url: string;
+        size: number;
+        alt?: string | undefined;
         width?: number | undefined;
         height?: number | undefined;
-        alt?: string | undefined;
     }, {
-        size: number;
         url: string;
+        size: number;
+        alt?: string | undefined;
         width?: number | undefined;
         height?: number | undefined;
-        alt?: string | undefined;
     }>>;
     pollMetadata: z.ZodOptional<z.ZodObject<{
         question: z.ZodString;
@@ -679,14 +679,14 @@ export declare const CreatePostSchema: z.ZodEffects<z.ZodObject<{
         options: string[];
         question: string;
         allowMultiple: boolean;
-        expiresAt?: Date | undefined;
         votes?: Record<string, string[]> | undefined;
+        expiresAt?: Date | undefined;
     }, {
         options: string[];
         question: string;
-        expiresAt?: Date | undefined;
         votes?: Record<string, string[]> | undefined;
         allowMultiple?: boolean | undefined;
+        expiresAt?: Date | undefined;
     }>>;
     eventMetadata: z.ZodOptional<z.ZodObject<{
         title: z.ZodString;
@@ -727,12 +727,12 @@ export declare const CreatePostSchema: z.ZodEffects<z.ZodObject<{
         toolDescription?: string | undefined;
     }>>;
 }, "strip", z.ZodTypeAny, {
-    type: "text" | "event" | "image" | "poll" | "toolshare";
+    type: "text" | "image" | "poll" | "event" | "toolshare";
     content: string;
     richContent?: {
         text: string;
         formatting?: {
-            type: "bold" | "link" | "italic";
+            type: "bold" | "italic" | "link";
             start: number;
             end: number;
             url?: string | undefined;
@@ -745,18 +745,18 @@ export declare const CreatePostSchema: z.ZodEffects<z.ZodObject<{
         }[] | undefined;
     } | undefined;
     imageMetadata?: {
-        size: number;
         url: string;
+        size: number;
+        alt?: string | undefined;
         width?: number | undefined;
         height?: number | undefined;
-        alt?: string | undefined;
     } | undefined;
     pollMetadata?: {
         options: string[];
         question: string;
         allowMultiple: boolean;
-        expiresAt?: Date | undefined;
         votes?: Record<string, string[]> | undefined;
+        expiresAt?: Date | undefined;
     } | undefined;
     eventMetadata?: {
         title: string;
@@ -774,11 +774,11 @@ export declare const CreatePostSchema: z.ZodEffects<z.ZodObject<{
     } | undefined;
 }, {
     content: string;
-    type?: "text" | "event" | "image" | "poll" | "toolshare" | undefined;
+    type?: "text" | "image" | "poll" | "event" | "toolshare" | undefined;
     richContent?: {
         text: string;
         formatting?: {
-            type: "bold" | "link" | "italic";
+            type: "bold" | "italic" | "link";
             start: number;
             end: number;
             url?: string | undefined;
@@ -791,18 +791,18 @@ export declare const CreatePostSchema: z.ZodEffects<z.ZodObject<{
         }[] | undefined;
     } | undefined;
     imageMetadata?: {
-        size: number;
         url: string;
+        size: number;
+        alt?: string | undefined;
         width?: number | undefined;
         height?: number | undefined;
-        alt?: string | undefined;
     } | undefined;
     pollMetadata?: {
         options: string[];
         question: string;
-        expiresAt?: Date | undefined;
         votes?: Record<string, string[]> | undefined;
         allowMultiple?: boolean | undefined;
+        expiresAt?: Date | undefined;
     } | undefined;
     eventMetadata?: {
         title: string;
@@ -819,12 +819,12 @@ export declare const CreatePostSchema: z.ZodEffects<z.ZodObject<{
         toolDescription?: string | undefined;
     } | undefined;
 }>, {
-    type: "text" | "event" | "image" | "poll" | "toolshare";
+    type: "text" | "image" | "poll" | "event" | "toolshare";
     content: string;
     richContent?: {
         text: string;
         formatting?: {
-            type: "bold" | "link" | "italic";
+            type: "bold" | "italic" | "link";
             start: number;
             end: number;
             url?: string | undefined;
@@ -837,18 +837,18 @@ export declare const CreatePostSchema: z.ZodEffects<z.ZodObject<{
         }[] | undefined;
     } | undefined;
     imageMetadata?: {
-        size: number;
         url: string;
+        size: number;
+        alt?: string | undefined;
         width?: number | undefined;
         height?: number | undefined;
-        alt?: string | undefined;
     } | undefined;
     pollMetadata?: {
         options: string[];
         question: string;
         allowMultiple: boolean;
-        expiresAt?: Date | undefined;
         votes?: Record<string, string[]> | undefined;
+        expiresAt?: Date | undefined;
     } | undefined;
     eventMetadata?: {
         title: string;
@@ -866,11 +866,11 @@ export declare const CreatePostSchema: z.ZodEffects<z.ZodObject<{
     } | undefined;
 }, {
     content: string;
-    type?: "text" | "event" | "image" | "poll" | "toolshare" | undefined;
+    type?: "text" | "image" | "poll" | "event" | "toolshare" | undefined;
     richContent?: {
         text: string;
         formatting?: {
-            type: "bold" | "link" | "italic";
+            type: "bold" | "italic" | "link";
             start: number;
             end: number;
             url?: string | undefined;
@@ -883,18 +883,18 @@ export declare const CreatePostSchema: z.ZodEffects<z.ZodObject<{
         }[] | undefined;
     } | undefined;
     imageMetadata?: {
-        size: number;
         url: string;
+        size: number;
+        alt?: string | undefined;
         width?: number | undefined;
         height?: number | undefined;
-        alt?: string | undefined;
     } | undefined;
     pollMetadata?: {
         options: string[];
         question: string;
-        expiresAt?: Date | undefined;
         votes?: Record<string, string[]> | undefined;
         allowMultiple?: boolean | undefined;
+        expiresAt?: Date | undefined;
     } | undefined;
     eventMetadata?: {
         title: string;
@@ -925,12 +925,12 @@ export declare const EditPostSchema: z.ZodObject<{
             end: z.ZodNumber;
             url: z.ZodOptional<z.ZodString>;
         }, "strip", z.ZodTypeAny, {
-            type: "bold" | "link" | "italic";
+            type: "bold" | "italic" | "link";
             start: number;
             end: number;
             url?: string | undefined;
         }, {
-            type: "bold" | "link" | "italic";
+            type: "bold" | "italic" | "link";
             start: number;
             end: number;
             url?: string | undefined;
@@ -954,7 +954,7 @@ export declare const EditPostSchema: z.ZodObject<{
     }, "strip", z.ZodTypeAny, {
         text: string;
         formatting?: {
-            type: "bold" | "link" | "italic";
+            type: "bold" | "italic" | "link";
             start: number;
             end: number;
             url?: string | undefined;
@@ -968,7 +968,7 @@ export declare const EditPostSchema: z.ZodObject<{
     }, {
         text: string;
         formatting?: {
-            type: "bold" | "link" | "italic";
+            type: "bold" | "italic" | "link";
             start: number;
             end: number;
             url?: string | undefined;
@@ -985,7 +985,7 @@ export declare const EditPostSchema: z.ZodObject<{
     richContent?: {
         text: string;
         formatting?: {
-            type: "bold" | "link" | "italic";
+            type: "bold" | "italic" | "link";
             start: number;
             end: number;
             url?: string | undefined;
@@ -1002,7 +1002,7 @@ export declare const EditPostSchema: z.ZodObject<{
     richContent?: {
         text: string;
         formatting?: {
-            type: "bold" | "link" | "italic";
+            type: "bold" | "italic" | "link";
             start: number;
             end: number;
             url?: string | undefined;

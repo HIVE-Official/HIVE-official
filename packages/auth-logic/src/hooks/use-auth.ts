@@ -1,6 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, {
+  useState,
+  useEffect,
+  createContext,
+  useContext,
+  ReactNode,
+} from "react";
 import type { User } from "firebase/auth";
 import { auth } from "../firebase-config";
 import { onAuthStateChanged } from "firebase/auth";
@@ -13,47 +19,62 @@ export interface AuthUser {
   getIdToken: () => Promise<string>;
 }
 
-export interface UseAuthReturn {
+export interface AuthContextType {
   user: AuthUser | null;
   isLoading: boolean;
   isAuthenticated: boolean;
 }
 
-export function useAuth(): UseAuthReturn {
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(
-      auth,
-      (firebaseUser: User | null) => {
-        if (firebaseUser) {
-          // In a real implementation, you'd fetch additional user data from Firestore
-          // For now, we'll create a basic user object
-          const authUser: AuthUser = {
-            uid: firebaseUser.uid,
-            email: firebaseUser.email,
-            fullName:
-              firebaseUser.displayName ||
-              firebaseUser.email?.split("@")[0] ||
-              "User",
-            onboardingCompleted: true, // Placeholder - would be fetched from user profile
-            getIdToken: () => firebaseUser.getIdToken(),
-          };
-          setUser(authUser);
-        } else {
-          setUser(null);
-        }
-        setIsLoading(false);
+    if (!auth) {
+      setIsLoading(false);
+      return;
+    }
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      if (firebaseUser) {
+        // In a real implementation, you'd fetch additional user data from Firestore
+        const idTokenResult = await firebaseUser.getIdTokenResult();
+        const onboardingCompleted = !!idTokenResult.claims.onboardingCompleted;
+
+        const authUser: AuthUser = {
+          uid: firebaseUser.uid,
+          email: firebaseUser.email,
+          fullName:
+            firebaseUser.displayName ||
+            firebaseUser.email?.split("@")[0] ||
+            "User",
+          onboardingCompleted,
+          getIdToken: () => firebaseUser.getIdToken(),
+        };
+        setUser(authUser);
+      } else {
+        setUser(null);
       }
-    );
+      setIsLoading(false);
+    });
 
     return () => unsubscribe();
-  }, []);
+  }, [auth]);
 
-  return {
+  const value = {
     user,
     isLoading,
     isAuthenticated: !!user,
   };
+
+  return React.createElement(AuthContext.Provider, { value }, children);
+}
+
+export function useAuth(): AuthContextType {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
 }

@@ -4,13 +4,65 @@
 
 @layer base {
   :root {
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
-    /* ... other CSS variables ... */
+    /* CORRECTED: Brand typography tokens */
+    --font-display:
+      "Space Grotesk Variable", "Space Grotesk", system-ui, sans-serif;
+    --font-body: "Geist Sans Variable", "Geist Sans", system-ui, sans-serif;
+
+    /* CORRECTED: Brand color tokens */
+    --background: #0a0a0a; /* Primary canvas */
+    --surface: #111111; /* Card backgrounds */
+    --foreground: #ffffff; /* Primary text */
+    --muted: #6b7280; /* Secondary text */
+    --border: #2a2a2a; /* CORRECTED border color */
+    --accent: #ffd700; /* Gold accent */
+    --accent-hover: #eac200; /* CORRECTED gold hover */
+    --accent-active: #c4a500; /* CORRECTED gold active */
+
+    /* CORRECTED: Motion tokens */
+    --motion-fast: 90ms; /* Micro-interactions */
+    --motion-content: 220ms; /* Content transitions */
+    --motion-slow: 300ms; /* Ritual theatrics only */
+    --motion-easing: cubic-bezier(
+      0.22,
+      0.61,
+      0.36,
+      1
+    ); /* Single easing curve */
+
+    /* Legacy HSL mappings for backward compatibility */
+    --background-hsl: 0 0% 4%;
+    --foreground-hsl: 0 0% 98%;
+    --card-hsl: 0 0% 7%;
+    --card-foreground-hsl: 0 0% 98%;
+    --popover-hsl: 0 0% 7%;
+    --popover-foreground-hsl: 0 0% 98%;
+    --primary-hsl: 48 100% 50%; /* Gold */
+    --primary-foreground-hsl: 0 0% 4%;
+    --secondary-hsl: 0 0% 7%; /* Surface */
+    --secondary-foreground-hsl: 0 0% 98%;
+    --muted-hsl: 0 0% 42%; /* Muted text */
+    --muted-foreground-hsl: 0 0% 98%;
+    --accent-hsl: 48 100% 50%; /* Gold */
+    --accent-foreground-hsl: 0 0% 4%;
+    --destructive-hsl: 0 0% 7%; /* Surface (no red) */
+    --destructive-foreground-hsl: 0 0% 98%;
+    --border-hsl: 0 0% 16%; /* CORRECTED */
+    --input-hsl: 0 0% 16%; /* CORRECTED */
+    --ring-hsl: 48 100% 50%; /* Gold focus ring */
+    --radius: 0.5rem;
   }
- 
+
   .dark {
-    /* ... dark theme variables ... */
+    /* Same values for dark mode (our primary theme) */
+    --background: #0a0a0a;
+    --surface: #111111;
+    --foreground: #ffffff;
+    --muted: #6b7280;
+    --border: #2a2a2a;
+    --accent: #ffd700;
+    --accent-hover: #eac200;
+    --accent-active: #c4a500;
   }
 }
 
@@ -18,7 +70,184 @@
   * {
     @apply border-border;
   }
+
+  html {
+    scroll-behavior: smooth;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-body); /* CORRECTED: Geist Sans Variable */
+    line-height: 1.5;
+    font-feature-settings: "cv11", "ss01";
   }
-} 
+
+  /* CORRECTED: Typography classes */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display); /* Space Grotesk Variable */
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+
+  h1 {
+    font-size: 2rem;
+    line-height: 1.25;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    line-height: 1.33;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+
+  h4 {
+    font-size: 1.125rem;
+    line-height: 1.44;
+  }
+
+  p,
+  span,
+  div {
+    font-family: var(--font-body); /* Geist Sans Variable */
+  }
+
+  /* CORRECTED: Focus ring system */
+  .focus-visible:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    transition: outline var(--motion-fast) var(--motion-easing);
+  }
+}
+
+@layer utilities {
+  /* CORRECTED: Fade in animation with proper timing */
+  .animate-fade-in {
+    animation: fadeIn var(--motion-content) var(--motion-easing) forwards;
+    opacity: 0;
+  }
+
+  /* CORRECTED: Shake animation for error feedback */
+  .animate-shake {
+    animation: shakeMicro var(--motion-fast) var(--motion-easing);
+  }
+
+  /* CORRECTED: Pulse animation for success feedback */
+  .animate-pulse-subtle {
+    animation: pulseSubtle var(--motion-content) var(--motion-easing);
+  }
+
+  /* CORRECTED: Ritual animation for special moments */
+  .animate-ritual {
+    animation: ritualBurst var(--motion-slow) var(--motion-easing);
+  }
+
+  /* Brand color utilities */
+  .text-brand-accent {
+    color: var(--accent);
+  }
+
+  .bg-brand-accent {
+    background-color: var(--accent);
+    color: var(--background);
+  }
+
+  .border-brand-accent {
+    border-color: var(--accent);
+  }
+
+  .text-brand-muted {
+    color: var(--muted);
+  }
+
+  .bg-brand-surface {
+    background-color: var(--surface);
+  }
+
+  .border-brand {
+    border-color: var(--border);
+  }
+}
+
+/* CORRECTED: Keyframe animations with proper timing */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shakeMicro {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-2px);
+  }
+  75% {
+    transform: translateX(2px);
+  }
+}
+
+@keyframes pulseSubtle {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+}
+
+@keyframes ritualBurst {
+  0% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1) rotate(180deg);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1) rotate(360deg);
+    opacity: 1;
+  }
+}
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Brand compliance note: This CSS enforces:
+ * - Space Grotesk Variable + Geist Sans Variable fonts
+ * - CORRECTED border color: #2A2A2A
+ * - CORRECTED gold hover: #EAC200, active: #C4A500
+ * - Motion timing: 90ms/220ms/300ms only
+ * - Single easing: cubic-bezier(0.22, 0.61, 0.36, 1)
+ * - Motion-based status feedback (no red/green colors)
+ */

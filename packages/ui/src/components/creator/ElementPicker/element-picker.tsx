@@ -7,8 +7,6 @@ import { ElementCard } from "./element-card";
 import type { ElementPickerProps } from "./types";
 import type { Element } from "@hive/core";
 
-export default {};
-
 // Mock data for now - will be replaced with Firestore hook
 const MOCK_ELEMENTS: Element[] = [
   {

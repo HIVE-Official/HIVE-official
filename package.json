@@ -10,16 +10,22 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
+    "dev:web": "turbo run dev --filter=web...",
+    "dev:admin": "turbo run dev --filter=admin...",
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
+    "validate": "pnpm lint && pnpm typecheck",
     "test": "turbo run test",
     "test:e2e": "turbo run test:e2e",
     "clean": "turbo run clean",
-    "storybook": "turbo run storybook",
+    "storybook": "pnpm --filter @hive/ui storybook",
     "build-storybook": "turbo run build-storybook"
   },
   "devDependencies": {
     "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-react": "^7.34.2",
+    "globals": "^16.2.0",
+    "cpy-cli": "^5.0.0",
     "turbo": "^2.5.4"
   },
   "workspaces": [

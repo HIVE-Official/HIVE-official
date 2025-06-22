@@ -21,4 +21,18 @@ export * from "./constants/majors";
 export * from "./stores/useAppStore";
 // Firebase client config
 export * from "./firebase";
+// Feed System Core
+export * from "./domain/feed/top-strip";
+export * from "./domain/feed/main-feed";
+export * from "./domain/feed/composer";
+export { CreatePostSchema, ContentProcessor, PostValidator, PostCreationEngine, DraftManager, PostAnalyticsTracker, } from "./domain/feed/posting";
+// Space Discovery System
+// Note: Selective export to avoid conflicts with firestore/space
+export { SpaceSection, SpaceStatus, SpaceOwnerType, SpaceDiscoveryEngine, } from "./domain/space/discovery";
+export { SpaceDiscoverySchema } from "./domain/space/discovery";
+// Note: ContentProcessor and PostValidator are now exported from domain/feed/posting
+// export * from "./domain/space/space.types"; // Obsolete – file removed
+// export * from "./domain/space/space.guards"; // Obsolete – file removed
+// export * from "./domain/feed/feed.types"; // Obsolete – file removed
+// export * from "./domain/feed/feed.guards"; // Obsolete – file removed
 //# sourceMappingURL=index.js.map
