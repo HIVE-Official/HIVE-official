@@ -31,3 +31,5 @@ export {
   useAnimationDuration,
   getAnimationDuration,
 } from "./use-reduced-motion";
+
+export * from './use-timer/use-timer'

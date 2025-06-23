@@ -1,80 +1,71 @@
 "use client";
 
 import * as React from "react";
-import * as SwitchPrimitive from "@radix-ui/react-switch";
-import { cva, type VariantProps } from "class-variance-authority";
+import * as SwitchPrimitives from "@radix-ui/react-switch";
 import { cn } from "../../lib/utils";
 
-const switchVariants = cva(
-  [
-    "peer inline-flex shrink-0 cursor-pointer transition-all duration-300 ease-out",
-    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-gold focus-visible:ring-offset-2 focus-visible:ring-offset-bg-canvas",
-    "disabled:cursor-not-allowed disabled:opacity-50",
-    // Sophisticated background with glass effect
-    "border border-white/12 backdrop-blur-sm",
-    // Unchecked state - subtle dark background
-    "data-[state=unchecked]:bg-white/8 data-[state=unchecked]:hover:bg-white/12",
-    // Checked state - gold gradient with glow
-    "data-[state=checked]:bg-gradient-to-r data-[state=checked]:from-accent-gold data-[state=checked]:to-accent-gold-hover",
-    "data-[state=checked]:border-accent-gold/30 data-[state=checked]:shadow-lg data-[state=checked]:shadow-accent-gold/20",
-    // Hover enhancement for checked state
-    "data-[state=checked]:hover:shadow-xl data-[state=checked]:hover:shadow-accent-gold/30",
-  ].join(" "),
-  {
-    variants: {
-      size: {
-        sm: "h-5 w-9 rounded-full",
-        md: "h-6 w-11 rounded-full",
-        lg: "h-7 w-13 rounded-full",
-      },
-    },
-    defaultVariants: {
-      size: "md",
-    },
-  }
-);
-
-const thumbVariants = cva(
-  [
-    "pointer-events-none block rounded-full transition-all duration-300 ease-out",
-    "border border-white/20 shadow-lg backdrop-blur-sm",
-    // Unchecked thumb - glass effect
-    "data-[state=unchecked]:bg-white/90 data-[state=unchecked]:translate-x-0.5",
-    // Checked thumb - refined design
-    "data-[state=checked]:bg-white data-[state=checked]:border-white/30",
-    // Enhanced shadow and scale on checked
-    "data-[state=checked]:shadow-xl data-[state=checked]:scale-105",
-  ].join(" "),
-  {
-    variants: {
-      size: {
-        sm: "h-4 w-4 data-[state=checked]:translate-x-4",
-        md: "h-5 w-5 data-[state=checked]:translate-x-5",
-        lg: "h-6 w-6 data-[state=checked]:translate-x-6",
-      },
-    },
-    defaultVariants: {
-      size: "md",
-    },
-  }
-);
-
-export interface SwitchProps
-  extends React.ComponentPropsWithoutRef<typeof SwitchPrimitive.Root>,
-    VariantProps<typeof switchVariants> {}
-
 const Switch = React.forwardRef<
-  React.ElementRef<typeof SwitchPrimitive.Root>,
-  SwitchProps
->(({ className, size, ...props }, ref) => (
-  <SwitchPrimitive.Root
-    className={cn(switchVariants({ size }), className)}
+  React.ElementRef<typeof SwitchPrimitives.Root>,
+  React.ComponentPropsWithoutRef<typeof SwitchPrimitives.Root>
+>(({ className, ...props }, ref) => (
+  <SwitchPrimitives.Root
+    className={cn(
+      // Base styling - HIVE dark-first design
+      "peer inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full",
+      "border-2 border-[#2A2A2A]", // Subtle border
+      
+      // HIVE motion system
+      "transition-all duration-fast ease-hive-smooth",
+      
+      // Hover state
+      "hover:scale-105", // Subtle HIVE scale effect
+      "hover:border-accent/50",
+      
+      // Focus state - gold ring
+      "focus-visible:outline-none",
+      "focus-visible:ring-2 focus-visible:ring-accent",
+      "focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+      
+      // Unchecked state - dark surface
+      "data-[state=unchecked]:bg-surface",
+      "data-[state=unchecked]:border-[#2A2A2A]",
+      
+      // Checked state - gold accent
+      "data-[state=checked]:bg-accent",
+      "data-[state=checked]:border-accent",
+      "data-[state=checked]:scale-110", // Slightly larger when checked
+      
+      // Disabled state
+      "disabled:cursor-not-allowed disabled:opacity-50",
+      "disabled:hover:scale-100", // No scale on disabled hover
+      
+      className
+    )}
     {...props}
     ref={ref}
   >
-    <SwitchPrimitive.Thumb className={cn(thumbVariants({ size }))} />
-  </SwitchPrimitive.Root>
+    <SwitchPrimitives.Thumb
+      className={cn(
+        // Base thumb styling
+        "pointer-events-none block h-4 w-4 rounded-full shadow-lg ring-0",
+        "bg-foreground", // White thumb
+        
+        // HIVE motion system for smooth sliding
+        "transition-all duration-fast ease-hive-smooth",
+        
+        // Position states
+        "data-[state=unchecked]:translate-x-0.5", // Slight offset from edge
+        "data-[state=checked]:translate-x-5.5", // Slide to right with offset
+        
+        // Scale effect when switching
+        "data-[state=checked]:scale-110",
+        
+        // On checked state, make thumb dark to contrast with gold background
+        "data-[state=checked]:bg-background",
+      )}
+    />
+  </SwitchPrimitives.Root>
 ));
-Switch.displayName = SwitchPrimitive.Root.displayName;
+Switch.displayName = SwitchPrimitives.Root.displayName;
 
 export { Switch };

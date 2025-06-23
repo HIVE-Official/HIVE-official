@@ -45,7 +45,7 @@ export default function ShareInvitePage() {
     }
   };
 
-  const shareOnPlatform = (platform: string) => {
+  const _handleShare = async (platform: string) => {
     const text =
       "Join me on HIVE - the exclusive social platform launching at UB! 🔥";
     const url = encodeURIComponent(inviteLink);
@@ -58,7 +58,7 @@ export default function ShareInvitePage() {
     };
 
     if (platform === "instagram") {
-      // For Instagram, we'll copy the text and open Instagram
+      // For Instagram, we&apos;ll copy the text and open Instagram
       navigator.clipboard.writeText(`${text} ${inviteLink}`);
       window.open("https://www.instagram.com/", "_blank");
     } else {
@@ -215,21 +215,21 @@ export default function ShareInvitePage() {
           <CardContent>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <Button
-                onClick={() => shareOnPlatform("twitter")}
+                onClick={() => _handleShare("twitter")}
                 className="w-full bg-blue-500 hover:bg-blue-600 text-white font-sans"
               >
                 <Twitter className="w-4 h-4 mr-2" />
                 Twitter
               </Button>
               <Button
-                onClick={() => shareOnPlatform("facebook")}
+                onClick={() => _handleShare("facebook")}
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white font-sans"
               >
                 <Facebook className="w-4 h-4 mr-2" />
                 Facebook
               </Button>
               <Button
-                onClick={() => shareOnPlatform("instagram")}
+                onClick={() => _handleShare("instagram")}
                 className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-sans"
               >
                 <Instagram className="w-4 h-4 mr-2" />
@@ -253,7 +253,7 @@ export default function ShareInvitePage() {
             <div className="p-4 bg-zinc-800/50 rounded-lg">
               <p className="text-sm text-zinc-300 font-sans leading-relaxed">
                 Hey! 👋 I just joined HIVE - the new social platform launching
-                exclusively at UB! It's designed specifically for college
+                exclusively at UB! It&apos;s designed specifically for college
                 students and looks amazing. Want to join the founding UB
                 community? Check it out: {inviteLink}
               </p>
@@ -261,7 +261,7 @@ export default function ShareInvitePage() {
             <Button
               onClick={() =>
                 navigator.clipboard.writeText(
-                  `Hey! 👋 I just joined HIVE - the new social platform launching exclusively at UB! It's designed specifically for college students and looks amazing. Want to join the founding UB community? Check it out: ${inviteLink}`
+                  `Hey! 👋 I just joined HIVE - the new social platform launching exclusively at UB! It&apos;s designed specifically for college students and looks amazing. Want to join the founding UB community? Check it out: ${inviteLink}`
                 )
               }
               className="w-full mt-3 border-zinc-700 text-zinc-300 hover:bg-zinc-800 font-sans"
@@ -297,7 +297,7 @@ export default function ShareInvitePage() {
               <div>
                 <strong className="text-white">Exclusive Access:</strong>
                 <p>
-                  HIVE is launching exclusively at UB first. Your friends won't
+                  HIVE is launching exclusively at UB first. Your friends won&apos;t
                   be able to join from anywhere else!
                 </p>
               </div>

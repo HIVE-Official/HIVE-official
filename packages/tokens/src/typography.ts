@@ -4,7 +4,7 @@
 export const typography = {
   // Font families - CORRECTED to match HIVE brand guidelines
   fontFamily: {
-    sans: ["Geist Sans Variable", "Geist Sans", "system-ui", "sans-serif"],
+    sans: ["Inter", "system-ui", "sans-serif"],
     display: [
       "Space Grotesk Variable",
       "Space Grotesk",
@@ -69,14 +69,14 @@ export const typography = {
       size: "16px",
       lineHeight: "24px",
       fontWeight: "400",
-      fontFamily: "Geist Sans Variable",
+      fontFamily: "Inter",
       usage: "Body text, paragraphs, default text",
     },
     bodySmall: {
       size: "14px",
       lineHeight: "20px",
       fontWeight: "400",
-      fontFamily: "Geist Sans Variable",
+      fontFamily: "Inter",
       usage: "Smaller body text, captions",
     },
 
@@ -85,14 +85,14 @@ export const typography = {
       size: "12px",
       lineHeight: "18px",
       fontWeight: "400",
-      fontFamily: "Geist Sans Variable",
+      fontFamily: "Inter",
       usage: "Labels, metadata, micro-copy",
     },
     button: {
       size: "14px",
       lineHeight: "20px",
       fontWeight: "500",
-      fontFamily: "Geist Sans Variable",
+      fontFamily: "Inter",
       usage: "Button text, CTAs",
     },
 

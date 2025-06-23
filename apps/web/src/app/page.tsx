@@ -123,7 +123,7 @@ export default function LandingPage() {
                 Campus Feed
               </h4>
               <p className="text-[#A1A1AA] font-sans leading-relaxed">
-                Stay connected with what's happening on your campus. Smart
+                Stay connected with what&apos;s happening on your campus. Smart
                 algorithms surface the most relevant content for you.
               </p>
             </div>
@@ -208,9 +208,9 @@ export default function LandingPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <div className="group bg-white/[0.015] rounded-xl p-6 border border-white/6 transition-all duration-[200ms] hover:border-white/10 hover:bg-white/[0.025]">
               <p className="text-[#FFFFFF]/90 mb-4 italic font-sans leading-relaxed">
-                "HIVE helped me find my study group for organic chemistry. We
+                &quot;HIVE helped me find my study group for organic chemistry. We
                 went from strangers to best friends, and I actually passed the
-                class!"
+                class!&quot;
               </p>
               <div className="flex items-center">
                 <div className="w-10 h-10 bg-[#FFD700]/20 rounded-full flex items-center justify-center mr-3">
@@ -229,9 +229,9 @@ export default function LandingPage() {
 
             <div className="group bg-white/[0.015] rounded-xl p-6 border border-white/6 transition-all duration-[200ms] hover:border-white/10 hover:bg-white/[0.025]">
               <p className="text-[#FFFFFF]/90 mb-4 italic font-sans leading-relaxed">
-                "Finally, a social app that actually understands college life.
+                &quot;Finally, a social app that actually understands college life.
                 No algorithms pushing random content - just my campus
-                community."
+                community.&quot;
               </p>
               <div className="flex items-center">
                 <div className="w-10 h-10 bg-[#FFD700]/20 rounded-full flex items-center justify-center mr-3">
@@ -250,8 +250,8 @@ export default function LandingPage() {
 
             <div className="group bg-white/[0.015] rounded-xl p-6 border border-white/6 transition-all duration-[200ms] hover:border-white/10 hover:bg-white/[0.025]">
               <p className="text-[#FFFFFF]/90 mb-4 italic font-sans leading-relaxed">
-                "I was so overwhelmed freshman year until I found my people on
-                HIVE. Now I can't imagine college without this community."
+                &quot;I was so overwhelmed freshman year until I found my people on
+                HIVE. Now I can&apos;t imagine college without this community.&quot;
               </p>
               <div className="flex items-center">
                 <div className="w-10 h-10 bg-[#FFD700]/20 rounded-full flex items-center justify-center mr-3">

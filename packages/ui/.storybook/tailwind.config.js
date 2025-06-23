@@ -1,3 +1,7 @@
+import { colors, shadcnColors } from '@hive/tokens/colors';
+import { typography, tailwindFontSizes } from '@hive/tokens/typography';
+import { motion } from '@hive/tokens/motion';
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
@@ -6,61 +10,27 @@ export default {
     "../src/components/**/*.{js,ts,jsx,tsx}",
     "../**/*.stories.{js,ts,jsx,tsx}",
   ],
+  darkMode: 'class', // Enable class-based dark mode
   theme: {
     extend: {
       colors: {
-        // HIVE brand colors hardcoded for Storybook
-        "bg-root": "#0A0A0A",
-        "surface-01": "#111111",
-        "surface-02": "#141417",
-        "surface-03": "#1A1A1D",
-        "border-line": "#333333",
-        "text-primary": "#FFFFFF",
-        "text-secondary": "#B3B3B3",
-        "text-disabled": "#666666",
-        "yellow-500": "#FFD700",
-        "yellow-600": "#E6C200",
-        "yellow-700": "#CCAD00",
-
-        // shadcn/ui compatibility
-        border: "#333333",
-        input: "#1A1A1D",
-        ring: "#FFD700",
-        background: "#0A0A0A",
-        foreground: "#FFFFFF",
-        primary: {
-          DEFAULT: "#FFD700",
-          foreground: "#0A0A0A",
-        },
-        secondary: {
-          DEFAULT: "#141417",
-          foreground: "#FFFFFF",
-        },
-        muted: {
-          DEFAULT: "#111111",
-          foreground: "#B3B3B3",
-        },
-        accent: {
-          DEFAULT: "#FFD700",
-          foreground: "#0A0A0A",
-        },
-        card: {
-          DEFAULT: "#111111",
-          foreground: "#FFFFFF",
-        },
+        ...colors, // Import base HIVE colors
+        ...shadcnColors, // Import shadcn/ui compatible colors
       },
       fontFamily: {
-        display: ["General Sans Variable", "system-ui", "sans-serif"],
-        body: ["Inter Variable", "system-ui", "sans-serif"],
-        mono: ["JetBrains Mono", "SF Mono", "Consolas", "monospace"],
+        ...typography.fontFamily, // Import font families from tokens
       },
       fontSize: {
-        h1: ["2.5rem", { lineHeight: "1.2", letterSpacing: "-0.02em" }],
-        h2: ["2rem", { lineHeight: "1.25", letterSpacing: "-0.01em" }],
-        h3: ["1.5rem", { lineHeight: "1.3", letterSpacing: "-0.01em" }],
-        h4: ["1.25rem", { lineHeight: "1.35", letterSpacing: "0" }],
-        body: ["1rem", { lineHeight: "1.5", letterSpacing: "0" }],
-        caption: ["0.875rem", { lineHeight: "1.4", letterSpacing: "0.01em" }],
+        ...tailwindFontSizes, // Import font sizes from tokens
+      },
+      fontWeight: {
+        ...typography.fontWeight, // Import font weights from tokens
+      },
+      lineHeight: {
+        ...typography.lineHeight, // Import line heights from tokens
+      },
+      letterSpacing: {
+        ...typography.letterSpacing, // Import letter spacing from tokens
       },
       // ============================================================================
       // APPLE-INSPIRED SHADOW SYSTEM
@@ -89,44 +59,208 @@ export default {
       },
 
       // ============================================================================
-      // MOTION SYSTEM - Apple-inspired timing
+      // HIVE CUSTOM MOTION SYSTEM (NO Material Design)
       // ============================================================================
       transitionTimingFunction: {
-        hive: "cubic-bezier(0.32, 0.72, 0, 1)",
-        "hive-bounce": "cubic-bezier(0.68, -0.55, 0.265, 1.55)",
-        "hive-ease": "cubic-bezier(0.25, 0.46, 0.45, 0.94)",
-        apple: "cubic-bezier(0.25, 0.1, 0.25, 1)",
+        // HIVE custom easing functions
+        'hive-smooth': motion.easing.smooth,     // Primary HIVE easing
+        'hive-snap': motion.easing.snap,         // Playful bounce
+        'hive-elegant': motion.easing.elegant,   // Refined transitions
+        'hive-brand': motion.easing.brand,       // Signature HIVE spring
+        
+        // Performance fallbacks
+        linear: motion.easing.linear,
+        ease: motion.easing.ease,
       },
       transitionDuration: {
-        75: "75ms", // Ultra-fast feedback
-        90: "90ms", // Standard micro-interaction (Apple-like)
-        150: "150ms", // Hover states
-        250: "250ms", // Medium transitions
-        300: "300ms", // Standard transition
-        400: "400ms", // Ritual moments
-        500: "500ms", // Slow transitions
+        // HIVE timing hierarchy
+        instant: motion.duration.instant,   // 50ms - Immediate feedback
+        fast: motion.duration.fast,         // 120ms - Micro-interactions
+        base: motion.duration.base,         // 180ms - Content transitions
+        slow: motion.duration.slow,         // 280ms - Complex animations
+        ritual: motion.duration.ritual,     // 400ms - Special HIVE moments
+        
+        // Legacy values for compatibility
+        75: "75ms",
+        90: "90ms",
+        150: "150ms",
+        200: "200ms",
+        300: "300ms",
+        500: "500ms",
       },
 
       animation: {
+        // HIVE brand animations
+        "hive-fade-in": `${motion.keyframes.fadeIn} ${motion.duration.base} ${motion.easing.smooth}`,
+        "hive-scale-in": `${motion.keyframes.scaleIn} ${motion.duration.base} ${motion.easing.elegant}`,
+        "hive-slide-up": `${motion.keyframes.slideUp} ${motion.duration.base} ${motion.easing.smooth}`,
+        "hive-slide-down": `${motion.keyframes.slideDown} ${motion.duration.base} ${motion.easing.smooth}`,
+        "hive-gold-pulse": `${motion.keyframes.goldPulse} ${motion.duration.slow} ${motion.easing.smooth} infinite`,
+        "hive-gold-glow": `${motion.keyframes.goldGlow} ${motion.duration.slow} ${motion.easing.smooth} infinite`,
+        "hive-surface-rise": `${motion.keyframes.surfaceRise} ${motion.duration.base} ${motion.easing.elegant}`,
+        "hive-emboss-reveal": `${motion.keyframes.embossReveal} ${motion.duration.base} ${motion.easing.smooth}`,
+        "hive-ritual-burst": `${motion.keyframes.ritualBurst} ${motion.duration.ritual} ${motion.easing.brand}`,
+        "hive-space-join": `${motion.keyframes.spaceJoin} ${motion.duration.ritual} ${motion.easing.brand}`,
+        
+        // Legacy animations (kept for compatibility)
         "border-flicker": "border-flicker 16ms ease-out",
         "micro-shake": "micro-shake 16ms ease-out",
         "scale-success": "scale-success 200ms ease-out",
+        shake: 'shake 90ms cubic-bezier(0.33, 0.65, 0, 1)',
       },
       keyframes: {
-        "border-flicker": {
-          "0%": { borderColor: "#333333" },
-          "50%": { borderColor: "#FFFFFF" },
-          "100%": { borderColor: "#333333" },
+        // shadcn/ui required keyframes
+        "accordion-down": {
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
         },
+        "accordion-up": {
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
+        },
+        
+        // HIVE custom keyframes (defined as CSS keyframes)
+        "hive-fade-in": {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        "hive-scale-in": {
+          '0%': { opacity: '0', transform: 'scale(0.96)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
+        },
+        "hive-slide-up": {
+          '0%': { opacity: '0', transform: 'translateY(8px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        "hive-slide-down": {
+          '0%': { opacity: '0', transform: 'translateY(-8px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        "hive-gold-pulse": {
+          '0%, 100%': { boxShadow: '0 0 0 0 rgba(255, 215, 0, 0.4)' },
+          '50%': { boxShadow: '0 0 20px 10px rgba(255, 215, 0, 0)' },
+        },
+        "hive-gold-glow": {
+          '0%, 100%': { boxShadow: '0 0 5px rgba(255, 215, 0, 0.3)' },
+          '50%': { boxShadow: '0 0 20px rgba(255, 215, 0, 0.6)' },
+        },
+        "hive-surface-rise": {
+          '0%': { transform: 'translateY(0)', boxShadow: '0 1px 3px rgba(0, 0, 0, 0.6)' },
+          '100%': { transform: 'translateY(-2px)', boxShadow: '0 8px 25px rgba(0, 0, 0, 0.15)' },
+        },
+        "hive-emboss-reveal": {
+          '0%': { 
+            opacity: '0', 
+            transform: 'scale(0.98)',
+            boxShadow: '0 0 0 rgba(0, 0, 0, 0)' 
+          },
+          '100%': { 
+            opacity: '1', 
+            transform: 'scale(1)',
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 215, 0, 0.1)' 
+          },
+        },
+        "hive-ritual-burst": {
+          '0%': { transform: 'scale(1) rotate(0deg)', opacity: '1' },
+          '50%': { transform: 'scale(1.15) rotate(180deg)', opacity: '0.8' },
+          '100%': { transform: 'scale(1) rotate(360deg)', opacity: '1' },
+        },
+        "hive-space-join": {
+          '0%': { 
+            transform: 'scale(0.9)', 
+            opacity: '0',
+            boxShadow: '0 0 0 rgba(255, 215, 0, 0)' 
+          },
+          '50%': { 
+            transform: 'scale(1.05)', 
+            opacity: '1',
+            boxShadow: '0 0 30px rgba(255, 215, 0, 0.4)' 
+          },
+          '100%': { 
+            transform: 'scale(1)', 
+            opacity: '1',
+            boxShadow: '0 0 10px rgba(255, 215, 0, 0.2)' 
+          },
+        },
+        
+        // Legacy keyframes (kept for compatibility)
         "micro-shake": {
           "0%, 100%": { transform: "translateX(0)" },
-          "25%": { transform: "translateX(-1px)" },
-          "75%": { transform: "translateX(1px)" },
+          "10%, 30%, 50%, 70%, 90%": { transform: "translateX(-1px)" },
+          "20%, 40%, 60%, 80%": { transform: "translateX(1px)" },
         },
         "scale-success": {
           "0%": { transform: "scale(1)" },
-          "50%": { transform: "scale(1.03)" },
+          "50%": { transform: "scale(1.05)" },
           "100%": { transform: "scale(1)" },
+        },
+        shake: {
+          '0%, 100%': { transform: 'translateX(0)' },
+          '25%': { transform: 'translateX(-2px)' },
+          '75%': { transform: 'translateX(2px)' },
+        },
+        // Legacy motion keyframes
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        fadeOut: {
+          '0%': { opacity: '1' },
+          '100%': { opacity: '0' },
+        },
+        scaleIn: {
+          '0%': {
+            opacity: '0',
+            transform: 'scale(0.95)',
+          },
+          '100%': {
+            opacity: '1',
+            transform: 'scale(1)',
+          },
+        },
+        scaleOut: {
+          '0%': {
+            opacity: '1',
+            transform: 'scale(1)',
+          },
+          '100%': {
+            opacity: '0',
+            transform: 'scale(0.95)',
+          },
+        },
+        slideIn: {
+          '0%': {
+            opacity: '0',
+            transform: 'translateY(20px)',
+          },
+          '100%': {
+            opacity: '1',
+            transform: 'translateY(0)',
+          },
+        },
+        slideInFromRight: {
+          '0%': {
+            opacity: '0',
+            transform: 'translateX(20px)',
+          },
+          '100%': {
+            opacity: '1',
+            transform: 'translateX(0)',
+          },
+        },
+        ritualBurst: {
+          '0%': {
+            transform: 'scale(1) rotate(0deg)',
+            opacity: '1',
+          },
+          '50%': {
+            transform: 'scale(1.1) rotate(180deg)',
+            opacity: '0.8',
+          },
+          '100%': {
+            transform: 'scale(1) rotate(360deg)',
+            opacity: '1',
+          },
         },
       },
       borderRadius: {

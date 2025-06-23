@@ -34,7 +34,7 @@ const Separator = React.forwardRef<
         decorative={decorative}
         orientation={orientation}
         className={cn(
-          "shrink-0 transition-colors duration-150 ease-out",
+          "shrink-0 transition-colors duration-fast ease-hive-smooth",
           orientation === "horizontal" ? "h-[1px] w-full" : "h-full w-[1px]",
           variantClasses[variant],
           className

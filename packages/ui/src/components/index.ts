@@ -22,6 +22,8 @@ export * from "./ui/empty-state";
 export * from "./ui/typography";
 export * from "./ui/toast";
 export * from "./ui/toaster";
+export * from "./ui/form";
+export * from "./ui/enhanced-cards";
 export * from "./alert";
 export * from "./progress";
 
@@ -29,6 +31,7 @@ export * from "./progress";
 export * from "./stack";
 export * from "./grid";
 export * from "./box";
+export * from "./layout/AppHeader";
 
 // Typography Components are exported from ui/typography
 
@@ -53,6 +56,7 @@ export * from "./welcome";
 
 // Brand Components
 export * from "./brand/hive-logo";
+export * from "./brand/HiveLogoIcon";
 
 // Error Components
 export * from "./errors";
@@ -66,6 +70,7 @@ export * from "./landing";
 // Navigation Components
 export * from "./navigation/navbar";
 export type { NavItem, NavbarProps } from "./navigation/navbar";
+export * from "./navigation/BottomNavBar";
 
 // Profile components
 export * from "./profile-dashboard";
@@ -97,6 +102,53 @@ export * from "./rituals/ritual-timer";
 
 // Space Components
 export * from "./spaces/category-grid";
+export * from "./spaces/SpaceHeader";
 
 // HiveLAB Components
 export * from "./hivelab/template-selector";
+
+// Enhanced Cards
+export { ProfileCard, EventCard } from './ui/enhanced-cards';
+
+// Command Palette
+export { 
+  CommandPalette, 
+  useCommandPalette,
+  type Command,
+  type CommandCategory
+} from './ui/command-palette';
+
+// Avatar
+export { Avatar, AvatarImage, AvatarFallback, type AvatarProps } from './ui/avatar';
+
+// Content Cards - Adaptive card system for all content types
+export {
+  AdaptiveCard,
+  SpaceShowcaseCard,
+  EventAnnouncementCard,
+  UGCPostCard,
+  type AdaptiveCardProps,
+  type SpaceShowcaseData,
+  type SpaceShowcaseCardProps,
+  type EventAnnouncementData,
+  type EventAnnouncementCardProps,
+  type UGCPostData,
+  type UGCPostCardProps,
+} from "./content";
+
+// Badge System - HIVE-branded badges for status, priority, and context
+export {
+  Badge as HIVEBadge,
+  StatusBadge,
+  PriorityBadge,
+  CountBadge,
+  DotBadge,
+  BadgeGroup,
+  badgeVariants,
+  type BadgeProps as HIVEBadgeProps,
+  type StatusBadgeProps,
+  type PriorityBadgeProps,
+  type CountBadgeProps,
+  type DotBadgeProps,
+  type BadgeGroupProps
+} from "./content";

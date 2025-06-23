@@ -3,69 +3,59 @@
 import * as React from "react";
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
 import { Check, Minus } from "lucide-react";
-import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "../../lib/utils";
-
-const checkboxVariants = cva(
-  [
-    "peer shrink-0 border-2 transition-all duration-200 ease-out",
-    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-gold focus-visible:ring-offset-2 focus-visible:ring-offset-bg-canvas",
-    "disabled:cursor-not-allowed disabled:opacity-50",
-    // Sophisticated hover and active states
-    "hover:border-white/30 hover:shadow-sm",
-    "data-[state=checked]:border-accent-gold data-[state=checked]:bg-accent-gold data-[state=checked]:text-black",
-    "data-[state=indeterminate]:border-accent-gold data-[state=indeterminate]:bg-accent-gold data-[state=indeterminate]:text-black",
-    // Unchecked state with glass effect
-    "data-[state=unchecked]:border-white/20 data-[state=unchecked]:bg-white/4 data-[state=unchecked]:text-white",
-    // Active press state
-    "active:scale-95 active:transition-transform active:duration-75",
-  ].join(" "),
-  {
-    variants: {
-      size: {
-        sm: "h-4 w-4 rounded-md",
-        md: "h-5 w-5 rounded-lg",
-        lg: "h-6 w-6 rounded-lg",
-      },
-    },
-    defaultVariants: {
-      size: "md",
-    },
-  }
-);
-
-const iconVariants = cva("transition-all duration-150", {
-  variants: {
-    size: {
-      sm: "h-3 w-3",
-      md: "h-3.5 w-3.5",
-      lg: "h-4 w-4",
-    },
-  },
-  defaultVariants: {
-    size: "md",
-  },
-});
-
-export interface CheckboxProps
-  extends React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>,
-    VariantProps<typeof checkboxVariants> {}
 
 const Checkbox = React.forwardRef<
   React.ElementRef<typeof CheckboxPrimitive.Root>,
-  CheckboxProps
->(({ className, size, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>
+>(({ className, ...props }, ref) => (
   <CheckboxPrimitive.Root
     ref={ref}
-    className={cn(checkboxVariants({ size }), className)}
+    className={cn(
+      // Base styling - HIVE dark-first design
+      "peer h-4 w-4 shrink-0 rounded-sm",
+      "bg-surface border-2 border-[#2A2A2A]", // Dark surface with subtle border
+      
+      // HIVE motion system
+      "transition-all duration-fast ease-hive-smooth",
+      
+      // Hover state - gold accent
+      "hover:border-accent/50 hover:bg-[#181818]",
+      "hover:scale-105", // Subtle HIVE scale effect
+      
+      // Focus state - gold ring
+      "focus-visible:outline-none",
+      "focus-visible:ring-2 focus-visible:ring-accent",
+      "focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+      
+      // Checked state - gold fill
+      "data-[state=checked]:bg-accent data-[state=checked]:border-accent",
+      "data-[state=checked]:text-background", // Dark text on gold background
+      "data-[state=checked]:scale-110", // Slightly larger when checked
+      
+      // Indeterminate state - gold fill
+      "data-[state=indeterminate]:bg-accent data-[state=indeterminate]:border-accent",
+      "data-[state=indeterminate]:text-background", // Dark text on gold background
+      "data-[state=indeterminate]:scale-110",
+      
+      // Disabled state
+      "disabled:cursor-not-allowed disabled:opacity-50",
+      "disabled:hover:scale-100", // No scale on disabled hover
+      
+      className
+    )}
     {...props}
   >
-    <CheckboxPrimitive.Indicator className="flex items-center justify-center text-current">
-      {props.checked === "indeterminate" && (
-        <Minus className={cn(iconVariants({ size }), "stroke-[2.5]")} />
+    <CheckboxPrimitive.Indicator
+      className={cn(
+        "flex items-center justify-center text-current",
+        "animate-in zoom-in-75 duration-fast" // HIVE motion for check appearance
       )}
-      {props.checked === true && (
-        <Check className={cn(iconVariants({ size }), "stroke-[2.5]")} />
+    >
+      {props.checked === "indeterminate" ? (
+        <Minus className="h-3 w-3" />
+      ) : (
+        <Check className="h-3 w-3" />
       )}
     </CheckboxPrimitive.Indicator>
   </CheckboxPrimitive.Root>

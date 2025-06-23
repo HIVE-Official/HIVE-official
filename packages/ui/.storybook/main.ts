@@ -3,7 +3,7 @@ import { mergeConfig } from "vite";
 import path from "path";
 
 const config: StorybookConfig = {
-  stories: ["../src/**/*.mdx", "../src/**/*.stories.@(js|jsx|ts|tsx)"],
+  stories: ["../src/components/**/*.stories.@(js|jsx|ts|tsx|mdx)"],
   addons: [
     "@storybook/addon-links",
     "@storybook/addon-essentials",
@@ -24,20 +24,7 @@ const config: StorybookConfig = {
     },
   ],
   viteFinal: async (config) => {
-    const { default: tailwindcss } = await import("tailwindcss");
-    const { default: autoprefixer } = await import("autoprefixer");
-
     return mergeConfig(config, {
-      css: {
-        postcss: {
-          plugins: [
-            tailwindcss({
-              config: path.resolve(__dirname, "./tailwind.config.js"),
-            }),
-            autoprefixer(),
-          ],
-        },
-      },
       define: {
         // Fix "process is not defined" error
         "process.env": "{}",
@@ -49,10 +36,9 @@ const config: StorybookConfig = {
       resolve: {
         alias: {
           "@": path.resolve(__dirname, "../src"),
-          // Workspace packages - point to src directories for imports
-          "@hive/core": path.resolve(__dirname, "../../core/src/index.ts"),
-          "@hive/hooks": path.resolve(__dirname, "../../hooks/src"),
           "@hive/ui": path.resolve(__dirname, "../src"),
+          "@hive/core": path.resolve(__dirname, "../../core/src"),
+          "@hive/hooks": path.resolve(__dirname, "../../hooks/src"),
           "@hive/tokens": path.resolve(__dirname, "../../tokens/src"),
           "@hive/utilities": path.resolve(__dirname, "../../utilities/src"),
           "@hive/validation": path.resolve(__dirname, "../../validation/src"),
@@ -94,19 +80,13 @@ const config: StorybookConfig = {
       },
       optimizeDeps: {
         include: ["react", "react-dom"],
-        // Include workspace packages that need pre-bundling
-        force: true,
+        exclude: ["zustand"],
       },
     });
   },
   typescript: {
-    check: false,
     reactDocgen: "react-docgen-typescript",
-    reactDocgenTypescriptOptions: {
-      shouldExtractLiteralValuesFromEnum: true,
-      propFilter: (prop) =>
-        prop.parent ? !/node_modules/.test(prop.parent.fileName) : true,
-    },
+    check: false,
   },
 };
 

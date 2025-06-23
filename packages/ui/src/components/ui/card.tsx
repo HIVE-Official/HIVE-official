@@ -23,33 +23,32 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
         ref={ref}
         className={cn(
           // Base HIVE card styles
-          "relative rounded-hive border",
+          "relative rounded-lg border",
 
           // Variant styles
           {
-            // Default: Standard HIVE card
-            "bg-card text-card-foreground border-border": variant === "default",
-
-            // Glass: Subtle transparency effect
-            "bg-card/50 text-card-foreground border-border/50 backdrop-blur-sm":
+            "bg-surface text-foreground border-border": variant === "default",
+            "bg-surface/50 text-foreground border-border/50 backdrop-blur-sm":
               variant === "glass",
-
-            // Outline: Border-only style
-            "bg-transparent text-foreground border-border content-transition":
+            "bg-transparent text-foreground border-border":
               variant === "outline",
           },
 
-          // Elevation system (Vercel-style shadows)
+          // Elevation system from tokens
           {
-            "shadow-elevation-1": elevation === "1",
-            "shadow-elevation-2": elevation === "2",
-            "shadow-elevation-3": elevation === "3",
-            "shadow-elevation-4": elevation === "4",
+            "shadow-[0px_1px_2px_rgba(0,0,0,0.06),_0px_1px_3px_rgba(0,0,0,0.1)]":
+              elevation === "1",
+            "shadow-[0px_2px_4px_rgba(0,0,0,0.06),_0px_4px_6px_rgba(0,0,0,0.1)]":
+              elevation === "2",
+            "shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.1),_0px_4px_6px_-2px_rgba(0,0,0,0.05)]":
+              elevation === "3",
+            "shadow-[0px_20px_25px_-5px_rgba(0,0,0,0.1),_0px_10px_10px_-5px_rgba(0,0,0,0.04)]":
+              elevation === "4",
           },
 
           // Hover states using HIVE motion system
           hoverable && [
-            "cursor-pointer elevate", // HIVE utility class for card hover
+            "cursor-pointer transition-transform duration-200 ease-standard hover:-translate-y-1",
           ],
 
           className
@@ -80,7 +79,7 @@ const CardTitle = React.forwardRef<
   <h3
     ref={ref}
     className={cn(
-      "text-h3 font-display font-semibold leading-tight tracking-tight text-foreground",
+      "font-display text-h3 font-semibold leading-tight tracking-tight text-foreground",
       className
     )}
     {...props}
@@ -94,7 +93,7 @@ const CardDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn("text-sm text-muted-foreground leading-relaxed", className)}
+    className={cn("text-body text-muted font-sans", className)}
     {...props}
   />
 ));
@@ -115,8 +114,7 @@ const CardFooter = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "flex items-center justify-between px-6 py-4",
-      "border-t border-border/50 bg-muted/20",
+      "flex items-center justify-between border-t border-border/50 bg-muted/20 px-6 py-4",
       className
     )}
     {...props}

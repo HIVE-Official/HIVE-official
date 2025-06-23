@@ -58,7 +58,7 @@ function checkRateLimit(sessionId: string): boolean {
 // Process analytics event
 async function processAnalyticsEvent(
   eventType: string,
-  eventData: any
+  eventData: Record<string, unknown>
 ): Promise<void> {
   try {
     console.log("📊 Analytics Event:", {
@@ -74,19 +74,26 @@ async function processAnalyticsEvent(
   }
 }
 
+interface AnalyticsRequestData {
+  event: string;
+  timestamp: number;
+  sessionId: string;
+  // Add other properties as needed
+}
+
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
+    const data = await request.json() as AnalyticsRequestData;
     const eventType = request.nextUrl.searchParams.get("type");
 
-    if (!eventType || !body) {
+    if (!eventType || !data) {
       return NextResponse.json(
         { error: "Missing event type or body" },
         { status: 400 }
       );
     }
 
-    const sessionId = body.sessionId;
+    const sessionId = data.sessionId;
     if (!sessionId) {
       return NextResponse.json(
         { error: "Session ID required" },
@@ -104,19 +111,19 @@ export async function POST(request: NextRequest) {
     // Process different event types
     switch (eventType) {
       case "page_view": {
-        const validatedData = pageViewEventSchema.parse(body);
+        const validatedData = pageViewEventSchema.parse(data);
         await processAnalyticsEvent("landing_page_view", validatedData);
         break;
       }
 
       case "cta_click": {
-        const validatedData = ctaClickEventSchema.parse(body);
+        const validatedData = ctaClickEventSchema.parse(data);
         await processAnalyticsEvent("landing_cta_click", validatedData);
         break;
       }
 
       case "scroll_depth": {
-        const validatedData = scrollDepthEventSchema.parse(body);
+        const validatedData = scrollDepthEventSchema.parse(data);
         await processAnalyticsEvent("landing_scroll_depth", validatedData);
         break;
       }
@@ -132,26 +139,13 @@ export async function POST(request: NextRequest) {
       { success: true, timestamp: new Date().toISOString() },
       { status: 200 }
     );
-  } catch (error) {
-    console.error("❌ Analytics API error:", error);
-
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        {
-          error: "Validation failed",
-          details: error.errors.map((e) => ({
-            field: e.path.join("."),
-            message: e.message,
-          })),
-        },
-        { status: 400 }
-      );
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("Analytics error:", error.message);
+    } else {
+      console.error("Unknown analytics error:", error);
     }
-
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Analytics error" }, { status: 500 });
   }
 }
 

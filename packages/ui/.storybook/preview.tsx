@@ -1,18 +1,7 @@
 import React from "react";
 import type { Preview } from "@storybook/react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import "../src/styles.css";
 import "../src/globals.css";
-
-// Create a query client for stories that need server state
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: false,
-      staleTime: Infinity,
-    },
-  },
-});
+import "../src/force-white-inputs.css";
 
 const preview: Preview = {
   parameters: {
@@ -30,27 +19,12 @@ const preview: Preview = {
         { name: "light", value: "#FFFFFF" },
       ],
     },
-    layout: "centered",
   },
   decorators: [
     (Story) => (
-      <QueryClientProvider client={queryClient}>
-        <div
-          className="font-sans bg-background text-foreground dark"
-          style={
-            {
-              "--font-display":
-                "General Sans, -apple-system, BlinkMacSystemFont, sans-serif",
-              "--font-sans":
-                "Inter Variable, Inter, -apple-system, BlinkMacSystemFont, sans-serif",
-              backgroundColor: "#0A0A0A",
-              color: "#ffffff",
-            } as React.CSSProperties
-          }
-        >
-          <Story />
-        </div>
-      </QueryClientProvider>
+      <div className="dark font-sans antialiased bg-background text-foreground">
+        <Story />
+      </div>
     ),
   ],
 };

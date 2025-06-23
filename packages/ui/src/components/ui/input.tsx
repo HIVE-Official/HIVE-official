@@ -26,7 +26,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ) => {
     // Shake animation class (motion-based error feedback)
     const shakeClass = shake
-      ? "animate-[shake-micro_90ms_cubic-bezier(0.22,0.61,0.36,1)]"
+      ? "animate-[shakeMicro_90ms_cubic-bezier(0.4,0.0,0.2,1)]"
       : "";
 
     return (
@@ -47,13 +47,13 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         <input
           type={type}
           className={cn(
-            // Base styles - CORRECTED to match brand system
-            "flex w-full rounded-lg font-sans", // Geist Sans Variable
+            // Base styles - FORCE WHITE TEXT
+            "flex w-full rounded-lg font-sans", // Inter
             "bg-surface", // #111111 surface color
             "border border-[#2A2A2A]", // CORRECTED border color
-            "text-foreground", // #FFFFFF text
+            "!text-white", // FORCE white text with !important
             "placeholder:text-muted", // #6B7280 placeholder
-            "transition-all duration-[90ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]", // CORRECTED timing + easing
+            "transition-all duration-fast ease-hive-smooth", // HIVE motion tokens
 
             // Focus states - CORRECTED gold accent
             "focus-visible:outline-none",
@@ -93,6 +93,10 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             ],
             className
           )}
+          style={{
+            color: '#FFFFFF !important',
+            // Force white text as inline style fallback
+          }}
           ref={ref}
           aria-invalid={error}
           {...props}
@@ -167,7 +171,9 @@ export const PasswordInput = React.forwardRef<
         <button
           type="button"
           onClick={() => setShowPassword(!showPassword)}
-          className="text-muted hover:text-foreground transition-colors duration-[90ms]"
+          className={cn(
+            "text-muted hover:text-foreground transition-colors duration-fast"
+          )}
           tabIndex={-1}
         >
           {showPassword ? (
@@ -221,11 +227,11 @@ PasswordInput.displayName = "PasswordInput";
 export const INPUT_COMPLIANCE = {
   rules: [
     "Use 90ms timing for all interactions",
-    "Use single easing curve: cubic-bezier(0.22, 0.61, 0.36, 1)",
+    "Use single easing curve: cubic-bezier(0.4,0.0,0.2,1)",
     "Border color: #2A2A2A (not other greys)",
     "Motion-based error feedback (shake), not red colors",
     "Gold focus ring: #FFD700",
-    "Geist Sans Variable for input text",
+    "Inter for input text",
   ],
   violations: [
     "Red/green/blue status colors",

@@ -105,11 +105,11 @@ export default function CampusSelectionPage() {
             </Button>
           </Link>
           <div>
-            <h1 className="text-3xl font-bold font-display">
-              Welcome to HIVE at UB
+            <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
+              Welcome to your campus&apos;s HIVE
             </h1>
-            <p className="text-zinc-400 mt-1 font-sans">
-              The exclusive social platform launching at University at Buffalo
+            <p className="text-xl text-zinc-400 mb-8 max-w-3xl">
+              Connect with students, discover events, and shape your college experience like never before.
             </p>
           </div>
         </div>
@@ -233,7 +233,7 @@ export default function CampusSelectionPage() {
                 Ready to Join {selectedUniversity.name}?
               </CardTitle>
               <CardDescription className="font-sans">
-                You'll need to verify your identity with your @
+                You&apos;ll need to verify your identity with your @
                 {selectedUniversity.domain} email address
               </CardDescription>
             </CardHeader>
@@ -242,8 +242,9 @@ export default function CampusSelectionPage() {
                 <div className="flex items-center justify-between p-4 bg-zinc-800/50 rounded-lg">
                   <div>
                     <div className="font-medium font-display">UB Community</div>
-                    <div className="text-sm text-zinc-400 font-sans">
-                      Join the founding UB students on HIVE
+                    <div className="text-zinc-400 font-sans">
+                      You&apos;re part of the early community that&apos;s defining how students 
+                      connect on campus.
                     </div>
                   </div>
                   <Users className="w-8 h-8 text-[#FFD700]" />
@@ -254,8 +255,8 @@ export default function CampusSelectionPage() {
                     <div className="font-medium font-display">
                       Campus Spaces
                     </div>
-                    <div className="text-sm text-zinc-400 font-sans">
-                      Connect with UB students in your programs and interests
+                    <div className="text-zinc-400 font-sans">
+                      We&apos;re building the tools that will transform how you experience college.
                     </div>
                   </div>
                   <MessageSquare className="w-8 h-8 text-[#FFD700]" />
@@ -284,12 +285,12 @@ export default function CampusSelectionPage() {
                 <strong className="text-white">Not a UB student?</strong>
                 <p>
                   HIVE is currently launching exclusively at University at
-                  Buffalo. We'll be expanding to other universities soon!
+                  Buffalo. We&apos;ll be expanding to other universities soon!
                 </p>
               </div>
               <div>
                 <strong className="text-white">
-                  Don't have a @buffalo.edu email?
+                  Don&apos;t have a @buffalo.edu email?
                 </strong>
                 <p>
                   HIVE requires official university email addresses for
@@ -302,7 +303,7 @@ export default function CampusSelectionPage() {
                   Questions about the UB launch?
                 </strong>
                 <p>
-                  We're building HIVE specifically for UB students first. Join
+                  We&apos;re building HIVE specifically for UB students first. Join
                   our founding community and help shape the platform!
                 </p>
               </div>

@@ -135,8 +135,8 @@ export async function POST(request: NextRequest) {
  */
 export async function GET(request: NextRequest) {
   try {
-    // Authenticate user
-    const user = await requireAuth(request);
+    // Authenticate user (required but user object not used in this endpoint)
+    const _user = await requireAuth(request);
 
     const { searchParams } = new URL(request.url);
     const spaceId = searchParams.get("spaceId");

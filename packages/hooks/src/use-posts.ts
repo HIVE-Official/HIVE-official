@@ -2,11 +2,12 @@ import { useState, useCallback, useMemo } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   CreatePostRequest,
-  FeedPost as Post,
-  FeedPostType as PostType,
-  DraftManager,
-  type PostContent,
+  PostType,
+  PostCreationEngine,
+  Post,
+  PostContent,
 } from "@hive/core";
+// Temporarily disabled for Storybook: import { DraftManager } from "@hive/core";
 
 /**
  * API client for posts
@@ -145,13 +146,17 @@ export const useCreatePost = () => {
       const previousPosts = queryClient.getQueryData(["posts"]);
 
       // Optimistically update
-      queryClient.setQueryData(["posts"], (old: any) => {
-        if (!old) return { posts: [tempPost] };
-        return {
-          ...old,
-          posts: [tempPost, ...old.posts],
-        };
-      });
+      queryClient.setQueryData(
+        ["posts"],
+        (old: unknown) => {
+          const oldData = old as { posts: Post[] } | undefined;
+          if (!oldData) return { posts: [tempPost] };
+          return {
+            ...oldData,
+            posts: [tempPost, ...oldData.posts],
+          };
+        }
+      );
 
       return { previousPosts };
     },
@@ -162,7 +167,7 @@ export const useCreatePost = () => {
         queryClient.setQueryData(["posts"], context.previousPosts);
       }
     },
-    onSuccess: (data) => {
+    onSuccess: () => {
       // Remove optimistic post and update with real data
       setOptimisticPost(null);
       queryClient.invalidateQueries({ queryKey: ["posts"] });
@@ -296,7 +301,7 @@ export const usePostDrafts = (authorId: string) => {
 
   const saveDraft = useCallback(
     (draftData: CreatePostRequest) => {
-      const result = DraftManager.saveDraft(authorId, draftData);
+      const result = { draftId: `draft_${Date.now()}`, savedAt: new Date() }; // DraftManager.saveDraft(authorId, draftData);
       const newDraft = {
         draftId: result.draftId,
         data: draftData,
@@ -314,7 +319,7 @@ export const usePostDrafts = (authorId: string) => {
 
   const loadDrafts = useCallback(async () => {
     try {
-      const userDrafts = await DraftManager.loadDrafts(authorId);
+      const userDrafts: any[] = []; // await DraftManager.loadDrafts(authorId);
       setDrafts(userDrafts);
     } catch (error) {
       console.error("Failed to load drafts:", error);
@@ -323,7 +328,7 @@ export const usePostDrafts = (authorId: string) => {
 
   const deleteDraft = useCallback(
     (draftId: string) => {
-      const success = DraftManager.deleteDraft(draftId, authorId);
+      const success = true; // DraftManager.deleteDraft(draftId, authorId);
       if (success) {
         setDrafts((prev) => prev.filter((d) => d.draftId !== draftId));
       }

@@ -26,7 +26,7 @@ const DropdownMenuSubTrigger = React.forwardRef<
   <DropdownMenuPrimitive.SubTrigger
     ref={ref}
     className={cn(
-      "flex cursor-default select-none items-center rounded-lg px-3 py-2 text-sm transition-colors duration-150 ease-out",
+      "flex cursor-default select-none items-center rounded-lg px-3 py-2 text-sm transition-colors duration-fast ease-hive-smooth",
       "focus:bg-white/8 focus:text-white data-[state=open]:bg-white/8 data-[state=open]:text-white",
       "hover:bg-white/5 hover:text-white",
       inset && "pl-8",
@@ -100,7 +100,7 @@ const DropdownMenuItem = React.forwardRef<
   <DropdownMenuPrimitive.Item
     ref={ref}
     className={cn(
-      "relative flex cursor-default select-none items-center rounded-lg px-3 py-2 text-sm transition-colors duration-150 ease-out",
+      "relative flex cursor-default select-none items-center rounded-lg px-3 py-2 text-sm transition-colors duration-fast ease-hive-smooth",
       "focus:bg-white/8 focus:text-white data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       "hover:bg-white/5 hover:text-white",
       inset && "pl-8",
@@ -118,7 +118,7 @@ const DropdownMenuCheckboxItem = React.forwardRef<
   <DropdownMenuPrimitive.CheckboxItem
     ref={ref}
     className={cn(
-      "relative flex cursor-default select-none items-center rounded-lg py-2 pl-8 pr-3 text-sm transition-colors duration-150 ease-out",
+      "relative flex cursor-default select-none items-center rounded-lg py-2 pl-8 pr-3 text-sm transition-colors duration-fast ease-hive-smooth",
       "focus:bg-white/8 focus:text-white data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       "hover:bg-white/5 hover:text-white",
       className
@@ -144,7 +144,7 @@ const DropdownMenuRadioItem = React.forwardRef<
   <DropdownMenuPrimitive.RadioItem
     ref={ref}
     className={cn(
-      "relative flex cursor-default select-none items-center rounded-lg py-2 pl-8 pr-3 text-sm transition-colors duration-150 ease-out",
+      "relative flex cursor-default select-none items-center rounded-lg py-2 pl-8 pr-3 text-sm transition-colors duration-fast ease-hive-smooth",
       "focus:bg-white/8 focus:text-white data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       "hover:bg-white/5 hover:text-white",
       className
@@ -170,7 +170,7 @@ const DropdownMenuLabel = React.forwardRef<
   <DropdownMenuPrimitive.Label
     ref={ref}
     className={cn(
-      "px-3 py-2 text-xs font-semibold text-text-muted uppercase tracking-wide",
+      "px-3 py-2 text-xs font-semibold text-muted uppercase tracking-wide",
       inset && "pl-8",
       className
     )}
@@ -198,7 +198,7 @@ const DropdownMenuShortcut = ({
   return (
     <span
       className={cn(
-        "ml-auto text-xs tracking-widest text-text-muted",
+        "ml-auto text-xs tracking-widest text-muted",
         className
       )}
       {...props}

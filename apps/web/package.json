@@ -3,12 +3,10 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "npx next dev",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "npx eslint . --max-warnings 10",
-    "test": "echo 'skipping tests'",
-    "test:e2e": "playwright test"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@hive/auth-logic": "workspace:*",

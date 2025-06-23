@@ -5,9 +5,8 @@ import React, {
   useEffect,
   createContext,
   useContext,
-  ReactNode,
 } from "react";
-import type { User } from "firebase/auth";
+import type { ReactNode } from "react";
 import { auth } from "../firebase-config";
 import { onAuthStateChanged } from "firebase/auth";
 

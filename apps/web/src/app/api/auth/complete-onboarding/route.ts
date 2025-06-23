@@ -38,6 +38,13 @@ interface UserData {
   updatedAt?: Timestamp;
 }
 
+// Define interface for the request body
+interface OnboardingRequestBody {
+  displayName: string;
+  handle: string;
+  [key: string]: unknown; // Allow additional properties
+}
+
 export async function POST(request: NextRequest) {
   try {
     // Get the authorization header
@@ -75,7 +82,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Parse and validate the request body
-    const body = (await request.json()) as unknown;
+    const body = await request.json() as OnboardingRequestBody;
     const onboardingData = completeOnboardingSchema.parse(body);
 
     // Normalize handle to lowercase

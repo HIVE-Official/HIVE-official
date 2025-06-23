@@ -17,8 +17,16 @@ import {
   User,
 } from "lucide-react";
 
+// Define proper interface for top strip items
+interface TopStripItem {
+  id: string;
+  type: 'ritual' | 'space-unlock' | 'tool-reveal' | 'campus-event';
+  title: string;
+  // Add other properties as needed
+}
+
 export default function FeedPage() {
-  const { user, loading } = useAuth();
+  const { user, isLoading } = useAuth();
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
 
@@ -27,13 +35,12 @@ export default function FeedPage() {
   }, []);
 
   useEffect(() => {
-    if (mounted && !loading && !user) {
+    if (mounted && !isLoading && !user) {
       router.push("/");
     }
-  }, [mounted, loading, user, router]);
+  }, [mounted, isLoading, user, router]);
 
-  const handleTopStripItemClick = (item: any) => {
-    console.log("Top Strip item clicked:", item);
+  const handleTopStripItemClick = (item: TopStripItem) => {
     // TODO: Navigate to appropriate detail page based on item type
     switch (item.type) {
       case "ritual":
@@ -51,12 +58,11 @@ export default function FeedPage() {
     }
   };
 
-  const handleTopStripItemLongPress = (item: any) => {
-    console.log("Top Strip item long pressed:", item);
+  const handleTopStripItemLongPress = (_item: TopStripItem) => {
     // The long press preview is handled by the TopStrip component itself
   };
 
-  if (!mounted || loading) {
+  if (!mounted || isLoading) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="w-8 h-8 border-2 border-yellow-500 border-t-transparent rounded-full animate-spin" />
@@ -160,7 +166,7 @@ export default function FeedPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <p className="text-zinc-400">
-                  You're now part of the HIVE community. Start exploring and
+                  You&apos;re now part of the HIVE community. Start exploring and
                   connecting!
                 </p>
                 <Button className="w-full bg-yellow-500 hover:bg-yellow-600 text-black">
@@ -214,7 +220,7 @@ export default function FeedPage() {
                   Your feed is ready!
                 </h2>
                 <p className="text-zinc-400 max-w-md mx-auto">
-                  This is where you'll see posts from your spaces, campus
+                  This is where you&apos;ll see posts from your spaces, campus
                   events, and updates from people you follow.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -242,7 +248,7 @@ export default function FeedPage() {
                 </div>
                 <p className="text-zinc-300 mb-4">
                   Just finished my first day of classes! The campus is
-                  absolutely beautiful. Can't wait to explore more spaces and
+                  absolutely beautiful. Can&apos;t wait to explore more spaces and
                   meet new people.
                 </p>
                 <div className="flex gap-2">

@@ -238,8 +238,7 @@ export function WaitlistForm({
           </Button>
 
           <p className="text-xs text-zinc-500 text-center font-sans">
-            By joining, you'll be among the first UB students to experience HIVE
-            when we launch.
+            By joining, you&apos;ll be among the first UB students to experience HIVE
           </p>
         </form>
       </CardContent>

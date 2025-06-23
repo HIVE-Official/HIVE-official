@@ -226,7 +226,7 @@ export default function VerifyPage() {
                   Welcome to HIVE! 🎉
                 </CardTitle>
                 <CardDescription className="text-zinc-400">
-                  You've been successfully signed in
+                  You&apos;ve been successfully signed in
                 </CardDescription>
               </>
             )}
@@ -337,7 +337,7 @@ export default function VerifyPage() {
             <h3 className="font-semibold text-white mb-3">Having trouble?</h3>
             <div className="space-y-2 text-sm text-zinc-400">
               <p>• Check that you clicked the most recent link we sent</p>
-              <p>• Make sure you're using the same device/browser</p>
+              <p>• Make sure you&apos;re using the same device/browser</p>
               <p>• Links expire after 10 minutes for security</p>
             </div>
 

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Button } from "@hive/ui";
 
 // This would be replaced with actual MDX content loading in a real implementation
-// For now, we'll use a placeholder structure that demonstrates the intended format
+// For now, we&apos;ll use a placeholder structure that demonstrates the intended format
 
 interface LegalDocument {
   version: string;
@@ -32,8 +32,8 @@ const CURRENT_TERMS: LegalDocument = {
 
       <h2>1. Acceptance of Terms</h2>
       <p>
-        By accessing or using HIVE ("the Service"), you agree to be bound by
-        these Terms of Service ("Terms"). If you disagree with any part of these
+        By accessing or using HIVE (&quot;the Service&quot;), you agree to be bound by
+        these Terms of Service (&quot;Terms&quot;). If you disagree with any part of these
         terms, you may not access the Service.
       </p>
 
@@ -144,7 +144,7 @@ const CURRENT_TERMS: LegalDocument = {
       </ul>
       <p>
         Prohibited content includes but is not limited to harassment, hate
-        speech, spam, illegal activities, and content that violates others'
+        speech, spam, illegal activities, and content that violates others&apos;
         intellectual property rights.
       </p>
 
@@ -160,7 +160,7 @@ const CURRENT_TERMS: LegalDocument = {
           Tools must not contain malicious code or security vulnerabilities
         </li>
         <li>
-          Tools must not violate other users' privacy or collect unauthorized
+          Tools must not violate other users&apos; privacy or collect unauthorized
           data
         </li>
         <li>
@@ -224,7 +224,7 @@ const CURRENT_TERMS: LegalDocument = {
 
       <h2>9. Limitation of Liability</h2>
       <p>
-        HIVE is provided "as is" without warranties of any kind. We are not
+        HIVE is provided &quot;as is&quot; without warranties of any kind. We are not
         liable for indirect, incidental, or consequential damages arising from
         your use of the Service.
       </p>

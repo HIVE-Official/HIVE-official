@@ -6,7 +6,6 @@ import { Navbar } from "@hive/ui";
 import { useAuth } from "@/lib/auth";
 import { HivePage } from "@hive/ui";
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
 
 interface PageWrapperProps {
   children: React.ReactNode;

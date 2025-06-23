@@ -19,8 +19,8 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { HiveLogo } from "../brand/hive-logo";
-import { Button } from "../ui/button";
 import { Avatar } from "../ui/avatar";
+import Link from "next/link";
 
 export interface User {
   id: string;

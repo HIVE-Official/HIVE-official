@@ -273,7 +273,17 @@ test.describe('Space Feed Flow', () => {
   
   test('should track analytics events', async ({ page }) => {
     // Mock analytics endpoint
-    const analyticsEvents: any[] = []
+    interface AnalyticsEvent {
+      event: string;
+      spaceId?: string;
+      metadata?: {
+        reaction?: string;
+        [key: string]: unknown;
+      };
+      [key: string]: unknown;
+    }
+    
+    const analyticsEvents: AnalyticsEvent[] = []
     await page.route('/api/analytics/track', route => {
       const request = route.request()
       analyticsEvents.push(request.postDataJSON())

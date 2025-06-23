@@ -1,344 +1,159 @@
-// HIVE Brand System v1.0 - Motion Tokens (CORRECTED)
-// Aligned with /memory-bank/hive-brand-system.md
+// HIVE Brand System v1.0 - Motion Tokens (CUSTOM BRAND)
+// Premium motion system for dark-first UI with gold accents
+// NO Material Design - this is HIVE's custom motion language
 
 export const motion = {
-  // Core durations - CORRECTED TO MATCH BRAND SYSTEM
+  // HIVE-specific durations (web-optimized, premium feel)
   duration: {
-    fast: "90ms", // Micro-interactions, hover states (CORRECTED)
-    content: "220ms", // Content transitions, page changes (CORRECTED)
-    slow: "300ms", // Ritual theatrics only (CORRECTED)
-
-    // Legacy aliases for backward compatibility
-    instant: "90ms", // Maps to fast
-    base: "220ms", // Maps to content
-    slower: "300ms", // Maps to slow
+    instant: "50ms",   // Immediate feedback (hover, focus)
+    fast: "120ms",     // Micro-interactions, state changes  
+    base: "180ms",     // Content transitions, modals
+    slow: "280ms",     // Complex animations, emphasis
+    ritual: "400ms",   // Special HIVE moments, celebrations
   },
 
-  // Timing functions - CORRECTED TO SINGLE EASING
+  // HIVE brand easing (premium, not Material Design)
   easing: {
-    // SINGLE APPROVED EASING for all animations
-    standard: "cubic-bezier(0.22, 0.61, 0.36, 1)", // CORRECTED
-
-    // Legacy aliases (all map to standard for consistency)
-    spring: "cubic-bezier(0.22, 0.61, 0.36, 1)",
-    smooth: "cubic-bezier(0.22, 0.61, 0.36, 1)",
-    swift: "cubic-bezier(0.22, 0.61, 0.36, 1)",
-
-    // Basic CSS easing (discouraged, use standard)
+    // Primary HIVE easing - smooth, premium feel
+    smooth: "cubic-bezier(0.25, 0.46, 0.45, 0.94)",     // Smooth, confident
+    snap: "cubic-bezier(0.68, -0.55, 0.265, 1.55)",     // Playful bounce for interactions
+    elegant: "cubic-bezier(0.23, 1, 0.32, 1)",          // Elegant, refined
+    
+    // Special HIVE brand spring for gold accent moments
+    brand: "cubic-bezier(0.33, 0.65, 0, 1)",            // Signature HIVE spring
+    
+    // Performance easing (when needed)
     linear: "linear",
     ease: "ease",
-    "ease-in": "ease-in",
-    "ease-out": "ease-out",
-    "ease-in-out": "ease-in-out",
   },
 
-  // Scale values for transforms
+  // HIVE-specific scale values (subtle, premium)
   scale: {
     none: "1",
-    subtle: "1.02", // Button hover - CORRECTED to match brand
-    small: "1.05", // Card hover
-    medium: "1.1", // Emphasis
-    large: "1.25", // Strong emphasis
+    micro: "1.01",     // Subtle hover for cards
+    small: "1.02",     // Button hover
+    medium: "1.05",    // Emphasis
+    large: "1.1",      // Strong emphasis
+    ritual: "1.15",    // Special HIVE moments
   },
 
-  // Transform origins
-  origin: {
-    center: "center",
-    top: "top",
-    "top-right": "top right",
-    right: "right",
-    "bottom-right": "bottom right",
-    bottom: "bottom",
-    "bottom-left": "bottom left",
-    left: "left",
-    "top-left": "top left",
-  },
-
-  // Animation keyframes
+  // HIVE keyframes (dark-first, gold accents)
   keyframes: {
-    // Fade animations
-    fadeIn: {
-      from: { opacity: "0" },
-      to: { opacity: "1" },
-    },
-    fadeOut: {
-      from: { opacity: "1" },
-      to: { opacity: "0" },
-    },
+    // Subtle entrance animations
+    fadeIn: "hive-fade-in",
+    slideUp: "hive-slide-up", 
+    slideDown: "hive-slide-down",
+    scaleIn: "hive-scale-in",
+    
+    // Gold accent animations
+    goldPulse: "hive-gold-pulse",
+    goldGlow: "hive-gold-glow",
+    
+    // Dark surface animations
+    surfaceRise: "hive-surface-rise",
+    embossReveal: "hive-emboss-reveal",
+    
+    // Special HIVE moments
+    ritualBurst: "hive-ritual-burst",
+    spaceJoin: "hive-space-join",
+  },
 
-    // Scale animations
-    scaleIn: {
-      from: {
-        opacity: "0",
-        transform: "scale(0.95)",
-      },
-      to: {
-        opacity: "1",
-        transform: "scale(1)",
-      },
-    },
-    scaleOut: {
-      from: {
-        opacity: "1",
-        transform: "scale(1)",
-      },
-      to: {
-        opacity: "0",
-        transform: "scale(0.95)",
-      },
-    },
-
-    // Slide animations
-    slideInFromTop: {
-      from: {
-        opacity: "0",
-        transform: "translateY(-20px)",
-      },
-      to: {
-        opacity: "1",
-        transform: "translateY(0)",
-      },
-    },
-    slideInFromBottom: {
-      from: {
-        opacity: "0",
-        transform: "translateY(20px)",
-      },
-      to: {
-        opacity: "1",
-        transform: "translateY(0)",
-      },
-    },
-    slideInFromLeft: {
-      from: {
-        opacity: "0",
-        transform: "translateX(-20px)",
-      },
-      to: {
-        opacity: "1",
-        transform: "translateX(0)",
-      },
-    },
-    slideInFromRight: {
-      from: {
-        opacity: "0",
-        transform: "translateX(20px)",
-      },
-      to: {
-        opacity: "1",
-        transform: "translateX(0)",
-      },
-    },
-
-    // Micro-interaction animations (brand-specific)
-    shakeMicro: {
-      "0%, 100%": { transform: "translateX(0)" },
-      "25%": { transform: "translateX(-2px)" },
-      "75%": { transform: "translateX(2px)" },
-    },
-
-    pulseSubtle: {
-      "0%, 100%": { transform: "scale(1)" },
-      "50%": { transform: "scale(1.02)" },
-    },
-
-    // Spin animation for loading states
-    spin: {
-      from: { transform: "rotate(0deg)" },
-      to: { transform: "rotate(360deg)" },
-    },
-
-    // Pulse animation for loading states
-    pulse: {
-      "0%, 100%": { opacity: "1" },
-      "50%": { opacity: "0.5" },
-    },
-
-    // Ritual celebration (300ms timing)
-    ritualBurst: {
-      "0%": {
-        transform: "scale(1) rotate(0deg)",
-        opacity: "1",
-      },
-      "50%": {
-        transform: "scale(1.1) rotate(180deg)",
-        opacity: "0.8",
-      },
-      "100%": {
-        transform: "scale(1) rotate(360deg)",
-        opacity: "1",
-      },
+  // Performance optimization hints
+  performance: {
+    // GPU-accelerated properties (safe to animate)
+    gpu: ["transform", "opacity", "filter"],
+    // Properties that cause layout (avoid animating)
+    layout: ["width", "height", "padding", "margin", "border-width"],
+    // HIVE-optimized will-change hints
+    willChange: {
+      transform: "transform",
+      opacity: "opacity", 
+      filter: "filter",
+      auto: "auto",
     },
   },
 
-  // Pre-defined animations - CORRECTED TO MATCH BRAND TIMINGS
-  animations: {
-    // Button interactions - CORRECTED TIMING
-    buttonHover: {
-      duration: "90ms", // CORRECTED
-      easing: "cubic-bezier(0.22, 0.61, 0.36, 1)", // CORRECTED
-      transform: "scale(1.02)",
-    },
-
-    // Modal animations - CORRECTED TIMING
-    modalEnter: {
-      duration: "220ms", // CORRECTED
-      easing: "cubic-bezier(0.22, 0.61, 0.36, 1)", // CORRECTED
-      keyframes: "scaleIn",
-    },
-    modalExit: {
-      duration: "220ms", // CORRECTED
-      easing: "cubic-bezier(0.22, 0.61, 0.36, 1)", // CORRECTED
-      keyframes: "scaleOut",
-    },
-
-    // Page transitions - CORRECTED TIMING
-    pageEnter: {
-      duration: "220ms", // CORRECTED
-      easing: "cubic-bezier(0.22, 0.61, 0.36, 1)", // CORRECTED
-      keyframes: "slideInFromRight",
-    },
-    pageExit: {
-      duration: "220ms", // CORRECTED
-      easing: "cubic-bezier(0.22, 0.61, 0.36, 1)", // CORRECTED
-      keyframes: "slideInFromLeft",
-    },
-
-    // Status feedback animations (motion-based, no colors)
-    errorShake: {
-      duration: "90ms", // CORRECTED
-      easing: "cubic-bezier(0.22, 0.61, 0.36, 1)", // CORRECTED
-      keyframes: "shakeMicro",
-    },
-
-    successPulse: {
-      duration: "220ms", // CORRECTED
-      easing: "cubic-bezier(0.22, 0.61, 0.36, 1)", // CORRECTED
-      keyframes: "pulseSubtle",
-    },
-
-    // Ritual animations - ONLY 300ms timing allowed
-    ritualCelebration: {
-      duration: "300ms", // Ritual timing
-      easing: "cubic-bezier(0.22, 0.61, 0.36, 1)",
-      keyframes: "ritualBurst",
-    },
-
-    // Loading states
-    spinner: {
-      duration: "1000ms",
+  // Accessibility support
+  accessibility: {
+    // Reduced motion fallbacks
+    reducedMotion: {
+      duration: "0.01ms",
       easing: "linear",
-      keyframes: "spin",
-      iterationCount: "infinite",
+      scale: "1",
     },
-
-    // Notification animations
-    toastEnter: {
-      duration: "220ms", // CORRECTED
-      easing: "cubic-bezier(0.22, 0.61, 0.36, 1)", // CORRECTED
-      keyframes: "slideInFromTop",
-    },
-    toastExit: {
-      duration: "220ms", // CORRECTED
-      easing: "cubic-bezier(0.22, 0.61, 0.36, 1)", // CORRECTED
-      keyframes: "slideInFromTop",
+    // Focus indicators (HIVE gold)
+    focus: {
+      ring: "2px solid #FFD700",
+      offset: "2px",
+      duration: "120ms",
     },
   },
-
-  // Reduced motion support
-  reducedMotion: {
-    // Respect user preferences
-    prefersReducedMotion: "@media (prefers-reduced-motion: reduce)",
-
-    // Fallback animations for reduced motion
-    fallback: {
-      duration: "0.01ms", // Near-instant
-      easing: "linear",
-      transform: "none",
-    },
-  },
-} as const;
-
-// ============================================================================
-// UTILITY FUNCTIONS - CORRECTED
-// ============================================================================
-
-export const createAnimation = (
-  keyframes: string,
-  duration: keyof typeof motion.duration = "content",
-  easing: string = motion.easing.standard, // Use standard easing by default
-  fillMode: string = "both"
-) => {
-  return {
-    animation: `${keyframes} ${motion.duration[duration]} ${easing} ${fillMode}`,
-  };
 };
 
-export const createTransition = (
+// HIVE motion utilities
+export const createHiveTransition = (
   property: string = "all",
   duration: keyof typeof motion.duration = "fast",
-  easing: string = motion.easing.standard // Use standard easing by default
+  easing: keyof typeof motion.easing = "smooth"
+) => {
+  return `${property} ${motion.duration[duration]} ${motion.easing[easing]}`;
+};
+
+export const createHiveHover = (
+  scale: keyof typeof motion.scale = "micro"
 ) => {
   return {
-    transition: `${property} ${motion.duration[duration]} ${easing}`,
+    transition: createHiveTransition("transform", "fast", "smooth"),
+    "&:hover": {
+      transform: `scale(${motion.scale[scale]})`,
+    },
   };
 };
 
-// Brand-compliant hover effect
-export const createHoverEffect = (
-  scale: keyof typeof motion.scale = "subtle"
+export const createGoldAccent = (
+  duration: keyof typeof motion.duration = "fast"
 ) => {
   return {
-    transform: `scale(${motion.scale[scale]})`,
-    transition: `transform ${motion.duration.fast} ${motion.easing.standard}`,
+    transition: createHiveTransition("all", duration, "smooth"),
+    "&:hover": {
+      boxShadow: "0 0 20px rgba(255, 215, 0, 0.3)",
+      borderColor: "#FFD700",
+    },
   };
 };
 
-// Focus ring animation
-export const createFocusRing = () => {
-  return {
-    outline: "2px solid #FFD700", // Gold focus ring
-    outlineOffset: "2px",
-    transition: `outline ${motion.duration.fast} ${motion.easing.standard}`,
-  };
+// HIVE-specific animation presets
+export const hiveAnimations = {
+  // Card hover (subtle emboss effect)
+  cardHover: {
+    transition: createHiveTransition("all", "fast", "smooth"),
+    "&:hover": {
+      transform: "scale(1.01) translateY(-1px)",
+      boxShadow: "0 8px 25px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 215, 0, 0.1)",
+    },
+  },
+  
+  // Button press (HIVE gold)
+  buttonPress: {
+    transition: createHiveTransition("all", "fast", "snap"),
+    "&:active": {
+      transform: "scale(0.98)",
+    },
+    "&:hover": {
+      transform: "scale(1.02)",
+      boxShadow: "0 0 15px rgba(255, 215, 0, 0.2)",
+    },
+  },
+  
+  // Modal entrance (elegant)
+  modalEnter: {
+    animation: `${motion.keyframes.fadeIn} ${motion.duration.base} ${motion.easing.elegant}, ${motion.keyframes.scaleIn} ${motion.duration.base} ${motion.easing.elegant}`,
+  },
+  
+  // Ritual celebration (special HIVE moment)
+  ritualCelebration: {
+    animation: `${motion.keyframes.ritualBurst} ${motion.duration.ritual} ${motion.easing.brand}`,
+  },
 };
 
-// ============================================================================
-// TYPE DEFINITIONS
-// ============================================================================
-
-export type MotionDuration = keyof typeof motion.duration;
-export type MotionEasing = keyof typeof motion.easing;
-export type MotionScale = keyof typeof motion.scale;
-export type MotionKeyframes = keyof typeof motion.keyframes;
-export type MotionAnimation = keyof typeof motion.animations;
-
-// ============================================================================
-// BRAND COMPLIANCE RULES
-// ============================================================================
-
-export const MOTION_COMPLIANCE = {
-  rules: [
-    "Use 90ms for ALL micro-interactions (hover, focus, press)",
-    "Use 220ms for ALL content transitions (page changes, components)",
-    "Use 300ms ONLY for ritual theatrics and special moments",
-    "Use SINGLE easing curve: cubic-bezier(0.22, 0.61, 0.36, 1)",
-    "Respect prefers-reduced-motion user preferences",
-    "No other timing values allowed without brand approval",
-  ],
-  violations: [
-    "Multiple easing curves",
-    "150ms, 200ms, or other non-approved timings",
-    "Ignoring reduced motion preferences",
-    "Using ease, ease-out, or other basic CSS easing",
-  ],
-} as const;
-
-// Export default
 export default motion;
-
-// Brand compliance note: This file enforces the corrected brand timings:
-// - Fast: 90ms (not 150ms)
-// - Content: 220ms (not 200ms)
-// - Single easing: cubic-bezier(0.22, 0.61, 0.36, 1)
-// - All animations use approved timings only

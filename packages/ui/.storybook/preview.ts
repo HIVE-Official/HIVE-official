@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 // Import only the HIVE globals CSS (not styles.css which has old variables)
 import "../src/globals.css";
+import "../src/lib/geist-font.css";
 
 // Create a query client for stories that need server state
 const queryClient = new QueryClient({
@@ -52,22 +53,19 @@ const preview: Preview = {
   },
   decorators: [
     (Story) => {
+      // This decorator ensures a consistent dark background and that the root element
+      // has the 'dark' class applied, which is necessary for Tailwind's dark mode
+      // variants to work correctly. It no longer contains hardcoded styles,
+      // allowing tailwind.config.ts to be the single source of truth.
       return React.createElement(
         QueryClientProvider,
         { client: queryClient },
         React.createElement(
           "div",
           {
-            className:
-              "font-sans bg-hive-canvas text-hive-white dark min-h-screen",
-            style: {
-              fontFamily:
-                "Inter Variable, Inter, -apple-system, BlinkMacSystemFont, sans-serif",
-              backgroundColor: "#0A0A0A",
-              color: "#ffffff",
-              minHeight: "100vh",
-              padding: "1rem",
-            } as React.CSSProperties,
+            // The `dark` class is essential for Tailwind's dark mode.
+            // All other styles should come from the global CSS.
+            className: "dark",
           },
           React.createElement(Story)
         )

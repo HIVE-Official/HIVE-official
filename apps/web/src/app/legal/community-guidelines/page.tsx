@@ -22,7 +22,7 @@ const CURRENT_GUIDELINES: LegalDocument = {
         </h2>
         <p className="mb-0 text-gray-300">
           HIVE is built on respect, authenticity, and collaboration. Treat
-          others as you'd want to be treated, contribute meaningfully to your
+          others as you&apos;d want to be treated, contribute meaningfully to your
           communities, and help us create a space where everyone can thrive.
         </p>
       </div>
@@ -44,7 +44,7 @@ const CURRENT_GUIDELINES: LegalDocument = {
         <div className="rounded-lg border border-gold/20 bg-gray-900/30 p-4">
           <h3 className="mt-0 text-gold">🚀 Growth</h3>
           <p className="mb-0 text-sm">
-            Support each other's learning and development.
+            Support each other&apos;s learning and development.
           </p>
         </div>
       </div>
@@ -76,7 +76,7 @@ const CURRENT_GUIDELINES: LegalDocument = {
         </li>
       </ul>
 
-      <h3>What We Don't Allow</h3>
+      <h3>What We Don&apos;t Allow</h3>
       <ul>
         <li>Personal attacks, insults, or harassment</li>
         <li>
@@ -113,12 +113,12 @@ const CURRENT_GUIDELINES: LegalDocument = {
       </ul>
 
       <p>
-        <strong>However, we don't allow:</strong>
+        <strong>However, we don&apos;t allow:</strong>
       </p>
       <ul>
         <li>Sharing or requesting answers to specific assignments or exams</li>
         <li>Plagiarism or encouraging academic dishonesty</li>
-        <li>Violating your institution's academic integrity policies</li>
+        <li>Violating your institution&apos;s academic integrity policies</li>
       </ul>
 
       <h2>3. Content Standards</h2>
@@ -168,7 +168,7 @@ const CURRENT_GUIDELINES: LegalDocument = {
         </li>
         <li>
           <strong>Copyright Violations:</strong> Content that infringes on
-          others' intellectual property
+          others&apos; intellectual property
         </li>
       </ul>
 
@@ -240,14 +240,14 @@ const CURRENT_GUIDELINES: LegalDocument = {
       <h2>6. Privacy and Safety</h2>
       <div className="mb-4 rounded border-l-4 border-gold/50 bg-gray-900/50 p-4">
         <p className="mb-2 font-medium text-gold">
-          TL;DR: Protect your privacy and respect others' boundaries.
+          TL;DR: Protect your privacy and respect others&apos; boundaries.
         </p>
       </div>
 
       <h3>Protecting Yourself</h3>
       <ul>
         <li>
-          Don't share personal information like addresses, phone numbers, or
+          Don&apos;t share personal information like addresses, phone numbers, or
           financial details
         </li>
         <li>
@@ -259,9 +259,9 @@ const CURRENT_GUIDELINES: LegalDocument = {
 
       <h3>Respecting Others</h3>
       <ul>
-        <li>Don't share others' personal information without permission</li>
+        <li>Don&apos;t share others&apos; personal information without permission</li>
         <li>Respect when someone asks for space or sets boundaries</li>
-        <li>Don't screenshot or share private conversations publicly</li>
+        <li>Don&apos;t screenshot or share private conversations publicly</li>
         <li>Ask before tagging people in posts or photos</li>
       </ul>
 
@@ -366,7 +366,7 @@ const CURRENT_GUIDELINES: LegalDocument = {
       </div>
 
       <p>
-        These guidelines may be updated as HIVE grows and evolves. We'll notify
+        These guidelines may be updated as HIVE grows and evolves. We&apos;ll notify
         the community of significant changes and always aim to maintain the core
         values of respect, authenticity, and growth.
       </p>

@@ -51,6 +51,12 @@ interface NotificationSettings {
   frequency: "instant" | "hourly" | "daily" | "none";
 }
 
+interface FeedSettingsData {
+  emailNotifications: boolean;
+  pushNotifications: boolean;
+  // Add other properties as needed
+}
+
 const defaultAlgorithmPrefs: AlgorithmPreferences = {
   contentTypeWeights: {
     events: 30,
@@ -98,11 +104,38 @@ export default function FeedSettingsPage() {
   const [hasChanges, setHasChanges] = useState(false);
   const [newTopicInput, setNewTopicInput] = useState("");
   const [newUserInput, setNewUserInput] = useState("");
+  const [_settings, setSettings] = useState<FeedSettingsData>({
+    emailNotifications: true,
+    pushNotifications: true,
+  });
+  const [_isLoading, setIsLoading] = useState(false);
 
   // Track changes
   useEffect(() => {
     setHasChanges(true);
   }, [algorithmPrefs, contentFilters, notificationSettings]);
+
+  const _handleSettingChange = (setting: string, value: boolean) => {
+    // Handle setting change without console logging
+    setSettings(prev => ({
+      ...prev,
+      [setting]: value
+    }));
+  };
+
+  const _handleSave = async () => {
+    // Handle save without console logging
+    try {
+      // Save settings logic here
+      setIsLoading(true);
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      setIsLoading(false);
+    } catch (_error) {
+      setIsLoading(false);
+      // Handle error properly
+    }
+  };
 
   const handleSaveSettings = async () => {
     try {
@@ -813,7 +846,7 @@ export default function FeedSettingsPage() {
                               : "outline"
                           }
                           onClick={() =>
-                            handleAlgorithmChange("frequency", value as any)
+                            handleAlgorithmChange("frequency", value as NotificationSettings["frequency"])
                           }
                           className={`w-full ${
                             notificationSettings.frequency === value

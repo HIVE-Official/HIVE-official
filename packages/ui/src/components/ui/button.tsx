@@ -1,183 +1,120 @@
-import * as React from "react";
-import { Slot } from "@radix-ui/react-slot";
-import { cva, type VariantProps } from "class-variance-authority";
-import { cn } from "../../lib/utils";
+import React from 'react';
+import { Slot } from '@radix-ui/react-slot';
+import { cva, type VariantProps } from 'class-variance-authority';
+import { cn } from '@/lib/utils';
 
-// ============================================================================
-// BUTTON VARIANTS - HIVE Brand System v1.0 (CORRECTED)
-// ============================================================================
-
+// HIVE Brand Button System - Compliant with hive-brand-system.md
 const buttonVariants = cva(
-  // Base styles - CORRECTED to match brand system
+  // Base styles using HIVE motion and typography systems
   [
-    "hive-button-base",
-    "relative",
-    "inline-flex",
-    "items-center",
-    "justify-center",
-    "gap-2",
-    "whitespace-nowrap",
-    "rounded-lg",
-    "font-medium",
-    "font-sans", // Geist Sans Variable
-    "transition-all",
-    "duration-[90ms]", // CORRECTED: 90ms for micro-interactions
-    "ease-[cubic-bezier(0.22,0.61,0.36,1)]", // CORRECTED: single brand easing
-    "focus-visible:outline-none",
-    "focus-visible:ring-2",
-    "focus-visible:ring-[#FFD700]", // Gold focus ring
-    "focus-visible:ring-offset-2",
-    "focus-visible:ring-offset-[#0A0A0A]", // Background color
-    "disabled:pointer-events-none",
-    "disabled:opacity-50",
-    "[&_svg]:pointer-events-none",
-    "[&_svg]:size-4",
-    "[&_svg]:shrink-0",
+    'inline-flex items-center justify-center whitespace-nowrap rounded-xl',
+    'font-sans font-button', // Correctly uses font-sans (Geist) and button token
+    'transition-all duration-fast ease-standard', // HIVE motion tokens
+    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+    'disabled:pointer-events-none disabled:opacity-50',
   ],
   {
     variants: {
       variant: {
-        // Primary: CORRECTED - NO GOLD FILL, surface bg + gold text/border
+        // Primary: Gold FILL, white text.
+        primary: [
+          'bg-accent !text-background border border-accent', // FORCE white text on gold bg
+          'hover:bg-accent-600 hover:border-accent-600',
+          'hover:scale-102',
+          'active:scale-98 active:duration-instant',
+        ],
+        // Default is an alias for Primary
         default: [
-          "bg-[#111111]", // surface
-          "text-[#FFD700]", // gold text
-          "border",
-          "border-[#FFD700]", // gold border
-          "hover:text-[#EAC200]", // gold-600 hover (CORRECTED)
-          "hover:border-[#EAC200]", // gold-600 border hover
-          "hover:scale-[1.02]", // 2% scale increase
-          "active:text-[#C4A500]", // gold-700 active (CORRECTED)
-          "active:border-[#C4A500]", // gold-700 border active
-          "active:scale-[0.98]", // Press feedback
+          'bg-accent !text-background border border-accent', // FORCE white text on gold bg
+          'hover:bg-accent-600 hover:border-accent-600',
+          'hover:scale-102',
+          'active:scale-98 active:duration-instant',
         ],
-
-        // Ghost: Minimal styling
+        // Secondary: Monochrome, for less important actions.
+        secondary: [
+          'bg-foreground/5 border-foreground/10 !text-foreground', // FORCE white text
+          'hover:bg-foreground/10',
+          'hover:scale-101',
+          'active:scale-98 active:duration-instant',
+        ],
+        // Ghost: For tertiary actions, minimal visual weight.
         ghost: [
-          "text-[#FFFFFF]", // foreground
-          "bg-transparent",
-          "border",
-          "border-[#2A2A2A]", // CORRECTED border color
-          "hover:bg-[#111111]", // surface hover
-          "hover:border-[#6B7280]", // muted border hover
-          "active:bg-[#181818]", // surface-02 active
+          '!text-foreground/80', // FORCE white text
+          'hover:bg-foreground/5 hover:!text-foreground',
+          'active:scale-98 active:duration-instant',
         ],
-
         // Outline: Border-focused
         outline: [
-          "border",
-          "border-[#2A2A2A]", // CORRECTED border color
-          "text-[#FFFFFF]", // foreground
-          "bg-transparent",
-          "hover:bg-[#111111]", // surface hover
-          "hover:border-[#6B7280]", // muted border hover
-          "active:bg-[#181818]", // surface-02 active
+          'border border-border bg-transparent',
+          '!text-foreground/90', // Muted text for less emphasis -> Changed to white
+          'hover:bg-surface-02 hover:border-accent hover:text-accent',
+          'hover:scale-102',
+          'active:scale-98 active:duration-instant',
         ],
-
-        // Link: Text-only
+        // Link: For navigation, styled like a hyperlink.
         link: [
-          "text-[#FFD700]", // gold text
-          "underline-offset-4",
-          "hover:underline",
-          "hover:text-[#EAC200]", // gold-600 hover (CORRECTED)
-          "active:text-[#C4A500]", // gold-700 active (CORRECTED)
-          "bg-transparent",
-          "border-0",
+          '!text-foreground/80 underline-offset-4', // FORCE white text
+          'hover:underline hover:!text-foreground',
+          'active:scale-98 active:duration-instant',
         ],
-
-        // Ritual Badge: ONLY ALLOWED GOLD FILL
-        "ritual-badge": [
-          "bg-[#FFD700]", // ONLY place for gold fill
-          "text-[#0A0A0A]", // background color text
-          "border-0",
-          "rounded-full", // Pill shape for ritual badges
-          "hover:bg-[#EAC200]", // gold-600 hover
-          "active:bg-[#C4A500]", // gold-700 active
-          "px-3", // Tighter padding for badges
-          "py-1",
-          "text-xs", // Smaller text for badges
-          "font-semibold", // Bold for emphasis
-        ],
-
-        // Destructive: Uses motion feedback, not red colors
+        // Monochrome Destructive: Uses motion for feedback, not color.
         destructive: [
-          "bg-[#111111]", // surface
-          "text-[#FFFFFF]", // foreground
-          "border",
-          "border-[#6B7280]", // muted border
-          "hover:bg-[#181818]", // surface-02 hover
-          "hover:border-[#FFFFFF]", // white border for emphasis
-          "active:bg-[#1F1F1F]", // surface-03 active
-          // Motion feedback will be handled via animations
+          'bg-surface !text-foreground/90 border border-border', // Changed to white
+          'hover:bg-surface-02 hover:border-muted hover:text-foreground',
+          'focus-visible:ring-foreground',
+          'hover:animate-shake-micro', // Use HIVE shake animation
+          'active:scale-98 active:duration-instant',
         ],
       },
       size: {
-        sm: "h-8 px-3 text-xs",
-        md: "h-9 px-4 text-sm",
-        lg: "h-11 px-6 text-base",
-        xl: "h-12 px-8 text-lg",
-        icon: "h-9 w-9 p-0",
+        xs: 'h-8 px-2 text-xs',
+        sm: 'h-9 px-3 text-sm',
+        default: 'h-10 px-4 py-2 text-button', // Use button typography token
+        md: 'h-10 px-4 py-2 text-button', // Alias for default
+        lg: 'h-11 px-8 text-base',
+        xl: 'h-12 px-10 text-lg',
+        icon: 'h-10 w-10',
+      },
+      fullWidth: {
+        true: 'w-full',
+        false: 'w-auto',
       },
     },
     defaultVariants: {
-      variant: "default",
-      size: "md",
+      variant: 'default',
+      size: 'default',
+      fullWidth: false,
     },
   }
 );
 
-// ============================================================================
-// BUTTON INTERFACE
-// ============================================================================
-
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
-  /**
-   * Render as child component (e.g., Link)
-   */
   asChild?: boolean;
-
-  /**
-   * Loading state with spinner
-   */
   loading?: boolean;
-
-  /**
-   * Icon to display on the left
-   */
   leftIcon?: React.ReactNode;
-
-  /**
-   * Icon to display on the right
-   */
   rightIcon?: React.ReactNode;
-
-  /**
-   * Make button full width
-   */
   fullWidth?: boolean;
-
-  /**
-   * Add shake animation for error feedback (motion-based)
-   */
-  shake?: boolean;
 }
 
-// ============================================================================
-// LOADING SPINNER COMPONENT - CORRECTED COLORS
-// ============================================================================
-
-const LoadingSpinner = ({ variant }: { variant?: string }) => {
-  // Spinner color based on variant
-  const spinnerColor = variant === "ritual-badge" ? "#0A0A0A" : "#FFD700";
+// Loading spinner component with HIVE motion
+const LoadingSpinner = ({ size = 'default' }: { size?: 'xs' | 'sm' | 'default' | 'md' | 'lg' | 'xl' }) => {
+  const spinnerSize = {
+    xs: 'h-3 w-3',
+    sm: 'h-3 w-3', 
+    default: 'h-4 w-4',
+    md: 'h-4 w-4', // Same as default
+    lg: 'h-5 w-5',
+    xl: 'h-6 w-6',
+  }[size];
 
   return (
     <svg
-      className="animate-spin h-4 w-4"
+      className={cn("animate-spin duration-base ease-linear", spinnerSize)} // Use HIVE duration token
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"
-      style={{ color: spinnerColor }}
     >
       <circle
         className="opacity-25"
@@ -196,131 +133,86 @@ const LoadingSpinner = ({ variant }: { variant?: string }) => {
   );
 };
 
-// ============================================================================
-// BUTTON COMPONENT - CORRECTED
-// ============================================================================
-
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  (
-    {
-      className,
-      variant,
-      size,
-      asChild = false,
-      loading = false,
-      leftIcon,
-      rightIcon,
-      fullWidth = false,
-      shake = false,
-      children,
-      disabled,
-      ...props
-    },
-    ref
-  ) => {
-    const Comp = asChild ? Slot : "button";
-
-    // Disable button when loading
+  ({ 
+    className, 
+    variant, 
+    size, 
+    asChild = false, 
+    loading = false,
+    leftIcon,
+    rightIcon,
+    children,
+    disabled,
+    fullWidth,
+    ...props 
+  }, ref) => {
+    const Comp = asChild ? Slot : 'button';
     const isDisabled = disabled || loading;
-
-    // Shake animation class (motion-based error feedback)
-    const shakeClass = shake
-      ? "animate-[shake_90ms_cubic-bezier(0.22,0.61,0.36,1)]"
-      : "";
 
     return (
       <Comp
+        className={cn(buttonVariants({ variant, size, fullWidth, className }))}
         ref={ref}
         disabled={isDisabled}
-        className={cn(
-          buttonVariants({ variant, size }),
-          fullWidth && "w-full",
-          shakeClass,
-          className
-        )}
         {...props}
       >
-        {/* Left icon or loading spinner */}
         {loading ? (
-          <LoadingSpinner variant={variant} />
-        ) : leftIcon ? (
-          <span className="flex items-center justify-center">{leftIcon}</span>
-        ) : null}
-
-        {/* Button content */}
-        {children}
-
-        {/* Right icon (not shown when loading) */}
-        {!loading && rightIcon && (
-          <span className="flex items-center justify-center">{rightIcon}</span>
+          <LoadingSpinner size={size === 'icon' ? 'default' : (size || 'default')} />
+        ) : (
+          <>
+            {leftIcon && <span className="mr-2 flex-shrink-0">{leftIcon}</span>}
+            <span className={cn(fullWidth && "flex-1 text-center")}>{children}</span>
+            {rightIcon && <span className="ml-2 flex-shrink-0">{rightIcon}</span>}
+          </>
         )}
       </Comp>
     );
   }
 );
+Button.displayName = 'Button';
 
-Button.displayName = "Button";
+// Button Group Component for related actions
+export interface ButtonGroupProps extends React.HTMLAttributes<HTMLDivElement> {
+  children: React.ReactNode;
+  orientation?: 'horizontal' | 'vertical';
+  size?: 'xs' | 'sm' | 'default' | 'md' | 'lg' | 'xl';
+  variant?: 'default' | 'primary' | 'secondary' | 'outline';
+}
 
-// ============================================================================
-// SPECIALIZED BUTTON COMPONENTS
-// ============================================================================
+const ButtonGroup = React.forwardRef<HTMLDivElement, ButtonGroupProps>(
+  ({ className, children, orientation = 'horizontal', size = 'default', variant = 'outline', ...props }, ref) => {
+    return (
+      <div
+        ref={ref}
+        className={cn(
+          'inline-flex',
+          orientation === 'horizontal' ? 'flex-row' : 'flex-col',
+          '[&>button]:rounded-none',
+          '[&>button:first-child]:rounded-l-xl',
+          '[&>button:last-child]:rounded-r-xl',
+          orientation === 'vertical' && '[&>button:first-child]:rounded-t-xl [&>button:first-child]:rounded-l-none',
+          orientation === 'vertical' && '[&>button:last-child]:rounded-b-xl [&>button:last-child]:rounded-r-none',
+          '[&>button:not(:first-child)]:border-l-0',
+          orientation === 'vertical' && '[&>button:not(:first-child)]:border-l [&>button:not(:first-child)]:border-t-0',
+          className
+        )}
+        {...props}
+      >
+        {React.Children.map(children, (child) => {
+          if (React.isValidElement(child) && child.type === Button) {
+            return React.cloneElement(child, {
+              size,
+              variant,
+              ...child.props,
+            });
+          }
+          return child;
+        })}
+      </div>
+    );
+  }
+);
+ButtonGroup.displayName = 'ButtonGroup';
 
-// Ritual Badge Button - for special moments only
-export const RitualBadge = React.forwardRef<
-  HTMLButtonElement,
-  Omit<ButtonProps, "variant">
->(({ children, ...props }, ref) => (
-  <Button ref={ref} variant="ritual-badge" size="sm" {...props}>
-    {children}
-  </Button>
-));
-
-RitualBadge.displayName = "RitualBadge";
-
-// Primary CTA Button - follows brand no-gold-fill rule
-export const CTAButton = React.forwardRef<
-  HTMLButtonElement,
-  Omit<ButtonProps, "variant">
->(({ children, ...props }, ref) => (
-  <Button ref={ref} variant="default" size="lg" {...props}>
-    {children}
-  </Button>
-));
-
-CTAButton.displayName = "CTAButton";
-
-// ============================================================================
-// BRAND COMPLIANCE VALIDATION
-// ============================================================================
-
-export const BUTTON_COMPLIANCE = {
-  rules: [
-    "NO gold fills except ritual badges",
-    "Use 90ms timing for all interactions",
-    "Use single easing curve: cubic-bezier(0.22, 0.61, 0.36, 1)",
-    "Gold text/borders only: #FFD700, hover #EAC200, active #C4A500",
-    "Motion-based error feedback (shake), not color changes",
-    "Geist Sans Variable for button text",
-  ],
-  violations: [
-    "Gold background on primary buttons",
-    "Multiple easing curves",
-    "150ms or other non-approved timings",
-    "Red/green/blue status colors",
-    "Wrong font family",
-  ],
-} as const;
-
-// ============================================================================
-// EXPORTS
-// ============================================================================
-
-export { Button, buttonVariants };
-export type { ButtonProps };
-
-// Brand compliance note: This button component enforces:
-// - NO gold fills except ritual badges
-// - Corrected timing: 90ms micro-interactions
-// - Single easing: cubic-bezier(0.22, 0.61, 0.36, 1)
-// - Corrected colors: #EAC200 hover, #C4A500 active
-// - Motion-based feedback instead of color changes
+export { Button, ButtonGroup, buttonVariants }; 

@@ -1,22 +1,23 @@
 "use client";
 
-import { Button } from "@hive/ui";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import {
-  ArrowRight,
-  Sparkles,
-  Users,
-  BookOpen,
-  Calendar,
-  Star,
+import { Card, CardContent, CardHeader, CardTitle } from "@hive/ui";
+import { Badge } from "@hive/ui";
+import { 
+  Users, 
+  Calendar, 
   Zap,
+  ArrowRight,
+  Star,
+  Sparkles,
+  BookOpen
 } from "lucide-react";
 import { useAuth } from "@hive/hooks";
 
 export default function WelcomePage() {
+  const { user, isLoading } = useAuth();
   const router = useRouter();
-  const { user, loading } = useAuth();
   const [mounted, setMounted] = useState(false);
   const [animationStep, setAnimationStep] = useState(0);
 
@@ -35,12 +36,11 @@ export default function WelcomePage() {
     };
   }, []);
 
-  // Redirect if user is not authenticated
   useEffect(() => {
-    if (!loading && !user) {
-      router.push("/auth/login");
+    if (mounted && !isLoading && user) {
+      router.push("/feed");
     }
-  }, [user, loading, router]);
+  }, [mounted, isLoading, user, router]);
 
   const handleSchoolSelect = () => {
     setAnimationStep(1);
@@ -52,10 +52,10 @@ export default function WelcomePage() {
     router.push("/spaces");
   };
 
-  if (loading || !mounted) {
+  if (!mounted || isLoading) {
     return (
-      <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-[#FFD700] border-t-transparent rounded-full animate-spin" />
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-yellow-500 border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -87,14 +87,12 @@ export default function WelcomePage() {
               <span>Successfully Authenticated</span>
             </div>
 
-            <h1 className="text-5xl lg:text-7xl font-bold leading-tight font-display text-white">
-              Welcome to <span className="text-[#FFD700]">HIVE</span>
+            <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
+              Welcome to HIVE&apos;s vBETA
             </h1>
-
-            <p className="text-xl lg:text-2xl text-[#6B7280] leading-relaxed max-w-xl mx-auto font-sans">
-              {user.profile?.name ? `Hey ${user.profile.name}! ` : ""}
-              You're now part of the exclusive college social platform. Let's
-              get you set up.
+            <p className="text-xl text-zinc-400 mb-8 max-w-3xl">
+              You&apos;re among the first students to experience the future of campus connection. 
+              Help us build something amazing together.
             </p>
           </div>
 

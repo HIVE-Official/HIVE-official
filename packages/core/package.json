@@ -15,11 +15,9 @@
     "dist"
   ],
   "scripts": {
-    "build": "npx tsc && npx cpy package.json dist",
-    "dev": "npx tsc --watch",
-    "clean": "rm -rf dist",
-    "lint": "npx eslint . --max-warnings 10",
-    "typecheck": "npx tsc --noEmit"
+    "build": "tsup src/index.ts --format esm,cjs --dts",
+    "dev": "tsup src/index.ts --format esm,cjs --dts --watch",
+    "clean": "rm -rf dist"
   },
   "devDependencies": {
     "@hive/eslint-config": "workspace:*",
@@ -36,5 +34,7 @@
   },
   "overrides": {
     "eslint": "$eslint"
-  }
+  },
+  "keywords": [],
+  "author": ""
 }

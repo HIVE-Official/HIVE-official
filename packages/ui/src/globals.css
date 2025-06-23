@@ -4,6 +4,9 @@
  * Aligned with /memory-bank/hive-brand-system.md
  */
 
+/* Import nuclear option for white input text - MUST BE FIRST */
+@import "./force-white-inputs.css";
+
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";

@@ -66,7 +66,7 @@ const CURRENT_PRIVACY: LegalDocument = {
       <h2>2. How We Use Your Information</h2>
       <div className="mb-4 rounded border-l-4 border-gold/50 bg-gray-900/50 p-4">
         <p className="mb-2 font-medium text-gold">
-          TL;DR: To provide HIVE's features, improve the platform, and
+          TL;DR: To provide HIVE&apos;s features, improve the platform, and
           communicate with you.
         </p>
       </div>
@@ -98,7 +98,7 @@ const CURRENT_PRIVACY: LegalDocument = {
       <h2>3. Information Sharing and Disclosure</h2>
       <div className="mb-4 rounded border-l-4 border-gold/50 bg-gray-900/50 p-4">
         <p className="mb-2 font-medium text-gold">
-          TL;DR: We don't sell your data. Limited sharing only for service
+          TL;DR: We don&apos;t sell your data. Limited sharing only for service
           operation and legal compliance.
         </p>
       </div>
@@ -196,7 +196,7 @@ const CURRENT_PRIVACY: LegalDocument = {
       </div>
 
       <h3>European Union (GDPR)</h3>
-      <p>If you're in the EU, you have additional rights under GDPR:</p>
+      <p>If you&apos;re in the EU, you have additional rights under GDPR:</p>
       <ul>
         <li>Right to withdraw consent at any time</li>
         <li>Right to lodge a complaint with supervisory authorities</li>
@@ -209,11 +209,11 @@ const CURRENT_PRIVACY: LegalDocument = {
       <ul>
         <li>Right to know what personal information is collected</li>
         <li>Right to delete personal information</li>
-        <li>Right to opt-out of sale (we don't sell data)</li>
+        <li>Right to opt-out of sale (we don&apos;t sell data)</li>
         <li>Right to non-discrimination for exercising privacy rights</li>
       </ul>
 
-      <h2>7. Children's Privacy (COPPA)</h2>
+      <h2>7. Children&apos;s Privacy (COPPA)</h2>
       <div className="mb-4 rounded border-l-4 border-gold/50 bg-gray-900/50 p-4">
         <p className="mb-2 font-medium text-gold">
           TL;DR: HIVE is for users 13 and older.
@@ -268,7 +268,7 @@ const CURRENT_PRIVACY: LegalDocument = {
       <h2>11. Changes to This Privacy Policy</h2>
       <div className="mb-4 rounded border-l-4 border-gold/50 bg-gray-900/50 p-4">
         <p className="mb-2 font-medium text-gold">
-          TL;DR: We'll notify you of significant changes.
+          TL;DR: We&apos;ll notify you of significant changes.
         </p>
       </div>
 

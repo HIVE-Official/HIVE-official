@@ -41,21 +41,21 @@ const Slider = React.forwardRef<
     >
       <SliderPrimitive.Track
         className={cn(
-          "relative w-full grow overflow-hidden rounded-full bg-white/10",
+          "relative w-full grow overflow-hidden rounded-full bg-surface-02",
           trackHeights[size]
         )}
       >
-        <SliderPrimitive.Range className="absolute h-full bg-accent-gold transition-all duration-150 ease-out" />
+        <SliderPrimitive.Range className="absolute h-full bg-accent transition-all duration-fast ease-hive-smooth" />
       </SliderPrimitive.Track>
       <SliderPrimitive.Thumb
         className={cn(
           // Base styles
-          "block rounded-full border-2 border-accent-gold bg-accent-gold transition-all duration-150 ease-out",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-gold/50 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-canvas",
+          "block rounded-full border-2 border-accent bg-accent transition-all duration-fast ease-hive-smooth",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
 
-          // Hover & active states
-          "hover:scale-110 hover:shadow-lg hover:shadow-accent-gold/25",
-          "active:scale-105",
+          // Hover & active states - HIVE motion with 2% scale
+          "hover:scale-[1.02] hover:shadow-lg hover:shadow-accent/25",
+          "active:scale-[0.98] active:duration-instant",
 
           // Disabled state
           "disabled:pointer-events-none disabled:opacity-50",
