@@ -29,34 +29,10 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${spaceGrotesk.variable} ${GeistSans.variable} dark`}
-      style={
-        {
-          colorScheme: "dark",
-          // CORRECTED: Use proper brand fonts
-          "--font-display":
-            "var(--font-space-grotesk), Space Grotesk, system-ui, sans-serif",
-          "--font-body":
-            "var(--font-geist-sans), Geist Sans Variable, Geist Sans, system-ui, sans-serif",
-          // Brand color tokens
-          "--background": "#0A0A0A",
-          "--surface": "#111111",
-          "--border": "#2A2A2A", // CORRECTED border color
-          "--foreground": "#FFFFFF",
-          "--muted": "#6B7280",
-          "--accent": "#FFD700",
-          "--accent-hover": "#EAC200", // CORRECTED hover
-          "--accent-active": "#C4A500", // CORRECTED active
-          // Motion tokens
-          "--motion-fast": "90ms",
-          "--motion-content": "220ms",
-          "--motion-slow": "300ms",
-          "--motion-easing": "cubic-bezier(0.22, 0.61, 0.36, 1)",
-        } as React.CSSProperties
-      }
       suppressHydrationWarning
     >
       <body
-        className="font-body bg-background text-foreground antialiased"
+        className="font-sans bg-background text-foreground antialiased"
         suppressHydrationWarning
       >
         <Providers>{children}</Providers>
@@ -65,8 +41,9 @@ export default function RootLayout({
   );
 }
 
-// Brand compliance note: This layout enforces:
-// - Space Grotesk from Google Fonts for headlines (--font-display)
-// - Geist Sans from NPM package for body text (--font-body)
-// - CORRECTED color tokens with proper border (#2A2A2A) and gold values
-// - Motion timing tokens for consistent animations across the app
+// Brand compliance note: This layout now correctly:
+// 1. Sets the CSS variables for Space Grotesk and Geist Sans via the font packages.
+// 2. Applies the 'dark' theme class globally.
+// 3. Relies on the tailwind.config.js (which consumes @hive/tokens) for all color,
+//    font-family, and other styles via utility classes like 'font-sans' and 'bg-background'.
+//    This removes inline styles and creates a single source of truth for the design system.

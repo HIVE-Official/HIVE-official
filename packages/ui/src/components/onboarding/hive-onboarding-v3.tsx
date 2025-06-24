@@ -1,20 +1,19 @@
 "use client";
-
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Button } from "../ui/button";
-import { Card } from "../ui/card";
-import { Input } from "../ui/input";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../ui/select";
-import { Checkbox } from "../ui/checkbox";
-import { Label } from "../ui/label";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+} from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   ArrowRight,
   ArrowLeft,
@@ -22,6 +21,7 @@ import {
   User,
   Sparkles,
   Check,
+  X,
 } from "lucide-react";
 import { HiveLogo } from "../brand/hive-logo";
 
@@ -191,25 +191,25 @@ const hiveWords = ["campus", "community", "network", "home"];
 
 // --- TYPES ---
 export interface OnboardingData {
-  email: string;
-  fullName: string;
-  preferredName: string;
-  major: string;
-  gradYear: number;
-  handle: string;
-  isBuilder: boolean;
-  builderRole?: string;
-  interests: string[];
-  avatarUrl: string;
-  legalAccepted: boolean;
+  readonly email: string;
+  readonly fullName: string;
+  readonly preferredName: string;
+  readonly major: string;
+  readonly gradYear: number;
+  readonly handle: string;
+  readonly isBuilder: boolean;
+  readonly builderRole?: string;
+  readonly interests: readonly string[];
+  readonly avatarUrl: string;
+  readonly legalAccepted: boolean;
 }
 
 export interface OnboardingProps {
-  onComplete: (data: OnboardingData) => void;
-  onStepChange?: (step: number) => void;
-  initialData: Partial<OnboardingData>;
+  readonly onComplete: (data: OnboardingData) => void;
+  readonly onStepChange?: (step: number) => void;
+  readonly initialData: Partial<OnboardingData>;
   // Example of a function prop to check handle availability
-  isHandleAvailable?: (handle: string) => Promise<boolean>;
+  readonly isHandleAvailable?: (handle: string) => Promise<boolean>;
 }
 
 // --- Progress Bar Component ---
@@ -217,8 +217,8 @@ function ProgressBar({
   currentStep,
   totalSteps,
 }: {
-  currentStep: number;
-  totalSteps: number;
+  readonly currentStep: number;
+  readonly totalSteps: number;
 }) {
   const progress = (currentStep / totalSteps) * 100;
 
@@ -240,9 +240,9 @@ function StepHeader({
   totalSteps,
   title,
 }: {
-  currentStep: number;
-  totalSteps: number;
-  title: string;
+  readonly currentStep: number;
+  readonly totalSteps: number;
+  readonly title: string;
 }) {
   return (
     <div className="text-center mb-8">
@@ -256,7 +256,11 @@ function StepHeader({
 }
 
 // --- Canvas: The Main Container ---
-function OnboardingCanvas({ children }: { children: React.ReactNode }) {
+function OnboardingCanvas({
+  children,
+}: {
+  readonly children: React.ReactNode;
+}) {
   return (
     <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center p-4 font-sans">
       <Card className="w-full max-w-md bg-[#111111] border-[#2A2A2A] shadow-2xl overflow-hidden">
@@ -267,7 +271,7 @@ function OnboardingCanvas({ children }: { children: React.ReactNode }) {
 }
 
 // --- Step 1: Opening ---
-function StepOpening({ onNext }: { onNext: () => void }) {
+function StepOpening({ onNext }: { readonly onNext: () => void }) {
   const [wordIndex, setWordIndex] = useState(0);
   const [showButton, setShowButton] = useState(false);
 
@@ -352,9 +356,9 @@ function StepNameCollection({
   onBack,
   initialData,
 }: {
-  onNext: (data: { fullName: string; preferredName: string }) => void;
-  onBack: () => void;
-  initialData: Partial<OnboardingData>;
+  readonly onNext: (data: { fullName: string; preferredName: string }) => void;
+  readonly onBack: () => void;
+  readonly initialData: Partial<OnboardingData>;
 }) {
   const generateFullNameFromEmail = (email: string): string => {
     if (!email) return "";
@@ -458,8 +462,8 @@ function StepAcademics({
   onNext,
   onBack,
 }: {
-  onNext: (data: { major: string; gradYear: number }) => void;
-  onBack: () => void;
+  readonly onNext: (data: { major: string; gradYear: number }) => void;
+  readonly onBack: () => void;
 }) {
   const [major, setMajor] = useState("");
   const [gradYear, setGradYear] = useState<number | undefined>(undefined);
@@ -544,8 +548,11 @@ function StepAcademics({
           >
             Graduation Year
           </Label>
-          <Select onValueChange={(val) => setGradYear(Number(val))}>
-            <SelectTrigger className="w-full mt-1">
+          <Select
+            onValueChange={(val: string) => setGradYear(Number(val))}
+            defaultValue={gradYear?.toString()}
+          >
+            <SelectTrigger id="gradYear" className="mt-2">
               <SelectValue placeholder="Select year..." />
             </SelectTrigger>
             <SelectContent>
@@ -585,14 +592,14 @@ function StepBuilderRole({
   onNext,
   onBack,
 }: {
-  onNext: (data: { isBuilder: boolean; builderRole?: string }) => void;
-  onBack: () => void;
+  readonly onNext: (data: { isBuilder: boolean; builderRole?: string }) => void;
+  readonly onBack: () => void;
 }) {
   const [isBuilder, setIsBuilder] = useState(false);
   const [builderRole, setBuilderRole] = useState("");
 
   const handleNext = () => {
-    onNext({ isBuilder, builderRole });
+    onNext({ isBuilder, builderRole: isBuilder ? builderRole : undefined });
   };
 
   return (
@@ -678,9 +685,9 @@ function StepHandle({
   onBack,
   isHandleAvailable,
 }: {
-  onNext: (data: { handle: string }) => void;
-  onBack: () => void;
-  isHandleAvailable?: (handle: string) => Promise<boolean>;
+  readonly onNext: (data: { handle: string }) => void;
+  readonly onBack: () => void;
+  readonly isHandleAvailable?: (handle: string) => Promise<boolean>;
 }) {
   const [handle, setHandle] = useState("");
   const [status, setStatus] = useState<
@@ -790,8 +797,8 @@ function StepInterests({
   onNext,
   onBack,
 }: {
-  onNext: (data: { interests: string[] }) => void;
-  onBack: () => void;
+  readonly onNext: (data: { interests: readonly string[] }) => void;
+  readonly onBack: () => void;
 }) {
   const allInterests = [
     "Technology",
@@ -878,8 +885,8 @@ function StepProfilePhoto({
   onNext,
   onBack,
 }: {
-  onNext: (data: { avatarUrl: string }) => void;
-  onBack: () => void;
+  readonly onNext: (data: { avatarUrl: string }) => void;
+  readonly onBack: () => void;
 }) {
   const [avatarUrl, setAvatarUrl] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -944,7 +951,7 @@ function StepProfilePhoto({
         <div className="w-2/3 flex space-x-4">
           <Button
             onClick={handleSkip}
-            variant="secondary"
+            variant="link"
             size="lg"
             className="flex-1"
           >
@@ -970,8 +977,8 @@ function StepFinalWelcome({
   onComplete,
   onBack,
 }: {
-  onComplete: (data: { legalAccepted: boolean }) => void;
-  onBack: () => void;
+  readonly onComplete: (data: { legalAccepted: boolean }) => void;
+  readonly onBack: () => void;
 }) {
   const [legalAccepted, setLegalAccepted] = useState(false);
 
@@ -1000,7 +1007,6 @@ function StepFinalWelcome({
 
       <div className="flex items-center space-x-2 pt-4">
         <Checkbox
-          id="legal"
           checked={legalAccepted}
           onCheckedChange={(checked) => setLegalAccepted(Boolean(checked))}
         />

@@ -1,5 +1,10 @@
 import { useState, useCallback, useMemo } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  useInfiniteQuery,
+} from "@tanstack/react-query";
 import {
   CreatePostRequest,
   PostType,
@@ -108,68 +113,10 @@ const postsApi = {
  */
 export const useCreatePost = () => {
   const queryClient = useQueryClient();
-  const [optimisticPost, setOptimisticPost] = useState<Post | null>(null);
 
   const mutation = useMutation({
     mutationFn: postsApi.createPost,
-    onMutate: async (postData: CreatePostRequest) => {
-      // Create optimistic post for immediate UI feedback
-      const tempPost: Post = {
-        id: `temp_${Date.now()}`,
-        type: postData.type,
-        authorId: "current-user", // Would be from auth context
-        authorHandle: "current-handle",
-        authorDisplayName: "Current User",
-        content: postData.content as PostContent,
-        spaceId: postData.spaceId,
-        spaceName: undefined,
-        visibility: postData.visibility,
-        status: "published",
-        scheduledAt: postData.scheduledAt,
-        publishedAt: new Date(),
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        reactions: {},
-        reactionCount: 0,
-        commentCount: 0,
-        shareCount: 0,
-        viewCount: 0,
-        toolData: postData.toolData,
-      };
-
-      setOptimisticPost(tempPost);
-
-      // Cancel outgoing refetches
-      await queryClient.cancelQueries({ queryKey: ["posts"] });
-
-      // Snapshot previous value
-      const previousPosts = queryClient.getQueryData(["posts"]);
-
-      // Optimistically update
-      queryClient.setQueryData(
-        ["posts"],
-        (old: unknown) => {
-          const oldData = old as { posts: Post[] } | undefined;
-          if (!oldData) return { posts: [tempPost] };
-          return {
-            ...oldData,
-            posts: [tempPost, ...oldData.posts],
-          };
-        }
-      );
-
-      return { previousPosts };
-    },
-    onError: (err, postData, context) => {
-      // Rollback optimistic update
-      setOptimisticPost(null);
-      if (context?.previousPosts) {
-        queryClient.setQueryData(["posts"], context.previousPosts);
-      }
-    },
     onSuccess: () => {
-      // Remove optimistic post and update with real data
-      setOptimisticPost(null);
       queryClient.invalidateQueries({ queryKey: ["posts"] });
     },
   });
@@ -178,7 +125,6 @@ export const useCreatePost = () => {
     createPost: mutation.mutate,
     isCreating: mutation.isPending,
     error: mutation.error?.message,
-    optimisticPost,
     reset: mutation.reset,
   };
 };
@@ -225,65 +171,47 @@ export const useInfinitePosts = (params?: {
   limit?: number;
   type?: "public" | "space" | "personal";
 }) => {
-  const [allPosts, setAllPosts] = useState<Post[]>([]);
-  const [offset, setOffset] = useState(0);
-  const [hasMore, setHasMore] = useState(true);
-  const [isLoadingMore, setIsLoadingMore] = useState(false);
-
-  const limit = params?.limit || 20;
-
-  const { posts, isLoading, error, refetch } = usePosts({
-    ...params,
-    limit,
-    // offset handled manually for infinite scroll
+  const {
+    data,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+    isFetchingNextPage,
+    status,
+    refetch,
+  } = useInfiniteQuery({
+    queryKey: ["posts", params],
+    queryFn: ({ pageParam = 0 }) =>
+      postsApi.fetchPosts({
+        ...params,
+        offset: pageParam as number,
+        limit: params?.limit || 20,
+      }),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, allPages) => {
+      if (lastPage.pagination.hasMore) {
+        return lastPage.pagination.offset + lastPage.pagination.limit;
+      }
+      return undefined;
+    },
+    staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
-  const loadMore = useCallback(async () => {
-    if (isLoadingMore || !hasMore) return;
-
-    setIsLoadingMore(true);
-    try {
-      const response = await postsApi.fetchPosts({
-        ...params,
-        limit,
-        offset: offset + limit,
-      });
-
-      if (response.success) {
-        setAllPosts((prev) => [...prev, ...response.posts]);
-        setOffset((prev) => prev + limit);
-        setHasMore(response.pagination.hasMore);
-      }
-    } catch (err) {
-      console.error("Failed to load more posts:", err);
-    } finally {
-      setIsLoadingMore(false);
-    }
-  }, [params, limit, offset, hasMore, isLoadingMore]);
-
-  // Reset when params change
-  const reset = useCallback(() => {
-    setAllPosts([]);
-    setOffset(0);
-    setHasMore(true);
-    refetch();
-  }, [refetch]);
-
-  // Update allPosts when initial posts load
-  useMemo(() => {
-    if (posts.length > 0 && offset === 0) {
-      setAllPosts(posts);
-    }
-  }, [posts, offset]);
+  const posts = useMemo(
+    () => data?.pages.flatMap((page) => page.posts) ?? [],
+    [data]
+  );
 
   return {
-    posts: allPosts,
-    isLoading,
-    isLoadingMore,
-    error,
-    hasMore,
-    loadMore,
-    reset,
+    posts,
+    error: error as Error | null,
+    fetchNextPage,
+    hasNextPage,
+    isLoading: status === "pending",
+    isFetching,
+    isFetchingNextPage,
+    refetch,
   };
 };
 

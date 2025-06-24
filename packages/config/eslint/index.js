@@ -23,23 +23,23 @@ const compat = new FlatCompat({
 export default [
   // Base JavaScript config
   js.configs.recommended,
-  
+
   // TypeScript configs
   ...tseslint.configs.recommended,
   ...tseslint.configs.recommendedTypeChecked,
-  
+
   // Patched configs for compatibility
   ...fixupConfigRules([
     ...compat.extends("turbo"),
     ...compat.extends("prettier"),
   ]),
-  
+
   // Global configuration
   {
     plugins: {
       unicorn: fixupPluginRules(unicorn),
     },
-    
+
     languageOptions: {
       parser: tseslint.parser,
       parserOptions: {
@@ -50,7 +50,7 @@ export default [
         JSX: "readonly",
       },
     },
-    
+
     settings: {
       "import/resolver": {
         typescript: {
@@ -58,25 +58,47 @@ export default [
         },
       },
     },
-    
+
     linterOptions: {
       reportUnusedDisableDirectives: "error",
     },
-    
+
     rules: {
       "turbo/no-undeclared-env-vars": "off",
       "unicorn/filename-case": [
         "error",
         {
-          "case": "kebabCase"
-        }
+          case: "kebabCase",
+        },
       ],
-      "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
-      "@typescript-eslint/consistent-type-imports": ["error", { prefer: "type-imports" }],
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        { argsIgnorePattern: "^_" },
+      ],
+      "@typescript-eslint/consistent-type-imports": [
+        "error",
+        { prefer: "type-imports" },
+      ],
       "@typescript-eslint/no-floating-promises": "error",
+      "no-restricted-syntax": [
+        "error",
+        {
+          selector: "Literal[value=/^#(?:[0-9a-fA-F]{3}){1,2}$/]",
+          message:
+            "Do not use raw hex color values. Import colors from '@hive/tokens/colors' instead.",
+        },
+      ],
     },
   },
-  
+
+  // Allow raw hex colors in token files
+  {
+    files: ["packages/tokens/**/*.ts", "**/*.stories.tsx"],
+    rules: {
+      "no-restricted-syntax": "off",
+    },
+  },
+
   // Ignore patterns
   {
     ignores: [
@@ -89,4 +111,4 @@ export default [
       "**/eslint.config.js",
     ],
   },
-]; 
+];

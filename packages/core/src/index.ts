@@ -28,10 +28,11 @@ export type { School } from "./domain/school";
 export * from "./constants/majors";
 
 // Stores
-export * from "./stores/useAppStore";
+export * from "./stores";
 
 // Firebase client config
 export * from "./firebase";
+export * from "./firebase-admin";
 
 // Feed System Core
 export * from "./domain/feed/top-strip";
@@ -85,3 +86,6 @@ export { SpaceDiscoverySchema } from "./domain/space/discovery";
 
 // export * from "./domain/feed/feed.types"; // Obsolete – file removed
 // export * from "./domain/feed/feed.guards"; // Obsolete – file removed
+
+// Types
+export * from "./types/auth-types";

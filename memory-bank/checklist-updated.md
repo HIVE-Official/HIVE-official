@@ -34,7 +34,7 @@ You are an AI developer tasked with building the HIVE platform - a campus-specif
 - **Gold**: #FFD700 (accent color only)
 - **Motion**: 200ms ease-out, never elastic
 - **Copy Tone**: Confident whisper
-- **Footer Credo**: "Built by Students · Owned by Students."
+- **Footer Credo**: "Built by Students ï¿½ Owned by Students."
 
 ### **?? DESIGN SYSTEM INTEGRATION (MANDATORY)**
 
@@ -48,24 +48,25 @@ background: "#0A0A0A"; // Primary canvas
 accent: "#FFD700"; // Gold accents only
 foreground: "#FFFFFF"; // Text and icons
 muted: "#6B7280"; // Secondary text
-border: "#374151"; // Dividers and borders
+border: "#2A2A2A"; // Dividers and borders - CORRECTED
 ```
 
 #### **Animation Timing**
 
 ```typescript
 // From packages/tokens/src/motion.ts
-fast: "150ms"; // Hover states, micro-interactions
-base: "200ms"; // Standard transitions, page changes
-slow: "300ms"; // Complex animations, modal entrances
+fast: "120ms"; // Hover states, micro-interactions
+base: "180ms"; // Standard transitions, page changes
+slow: "280ms"; // Complex animations, modal entrances
+ritual: "400ms"; // Special HIVE moments
 ```
 
 #### **Typography System**
 
 ```typescript
 // From packages/tokens/src/typography.ts
-headline: "General Sans Variable"; // Hero text, CTAs
-body: "Inter Variable"; // Body text, menus
+headline: "Space Grotesk Variable"; // Hero text, CTAs
+body: "Inter"; // Body text, menus
 mono: "JetBrains Mono"; // Code, countdown timers
 ```
 

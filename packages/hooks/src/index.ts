@@ -24,6 +24,7 @@ export {
 
 // Utility hooks
 export { useDebounce } from "./use-debounce";
+export { useConfetti } from "./use-confetti";
 
 // Motion & accessibility hooks
 export {
@@ -32,4 +33,6 @@ export {
   getAnimationDuration,
 } from "./use-reduced-motion";
 
-export * from './use-timer/use-timer'
+export * from "./use-timer/use-timer";
+
+export * from "./use-online-status";

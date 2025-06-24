@@ -1,5 +1,6 @@
 import type { Config } from "tailwindcss";
 import tailwindcssAnimate from "tailwindcss-animate";
+import { designTokens } from "@hive/tokens";
 
 const config = {
   darkMode: ["class"],
@@ -10,21 +11,7 @@ const config = {
   ],
   prefix: "",
   theme: {
-    spacing: {
-      "0": "0",
-      "1": "4px",
-      "2": "8px",
-      "3": "12px",
-      "4": "16px",
-      "5": "20px",
-      "6": "24px",
-      "8": "32px",
-      "10": "40px",
-      "12": "48px",
-      "16": "64px",
-      "20": "80px",
-      "24": "96px",
-    },
+    spacing: designTokens.spacing,
     container: {
       center: true,
       padding: "2rem",
@@ -34,49 +21,8 @@ const config = {
     },
     extend: {
       colors: {
-        background: "#0A0A0A",
-        surface: "#111111",
-        foreground: "#FFFFFF",
-        muted: "#6B7280",
-        disabled: "#3F3F46",
-        border: "#2A2A2A",
-        accent: {
-          DEFAULT: "#FFD700",
-          600: "#EAC200",
-          700: "#C4A500",
-        },
-        "surface-01": "#111111",
-        "surface-02": "#181818",
-        "surface-03": "#1F1F1F",
-        "bg-canvas": "#0A0A0A",
-        "bg-card": "#111111",
-        "accent-gold": "#FFD700",
-        "accent-gold-hover": "#EAC200",
-        "text-primary": "#FFFFFF",
-        "text-muted": "#6B7280",
-        ring: "#FFD700",
-        "ring-offset": "#0A0A0A",
-        input: "#2A2A2A",
-        primary: {
-          DEFAULT: "#FFD700",
-          foreground: "#0A0A0A",
-        },
-        secondary: {
-          DEFAULT: "#111111",
-          foreground: "#FFFFFF",
-        },
-        destructive: {
-          DEFAULT: "#111111",
-          foreground: "#FFFFFF",
-        },
-        popover: {
-          DEFAULT: "#111111",
-          foreground: "#FFFFFF",
-        },
-        card: {
-          DEFAULT: "#111111",
-          foreground: "#FFFFFF",
-        },
+        ...designTokens.colors,
+        ...designTokens.shadcnColors,
       },
       borderRadius: {
         sm: "4px",
@@ -87,40 +33,8 @@ const config = {
         full: "9999px",
         hive: "12px",
       },
-      fontFamily: {
-        sans: [
-          "Geist Sans Variable",
-          "Geist Sans",
-          "system-ui",
-          "sans-serif"
-        ],
-        display: [
-          "Space Grotesk Variable",
-          "Space Grotesk",
-          "system-ui",
-          "sans-serif"
-        ],
-        mono: ["JetBrains Mono", "Consolas", "Monaco", "monospace"],
-      },
-      fontSize: {
-        caption: ["12px", { lineHeight: "18px", fontWeight: "400" }],
-        "body-sm": ["14px", { lineHeight: "20px", fontWeight: "400" }],
-        body: ["16px", { lineHeight: "24px", fontWeight: "400" }],
-        button: ["14px", { lineHeight: "20px", fontWeight: "500" }],
-        h4: ["18px", { lineHeight: "26px", fontWeight: "600" }],
-        h3: ["20px", { lineHeight: "28px", fontWeight: "600" }],
-        h2: ["24px", { lineHeight: "32px", fontWeight: "600" }],
-        h1: ["32px", { lineHeight: "40px", fontWeight: "600" }],
-        display: ["48px", { lineHeight: "56px", fontWeight: "600" }],
-        xs: ["12px", { lineHeight: "18px" }],
-        sm: ["14px", { lineHeight: "20px" }],
-        base: ["16px", { lineHeight: "24px" }],
-        lg: ["18px", { lineHeight: "26px" }],
-        xl: ["20px", { lineHeight: "28px" }],
-        "2xl": ["24px", { lineHeight: "32px" }],
-        "3xl": ["32px", { lineHeight: "40px" }],
-        "4xl": ["48px", { lineHeight: "56px" }],
-      },
+      fontFamily: designTokens.typography.fontFamily,
+      fontSize: designTokens.tailwindFontSizes,
       keyframes: {
         "accordion-down": {
           from: { height: "0" },
@@ -140,17 +54,17 @@ const config = {
           "50%": { transform: "scale(1.02)" },
         },
         "ritual-burst": {
-          "0%": { 
+          "0%": {
             transform: "scale(1) rotate(0deg)",
-            opacity: "1" 
+            opacity: "1",
           },
-          "50%": { 
+          "50%": {
             transform: "scale(1.1) rotate(180deg)",
-            opacity: "0.8" 
+            opacity: "0.8",
           },
-          "100%": { 
+          "100%": {
             transform: "scale(1) rotate(360deg)",
-            opacity: "1" 
+            opacity: "1",
           },
         },
         spin: {
@@ -167,7 +81,8 @@ const config = {
         },
       },
       animation: {
-        "accordion-down": "accordion-down 220ms cubic-bezier(0.22, 0.61, 0.36, 1)",
+        "accordion-down":
+          "accordion-down 220ms cubic-bezier(0.22, 0.61, 0.36, 1)",
         "accordion-up": "accordion-up 220ms cubic-bezier(0.22, 0.61, 0.36, 1)",
         "shake-micro": "shake-micro 90ms cubic-bezier(0.22, 0.61, 0.36, 1)",
         "pulse-subtle": "pulse-subtle 220ms cubic-bezier(0.22, 0.61, 0.36, 1)",
@@ -194,16 +109,7 @@ const config = {
         105: "1.05",
         110: "1.1",
       },
-      boxShadow: {
-        "elevation-1": "0 4px 24px rgba(0, 0, 0, 0.45)",
-        "elevation-2": "0 8px 32px rgba(0, 0, 0, 0.6)",
-        "focus-ring": "0 0 0 2px #FFD700",
-        "1": "0 1px 3px rgba(0, 0, 0, 0.45)",
-        "2": "0 4px 12px rgba(0, 0, 0, 0.45)",
-        "3": "0 8px 24px rgba(0, 0, 0, 0.45)",
-        card: "0 4px 24px rgba(0, 0, 0, 0.45)",
-        "card-hover": "0 8px 32px rgba(0, 0, 0, 0.6)",
-      },
+      boxShadow: designTokens.effects.shadow,
     },
   },
   plugins: [tailwindcssAnimate],

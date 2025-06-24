@@ -14,6 +14,13 @@ export const effects = {
       "0px 20px 25px -5px rgba(0, 0, 0, 0.1), 0px 10px 10px -5px rgba(0, 0, 0, 0.04)",
   },
 
+  // HIVE Signature "Emboss" effect
+  emboss: {
+    // TODO: Define with HT-DS-02
+    DEFAULT:
+      "0px 1px 1px rgba(0,0,0,0.5), inset 0px 1px 1px rgba(255,255,255,0.1)",
+  },
+
   // Glassmorphism effects
   blur: {
     sm: "4px",
@@ -25,4 +32,4 @@ export const effects = {
 export type ShadowToken = keyof typeof effects.shadow;
 export type BlurToken = keyof typeof effects.blur;
 
-export default effects; 
+export default effects;

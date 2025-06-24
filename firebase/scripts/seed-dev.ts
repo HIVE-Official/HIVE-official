@@ -5,9 +5,9 @@
  * Seeds essential data for development and staging environments
  */
 
-import { initializeApp, applicationDefault } from 'firebase-admin/app';
-import { getFirestore } from 'firebase-admin/firestore';
-import { getAuth } from 'firebase-admin/auth';
+import { initializeApp, applicationDefault } from "firebase-admin/app";
+import { getFirestore } from "firebase-admin/firestore";
+import { getAuth } from "firebase-admin/auth";
 
 // Initialize Firebase Admin
 initializeApp({
@@ -21,7 +21,7 @@ interface SeedSchool {
   id: string;
   name: string;
   domain: string;
-  status: 'active' | 'waitlist';
+  status: "active" | "waitlist";
   waitlistCount: number;
   location: {
     city: string;
@@ -46,131 +46,149 @@ interface SeedUser {
 
 const SEED_SCHOOLS: SeedSchool[] = [
   {
-    id: 'ub',
-    name: 'University at Buffalo',
-    domain: 'buffalo.edu',
-    status: 'active',
+    id: "ub",
+    name: "University at Buffalo",
+    domain: "buffalo.edu",
+    status: "active",
     waitlistCount: 0,
     location: {
-      city: 'Buffalo',
-      state: 'NY',
-      country: 'USA'
+      city: "Buffalo",
+      state: "NY",
+      country: "USA",
     },
     colors: {
-      primary: '#005BBB',
-      secondary: '#FFD700'
-    }
+      primary: "#005BBB",
+      secondary: "#FFD700",
+    },
   },
   {
-    id: 'cornell',
-    name: 'Cornell University',
-    domain: 'cornell.edu',
-    status: 'waitlist',
+    id: "cornell",
+    name: "Cornell University",
+    domain: "cornell.edu",
+    status: "waitlist",
     waitlistCount: 127,
     location: {
-      city: 'Ithaca',
-      state: 'NY',
-      country: 'USA'
+      city: "Ithaca",
+      state: "NY",
+      country: "USA",
     },
     colors: {
-      primary: '#B31B1B',
-      secondary: '#FFFFFF'
-    }
+      primary: "#B31B1B",
+      secondary: "#FFFFFF",
+    },
   },
   {
-    id: 'columbia',
-    name: 'Columbia University',
-    domain: 'columbia.edu',
-    status: 'waitlist',
+    id: "columbia",
+    name: "Columbia University",
+    domain: "columbia.edu",
+    status: "waitlist",
     waitlistCount: 89,
     location: {
-      city: 'New York',
-      state: 'NY',
-      country: 'USA'
+      city: "New York",
+      state: "NY",
+      country: "USA",
     },
     colors: {
-      primary: '#B9D9EB',
-      secondary: '#FFFFFF'
-    }
+      primary: "#B9D9EB",
+      secondary: "#FFFFFF",
+    },
   },
   {
-    id: 'nyu',
-    name: 'New York University',
-    domain: 'nyu.edu',
-    status: 'waitlist',
+    id: "nyu",
+    name: "New York University",
+    domain: "nyu.edu",
+    status: "waitlist",
     waitlistCount: 156,
     location: {
-      city: 'New York',
-      state: 'NY',
-      country: 'USA'
+      city: "New York",
+      state: "NY",
+      country: "USA",
     },
     colors: {
-      primary: '#57068C',
-      secondary: '#FFFFFF'
-    }
+      primary: "#57068C",
+      secondary: "#FFFFFF",
+    },
   },
   {
-    id: 'rit',
-    name: 'Rochester Institute of Technology',
-    domain: 'rit.edu',
-    status: 'waitlist',
+    id: "rit",
+    name: "Rochester Institute of Technology",
+    domain: "rit.edu",
+    status: "waitlist",
     waitlistCount: 73,
     location: {
-      city: 'Rochester',
-      state: 'NY',
-      country: 'USA'
+      city: "Rochester",
+      state: "NY",
+      country: "USA",
     },
     colors: {
-      primary: '#F76902',
-      secondary: '#513127'
-    }
-  }
+      primary: "#F76902",
+      secondary: "#513127",
+    },
+  },
 ];
 
 const SEED_USERS: SeedUser[] = [
   {
-    uid: 'dev-admin-001',
-    email: 'admin@buffalo.edu',
-    fullName: 'Admin User',
-    handle: 'admin',
-    major: 'Computer Science',
-    schoolId: 'ub',
-    isBuilder: true
+    uid: "dev-admin-001",
+    email: "admin@buffalo.edu",
+    fullName: "Admin User",
+    handle: "admin",
+    major: "Computer Science",
+    schoolId: "ub",
+    isBuilder: true,
   },
   {
-    uid: 'dev-builder-001',
-    email: 'builder@buffalo.edu',
-    fullName: 'Builder Demo',
-    handle: 'builder_demo',
-    major: 'Engineering Physics',
-    schoolId: 'ub',
-    isBuilder: true
+    uid: "dev-builder-001",
+    email: "builder@buffalo.edu",
+    fullName: "Builder Demo",
+    handle: "builder_demo",
+    major: "Engineering Physics",
+    schoolId: "ub",
+    isBuilder: true,
   },
   {
-    uid: 'dev-user-001',
-    email: 'student1@buffalo.edu',
-    fullName: 'Jane Smith',
-    handle: 'jane_smith',
-    major: 'Psychology',
-    schoolId: 'ub',
-    isBuilder: false
+    uid: "dev-user-001",
+    email: "student1@buffalo.edu",
+    fullName: "Jane Smith",
+    handle: "jane_smith",
+    major: "Psychology",
+    schoolId: "ub",
+    isBuilder: false,
   },
   {
-    uid: 'dev-user-002',
-    email: 'student2@buffalo.edu',
-    fullName: 'Mike Johnson',
-    handle: 'mike_j',
-    major: 'Business Administration',
-    schoolId: 'ub',
-    isBuilder: false
-  }
+    uid: "dev-user-002",
+    email: "student2@buffalo.edu",
+    fullName: "Mike Johnson",
+    handle: "mike_j",
+    major: "Business Administration",
+    schoolId: "ub",
+    isBuilder: false,
+  },
+];
+
+const DEMO_POST_CONTENT = [
+  "Just aced my quantum physics midterm! ⚛️ Time to celebrate. #STEM #CollegeLife",
+  "Anyone else feel like they need a coffee IV drip to get through finals week? ☕ #StudentProblems",
+  "Campus looks absolutely beautiful in the fall. 🍂 Grab a pumpkin spice latte and enjoy the view!",
+  "Looking for a study group for Organic Chemistry. We're meeting at the library, third floor. #StudyBuddies",
+  "That feeling when your code compiles on the first try. A truly rare event. #ComputerScience",
+  "The basketball team killed it last night! What a game! 🏀 #GoBulls",
+  "Has anyone seen the new exhibit at the art gallery? It's breathtaking.",
+  "Debating if I should pull an all-nighter or just accept my fate. Decisions, decisions.",
+  "I'm officially running on 3 hours of sleep and a dream. Finals, you will not defeat me.",
+  "Shoutout to the baristas at the campus coffee shop for being the real MVPs.",
+  "Found a hidden gem of a pizza place just off campus. 10/10 would recommend.",
+  "Pro-tip: The quiet floor of the library is the only place you can find true peace during finals.",
+  "Just submitted my final paper. The sense of relief is unreal.",
+  "Thinking about starting a club for procrastinators... but we'll probably start it tomorrow.",
+  "That awkward moment when you walk into the wrong lecture hall and have to do the walk of shame.",
 ];
 
 async function seedSchools() {
-  console.log('🏫 Seeding schools...');
-  
+  console.log("🏫 Seeding schools...");
+
   for (const school of SEED_SCHOOLS) {
-    await db.collection('schools').doc(school.id).set({
+    await db.collection("schools").doc(school.id).set({
       name: school.name,
       domain: school.domain,
       status: school.status,
@@ -178,16 +196,16 @@ async function seedSchools() {
       location: school.location,
       colors: school.colors,
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
     });
-    
+
     console.log(`  ✓ Created school: ${school.name}`);
   }
 }
 
 async function seedUsers() {
-  console.log('👥 Seeding users...');
-  
+  console.log("👥 Seeding users...");
+
   for (const user of SEED_USERS) {
     try {
       // Create Auth user
@@ -195,24 +213,24 @@ async function seedUsers() {
         uid: user.uid,
         email: user.email,
         displayName: user.fullName,
-        emailVerified: true
+        emailVerified: true,
       });
-      
+
       // Set custom claims for admin/builder roles
       const customClaims: any = {};
-      if (user.handle === 'admin') {
+      if (user.handle === "admin") {
         customClaims.admin = true;
       }
       if (user.isBuilder) {
         customClaims.builder = true;
       }
-      
+
       if (Object.keys(customClaims).length > 0) {
         await auth.setCustomUserClaims(user.uid, customClaims);
       }
-      
+
       // Create Firestore user document
-      await db.collection('users').doc(user.uid).set({
+      await db.collection("users").doc(user.uid).set({
         id: user.uid,
         uid: user.uid,
         email: user.email,
@@ -226,23 +244,22 @@ async function seedUsers() {
         isBuilder: user.isBuilder,
         onboardingCompleted: true,
         isVerified: true,
-        status: 'active',
+        status: "active",
         createdAt: new Date(),
         updatedAt: new Date(),
-        lastActiveAt: new Date()
+        lastActiveAt: new Date(),
       });
-      
+
       // Reserve handle
-      await db.collection('handles').doc(user.handle).set({
+      await db.collection("handles").doc(user.handle).set({
         handle: user.handle,
         userId: user.uid,
-        reservedAt: new Date()
+        reservedAt: new Date(),
       });
-      
+
       console.log(`  ✓ Created user: ${user.fullName} (${user.email})`);
-      
     } catch (error: any) {
-      if (error.code === 'auth/uid-already-exists') {
+      if (error.code === "auth/uid-already-exists") {
         console.log(`  ⚠ User ${user.email} already exists, skipping...`);
       } else {
         console.error(`  ✗ Error creating user ${user.email}:`, error.message);
@@ -251,95 +268,210 @@ async function seedUsers() {
   }
 }
 
+async function seedPosts() {
+  console.log("📝 Seeding posts...");
+  const postBatch = db.batch();
+  const users = SEED_USERS.filter((user) => user.schoolId === "ub");
+
+  for (let i = 0; i < 50; i++) {
+    const user = users[i % users.length];
+    const postContent = DEMO_POST_CONTENT[i % DEMO_POST_CONTENT.length];
+    const postId = `dev-post-${String(i + 1).padStart(3, "0")}`;
+    const postRef = db.collection("posts").doc(postId);
+
+    const newPost = {
+      id: postId,
+      type: "prompt-post",
+      authorId: user.uid,
+      authorHandle: user.handle,
+      authorDisplayName: user.fullName,
+      content: {
+        text: `${postContent} #${i}`,
+      },
+      spaceId: "general",
+      visibility: "public",
+      status: "published",
+      publishedAt: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      reactions: {},
+      reactionCount: 0,
+      commentCount: 0,
+      shareCount: 0,
+      viewCount: 0,
+    };
+    postBatch.set(postRef, newPost);
+  }
+
+  await postBatch.commit();
+  console.log("  ✓ Seeded 50 posts.");
+}
+
+async function seedRituals() {
+  console.log("✨ Seeding rituals...");
+  const ritualBatch = db.batch();
+  const now = new Date();
+
+  const rituals = [
+    {
+      id: "ritual-first-light",
+      type: "active_ritual",
+      priority: 1,
+      expiresAt: new Date(now.getTime() + 2 * 60 * 60 * 1000), // 2 hours
+      createdAt: now,
+      metadata: { isUrgent: true },
+      ritual: {
+        id: "first-light-ceremony",
+        name: "First Light Ceremony",
+        description:
+          "The first campus-wide post flood begins. Join the moment.",
+        countdown: new Date(now.getTime() + 2 * 60 * 60 * 1000),
+        participantCount: 842,
+      },
+    },
+    {
+      id: "ritual-weekly-recharge",
+      type: "active_ritual",
+      priority: 5,
+      expiresAt: new Date(now.getTime() + 3 * 24 * 60 * 60 * 1000), // 3 days
+      createdAt: now,
+      metadata: { isUrgent: false },
+      ritual: {
+        id: "weekly-recharge",
+        name: "Weekly Recharge",
+        description: "Share your wins and challenges from the week.",
+        countdown: new Date(now.getTime() + 3 * 24 * 60 * 60 * 1000),
+        participantCount: 156,
+      },
+    },
+    {
+      id: "ritual-study-sprint",
+      type: "active_ritual",
+      priority: 3,
+      expiresAt: new Date(now.getTime() + 24 * 60 * 60 * 1000), // 1 day
+      createdAt: now,
+      metadata: { isUrgent: false },
+      ritual: {
+        id: "study-sprint",
+        name: "Finals Study Sprint",
+        description:
+          "A focused study session for everyone grinding for finals.",
+        countdown: new Date(now.getTime() + 24 * 60 * 60 * 1000),
+        participantCount: 412,
+      },
+    },
+  ];
+
+  rituals.forEach((ritual) => {
+    const ritualRef = db.collection("topStripContent").doc(ritual.id);
+    ritualBatch.set(ritualRef, ritual);
+  });
+
+  await ritualBatch.commit();
+  console.log("  ✓ Seeded 3 rituals.");
+}
+
 async function seedSpaces() {
-  console.log('🏠 Seeding default spaces...');
-  
+  console.log("🏠 Seeding default spaces...");
+
   const spaces = [
     {
-      id: 'ub-computer-science',
-      name: 'Computer Science Majors',
-      description: 'Connect with fellow CS students, share projects, and discuss the latest in tech.',
-      type: 'academic',
-      subType: 'major',
-      schoolId: 'ub',
+      id: "ub-computer-science",
+      name: "Computer Science Majors",
+      description:
+        "Connect with fellow CS students, share projects, and discuss the latest in tech.",
+      type: "academic",
+      subType: "major",
+      schoolId: "ub",
       memberCount: 2,
       isPublic: true,
-      status: 'activated'
+      status: "activated",
     },
     {
-      id: 'ub-psychology',
-      name: 'Psychology Majors',
-      description: 'A space for psychology students to discuss research, career paths, and mental health.',
-      type: 'academic',
-      subType: 'major',
-      schoolId: 'ub',
+      id: "ub-psychology",
+      name: "Psychology Majors",
+      description:
+        "A space for psychology students to discuss research, career paths, and mental health.",
+      type: "academic",
+      subType: "major",
+      schoolId: "ub",
       memberCount: 1,
       isPublic: true,
-      status: 'activated'
+      status: "activated",
     },
     {
-      id: 'ub-business',
-      name: 'Business Administration',
-      description: 'Network with business students, share internship opportunities, and discuss entrepreneurship.',
-      type: 'academic',
-      subType: 'major',
-      schoolId: 'ub',
+      id: "ub-business",
+      name: "Business Administration",
+      description:
+        "Network with business students, share internship opportunities, and discuss entrepreneurship.",
+      type: "academic",
+      subType: "major",
+      schoolId: "ub",
       memberCount: 1,
       isPublic: true,
-      status: 'activated'
+      status: "activated",
     },
     {
-      id: 'ub-study-group',
-      name: 'Late Night Study Group',
-      description: 'For night owls who prefer studying after hours. Share tips and motivate each other!',
-      type: 'interest',
-      subType: 'study',
-      schoolId: 'ub',
+      id: "ub-study-group",
+      name: "Late Night Study Group",
+      description:
+        "For night owls who prefer studying after hours. Share tips and motivate each other!",
+      type: "interest",
+      subType: "study",
+      schoolId: "ub",
       memberCount: 0,
       isPublic: true,
-      status: 'activated'
-    }
+      status: "activated",
+    },
   ];
-  
+
   for (const space of spaces) {
-    await db.collection('spaces').doc(space.id).set({
-      ...space,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    });
-    
+    await db
+      .collection("spaces")
+      .doc(space.id)
+      .set({
+        ...space,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+
     console.log(`  ✓ Created space: ${space.name}`);
   }
 }
 
 async function main() {
   try {
-    console.log('🌱 Starting database seed...\n');
-    
+    console.log("🌱 Starting database seed...\n");
+
     await seedSchools();
-    console.log('');
-    
+    console.log("");
+
     await seedUsers();
-    console.log('');
-    
+    console.log("");
+
     await seedSpaces();
-    console.log('');
-    
-    console.log('✅ Database seeding completed successfully!');
-    console.log('\n📝 Seeded data:');
+    console.log("");
+
+    await seedPosts();
+    console.log("");
+
+    await seedRituals();
+    console.log("");
+
+    console.log("✅ Database seeding completed successfully!");
+    console.log("\n📝 Seeded data:");
     console.log(`   • ${SEED_SCHOOLS.length} schools`);
     console.log(`   • ${SEED_USERS.length} users`);
-    console.log('   • 4 spaces');
-    console.log('\n🔐 Admin credentials:');
-    console.log('   Email: admin@buffalo.edu');
-    console.log('   (Use magic link to sign in)');
-    
+    console.log("   • 4 spaces");
+    console.log("\n🔐 Admin credentials:");
+    console.log("   Email: admin@buffalo.edu");
+    console.log("   (Use magic link to sign in)");
   } catch (error) {
-    console.error('❌ Seeding failed:', error);
+    console.error("❌ Seeding failed:", error);
     process.exit(1);
   }
 }
 
 if (require.main === module) {
   main();
-} 
+}

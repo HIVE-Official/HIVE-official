@@ -1,10 +1,4 @@
-const {
-  colors,
-  typography,
-  motion,
-  spacing,
-  effects,
-} = require("@hive/tokens");
+const { designTokens } = require("@hive/tokens");
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -26,60 +20,28 @@ module.exports = {
     },
     extend: {
       colors: {
-        ...colors,
-        border: colors.border,
-        input: colors.border,
-        ring: colors.ring,
-        background: colors.background,
-        foreground: colors.foreground,
-        primary: {
-          DEFAULT: colors.accent.DEFAULT,
-          foreground: colors.background,
-        },
-        secondary: {
-          DEFAULT: colors.surface,
-          foreground: colors.foreground,
-        },
-        destructive: {
-          DEFAULT: colors.surface,
-          foreground: colors.foreground,
-        },
-        muted: {
-          DEFAULT: colors.muted,
-          foreground: colors.foreground,
-        },
-        accent: {
-          DEFAULT: colors.accent.DEFAULT,
-          foreground: colors.background,
-        },
-        popover: {
-          DEFAULT: colors["surface-02"],
-          foreground: colors.foreground,
-        },
-        card: {
-          DEFAULT: colors.surface,
-          foreground: colors.foreground,
-        },
+        ...designTokens.colors,
+        ...designTokens.shadcnColors,
       },
       spacing: {
-        ...spacing,
+        ...designTokens.spacing,
       },
       fontFamily: {
-        sans: typography.fontFamily.sans,
-        display: typography.fontFamily.display,
-        mono: typography.fontFamily.mono,
+        sans: designTokens.typography.fontFamily.sans,
+        display: designTokens.typography.fontFamily.display,
+        mono: designTokens.typography.fontFamily.mono,
       },
       fontSize: {
-        ...typography.tailwindFontSizes,
+        ...designTokens.tailwindFontSizes,
       },
       transitionDuration: {
-        ...motion.duration,
+        ...designTokens.motion.duration,
       },
       transitionTimingFunction: {
-        ...motion.easing,
+        ...designTokens.motion.easing,
       },
       boxShadow: {
-        ...effects.shadow,
+        ...designTokens.effects.shadow,
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -87,7 +49,6 @@ module.exports = {
         sm: "calc(var(--radius) - 4px)",
       },
       keyframes: {
-        ...motion.keyframes,
         "accordion-down": {
           from: { height: "0" },
           to: { height: "var(--radix-accordion-content-height)" },
@@ -98,11 +59,10 @@ module.exports = {
         },
       },
       animation: {
-        ...motion.animations,
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
 };

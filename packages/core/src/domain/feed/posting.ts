@@ -134,6 +134,25 @@ export const PostSchema = z.object({
 export type Post = z.infer<typeof PostSchema>;
 
 /**
+ * Minimal Post Schema for offline caching and list views
+ */
+export const MinimalPostSchema = PostSchema.pick({
+  id: true,
+  type: true,
+  authorId: true,
+  authorHandle: true,
+  authorDisplayName: true,
+  content: true, // Content is essential for display
+  spaceId: true,
+  visibility: true,
+  publishedAt: true,
+  reactionCount: true,
+  commentCount: true,
+});
+
+export type MinimalPost = z.infer<typeof MinimalPostSchema>;
+
+/**
  * Post Creation Request Schema
  */
 export const CreatePostSchema = z.object({

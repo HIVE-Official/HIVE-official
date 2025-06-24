@@ -63,6 +63,20 @@ export default [
       },
     },
     rules: {
+      // HIVE MONOREPO ARCHITECTURE RULES
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              group: ["@hive/*/**"],
+              message:
+                "Deep imports from @hive packages are not allowed. Import from the package's main entry point (e.g., '@hive/ui') instead.",
+            },
+          ],
+        },
+      ],
+
       // CRITICAL ERROR PREVENTION RULES (MUST be error level per @error-prevention-and-linting-strict.mdc)
       "@typescript-eslint/no-floating-promises": "error",
       "@typescript-eslint/no-unused-vars": [

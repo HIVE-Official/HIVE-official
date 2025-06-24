@@ -254,23 +254,22 @@ body {
 }
 
 .hive-input-base:focus {
-  outline: 2px solid var(--focus-ring);
-  outline-offset: 2px;
   border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
 }
 
 .hive-input-base::placeholder {
-  color: var(--muted);
+  color: var(--disabled);
 }
 
 /* Focus ring utility */
 .hive-focus {
-  transition: outline var(--timing-fast) var(--easing-standard); /* CORRECTED */
+  transition: all var(--timing-fast) var(--easing-standard);
 }
 
 .hive-focus:focus-visible {
-  outline: 2px solid var(--focus-ring);
-  outline-offset: 2px;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--focus-ring);
 }
 
 /* ============================================================================
@@ -360,7 +359,7 @@ body {
 }
 
 .ritual-moment {
-  animation: ritual-burst var(--timing-slow) var(--easing-standard); /* 300ms ritual timing */
+  animation: ritual-burst var(--timing-ritual) var(--easing-hive) forwards;
 }
 
 /* ============================================================================
@@ -369,6 +368,10 @@ body {
 
 /* Respect reduced motion preferences */
 @media (prefers-reduced-motion: reduce) {
+  html:focus-within {
+    scroll-behavior: auto;
+  }
+
   *,
   *::before,
   *::after {
@@ -383,7 +386,9 @@ body {
 .focus-visible:focus-visible {
   outline: 2px solid var(--focus-ring);
   outline-offset: 2px;
-  transition: outline var(--timing-fast) var(--easing-standard);
+  transition:
+    outline-offset 150ms ease-out,
+    outline 150ms ease-out;
 }
 
 /* Screen reader only */
