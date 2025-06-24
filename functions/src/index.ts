@@ -40,6 +40,9 @@ import * as updateUserProfile from "./profile/updateUserProfile";
 
 // Import feed functions
 import * as getFeed from "./feed/getFeed";
+import * as getTopStrip from "./feed/getTopStrip";
+import * as feedTriggers from "./feed/triggers";
+import * as joinRitual from "./feed/joinRitual";
 import * as interactions from "./feed/interactions";
 import * as follow from "./feed/follow";
 import * as mute from "./feed/mute";
@@ -109,7 +112,10 @@ export const profile = {
 };
 
 export const feed = {
+  getTopStrip: getTopStrip.getTopStrip,
   getFeed: getFeed.getFeed,
+  joinRitual: joinRitual.joinRitual,
+  onNewPost: feedTriggers.onNewPost,
   likeCard: interactions.likeCard,
   followUser: follow.followUser,
   unfollowUser: follow.unfollowUser,

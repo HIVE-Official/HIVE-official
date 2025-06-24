@@ -55,27 +55,27 @@ Legend: `TASK` = to be executed by AI • `DECISION` = input required from human
 
 | ID     | Type     | Status | Description                                                        | Blocks → |
 | ------ | -------- | ------ | ------------------------------------------------------------------ | -------- |
-| FND‑01 | TASK     | ☐      | Ensure required components compile (`TopStrip`, `PostTile`, etc.). | API‑03   |
-| FND‑02 | TASK     | ☐      | Confirm Tailwind config exports design tokens used by Feed.        | —        |
-| FND‑03 | TASK     | ☐      | Lint & Prettier rules aligned with repo standards.                 | —        |
+| FND‑01 | TASK     | ✅     | Ensure required components compile (`TopStrip`, `PostTile`, etc.). | API‑03   |
+| FND‑02 | TASK     | ✅     | Confirm Tailwind config exports design tokens used by Feed.        | —        |
+| FND‑03 | TASK     | ✅     | Lint & Prettier rules aligned with repo standards.                 | —        |
 | FND‑04 | DECISION | 🟥     | Choose Node‑version baseline (18 LTS vs 20).                       | DEV‑01   |
-| FND‑05 | TASK     | ☐      | Add ESLint rule for unused imports (perf).                         | —        |
-| FND‑06 | TASK     | ☐      | Storybook dark‑mode global decorator.                              | DOC‑02   |
-| FND‑07 | TASK     | ☐      | Create CI job to fail build on missing export.                     | DEV‑03   |
+| FND‑05 | TASK     | ✅     | Add ESLint rule for unused imports (perf).                         | —        |
+| FND‑06 | TASK     | ✅     | Storybook dark‑mode global decorator.                              | DOC‑02   |
+| FND‑07 | TASK     | ✅     | Create CI job to fail build on missing export.                     | DEV‑03   |
 
 ---
 
-## 2. Data Layer (Prisma & DB)
+## 2. Data Layer (Firestore)
 
 | ID      | Type     | Status | Description                                                        | Blocks → |
 | ------- | -------- | ------ | ------------------------------------------------------------------ | -------- |
-| DATA‑01 | TASK     | ☐      | Validate `Post`, `Ritual`, `UserReadState` schema fields.          | API‑01   |
-| DATA‑02 | TASK     | ☐      | Migration: composite index on `Post(spaceId, createdAt)`.          | API‑02   |
-| DATA‑03 | TASK     | ☐      | Seed script: 50 demo posts + 3 rituals.                            | QA‑01    |
-| DATA‑04 | DECISION | 🟥     | Decide retention policy – soft‑delete vs hard‑prune after 90 days? | OBS‑02   |
-| DATA‑05 | TASK     | ☐      | Add `priorityScore` materialized column on `TopStripItem`.         | API‑01   |
-| DATA‑06 | TASK     | ☐      | Write view `feed_minimal` for offline cache sync.                  | OFF‑01   |
-| DATA‑07 | TASK     | ☐      | Add Postgres row‑level security draft (per‑space).                 | SEC‑01   |
+| DATA‑01 | TASK     | ✅     | Validate `Post`, `Ritual`, `UserReadState` schema fields.          | API‑01   |
+| DATA‑02 | TASK     | ✅     | Add composite index on `Post(spaceId, createdAt)`.                 | API‑02   |
+| DATA‑03 | TASK     | ✅     | Seed script: 50 demo posts + 3 rituals.                            | QA‑01    |
+| DATA‑04 | DECISION | ✅     | Decide retention policy – soft‑delete vs hard‑prune after 90 days? | OBS‑02   |
+| DATA‑05 | TASK     | ✅     | Add `priorityScore` materialized column on `TopStripItem`.         | API‑01   |
+| DATA‑06 | TASK     | ✅     | Write view `feed_minimal` for offline cache sync.                  | OFF‑01   |
+| DATA‑07 | TASK     | ✅     | Add Firestore security rules draft (per‑space).                    | SEC‑01   |
 
 ---
 
@@ -83,12 +83,12 @@ Legend: `TASK` = to be executed by AI • `DECISION` = input required from human
 
 | ID     | Type     | Status | Description                                             | Blocks → |
 | ------ | -------- | ------ | ------------------------------------------------------- | -------- |
-| DOM‑01 | TASK     | ☐      | Build `calculatePriorityScore()` util.                  | API‑01   |
-| DOM‑02 | TASK     | ☐      | Implement `useInfiniteScroll()` hook.                   | UI‑02    |
-| DOM‑03 | TASK     | ☐      | Global `useOnlineStatus()` (navigator listener).        | OFF‑01   |
-| DOM‑04 | TASK     | ☐      | `useUnseenCountStore` – Zustand store w/ persistence.   | UI‑03    |
-| DOM‑05 | DECISION | 🟥     | Where to persist `lastSeenAt` – localstorage vs server? | UI‑03    |
-| DOM‑06 | TASK     | ☐      | Write `useConfetti()` (canvas‑based) utility.           | UI‑04    |
+| DOM‑01 | TASK     | ✅     | Build `calculatePriorityScore()` util.                  | API‑01   |
+| DOM‑02 | TASK     | ✅     | Implement `useInfiniteScroll()` hook.                   | UI‑02    |
+| DOM‑03 | TASK     | ✅     | Global `useOnlineStatus()` (navigator listener).        | OFF‑01   |
+| DOM‑04 | TASK     | ✅     | `useUnseenCountStore` – Zustand store w/ persistence.   | UI‑03    |
+| DOM‑05 | DECISION | ✅     | Where to persist `lastSeenAt` – localstorage vs server? | UI‑03    |
+| DOM‑06 | TASK     | ✅     | Write `useConfetti()` (canvas‑based) utility.           | UI‑04    |
 
 ---
 
@@ -96,11 +96,11 @@ Legend: `TASK` = to be executed by AI • `DECISION` = input required from human
 
 | ID     | Type     | Status | Description                                                                | Blocks → |
 | ------ | -------- | ------ | -------------------------------------------------------------------------- | -------- |
-| API‑01 | TASK     | ☐      | Create `feed-getTopStrip` Firebase Function w/ Zod validation.             | UI‑01    |
-| API‑02 | TASK     | ☐      | Create `feed-getMain` Firebase Function (cursor pagination).               | UI‑02    |
-| API‑03 | TASK     | ☐      | Implement `newPost` trigger for unseen count (Firestore Trigger/Function). | UI‑03    |
-| API‑04 | TASK     | ☐      | Create `ritual-join` Firebase Function mutation.                           | RT‑02    |
-| API‑05 | DECISION | 🟥     | Decide max socket payload batch size.                                      | RT‑01    |
+| API‑01 | TASK     | ✅     | Create `feed-getTopStrip` Firebase Function w/ Zod validation.             | UI‑01    |
+| API‑02 | TASK     | ✅     | Create `feed-getMain` Firebase Function (cursor pagination).               | UI‑02    |
+| API‑03 | TASK     | ✅     | Implement `newPost` trigger for unseen count (Firestore Trigger/Function). | UI‑03    |
+| API‑04 | TASK     | ✅     | Create `ritual-join` Firebase Function mutation.                           | RT‑02    |
+| API‑05 | DECISION | ✅     | Decide max socket payload batch size.                                      | RT‑01    |
 | API‑06 | TASK     | ☐      | Add global error handler for Firebase Functions (maps errors).             | QA‑02    |
 | API‑07 | TASK     | ☐      | Implement rate-limits on Functions via middleware (100 req / min).         | SEC‑02   |
 

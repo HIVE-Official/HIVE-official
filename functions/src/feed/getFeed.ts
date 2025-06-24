@@ -1,85 +1,93 @@
-import {
-  createHttpsFunction,
-  FunctionContext,
-  Timestamp,
-  functions,
-} from "../types/firebase";
+import * as functions from "firebase-functions";
+import * as admin from "firebase-admin";
+import { PostSchema } from "@hive/core";
+import { z } from "zod";
 
-// Temporary FeedCard interface - replace with @hive/validation import once workspace is fixed
-interface FeedCard {
-  id: string;
-  type: "app_news" | "upcoming_event" | "post" | "achievement";
-  sourceId: string;
-  sourceType: "system" | "event" | "post" | "user";
-  timestamp: any; // Firestore Timestamp
-  pinned?: boolean;
-  content: {
-    title?: string;
-    body?: string;
-    imageUrl?: string;
-    spaceName?: string;
-    startTime?: any; // Firestore Timestamp
-    location?: string;
-  };
-  interactionData: {
-    likes: number;
-    comments: number;
-  };
-}
+const GetFeedSchema = z.object({
+  limit: z.number().int().min(1).max(50).optional().default(20),
+  cursor: z.string().optional(),
+  spaceId: z.string().optional(), // Allow filtering by space
+});
 
-interface GetFeedData {
-  limit?: number;
-  cursor?: string;
-}
+/**
+ * Fetches the main feed content with cursor-based pagination.
+ */
+export const getFeed = functions.https.onCall(async (data, context) => {
+  if (!context.auth) {
+    throw new functions.https.HttpsError(
+      "unauthenticated",
+      "You must be logged in to view the feed."
+    );
+  }
 
-export const getFeed = createHttpsFunction<GetFeedData>(
-  async (data: GetFeedData, context: FunctionContext) => {
-    if (!context.auth) {
-      throw new functions.https.HttpsError(
-        "unauthenticated",
-        "User must be authenticated."
-      );
+  const validationResult = GetFeedSchema.safeParse(data);
+  if (!validationResult.success) {
+    throw new functions.https.HttpsError(
+      "invalid-argument",
+      "Invalid arguments provided.",
+      validationResult.error.flatten()
+    );
+  }
+
+  const { limit, cursor, spaceId } = validationResult.data;
+
+  try {
+    const db = admin.firestore();
+    let query: admin.firestore.Query = db
+      .collection("posts")
+      .orderBy("publishedAt", "desc")
+      .limit(limit);
+
+    // If a spaceId is provided, filter posts for that space
+    if (spaceId) {
+      query = query.where("spaceId", "==", spaceId);
+    } else {
+      // For a general feed, you might filter for public posts
+      // or posts from spaces the user follows. This is a simple version.
+      query = query.where("visibility", "==", "public");
     }
 
-    // This is a placeholder implementation.
-    // In the real version, this function would:
-    // 1. Get the user's follows and mutes.
-    // 2. Query various content sources (posts, events, etc.).
-    // 3. Filter, transform, and rank the content.
-    // 4. Return a paginated list of FeedCard objects.
+    if (cursor) {
+      const lastDoc = await db.collection("posts").doc(cursor).get();
+      if (lastDoc.exists) {
+        query = query.startAfter(lastDoc);
+      }
+    }
 
-    const mockFeed: FeedCard[] = [
-      {
-        id: "1",
-        type: "app_news",
-        sourceId: "welcome-post",
-        sourceType: "system",
-        timestamp: Timestamp.now(),
-        pinned: true,
-        content: {
-          title: "Welcome to HIVE vBETA!",
-          body: "We're so excited to have you here. This is the very beginning of a new way to connect on campus. Explore, build, and share your feedback!",
-          imageUrl:
-            "https://images.unsplash.com/photo-1588345921523-c2dcdb7f1dcd?w=800&q=80",
-        },
-        interactionData: { likes: 10, comments: 2 },
-      },
-      {
-        id: "2",
-        type: "upcoming_event",
-        sourceId: "event-123",
-        sourceType: "event",
-        timestamp: Timestamp.now(),
-        content: {
-          title: "Club Fair",
-          spaceName: "Student Union",
-          startTime: Timestamp.fromMillis(Date.now() + 86400000), // tomorrow
-          location: "Main Atrium",
-        },
-        interactionData: { likes: 5, comments: 0 },
-      },
-    ];
+    const snapshot = await query.get();
 
-    return { feed: mockFeed };
+    if (snapshot.empty) {
+      return { success: true, posts: [], nextCursor: null };
+    }
+
+    const posts = await Promise.all(
+      snapshot.docs.map(async (doc) => {
+        const postData = doc.data();
+        // Add the document ID to the post data
+        postData.id = doc.id;
+        const result = await PostSchema.safeParseAsync(postData);
+        if (result.success) {
+          return result.data;
+        } else {
+          functions.logger.error(
+            `Post validation failed for doc ${doc.id}:`,
+            result.error.flatten()
+          );
+          return null;
+        }
+      })
+    );
+
+    const filteredPosts = posts.filter((p) => p !== null);
+    const lastVisible = snapshot.docs[snapshot.docs.length - 1];
+    const nextCursor = lastVisible ? lastVisible.id : null;
+
+    return { success: true, posts: filteredPosts, nextCursor };
+  } catch (error) {
+    functions.logger.error("Error fetching main feed:", error);
+    throw new functions.https.HttpsError(
+      "internal",
+      "An unexpected error occurred while fetching the feed."
+    );
   }
-);
+});
