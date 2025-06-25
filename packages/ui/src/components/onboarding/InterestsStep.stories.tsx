@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { InterestsStep } from "./InterestsStep";
+import { logger } from "@hive/core";
 
 const meta: Meta<typeof InterestsStep> = {
   title: "Onboarding/InterestsStep",
@@ -24,36 +25,36 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     maxInterests: 6,
-    onNext: () => console.log("Next step"),
+    onNext: () => logger.debug("Next step"),
     onSubmit: async (interests) => {
-      console.log("Selected interests:", interests);
+      logger.debug("Selected interests:", interests);
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1500));
     },
-    onSkip: () => console.log("Skipped interests selection"),
+    onSkip: () => logger.debug("Skipped interests selection"),
   },
 };
 
 export const WithLowerLimit: Story = {
   args: {
     maxInterests: 3,
-    onNext: () => console.log("Next step"),
+    onNext: () => logger.debug("Next step"),
     onSubmit: async (interests) => {
-      console.log("Selected interests (max 3):", interests);
+      logger.debug("Selected interests (max 3):", interests);
       await new Promise((resolve) => setTimeout(resolve, 1000));
     },
-    onSkip: () => console.log("Skipped interests selection"),
+    onSkip: () => logger.debug("Skipped interests selection"),
   },
 };
 
 export const WithHigherLimit: Story = {
   args: {
     maxInterests: 10,
-    onNext: () => console.log("Next step"),
+    onNext: () => logger.debug("Next step"),
     onSubmit: async (interests) => {
-      console.log("Selected interests (max 10):", interests);
+      logger.debug("Selected interests (max 10):", interests);
       await new Promise((resolve) => setTimeout(resolve, 2000));
     },
-    onSkip: () => console.log("Skipped interests selection"),
+    onSkip: () => logger.debug("Skipped interests selection"),
   },
 };

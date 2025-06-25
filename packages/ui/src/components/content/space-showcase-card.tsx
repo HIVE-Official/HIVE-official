@@ -1,15 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { motion } from "framer-motion";
-import {
-  Users,
-  TrendingUp,
-  Calendar,
-  MapPin,
-  Star,
-  Check,
-} from "lucide-react";
+import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   AdaptiveCard,
@@ -17,7 +9,6 @@ import {
   CardContent,
   CardFooter,
   CardMedia,
-  adaptiveCardVariants,
 } from "./adaptive-card";
 import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar";
 import { Badge } from "./badge-system";
@@ -103,9 +94,7 @@ const SpaceShowcaseCard = React.forwardRef<
         <p className="text-sm text-white/60">{category}</p>
       </CardHeader>
       <CardContent>
-        <p className="mb-4 line-clamp-2 text-sm text-white/80">
-          {description}
-        </p>
+        <p className="mb-4 line-clamp-2 text-sm text-white/80">{description}</p>
         <div className="flex items-center justify-between">
           <AvatarGroup>
             {recentMembers.map((member, index) => (
@@ -143,4 +132,4 @@ const SpaceShowcaseCard = React.forwardRef<
 });
 SpaceShowcaseCard.displayName = "SpaceShowcaseCard";
 
-export { SpaceShowcaseCard }; 
+export { SpaceShowcaseCard };

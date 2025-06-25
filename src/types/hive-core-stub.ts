@@ -5,7 +5,7 @@ export interface Element {
   icon: string;
   description: string;
   usageCount?: number;
-  presets?: Array<{ popularity?: number; [key: string]: any }>;
+  presets?: Array<{ popularity?: number; [key: string]: unknown }>;
   defaultConfig?: Record<string, unknown>;
 }
 
@@ -15,7 +15,7 @@ export interface Tool {
   description: string;
   elements: ElementInstance[];
   currentVersion?: string;
-  status?: 'draft' | 'preview' | 'published';
+  status?: "draft" | "preview" | "published";
   updatedAt?: string;
 }
 
@@ -28,9 +28,9 @@ export interface ElementInstance {
 }
 
 export enum PostType {
-  TEXT = 'text',
-  POLL = 'poll',
-  EVENT = 'event'
+  TEXT = "text",
+  POLL = "poll",
+  EVENT = "event",
 }
 
 // CreatePost interface for feed composer
@@ -42,4 +42,4 @@ export interface CreatePost {
   pollOptions?: string[];
   eventDate?: string;
   eventLocation?: string;
-} 
+}

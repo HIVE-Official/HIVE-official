@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { joinWaitlist } from "@/lib/join-waitlist";
+import { logger } from "@hive/core";
 
 export async function POST(req: Request) {
   try {
@@ -7,9 +8,10 @@ export async function POST(req: Request) {
     await joinWaitlist(email, schoolId);
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Error joining waitlist:", error);
-    const errorMessage = error instanceof Error ? error.message : "An unknown error occurred.";
-     if (errorMessage === "Email and school ID are required.") {
+    logger.error("Error joining waitlist:", error);
+    const errorMessage =
+      error instanceof Error ? error.message : "An unknown error occurred.";
+    if (errorMessage === "Email and school ID are required.") {
       return NextResponse.json({ error: errorMessage }, { status: 400 });
     }
     if (errorMessage === "School not found.") {
@@ -20,4 +22,4 @@ export async function POST(req: Request) {
       { status: 500 }
     );
   }
-} 
+}

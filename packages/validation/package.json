@@ -2,28 +2,19 @@
   "name": "@hive/validation",
   "version": "0.1.0",
   "private": true,
-  "type": "module",
-  "main": "./src/index.ts",
-  "types": "./src/index.ts",
-  "exports": {
-    ".": "./src/index.ts"
-  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "build": "npx tsc",
-    "lint": "npx eslint . --max-warnings 10",
-    "typecheck": "npx tsc --noEmit"
+    "lint": "eslint ."
   },
   "dependencies": {
-    "zod": "^3.25.64"
+    "@hive/core": "workspace:*",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@hive/eslint-config": "workspace:*",
-    "@hive/typescript-config": "workspace:*",
-    "@types/node": "^20.19.0",
-    "eslint": "^9.28.0",
-    "typescript": "^5.8.3"
-  },
-  "overrides": {
-    "eslint": "$eslint"
+    "@types/node": "^20.11.5",
+    "typescript": "^5.3.3"
   }
 }

@@ -107,9 +107,13 @@ jspm_packages/
 
 # Build outputs
 .next/
-/dist
+dist/
+**/dist/
 /out
 /build
+**/tsconfig.tsbuildinfo
+**/*.tsbuildinfo
+**/*.backup.json
 
 # Turbo
 .turbo/

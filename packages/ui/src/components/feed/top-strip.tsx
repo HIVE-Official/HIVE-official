@@ -144,7 +144,7 @@ export const TopStrip = ({
   const otherItems = sortedItems.filter((item) => item.id !== leadRitual?.id);
 
   const handleLongPress = (
-    e: React.PointerEvent<HTMLDivElement>,
+    e: React.MouseEvent<HTMLDivElement>,
     item: TopStripItem
   ) => {
     e.preventDefault();
@@ -156,7 +156,7 @@ export const TopStrip = ({
     <motion.div
       className="col-span-full rounded-xl bg-surface-02 border border-border-line p-4 flex flex-col justify-between cursor-pointer h-32 relative overflow-hidden"
       onClick={() => onItemClick?.(item)}
-      onContextMenu={(e) => handleLongPress(e as any, item)}
+      onContextMenu={(e) => handleLongPress(e, item)}
       whileHover={HIVE_MOTION.hover}
       {...HIVE_MOTION}
     >
@@ -208,7 +208,7 @@ export const TopStrip = ({
     <motion.div
       className="rounded-lg bg-surface-01 border border-border-line p-3 flex items-center justify-between cursor-pointer h-20"
       onClick={() => onItemClick?.(item)}
-      onContextMenu={(e) => handleLongPress(e as any, item)}
+      onContextMenu={(e) => handleLongPress(e, item)}
       whileHover={HIVE_MOTION.hover}
       {...HIVE_MOTION}
     >

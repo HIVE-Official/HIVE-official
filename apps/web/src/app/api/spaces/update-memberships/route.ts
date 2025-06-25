@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getAuth } from "firebase-admin/auth";
 import { getFirestore, FieldValue } from "firebase-admin/firestore";
-import { type User, UB_MAJORS } from "@hive/core";
+import { type User, UB_MAJORS, logger } from "@hive/core";
 
 // Server-side space type that allows FieldValue for timestamps
 interface ServerSpace {
@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
     try {
       decodedToken = await auth.verifyIdToken(idToken);
     } catch (authError) {
-      console.error("Token verification failed:", authError);
+      logger.error("Token verification failed:", authError);
       return NextResponse.json(
         { error: "Invalid or expired token" },
         { status: 401 }
@@ -239,7 +239,7 @@ export async function POST(request: NextRequest) {
       changes,
     });
   } catch (error) {
-    console.error("Error updating memberships:", error);
+    logger.error("Error updating memberships:", error);
     return NextResponse.json(
       { error: "Failed to update memberships. Please try again." },
       { status: 500 }

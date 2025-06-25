@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
+import { logger } from "@hive/core/utils/logger";
 import {
   Button,
   Card,
@@ -67,7 +68,7 @@ export const AcademicCardStep = ({
       }
       onNext();
     } catch (error) {
-      console.error("Failed to save academic info", error);
+      logger.error("Failed to save academic info", error);
     } finally {
       setIsLoading(false);
     }
@@ -143,7 +144,7 @@ export const AcademicCardStep = ({
                 htmlFor="firstYear"
                 className="text-zinc-300 text-sm cursor-pointer"
               >
-                I'm a first-year student
+                I&apos;m a first-year student
               </Label>
             </div>
 

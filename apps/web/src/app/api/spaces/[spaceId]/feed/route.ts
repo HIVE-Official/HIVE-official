@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { dbAdmin } from "@/lib/firebase-admin";
-import { type Post } from "@hive/core";
+import { type Post, logger } from "@hive/core";
 
 export async function GET(
   request: Request,
@@ -38,7 +38,7 @@ export async function GET(
 
     return NextResponse.json(posts, { status: 200 });
   } catch (error) {
-    console.error(
+    logger.error(
       `Error fetching feed for space ${spaceId || "unknown"}:`,
       error
     );

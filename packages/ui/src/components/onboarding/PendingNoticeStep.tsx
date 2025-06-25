@@ -5,7 +5,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@hive/ui";
+} from "../ui";
 import { CheckCircle } from "lucide-react";
 
 export interface PendingNoticeStepProps {
@@ -31,8 +31,8 @@ export function PendingNoticeStep({
         </CardHeader>
         <CardContent className="space-y-6">
           <p className="text-center text-zinc-400">
-            We'll notify you once your request has been approved. In the
-            meantime, let's continue setting up your profile.
+            We&apos;ll notify you once your request has been approved. In the
+            meantime, let&apos;s continue setting up your profile.
           </p>
           <Button onClick={() => onNext(5)} className="w-full">
             Continue

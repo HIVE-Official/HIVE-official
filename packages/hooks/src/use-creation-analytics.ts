@@ -9,7 +9,7 @@ import {
 } from "@hive/core";
 
 // Type-only import to avoid unused variable error
-import type { UseAuthReturn } from "@hive/auth-logic";
+import type { AuthContextType } from "@hive/auth-logic";
 
 interface UseCreationAnalyticsOptions {
   toolId?: string;

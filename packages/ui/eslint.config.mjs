@@ -51,6 +51,11 @@ export default [
         tsconfigRootDir: __dirname,
       },
     },
+    settings: {
+      react: {
+        version: "detect",
+      },
+    },
     rules: {
       "@typescript-eslint/no-unused-vars": [
         "warn",

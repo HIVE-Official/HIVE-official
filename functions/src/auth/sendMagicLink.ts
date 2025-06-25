@@ -9,11 +9,11 @@ async function sendEmail(
   subject: string,
   body: string
 ): Promise<void> {
-  console.log("---- SENDING EMAIL ----");
-  console.log(`TO: ${email}`);
-  console.log(`SUBJECT: ${subject}`);
-  console.log(`BODY: ${body}`);
-  console.log("-----------------------");
+  functions.logger.info("---- SENDING EMAIL ----");
+  functions.logger.info(`TO: ${email}`);
+  functions.logger.info(`SUBJECT: ${subject}`);
+  functions.logger.info(`BODY: ${body}`);
+  functions.logger.info("-----------------------");
   return Promise.resolve();
 }
 
@@ -64,7 +64,7 @@ export const sendMagicLink = functions.https.onCall(
 
       return { success: true, message: "Magic link sent successfully" };
     } catch (error) {
-      console.error("Error sending magic link:", error);
+      functions.logger.error("Error sending magic link:", error);
       throw new FirebaseHttpsError("internal", "Failed to send magic link");
     }
   }

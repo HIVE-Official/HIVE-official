@@ -29,17 +29,23 @@ if (typeof window !== "undefined") {
 if (isDevelopment && typeof window !== "undefined") {
   try {
     // Only connect to emulators if not already connected
-    if (!auth.config.emulator) {
+    // Check auth emulator connection status safely
+    const authConfig = auth.config as { emulator?: unknown };
+    if (!authConfig.emulator) {
       connectAuthEmulator(auth, "http://localhost:9099", {
         disableWarnings: true,
       });
     }
-    if (!db._delegate._databaseId.projectId.includes("localhost")) {
+
+    // Check firestore emulator connection status safely
+    const dbInternal = db as unknown as {
+      _delegate?: { _databaseId?: { projectId?: string } };
+    };
+    if (!dbInternal._delegate?._databaseId?.projectId?.includes("localhost")) {
       connectFirestoreEmulator(db, "localhost", 8080);
     }
-  } catch (error) {
+  } catch {
     // Emulators might not be running, that's ok
-    console.log("Firebase emulators not available:", error);
   }
 }
 

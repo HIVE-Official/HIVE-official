@@ -5,6 +5,7 @@ import { CheckEmailInfo } from "../../components/auth/CheckEmailInfo";
 
 const meta: Meta = {
   title: "Flows/Authentication",
+  component: AuthForm,
   parameters: {
     layout: "fullscreen",
   },
@@ -55,12 +56,6 @@ export const FullFlow: StoryObj = {
           setStep("check-email");
         }
       }, 1500);
-    };
-
-    const handleBackToStart = () => {
-      setEmail("");
-      setError(null);
-      setStep("auth-form");
     };
 
     if (step === "check-email") {

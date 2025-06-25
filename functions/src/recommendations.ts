@@ -133,7 +133,7 @@ export const getRecommendations = createHttpsFunction<RecommendationData>(
     const { type = "content", limit = 10 } = data;
 
     try {
-      const db = getFirestore();
+      // const db = getFirestore();
 
       // Simple recommendation logic
       const recommendations = [];

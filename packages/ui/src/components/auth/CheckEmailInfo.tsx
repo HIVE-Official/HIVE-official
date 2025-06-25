@@ -6,7 +6,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@hive/ui";
+} from "../ui";
 import { Mail, Shield } from "lucide-react";
 import Link from "next/link";
 import React from "react";

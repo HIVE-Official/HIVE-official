@@ -10,9 +10,10 @@ import {
   CardHeader,
   CardTitle,
   Label,
-} from "@hive/ui";
+} from "../ui";
 import { Loader2 } from "lucide-react";
 import { debounce } from "lodash";
+import { logger } from "@hive/core";
 
 // A utility to generate a handle from a name
 const generateHandle = (name: string) => {
@@ -67,7 +68,7 @@ export function DisplayNameStep({
       try {
         const isAvailable = await onHandleCheck(h);
         setHandleError(isAvailable ? null : "This handle is already taken.");
-      } catch (error) {
+      } catch {
         setHandleError("Error checking handle availability.");
       } finally {
         setIsCheckingHandle(false);
@@ -91,7 +92,7 @@ export function DisplayNameStep({
       // In a real implementation, we'd save the data here
       onNext(2);
     } catch (error) {
-      console.error("Error saving display name:", error);
+      logger.error("Error saving display name:", error);
     } finally {
       setIsLoading(false);
     }

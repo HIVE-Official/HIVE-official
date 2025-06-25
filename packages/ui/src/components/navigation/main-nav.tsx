@@ -20,7 +20,6 @@ import {
 import { cn } from "@/lib/utils";
 import { HiveLogo } from "../brand/hive-logo";
 import { Avatar } from "../ui/avatar";
-import Link from "next/link";
 
 export interface User {
   id: string;

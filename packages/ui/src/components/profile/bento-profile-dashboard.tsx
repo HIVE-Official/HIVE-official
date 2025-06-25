@@ -5,7 +5,7 @@ import { Button } from "../ui/button";
 import { Settings, Undo2 } from "lucide-react";
 import { GridContainer } from "./grid/grid-container";
 import { useGridState } from "./grid/grid-state-manager";
-import type { TileData, TileLayout } from "./grid/types";
+import type { TileData } from "./grid/types";
 
 interface BentoProfileDashboardProps {
   user: {
@@ -109,7 +109,7 @@ export const BentoProfileDashboard: React.FC<BentoProfileDashboardProps> = ({
           </h3>
           <p className="text-xs text-muted-foreground">
             Drag tiles to rearrange, resize by dragging corners, or hide tiles
-            you don't need. Changes are saved automatically.
+            you don&apos;t need. Changes are saved automatically.
           </p>
         </div>
       )}

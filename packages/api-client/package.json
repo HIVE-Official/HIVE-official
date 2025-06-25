@@ -2,29 +2,33 @@
   "name": "@hive/api-client",
   "version": "0.1.0",
   "private": true,
-  "type": "module",
-  "main": "./src/index.ts",
-  "types": "./src/index.ts",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
   "exports": {
-    ".": "./src/index.ts"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    }
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "build": "npx tsc",
-    "lint": "npx eslint . --max-warnings 10",
-    "typecheck": "npx tsc --noEmit"
+    "build": "npx tsc --build",
+    "lint": "eslint .",
+    "typecheck": "npx tsc --noEmit",
+    "dev": "npx tsc --build --watch",
+    "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@hive/core": "workspace:*",
-    "firebase": "^11.0.0"
+    "@hive/core": "workspace:*"
   },
   "devDependencies": {
     "@hive/eslint-config": "workspace:*",
     "@hive/typescript-config": "workspace:*",
-    "@types/node": "^20.19.0",
-    "eslint": "^9.28.0",
-    "typescript": "^5.8.3"
-  },
-  "overrides": {
-    "eslint": "$eslint"
+    "@types/node": "^20.11.5",
+    "typescript": "^5.3.3"
   }
 }

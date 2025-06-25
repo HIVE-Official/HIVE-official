@@ -38,8 +38,11 @@ export const NotFound: React.FC<NotFoundProps> = ({
       </h1>
 
       <p className="mt-6 text-lg text-zinc-400 max-w-md">
-        We couldn't find that page.
-        <span className="sr-only"> …must've wandered out of the hive 🐝</span>
+        We couldn&apos;t find that page.
+        <span className="sr-only">
+          {" "}
+          …must&apos;ve wandered out of the hive 🐝
+        </span>
       </p>
 
       {/* Actions */}

@@ -315,8 +315,6 @@ export function createGuestUserContext(sessionId: string): LandingUserContext {
 // Helper Functions
 function generateFingerprint(): string {
   // Simple fingerprinting - in production, use more sophisticated method
-  const canvas =
-    typeof document !== "undefined" ? document.createElement("canvas") : null;
   const screen = typeof window !== "undefined" ? window.screen : null;
   const navigator = typeof window !== "undefined" ? window.navigator : null;
 

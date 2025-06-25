@@ -1,6 +1,6 @@
 export declare const typography: {
     readonly fontFamily: {
-        readonly sans: readonly ["Geist Sans Variable", "Geist Sans", "system-ui", "sans-serif"];
+        readonly sans: readonly ["Inter Variable", "Inter", "system-ui", "sans-serif"];
         readonly display: readonly ["Space Grotesk Variable", "Space Grotesk", "system-ui", "sans-serif"];
         readonly mono: readonly ["JetBrains Mono", "Consolas", "Monaco", "monospace"];
     };
@@ -13,36 +13,36 @@ export declare const typography: {
     };
     readonly fontSize: {
         readonly display: {
-            readonly size: "48px";
-            readonly lineHeight: "56px";
+            readonly size: "64px";
+            readonly lineHeight: "72px";
             readonly fontWeight: "600";
             readonly fontFamily: "Space Grotesk Variable";
             readonly usage: "Hero headlines, marketing pages";
         };
         readonly h1: {
-            readonly size: "32px";
-            readonly lineHeight: "40px";
+            readonly size: "48px";
+            readonly lineHeight: "56px";
             readonly fontWeight: "600";
             readonly fontFamily: "Space Grotesk Variable";
             readonly usage: "Page titles, primary headings";
         };
         readonly h2: {
-            readonly size: "24px";
-            readonly lineHeight: "32px";
+            readonly size: "32px";
+            readonly lineHeight: "40px";
             readonly fontWeight: "600";
             readonly fontFamily: "Space Grotesk Variable";
             readonly usage: "Section headers, secondary headings";
         };
         readonly h3: {
-            readonly size: "20px";
-            readonly lineHeight: "28px";
+            readonly size: "24px";
+            readonly lineHeight: "32px";
             readonly fontWeight: "600";
             readonly fontFamily: "Space Grotesk Variable";
             readonly usage: "Subsection headers";
         };
         readonly h4: {
-            readonly size: "18px";
-            readonly lineHeight: "26px";
+            readonly size: "20px";
+            readonly lineHeight: "28px";
             readonly fontWeight: "600";
             readonly fontFamily: "Space Grotesk Variable";
             readonly usage: "Card titles, minor headings";
@@ -51,28 +51,28 @@ export declare const typography: {
             readonly size: "16px";
             readonly lineHeight: "24px";
             readonly fontWeight: "400";
-            readonly fontFamily: "Geist Sans Variable";
+            readonly fontFamily: "Inter Variable";
             readonly usage: "Body text, paragraphs, default text";
         };
         readonly bodySmall: {
             readonly size: "14px";
             readonly lineHeight: "20px";
             readonly fontWeight: "400";
-            readonly fontFamily: "Geist Sans Variable";
+            readonly fontFamily: "Inter Variable";
             readonly usage: "Smaller body text, captions";
         };
         readonly caption: {
             readonly size: "12px";
             readonly lineHeight: "18px";
             readonly fontWeight: "400";
-            readonly fontFamily: "Geist Sans Variable";
+            readonly fontFamily: "Inter Variable";
             readonly usage: "Labels, metadata, micro-copy";
         };
         readonly button: {
             readonly size: "14px";
             readonly lineHeight: "20px";
             readonly fontWeight: "500";
-            readonly fontFamily: "Geist Sans Variable";
+            readonly fontFamily: "Inter Variable";
             readonly usage: "Button text, CTAs";
         };
         readonly code: {
@@ -98,17 +98,17 @@ export declare const typography: {
     };
 };
 export declare const getFontSize: (key: keyof typeof typography.fontSize) => {
-    fontSize: "48px" | "32px" | "24px" | "20px" | "18px" | "16px" | "14px" | "12px";
-    lineHeight: "56px" | "32px" | "40px" | "24px" | "20px" | "28px" | "18px" | "26px";
+    fontSize: "12px" | "24px" | "64px" | "48px" | "32px" | "20px" | "16px" | "14px";
+    lineHeight: "24px" | "72px" | "56px" | "32px" | "40px" | "20px" | "28px" | "18px";
     fontWeight: "400" | "500" | "600";
-    fontFamily: "Geist Sans Variable" | "Space Grotesk Variable" | "JetBrains Mono";
+    fontFamily: "Inter Variable" | "Space Grotesk Variable" | "JetBrains Mono";
 };
 export declare const tailwindFontSizes: {
-    readonly display: readonly ["48px", "56px"];
-    readonly h1: readonly ["32px", "40px"];
-    readonly h2: readonly ["24px", "32px"];
-    readonly h3: readonly ["20px", "28px"];
-    readonly h4: readonly ["18px", "26px"];
+    readonly display: readonly ["64px", "72px"];
+    readonly h1: readonly ["48px", "56px"];
+    readonly h2: readonly ["32px", "40px"];
+    readonly h3: readonly ["24px", "32px"];
+    readonly h4: readonly ["20px", "28px"];
     readonly body: readonly ["16px", "24px"];
     readonly "body-sm": readonly ["14px", "20px"];
     readonly caption: readonly ["12px", "18px"];

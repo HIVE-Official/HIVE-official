@@ -1,11 +1,6 @@
 "use client";
 
-import React, {
-  Component,
-  type ComponentType,
-  type ErrorInfo,
-  type ReactNode,
-} from "react";
+import { Component, type ErrorInfo, type ReactNode } from "react";
 import { logger } from "@hive/core";
 // Temporary mock for Storybook compatibility
 interface UserFriendlyError {
@@ -105,136 +100,13 @@ export class ErrorBoundary extends Component<Props, State> {
         this.state.error
       );
 
-      return <this.props.fallback error={userFriendlyError} />;
+      if (this.props.fallback) {
+        return this.props.fallback(userFriendlyError, this.handleRetry);
+      }
     }
 
     return this.props.children;
   }
-}
-
-interface DefaultErrorFallbackProps {
-  error: UserFriendlyError;
-  onRetry: () => void;
-  errorId: string;
-}
-
-function DefaultErrorFallback({
-  error,
-  onRetry,
-  errorId,
-}: DefaultErrorFallbackProps) {
-  const getIconForSeverity = (severity: UserFriendlyError["severity"]) => {
-    switch (severity) {
-      case "error":
-        return "⚠️";
-      case "warning":
-        return "⚡";
-      case "info":
-        return "ℹ️";
-      default:
-        return "❌";
-    }
-  };
-
-  const getSeverityColor = (severity: UserFriendlyError["severity"]) => {
-    switch (severity) {
-      case "error":
-        return "text-red-600 border-red-200 bg-red-50";
-      case "warning":
-        return "text-amber-600 border-amber-200 bg-amber-50";
-      case "info":
-        return "text-blue-600 border-blue-200 bg-blue-50";
-      default:
-        return "text-gray-600 border-gray-200 bg-gray-50";
-    }
-  };
-
-  return (
-    <div className="min-h-[200px] flex items-center justify-center p-4">
-      <div
-        className={`
-        max-w-md w-full rounded-lg border-2 p-6 text-center space-y-4
-        ${getSeverityColor(error.severity)}
-      `}
-      >
-        <div className="text-4xl mb-2">
-          {getIconForSeverity(error.severity)}
-        </div>
-
-        <h3 className="text-lg font-semibold">Something went wrong</h3>
-
-        <p className="text-sm leading-relaxed">{error.message}</p>
-
-        <div className="space-y-2 pt-2">
-          {error.action === "retry" && error.isRetryable && (
-            <button
-              onClick={onRetry}
-              className="w-full px-4 py-2 bg-white border border-current rounded-md hover:bg-opacity-90 transition-colors font-medium"
-            >
-              {FirebaseErrorHandler.getActionButtonText(error)}
-            </button>
-          )}
-
-          {error.action === "contact-support" && (
-            <button
-              onClick={this.handleContactSupport}
-              className="w-full px-4 py-2 bg-white border border-current rounded-md hover:bg-opacity-90 transition-colors font-medium"
-            >
-              {FirebaseErrorHandler.getActionButtonText(error)}
-            </button>
-          )}
-
-          {error.action === "sign-in" && (
-            <button
-              onClick={() => {
-                // In a real app, this would redirect to sign-in
-                window.location.href = "/auth/login";
-              }}
-              className="w-full px-4 py-2 bg-white border border-current rounded-md hover:bg-opacity-90 transition-colors font-medium"
-            >
-              {FirebaseErrorHandler.getActionButtonText(error)}
-            </button>
-          )}
-
-          {error.action === "sign-up" && (
-            <button
-              onClick={() => {
-                // In a real app, this would redirect to sign-up
-                window.location.href = "/auth/signup";
-              }}
-              className="w-full px-4 py-2 bg-white border border-current rounded-md hover:bg-opacity-90 transition-colors font-medium"
-            >
-              {FirebaseErrorHandler.getActionButtonText(error)}
-            </button>
-          )}
-
-          {error.action === "check-email" && (
-            <div className="text-xs space-y-2">
-              <p>Please check your email and click the verification link.</p>
-              <button
-                onClick={onRetry}
-                className="w-full px-4 py-2 bg-white border border-current rounded-md hover:bg-opacity-90 transition-colors font-medium"
-              >
-                I've verified my email
-              </button>
-            </div>
-          )}
-        </div>
-
-        {process.env.NODE_ENV === "development" && (
-          <details className="text-xs text-left">
-            <summary className="cursor-pointer font-medium">Debug Info</summary>
-            <div className="mt-2 p-2 bg-white rounded border font-mono">
-              <div>Error ID: {errorId}</div>
-              <div>Code: {error.code}</div>
-              <div>Retryable: {error.isRetryable ? "Yes" : "No"}</div>
-              <div>Action: {error.action || "None"}</div>
-            </div>
-          </details>
-        )}
-      </div>
-    </div>
-  );
 }
 
 // Hook for using error boundary in functional components

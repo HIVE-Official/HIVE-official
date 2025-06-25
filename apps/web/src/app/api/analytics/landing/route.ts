@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
+import { logger } from "@hive/core";
 
 // Event schemas for landing page analytics
 const pageViewEventSchema = z.object({
@@ -61,7 +62,7 @@ async function processAnalyticsEvent(
   eventData: Record<string, unknown>
 ): Promise<void> {
   try {
-    console.log("📊 Analytics Event:", {
+    logger.info("📊 Analytics Event:", {
       type: eventType,
       sessionId: eventData.sessionId,
       timestamp: new Date().toISOString(),
@@ -70,7 +71,7 @@ async function processAnalyticsEvent(
 
     // In production: send to analytics service, store in database, etc.
   } catch (error) {
-    console.error("❌ Failed to process analytics event:", error);
+    logger.error("❌ Failed to process analytics event:", error);
   }
 }
 
@@ -83,7 +84,7 @@ interface AnalyticsRequestData {
 
 export async function POST(request: NextRequest) {
   try {
-    const data = await request.json() as AnalyticsRequestData;
+    const data = (await request.json()) as AnalyticsRequestData;
     const eventType = request.nextUrl.searchParams.get("type");
 
     if (!eventType || !data) {
@@ -141,9 +142,9 @@ export async function POST(request: NextRequest) {
     );
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error("Analytics error:", error.message);
+      logger.error("Analytics error:", error.message);
     } else {
-      console.error("Unknown analytics error:", error);
+      logger.error("Unknown analytics error:", error);
     }
     return NextResponse.json({ error: "Analytics error" }, { status: 500 });
   }

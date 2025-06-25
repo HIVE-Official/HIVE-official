@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { getAuth } from "firebase-admin/auth";
 import { dbAdmin } from "@/lib/firebase-admin";
 import type { Timestamp } from "firebase-admin/firestore";
+import { logger } from "@hive/core";
 
 interface SpaceData {
   name: string;
@@ -141,7 +142,7 @@ export async function GET(request: NextRequest) {
       ),
     });
   } catch (error) {
-    console.error("Get user spaces error:", error);
+    logger.error("Get user spaces error:", error);
 
     if (
       error instanceof Error &&

@@ -1,3 +1,5 @@
+import { Post } from "../firestore/post";
+
 // Content processing utilities
 export class ContentProcessor {
   static processText(text: string): string {
@@ -44,7 +46,7 @@ export class PostValidator {
     };
   }
 
-  static validatePost(post: any): { isValid: boolean; errors: string[] } {
+  static validatePost(post: Post): { isValid: boolean; errors: string[] } {
     const errors: string[] = [];
 
     if (!post.content) {

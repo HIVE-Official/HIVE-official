@@ -39,7 +39,7 @@ export const onboardingSaveInterests = functions.https.onCall(
 
       return { success: true, message: "Interests saved." };
     } catch (error) {
-      console.error("Error saving interests:", error);
+      functions.logger.error("Error saving interests:", error);
       throw new functions.https.HttpsError(
         "internal",
         "An unexpected error occurred while saving interests."

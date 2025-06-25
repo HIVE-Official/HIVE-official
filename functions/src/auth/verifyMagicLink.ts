@@ -53,7 +53,7 @@ export const verifyMagicLink = functions.https.onCall(
       let isNewUser = false;
       try {
         userRecord = await authService.getUserByEmail(magicLinkData.email);
-      } catch (error) {
+      } catch {
         // User doesn't exist, create new user
         userRecord = await authService.createUser({
           email: magicLinkData.email,
@@ -110,9 +110,9 @@ export const verifyMagicLink = functions.https.onCall(
         message: "Magic link verified successfully",
         customToken,
       };
-    } catch (_error) {
+    } catch (error) {
       // Handle error silently for logging endpoint
-      console.error("Error verifying magic link:", _error);
+      logger.error("Error verifying magic link:", error);
       throw new FirebaseHttpsError("internal", "Failed to verify magic link");
     }
   }

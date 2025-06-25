@@ -3,6 +3,7 @@ import { onCall, CallableRequest } from "firebase-functions/v2/https";
 import { onSchedule } from "firebase-functions/v2/scheduler";
 import { onDocumentCreated } from "firebase-functions/v2/firestore";
 import * as admin from "firebase-admin";
+import { logger } from "firebase-functions";
 
 // Initialize Firebase Admin if not already initialized
 if (!admin.apps.length) {
@@ -122,16 +123,7 @@ export function getDocumentData<T extends Record<string, unknown>>(
 }
 
 // Simple logger
-export const logger = {
-  info: (message: string, data?: unknown) =>
-    console.log("[INFO]", message, data),
-  warn: (message: string, data?: unknown) =>
-    console.warn("[WARN]", message, data),
-  error: (message: string, data?: unknown) =>
-    console.error("[ERROR]", message, data),
-  debug: (message: string, data?: unknown) =>
-    console.log("[DEBUG]", message, data),
-};
+export { logger };
 
 export function handleFirebaseError(error: unknown): FirebaseHttpsError {
   if (error instanceof functions.https.HttpsError) {

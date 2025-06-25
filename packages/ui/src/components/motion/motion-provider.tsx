@@ -7,7 +7,7 @@ import React, {
   useState,
   useCallback,
 } from "react";
-import { motion, MotionConfig } from "framer-motion";
+import { motion, MotionConfig, MotionProps } from "framer-motion";
 
 interface MotionContextValue {
   /** Whether animations are enabled (respects user preference + performance) */
@@ -20,9 +20,17 @@ interface MotionContextValue {
   toggleAnimations: () => void;
   /** Force performance tier (for testing) */
   setPerformanceTier: (tier: "low" | "medium" | "high") => void;
+  forcedPerformanceTier?: "low" | "medium" | "high";
 }
 
 const MotionContext = createContext<MotionContextValue | null>(null);
+
+interface ExtendedNavigator extends Navigator {
+  deviceMemory?: number;
+  connection?: {
+    effectiveType: "slow-2g" | "2g" | "3g" | "4g";
+  };
+}
 
 interface MotionProviderProps {
   children: React.ReactNode;
@@ -76,9 +84,10 @@ export function MotionProvider({
 
     const detectPerformance = () => {
       // Use multiple signals to determine device capability
-      const hardwareConcurrency = navigator.hardwareConcurrency || 4;
-      const deviceMemory = (navigator as any).deviceMemory || 4;
-      const connection = (navigator as any).connection;
+      const extendedNavigator = navigator as ExtendedNavigator;
+      const hardwareConcurrency = extendedNavigator.hardwareConcurrency || 4;
+      const deviceMemory = extendedNavigator.deviceMemory || 4;
+      const connection = extendedNavigator.connection;
 
       let score = 0;
 
@@ -128,6 +137,7 @@ export function MotionProvider({
     performanceTier,
     toggleAnimations,
     setPerformanceTier,
+    forcedPerformanceTier,
   };
 
   // Global motion configuration based on performance and preferences
@@ -183,8 +193,7 @@ export function AdaptiveMotion({
   children: React.ReactNode;
   lowEndFallback?: React.ReactNode;
   className?: string;
-  [key: string]: any;
-}) {
+} & MotionProps) {
   const { animationsEnabled, performanceTier } = useMotion();
 
   // Return static content for low-end devices or disabled animations

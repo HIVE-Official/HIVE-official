@@ -16,7 +16,7 @@ export declare const CreationAnalyticsEventSchema: z.ZodObject<{
     elementId: z.ZodOptional<z.ZodString>;
     elementType: z.ZodOptional<z.ZodString>;
     elementVersion: z.ZodOptional<z.ZodNumber>;
-    metadata: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodAny>>;
+    metadata: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnknown>>;
     userAgent: z.ZodOptional<z.ZodString>;
     viewport: z.ZodOptional<z.ZodObject<{
         width: z.ZodNumber;
@@ -41,7 +41,7 @@ export declare const CreationAnalyticsEventSchema: z.ZodObject<{
     anonymized: boolean;
     elementId?: string | undefined;
     elementType?: string | undefined;
-    metadata?: Record<string, any> | undefined;
+    metadata?: Record<string, unknown> | undefined;
     spaceId?: string | undefined;
     isSpaceTool?: boolean | undefined;
     toolId?: string | undefined;
@@ -64,7 +64,7 @@ export declare const CreationAnalyticsEventSchema: z.ZodObject<{
     eventId: string;
     elementId?: string | undefined;
     elementType?: string | undefined;
-    metadata?: Record<string, any> | undefined;
+    metadata?: Record<string, unknown> | undefined;
     spaceId?: string | undefined;
     isSpaceTool?: boolean | undefined;
     toolId?: string | undefined;

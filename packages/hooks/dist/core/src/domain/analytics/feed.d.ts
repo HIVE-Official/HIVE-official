@@ -111,15 +111,15 @@ export declare const FeedAnalyticsEventSchema: z.ZodDiscriminatedUnion<"event", 
         authorId: z.ZodString;
         isOwnPost: z.ZodBoolean;
     }, "strip", z.ZodTypeAny, {
-        action: "add" | "remove";
         authorId: string;
         reaction: "heart";
+        action: "add" | "remove";
         postAge: number;
         isOwnPost: boolean;
     }, {
-        action: "add" | "remove";
         authorId: string;
         reaction: "heart";
+        action: "add" | "remove";
         postAge: number;
         isOwnPost: boolean;
     }>;
@@ -127,9 +127,9 @@ export declare const FeedAnalyticsEventSchema: z.ZodDiscriminatedUnion<"event", 
     event: "post_reacted";
     userId: string;
     metadata: {
-        action: "add" | "remove";
         authorId: string;
         reaction: "heart";
+        action: "add" | "remove";
         postAge: number;
         isOwnPost: boolean;
     };
@@ -140,9 +140,9 @@ export declare const FeedAnalyticsEventSchema: z.ZodDiscriminatedUnion<"event", 
     event: "post_reacted";
     userId: string;
     metadata: {
-        action: "add" | "remove";
         authorId: string;
         reaction: "heart";
+        action: "add" | "remove";
         postAge: number;
         isOwnPost: boolean;
     };
@@ -396,12 +396,12 @@ export declare const FeedAnalyticsEventSchema: z.ZodDiscriminatedUnion<"event", 
     }, "strip", z.ZodTypeAny, {
         action: "pin_post" | "unpin_post" | "delete_post" | "mute_user" | "unmute_user";
         targetId: string;
-        targetType: "user" | "post";
+        targetType: "post" | "user";
         reason?: string | undefined;
     }, {
         action: "pin_post" | "unpin_post" | "delete_post" | "mute_user" | "unmute_user";
         targetId: string;
-        targetType: "user" | "post";
+        targetType: "post" | "user";
         reason?: string | undefined;
     }>;
 }, "strip", z.ZodTypeAny, {
@@ -410,7 +410,7 @@ export declare const FeedAnalyticsEventSchema: z.ZodDiscriminatedUnion<"event", 
     metadata: {
         action: "pin_post" | "unpin_post" | "delete_post" | "mute_user" | "unmute_user";
         targetId: string;
-        targetType: "user" | "post";
+        targetType: "post" | "user";
         reason?: string | undefined;
     };
     spaceId: string;
@@ -421,7 +421,7 @@ export declare const FeedAnalyticsEventSchema: z.ZodDiscriminatedUnion<"event", 
     metadata: {
         action: "pin_post" | "unpin_post" | "delete_post" | "mute_user" | "unmute_user";
         targetId: string;
-        targetType: "user" | "post";
+        targetType: "post" | "user";
         reason?: string | undefined;
     };
     spaceId: string;

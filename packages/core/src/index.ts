@@ -33,7 +33,7 @@ export * from "./stores";
 
 // Firebase client config
 export * from "./firebase";
-export * from "./firebase-admin";
+// export * from "./firebase-admin"; // TEMP: Commented out to avoid duplicate auth/db exports
 
 // Feed System Core
 export * from "./domain/feed/top-strip";
@@ -89,6 +89,6 @@ export { SpaceDiscoverySchema } from "./domain/space/discovery";
 // export * from "./domain/feed/feed.guards"; // Obsolete – file removed
 
 // Types
-export * from "./types/auth-types";
+// export * from "./types/auth-types"; // TEMP: Commented out missing file
 
 export * from "./utils/logger";

@@ -1,8 +1,8 @@
-import React, { useState, ReactNode } from "react";
+import React, { useState } from "react";
+import type { ReactNode } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { Home, Compass, User, Settings, Bot, Search, Bell } from "lucide-react";
-import { HiveLogo } from "../brand/Logo";
+import { Search, Bell } from "lucide-react";
 
 interface LayoutImmersiveProps {
   children: ReactNode;

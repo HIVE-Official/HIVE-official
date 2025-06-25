@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { getAuth } from "firebase-admin/auth";
 import { getFirestore } from "firebase-admin/firestore";
 import { z } from "zod";
-import { CreateToolSchema, ToolSchema, createToolDefaults } from "@hive/core";
+import { CreateToolSchema, ToolSchema, createToolDefaults, logger } from "@hive/core";
 // // import { rateLimit } from "@/lib/rate-limit";
 
 const db = getFirestore();
@@ -72,7 +72,7 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error("Error fetching tools:", error);
+    logger.error("Error fetching tools:", error);
     return NextResponse.json(
       { error: "Failed to fetch tools" },
       { status: 500 }
@@ -176,7 +176,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(createdTool, { status: 201 });
   } catch (error) {
-    console.error("Error creating tool:", error);
+    logger.error("Error creating tool:", error);
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(

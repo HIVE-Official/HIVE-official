@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { AuthForm } from "@hive/ui/components/auth/AuthForm";
+import { logger } from "@hive/core";
 // We need to figure out where to get this from now
 // import { sendMagicLink } from '@hive/auth-logic';
 
@@ -41,7 +42,7 @@ export default function AuthPage() {
 
     try {
       // await sendMagicLink({ email: email.toLowerCase().trim(), schoolId: 'buffalo' });
-      console.log("Requesting magic link for:", email);
+      logger.info("Requesting magic link for:", email);
       router.push(`/auth/check-email?email=${encodeURIComponent(email)}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");

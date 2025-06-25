@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getAuth } from "firebase-admin/auth";
 import { dbAdmin } from "@/lib/firebase-admin";
+import { logger } from "@hive/core";
 
 const membershipQuerySchema = z.object({
   limit: z.coerce.number().min(1).max(100).default(50),
@@ -137,7 +138,7 @@ export async function GET(
             : null,
         };
       } catch (error) {
-        console.error(`Error fetching user ${userId}:`, error);
+        logger.error(`Error fetching user ${userId}:`, error);
         return {
           userId,
           membership: {
@@ -208,7 +209,7 @@ export async function GET(
       },
     });
   } catch (error: unknown) {
-    console.error("Get space membership error:", error);
+    logger.error("Get space membership error:", error);
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(

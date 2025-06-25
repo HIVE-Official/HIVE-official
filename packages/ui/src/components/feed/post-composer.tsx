@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
+import React, { useCallback } from "react";
 import { cn } from "@/lib/utils";
 import { logger } from "@hive/core";
 
@@ -261,6 +261,6 @@ export const createSamplePostComposer = () => ({
   placeholder: "What's happening at your campus?",
   maxLength: 280,
   onSubmit: (content: string, reactions: string[]) => {
-    console.log("Post submitted:", { content, reactions });
+    logger.debug("Post submitted:", { content, reactions });
   },
 });

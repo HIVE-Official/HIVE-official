@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { logger } from "@hive/core";
 /**
  * React hooks for Space Discovery functionality
  * Includes search, filtering, joining, and trending spaces
@@ -172,11 +173,10 @@ export function useSpaceJoining() {
             // Invalidate discovery queries to update join status
             queryClient.invalidateQueries({ queryKey: ["space-discovery"] });
             queryClient.invalidateQueries({ queryKey: ["user-spaces"] });
-            // Could also show success toast here
-            console.log(`Successfully joined space ${spaceId}`);
+            logger.info(`Successfully joined space ${spaceId}`);
         },
         onError: (error) => {
-            console.error("Failed to join space:", error);
+            logger.error("Failed to join space:", error);
             // Could show error toast here
         },
     });
@@ -186,10 +186,10 @@ export function useSpaceJoining() {
         onSuccess: (_, { spaceId }) => {
             // Invalidate relevant queries
             queryClient.invalidateQueries({ queryKey: ["space-discovery"] });
-            console.log(`Successfully requested to join space ${spaceId}`);
+            logger.info(`Successfully requested to join space ${spaceId}`);
         },
         onError: (error) => {
-            console.error("Failed to request join space:", error);
+            logger.error("Failed to request join space:", error);
         },
     });
     const joinSpace = useCallback((spaceId) => {

@@ -5,7 +5,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@hive/ui";
+} from "../ui";
 import { useState } from "react";
 
 export interface LeaderQuestionStepProps {

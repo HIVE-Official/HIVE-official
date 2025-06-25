@@ -2,9 +2,8 @@
 
 import * as React from "react";
 import { Badge } from "../../ui/badge";
-import { Button } from "../../ui/button";
 import { Card, CardContent, CardHeader } from "../../ui/card";
-import { ExternalLink, Home } from "lucide-react";
+import { Home } from "lucide-react";
 import type { TileProps } from "../grid/types";
 import { cn } from "@hive/ui/lib/utils";
 

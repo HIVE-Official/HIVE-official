@@ -419,7 +419,7 @@ export class ComposerEngine {
   static handleDragGesture(
     startY: number,
     currentY: number,
-    state: ComposerState
+    _state: ComposerState
   ): { shouldExpand: boolean; dragProgress: number } {
     const dragDistance = startY - currentY; // Positive = dragging up
     const expandThreshold = 50; // Pixels to drag before expanding

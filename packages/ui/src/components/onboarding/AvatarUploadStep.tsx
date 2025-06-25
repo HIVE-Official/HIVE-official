@@ -9,9 +9,9 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-  Label,
   Input,
 } from "..";
+import { logger } from "@hive/core";
 
 interface AvatarUploadStepProps {
   onNext: () => void;
@@ -70,7 +70,7 @@ export const AvatarUploadStep = ({
       }
       onNext();
     } catch (error) {
-      console.error("Failed to save avatar", error);
+      logger.error("Failed to save avatar", error);
     } finally {
       setIsLoading(false);
     }

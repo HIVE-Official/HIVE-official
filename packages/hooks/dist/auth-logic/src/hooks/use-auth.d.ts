@@ -1,4 +1,5 @@
-import { ReactNode } from "react";
+import React from "react";
+import type { ReactNode } from "react";
 export interface AuthUser {
     uid: string;
     email: string | null;
@@ -13,6 +14,6 @@ export interface AuthContextType {
 }
 export declare function AuthProvider({ children }: {
     children: ReactNode;
-}): AuthContext.Provider;
+}): React.FunctionComponentElement<React.ProviderProps<AuthContextType | undefined>>;
 export declare function useAuth(): AuthContextType;
 //# sourceMappingURL=use-auth.d.ts.map

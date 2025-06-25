@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import type * as admin from "firebase-admin";
 import type { Space, SpaceType } from "@hive/core";
 import { dbAdmin } from "@/lib/firebase-admin";
+import { logger } from "@hive/core";
 
 export async function GET(request: Request) {
   try {
@@ -37,7 +38,7 @@ export async function GET(request: Request) {
 
     return NextResponse.json(spaces, { status: 200 });
   } catch (error) {
-    console.error("Error fetching spaces:", error);
+    logger.error("Error fetching spaces:", error);
     return NextResponse.json(
       { error: "Failed to fetch spaces" },
       { status: 500 }

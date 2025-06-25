@@ -78,7 +78,7 @@ export const CreationAnalyticsEventSchema = z.object({
   elementVersion: z.number().optional(),
 
   // Event-specific data
-  metadata: z.record(z.any()).optional(),
+  metadata: z.record(z.unknown()).optional(),
 
   // Technical context
   userAgent: z.string().optional(),

@@ -349,10 +349,6 @@ export const SpaceFeed: React.FC<SpaceFeedProps> = ({
     }
   }, [spaceId]);
 
-  const handleError = (error: Error) => {
-    logger.error("Failed to load feed items:", error);
-  };
-
   const handleLoadMore = useCallback(async () => {
     setIsLoading(true);
     try {

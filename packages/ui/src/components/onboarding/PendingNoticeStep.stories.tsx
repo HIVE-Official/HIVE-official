@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { PendingNoticeStep } from "./PendingNoticeStep";
+import { logger } from "@hive/core/utils/logger";
 
 const meta: Meta<typeof PendingNoticeStep> = {
   title: "Onboarding/PendingNoticeStep",
@@ -18,13 +19,13 @@ type Story = StoryObj<typeof PendingNoticeStep>;
 export const Default: Story = {
   args: {
     spaceName: "Computer Science Club",
-    onNext: (step: number) => console.log("Next step:", step),
+    onNext: (step: number) => logger.debug("Next step:", step),
   },
 };
 
 export const LongSpaceName: Story = {
   args: {
     spaceName: "The Really Long Name Of A Student Organization That Might Wrap",
-    onNext: (step: number) => console.log("Next step:", step),
+    onNext: (step: number) => logger.debug("Next step:", step),
   },
 };

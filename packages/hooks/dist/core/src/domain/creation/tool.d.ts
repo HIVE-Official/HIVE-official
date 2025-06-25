@@ -1,5 +1,5 @@
-import { z } from 'zod';
-import { type ElementInstance } from './element';
+import { z } from "zod";
+import { type ElementInstance } from "./element";
 export declare const ToolStatus: z.ZodEnum<["draft", "preview", "published"]>;
 export type ToolStatus = z.infer<typeof ToolStatus>;
 export declare const ToolPermission: z.ZodEnum<["view", "comment", "edit"]>;
@@ -1328,7 +1328,7 @@ export type ShareTool = z.infer<typeof ShareToolSchema>;
 export declare const ToolDataRecordSchema: z.ZodObject<{
     id: z.ZodString;
     toolId: z.ZodString;
-    data: z.ZodRecord<z.ZodString, z.ZodAny>;
+    data: z.ZodRecord<z.ZodString, z.ZodUnknown>;
     submittedBy: z.ZodOptional<z.ZodString>;
     submittedAt: z.ZodDate;
     ipAddress: z.ZodOptional<z.ZodString>;
@@ -1342,7 +1342,7 @@ export declare const ToolDataRecordSchema: z.ZodObject<{
     referrer: z.ZodOptional<z.ZodString>;
 }, "strip", z.ZodTypeAny, {
     id: string;
-    data: Record<string, any>;
+    data: Record<string, unknown>;
     toolId: string;
     submittedAt: Date;
     isAnonymous: boolean;
@@ -1357,7 +1357,7 @@ export declare const ToolDataRecordSchema: z.ZodObject<{
     referrer?: string | undefined;
 }, {
     id: string;
-    data: Record<string, any>;
+    data: Record<string, unknown>;
     toolId: string;
     submittedAt: Date;
     submittedBy?: string | undefined;
@@ -1379,7 +1379,7 @@ export declare const ToolUsageEventSchema: z.ZodObject<{
     eventType: z.ZodEnum<["view", "start", "complete", "abandon", "share", "fork"]>;
     timestamp: z.ZodDate;
     sessionId: z.ZodString;
-    metadata: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodAny>>;
+    metadata: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnknown>>;
 }, "strip", z.ZodTypeAny, {
     id: string;
     toolId: string;
@@ -1387,7 +1387,7 @@ export declare const ToolUsageEventSchema: z.ZodObject<{
     eventType: "start" | "view" | "complete" | "abandon" | "share" | "fork";
     timestamp: Date;
     userId?: string | undefined;
-    metadata?: Record<string, any> | undefined;
+    metadata?: Record<string, unknown> | undefined;
 }, {
     id: string;
     toolId: string;
@@ -1395,7 +1395,7 @@ export declare const ToolUsageEventSchema: z.ZodObject<{
     eventType: "start" | "view" | "complete" | "abandon" | "share" | "fork";
     timestamp: Date;
     userId?: string | undefined;
-    metadata?: Record<string, any> | undefined;
+    metadata?: Record<string, unknown> | undefined;
 }>;
 export type ToolUsageEvent = z.infer<typeof ToolUsageEventSchema>;
 export declare const createToolDefaults: (ownerId: string, data: CreateTool) => Omit<Tool, "id" | "createdAt" | "updatedAt">;

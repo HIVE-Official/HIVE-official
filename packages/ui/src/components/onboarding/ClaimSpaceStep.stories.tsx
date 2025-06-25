@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { ClaimSpaceStep } from "./ClaimSpaceStep";
+import { logger } from "@hive/core";
 
 const meta: Meta<typeof ClaimSpaceStep> = {
   title: "Onboarding/ClaimSpaceStep",
@@ -25,17 +26,17 @@ const mockSpaces = [
 export const Default: Story = {
   args: {
     existingSpaces: mockSpaces,
-    onNext: (step: number) => console.log("Next step:", step),
+    onNext: (step: number) => logger.debug("Next step:", step),
     onClaim: (spaceId: string | null, newSpaceName?: string) =>
-      console.log("Claimed:", { spaceId, newSpaceName }),
+      logger.debug("Claimed:", { spaceId, newSpaceName }),
   },
 };
 
 export const NoExistingSpaces: Story = {
   args: {
     existingSpaces: [],
-    onNext: (step: number) => console.log("Next step:", step),
+    onNext: (step: number) => logger.debug("Next step:", step),
     onClaim: (spaceId: string | null, newSpaceName?: string) =>
-      console.log("Claimed:", { spaceId, newSpaceName }),
+      logger.debug("Claimed:", { spaceId, newSpaceName }),
   },
 };

@@ -60,7 +60,7 @@ export const onboardingSaveDisplayName = functions.https.onCall(
 
       return { success: true, message: "Display name and handle saved." };
     } catch (error) {
-      console.error("Error saving display name:", error);
+      functions.logger.error("Error saving display name:", error);
       if (error instanceof functions.https.HttpsError) {
         throw error;
       }

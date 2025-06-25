@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { LeaderQuestionStep } from "./LeaderQuestionStep";
+import { logger } from "@hive/core/utils/logger";
 
 const meta: Meta<typeof LeaderQuestionStep> = {
   title: "Onboarding/LeaderQuestionStep",
@@ -18,8 +19,8 @@ type Story = StoryObj<typeof LeaderQuestionStep>;
 
 export const Default: Story = {
   args: {
-    onNext: (step: number) => console.log("Next step:", step),
-    onAnswer: (isLeader: boolean) => console.log("Is leader:", isLeader),
+    onNext: (step: number) => logger.debug("Next step:", step),
+    onAnswer: (isLeader: boolean) => logger.debug("Is leader:", isLeader),
   },
 };
 

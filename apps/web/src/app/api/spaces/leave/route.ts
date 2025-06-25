@@ -11,6 +11,7 @@ import {
 import { db } from "@/lib/firebase";
 import { getAuth } from "firebase-admin/auth";
 import type { Space } from "@hive/core/src/domain/firestore/space";
+import { logger } from "@hive/core";
 
 const leaveSpaceSchema = z.object({
   spaceId: z.string().min(1, "Space ID is required"),
@@ -38,7 +39,7 @@ export async function POST(request: NextRequest) {
     try {
       decodedToken = await auth.verifyIdToken(idToken);
     } catch (authError) {
-      console.error("Token verification failed:", authError);
+      logger.error("Token verification failed:", authError);
       return NextResponse.json(
         { error: "Invalid or expired token" },
         { status: 401 }
@@ -78,7 +79,7 @@ export async function POST(request: NextRequest) {
     if (memberData?.role === "builder") {
       // TODO: In future, we could add logic to check if there are other builders
       // For now, we'll allow builders to leave but could add restrictions later
-      console.warn(`Builder ${userId} leaving space ${spaceId}`);
+      logger.warn(`Builder ${userId} leaving space ${spaceId}`);
     }
 
     // Perform the leave operation atomically
@@ -106,7 +107,7 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error("Error leaving space:", error);
+    logger.error("Error leaving space:", error);
     return NextResponse.json(
       { error: "Failed to leave space. Please try again." },
       { status: 500 }

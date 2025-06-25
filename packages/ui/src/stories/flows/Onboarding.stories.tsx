@@ -5,6 +5,7 @@ import { LeaderQuestionStep } from "../../components/onboarding/LeaderQuestionSt
 
 const meta: Meta = {
   title: "Flows/Onboarding",
+  component: DisplayNameStep,
   parameters: {
     layout: "fullscreen",
   },
@@ -62,4 +63,4 @@ export const FullFlow: StoryObj = {
         );
     }
   },
-}; 
+};

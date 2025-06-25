@@ -10,16 +10,16 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
-    "dev:web": "turbo run dev --filter=web...",
-    "dev:admin": "turbo run dev --filter=admin...",
+    "web": "turbo run dev --filter=web...",
+    "admin": "turbo run dev --filter=admin...",
+    "storybook": "pnpm --filter @hive/ui storybook",
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
     "validate": "pnpm lint && pnpm typecheck",
     "test": "turbo run test",
     "test:e2e": "turbo run test:e2e",
     "clean": "turbo run clean",
-    "storybook": "pnpm --filter @hive/ui storybook",
-    "build-storybook": "turbo run build-storybook"
+    "build-storybook": "pnpm --filter @hive/ui build-storybook"
   },
   "devDependencies": {
     "cpy-cli": "^5.0.0",

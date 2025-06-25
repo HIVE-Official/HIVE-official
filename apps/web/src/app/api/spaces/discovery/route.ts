@@ -6,6 +6,7 @@ import {
   type SpaceDiscoveryData,
   type UserDiscoveryContext,
   type DiscoveryFilters,
+  logger,
 } from "@hive/core";
 import { requireAuth } from "@/lib/auth";
 import { db } from "@/lib/firebase";
@@ -154,7 +155,7 @@ export async function GET(request: NextRequest) {
       ...discoveryResult,
     });
   } catch (error) {
-    console.error("Space discovery error:", error);
+    logger.error("Space discovery error:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

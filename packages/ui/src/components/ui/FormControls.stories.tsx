@@ -1,46 +1,41 @@
-import React, { useState } from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
-import { Button } from './button';
-import { Input, SearchInput, PasswordInput } from './input';
-import { Textarea } from './textarea';
-import { Checkbox } from './checkbox';
-import { RadioGroup, RadioGroupItem } from './radio-group';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './select';
-import { Switch } from './switch';
-import { Label } from './label';
-import { 
-  FormField, 
-  FormLabel, 
-  FormControl, 
-  FormDescription, 
-  FormMessage, 
-  FormGroup 
-} from './form';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './card';
-import { Separator } from './separator';
-import { Badge } from './badge';
-import { 
-  User, 
-  Mail, 
-  Search, 
-  GraduationCap,
-  Check
-} from 'lucide-react';
+import React, { useState } from "react";
+import type { Meta, StoryObj } from "@storybook/react";
+import { Button } from "./button";
+import { Input, SearchInput, PasswordInput } from "./input";
+import { Textarea } from "./textarea";
+import { Checkbox } from "./checkbox";
+import { RadioGroup, RadioGroupItem } from "./radio-group";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./select";
+import { Switch } from "./switch";
+import { Label } from "./label";
+import { FormField, FormLabel, FormControl, FormDescription } from "./form";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "./card";
+import { Badge } from "./badge";
 
-const FormControls = () => (
-    <div>Form Controls</div>
-);
+const FormControls = () => <div>Form Controls</div>;
 
 const meta: Meta = {
-    title: 'UI/Form Controls',
-    component: FormControls,
-    parameters: {
-        layout: 'centered',
-        backgrounds: {
-            default: 'hive-dark',
-            values: [{ name: 'hive-dark', value: '#0A0A0A' }],
-        },
+  title: "UI/Form Controls",
+  component: FormControls,
+  parameters: {
+    layout: "centered",
+    backgrounds: {
+      default: "hive-dark",
+      values: [{ name: "hive-dark", value: "#0A0A0A" }],
     },
+  },
 };
 
 export default meta;
@@ -53,13 +48,13 @@ type Story = StoryObj<typeof meta>;
 export const FormControlsShowcase: Story = {
   render: () => {
     const [formData, setFormData] = useState({
-      email: '',
-      password: '',
-      name: '',
-      bio: '',
+      email: "",
+      password: "",
+      name: "",
+      bio: "",
       notifications: true,
-      theme: 'dark',
-      role: '',
+      theme: "dark",
+      role: "",
       skills: [] as string[],
       newsletter: false,
     });
@@ -72,26 +67,27 @@ export const FormControlsShowcase: Story = {
             HIVE Form Controls
           </h1>
           <p className="text-body text-muted">
-            Brand-consistent form components with dark-first design and gold accents
+            Brand-consistent form components with dark-first design and gold
+            accents
           </p>
         </div>
 
         {/* Form Controls Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          
           {/* Input Controls */}
           <Card className="bg-surface border-[#2A2A2A]">
             <CardHeader>
               <CardTitle className="text-h3 text-foreground flex items-center gap-2">
                 Input Controls
-                <Badge variant="secondary" className="text-xs">Interactive</Badge>
+                <Badge variant="secondary" className="text-xs">
+                  Interactive
+                </Badge>
               </CardTitle>
               <CardDescription className="text-muted">
                 Text inputs with HIVE brand styling
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              
               {/* Standard Input */}
               <FormField name="email">
                 <FormLabel htmlFor="email">Email Address</FormLabel>
@@ -101,7 +97,12 @@ export const FormControlsShowcase: Story = {
                     type="email"
                     placeholder="Enter your email"
                     value={formData.email}
-                    onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        email: e.target.value,
+                      }))
+                    }
                   />
                 </FormControl>
                 <FormDescription>
@@ -117,7 +118,12 @@ export const FormControlsShowcase: Story = {
                     id="password"
                     placeholder="Enter your password"
                     value={formData.password}
-                    onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        password: e.target.value,
+                      }))
+                    }
                   />
                 </FormControl>
               </FormField>
@@ -141,12 +147,13 @@ export const FormControlsShowcase: Story = {
                     id="bio"
                     placeholder="Tell us about yourself..."
                     value={formData.bio}
-                    onChange={(e) => setFormData(prev => ({ ...prev, bio: e.target.value }))}
+                    onChange={(e) =>
+                      setFormData((prev) => ({ ...prev, bio: e.target.value }))
+                    }
                     rows={3}
                   />
                 </FormControl>
               </FormField>
-              
             </CardContent>
           </Card>
 
@@ -155,22 +162,26 @@ export const FormControlsShowcase: Story = {
             <CardHeader>
               <CardTitle className="text-h3 text-foreground flex items-center gap-2">
                 Selection Controls
-                <Badge variant="secondary" className="text-xs">Interactive</Badge>
+                <Badge variant="secondary" className="text-xs">
+                  Interactive
+                </Badge>
               </CardTitle>
               <CardDescription className="text-muted">
                 Choice inputs with gold accent states
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              
               {/* Checkbox */}
               <FormField name="newsletter">
                 <div className="flex items-center space-x-2">
                   <Checkbox
                     id="newsletter"
                     checked={formData.newsletter}
-                    onCheckedChange={(checked) => 
-                      setFormData(prev => ({ ...prev, newsletter: !!checked }))
+                    onCheckedChange={(checked) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        newsletter: !!checked,
+                      }))
                     }
                   />
                   <FormLabel htmlFor="newsletter" className="text-body">
@@ -186,7 +197,9 @@ export const FormControlsShowcase: Story = {
               <FormField name="notifications">
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <FormLabel htmlFor="notifications">Push Notifications</FormLabel>
+                    <FormLabel htmlFor="notifications">
+                      Push Notifications
+                    </FormLabel>
                     <FormDescription>
                       Receive notifications on your device
                     </FormDescription>
@@ -194,8 +207,11 @@ export const FormControlsShowcase: Story = {
                   <Switch
                     id="notifications"
                     checked={formData.notifications}
-                    onCheckedChange={(checked) => 
-                      setFormData(prev => ({ ...prev, notifications: checked }))
+                    onCheckedChange={(checked) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        notifications: checked,
+                      }))
                     }
                   />
                 </div>
@@ -207,8 +223,8 @@ export const FormControlsShowcase: Story = {
                 <FormControl>
                   <RadioGroup
                     value={formData.theme}
-                    onValueChange={(value) => 
-                      setFormData(prev => ({ ...prev, theme: value }))
+                    onValueChange={(value) =>
+                      setFormData((prev) => ({ ...prev, theme: value }))
                     }
                   >
                     <div className="flex items-center space-x-2">
@@ -232,8 +248,8 @@ export const FormControlsShowcase: Story = {
                 <FormLabel htmlFor="role">Role</FormLabel>
                 <Select
                   value={formData.role}
-                  onValueChange={(value) => 
-                    setFormData(prev => ({ ...prev, role: value }))
+                  onValueChange={(value) =>
+                    setFormData((prev) => ({ ...prev, role: value }))
                   }
                 >
                   <FormControl>
@@ -249,7 +265,6 @@ export const FormControlsShowcase: Story = {
                   </SelectContent>
                 </Select>
               </FormField>
-              
             </CardContent>
           </Card>
         </div>
@@ -281,10 +296,14 @@ export const FormControlsShowcase: Story = {
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <h4 className="text-body font-medium text-foreground">Color System</h4>
+                <h4 className="text-body font-medium text-foreground">
+                  Color System
+                </h4>
                 <div className="flex items-center gap-2">
                   <div className="w-4 h-4 rounded bg-accent"></div>
-                  <span className="text-body-sm text-muted">Gold accent (#FFD700)</span>
+                  <span className="text-body-sm text-muted">
+                    Gold accent (#FFD700)
+                  </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-4 h-4 rounded bg-surface border border-[#2A2A2A]"></div>
@@ -292,7 +311,9 @@ export const FormControlsShowcase: Story = {
                 </div>
               </div>
               <div className="space-y-2">
-                <h4 className="text-body font-medium text-foreground">Motion</h4>
+                <h4 className="text-body font-medium text-foreground">
+                  Motion
+                </h4>
                 <ul className="text-body-sm text-muted space-y-1">
                   <li>• 90ms micro-interactions</li>
                   <li>• Subtle scale effects (1.02x, 1.05x)</li>
@@ -318,7 +339,7 @@ export const BasicInputs: Story = {
       <p className="text-body text-muted">
         Essential input components with HIVE brand styling
       </p>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Text Inputs */}
         <Card className="bg-surface border-[#2A2A2A]">
@@ -330,12 +351,12 @@ export const BasicInputs: Story = {
               <Label>Email</Label>
               <Input type="email" placeholder="Enter your email" />
             </div>
-            
+
             <div className="space-y-2">
               <Label>Password</Label>
               <PasswordInput placeholder="Enter password" />
             </div>
-            
+
             <div className="space-y-2">
               <Label>Search</Label>
               <SearchInput placeholder="Search..." />
@@ -362,7 +383,7 @@ export const BasicInputs: Story = {
                 </SelectContent>
               </Select>
             </div>
-            
+
             <div className="space-y-3">
               <Label>Radio Group</Label>
               <RadioGroup defaultValue="a">
@@ -387,23 +408,23 @@ export const InputVariants: Story = {
   render: () => (
     <div className="space-y-6 p-6 bg-background">
       <h2 className="text-h2 font-bold text-foreground">Input Variants</h2>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label>Standard Input</Label>
           <Input placeholder="Enter text..." />
         </div>
-        
+
         <div className="space-y-2">
           <Label>Search Input</Label>
           <SearchInput placeholder="Search..." />
         </div>
-        
+
         <div className="space-y-2">
           <Label>Password Input</Label>
           <PasswordInput placeholder="Password..." />
         </div>
-        
+
         <div className="space-y-2">
           <Label>Error State</Label>
           <Input placeholder="Invalid input" error shake />
@@ -417,7 +438,7 @@ export const SelectionControls: Story = {
   render: () => (
     <div className="space-y-6 p-6 bg-background">
       <h2 className="text-h2 font-bold text-foreground">Selection Controls</h2>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Checkboxes */}
         <Card className="bg-surface border-[#2A2A2A]">
@@ -486,4 +507,4 @@ export const SelectionControls: Story = {
       </div>
     </div>
   ),
-}; 
+};

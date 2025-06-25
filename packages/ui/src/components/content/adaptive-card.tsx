@@ -12,8 +12,7 @@ const adaptiveCardVariants = cva(
       variant: {
         glass:
           "bg-[#0A0A0A]/60 backdrop-blur-xl border-white/10 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)]",
-        outline:
-          "bg-transparent border-white/10 hover:bg-white/5",
+        outline: "bg-transparent border-white/10 hover:bg-white/5",
       },
       size: {
         default: "p-6",
@@ -36,7 +35,10 @@ const adaptiveCardVariants = cva(
 );
 
 export interface AdaptiveCardProps
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onDrag' | 'onDragEnd' | 'onDragStart'>,
+  extends Omit<
+      React.HTMLAttributes<HTMLDivElement>,
+      "onDrag" | "onDragEnd" | "onDragStart"
+    >,
     VariantProps<typeof adaptiveCardVariants> {
   children: React.ReactNode;
   loading?: boolean;
@@ -55,8 +57,8 @@ const AdaptiveCard = React.forwardRef<HTMLDivElement, AdaptiveCardProps>(
       onInteract,
       id,
       role,
-      'aria-label': ariaLabel,
-      'aria-labelledby': ariaLabelledBy,
+      "aria-label": ariaLabel,
+      "aria-labelledby": ariaLabelledBy,
       ..._props
     },
     ref
@@ -66,7 +68,10 @@ const AdaptiveCard = React.forwardRef<HTMLDivElement, AdaptiveCardProps>(
     return (
       <MotionDiv
         ref={ref}
-        className={cn(adaptiveCardVariants({ variant, size, interactive }), className)}
+        className={cn(
+          adaptiveCardVariants({ variant, size, interactive }),
+          className
+        )}
         onClick={onInteract}
         id={id}
         role={role}
@@ -103,7 +108,7 @@ const AdaptiveCard = React.forwardRef<HTMLDivElement, AdaptiveCardProps>(
 AdaptiveCard.displayName = "AdaptiveCard";
 
 // Card composition components
-const CardHeader = React.forwardRef<
+const AdaptiveCardHeader = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
@@ -113,17 +118,17 @@ const CardHeader = React.forwardRef<
     {...props}
   />
 ));
-CardHeader.displayName = "CardHeader";
+AdaptiveCardHeader.displayName = "AdaptiveCardHeader";
 
-const CardContent = React.forwardRef<
+const AdaptiveCardContent = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
   <div ref={ref} className={cn("flex-1", className)} {...props} />
 ));
-CardContent.displayName = "CardContent";
+AdaptiveCardContent.displayName = "AdaptiveCardContent";
 
-const CardFooter = React.forwardRef<
+const AdaptiveCardFooter = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
@@ -136,7 +141,31 @@ const CardFooter = React.forwardRef<
     {...props}
   />
 ));
-CardFooter.displayName = "CardFooter";
+AdaptiveCardFooter.displayName = "AdaptiveCardFooter";
+
+const AdaptiveCardTitle = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn("text-sm font-medium leading-none", className)}
+    {...props}
+  />
+));
+AdaptiveCardTitle.displayName = "AdaptiveCardTitle";
+
+const AdaptiveCardDescription = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn("text-sm text-muted-foreground", className)}
+    {...props}
+  />
+));
+AdaptiveCardDescription.displayName = "AdaptiveCardDescription";
 
 const CardMedia = React.forwardRef<
   HTMLDivElement,
@@ -150,7 +179,7 @@ const CardMedia = React.forwardRef<
       "relative overflow-hidden rounded-md bg-muted",
       {
         "aspect-square": aspectRatio === "square",
-        "aspect-video": aspectRatio === "video", 
+        "aspect-video": aspectRatio === "video",
         "aspect-[2/1]": aspectRatio === "wide",
         "aspect-[3/4]": aspectRatio === "tall",
       },
@@ -161,11 +190,14 @@ const CardMedia = React.forwardRef<
 ));
 CardMedia.displayName = "CardMedia";
 
-export { 
-  AdaptiveCard, 
-  CardHeader, 
-  CardContent, 
-  CardFooter, 
+export {
+  AdaptiveCardHeader as CardHeader,
+  AdaptiveCardContent as CardContent,
+  AdaptiveCardFooter as CardFooter,
+  AdaptiveCardTitle as CardTitle,
+  AdaptiveCardDescription as CardDescription,
+  AdaptiveCard as Card,
+  AdaptiveCard,
   CardMedia,
   adaptiveCardVariants,
-}; 
+};

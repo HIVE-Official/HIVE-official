@@ -49,7 +49,7 @@ export const onboardingClaimSpace = functions.https.onCall(
       await claimsRef.add(newClaim);
       return { success: true, message: "Space claim submitted for review." };
     } catch (error) {
-      console.error("Error submitting space claim:", error);
+      functions.logger.error("Error submitting space claim:", error);
       throw new functions.https.HttpsError(
         "internal",
         "An unexpected error occurred while submitting the space claim."

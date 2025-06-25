@@ -44,7 +44,7 @@ export interface HeroCTA {
     target: string;
     analytics?: {
       event: string;
-      properties?: Record<string, any>;
+      properties?: Record<string, unknown>;
     };
   };
   states: {
@@ -127,7 +127,7 @@ export const heroCtaSchema = z.object({
     analytics: z
       .object({
         event: z.string(),
-        properties: z.record(z.any()).optional(),
+        properties: z.record(z.unknown()).optional(),
       })
       .optional(),
   }),

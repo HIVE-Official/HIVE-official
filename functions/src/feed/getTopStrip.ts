@@ -10,7 +10,7 @@ import { ActiveRitualTileSchema } from "@hive/core";
  *
  * The function validates the fetched data against the ActiveRitualTileSchema.
  */
-export const getTopStrip = onRequest(async (request, _context) => {
+export const getTopStrip = onRequest(async (_request, _context) => {
   // Optional: Add authentication check if only logged-in users can see this.
   // if (!context.auth) {
   //   throw new functions.https.HttpsError(

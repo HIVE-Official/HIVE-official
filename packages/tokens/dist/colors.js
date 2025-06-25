@@ -10,165 +10,167 @@ export const colors = {
     // Canvas & Surfaces (90% of interface)
     background: "#0A0A0A", // Primary canvas (matte black)
     surface: "#111111", // Card backgrounds, elevated surfaces
-    border: "#2A2A2A", // Dividers, input borders (CORRECTED)
+    border: "#2A2A2A", // CORRECTED: Dividers, input borders
     // Text Hierarchy
     foreground: "#FFFFFF", // Primary text, headlines
     muted: "#6B7280", // Secondary text, metadata
     disabled: "#3F3F46", // Disabled states, placeholder text
     // Yellow Accent System (≤10% usage) - FINAL CORRECTED VALUES
-    accent: "#FFD700", // Gold - primary accent for text, borders, focus
-    "accent-600": "#EAC200", // Gold hover state (CORRECTED)
-    "accent-700": "#C4A500", // Gold pressed state (CORRECTED)
-};
-// ============================================================================
-// LEGACY TOKEN MAPPING FOR BACKWARD COMPATIBILITY
-// ============================================================================
-export const HIVE_SEMANTIC_TOKENS = {
-    // Canvas & Surfaces (mapped to corrected values)
-    "bg-root": "#0A0A0A",
-    "surface-01": "#111111",
-    "surface-02": "#181818",
-    "surface-03": "#1F1F1F",
-    // Borders & Lines (CORRECTED)
-    "border-line": "#2A2A2A", // CORRECTED from #374151
-    // Text Hierarchy
+    accent: {
+        DEFAULT: "#FFD700", // Gold - primary accent for text, borders, focus
+        600: "#EAC200", // CORRECTED: Gold hover state
+        700: "#C4A500", // CORRECTED: Gold pressed state
+    },
+    // Surface variants for depth
+    "surface-01": "#111111", // Primary cards, feed rows
+    "surface-02": "#181818", // Drawers, dropdowns, modals
+    "surface-03": "#1F1F1F", // Nested blocks, input backgrounds
+    // Focus system
+    ring: "#FFD700", // Gold focus ring
+    "ring-offset": "#0A0A0A", // Background for ring offset
+    // Legacy token mappings for backward compatibility
+    "bg-canvas": "#0A0A0A",
+    "bg-card": "#111111",
+    "accent-gold": "#FFD700",
+    "accent-gold-hover": "#EAC200", // CORRECTED
+    "accent-gold-pressed": "#C4A500", // CORRECTED
     "text-primary": "#FFFFFF",
-    "text-secondary": "#6B7280", // Using muted
-    "text-disabled": "#3F3F46", // Using disabled
-    // Yellow Accent System (CORRECTED VALUES)
-    "yellow-500": "#FFD700", // accent
-    "yellow-600": "#EAC200", // accent-600 (CORRECTED)
-    "yellow-700": "#C4A500", // accent-700 (CORRECTED)
-    // Overlays & Effects
-    "overlay-scrim": "rgba(0, 0, 0, 0.55)",
-    "shadow-ambient": "0 2px 4px 0 rgba(0, 0, 0, 0.6)",
-    "grain-speck": "rgba(255, 255, 255, 0.015)",
+    "text-muted": "#6B7280",
+    "border-primary": "#2A2A2A", // CORRECTED
+    // NO SUCCESS/ERROR/WARNING COLORS (Pure monochrome + yellow system)
+    // Status feedback is handled via motion, not colors
 };
 // ============================================================================
-// GRAYSCALE UTILITY RAMP (UPDATED TO MATCH CORRECTED SYSTEM)
+// SHADCN/UI COLOR MAPPINGS (Brand-compliant)
 // ============================================================================
-export const HIVE_GRAYSCALE = {
-    50: "#FFFFFF", // foreground
-    100: "#F5F5F5",
-    200: "#E5E5E5",
-    300: "#CFCFCF",
-    400: "#A0A0A0",
-    500: "#6B7280", // muted (CORRECTED)
-    600: "#5F5F5F",
-    700: "#2A2A2A", // border (CORRECTED)
-    800: "#181818",
-    900: "#0A0A0A", // background
-};
-// ============================================================================
-// INTERACTION STATE MODIFIERS (CORRECTED)
-// ============================================================================
-export const HIVE_INTERACTION_STATES = {
-    hover: {
-        "surface-01-hover": "#1A1A1A",
-        "surface-02-hover": "#212121",
-        "surface-03-hover": "#282828",
-        "accent-hover": "#EAC200", // CORRECTED
+export const shadcnColors = {
+    background: colors.background,
+    foreground: colors.foreground,
+    primary: {
+        DEFAULT: colors.accent.DEFAULT, // Gold
+        foreground: colors.background, // Dark text on gold background
     },
-    pressed: {
-        "accent-pressed": "#C4A500", // CORRECTED
-        "yellow-overlay": "rgba(196, 165, 0, 0.1)",
+    secondary: {
+        DEFAULT: colors.surface, // Surface
+        foreground: colors.foreground, // White text
     },
-    focus: {
-        "focus-ring": "#FFD700",
-        "focus-ring-offset": "#0A0A0A",
+    muted: {
+        DEFAULT: colors.muted, // Muted text color
+        foreground: colors.foreground, // White text
     },
-};
-// ============================================================================
-// STATUS FEEDBACK (MOTION-BASED, NO COLORS)
-// ============================================================================
-export const HIVE_FEEDBACK_SYSTEM = {
-    error: {
-        // Motion: shake + border highlight (NO red colors)
-        motion: "shake-micro",
-        border: "#6B7280", // muted grey border
-        duration: "90ms",
+    accent: {
+        DEFAULT: colors.accent.DEFAULT, // Gold
+        foreground: colors.background, // Dark text on gold
     },
-    success: {
-        // Motion: scale + white border highlight (NO green colors)
-        motion: "pulse-subtle",
-        border: "#FFFFFF", // white border highlight
-        duration: "220ms",
+    destructive: {
+        DEFAULT: colors.surface, // NO red - use surface
+        foreground: colors.foreground, // White text
     },
-    processing: {
-        // Motion: continuous pulse (NO blue colors)
-        motion: "pulse-continuous",
-        border: "#2A2A2A", // default border
-        duration: "1200ms",
+    border: colors.border, // CORRECTED border
+    input: colors.border, // CORRECTED input border
+    ring: colors.ring, // Gold focus ring
+    card: {
+        DEFAULT: colors.surface, // Surface background
+        foreground: colors.foreground, // White text
     },
-    ritual: {
-        // ONLY place for gold background
-        background: "#FFD700",
-        color: "#0A0A0A",
-        gradient: "conic-gradient(from 0deg, #FFD700, #C4A500, #FFD700)",
-        duration: "300ms", // ritual timing
+    popover: {
+        DEFAULT: colors["surface-02"], // Elevated surface
+        foreground: colors.foreground, // White text
     },
 };
 // ============================================================================
-// CSS CUSTOM PROPERTIES GENERATOR (CORRECTED)
+// CSS CUSTOM PROPERTY MAPPINGS
 // ============================================================================
-export function generateCSSVariables() {
-    return {
-        // Primary color system (CORRECTED VALUES)
-        "--color-background": colors.background,
-        "--color-surface": colors.surface,
-        "--color-foreground": colors.foreground,
-        "--color-muted": colors.muted,
-        "--color-disabled": colors.disabled,
-        "--color-border": colors.border, // CORRECTED
-        "--color-accent": colors.accent,
-        "--color-accent-600": colors["accent-600"], // CORRECTED
-        "--color-accent-700": colors["accent-700"], // CORRECTED
-        // Legacy tokens for backward compatibility
-        ...Object.entries(HIVE_SEMANTIC_TOKENS).reduce((acc, [key, value]) => ({
-            ...acc,
-            [`--${key}`]: value,
-        }), {}),
-        // Focus system
-        "--focus-ring": HIVE_INTERACTION_STATES.focus["focus-ring"],
-        "--focus-ring-offset": HIVE_INTERACTION_STATES.focus["focus-ring-offset"],
-    };
-}
+export const cssVars = {
+    // Brand tokens
+    "--background": colors.background,
+    "--surface": colors.surface,
+    "--border": colors.border, // CORRECTED
+    "--foreground": colors.foreground,
+    "--muted": colors.muted,
+    "--disabled": colors.disabled,
+    "--accent": colors.accent.DEFAULT,
+    "--accent-hover": colors.accent[600], // CORRECTED
+    "--accent-active": colors.accent[700], // CORRECTED
+    // Surface variants
+    "--surface-01": colors["surface-01"],
+    "--surface-02": colors["surface-02"],
+    "--surface-03": colors["surface-03"],
+    // Focus system
+    "--ring": colors.ring,
+    "--ring-offset": colors["ring-offset"],
+};
 // ============================================================================
-// ACCESSIBILITY VALIDATION (UPDATED)
+// BRAND COMPLIANCE VALIDATION
 // ============================================================================
-export const ACCESSIBILITY_COMPLIANCE = {
-    contrast: {
-        // All combinations meet WCAG 2.1 AA (≥4.5:1) with corrected values
-        "white-on-background": "21:1", // ✅ AAA
-        "muted-on-background": "8.2:1", // ✅ AA+
-        "accent-on-background": "10.4:1", // ✅ AAA
-        "foreground-on-surface": "12.5:1", // ✅ AAA
-        "disabled-on-surface": "4.8:1", // ✅ AA
-    },
-    principles: [
-        "Yellow accents never used for critical information alone",
-        "Motion-based feedback for error/success states (NO colored states)",
-        "Focus rings always visible for keyboard navigation",
-        "All text meets minimum contrast requirements",
-        "Pure monochrome + yellow system enforced",
+export const COLOR_COMPLIANCE = {
+    rules: [
+        "Pure monochrome + yellow system only",
+        "Border color must be #2A2A2A (not #374151 or #262626)",
+        "Gold hover must be #EAC200 (not #E6C200)",
+        "Gold active must be #C4A500",
+        "NO success/error/warning colors (green/red/blue)",
+        "NO gold fills except ritual badges",
+        "Status feedback via motion, not colors",
     ],
+    violations: [
+        "Using red/green/blue for status feedback",
+        "Gold fills on primary buttons",
+        "Wrong border colors (#374151, #262626, etc.)",
+        "Wrong gold hover values (#E6C200, #FFCC00, etc.)",
+        "Multiple accent color systems",
+    ],
+    goldUsage: {
+        allowed: [
+            "Text color for emphasis",
+            "Border color for focus/active states",
+            "Focus ring color",
+            "Ritual badge backgrounds ONLY",
+        ],
+        forbidden: [
+            "Primary button backgrounds",
+            "Secondary button backgrounds",
+            "Card backgrounds",
+            "Large surface areas",
+        ],
+    },
 };
 // ============================================================================
 // UTILITY FUNCTIONS
 // ============================================================================
-export function getColor(token) {
-    return colors[token];
+/**
+ * Get a color value with TypeScript safety
+ */
+export function getColor(path) {
+    return colors[path];
 }
-export function getSemanticToken(token) {
-    return HIVE_SEMANTIC_TOKENS[token];
+/**
+ * Get an accent color variant
+ */
+export function getAccent(variant = "DEFAULT") {
+    return colors.accent[variant];
+}
+/**
+ * Validate if a color follows brand guidelines
+ */
+export function isValidBorderColor(color) {
+    return color === colors.border;
+}
+export function isValidGoldHover(color) {
+    return color === colors.accent[600];
+}
+export function isValidGoldActive(color) {
+    return color === colors.accent[700];
 }
 // ============================================================================
 // EXPORTS
 // ============================================================================
-export { colors as default, HIVE_SEMANTIC_TOKENS as semanticTokens, HIVE_GRAYSCALE as grayscale, HIVE_INTERACTION_STATES as interactionStates, HIVE_FEEDBACK_SYSTEM as feedbackSystem, };
-// Brand compliance note: This file enforces the corrected brand values:
-// - Border: #2A2A2A (not #374151)
-// - Gold hover: #EAC200 (not #E6C200)
-// - Gold pressed: #C4A500 (not other values)
-// - Pure monochrome + yellow system (no success/warning/error colors)
+export default colors;
+// Brand compliance note: This color system enforces:
+// - CORRECTED border color: #2A2A2A
+// - CORRECTED gold hover: #EAC200 (not #E6C200)
+// - CORRECTED gold active: #C4A500
+// - Pure monochrome + yellow system (no success/error colors)
+// - Motion-based status feedback instead of color-based
+// - Gold fills ONLY for ritual badges
 //# sourceMappingURL=colors.js.map

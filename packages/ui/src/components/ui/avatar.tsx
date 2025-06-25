@@ -87,4 +87,45 @@ const AvatarFallback = React.forwardRef<
 ));
 AvatarFallback.displayName = AvatarPrimitive.Fallback.displayName;
 
-export { Avatar, AvatarImage, AvatarFallback };
+// AvatarGroup component for displaying multiple avatars
+export interface AvatarGroupProps extends React.HTMLAttributes<HTMLDivElement> {
+  avatars: Array<{
+    src?: string;
+    alt?: string;
+    fallback?: React.ReactNode;
+  }>;
+  max?: number;
+  size?: "sm" | "md" | "lg" | "xl";
+}
+
+const AvatarGroup = React.forwardRef<HTMLDivElement, AvatarGroupProps>(
+  ({ className, avatars, max = 4, size = "md", ...props }, ref) => {
+    const displayAvatars = avatars.slice(0, max);
+    const remainingCount = Math.max(0, avatars.length - max);
+
+    return (
+      <div ref={ref} className={cn("flex -space-x-2", className)} {...props}>
+        {displayAvatars.map((avatar, index) => (
+          <Avatar
+            key={index}
+            size={size}
+            src={avatar.src}
+            alt={avatar.alt}
+            fallback={avatar.fallback}
+            className="border-2 border-background"
+          />
+        ))}
+        {remainingCount > 0 && (
+          <Avatar
+            size={size}
+            fallback={`+${remainingCount}`}
+            className="border-2 border-background bg-muted"
+          />
+        )}
+      </div>
+    );
+  }
+);
+AvatarGroup.displayName = "AvatarGroup";
+
+export { Avatar, AvatarImage, AvatarFallback, AvatarGroup };

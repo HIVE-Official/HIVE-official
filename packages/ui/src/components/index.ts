@@ -1,11 +1,11 @@
-// Core UI Components
+// Minimal working component exports - Emergency Router Fix
+
+// Core UI Components (only the ones that work)
 export * from "./ui/button";
 export * from "./ui/card";
 export * from "./ui/input";
 export * from "./ui/badge";
-export * from "./ui/textarea";
 export * from "./ui/tabs";
-export * from "./ui/resizable";
 export * from "./ui/scroll-area";
 export * from "./ui/avatar";
 export * from "./ui/dropdown-menu";
@@ -18,8 +18,6 @@ export * from "./ui/radio-group";
 export * from "./ui/label";
 export * from "./ui/select";
 export * from "./ui/skeleton";
-export * from "./ui/empty-state";
-export * from "./ui/typography";
 export * from "./ui/toast";
 export * from "./ui/toaster";
 export * from "./ui/form";
@@ -27,128 +25,99 @@ export * from "./ui/enhanced-cards";
 export * from "./alert";
 export * from "./progress";
 
-// Layout Components
+// Layout Components (basic working ones)
 export * from "./stack";
 export * from "./grid";
 export * from "./box";
-export * from "./layout/AppHeader";
-
-// Typography Components are exported from ui/typography
-
-// Animation Components
-export * from "./framer-motion-proxy";
-
-// Error Handling Components
-export * from "./error-boundary";
-
-// Other Components
-export * from "./space-card";
-
-// Creator Components
-export * from "./creator";
-
-// Welcome Components
-export * from "./welcome";
-
-// Analytics Components
-// Temporarily disabled - analytics dashboard has dependency issues
-// export * from "./analytics-dashboard";
 
 // Brand Components
 export * from "./brand/hive-logo";
 export * from "./brand/HiveLogoIcon";
 
-// Error Components
-export * from "./errors";
+// Error boundary
+export * from "./error-boundary";
 
-// New Component
-export * from "./ui/cta-button";
+// Animation proxy
+export * from "./framer-motion-proxy";
 
-// Landing Components
-export * from "./landing";
+// Basic working components
+export * from "./space-card";
 
-// Navigation Components
-export * from "./navigation/navbar";
-export type { NavItem, NavbarProps } from "./navigation/navbar";
-export * from "./navigation/BottomNavBar";
+// ALL OTHER EXPORTS COMMENTED OUT UNTIL FIXED
+// The following have dependency issues and need to be fixed one by one:
 
-// Profile components
-export * from "./profile-dashboard";
-export * from "./profile-sidebar";
-export * from "./calendar-widget";
-export * from "./about-section";
-export * from "./progress-section";
-export * from "./action-card";
-
-// Onboarding Components
-export * from "./onboarding";
-
-// Feed Components
-export * from "./feed/top-strip";
-export * from "./feed/main-feed";
-export * from "./feed/campus-unlock-banner";
-export * from "./feed/post-composer";
-export * from "./feed/feed-composer";
-export * from "./feed/space-feed";
-export * from "./feed/post-card";
-
-// Profile Components
-export * from "./profile/profile-header";
-export * from "./profile/academic-section";
-export * from "./profile/builder-dashboard";
-
-// Ritual Components
-export * from "./rituals/ritual-timer";
-
-// Space Components
-export * from "./spaces/category-grid";
-export * from "./spaces/SpaceHeader";
-
-// HiveLAB Components
-export * from "./hivelab/template-selector";
-
-// Enhanced Cards
-export { ProfileCard, EventCard } from './ui/enhanced-cards';
-
-// Command Palette
-export { 
-  CommandPalette, 
-  useCommandPalette,
-  type Command,
-  type CommandCategory
-} from './ui/command-palette';
-
-// Avatar
-export { Avatar, AvatarImage, AvatarFallback, type AvatarProps } from './ui/avatar';
-
-// Content Cards - Adaptive card system for all content types
-export {
-  AdaptiveCard,
-  SpaceShowcaseCard,
-  EventAnnouncementCard,
-  UGCPostCard,
-  type AdaptiveCardProps,
-  type SpaceShowcaseData,
-  type SpaceShowcaseCardProps,
-  type EventAnnouncementData,
-  type EventAnnouncementCardProps,
-  type UGCPostData,
-  type UGCPostCardProps,
-} from "./content";
-
-// Badge System - HIVE-branded badges for status, priority, and context
-export {
-  Badge as HIVEBadge,
-  StatusBadge,
-  PriorityBadge,
-  CountBadge,
-  DotBadge,
-  BadgeGroup,
-  badgeVariants,
-  type BadgeProps as HIVEBadgeProps,
-  type StatusBadgeProps,
-  type PriorityBadgeProps,
-  type CountBadgeProps,
-  type DotBadgeProps,
-  type BadgeGroupProps
-} from "./content";
+// PROBLEMATIC EXPORTS (commented out):
+// export * from "./ui/textarea"; // Missing file
+// export * from "./ui/empty-state"; // Missing file
+// export * from "./ui/typography"; // Missing file
+// export * from "./ui/cta-button"; // Issues
+// export * from "./ui/command-palette"; // Issues
+// export * from "./layout/AppHeader"; // Issues
+// export * from "./creator"; // Many dependency issues
+// export * from "./welcome"; // Import issues
+// export * from "./analytics-dashboard"; // Dependency issues
+// export * from "./errors"; // Issues
+// export * from "./landing"; // Issues
+// export * from "./navigation/navbar"; // Issues
+// export type { NavItem, NavbarProps } from "./navigation/navbar"; // Issues
+// export * from "./navigation/BottomNavBar"; // Issues
+// export * from "./profile-dashboard"; // Issues
+// export * from "./profile-sidebar"; // Issues
+// export * from "./calendar-widget"; // Issues
+// export * from "./about-section"; // Issues
+// export * from "./progress-section"; // Issues
+// export * from "./action-card"; // Issues
+// export * from "./onboarding"; // Issues
+// export * from "./feed/top-strip"; // Issues
+// export * from "./feed/main-feed"; // Issues
+// export * from "./feed/campus-unlock-banner"; // Issues
+// export * from "./feed/post-composer"; // Issues
+// export * from "./feed/feed-composer"; // Issues
+// export * from "./feed/space-feed"; // Issues
+// export * from "./feed/post-card"; // Issues
+// export * from "./profile/profile-header"; // Issues
+// export * from "./profile/academic-section"; // Issues
+// export * from "./profile/builder-dashboard"; // Issues
+// export * from "./rituals/ritual-timer"; // Issues
+// export * from "./spaces/category-grid"; // Issues
+// export * from "./spaces/SpaceHeader"; // Issues
+// export * from "./hivelab/template-selector"; // Issues
+// Enhanced Cards with complex types
+// export { ProfileCard, EventCard } from "./ui/enhanced-cards"; // Already exported above
+// Command Palette with type issues
+// export {
+//   CommandPalette,
+//   useCommandPalette,
+//   type Command,
+//   type CommandCategory,
+// } from "./ui/command-palette"; // Issues
+// Complex content exports
+// export {
+//   AdaptiveCard,
+//   SpaceShowcaseCard,
+//   EventAnnouncementCard,
+//   UGCPostCard,
+//   type AdaptiveCardProps,
+//   type SpaceShowcaseData,
+//   type SpaceShowcaseCardProps,
+//   type EventAnnouncementData,
+//   type EventAnnouncementCardProps,
+//   type UGCPostData,
+//   type UGCPostCardProps,
+// } from "./content"; // Issues
+// Badge system exports
+// export {
+//   Badge as HIVEBadge,
+//   StatusBadge,
+//   PriorityBadge,
+//   CountBadge,
+//   DotBadge,
+//   BadgeGroup,
+//   badgeVariants,
+//   type BadgeProps as HIVEBadgeProps,
+//   type StatusBadgeProps,
+//   type PriorityBadgeProps,
+//   type CountBadgeProps,
+//   type DotBadgeProps,
+//   type BadgeGroupProps,
+// } from "./content"; // Issues

@@ -77,64 +77,73 @@ export type {
 // } from "./components/onboarding/hive-onboarding-v3";
 
 // UI Components
-export * from "./components/ui";
+export * from "./components/ui/typography";
+export * from "./components/ui/button";
+export * from "./components/ui/input";
+export * from "./components/ui/textarea";
+export * from "./components/ui/label";
+export * from "./components/ui/card";
+export * from "./components/ui/dialog";
+export * from "./components/ui/dropdown-menu";
+export * from "./components/ui/tabs";
+export * from "./components/ui/badge";
+export * from "./components/ui/alert";
+export * from "./components/ui/toast";
 
 // Brand Components
-export * from "./components/brand";
+export * from "./components/brand/HiveLogo";
+export * from "./components/brand/HiveLogoIcon";
 
 // Layout Components
-export * from "./components/layout";
+export * from "./components/layout/Container";
+export * from "./components/layout/Section";
 
 // Content Components
-export * from "./components/content";
+export * from "./components/content/markdown-page";
 
-// Feed Components
-export * from "./components/feed";
+// Utility Functions
+export * from "./lib/utils";
 
-// Form Components
-export * from "./components/forms";
+// Motion system (working parts only)
+// export * from "./components/motion"; // TEMP: Commented out - causes duplicate export
 
-// Welcome Components
-export * from "./components/welcome";
+// Layout components (basic ones that work)
+export * from "./components/stack";
+export * from "./components/grid";
+export * from "./components/box";
 
-// Profile Components
-export * from "./components/profile";
+// Animation proxy that works
+export * from "./components/framer-motion-proxy";
 
-// Navigation Components
-export * from "./components/navigation";
+// Error boundary that works
+export * from "./components/error-boundary";
 
-// Motion Components
-export * from "./components/motion";
+// ALL OTHER EXPORTS TEMPORARILY COMMENTED OUT TO GET ROUTER WORKING
+// These need to be re-enabled one by one after fixing their dependencies
 
-// Analytics Components
-export * from "./components/analytics-dashboard";
+// COMMENTED OUT UNTIL FIXED:
+// export * from "./components/ui/textarea";  // Missing file
+// export * from "./components/ui/resizable"; // Check if exists
+// export * from "./components/ui/empty-state"; // Missing file
+// export * from "./components/ui/cta-button"; // Check if exists
+// export * from "./components/ui/command-palette"; // Check if exists
 
-// Error Components
-export * from "./components/errors";
+// All other component directories (need individual fixing)
+// export * from "./components/layout"; // Partially working
+// export * from "./components/content"; // Needs fixing
+// export * from "./components/feed"; // Many issues
+// export * from "./components/forms"; // Needs checking
+// export * from "./components/profile"; // Many issues
+// export * from "./components/navigation"; // Has issues
+// export * from "./components/analytics-dashboard"; // Issues
+// export * from "./components/errors"; // Needs checking
+// export * from "./components/creator"; // Many issues
+// export * from "./components/hivelab"; // Needs checking
+// export * from "./components/landing"; // Needs checking
+// export * from "./components/onboarding"; // Needs checking
 
-// Creator Components
-export * from "./components/creator";
-
-// HIVELab Components
-export * from "./components/hivelab";
-
-// Landing Components
-export * from "./components/landing";
-
-// Onboarding Components
-export * from "./components/onboarding";
-
-// Waitlist Form
-export { WaitlistForm } from "./components/waitlist-form";
-
-// Post Composer
-export { PostComposer } from "./components/post-composer";
-
-// About Section
-export { AboutSection } from "./components/about-section";
-
-// Action Card
-export { ActionCard } from "./components/action-card";
-
-// Global CSS for specific styling
-export * from "./force-white-inputs.css";
+// Individual component exports (need checking)
+// export { WaitlistForm } from "./components/waitlist-form"; // Issues
+// export { PostComposer } from "./components/post-composer"; // Issues
+// export { AboutSection } from "./components/about-section"; // Needs checking
+// export { ActionCard } from "./components/action-card"; // Issues

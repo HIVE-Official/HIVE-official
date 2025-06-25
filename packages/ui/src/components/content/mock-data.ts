@@ -1,6 +1,6 @@
-import { SpaceShowcaseData } from "./space-showcase-card";
-import { EventAnnouncementData } from "./event-announcement-card";
-import { UGCPostData } from "./ugc-post-card";
+import type { SpaceShowcaseData } from "./space-showcase-card";
+import type { EventAnnouncementData } from "./event-announcement-card";
+import type { UGCPostData } from "./ugc-post-card";
 
 export const mockSpace: SpaceShowcaseData = {
   id: "space-1",
@@ -46,9 +46,9 @@ export const mockEvent: EventAnnouncementData = {
   eventType: "ritual" as const,
   tags: [],
   organizer: {
-    id: '1',
-    name: 'test'
-  }
+    id: "1",
+    name: "test",
+  },
 };
 
 export const mockPost: UGCPostData = {
@@ -82,5 +82,5 @@ export const mockPost: UGCPostData = {
     hasShared: false,
   },
   timestamp: "2024-01-15T14:30:00Z",
-  postType: 'media'
-}; 
+  postType: "media",
+};

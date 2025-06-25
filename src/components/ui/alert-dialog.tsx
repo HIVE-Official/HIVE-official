@@ -1,5 +1,4 @@
-import * as React from "react"
-import { cn } from "@/lib/utils"
+import * as React from "react";
 
 // Create a proper alert dialog context
 const AlertDialogContext = React.createContext<{
@@ -10,22 +9,21 @@ const AlertDialogContext = React.createContext<{
   setIsOpen: () => {},
 });
 
-AlertDialogContext.displayName = 'AlertDialogContext';
+AlertDialogContext.displayName = "AlertDialogContext";
 
-const AlertDialog = React.forwardRef<
-  HTMLDivElement,
-  AlertDialogProps
->(({ children, open, onOpenChange, ...props }, ref) => {
-  const [internalOpen, setInternalOpen] = React.useState(false);
-  const isOpen = open !== undefined ? open : internalOpen;
-  const setIsOpen = onOpenChange || setInternalOpen;
+const AlertDialog = React.forwardRef<HTMLDivElement, AlertDialogProps>(
+  ({ children, open, onOpenChange, ...props }, ref) => {
+    const [internalOpen, setInternalOpen] = React.useState(false);
+    const isOpen = open !== undefined ? open : internalOpen;
+    const setIsOpen = onOpenChange || setInternalOpen;
 
-  return (
-    <AlertDialogContext.Provider value={{ isOpen, setIsOpen }}>
-      <div ref={ref} {...props}>
-        {children}
-      </div>
-    </AlertDialogContext.Provider>
-  )
-})
-AlertDialog.displayName = "AlertDialog" 
+    return (
+      <AlertDialogContext.Provider value={{ isOpen, setIsOpen }}>
+        <div ref={ref} {...props}>
+          {children}
+        </div>
+      </AlertDialogContext.Provider>
+    );
+  }
+);
+AlertDialog.displayName = "AlertDialog";

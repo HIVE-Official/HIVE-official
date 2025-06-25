@@ -1,9 +1,9 @@
-import { z } from 'zod';
-import { ElementInstanceSchema } from './element';
+import { z } from "zod";
+import { ElementInstanceSchema } from "./element";
 // Tool status for Draft → Preview → Publish workflow
-export const ToolStatus = z.enum(['draft', 'preview', 'published']);
+export const ToolStatus = z.enum(["draft", "preview", "published"]);
 // Tool sharing permissions
-export const ToolPermission = z.enum(['view', 'comment', 'edit']);
+export const ToolPermission = z.enum(["view", "comment", "edit"]);
 // Tool collaborator with role-based permissions
 export const ToolCollaboratorSchema = z.object({
     userId: z.string(),
@@ -14,23 +14,25 @@ export const ToolCollaboratorSchema = z.object({
 // Tool metadata for analytics and discovery
 export const ToolMetadataSchema = z.object({
     tags: z.array(z.string()).max(10).optional(),
-    difficulty: z.enum(['beginner', 'intermediate', 'advanced']).optional(),
+    difficulty: z.enum(["beginner", "intermediate", "advanced"]).optional(),
     estimatedTime: z.number().min(1).max(300).optional(), // minutes
     category: z.string().max(50).optional(),
-    language: z.string().length(2).default('en'), // ISO 639-1
+    language: z.string().length(2).default("en"), // ISO 639-1
 });
 // Tool data schema configuration
 export const ToolDataSchemaSchema = z.object({
     fields: z.array(z.object({
         name: z.string().max(50),
-        type: z.enum(['string', 'number', 'boolean', 'date', 'array', 'object']),
+        type: z.enum(["string", "number", "boolean", "date", "array", "object"]),
         required: z.boolean().default(false),
-        validation: z.object({
+        validation: z
+            .object({
             min: z.number().optional(),
             max: z.number().optional(),
             pattern: z.string().optional(),
             enum: z.array(z.string()).optional(),
-        }).optional(),
+        })
+            .optional(),
     })),
     maxRecords: z.number().min(1).max(1000).default(100),
     allowAnonymous: z.boolean().default(false),
@@ -38,9 +40,9 @@ export const ToolDataSchemaSchema = z.object({
 // Tool configuration and settings
 export const ToolConfigSchema = z.object({
     // Appearance
-    theme: z.enum(['light', 'dark', 'auto']).default('auto'),
-    primaryColor: z.string().default('#3b82f6'),
-    backgroundColor: z.string().default('#ffffff'),
+    theme: z.enum(["light", "dark", "auto"]).default("auto"),
+    primaryColor: z.string().default("#3b82f6"),
+    backgroundColor: z.string().default("#ffffff"),
     // Behavior
     allowMultipleSubmissions: z.boolean().default(false),
     requireAuthentication: z.boolean().default(true),
@@ -58,7 +60,9 @@ export const ToolConfigSchema = z.object({
 });
 // Tool version for immutable versioning
 export const ToolVersionSchema = z.object({
-    version: z.string().regex(/^\d+\.\d+\.\d+$/, 'Version must follow semver format (e.g., 1.0.0)'),
+    version: z
+        .string()
+        .regex(/^\d+\.\d+\.\d+$/, "Version must follow semver format (e.g., 1.0.0)"),
     changelog: z.string().max(1000).optional(),
     createdAt: z.date(),
     createdBy: z.string(),
@@ -74,8 +78,11 @@ export const ToolSchema = z.object({
     ownerId: z.string(),
     collaborators: z.array(ToolCollaboratorSchema).default([]),
     // Status and versioning
-    status: ToolStatus.default('draft'),
-    currentVersion: z.string().regex(/^\d+\.\d+\.\d+$/).default('1.0.0'),
+    status: ToolStatus.default("draft"),
+    currentVersion: z
+        .string()
+        .regex(/^\d+\.\d+\.\d+$/)
+        .default("1.0.0"),
     versions: z.array(ToolVersionSchema).default([]),
     // Tool structure
     elements: z.array(ElementInstanceSchema).max(50), // ELEMENT_LIMITS.MAX_ELEMENTS_PER_TOOL
@@ -120,7 +127,7 @@ export const UpdateToolSchema = z.object({
 });
 // Tool sharing schema
 export const ShareToolSchema = z.object({
-    permission: ToolPermission.default('view'),
+    permission: ToolPermission.default("view"),
     expiresAt: z.date().optional(),
     requiresApproval: z.boolean().default(false),
 });
@@ -128,7 +135,7 @@ export const ShareToolSchema = z.object({
 export const ToolDataRecordSchema = z.object({
     id: z.string(),
     toolId: z.string(),
-    data: z.record(z.any()), // Validated against tool's dataSchema
+    data: z.record(z.unknown()), // Validated against tool's dataSchema
     submittedBy: z.string().optional(), // userId if authenticated
     submittedAt: z.date(),
     ipAddress: z.string().optional(), // For anonymous submissions
@@ -140,7 +147,7 @@ export const ToolDataRecordSchema = z.object({
     validationErrors: z.array(z.string()).optional(),
     // Analytics
     completionTime: z.number().optional(), // milliseconds
-    deviceType: z.enum(['desktop', 'tablet', 'mobile']).optional(),
+    deviceType: z.enum(["desktop", "tablet", "mobile"]).optional(),
     referrer: z.string().optional(),
 });
 // Tool usage events for analytics
@@ -148,10 +155,10 @@ export const ToolUsageEventSchema = z.object({
     id: z.string(),
     toolId: z.string(),
     userId: z.string().optional(),
-    eventType: z.enum(['view', 'start', 'complete', 'abandon', 'share', 'fork']),
+    eventType: z.enum(["view", "start", "complete", "abandon", "share", "fork"]),
     timestamp: z.date(),
     sessionId: z.string(),
-    metadata: z.record(z.any()).optional(),
+    metadata: z.record(z.unknown()).optional(),
 });
 // Utility functions
 export const createToolDefaults = (ownerId, data) => ({
@@ -159,8 +166,8 @@ export const createToolDefaults = (ownerId, data) => ({
     description: data.description,
     ownerId,
     collaborators: [],
-    status: 'draft',
-    currentVersion: '1.0.0',
+    status: "draft",
+    currentVersion: "1.0.0",
     versions: [],
     elements: [],
     config: { ...ToolConfigSchema.parse({}), ...data.config },
@@ -176,28 +183,29 @@ export const createToolDefaults = (ownerId, data) => ({
     lastUsedAt: undefined,
 });
 export const generateShareToken = () => {
-    return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    return (Math.random().toString(36).substring(2, 15) +
+        Math.random().toString(36).substring(2, 15));
 };
 export const canUserEditTool = (tool, userId) => {
     if (tool.ownerId === userId)
         return true;
-    return tool.collaborators.some(collab => collab.userId === userId && collab.permission === 'edit');
+    return tool.collaborators.some((collab) => collab.userId === userId && collab.permission === "edit");
 };
 export const canUserViewTool = (tool, userId) => {
     if (tool.isPublic)
         return true;
     if (tool.ownerId === userId)
         return true;
-    return tool.collaborators.some(collab => collab.userId === userId);
+    return tool.collaborators.some((collab) => collab.userId === userId);
 };
 export const getNextVersion = (currentVersion, changeType) => {
-    const [major, minor, patch] = currentVersion.split('.').map(Number);
+    const [major, minor, patch] = currentVersion.split(".").map(Number);
     switch (changeType) {
-        case 'major':
+        case "major":
             return `${major + 1}.0.0`;
-        case 'minor':
+        case "minor":
             return `${major}.${minor + 1}.0`;
-        case 'patch':
+        case "patch":
             return `${major}.${minor}.${patch + 1}`;
         default:
             throw new Error(`Invalid change type: ${changeType}`);
@@ -205,26 +213,26 @@ export const getNextVersion = (currentVersion, changeType) => {
 };
 export const determineChangeType = (oldElements, newElements) => {
     // Major: Breaking changes (removed elements, changed element types)
-    const oldElementIds = new Set(oldElements.map(el => el.id));
-    const newElementIds = new Set(newElements.map(el => el.id));
+    const oldElementIds = new Set(oldElements.map((el) => el.id));
+    const newElementIds = new Set(newElements.map((el) => el.id));
     // Check for removed elements
     for (const oldId of oldElementIds) {
         if (!newElementIds.has(oldId)) {
-            return 'major'; // Removed element is breaking
+            return "major"; // Removed element is breaking
         }
     }
     // Check for element type changes
-    const oldElementMap = new Map(oldElements.map(el => [el.id, el]));
-    const newElementMap = new Map(newElements.map(el => [el.id, el]));
+    const oldElementMap = new Map(oldElements.map((el) => [el.id, el]));
+    const newElementMap = new Map(newElements.map((el) => [el.id, el]));
     for (const [id, oldEl] of oldElementMap) {
         const newEl = newElementMap.get(id);
         if (newEl && oldEl.elementId !== newEl.elementId) {
-            return 'major'; // Changed element type is breaking
+            return "major"; // Changed element type is breaking
         }
     }
     // Minor: New elements or significant config changes
     if (newElements.length > oldElements.length) {
-        return 'minor'; // Added new elements
+        return "minor"; // Added new elements
     }
     // Check for significant config changes
     for (const [id, oldEl] of oldElementMap) {
@@ -235,26 +243,28 @@ export const determineChangeType = (oldElements, newElements) => {
             if (oldConfigStr !== newConfigStr) {
                 // For now, treat any config change as minor
                 // In the future, we could analyze the specific changes
-                return 'minor';
+                return "minor";
             }
         }
     }
     // Patch: Minor changes (position, visibility, etc.)
-    return 'patch';
+    return "patch";
 };
 export const validateToolStructure = (elements) => {
     const errors = [];
     // Check element count limit
-    if (elements.length > 50) { // ELEMENT_LIMITS.MAX_ELEMENTS_PER_TOOL
+    if (elements.length > 50) {
+        // ELEMENT_LIMITS.MAX_ELEMENTS_PER_TOOL
         errors.push(`Tool cannot have more than 50 elements (found ${elements.length})`);
     }
     // Check nesting depth
     const checkNestingDepth = (elementId, depth = 0) => {
-        if (depth > 3) { // ELEMENT_LIMITS.MAX_NESTING_DEPTH
+        if (depth > 3) {
+            // ELEMENT_LIMITS.MAX_NESTING_DEPTH
             errors.push(`Element ${elementId} exceeds maximum nesting depth of 3`);
             return depth;
         }
-        const children = elements.filter(el => el.parentId === elementId);
+        const children = elements.filter((el) => el.parentId === elementId);
         let maxChildDepth = depth;
         for (const child of children) {
             const childDepth = checkNestingDepth(child.id, depth + 1);
@@ -263,7 +273,7 @@ export const validateToolStructure = (elements) => {
         return maxChildDepth;
     };
     // Check root elements (no parent)
-    const rootElements = elements.filter(el => !el.parentId);
+    const rootElements = elements.filter((el) => !el.parentId);
     for (const root of rootElements) {
         checkNestingDepth(root.id);
     }
@@ -274,7 +284,7 @@ export const validateToolStructure = (elements) => {
             return true;
         }
         visited.add(elementId);
-        const children = elements.filter(el => el.parentId === elementId);
+        const children = elements.filter((el) => el.parentId === elementId);
         for (const child of children) {
             if (hasCircularReference(child.id, new Set(visited))) {
                 return true;
@@ -288,7 +298,7 @@ export const validateToolStructure = (elements) => {
     }
     return {
         isValid: errors.length === 0,
-        errors
+        errors,
     };
 };
 //# sourceMappingURL=tool.js.map

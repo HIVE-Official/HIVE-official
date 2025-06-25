@@ -2,9 +2,8 @@
 
 import * as React from "react";
 import { Badge } from "../../ui/badge";
-import { Button } from "../../ui/button";
 import { Card, CardContent, CardHeader } from "../../ui/card";
-import { ExternalLink, GraduationCap } from "lucide-react";
+import { GraduationCap } from "lucide-react";
 import type { TileProps } from "../grid/types";
 
 export const AcademicCard: React.FC<TileProps> = ({ isEditing = false }) => {

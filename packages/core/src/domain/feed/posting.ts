@@ -533,8 +533,8 @@ export class PostCreationEngine {
    * Delete a post
    */
   static async deletePost(
-    postId: string,
-    userId: string
+    _postId: string,
+    _userId: string
   ): Promise<{ success: boolean; errors?: string[] }> {
     try {
       // Validate delete permissions
@@ -561,8 +561,8 @@ export class DraftManager {
    * Save draft post
    */
   static saveDraft(
-    authorId: string,
-    draftData: CreatePostRequest
+    _authorId: string,
+    _draftData: CreatePostRequest
   ): { draftId: string; savedAt: Date } {
     const draftId = `draft_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     const savedAt = new Date();
@@ -575,7 +575,7 @@ export class DraftManager {
   /**
    * Load user drafts
    */
-  static async loadDrafts(authorId: string): Promise<
+  static async loadDrafts(_authorId: string): Promise<
     Array<{
       draftId: string;
       data: CreatePostRequest;
@@ -589,7 +589,7 @@ export class DraftManager {
   /**
    * Delete draft
    */
-  static deleteDraft(draftId: string, authorId: string): boolean {
+  static deleteDraft(_draftId: string, _authorId: string): boolean {
     // In real implementation, this would delete from storage
     return true;
   }

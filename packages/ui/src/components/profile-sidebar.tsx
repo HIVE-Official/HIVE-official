@@ -3,7 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import type { User } from "@hive/core";
-import { Button } from "@hive/ui";
+import { Button } from "./ui/button";
 
 interface ProfileSidebarProps {
   user: User;

@@ -1,5 +1,6 @@
-import { useCallback, useRef, useEffect } from 'react';
-import { useAnalytics } from './use-analytics';
+import { useCallback, useRef, useEffect } from "react";
+import { useAnalytics } from "./use-analytics";
+import { logger } from "@hive/core";
 /**
  * Hook for tracking onboarding analytics events
  * Uses the general analytics pipeline
@@ -17,8 +18,16 @@ export const useOnboardingAnalytics = () => {
     }, []);
     const trackOnboardingStarted = useCallback(() => {
         sessionStartTime.current = Date.now();
+        logger.debug("Onboarding started", {
+            sessionId: `onboarding_${sessionStartTime.current}`,
+            userAgent: navigator.userAgent,
+            viewport: {
+                width: window.innerWidth,
+                height: window.innerHeight,
+            },
+        });
         track({
-            name: 'onboarding_started',
+            name: "onboarding_started",
             properties: {
                 timestamp: Date.now(),
                 sessionId: `onboarding_${sessionStartTime.current}`,
@@ -38,6 +47,10 @@ export const useOnboardingAnalytics = () => {
             const prevTiming = stepTimings.current.get(currentStep.current);
             if (prevTiming && !prevTiming.endTime) {
                 prevTiming.endTime = now;
+                logger.debug("Previous step completed", {
+                    stepName: currentStep.current,
+                    duration: now - prevTiming.startTime,
+                });
             }
         }
         // Start new step timing
@@ -46,14 +59,23 @@ export const useOnboardingAnalytics = () => {
             startTime: now,
         });
         currentStep.current = stepName;
+        logger.debug("Onboarding step started", {
+            stepName,
+            stepIndex: getStepIndex(stepName),
+            sessionDuration: sessionStartTime.current
+                ? now - sessionStartTime.current
+                : 0,
+        });
         track({
-            name: 'onboarding_step_started',
+            name: "onboarding_step_started",
             properties: {
                 timestamp: now,
                 sessionId: `onboarding_${sessionStartTime.current}`,
                 stepName,
                 stepIndex: getStepIndex(stepName),
-                sessionDuration: sessionStartTime.current ? now - sessionStartTime.current : 0,
+                sessionDuration: sessionStartTime.current
+                    ? now - sessionStartTime.current
+                    : 0,
             },
         });
     }, [track]);
@@ -64,15 +86,23 @@ export const useOnboardingAnalytics = () => {
             timing.endTime = now;
         }
         const stepDuration = timing ? now - timing.startTime : 0;
+        logger.debug("Onboarding step completed", {
+            stepName,
+            stepDuration,
+            stepIndex: getStepIndex(stepName),
+            data,
+        });
         track({
-            name: 'onboarding_step_completed',
+            name: "onboarding_step_completed",
             properties: {
                 timestamp: now,
                 sessionId: `onboarding_${sessionStartTime.current}`,
                 stepName,
                 stepDuration,
                 stepIndex: getStepIndex(stepName),
-                sessionDuration: sessionStartTime.current ? now - sessionStartTime.current : 0,
+                sessionDuration: sessionStartTime.current
+                    ? now - sessionStartTime.current
+                    : 0,
                 stepData: data,
             },
         });
@@ -81,15 +111,22 @@ export const useOnboardingAnalytics = () => {
         const now = Date.now();
         const timing = stepTimings.current.get(stepName);
         const stepDuration = timing ? now - timing.startTime : 0;
+        logger.debug("Onboarding step skipped", {
+            stepName,
+            stepDuration,
+            reason,
+        });
         track({
-            name: 'onboarding_step_skipped',
+            name: "onboarding_step_skipped",
             properties: {
                 timestamp: now,
                 sessionId: `onboarding_${sessionStartTime.current}`,
                 stepName,
                 stepDuration,
                 stepIndex: getStepIndex(stepName),
-                sessionDuration: sessionStartTime.current ? now - sessionStartTime.current : 0,
+                sessionDuration: sessionStartTime.current
+                    ? now - sessionStartTime.current
+                    : 0,
                 skipReason: reason,
             },
         });
@@ -97,13 +134,15 @@ export const useOnboardingAnalytics = () => {
     const trackValidationError = useCallback((stepName, field, error) => {
         const now = Date.now();
         track({
-            name: 'onboarding_validation_error',
+            name: "onboarding_validation_error",
             properties: {
                 timestamp: now,
                 sessionId: `onboarding_${sessionStartTime.current}`,
                 stepName,
                 stepIndex: getStepIndex(stepName),
-                sessionDuration: sessionStartTime.current ? now - sessionStartTime.current : 0,
+                sessionDuration: sessionStartTime.current
+                    ? now - sessionStartTime.current
+                    : 0,
                 field,
                 error,
             },
@@ -111,7 +150,9 @@ export const useOnboardingAnalytics = () => {
     }, [track]);
     const trackOnboardingCompleted = useCallback((totalDuration, completedSteps) => {
         const now = Date.now();
-        const actualDuration = sessionStartTime.current ? now - sessionStartTime.current : totalDuration;
+        const actualDuration = sessionStartTime.current
+            ? now - sessionStartTime.current
+            : totalDuration;
         // Calculate step-by-step timings
         const stepTimingsData = Array.from(stepTimings.current.entries()).map(([stepName, timing]) => ({
             stepName,
@@ -120,7 +161,7 @@ export const useOnboardingAnalytics = () => {
             endTime: timing.endTime,
         }));
         track({
-            name: 'onboarding_completed',
+            name: "onboarding_completed",
             properties: {
                 timestamp: now,
                 sessionId: `onboarding_${sessionStartTime.current}`,
@@ -138,14 +179,16 @@ export const useOnboardingAnalytics = () => {
     }, [track]);
     const trackOnboardingAbandoned = useCallback((lastStep, reason) => {
         const now = Date.now();
-        const sessionDuration = sessionStartTime.current ? now - sessionStartTime.current : 0;
+        const sessionDuration = sessionStartTime.current
+            ? now - sessionStartTime.current
+            : 0;
         // Get completed steps
-        const completedSteps = Array.from(stepTimings.current.keys()).filter(stepName => {
+        const completedSteps = Array.from(stepTimings.current.keys()).filter((stepName) => {
             const timing = stepTimings.current.get(stepName);
             return timing?.endTime;
         });
         track({
-            name: 'onboarding_abandoned',
+            name: "onboarding_abandoned",
             properties: {
                 timestamp: now,
                 sessionId: `onboarding_${sessionStartTime.current}`,
@@ -177,13 +220,13 @@ export const useOnboardingAnalytics = () => {
  */
 function getStepIndex(stepName) {
     const stepOrder = [
-        'welcome',
-        'name',
-        'academics',
-        'handle',
-        'photo',
-        'builder',
-        'legal'
+        "welcome",
+        "name",
+        "academics",
+        "handle",
+        "photo",
+        "builder",
+        "legal",
     ];
     return stepOrder.indexOf(stepName);
 }

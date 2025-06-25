@@ -5,6 +5,7 @@ export * from "./domain/firestore/member";
 export * from "./domain/firestore/post";
 export * from "./domain/firestore/space";
 export * from "./domain/firestore/user";
+export * from "./domain/firestore/leader-claim";
 export * from "./domain/auth/emailLink";
 export * from "./domain/analytics/creation";
 export * from "./domain/analytics/onboarding";
@@ -14,7 +15,7 @@ export type { SpaceMember } from "./domain/member";
 export type { WaitlistEntry } from "./domain/waitlistEntry";
 export type { School } from "./domain/school";
 export * from "./constants/majors";
-export * from "./stores/useAppStore";
+export * from "./stores";
 export * from "./firebase";
 export * from "./domain/feed/top-strip";
 export * from "./domain/feed/main-feed";
@@ -25,4 +26,5 @@ export { CreatePostSchema, ContentProcessor, PostValidator, PostCreationEngine, 
 export { SpaceSection, SpaceStatus, SpaceOwnerType, SpaceDiscoveryEngine, } from "./domain/space/discovery";
 export type { SpaceDiscoveryData, UserDiscoveryContext, DiscoveryFilters, DiscoveryResult, } from "./domain/space/discovery";
 export { SpaceDiscoverySchema } from "./domain/space/discovery";
+export * from "./utils/logger";
 //# sourceMappingURL=index.d.ts.map

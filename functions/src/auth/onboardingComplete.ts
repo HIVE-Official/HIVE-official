@@ -22,7 +22,7 @@ export const onboardingComplete = functions.https.onCall(
 
       return { success: true, message: "Onboarding completed successfully." };
     } catch (error) {
-      console.error("Error completing onboarding:", error);
+      functions.logger.error("Error completing onboarding:", error);
       throw new functions.https.HttpsError(
         "internal",
         "An unexpected error occurred while completing onboarding."

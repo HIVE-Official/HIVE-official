@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, createContext, useContext, } from "react";
+import React, { useState, useEffect, createContext, useContext, } from "react";
 import { auth } from "../firebase-config";
 import { onAuthStateChanged } from "firebase/auth";
 const AuthContext = createContext(undefined);
@@ -19,7 +19,9 @@ export function AuthProvider({ children }) {
                 const authUser = {
                     uid: firebaseUser.uid,
                     email: firebaseUser.email,
-                    fullName: firebaseUser.displayName || firebaseUser.email?.split("@")[0] || "User",
+                    fullName: firebaseUser.displayName ||
+                        firebaseUser.email?.split("@")[0] ||
+                        "User",
                     onboardingCompleted,
                     getIdToken: () => firebaseUser.getIdToken(),
                 };
@@ -37,11 +39,7 @@ export function AuthProvider({ children }) {
         isLoading,
         isAuthenticated: !!user,
     };
-    return value;
-    {
-        value;
-    }
-     > { children } < /AuthContext.Provider>;
+    return React.createElement(AuthContext.Provider, { value }, children);
 }
 export function useAuth() {
     const context = useContext(AuthContext);

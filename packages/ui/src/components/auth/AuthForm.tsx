@@ -11,7 +11,7 @@ import {
   Label,
   Alert,
   AlertDescription,
-} from "@hive/ui";
+} from "../ui";
 import {
   Loader2,
   Mail,
@@ -79,7 +79,9 @@ export function AuthForm({
                 type="email"
                 placeholder={`you@${schoolDomain}`}
                 value={email}
-                onChange={(e) => onEmailChange(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  onEmailChange(e.target.value)
+                }
                 className="bg-zinc-900 border-zinc-700 focus:ring-yellow-500"
                 required
               />

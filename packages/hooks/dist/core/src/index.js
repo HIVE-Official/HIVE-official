@@ -7,6 +7,7 @@ export * from "./domain/firestore/member";
 export * from "./domain/firestore/post";
 export * from "./domain/firestore/space";
 export * from "./domain/firestore/user";
+export * from "./domain/firestore/leader-claim";
 // Domain types - Auth
 export * from "./domain/auth/emailLink";
 // Domain types - Analytics
@@ -18,9 +19,10 @@ export * from "./domain/analytics/events";
 // Constants
 export * from "./constants/majors";
 // Stores
-export * from "./stores/useAppStore";
+export * from "./stores";
 // Firebase client config
 export * from "./firebase";
+// export * from "./firebase-admin"; // TEMP: Commented out to avoid duplicate auth/db exports
 // Feed System Core
 export * from "./domain/feed/top-strip";
 export * from "./domain/feed/main-feed";
@@ -31,4 +33,11 @@ export { CreatePostSchema, ContentProcessor, PostValidator, PostCreationEngine, 
 export { SpaceSection, SpaceStatus, SpaceOwnerType, SpaceDiscoveryEngine, } from "./domain/space/discovery";
 export { SpaceDiscoverySchema } from "./domain/space/discovery";
 // Note: ContentProcessor and PostValidator are now exported from domain/feed/posting
+// export * from "./domain/space/space.types"; // Obsolete – file removed
+// export * from "./domain/space/space.guards"; // Obsolete – file removed
+// export * from "./domain/feed/feed.types"; // Obsolete – file removed
+// export * from "./domain/feed/feed.guards"; // Obsolete – file removed
+// Types
+// export * from "./types/auth-types"; // TEMP: Commented out missing file
+export * from "./utils/logger";
 //# sourceMappingURL=index.js.map

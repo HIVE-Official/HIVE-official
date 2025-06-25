@@ -12,6 +12,7 @@ import {
   determineChangeType,
   validateToolStructure,
   validateElementConfig,
+  logger,
 } from "@hive/core";
 
 const db = getFirestore();
@@ -85,7 +86,7 @@ export async function GET(
       versions: versions.length > 0 ? versions : undefined,
     });
   } catch (error) {
-    console.error("Error fetching tool:", error);
+    logger.error("Error fetching tool:", error);
     return NextResponse.json(
       { error: "Failed to fetch tool" },
       { status: 500 }
@@ -228,7 +229,7 @@ export async function PUT(
 
     return NextResponse.json(result);
   } catch (error) {
-    console.error("Error updating tool:", error);
+    logger.error("Error updating tool:", error);
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -328,9 +329,9 @@ export async function DELETE(
       },
     });
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ message: "Tool deleted successfully" });
   } catch (error) {
-    console.error("Error deleting tool:", error);
+    logger.error("Error deleting tool:", error);
     return NextResponse.json(
       { error: "Failed to delete tool" },
       { status: 500 }

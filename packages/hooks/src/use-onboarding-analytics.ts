@@ -37,7 +37,7 @@ interface UseOnboardingAnalyticsReturn {
  * Uses the general analytics pipeline
  */
 export const useOnboardingAnalytics = (): UseOnboardingAnalyticsReturn => {
-  const { track } = useAnalytics();
+  const { trackEvent: track } = useAnalytics();
   const sessionStartTime = useRef<number | null>(null);
   const stepTimings = useRef<Map<OnboardingStepName, OnboardingStepTiming>>(
     new Map()

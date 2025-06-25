@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { logger } from "../../utils/logger";
 /**
  * Post Data Schema
  */
@@ -71,6 +72,22 @@ export const PostSchema = z.object({
     viewCount: z.number().default(0),
     // Tool-specific data
     toolData: z.record(z.unknown()).optional(),
+});
+/**
+ * Minimal Post Schema for offline caching and list views
+ */
+export const MinimalPostSchema = PostSchema.pick({
+    id: true,
+    type: true,
+    authorId: true,
+    authorHandle: true,
+    authorDisplayName: true,
+    content: true, // Content is essential for display
+    spaceId: true,
+    visibility: true,
+    publishedAt: true,
+    reactionCount: true,
+    commentCount: true,
 });
 /**
  * Post Creation Request Schema
@@ -318,6 +335,11 @@ export class PostCreationEngine {
                 viewCount: 0,
                 toolData: validatedRequest.toolData,
             };
+            logger.debug("Post created:", {
+                id: post.id,
+                authorId: post.authorId,
+                content: post.content,
+            });
             return {
                 success: true,
                 post,
@@ -379,7 +401,7 @@ export class PostCreationEngine {
     /**
      * Delete a post
      */
-    static async deletePost(postId, userId) {
+    static async deletePost(_postId, _userId) {
         try {
             // Validate delete permissions
             // This would check if user is post author or has admin permissions
@@ -403,7 +425,7 @@ export class DraftManager {
     /**
      * Save draft post
      */
-    static saveDraft(authorId, draftData) {
+    static saveDraft(_authorId, _draftData) {
         const draftId = `draft_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
         const savedAt = new Date();
         // In real implementation, this would save to storage
@@ -412,14 +434,14 @@ export class DraftManager {
     /**
      * Load user drafts
      */
-    static async loadDrafts(authorId) {
+    static async loadDrafts(_authorId) {
         // In real implementation, this would load from storage
         return [];
     }
     /**
      * Delete draft
      */
-    static deleteDraft(draftId, authorId) {
+    static deleteDraft(_draftId, _authorId) {
         // In real implementation, this would delete from storage
         return true;
     }
@@ -430,7 +452,7 @@ export class PostAnalyticsTracker {
      */
     static trackPostCreated(post) {
         // Analytics tracking implementation
-        console.log("Post created:", {
+        logger.debug("Post created:", {
             postId: post.id,
             type: post.type,
             spaceId: post.spaceId,
@@ -443,7 +465,7 @@ export class PostAnalyticsTracker {
      */
     static trackPostEngagement(postId, userId, engagementType) {
         // Analytics tracking implementation
-        console.log("Post engagement:", {
+        logger.debug("Post engagement:", {
             postId,
             userId,
             engagementType,

@@ -5,14 +5,8 @@ import {
   useQueryClient,
   useInfiniteQuery,
 } from "@tanstack/react-query";
-import {
-  CreatePostRequest,
-  PostType,
-  PostCreationEngine,
-  Post,
-  PostContent,
-  logger,
-} from "@hive/core";
+import { logger } from "@hive/core";
+import type { CreatePostRequest, PostType, Post } from "@hive/core";
 // Temporarily disabled for Storybook: import { DraftManager } from "@hive/core";
 
 /**
@@ -190,7 +184,7 @@ export const useInfinitePosts = (params?: {
         limit: params?.limit || 20,
       }),
     initialPageParam: 0,
-    getNextPageParam: (lastPage, allPages) => {
+    getNextPageParam: (lastPage, _allPages: (typeof lastPage)[]) => {
       if (lastPage.pagination.hasMore) {
         return lastPage.pagination.offset + lastPage.pagination.limit;
       }
@@ -219,14 +213,13 @@ export const useInfinitePosts = (params?: {
 /**
  * Hook for managing post drafts
  */
+type Draft = {
+  draftId: string;
+  data: CreatePostRequest;
+  savedAt: Date;
+};
 export const usePostDrafts = (authorId: string) => {
-  const [drafts, setDrafts] = useState<
-    Array<{
-      draftId: string;
-      data: CreatePostRequest;
-      savedAt: Date;
-    }>
-  >([]);
+  const [drafts, setDrafts] = useState<Draft[]>([]);
 
   const saveDraft = useCallback(
     (draftData: CreatePostRequest) => {
@@ -248,7 +241,7 @@ export const usePostDrafts = (authorId: string) => {
 
   const loadDrafts = useCallback(async () => {
     try {
-      const userDrafts: any[] = []; // await DraftManager.loadDrafts(authorId);
+      const userDrafts: Draft[] = []; // await DraftManager.loadDrafts(authorId);
       setDrafts(userDrafts);
     } catch (error) {
       logger.error("Failed to load drafts:", error);

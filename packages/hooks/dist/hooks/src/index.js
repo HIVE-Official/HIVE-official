@@ -11,4 +11,9 @@ export { useCreatePost, usePosts, usePostEditor, usePostInteractions, } from "./
 export { useSpaceDiscovery, useSpaceJoining, useCompleteSpaceDiscovery, } from "./use-space-discovery";
 // Utility hooks
 export { useDebounce } from "./use-debounce";
+export { useConfetti } from "./use-confetti";
+// Motion & accessibility hooks
+export { usePrefersReducedMotion, useAnimationDuration, getAnimationDuration, } from "./use-reduced-motion";
+export * from "./use-timer/use-timer";
+export * from "./use-online-status";
 //# sourceMappingURL=index.js.map

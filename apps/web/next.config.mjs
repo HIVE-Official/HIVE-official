@@ -18,7 +18,7 @@ const nextConfig = {
     ignoreBuildErrors: false,
   },
   // SVG handling and workspace resolution
-  webpack: (config, { isServer }) => {
+  webpack: (config) => {
     // SVG handling
     config.module.rules.push({
       test: /\.svg$/,

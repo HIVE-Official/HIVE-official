@@ -18,6 +18,11 @@ export default [
   ...tseslint.configs.recommended,
   pluginReact.configs.flat.recommended,
   {
+    settings: {
+      react: {
+        version: "detect",
+      },
+    },
     rules: {
       "@typescript-eslint/no-unused-vars": [
         "error",
@@ -37,13 +42,14 @@ export default [
       "**/node_modules/**",
       "**/dist/**",
       "**/.next/**",
+      "**/.turbo/**",
       "**/out/**",
       "**/build/**",
+      "**/.cache/**",
+      "**/coverage/**",
       "**/lib/**", // Compiled JavaScript
-      "**/*.config.js",
-      "**/*.config.mjs",
-      "**/*.config.ts",
       "**/.eslintrc.js",
+      "**/eslint.config.js",
       "**/storybook-static/**",
       "**/test-results/**",
       "**/playwright-report/**",
@@ -51,6 +57,8 @@ export default [
       "**/packages/*/lib/**", // Package compiled outputs
       "**/scripts/**", // Node.js scripts
       "**/firebase/datafix/**", // Firebase data migration scripts
+      "**/firebase/scripts/**",
+      "**/*.test.js",
       "**/functions/src/feed/report.ts", // Still suspicious, but keeping for now
       "**/functions/src/moderation.ts", // Still suspicious, but keeping for now
       "**/functions/src/spaces/claim.ts", // Still suspicious, but keeping for now

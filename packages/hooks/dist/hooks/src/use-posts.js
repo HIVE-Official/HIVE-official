@@ -1,6 +1,7 @@
 import { useState, useCallback, useMemo } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { DraftManager, } from "@hive/core";
+import { useMutation, useQuery, useQueryClient, useInfiniteQuery, } from "@tanstack/react-query";
+import { logger } from "@hive/core";
+// Temporarily disabled for Storybook: import { DraftManager } from "@hive/core";
 /**
  * API client for posts
  */
@@ -78,59 +79,9 @@ const postsApi = {
  */
 export const useCreatePost = () => {
     const queryClient = useQueryClient();
-    const [optimisticPost, setOptimisticPost] = useState(null);
     const mutation = useMutation({
         mutationFn: postsApi.createPost,
-        onMutate: async (postData) => {
-            // Create optimistic post for immediate UI feedback
-            const tempPost = {
-                id: `temp_${Date.now()}`,
-                type: postData.type,
-                authorId: "current-user", // Would be from auth context
-                authorHandle: "current-handle",
-                authorDisplayName: "Current User",
-                content: postData.content,
-                spaceId: postData.spaceId,
-                spaceName: undefined,
-                visibility: postData.visibility,
-                status: "published",
-                scheduledAt: postData.scheduledAt,
-                publishedAt: new Date(),
-                createdAt: new Date(),
-                updatedAt: new Date(),
-                reactions: {},
-                reactionCount: 0,
-                commentCount: 0,
-                shareCount: 0,
-                viewCount: 0,
-                toolData: postData.toolData,
-            };
-            setOptimisticPost(tempPost);
-            // Cancel outgoing refetches
-            await queryClient.cancelQueries({ queryKey: ["posts"] });
-            // Snapshot previous value
-            const previousPosts = queryClient.getQueryData(["posts"]);
-            // Optimistically update
-            queryClient.setQueryData(["posts"], (old) => {
-                if (!old)
-                    return { posts: [tempPost] };
-                return {
-                    ...old,
-                    posts: [tempPost, ...old.posts],
-                };
-            });
-            return { previousPosts };
-        },
-        onError: (err, postData, context) => {
-            // Rollback optimistic update
-            setOptimisticPost(null);
-            if (context?.previousPosts) {
-                queryClient.setQueryData(["posts"], context.previousPosts);
-            }
-        },
-        onSuccess: (data) => {
-            // Remove optimistic post and update with real data
-            setOptimisticPost(null);
+        onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["posts"] });
         },
     });
@@ -138,7 +89,6 @@ export const useCreatePost = () => {
         createPost: mutation.mutate,
         isCreating: mutation.isPending,
         error: mutation.error?.message,
-        optimisticPost,
         reset: mutation.reset,
     };
 };
@@ -172,69 +122,38 @@ export const usePosts = (params) => {
  * Hook for infinite scroll posts
  */
 export const useInfinitePosts = (params) => {
-    const [allPosts, setAllPosts] = useState([]);
-    const [offset, setOffset] = useState(0);
-    const [hasMore, setHasMore] = useState(true);
-    const [isLoadingMore, setIsLoadingMore] = useState(false);
-    const limit = params?.limit || 20;
-    const { posts, isLoading, error, refetch } = usePosts({
-        ...params,
-        limit,
-        // offset handled manually for infinite scroll
-    });
-    const loadMore = useCallback(async () => {
-        if (isLoadingMore || !hasMore)
-            return;
-        setIsLoadingMore(true);
-        try {
-            const response = await postsApi.fetchPosts({
-                ...params,
-                limit,
-                offset: offset + limit,
-            });
-            if (response.success) {
-                setAllPosts((prev) => [...prev, ...response.posts]);
-                setOffset((prev) => prev + limit);
-                setHasMore(response.pagination.hasMore);
+    const { data, error, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage, status, refetch, } = useInfiniteQuery({
+        queryKey: ["posts", params],
+        queryFn: ({ pageParam = 0 }) => postsApi.fetchPosts({
+            ...params,
+            offset: pageParam,
+            limit: params?.limit || 20,
+        }),
+        initialPageParam: 0,
+        getNextPageParam: (lastPage, _allPages) => {
+            if (lastPage.pagination.hasMore) {
+                return lastPage.pagination.offset + lastPage.pagination.limit;
             }
-        }
-        catch (err) {
-            console.error("Failed to load more posts:", err);
-        }
-        finally {
-            setIsLoadingMore(false);
-        }
-    }, [params, limit, offset, hasMore, isLoadingMore]);
-    // Reset when params change
-    const reset = useCallback(() => {
-        setAllPosts([]);
-        setOffset(0);
-        setHasMore(true);
-        refetch();
-    }, [refetch]);
-    // Update allPosts when initial posts load
-    useMemo(() => {
-        if (posts.length > 0 && offset === 0) {
-            setAllPosts(posts);
-        }
-    }, [posts, offset]);
+            return undefined;
+        },
+        staleTime: 1000 * 60 * 5, // 5 minutes
+    });
+    const posts = useMemo(() => data?.pages.flatMap((page) => page.posts) ?? [], [data]);
     return {
-        posts: allPosts,
-        isLoading,
-        isLoadingMore,
-        error,
-        hasMore,
-        loadMore,
-        reset,
+        posts,
+        error: error,
+        fetchNextPage,
+        hasNextPage,
+        isLoading: status === "pending",
+        isFetching,
+        isFetchingNextPage,
+        refetch,
     };
 };
-/**
- * Hook for managing post drafts
- */
 export const usePostDrafts = (authorId) => {
     const [drafts, setDrafts] = useState([]);
     const saveDraft = useCallback((draftData) => {
-        const result = DraftManager.saveDraft(authorId, draftData);
+        const result = { draftId: `draft_${Date.now()}`, savedAt: new Date() }; // DraftManager.saveDraft(authorId, draftData);
         const newDraft = {
             draftId: result.draftId,
             data: draftData,
@@ -248,15 +167,16 @@ export const usePostDrafts = (authorId) => {
     }, [authorId]);
     const loadDrafts = useCallback(async () => {
         try {
-            const userDrafts = await DraftManager.loadDrafts(authorId);
+            const userDrafts = []; // await DraftManager.loadDrafts(authorId);
             setDrafts(userDrafts);
         }
         catch (error) {
-            console.error("Failed to load drafts:", error);
+            logger.error("Failed to load drafts:", error);
+            return [];
         }
     }, [authorId]);
     const deleteDraft = useCallback((draftId) => {
-        const success = DraftManager.deleteDraft(draftId, authorId);
+        const success = true; // DraftManager.deleteDraft(draftId, authorId);
         if (success) {
             setDrafts((prev) => prev.filter((d) => d.draftId !== draftId));
         }

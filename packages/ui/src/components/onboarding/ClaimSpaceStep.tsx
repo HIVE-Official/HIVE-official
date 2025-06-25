@@ -12,7 +12,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@hive/ui";
+} from "../ui";
 import { useState } from "react";
 
 export interface Space {

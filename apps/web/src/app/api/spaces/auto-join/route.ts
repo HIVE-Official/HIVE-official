@@ -1,6 +1,6 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { type User, UB_MAJORS } from "@hive/core";
+import { type User, UB_MAJORS, logger } from "@hive/core";
 import { dbAdmin } from "@/lib/firebase-admin";
 import { FieldValue } from "firebase-admin/firestore";
 
@@ -176,7 +176,7 @@ export async function POST(request: NextRequest) {
       spacesJoined,
     });
   } catch (error) {
-    console.error("Auto-join error:", error);
+    logger.error("Auto-join error:", error);
     return NextResponse.json(
       { error: "Failed to auto-join user to spaces" },
       { status: 500 }

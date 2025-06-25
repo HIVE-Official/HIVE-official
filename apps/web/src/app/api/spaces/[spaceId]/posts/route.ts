@@ -5,6 +5,7 @@ import { dbAdmin } from "@/lib/firebase-admin";
 import { getAuth } from "firebase-admin/auth";
 import { getAuthTokenFromRequest } from "@/lib/auth";
 import { postCreationRateLimit } from "@/lib/rate-limit";
+import { logger } from "@hive/core";
 
 const CreatePostSchema = z.object({
   content: z.string().min(1).max(2000),
@@ -158,7 +159,7 @@ export async function GET(
           : null,
     });
   } catch (error) {
-    console.error("Error fetching posts:", error);
+    logger.error("Error fetching posts:", error);
     return NextResponse.json(
       { error: "Failed to fetch posts" },
       { status: 500 }
@@ -284,7 +285,7 @@ export async function POST(
       );
     }
 
-    console.error("Error creating post:", error);
+    logger.error("Error creating post:", error);
     return NextResponse.json(
       { error: "Failed to create post" },
       { status: 500 }

@@ -59,15 +59,15 @@ export declare const PostSchema: z.ZodObject<{
             displayName: z.ZodString;
             position: z.ZodTuple<[z.ZodNumber, z.ZodNumber], null>;
         }, "strip", z.ZodTypeAny, {
-            displayName: string;
             position: [number, number];
             userId: string;
             handle: string;
+            displayName: string;
         }, {
-            displayName: string;
             position: [number, number];
             userId: string;
             handle: string;
+            displayName: string;
         }>, "many">>;
         hashtags: z.ZodOptional<z.ZodArray<z.ZodObject<{
             tag: z.ZodString;
@@ -135,10 +135,10 @@ export declare const PostSchema: z.ZodObject<{
     }, "strip", z.ZodTypeAny, {
         text?: string | undefined;
         mentions?: {
-            displayName: string;
             position: [number, number];
             userId: string;
             handle: string;
+            displayName: string;
         }[] | undefined;
         media?: {
             type: "image" | "video" | "audio";
@@ -164,10 +164,10 @@ export declare const PostSchema: z.ZodObject<{
     }, {
         text?: string | undefined;
         mentions?: {
-            displayName: string;
             position: [number, number];
             userId: string;
             handle: string;
+            displayName: string;
         }[] | undefined;
         media?: {
             type: "image" | "video" | "audio";
@@ -216,10 +216,10 @@ export declare const PostSchema: z.ZodObject<{
     content: {
         text?: string | undefined;
         mentions?: {
-            displayName: string;
             position: [number, number];
             userId: string;
             handle: string;
+            displayName: string;
         }[] | undefined;
         media?: {
             type: "image" | "video" | "audio";
@@ -265,10 +265,10 @@ export declare const PostSchema: z.ZodObject<{
     content: {
         text?: string | undefined;
         mentions?: {
-            displayName: string;
             position: [number, number];
             userId: string;
             handle: string;
+            displayName: string;
         }[] | undefined;
         media?: {
             type: "image" | "video" | "audio";
@@ -307,6 +307,253 @@ export declare const PostSchema: z.ZodObject<{
     toolData?: Record<string, unknown> | undefined;
 }>;
 export type Post = z.infer<typeof PostSchema>;
+/**
+ * Minimal Post Schema for offline caching and list views
+ */
+export declare const MinimalPostSchema: z.ZodObject<Pick<{
+    id: z.ZodString;
+    type: z.ZodEnum<["prompt-post", "pulse", "event-card", "join-form", "poll", "media-post"]>;
+    authorId: z.ZodString;
+    authorHandle: z.ZodString;
+    authorDisplayName: z.ZodString;
+    content: z.ZodObject<{
+        text: z.ZodOptional<z.ZodString>;
+        mentions: z.ZodOptional<z.ZodArray<z.ZodObject<{
+            userId: z.ZodString;
+            handle: z.ZodString;
+            displayName: z.ZodString;
+            position: z.ZodTuple<[z.ZodNumber, z.ZodNumber], null>;
+        }, "strip", z.ZodTypeAny, {
+            position: [number, number];
+            userId: string;
+            handle: string;
+            displayName: string;
+        }, {
+            position: [number, number];
+            userId: string;
+            handle: string;
+            displayName: string;
+        }>, "many">>;
+        hashtags: z.ZodOptional<z.ZodArray<z.ZodObject<{
+            tag: z.ZodString;
+            position: z.ZodTuple<[z.ZodNumber, z.ZodNumber], null>;
+        }, "strip", z.ZodTypeAny, {
+            position: [number, number];
+            tag: string;
+        }, {
+            position: [number, number];
+            tag: string;
+        }>, "many">>;
+        links: z.ZodOptional<z.ZodArray<z.ZodObject<{
+            url: z.ZodString;
+            title: z.ZodOptional<z.ZodString>;
+            description: z.ZodOptional<z.ZodString>;
+            image: z.ZodOptional<z.ZodString>;
+            position: z.ZodTuple<[z.ZodNumber, z.ZodNumber], null>;
+        }, "strip", z.ZodTypeAny, {
+            url: string;
+            position: [number, number];
+            description?: string | undefined;
+            image?: string | undefined;
+            title?: string | undefined;
+        }, {
+            url: string;
+            position: [number, number];
+            description?: string | undefined;
+            image?: string | undefined;
+            title?: string | undefined;
+        }>, "many">>;
+        media: z.ZodOptional<z.ZodArray<z.ZodObject<{
+            type: z.ZodEnum<["image", "video", "audio"]>;
+            url: z.ZodString;
+            thumbnail: z.ZodOptional<z.ZodString>;
+            alt: z.ZodOptional<z.ZodString>;
+            dimensions: z.ZodOptional<z.ZodObject<{
+                width: z.ZodNumber;
+                height: z.ZodNumber;
+            }, "strip", z.ZodTypeAny, {
+                width: number;
+                height: number;
+            }, {
+                width: number;
+                height: number;
+            }>>;
+        }, "strip", z.ZodTypeAny, {
+            type: "image" | "video" | "audio";
+            url: string;
+            alt?: string | undefined;
+            thumbnail?: string | undefined;
+            dimensions?: {
+                width: number;
+                height: number;
+            } | undefined;
+        }, {
+            type: "image" | "video" | "audio";
+            url: string;
+            alt?: string | undefined;
+            thumbnail?: string | undefined;
+            dimensions?: {
+                width: number;
+                height: number;
+            } | undefined;
+        }>, "many">>;
+    }, "strip", z.ZodTypeAny, {
+        text?: string | undefined;
+        mentions?: {
+            position: [number, number];
+            userId: string;
+            handle: string;
+            displayName: string;
+        }[] | undefined;
+        media?: {
+            type: "image" | "video" | "audio";
+            url: string;
+            alt?: string | undefined;
+            thumbnail?: string | undefined;
+            dimensions?: {
+                width: number;
+                height: number;
+            } | undefined;
+        }[] | undefined;
+        hashtags?: {
+            position: [number, number];
+            tag: string;
+        }[] | undefined;
+        links?: {
+            url: string;
+            position: [number, number];
+            description?: string | undefined;
+            image?: string | undefined;
+            title?: string | undefined;
+        }[] | undefined;
+    }, {
+        text?: string | undefined;
+        mentions?: {
+            position: [number, number];
+            userId: string;
+            handle: string;
+            displayName: string;
+        }[] | undefined;
+        media?: {
+            type: "image" | "video" | "audio";
+            url: string;
+            alt?: string | undefined;
+            thumbnail?: string | undefined;
+            dimensions?: {
+                width: number;
+                height: number;
+            } | undefined;
+        }[] | undefined;
+        hashtags?: {
+            position: [number, number];
+            tag: string;
+        }[] | undefined;
+        links?: {
+            url: string;
+            position: [number, number];
+            description?: string | undefined;
+            image?: string | undefined;
+            title?: string | undefined;
+        }[] | undefined;
+    }>;
+    spaceId: z.ZodOptional<z.ZodString>;
+    spaceName: z.ZodOptional<z.ZodString>;
+    visibility: z.ZodEnum<["public", "space-only", "followers-only"]>;
+    status: z.ZodEnum<["draft", "published", "archived", "flagged"]>;
+    scheduledAt: z.ZodOptional<z.ZodDate>;
+    publishedAt: z.ZodOptional<z.ZodDate>;
+    createdAt: z.ZodDate;
+    updatedAt: z.ZodDate;
+    reactions: z.ZodDefault<z.ZodRecord<z.ZodString, z.ZodNumber>>;
+    reactionCount: z.ZodDefault<z.ZodNumber>;
+    commentCount: z.ZodDefault<z.ZodNumber>;
+    shareCount: z.ZodDefault<z.ZodNumber>;
+    viewCount: z.ZodDefault<z.ZodNumber>;
+    toolData: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnknown>>;
+}, "type" | "id" | "spaceId" | "publishedAt" | "authorId" | "content" | "reactionCount" | "authorHandle" | "authorDisplayName" | "visibility" | "commentCount">, "strip", z.ZodTypeAny, {
+    type: "poll" | "pulse" | "prompt-post" | "event-card" | "join-form" | "media-post";
+    id: string;
+    authorId: string;
+    content: {
+        text?: string | undefined;
+        mentions?: {
+            position: [number, number];
+            userId: string;
+            handle: string;
+            displayName: string;
+        }[] | undefined;
+        media?: {
+            type: "image" | "video" | "audio";
+            url: string;
+            alt?: string | undefined;
+            thumbnail?: string | undefined;
+            dimensions?: {
+                width: number;
+                height: number;
+            } | undefined;
+        }[] | undefined;
+        hashtags?: {
+            position: [number, number];
+            tag: string;
+        }[] | undefined;
+        links?: {
+            url: string;
+            position: [number, number];
+            description?: string | undefined;
+            image?: string | undefined;
+            title?: string | undefined;
+        }[] | undefined;
+    };
+    reactionCount: number;
+    authorHandle: string;
+    authorDisplayName: string;
+    visibility: "public" | "space-only" | "followers-only";
+    commentCount: number;
+    spaceId?: string | undefined;
+    publishedAt?: Date | undefined;
+}, {
+    type: "poll" | "pulse" | "prompt-post" | "event-card" | "join-form" | "media-post";
+    id: string;
+    authorId: string;
+    content: {
+        text?: string | undefined;
+        mentions?: {
+            position: [number, number];
+            userId: string;
+            handle: string;
+            displayName: string;
+        }[] | undefined;
+        media?: {
+            type: "image" | "video" | "audio";
+            url: string;
+            alt?: string | undefined;
+            thumbnail?: string | undefined;
+            dimensions?: {
+                width: number;
+                height: number;
+            } | undefined;
+        }[] | undefined;
+        hashtags?: {
+            position: [number, number];
+            tag: string;
+        }[] | undefined;
+        links?: {
+            url: string;
+            position: [number, number];
+            description?: string | undefined;
+            image?: string | undefined;
+            title?: string | undefined;
+        }[] | undefined;
+    };
+    authorHandle: string;
+    authorDisplayName: string;
+    visibility: "public" | "space-only" | "followers-only";
+    spaceId?: string | undefined;
+    publishedAt?: Date | undefined;
+    reactionCount?: number | undefined;
+    commentCount?: number | undefined;
+}>;
+export type MinimalPost = z.infer<typeof MinimalPostSchema>;
 /**
  * Post Creation Request Schema
  */
@@ -513,7 +760,7 @@ export declare class PostCreationEngine {
     /**
      * Delete a post
      */
-    static deletePost(postId: string, userId: string): Promise<{
+    static deletePost(_postId: string, _userId: string): Promise<{
         success: boolean;
         errors?: string[];
     }>;
@@ -525,14 +772,14 @@ export declare class DraftManager {
     /**
      * Save draft post
      */
-    static saveDraft(authorId: string, draftData: CreatePostRequest): {
+    static saveDraft(_authorId: string, _draftData: CreatePostRequest): {
         draftId: string;
         savedAt: Date;
     };
     /**
      * Load user drafts
      */
-    static loadDrafts(authorId: string): Promise<Array<{
+    static loadDrafts(_authorId: string): Promise<Array<{
         draftId: string;
         data: CreatePostRequest;
         savedAt: Date;
@@ -540,7 +787,7 @@ export declare class DraftManager {
     /**
      * Delete draft
      */
-    static deleteDraft(draftId: string, authorId: string): boolean;
+    static deleteDraft(_draftId: string, _authorId: string): boolean;
 }
 /**
  * Post Analytics Tracking

@@ -39,7 +39,7 @@ export const onboardingSaveLeaderChoice = functions.https.onCall(
 
       return { success: true, message: "Leader choice saved." };
     } catch (error) {
-      console.error("Error saving leader choice:", error);
+      functions.logger.error("Error saving leader choice:", error);
       throw new functions.https.HttpsError(
         "internal",
         "An unexpected error occurred while saving leader choice."

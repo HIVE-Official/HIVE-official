@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Heart, Share2, MoreHorizontal } from "lucide-react";
+import { Heart, Share2, MoreHorizontal, MessageSquare } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   AdaptiveCard,

@@ -328,7 +328,7 @@ export class ComposerEngine {
     /**
      * Handle drag-to-expand gesture detection
      */
-    static handleDragGesture(startY, currentY, state) {
+    static handleDragGesture(startY, currentY, _state) {
         const dragDistance = startY - currentY; // Positive = dragging up
         const expandThreshold = 50; // Pixels to drag before expanding
         const dragProgress = Math.min(Math.max(dragDistance / expandThreshold, 0), 1);

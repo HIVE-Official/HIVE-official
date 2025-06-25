@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { OnboardingCompleteStep } from "./OnboardingCompleteStep";
+import { logger } from "@hive/core/utils/logger";
 
 const meta: Meta<typeof OnboardingCompleteStep> = {
   title: "Onboarding/OnboardingCompleteStep",
@@ -32,7 +33,7 @@ export const AutoRedirect: Story = {
     autoRedirectDelay: 3000,
     showRedirectButton: false,
     userDisplayName: "Alex",
-    onNext: () => console.log("Redirecting to feed..."),
+    onNext: () => logger.debug("Redirecting to feed..."),
   },
 };
 
@@ -41,7 +42,7 @@ export const ManualRedirect: Story = {
     autoRedirectDelay: 3000,
     showRedirectButton: true,
     userDisplayName: "Jordan",
-    onNext: () => console.log("Manual redirect to feed..."),
+    onNext: () => logger.debug("Manual redirect to feed..."),
   },
 };
 
@@ -50,7 +51,7 @@ export const FastAutoRedirect: Story = {
     autoRedirectDelay: 1500,
     showRedirectButton: false,
     userDisplayName: "Sam",
-    onNext: () => console.log("Fast redirect to feed..."),
+    onNext: () => logger.debug("Fast redirect to feed..."),
   },
 };
 
@@ -59,7 +60,7 @@ export const SlowAutoRedirect: Story = {
     autoRedirectDelay: 5000,
     showRedirectButton: false,
     userDisplayName: "Taylor",
-    onNext: () => console.log("Slow redirect to feed..."),
+    onNext: () => logger.debug("Slow redirect to feed..."),
   },
 };
 
@@ -68,6 +69,6 @@ export const LongUserName: Story = {
     autoRedirectDelay: 3000,
     showRedirectButton: false,
     userDisplayName: "Alexandria",
-    onNext: () => console.log("Redirecting user with long name..."),
+    onNext: () => logger.debug("Redirecting user with long name..."),
   },
 };

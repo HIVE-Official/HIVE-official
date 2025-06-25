@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "../ui/button";
-import { Users, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Avatar, AvatarGroup, AvatarImage, AvatarFallback } from "../ui/avatar";
 
 export interface RitualCardProps {

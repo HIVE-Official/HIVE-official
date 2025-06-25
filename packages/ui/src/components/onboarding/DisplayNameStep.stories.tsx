@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { DisplayNameStep } from "./DisplayNameStep";
+import { logger } from "@hive/core";
 
 const meta: Meta<typeof DisplayNameStep> = {
   title: "Onboarding/DisplayNameStep",
@@ -26,14 +27,14 @@ const mockHandleCheck = async (handle: string) => {
 export const Default: Story = {
   args: {
     email: "john.doe@buffalo.edu",
-    onNext: (step: number) => console.log("Next step:", step),
+    onNext: (step: number) => logger.debug("Next step:", step),
     onHandleCheck: mockHandleCheck,
   },
 };
 
 export const EmptyState: Story = {
   args: {
-    onNext: (step: number) => console.log("Next step:", step),
+    onNext: (step: number) => logger.debug("Next step:", step),
     onHandleCheck: mockHandleCheck,
   },
 };
@@ -41,7 +42,7 @@ export const EmptyState: Story = {
 export const WithTakenHandle: Story = {
   args: {
     email: "admin@buffalo.edu",
-    onNext: (step: number) => console.log("Next step:", step),
+    onNext: (step: number) => logger.debug("Next step:", step),
     onHandleCheck: async () => false,
   },
 };

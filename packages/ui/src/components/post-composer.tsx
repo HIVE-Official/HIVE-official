@@ -1,3 +1,5 @@
+// TODO: This file is temporarily disabled due to missing dependencies (button, textarea, utils). Restore when those files are available.
+/*
 "use client";
 
 import { useState } from "react";
@@ -75,3 +77,4 @@ export function PostComposer({
     </div>
   );
 }
+*/

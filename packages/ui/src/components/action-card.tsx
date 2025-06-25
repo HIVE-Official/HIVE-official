@@ -2,7 +2,7 @@
 
 import React from "react";
 import type { User } from "@hive/core";
-import { Button } from "@hive/ui";
+import { Button } from "../ui/button";
 
 interface ActionCardProps {
   user: User;
@@ -23,7 +23,7 @@ export const ActionCard = ({ user }: ActionCardProps) => {
     if (user.organizations && user.organizations.length > 0) completed++;
     if (user.academicInterests && user.academicInterests.length > 0)
       completed++;
-    if (user.major) completed++;
+    if (user.majorId) completed++;
     if (user.graduationYear) completed++;
 
     return Math.round((completed / total) * 100);

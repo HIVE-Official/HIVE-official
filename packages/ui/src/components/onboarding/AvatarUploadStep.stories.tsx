@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { AvatarUploadStep } from "./AvatarUploadStep";
+import { logger } from "@hive/core";
 
 const meta: Meta<typeof AvatarUploadStep> = {
   title: "Onboarding/AvatarUploadStep",
@@ -19,24 +20,24 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    onNext: () => console.log("Next step"),
+    onNext: () => logger.debug("Next step"),
     onSubmit: async (file) => {
-      console.log("Uploading file:", file);
+      logger.debug("Uploading file:", file);
       // Simulate upload
       await new Promise((resolve) => setTimeout(resolve, 2000));
     },
-    onSkip: () => console.log("Skipped avatar upload"),
+    onSkip: () => logger.debug("Skipped avatar upload"),
   },
 };
 
 export const WithSlowUpload: Story = {
   args: {
-    onNext: () => console.log("Next step"),
+    onNext: () => logger.debug("Next step"),
     onSubmit: async (file) => {
-      console.log("Slow upload simulation:", file);
+      logger.debug("Slow upload simulation:", file);
       // Simulate slow upload
       await new Promise((resolve) => setTimeout(resolve, 5000));
     },
-    onSkip: () => console.log("Skipped avatar upload"),
+    onSkip: () => logger.debug("Skipped avatar upload"),
   },
 };

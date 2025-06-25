@@ -43,7 +43,7 @@ export const onboardingSaveAcademicInfo = functions.https.onCall(
 
       return { success: true, message: "Academic information saved." };
     } catch (error) {
-      console.error("Error saving academic information:", error);
+      functions.logger.error("Error saving academic information:", error);
       throw new functions.https.HttpsError(
         "internal",
         "An unexpected error occurred while saving academic information."

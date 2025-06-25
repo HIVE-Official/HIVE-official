@@ -7,6 +7,7 @@ import { mockSpace, mockEvent, mockPost } from "./mock-data";
 
 const meta: Meta = {
   title: "Content/Card System",
+  component: SpaceShowcaseCard,
   parameters: {
     layout: "centered",
     backgrounds: {

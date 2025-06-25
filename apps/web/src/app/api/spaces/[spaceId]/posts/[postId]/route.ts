@@ -3,6 +3,7 @@ import type { NextRequest } from "next/server";
 import { z } from "zod";
 import { dbAdmin } from "@/lib/firebase-admin";
 import { getAuth } from "firebase-admin/auth";
+import { logger } from "@hive/core";
 
 const EditPostSchema = z.object({
   content: z.string().min(1).max(2000),
@@ -88,7 +89,7 @@ export async function GET(
 
     return NextResponse.json({ post });
   } catch (error) {
-    console.error("Error fetching post:", error);
+    logger.error("Error fetching post:", error);
     return NextResponse.json(
       { error: "Failed to fetch post" },
       { status: 500 }
@@ -220,7 +221,7 @@ export async function PATCH(
       );
     }
 
-    console.error("Error editing post:", error);
+    logger.error("Error editing post:", error);
     return NextResponse.json({ error: "Failed to edit post" }, { status: 500 });
   }
 }
@@ -315,7 +316,7 @@ export async function DELETE(
 
     return NextResponse.json({ message: "Post deleted successfully" });
   } catch (error) {
-    console.error("Error deleting post:", error);
+    logger.error("Error deleting post:", error);
     return NextResponse.json(
       { error: "Failed to delete post" },
       { status: 500 }
@@ -428,7 +429,7 @@ export async function POST(
       );
     }
 
-    console.error("Error updating reaction:", error);
+    logger.error("Error updating reaction:", error);
     return NextResponse.json(
       { error: "Failed to update reaction" },
       { status: 500 }

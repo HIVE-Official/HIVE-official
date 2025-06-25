@@ -2,7 +2,6 @@ import type { Meta, StoryObj } from "@storybook/react";
 import React from "react";
 import { motion } from "framer-motion";
 import { HiveLogo } from "../brand/hive-logo";
-import { cn } from "../../lib/utils";
 
 // --- Components defined directly in the story for simplicity ---
 
@@ -60,4 +59,4 @@ export default meta;
 
 type Story = StoryObj<typeof ImmersiveLayout>;
 
-export const Default: Story = {}; 
+export const Default: Story = {};

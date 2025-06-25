@@ -1,4 +1,4 @@
-import { CreatePostRequest, FeedPost as Post, FeedPostType as PostType } from "@hive/core";
+import type { CreatePostRequest, PostType, Post } from "@hive/core";
 /**
  * Hook for creating posts with optimistic updates
  */
@@ -25,62 +25,9 @@ export declare const useCreatePost: () => {
         spaceId?: string | undefined;
         scheduledAt?: Date | undefined;
         toolData?: Record<string, unknown> | undefined;
-    }, {
-        previousPosts: unknown;
-    }>;
+    }, unknown>;
     isCreating: boolean;
     error: string | undefined;
-    optimisticPost: {
-        type: "poll" | "pulse" | "prompt-post" | "event-card" | "join-form" | "media-post";
-        status: "draft" | "published" | "flagged" | "archived";
-        id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        viewCount: number;
-        authorId: string;
-        content: {
-            text?: string | undefined;
-            mentions?: {
-                displayName: string;
-                position: [number, number];
-                userId: string;
-                handle: string;
-            }[] | undefined;
-            media?: {
-                type: "image" | "video" | "audio";
-                url: string;
-                alt?: string | undefined;
-                thumbnail?: string | undefined;
-                dimensions?: {
-                    width: number;
-                    height: number;
-                } | undefined;
-            }[] | undefined;
-            hashtags?: {
-                position: [number, number];
-                tag: string;
-            }[] | undefined;
-            links?: {
-                url: string;
-                position: [number, number];
-                description?: string | undefined;
-                image?: string | undefined;
-                title?: string | undefined;
-            }[] | undefined;
-        };
-        reactions: Record<string, number>;
-        reactionCount: number;
-        authorHandle: string;
-        authorDisplayName: string;
-        visibility: "public" | "space-only" | "followers-only";
-        commentCount: number;
-        shareCount: number;
-        spaceId?: string | undefined;
-        publishedAt?: Date | undefined;
-        spaceName?: string | undefined;
-        scheduledAt?: Date | undefined;
-        toolData?: Record<string, unknown> | undefined;
-    } | null;
     reset: () => void;
 };
 /**
@@ -92,55 +39,81 @@ export declare const usePosts: (params?: {
     type?: "public" | "space" | "personal";
 }) => {
     posts: {
-        type: "poll" | "pulse" | "prompt-post" | "event-card" | "join-form" | "media-post";
-        status: "draft" | "published" | "flagged" | "archived";
+        type: "text" | "event" | "image" | "poll" | "toolshare";
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        viewCount: number;
+        spaceId: string;
         authorId: string;
-        content: {
-            text?: string | undefined;
+        content: string;
+        reactions: {
+            heart: number;
+        };
+        reactedUsers: {
+            heart: string[];
+        };
+        isPinned: boolean;
+        isEdited: boolean;
+        isDeleted: boolean;
+        isFlagged: boolean;
+        author?: {
+            id: string;
+            handle: string;
+            fullName: string;
+            photoURL?: string | undefined;
+            role?: "admin" | "member" | "builder" | undefined;
+        } | undefined;
+        richContent?: {
+            text: string;
+            formatting?: {
+                type: "bold" | "link" | "italic";
+                start: number;
+                end: number;
+                url?: string | undefined;
+            }[] | undefined;
             mentions?: {
-                displayName: string;
-                position: [number, number];
+                start: number;
+                end: number;
                 userId: string;
                 handle: string;
             }[] | undefined;
-            media?: {
-                type: "image" | "video" | "audio";
-                url: string;
-                alt?: string | undefined;
-                thumbnail?: string | undefined;
-                dimensions?: {
-                    width: number;
-                    height: number;
-                } | undefined;
-            }[] | undefined;
-            hashtags?: {
-                position: [number, number];
-                tag: string;
-            }[] | undefined;
-            links?: {
-                url: string;
-                position: [number, number];
-                description?: string | undefined;
-                image?: string | undefined;
-                title?: string | undefined;
-            }[] | undefined;
-        };
-        reactions: Record<string, number>;
-        reactionCount: number;
-        authorHandle: string;
-        authorDisplayName: string;
-        visibility: "public" | "space-only" | "followers-only";
-        commentCount: number;
-        shareCount: number;
-        spaceId?: string | undefined;
-        publishedAt?: Date | undefined;
-        spaceName?: string | undefined;
-        scheduledAt?: Date | undefined;
-        toolData?: Record<string, unknown> | undefined;
+        } | undefined;
+        imageMetadata?: {
+            size: number;
+            url: string;
+            width?: number | undefined;
+            height?: number | undefined;
+            alt?: string | undefined;
+        } | undefined;
+        pollMetadata?: {
+            options: string[];
+            question: string;
+            allowMultiple: boolean;
+            expiresAt?: Date | undefined;
+            votes?: Record<string, string[]> | undefined;
+        } | undefined;
+        eventMetadata?: {
+            title: string;
+            startTime: Date;
+            description?: string | undefined;
+            endTime?: Date | undefined;
+            location?: string | undefined;
+            attendees?: string[] | undefined;
+        } | undefined;
+        toolShareMetadata?: {
+            toolId: string;
+            toolName: string;
+            shareType: "created" | "updated" | "featured";
+            toolDescription?: string | undefined;
+        } | undefined;
+        pinnedAt?: Date | undefined;
+        pinnedBy?: string | undefined;
+        deletedAt?: Date | undefined;
+        deletedBy?: string | undefined;
+        flaggedAt?: Date | undefined;
+        flaggedBy?: string | undefined;
+        flagReason?: string | undefined;
+        hardDeleteAt?: Date | undefined;
     }[];
     pagination: {
         limit: number;
@@ -169,76 +142,28 @@ export declare const useInfinitePosts: (params?: {
     limit?: number;
     type?: "public" | "space" | "personal";
 }) => {
-    posts: {
-        type: "poll" | "pulse" | "prompt-post" | "event-card" | "join-form" | "media-post";
-        status: "draft" | "published" | "flagged" | "archived";
-        id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        viewCount: number;
-        authorId: string;
-        content: {
-            text?: string | undefined;
-            mentions?: {
-                displayName: string;
-                position: [number, number];
-                userId: string;
-                handle: string;
-            }[] | undefined;
-            media?: {
-                type: "image" | "video" | "audio";
-                url: string;
-                alt?: string | undefined;
-                thumbnail?: string | undefined;
-                dimensions?: {
-                    width: number;
-                    height: number;
-                } | undefined;
-            }[] | undefined;
-            hashtags?: {
-                position: [number, number];
-                tag: string;
-            }[] | undefined;
-            links?: {
-                url: string;
-                position: [number, number];
-                description?: string | undefined;
-                image?: string | undefined;
-                title?: string | undefined;
-            }[] | undefined;
-        };
-        reactions: Record<string, number>;
-        reactionCount: number;
-        authorHandle: string;
-        authorDisplayName: string;
-        visibility: "public" | "space-only" | "followers-only";
-        commentCount: number;
-        shareCount: number;
-        spaceId?: string | undefined;
-        publishedAt?: Date | undefined;
-        spaceName?: string | undefined;
-        scheduledAt?: Date | undefined;
-        toolData?: Record<string, unknown> | undefined;
-    }[];
+    posts: any[];
+    error: Error | null;
+    fetchNextPage: (options?: import("@tanstack/react-query").FetchNextPageOptions) => Promise<import("@tanstack/react-query").InfiniteQueryObserverResult<import("@tanstack/react-query").InfiniteData<unknown, unknown>, Error>>;
+    hasNextPage: boolean;
     isLoading: boolean;
-    isLoadingMore: boolean;
-    error: string | undefined;
-    hasMore: boolean;
-    loadMore: () => Promise<void>;
-    reset: () => void;
+    isFetching: boolean;
+    isFetchingNextPage: boolean;
+    refetch: (options?: import("@tanstack/react-query").RefetchOptions) => Promise<import("@tanstack/react-query").QueryObserverResult<import("@tanstack/react-query").InfiniteData<unknown, unknown>, Error>>;
 };
 /**
  * Hook for managing post drafts
  */
+type Draft = {
+    draftId: string;
+    data: CreatePostRequest;
+    savedAt: Date;
+};
 export declare const usePostDrafts: (authorId: string) => {
-    drafts: {
-        draftId: string;
-        data: CreatePostRequest;
-        savedAt: Date;
-    }[];
+    drafts: Draft[];
     saveDraft: (draftData: CreatePostRequest) => string;
-    loadDrafts: () => Promise<void>;
-    deleteDraft: (draftId: string) => boolean;
+    loadDrafts: () => Promise<never[] | undefined>;
+    deleteDraft: (draftId: string) => true;
 };
 /**
  * Hook for post editor state management
@@ -275,4 +200,5 @@ export declare const usePostInteractions: (postId: string) => {
     isReacting: boolean;
     isSharing: boolean;
 };
+export {};
 //# sourceMappingURL=use-posts.d.ts.map

@@ -1040,11 +1040,11 @@ export declare const PostReactionSchema: z.ZodObject<{
     reaction: z.ZodEnum<["heart"]>;
     action: z.ZodEnum<["add", "remove"]>;
 }, "strip", z.ZodTypeAny, {
-    action: "add" | "remove";
     reaction: "heart";
+    action: "add" | "remove";
 }, {
-    action: "add" | "remove";
     reaction: "heart";
+    action: "add" | "remove";
 }>;
 export type PostReaction = z.infer<typeof PostReactionSchema>;
 /**

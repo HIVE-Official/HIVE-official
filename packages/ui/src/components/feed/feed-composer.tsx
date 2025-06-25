@@ -4,14 +4,6 @@ import React from "react";
 import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
 
-interface FeedUser {
-  id: string;
-  fullName: string;
-  handle: string;
-  photoURL?: string;
-  role?: "member" | "builder" | "admin";
-}
-
 interface FeedComposerProps {
   className?: string;
   placeholder?: string;

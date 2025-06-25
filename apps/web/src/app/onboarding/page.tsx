@@ -5,6 +5,7 @@ import type { OnboardingData } from "@hive/ui";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useAuth } from "@hive/auth-logic";
+import { logger } from "@hive/core";
 
 export default function OnboardingPage() {
   const router = useRouter();
@@ -30,16 +31,16 @@ export default function OnboardingPage() {
       const data = await response.json();
       return data.available;
     } catch (error) {
-      console.error("Failed to check handle availability", error);
+      logger.error("Failed to check handle availability", error);
       return false; // Fail securely
     }
   };
 
   const handleOnboardingComplete = async (data: OnboardingData) => {
-    console.log("🎉 Onboarding completed with data:", data);
+    logger.info("🎉 Onboarding completed with data:", data);
 
     if (!user) {
-      console.error("No authenticated user");
+      logger.error("No authenticated user");
       return;
     }
 
@@ -73,7 +74,7 @@ export default function OnboardingPage() {
       // Redirect to welcome page for celebration
       router.push("/welcome");
     } catch (error) {
-      console.error("Onboarding completion failed:", error);
+      logger.error("Onboarding completion failed:", error);
       // Stay on page to allow retry
     } finally {
       setIsSubmitting(false);
@@ -81,7 +82,7 @@ export default function OnboardingPage() {
   };
 
   const handleStepChange = (step: number) => {
-    console.log("📍 Onboarding step changed to:", step);
+    logger.info("📍 Onboarding step changed to:", step);
     // You could track analytics here
   };
 

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { type Space } from "@hive/core";
+import { type Space, logger } from "@hive/core";
 import { dbAdmin } from "@/lib/firebase-admin";
 
 export async function GET(
@@ -30,7 +30,7 @@ export async function GET(
 
     return NextResponse.json(space, { status: 200 });
   } catch (error) {
-    console.error(`Error fetching space ${spaceId || "unknown"}:`, error);
+    logger.error(`Error fetching space ${spaceId || "unknown"}:`, error);
     return NextResponse.json(
       { error: "Failed to fetch space" },
       { status: 500 }

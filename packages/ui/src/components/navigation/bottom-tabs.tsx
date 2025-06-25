@@ -61,7 +61,7 @@ export const BottomTabs = React.forwardRef<HTMLDivElement, BottomTabsProps>(
       currentPage,
       isBuilder = false,
       onTabClick,
-      notificationCount = 0,
+      notificationCount: _notificationCount = 0,
       className,
     },
     ref

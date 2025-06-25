@@ -97,7 +97,7 @@ export declare class ComposerEngine {
     /**
      * Handle drag-to-expand gesture detection
      */
-    static handleDragGesture(startY: number, currentY: number, state: ComposerState): {
+    static handleDragGesture(startY: number, currentY: number, _state: ComposerState): {
         shouldExpand: boolean;
         dragProgress: number;
     };

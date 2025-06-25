@@ -14,10 +14,6 @@ import {
   Hash,
   ArrowRight,
   Command,
-  Home,
-  Compass,
-  CalendarPlus,
-  MessageSquare,
 } from "lucide-react";
 import { cn } from "../../lib/utils";
 import { logger } from "@hive/core";

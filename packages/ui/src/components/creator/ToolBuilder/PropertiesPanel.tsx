@@ -1,16 +1,25 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../../ui/card";
 import { cn } from "../../../lib/utils";
-import type { ElementNode, ElementProperty, ElementPropertyValue } from "@hive/core";
+import type {
+  ElementNode,
+  ElementProperty,
+  ElementPropertyValue,
+  Element,
+  ElementInstance,
+} from "@hive/core";
 
 export interface PropertiesPanelProps {
   selectedElement: ElementNode | null;
-  elementDefinition: any | null;
-  onElementUpdate?: (id: string, updates: any) => void;
+  elementDefinition: Element | null;
+  onElementUpdate?: (id: string, updates: Partial<ElementInstance>) => void;
   onElementDelete: (elementId: string) => void;
   onElementDuplicate?: (id: string) => void;
   className?: string;
-  onPropertyChange: (property: ElementProperty, value: ElementPropertyValue) => void;
+  onPropertyChange: (
+    property: ElementProperty,
+    value: ElementPropertyValue
+  ) => void;
 }
 
 export function PropertiesPanel({

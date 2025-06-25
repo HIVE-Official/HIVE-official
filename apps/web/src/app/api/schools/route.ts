@@ -1,6 +1,7 @@
 import { dbAdmin } from "@/lib/firebase-admin";
 import type { School } from "@hive/core";
 import { NextResponse } from "next/server";
+import { logger } from "@hive/core";
 
 // Mock schools data for development when Firebase is not configured
 const mockSchools: School[] = [
@@ -43,7 +44,7 @@ export async function GET() {
     );
     return NextResponse.json(schools);
   } catch (error) {
-    console.error("Firebase connection failed, using mock data:", error);
+    logger.error("Firebase connection failed, using mock data:", error);
 
     // Return mock data for development
     return NextResponse.json(mockSchools);

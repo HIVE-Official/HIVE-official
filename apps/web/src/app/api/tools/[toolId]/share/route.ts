@@ -9,6 +9,7 @@ import {
   ShareToolSchema,
   generateShareToken,
   createToolDefaults,
+  logger,
 } from "@hive/core";
 
 const db = getFirestore();
@@ -194,7 +195,7 @@ export async function POST(
       );
     }
   } catch (error) {
-    console.error("Error sharing tool:", error);
+    logger.error("Error sharing tool:", error);
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -265,14 +266,14 @@ export async function GET(
         ? `${process.env.NEXT_PUBLIC_APP_URL}/tools/shared/${tool.shareToken}`
         : null,
       forkCount: tool.forkCount || 0,
-      forks,
+      recentForks: forks,
       viewCount: tool.viewCount || 0,
       useCount: tool.useCount || 0,
     });
   } catch (error) {
-    console.error("Error fetching sharing info:", error);
+    logger.error("Error fetching sharing info:", error);
     return NextResponse.json(
-      { error: "Failed to fetch sharing information" },
+      { error: "Failed to fetch sharing info" },
       { status: 500 }
     );
   }

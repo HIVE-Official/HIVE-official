@@ -1,4 +1,4 @@
-import type { OnboardingStepName } from '@hive/core';
+import type { OnboardingStepName } from "@hive/core";
 interface UseOnboardingAnalyticsReturn {
     trackOnboardingStarted: () => void;
     trackStepStarted: (stepName: OnboardingStepName) => void;

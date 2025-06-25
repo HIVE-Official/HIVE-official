@@ -1,5 +1,5 @@
 import * as admin from "firebase-admin";
-import { logger } from './utils/logger';
+import { logger } from "./utils/logger";
 
 // Environment detection
 function getCurrentEnvironment(): "development" | "staging" | "production" {
@@ -17,8 +17,8 @@ function getCurrentEnvironment(): "development" | "staging" | "production" {
 const currentEnvironment = getCurrentEnvironment();
 
 let firebaseInitialized = false;
-let dbAdmin: admin.firestore.Firestore;
-let authAdmin: admin.auth.Auth;
+let dbAdmin: admin.firestore.Firestore | undefined;
+let authAdmin: admin.auth.Auth | undefined;
 
 const initializeFirebaseAdmin = () => {
   try {
@@ -26,7 +26,10 @@ const initializeFirebaseAdmin = () => {
       let credential: admin.credential.Credential | undefined;
 
       // Try different credential formats
-      if (process.env.FIREBASE_PRIVATE_KEY && process.env.FIREBASE_CLIENT_EMAIL) {
+      if (
+        process.env.FIREBASE_PRIVATE_KEY &&
+        process.env.FIREBASE_CLIENT_EMAIL
+      ) {
         // Format 1: Individual environment variables (Vercel recommended)
         credential = admin.credential.cert({
           projectId: process.env.FIREBASE_PROJECT_ID || "hive-dev-2025",
@@ -136,11 +139,13 @@ const initializeFirebaseAdmin = () => {
           },
         }),
       }),
-    } as admin.firestore.Firestore;
+    } as unknown as admin.firestore.Firestore;
 
     authAdmin = {
       verifyIdToken: async (_token: string) => {
-        logger.debug(`🔄 Mock Firebase call: verifyIdToken() - development mode`);
+        logger.debug(
+          `🔄 Mock Firebase call: verifyIdToken() - development mode`
+        );
         throw new Error(
           `Firebase Auth not configured for ${currentEnvironment}.`
         );
@@ -153,7 +158,7 @@ const initializeFirebaseAdmin = () => {
           `Firebase Auth not configured for ${currentEnvironment}.`
         );
       },
-    } as admin.auth.Auth;
+    } as unknown as admin.auth.Auth;
   }
 };
 
@@ -162,9 +167,9 @@ initializeFirebaseAdmin();
 
 export { dbAdmin, authAdmin };
 
-// Re-export for compatibility
-export const db = dbAdmin;
-export const auth = authAdmin;
+// Re-export for compatibility with runtime checks
+export const db = dbAdmin!; // Safe after initialization
+export const auth = authAdmin!; // Safe after initialization
 export const isFirebaseConfigured = firebaseInitialized;
 
 // Environment info for debugging

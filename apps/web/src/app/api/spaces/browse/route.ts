@@ -4,6 +4,7 @@ import { z } from "zod";
 import { getAuth } from "firebase-admin/auth";
 import { dbAdmin } from "@/lib/firebase-admin";
 import { type Space } from "@hive/core/src/domain/firestore/space";
+import { logger } from "@hive/core";
 
 const browseSpacesSchema = z.object({
   schoolId: z.string().optional(),
@@ -179,7 +180,7 @@ export async function GET(request: NextRequest) {
       ),
     });
   } catch (error: unknown) {
-    console.error("Browse spaces error:", error);
+    logger.error("Browse spaces error:", error);
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(

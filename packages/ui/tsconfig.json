@@ -17,13 +17,20 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@hive/core": ["../core/src/index.ts"],
-      "@hive/hooks": ["../hooks/src/index.ts"],
-      "@hive/auth-logic": ["../auth-logic/src/index.ts"]
+      "@hive/core": ["../core/src"],
+      "@hive/hooks": ["../hooks/src"],
+      "@hive/auth-logic": ["../auth-logic/src"],
+      "@hive/tokens": ["../tokens/src"]
     },
     "resolveJsonModule": true
   },
   "include": ["index.ts", "src/**/*"],
+  "references": [
+    { "path": "../core" },
+    { "path": "../hooks" },
+    { "path": "../auth-logic" },
+    { "path": "../tokens" }
+  ],
   "exclude": [
     "dist",
     "node_modules",

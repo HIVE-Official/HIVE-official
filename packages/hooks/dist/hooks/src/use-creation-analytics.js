@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useAuth } from "./use-auth";
-import { createAnalyticsEvent, shouldTrackEvent, batchAnalyticsEvents, } from "@hive/core";
+import { createAnalyticsEvent, shouldTrackEvent, batchAnalyticsEvents, logger, } from "@hive/core";
 export const useCreationAnalytics = (options = {}) => {
     const authResult = useAuth();
     const user = authResult.user;
@@ -23,7 +23,7 @@ export const useCreationAnalytics = (options = {}) => {
     });
     // Load user preferences
     useEffect(() => {
-        const loadPreferences = () => {
+        const loadPreferences = async () => {
             if (!user)
                 return;
             try {
@@ -35,7 +35,7 @@ export const useCreationAnalytics = (options = {}) => {
                 }
             }
             catch (error) {
-                console.error("Failed to load analytics preferences:", error);
+                logger.error("Failed to load analytics preferences:", error);
             }
         };
         loadPreferences();
@@ -59,6 +59,11 @@ export const useCreationAnalytics = (options = {}) => {
             for (const batch of batches) {
                 // Send to analytics service
                 const idToken = user ? await user.getIdToken() : "";
+                logger.debug("Flushing creation analytics batch", {
+                    batchSize: batch.length,
+                    toolId: currentContext.toolId,
+                    spaceId: currentContext.spaceId,
+                });
                 await fetch("/api/analytics/creation", {
                     method: "POST",
                     headers: {
@@ -67,13 +72,15 @@ export const useCreationAnalytics = (options = {}) => {
                     },
                     body: JSON.stringify({ events: batch }),
                 });
-                if (enableDebugLogging) {
-                    console.log(`Flushed ${batch.length} creation analytics events`);
-                }
+                logger.info("Creation analytics batch flushed", {
+                    batchSize: batch.length,
+                    toolId: currentContext.toolId,
+                    spaceId: currentContext.spaceId,
+                });
             }
         }
         catch (error) {
-            console.error("Failed to flush analytics events:", error);
+            logger.error("Failed to flush analytics events:", error);
             // Re-queue events on failure
             eventQueue.current.unshift(...eventsToFlush);
         }
@@ -98,6 +105,10 @@ export const useCreationAnalytics = (options = {}) => {
     // Track event
     const trackEvent = useCallback((eventType, metadata, context) => {
         if (!shouldTrackEvent(eventType, userPreferences)) {
+            logger.debug("Event tracking skipped", {
+                eventType,
+                reason: "userPreferences",
+            });
             return;
         }
         const event = createAnalyticsEvent(eventType, {
@@ -125,13 +136,21 @@ export const useCreationAnalytics = (options = {}) => {
         if (userPreferences.anonymizeData) {
             event.userIdHash = undefined;
             event.anonymized = true;
+            logger.debug("Event anonymized per user preferences");
         }
         eventQueue.current.push(event);
-        if (enableDebugLogging) {
-            console.log("Tracked creation event:", eventType, metadata);
-        }
+        logger.debug("Creation event tracked", {
+            eventType,
+            sessionId,
+            toolId: event.toolId,
+            elementId: event.elementId,
+        });
         // Flush if queue is full
         if (eventQueue.current.length >= batchSize) {
+            logger.debug("Event queue full, flushing events", {
+                queueSize: eventQueue.current.length,
+                batchSize,
+            });
             void flushEvents();
         }
     }, [
@@ -142,7 +161,6 @@ export const useCreationAnalytics = (options = {}) => {
         currentContext,
         userPreferences,
         batchSize,
-        enableDebugLogging,
         flushEvents,
     ]);
     // Update context
@@ -152,6 +170,7 @@ export const useCreationAnalytics = (options = {}) => {
     // Builder session tracking
     const startBuilderSession = useCallback((toolId, toolName) => {
         updateContext({ toolId, toolName });
+        logger.debug("Starting builder session", { toolId, toolName });
         trackEvent("builder_session_start", {
             toolId,
             toolName,
@@ -165,16 +184,19 @@ export const useCreationAnalytics = (options = {}) => {
     }, [trackEvent, updateContext]);
     const endBuilderSession = useCallback((exitReason = "abandon") => {
         const sessionDuration = (Date.now() - sessionStartTime) / 1000; // seconds
-        trackEvent("builder_session_end", {
-            sessionDuration,
+        logger.debug("Ending builder session", {
             exitReason,
-            elementsAdded: 0, // Would be tracked separately
-            elementsRemoved: 0,
-            elementsConfigured: 0,
+            sessionDuration,
+            toolId: currentContext.toolId,
+        });
+        trackEvent("builder_session_end", {
+            exitReason,
+            sessionDuration,
+            toolId: currentContext.toolId,
+            toolName: currentContext.toolName,
         });
         setIsSessionActive(false);
-        void flushEvents(true); // Force flush on session end
-    }, [trackEvent, sessionStartTime, flushEvents]);
+    }, [trackEvent, sessionStartTime, currentContext]);
     // Tool lifecycle events
     const trackToolCreated = useCallback((toolData) => {
         updateContext({

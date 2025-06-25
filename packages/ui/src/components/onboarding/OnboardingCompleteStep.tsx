@@ -69,7 +69,7 @@ export const OnboardingCompleteStep = ({
               <Sparkles className="w-6 h-6 text-yellow-500" />
             </CardTitle>
             <CardDescription className="text-zinc-400 text-lg">
-              You're all set and ready to explore your community.
+              You&apos;re all set and ready to explore your community.
             </CardDescription>
           </div>
         </CardHeader>
@@ -77,7 +77,9 @@ export const OnboardingCompleteStep = ({
         <CardContent className="space-y-6">
           {/* Feature highlights */}
           <div className="bg-zinc-800/50 rounded-lg p-4 text-left space-y-3">
-            <h3 className="text-white font-semibold text-sm">What's next?</h3>
+            <h3 className="text-white font-semibold text-sm">
+              What&apos;s next?
+            </h3>
             <ul className="space-y-2 text-sm text-zinc-400">
               <li className="flex items-center gap-2">
                 <div className="w-1.5 h-1.5 bg-yellow-500 rounded-full" />

@@ -10,12 +10,12 @@ import {
   CardTitle,
   Input,
   Label,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-  Checkbox,
+  // Select,
+  // SelectContent,
+  // SelectItem,
+  // SelectTrigger,
+  // SelectValue,
+  // Checkbox,
   // Import the new design system components
   AcademicCardStep as UIAcademicCardStep,
   AvatarUploadStep as UIAvatarUploadStep,
@@ -25,6 +25,7 @@ import {
 import { Loader2 } from "lucide-react";
 import { debounce } from "lodash";
 import { User } from "firebase/auth";
+import { logger } from "@hive/core";
 
 // A utility to generate a handle from a name
 const generateHandle = (name: string) => {
@@ -103,10 +104,10 @@ export const DisplayNameStep: React.FC<StepProps> = ({
       // const functions = getFunctions();
       // const saveDisplayName = httpsCallable(functions, 'onboardingSaveDisplayName');
       // await saveDisplayName({ fullName, handle });
-      console.log("Saving:", { fullName, handle });
+      logger.info("Saving:", { fullName, handle });
       onNext(); // Proceed to the next step
     } catch (error) {
-      console.error("Failed to save display name", error);
+      logger.error("Failed to save display name", error);
       setIsLoading(false);
     }
   };
@@ -193,14 +194,14 @@ export const LeaderQuestionStep: React.FC<StepProps> = ({ onNext, onPrev }) => {
       // const functions = getFunctions();
       // const saveLeaderChoice = httpsCallable(functions, 'onboardingSaveLeaderChoice');
       // await saveLeaderChoice({ isLeaderCandidate: choice });
-      console.log("Saving leader choice:", choice);
+      logger.info("Saving leader choice:", choice);
       if (choice) {
         onNext(3); // Go to Claim Space step
       } else {
         onNext(4); // Skip to Academic Card step
       }
     } catch (error) {
-      console.error("Failed to save leader choice", error);
+      logger.error("Failed to save leader choice", error);
       setIsLoading(false);
     }
   };
@@ -278,14 +279,14 @@ export const ClaimSpaceStep: React.FC<StepProps> = ({ onNext, onPrev }) => {
       // const { data } = await claimSpace({ spaceName });
       // const { verificationRequired } = data as any;
       const verificationRequired = true; // Mocking
-      console.log("Claiming space:", { spaceName, verificationRequired });
+      logger.info("Claiming space:", { spaceName, verificationRequired });
       if (verificationRequired) {
         onNext(3.5); // Go to pending notice
       } else {
         onNext(4); // Go to academic card
       }
     } catch (error) {
-      console.error("Failed to save space claim", error);
+      logger.error("Failed to save space claim", error);
       setIsLoading(false);
     }
   };
@@ -391,82 +392,75 @@ export const AcademicCardStep: React.FC<StepProps> = ({ onNext }) => {
       // const functions = getFunctions();
       // const saveAcademicInfo = httpsCallable(functions, 'onboardingSaveAcademicInfo');
       // await saveAcademicInfo(data);
-      console.log("Saving academic info:", data);
+      logger.info("Saving academic info:", data);
+      onNext();
     } catch (error) {
-      console.error("Failed to save academic info", error);
-      throw error; // Re-throw to let UI component handle loading state
+      logger.error("Failed to save academic info", error);
     }
   };
 
-  return <UIAcademicCardStep onNext={onNext} onSubmit={handleSubmit} />;
+  return <UIAcademicCardStep onSubmit={handleSubmit} />;
 };
 
 export const AvatarUploadStep: React.FC<StepProps> = ({ onNext }) => {
   const handleSubmit = async (file: File | null) => {
+    if (!file) {
+      logger.info("Skipping avatar upload");
+      onNext();
+      return;
+    }
     try {
+      logger.info("Uploading avatar:", file.name);
       // const functions = getFunctions();
-      // const saveAvatar = httpsCallable(functions, 'onboardingSaveAvatar');
-      // await saveAvatar({ imageUrl: 'some-url' });
-      console.log("Saving avatar:", file?.name || "No file selected");
+      // const uploadAvatar = httpsCallable(functions, 'onboardingUploadAvatar');
+      // const storagePath = (await uploadAvatar({ fileName: file.name, contentType: file.type })).data.path;
+      // await uploadBytes(ref(storage, storagePath), file);
+      onNext();
     } catch (error) {
-      console.error("Failed to save avatar", error);
-      throw error;
+      logger.error("Failed to upload avatar", error);
     }
   };
 
   const handleSkip = () => {
-    console.log("User skipped avatar upload");
+    logger.info("Skipping avatar upload");
+    onNext();
   };
 
-  return (
-    <UIAvatarUploadStep
-      onNext={onNext}
-      onSubmit={handleSubmit}
-      onSkip={handleSkip}
-    />
-  );
+  return <UIAvatarUploadStep onSubmit={handleSubmit} onSkip={handleSkip} />;
 };
 
-export const InterestsStep: React.FC<StepProps> = ({ onNext, onPrev }) => {
+export const InterestsStep: React.FC<StepProps> = ({
+  onNext,
+  onPrev: _onPrev,
+}) => {
   const handleSubmit = async (interests: string[]) => {
     try {
       // const functions = getFunctions();
       // const saveInterests = httpsCallable(functions, 'onboardingSaveInterests');
       // await saveInterests({ interests });
-      console.log("Saving interests:", interests);
+      logger.info("Saving interests:", interests);
+      onNext();
     } catch (error) {
-      console.error("Failed to save interests", error);
-      throw error;
+      logger.error("Failed to save interests", error);
     }
   };
 
   const handleSkip = () => {
-    console.log("User skipped interests selection");
+    logger.info("Skipping interests step");
+    onNext();
   };
 
-  return (
-    <UIInterestsStep
-      onNext={onNext}
-      onSubmit={handleSubmit}
-      onSkip={handleSkip}
-      maxInterests={6}
-    />
-  );
+  return <UIInterestsStep onSubmit={handleSubmit} onSkip={handleSkip} />;
 };
 
 export const OnboardingCompleteStep: React.FC<StepProps> = ({
   onNext,
   user,
 }) => {
-  // Extract user display name from email or user data
-  const userDisplayName = user?.email?.split("@")[0] || "there";
+  const handleComplete = () => {
+    logger.info("Onboarding complete for user:", user.uid);
+    onNext();
+  };
 
-  return (
-    <UIOnboardingCompleteStep
-      onNext={onNext}
-      autoRedirectDelay={3000}
-      showRedirectButton={false}
-      userDisplayName={userDisplayName}
-    />
-  );
+  return <UIOnboardingCompleteStep onComplete={handleComplete} />;
 };

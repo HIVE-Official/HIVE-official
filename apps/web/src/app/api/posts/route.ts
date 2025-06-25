@@ -4,6 +4,7 @@ import {
   CreatePostSchema,
   PostAnalyticsTracker,
   type CreatePostRequest,
+  logger,
 } from "@hive/core";
 import { requireAuth } from "@/lib/auth";
 import { db } from "@/lib/firebase";
@@ -98,7 +99,7 @@ export async function POST(request: NextRequest) {
           { merge: true }
         );
       } catch (error) {
-        console.error("Failed to update space activity:", error);
+        logger.error("Failed to update space activity:", error);
         // Don't fail the request if space update fails
       }
     }
@@ -121,7 +122,7 @@ export async function POST(request: NextRequest) {
       { status: 201 }
     );
   } catch (error) {
-    console.error("Post creation error:", error);
+    logger.error("Post creation error:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
@@ -183,7 +184,7 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error("Posts retrieval error:", error);
+    logger.error("Posts retrieval error:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

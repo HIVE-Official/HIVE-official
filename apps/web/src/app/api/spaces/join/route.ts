@@ -5,6 +5,7 @@ import { getAuth } from "firebase-admin/auth";
 import { getFirestore, FieldValue } from "firebase-admin/firestore";
 import type { Space } from "@hive/core/src/domain/firestore/space";
 import type { MemberRole } from "@hive/core/src/domain/firestore/member";
+import { logger } from "@hive/core";
 
 // Server-side member type that allows FieldValue for timestamps
 interface ServerMember {
@@ -39,7 +40,7 @@ export async function POST(request: NextRequest) {
     try {
       decodedToken = await auth.verifyIdToken(idToken);
     } catch (authError) {
-      console.error("Token verification failed:", authError);
+      logger.error("Token verification failed:", authError);
       return NextResponse.json(
         { error: "Invalid or expired token" },
         { status: 401 }
@@ -146,7 +147,7 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error("Error joining space:", error);
+    logger.error("Error joining space:", error);
     return NextResponse.json(
       { error: "Failed to join space. Please try again." },
       { status: 500 }

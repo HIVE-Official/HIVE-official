@@ -263,8 +263,8 @@ export const TemplateSelector = React.forwardRef<
         {/* Help Text */}
         <div className="text-center p-4 bg-surface-02 rounded-lg">
           <p className="text-sm text-text-secondary">
-            Need help choosing? Start with a <strong>Poll</strong> - it's the
-            most versatile and beginner-friendly option.
+            Need help choosing? Start with a <strong>Poll</strong> - it&apos;s
+            the most versatile and beginner-friendly option.
           </p>
         </div>
       </div>

@@ -11,6 +11,7 @@ import {
 } from "@hive/ui";
 import { PartyPopper } from "lucide-react";
 import { useEffect, useState } from "react";
+import { logger } from "@hive/core";
 // import Confetti from 'react-confetti'; // Assuming this library is installed
 
 export default function OnboardingCompletePage() {
@@ -25,7 +26,7 @@ export default function OnboardingCompletePage() {
         // const functions = getFunctions();
         // const onboardingComplete = httpsCallable(functions, 'onboardingComplete');
         // await onboardingComplete();
-        console.log("Finalizing onboarding...");
+        logger.info("Finalizing onboarding...");
       };
       complete();
     }, 500);

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
+import { logger } from "@hive/core/utils/logger";
 import {
   Button,
   Card,
@@ -77,7 +78,7 @@ export const InterestsStep = ({
       }
       onNext();
     } catch (error) {
-      console.error("Failed to save interests", error);
+      logger.error("Failed to save interests", error);
     } finally {
       setIsLoading(false);
     }
@@ -146,8 +147,8 @@ export const InterestsStep = ({
           {isAtLimit && (
             <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-3">
               <p className="text-yellow-400 text-sm text-center">
-                You've reached the maximum of {maxInterests} interests. Unselect
-                one to choose a different interest.
+                You&apos;ve reached the maximum of {maxInterests} interests.
+                Unselect one to choose a different interest.
               </p>
             </div>
           )}

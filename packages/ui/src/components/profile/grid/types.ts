@@ -1,6 +1,3 @@
-import type { LucideIcon } from "lucide-react";
-import type { ComponentType } from "react";
-
 // Core tile layout position and size
 export interface TileLayout {
   id: string;

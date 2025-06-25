@@ -6,11 +6,11 @@ import {
 } from "../types/firebase";
 
 // Temporary UserProfileSchema - replace with @hive/validation import once workspace is fixed
-const updatableProfileFields = {
-  preferredName: "string",
-  major: "string",
-  isBuilder: "boolean",
-};
+// const updatableProfileFields = {
+//   preferredName: "string",
+//   major: "string",
+//   isBuilder: "boolean",
+// };
 
 interface UpdateUserProfileData {
   preferredName?: string;

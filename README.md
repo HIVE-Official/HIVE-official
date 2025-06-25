@@ -127,10 +127,13 @@ The application handles various states gracefully:
 ### Development Commands
 
 ```bash
+# Install dependencies (required first)
+pnpm install
+
 # Start development server
 pnpm dev
 
-# Build for production
+# Build all packages and applications
 pnpm build
 
 # Run linting
@@ -145,9 +148,25 @@ pnpm test
 # Start Storybook
 pnpm storybook
 
-# Clean all node_modules and build artifacts
+# Clean all build artifacts
 pnpm clean
 ```
+
+### Important Build Notes
+
+Before running `pnpm build`, ensure:
+
+1. All dependencies are installed with `pnpm install`
+2. Your Node.js version is 18.0 or higher
+3. You have proper access to all required environment variables
+
+If you encounter any build issues:
+
+1. Clean the build artifacts: `pnpm clean`
+2. Remove node_modules: `rm -rf node_modules`
+3. Clear pnpm store: `pnpm store prune`
+4. Reinstall dependencies: `pnpm install`
+5. Rebuild: `pnpm build`
 
 ## Development Workflow
 

@@ -1,10 +1,10 @@
 // HIVE Design System - Typography Tokens
-// Font stack: Space Grotesk for headlines, Geist Sans Variable for body
+// Font stack: Space Grotesk for headlines, Inter Variable for body
 
 export const typography = {
-  // Font families - CORRECTED to match HIVE brand guidelines
+  // Font families - CORRECTED to match design-checklist.md
   fontFamily: {
-    sans: ["Geist Sans Variable", "Geist Sans", "system-ui", "sans-serif"],
+    sans: ["Inter Variable", "Inter", "system-ui", "sans-serif"],
     display: [
       "Space Grotesk Variable",
       "Space Grotesk",
@@ -23,12 +23,12 @@ export const typography = {
     bold: "700",
   },
 
-  // Type scale - aligned with brand whitepaper
+  // Type scale - aligned with design-checklist.md
   fontSize: {
     // Display sizes - Space Grotesk Variable
     display: {
-      size: "48px",
-      lineHeight: "56px",
+      size: "64px",
+      lineHeight: "72px",
       fontWeight: "600",
       fontFamily: "Space Grotesk Variable",
       usage: "Hero headlines, marketing pages",
@@ -36,63 +36,63 @@ export const typography = {
 
     // Heading hierarchy - Space Grotesk Variable
     h1: {
-      size: "32px",
-      lineHeight: "40px",
+      size: "48px",
+      lineHeight: "56px",
       fontWeight: "600",
       fontFamily: "Space Grotesk Variable",
       usage: "Page titles, primary headings",
     },
     h2: {
-      size: "24px",
-      lineHeight: "32px",
+      size: "32px",
+      lineHeight: "40px",
       fontWeight: "600",
       fontFamily: "Space Grotesk Variable",
       usage: "Section headers, secondary headings",
     },
     h3: {
-      size: "20px",
-      lineHeight: "28px",
+      size: "24px",
+      lineHeight: "32px",
       fontWeight: "600",
       fontFamily: "Space Grotesk Variable",
       usage: "Subsection headers",
     },
     h4: {
-      size: "18px",
-      lineHeight: "26px",
+      size: "20px",
+      lineHeight: "28px",
       fontWeight: "600",
       fontFamily: "Space Grotesk Variable",
       usage: "Card titles, minor headings",
     },
 
-    // Body text - Geist Sans Variable
+    // Body text - Inter Variable
     body: {
       size: "16px",
       lineHeight: "24px",
       fontWeight: "400",
-      fontFamily: "Geist Sans Variable",
+      fontFamily: "Inter Variable",
       usage: "Body text, paragraphs, default text",
     },
     bodySmall: {
       size: "14px",
       lineHeight: "20px",
       fontWeight: "400",
-      fontFamily: "Geist Sans Variable",
+      fontFamily: "Inter Variable",
       usage: "Smaller body text, captions",
     },
 
-    // UI text - Geist Sans Variable
+    // UI text - Inter Variable
     caption: {
       size: "12px",
       lineHeight: "18px",
       fontWeight: "400",
-      fontFamily: "Geist Sans Variable",
+      fontFamily: "Inter Variable",
       usage: "Labels, metadata, micro-copy",
     },
     button: {
       size: "14px",
       lineHeight: "20px",
       fontWeight: "500",
-      fontFamily: "Geist Sans Variable",
+      fontFamily: "Inter Variable",
       usage: "Button text, CTAs",
     },
 
@@ -137,11 +137,11 @@ export const getFontSize = (key: keyof typeof typography.fontSize) => {
 
 // Tailwind-compatible font size configuration
 export const tailwindFontSizes = {
-  display: ["48px", "56px"],
-  h1: ["32px", "40px"],
-  h2: ["24px", "32px"],
-  h3: ["20px", "28px"],
-  h4: ["18px", "26px"],
+  display: ["64px", "72px"],
+  h1: ["48px", "56px"],
+  h2: ["32px", "40px"],
+  h3: ["24px", "32px"],
+  h4: ["20px", "28px"],
   body: ["16px", "24px"],
   "body-sm": ["14px", "20px"],
   caption: ["12px", "18px"],
