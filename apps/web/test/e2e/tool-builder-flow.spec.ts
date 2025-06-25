@@ -579,7 +579,7 @@ test.describe("Tool Builder - Analytics Integration", () => {
       const body = await request.postDataJSON();
 
       const elementAddedEvent = body.events.find(
-        (e: any) => e.eventType === "element_added"
+        (e: { eventType: string }) => e.eventType === "element_added"
       );
       if (elementAddedEvent) {
         expect(elementAddedEvent.metadata).toMatchObject({
@@ -610,12 +610,12 @@ test.describe("Tool Builder - Analytics Integration", () => {
       const body = await request.postDataJSON();
 
       if (
-        body.events.some((e: any) => e.eventType === "builder_session_start")
+        body.events.some((e: { eventType: string }) => e.eventType === "builder_session_start")
       ) {
         sessionStartTracked = true;
       }
 
-      if (body.events.some((e: any) => e.eventType === "builder_session_end")) {
+      if (body.events.some((e: { eventType: string }) => e.eventType === "builder_session_end")) {
         sessionEndTracked = true;
       }
 

@@ -1,99 +1,120 @@
-import { useEffect, useRef, useCallback, useState } from 'react'
-import { useAnalytics } from './use-analytics'
-import type { 
-  FeedAnalyticsEvent, 
-  FeedAnalyticsConfig 
-} from '@hive/core'
-import {
-  createFeedEvent, 
-  hashUserIdForFeed
-} from '@hive/core'
+import { useEffect, useRef, useCallback, useState } from "react";
+import { useAnalytics } from "./use-analytics";
+import type {
+  FeedAnalyticsEvent,
+  FeedAnalyticsConfig,
+  FeedItemType,
+  FeedInteractionType,
+} from "@hive/core";
+import { createFeedEvent, hashUserIdForFeed, logger } from "@hive/core";
 
 interface UseFeedAnalyticsOptions {
-  spaceId: string
-  userId: string
-  config?: Partial<FeedAnalyticsConfig>
+  spaceId: string;
+  userId: string;
+  config?: Partial<FeedAnalyticsConfig>;
 }
 
 interface FeedAnalyticsHook {
   // Event Tracking
   trackPostCreated: (data: {
-    postId: string
-    postType: 'text' | 'image' | 'poll' | 'event' | 'toolshare'
-    contentLength: number
-    hasMentions: boolean
-    hasRichFormatting: boolean
-    draftTime?: number
-  }) => void
-  
+    postId: string;
+    postType: "text" | "image" | "poll" | "event" | "toolshare";
+    contentLength: number;
+    hasMentions: boolean;
+    hasRichFormatting: boolean;
+    draftTime?: number;
+  }) => void;
+
   trackPostReacted: (data: {
-    postId: string
-    reaction: 'heart'
-    action: 'add' | 'remove'
-    postAge: number
-    authorId: string
-    isOwnPost: boolean
-  }) => void
-  
+    postId: string;
+    reaction: "heart";
+    action: "add" | "remove";
+    postAge: number;
+    authorId: string;
+    isOwnPost: boolean;
+  }) => void;
+
   trackPostViewed: (data: {
-    postId: string
-    viewDuration: number
-    scrolledToEnd: boolean
-    authorId: string
-    postType: 'text' | 'image' | 'poll' | 'event' | 'toolshare'
-    postAge: number
-  }) => void
-  
+    postId: string;
+    viewDuration: number;
+    scrolledToEnd: boolean;
+    authorId: string;
+    postType: "text" | "image" | "poll" | "event" | "toolshare";
+    postAge: number;
+  }) => void;
+
   trackPostEdited: (data: {
-    postId: string
-    editTime: number
-    contentLengthBefore: number
-    contentLengthAfter: number
-    editReason?: 'typo' | 'clarification' | 'addition' | 'other'
-  }) => void
-  
+    postId: string;
+    editTime: number;
+    contentLengthBefore: number;
+    contentLengthAfter: number;
+    editReason?: "typo" | "clarification" | "addition" | "other";
+  }) => void;
+
   trackPostDeleted: (data: {
-    postId: string
-    deletedBy: 'author' | 'builder' | 'admin'
-    postAge: number
-    hadReactions: boolean
-    reactionCount: number
-    deleteReason?: 'inappropriate' | 'spam' | 'mistake' | 'other'
-  }) => void
-  
+    postId: string;
+    deletedBy: "author" | "builder" | "admin";
+    postAge: number;
+    hadReactions: boolean;
+    reactionCount: number;
+    deleteReason?: "inappropriate" | "spam" | "mistake" | "other";
+  }) => void;
+
   trackSpaceJoined: (data: {
-    joinMethod: 'invite' | 'browse' | 'search' | 'auto'
-    referrerSpaceId?: string
-    invitedBy?: string
-  }) => void
-  
+    joinMethod: "invite" | "browse" | "search" | "auto";
+    referrerSpaceId?: string;
+    invitedBy?: string;
+  }) => void;
+
   trackSpaceLeft: (data: {
-    membershipDuration: number
-    postsCreated: number
-    reactionsGiven: number
-    lastActiveAt: Date
-    leaveReason?: 'inactive' | 'content' | 'privacy' | 'other'
-  }) => void
-  
+    membershipDuration: number;
+    postsCreated: number;
+    reactionsGiven: number;
+    lastActiveAt: Date;
+    leaveReason?: "inactive" | "content" | "privacy" | "other";
+  }) => void;
+
   trackBuilderAction: (data: {
-    action: 'pin_post' | 'unpin_post' | 'delete_post' | 'mute_user' | 'unmute_user'
-    targetId: string
-    targetType: 'post' | 'user'
-    reason?: string
-  }) => void
-  
+    action:
+      | "pin_post"
+      | "unpin_post"
+      | "delete_post"
+      | "mute_user"
+      | "unmute_user";
+    targetId: string;
+    targetType: "post" | "user";
+    reason?: string;
+  }) => void;
+
   // Feed Viewing
   trackFeedViewed: (data: {
-    postsVisible: number
-    scrollDepth: number
-    timeSpent: number
-    deviceType?: 'mobile' | 'tablet' | 'desktop'
-  }) => void
-  
+    postsVisible: number;
+    scrollDepth: number;
+    timeSpent: number;
+    deviceType?: "mobile" | "tablet" | "desktop";
+  }) => void;
+
   // Session Management
-  startSession: () => void
-  endSession: () => void
-  isSessionActive: boolean
+  startSession: () => void;
+  endSession: () => void;
+  isSessionActive: boolean;
+
+  trackFeedView: (feedId: string, itemCount: number) => void;
+  trackItemView: (
+    itemId: string,
+    itemType: FeedItemType,
+    position: number
+  ) => void;
+  trackItemInteraction: (
+    itemId: string,
+    itemType: FeedItemType,
+    interactionType: FeedInteractionType,
+    position: number,
+    data?: Record<string, unknown>
+  ) => void;
+  trackFeedError: (error: Error, context?: Record<string, unknown>) => void;
+  trackFeedRefresh: (feedId: string, reason?: string) => void;
+  trackFeedFilter: (filters: Record<string, unknown>) => void;
 }
 
 export const useFeedAnalytics = ({
@@ -101,20 +122,20 @@ export const useFeedAnalytics = ({
   userId,
   config = {},
 }: UseFeedAnalyticsOptions): FeedAnalyticsHook => {
-  const { track } = useAnalytics()
-  const [isSessionActive, setIsSessionActive] = useState(false)
-  
+  const { track } = useAnalytics();
+  const [isSessionActive, setIsSessionActive] = useState(false);
+
   // Session and heartbeat management
-  const sessionIdRef = useRef<string>()
-  const heartbeatIntervalRef = useRef<NodeJS.Timeout>()
-  const lastInteractionRef = useRef<Date>(new Date())
-  const activeTimeRef = useRef<number>(0)
-  const lastHeartbeatRef = useRef<Date>(new Date())
-  
+  const sessionIdRef = useRef<string>();
+  const heartbeatIntervalRef = useRef<NodeJS.Timeout>();
+  const lastInteractionRef = useRef<Date>(new Date());
+  const activeTimeRef = useRef<number>(0);
+  const lastHeartbeatRef = useRef<Date>(new Date());
+
   // Event batching
-  const eventBatchRef = useRef<FeedAnalyticsEvent[]>([])
-  const batchTimeoutRef = useRef<NodeJS.Timeout>()
-  
+  const eventBatchRef = useRef<FeedAnalyticsEvent[]>([]);
+  const batchTimeoutRef = useRef<NodeJS.Timeout>();
+
   // Configuration with defaults
   const analyticsConfig: FeedAnalyticsConfig = {
     batchSize: 100,
@@ -122,88 +143,138 @@ export const useFeedAnalytics = ({
     hashUserIds: true,
     retentionDays: 90,
     sampleRate: 1,
-    dataset: 'hive_analytics',
-    feedEventsTable: 'feed_events',
-    spaceMetricsTable: 'space_metrics',
-    userBehaviorTable: 'user_behavior',
+    dataset: "hive_analytics",
+    feedEventsTable: "feed_events",
+    spaceMetricsTable: "space_metrics",
+    userBehaviorTable: "user_behavior",
     ...config,
-  }
-  
+  };
+
   // Generate session ID
   const generateSessionId = useCallback(() => {
-    return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
-  }, [])
-  
+    return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  }, []);
+
   // Flush event batch
-  const flushEvents = useCallback(() => {
-    if (eventBatchRef.current.length === 0) return
-    
-    const events = [...eventBatchRef.current]
-    eventBatchRef.current = []
-    
+  const flushEvents = useCallback(async () => {
+    if (eventBatchRef.current.length === 0) return;
+
+    const events = [...eventBatchRef.current];
+    eventBatchRef.current = [];
+
     try {
+      logger.debug("Flushing analytics events batch", {
+        batchSize: events.length,
+        spaceId,
+        userId: analyticsConfig.hashUserIds
+          ? hashUserIdForFeed(userId)
+          : userId,
+      });
+
       // Send to analytics pipeline (same as Team 1)
-      track({
-        name: 'feed_analytics_batch',
+      await track({
+        name: "feed_analytics_batch",
         properties: {
           events,
           spaceId,
-          userId: analyticsConfig.hashUserIds ? hashUserIdForFeed(userId) : userId,
+          userId: analyticsConfig.hashUserIds
+            ? hashUserIdForFeed(userId)
+            : userId,
           batchSize: events.length,
           timestamp: new Date(),
-        }
-      })
+        },
+      });
     } catch (error) {
-      console.error('Failed to flush analytics events:', error)
+      logger.error("Failed to flush analytics events:", error, {
+        batchSize: events.length,
+        spaceId,
+      });
       // Re-add events to batch for retry
-      eventBatchRef.current.unshift(...events)
+      eventBatchRef.current.unshift(...events);
     }
-  }, [track, spaceId, userId, analyticsConfig.hashUserIds])
-  
+  }, [track, spaceId, userId, analyticsConfig.hashUserIds]);
+
   // Add event to batch
-  const addEventToBatch = useCallback((event: FeedAnalyticsEvent) => {
-    // Apply sampling
-    if (Math.random() > analyticsConfig.sampleRate) return
-    
-    eventBatchRef.current.push(event)
-    
-    // Flush if batch is full
-    if (eventBatchRef.current.length >= analyticsConfig.batchSize) {
-      flushEvents()
-    }
-    
-    // Set flush timeout if not already set
-    if (!batchTimeoutRef.current) {
-      batchTimeoutRef.current = setTimeout(() => {
-        flushEvents()
-        batchTimeoutRef.current = undefined
-      }, analyticsConfig.flushInterval)
-    }
-  }, [analyticsConfig.batchSize, analyticsConfig.sampleRate, analyticsConfig.flushInterval, flushEvents])
-  
+  const addEventToBatch = useCallback(
+    (event: FeedAnalyticsEvent) => {
+      // Apply sampling
+      if (Math.random() > analyticsConfig.sampleRate) {
+        logger.debug("Event sampled out", {
+          eventType: event.type,
+          sampleRate: analyticsConfig.sampleRate,
+        });
+        return;
+      }
+
+      eventBatchRef.current.push(event);
+      logger.debug("Event added to batch", {
+        eventType: event.type,
+        batchSize: eventBatchRef.current.length,
+      });
+
+      // Flush if batch is full
+      if (eventBatchRef.current.length >= analyticsConfig.batchSize) {
+        logger.debug("Batch full, flushing events", {
+          batchSize: eventBatchRef.current.length,
+        });
+        flushEvents();
+      }
+
+      // Set flush timeout if not already set
+      if (!batchTimeoutRef.current) {
+        batchTimeoutRef.current = setTimeout(() => {
+          logger.debug("Flush timeout triggered");
+          flushEvents();
+          batchTimeoutRef.current = undefined;
+        }, analyticsConfig.flushInterval);
+      }
+    },
+    [
+      analyticsConfig.batchSize,
+      analyticsConfig.sampleRate,
+      analyticsConfig.flushInterval,
+      flushEvents,
+    ]
+  );
+
   // Track user interaction
   const trackInteraction = useCallback(() => {
-    lastInteractionRef.current = new Date()
-  }, [])
-  
+    lastInteractionRef.current = new Date();
+    logger.debug("User interaction tracked", {
+      timestamp: lastInteractionRef.current,
+    });
+  }, []);
+
   // Heartbeat function
   const sendHeartbeat = useCallback(() => {
-    if (!isSessionActive || !sessionIdRef.current) return
-    
-    const now = new Date()
-    const timeSinceLastHeartbeat = now.getTime() - lastHeartbeatRef.current.getTime()
-    const timeSinceLastInteraction = now.getTime() - lastInteractionRef.current.getTime()
-    
-    // Only count as active time if user interacted recently (within 30 seconds)
-    const isActive = timeSinceLastInteraction < 30000
-    if (isActive) {
-      activeTimeRef.current += Math.min(timeSinceLastHeartbeat, 30000)
+    if (!isSessionActive || !sessionIdRef.current) {
+      logger.debug("Heartbeat skipped - session inactive");
+      return;
     }
-    
-    lastHeartbeatRef.current = now
-    
+
+    const now = new Date();
+    const timeSinceLastHeartbeat =
+      now.getTime() - lastHeartbeatRef.current.getTime();
+    const timeSinceLastInteraction =
+      now.getTime() - lastInteractionRef.current.getTime();
+
+    // Only count as active time if user interacted recently (within 30 seconds)
+    const isActive = timeSinceLastInteraction < 30000;
+    if (isActive) {
+      activeTimeRef.current += Math.min(timeSinceLastHeartbeat, 30000);
+    }
+
+    lastHeartbeatRef.current = now;
+
+    logger.debug("Sending heartbeat", {
+      sessionId: sessionIdRef.current,
+      activeTime: activeTimeRef.current,
+      isActive,
+      timeSinceLastInteraction,
+    });
+
     // Send heartbeat event
-    const heartbeatEvent = createFeedEvent('space_heartbeat', {
+    const heartbeatEvent = createFeedEvent("space_heartbeat", {
       spaceId,
       userId: analyticsConfig.hashUserIds ? hashUserIdForFeed(userId) : userId,
       metadata: {
@@ -213,26 +284,32 @@ export const useFeedAnalytics = ({
         scrollPosition: window.scrollY,
         lastInteraction: lastInteractionRef.current,
       },
-    })
-    
-    addEventToBatch(heartbeatEvent)
-  }, [isSessionActive, analyticsConfig.hashUserIds, userId, spaceId, addEventToBatch])
+    });
+
+    addEventToBatch(heartbeatEvent);
+  }, [
+    isSessionActive,
+    analyticsConfig.hashUserIds,
+    userId,
+    spaceId,
+    addEventToBatch,
+  ]);
 
   // Start session
   const startSession = useCallback(() => {
-    if (isSessionActive) return
-    
-    sessionIdRef.current = generateSessionId()
-    setIsSessionActive(true)
-    lastInteractionRef.current = new Date()
-    lastHeartbeatRef.current = new Date()
-    activeTimeRef.current = 0
-    
+    if (isSessionActive) return;
+
+    sessionIdRef.current = generateSessionId();
+    setIsSessionActive(true);
+    lastInteractionRef.current = new Date();
+    lastHeartbeatRef.current = new Date();
+    activeTimeRef.current = 0;
+
     // Start heartbeat
-    heartbeatIntervalRef.current = setInterval(sendHeartbeat, 30000) // Every 30 seconds
-    
+    heartbeatIntervalRef.current = setInterval(sendHeartbeat, 30000); // Every 30 seconds
+
     // Track session start with space heartbeat
-    const sessionStartEvent = createFeedEvent('space_heartbeat', {
+    const sessionStartEvent = createFeedEvent("space_heartbeat", {
       spaceId,
       userId: analyticsConfig.hashUserIds ? hashUserIdForFeed(userId) : userId,
       metadata: {
@@ -242,23 +319,31 @@ export const useFeedAnalytics = ({
         scrollPosition: 0,
         lastInteraction: lastInteractionRef.current,
       },
-    })
-    
-    addEventToBatch(sessionStartEvent)
-  }, [isSessionActive, generateSessionId, sendHeartbeat, spaceId, userId, analyticsConfig.hashUserIds, addEventToBatch])
+    });
+
+    addEventToBatch(sessionStartEvent);
+  }, [
+    isSessionActive,
+    generateSessionId,
+    sendHeartbeat,
+    spaceId,
+    userId,
+    analyticsConfig.hashUserIds,
+    addEventToBatch,
+  ]);
 
   // End session
   const endSession = useCallback(() => {
-    if (!isSessionActive || !sessionIdRef.current) return
-    
+    if (!isSessionActive || !sessionIdRef.current) return;
+
     // Clear heartbeat
     if (heartbeatIntervalRef.current) {
-      clearInterval(heartbeatIntervalRef.current)
-      heartbeatIntervalRef.current = undefined
+      clearInterval(heartbeatIntervalRef.current);
+      heartbeatIntervalRef.current = undefined;
     }
-    
+
     // Track session end with final heartbeat
-    const sessionEndEvent = createFeedEvent('space_heartbeat', {
+    const sessionEndEvent = createFeedEvent("space_heartbeat", {
       spaceId,
       userId: analyticsConfig.hashUserIds ? hashUserIdForFeed(userId) : userId,
       metadata: {
@@ -268,238 +353,495 @@ export const useFeedAnalytics = ({
         scrollPosition: window.scrollY,
         lastInteraction: lastInteractionRef.current,
       },
-    })
-    
-    addEventToBatch(sessionEndEvent)
-    
+    });
+
+    addEventToBatch(sessionEndEvent);
+
     // Flush remaining events
-    flushEvents()
-    
-    setIsSessionActive(false)
-    sessionIdRef.current = undefined
-  }, [isSessionActive, spaceId, userId, analyticsConfig.hashUserIds, addEventToBatch, flushEvents])
+    flushEvents();
+
+    setIsSessionActive(false);
+    sessionIdRef.current = undefined;
+  }, [
+    isSessionActive,
+    spaceId,
+    userId,
+    analyticsConfig.hashUserIds,
+    addEventToBatch,
+    flushEvents,
+  ]);
 
   // Event tracking functions
-  const trackPostCreated = useCallback((data: {
-    postId: string
-    postType: 'text' | 'image' | 'poll' | 'event' | 'toolshare'
-    contentLength: number
-    hasMentions: boolean
-    hasRichFormatting: boolean
-    draftTime?: number
-  }) => {
-    trackInteraction()
-    const event = createFeedEvent('post_created', {
-      postId: data.postId,
+  const trackPostCreated = useCallback(
+    (data: {
+      postId: string;
+      postType: "text" | "image" | "poll" | "event" | "toolshare";
+      contentLength: number;
+      hasMentions: boolean;
+      hasRichFormatting: boolean;
+      draftTime?: number;
+    }) => {
+      trackInteraction();
+      const event = createFeedEvent("post_created", {
+        postId: data.postId,
+        spaceId,
+        userId: analyticsConfig.hashUserIds
+          ? hashUserIdForFeed(userId)
+          : userId,
+        metadata: {
+          postType: data.postType,
+          contentLength: data.contentLength,
+          hasMentions: data.hasMentions,
+          hasRichFormatting: data.hasRichFormatting,
+          draftTime: data.draftTime,
+          composerSource: "inline" as const,
+        },
+      });
+      addEventToBatch(event);
+    },
+    [
+      trackInteraction,
       spaceId,
-      userId: analyticsConfig.hashUserIds ? hashUserIdForFeed(userId) : userId,
-      metadata: {
-        postType: data.postType,
-        contentLength: data.contentLength,
-        hasMentions: data.hasMentions,
-        hasRichFormatting: data.hasRichFormatting,
-        draftTime: data.draftTime,
-        composerSource: 'inline' as const,
-      },
-    })
-    addEventToBatch(event)
-  }, [trackInteraction, spaceId, userId, analyticsConfig.hashUserIds, addEventToBatch])
+      userId,
+      analyticsConfig.hashUserIds,
+      addEventToBatch,
+    ]
+  );
 
-  const trackPostReacted = useCallback((data: {
-    postId: string
-    reaction: 'heart'
-    action: 'add' | 'remove'
-    postAge: number
-    authorId: string
-    isOwnPost: boolean
-  }) => {
-    trackInteraction()
-    const event = createFeedEvent('post_reacted', {
-      postId: data.postId,
+  const trackPostReacted = useCallback(
+    (data: {
+      postId: string;
+      reaction: "heart";
+      action: "add" | "remove";
+      postAge: number;
+      authorId: string;
+      isOwnPost: boolean;
+    }) => {
+      trackInteraction();
+      const event = createFeedEvent("post_reacted", {
+        postId: data.postId,
+        spaceId,
+        userId: analyticsConfig.hashUserIds
+          ? hashUserIdForFeed(userId)
+          : userId,
+        metadata: {
+          reaction: data.reaction,
+          action: data.action,
+          postAge: data.postAge,
+          authorId: data.authorId,
+          isOwnPost: data.isOwnPost,
+        },
+      });
+      addEventToBatch(event);
+    },
+    [
+      trackInteraction,
       spaceId,
-      userId: analyticsConfig.hashUserIds ? hashUserIdForFeed(userId) : userId,
-      metadata: {
-        reaction: data.reaction,
-        action: data.action,
-        postAge: data.postAge,
-        authorId: data.authorId,
-        isOwnPost: data.isOwnPost,
-      },
-    })
-    addEventToBatch(event)
-  }, [trackInteraction, spaceId, userId, analyticsConfig.hashUserIds, addEventToBatch])
+      userId,
+      analyticsConfig.hashUserIds,
+      addEventToBatch,
+    ]
+  );
 
-  const trackPostViewed = useCallback((data: {
-    postId: string
-    viewDuration: number
-    scrolledToEnd: boolean
-    authorId: string
-    postType: 'text' | 'image' | 'poll' | 'event' | 'toolshare'
-    postAge: number
-  }) => {
-    trackInteraction()
-    const event = createFeedEvent('post_viewed', {
-      postId: data.postId,
+  const trackPostViewed = useCallback(
+    (data: {
+      postId: string;
+      viewDuration: number;
+      scrolledToEnd: boolean;
+      authorId: string;
+      postType: "text" | "image" | "poll" | "event" | "toolshare";
+      postAge: number;
+    }) => {
+      trackInteraction();
+      const event = createFeedEvent("post_viewed", {
+        postId: data.postId,
+        spaceId,
+        userId: analyticsConfig.hashUserIds
+          ? hashUserIdForFeed(userId)
+          : userId,
+        metadata: {
+          viewDuration: data.viewDuration,
+          scrolledToEnd: data.scrolledToEnd,
+          authorId: data.authorId,
+          postType: data.postType,
+          postAge: data.postAge,
+        },
+      });
+      addEventToBatch(event);
+    },
+    [
+      trackInteraction,
       spaceId,
-      userId: analyticsConfig.hashUserIds ? hashUserIdForFeed(userId) : userId,
-      metadata: {
-        viewDuration: data.viewDuration,
-        scrolledToEnd: data.scrolledToEnd,
-        authorId: data.authorId,
-        postType: data.postType,
-        postAge: data.postAge,
-      },
-    })
-    addEventToBatch(event)
-  }, [trackInteraction, spaceId, userId, analyticsConfig.hashUserIds, addEventToBatch])
+      userId,
+      analyticsConfig.hashUserIds,
+      addEventToBatch,
+    ]
+  );
 
-  const trackPostEdited = useCallback((data: {
-    postId: string
-    editTime: number
-    contentLengthBefore: number
-    contentLengthAfter: number
-    editReason?: 'typo' | 'clarification' | 'addition' | 'other'
-  }) => {
-    trackInteraction()
-    const event = createFeedEvent('post_edited', {
-      postId: data.postId,
+  const trackPostEdited = useCallback(
+    (data: {
+      postId: string;
+      editTime: number;
+      contentLengthBefore: number;
+      contentLengthAfter: number;
+      editReason?: "typo" | "clarification" | "addition" | "other";
+    }) => {
+      trackInteraction();
+      const event = createFeedEvent("post_edited", {
+        postId: data.postId,
+        spaceId,
+        userId: analyticsConfig.hashUserIds
+          ? hashUserIdForFeed(userId)
+          : userId,
+        metadata: {
+          editTime: data.editTime,
+          contentLengthBefore: data.contentLengthBefore,
+          contentLengthAfter: data.contentLengthAfter,
+          editReason: data.editReason,
+        },
+      });
+      addEventToBatch(event);
+    },
+    [
+      trackInteraction,
       spaceId,
-      userId: analyticsConfig.hashUserIds ? hashUserIdForFeed(userId) : userId,
-      metadata: {
-        editTime: data.editTime,
-        contentLengthBefore: data.contentLengthBefore,
-        contentLengthAfter: data.contentLengthAfter,
-        editReason: data.editReason,
-      },
-    })
-    addEventToBatch(event)
-  }, [trackInteraction, spaceId, userId, analyticsConfig.hashUserIds, addEventToBatch])
+      userId,
+      analyticsConfig.hashUserIds,
+      addEventToBatch,
+    ]
+  );
 
-  const trackPostDeleted = useCallback((data: {
-    postId: string
-    deletedBy: 'author' | 'builder' | 'admin'
-    postAge: number
-    hadReactions: boolean
-    reactionCount: number
-    deleteReason?: 'inappropriate' | 'spam' | 'mistake' | 'other'
-  }) => {
-    trackInteraction()
-    const event = createFeedEvent('post_deleted', {
-      postId: data.postId,
+  const trackPostDeleted = useCallback(
+    (data: {
+      postId: string;
+      deletedBy: "author" | "builder" | "admin";
+      postAge: number;
+      hadReactions: boolean;
+      reactionCount: number;
+      deleteReason?: "inappropriate" | "spam" | "mistake" | "other";
+    }) => {
+      trackInteraction();
+      const event = createFeedEvent("post_deleted", {
+        postId: data.postId,
+        spaceId,
+        userId: analyticsConfig.hashUserIds
+          ? hashUserIdForFeed(userId)
+          : userId,
+        metadata: {
+          deletedBy: data.deletedBy,
+          postAge: data.postAge,
+          hadReactions: data.hadReactions,
+          reactionCount: data.reactionCount,
+          deleteReason: data.deleteReason,
+        },
+      });
+      addEventToBatch(event);
+    },
+    [
+      trackInteraction,
       spaceId,
-      userId: analyticsConfig.hashUserIds ? hashUserIdForFeed(userId) : userId,
-      metadata: {
-        deletedBy: data.deletedBy,
-        postAge: data.postAge,
-        hadReactions: data.hadReactions,
-        reactionCount: data.reactionCount,
-        deleteReason: data.deleteReason,
-      },
-    })
-    addEventToBatch(event)
-  }, [trackInteraction, spaceId, userId, analyticsConfig.hashUserIds, addEventToBatch])
+      userId,
+      analyticsConfig.hashUserIds,
+      addEventToBatch,
+    ]
+  );
 
-  const trackSpaceJoined = useCallback((data: {
-    joinMethod: 'invite' | 'browse' | 'search' | 'auto'
-    referrerSpaceId?: string
-    invitedBy?: string
-  }) => {
-    trackInteraction()
-    const event = createFeedEvent('space_joined', {
+  const trackSpaceJoined = useCallback(
+    (data: {
+      joinMethod: "invite" | "browse" | "search" | "auto";
+      referrerSpaceId?: string;
+      invitedBy?: string;
+    }) => {
+      trackInteraction();
+      const event = createFeedEvent("space_joined", {
+        spaceId,
+        userId: analyticsConfig.hashUserIds
+          ? hashUserIdForFeed(userId)
+          : userId,
+        metadata: {
+          joinMethod: data.joinMethod,
+          referrerSpaceId: data.referrerSpaceId,
+          invitedBy: data.invitedBy,
+        },
+      });
+      addEventToBatch(event);
+    },
+    [
+      trackInteraction,
       spaceId,
-      userId: analyticsConfig.hashUserIds ? hashUserIdForFeed(userId) : userId,
-      metadata: {
-        joinMethod: data.joinMethod,
-        referrerSpaceId: data.referrerSpaceId,
-        invitedBy: data.invitedBy,
-      },
-    })
-    addEventToBatch(event)
-  }, [trackInteraction, spaceId, userId, analyticsConfig.hashUserIds, addEventToBatch])
+      userId,
+      analyticsConfig.hashUserIds,
+      addEventToBatch,
+    ]
+  );
 
-  const trackSpaceLeft = useCallback((data: {
-    membershipDuration: number
-    postsCreated: number
-    reactionsGiven: number
-    lastActiveAt: Date
-    leaveReason?: 'inactive' | 'content' | 'privacy' | 'other'
-  }) => {
-    trackInteraction()
-    const event = createFeedEvent('space_left', {
+  const trackSpaceLeft = useCallback(
+    (data: {
+      membershipDuration: number;
+      postsCreated: number;
+      reactionsGiven: number;
+      lastActiveAt: Date;
+      leaveReason?: "inactive" | "content" | "privacy" | "other";
+    }) => {
+      trackInteraction();
+      const event = createFeedEvent("space_left", {
+        spaceId,
+        userId: analyticsConfig.hashUserIds
+          ? hashUserIdForFeed(userId)
+          : userId,
+        metadata: {
+          membershipDuration: data.membershipDuration,
+          postsCreated: data.postsCreated,
+          reactionsGiven: data.reactionsGiven,
+          lastActiveAt: data.lastActiveAt,
+          leaveReason: data.leaveReason,
+        },
+      });
+      addEventToBatch(event);
+    },
+    [
+      trackInteraction,
       spaceId,
-      userId: analyticsConfig.hashUserIds ? hashUserIdForFeed(userId) : userId,
-      metadata: {
-        membershipDuration: data.membershipDuration,
-        postsCreated: data.postsCreated,
-        reactionsGiven: data.reactionsGiven,
-        lastActiveAt: data.lastActiveAt,
-        leaveReason: data.leaveReason,
-      },
-    })
-    addEventToBatch(event)
-  }, [trackInteraction, spaceId, userId, analyticsConfig.hashUserIds, addEventToBatch])
+      userId,
+      analyticsConfig.hashUserIds,
+      addEventToBatch,
+    ]
+  );
 
-  const trackBuilderAction = useCallback((data: {
-    action: 'pin_post' | 'unpin_post' | 'delete_post' | 'mute_user' | 'unmute_user'
-    targetId: string
-    targetType: 'post' | 'user'
-    reason?: string
-  }) => {
-    trackInteraction()
-    const event = createFeedEvent('builder_action', {
+  const trackBuilderAction = useCallback(
+    (data: {
+      action:
+        | "pin_post"
+        | "unpin_post"
+        | "delete_post"
+        | "mute_user"
+        | "unmute_user";
+      targetId: string;
+      targetType: "post" | "user";
+      reason?: string;
+    }) => {
+      trackInteraction();
+      const event = createFeedEvent("builder_action", {
+        spaceId,
+        userId: analyticsConfig.hashUserIds
+          ? hashUserIdForFeed(userId)
+          : userId,
+        metadata: {
+          action: data.action,
+          targetId: data.targetId,
+          targetType: data.targetType,
+          reason: data.reason,
+        },
+      });
+      addEventToBatch(event);
+    },
+    [
+      trackInteraction,
       spaceId,
-      userId: analyticsConfig.hashUserIds ? hashUserIdForFeed(userId) : userId,
-      metadata: {
-        action: data.action,
-        targetId: data.targetId,
-        targetType: data.targetType,
-        reason: data.reason,
-      },
-    })
-    addEventToBatch(event)
-  }, [trackInteraction, spaceId, userId, analyticsConfig.hashUserIds, addEventToBatch])
+      userId,
+      analyticsConfig.hashUserIds,
+      addEventToBatch,
+    ]
+  );
 
-  const trackFeedViewed = useCallback((data: {
-    postsVisible: number
-    scrollDepth: number
-    timeSpent: number
-    deviceType?: 'mobile' | 'tablet' | 'desktop'
-  }) => {
-    trackInteraction()
-    const event = createFeedEvent('space_feed_viewed', {
+  const trackFeedViewed = useCallback(
+    (data: {
+      postsVisible: number;
+      scrollDepth: number;
+      timeSpent: number;
+      deviceType?: "mobile" | "tablet" | "desktop";
+    }) => {
+      trackInteraction();
+      const event = createFeedEvent("space_feed_viewed", {
+        spaceId,
+        userId: analyticsConfig.hashUserIds
+          ? hashUserIdForFeed(userId)
+          : userId,
+        metadata: {
+          postsVisible: data.postsVisible,
+          scrollDepth: data.scrollDepth,
+          timeSpent: data.timeSpent,
+          deviceType: data.deviceType,
+        },
+      });
+      addEventToBatch(event);
+    },
+    [
+      trackInteraction,
       spaceId,
-      userId: analyticsConfig.hashUserIds ? hashUserIdForFeed(userId) : userId,
-      metadata: {
-        postsVisible: data.postsVisible,
-        scrollDepth: data.scrollDepth,
-        timeSpent: data.timeSpent,
-        deviceType: data.deviceType,
-      },
-    })
-    addEventToBatch(event)
-  }, [trackInteraction, spaceId, userId, analyticsConfig.hashUserIds, addEventToBatch])
+      userId,
+      analyticsConfig.hashUserIds,
+      addEventToBatch,
+    ]
+  );
+
+  const trackFeedView = useCallback(
+    (feedId: string, itemCount: number) => {
+      const now = Date.now();
+
+      logger.debug("Feed viewed", {
+        feedId,
+        itemCount,
+        viewport: {
+          width: window.innerWidth,
+          height: window.innerHeight,
+        },
+      });
+
+      track({
+        name: "feed_viewed",
+        properties: {
+          timestamp: now,
+          feedId,
+          itemCount,
+          viewport: {
+            width: window.innerWidth,
+            height: window.innerHeight,
+          },
+        },
+      });
+    },
+    [track]
+  );
+
+  const trackItemView = useCallback(
+    (itemId: string, itemType: FeedItemType, position: number) => {
+      const now = Date.now();
+
+      logger.debug("Feed item viewed", {
+        itemId,
+        itemType,
+        position,
+      });
+
+      track({
+        name: "feed_item_viewed",
+        properties: {
+          timestamp: now,
+          itemId,
+          itemType,
+          position,
+        },
+      });
+    },
+    [track]
+  );
+
+  const trackItemInteraction = useCallback(
+    (
+      itemId: string,
+      itemType: FeedItemType,
+      interactionType: FeedInteractionType,
+      position: number,
+      data?: Record<string, unknown>
+    ) => {
+      const now = Date.now();
+
+      logger.debug("Feed item interaction", {
+        itemId,
+        itemType,
+        interactionType,
+        position,
+        data,
+      });
+
+      track({
+        name: "feed_item_interaction",
+        properties: {
+          timestamp: now,
+          itemId,
+          itemType,
+          interactionType,
+          position,
+          interactionData: data,
+        },
+      });
+    },
+    [track]
+  );
+
+  const trackFeedError = useCallback(
+    (error: Error, context?: Record<string, unknown>) => {
+      const now = Date.now();
+
+      logger.error("Feed error", {
+        error: error.message,
+        stack: error.stack,
+        context,
+      });
+
+      track({
+        name: "feed_error",
+        properties: {
+          timestamp: now,
+          errorMessage: error.message,
+          errorStack: error.stack,
+          errorContext: context,
+        },
+      });
+    },
+    [track]
+  );
+
+  const trackFeedRefresh = useCallback(
+    (feedId: string, reason?: string) => {
+      const now = Date.now();
+
+      logger.debug("Feed refreshed", {
+        feedId,
+        reason,
+      });
+
+      track({
+        name: "feed_refreshed",
+        properties: {
+          timestamp: now,
+          feedId,
+          refreshReason: reason,
+        },
+      });
+    },
+    [track]
+  );
+
+  const trackFeedFilter = useCallback(
+    (filters: Record<string, unknown>) => {
+      const now = Date.now();
+
+      logger.debug("Feed filters applied", filters);
+
+      track({
+        name: "feed_filtered",
+        properties: {
+          timestamp: now,
+          filters,
+        },
+      });
+    },
+    [track]
+  );
 
   // Auto-start session on mount
   useEffect(() => {
-    startSession()
-    
+    startSession();
+
     // Handle visibility change
     const handleVisibilityChange = () => {
       if (document.hidden) {
-        endSession()
+        endSession();
       } else {
-        startSession()
+        startSession();
       }
-    }
-    
-    document.addEventListener('visibilitychange', handleVisibilityChange)
-    
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
     // Cleanup on unmount
     return () => {
-      document.removeEventListener('visibilitychange', handleVisibilityChange)
-      endSession()
-    }
-  }, [startSession, endSession])
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      endSession();
+    };
+  }, [startSession, endSession]);
 
   return {
     // Event tracking
@@ -512,10 +854,17 @@ export const useFeedAnalytics = ({
     trackSpaceLeft,
     trackBuilderAction,
     trackFeedViewed,
-    
+
     // Session management
     startSession,
     endSession,
     isSessionActive,
-  }
-} 
+
+    trackFeedView,
+    trackItemView,
+    trackItemInteraction,
+    trackFeedError,
+    trackFeedRefresh,
+    trackFeedFilter,
+  };
+};

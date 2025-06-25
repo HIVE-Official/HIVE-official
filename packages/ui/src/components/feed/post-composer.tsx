@@ -1,7 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { useState, useCallback } from "react";
 import { cn } from "@/lib/utils";
+import { logger } from "@hive/core";
 
 export interface PostComposerProps {
   placeholder?: string;
@@ -59,14 +60,18 @@ export const PostComposer = React.forwardRef<
     const canSubmit =
       content.trim().length > 0 && !isOverLimit && !isSubmitting;
 
-    const handleSubmit = () => {
+    const handleSubmit = useCallback(async () => {
       if (canSubmit) {
-        onSubmit?.(content.trim(), selectedReactions);
+        await onSubmit?.(content.trim(), selectedReactions);
         setContent("");
         setSelectedReactions([]);
         setShowEmojiPicker(false);
+        logger.debug("Post submitted", {
+          content,
+          reactions: selectedReactions,
+        });
       }
-    };
+    }, [content, selectedReactions, onSubmit]);
 
     const handleCancel = () => {
       setContent("");

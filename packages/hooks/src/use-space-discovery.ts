@@ -7,6 +7,7 @@ import type {
   DiscoveryFilters,
   DiscoveryResult,
 } from "@hive/core";
+import { logger } from "@hive/core";
 
 /**
  * React hooks for Space Discovery functionality
@@ -226,11 +227,10 @@ export function useSpaceJoining() {
       queryClient.invalidateQueries({ queryKey: ["space-discovery"] });
       queryClient.invalidateQueries({ queryKey: ["user-spaces"] });
 
-      // Could also show success toast here
-      console.log(`Successfully joined space ${spaceId}`);
+      logger.info(`Successfully joined space ${spaceId}`);
     },
     onError: (error: Error) => {
-      console.error("Failed to join space:", error);
+      logger.error("Failed to join space:", error);
       // Could show error toast here
     },
   });
@@ -243,10 +243,10 @@ export function useSpaceJoining() {
       // Invalidate relevant queries
       queryClient.invalidateQueries({ queryKey: ["space-discovery"] });
 
-      console.log(`Successfully requested to join space ${spaceId}`);
+      logger.info(`Successfully requested to join space ${spaceId}`);
     },
     onError: (error: Error) => {
-      console.error("Failed to request join space:", error);
+      logger.error("Failed to request join space:", error);
     },
   });
 

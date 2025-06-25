@@ -11,7 +11,7 @@ import {
 
 interface SetCustomClaimsData {
   userId: string;
-  claims: Record<string, any>;
+  claims: Record<string, string | number | boolean>;
 }
 
 /**

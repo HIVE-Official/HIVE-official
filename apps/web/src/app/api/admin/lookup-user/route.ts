@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getAuth } from "firebase-admin/auth";
 import { getFirestore } from "firebase-admin/firestore";
+import { logger } from "@hive/core";
 
 // Validation schema
 const lookupUserSchema = z.object({
@@ -182,9 +183,7 @@ export async function POST(request: NextRequest) {
               };
             } catch {
               // User exists in Firestore but not in Auth (orphaned data)
-              console.warn(
-                `User ${doc.id} exists in Firestore but not in Auth`
-              );
+              logger.warn(`User ${doc.id} exists in Firestore but not in Auth`);
             }
           }
         }
@@ -196,21 +195,21 @@ export async function POST(request: NextRequest) {
           profile: firestoreData,
         });
       } catch (searchError) {
-        console.error("User lookup error:", searchError);
+        logger.error("User lookup error:", searchError);
         return NextResponse.json(
           { error: "Error searching for user" },
           { status: 500 }
         );
       }
     } catch (authError) {
-      console.error("Failed to verify admin token:", authError);
+      logger.error("Failed to verify admin token:", authError);
       return NextResponse.json(
         { error: "Invalid admin token" },
         { status: 401 }
       );
     }
   } catch (error) {
-    console.error("Lookup user error:", error);
+    logger.error("Lookup user error:", error);
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(

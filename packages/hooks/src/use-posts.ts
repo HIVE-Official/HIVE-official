@@ -11,6 +11,7 @@ import {
   PostCreationEngine,
   Post,
   PostContent,
+  logger,
 } from "@hive/core";
 // Temporarily disabled for Storybook: import { DraftManager } from "@hive/core";
 
@@ -250,7 +251,8 @@ export const usePostDrafts = (authorId: string) => {
       const userDrafts: any[] = []; // await DraftManager.loadDrafts(authorId);
       setDrafts(userDrafts);
     } catch (error) {
-      console.error("Failed to load drafts:", error);
+      logger.error("Failed to load drafts:", error);
+      return [];
     }
   }, [authorId]);
 

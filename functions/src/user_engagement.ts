@@ -46,9 +46,10 @@ export const trackEngagement = onDocumentCreated(
       // Update user engagement metrics
       const userEngagementRef = db.collection("user_engagement").doc(userId);
 
-      const updateData: any = {
-        lastActive: FieldValue.serverTimestamp(),
-      };
+      const updateData: Record<string, FirebaseFirestore.FieldValue | number> =
+        {
+          lastActive: FieldValue.serverTimestamp(),
+        };
 
       switch (interactionType) {
         case "like":
@@ -189,9 +190,10 @@ export const updateEngagement = createHttpsFunction<EngagementData>(
       });
 
       // Update user engagement metrics
-      const updateData: any = {
-        lastActive: FieldValue.serverTimestamp(),
-      };
+      const updateData: Record<string, FirebaseFirestore.FieldValue | number> =
+        {
+          lastActive: FieldValue.serverTimestamp(),
+        };
 
       switch (action) {
         case "view":

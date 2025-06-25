@@ -13,28 +13,22 @@ interface FeedUser {
 }
 
 interface FeedComposerProps {
-  placeholder?: string;
-  onSubmit?: (content: string) => void;
-  onPostCreated?: (newPost: any) => void;
   className?: string;
-  spaceId?: string;
-  currentUser?: FeedUser;
+  placeholder?: string;
+  onPostCreated?: (content: string) => void;
 }
 
-export const FeedComposer = ({
-  placeholder = "What's happening?",
-  onSubmit,
-  onPostCreated,
+export function FeedComposer({
   className,
-  spaceId,
-  currentUser,
-}: FeedComposerProps) => {
+  placeholder = "Share something with your community...",
+  onPostCreated,
+}: FeedComposerProps) {
   const [content, setContent] = React.useState("");
   const [isExpanded, setIsExpanded] = React.useState(false);
 
   const handleSubmit = () => {
     if (content.trim()) {
-      onSubmit?.(content);
+      onPostCreated?.(content);
       setContent("");
       setIsExpanded(false);
     }
@@ -76,4 +70,4 @@ export const FeedComposer = ({
       )}
     </div>
   );
-};
+}

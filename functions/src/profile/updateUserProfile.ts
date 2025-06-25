@@ -29,11 +29,13 @@ export const updateUserProfile = createHttpsFunction<UpdateUserProfileData>(
 
     // Basic validation
     const allowedFields = ["preferredName", "major", "isBuilder"];
-    const updateData: Record<string, any> = {};
+    const updateData: Record<string, string | boolean> = {};
 
     for (const [key, value] of Object.entries(data)) {
       if (allowedFields.includes(key)) {
-        updateData[key] = value;
+        if (typeof value === "string" || typeof value === "boolean") {
+          updateData[key] = value;
+        }
       }
     }
 

@@ -1,6 +1,15 @@
 import { z } from "zod";
 
-const elementSchemas: Record<string, z.ZodObject<any, any, any>> = {
+const elementSchemas: Record<
+  string,
+  z.ZodObject<
+    z.ZodRawShape,
+    "strip",
+    z.ZodTypeAny,
+    Record<string, unknown>,
+    Record<string, unknown>
+  >
+> = {
   textBlock: z.object({
     content: z.string().min(1, "Content cannot be empty."),
     style: z.enum(["h1", "h2", "h3", "body", "caption"]),
@@ -79,13 +88,18 @@ export const validateElementConfig = (elementId: string, config: unknown) => {
   return validation.data;
 };
 
-// Validation functions for creation tools
-
-export function validateElementConfig(
-  elementType: string,
-  config: Record<string, unknown>,
-  schema: Record<string, unknown>
+export function validateTool(
+  name: string,
+  properties: Record<string, unknown>,
+  config: Record<string, unknown>
 ): boolean {
-  // Basic validation implementation
-  return elementType && config && schema ? true : false;
+  // Validation logic here
+  return (
+    typeof name === "string" &&
+    name.length > 0 &&
+    typeof properties === "object" &&
+    properties !== null &&
+    typeof config === "object" &&
+    config !== null
+  );
 }

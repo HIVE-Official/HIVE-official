@@ -13,6 +13,7 @@ import { FeedComposer } from "./feed-composer";
 import { PostCard } from "./post-card";
 import { cn } from "../../lib/utils";
 import type { Post } from "@hive/core";
+import { logger } from "@hive/core";
 
 interface FeedUser {
   id: string;
@@ -343,17 +344,21 @@ export const SpaceFeed: React.FC<SpaceFeedProps> = ({
         lastPostId: data.lastPostId || "",
       };
     } catch (error) {
-      console.error("Error fetching posts:", error);
+      logger.error("Failed to fetch posts:", error);
       return { hasMore: false, lastPostId: "" };
     }
   }, [spaceId]);
+
+  const handleError = (error: Error) => {
+    logger.error("Failed to load feed items:", error);
+  };
 
   const handleLoadMore = useCallback(async () => {
     setIsLoading(true);
     try {
       await fetchMorePosts();
     } catch (error) {
-      console.error("Error loading more posts:", error);
+      logger.error("Failed to load more feed items:", error);
       setError("Failed to load more posts");
     } finally {
       setIsLoading(false);

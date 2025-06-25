@@ -1,24 +1,14 @@
 "use client";
 
 import * as React from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { 
-  Heart, 
-  MessageCircle, 
-  Share2, 
-  Bookmark,
-  MoreHorizontal,
-  ExternalLink,
-  Play,
-  Image as ImageIcon,
-  Clock,
-  Pin,
-  Award,
-  Zap,
-  Check
-} from "lucide-react";
+import { Heart, Share2, MoreHorizontal } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { AdaptiveCard, CardHeader, CardContent, CardFooter, CardMedia } from "./adaptive-card";
+import {
+  AdaptiveCard,
+  CardHeader,
+  CardContent,
+  CardFooter,
+} from "./adaptive-card";
 import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar";
 import { Badge } from "./badge-system";
 import { Button } from "../ui/button";
@@ -98,7 +88,8 @@ const UGCPostCard = React.forwardRef<HTMLDivElement, UGCPostCardProps>(
       day: "numeric",
     });
 
-    const mediaItem = content.media && content.media.length > 0 ? content.media[0] : null;
+    const mediaItem =
+      content.media && content.media.length > 0 ? content.media[0] : null;
 
     return (
       <AdaptiveCard
@@ -197,7 +188,7 @@ const EngagementBar = ({
       activeClass="text-red-500"
     />
     <EngagementButton
-      icon={MessageCircle}
+      icon={MessageSquare}
       count={engagement.comments}
       onClick={onComment}
     />
@@ -231,4 +222,4 @@ const EngagementButton = ({
   </button>
 );
 
-export { UGCPostCard }; 
+export { UGCPostCard };

@@ -17,6 +17,7 @@ import { ElementRenderer } from "./ElementRenderer";
 import { Button } from "../../ui/button";
 import { ScrollArea } from "../../ui/scroll-area";
 import { Grid3X3, Move } from "lucide-react";
+import { logger } from "@hive/core";
 
 interface DesignCanvasProps {
   tool: Tool;
@@ -267,7 +268,7 @@ export const DesignCanvas = forwardRef<HTMLDivElement, DesignCanvasProps>(
           case "paste": {
             const clipboardData = getClipboardData();
             if (clipboardData) {
-              console.log("Pasting:", clipboardData);
+              logger.debug("Pasting:", clipboardData);
             }
             break;
           }

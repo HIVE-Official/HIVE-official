@@ -1,7 +1,12 @@
 "use client";
 
-import React, { Component } from "react";
-import type { ReactNode, ErrorInfo } from "react";
+import React, {
+  Component,
+  type ComponentType,
+  type ErrorInfo,
+  type ReactNode,
+} from "react";
+import { logger } from "@hive/core";
 // Temporary mock for Storybook compatibility
 interface UserFriendlyError {
   code: string;
@@ -50,7 +55,7 @@ interface State {
   errorId: string;
 }
 
-export class FirebaseErrorBoundary extends Component<Props, State> {
+export class ErrorBoundary extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -60,7 +65,7 @@ export class FirebaseErrorBoundary extends Component<Props, State> {
     };
   }
 
-  static getDerivedStateFromError(error: Error): State {
+  static getDerivedStateFromError(error: Error) {
     return {
       hasError: true,
       error,
@@ -69,8 +74,7 @@ export class FirebaseErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    // Log the error to Firebase Analytics or your error reporting service
-    console.error("Firebase Error Boundary caught an error:", error, errorInfo);
+    logger.error("Firebase Error Boundary caught an error:", error, errorInfo);
 
     // Call the optional onError prop
     this.props.onError?.(error, errorInfo);
@@ -87,23 +91,21 @@ export class FirebaseErrorBoundary extends Component<Props, State> {
     });
   };
 
+  handleContactSupport = () => {
+    logger.debug("Contact support clicked", {
+      error: this.state.error,
+      componentStack: this.state.componentStack,
+    });
+    // ... existing code ...
+  };
+
   render() {
     if (this.state.hasError && this.state.error) {
       const userFriendlyError = FirebaseErrorHandler.handleError(
         this.state.error
       );
 
-      if (this.props.fallback) {
-        return this.props.fallback(userFriendlyError, this.handleRetry);
-      }
-
-      return (
-        <DefaultErrorFallback
-          error={userFriendlyError}
-          onRetry={this.handleRetry}
-          errorId={this.state.errorId}
-        />
-      );
+      return <this.props.fallback error={userFriendlyError} />;
     }
 
     return this.props.children;
@@ -175,13 +177,7 @@ function DefaultErrorFallback({
 
           {error.action === "contact-support" && (
             <button
-              onClick={() => {
-                // In a real app, this would open a support form or mailto link
-                console.log("Contact support clicked", {
-                  errorId,
-                  errorCode: error.code,
-                });
-              }}
+              onClick={this.handleContactSupport}
               className="w-full px-4 py-2 bg-white border border-current rounded-md hover:bg-opacity-90 transition-colors font-medium"
             >
               {FirebaseErrorHandler.getActionButtonText(error)}

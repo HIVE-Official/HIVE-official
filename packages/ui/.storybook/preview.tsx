@@ -1,6 +1,8 @@
 import React from "react";
 import type { Preview } from "@storybook/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+// Import CSS
 import "../src/globals.css";
 import "../src/force-white-inputs.css";
 
@@ -23,12 +25,14 @@ const preview: Preview = {
       },
     },
     backgrounds: {
-      default: "dark",
+      default: "hive-dark",
       values: [
-        { name: "dark", value: "#0A0A0A" },
+        { name: "hive-dark", value: "#0A0A0A" },
+        { name: "hive-card", value: "#141417" },
         { name: "light", value: "#FFFFFF" },
       ],
     },
+    layout: "centered",
     viewport: {
       viewports: {
         mobile: {
@@ -49,7 +53,7 @@ const preview: Preview = {
   decorators: [
     (Story) => (
       <QueryClientProvider client={queryClient}>
-        <div className="dark font-sans antialiased bg-background text-foreground">
+        <div className="dark font-sans antialiased bg-background text-foreground min-h-screen">
           <Story />
         </div>
       </QueryClientProvider>

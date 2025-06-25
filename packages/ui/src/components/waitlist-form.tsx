@@ -7,6 +7,7 @@ import { MotionDiv, AnimatePresence } from "./framer-motion-proxy";
 import { गति } from "../lib/motion";
 import { CheckCircle } from "lucide-react";
 import { Stack } from ".";
+import { logger } from "@hive/core";
 
 interface WaitlistFormProps {
   onSubmit: (email: string) => Promise<void>;
@@ -17,22 +18,20 @@ export const WaitlistForm: React.FC<WaitlistFormProps> = ({ onSubmit }) => {
   const [loading, setLoading] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     setLoading(true);
 
-    // Fire and forget with proper error handling
-    void onSubmit(email)
-      .then(() => {
-        setSuccess(true);
-      })
-      .catch((error) => {
-        console.error("Waitlist submission failed:", error);
-        // Handle error appropriately - maybe show a toast or error state
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    try {
+      // Fire and forget with proper error handling
+      await onSubmit(email);
+      setSuccess(true);
+    } catch (error) {
+      logger.error("Waitlist submission failed:", error);
+      // Handle error appropriately - maybe show a toast or error state
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -53,10 +52,10 @@ export const WaitlistForm: React.FC<WaitlistFormProps> = ({ onSubmit }) => {
               </div>
               <div className="text-center space-y-2">
                 <Heading level={3} className="text-white">
-                  You're on the list!
+                  You&apos;re on the list!
                 </Heading>
                 <Text className="text-white/60">
-                  We'll notify you at{" "}
+                  We&apos;ll notify you at{" "}
                   <span className="text-white font-medium">{email}</span> when
                   HIVE is ready.
                 </Text>
@@ -100,6 +99,12 @@ export const WaitlistForm: React.FC<WaitlistFormProps> = ({ onSubmit }) => {
                 </Button>
               </CardFooter>
             </form>
+            <p className="text-sm text-muted-foreground">
+              We&apos;ll let you know when it&apos;s your turn to join HIVE.
+            </p>
+            <p className="text-sm text-muted-foreground">
+              You&apos;ll be among the first to experience HIVE at your school.
+            </p>
           </MotionDiv>
         )}
       </AnimatePresence>

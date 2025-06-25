@@ -117,9 +117,9 @@ export default function FeedSettingsPage() {
 
   const _handleSettingChange = (setting: string, value: boolean) => {
     // Handle setting change without console logging
-    setSettings(prev => ({
+    setSettings((prev) => ({
       ...prev,
-      [setting]: value
+      [setting]: value,
     }));
   };
 
@@ -129,11 +129,12 @@ export default function FeedSettingsPage() {
       // Save settings logic here
       setIsLoading(true);
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       setIsLoading(false);
-    } catch (_error) {
+    } catch (error) {
       setIsLoading(false);
       // Handle error properly
+      console.error(error);
     }
   };
 
@@ -408,7 +409,8 @@ export default function FeedSettingsPage() {
                         className="w-full"
                       />
                       <p className="text-xs text-gray-500 mt-1">
-                        Extra priority for content from spaces you've joined
+                        Extra priority for content from spaces you&apos;ve
+                        joined
                       </p>
                     </div>
 
@@ -846,7 +848,10 @@ export default function FeedSettingsPage() {
                               : "outline"
                           }
                           onClick={() =>
-                            handleAlgorithmChange("frequency", value as NotificationSettings["frequency"])
+                            handleAlgorithmChange(
+                              "frequency",
+                              value as NotificationSettings["frequency"]
+                            )
                           }
                           className={`w-full ${
                             notificationSettings.frequency === value

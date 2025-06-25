@@ -8,7 +8,7 @@ export interface BaseAnalyticsEvent {
   userId?: string;
   event: string;
   category: EventCategory;
-  properties: Record<string, any>;
+  properties: Record<string, unknown>;
   context: EventContext;
   metadata: EventMetadata;
 }
@@ -605,7 +605,7 @@ export interface EventFilter {
     | "less_than"
     | "in"
     | "not_in";
-  value: any;
+  value: unknown;
 }
 
 // All types are already exported with their interface declarations above

@@ -6,6 +6,7 @@ import { FlatCompat } from "@eslint/eslintrc";
 import { fixupConfigRules, fixupPluginRules } from "@eslint/compat";
 import tseslint from "typescript-eslint";
 import unicorn from "eslint-plugin-unicorn";
+import unusedImports from "eslint-plugin-unused-imports";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -38,6 +39,7 @@ export default [
   {
     plugins: {
       unicorn: fixupPluginRules(unicorn),
+      "unused-imports": fixupPluginRules(unusedImports),
     },
 
     languageOptions: {
@@ -71,9 +73,11 @@ export default [
           case: "kebabCase",
         },
       ],
-      "@typescript-eslint/no-unused-vars": [
+      "@typescript-eslint/no-unused-vars": "off",
+      "unused-imports/no-unused-imports": "error",
+      "unused-imports/no-unused-vars": [
         "error",
-        { argsIgnorePattern: "^_" },
+        { vars: "all", args: "after-used", ignoreRestSiblings: true },
       ],
       "@typescript-eslint/consistent-type-imports": [
         "error",
@@ -88,6 +92,8 @@ export default [
             "Do not use raw hex color values. Import colors from '@hive/tokens/colors' instead.",
         },
       ],
+      "react/no-unescaped-entities": "off",
+      "no-console": "off",
     },
   },
 

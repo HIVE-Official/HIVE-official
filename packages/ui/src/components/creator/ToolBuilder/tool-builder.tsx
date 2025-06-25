@@ -39,6 +39,7 @@ import {
   Monitor,
   Tablet,
 } from "lucide-react";
+import { logger } from "@hive/core";
 
 interface ToolBuilderProps {
   tool: Tool;
@@ -84,17 +85,17 @@ export const ToolBuilder: React.FC<ToolBuilderProps> = ({
   useEffect(() => {
     if (!isDirty) return;
 
-    const performAutoSave = async () => {
+    const handleAutoSave = async () => {
       try {
         await onSave(currentTool);
         setIsDirty(false);
       } catch (error) {
-        console.error("Auto-save failed:", error);
+        logger.error("Auto-save failed:", error);
       }
     };
 
     const autoSaveTimer = setTimeout(() => {
-      void performAutoSave();
+      void handleAutoSave();
     }, 2000); // Auto-save after 2 seconds of inactivity
 
     return () => clearTimeout(autoSaveTimer);
@@ -230,7 +231,7 @@ export const ToolBuilder: React.FC<ToolBuilderProps> = ({
       await onSave(currentTool);
       setIsDirty(false);
     } catch (error) {
-      console.error("Save failed:", error);
+      logger.error("Save failed:", error);
     } finally {
       setIsSaving(false);
     }
@@ -245,7 +246,7 @@ export const ToolBuilder: React.FC<ToolBuilderProps> = ({
   //   try {
   //     await onPublish(currentTool);
   //   } catch (error) {
-  //     console.error("Publish failed:", error);
+  //     logger.error("Publish failed:", error);
   //   }
   // }, [onPublish, currentTool]);
 

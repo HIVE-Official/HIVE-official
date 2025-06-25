@@ -144,7 +144,7 @@ export const syncEventsFromRSS = onSchedule(
 /**
  * Fetch events from the RSS feed
  */
-async function fetchEventsFromRSS(): Promise<any[]> {
+async function fetchEventsFromRSS(): Promise<EventData[]> {
   return new Promise((resolve, reject) => {
     https
       .get(UB_EVENTS_RSS_URL, (res) => {
@@ -195,7 +195,28 @@ async function fetchEventsFromRSS(): Promise<any[]> {
 /**
  * Process an RSS item into our event format
  */
-function processRssItem(item: any): any {
+interface RssItem {
+  guid?: string;
+  title?: string;
+  description?: string;
+  pubDate?: string;
+  link?: string;
+}
+
+interface EventData {
+  id: string;
+  title: string;
+  description: string;
+  startDate: string;
+  endDate: string;
+  location: string;
+  organizerName: string;
+  link: string;
+  updatedAt: string;
+  synced_at: FirebaseFirestore.FieldValue;
+}
+
+function processRssItem(item: RssItem): EventData {
   // Generate an ID from the guid or title
   const id = item.guid
     ? String(item.guid).replace(/[^\w-]/g, "-")
@@ -277,7 +298,7 @@ function sanitizeDescription(description: string): string {
 /**
  * Save events to Firestore in batches, preserving user modifications
  */
-async function saveEventsToFirestore(events: any[]): Promise<void> {
+async function saveEventsToFirestore(events: EventData[]): Promise<void> {
   const db = admin.firestore();
   const batchSize = 500; // Firestore batch limit is 500 operations
 

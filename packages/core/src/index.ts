@@ -8,6 +8,7 @@ export * from "./domain/firestore/member";
 export * from "./domain/firestore/post";
 export * from "./domain/firestore/space";
 export * from "./domain/firestore/user";
+export * from "./domain/firestore/leader-claim";
 
 // Domain types - Auth
 export * from "./domain/auth/emailLink";
@@ -89,3 +90,5 @@ export { SpaceDiscoverySchema } from "./domain/space/discovery";
 
 // Types
 export * from "./types/auth-types";
+
+export * from "./utils/logger";

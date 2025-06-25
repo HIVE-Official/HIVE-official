@@ -1,6 +1,6 @@
 import type { Config } from "tailwindcss";
 import tailwindcssAnimate from "tailwindcss-animate";
-import { designTokens } from "@hive/tokens";
+import { designTokens } from "../tokens/src/index.ts";
 
 const config = {
   darkMode: ["class"],

@@ -1,6 +1,11 @@
-import { colors, shadcnColors } from '@hive/tokens/colors';
-import { typography, tailwindFontSizes } from '@hive/tokens/typography';
-import { motion } from '@hive/tokens/motion';
+import {
+  colors,
+  shadcnColors,
+  typography,
+  tailwindFontSizes,
+} from "../../tokens/src/index.ts";
+import { motion as hiveMotion } from "../../tokens/src/motion.ts";
+const motion = JSON.parse(JSON.stringify(hiveMotion));
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -10,7 +15,7 @@ export default {
     "../src/components/**/*.{js,ts,jsx,tsx}",
     "../**/*.stories.{js,ts,jsx,tsx}",
   ],
-  darkMode: 'class', // Enable class-based dark mode
+  darkMode: "class", // Enable class-based dark mode
   theme: {
     extend: {
       colors: {
@@ -63,23 +68,23 @@ export default {
       // ============================================================================
       transitionTimingFunction: {
         // HIVE custom easing functions
-        'hive-smooth': motion.easing.smooth,     // Primary HIVE easing
-        'hive-snap': motion.easing.snap,         // Playful bounce
-        'hive-elegant': motion.easing.elegant,   // Refined transitions
-        'hive-brand': motion.easing.brand,       // Signature HIVE spring
-        
+        "hive-smooth": motion.easing.smooth, // Primary HIVE easing
+        "hive-snap": motion.easing.snap, // Playful bounce
+        "hive-elegant": motion.easing.elegant, // Refined transitions
+        "hive-brand": motion.easing.brand, // Signature HIVE spring
+
         // Performance fallbacks
         linear: motion.easing.linear,
         ease: motion.easing.ease,
       },
       transitionDuration: {
         // HIVE timing hierarchy
-        instant: motion.duration.instant,   // 50ms - Immediate feedback
-        fast: motion.duration.fast,         // 120ms - Micro-interactions
-        base: motion.duration.base,         // 180ms - Content transitions
-        slow: motion.duration.slow,         // 280ms - Complex animations
-        ritual: motion.duration.ritual,     // 400ms - Special HIVE moments
-        
+        instant: motion.duration.instant, // 50ms - Immediate feedback
+        fast: motion.duration.fast, // 120ms - Micro-interactions
+        base: motion.duration.base, // 180ms - Content transitions
+        slow: motion.duration.slow, // 280ms - Complex animations
+        ritual: motion.duration.ritual, // 400ms - Special HIVE moments
+
         // Legacy values for compatibility
         75: "75ms",
         90: "90ms",
@@ -101,12 +106,12 @@ export default {
         "hive-emboss-reveal": `${motion.keyframes.embossReveal} ${motion.duration.base} ${motion.easing.smooth}`,
         "hive-ritual-burst": `${motion.keyframes.ritualBurst} ${motion.duration.ritual} ${motion.easing.brand}`,
         "hive-space-join": `${motion.keyframes.spaceJoin} ${motion.duration.ritual} ${motion.easing.brand}`,
-        
+
         // Legacy animations (kept for compatibility)
         "border-flicker": "border-flicker 16ms ease-out",
         "micro-shake": "micro-shake 16ms ease-out",
         "scale-success": "scale-success 200ms ease-out",
-        shake: 'shake 90ms cubic-bezier(0.33, 0.65, 0, 1)',
+        shake: "shake 90ms cubic-bezier(0.33, 0.65, 0, 1)",
       },
       keyframes: {
         // shadcn/ui required keyframes
@@ -118,71 +123,78 @@ export default {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
-        
+
         // HIVE custom keyframes (defined as CSS keyframes)
         "hive-fade-in": {
-          '0%': { opacity: '0' },
-          '100%': { opacity: '1' },
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
         },
         "hive-scale-in": {
-          '0%': { opacity: '0', transform: 'scale(0.96)' },
-          '100%': { opacity: '1', transform: 'scale(1)' },
+          "0%": { opacity: "0", transform: "scale(0.96)" },
+          "100%": { opacity: "1", transform: "scale(1)" },
         },
         "hive-slide-up": {
-          '0%': { opacity: '0', transform: 'translateY(8px)' },
-          '100%': { opacity: '1', transform: 'translateY(0)' },
+          "0%": { opacity: "0", transform: "translateY(8px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
         },
         "hive-slide-down": {
-          '0%': { opacity: '0', transform: 'translateY(-8px)' },
-          '100%': { opacity: '1', transform: 'translateY(0)' },
+          "0%": { opacity: "0", transform: "translateY(-8px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
         },
         "hive-gold-pulse": {
-          '0%, 100%': { boxShadow: '0 0 0 0 rgba(255, 215, 0, 0.4)' },
-          '50%': { boxShadow: '0 0 20px 10px rgba(255, 215, 0, 0)' },
+          "0%, 100%": { boxShadow: "0 0 0 0 rgba(255, 215, 0, 0.4)" },
+          "50%": { boxShadow: "0 0 20px 10px rgba(255, 215, 0, 0)" },
         },
         "hive-gold-glow": {
-          '0%, 100%': { boxShadow: '0 0 5px rgba(255, 215, 0, 0.3)' },
-          '50%': { boxShadow: '0 0 20px rgba(255, 215, 0, 0.6)' },
+          "0%, 100%": { boxShadow: "0 0 5px rgba(255, 215, 0, 0.3)" },
+          "50%": { boxShadow: "0 0 20px rgba(255, 215, 0, 0.6)" },
         },
         "hive-surface-rise": {
-          '0%': { transform: 'translateY(0)', boxShadow: '0 1px 3px rgba(0, 0, 0, 0.6)' },
-          '100%': { transform: 'translateY(-2px)', boxShadow: '0 8px 25px rgba(0, 0, 0, 0.15)' },
+          "0%": {
+            transform: "translateY(0)",
+            boxShadow: "0 1px 3px rgba(0, 0, 0, 0.6)",
+          },
+          "100%": {
+            transform: "translateY(-2px)",
+            boxShadow: "0 8px 25px rgba(0, 0, 0, 0.15)",
+          },
         },
         "hive-emboss-reveal": {
-          '0%': { 
-            opacity: '0', 
-            transform: 'scale(0.98)',
-            boxShadow: '0 0 0 rgba(0, 0, 0, 0)' 
+          "0%": {
+            opacity: "0",
+            transform: "scale(0.98)",
+            boxShadow: "0 0 0 rgba(0, 0, 0, 0)",
           },
-          '100%': { 
-            opacity: '1', 
-            transform: 'scale(1)',
-            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 215, 0, 0.1)' 
+          "100%": {
+            opacity: "1",
+            transform: "scale(1)",
+            boxShadow:
+              "0 4px 8px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 215, 0, 0.1)",
           },
         },
         "hive-ritual-burst": {
-          '0%': { transform: 'scale(1) rotate(0deg)', opacity: '1' },
-          '50%': { transform: 'scale(1.15) rotate(180deg)', opacity: '0.8' },
-          '100%': { transform: 'scale(1) rotate(360deg)', opacity: '1' },
+          "0%": { transform: "scale(1) rotate(0deg)", opacity: "1" },
+          "50%": { transform: "scale(1.15) rotate(180deg)", opacity: "0.8" },
+          "100%": { transform: "scale(1) rotate(360deg)", opacity: "1" },
         },
         "hive-space-join": {
-          '0%': { 
-            transform: 'scale(0.9)', 
-            opacity: '0',
-            boxShadow: '0 0 0 rgba(255, 215, 0, 0)' 
+          "0%": {
+            transform: "scale(0.9)",
+            opacity: "0",
+            boxShadow: "0 0 0 rgba(255, 215, 0, 0)",
           },
-          '50%': { 
-            transform: 'scale(1.05)', 
-            opacity: '1',
-            boxShadow: '0 0 30px rgba(255, 215, 0, 0.4)' 
+          "50%": {
+            transform: "scale(1.05)",
+            opacity: "1",
+            boxShadow: "0 0 30px rgba(255, 215, 0, 0.4)",
           },
-          '100%': { 
-            transform: 'scale(1)', 
-            opacity: '1',
-            boxShadow: '0 0 10px rgba(255, 215, 0, 0.2)' 
+          "100%": {
+            transform: "scale(1)",
+            opacity: "1",
+            boxShadow: "0 0 10px rgba(255, 215, 0, 0.2)",
           },
         },
-        
+
         // Legacy keyframes (kept for compatibility)
         "micro-shake": {
           "0%, 100%": { transform: "translateX(0)" },
@@ -195,71 +207,71 @@ export default {
           "100%": { transform: "scale(1)" },
         },
         shake: {
-          '0%, 100%': { transform: 'translateX(0)' },
-          '25%': { transform: 'translateX(-2px)' },
-          '75%': { transform: 'translateX(2px)' },
+          "0%, 100%": { transform: "translateX(0)" },
+          "25%": { transform: "translateX(-2px)" },
+          "75%": { transform: "translateX(2px)" },
         },
         // Legacy motion keyframes
         fadeIn: {
-          '0%': { opacity: '0' },
-          '100%': { opacity: '1' },
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
         },
         fadeOut: {
-          '0%': { opacity: '1' },
-          '100%': { opacity: '0' },
+          "0%": { opacity: "1" },
+          "100%": { opacity: "0" },
         },
         scaleIn: {
-          '0%': {
-            opacity: '0',
-            transform: 'scale(0.95)',
+          "0%": {
+            opacity: "0",
+            transform: "scale(0.95)",
           },
-          '100%': {
-            opacity: '1',
-            transform: 'scale(1)',
+          "100%": {
+            opacity: "1",
+            transform: "scale(1)",
           },
         },
         scaleOut: {
-          '0%': {
-            opacity: '1',
-            transform: 'scale(1)',
+          "0%": {
+            opacity: "1",
+            transform: "scale(1)",
           },
-          '100%': {
-            opacity: '0',
-            transform: 'scale(0.95)',
+          "100%": {
+            opacity: "0",
+            transform: "scale(0.95)",
           },
         },
         slideIn: {
-          '0%': {
-            opacity: '0',
-            transform: 'translateY(20px)',
+          "0%": {
+            opacity: "0",
+            transform: "translateY(20px)",
           },
-          '100%': {
-            opacity: '1',
-            transform: 'translateY(0)',
+          "100%": {
+            opacity: "1",
+            transform: "translateY(0)",
           },
         },
         slideInFromRight: {
-          '0%': {
-            opacity: '0',
-            transform: 'translateX(20px)',
+          "0%": {
+            opacity: "0",
+            transform: "translateX(20px)",
           },
-          '100%': {
-            opacity: '1',
-            transform: 'translateX(0)',
+          "100%": {
+            opacity: "1",
+            transform: "translateX(0)",
           },
         },
         ritualBurst: {
-          '0%': {
-            transform: 'scale(1) rotate(0deg)',
-            opacity: '1',
+          "0%": {
+            transform: "scale(1) rotate(0deg)",
+            opacity: "1",
           },
-          '50%': {
-            transform: 'scale(1.1) rotate(180deg)',
-            opacity: '0.8',
+          "50%": {
+            transform: "scale(1.1) rotate(180deg)",
+            opacity: "0.8",
           },
-          '100%': {
-            transform: 'scale(1) rotate(360deg)',
-            opacity: '1',
+          "100%": {
+            transform: "scale(1) rotate(360deg)",
+            opacity: "1",
           },
         },
       },

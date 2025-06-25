@@ -2,6 +2,7 @@ import { initializeApp, getApps } from "firebase/app";
 import type { FirebaseApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import type { Auth } from "firebase/auth";
+import { logger } from "@hive/core";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "demo-api-key",
@@ -32,7 +33,7 @@ if (!isDevWithoutFirebase) {
   auth = getAuth(app);
 } else {
   // In development without Firebase config, create mock auth object with proper type assertion
-  console.warn("🔥 Firebase not configured - using mock auth for development");
+  logger.warn("🔥 Firebase not configured - using mock auth for development");
   auth = {
     currentUser: null,
     onAuthStateChanged: () => () => {},

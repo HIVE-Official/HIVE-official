@@ -100,17 +100,17 @@ export function WaitlistForm({
             Welcome to the UB founding community!
           </CardTitle>
           <CardDescription className="text-zinc-400 font-sans">
-            You're now part of the exclusive group launching HIVE at UB
+            You&apos;re now part of the exclusive group launching HIVE at UB
           </CardDescription>
         </CardHeader>
         <CardContent className="text-center space-y-4">
           <div className="p-4 bg-[#FFD700]/5 border border-[#FFD700]/20 rounded-lg">
             <p className="text-sm text-[#FFD700] font-medium font-display mb-1">
-              What's Next?
+              What&apos;s Next?
             </p>
             <p className="text-xs text-zinc-400 font-sans">
-              We'll email you when HIVE launches at UB. Be ready to connect with
-              your fellow Bulls!
+              We&apos;ll email you when HIVE launches at UB. Be ready to connect
+              with your fellow Bulls!
             </p>
           </div>
           <Button
@@ -238,7 +238,8 @@ export function WaitlistForm({
           </Button>
 
           <p className="text-xs text-zinc-500 text-center font-sans">
-            By joining, you&apos;ll be among the first UB students to experience HIVE
+            By joining, you&apos;ll be among the first UB students to experience
+            HIVE
           </p>
         </form>
       </CardContent>

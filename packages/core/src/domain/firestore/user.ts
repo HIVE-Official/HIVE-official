@@ -15,11 +15,16 @@ export interface User {
   fullName: string;
   handle: string; // Unique, immutable after creation
   avatarUrl?: string;
+  interestTags: string[]; // Added for onboarding
 
   // Academic information
-  major: string;
+  majorId: string; // Renamed from major
   graduationYear?: number;
   schoolId: string; // Immutable after creation
+  isFirstYear: boolean; // Added for onboarding
+
+  // Leadership
+  isLeaderCandidate: boolean; // Added for onboarding
 
   // Residential information (for auto-join)
   dormitory?: string; // e.g., "East Hall"
@@ -96,9 +101,12 @@ export const UserSchema = z.object({
   fullName: z.string(),
   handle: z.string(),
   avatarUrl: z.string().optional(),
-  major: z.string(),
+  interestTags: z.array(z.string()).default([]),
+  majorId: z.string(),
   graduationYear: z.number().optional(),
   schoolId: z.string(),
+  isFirstYear: z.boolean().default(false),
+  isLeaderCandidate: z.boolean().default(false),
   dormitory: z.string().optional(),
   roomNumber: z.string().optional(),
   housingType: z.enum(["on_campus", "off_campus", "commuter"]).optional(),

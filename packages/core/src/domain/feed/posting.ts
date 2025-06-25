@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { logger } from "../../utils/logger";
 
 /**
  * Post Content Types
@@ -455,6 +456,12 @@ export class PostCreationEngine {
         toolData: validatedRequest.toolData,
       };
 
+      logger.debug("Post created:", {
+        id: post.id,
+        authorId: post.authorId,
+        content: post.content,
+      });
+
       return {
         success: true,
         post,
@@ -610,7 +617,7 @@ export class PostAnalyticsTracker {
    */
   static trackPostCreated(post: Post): void {
     // Analytics tracking implementation
-    console.log("Post created:", {
+    logger.debug("Post created:", {
       postId: post.id,
       type: post.type,
       spaceId: post.spaceId,
@@ -628,7 +635,7 @@ export class PostAnalyticsTracker {
     engagementType: "view" | "reaction" | "comment" | "share"
   ): void {
     // Analytics tracking implementation
-    console.log("Post engagement:", {
+    logger.debug("Post engagement:", {
       postId,
       userId,
       engagementType,

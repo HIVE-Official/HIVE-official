@@ -1,21 +1,35 @@
-import { useCallback, useRef, useEffect } from 'react'
-import { useAnalytics } from './use-analytics'
-import type { OnboardingStepName } from '@hive/core'
+import { useCallback, useRef, useEffect } from "react";
+import { useAnalytics } from "./use-analytics";
+import type { OnboardingStepName } from "@hive/core";
+import { logger } from "@hive/core";
 
 interface OnboardingStepTiming {
-  stepName: OnboardingStepName
-  startTime: number
-  endTime?: number
+  stepName: OnboardingStepName;
+  startTime: number;
+  endTime?: number;
 }
 
 interface UseOnboardingAnalyticsReturn {
-  trackOnboardingStarted: () => void
-  trackStepStarted: (stepName: OnboardingStepName) => void
-  trackStepCompleted: (stepName: OnboardingStepName, data?: Record<string, unknown>) => void
-  trackStepSkipped: (stepName: OnboardingStepName, reason?: string) => void
-  trackValidationError: (stepName: OnboardingStepName, field: string, error: string) => void
-  trackOnboardingCompleted: (totalDuration: number, completedSteps: OnboardingStepName[]) => void
-  trackOnboardingAbandoned: (lastStep: OnboardingStepName, reason?: string) => void
+  trackOnboardingStarted: () => void;
+  trackStepStarted: (stepName: OnboardingStepName) => void;
+  trackStepCompleted: (
+    stepName: OnboardingStepName,
+    data?: Record<string, unknown>
+  ) => void;
+  trackStepSkipped: (stepName: OnboardingStepName, reason?: string) => void;
+  trackValidationError: (
+    stepName: OnboardingStepName,
+    field: string,
+    error: string
+  ) => void;
+  trackOnboardingCompleted: (
+    totalDuration: number,
+    completedSteps: OnboardingStepName[]
+  ) => void;
+  trackOnboardingAbandoned: (
+    lastStep: OnboardingStepName,
+    reason?: string
+  ) => void;
 }
 
 /**
@@ -23,23 +37,34 @@ interface UseOnboardingAnalyticsReturn {
  * Uses the general analytics pipeline
  */
 export const useOnboardingAnalytics = (): UseOnboardingAnalyticsReturn => {
-  const { track } = useAnalytics()
-  const sessionStartTime = useRef<number | null>(null)
-  const stepTimings = useRef<Map<OnboardingStepName, OnboardingStepTiming>>(new Map())
-  const currentStep = useRef<OnboardingStepName | null>(null)
+  const { track } = useAnalytics();
+  const sessionStartTime = useRef<number | null>(null);
+  const stepTimings = useRef<Map<OnboardingStepName, OnboardingStepTiming>>(
+    new Map()
+  );
+  const currentStep = useRef<OnboardingStepName | null>(null);
 
   // Initialize session on mount
   useEffect(() => {
     if (!sessionStartTime.current) {
-      sessionStartTime.current = Date.now()
+      sessionStartTime.current = Date.now();
     }
-  }, [])
+  }, []);
 
   const trackOnboardingStarted = useCallback(() => {
-    sessionStartTime.current = Date.now()
-    
+    sessionStartTime.current = Date.now();
+
+    logger.debug("Onboarding started", {
+      sessionId: `onboarding_${sessionStartTime.current}`,
+      userAgent: navigator.userAgent,
+      viewport: {
+        width: window.innerWidth,
+        height: window.innerHeight,
+      },
+    });
+
     track({
-      name: 'onboarding_started',
+      name: "onboarding_started",
       properties: {
         timestamp: Date.now(),
         sessionId: `onboarding_${sessionStartTime.current}`,
@@ -50,159 +75,218 @@ export const useOnboardingAnalytics = (): UseOnboardingAnalyticsReturn => {
         },
         referrer: document.referrer,
       },
-    })
-  }, [track])
+    });
+  }, [track]);
 
-  const trackStepStarted = useCallback((stepName: OnboardingStepName) => {
-    const now = Date.now()
-    
-    // Complete previous step timing if exists
-    if (currentStep.current) {
-      const prevTiming = stepTimings.current.get(currentStep.current)
-      if (prevTiming && !prevTiming.endTime) {
-        prevTiming.endTime = now
+  const trackStepStarted = useCallback(
+    (stepName: OnboardingStepName) => {
+      const now = Date.now();
+
+      // Complete previous step timing if exists
+      if (currentStep.current) {
+        const prevTiming = stepTimings.current.get(currentStep.current);
+        if (prevTiming && !prevTiming.endTime) {
+          prevTiming.endTime = now;
+          logger.debug("Previous step completed", {
+            stepName: currentStep.current,
+            duration: now - prevTiming.startTime,
+          });
+        }
       }
-    }
 
-    // Start new step timing
-    stepTimings.current.set(stepName, {
-      stepName,
-      startTime: now,
-    })
-    currentStep.current = stepName
+      // Start new step timing
+      stepTimings.current.set(stepName, {
+        stepName,
+        startTime: now,
+      });
+      currentStep.current = stepName;
 
-    track({
-      name: 'onboarding_step_started',
-      properties: {
-        timestamp: now,
-        sessionId: `onboarding_${sessionStartTime.current}`,
+      logger.debug("Onboarding step started", {
         stepName,
         stepIndex: getStepIndex(stepName),
-        sessionDuration: sessionStartTime.current ? now - sessionStartTime.current : 0,
-      },
-    })
-  }, [track])
+        sessionDuration: sessionStartTime.current
+          ? now - sessionStartTime.current
+          : 0,
+      });
 
-  const trackStepCompleted = useCallback((stepName: OnboardingStepName, data?: Record<string, unknown>) => {
-    const now = Date.now()
-    const timing = stepTimings.current.get(stepName)
-    
-    if (timing) {
-      timing.endTime = now
-    }
+      track({
+        name: "onboarding_step_started",
+        properties: {
+          timestamp: now,
+          sessionId: `onboarding_${sessionStartTime.current}`,
+          stepName,
+          stepIndex: getStepIndex(stepName),
+          sessionDuration: sessionStartTime.current
+            ? now - sessionStartTime.current
+            : 0,
+        },
+      });
+    },
+    [track]
+  );
 
-    const stepDuration = timing ? now - timing.startTime : 0
+  const trackStepCompleted = useCallback(
+    (stepName: OnboardingStepName, data?: Record<string, unknown>) => {
+      const now = Date.now();
+      const timing = stepTimings.current.get(stepName);
 
-    track({
-      name: 'onboarding_step_completed',
-      properties: {
-        timestamp: now,
-        sessionId: `onboarding_${sessionStartTime.current}`,
-        stepName,
-        stepDuration,
-        stepIndex: getStepIndex(stepName),
-        sessionDuration: sessionStartTime.current ? now - sessionStartTime.current : 0,
-        stepData: data,
-      },
-    })
-  }, [track])
+      if (timing) {
+        timing.endTime = now;
+      }
 
-  const trackStepSkipped = useCallback((stepName: OnboardingStepName, reason?: string) => {
-    const now = Date.now()
-    const timing = stepTimings.current.get(stepName)
-    const stepDuration = timing ? now - timing.startTime : 0
+      const stepDuration = timing ? now - timing.startTime : 0;
 
-    track({
-      name: 'onboarding_step_skipped',
-      properties: {
-        timestamp: now,
-        sessionId: `onboarding_${sessionStartTime.current}`,
+      logger.debug("Onboarding step completed", {
         stepName,
         stepDuration,
         stepIndex: getStepIndex(stepName),
-        sessionDuration: sessionStartTime.current ? now - sessionStartTime.current : 0,
-        skipReason: reason,
-      },
-    })
-  }, [track])
+        data,
+      });
 
-  const trackValidationError = useCallback((stepName: OnboardingStepName, field: string, error: string) => {
-    const now = Date.now()
+      track({
+        name: "onboarding_step_completed",
+        properties: {
+          timestamp: now,
+          sessionId: `onboarding_${sessionStartTime.current}`,
+          stepName,
+          stepDuration,
+          stepIndex: getStepIndex(stepName),
+          sessionDuration: sessionStartTime.current
+            ? now - sessionStartTime.current
+            : 0,
+          stepData: data,
+        },
+      });
+    },
+    [track]
+  );
 
-    track({
-      name: 'onboarding_validation_error',
-      properties: {
-        timestamp: now,
-        sessionId: `onboarding_${sessionStartTime.current}`,
+  const trackStepSkipped = useCallback(
+    (stepName: OnboardingStepName, reason?: string) => {
+      const now = Date.now();
+      const timing = stepTimings.current.get(stepName);
+      const stepDuration = timing ? now - timing.startTime : 0;
+
+      logger.debug("Onboarding step skipped", {
         stepName,
-        stepIndex: getStepIndex(stepName),
-        sessionDuration: sessionStartTime.current ? now - sessionStartTime.current : 0,
-        field,
-        error,
-      },
-    })
-  }, [track])
+        stepDuration,
+        reason,
+      });
 
-  const trackOnboardingCompleted = useCallback((totalDuration: number, completedSteps: OnboardingStepName[]) => {
-    const now = Date.now()
-    const actualDuration = sessionStartTime.current ? now - sessionStartTime.current : totalDuration
+      track({
+        name: "onboarding_step_skipped",
+        properties: {
+          timestamp: now,
+          sessionId: `onboarding_${sessionStartTime.current}`,
+          stepName,
+          stepDuration,
+          stepIndex: getStepIndex(stepName),
+          sessionDuration: sessionStartTime.current
+            ? now - sessionStartTime.current
+            : 0,
+          skipReason: reason,
+        },
+      });
+    },
+    [track]
+  );
 
-    // Calculate step-by-step timings
-    const stepTimingsData = Array.from(stepTimings.current.entries()).map(([stepName, timing]) => ({
-      stepName,
-      duration: timing.endTime ? timing.endTime - timing.startTime : 0,
-      startTime: timing.startTime,
-      endTime: timing.endTime,
-    }))
+  const trackValidationError = useCallback(
+    (stepName: OnboardingStepName, field: string, error: string) => {
+      const now = Date.now();
 
-    track({
-      name: 'onboarding_completed',
-      properties: {
-        timestamp: now,
-        sessionId: `onboarding_${sessionStartTime.current}`,
-        totalDuration: actualDuration,
-        completedSteps,
-        stepCount: completedSteps.length,
-        stepTimings: stepTimingsData,
-        conversionRate: 1.0, // Completed successfully
-      },
-    })
+      track({
+        name: "onboarding_validation_error",
+        properties: {
+          timestamp: now,
+          sessionId: `onboarding_${sessionStartTime.current}`,
+          stepName,
+          stepIndex: getStepIndex(stepName),
+          sessionDuration: sessionStartTime.current
+            ? now - sessionStartTime.current
+            : 0,
+          field,
+          error,
+        },
+      });
+    },
+    [track]
+  );
 
-    // Reset session data
-    sessionStartTime.current = null
-    stepTimings.current.clear()
-    currentStep.current = null
-  }, [track])
+  const trackOnboardingCompleted = useCallback(
+    (totalDuration: number, completedSteps: OnboardingStepName[]) => {
+      const now = Date.now();
+      const actualDuration = sessionStartTime.current
+        ? now - sessionStartTime.current
+        : totalDuration;
 
-  const trackOnboardingAbandoned = useCallback((lastStep: OnboardingStepName, reason?: string) => {
-    const now = Date.now()
-    const sessionDuration = sessionStartTime.current ? now - sessionStartTime.current : 0
+      // Calculate step-by-step timings
+      const stepTimingsData = Array.from(stepTimings.current.entries()).map(
+        ([stepName, timing]) => ({
+          stepName,
+          duration: timing.endTime ? timing.endTime - timing.startTime : 0,
+          startTime: timing.startTime,
+          endTime: timing.endTime,
+        })
+      );
 
-    // Get completed steps
-    const completedSteps = Array.from(stepTimings.current.keys()).filter(stepName => {
-      const timing = stepTimings.current.get(stepName)
-      return timing?.endTime
-    })
+      track({
+        name: "onboarding_completed",
+        properties: {
+          timestamp: now,
+          sessionId: `onboarding_${sessionStartTime.current}`,
+          totalDuration: actualDuration,
+          completedSteps,
+          stepCount: completedSteps.length,
+          stepTimings: stepTimingsData,
+          conversionRate: 1.0, // Completed successfully
+        },
+      });
 
-    track({
-      name: 'onboarding_abandoned',
-      properties: {
-        timestamp: now,
-        sessionId: `onboarding_${sessionStartTime.current}`,
-        lastStep,
-        totalDuration: sessionDuration,
-        completedSteps,
-        stepCount: completedSteps.length,
-        abandonmentReason: reason,
-        conversionRate: 0.0, // Abandoned
-      },
-    })
+      // Reset session data
+      sessionStartTime.current = null;
+      stepTimings.current.clear();
+      currentStep.current = null;
+    },
+    [track]
+  );
 
-    // Reset session data
-    sessionStartTime.current = null
-    stepTimings.current.clear()
-    currentStep.current = null
-  }, [track])
+  const trackOnboardingAbandoned = useCallback(
+    (lastStep: OnboardingStepName, reason?: string) => {
+      const now = Date.now();
+      const sessionDuration = sessionStartTime.current
+        ? now - sessionStartTime.current
+        : 0;
+
+      // Get completed steps
+      const completedSteps = Array.from(stepTimings.current.keys()).filter(
+        (stepName) => {
+          const timing = stepTimings.current.get(stepName);
+          return timing?.endTime;
+        }
+      );
+
+      track({
+        name: "onboarding_abandoned",
+        properties: {
+          timestamp: now,
+          sessionId: `onboarding_${sessionStartTime.current}`,
+          lastStep,
+          totalDuration: sessionDuration,
+          completedSteps,
+          stepCount: completedSteps.length,
+          abandonmentReason: reason,
+          conversionRate: 0.0, // Abandoned
+        },
+      });
+
+      // Reset session data
+      sessionStartTime.current = null;
+      stepTimings.current.clear();
+      currentStep.current = null;
+    },
+    [track]
+  );
 
   return {
     trackOnboardingStarted,
@@ -212,22 +296,22 @@ export const useOnboardingAnalytics = (): UseOnboardingAnalyticsReturn => {
     trackValidationError,
     trackOnboardingCompleted,
     trackOnboardingAbandoned,
-  }
-}
+  };
+};
 
 /**
  * Get the index of an onboarding step for analytics
  */
 function getStepIndex(stepName: OnboardingStepName): number {
   const stepOrder: OnboardingStepName[] = [
-    'welcome',
-    'name',
-    'academics',
-    'handle',
-    'photo',
-    'builder',
-    'legal'
-  ]
-  
-  return stepOrder.indexOf(stepName)
-} 
+    "welcome",
+    "name",
+    "academics",
+    "handle",
+    "photo",
+    "builder",
+    "legal",
+  ];
+
+  return stepOrder.indexOf(stepName);
+}

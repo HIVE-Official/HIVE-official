@@ -2,16 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Card, CardContent, CardHeader, CardTitle } from "@hive/ui";
-import { Badge } from "@hive/ui";
-import { 
-  Users, 
-  Calendar, 
+import {
+  Users,
+  Calendar,
   Zap,
   ArrowRight,
   Star,
   Sparkles,
-  BookOpen
+  BookOpen,
 } from "lucide-react";
 import { useAuth } from "@hive/hooks";
 
@@ -91,8 +89,8 @@ export default function WelcomePage() {
               Welcome to HIVE&apos;s vBETA
             </h1>
             <p className="text-xl text-zinc-400 mb-8 max-w-3xl">
-              You&apos;re among the first students to experience the future of campus connection. 
-              Help us build something amazing together.
+              You&apos;re among the first students to experience the future of
+              campus connection. Help us build something amazing together.
             </p>
           </div>
 

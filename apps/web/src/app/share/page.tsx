@@ -22,6 +22,7 @@ import {
   CheckCircle,
   Users,
   Sparkles,
+  MessageSquare,
 } from "lucide-react";
 
 export default function ShareInvitePage() {
@@ -35,54 +36,41 @@ export default function ShareInvitePage() {
   // Generate UB-specific invite link
   const inviteLink = `${window.location.origin}/campus?ref=${searchParams.get("userId") || "ub-student"}&utm_source=friend_invite&utm_campaign=ub_launch`;
 
-  const handleCopyLink = async () => {
+  const shareUrl = `https://app.myhive.quest/invite?code=${shareContent.inviteCode}`;
+
+  const copyToClipboard = async () => {
     try {
-      void navigator.clipboard.writeText(inviteLink);
+      await navigator.clipboard.writeText(shareUrl);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
-      console.error("Failed to copy link:", err);
+      console.error("Failed to copy:", err);
     }
   };
 
-  const _handleShare = async (platform: string) => {
-    const text =
-      "Join me on HIVE - the exclusive social platform launching at UB! 🔥";
-    const url = encodeURIComponent(inviteLink);
-    const encodedText = encodeURIComponent(text);
-
+  const legacy_handleShare = async (platform: string) => {
+    const text = `I just joined HIVE, the new social platform for UB students. Join me!`;
     const shareUrls = {
-      twitter: `https://twitter.com/intent/tweet?text=${encodedText}&url=${url}`,
-      facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
-      instagram: `https://www.instagram.com/`, // Instagram doesn't support direct URL sharing
+      twitter: `https://twitter.com/intent/tweet?url=${encodeURIComponent(
+        shareUrl
+      )}&text=${encodeURIComponent(text)}`,
+      facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+        shareUrl
+      )}`,
     };
 
     if (platform === "instagram") {
-      // For Instagram, we&apos;ll copy the text and open Instagram
-      navigator.clipboard.writeText(`${text} ${inviteLink}`);
-      window.open("https://www.instagram.com/", "_blank");
+      // Instagram doesn't support direct web sharing with pre-filled text
+      await navigator.clipboard.writeText(`${text} ${shareUrl}`);
+      alert(
+        "Invite message copied to clipboard. Paste it in your Instagram story or DM!"
+      );
     } else {
       window.open(
         shareUrls[platform as keyof typeof shareUrls],
         "_blank",
         "width=600,height=400"
       );
-    }
-  };
-
-  const handleShare = async () => {
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: shareContent.title,
-          text: shareContent.description,
-          url: shareUrl,
-        });
-      } catch (error) {
-        console.error("Error sharing:", error);
-      }
-    } else {
-      await navigator.clipboard.writeText(shareUrl);
     }
   };
 
@@ -181,7 +169,7 @@ export default function ShareInvitePage() {
                   {inviteLink}
                 </code>
                 <Button
-                  onClick={handleCopyLink}
+                  onClick={copyToClipboard}
                   size="sm"
                   className="bg-[#FFD700] hover:bg-[#FFE255] text-black font-medium"
                 >
@@ -215,21 +203,21 @@ export default function ShareInvitePage() {
           <CardContent>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <Button
-                onClick={() => _handleShare("twitter")}
+                onClick={() => legacy_handleShare("twitter")}
                 className="w-full bg-blue-500 hover:bg-blue-600 text-white font-sans"
               >
                 <Twitter className="w-4 h-4 mr-2" />
                 Twitter
               </Button>
               <Button
-                onClick={() => _handleShare("facebook")}
+                onClick={() => legacy_handleShare("facebook")}
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white font-sans"
               >
                 <Facebook className="w-4 h-4 mr-2" />
                 Facebook
               </Button>
               <Button
-                onClick={() => _handleShare("instagram")}
+                onClick={() => legacy_handleShare("instagram")}
                 className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-sans"
               >
                 <Instagram className="w-4 h-4 mr-2" />
@@ -253,7 +241,7 @@ export default function ShareInvitePage() {
             <div className="p-4 bg-zinc-800/50 rounded-lg">
               <p className="text-sm text-zinc-300 font-sans leading-relaxed">
                 Hey! 👋 I just joined HIVE - the new social platform launching
-                exclusively at UB! It&apos;s designed specifically for college
+                exclusively at UB! It's designed specifically for college
                 students and looks amazing. Want to join the founding UB
                 community? Check it out: {inviteLink}
               </p>
@@ -261,13 +249,13 @@ export default function ShareInvitePage() {
             <Button
               onClick={() =>
                 navigator.clipboard.writeText(
-                  `Hey! 👋 I just joined HIVE - the new social platform launching exclusively at UB! It&apos;s designed specifically for college students and looks amazing. Want to join the founding UB community? Check it out: ${inviteLink}`
+                  `Hey! 👋 I just joined HIVE - the new social platform launching exclusively at UB! It's designed specifically for college students and looks amazing. Want to join the founding UB community? Check it out: ${inviteLink}`
                 )
               }
-              className="w-full mt-3 border-zinc-700 text-zinc-300 hover:bg-zinc-800 font-sans"
-              variant="outline"
+              size="lg"
+              className="w-full mt-4 bg-zinc-700 hover:bg-zinc-600 text-white font-sans"
             >
-              <Copy className="w-4 h-4 mr-2" />
+              <MessageSquare className="w-4 h-4 mr-2" />
               Copy Message
             </Button>
           </CardContent>
@@ -297,8 +285,8 @@ export default function ShareInvitePage() {
               <div>
                 <strong className="text-white">Exclusive Access:</strong>
                 <p>
-                  HIVE is launching exclusively at UB first. Your friends won&apos;t
-                  be able to join from anywhere else!
+                  HIVE is launching exclusively at UB first. Your friends
+                  won&apos;t be able to join from anywhere else!
                 </p>
               </div>
             </div>

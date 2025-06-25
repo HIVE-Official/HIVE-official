@@ -6,6 +6,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Home, Users, User, Zap, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { logger } from "@hive/core";
 
 export interface TabItem {
   id: string;
@@ -194,5 +195,5 @@ export const createSampleBottomTabsProps = (): BottomTabsProps => ({
   currentPage: "feed",
   isBuilder: true,
   notificationCount: 3,
-  onTabClick: (tabId) => console.log("Tab clicked:", tabId),
+  onTabClick: (tabId) => logger.debug("Tab clicked:", tabId),
 });

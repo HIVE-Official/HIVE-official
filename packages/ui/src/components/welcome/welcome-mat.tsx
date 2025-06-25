@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ArrowRight, Users } from "lucide-react";
 import { cn } from "../../lib/utils";
+import { logger } from "@hive/core";
 
 interface WelcomeMatProps {
   /** Whether to show the welcome mat */
@@ -187,13 +188,13 @@ export const useWelcomeMat = () => {
 
   // Check if welcome mat should be shown
   useEffect(() => {
-    const checkWelcomeMatStatus = () => {
+    const checkWelcomeMatStatus = async () => {
       try {
         const dismissed = localStorage.getItem("welcomeMatDismissed");
         const shouldShow = !dismissed;
         setIsVisible(shouldShow);
       } catch (error) {
-        console.warn("Failed to check welcome mat status:", error);
+        logger.warn("Failed to check welcome mat status:", error);
         setIsVisible(false);
       } finally {
         setHasCheckedStorage(true);
@@ -203,12 +204,12 @@ export const useWelcomeMat = () => {
     checkWelcomeMatStatus();
   }, []);
 
-  const dismissWelcomeMat = () => {
+  const dismissWelcomeMat = async () => {
     try {
       localStorage.setItem("welcomeMatDismissed", "true");
       setIsVisible(false);
     } catch (error) {
-      console.warn("Failed to save welcome mat dismissal:", error);
+      logger.warn("Failed to save welcome mat dismissal:", error);
       setIsVisible(false);
     }
   };

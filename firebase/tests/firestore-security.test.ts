@@ -13,12 +13,13 @@ import {
 } from "@firebase/rules-unit-testing";
 import {
   doc,
-  collection,
   setDoc,
   getDoc,
   updateDoc,
   deleteDoc,
-  getDocs,
+  addDoc,
+  query,
+  where,
 } from "firebase/firestore";
 import { readFileSync } from "fs";
 import { join } from "path";

@@ -1,7 +1,8 @@
+import { onRequest } from "firebase-functions/v2/https";
+import { logger } from "../lib/logger";
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 import { ActiveRitualTileSchema } from "@hive/core";
-import { z } from "zod";
 
 /**
  * Fetches the content for the top strip of the main feed, which includes
@@ -9,7 +10,7 @@ import { z } from "zod";
  *
  * The function validates the fetched data against the ActiveRitualTileSchema.
  */
-export const getTopStrip = functions.https.onCall(async (data, context) => {
+export const getTopStrip = onRequest(async (request, _context) => {
   // Optional: Add authentication check if only logged-in users can see this.
   // if (!context.auth) {
   //   throw new functions.https.HttpsError(
@@ -57,10 +58,7 @@ export const getTopStrip = functions.https.onCall(async (data, context) => {
 
     return { success: true, data: validatedData };
   } catch (error) {
-    functions.logger.error("Error fetching top strip content:", error);
-    throw new functions.https.HttpsError(
-      "internal",
-      "An unexpected error occurred while fetching the feed."
-    );
+    logger.error("Error getting top strip:", error);
+    throw error;
   }
 });

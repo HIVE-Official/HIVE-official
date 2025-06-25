@@ -4,8 +4,9 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { ChevronRight, Home } from "lucide-react";
+import { ChevronRight, Home, Users, GraduationCap } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { logger } from "@hive/core";
 
 // Breadcrumb item interface
 export interface BreadcrumbItem {
@@ -231,25 +232,24 @@ export const HiveLabBreadcrumb = ({
 };
 
 // Utility functions for sample data
-export const createSampleBreadcrumbItems = (): BreadcrumbItem[] => [
-  {
-    id: "home",
-    label: "Feed",
-    onClick: () => console.log("Navigate to Feed"),
-  },
-  {
-    id: "spaces",
-    label: "Spaces",
-    onClick: () => console.log("Navigate to Spaces"),
-  },
-  {
-    id: "category",
-    label: "Academic",
-    onClick: () => console.log("Navigate to Academic"),
-  },
-  {
-    id: "space",
-    label: "Computer Science",
-    isActive: true,
-  },
-];
+export const createSampleBreadcrumbItems = (): BreadcrumbItem[] => {
+  const defaultItems = [
+    {
+      label: "Feed",
+      icon: <Home className="w-4 h-4" />,
+      onClick: () => logger.debug("Navigate to Feed"),
+    },
+    {
+      label: "Spaces",
+      icon: <Users className="w-4 h-4" />,
+      onClick: () => logger.debug("Navigate to Spaces"),
+    },
+    {
+      label: "Academic",
+      icon: <GraduationCap className="w-4 h-4" />,
+      onClick: () => logger.debug("Navigate to Academic"),
+    },
+  ];
+
+  return defaultItems;
+};

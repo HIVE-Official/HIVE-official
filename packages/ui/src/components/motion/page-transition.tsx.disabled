@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { logger } from '@hive/core';
 
 // Import our motion tokens with proper typing
 import { motion as motionTokens } from "@hive/tokens/motion";
@@ -68,7 +69,7 @@ export function PageTransition({
   // Type-safe variant access
   const transitionVariant = motionTokens.animations[variant];
   if (!transitionVariant) {
-    console.warn(`Motion variant "${variant}" not found, using default`);
+    logger.warn(`Motion variant "${variant}" not found, using default`);
     return <div className={cn("min-h-screen", className)}>{children}</div>;
   }
 

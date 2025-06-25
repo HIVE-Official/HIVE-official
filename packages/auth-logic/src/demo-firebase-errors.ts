@@ -9,6 +9,7 @@ import {
   FirebaseErrorHandler,
   useFirebaseErrorHandler,
 } from "./firebase-error-handler";
+import { logger } from "@hive/core";
 
 // Example 1: Basic error handling in a function
 export async function exampleAuthOperation() {
@@ -18,9 +19,9 @@ export async function exampleAuthOperation() {
   } catch (error) {
     const userFriendlyError = FirebaseErrorHandler.handleError(error);
 
-    console.log("User sees:", userFriendlyError.message);
-    console.log("Action:", userFriendlyError.action);
-    console.log("Can retry:", userFriendlyError.isRetryable);
+    logger.debug("User sees:", userFriendlyError.message);
+    logger.debug("Action:", userFriendlyError.action);
+    logger.debug("Can retry:", userFriendlyError.isRetryable);
 
     return userFriendlyError;
   }
@@ -34,7 +35,7 @@ export function ExampleAuthComponent() {
     try {
       // Your Firebase Auth sign-in logic here
       // await signInWithEmailAndPassword(auth, email, password);
-      console.log("Sign in successful for:", email);
+      logger.info("Sign in successful for:", email);
     } catch (error) {
       const errorDisplay = getErrorDisplay(error);
 
@@ -45,12 +46,12 @@ export function ExampleAuthComponent() {
 
       if (errorDisplay.shouldShowRetry) {
         // Show retry button
-        console.log("Show retry button");
+        logger.debug("Show retry button");
       }
 
       if (errorDisplay.shouldContactSupport) {
         // Show contact support option
-        console.log("Show contact support");
+        logger.debug("Show contact support");
       }
     }
   };
@@ -72,7 +73,7 @@ export async function exampleFunctionCall() {
       window.location.href = "/auth/login";
     } else if (userFriendlyError.isRetryable) {
       // Show retry option
-      console.log("Retry available");
+      logger.debug("Retry available");
     }
 
     return userFriendlyError;
@@ -89,7 +90,7 @@ export function getErrorBoundaryExample() {
         <FirebaseErrorBoundary
           onError={(error, errorInfo) => {
             // Log to analytics service
-            console.error('Error boundary caught:', error);
+            logger.error('Error boundary caught:', error);
           }}
         >
           <YourAppContent />
@@ -124,16 +125,16 @@ export const commonErrorScenarios = {
     const error = FirebaseErrorHandler.handleAuthError(
       new Error("auth/user-not-found")
     );
-    console.log("Message:", error.message); // "No account found with this email address..."
-    console.log("Action:", error.action); // "sign-up"
+    logger.debug("Message:", error.message); // "No account found with this email address..."
+    logger.debug("Action:", error.action); // "sign-up"
   },
 
   "auth/too-many-requests": () => {
     const error = FirebaseErrorHandler.handleAuthError(
       new Error("auth/too-many-requests")
     );
-    console.log("Message:", error.message); // "Too many failed attempts..."
-    console.log("Severity:", error.severity); // "warning"
+    logger.debug("Message:", error.message); // "Too many failed attempts..."
+    logger.debug("Severity:", error.severity); // "warning"
   },
 
   // Functions errors
@@ -141,8 +142,8 @@ export const commonErrorScenarios = {
     const error = FirebaseErrorHandler.handleFunctionsError(
       new Error("functions/permission-denied")
     );
-    console.log("Message:", error.message); // "You don't have permission..."
-    console.log("Action:", error.action); // "contact-support"
+    logger.debug("Message:", error.message); // "You don't have permission..."
+    logger.debug("Action:", error.action); // "contact-support"
   },
 
   // Generic errors
@@ -150,8 +151,8 @@ export const commonErrorScenarios = {
     const error = FirebaseErrorHandler.handleError(
       new Error("Something went wrong")
     );
-    console.log("Message:", error.message); // Uses the original error message
-    console.log("Code:", error.code); // "generic-error"
+    logger.debug("Message:", error.message); // Uses the original error message
+    logger.debug("Code:", error.code); // "generic-error"
   },
 };
 

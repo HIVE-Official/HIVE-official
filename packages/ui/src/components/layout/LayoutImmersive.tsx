@@ -1,8 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, ReactNode } from "react";
 import { motion } from "framer-motion";
-import { cn } from "../../lib/utils";
+import { cn } from "@/lib/utils";
 import { Home, Compass, User, Settings, Bot, Search, Bell } from "lucide-react";
 import { HiveLogo } from "../brand/Logo";
+
+interface LayoutImmersiveProps {
+  children: ReactNode;
+  className?: string;
+}
 
 // Placeholder for a logo component
 const PlaceholderLogo = () => (
@@ -50,16 +55,17 @@ const PlaceholderAvatar = () => (
 );
 
 // The main layout component for Option B
-export const LayoutImmersive = ({
-  children,
-}: {
-  children: React.ReactNode;
-}) => {
+export function LayoutImmersive({ children, className }: LayoutImmersiveProps) {
   const [active, setActive] = useState("Feed");
   const navItems = ["Feed", "Spaces", "Profile"];
 
   return (
-    <div className="flex min-h-screen w-full flex-col bg-background font-sans text-foreground">
+    <div
+      className={cn(
+        "flex min-h-screen w-full flex-col bg-background font-sans text-foreground",
+        className
+      )}
+    >
       {/* Top Header */}
       <header className="sticky top-0 z-50 flex h-16 items-center gap-4 border-b border-border bg-surface/80 px-6 backdrop-blur-sm">
         <div className="flex items-center gap-2">
@@ -89,4 +95,4 @@ export const LayoutImmersive = ({
       <main className="flex-1 p-6">{children}</main>
     </div>
   );
-}; 
+}

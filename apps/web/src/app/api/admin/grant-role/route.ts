@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getAuth } from "firebase-admin/auth";
 import { getFirestore } from "firebase-admin/firestore";
+import { logger } from "@hive/core";
 
 // Validation schema
 const grantRoleSchema = z.object({
@@ -87,7 +88,7 @@ export async function POST(request: NextRequest) {
       message: `Role ${role} granted to user ${userId}`,
     });
   } catch (error) {
-    console.error("Error granting role:", error);
+    logger.error("Error granting role:", error);
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(

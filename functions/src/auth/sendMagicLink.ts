@@ -24,6 +24,7 @@ function generateToken(): string {
 
 interface MagicLinkData {
   email: string;
+  schoolId: string;
 }
 
 export const sendMagicLink = functions.https.onCall(
@@ -31,8 +32,11 @@ export const sendMagicLink = functions.https.onCall(
     // Extract data from request
     const data = request.data as MagicLinkData;
 
-    if (!data.email) {
-      throw new FirebaseHttpsError("invalid-argument", "Email is required");
+    if (!data.email || !data.schoolId) {
+      throw new FirebaseHttpsError(
+        "invalid-argument",
+        "Email and schoolId are required"
+      );
     }
 
     try {
@@ -43,6 +47,7 @@ export const sendMagicLink = functions.https.onCall(
       // Store the magic link token in Firestore
       await db.collection("magic_links").add({
         email: data.email,
+        schoolId: data.schoolId,
         token,
         expiresAt,
         used: false,

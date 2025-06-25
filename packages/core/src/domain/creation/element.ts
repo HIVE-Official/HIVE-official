@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { logger } from "../../utils/logger";
 
 // Element categories for organization
 export const ElementCategory = z.enum([
@@ -387,7 +388,7 @@ export const validateElementConfig = (
     ElementConfigSchema.parse(configWithType);
     return true;
   } catch (error) {
-    console.error("Element config validation failed:", error);
+    logger.error("Element config validation failed:", error);
     return false;
   }
 };
