@@ -7,6 +7,8 @@ export interface TestUser extends Omit<AuthUser, 'email' | 'fullName'> {
   email: string;
   fullName: string;
   isAnonymous: boolean;
+  emailVerified: boolean;
+  customClaims: Record<string, unknown>;
   metadata: {
     creationTime: string;
     lastSignInTime: string;

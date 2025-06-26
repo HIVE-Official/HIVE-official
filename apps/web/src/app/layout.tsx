@@ -1,27 +1,10 @@
 import type { Metadata } from "next";
 import { GeistSans } from "geist/font/sans";
-import { Space_Grotesk, Inter, JetBrains_Mono } from "next/font/google";
+// Google Fonts removed due to offline build constraints
 import { Providers } from "./providers";
 import "./globals.css";
 
 // CORRECTED: Space Grotesk from Google Fonts for display text (HIVE Brand System v1.0)
-const spaceGrotesk = Space_Grotesk({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-display",
-});
-
-const inter = Inter({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-sans",
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-mono",
-});
 
 export const metadata: Metadata = {
   title: "HIVE",
@@ -39,7 +22,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${spaceGrotesk.variable} ${GeistSans.variable} ${inter.variable} ${jetbrainsMono.variable} dark`}
+      className={`${GeistSans.variable} dark`}
       suppressHydrationWarning
     >
       <body

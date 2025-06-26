@@ -6,7 +6,6 @@ import { z } from "zod";
 import { CreateToolSchema, ToolSchema, createToolDefaults, logger } from "@hive/core";
 // // import { rateLimit } from "@/lib/rate-limit";
 
-const db = getFirestore();
 
 // Rate limiting: 10 tool creations per hour per user
 // // const createToolLimiter = rateLimit({
@@ -17,6 +16,7 @@ const db = getFirestore();
 // GET /api/tools - List user's tools
 export async function GET(request: NextRequest) {
   try {
+    const db = getFirestore();
     const authHeader = request.headers.get("authorization");
     if (!authHeader?.startsWith("Bearer ")) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -83,6 +83,7 @@ export async function GET(request: NextRequest) {
 // POST /api/tools - Create new tool
 export async function POST(request: NextRequest) {
   try {
+    const db = getFirestore();
     const authHeader = request.headers.get("authorization");
     if (!authHeader?.startsWith("Bearer ")) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

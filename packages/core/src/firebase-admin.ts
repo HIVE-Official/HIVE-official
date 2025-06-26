@@ -14,10 +14,17 @@ let authAdmin: Auth | null = null;
 const initializeFirebaseAdmin = () => {
 	if (firebaseInitialized) return;
 
-	try {
-		if (!serviceAccountKey) {
-			throw new Error('FIREBASE_ADMIN_PRIVATE_KEY is not set.');
-		}
+        try {
+                if (!serviceAccountKey) {
+                        logger.warn('FIREBASE_ADMIN_PRIVATE_KEY is not set. Skipping Firebase Admin init.');
+                        if (!isProduction) {
+                                dbAdmin = {} as Firestore;
+                                authAdmin = {} as Auth;
+                                firebaseInitialized = true;
+                                return;
+                        }
+                        return;
+                }
 
 		const serviceAccount = JSON.parse(serviceAccountKey);
 		const appName = 'hive-admin-app';

@@ -2,6 +2,11 @@
 // TODO: Implement proper server-side auth
 
 import type { AuthUser } from "@hive/auth-logic";
+
+interface ExtendedAuthUser extends AuthUser {
+  emailVerified: boolean;
+  customClaims: Record<string, unknown>;
+}
 import { authAdmin } from "./firebase-admin";
 
 /**
@@ -11,7 +16,7 @@ import { authAdmin } from "./firebase-admin";
  */
 export async function verifyAuthToken(
   request: Request
-): Promise<AuthUser | null> {
+): Promise<ExtendedAuthUser | null> {
   try {
     const authHeader = request.headers.get("authorization");
 
@@ -29,6 +34,7 @@ export async function verifyAuthToken(
       customClaims: decodedToken.custom_claims,
       fullName: decodedToken.name,
       onboardingCompleted: (decodedToken.custom_claims?.onboardingCompleted as boolean) || false,
+      getIdToken: async () => token,
     };
   } catch (error) {
     console.error("Auth token verification failed:", error);
@@ -56,7 +62,7 @@ export function getAuthTokenFromRequest(request: Request): string | null {
  * @param request - The incoming request object
  * @returns Promise<AuthUser> - Throws if not authenticated
  */
-export async function requireAuth(request: Request): Promise<AuthUser> {
+export async function requireAuth(request: Request): Promise<ExtendedAuthUser> {
   const user = await verifyAuthToken(request);
 
   if (!user) {
@@ -71,7 +77,7 @@ export async function requireAuth(request: Request): Promise<AuthUser> {
  * @param user - The authenticated user
  * @returns boolean
  */
-export function isAdmin(user: AuthUser): boolean {
+export function isAdmin(user: ExtendedAuthUser): boolean {
   return (user.customClaims as { role?: string })?.role === "admin" || false;
 }
 
@@ -80,11 +86,11 @@ export function isAdmin(user: AuthUser): boolean {
  * @param user - The authenticated user
  * @returns boolean
  */
-export function isBuilder(user: AuthUser): boolean {
+export function isBuilder(user: ExtendedAuthUser): boolean {
   const roles = (user.customClaims as { roles?: string[] })?.roles;
   return roles?.includes("builder") || false;
 }
 
-export async function getCurrentUser(): Promise<AuthUser | null> {
+export async function getCurrentUser(): Promise<ExtendedAuthUser | null> {
   return null;
 }
