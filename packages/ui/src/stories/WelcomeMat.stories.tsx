@@ -1,3 +1,4 @@
+// eslint-disable-next-line storybook/no-renderer-packages
 import type { Meta, StoryObj } from '@storybook/react'
 import { WelcomeMat, useWelcomeMat } from '../components/welcome-mat'
 import { useEffect } from 'react'

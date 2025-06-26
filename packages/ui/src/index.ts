@@ -12,6 +12,9 @@ export { Textarea } from "./components/textarea";
 export { Select, SelectTrigger, SelectContent, SelectItem, SelectValue, SelectGroup } from "./components/select";
 export { Skeleton } from "./components/skeleton";
 
+// Export typography components
+export { Typography, Heading, Text, Caption, Code } from "./components/typography";
+
 // Export card components from the main components directory (not ui subdirectory)
 export { Card, CardContent, CardDescription, CardHeader, CardTitle } from './components/card';
 

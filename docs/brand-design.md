@@ -193,4 +193,133 @@ Motion is a core part of the HIVE brand, used to provide feedback and create a p
 | `smooth` | `cubic-bezier(0.25, 0.46, 0.45, 0.94)` | Confident and smooth. |
 | `snap` | `cubic-bezier(0.68, -0.55, 0.265, 1.55)` | Playful bounce. |
 | `elegant` | `cubic-bezier(0.23, 1, 0.32, 1)` | Refined and graceful. |
-| `brand` | `cubic-bezier(0.33, 0.65, 0, 1)` | Signature HIVE spring for gold accents. | 
+| `brand` | `cubic-bezier(0.33, 0.65, 0, 1)` | Signature HIVE spring for gold accents. |
+
+### Motion Philosophy
+
+-   **Purposeful**: Animation should guide the user's attention, provide feedback, or smooth transitions. It should never be purely decorative.
+-   **Responsive**: Interactions should have immediate haptic feedback through subtle, fast animations.
+-   **Contextual**: Animate layout changes to prevent disorientation (e.g., expanding cards, list re-ordering).
+-   **Performant**: All animations must be hardware-accelerated (favoring `transform` and `opacity`) and respect `prefers-reduced-motion`.
+
+## 8. Iconography
+
+To ensure visual consistency and a premium, technical feel, HIVE uses the **Lucide React** icon library. Lucide's clean, geometric style aligns perfectly with our Vercel-inspired aesthetic.
+
+### Guidelines
+
+| Rule | Value | Notes |
+| :--- | :--- | :--- |
+| **Default Size** | `18px` | For inline use with body text. |
+| **Stroke Width** | `1.5px` | Thinner than the default for a more refined look. |
+| **Color** | `foreground` or `muted` | Use `foreground` for primary icons and `muted` for secondary ones. |
+| **Accent Usage** | Gold on hover/focus | Icons can take on the gold accent color during interaction states. |
+
+## 9. Component States & Variants
+
+Defining consistent interaction states is critical for a predictable and high-quality user experience.
+
+### Button Variants & States
+
+Our button strategy is updated to prioritize a clean, transparent-first aesthetic. The default button is a "ghost" or "outline" style, with solid fills used for higher-emphasis actions.
+
+| Variant | Style | Usage |
+| :--- | :--- | :--- |
+| **Outline (Default)** | Transparent background with a `border` outline. | The standard button for most actions. |
+| **Primary (White Fill)** | Solid `foreground` (white) fill with `background` (black) text. | The main call-to-action on a page. Use sparingly. |
+| **Secondary (Black Fill)** | Solid `background` (black) fill with `foreground` (white) text. | For secondary actions that need more emphasis than an outline. |
+
+**Interaction States for Buttons:**
+
+| State | Visual Style (Outline) | Visual Style (Solid Fills) |
+| :--- | :--- | :--- |
+| **Hover** | Border color brightens to `#4A4A4A` and a subtle `surface-03` background appears. | Background lightens/darkens by ~10%. |
+| **Focus** | 2px `accent` (`#FFD700`) outer ring/outline. | 2px `accent` (`#FFD700`) outer ring/outline. |
+| **Pressed** | Subtle `transform: scale(0.98)` and a more prominent background. | Subtle `transform: scale(0.98)`. |
+| **Disabled** | `disabled` (`#3F3F46`) text/border color; no hover or focus effects. | `disabled` (`#3F3F46`) text/fill color; no hover or focus effects. |
+
+### Chips & Tags
+
+To achieve an "Apple-like" feel, chips and tags should be styled as pill-shaped elements with a fully-rounded radius.
+
+| Property | Value | Notes |
+| :--- | :--- | :--- |
+| **Border Radius** | `radius-full` (`9999px`) | Creates the signature pill shape. References `Section 5`. |
+| **Background** | `surface-03` (`#1F1F1F`) | A slightly elevated, dark background. |
+| **Padding** | `4px 10px` | `py-1 px-2.5` in Tailwind. |
+| **Text Style** | `Caption` or `Body Small` | Keep text concise and clear. |
+
+### Data-Driven States (Cards, Lists)
+
+To capture the Vercel-like experience for data-heavy views, we use specific, non-color-based states.
+
+| State | Pattern | Description |
+| :--- | :--- | :--- |
+| **Loading** | **Skeleton Loader** | Use shimmering, animated placeholders that mimic the shape of the final content. This provides a high-quality perceived performance. |
+| **Empty** | **Icon + Text** | Display a relevant Lucide icon and helpful micro-copy (e.g., "No spaces found. Why not create one?"). Can include a primary action button. |
+| **Error** | **Icon + Text + Retry** | Display a warning icon (e.g., `AlertTriangle`), a clear, concise error message, and a "Try again" button. |
+
+## 10. Layout & Grid System
+
+To ensure responsive consistency, all page layouts adhere to a 12-column flexible grid system.
+
+| Property | Value | Notes |
+| :--- | :--- | :--- |
+| **Columns** | `12` | Standard flexible grid. |
+| **Gutter** | `24px` | Space between columns. |
+| **Page Margin** | `32px` (desktop), `16px` (mobile) | Outer spacing for the entire page. |
+| **Max Content Width** | `1280px` | The maximum width for the main content area to ensure readability on large screens. |
+
+## 11. Surfaces & Effects
+
+To bring in that polished, layered feel from Apple's HIG, we will use a "frosted glass" effect for elevated, transient surfaces.
+
+### Glassmorphism (Frosted Glass)
+
+-   **Effect**: `backdrop-blur(12px) saturate(180%)`
+-   **Background**: `rgba(17, 17, 17, 0.75)` (surface at 75% opacity)
+-   **Usage**: Modals, popovers, command menus (`⌘K`), and the main navigation bar.
+-   **Border**: A 1px subtle white border (`rgba(255, 255, 255, 0.1)`) is applied to the edges of glass surfaces to help them stand out from the background.
+
+## 12. Social & Interactive Elements
+
+To bridge the gap between a premium "company" aesthetic and a vibrant "social platform," this section defines patterns for human-centric interaction and community feel.
+
+### Avatars & Presence
+
+Avatars are the primary representation of users and spaces.
+
+| Property | Value | Notes |
+| :--- | :--- | :--- |
+| **Shape** | `radius-full` (Circular) | Creates a friendly, approachable look. |
+| **Sizes** | `24px`, `32px`, `48px`, `96px` | For use in comments, lists, profiles, and headers respectively. |
+| **Fallback** | Initials on a `surface-02` background. | Ensures a consistent look when an image isn't available. |
+| **Presence Indicator** | A `10px` circle at the bottom-right corner. | Green (`#22C55E`) for online, `surface-03` for offline. Has a 2px `background` border to separate it from the avatar. |
+
+### User-Generated Content (UGC)
+
+Text created by users should be scannable and interactive.
+
+| Element | Style | Notes |
+| :--- | :--- | :--- |
+| **@mentions** | `accent` color (`#FFD700`) text, `font-medium`. | Should be interactive, opening a user profile popover on hover. |
+| **#hashtags** | `foreground` color (`#FFFFFF`) text, `font-medium`. | Should be clickable to navigate to a feed of posts with that hashtag. |
+| **Links** | `foreground` color, underlined. | Standard link styling for clarity. |
+
+### Ritual & Celebration
+
+Key moments in the user journey should be celebrated with motion and our brand accent to foster engagement and reward participation.
+
+| Moment | Effect |
+| :--- | :--- |
+| **First Post / Achievement** | A glowing `accent` border on the "Complete" button, followed by a subtle burst of gold particle confetti on the next screen. |
+| **New Follower / Mention** | Notification badges use the `accent` color. |
+| **High-Engagement Post** | A subtle, shimmering `accent` gradient can be applied to the card's border to signify popularity. |
+
+### Micro-interactions & Reactions
+
+Interactive elements should provide satisfying, haptic feedback.
+
+-   **Liking/Reacting**: A button should have a "snap" animation (`cubic-bezier(0.68, -0.55, 0.265, 1.55)`) where the icon scales up slightly and "bounces" before settling. The icon should fill with the `accent` color.
+-   **Following**: A follow button should smoothly transition its state and text (e.g., "Follow" -> "Following") with a cross-fade animation.
+-   **Hover States**: Interactive social elements (like avatar popovers) should appear after a short delay (`150ms`) to avoid accidental triggering. 

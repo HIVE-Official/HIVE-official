@@ -1,20 +1,24 @@
+// eslint-disable-next-line storybook/no-renderer-packages
 import type { Meta, StoryObj } from '@storybook/react'
-import { Label } from '../components/label'
+
+import { Input } from '@/components/input'
+import { Label } from '@/components/label'
 
 const meta: Meta<typeof Label> = {
-  title: 'UI/Label',
-  component: Label,
-  parameters: {
-    layout: 'centered',
-    backgrounds: {
-      default: 'dark',
-      values: [
-        { name: 'dark', value: '#1A1A1A' },
-        { name: 'light', value: '#F8F8F8' },
-      ],
-    },
-  },
-  tags: ['autodocs'],
+	title: 'UI/Label',
+	component: Label,
+	parameters: {
+		layout: 'centered',
+		backgrounds: {
+			default: 'dark',
+		},
+	},
+	tags: ['autodocs'],
+	argTypes: {
+		children: {
+			control: 'text',
+		},
+	},
 }
 
 export default meta
@@ -22,7 +26,21 @@ export default meta
 type Story = StoryObj<typeof Label>
 
 export const Default: Story = {
-  render: (args: React.ComponentProps<typeof Label>) => (
-    <Label {...args}>Label Text</Label>
-  ),
+	args: {
+		children: 'Your Email Address',
+	},
+}
+
+export const WithInput: Story = {
+	render: (args) => (
+		<div className="grid w-full max-w-sm items-center gap-2.5">
+			<Label htmlFor="email" {...args}>
+				Email
+			</Label>
+			<Input type="email" id="email" placeholder="m@example.com" />
+		</div>
+	),
+	args: {
+		...Default.args,
+	},
 }

@@ -1,10 +1,19 @@
 import type { Config } from "tailwindcss"
-import { fontFamily } from "tailwindcss/defaultTheme"
-import { colors, spacing, motion, effects } from "@hive/tokens"
+import designTokens from "@hive/tokens"
 import tailwindcssAnimate from "tailwindcss-animate"
 
+// Destructure the needed tokens for a cleaner config
+const {
+  effects,
+  motion,
+  shadcnColors,
+  spacing,
+  tailwindFontSizes,
+  typography,
+} = designTokens
+
 const config = {
-  darkMode: ["class"],
+  darkMode: "class",
   content: ["./src/**/*.{ts,tsx}"],
   prefix: "",
   theme: {
@@ -16,51 +25,46 @@ const config = {
       },
     },
     extend: {
-      colors: {
-        ...colors,
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
-        primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
-        },
-        secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
-        },
-        destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))",
-        },
-        muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
-        },
-        accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
-        },
-        popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
-        },
-        card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
-        },
-      },
+      colors: shadcnColors,
       spacing: spacing,
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        sm: "4px",
+        md: "8px",
+        lg: "12px",
+        xl: "16px",
+        full: "9999px",
       },
-      fontFamily: {
-        sans: ["var(--font-sans)", ...fontFamily.sans],
-        mono: ["var(--font-mono)", ...fontFamily.mono],
+      fontFamily: typography.fontFamily,
+      fontSize: tailwindFontSizes,
+      boxShadow: {
+        ...effects.shadow,
+        emboss: effects.emboss.DEFAULT,
+      },
+      blur: effects.blur,
+      // HIVE Motion System
+      transitionDuration: {
+        instant: motion.duration.instant,
+        fast: motion.duration.fast,
+        base: motion.duration.base,
+        slow: motion.duration.slow,
+        ritual: motion.duration.ritual,
+      },
+      transitionTimingFunction: {
+        smooth: motion.easing.smooth,
+        snap: motion.easing.snap,
+        elegant: motion.easing.elegant,
+        brand: motion.easing.brand,
+        "ease-smooth": motion.easing.smooth,
+        "ease-snap": motion.easing.snap,
+        "ease-elegant": motion.easing.elegant,
+        "ease-brand": motion.easing.brand,
+      },
+      scale: {
+        micro: motion.scale.micro,
+        small: motion.scale.small,
+        medium: motion.scale.medium,
+        large: motion.scale.large,
+        ritual: motion.scale.ritual,
       },
       keyframes: {
         "accordion-down": {
@@ -71,16 +75,36 @@ const config = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        // HIVE brand keyframes
+        "hive-fade-in": {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
+        },
+        "hive-slide-up": {
+          "0%": { transform: "translateY(10px)", opacity: "0" },
+          "100%": { transform: "translateY(0)", opacity: "1" },
+        },
+        "hive-scale-in": {
+          "0%": { transform: "scale(0.95)", opacity: "0" },
+          "100%": { transform: "scale(1)", opacity: "1" },
+        },
+        "hive-gold-pulse": {
+          "0%, 100%": { boxShadow: "0 0 0 0 rgba(255, 215, 0, 0.7)" },
+          "50%": { boxShadow: "0 0 0 10px rgba(255, 215, 0, 0)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        // HIVE brand animations
+        "hive-fade-in": `hive-fade-in ${motion.duration.base} ${motion.easing.elegant}`,
+        "hive-slide-up": `hive-slide-up ${motion.duration.base} ${motion.easing.smooth}`,
+        "hive-scale-in": `hive-scale-in ${motion.duration.fast} ${motion.easing.snap}`,
+        "hive-gold-pulse": `hive-gold-pulse ${motion.duration.ritual} ${motion.easing.brand} infinite`,
       },
-      boxShadow: effects.boxShadow,
-      transitionTimingFunction: motion.timing,
     },
   },
   plugins: [tailwindcssAnimate],
 } satisfies Config
 
-export default config 
+export default config

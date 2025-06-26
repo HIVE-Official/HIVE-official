@@ -21,10 +21,13 @@
   "devDependencies": {
     "@hive/tokens": "workspace:*",
     "@hive/typescript-config": "workspace:*",
+    "@storybook/addon-controls": "^8.6.14",
     "@storybook/addon-docs": "^8.6.14",
     "@storybook/addon-essentials": "^8.6.14",
     "@storybook/addon-interactions": "^8.6.14",
     "@storybook/addon-links": "^8.6.14",
+    "@storybook/addon-postcss": "^2.0.0",
+    "@storybook/addon-viewport": "^8.6.14",
     "@storybook/react": "^8.6.14",
     "@storybook/react-vite": "^8.6.14",
     "@storybook/test": "^8.6.14",

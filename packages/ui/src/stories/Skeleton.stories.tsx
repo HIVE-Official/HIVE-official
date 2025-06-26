@@ -1,5 +1,6 @@
+// eslint-disable-next-line storybook/no-renderer-packages
 import type { Meta, StoryObj } from '@storybook/react'
-import { Skeleton } from '../components/skeleton'
+import { Skeleton } from '@/components/skeleton'
 
 const meta: Meta<typeof Skeleton> = {
   title: 'UI/Skeleton',
@@ -8,10 +9,6 @@ const meta: Meta<typeof Skeleton> = {
     layout: 'centered',
     backgrounds: {
       default: 'dark',
-      values: [
-        { name: 'dark', value: '#1A1A1A' },
-        { name: 'light', value: '#F8F8F8' },
-      ],
     },
   },
   tags: ['autodocs'],
@@ -22,5 +19,13 @@ export default meta
 type Story = StoryObj<typeof Skeleton>
 
 export const Default: Story = {
-  render: () => <Skeleton className="h-8 w-32" />,
+  render: () => (
+    <div className="flex items-center space-x-4">
+      <Skeleton className="h-12 w-12 rounded-full" />
+      <div className="space-y-2">
+        <Skeleton className="h-4 w-[250px]" />
+        <Skeleton className="h-4 w-[200px]" />
+      </div>
+    </div>
+  ),
 }

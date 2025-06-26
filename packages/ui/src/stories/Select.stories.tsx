@@ -1,12 +1,15 @@
+// eslint-disable-next-line storybook/no-renderer-packages
 import type { Meta, StoryObj } from '@storybook/react'
 import {
   Select,
-  SelectTrigger,
   SelectContent,
-  SelectItem,
-  SelectValue,
   SelectGroup,
-} from '../components/select'
+  SelectItem,
+  SelectLabel,
+  SelectSeparator,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/select'
 
 const meta: Meta<typeof Select> = {
   title: 'UI/Select',
@@ -15,18 +18,7 @@ const meta: Meta<typeof Select> = {
     layout: 'centered',
     backgrounds: {
       default: 'dark',
-      values: [
-        { name: 'dark', value: '#1A1A1A' },
-        { name: 'light', value: '#F8F8F8' },
-      ],
     },
-  },
-  subcomponents: {
-    SelectTrigger,
-    SelectContent,
-    SelectItem,
-    SelectValue,
-    SelectGroup,
   },
   tags: ['autodocs'],
 }
@@ -36,18 +28,37 @@ export default meta
 type Story = StoryObj<typeof Select>
 
 export const Default: Story = {
-  render: () => (
-    <Select defaultValue="option-1">
-      <SelectTrigger className="w-[180px]">
-        <SelectValue />
+  render: (args) => (
+    <Select {...args}>
+      <SelectTrigger className="w-[280px]">
+        <SelectValue placeholder="Select a fruit" />
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
-          <SelectItem value="option-1">Option 1</SelectItem>
-          <SelectItem value="option-2">Option 2</SelectItem>
-          <SelectItem value="option-3">Option 3</SelectItem>
+          <SelectLabel>Fruits</SelectLabel>
+          <SelectItem value="apple">Apple</SelectItem>
+          <SelectItem value="banana">Banana</SelectItem>
+          <SelectItem value="blueberry">Blueberry</SelectItem>
+          <SelectItem value="grapes">Grapes</SelectItem>
+          <SelectItem value="pineapple">Pineapple</SelectItem>
+        </SelectGroup>
+        <SelectSeparator />
+        <SelectGroup>
+          <SelectLabel>Vegetables</SelectLabel>
+          <SelectItem value="broccoli">Broccoli</SelectItem>
+          <SelectItem value="carrot">Carrot</SelectItem>
+          <SelectItem value="spinach" disabled>
+            Spinach
+          </SelectItem>
         </SelectGroup>
       </SelectContent>
     </Select>
   ),
+}
+
+export const Disabled: Story = {
+  ...Default,
+  args: {
+    disabled: true,
+  },
 }

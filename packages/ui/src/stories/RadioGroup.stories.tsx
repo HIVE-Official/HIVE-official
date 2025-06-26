@@ -1,6 +1,7 @@
+// eslint-disable-next-line storybook/no-renderer-packages
 import type { Meta, StoryObj } from '@storybook/react'
-import { RadioGroup, RadioGroupItem } from '../components/radio-group'
-import { Label } from '../components/label'
+import { RadioGroup, RadioGroupItem } from '@/components/radio-group'
+import { Label } from '@/components/label'
 
 const meta: Meta<typeof RadioGroup> = {
   title: 'UI/RadioGroup',
@@ -9,14 +10,14 @@ const meta: Meta<typeof RadioGroup> = {
     layout: 'centered',
     backgrounds: {
       default: 'dark',
-      values: [
-        { name: 'dark', value: '#1A1A1A' },
-        { name: 'light', value: '#F8F8F8' },
-      ],
     },
   },
-  subcomponents: { RadioGroupItem },
   tags: ['autodocs'],
+  argTypes: {
+    disabled: {
+      control: 'boolean',
+    },
+  },
 }
 
 export default meta
@@ -24,16 +25,27 @@ export default meta
 type Story = StoryObj<typeof RadioGroup>
 
 export const Default: Story = {
-  render: () => (
-    <RadioGroup defaultValue="1" className="flex gap-4">
-      <div className="flex items-center gap-2">
-        <RadioGroupItem value="1" id="r1" />
-        <Label htmlFor="r1">One</Label>
+  render: (args) => (
+    <RadioGroup defaultValue="comfortable" {...args}>
+      <div className="flex items-center space-x-2">
+        <RadioGroupItem value="default" id="r1" />
+        <Label htmlFor="r1">Default</Label>
       </div>
-      <div className="flex items-center gap-2">
-        <RadioGroupItem value="2" id="r2" />
-        <Label htmlFor="r2">Two</Label>
+      <div className="flex items-center space-x-2">
+        <RadioGroupItem value="comfortable" id="r2" />
+        <Label htmlFor="r2">Comfortable</Label>
+      </div>
+      <div className="flex items-center space-x-2">
+        <RadioGroupItem value="compact" id="r3" />
+        <Label htmlFor="r3">Compact</Label>
       </div>
     </RadioGroup>
   ),
+}
+
+export const Disabled: Story = {
+  ...Default,
+  args: {
+    disabled: true,
+  },
 }
