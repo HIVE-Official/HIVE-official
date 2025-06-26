@@ -23,6 +23,12 @@ const config: StorybookConfig = {
   docs: {
     autodocs: 'tag',
   },
+  async viteFinal(config) {
+    const { default: tsconfigPaths } = await import('vite-tsconfig-paths')
+    config.plugins = config.plugins || []
+    config.plugins.push(tsconfigPaths())
+    return config
+  },
 };
 
 export default config;
