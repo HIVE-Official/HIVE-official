@@ -112,8 +112,8 @@ The application handles various states gracefully:
 3. Set up environment variables:
 
    ```bash
-   cp .env.example .env.local
-   # Fill in your Firebase and other configuration
+   cp apps/web/.env.example apps/web/.env.local
+   # Fill in your Firebase configuration
    ```
 
 4. Start the development server:
