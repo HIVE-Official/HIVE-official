@@ -20,7 +20,8 @@
     "lint": "eslint .",
     "typecheck": "npx tsc --noEmit",
     "dev": "npx tsc --build --watch",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "test": "vitest"
   },
   "devDependencies": {
     "@hive/eslint-config": "workspace:*",
@@ -29,7 +30,8 @@
     "cross-env": "^7.0.3",
     "eslint": "^9.29.0",
     "tsup": "^8.5.0",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.4"
   },
   "dependencies": {
     "@upstash/ratelimit": "^2.0.5",
