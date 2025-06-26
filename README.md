@@ -211,6 +211,23 @@ The application is deployed using:
 - **Firebase**: Backend services and database
 - **GitHub Actions**: CI/CD pipeline for automated deployments
 
+## Troubleshooting
+
+If the web app loads without styling (just plain HTML):
+
+1. Make sure dependencies are installed with `pnpm install`.
+2. Verify that `apps/web/postcss.config.mjs` contains the Tailwind plugin:
+
+   ```js
+   export default {
+     plugins: {
+       '@tailwindcss/postcss': {},
+       autoprefixer: {},
+     },
+   };
+   ```
+3. Run the development server with `pnpm --filter web dev` to focus on the web app.
+
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
