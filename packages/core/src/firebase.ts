@@ -62,4 +62,4 @@ try {
   throw new Error('Failed to initialize Firebase. Please check your configuration.');
 }
 
-export { app, db, auth, storage, analytics }; 
+export { app, db, auth, storage, analytics };

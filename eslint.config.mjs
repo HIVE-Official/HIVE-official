@@ -32,7 +32,7 @@ export default [
         },
       ],
       "react/react-in-jsx-scope": "off",
-      "no-console": "warn",
+      "no-console": "off",
       "react/prop-types": "off",
     },
   },

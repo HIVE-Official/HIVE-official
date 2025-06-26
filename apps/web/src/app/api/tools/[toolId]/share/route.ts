@@ -12,7 +12,6 @@ import {
   logger,
 } from "@hive/core";
 
-const db = getFirestore();
 
 // POST /api/tools/[toolId]/share - Create share link or fork tool
 export async function POST(
@@ -20,6 +19,7 @@ export async function POST(
   { params }: { params: Promise<{ toolId: string }> }
 ) {
   try {
+    const db = getFirestore();
     const authHeader = request.headers.get("authorization");
     if (!authHeader?.startsWith("Bearer ")) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -220,6 +220,7 @@ export async function GET(
   { params }: { params: Promise<{ toolId: string }> }
 ) {
   try {
+    const db = getFirestore();
     const authHeader = request.headers.get("authorization");
     if (!authHeader?.startsWith("Bearer ")) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

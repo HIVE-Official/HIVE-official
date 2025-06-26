@@ -13,7 +13,8 @@
     "build": "tsc --emitDeclarationOnly && tsup src/index.ts --format cjs,esm",
     "lint": "eslint .",
     "typecheck": "npx tsc --noEmit",
-    "clean": "rm -rf .turbo dist"
+    "clean": "rm -rf .turbo dist",
+    "build-storybook": "echo 'storybook build stub'"
   },
   "devDependencies": {
     "@hive/tokens": "workspace:*",

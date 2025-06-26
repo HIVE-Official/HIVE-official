@@ -15,4 +15,4 @@ export interface AuthContextType {
   signInWithCustomToken: (token: string) => Promise<void>;
 }
 
-export type UseAuthReturn = AuthContextType; 
+export type UseAuthReturn = AuthContextType;

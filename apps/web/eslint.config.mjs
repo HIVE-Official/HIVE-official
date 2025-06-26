@@ -2,8 +2,6 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import js from "@eslint/js";
-import { FlatCompat } from "@eslint/eslintrc";
-import { fixupConfigRules } from "@eslint/compat";
 import tseslint from "typescript-eslint";
 import nextPlugin from "@next/eslint-plugin-next";
 import reactPlugin from "eslint-plugin-react";
@@ -11,17 +9,6 @@ import reactHooksPlugin from "eslint-plugin-react-hooks";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-  recommendedConfig: js.configs.recommended,
-  allConfig: js.configs.all,
-});
-
-// Patch Next.js config for ESLint 9 compatibility
-const patchedNextConfig = fixupConfigRules([
-  ...compat.extends("next/core-web-vitals"),
-]);
 
 export default [
   // Base JavaScript config
@@ -214,6 +201,7 @@ export default [
       "src/lib/env.js",
       "src/lib/firebase-admin.d.ts",
       "src/lib/firebase-admin.js",
+      "test/e2e/types.d.ts",
     ],
   },
 ];
