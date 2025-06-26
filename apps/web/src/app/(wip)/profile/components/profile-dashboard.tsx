@@ -1,13 +1,18 @@
 "use client";
 
 import React from "react";
-import type { User } from "@hive/core";
-import { BentoProfileDashboard } from "@hive/ui";
+import type { AuthUser } from "@hive/auth-logic";
+// import { BentoProfileDashboard } from "@hive/ui";
 
 interface ProfileDashboardProps {
-  user: User;
+  user: AuthUser;
 }
 
-export const ProfileDashboard = ({ user }: ProfileDashboardProps) => {
-  return <BentoProfileDashboard user={user} />;
-};
+export function ProfileDashboard({ user }: ProfileDashboardProps) {
+  return (
+    <div>
+      <h2>Profile Dashboard</h2>
+      <p>Welcome, {user.fullName}</p>
+    </div>
+  );
+}

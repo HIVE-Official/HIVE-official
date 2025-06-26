@@ -1605,3 +1605,6 @@ export const MAJOR_CATEGORIES = [
 ] as const;
 
 export type MajorCategory = (typeof MAJOR_CATEGORIES)[number];
+
+// Legacy alias for backward compatibility
+export const UB_MAJORS = ALL_MAJORS;

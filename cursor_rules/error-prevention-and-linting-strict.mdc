@@ -1,144 +1,167 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
 ## 14. STORYBOOK COMPONENT INTERFACE HYGIENE (MANDATORY)
 
 **✅ PROVEN EFFECTIVE** - The following protocols prevent component interface mismatches:
 
 ### **Component Props Interface Validation**
+# 🚨 HIVE ENGINEERING: BUILD-SAFETY & LINT COVENANT 2.0 🚨
 
-**ENFORCED BY WORKING ESLINT + STORYBOOK CONFIG:**
+> **THIS DOCUMENT _REPLACES_ THE PREVIOUS `@error-prevention-and-linting-strict.mdc`.**  
+> Compliance is **MANDATORY** for every contributor—human **and** AI.
 
-```typescript
-// ✅ CORRECT - Props match component interface exactly:
-interface ComponentProps {
-  elementInstance: ElementInstance;
-  elementDefinition: Element;
-  isSelected?: boolean;
-  isPreview?: boolean;
-  onSelect?: () => void;
-}
+---
 
-// Story MUST match interface:
-export const Example: Story = {
-  args: {
-    elementInstance: mockInstance,  // ✅ Matches interface
-    elementDefinition: mockDef,     // ✅ Matches interface
-    isSelected: false,              // ✅ Matches interface
-    isPreview: false,               // ✅ Matches interface
-    onSelect: () => console.log(),  // ✅ Matches interface
-  },
-};
+## 1. CORE PRINCIPLE
 
-// ❌ WRONG - Props don't match interface (causes runtime errors):
-export const Broken: Story = {
-  args: {
-    element: mockInstance,          // ❌ Should be 'elementInstance'
-    onClick: () => console.log(),   // ❌ Should be 'onSelect'
-    mode: "design",                 // ❌ Should be 'isPreview: boolean'
-  },
-};
-```
+> **NO CHANGE IS “DONE” UNTIL THE ENTIRE WORKSPACE BUILDS, TESTS & RENDERS ERROR-FREE.**
 
-### **Mandatory Storybook Validation Protocol**
+All guidelines below exist to guarantee that principle.
 
-**AI AGENTS: YOU MUST VERIFY FOR EVERY COMPONENT STORY:**
+---
 
-1. **Interface Alignment Check**:
-   ```bash
-   # Verify props in story match component interface exactly
-   grep -A 20 "interface.*Props" src/components/path/Component.tsx
-   grep -A 10 "args:" src/components/path/component.stories.tsx
-   ```
-
-2. **Runtime Error Prevention**:
-   ```typescript
-   // ALWAYS check for undefined prop access errors:
-   const config = (elementInstance?.config as ElementConfig) || {};
-   
-   // ❌ NEVER assume props exist:
-   const config = elementInstance.config; // Can cause "Cannot read properties of undefined"
-   ```
-
-3. **Story ArgTypes Validation**:
-   ```typescript
-   // ✅ ArgTypes MUST match component props:
-   const meta: Meta<typeof Component> = {
-     argTypes: {
-       onSelect: { action: "selected" },    // ✅ Matches prop name
-       isPreview: { control: "boolean" },   // ✅ Matches prop type
-       // ❌ onClick: { action: "clicked" }, // WRONG - doesn't exist in interface
-     },
-   };
-   ```
-
-### **Component Interface Anti-Patterns (FORBIDDEN)**
-
-**ESLINT CATCHES THESE VIOLATIONS:**
-
-```typescript
-// ❌ FORBIDDEN - Inconsistent prop naming:
-interface Props {
-  elementInstance: ElementInstance;
-}
-// Story using different name:
-args: { element: mockData } // Should be elementInstance
-
-// ❌ FORBIDDEN - Missing prop type safety:
-args: {
-  elementInstance: mockData as any,  // ESLint error
-}
-
-// ❌ FORBIDDEN - Callback prop mismatches:
-interface Props {
-  onSelect: () => void;
-}
-// Story with wrong callback:
-args: { onClick: () => {} }  // Should be onSelect
-```
-
-### **Storybook Error Recovery Protocol**
-
-**WHEN "Cannot read properties of undefined" ERRORS OCCUR:**
-
-1. **Immediate Diagnosis**:
-   ```bash
-   # Check component interface:
-   head -50 src/components/path/Component.tsx | grep -A 20 "interface.*Props"
-   
-   # Check story props:
-   head -100 src/components/path/component.stories.tsx | grep -A 20 "args:"
-   ```
-
-2. **Fix Prop Mismatches**:
-   ```typescript
-   // Update story to match interface exactly
-   // Change: element → elementInstance
-   // Change: onClick → onSelect  
-   // Change: mode → isPreview
-   ```
-
-3. **Verify Fix**:
-   ```bash
-   npx eslint src/components/path/ --max-warnings 0
-   # Storybook should reload automatically without errors
-   ```
-
-### **Integration with Existing Covenant**
-
-This section extends the existing **ZERO TOLERANCE POLICY** to include:
-
-- ❌ **NO** prop name mismatches between components and stories
-- ❌ **NO** undefined property access in components
-- ❌ **NO** `as any` type assertions in Storybook args
-- ❌ **NO** callback prop naming inconsistencies
-- ❌ **NO** interface violations in component stories
-
-**MANDATORY VERIFICATION UPDATED:**
+## 2. ZERO-TOLERANCE CHECKLIST (MUST PASS _BEFORE_ SUBMITTING A PR)
 
 ```bash
-✅ npx eslint . --max-warnings 15        # MUST pass with ≤15 warnings total
-✅ tsc --noEmit                          # MUST pass TypeScript compilation  
-✅ Test Storybook loads without errors   # NEW: All stories must render without runtime errors
-✅ pnpm test                             # MUST pass all tests
-✅ next build                            # MUST build successfully
+npx eslint . --max-warnings 15   # ≤15 warnings, 0 errors  ✅
+tsc --noEmit                     # TypeScript strict compile ✅
+next build                       # Next.js production build ✅
+pnpm test                        # Vitest unit + Playwright e2e ✅
+pnpm storybook:smoke             # Storybook smoke test (see §6) ✅
 ```
 
-**If Storybook has runtime errors, the task is NOT complete.**
+*Any failure blocks merge. Fix it or refuse the task.*
+
+---
+
+## 3. LINT GUARDRAILS
+
+### 3.1 Forbidden Patterns (will **FAIL** lint)
+
+| Category | Violation | Rule |
+| --- | --- | --- |
+| **Types** | `any`, `as any`, unchecked `unknown` | `@typescript-eslint/no-explicit-any` |
+| **Promises** | Floating promises | `@typescript-eslint/no-floating-promises` |
+| **Safety** | Unsafe member access/call/assignment | `@typescript-eslint/no-unsafe-*` |
+| **Imports** | Non-type import used _only_ for types | `@typescript-eslint/consistent-type-imports` |
+| **React** | Missing deps in `useEffect`, invalid list keys | `react-hooks/exhaustive-deps`, `react/jsx-key` |
+
+### 3.2 Required Patterns
+
+1. Type-only imports when value not used:
+   ```ts
+   import type { User } from '@hive/core'
+   ```
+2. Explicit return & param types on **all** exported functions/components.
+3. Error handling for **every** `await`:
+   ```ts
+   try {
+     const res = await api()
+   } catch (err) {
+     logger.error(err)
+   }
+   ```
+
+---
+
+## 4. TYPESCRIPT STRICTNESS
+
+1. **Strict mode required** workspace-wide (see `tsconfig.json`).
+2. Runtime unknowns validated with Zod before use.
+3. Firestore & API data **must** have matching TypeScript interface **and** Zod schema.
+
+```ts
+const PostSchema = z.object({
+  id: z.string(),
+  body: z.string().min(1),
+})
+
+type Post = z.infer<typeof PostSchema>
+```
+
+---
+
+## 5. BUILD-TIME SAFETY NETS
+
+### 5.1 Turborepo Targets
+
+* `turbo run lint typecheck build test` automatically enforces sections 2-4.
+* CI mirrors the local checklist—green local run = green CI.
+
+### 5.2 Windows Compatibility
+
+Always invoke tools through **`npx`** (binary-path issues solved in Dec 2024 fix).
+
+---
+
+## 6. STORYBOOK CONTRACT
+
+### 6.1 Smoke Test Command
+
+```bash
+# package.json (root)
+"scripts": {
+  "storybook:smoke": "storybook build --dry-run --quiet"
+}
+```
+
+### 6.2 Prop-Interface Alignment
+
+* Every story's `args` **must** match component prop names & types.
+* ESLint rule `storybook/prop-types` is enforced; mismatches fail lint.
+
+Example ✅:
+```ts
+interface BadgeProps { label: string; intent?: 'success'|'error' }
+export const Primary: StoryObj<BadgeProps> = { args: { label: 'New', intent: 'success' } }
+```
+
+Example ❌:
+```ts
+// label ➜ text, intent value invalid
+export const Broken = { args: { text: 'New', intent: 'good' } }
+```
+
+### 6.3 Runtime Safety
+
+During manual review `pnpm storybook` must render **without console errors**. A single red error banner blocks merge.
+
+---
+
+## 7. COMMON FAILURE PLAYBOOK
+
+| Symptom | Likely Cause | Fix |
+| --- | --- | --- |
+| `Cannot read properties of undefined` in Storybook | Prop name mismatch | Align `args` with interface (see §6.2) |
+| TypeScript `TS2322` type mismatch | Untyped API / missing generics | Add or refine interfaces; validate data with Zod |
+| ESLint `no-unsafe-call` | Using unknown external data | Add guards or schema parse first |
+| Next.js build fails at `collectPages` | Client-only code inside Server Component | Add `'use client'` or move logic to client component |
+
+---
+
+## 8. HOW TO COMPLY (STEP-BY-STEP)
+
+1. **Add types & schemas first**—don't code blind.
+2. Write component **+ story** together; Storybook is your unit test.
+3. Run the **Zero-Tolerance Checklist** (section 2).
+4. Commit.
+
+🚀  _If it passes locally, CI will pass too._
+
+---
+
+## 9. VERSION HISTORY
+
+| Version | Date | Notes |
+| --- | --- | --- |
+| **2.0** | 2025-06-26 | Full rewrite: merged Storybook contract, Windows fixes & TypeScript strict rules |
+| 1.x | 2024 | Original covenant |
+
+---
+
+### Questions?
+
+Open an issue labelled **`build-safety`** and tag *@hive/maintainers*.

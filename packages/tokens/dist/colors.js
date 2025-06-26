@@ -173,4 +173,3 @@ export default colors;
 // - Pure monochrome + yellow system (no success/error colors)
 // - Motion-based status feedback instead of color-based
 // - Gold fills ONLY for ritual badges
-//# sourceMappingURL=colors.js.map

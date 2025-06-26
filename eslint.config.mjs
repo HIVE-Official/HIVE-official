@@ -48,6 +48,10 @@ export default [
       "**/.cache/**",
       "**/coverage/**",
       "**/lib/**", // Compiled JavaScript
+      "**/src/**/*.js",
+      "**/src/**/*.js.map",
+      "**/src/**/*.d.ts",
+      "**/src/**/*.d.ts.map",
       "**/.eslintrc.js",
       "**/eslint.config.js",
       "**/storybook-static/**",

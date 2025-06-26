@@ -1,7 +1,7 @@
 "use client";
-
-import { type SpaceType } from "@hive/core";
+import React from "react";
 import { Button } from "@hive/ui";
+import { type SpaceType } from "@hive/core";
 import { cn } from "@/lib/utils";
 
 const spaceFilters: { name: string; type: SpaceType | "all" }[] = [

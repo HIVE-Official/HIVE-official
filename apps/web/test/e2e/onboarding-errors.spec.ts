@@ -1,6 +1,56 @@
 import { test, expect } from '@playwright/test'
+import { setupTestUser, cleanupTestData } from './helpers/test-setup'
+import type { Page } from '@playwright/test'
+
+// Define analytics event types for testing
+interface OnboardingAnalyticsEvent {
+  type: 'onboarding_started' | 'onboarding_abandoned' | 'onboarding_completed';
+  stepName?: string;
+  timestamp: string;
+  userId: string;
+}
+
+interface TestError {
+  message: string;
+  field?: string;
+}
 
 test.describe('Onboarding Error Scenarios', () => {
+  test.beforeEach(async ({ page }) => {
+    await setupTestUser(page)
+    
+    // Initialize analytics tracking
+    await page.addInitScript(() => {
+      (window as unknown as { analyticsEvents: OnboardingAnalyticsEvent[] }).analyticsEvents = [];
+    })
+  })
+
+  test.afterEach(async ({ page }) => {
+    await cleanupTestData(page)
+  })
+
+  test('abandonment tracking', async ({ page }) => {
+    await page.goto('/onboarding?token=test-token')
+    
+    // Navigate to academics step
+    await page.click('[data-testid="get-started-button"]')
+    await page.click('[data-testid="continue-button"]')
+    
+    // Leave the page
+    await page.goto('/home')
+    
+    // Check abandonment event
+    const events = await page.evaluate(() => (window as unknown as { analyticsEvents?: OnboardingAnalyticsEvent[] }).analyticsEvents || []) as OnboardingAnalyticsEvent[]
+    const abandonmentEvent = events.find((e) => e.type === 'onboarding_abandoned')
+
+    // Verify event was tracked
+    expect(abandonmentEvent).toBeTruthy()
+    expect(abandonmentEvent).toMatchObject({
+      type: 'onboarding_abandoned',
+      stepName: 'academics'
+    })
+  })
+
   test('handle validation errors', async ({ page }) => {
     await page.goto('/onboarding?token=test-token')
     
@@ -111,34 +161,6 @@ test.describe('Onboarding Error Scenarios', () => {
     await expect(page.locator('[data-testid="request-new-link"]')).toBeVisible()
   })
   
-  test('onboarding abandonment tracking', async ({ page }) => {
-    // Mock analytics endpoint
-    let abandonmentEvent = null
-    await page.route('/api/analytics/track', async route => {
-      const body = await route.request().postDataJSON()
-      if (body.type === 'onboarding_abandoned') {
-        abandonmentEvent = body
-      }
-      await route.fulfill({ status: 200, body: '{"success": true}' })
-    })
-    
-    await page.goto('/onboarding?token=test-token')
-    
-    // Start onboarding
-    await page.click('[data-testid="get-started-button"]')
-    await page.click('[data-testid="continue-button"]')
-    
-    // Navigate away (abandon)
-    await page.goto('/auth/login')
-    
-    // Wait for abandonment event
-    await page.waitForTimeout(1000)
-    
-    expect(abandonmentEvent).toBeTruthy()
-    expect(abandonmentEvent.type).toBe('onboarding_abandoned')
-    expect(abandonmentEvent.stepName).toBe('academics')
-  })
-  
   test('form validation edge cases', async ({ page }) => {
     await page.goto('/onboarding?token=test-token')
     
@@ -197,4 +219,8 @@ test.describe('Onboarding Error Scenarios', () => {
     await expect(page.locator('[data-testid="handle-available"]')).toBeVisible({ timeout: 5000 })
     await expect(page.locator('[data-testid="continue-button"]')).toBeEnabled()
   })
-}) 
+})
+
+async function _expectError(_page: Page, _error: TestError): Promise<void> {
+  // ... existing code ...
+} 

@@ -3,38 +3,57 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
-      "@hive/ui": ["../../packages/ui/src"],
-      "@hive/core": ["../../packages/core/src"],
-      "@hive/hooks": ["../../packages/hooks/src"],
-      "@hive/auth-logic": ["../../packages/auth-logic/src"],
-      "@hive/tokens": ["../../packages/tokens"],
-      "@hive/utilities": ["../../packages/utilities/src"],
-      "@hive/validation": ["../../packages/validation/src"]
+      "@/*": [
+        "src/*"
+      ]
     },
     "plugins": [
       {
         "name": "next"
       }
     ],
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
-    "noEmit": true,
+    "noEmit": false,
     "incremental": true,
+    "allowSyntheticDefaultImports": true,
     "module": "esnext",
     "esModuleInterop": true,
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
     "target": "ES2017",
+    "composite": true,
     "typeRoots": [
       "../../node_modules/@types",
       "../../node_modules",
       "node_modules/@types"
     ]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "next-env.d.ts",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ],
+  "references": [
+    { "path": "../../packages/ui" },
+    { "path": "../../packages/core" },
+    { "path": "../../packages/auth-logic" },
+    { "path": "../../packages/hooks" },
+    { "path": "../../packages/validation" },
+    { "path": "../../packages/utilities" },
+    { "path": "../../packages/api-client" },
+    { "path": "../../packages/analytics" }
+  ]
 }

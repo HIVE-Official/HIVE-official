@@ -1,5 +1,5 @@
 import { logger } from "@hive/core";
-import type { FeedPost, CreatePostInput } from "@hive/core";
+import type { FeedPost, CreatePostRequest } from "@hive/core";
 import { ApiError } from "../errors";
 
 export class FeedApiClient {
@@ -22,7 +22,7 @@ export class FeedApiClient {
     }
   }
 
-  async createPost(input: CreatePostInput): Promise<FeedPost> {
+  async createPost(input: CreatePostRequest): Promise<FeedPost> {
     try {
       const response = await fetch(`${this.baseUrl}/api/feed`, {
         method: "POST",

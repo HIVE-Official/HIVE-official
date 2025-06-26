@@ -1,41 +1,33 @@
 "use client";
 
+import React from "react";
+import Link from "next/link";
 import {
-  Button,
-  Input,
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
-  Label,
-  Alert,
-  AlertDescription,
-} from "../ui";
-import {
-  Loader2,
-  Mail,
-  ArrowLeft,
-  AlertCircle,
-  University,
-} from "lucide-react";
-import Link from "next/link";
-import React from "react";
+} from "../card";
+import { Button } from "../button";
+import { Input } from "../input";
+import { Label } from "../label";
 
-export interface AuthFormProps {
+interface AuthFormProps {
   schoolName: string;
   schoolDomain: string;
   email: string;
   onEmailChange: (value: string) => void;
   onSubmit: (e: React.FormEvent) => void;
   isLoading: boolean;
-  error?: string | null;
-  validationError?: string | null;
+  error: string | null;
+  validationError: string | null;
   isSubmitDisabled: boolean;
   backLinkHref: string;
 }
 
-export function AuthForm({
+export const AuthForm = ({
   schoolName,
   schoolDomain,
   email,
@@ -46,70 +38,65 @@ export function AuthForm({
   validationError,
   isSubmitDisabled,
   backLinkHref,
-}: AuthFormProps) {
+}: AuthFormProps) => {
   return (
-    <div className="min-h-screen bg-black flex flex-col items-center justify-center p-4">
-      <div className="absolute top-4 left-4">
-        <Link
-          href={backLinkHref}
-          className="text-zinc-400 hover:text-white transition-colors flex items-center gap-2"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Back to Campus Selection
-        </Link>
-      </div>
-      <Card className="w-full max-w-md bg-zinc-900/95 border-zinc-800">
-        <CardHeader>
-          <div className="flex items-center gap-3 mb-2">
-            <University className="w-6 h-6 text-yellow-500" />
-            <CardTitle className="text-white text-xl">{schoolName}</CardTitle>
-          </div>
-          <CardDescription className="text-zinc-400">
-            Enter your student email to sign in or create your account.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={onSubmit} className="space-y-4">
+    <div className="flex items-center justify-center min-h-screen">
+      <Card className="w-full max-w-md">
+        <form onSubmit={onSubmit}>
+          <CardHeader>
+            <CardTitle className="text-2xl">Welcome to HIVE</CardTitle>
+            <CardDescription>
+              Enter your {schoolName} email to get started.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-zinc-300">
-                Student Email
-              </Label>
+              <Label htmlFor="email">School Email</Label>
               <Input
                 id="email"
                 type="email"
                 placeholder={`you@${schoolDomain}`}
                 value={email}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  onEmailChange(e.target.value)
-                }
-                className="bg-zinc-900 border-zinc-700 focus:ring-yellow-500"
+                onChange={(e) => onEmailChange(e.target.value)}
                 required
+                disabled={isLoading}
               />
               {validationError && (
-                <p className="text-xs text-red-500 pt-1">{validationError}</p>
+                <p className="text-sm text-red-500">{validationError}</p>
               )}
             </div>
             {error && (
-              <Alert variant="destructive">
-                <AlertCircle className="h-4 w-4" />
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
+              <p className="text-sm text-red-500">{error}</p>
             )}
+          </CardContent>
+          <CardFooter className="flex flex-col">
             <Button
               type="submit"
-              className="w-full bg-yellow-500 text-black hover:bg-yellow-600"
+              className="w-full"
               disabled={isSubmitDisabled || isLoading}
             >
-              {isLoading ? (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              ) : (
-                <Mail className="mr-2 h-4 w-4" />
-              )}
-              Send Sign-in Link
+              {isLoading ? "Sending..." : "Continue with Email"}
             </Button>
-          </form>
-        </CardContent>
+            <p className="mt-4 text-xs text-center text-gray-400">
+              By continuing, you agree to HIVE&apos;s{" "}
+              <Link href="/legal/terms" className="underline">
+                Terms of Service
+              </Link>{" "}
+              and{" "}
+              <Link href="/legal/privacy" className="underline">
+                Privacy Policy
+              </Link>
+              .
+            </p>
+            <Link
+              href={backLinkHref}
+              className="mt-2 text-sm text-center text-gray-400 hover:underline"
+            >
+              Back
+            </Link>
+          </CardFooter>
+        </form>
       </Card>
     </div>
   );
-}
+}; 

@@ -1,171 +1,62 @@
-import * as admin from "firebase-admin";
-import { logger } from "./utils/logger";
+import { getApps, initializeApp, cert, getApp } from 'firebase-admin/app';
+import { getAuth, type Auth } from 'firebase-admin/auth';
+import { getFirestore, type Firestore } from 'firebase-admin/firestore';
+import { logger } from './utils/logger';
 
 // Environment detection
-function getCurrentEnvironment(): "development" | "staging" | "production" {
-  const env = process.env.NODE_ENV || "development";
-  const vercelEnv = process.env.VERCEL_ENV;
-
-  if (vercelEnv === "production") return "production";
-  if (vercelEnv === "preview") return "staging";
-  if (env === "production") return "production";
-  if (env === "staging") return "staging";
-
-  return "development";
-}
-
-const currentEnvironment = getCurrentEnvironment();
+const isProduction = process.env.NODE_ENV === 'production';
+const serviceAccountKey = process.env.FIREBASE_ADMIN_PRIVATE_KEY;
 
 let firebaseInitialized = false;
-let dbAdmin: admin.firestore.Firestore | undefined;
-let authAdmin: admin.auth.Auth | undefined;
+let dbAdmin: Firestore | null = null;
+let authAdmin: Auth | null = null;
 
 const initializeFirebaseAdmin = () => {
-  try {
-    if (!admin.apps.length) {
-      let credential: admin.credential.Credential | undefined;
+	if (firebaseInitialized) return;
 
-      // Try different credential formats
-      if (
-        process.env.FIREBASE_PRIVATE_KEY &&
-        process.env.FIREBASE_CLIENT_EMAIL
-      ) {
-        // Format 1: Individual environment variables (Vercel recommended)
-        credential = admin.credential.cert({
-          projectId: process.env.FIREBASE_PROJECT_ID || "hive-dev-2025",
-          clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-          privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n"),
-        });
-        logger.info(
-          `🔐 Firebase Admin: Using individual env vars for ${currentEnvironment}`
-        );
-      } else if (process.env.FIREBASE_SERVICE_ACCOUNT_KEY) {
-        // Format 2: Base64 encoded service account (existing pattern)
-        try {
-          const serviceAccountJson = JSON.parse(
-            Buffer.from(
-              process.env.FIREBASE_SERVICE_ACCOUNT_KEY,
-              "base64"
-            ).toString("ascii")
-          );
-          credential = admin.credential.cert(serviceAccountJson);
-          logger.info(
-            `🔐 Firebase Admin: Using base64 service account for ${currentEnvironment}`
-          );
-        } catch (error) {
-          logger.warn("Failed to parse base64 service account:", error);
-        }
-      } else {
-        // Format 3: Application default credentials (development fallback)
-        try {
-          credential = admin.credential.applicationDefault();
-          logger.info(
-            `🔑 Firebase Admin: Using application default credentials for ${currentEnvironment}`
-          );
-        } catch (credError) {
-          logger.warn(
-            `⚠️ No Firebase Admin credentials available for ${currentEnvironment}`
-          );
-          throw credError;
-        }
-      }
+	try {
+		if (!serviceAccountKey) {
+			throw new Error('FIREBASE_ADMIN_PRIVATE_KEY is not set.');
+		}
 
-      if (credential) {
-        admin.initializeApp({
-          credential: credential,
-          projectId: process.env.FIREBASE_PROJECT_ID || "hive-dev-2025",
-        });
+		const serviceAccount = JSON.parse(serviceAccountKey);
+		const appName = 'hive-admin-app';
 
-        dbAdmin = admin.firestore();
-        authAdmin = admin.auth();
-        firebaseInitialized = true;
+		if (!getApps().some((app) => app.name === appName)) {
+			initializeApp(
+				{
+					credential: cert(serviceAccount),
+					databaseURL: `https://${serviceAccount.project_id}.firebaseio.com`,
+				},
+				appName
+			);
+			logger.info('Firebase Admin SDK initialized successfully.');
+		}
 
-        logger.info(
-          `✅ Firebase Admin initialized successfully for ${currentEnvironment}`
-        );
-      } else {
-        throw new Error("No valid Firebase credentials found");
-      }
-    } else {
-      // App already initialized
-      dbAdmin = admin.firestore();
-      authAdmin = admin.auth();
-      firebaseInitialized = true;
-      logger.info(
-        `🔄 Firebase Admin: Using existing app for ${currentEnvironment}`
-      );
-    }
-  } catch (error) {
-    logger.warn(
-      `⚠️ Firebase Admin initialization failed for ${currentEnvironment}:`,
-      error
-    );
-
-    // Create mock instances for development
-    dbAdmin = {
-      collection: (path: string) => ({
-        get: async () => {
-          logger.debug(
-            `🔄 Mock Firebase call: collection(${path}).get() - returning development data`
-          );
-          throw new Error(
-            `Firebase Admin not configured for ${currentEnvironment}. Add credentials to environment variables.`
-          );
-        },
-        add: async (_data: unknown) => {
-          logger.debug(
-            `🔄 Mock Firebase call: collection(${path}).add() - development mode`
-          );
-          throw new Error(
-            `Firebase Admin not configured for ${currentEnvironment}.`
-          );
-        },
-        doc: (id: string) => ({
-          get: async () => {
-            logger.debug(
-              `🔄 Mock Firebase call: collection(${path}).doc(${id}).get() - development mode`
-            );
-            throw new Error(
-              `Firebase Admin not configured for ${currentEnvironment}.`
-            );
-          },
-          set: async (_data: unknown) => {
-            logger.debug(
-              `🔄 Mock Firebase call: collection(${path}).doc(${id}).set() - development mode`
-            );
-            throw new Error(
-              `Firebase Admin not configured for ${currentEnvironment}.`
-            );
-          },
-        }),
-      }),
-    } as unknown as admin.firestore.Firestore;
-
-    authAdmin = {
-      verifyIdToken: async (_token: string) => {
-        logger.debug(
-          `🔄 Mock Firebase call: verifyIdToken() - development mode`
-        );
-        throw new Error(
-          `Firebase Auth not configured for ${currentEnvironment}.`
-        );
-      },
-      createCustomToken: async (uid: string) => {
-        logger.debug(
-          `🔄 Mock Firebase call: createCustomToken(${uid}) - development mode`
-        );
-        throw new Error(
-          `Firebase Auth not configured for ${currentEnvironment}.`
-        );
-      },
-    } as unknown as admin.auth.Auth;
-  }
+		const app = getApp(appName);
+		dbAdmin = getFirestore(app);
+		authAdmin = getAuth(app);
+		firebaseInitialized = true;
+	} catch (error) {
+		logger.error('Firebase Admin SDK initialization failed:', error);
+		// In a non-production environment, you might want to mock the services
+		// to allow the application to run without a live Firebase connection.
+		if (!isProduction) {
+			logger.warn(
+				'Running in non-production without Firebase Admin. Using mock services.'
+			);
+			dbAdmin = {} as Firestore; // Mock object
+			authAdmin = {} as Auth; // Mock object
+			firebaseInitialized = true; // Pretend it's initialized
+		} else {
+			// In production, this is a fatal error.
+			throw error;
+		}
+	}
 };
 
-// Initialize Firebase Admin on module load
+// Initialize on first import
 initializeFirebaseAdmin();
-
-export { dbAdmin, authAdmin };
 
 // Re-export for compatibility with runtime checks
 export const db = dbAdmin!; // Safe after initialization
@@ -174,14 +65,12 @@ export const isFirebaseConfigured = firebaseInitialized;
 
 // Environment info for debugging
 export const environmentInfo = {
-  environment: currentEnvironment,
-  firebaseConfigured: firebaseInitialized,
-  projectId: process.env.FIREBASE_PROJECT_ID || "hive-dev-2025",
-  credentialSource: firebaseInitialized
-    ? process.env.FIREBASE_PRIVATE_KEY
-      ? "individual_vars"
-      : process.env.FIREBASE_SERVICE_ACCOUNT_KEY
-        ? "base64_key"
-        : "application_default"
-    : "none",
+	environment: process.env.NODE_ENV || "development",
+	firebaseConfigured: firebaseInitialized,
+	projectId: process.env.FIREBASE_PROJECT_ID || "hive-dev-2025",
+	credentialSource: firebaseInitialized
+		? process.env.FIREBASE_ADMIN_PRIVATE_KEY
+			? "base64_key"
+			: "application_default"
+		: "none",
 };

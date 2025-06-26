@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getAuth } from "firebase-admin/auth";
 import { getFirestore, FieldValue } from "firebase-admin/firestore";
-import { type User, UB_MAJORS, logger } from "@hive/core";
+import { type User, ALL_MAJORS, logger } from "@hive/core";
 
 // Server-side space type that allows FieldValue for timestamps
 interface ServerSpace {
@@ -145,7 +145,7 @@ export async function POST(request: NextRequest) {
       }
 
       // Join new major space (create if needed)
-      const majorData = UB_MAJORS.find((m) => m.name === newMajor);
+      const majorData = ALL_MAJORS.find((m) => m.name === newMajor);
 
       const newMajorSpacesQuery = db
         .collection("spaces")

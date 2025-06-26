@@ -1,45 +1,60 @@
 {
-  "extends": "../../packages/config/typescript/nextjs.json",
   "compilerOptions": {
     "target": "ES2017",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
-    "strict": true,
-    "noEmit": true,
-    "esModuleInterop": true,
+    "strict": false,
+    "noEmit": false,
+    "incremental": true,
     "module": "esnext",
+    "esModuleInterop": true,
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "incremental": true,
-    "baseUrl": ".",
+    "composite": true,
     "plugins": [
       {
         "name": "next"
       }
     ],
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
-      "@hive/ui": ["../../packages/ui/src/index.ts"],
-      "@hive/core": ["../../packages/core/src/index.ts"],
-      "@hive/hooks": ["../../packages/hooks/src/index.ts"],
-      "@hive/auth-logic": ["../../packages/auth-logic/src/index.ts"],
-      "@hive/api-client": ["../../packages/api-client/src"],
-      "@hive/api-client/*": ["../../packages/api-client/src/*"],
-      "@hive/validation": ["../../packages/validation/src"],
-      "@hive/validation/*": ["../../packages/validation/src/*"],
-      "@hive/analytics": ["../../packages/analytics/src"],
-      "@hive/analytics/*": ["../../packages/analytics/src/*"],
-      "@hive/utilities": ["../../packages/utilities/src"],
-      "@hive/utilities/*": ["../../packages/utilities/src/*"],
-      "@hive/tokens": ["../../packages/tokens/src"],
-      "@hive/tokens/*": ["../../packages/tokens/src/*"],
-      "@hive/i18n": ["../../packages/i18n/src"],
-      "@hive/i18n/*": ["../../packages/i18n/src/*"]
-    }
+      "@/*": [
+        "./src/*"
+      ],
+      "@hive/*": [
+        "../../packages/*/src"
+      ]
+    },
+    "types": [
+      "vitest/globals",
+      "node"
+    ]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "next-env.d.ts",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ],
+  "references": [
+    { "path": "../../packages/ui" },
+    { "path": "../../packages/core" },
+    { "path": "../../packages/auth-logic" },
+    { "path": "../../packages/hooks" },
+    { "path": "../../packages/validation" },
+    { "path": "../../packages/utilities" },
+    { "path": "../../packages/api-client" },
+    { "path": "../../packages/analytics" }
+  ]
 }

@@ -1,5 +1,5 @@
 "use client";
-
+import React from "react";
 import { Progress } from "@hive/ui";
 
 type WaitlistProgressProps = {
@@ -22,7 +22,7 @@ export function WaitlistProgress({
       <div className="space-y-2">
         <div className="flex items-center justify-between text-sm font-sans">
           <span className="text-zinc-400">Progress</span>
-          <span className="text-[#FFD700] font-medium">
+          <span className="text-accent font-medium">
             {currentCount} / {threshold} students
           </span>
         </div>
@@ -30,8 +30,8 @@ export function WaitlistProgress({
       </div>
 
       {isManualActivation ? (
-        <div className="p-3 bg-[#FFD700]/5 border border-[#FFD700]/20 rounded-lg">
-          <p className="text-xs text-[#FFD700] font-medium font-display">
+        <div className="p-3 bg-accent/5 border border-accent/20 rounded-lg">
+          <p className="text-xs text-accent font-medium font-display">
             UB Founding Launch
           </p>
           <p className="text-xs text-zinc-400 mt-1 font-sans">

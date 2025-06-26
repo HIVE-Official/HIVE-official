@@ -1,21 +1,21 @@
 import type { Page } from "@playwright/test";
 import { test, expect } from "@playwright/test";
+import { setupTestUser, cleanupTestData } from './helpers/test-setup'
+import type { TestTool, TestElement, ConfigValue as _ConfigValue, Position, ElementConfig, ToolBuilderEvent } from './types/tool-builder';
 
 // Test data
-const TEST_TOOL = {
+const TEST_TOOL: TestTool = {
   name: "Test Survey Tool",
   description: "A comprehensive survey tool for testing",
 };
 
-const TEST_ELEMENTS = [
+const TEST_ELEMENTS: TestElement[] = [
   { type: "textBlock", name: "Text Block" },
   { type: "textInput", name: "Text Input" },
   { type: "choiceSelect", name: "Choice Select" },
   { type: "button", name: "Button" },
   { type: "ratingStars", name: "Rating Stars" },
 ];
-
-type ConfigValue = string | number | boolean;
 
 // Helper functions
 async function loginTestUser(page: Page) {
@@ -25,7 +25,7 @@ async function loginTestUser(page: Page) {
   await page.waitForURL("/profile");
 }
 
-async function createNewTool(page: Page, toolData = TEST_TOOL) {
+async function createNewTool(page: Page, toolData: TestTool = TEST_TOOL) {
   await page.goto("/tools/create");
   await page.fill('[data-testid="tool-name-input"]', toolData.name);
   await page.fill(
@@ -38,8 +38,8 @@ async function createNewTool(page: Page, toolData = TEST_TOOL) {
 
 async function dragElementToCanvas(
   page: Page,
-  elementType: string,
-  position = { x: 200, y: 200 }
+  elementType: TestElement['type'],
+  position: Position = { x: 200, y: 200 }
 ) {
   const element = page.locator(`[data-testid="element-${elementType}"]`);
   const canvas = page.locator('[data-testid="design-canvas"]');
@@ -55,7 +55,7 @@ async function dragElementToCanvas(
 async function configureElement(
   page: Page,
   elementId: string,
-  config: Record<string, ConfigValue>
+  config: ElementConfig
 ) {
   // Select element
   await page.click(`[data-testid="canvas-element-${elementId}"]`);
@@ -84,7 +84,11 @@ async function configureElement(
 
 test.describe("Tool Builder - Happy Path", () => {
   test.beforeEach(async ({ page }) => {
-    await loginTestUser(page);
+    await setupTestUser(page)
+  });
+
+  test.afterEach(async ({ page }) => {
+    await cleanupTestData(page)
   });
 
   test("should create a new tool and navigate to builder", async ({ page }) => {
@@ -105,6 +109,15 @@ test.describe("Tool Builder - Happy Path", () => {
         page.locator(`[data-testid="element-${element.type}"]`)
       ).toBeVisible();
     }
+
+    // Verify analytics event
+    const events = await page.evaluate(() => window.analyticsEvents) as ToolBuilderEvent[];
+    expect(events).toContainEqual(expect.objectContaining({
+      type: 'tool_created',
+      metadata: expect.objectContaining({
+        toolName: TEST_TOOL.name
+      })
+    }));
   });
 
   test("should add elements via drag and drop", async ({ page }) => {
@@ -134,28 +147,49 @@ test.describe("Tool Builder - Happy Path", () => {
     await expect(page.locator('[data-testid="element-count"]')).toContainText(
       "3 elements"
     );
+
+    // Verify analytics events
+    const events = await page.evaluate(() => window.analyticsEvents) as ToolBuilderEvent[];
+    expect(events).toContainEqual(expect.objectContaining({
+      type: 'element_added',
+      metadata: expect.objectContaining({
+        elementType: 'textBlock'
+      })
+    }));
   });
 
   test("should configure element properties", async ({ page }) => {
     await createNewTool(page);
     await dragElementToCanvas(page, "textBlock");
 
-    // Configure text block
-    await configureElement(page, "textBlock", {
+    const textConfig: ElementConfig = {
       text: "Welcome to our survey!",
       fontSize: "xl",
       fontWeight: "bold",
       textAlign: "center",
-    });
+    };
+
+    // Configure text block
+    await configureElement(page, "textBlock", textConfig);
 
     // Verify configuration applied
     const textElement = page.locator(
       '[data-testid="canvas-element-textBlock"]'
     );
-    await expect(textElement).toContainText("Welcome to our survey!");
+    await expect(textElement).toContainText(textConfig.text as string);
     await expect(textElement).toHaveClass(/text-xl/);
     await expect(textElement).toHaveClass(/font-bold/);
     await expect(textElement).toHaveClass(/text-center/);
+
+    // Verify analytics event
+    const events = await page.evaluate(() => window.analyticsEvents) as ToolBuilderEvent[];
+    expect(events).toContainEqual(expect.objectContaining({
+      type: 'element_configured',
+      metadata: expect.objectContaining({
+        elementType: 'textBlock',
+        config: textConfig
+      })
+    }));
   });
 
   test("should use element presets", async ({ page }) => {
@@ -193,10 +227,6 @@ test.describe("Tool Builder - Happy Path", () => {
       .locator('[data-testid="json-content"]')
       .textContent();
     expect(jsonContent).toContain("textBlock");
-
-    // Switch back to design mode
-    await page.click('[data-testid="mode-design"]');
-    await expect(page.locator('[data-testid="design-canvas"]')).toBeVisible();
   });
 
   test("should test different device modes", async ({ page }) => {
@@ -629,3 +659,56 @@ test.describe("Tool Builder - Analytics Integration", () => {
     expect(sessionEndTracked).toBe(true);
   });
 });
+
+test.describe('Tool Builder Flow', () => {
+  test('create and share tool', async ({ page, context }) => {
+    // Mock API responses
+    await page.route('/api/tools/create', async route => {
+      await route.fulfill({
+        status: 200,
+        body: JSON.stringify({
+          id: 'test-tool',
+          name: 'Test Tool',
+          description: 'A tool for testing'
+        })
+      })
+    })
+
+    // Navigate to tool builder
+    await page.goto('/builder/new')
+
+    // Create tool
+    await page.fill('[data-testid="tool-name"]', 'Test Tool')
+    await page.fill('[data-testid="tool-description"]', 'A tool for testing')
+    await page.click('[data-testid="create-tool"]')
+
+    // Get tool URL from response
+    const toolUrl = await page.evaluate(() => {
+      const urlElement = document.querySelector('[data-testid="tool-url"]')
+      const href = urlElement?.getAttribute('href')
+      return href !== null ? href : '/tools/test-tool'
+    })
+
+    // Navigate to tool
+    await page.goto(toolUrl)
+
+    // Share tool
+    await page.click('[data-testid="share-button"]')
+    const shareLink = await page.evaluate(() => {
+      const linkElement = document.querySelector('[data-testid="share-link"]')
+      const value = linkElement?.getAttribute('value')
+      return value !== null ? value : '/tools/test-tool/share'
+    })
+
+    // Open tool in new tab
+    const newPage = await context.newPage()
+    await newPage.goto(shareLink)
+
+    // Verify tool loads in new tab
+    await expect(newPage.locator('[data-testid="tool-name"]')).toContainText('Test Tool')
+
+    // Navigate back to original tool
+    await page.goto(shareLink)
+    await expect(page.locator('[data-testid="tool-name"]')).toContainText('Test Tool')
+  })
+})

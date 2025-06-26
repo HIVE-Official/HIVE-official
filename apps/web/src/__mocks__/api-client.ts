@@ -1,31 +1,48 @@
 // Mock API client for Team 1 development
 // This will be replaced with real API integration in Phase 3
 
-import type { Space, SpaceMember, Post, User, School } from "@hive/core";
+import { Timestamp } from "firebase/firestore";
+import type {
+  Space,
+  SpaceMember,
+  Post,
+  User,
+  School,
+} from "@hive/core";
 
 // Mock data
 const mockSpaces: Space[] = [
   {
     id: "space-1",
     name: "Computer Science",
+    name_lowercase: "computer science",
     description: "A space for CS students",
     schoolId: "school-1",
-    isPublic: true,
     memberCount: 150,
-    tags: ["programming", "algorithms"],
-    createdAt: new Date("2024-01-01"),
-    updatedAt: new Date("2024-01-01"),
+    type: "major",
+    status: "activated",
+    tags: [
+      { type: "major", sub_type: "programming" },
+      { type: "major", sub_type: "algorithms" },
+    ],
+    createdAt: Timestamp.fromDate(new Date("2024-01-01")),
+    updatedAt: Timestamp.fromDate(new Date("2024-01-01")),
   },
   {
     id: "space-2",
     name: "Mathematics",
+    name_lowercase: "mathematics",
     description: "Math enthusiasts unite",
     schoolId: "school-1",
-    isPublic: true,
     memberCount: 89,
-    tags: ["calculus", "statistics"],
-    createdAt: new Date("2024-01-02"),
-    updatedAt: new Date("2024-01-02"),
+    type: "major",
+    status: "activated",
+    tags: [
+      { type: "major", sub_type: "calculus" },
+      { type: "major", sub_type: "statistics" },
+    ],
+    createdAt: Timestamp.fromDate(new Date("2024-01-02")),
+    updatedAt: Timestamp.fromDate(new Date("2024-01-02")),
   },
 ];
 
@@ -37,20 +54,48 @@ const mockPosts: Post[] = [
     content: "Welcome to the CS space!",
     createdAt: new Date("2024-01-01"),
     updatedAt: new Date("2024-01-01"),
-    likeCount: 5,
-    commentCount: 2,
+    reactions: { heart: 5 },
+    reactedUsers: { heart: [] },
+    type: "text",
+    isEdited: false,
+    isDeleted: false,
+    isFlagged: false,
+    isPinned: false,
   },
 ];
 
 const mockUsers: User[] = [
   {
     id: "user-1",
+    uid: "user-1",
     email: "john@example.com",
     fullName: "John Doe",
     handle: "johndoe",
     schoolId: "school-1",
-    createdAt: new Date("2024-01-01"),
-    updatedAt: new Date("2024-01-01"),
+    createdAt: Timestamp.fromDate(new Date("2024-01-01")),
+    updatedAt: Timestamp.fromDate(new Date("2024-01-01")),
+    interestTags: ["webdev", "ai"],
+    majorId: "cs",
+    isFirstYear: true,
+    isLeaderCandidate: false,
+    organizations: [],
+    clubs: [],
+    academicInterests: [],
+    isPublic: true,
+    consentGiven: true,
+    showDormitory: true,
+    showOrganizations: true,
+    builderOptIn: false,
+    isBuilder: false,
+    builderAchievements: {
+      toolsCreated: 0,
+      totalEngagement: 0,
+      invitesSent: 0,
+    },
+    builderAnalyticsEnabled: true,
+    onboardingCompleted: true,
+    isVerified: true,
+    status: "active",
   },
 ];
 
@@ -59,9 +104,8 @@ const mockSchools: School[] = [
     id: "school-1",
     name: "University of Example",
     domain: "example.edu",
-    isActive: true,
-    createdAt: new Date("2024-01-01"),
-    updatedAt: new Date("2024-01-01"),
+    status: "active",
+    waitlistCount: 0,
   },
 ];
 
@@ -76,7 +120,9 @@ export const apiClient = {
     getPosts: async (_spaceId: string) => mockPosts,
     createPost: async (_spaceId: string, _content: string) => mockPosts[0],
   },
-
+  posts: {
+    // Add mock post methods if needed
+  },
   users: {
     getCurrent: async () => mockUsers[0],
     updateMembership: async (
@@ -85,15 +131,16 @@ export const apiClient = {
       _role: string
     ) => ({ success: true }),
   },
-
   schools: {
     getAll: async () => mockSchools,
-    getById: async (_spaceId: string) => mockSchools[0],
+    getById: async (_schoolId: string) => mockSchools[0],
+  },
+  admin: {
+    // Add mock admin methods if needed
   },
 };
 
 // Export individual modules for easier importing
 export const spacesApi = apiClient.spaces;
-export const membersApi = apiClient.members;
 export const postsApi = apiClient.posts;
 export const adminApi = apiClient.admin;

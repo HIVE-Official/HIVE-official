@@ -1,3 +1,6 @@
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
+
 interface RateLimitEntry {
   count: number;
   resetTime: number;
@@ -121,9 +124,11 @@ export const userRateLimit = rateLimitMiddleware(RateLimits.API);
 /**
  * Rate limit for post creation
  */
-export const postCreationRateLimit = rateLimitMiddleware(
-  RateLimits.POST_CREATION
-);
+export const postCreationRateLimit = new Ratelimit({
+  redis: Redis.fromEnv(),
+  limiter: Ratelimit.slidingWindow(5, "1 h"),
+  analytics: true,
+});
 
 /**
  * Rate limit for authentication attempts

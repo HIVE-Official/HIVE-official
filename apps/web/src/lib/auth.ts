@@ -1,14 +1,8 @@
 // Temporary stub for auth utilities
 // TODO: Implement proper server-side auth
 
+import type { AuthUser } from "@hive/auth-logic";
 import { authAdmin } from "./firebase-admin";
-
-export interface AuthUser {
-  uid: string;
-  email: string;
-  emailVerified: boolean;
-  customClaims?: Record<string, unknown>;
-}
 
 /**
  * Verifies the Firebase ID token from the request headers
@@ -33,6 +27,8 @@ export async function verifyAuthToken(
       email: decodedToken.email || "",
       emailVerified: decodedToken.email_verified || false,
       customClaims: decodedToken.custom_claims,
+      fullName: decodedToken.name,
+      onboardingCompleted: (decodedToken.custom_claims?.onboardingCompleted as boolean) || false,
     };
   } catch (error) {
     console.error("Auth token verification failed:", error);

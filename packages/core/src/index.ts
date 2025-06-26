@@ -92,3 +92,5 @@ export { SpaceDiscoverySchema } from "./domain/space/discovery";
 // export * from "./types/auth-types"; // TEMP: Commented out missing file
 
 export * from "./utils/logger";
+export * from "./utils/rate-limit";
+export { postCreationRateLimit } from './utils/rate-limit';

@@ -1,5 +1,5 @@
-import { FirebaseError } from "firebase/app";
-import { AuthError } from "firebase/auth";
+import type { FirebaseError } from "firebase/app";
+import type { AuthError } from "firebase/auth";
 export declare const AUTH_ERROR_MESSAGES: Record<string, string>;
 export declare const FUNCTIONS_ERROR_MESSAGES: Record<string, string>;
 export interface UserFriendlyError {

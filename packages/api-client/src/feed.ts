@@ -1,15 +1,12 @@
 import { getFunctions, httpsCallable } from "firebase/functions";
 import { logger } from "@hive/core";
-import {
-  PostSchema,
-  ActiveRitualTileSchema,
-} from "@hive/core";
-import type {
-  FeedPost,
-  CreatePostInput,
-  Post,
-  ActiveRitualTile,
-} from "@hive/core";
+import { PostSchema } from "@hive/core";
+import type { Post } from '@hive/core';
+// Unused imports removed - will be used when feed API is implemented
+// import {
+//   FeedPost,
+//   CreatePostRequest,
+// } from "@hive/core";
 
 const functions = getFunctions();
 
@@ -38,48 +35,23 @@ export const feedApi = {
     return parsed.data;
   },
 
-  getTopStrip: async (): Promise<ActiveRitualTile[]> => {
-    const getTopStrip = httpsCallable(functions, "getTopStrip");
-    const response = await getTopStrip();
-    const parsed = ActiveRitualTileSchema.array().safeParse(response.data);
-    if (!parsed.success) {
-      logger.error("Zod validation failed for TopStrip", parsed.error);
-      throw new Error("Invalid response from getTopStrip");
-    }
-    return parsed.data;
-  },
+  // getTopStrip: async (): Promise<ActiveRitualTile[]> => {
+  //   const getTopStrip = httpsCallable(functions, "getTopStrip");
+  //   const response = await getTopStrip();
+  //   // TODO: Add schema validation back once it's available
+  //   return response.data as ActiveRitualTile[];
+  // },
 };
 
-export class FeedApiClient {
-  private baseUrl: string;
-
-  constructor(baseUrl: string) {
-    this.baseUrl = baseUrl;
-  }
-
-  async getPosts(): Promise<FeedPost[]> {
-    const response = await fetch(`${this.baseUrl}/api/feed`);
+export async function fetchFeed() {
+  try {
+    const response = await fetch("/api/feed");
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      throw new Error("Failed to fetch feed");
     }
-    const posts = await response.json();
-    return posts;
-  }
-
-  async createPost(input: CreatePostInput): Promise<FeedPost> {
-    const response = await fetch(`${this.baseUrl}/api/feed`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(input),
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const post = await response.json();
-    return post;
+    return response.json();
+  } catch (error) {
+    logger.error("Error fetching feed:", error);
+    throw error;
   }
 }

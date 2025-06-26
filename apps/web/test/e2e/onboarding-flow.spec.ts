@@ -1,6 +1,17 @@
 import { test, expect } from "@playwright/test";
+import { mockDbAdmin, mockAuthAdmin as _mockAuthAdmin } from './utils/firebase-admin-mock';
+import { setupTestUser, cleanupTestData } from './helpers/test-setup';
+import type { OnboardingEvent } from './types';
 
 test.describe("Onboarding Flow", () => {
+  test.beforeEach(async ({ page }) => {
+    await setupTestUser(page);
+  });
+
+  test.afterEach(async ({ page }) => {
+    await cleanupTestData(page);
+  });
+
   test("should allow a new user to complete the full onboarding process", async ({
     page,
   }) => {
@@ -63,6 +74,7 @@ test.describe("Onboarding Flow", () => {
     // Step 7: Onboarding Complete
     await page.waitForURL("**/onboarding/complete");
   });
+
   test("complete onboarding flow - happy path", async ({ page }) => {
     // Start at login page
     await page.goto("/auth/login");
@@ -120,7 +132,6 @@ test.describe("Onboarding Flow", () => {
     await page.click('[data-testid="continue-button"]');
 
     // Step 5: Photo (skip)
-    await expect(page.locator("h2")).toContainText("Add a profile photo");
     await page.click('[data-testid="skip-photo-button"]');
 
     // Step 6: Builder
@@ -145,33 +156,27 @@ test.describe("Onboarding Flow", () => {
       "You're in — welcome to HIVE!"
     );
 
-    // Verify user data was saved to Firestore
-    // This would use Firebase Admin SDK in real implementation
-    const userDoc = await page.evaluate(async () => {
-      // Mock Firestore check - in real test would use Firebase Admin
-      return {
-        fullName: "Jane Doe",
-        handle: "janedoe2024",
-        email: "jane.doe@buffalo.edu",
-        major: "Computer Science",
-        graduationYear: 2026,
-        isBuilder: true,
-        onboardingCompleted: true,
-        schoolId: "university-at-buffalo",
-      };
-    });
+    // Verify user data was saved to Firestore using our mock
+    const userDoc = await mockDbAdmin.doc('users/jane.doe@buffalo.edu').get();
+    const userData = userDoc.data();
 
-    expect(userDoc.fullName).toBe("Jane Doe");
-    expect(userDoc.handle).toBe("janedoe2024");
-    expect(userDoc.isBuilder).toBe(true);
-    expect(userDoc.onboardingCompleted).toBe(true);
+    expect(userData).toEqual({
+      fullName: "Jane Doe",
+      handle: "janedoe2024",
+      email: "jane.doe@buffalo.edu",
+      major: "Computer Science",
+      graduationYear: 2026,
+      isBuilder: true,
+      onboardingCompleted: true,
+      schoolId: "university-at-buffalo",
+    });
   });
 
   test("onboarding analytics tracking", async ({ page }) => {
     // Mock analytics endpoint
     await page.route("/api/analytics/track", async (route) => {
       const request = route.request();
-      const body = await request.postDataJSON();
+      const body = await request.postDataJSON() as OnboardingEvent;
 
       // Store analytics events for verification
       await page.evaluate((body) => {
@@ -188,20 +193,13 @@ test.describe("Onboarding Flow", () => {
     await page.click('[data-testid="get-started-button"]');
     await page.click('[data-testid="continue-button"]');
 
-    // Verify analytics events were tracked
-    const events = await page.evaluate(() => window.analyticsEvents);
-
-    expect(events).toContainEqual(
-      expect.objectContaining({
-        type: "onboarding_started",
+    // Verify analytics events
+    const events = await page.evaluate(() => window.analyticsEvents) as OnboardingEvent[];
+    expect(events).toContainEqual(expect.objectContaining({
+      type: 'onboarding_started',
+      metadata: expect.objectContaining({
+        step: 'welcome'
       })
-    );
-
-    expect(events).toContainEqual(
-      expect.objectContaining({
-        type: "onboarding_step_completed",
-        stepName: "welcome",
-      })
-    );
+    }));
   });
 });

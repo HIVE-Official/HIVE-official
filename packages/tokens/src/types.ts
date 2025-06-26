@@ -1,8 +1,8 @@
-import { typography } from "./typography";
-import { colors } from "./colors";
-import { spacing } from "./spacing";
-import { motion } from "./motion";
-import { effects } from "./effects";
+import type { typography } from "./typography";
+import type { colors } from "./colors";
+import type { spacing } from "./spacing";
+import type { motion } from "./motion";
+import type { effects } from "./effects";
 
 // Typography Types
 export type FontSizeToken = keyof typeof typography.fontSize;

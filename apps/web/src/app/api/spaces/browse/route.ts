@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getAuth } from "firebase-admin/auth";
 import { dbAdmin } from "@/lib/firebase-admin";
-import { type Space } from "@hive/core/src/domain/firestore/space";
+import { type Space } from "@hive/core";
 import { logger } from "@hive/core";
 
 const browseSpacesSchema = z.object({

@@ -1,8 +1,9 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { type User, UB_MAJORS, logger } from "@hive/core";
+import { type User, ALL_MAJORS, logger } from "@hive/core";
 import { dbAdmin } from "@/lib/firebase-admin";
 import { FieldValue } from "firebase-admin/firestore";
+import { requireAuth } from "@/lib/auth";
 
 /**
  * Auto-join a user to relevant spaces (major and residential).
@@ -11,25 +12,14 @@ import { FieldValue } from "firebase-admin/firestore";
  */
 export async function POST(request: NextRequest) {
   try {
-    const { userId } = await request.json();
-
-    if (!userId) {
-      return NextResponse.json(
-        { error: "User ID is required" },
-        { status: 400 }
-      );
-    }
-
-    // Get user data
-    const userDoc = await dbAdmin.collection("users").doc(userId).get();
-
+    const { uid } = await requireAuth(request);
+    const userDoc = await dbAdmin.collection("users").doc(uid).get();
     if (!userDoc.exists) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
-
     const user = userDoc.data() as User;
 
-    if (!user.major || !user.schoolId) {
+    if (!user.majorId || !user.schoolId) {
       return NextResponse.json(
         { error: "User missing required fields (major, schoolId)" },
         { status: 400 }
@@ -37,7 +27,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Find if the user's major exists in our UB_MAJORS list
-    const majorData = UB_MAJORS.find((m) => m.name === user.major);
+    const majorData = ALL_MAJORS.find((m) => m.name === user.majorId);
 
     const batch = dbAdmin.batch();
     const spacesJoined: string[] = [];
@@ -46,7 +36,7 @@ export async function POST(request: NextRequest) {
     const majorSpacesSnapshot = await dbAdmin
       .collection("spaces")
       .where("type", "==", "major")
-      .where("tags", "array-contains", { type: "major", sub_type: user.major })
+      .where("tags", "array-contains", { type: "major", sub_type: user.majorId })
       .limit(1)
       .get();
 
@@ -55,21 +45,21 @@ export async function POST(request: NextRequest) {
       // Create the major space if it doesn't exist
       const spaceName = majorData
         ? `${majorData.name} Majors`
-        : `${user.major} Majors`;
+        : `${user.majorId} Majors`;
       const majorSpaceRef = dbAdmin.collection("spaces").doc();
       majorSpaceId = majorSpaceRef.id;
 
       const newMajorSpace = {
         name: spaceName,
         name_lowercase: spaceName.toLowerCase(),
-        description: `Connect with fellow ${user.major} students, share resources, and collaborate on projects.`,
+        description: `Connect with fellow ${user.majorId} students, share resources, and collaborate on projects.`,
         memberCount: 0,
         schoolId: user.schoolId,
         type: "major",
         tags: [
           {
             type: "major",
-            sub_type: user.major,
+            sub_type: user.majorId,
           },
         ],
         status: "activated",
@@ -87,9 +77,9 @@ export async function POST(request: NextRequest) {
       .collection("spaces")
       .doc(majorSpaceId)
       .collection("members")
-      .doc(userId);
+      .doc(uid);
     batch.set(majorMemberRef, {
-      uid: userId,
+      uid: uid,
       role: "member",
       joinedAt: FieldValue.serverTimestamp(),
     });
@@ -149,9 +139,9 @@ export async function POST(request: NextRequest) {
       .collection("spaces")
       .doc(residentialSpaceId)
       .collection("members")
-      .doc(userId);
+      .doc(uid);
     batch.set(residentialMemberRef, {
-      uid: userId,
+      uid: uid,
       role: "member",
       joinedAt: FieldValue.serverTimestamp(),
     });

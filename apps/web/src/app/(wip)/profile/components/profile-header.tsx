@@ -1,7 +1,7 @@
 "use client";
-
+import React from "react";
 import { Avatar, AvatarFallback, AvatarImage, Button } from "@hive/ui";
-import { Camera, MapPin, Calendar, GraduationCap } from "lucide-react";
+import { Calendar, Camera } from "lucide-react";
 import type { User } from "@hive/core";
 
 interface ProfileHeaderProps {
@@ -50,23 +50,18 @@ export const ProfileHeader = ({ user }: ProfileHeaderProps) => {
               <p className="text-lg text-gold">@{user.handle}</p>
             </div>
 
-            <div className="flex flex-wrap gap-4 text-sm text-gray-400">
-              {user.major && (
-                <div className="flex items-center gap-1">
-                  <GraduationCap className="h-4 w-4" />
-                  <span>{user.major}</span>
-                </div>
+            <div className="mt-4 flex items-center space-x-4 text-sm text-gray-400">
+              {user.schoolId && <span>{user.schoolId}</span>}
+              {user.majorId && (
+                <>
+                  <span>&middot;</span>
+                  <span>{user.majorId}</span>
+                </>
               )}
               {user.graduationYear && (
                 <div className="flex items-center gap-1">
                   <Calendar className="h-4 w-4" />
                   <span>Class of {user.graduationYear}</span>
-                </div>
-              )}
-              {user.schoolId && (
-                <div className="flex items-center gap-1">
-                  <MapPin className="h-4 w-4" />
-                  <span>University at Buffalo</span>
                 </div>
               )}
             </div>
@@ -83,7 +78,7 @@ export const ProfileHeader = ({ user }: ProfileHeaderProps) => {
               Share Profile
             </Button>
             <Button
-              variant="primary"
+              variant="default"
               size="sm"
               className="bg-gold text-black hover:bg-gold/90"
             >

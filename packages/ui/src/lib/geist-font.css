@@ -1,7 +1,0 @@
-/* Geist Sans Variable font-face for Storybook preview */
-@font-face {
-  font-family: "Geist Sans Variable";
-  src: url("https://unpkg.com/geist@1.4.2/dist/fonts/geist-sans/Geist-Variable.woff2") format("woff2-variations");
-  font-weight: 100 900;
-  font-display: swap;
-} 

@@ -1,4 +1,4 @@
-import { Post } from "../firestore/post";
+import type { Post } from "../firestore/post";
 
 // Content processing utilities
 export class ContentProcessor {

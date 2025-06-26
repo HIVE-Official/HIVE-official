@@ -1,37 +1,30 @@
 {
-  "extends": "../config/typescript/base.json",
+  "extends": "@hive/typescript-config/base.json",
   "compilerOptions": {
-    "outDir": "dist",
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "composite": true,
+    "tsBuildInfoFile": "./dist/.tsbuildinfo",
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "jsx": "react-jsx",
+    "forceConsistentCasingInFileNames": true,
     "noEmit": false,
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
-    "skipLibCheck": true,
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"],
-      "@hive/ui": ["../ui/src"],
-      "@hive/ui/*": ["../ui/src/*"],
-      "@hive/core": ["../core/src"],
-      "@hive/core/*": ["../core/src/*"],
-      "@hive/hooks": ["../hooks/src"],
-      "@hive/hooks/*": ["../hooks/src/*"],
-      "@hive/auth-logic": ["../auth-logic/src"],
-      "@hive/auth-logic/*": ["../auth-logic/src/*"],
-      "@hive/api-client": ["../api-client/src"],
-      "@hive/api-client/*": ["../api-client/src/*"],
-      "@hive/validation": ["../validation/src"],
-      "@hive/validation/*": ["../validation/src/*"],
-      "@hive/analytics": ["../analytics/src"],
-      "@hive/analytics/*": ["../analytics/src/*"],
-      "@hive/utilities": ["../utilities/src"],
-      "@hive/utilities/*": ["../utilities/src/*"],
-      "@hive/tokens": ["../tokens/src"],
-      "@hive/tokens/*": ["../tokens/src/*"],
-      "@hive/i18n": ["../i18n/src"],
-      "@hive/i18n/*": ["../i18n/src/*"]
-    }
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
-  "include": ["src/**/*"],
-  "exclude": ["dist", "node_modules"]
-}
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"],
+  "references": [
+    { "path": "../core" },
+    { "path": "../auth-logic" }
+  ]
+} 

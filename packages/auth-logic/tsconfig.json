@@ -1,21 +1,31 @@
 {
   // TypeScript configuration for auth-logic package
-  "extends": "../config/typescript/base.json",
+  "extends": "@hive/typescript-config/base.json",
   "compilerOptions": {
-    "types": ["node", "vitest/globals"],
+    "outDir": "dist",
+    "rootDir": "./src",
+    "composite": true,
+    "noEmit": false,
+    "jsx": "react-jsx",
+    "declaration": true,
+    "declarationMap": true,
+    "module": "esnext",
     "moduleResolution": "bundler",
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"],
-      "@hive/core": ["../core/src"],
-      "@hive/hooks": ["../hooks/src"],
-      "@hive/ui": ["../ui/src"],
-      "@hive/tokens": ["../tokens"],
-      "@hive/utilities": ["../utilities/src"],
-      "@hive/validation": ["../validation/src"]
-    },
-    "typeRoots": ["../../node_modules/@types", "../../node_modules"]
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "types": ["node", "react", "react-dom", "vitest/globals"]
   },
-  "include": ["src", "vitest.config.ts"],
-  "exclude": ["dist", "build", "node_modules"]
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ],
+  "references": [
+    { "path": "../core" }
+  ]
 }

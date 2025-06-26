@@ -1,8 +1,7 @@
-import { FirebaseApp } from "firebase/app";
-import { Auth } from "firebase/auth";
-
-declare let app: FirebaseApp;
-declare let auth: Auth;
+import type { FirebaseApp } from "firebase/app";
+import type { Auth } from "firebase/auth";
+declare let app: FirebaseApp | null;
+declare let auth: Auth | null;
 export { auth };
 export default app;
 //# sourceMappingURL=firebase-config.d.ts.map

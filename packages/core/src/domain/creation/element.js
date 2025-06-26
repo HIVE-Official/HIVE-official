@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { logger } from '../../utils/logger';
+import { logger } from "../../utils/logger";
 // Element categories for organization
 export const ElementCategory = z.enum([
     "Display & Layout",
@@ -326,7 +326,7 @@ export const validateElementConfig = (element, config) => {
         return true;
     }
     catch (error) {
-        logger.error("Element config validation failed", error);
+        logger.error("Element config validation failed:", error);
         return false;
     }
 };

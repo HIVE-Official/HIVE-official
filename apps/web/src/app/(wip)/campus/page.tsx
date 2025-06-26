@@ -3,16 +3,16 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Button } from "@hive/ui";
-import { Input } from "@hive/ui";
 import {
+  Button,
+  Input,
+  Badge,
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
 } from "@hive/ui";
-import { Badge } from "@hive/ui";
 import {
   ArrowLeft,
   Search,
@@ -91,7 +91,7 @@ export default function CampusSelectionPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0A0A0A] text-white">
+    <div className="min-h-screen bg-background text-foreground">
       <div className="max-w-4xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex items-center mb-8">
@@ -128,15 +128,15 @@ export default function CampusSelectionPage() {
         </div>
 
         {/* vBETA Launch Info */}
-        <Card className="mb-8 bg-[#FFD700]/5 border-[#FFD700]/20">
+        <Card className="mb-8 bg-accent/5 border-accent/20">
           <CardContent className="pt-6">
             <div className="flex items-start space-x-3">
-              <GraduationCap className="w-6 h-6 text-[#FFD700] mt-1 flex-shrink-0" />
+              <GraduationCap className="w-6 h-6 text-accent mt-1 flex-shrink-0" />
               <div>
-                <h3 className="font-semibold text-[#FFD700] mb-2 font-display">
+                <h3 className="font-semibold text-accent mb-2 font-display">
                   UB vBETA Launch
                 </h3>
-                <p className="text-zinc-300 text-sm leading-relaxed font-sans">
+                <p className="text-muted text-sm leading-relaxed font-sans">
                   HIVE is launching exclusively at University at Buffalo first.
                   Sign in with your official @buffalo.edu email address to join
                   the founding UB community on HIVE.
@@ -149,12 +149,12 @@ export default function CampusSelectionPage() {
         {/* University Results */}
         <div className="space-y-4 mb-8">
           {filteredUniversities.length === 0 && searchQuery ? (
-            <Card className="bg-zinc-900/50 border-zinc-800">
+            <Card className="bg-surface-01 border-border">
               <CardContent className="pt-6 text-center">
-                <p className="text-zinc-400 mb-4 font-sans">
+                <p className="text-muted mb-4 font-sans">
                   Please use your @buffalo.edu email to access HIVE
                 </p>
-                <p className="text-sm text-zinc-500 font-sans">
+                <p className="text-sm text-muted font-sans">
                   HIVE is currently exclusive to University at Buffalo students.
                 </p>
               </CardContent>
@@ -163,10 +163,10 @@ export default function CampusSelectionPage() {
             filteredUniversities.map((university) => (
               <Card
                 key={university.id}
-                className={`cursor-pointer transition-all duration-200 ${
+                className={`cursor-pointer transition-all duration-base ease-hive-smooth ${
                   selectedUniversity?.id === university.id
-                    ? "bg-[#FFD700]/10 border-[#FFD700]/50"
-                    : "bg-zinc-900/50 border-zinc-800 hover:bg-zinc-900/70"
+                    ? "bg-accent/10 border-accent/50"
+                    : "bg-surface-01 border-border hover:bg-surface-02"
                 }`}
                 onClick={() => handleUniversitySelect(university)}
               >
@@ -178,16 +178,16 @@ export default function CampusSelectionPage() {
                           {university.name}
                         </h3>
                         {university.isVerified && (
-                          <CheckCircle className="w-5 h-5 text-green-500" />
+                          <CheckCircle className="w-5 h-5 text-accent" />
                         )}
                         {selectedUniversity?.id === university.id && (
-                          <Badge className="bg-[#FFD700] text-black font-medium">
+                          <Badge variant="default" className="bg-accent text-background font-medium">
                             Selected
                           </Badge>
                         )}
                       </div>
 
-                      <div className="flex items-center space-x-4 text-sm text-zinc-400 mb-3 font-sans">
+                      <div className="flex items-center space-x-4 text-sm text-muted mb-3 font-sans">
                         <div className="flex items-center space-x-1">
                           <MapPin className="w-4 h-4" />
                           <span>{university.location}</span>
@@ -201,16 +201,16 @@ export default function CampusSelectionPage() {
 
                       <div className="flex items-center space-x-6 text-sm font-sans">
                         <div className="flex items-center space-x-2">
-                          <Users className="w-4 h-4 text-zinc-500" />
-                          <span className="text-zinc-400">
+                          <Users className="w-4 h-4 text-muted" />
+                          <span className="text-muted">
                             {university.memberCount > 0
                               ? `${university.memberCount.toLocaleString()} students`
                               : "Launching soon"}
                           </span>
                         </div>
                         <div className="flex items-center space-x-2">
-                          <MessageSquare className="w-4 h-4 text-zinc-500" />
-                          <span className="text-zinc-400">
+                          <MessageSquare className="w-4 h-4 text-muted" />
+                          <span className="text-muted">
                             {university.spaceCount > 0
                               ? `${university.spaceCount} active spaces`
                               : "Getting ready"}
@@ -227,9 +227,9 @@ export default function CampusSelectionPage() {
 
         {/* Selected University Preview */}
         {selectedUniversity && (
-          <Card className="mb-8 bg-zinc-900/30 border-zinc-700">
+          <Card className="mb-8 bg-surface-01 border-border">
             <CardHeader>
-              <CardTitle className="text-[#FFD700] font-display">
+              <CardTitle className="text-accent font-display">
                 Ready to Join {selectedUniversity.name}?
               </CardTitle>
               <CardDescription className="font-sans">
@@ -239,32 +239,32 @@ export default function CampusSelectionPage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                <div className="flex items-center justify-between p-4 bg-zinc-800/50 rounded-lg">
+                <div className="flex items-center justify-between p-4 bg-surface-02 rounded-lg">
                   <div>
                     <div className="font-medium font-display">UB Community</div>
-                    <div className="text-zinc-400 font-sans">
+                    <div className="text-muted font-sans">
                       You&apos;re part of the early community that&apos;s defining how students 
                       connect on campus.
                     </div>
                   </div>
-                  <Users className="w-8 h-8 text-[#FFD700]" />
+                  <Users className="w-8 h-8 text-accent" />
                 </div>
 
-                <div className="flex items-center justify-between p-4 bg-zinc-800/50 rounded-lg">
+                <div className="flex items-center justify-between p-4 bg-surface-02 rounded-lg">
                   <div>
                     <div className="font-medium font-display">
                       Campus Spaces
                     </div>
-                    <div className="text-zinc-400 font-sans">
+                    <div className="text-muted font-sans">
                       We&apos;re building the tools that will transform how you experience college.
                     </div>
                   </div>
-                  <MessageSquare className="w-8 h-8 text-[#FFD700]" />
+                  <MessageSquare className="w-8 h-8 text-accent" />
                 </div>
 
                 <Button
                   onClick={handleContinue}
-                  className="w-full bg-[#FFD700] hover:bg-[#FFE255] text-black font-semibold py-3 font-display"
+                  className="w-full bg-accent hover:bg-accent-600 text-background font-semibold py-3 font-display"
                   disabled={isLoading}
                 >
                   {isLoading
@@ -277,19 +277,19 @@ export default function CampusSelectionPage() {
         )}
 
         {/* Help Section */}
-        <Card className="bg-zinc-900/30 border-zinc-800">
+        <Card className="bg-surface-01 border-border">
           <CardContent className="pt-6">
             <h3 className="font-semibold mb-4 font-display">Need Help?</h3>
-            <div className="space-y-3 text-sm text-zinc-400 font-sans">
+            <div className="space-y-3 text-sm text-muted font-sans">
               <div>
-                <strong className="text-white">Not a UB student?</strong>
+                <strong className="text-foreground">Not a UB student?</strong>
                 <p>
                   HIVE is currently launching exclusively at University at
                   Buffalo. We&apos;ll be expanding to other universities soon!
                 </p>
               </div>
               <div>
-                <strong className="text-white">
+                <strong className="text-foreground">
                   Don&apos;t have a @buffalo.edu email?
                 </strong>
                 <p>
@@ -299,7 +299,7 @@ export default function CampusSelectionPage() {
                 </p>
               </div>
               <div>
-                <strong className="text-white">
+                <strong className="text-foreground">
                   Questions about the UB launch?
                 </strong>
                 <p>

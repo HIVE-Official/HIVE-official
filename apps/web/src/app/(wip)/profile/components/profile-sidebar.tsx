@@ -54,9 +54,9 @@ export const ProfileSidebar = ({ user }: ProfileSidebarProps) => {
 
         {/* Builder Badge */}
         {user.isBuilder && (
-          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-[#FFD700]/20 to-[#FFD700]/10 border border-[#FFD700]/30 rounded-full px-3 py-1 mb-4">
-            <div className="w-2 h-2 bg-[#FFD700] rounded-full"></div>
-            <span className="font-sans text-sm font-medium text-[#FFD700]">
+          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-accent/20 to-accent/10 border border-accent/30 rounded-full px-3 py-1 mb-4">
+            <div className="w-2 h-2 bg-accent rounded-full"></div>
+            <span className="font-sans text-sm font-medium text-accent">
               Builder
             </span>
           </div>

@@ -2,9 +2,8 @@
 
 import * as React from "react";
 import { usePathname } from "next/navigation";
-import { Navbar } from "@hive/ui";
-import { useAuth } from "@/lib/auth";
-import { HivePage } from "@hive/ui";
+// import { Navbar } from "@hive/ui";
+// import { HivePage } from "@hive/ui";
 import { cn } from "@/lib/utils";
 
 interface PageWrapperProps {
@@ -28,13 +27,12 @@ interface PageWrapperProps {
  */
 export function PageWrapper({
   children,
-  className,
-  background = "canvas",
-  disableTransitions = false,
-  metadata,
+  className: _className,
+  background: _background = "canvas",
+  disableTransitions: _disableTransitions = false,
+  metadata: _metadata,
 }: PageWrapperProps) {
   const pathname = usePathname();
-  const { user } = useAuth();
   const isAuthPage =
     pathname.startsWith("/auth") || pathname.startsWith("/welcome");
 
@@ -44,26 +42,9 @@ export function PageWrapper({
 
   return (
     <div className="min-h-screen bg-bg-root font-body text-text-primary">
-      <Navbar user={user} />
+      {/* <Navbar /> */}
       <main className="pt-16">
-        <HivePage
-          metadata={{
-            background,
-            layoutId: metadata?.layoutId,
-          }}
-          disableTransitions={disableTransitions}
-          className={cn(
-            // Standard page styles
-            "min-h-screen",
-            // Responsive padding
-            "px-4 py-6 md:px-6 lg:px-8",
-            // Performance optimization
-            "will-change-transform",
-            className
-          )}
-        >
-          <div className="mx-auto max-w-7xl">{children}</div>
-        </HivePage>
+        <div className="mx-auto max-w-7xl">{children}</div>
       </main>
     </div>
   );
@@ -85,7 +66,24 @@ export function FeedPageWrapper({
       className={cn("px-0 py-0", className)} // Feed handles its own spacing
       {...props}
     >
-      {children}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3 xl:grid-cols-4">
+        {/* Left Sidebar - Hidden on mobile */}
+        <div className="hidden lg:block">
+          <div className="sticky top-20">
+            {/* Navigation shortcuts, trending topics, etc. */}
+          </div>
+        </div>
+
+        {/* Main Content */}
+        <div className="lg:col-span-2">{children}</div>
+
+        {/* Right Sidebar - Hidden on smaller screens */}
+        <div className="hidden xl:block">
+          <div className="sticky top-20">
+            {/* Suggested connections, upcoming events, etc. */}
+          </div>
+        </div>
+      </div>
     </PageWrapper>
   );
 }
@@ -120,6 +118,40 @@ export function DashboardPageWrapper({
       {...props}
     >
       {children}
+    </PageWrapper>
+  );
+}
+
+/** Profile and settings wrapper */
+export function ProfilePageWrapper({
+  children,
+  className,
+  ...props
+}: Omit<PageWrapperProps, "background">) {
+  return (
+    <PageWrapper
+      background="elevated"
+      className={cn("pb-16", className)}
+      {...props}
+    >
+      <div className="mx-auto max-w-5xl">{children}</div>
+    </PageWrapper>
+  );
+}
+
+/** Spaces detail wrapper */
+export function SpacePageWrapper({
+  children,
+  className,
+  ...props
+}: Omit<PageWrapperProps, "background">) {
+  return (
+    <PageWrapper
+      background="canvas"
+      className={cn("pb-16", className)}
+      {...props}
+    >
+      <div className="mx-auto max-w-6xl">{children}</div>
     </PageWrapper>
   );
 }

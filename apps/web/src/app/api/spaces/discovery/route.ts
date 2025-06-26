@@ -87,7 +87,7 @@ export async function GET(request: NextRequest) {
       userId: user.uid,
       major: userProfile.major,
       dorm: userProfile.dorm,
-      graduationYear: userProfile.graduationYear,
+      graduationYear: String(userProfile.graduationYear),
       joinedSpaces,
       interests: userProfile.interests || [],
       isBuilder: userProfile.isBuilder || false,

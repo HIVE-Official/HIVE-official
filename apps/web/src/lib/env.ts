@@ -88,7 +88,7 @@ const firebaseConfigs = {
  * Get the current environment
  */
 function getCurrentEnvironment(): keyof typeof firebaseConfigs {
-  const env = process.env.NODE_ENV || "development";
+  const env = process.env.NODE_ENV as "development" | "staging" | "production" || "development";
   const vercelEnv = process.env.VERCEL_ENV;
 
   // Vercel environment mapping

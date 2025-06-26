@@ -1,4 +1,4 @@
-import { Timestamp } from 'firebase/firestore';
+import type { Timestamp } from "firebase/firestore";
 /**
  * Represents an entry in the waitlist for a specific school.
  * Stored in the `/schools/{schoolId}/waitlist_entries` sub-collection.

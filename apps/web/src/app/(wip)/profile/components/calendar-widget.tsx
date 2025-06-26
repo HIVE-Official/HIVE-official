@@ -81,7 +81,7 @@ export const CalendarWidget = () => {
               ${
                 dayData.isCurrentMonth
                   ? dayData.isHighlighted
-                    ? "bg-[#FFD700] text-black font-semibold"
+                    ? "bg-accent text-background font-semibold"
                     : "text-white hover:bg-zinc-800"
                   : "text-zinc-600"
               }

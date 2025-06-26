@@ -1,12 +1,12 @@
 "use client";
 
-import { Input } from "@hive/ui";
+// import { Input } from "@hive/ui";
 import { Search } from "lucide-react";
 import { useEffect, useState, useRef } from "react";
 import type { School } from "@hive/core";
 import { useRouter } from "next/navigation";
 
-export function SchoolSearch() {
+export default function SchoolSearch() {
   const [query, setQuery] = useState("");
   const [schools, setSchools] = useState<School[]>([]);
   const [filteredSchools, setFilteredSchools] = useState<School[]>([]);
@@ -89,7 +89,7 @@ export function SchoolSearch() {
     <div className="flex flex-col gap-4">
       <div className="relative">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-        <Input
+        <input
           ref={inputRef}
           type="search"
           placeholder="Search for your school..."

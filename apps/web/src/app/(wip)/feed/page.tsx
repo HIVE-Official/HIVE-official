@@ -1,5 +1,5 @@
 import { type Metadata } from "next";
-import { MainFeed } from "@hive/ui";
+// import { MainFeed } from "@hive/ui";
 
 export const metadata: Metadata = {
   title: "Feed | HIVE",
@@ -8,8 +8,8 @@ export const metadata: Metadata = {
 
 export default function FeedPage() {
   return (
-    <main className="flex-1">
-      <MainFeed />
-    </main>
+    <div>
+      <h1>Feed</h1>
+    </div>
   );
 }

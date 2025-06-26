@@ -1,10 +1,6 @@
 import { test, expect } from "@playwright/test";
-import { setupTestUser, cleanupTestData } from "./helpers/test-setup";
-
-interface TestUser {
-  id: string;
-  email: string;
-}
+import { setupTestUser, cleanupTestData, type TestUser } from "./helpers/test-setup";
+import type { AuthUser as _AuthUser } from "@hive/auth-logic";
 
 interface TestSpace {
   id: string;
@@ -15,9 +11,10 @@ interface TestSpace {
 test.describe("Space Feed Error Scenarios", () => {
   let testUser: TestUser;
   let testSpace: TestSpace;
+  let user: TestUser;
 
   test.beforeEach(async ({ page }) => {
-    testUser = await setupTestUser();
+    testUser = await setupTestUser(page);
     testSpace = {
       id: `test-space-${Date.now()}`,
       name: "Test Space",
@@ -34,10 +31,12 @@ test.describe("Space Feed Error Scenarios", () => {
 
     // Navigate to test space
     await page.goto(`/spaces/${testSpace.id}`);
+
+    user = await setupTestUser(page);
   });
 
-  test.afterEach(async () => {
-    await cleanupTestData(testUser.id, testSpace.id);
+  test.afterEach(async ({ page }) => {
+    await cleanupTestData(page);
   });
 
   test("should handle network failures gracefully", async ({ page }) => {
@@ -464,4 +463,93 @@ test.describe("Space Feed Error Scenarios", () => {
       page.locator('[data-testid="post-content-input"]')
     ).toHaveValue("Hey @alice how are you?");
   });
+
+  test("handle network errors", async ({ page }) => {
+    // Mock network failure
+    await page.route('/api/spaces/test-space/feed', async route => {
+      await route.abort('failed')
+    })
+
+    await page.goto('/spaces/test-space')
+
+    // Should show error message
+    await expect(page.locator('[data-testid="feed-error"]')).toBeVisible()
+    await expect(page.locator('[data-testid="feed-error"]')).toContainText('Something went wrong')
+
+    // Should show retry button
+    await expect(page.locator('[data-testid="retry-button"]')).toBeVisible()
+  })
+
+  test("handle empty feed", async ({ page }) => {
+    // Mock empty feed response
+    await page.route('/api/spaces/test-space/feed', async route => {
+      await route.fulfill({
+        status: 200,
+        body: JSON.stringify({
+          posts: [],
+          hasMore: false
+        })
+      })
+    })
+
+    await page.goto('/spaces/test-space')
+
+    // Should show empty state
+    await expect(page.locator('[data-testid="empty-feed"]')).toBeVisible()
+    await expect(page.locator('[data-testid="empty-feed"]')).toContainText('No posts yet')
+  })
+
+  test("handle slow network conditions", async ({ page }) => {
+    // Mock slow response
+    await page.route('/api/spaces/test-space/feed', async route => {
+      await new Promise(resolve => setTimeout(resolve, 3000)) // 3 second delay
+      await route.fulfill({
+        status: 200,
+        body: JSON.stringify({
+          posts: [
+            {
+              id: 'test-post',
+              content: 'Test post content',
+              author: user.uid,
+              createdAt: new Date().toISOString()
+            }
+          ],
+          hasMore: false
+        })
+      })
+    })
+
+    await page.goto('/spaces/test-space')
+
+    // Should show loading state
+    await expect(page.locator('[data-testid="feed-loading"]')).toBeVisible()
+
+    // Should eventually show content
+    await expect(page.locator('[data-testid="post-content"]')).toBeVisible({ timeout: 5000 })
+  })
+
+  test("handle invalid post data", async ({ page }) => {
+    // Mock invalid post data
+    await page.route('/api/spaces/test-space/feed', async route => {
+      await route.fulfill({
+        status: 200,
+        body: JSON.stringify({
+          posts: [
+            {
+              id: 'test-post',
+              content: null, // Invalid content
+              author: user.uid,
+              createdAt: 'invalid-date'
+            }
+          ],
+          hasMore: false
+        })
+      })
+    })
+
+    await page.goto('/spaces/test-space')
+
+    // Should show error boundary fallback
+    await expect(page.locator('[data-testid="post-error"]')).toBeVisible()
+  })
 });

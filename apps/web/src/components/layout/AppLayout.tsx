@@ -1,6 +1,7 @@
 'use client'
 
 import { usePathname } from 'next/navigation'
+import Link from 'next/link'
 import { AppHeader } from '@hive/ui'
 import { BottomNavBar } from '@hive/ui'
 import { HiveLogo } from '@hive/ui'
@@ -18,33 +19,33 @@ function DesktopNav() {
 					<HiveLogo />
 				</AppHeader.Logo>
 				<AppHeader.Nav className='ml-10'>
-					<a
+					<Link
 						href='/feed'
 						className={`text-sm font-medium transition-colors hover:text-white ${
 							pathname === '/feed' ? 'text-white' : 'text-neutral-400'
 						}`}
 					>
 						Feed
-					</a>
-					<a
+					</Link>
+					<Link
 						href='/campus'
 						className={`text-sm font-medium transition-colors hover:text-white ${
 							pathname === '/campus' ? 'text-white' : 'text-neutral-400'
 						}`}
 					>
 						Campus
-					</a>
-					<a
+					</Link>
+					<Link
 						href='/spaces'
 						className={`text-sm font-medium transition-colors hover:text-white ${
 							pathname === '/spaces' ? 'text-white' : 'text-neutral-400'
 						}`}
 					>
 						Spaces
-					</a>
+					</Link>
 				</AppHeader.Nav>
 				<AppHeader.Actions>
-					<Button variant='primary'>Create</Button>
+					<Button variant='default'>Create</Button>
 					<Avatar>
 						<AvatarImage src='https://github.com/shadcn.png' alt='@shadcn' />
 						<AvatarFallback>CN</AvatarFallback>
@@ -60,7 +61,7 @@ function MobileNav() {
 	return (
 		<BottomNavBar.Root>
 			<BottomNavBar.Content>
-				<a href='/feed' className='text-decoration-none'>
+				<Link href='/feed' className='text-decoration-none'>
 					<BottomNavBar.Item isActive={pathname === '/feed'}>
 						{pathname === '/feed' && <BottomNavBar.Indicator />}
 						<BottomNavBar.Icon>
@@ -68,8 +69,8 @@ function MobileNav() {
 						</BottomNavBar.Icon>
 						<BottomNavBar.Label>Feed</BottomNavBar.Label>
 					</BottomNavBar.Item>
-				</a>
-				<a href='/spaces' className='text-decoration-none'>
+				</Link>
+				<Link href='/spaces' className='text-decoration-none'>
 					<BottomNavBar.Item isActive={pathname === '/spaces'}>
 						{pathname === '/spaces' && <BottomNavBar.Indicator />}
 						<BottomNavBar.Icon>
@@ -77,8 +78,8 @@ function MobileNav() {
 						</BottomNavBar.Icon>
 						<BottomNavBar.Label>Spaces</BottomNavBar.Label>
 					</BottomNavBar.Item>
-				</a>
-				<a href='/profile' className='text-decoration-none'>
+				</Link>
+				<Link href='/profile' className='text-decoration-none'>
 					<BottomNavBar.Item isActive={pathname === '/profile'}>
 						{pathname === '/profile' && <BottomNavBar.Indicator />}
 						<BottomNavBar.Icon>
@@ -86,7 +87,7 @@ function MobileNav() {
 						</BottomNavBar.Icon>
 						<BottomNavBar.Label>Profile</BottomNavBar.Label>
 					</BottomNavBar.Item>
-				</a>
+				</Link>
 			</BottomNavBar.Content>
 		</BottomNavBar.Root>
 	)

@@ -1,34 +1,11 @@
 "use client";
+// import { useAuth } from "@hive/hooks";
+// import { WelcomeMat, useWelcomeMat } from "@hive/ui";
 
-import { useAuth } from "@hive/hooks";
-import { WelcomeMat, useWelcomeMat } from "@hive/ui";
-
-interface WelcomeMatProviderProps {
+export function WelcomeMatProvider({
+  children,
+}: {
   children: React.ReactNode;
+}) {
+  return <div>{children}</div>;
 }
-
-export const WelcomeMatProvider = ({ children }: WelcomeMatProviderProps) => {
-  const { user, isLoading } = useAuth();
-  const { isVisible, dismissWelcomeMat, hasCheckedStorage } = useWelcomeMat();
-
-  // Only show welcome mat for authenticated users who have completed onboarding
-  const shouldShowWelcomeMat =
-    !isLoading &&
-    user &&
-    user.onboardingCompleted &&
-    hasCheckedStorage &&
-    isVisible;
-
-  return (
-    <>
-      {children}
-      {shouldShowWelcomeMat && (
-        <WelcomeMat
-          isVisible={true}
-          onDismiss={dismissWelcomeMat}
-          userName={user.fullName || undefined}
-        />
-      )}
-    </>
-  );
-};

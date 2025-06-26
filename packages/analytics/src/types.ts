@@ -8,6 +8,33 @@ export interface AnalyticsEvent {
 }
 
 /**
+ * Onboarding-specific analytics events
+ */
+export interface OnboardingStartedEvent extends AnalyticsEvent {
+  name: 'onboarding_started';
+}
+
+export interface OnboardingStepCompletedEvent extends AnalyticsEvent {
+  name: 'onboarding_step_completed';
+  properties: {
+    stepName: string;
+  };
+}
+
+export interface OnboardingAbandonedEvent extends AnalyticsEvent {
+  name: 'onboarding_abandoned';
+  properties: {
+    stepName: string;
+    lastActiveAt: number;
+  };
+}
+
+export type OnboardingEvent = 
+  | OnboardingStartedEvent 
+  | OnboardingStepCompletedEvent 
+  | OnboardingAbandonedEvent;
+
+/**
  * Page view event interface
  */
 export interface PageView {

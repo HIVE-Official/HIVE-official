@@ -2,14 +2,22 @@
 
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Button, Badge } from "@hive/ui";
-import { Users, ArrowLeft, AlertTriangle, Loader2 } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
 import { type Space } from "@hive/core";
-import { SpaceActionButton } from "./components/space-action-button";
+import Image from "next/image";
+import { 
+  Button,
+  Badge,
+} from "@hive/ui";
+import {
+  Users,
+  ArrowLeft,
+  Loader2,
+  AlertTriangle,
+} from "lucide-react";
+import Link from "next/link";
 import { CreatePost } from "./components/create-post";
 import { Feed } from "./components/feed";
+import { SpaceActionButton } from "./components/space-action-button";
 
 async function fetchSpaceById(spaceId: string): Promise<Space> {
   const response = await fetch(`/api/spaces/${spaceId}`);
@@ -182,7 +190,7 @@ export default function SpaceDetailPage({
             </div>
 
             <div className="flex-shrink-0">
-              <SpaceActionButton spaceId={spaceId} />
+              <SpaceActionButton _spaceId={spaceId} />
             </div>
           </div>
         </div>
@@ -226,7 +234,7 @@ export default function SpaceDetailPage({
 
           {/* Main Feed */}
           <div className="lg:col-span-2 space-y-6">
-            <CreatePost spaceId={spaceId} onPostCreated={() => {}} />
+            <CreatePost _spaceId={spaceId} _onPostCreated={() => {}} />
             <Feed spaceId={spaceId} />
           </div>
         </div>

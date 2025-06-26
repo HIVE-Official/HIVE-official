@@ -2,14 +2,8 @@
 
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@hive/ui";
 import { Loader2 } from "lucide-react";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@hive/ui";
 import { useAuth } from "@hive/auth-logic";
 
 function VerifyContent() {
@@ -52,7 +46,7 @@ function VerifyContent() {
       }
     };
 
-    verify();
+    void verify();
   }, [searchParams, router, signInWithCustomToken]);
 
   return (
@@ -81,6 +75,8 @@ function VerifyContent() {
 }
 
 export default function VerifyPage() {
+  const router = useRouter();
+  void router.push('/onboarding');
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <VerifyContent />

@@ -46,7 +46,7 @@ export const ProgressSection = ({ user }: ProgressSectionProps) => {
               strokeWidth="8"
               fill="transparent"
               strokeDasharray={`${progressPercentage * 2.51} 251.2`}
-              className="text-[#FFD700] transition-all duration-300 ease-out"
+              className="text-accent transition-all duration-slow ease-hive-smooth"
               strokeLinecap="round"
             />
           </svg>

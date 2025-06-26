@@ -5,6 +5,9 @@ import js from "@eslint/js";
 import { FlatCompat } from "@eslint/eslintrc";
 import { fixupConfigRules } from "@eslint/compat";
 import tseslint from "typescript-eslint";
+import nextPlugin from "@next/eslint-plugin-next";
+import reactPlugin from "eslint-plugin-react";
+import reactHooksPlugin from "eslint-plugin-react-hooks";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -27,16 +30,28 @@ export default [
   // TypeScript ESLint configs
   ...tseslint.configs.recommended,
 
-  // Add Next.js specific config (already includes react and next plugins)
-  ...patchedNextConfig,
+  // Add Next.js specific config
+  {
+    plugins: {
+      "@next/next": nextPlugin,
+    },
+    rules: {
+      ...nextPlugin.configs.recommended.rules,
+      ...nextPlugin.configs["core-web-vitals"].rules,
+    },
+  },
 
   // Main configuration for all files
   {
     files: ["**/*.{js,jsx,ts,tsx}"],
+    plugins: {
+      react: reactPlugin,
+      "react-hooks": reactHooksPlugin,
+    },
     languageOptions: {
       parser: tseslint.parser,
       parserOptions: {
-        project: true,
+        project: "tsconfig.eslint.json",
         tsconfigRootDir: __dirname,
         ecmaFeatures: {
           jsx: true,
@@ -93,9 +108,7 @@ export default [
       "@typescript-eslint/no-unsafe-return": "off",
       "@typescript-eslint/no-unsafe-argument": "off",
 
-      // Next.js specific rules
-      "@next/next/no-img-element": "warn",
-      "react-hooks/exhaustive-deps": "warn",
+      // Next.js specific rules are now handled by the plugin config above
 
       // React specific rules
       "react/no-unescaped-entities": "off",
@@ -110,6 +123,7 @@ export default [
       "react/no-unknown-property": "error",
       "react/prop-types": "off", // We use TypeScript for prop validation
       "react/react-in-jsx-scope": "off", // Not needed in Next.js
+      "react-hooks/exhaustive-deps": "warn",
 
       // Other helpful rules
       "prefer-const": "error",

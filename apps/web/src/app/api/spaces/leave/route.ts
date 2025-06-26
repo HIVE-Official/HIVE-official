@@ -10,7 +10,7 @@ import {
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { getAuth } from "firebase-admin/auth";
-import type { Space } from "@hive/core/src/domain/firestore/space";
+import type { Space } from "@hive/core";
 import { logger } from "@hive/core";
 
 const leaveSpaceSchema = z.object({

@@ -5,17 +5,10 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ThemeProvider } from "next-themes";
 import { AuthProvider } from "@hive/auth-logic";
-import { Toaster, MotionProvider } from "@hive/ui";
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 5 * 60 * 1000, // 5 minutes
-    },
-  },
-});
+import { WelcomeMatProvider } from "@/components/welcome-mat-provider";
 
 export function Providers({ children }: { children: React.ReactNode }) {
+  const [queryClient] = React.useState(() => new QueryClient());
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider
@@ -24,10 +17,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
         enableSystem={false}
         disableTransitionOnChange
       >
-        <MotionProvider>
-          <AuthProvider>{children}</AuthProvider>
-          <Toaster />
-        </MotionProvider>
+        <AuthProvider>
+          <WelcomeMatProvider>{children}</WelcomeMatProvider>
+        </AuthProvider>
       </ThemeProvider>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>

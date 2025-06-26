@@ -19,7 +19,7 @@ const db = dbAdmin;
 
 // Simple profanity check - in production, use a proper service
 const checkProfanity = (text: string): boolean => {
-  const profanityWords = ["spam", "scam"]; // Minimal list for demo
+  const profanityWords = ["spam", "scam", "hack"];
   return profanityWords.some((word) => text.toLowerCase().includes(word));
 };
 
@@ -186,20 +186,29 @@ export async function POST(
     const decodedToken = await auth.verifyIdToken(token);
 
     // Check rate limiting
-    const rateLimitResult = postCreationRateLimit(decodedToken.uid);
-    if (!rateLimitResult.success) {
+    const { success, limit, remaining, reset, pending } = await postCreationRateLimit.limit(decodedToken.uid);
+    
+    // Handle pending operations for edge functions
+    if (pending) {
+      request.signal.addEventListener("abort", () => {
+        // Handle cleanup if needed
+      });
+    }
+
+    if (!success) {
       return NextResponse.json(
         {
           error: "Rate limit exceeded. Please wait before posting again.",
+          limit,
+          remaining,
+          reset,
         },
         {
           status: 429,
           headers: {
-            "X-RateLimit-Limit": rateLimitResult.limit.toString(),
-            "X-RateLimit-Remaining": rateLimitResult.remaining.toString(),
-            "X-RateLimit-Reset": new Date(
-              rateLimitResult.resetTime
-            ).toISOString(),
+            "X-RateLimit-Limit": limit.toString(),
+            "X-RateLimit-Remaining": remaining.toString(),
+            "X-RateLimit-Reset": reset.toString(),
           },
         }
       );
@@ -220,71 +229,32 @@ export async function POST(
       );
     }
 
-    const body = (await request.json()) as unknown;
-    const validatedData = CreatePostSchema.parse(body);
+    // Parse and validate request body
+    const body = await request.json();
+    const validatedBody = CreatePostSchema.parse(body);
 
     // Check for profanity
-    if (checkProfanity(validatedData.content)) {
+    if (checkProfanity(validatedBody.content)) {
       return NextResponse.json(
-        {
-          error:
-            "Post contains inappropriate content. Please revise and try again.",
-        },
+        { error: "Content contains inappropriate language" },
         { status: 400 }
       );
     }
 
     // Create post document
-    const postData = {
-      ...validatedData,
-      authorId: decodedToken.uid,
-      spaceId: spaceId,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      reactions: {
-        heart: 0,
-      },
-      reactedUsers: {
-        heart: [],
-      },
-      isPinned: false,
-      isEdited: false,
-      isDeleted: false,
-    };
-
-    const postRef = await db
-      .collection("spaces")
-      .doc(spaceId)
-      .collection("posts")
-      .add(postData);
-
-    // Get the created post with author info
-    const authorDoc = await db.collection("users").doc(decodedToken.uid).get();
-    const author = authorDoc.data();
-
-    const createdPost = {
+    const postRef = db.collection("spaces").doc(spaceId).collection("posts").doc();
+    await postRef.set({
       id: postRef.id,
-      ...postData,
-      author: {
-        id: decodedToken.uid,
-        fullName: author?.fullName || "Unknown User",
-        handle: author?.handle || "unknown",
-        photoURL: author?.photoURL || null,
-      },
-    };
+      ...validatedBody,
+      authorId: decodedToken.uid,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      likes: 0,
+      comments: 0,
+    });
 
-    return NextResponse.json({ post: createdPost }, { status: 201 });
+    return NextResponse.json({ id: postRef.id });
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        {
-          error: "Invalid post data",
-          details: error.errors,
-        },
-        { status: 400 }
-      );
-    }
-
     logger.error("Error creating post:", error);
     return NextResponse.json(
       { error: "Failed to create post" },

@@ -8,27 +8,19 @@ import React, {
 } from "react";
 import type { ReactNode } from "react";
 import { auth } from "../firebase-config";
-import { onAuthStateChanged } from "firebase/auth";
-
-export interface AuthUser {
-  uid: string;
-  email: string | null;
-  fullName: string | null;
-  onboardingCompleted: boolean;
-  getIdToken: () => Promise<string>;
-}
-
-export interface AuthContextType {
-  user: AuthUser | null;
-  isLoading: boolean;
-  isAuthenticated: boolean;
-}
+import { onAuthStateChanged, signInWithCustomToken as firebaseSignInWithCustomToken } from "firebase/auth";
+import type { AuthUser, AuthContextType, UseAuthReturn } from "../types";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  const signInWithCustomToken = async (token: string) => {
+    if (!auth) throw new Error("Firebase auth not initialized");
+    await firebaseSignInWithCustomToken(auth, token);
+  };
 
   useEffect(() => {
     if (!auth) {
@@ -49,6 +41,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             firebaseUser.email?.split("@")[0] ||
             "User",
           onboardingCompleted,
+          emailVerified: firebaseUser.emailVerified || false,
+          customClaims: idTokenResult.claims || {},
           getIdToken: () => firebaseUser.getIdToken(),
         };
         setUser(authUser);
@@ -65,12 +59,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     user,
     isLoading,
     isAuthenticated: !!user,
+    signInWithCustomToken,
   };
 
   return React.createElement(AuthContext.Provider, { value }, children);
 }
 
-export function useAuth(): AuthContextType {
+export function useAuth(): UseAuthReturn {
   const context = useContext(AuthContext);
   if (context === undefined) {
     throw new Error("useAuth must be used within an AuthProvider");

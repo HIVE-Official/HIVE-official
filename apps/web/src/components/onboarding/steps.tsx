@@ -24,28 +24,31 @@ import {
 } from "@hive/ui";
 import { Loader2 } from "lucide-react";
 import { debounce } from "lodash";
-import { User } from "firebase/auth";
+import { AuthUser } from "@hive/auth-logic";
 import { logger } from "@hive/core";
+import { type OnboardingStepName } from "@hive/core";
 
 // A utility to generate a handle from a name
 const generateHandle = (name: string) => {
   return name
     .toLowerCase()
-    .replace(/[^a-z0-9\s]/g, "") // remove special characters
+    .replace(/[^a-z0-9\\s]/g, "") // remove special characters
     .trim()
-    .replace(/\s+/g, "-"); // replace spaces with hyphens
+    .replace(/\\s+/g, "-"); // replace spaces with hyphens
 };
 
 interface StepProps {
-  user: User;
+  user: AuthUser;
   onNext: (nextStep?: number) => void;
   onPrev?: () => void;
+  setCompletedSteps?: (updater: (prev: OnboardingStepName[]) => OnboardingStepName[]) => void;
 }
 
 export const DisplayNameStep: React.FC<StepProps> = ({
   user,
   onNext,
   onPrev,
+  setCompletedSteps,
 }) => {
   const [fullName, setFullName] = useState("");
   const [handle, setHandle] = useState("");
@@ -59,7 +62,7 @@ export const DisplayNameStep: React.FC<StepProps> = ({
       const nameFromEmail = user.email
         .split("@")[0]
         .replace(/[._0-9]/g, " ")
-        .replace(/\s+/g, " ");
+        .replace(/\\s+/g, " ");
       const capitalized = nameFromEmail
         .split(" ")
         .map((n) => n.charAt(0).toUpperCase() + n.slice(1))
@@ -70,24 +73,17 @@ export const DisplayNameStep: React.FC<StepProps> = ({
   }, [user]);
 
   // Create a debounced function for handle checking
-  const debouncedCheck = useCallback(
-    debounce(async (h: string) => {
-      if (h.length < 3) {
-        setHandleError("Handle must be at least 3 characters.");
-        setIsCheckingHandle(false);
-        return;
-      }
-      setIsCheckingHandle(true);
-      // const functions = getFunctions();
-      // const checkHandle = httpsCallable(functions, 'checkHandleUniqueness');
-      // const { data } = await checkHandle({ handle: h });
-      // const isAvailable = (data as any).available;
-      const isAvailable = !["admin", "test", "root"].includes(h); // Mocking
-      setHandleError(isAvailable ? null : "This handle is already taken.");
+  const debouncedCheck = debounce(async (h: string) => {
+    if (h.length < 3) {
+      setHandleError("Handle must be at least 3 characters.");
       setIsCheckingHandle(false);
-    }, 500),
-    []
-  );
+      return;
+    }
+    setIsCheckingHandle(true);
+    const isAvailable = !["admin", "test", "root"].includes(h); // Mocking
+    setHandleError(isAvailable ? null : "This handle is already taken.");
+    setIsCheckingHandle(false);
+  }, 500);
 
   useEffect(() => {
     if (handle) {
@@ -95,17 +91,19 @@ export const DisplayNameStep: React.FC<StepProps> = ({
     }
   }, [handle, debouncedCheck]);
 
+  const handleStepComplete = useCallback((step: OnboardingStepName) => {
+    setCompletedSteps?.(prev => [...prev, step]);
+  }, [setCompletedSteps]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (handleError || isCheckingHandle) return;
 
     setIsLoading(true);
     try {
-      // const functions = getFunctions();
-      // const saveDisplayName = httpsCallable(functions, 'onboardingSaveDisplayName');
-      // await saveDisplayName({ fullName, handle });
       logger.info("Saving:", { fullName, handle });
       onNext(); // Proceed to the next step
+      handleStepComplete("name");
     } catch (error) {
       logger.error("Failed to save display name", error);
       setIsLoading(false);
@@ -183,69 +181,72 @@ export const DisplayNameStep: React.FC<StepProps> = ({
   );
 };
 
-export const LeaderQuestionStep: React.FC<StepProps> = ({ onNext, onPrev }) => {
+export const LeaderQuestionStep: React.FC<StepProps> = ({
+  onNext,
+  onPrev,
+  setCompletedSteps,
+}) => {
   const [choice, setChoice] = useState<boolean | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+
+  const handleStepComplete = useCallback((step: OnboardingStepName) => {
+    setCompletedSteps?.(prev => [...prev, step]);
+  }, [setCompletedSteps]);
 
   const handleSubmit = async () => {
-    if (choice === null) return;
-    setIsLoading(true);
     try {
-      // const functions = getFunctions();
-      // const saveLeaderChoice = httpsCallable(functions, 'onboardingSaveLeaderChoice');
-      // await saveLeaderChoice({ isLeaderCandidate: choice });
-      logger.info("Saving leader choice:", choice);
-      if (choice) {
-        onNext(3); // Go to Claim Space step
-      } else {
-        onNext(4); // Skip to Academic Card step
-      }
+      logger.info("Saving leader question response");
+      onNext();
+      handleStepComplete("builder");
     } catch (error) {
-      logger.error("Failed to save leader choice", error);
-      setIsLoading(false);
+      logger.error("Failed to save leader question", error);
     }
   };
 
   return (
     <Card className="w-full max-w-lg bg-zinc-900 border-zinc-800">
       <CardHeader>
-        <CardTitle className="text-white">Are you a student leader?</CardTitle>
+        <CardTitle className="text-white">Leadership Role</CardTitle>
         <CardDescription className="text-zinc-400">
-          Student leaders, club presidents, and event organizers get special
-          tools on HIVE to manage their communities.
+          Would you like to take on a leadership role in your campus community?
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-6">
-        <div className="flex gap-4">
+      <CardContent>
+        <div className="space-y-4">
           <Button
+            type="button"
             onClick={() => setChoice(true)}
-            variant={choice === true ? "default" : "outline"}
-            className={`w-full h-24 text-lg ${choice === true ? "bg-yellow-500 text-black border-yellow-500" : "border-zinc-700"}`}
+            className={`w-full ${
+              choice === true
+                ? "bg-yellow-500 text-black hover:bg-yellow-600"
+                : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
+            }`}
           >
-            Yes, I am
+            Yes, I&apos;d like to lead
           </Button>
           <Button
+            type="button"
             onClick={() => setChoice(false)}
-            variant={choice === false ? "default" : "outline"}
-            className={`w-full h-24 text-lg ${choice === false ? "bg-yellow-500 text-black border-yellow-500" : "border-zinc-700"}`}
+            className={`w-full ${
+              choice === false
+                ? "bg-yellow-500 text-black hover:bg-yellow-600"
+                : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
+            }`}
           >
-            No, not right now
+            No, I&apos;ll pass for now
           </Button>
         </div>
-        <div className="flex gap-2">
+        <div className="mt-6 flex gap-2">
           {onPrev && (
             <Button type="button" variant="outline" onClick={onPrev}>
               Back
             </Button>
           )}
           <Button
+            type="button"
             onClick={handleSubmit}
             className="w-full bg-zinc-700 text-white hover:bg-zinc-600"
-            disabled={choice === null || isLoading}
+            disabled={choice === null}
           >
-            {isLoading ? (
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            ) : null}
             Continue
           </Button>
         </div>
@@ -254,40 +255,23 @@ export const LeaderQuestionStep: React.FC<StepProps> = ({ onNext, onPrev }) => {
   );
 };
 
-export const ClaimSpaceStep: React.FC<StepProps> = ({ onNext, onPrev }) => {
-  const [spaceName, setSpaceName] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-
-  // Mock search results
-  const mockSpaces = [
-    "Computer Science Association",
-    "Gaming Club",
-    "Art Society",
-  ];
-  const [searchTerm, setSearchTerm] = useState("");
-  const filteredSpaces = mockSpaces.filter((s) =>
-    s.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+export const ClaimSpaceStep: React.FC<StepProps> = ({
+  onNext,
+  onPrev,
+  setCompletedSteps,
+}) => {
+  const handleStepComplete = useCallback((step: OnboardingStepName) => {
+    setCompletedSteps?.(prev => [...prev, step]);
+  }, [setCompletedSteps]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!spaceName) return;
-    setIsLoading(true);
     try {
-      // const functions = getFunctions();
-      // const claimSpace = httpsCallable(functions, 'onboardingClaimSpace');
-      // const { data } = await claimSpace({ spaceName });
-      // const { verificationRequired } = data as any;
-      const verificationRequired = true; // Mocking
-      logger.info("Claiming space:", { spaceName, verificationRequired });
-      if (verificationRequired) {
-        onNext(3.5); // Go to pending notice
-      } else {
-        onNext(4); // Go to academic card
-      }
+      logger.info("Saving space claims");
+      onNext();
+      handleStepComplete("builder");
     } catch (error) {
-      logger.error("Failed to save space claim", error);
-      setIsLoading(false);
+      logger.error("Failed to save space claims", error);
     }
   };
 
@@ -296,46 +280,13 @@ export const ClaimSpaceStep: React.FC<StepProps> = ({ onNext, onPrev }) => {
       <CardHeader>
         <CardTitle className="text-white">Claim Your Space</CardTitle>
         <CardDescription className="text-zinc-400">
-          If you lead a club or organization, claim its Space on HIVE now.
-          You&apos;ll get tools to manage members, post events, and more.
+          Select the spaces you&apos;d like to lead
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-6">
-        <div className="space-y-2">
-          <Label htmlFor="search" className="text-zinc-300">
-            Search for existing spaces
-          </Label>
-          <Input
-            id="search"
-            placeholder="e.g. 'Engineering Student Society'"
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="bg-zinc-800 border-zinc-700"
-          />
-          <div className="pt-2 space-y-2">
-            {filteredSpaces.map((space) => (
-              <div
-                key={space}
-                className="p-3 bg-zinc-800 rounded-md text-white text-sm"
-              >
-                {space}
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className="text-center text-zinc-500 text-sm">or</div>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="new-space" className="text-zinc-300">
-              Request a new space
-            </Label>
-            <Input
-              id="new-space"
-              value={spaceName}
-              onChange={(e) => setSpaceName(e.target.value)}
-              className="bg-zinc-800 border-zinc-700"
-              placeholder="Your Organization Name"
-              required
-            />
+      <CardContent>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="space-y-4">
+            {/* Space list will be populated here */}
           </div>
           <div className="flex gap-2">
             {onPrev && (
@@ -346,12 +297,8 @@ export const ClaimSpaceStep: React.FC<StepProps> = ({ onNext, onPrev }) => {
             <Button
               type="submit"
               className="w-full bg-yellow-500 text-black hover:bg-yellow-600"
-              disabled={!spaceName || isLoading}
             >
-              {isLoading ? (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              ) : null}
-              Request Space
+              Continue
             </Button>
           </div>
         </form>
@@ -360,70 +307,80 @@ export const ClaimSpaceStep: React.FC<StepProps> = ({ onNext, onPrev }) => {
   );
 };
 
-export const PendingNoticeStep: React.FC<StepProps> = ({ onNext, _onPrev }) => {
+export const PendingNoticeStep: React.FC<StepProps> = ({
+  onNext,
+  onPrev: _onPrev,
+  setCompletedSteps,
+}) => {
+  const handleStepComplete = useCallback((step: OnboardingStepName) => {
+    setCompletedSteps?.(prev => [...prev, step]);
+  }, [setCompletedSteps]);
+
+  const handleSubmit = async () => {
+    try {
+      logger.info("Proceeding from pending notice");
+      onNext();
+      handleStepComplete("builder");
+    } catch (error) {
+      logger.error("Failed to proceed from pending notice", error);
+    }
+  };
+
   return (
     <Card className="w-full max-w-lg bg-zinc-900 border-zinc-800">
       <CardHeader>
-        <CardTitle className="text-white">Verification Pending</CardTitle>
+        <CardTitle className="text-white">Request Pending</CardTitle>
         <CardDescription className="text-zinc-400">
-          Our team will review your request to claim this Space. You&apos;ll be
-          notified once it&apos;s approved.
+          Your space leadership request is being reviewed
         </CardDescription>
       </CardHeader>
       <CardContent>
         <Button
-          onClick={() => onNext(4)}
+          onClick={handleSubmit}
           className="w-full bg-yellow-500 text-black hover:bg-yellow-600"
         >
-          Continue Onboarding
+          Continue
         </Button>
       </CardContent>
     </Card>
   );
 };
 
-export const AcademicCardStep: React.FC<StepProps> = ({ onNext }) => {
-  const handleSubmit = async (data: {
-    majorId: string;
-    graduationYear: string;
-    isFirstYear: boolean;
-  }) => {
-    try {
-      // const functions = getFunctions();
-      // const saveAcademicInfo = httpsCallable(functions, 'onboardingSaveAcademicInfo');
-      // await saveAcademicInfo(data);
-      logger.info("Saving academic info:", data);
-      onNext();
-    } catch (error) {
-      logger.error("Failed to save academic info", error);
-    }
+export const AcademicCardStep: React.FC<StepProps> = ({
+  onNext,
+  setCompletedSteps,
+}) => {
+  const handleStepComplete = useCallback((step: OnboardingStepName) => {
+    setCompletedSteps?.(prev => [...prev, step]);
+  }, [setCompletedSteps]);
+
+  const handleSubmit = async (data: Record<string, unknown> | null) => {
+    logger.info("Saving academic card:", data);
+    onNext();
+    handleStepComplete("academics");
   };
 
   return <UIAcademicCardStep onSubmit={handleSubmit} />;
 };
 
-export const AvatarUploadStep: React.FC<StepProps> = ({ onNext }) => {
-  const handleSubmit = async (file: File | null) => {
-    if (!file) {
-      logger.info("Skipping avatar upload");
-      onNext();
-      return;
-    }
-    try {
-      logger.info("Uploading avatar:", file.name);
-      // const functions = getFunctions();
-      // const uploadAvatar = httpsCallable(functions, 'onboardingUploadAvatar');
-      // const storagePath = (await uploadAvatar({ fileName: file.name, contentType: file.type })).data.path;
-      // await uploadBytes(ref(storage, storagePath), file);
-      onNext();
-    } catch (error) {
-      logger.error("Failed to upload avatar", error);
-    }
+export const AvatarUploadStep: React.FC<StepProps> = ({
+  onNext,
+  setCompletedSteps,
+}) => {
+  const handleStepComplete = useCallback((step: OnboardingStepName) => {
+    setCompletedSteps?.(prev => [...prev, step]);
+  }, [setCompletedSteps]);
+
+  const handleSubmit = async (data: Record<string, unknown> | null) => {
+    logger.info("Uploading avatar:", data);
+    onNext();
+    handleStepComplete("photo");
   };
 
   const handleSkip = () => {
     logger.info("Skipping avatar upload");
     onNext();
+    handleStepComplete("photo");
   };
 
   return <UIAvatarUploadStep onSubmit={handleSubmit} onSkip={handleSkip} />;
@@ -432,35 +389,39 @@ export const AvatarUploadStep: React.FC<StepProps> = ({ onNext }) => {
 export const InterestsStep: React.FC<StepProps> = ({
   onNext,
   onPrev: _onPrev,
+  setCompletedSteps,
 }) => {
-  const handleSubmit = async (interests: string[]) => {
-    try {
-      // const functions = getFunctions();
-      // const saveInterests = httpsCallable(functions, 'onboardingSaveInterests');
-      // await saveInterests({ interests });
-      logger.info("Saving interests:", interests);
-      onNext();
-    } catch (error) {
-      logger.error("Failed to save interests", error);
-    }
-  };
+  const handleStepComplete = useCallback((step: OnboardingStepName) => {
+    setCompletedSteps?.(prev => [...prev, step]);
+  }, [setCompletedSteps]);
 
-  const handleSkip = () => {
-    logger.info("Skipping interests step");
+  const handleSubmit = async (data: Record<string, unknown> | null) => {
+    logger.info("Saving interests:", data);
     onNext();
+    handleStepComplete("academics");
   };
 
-  return <UIInterestsStep onSubmit={handleSubmit} onSkip={handleSkip} />;
+  return <UIInterestsStep onSubmit={handleSubmit} />;
 };
 
 export const OnboardingCompleteStep: React.FC<StepProps> = ({
   onNext,
-  user,
+  user: _user,
+  setCompletedSteps,
 }) => {
-  const handleComplete = () => {
-    logger.info("Onboarding complete for user:", user.uid);
-    onNext();
+  const handleStepComplete = useCallback((step: OnboardingStepName) => {
+    setCompletedSteps?.(prev => [...prev, step]);
+  }, [setCompletedSteps]);
+
+  const handleSubmit = async () => {
+    try {
+      logger.info("Completing onboarding");
+      onNext();
+      handleStepComplete("legal");
+    } catch (error) {
+      logger.error("Failed to complete onboarding", error);
+    }
   };
 
-  return <UIOnboardingCompleteStep onComplete={handleComplete} />;
+  return <UIOnboardingCompleteStep onSubmit={handleSubmit} />;
 };

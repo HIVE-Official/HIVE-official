@@ -86,7 +86,7 @@ try {
   );
 
   // Create mock instances for development
-  dbAdmin = {
+  const mockDb = {
     collection: (path: string) => ({
       get: async () => {
         console.log(
@@ -123,9 +123,9 @@ try {
         },
       }),
     }),
-  } as admin.firestore.Firestore;
+  };
 
-  authAdmin = {
+  const mockAuth = {
     verifyIdToken: async (_token: string) => {
       console.log(`🔄 Mock Firebase call: verifyIdToken() - development mode`);
       throw new Error(
@@ -140,7 +140,10 @@ try {
         `Firebase Auth not configured for ${currentEnvironment}.`
       );
     },
-  } as admin.auth.Auth;
+  };
+
+  dbAdmin = mockDb as unknown as admin.firestore.Firestore;
+  authAdmin = mockAuth as unknown as admin.auth.Auth;
 }
 
 export { dbAdmin, authAdmin };

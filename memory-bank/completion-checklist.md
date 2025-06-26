@@ -22,6 +22,22 @@ A comprehensive specification for building the HIVE social platform. This docume
 
 ---
 
+## 🚦 Feature Validation Gateway
+
+*No feature is "done" until it passes this gateway. A feature is not complete when it is coded, but when it is **validated** against its core hypothesis.*
+
+### **Validating: EPIC 1 - The First-Time User Experience**
+**User Story:** As a new UB student, I want a seamless, multi-step process to create an account, establish my identity, and signal my leadership interests, so I can quickly and effectively join the HIVE community.
+
+| ID            | Type       | Hypothesis / Goal                               | Task / Decision Description                                                                | Validation Metric / Evidence                                           | Status |
+|:--------------|:-----------|:------------------------------------------------|:-------------------------------------------------------------------------------------------|:-----------------------------------------------------------------------|:-------|
+| **ONB-VAL-01**  | **VALIDATE** | The onboarding flow is functionally complete.   | **TEST:** Can a user, on `staging`, complete the entire flow from `/auth` to `/feed` without error? | A successful end-to-end video recording.                               | ☐      |
+| **ONB-VAL-02**  | **VALIDATE** | The flow is efficient and frictionless.         | **MEASURE:** Instrument analytics for each step of the onboarding funnel.                  | Onboarding completion rate > 95% (from step 1 to `onboarding.complete`). | ☐      |
+| **ONB-VAL-03**  | **VALIDATE** | The UI is polished and meets brand standards.   | **REVIEW:** Conduct a full visual and UX review of the live flow on mobile and desktop.    | Human partner signs off on UI/UX quality.                              | ☐      |
+| **ONB-VAL-04**  | **VALIDATE** | The feature is robust and handles edge cases.   | **TEST:** Confirm error states (e.g., invalid email, expired link) work as designed.       | Error states are documented and verified via tests or video.           | ☐      |
+
+---
+
 ## 🏗️ Architectural Foundation Documents
 
 Before implementing any feature, these foundational documents must exist and be referenced:
