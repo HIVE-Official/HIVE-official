@@ -1,5 +1,5 @@
 // eslint-disable-next-line storybook/no-renderer-packages
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Star, Award, CheckCircle, User, Calendar, BookOpen, Users, Trophy, Shield, Heart } from 'lucide-react'
 
 import { Badge } from '../components/badge'

@@ -6,7 +6,7 @@ import { cn } from "../lib/utils"
 
 const avatarVariants = cva(
   // Base styles following HIVE brand guidelines - circular avatars
-  "relative inline-flex shrink-0 overflow-hidden rounded-full border-2 border-border bg-surface-02 transition-all duration-[180ms] ease-[cubic-bezier(0.25,0.46,0.45,0.94)]",
+  "relative inline-flex shrink-0 overflow-hidden rounded-full border-2 border-border bg-surface-02 transition-all duration-fast ease-smooth",
   {
     variants: {
       size: {
@@ -19,9 +19,10 @@ const avatarVariants = cva(
       },
       status: {
         none: "",
-        online: "ring-2 ring-[#22C55E] ring-offset-2 ring-offset-background",
-        away: "ring-2 ring-[#F59E0B] ring-offset-2 ring-offset-background", 
-        offline: "ring-2 ring-surface-03 ring-offset-2 ring-offset-background",
+        // HIVE brand: using monochrome status indicators instead of colors
+        online: "ring-2 ring-accent ring-offset-2 ring-offset-background", // Gold for active/online
+        away: "ring-2 ring-muted ring-offset-2 ring-offset-background", // Muted for away/idle
+        offline: "ring-2 ring-surface-03 ring-offset-2 ring-offset-background", // Surface for offline
       },
       interactive: {
         true: "cursor-pointer hover:scale-105 hover:border-accent/50 hover:ring-2 hover:ring-accent/20 hover:ring-offset-2 hover:ring-offset-background",
@@ -92,17 +93,18 @@ const AvatarPresence = React.forwardRef<
     lg: "h-3 w-3",
   }
 
+  // HIVE brand: monochrome presence indicators
   const presenceColor = {
-    online: "bg-[#22C55E]",
-    away: "bg-[#F59E0B]", 
-    offline: "bg-surface-03",
+    online: "bg-accent", // Gold for active/online users
+    away: "bg-muted", // Muted gray for away/idle
+    offline: "bg-surface-03", // Surface for offline
   }
 
   return (
     <div
       ref={ref}
       className={cn(
-        "absolute bottom-0 right-0 rounded-full border-2 border-background",
+        "absolute bottom-0 right-0 rounded-full border-2 border-background transition-colors duration-fast ease-smooth",
         presenceSize[size],
         presenceColor[status],
         className

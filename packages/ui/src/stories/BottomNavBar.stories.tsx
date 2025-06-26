@@ -1,5 +1,5 @@
 // eslint-disable-next-line storybook/no-renderer-packages
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { BottomNavBar } from '../components/BottomNavBar';
 import { Home, Compass, MessageSquare } from 'lucide-react';
 import * as React from 'react';

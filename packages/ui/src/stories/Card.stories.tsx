@@ -1,5 +1,5 @@
 // eslint-disable-next-line storybook/no-renderer-packages
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/card';
 
 const meta: Meta<typeof Card> = {

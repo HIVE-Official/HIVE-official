@@ -1,0 +1,20 @@
+# Build outputs and distribution files
+dist/
+build/
+storybook-static/
+.turbo/
+coverage/
+
+# Node modules
+node_modules/
+
+# Config files
+*.config.js
+*.config.mjs
+*.config.ts
+
+# Generated files
+tsconfig.tsbuildinfo
+
+# Test files
+test-results/ 
