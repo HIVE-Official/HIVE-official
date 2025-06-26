@@ -9,9 +9,9 @@
     ".": "./src/index.ts"
   },
   "scripts": {
-    "build": "npx tsc",
-    "lint": "npx eslint . --max-warnings 10",
-    "typecheck": "npx tsc --noEmit"
+    "build": "tsc",
+    "lint": "eslint . --max-warnings 10",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "i18next": "^25.2.1",
@@ -30,5 +30,6 @@
   },
   "peerDependencies": {
     "react": "^18.0.0"
-  }
+  },
+  "packageManager": "pnpm@9.1.1"
 }

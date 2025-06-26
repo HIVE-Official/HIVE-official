@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "build": "tsup src/index.ts --format cjs,esm --dts",
-    "lint": "npx eslint . --max-warnings 15",
+    "lint": "eslint . --max-warnings 15",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
@@ -30,5 +30,6 @@
   },
   "overrides": {
     "eslint": "$eslint"
-  }
+  },
+  "packageManager": "pnpm@9.1.1"
 }

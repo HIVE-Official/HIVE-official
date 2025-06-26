@@ -3,7 +3,7 @@
   "extends": "@hive/typescript-config/base.json",
   "compilerOptions": {
     "outDir": "dist",
-    "rootDir": "./src",
+
     "composite": true,
     "noEmit": false,
     "jsx": "react-jsx",
@@ -16,6 +16,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "types": ["node", "react", "react-dom", "vitest/globals"]
+    ,"baseUrl": "./"
   },
   "include": [
     "src/**/*.ts",

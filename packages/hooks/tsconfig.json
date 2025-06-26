@@ -2,7 +2,6 @@
   "extends": "@hive/typescript-config/base.json",
   "compilerOptions": {
     "outDir": "./dist",
-    "rootDir": "./src",
     "composite": true,
     "tsBuildInfoFile": "./dist/.tsbuildinfo",
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
@@ -19,7 +18,8 @@
       {
         "name": "next"
       }
-    ]
+    ],
+    "baseUrl": "./"
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist"],

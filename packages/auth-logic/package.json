@@ -15,7 +15,7 @@
   "scripts": {
     "build": "tsup src/index.ts --format cjs,esm --dts --clean",
     "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
-    "lint": "npx eslint . --max-warnings 10",
+    "lint": "eslint . --max-warnings 10",
     "test": "echo 'skipping tests'",
     "clean": "rm -rf dist .turbo"
   },
@@ -38,5 +38,6 @@
   },
   "peerDependencies": {
     "react": "^18.0.0"
-  }
+  },
+  "packageManager": "pnpm@9.1.1"
 }

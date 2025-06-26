@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "npx next dev --port 3001",
-    "build": "npx next build",
-    "start": "npx next start --port 3001",
-    "lint": "npx eslint . --max-warnings 10",
+    "dev": "next dev --port 3001",
+    "build": "next build",
+    "start": "next start --port 3001",
+    "lint": "eslint . --max-warnings 10",
     "test": "echo 'skipping tests'",
     "test:e2e": "playwright test"
   },
@@ -43,5 +43,6 @@
     "msw": "^2.10.2",
     "typescript": "^5.8.3",
     "vitest": "^3.2.4"
-  }
+  },
+  "packageManager": "pnpm@9.1.1"
 }

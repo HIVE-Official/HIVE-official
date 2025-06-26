@@ -12,9 +12,9 @@
     }
   },
   "scripts": {
-    "build": "npx tsc",
-    "lint": "npx eslint . --max-warnings 10",
-    "typecheck": "npx tsc --noEmit"
+    "build": "tsc",
+    "lint": "eslint . --max-warnings 10",
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "@hive/eslint-config": "workspace:*",
@@ -25,5 +25,6 @@
   },
   "overrides": {
     "eslint": "$eslint"
-  }
+  },
+  "packageManager": "pnpm@9.1.1"
 }
