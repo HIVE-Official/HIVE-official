@@ -1,15 +1,11 @@
-import { Suspense } from "react";
+import { redirect } from 'next/navigation';
 import type { Metadata } from "next";
-import AuthPageClient from "./AuthPageClient";
 
 export const metadata: Metadata = {
   title: "Welcome to HIVE",
 };
 
 export default function AuthPage() {
-  return (
-    <Suspense>
-      <AuthPageClient />
-    </Suspense>
-  );
+  // Redirect to the new focused auth flow
+  redirect('/auth/choose');
 }

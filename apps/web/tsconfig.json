@@ -10,6 +10,7 @@
     "skipLibCheck": true,
     "strict": false,
     "noEmit": false,
+    "composite": true,
     "incremental": true,
     "module": "esnext",
     "esModuleInterop": true,
@@ -17,7 +18,6 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "composite": true,
     "plugins": [
       {
         "name": "next"
@@ -46,15 +46,5 @@
   "exclude": [
     "node_modules",
     "dist"
-  ],
-  "references": [
-    { "path": "../../packages/ui" },
-    { "path": "../../packages/core" },
-    { "path": "../../packages/auth-logic" },
-    { "path": "../../packages/hooks" },
-    { "path": "../../packages/validation" },
-    { "path": "../../packages/utilities" },
-    { "path": "../../packages/api-client" },
-    { "path": "../../packages/analytics" }
   ]
 }

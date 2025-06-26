@@ -73,19 +73,19 @@
   body {
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
-    font-family: var(--font-body); /* CORRECTED: Geist Sans Variable */
+    font-family: var(--font-sans);
     line-height: 1.5;
     font-feature-settings: "cv11", "ss01";
   }
 
-  /* CORRECTED: Typography classes */
+  /* Typography classes */
   h1,
   h2,
   h3,
   h4,
   h5,
   h6 {
-    font-family: var(--font-display); /* Space Grotesk Variable */
+    font-family: var(--font-display);
     font-weight: 600;
     line-height: 1.2;
     letter-spacing: -0.02em;
@@ -114,14 +114,19 @@
   p,
   span,
   div {
-    font-family: var(--font-body); /* Geist Sans Variable */
+    font-family: var(--font-sans);
   }
 
-  /* CORRECTED: Focus ring system */
+  code,
+  pre {
+    font-family: var(--font-mono);
+  }
+
+  /* Focus ring system */
   .focus-visible:focus-visible {
-    outline: 2px solid var(--accent);
+    outline: 2px solid hsl(var(--ring));
     outline-offset: 2px;
-    transition: outline var(--motion-fast) var(--motion-easing);
+    transition: outline 150ms cubic-bezier(0.4, 0, 0.2, 1);
   }
 }
 

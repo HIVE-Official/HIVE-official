@@ -132,3 +132,5 @@ firebase/serviceAccountKey.json
 
 # Firebase hosting cache
 .firebase/hosting.*/
+
+*storybook.log

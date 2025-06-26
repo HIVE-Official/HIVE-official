@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
-import { GeistSans } from "geist/font/sans";
-// Google Fonts removed due to offline build constraints
 import { Providers } from "./providers";
+import { fonts } from "./fonts";
 import "./globals.css";
 
 // CORRECTED: Space Grotesk from Google Fonts for display text (HIVE Brand System v1.0)
@@ -22,11 +21,11 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${GeistSans.variable} dark`}
+      className={`${fonts.sans} ${fonts.display} ${fonts.mono} dark`}
       suppressHydrationWarning
     >
       <body
-        className="font-sans bg-background text-foreground antialiased"
+        className="min-h-screen bg-background font-sans antialiased"
         suppressHydrationWarning
       >
         <Providers>{children}</Providers>

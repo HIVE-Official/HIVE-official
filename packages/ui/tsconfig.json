@@ -9,6 +9,7 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "noEmit": false,
+    "composite": true,
     "declaration": true,
     "declarationMap": true,
     "outDir": "dist",
@@ -19,7 +20,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "react-jsx",
-    "composite": true,
+
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
@@ -27,12 +28,7 @@
     "types": ["node", "react", "react-dom"]
   },
   "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx"
+    "src/**/*"
   ],
-  "exclude": ["node_modules", "dist", "**/*.stories.tsx", "**/*.test.tsx"],
-  "references": [
-    { "path": "../core" },
-    { "path": "../tokens" }
-  ]
+  "exclude": ["node_modules", "dist", "**/*.test.*", "**/*.spec.*"]
 } 
