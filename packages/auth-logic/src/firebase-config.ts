@@ -1,7 +1,7 @@
 import { initializeApp, getApps } from "firebase/app";
 import type { FirebaseApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import type { Auth } from "firebase/auth";
+import type { Auth, User } from "firebase/auth";
 import { logger } from "@hive/core";
 
 const firebaseConfig = {
@@ -32,12 +32,28 @@ if (!isDevWithoutFirebase) {
   app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
   auth = getAuth(app);
 } else {
-  // In development without Firebase config, create mock auth object with proper type assertion
+  // In development without Firebase config, create comprehensive mock auth object
   logger.warn("🔥 Firebase not configured - using mock auth for development");
+  
+  // Create a complete mock auth object with all necessary methods
   auth = {
     currentUser: null,
-    onAuthStateChanged: () => () => {},
+    onAuthStateChanged: (callback: (user: User | null) => void) => {
+      // Immediately call with null user (unauthenticated)
+      setTimeout(() => callback(null), 0);
+      // Return unsubscribe function
+      return () => {};
+    },
     signOut: () => Promise.resolve(),
+    signInWithCustomToken: () => Promise.reject(new Error("Mock auth - not implemented")),
+    signInWithEmailAndPassword: () => Promise.reject(new Error("Mock auth - not implemented")),
+    createUserWithEmailAndPassword: () => Promise.reject(new Error("Mock auth - not implemented")),
+    sendPasswordResetEmail: () => Promise.reject(new Error("Mock auth - not implemented")),
+    updateProfile: () => Promise.reject(new Error("Mock auth - not implemented")),
+    // Add any other auth methods that might be used
+    app: null,
+    name: "mock-auth",
+    config: firebaseConfig,
   } as unknown as Auth;
 }
 
