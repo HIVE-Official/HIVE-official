@@ -264,7 +264,7 @@ export default function CampusSelectionPage() {
 
                 <Button
                   onClick={handleContinue}
-                  className="w-full bg-accent hover:bg-accent-600 text-background font-semibold py-3 font-display"
+                  className="w-full bg-foreground hover:bg-foreground/90 text-background font-semibold py-3 font-display"
                   disabled={isLoading}
                 >
                   {isLoading

@@ -37,7 +37,7 @@ export function SpaceFilterPills({
           className={cn(
             "rounded-full px-4 py-1.5 text-sm font-medium transition-all duration-200 whitespace-nowrap",
             activeFilter === filterItem.type
-              ? "bg-yellow-400/10 text-yellow-400 hover:bg-yellow-400/20 border border-yellow-400/20"
+              ? "bg-accent/10 text-accent hover:bg-accent/20 border border-accent/20"
               : "text-neutral-400 hover:bg-white/5 hover:text-white border border-transparent"
           )}
         >

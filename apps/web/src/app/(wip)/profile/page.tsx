@@ -12,7 +12,7 @@ export default async function ProfilePage() {
   const user = await getCurrentUser();
 
   if (!user) {
-    redirect("/auth/login");
+    redirect("/auth/email");
   }
 
   return (

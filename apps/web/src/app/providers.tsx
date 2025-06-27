@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ThemeProvider } from "next-themes";
 import { AuthProvider } from "@hive/auth-logic";
+import { ToastProvider } from "@hive/ui";
 import { WelcomeMatProvider } from "@/components/welcome-mat-provider";
 
 export function Providers({ children }: { children: React.ReactNode }) {
@@ -18,7 +19,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
         disableTransitionOnChange
       >
         <AuthProvider>
+          <ToastProvider>
           <WelcomeMatProvider>{children}</WelcomeMatProvider>
+          </ToastProvider>
         </AuthProvider>
       </ThemeProvider>
       <ReactQueryDevtools initialIsOpen={false} />

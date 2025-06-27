@@ -118,7 +118,7 @@ function AuthErrorContent() {
         >
           <Link href={recovery.href}>
             <Button
-              className="w-full bg-accent hover:bg-accent/90 text-background"
+              className="w-full bg-foreground hover:bg-foreground/90 text-background"
             >
               <RefreshCw className="w-4 h-4 mr-2" />
               {recovery.text}

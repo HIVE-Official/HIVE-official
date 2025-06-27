@@ -6,6 +6,6 @@ export const metadata: Metadata = {
 };
 
 export default function AuthPage() {
-  // Redirect to the new focused auth flow
-  redirect('/auth/choose');
+  // Redirect directly to email auth
+  redirect('/auth/email');
 }

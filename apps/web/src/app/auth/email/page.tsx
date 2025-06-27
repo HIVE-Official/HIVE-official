@@ -6,6 +6,7 @@ import { Button, Input, Label } from '@hive/ui'
 import { ArrowLeft, Mail, AlertCircle, CheckCircle } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { logger } from '@hive/core'
 
 export default function AuthEmailPage() {
   const [email, setEmail] = useState('')
@@ -17,7 +18,7 @@ export default function AuthEmailPage() {
 
   // Email validation - must end with .edu
   useEffect(() => {
-    const eduRegex = /^[^@]+@[^@]+\.edu$/i
+    const eduRegex = /^[^@]+@[^@]+\\.edu$/i
     setIsValid(eduRegex.test(email))
     setError('')
   }, [email])
@@ -67,17 +68,22 @@ export default function AuthEmailPage() {
     }
   }
 
+  const handleSkipToOnboarding = () => {
+    logger.info('Development mode: skipping to onboarding')
+    router.push('/onboarding/1')
+  }
+
   const getDomain = (email: string) => {
     const match = email.match(/@(.+)/)
     return match ? match[1] : ''
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <div className="flex flex-col items-center justify-center min-h-screen px-8 py-12">
+    <main className="min-h-screen bg-black text-white flex items-center justify-center p-4">
+      <div className="w-full max-w-md bg-zinc-900/95 border border-zinc-800 rounded-lg p-6">
         {/* Back Button */}
         <motion.div
-          className="self-start mb-8"
+          className="mb-6"
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
@@ -95,7 +101,7 @@ export default function AuthEmailPage() {
 
         {/* Header */}
         <motion.div
-          className="text-center mb-8 max-w-md"
+          className="text-center mb-8"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
@@ -104,10 +110,10 @@ export default function AuthEmailPage() {
             <Mail className="w-8 h-8 text-accent" />
           </div>
           
-          <h1 className="text-4xl font-bold font-display mb-4">
+          <h1 className="text-2xl font-bold font-display mb-2">
             Enter your .edu email
           </h1>
-          <p className="text-lg text-muted font-sans">
+          <p className="text-sm text-zinc-400 font-sans">
             We&apos;ll send you a magic link to sign in
           </p>
         </motion.div>
@@ -115,7 +121,7 @@ export default function AuthEmailPage() {
         {/* Email Form */}
         <motion.form
           onSubmit={handleSubmit}
-          className="w-full max-w-md space-y-6"
+          className="space-y-6"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
@@ -181,11 +187,7 @@ export default function AuthEmailPage() {
           <Button
             type="submit"
             disabled={!isValid || isSubmitting || countdown > 0}
-            className={`w-full ${
-              isValid && !isSubmitting && countdown === 0
-                ? 'bg-accent hover:bg-accent/90 text-background'
-                : ''
-            }`}
+            className="w-full font-display font-semibold tracking-tight"
           >
             {isSubmitting ? (
               <div className="flex items-center">
@@ -210,20 +212,27 @@ export default function AuthEmailPage() {
               {error}
             </motion.div>
           )}
-        </motion.form>
 
-        {/* Help Text */}
+          {/* Dev Skip Button */}
+          {process.env.NODE_ENV !== 'production' && (
         <motion.div
-          className="text-center mt-8 max-w-md"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.8 }}
         >
-          <p className="text-sm text-muted font-sans">
-            Need help? Make sure you&apos;re using your official university email address ending in .edu
-          </p>
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full mt-4 gap-2"
+                onClick={handleSkipToOnboarding}
+              >
+                <span className="w-4 h-4">🛠️</span>
+                Skip to Onboarding (Dev)
+              </Button>
         </motion.div>
+          )}
+        </motion.form>
       </div>
-    </div>
+    </main>
   )
 } 

@@ -1,86 +1,124 @@
 "use client";
 
-import { notFound, useRouter } from "next/navigation";
-import { useAuth } from "@hive/auth-logic";
-import { useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth, mockUser } from "@hive/auth-logic";
+import { logger } from "@hive/core";
+import type { OnboardingData } from "@hive/core";
 import { Loader2 } from "lucide-react";
-import type { AuthUser } from "@hive/auth-logic";
-import type { User as _User } from "@hive/core";
-import type { Timestamp as _Timestamp } from "firebase/firestore";
-
-// Import step components
-import {
-  DisplayNameStep,
-  LeaderQuestionStep,
-  ClaimSpaceStep,
-  PendingNoticeStep,
-  AcademicCardStep,
-  AvatarUploadStep,
-  InterestsStep,
-} from "@/components/onboarding/steps";
+import { useOnboardingStore } from '@/lib/stores/onboarding';
+import { DisplayNameAvatar } from '@/components/onboarding/steps/display-name-avatar';
+import { LeaderQuestion } from '@/components/onboarding/steps/leader-question';
+import { SpaceVerification } from '@/components/onboarding/steps/space-verification';
+import { AcademicCard } from '@/components/onboarding/steps/academic-card';
+import { Interests } from '@/components/onboarding/steps/interests';
 
 interface OnboardingStepClientProps {
-  params: {
-    step: string;
-  };
+  step: keyof typeof STEPS;
 }
 
-interface StepProps {
-  user: AuthUser;
-  onNext: (nextStep?: number) => void;
-  onPrev?: () => void;
-}
+const STEPS = {
+  '1': DisplayNameAvatar,
+  '2': LeaderQuestion,
+  '3': SpaceVerification,
+  '4': AcademicCard,
+  '5': Interests,
+} as const;
 
-const ONBOARDING_STEPS: { [key: number]: React.FC<StepProps> } = {
-  1: DisplayNameStep,
-  2: LeaderQuestionStep,
-  3: ClaimSpaceStep,
-  3.5: PendingNoticeStep,
-  4: AcademicCardStep,
-  5: AvatarUploadStep,
-  6: InterestsStep,
-};
-
-export default function OnboardingStepClient({ params }: OnboardingStepClientProps) {
+export function OnboardingStepClient({ step }: OnboardingStepClientProps) {
   const router = useRouter();
-  const { user: authUser, isLoading } = useAuth();
-  const stepNumber = parseFloat(params.step);
+  const { user, isLoading } = useAuth();
+  const { data: onboardingData } = useOnboardingStore();
 
-  useEffect(() => {
-    if (!isLoading && !authUser) {
-      router.push("/auth/check-email");
-    }
-  }, [authUser, isLoading, router]);
+  // Handle invalid step numbers
+  if (isNaN(parseInt(step)) || parseInt(step) < 1 || parseInt(step) > Object.keys(STEPS).length) {
+    router.push("/onboarding/1");
+    return null;
+  }
 
-  if (isLoading) {
+  // Skip auth check in development mode
+  if (!process.env.NEXT_PUBLIC_FIREBASE_API_KEY) {
+    const CurrentStep = STEPS[step as keyof typeof STEPS];
     return (
-      <div className="flex h-screen items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin" />
+      <div className="flex min-h-screen items-center justify-center p-4">
+        <CurrentStep />
       </div>
     );
   }
 
-  if (!authUser) {
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="h-8 w-8 animate-spin text-muted" />
+          <p className="text-muted">Loading your profile...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Redirect if not authenticated
+  if (!user) {
+    router.push("/auth/email");
     return null;
   }
 
-  const StepComponent = ONBOARDING_STEPS[stepNumber];
+  // Validation and routing logic
+  useEffect(() => {
+    // If no onboarding data, start from beginning
+    if (!onboardingData && step !== '1') {
+      router.replace('/onboarding/1');
+      return;
+    }
 
-  if (!StepComponent) {
-    notFound();
-  }
+    // Step-specific validation
+    switch (step) {
+      case '2':
+        if (!onboardingData?.fullName || !onboardingData?.handle) {
+          router.replace('/onboarding/1');
+        }
+        break;
+      case '3':
+        // Only show verification step if they are a student leader
+        if (!onboardingData?.isStudentLeader) {
+          router.replace('/onboarding/4');
+        }
+        break;
+      case '4':
+        if (!onboardingData?.fullName || !onboardingData?.handle) {
+          router.replace('/onboarding/1');
+        }
+        // If they're a leader, they must have selected a space
+        if (onboardingData?.isStudentLeader && !onboardingData?.spaceId) {
+          router.replace('/onboarding/2');
+        }
+        break;
+      case '5':
+        if (!onboardingData?.academicLevel || !onboardingData?.majors?.length) {
+          router.replace('/onboarding/4');
+        }
+        break;
+    }
+  }, [step, onboardingData, router]);
 
-  const handleNext = (nextStep?: number) => {
-    const next = nextStep ?? stepNumber + 1;
-    router.push(`/onboarding/${next}`);
+  const handleNext = async (nextStep?: number, data?: Partial<OnboardingData>) => {
+    const updatedData = { ...onboardingData, ...data };
+    // TODO: Save onboarding data to user profile
+    logger.info("Completing onboarding with data:", updatedData);
+    router.push("/onboarding/complete");
   };
 
   const handlePrev = () => {
-    const prev = stepNumber - 1;
-    if (prev >= 1) {
-      router.push(`/onboarding/${prev}`);
+    if (parseInt(step) > 1) {
+      router.push(`/onboarding/${parseInt(step) - 1}`);
     }
   };
 
-  return <StepComponent user={authUser} onNext={handleNext} onPrev={handlePrev} />;
+  const StepComponent = STEPS[step];
+  return (
+    <div className="flex min-h-screen items-center justify-center p-4">
+      <StepComponent />
+    </div>
+  );
 } 

@@ -1,10 +1,10 @@
 import { type Metadata } from "next";
-import OnboardingStepClient from "./onboarding-step-client";
+import { OnboardingStepClient } from './onboarding-step-client';
 
-interface OnboardingStepParams {
-  params: Promise<{
+interface OnboardingStepPageProps {
+  params: {
     step: string;
-  }>;
+  };
 }
 
 export const metadata: Metadata = {
@@ -12,7 +12,10 @@ export const metadata: Metadata = {
   description: "Complete your HIVE profile setup",
 };
 
-export default async function OnboardingStepPage({ params }: OnboardingStepParams) {
-  const { step } = await params;
-  return <OnboardingStepClient params={{ step }} />;
+export default function OnboardingStepPage({ params }: OnboardingStepPageProps) {
+  return (
+    <div className="flex min-h-screen items-center justify-center p-4">
+      <OnboardingStepClient step={params.step as any} />
+    </div>
+  );
 }

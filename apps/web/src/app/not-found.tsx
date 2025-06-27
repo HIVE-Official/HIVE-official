@@ -6,35 +6,87 @@ import Link from "next/link";
 import { Button } from "@hive/ui";
 // import { useRouter } from "next/navigation"; // Unused import removed
 import * as React from "react";
+import { Home, ArrowLeft } from 'lucide-react'
+import { motion } from 'framer-motion'
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-4">
-      <div className="text-center max-w-md">
-        <h1 className="text-display font-display font-semibold text-accent mb-6">404</h1>
-        <h2 className="text-h2 font-display font-semibold mb-4">
-          Page Not Found
-        </h2>
-        <p className="text-body font-sans text-muted mb-8 leading-relaxed">
-          Sorry, we couldn&apos;t find the page you&apos;re looking for. It might
-          have been moved, deleted, or you entered the wrong URL.
-        </p>
-        <div className="space-y-4">
+    <div className="min-h-screen bg-background flex items-center justify-center p-4">
+      <motion.div
+        className="text-center max-w-md"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+      >
+        {/* 404 Number */}
+        <motion.div
+          className="text-8xl font-display font-bold text-accent mb-4"
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ delay: 0.2, duration: 0.5, type: "spring" }}
+        >
+          404
+        </motion.div>
+
+        {/* Main Message */}
+        <motion.h1
+          className="text-2xl font-display font-semibold text-foreground mb-4"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4, duration: 0.5 }}
+        >
+          jacob needs to fix this
+        </motion.h1>
+
+        {/* Subtitle */}
+        <motion.p
+          className="text-muted font-sans mb-8"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6, duration: 0.5 }}
+        >
+          This page doesn&apos;t exist yet. Jacob is working on it.
+        </motion.p>
+
+        {/* Action Buttons */}
+        <motion.div
+          className="space-y-4"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.8, duration: 0.5 }}
+        >
           <Link href="/">
-            <Button variant="primary-white" size="lg" className="w-full">
+            <Button className="w-full bg-foreground hover:bg-foreground/90 text-background">
+              <Home className="w-4 h-4 mr-2" />
               Go Home
             </Button>
           </Link>
-          <div className="text-caption font-sans text-muted">
-            <Link 
-              href="/campus" 
-              className="hover:text-foreground transition-colors duration-fast ease-smooth underline-offset-4 hover:underline"
-            >
-              Or explore your campus
-            </Link>
-          </div>
-        </div>
-      </div>
+          
+          <Button
+            variant="outline"
+            className="w-full"
+            onClick={() => window.history.back()}
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Go Back
+          </Button>
+        </motion.div>
+
+        {/* Fun Detail */}
+        <motion.div
+          className="mt-8 p-4 bg-surface-01 border border-border rounded-lg"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1, duration: 0.5 }}
+        >
+          <p className="text-sm text-muted font-sans">
+            <strong>Jacob&apos;s TODO:</strong><br />
+            • Build this page<br />
+            • Add proper routing<br />
+            • Make it awesome
+          </p>
+        </motion.div>
+      </motion.div>
     </div>
   );
 }

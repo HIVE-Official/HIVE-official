@@ -3,9 +3,10 @@
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { Button } from '@hive/ui'
-import { ArrowLeft, Mail, RefreshCw, ExternalLink } from 'lucide-react'
-import { useState, useEffect } from 'react'
+import { ArrowLeft, Mail, RefreshCw, ExternalLink, AlertCircle } from 'lucide-react'
+import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { logger } from '@hive/core'
 
 interface CountdownRingProps {
   timeLeft: number
@@ -54,66 +55,80 @@ function CountdownRing({ timeLeft, totalTime }: CountdownRingProps) {
   )
 }
 
-export default function AuthVerifyPage() {
-  const [timeLeft, setTimeLeft] = useState(60) // 60 seconds initial countdown
-  const [canResend, setCanResend] = useState(false)
-  const [isResending, setIsResending] = useState(false)
-  const [isPolling, setIsPolling] = useState(true)
-  const [error, setError] = useState('')
-  
+function VerifyContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const email = searchParams.get('email') || ''
-  const domain = email.split('@')[1] || ''
+  const [verificationStatus, setVerificationStatus] = useState<'pending' | 'success' | 'error'>('pending')
+  const [errorMessage, setErrorMessage] = useState<string>('')
+  const [timeLeft, setTimeLeft] = useState(300) // 5 minutes
+  const [canResend, setCanResend] = useState(false)
+
+  const oobCode = searchParams.get('oobCode')
+  const email = searchParams.get('email')
+
+  // Handle magic link verification on page load
+  useEffect(() => {
+    if (oobCode && email) {
+      void handleVerification()
+    }
+  }, [oobCode, email])
 
   // Countdown timer
   useEffect(() => {
     if (timeLeft > 0) {
-      const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000)
-      return () => clearTimeout(timer)
-    } else {
+      const timer = setInterval(() => {
+        setTimeLeft((prev) => {
+          if (prev <= 1) {
       setCanResend(true)
+            return 0
+          }
+          return prev - 1
+        })
+      }, 1000)
+
+      return () => clearInterval(timer)
     }
   }, [timeLeft])
 
-  // Polling for verification status
-  useEffect(() => {
-    if (!isPolling) return
+  const handleVerification = async () => {
+    if (!oobCode || !email) {
+      setVerificationStatus('error')
+      setErrorMessage('Missing verification parameters')
+      return
+    }
 
-    const pollVerification = async () => {
       try {
-        const response = await fetch(`/api/auth/email/status?email=${encodeURIComponent(email)}`)
+      const response = await fetch('/api/auth/email/verify', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          url: `${window.location.origin}/auth/verify?oobCode=${oobCode}&email=${email}`,
+        }),
+      })
+
         if (response.ok) {
-          const { verified } = await response.json()
-          if (verified) {
-            setIsPolling(false)
+        setVerificationStatus('success')
+        // Redirect to onboarding after a short delay
+        setTimeout(() => {
             router.push('/onboarding')
-            return
-          }
-        }
-      } catch {
-        setError('Network error. Please try again.')
+        }, 2000)
+      } else {
+        const error = await response.json()
+        setVerificationStatus('error')
+        setErrorMessage(error.message || 'Verification failed')
       }
+    } catch (error) {
+      logger.error('Verification error:', error)
+      setVerificationStatus('error')
+      setErrorMessage('Network error occurred')
     }
-
-    // Poll every 4 seconds
-    const interval = setInterval(pollVerification, 4000)
-    
-    // Stop polling after 5 minutes
-    const timeout = setTimeout(() => {
-      setIsPolling(false)
-      setError('Verification timeout. Please try again.')
-    }, 5 * 60 * 1000)
-
-    return () => {
-      clearInterval(interval)
-      clearTimeout(timeout)
-    }
-  }, [email, router, isPolling])
+  }
 
   const handleResend = async () => {
-    setIsResending(true)
-    setError('')
+    if (!email) return
     
     try {
       const response = await fetch('/api/auth/email/start', {
@@ -125,184 +140,179 @@ export default function AuthVerifyPage() {
       })
 
       if (response.ok) {
-        const { timeoutMs } = await response.json()
-        setTimeLeft(Math.floor(timeoutMs / 1000))
+        setTimeLeft(300)
         setCanResend(false)
-        setIsPolling(true)
+        setVerificationStatus('pending')
+        setErrorMessage('')
       } else {
-        const errorData = await response.json()
-        setError(errorData.message || 'Failed to resend magic link')
+        const error = await response.json()
+        setErrorMessage(error.message || 'Failed to resend email')
       }
-    } catch {
-      setError('Network error. Please try again.')
-    } finally {
-      setIsResending(false)
+    } catch (error) {
+      logger.error('Resend error:', error)
+      setErrorMessage('Network error occurred')
     }
   }
 
-  const getEmailProvider = (domain: string) => {
-    if (domain.includes('gmail')) return 'Gmail'
-    if (domain.includes('outlook') || domain.includes('hotmail')) return 'Outlook'
-    if (domain.includes('yahoo')) return 'Yahoo'
-    return domain
-  }
-
-  const getEmailUrl = (domain: string) => {
-    if (domain.includes('gmail')) return 'https://mail.google.com'
-    if (domain.includes('outlook') || domain.includes('hotmail')) return 'https://outlook.live.com'
-    if (domain.includes('yahoo')) return 'https://mail.yahoo.com'
-    return `https://${domain}`
-  }
-
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <div className="flex flex-col items-center justify-center min-h-screen px-8 py-12">
-        {/* Back Button */}
+    <div className="min-h-screen bg-background flex items-center justify-center p-4">
         <motion.div
-          className="self-start mb-8"
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5 }}
+        className="max-w-md w-full"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
         >
-          <Link href="/auth/email">
-            <Button
-              variant="ghost"
-              className="text-muted hover:text-foreground group"
-            >
-              <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform duration-200" />
-              Back
-            </Button>
-          </Link>
-        </motion.div>
-
         {/* Header */}
+        <div className="text-center mb-8">
         <motion.div
-          className="text-center mb-8 max-w-md"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-        >
-          <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-6">
+            className="w-16 h-16 bg-surface-01 rounded-full flex items-center justify-center mx-auto mb-4"
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 0.2, duration: 0.5, type: "spring" }}
+          >
+            {verificationStatus === 'success' ? (
             <Mail className="w-8 h-8 text-accent" />
-          </div>
+            ) : verificationStatus === 'error' ? (
+              <AlertCircle className="w-8 h-8 text-red-500" />
+            ) : (
+              <Mail className="w-8 h-8 text-muted" />
+            )}
+          </motion.div>
           
-          <h1 className="text-4xl font-bold font-display mb-4">
-            Check your email
+          <h1 className="text-2xl font-display font-semibold text-foreground mb-2">
+            {verificationStatus === 'success' && 'Email Verified!'}
+            {verificationStatus === 'error' && 'Verification Failed'}
+            {verificationStatus === 'pending' && 'Check Your Email'}
           </h1>
-          <p className="text-lg text-muted font-sans mb-2">
-            We sent a magic link to
-          </p>
-          <p className="text-lg font-semibold text-accent font-display">
-            {email}
-          </p>
-        </motion.div>
 
-        {/* Countdown Ring */}
-        <motion.div
-          className="mb-8"
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-        >
-          <CountdownRing timeLeft={timeLeft} totalTime={60} />
-        </motion.div>
+          <p className="text-muted font-sans">
+            {verificationStatus === 'success' && 'Redirecting to onboarding...'}
+            {verificationStatus === 'error' && errorMessage}
+            {verificationStatus === 'pending' && 'We sent a magic link to your email'}
+          </p>
+        </div>
 
-        {/* Status Message */}
+        {/* Status Content */}
+        {verificationStatus === 'pending' && (
         <motion.div
-          className="text-center mb-8 max-w-md"
+            className="text-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
+            transition={{ delay: 0.4 }}
         >
-          {isPolling ? (
-            <div className="flex items-center justify-center text-muted font-sans">
-              <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2" />
-              Waiting for verification...
+            {/* Countdown */}
+            <div className="flex justify-center mb-6">
+              <CountdownRing timeLeft={timeLeft} totalTime={300} />
             </div>
-          ) : (
-            <p className="text-muted font-sans">
-              Check your <strong>{getEmailProvider(domain)}</strong> inbox and click the link
+
+            <p className="text-sm text-muted font-sans mb-6">
+              Didn&apos;t receive the email? Check your spam folder or{' '}
+              <button
+                onClick={handleResend}
+                disabled={!canResend}
+                className="text-accent hover:text-accent/80 underline"
+              >
+                try again
+              </button>
             </p>
-          )}
-        </motion.div>
 
-        {/* Actions */}
-        <motion.div
-          className="w-full max-w-md space-y-4"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.8 }}
-        >
-          {/* Open Email Button */}
-          <a
-            href={getEmailUrl(domain)}
-            target="_blank"
-            rel="noopener noreferrer"
+            {/* Manual verification for development */}
+            <div className="bg-surface-01 border border-border rounded-lg p-4 mb-6">
+              <p className="text-sm text-muted font-sans mb-3">
+                For development testing:
+              </p>
+              <Button
+                onClick={handleVerification}
             className="w-full"
-          >
-            <Button
               variant="outline"
-              className="w-full border-accent text-accent hover:bg-accent hover:text-background"
-            >
-              <ExternalLink className="w-4 h-4 mr-2" />
-              Open {getEmailProvider(domain)}
-            </Button>
-          </a>
-
-          {/* Resend Button */}
-          <Button
-            onClick={handleResend}
-            disabled={!canResend || isResending}
-            variant="ghost"
-            className="w-full text-muted hover:text-foreground"
-          >
-            {isResending ? (
-              <div className="flex items-center">
-                <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2" />
-                Resending...
-              </div>
-            ) : canResend ? (
-              <div className="flex items-center">
+              >
                 <RefreshCw className="w-4 h-4 mr-2" />
-                Resend magic link
+                Verify Manually
+              </Button>
               </div>
-            ) : (
-              `Resend in ${timeLeft}s`
-            )}
-          </Button>
-
-          {/* Use Different Email */}
-          <Link href="/auth/email" className="w-full">
-            <Button variant="ghost" className="w-full text-muted hover:text-foreground">
-              Use a different email
-            </Button>
-          </Link>
-        </motion.div>
-
-        {/* Error Message */}
-        {error && (
-          <motion.div
-            className="text-center text-red-500 text-sm font-sans bg-red-500/10 px-4 py-3 rounded-md mt-6 max-w-md"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            {error}
           </motion.div>
         )}
 
-        {/* Help Text */}
+        {verificationStatus === 'success' && (
+          <motion.div
+            className="text-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+          >
+            <div className="bg-surface-01 border border-accent/20 rounded-lg p-6 mb-6">
+              <div className="w-12 h-12 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Mail className="w-6 h-6 text-accent" />
+              </div>
+              <p className="text-sm text-muted font-sans">
+                Your email has been verified successfully!
+              </p>
+            </div>
+          </motion.div>
+        )}
+
+        {verificationStatus === 'error' && (
         <motion.div
-          className="text-center mt-8 max-w-md"
+            className="text-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 1 }}
-        >
-          <p className="text-xs text-muted font-sans">
-            Didn&apos;t receive it? Check your spam folder or try a different email address
-          </p>
+            transition={{ delay: 0.4 }}
+          >
+            <div className="bg-surface-01 border border-red-500/20 rounded-lg p-6 mb-6">
+              <div className="w-12 h-12 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <AlertCircle className="w-6 h-6 text-red-500" />
+              </div>
+              <p className="text-sm text-muted font-sans mb-4">
+                {errorMessage}
+              </p>
+              <Button
+                onClick={handleResend}
+                className="w-full"
+                variant="outline"
+              >
+                <RefreshCw className="w-4 h-4 mr-2" />
+                Try Again
+              </Button>
+            </div>
         </motion.div>
+        )}
+
+        {/* Navigation */}
+        <div className="space-y-3">
+          <Link href="/auth">
+            <Button variant="outline" className="w-full">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Sign In
+            </Button>
+          </Link>
+
+          <Button
+            onClick={() => window.open('https://mail.google.com', '_blank')}
+            variant="ghost"
+            className="w-full"
+          >
+            <ExternalLink className="w-4 h-4 mr-2" />
+            Open Gmail
+          </Button>
       </div>
+      </motion.div>
     </div>
+  )
+}
+
+export default function VerifyPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 bg-surface-01 rounded-full flex items-center justify-center mx-auto mb-4">
+            <RefreshCw className="w-8 h-8 text-muted animate-spin" />
+          </div>
+          <p className="text-muted font-sans">Loading verification...</p>
+        </div>
+      </div>
+    }>
+      <VerifyContent />
+    </Suspense>
   )
 }
