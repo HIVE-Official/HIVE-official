@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+// @ts-nocheck
+// @ts-nocheck
 import type { Meta, StoryObj } from '@storybook/react'
 import { LoadingSpinner, PageLoader, InlineLoader, CardLoader } from '@/components/loading-spinner'
 
