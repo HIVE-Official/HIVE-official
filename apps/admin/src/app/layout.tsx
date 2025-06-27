@@ -1,12 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Space_Grotesk as SpaceGrotesk } from 'next/font/google';
 import "./globals.css";
-
-const inter = Inter({ subsets: ["latin"] });
-const spaceGrotesk = SpaceGrotesk({
-  subsets: ['latin'],
-  variable: '--font-display',
-});
 
 export const metadata: Metadata = {
   title: "HIVE Admin",
@@ -19,8 +12,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${spaceGrotesk.variable} dark`} style={{ colorScheme: 'dark' }}>
-      <body className={inter.className}>
+    <html lang="en" className="dark" style={{ colorScheme: 'dark' }}>
+      <body>
         {children}
       </body>
     </html>

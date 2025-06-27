@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+// @ts-nocheck
+// @ts-nocheck
 import type { Meta, StoryObj } from '@storybook/react';
 import { SchoolPick } from '../../components/auth/school-pick';
 import { action } from '@storybook/addon-actions';

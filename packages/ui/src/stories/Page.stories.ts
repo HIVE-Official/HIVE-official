@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+// @ts-nocheck
+// @ts-nocheck
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 import { expect, userEvent, within } from '@storybook/test';

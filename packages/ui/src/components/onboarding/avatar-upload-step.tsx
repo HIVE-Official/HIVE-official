@@ -76,10 +76,10 @@ export const AvatarUploadStep: React.FC<StepProps> = ({ onSubmit, onSkip }) => {
           >
             Skip for now
           </Button>
-          <Button
-            type="button"
-            variant="primary-white"
-            onClick={handleSubmit}
+            <Button
+              type="button"
+              variant="default"
+              onClick={handleSubmit}
             className="flex-1"
             disabled={!selectedFile || isLoading}
           >

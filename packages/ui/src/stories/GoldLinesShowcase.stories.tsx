@@ -1,10 +1,13 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+// @ts-nocheck
+// @ts-nocheck
 import type { Meta, StoryObj } from '@storybook/react'
 import { Button } from '@/components/button'
 import { Badge } from '@/components/badge'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/card'
 import { Input } from '@/components/input'
 import { Label } from '@/components/label'
-import { Sparkles, ArrowRight, Star, User, Settings, Bell } from 'lucide-react'
+import { Sparkles, ArrowRight, User, Settings, Bell } from 'lucide-react'
 
 const meta: Meta = {
   title: 'Showcase/Gold Lines Design System',

@@ -1,4 +1,5 @@
-import { Metadata } from "next";
+"use client";
+
 import { redirect } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@hive/ui";
 import { UserLookup } from "../../components/user-lookup";
@@ -7,10 +8,6 @@ import { FlagQueue } from "../../components/flag-queue";
 import { MetricCards } from "../../components/metric-cards";
 import { getCurrentAdmin } from "@/lib/auth";
 
-export const metadata: Metadata = {
-  title: "Admin Dashboard | HIVE",
-  description: "HIVE administration and moderation tools.",
-};
 
 export default function AdminDashboard() {
   const admin = getCurrentAdmin();
