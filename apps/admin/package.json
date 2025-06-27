@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "npx next dev --port 3001",
-    "build": "npx next build",
+    "build": "NEXT_FONT_SKIP_DOWNLOAD=1 npx next build",
     "start": "npx next start --port 3001",
     "lint": "eslint . --max-warnings 10",
     "test": "echo 'skipping tests'",
