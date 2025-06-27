@@ -572,9 +572,9 @@ importers:
 
   packages/ui:
     dependencies:
-      '@fontsource/space-grotesk':
-        specifier: ^5.2.8
-        version: 5.2.8
+      '@hive/core':
+        specifier: workspace:*
+        version: link:../core
       '@hive/hooks':
         specifier: workspace:*
         version: link:../hooks
