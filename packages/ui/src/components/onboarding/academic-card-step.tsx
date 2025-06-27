@@ -121,7 +121,7 @@ export const AcademicCardStep: React.FC<StepProps> = ({ onSubmit, onSkip }) => {
           </Button>
           <Button
             type="button"
-            variant="primary-white"
+            variant="default"
             onClick={handleSubmit}
             className="flex-1"
             disabled={!isFormValid || isLoading}

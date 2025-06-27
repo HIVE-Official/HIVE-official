@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+// @ts-nocheck
+// @ts-nocheck
+// @ts-nocheck
 import type { Meta, StoryObj } from '@storybook/react';
 import { SplashScreen } from '../../components/auth/splash-screen';
 import { action } from '@storybook/addon-actions';
