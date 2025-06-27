@@ -32,7 +32,7 @@ export const AuthFlow: React.FC<AuthFlowProps> = ({
     setCurrentStep('email-gate')
   }
 
-  const handleEmailSubmit = async (email: string, _school: School) => {
+  const handleEmailSubmit = async (email: string) => {
     try {
       await onEmailSubmit(email)
       setSelectedEmail(email)
@@ -105,9 +105,10 @@ export const AuthFlow: React.FC<AuthFlowProps> = ({
             transition={{ duration: 0.2 }}
           >
             <EmailGate
-              school={selectedSchool}
+              schoolName={selectedSchool.name}
+              schoolDomain={selectedSchool.domain}
               onBack={() => setCurrentStep('school-pick')}
-              onSendMagicLink={handleEmailSubmit}
+              onDevContinue={() => handleEmailSubmit('dev@buffalo.edu')}
             />
           </motion.div>
         )}

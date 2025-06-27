@@ -51,7 +51,7 @@
     "react": "19.0.0-rc-f994737d14-20240522"
   },
   "dependencies": {
-    "@fontsource/space-grotesk": "^5.2.8",
+    "@hive/core": "workspace:*",
     "@hive/hooks": "workspace:*",
     "@hive/tokens": "workspace:*",
     "@radix-ui/react-avatar": "^1.1.10",

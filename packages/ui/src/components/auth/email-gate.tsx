@@ -2,97 +2,138 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Mail } from 'lucide-react';
+import { Mail, CheckCircle, Wrench, Loader2 } from 'lucide-react';
 import { Button } from '../button';
 import { Input } from '../input';
-import { type School } from './school-pick';
+import { Label } from '../label';
+import { cn } from '../../lib/utils';
 
 interface EmailGateProps {
-  school: School;
-  onSendMagicLink: (email: string, school: School) => Promise<boolean>;
-  onBack: () => void;
-  className?: string
+  schoolName: string;
+  schoolDomain: string;
+  onBack?: () => void;
+  className?: string;
+  onDevContinue?: () => void;
 }
 
-export const EmailGate: React.FC<EmailGateProps> = ({ school, onSendMagicLink, onBack, className }) => {
+export const EmailGate: React.FC<EmailGateProps> = ({
+  schoolName,
+  schoolDomain,
+  onBack,
+  className,
+  onDevContinue
+}) => {
   const [email, setEmail] = useState('');
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const isValidEmail = (email: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email) && email.endsWith(school.domain);
-  };
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!isValidEmail(email)) {
-      setError(`Please enter a valid @${school.domain} email address.`);
-      return;
-    }
-    setError(null);
-    setIsLoading(true);
+    setIsSubmitting(true);
     
-    const success = await onSendMagicLink(email, school);
-    if (!success) {
-        setError('Something went wrong. Please try again.');
-    }
-
-    setIsLoading(false);
+    // Simulate sending magic link
+    setTimeout(() => {
+      setIsSubmitting(false);
+      setIsSuccess(true);
+    }, 1000);
   };
 
   return (
-    <div className={className}>
-        <motion.button
-            onClick={onBack}
-            className="flex items-center gap-2 text-muted hover:text-foreground transition-colors duration-base ease-smooth mb-6"
-        >
-            <ArrowLeft className="h-4 w-4" />
-            Back
-        </motion.button>
-        
-        <div className="w-16 h-16 bg-surface-02 rounded-full flex items-center justify-center mx-auto mb-6 border border-border">
-            <Mail className="h-8 w-8 text-muted" />
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className={cn("w-full max-w-md", className)}
+    >
+      <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
+        {isSuccess ? (
+          <div className="text-center space-y-4">
+            <div className="flex justify-center">
+              <CheckCircle className="w-12 h-12 text-green-500" />
         </div>
-        
-        <div className="text-center mb-8">
-            <h1 className="text-h2 font-display font-semibold mb-2">
-                Join {school.name}
-            </h1>
-            <p className="text-body text-muted">
-                Enter your <strong className="text-foreground">@{school.domain}</strong> email to continue.
+            <h2 className="text-xl font-semibold text-white">Check Your Email</h2>
+            <p className="text-zinc-400">
+              We sent a magic link to your email. Click it to continue.
             </p>
+            {onDevContinue && (
+              <Button
+                onClick={onDevContinue}
+                variant="outline"
+                className="w-full mt-4 gap-2"
+              >
+                <Wrench className="w-4 h-4" />
+                Continue to Onboarding (Dev)
+              </Button>
+            )}
+          </div>
+        ) : (
+          <>
+            <div className="text-center space-y-4 mb-6">
+              <div className="flex justify-center">
+                <Mail className="w-12 h-12 text-white" />
+              </div>
+              <div>
+                <h2 className="text-xl font-semibold text-white">Join {schoolName}</h2>
+                <p className="text-zinc-400 mt-1">
+                  Enter your {schoolDomain} email to continue
+                </p>
+              </div>
         </div>
-
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="space-y-2">
+              <div>
+                <Label htmlFor="email" className="sr-only">
+                  Email
+                </Label>
           <Input
+                  id="email"
             type="email"
-            placeholder={`you@${school.domain}`}
+                  placeholder={`you@${schoolDomain}`}
             value={email}
-            onChange={(e) => {
-              setEmail(e.target.value)
-              if (error) setError(null);
-            }}
-            variant="accent"
-            inputSize="lg"
-            state={error ? 'error' : 'default'}
-            disabled={isLoading}
-          />
-          {error && <p className="text-caption text-red-500">{error}</p>}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="bg-zinc-800 border-zinc-700"
+                  required
+                />
         </div>
-        
+              <div className="flex gap-2">
+                {onBack && (
+                  <Button type="button" variant="outline" onClick={onBack}>
+                    Back
+                  </Button>
+                )}
         <Button
           type="submit"
-          variant="default"
-          size="lg"
-          fullWidth
-          loading={isLoading}
-          disabled={!isValidEmail(email)}
-        >
-          Send Magic Link
+                  variant="surface"
+                  className="w-full font-semibold"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="flex items-center gap-2"
+                    >
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Sending...
+                    </motion.div>
+                  ) : (
+                    'Send Magic Link'
+                  )}
+                </Button>
+              </div>
+              {onDevContinue && (
+                <Button
+                  type="button"
+                  onClick={onDevContinue}
+                  variant="outline"
+                  className="w-full mt-4 gap-2"
+                >
+                  <Wrench className="w-4 h-4" />
+                  Skip to Onboarding (Dev)
         </Button>
+              )}
       </form>
+          </>
+        )}
     </div>
+    </motion.div>
   );
 }; 

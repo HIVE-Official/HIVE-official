@@ -1,130 +1,102 @@
 "use client";
 
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../card';
-import { Button } from '../button';
-import { Input } from '../input';
-import { Label } from '../label';
-import { Loader2 } from 'lucide-react';
-import { StepProps } from './types';
+import React, { useState } from "react";
+import { Button } from "../ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
+import { Loader2 } from "lucide-react";
 
-export const AcademicCardStep: React.FC<StepProps> = ({ onSubmit, onSkip }) => {
-  const [formData, setFormData] = useState({
-    institution: '',
-    department: '',
-    role: '',
-    graduationYear: '',
-  });
+export interface AcademicCardStepProps {
+  initialData: {
+    major: string;
+    graduationYear: number;
+  };
+  onSubmit: (data: { major: string; graduationYear: number } | null) => void;
+  onBack?: () => void;
+}
+
+export const AcademicCardStep: React.FC<AcademicCardStepProps> = ({
+  initialData,
+  onSubmit,
+  onBack,
+}) => {
+  const [major, setMajor] = useState(initialData.major);
+  const [graduationYear, setGraduationYear] = useState(initialData.graduationYear);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
   const handleSubmit = async () => {
+    if (!major || !graduationYear) return;
+    
     setIsLoading(true);
     try {
-      await onSubmit(formData);
-    } catch {
-      // console.error("Failed to submit academic info:", error);
-    } finally {
+      onSubmit({
+        major,
+        graduationYear,
+      });
+    } catch (error) {
+      console.error("Failed to submit academic info", error);
       setIsLoading(false);
     }
   };
-
-  const handleSkip = () => {
-    if (onSkip) {
-      onSkip();
-    } else {
-      void onSubmit(null);
-    }
-  };
-
-  const isFormValid = formData.institution && formData.department && formData.role;
 
   return (
     <Card className="w-full max-w-lg bg-card border-border">
       <CardHeader>
         <CardTitle className="text-card-foreground">Academic Information</CardTitle>
         <CardDescription className="text-muted-foreground">
-          Tell us about your academic background to help us connect you with relevant peers and content.
+          Tell us about your academic journey.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="space-y-4">
-          <div>
-            <Label htmlFor="institution" className="text-card-foreground">
-              Institution
-            </Label>
+          <div className="space-y-2">
+            <Label htmlFor="major">Major</Label>
             <Input
-              id="institution"
-              name="institution"
-              value={formData.institution}
-              onChange={handleChange}
-              placeholder="e.g., Stanford University"
-              className="bg-input border-border text-foreground"
-            />
-          </div>
-
-          <div>
-            <Label htmlFor="department" className="text-card-foreground">
-              Department
-            </Label>
-            <Input
-              id="department"
-              name="department"
-              value={formData.department}
-              onChange={handleChange}
+              id="major"
+              value={major}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMajor(e.target.value)}
               placeholder="e.g., Computer Science"
-              className="bg-input border-border text-foreground"
+              required
             />
           </div>
-
-          <div>
-            <Label htmlFor="role" className="text-card-foreground">
-              Role
-            </Label>
-            <Input
-              id="role"
-              name="role"
-              value={formData.role}
-              onChange={handleChange}
-              placeholder="e.g., PhD Student"
-              className="bg-input border-border text-foreground"
-            />
-          </div>
-
-          <div>
-            <Label htmlFor="graduationYear" className="text-card-foreground">
-              Expected Graduation Year (Optional)
-            </Label>
+          <div className="space-y-2">
+            <Label htmlFor="graduationYear">Expected Graduation Year</Label>
             <Input
               id="graduationYear"
-              name="graduationYear"
-              value={formData.graduationYear}
-              onChange={handleChange}
-              placeholder="e.g., 2025"
-              className="bg-input border-border text-foreground"
+              type="number"
+              value={graduationYear}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setGraduationYear(parseInt(e.target.value))}
+              min={new Date().getFullYear()}
+              max={new Date().getFullYear() + 6}
+              required
             />
           </div>
         </div>
 
         <div className="flex gap-2">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={handleSkip}
-            className="flex-1"
-          >
-            Skip for now
-          </Button>
+          {onBack && (
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onBack}
+              className="flex-1"
+            >
+              Back
+            </Button>
+          )}
           <Button
             type="button"
             variant="default"
             onClick={handleSubmit}
             className="flex-1"
-            disabled={!isFormValid || isLoading}
+            disabled={isLoading || !major || !graduationYear}
           >
             {isLoading ? (
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />

@@ -32,6 +32,7 @@ const config: StorybookConfig = {
     reactDocgen: 'react-docgen-typescript',
     check: false,
   },
+  staticDirs: ['../public'],
   async viteFinal(config) {
     return mergeConfig(config, {
       resolve: {
