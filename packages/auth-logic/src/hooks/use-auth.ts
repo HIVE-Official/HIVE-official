@@ -10,8 +10,21 @@ import type { ReactNode } from "react";
 import { auth } from "../firebase-config";
 import { onAuthStateChanged, signInWithCustomToken as firebaseSignInWithCustomToken } from "firebase/auth";
 import type { AuthUser, AuthContextType, UseAuthReturn } from "../types";
+import { logger } from "@hive/core";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export const mockUser: AuthUser = {
+  uid: 'mock-uid',
+  email: 'dev@buffalo.edu',
+  fullName: 'Dev User',
+  onboardingCompleted: false,
+  emailVerified: true,
+  customClaims: {
+    isBuilder: true,
+  },
+  getIdToken: () => Promise.resolve('mock-token'),
+};
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
@@ -23,10 +36,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
+    // Check for development mode without Firebase
+    if (!process.env.NEXT_PUBLIC_FIREBASE_API_KEY) {
+      logger.warn('🔥 Firebase not configured - using mock auth for development');
+      setUser(mockUser);
+      setIsLoading(false);
+      return () => {};
+    }
+
+    // Production mode with Firebase
     if (!auth) {
       setIsLoading(false);
-      return;
+      return () => {};
     }
+
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
         // In a real implementation, you'd fetch additional user data from Firestore
@@ -53,7 +76,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
 
     return () => unsubscribe();
-  }, [auth]);
+  }, []);
 
   const value = {
     user,

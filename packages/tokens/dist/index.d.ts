@@ -62,7 +62,7 @@ export declare const designTokens: {
     };
     readonly typography: {
         readonly fontFamily: {
-            readonly sans: readonly ["Geist", "Inter Variable", "Inter", "system-ui", "sans-serif"];
+            readonly sans: readonly ["Geist Sans", "Geist", "Inter Variable", "Inter", "system-ui", "sans-serif"];
             readonly display: readonly ["Space Grotesk Variable", "Space Grotesk", "system-ui", "sans-serif"];
             readonly mono: readonly ["Geist Mono", "JetBrains Mono", "Consolas", "Monaco", "monospace"];
         };
@@ -113,28 +113,28 @@ export declare const designTokens: {
                 readonly size: "16px";
                 readonly lineHeight: "24px";
                 readonly fontWeight: "400";
-                readonly fontFamily: "Geist";
+                readonly fontFamily: "Geist Sans";
                 readonly usage: "Body text, paragraphs, default text";
             };
             readonly bodySmall: {
                 readonly size: "14px";
                 readonly lineHeight: "20px";
                 readonly fontWeight: "400";
-                readonly fontFamily: "Geist";
+                readonly fontFamily: "Geist Sans";
                 readonly usage: "Smaller body text, captions";
             };
             readonly caption: {
                 readonly size: "12px";
                 readonly lineHeight: "18px";
                 readonly fontWeight: "400";
-                readonly fontFamily: "Geist";
+                readonly fontFamily: "Geist Sans";
                 readonly usage: "Labels, metadata, micro-copy";
             };
             readonly button: {
                 readonly size: "14px";
                 readonly lineHeight: "20px";
                 readonly fontWeight: "500";
-                readonly fontFamily: "Geist";
+                readonly fontFamily: "Geist Sans";
                 readonly usage: "Button text, CTAs";
             };
             readonly code: {

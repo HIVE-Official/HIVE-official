@@ -1,6 +1,6 @@
 export declare const typography: {
     readonly fontFamily: {
-        readonly sans: readonly ["Geist", "Inter Variable", "Inter", "system-ui", "sans-serif"];
+        readonly sans: readonly ["Geist Sans", "Geist", "Inter Variable", "Inter", "system-ui", "sans-serif"];
         readonly display: readonly ["Space Grotesk Variable", "Space Grotesk", "system-ui", "sans-serif"];
         readonly mono: readonly ["Geist Mono", "JetBrains Mono", "Consolas", "Monaco", "monospace"];
     };
@@ -51,28 +51,28 @@ export declare const typography: {
             readonly size: "16px";
             readonly lineHeight: "24px";
             readonly fontWeight: "400";
-            readonly fontFamily: "Geist";
+            readonly fontFamily: "Geist Sans";
             readonly usage: "Body text, paragraphs, default text";
         };
         readonly bodySmall: {
             readonly size: "14px";
             readonly lineHeight: "20px";
             readonly fontWeight: "400";
-            readonly fontFamily: "Geist";
+            readonly fontFamily: "Geist Sans";
             readonly usage: "Smaller body text, captions";
         };
         readonly caption: {
             readonly size: "12px";
             readonly lineHeight: "18px";
             readonly fontWeight: "400";
-            readonly fontFamily: "Geist";
+            readonly fontFamily: "Geist Sans";
             readonly usage: "Labels, metadata, micro-copy";
         };
         readonly button: {
             readonly size: "14px";
             readonly lineHeight: "20px";
             readonly fontWeight: "500";
-            readonly fontFamily: "Geist";
+            readonly fontFamily: "Geist Sans";
             readonly usage: "Button text, CTAs";
         };
         readonly code: {
@@ -101,7 +101,7 @@ export declare const getFontSize: (key: keyof typeof typography.fontSize) => {
     fontSize: "64px" | "48px" | "32px" | "24px" | "20px" | "16px" | "14px" | "12px";
     lineHeight: "72px" | "56px" | "32px" | "40px" | "24px" | "20px" | "28px" | "18px";
     fontWeight: "400" | "500" | "600";
-    fontFamily: "Geist" | "Space Grotesk Variable" | "Geist Mono";
+    fontFamily: "Geist Sans" | "Space Grotesk Variable" | "Geist Mono";
 };
 export declare const tailwindFontSizes: {
     readonly display: readonly ["64px", "72px"];

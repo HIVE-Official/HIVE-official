@@ -158,7 +158,7 @@ export const InContext: Story = {
 
       {/* Button with loading state */}
       <button 
-        className="w-full bg-accent text-background font-semibold py-3 px-4 rounded-lg opacity-75 cursor-not-allowed flex items-center justify-center"
+        className="w-full bg-foreground text-background font-semibold py-3 px-4 rounded-lg opacity-75 cursor-not-allowed flex items-center justify-center"
         disabled
       >
         <LoadingSpinner size="sm" variant="foreground" className="mr-2" />

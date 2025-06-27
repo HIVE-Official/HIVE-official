@@ -27,6 +27,7 @@ export type { School } from "./domain/school";
 
 // Constants
 export * from "./constants/majors";
+export * from "./constants/academic-years";
 
 // Stores
 export * from "./stores";
@@ -94,3 +95,6 @@ export { SpaceDiscoverySchema } from "./domain/space/discovery";
 export * from "./utils/logger";
 export * from "./utils/rate-limit";
 export { postCreationRateLimit } from './utils/rate-limit';
+
+export * from './types/major';
+export * from "./types/onboarding";

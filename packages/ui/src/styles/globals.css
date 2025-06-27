@@ -1,24 +1,5 @@
-@import '@fontsource/space-grotesk/index.css';
-
-/* Geist Sans Variable Font */
-@font-face {
-  font-family: 'Geist Sans';
-  src: url('../../../../node_modules/geist/dist/fonts/geist-sans/Geist-Variable.woff2') format('woff2'),
-       url('../../../../node_modules/geist/dist/fonts/geist-sans/Geist-Variable.ttf') format('truetype');
-  font-weight: 100 900;
-  font-style: normal;
-  font-display: swap;
-}
-
-/* Geist Mono Variable Font */
-@font-face {
-  font-family: 'Geist Mono';
-  src: url('../../../../node_modules/geist/dist/fonts/geist-mono/GeistMono-Variable.woff2') format('woff2'),
-       url('../../../../node_modules/geist/dist/fonts/geist-mono/GeistMono-Variable.ttf') format('truetype');
-  font-weight: 100 900;
-  font-style: normal;
-  font-display: swap;
-}
+/* Import font configuration */
+@import './fonts.css';
 
 @tailwind base;
 @tailwind components;
@@ -26,68 +7,82 @@
 
 @layer base {
   :root {
-    /* HIVE Brand System - Correct CSS Variables */
-    --background: 0 0% 3.9%;        /* #0A0A0A - matte black */
-    --foreground: 0 0% 98%;         /* #FFFFFF - white text */
-    --card: 0 0% 7%;                /* #111111 - surface */
-    --card-foreground: 0 0% 98%;    /* #FFFFFF - white text */
-    --popover: 0 0% 10%;            /* #181818 - surface-02 */
-    --popover-foreground: 0 0% 98%; /* #FFFFFF - white text */
-    --primary: 51 100% 50%;         /* #FFD700 - gold accent */
-    --primary-foreground: 0 0% 4%;  /* #0A0A0A - black on gold */
-    --secondary: 0 0% 7%;           /* #111111 - surface */
-    --secondary-foreground: 0 0% 98%; /* #FFFFFF - white text */
-    --muted: 0 0% 42%;              /* #6B7280 - muted text */
-    --muted-foreground: 0 0% 98%;   /* #FFFFFF - white text */
-    --accent: 51 100% 50%;          /* #FFD700 - gold accent */
-    --accent-foreground: 0 0% 4%;   /* #0A0A0A - black on gold */
-    --destructive: 0 0% 7%;         /* #111111 - no red, use surface */
-    --destructive-foreground: 0 0% 98%; /* #FFFFFF - white text */
-    --border: 0 0% 16%;             /* #2A2A2A - border color */
-    --input: 0 0% 16%;              /* #2A2A2A - input borders */
-    --ring: 51 100% 50%;            /* #FFD700 - gold focus ring */
+    --background: 0 0% 4%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 7%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 7%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 4%;
+    --secondary: 0 0% 9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 16%;
+    --input: 0 0% 16%;
+    --ring: 60 100% 50%;
     --radius: 0.5rem;
-    
-    /* HIVE surface colors */
-    --surface-01: 0 0% 7%;          /* #111111 - primary cards */
-    --surface-02: 0 0% 10%;         /* #181818 - drawers, modals */
-    --surface-03: 0 0% 13%;         /* #1F1F1F - nested blocks */
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
   }
 
-  .light {
-    /* Light theme - same as dark for HIVE (dark-first brand) */
-    --background: 0 0% 3.9%;        /* #0A0A0A - matte black */
-    --foreground: 0 0% 98%;         /* #FFFFFF - white text */
-    --card: 0 0% 7%;                /* #111111 - surface */
-    --card-foreground: 0 0% 98%;    /* #FFFFFF - white text */
-    --popover: 0 0% 10%;            /* #181818 - surface-02 */
-    --popover-foreground: 0 0% 98%; /* #FFFFFF - white text */
-    --primary: 51 100% 50%;         /* #FFD700 - gold accent */
-    --primary-foreground: 0 0% 4%;  /* #0A0A0A - black on gold */
-    --secondary: 0 0% 7%;           /* #111111 - surface */
-    --secondary-foreground: 0 0% 98%; /* #FFFFFF - white text */
-    --muted: 0 0% 42%;              /* #6B7280 - muted text */
-    --muted-foreground: 0 0% 98%;   /* #FFFFFF - white text */
-    --accent: 51 100% 50%;          /* #FFD700 - gold accent */
-    --accent-foreground: 0 0% 4%;   /* #0A0A0A - black on gold */
-    --destructive: 0 0% 7%;         /* #111111 - no red, use surface */
-    --destructive-foreground: 0 0% 98%; /* #FFFFFF - white text */
-    --border: 0 0% 16%;             /* #2A2A2A - border color */
-    --input: 0 0% 16%;              /* #2A2A2A - input borders */
-    --ring: 51 100% 50%;            /* #FFD700 - gold focus ring */
-    
-    /* HIVE surface colors */
-    --surface-01: 0 0% 7%;          /* #111111 - primary cards */
-    --surface-02: 0 0% 10%;         /* #181818 - drawers, modals */
-    --surface-03: 0 0% 13%;         /* #1F1F1F - nested blocks */
+  .dark {
+    --background: 0 0% 4%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 7%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 7%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 4%;
+    --secondary: 0 0% 9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 16%;
+    --input: 0 0% 16%;
+    --ring: 60 100% 50%;
+    --radius: 0.5rem;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
   }
+}
 
+@layer base {
   * {
     @apply border-border;
   }
-  
   body {
     @apply bg-background text-foreground;
-    font-feature-settings: 'rlig' 1, 'calt' 1;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  /* Typography classes */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+
+  code, pre {
+    font-family: var(--font-mono);
   }
 } 
