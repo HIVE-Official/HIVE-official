@@ -4,4 +4,5 @@ export * from './splash-screen';
 export * from './school-pick';
 export * from './email-gate';
 export * from './magic-link-sent';
-export * from './auth-flow'; 
+export * from './auth-flow';
+export * from './dev-mode-panel'; 

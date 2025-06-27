@@ -8,11 +8,25 @@ export interface AuthUser {
   getIdToken?: () => Promise<string>;
 }
 
+export interface DevModeConfig {
+  enabled: boolean;
+  mockUser: AuthUser;
+  skipOnboarding: boolean;
+  simulateErrors: {
+    auth: boolean;
+    onboarding: boolean;
+    network: boolean;
+  };
+  delayMs: number;
+}
+
 export interface AuthContextType {
   user: AuthUser | null;
   isLoading: boolean;
   isAuthenticated: boolean;
   signInWithCustomToken: (token: string) => Promise<void>;
+  devMode?: DevModeConfig;
+  setDevModeConfig?: (config: Partial<DevModeConfig>) => void;
 }
 
 export type UseAuthReturn = AuthContextType;

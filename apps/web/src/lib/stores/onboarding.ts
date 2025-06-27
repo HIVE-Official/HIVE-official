@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import type { OnboardingData } from '@hive/core';
+import { logger } from '@hive/core';
 
 interface OnboardingStore {
   data: Partial<OnboardingData> | null;
@@ -9,8 +10,13 @@ interface OnboardingStore {
 
 export const useOnboardingStore = create<OnboardingStore>((set) => ({
   data: null,
-  update: (newData) => set((state) => ({
-    data: { ...state.data, ...newData }
-  })),
-  reset: () => set({ data: null })
+  update: (newData) => set((state) => {
+    const updatedData = { ...state.data, ...newData };
+    logger.info('Updating onboarding data:', updatedData);
+    return { data: updatedData };
+  }),
+  reset: () => {
+    logger.info('Resetting onboarding data');
+    set({ data: null });
+  }
 })); 

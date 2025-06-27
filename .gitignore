@@ -103,34 +103,61 @@ jspm_packages/
 .pnp.*
 
 # Dependencies
-/.pnpm-store
+node_modules
+.pnpm-store/
 
 # Build outputs
 .next/
+out/
+build/
 dist/
-**/dist/
-/out
-/build
-**/tsconfig.tsbuildinfo
-**/*.tsbuildinfo
-**/*.backup.json
+.turbo
 
-# Turbo
-.turbo/
+# Testing
+coverage/
+.nyc_output/
+playwright-report/
+test-results/
 
-# Storybook build outputs
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+*.pem
+
+# Vercel
+.vercel
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# Firebase
+.firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+
+# Storybook
 storybook-static/
 
-# Firebase credentials should never be committed
-firebase/serviceAccountKey.json
-
-# Firebase debug logs
-*.log
-
-# Firebase cache
-.firebase/
-
-# Firebase hosting cache
-.firebase/hosting.*/
+# Cache
+.eslintcache
+.cache/
 
 *storybook.log

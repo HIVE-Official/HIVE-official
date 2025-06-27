@@ -51,6 +51,7 @@
     "react": "19.0.0-rc-f994737d14-20240522"
   },
   "dependencies": {
+    "@hive/auth-logic": "workspace:*",
     "@hive/core": "workspace:*",
     "@hive/hooks": "workspace:*",
     "@hive/tokens": "workspace:*",

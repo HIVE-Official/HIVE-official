@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { logger } from "@hive/core";
 
 /**
  * Environment Configuration Schema
@@ -13,26 +14,32 @@ const envSchema = z.object({
   // Firebase Client Config (Public - prefixed with NEXT_PUBLIC_)
   NEXT_PUBLIC_FIREBASE_API_KEY: z
     .string()
-    .min(1, "Firebase API key is required"),
+    .min(1, "Firebase API key is required")
+    .optional(),
   NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: z
     .string()
-    .min(1, "Firebase auth domain is required"),
+    .min(1, "Firebase auth domain is required")
+    .optional(),
   NEXT_PUBLIC_FIREBASE_PROJECT_ID: z
     .string()
-    .min(1, "Firebase project ID is required"),
+    .min(1, "Firebase project ID is required")
+    .optional(),
   NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: z
     .string()
-    .min(1, "Firebase storage bucket is required"),
+    .min(1, "Firebase storage bucket is required")
+    .optional(),
   NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: z
     .string()
-    .min(1, "Firebase messaging sender ID is required"),
-  NEXT_PUBLIC_FIREBASE_APP_ID: z.string().min(1, "Firebase app ID is required"),
+    .min(1, "Firebase messaging sender ID is required")
+    .optional(),
+  NEXT_PUBLIC_FIREBASE_APP_ID: z.string().min(1, "Firebase app ID is required").optional(),
   NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID: z.string().optional(),
 
   // Firebase Admin SDK (Private - Server-side only)
   FIREBASE_PROJECT_ID: z
     .string()
-    .min(1, "Firebase project ID is required for admin"),
+    .min(1, "Firebase project ID is required for admin")
+    .optional(),
   FIREBASE_CLIENT_EMAIL: z
     .string()
     .email("Valid Firebase client email is required")
@@ -87,7 +94,7 @@ const firebaseConfigs = {
 /**
  * Get the current environment
  */
-function getCurrentEnvironment(): keyof typeof firebaseConfigs {
+function getCurrentEnvironment(): "development" | "staging" | "production" {
   const env = process.env.NODE_ENV as "development" | "staging" | "production" || "development";
   const vercelEnv = process.env.VERCEL_ENV;
 
@@ -116,30 +123,18 @@ export function getFirebaseConfig() {
  */
 function parseEnv() {
   const currentEnv = getCurrentEnvironment();
-  const firebaseConfig = firebaseConfigs[currentEnv];
 
   // Try to parse from environment variables first
   const envVars = {
     NODE_ENV: process.env.NODE_ENV || "development",
-    NEXT_PUBLIC_FIREBASE_API_KEY:
-      process.env.NEXT_PUBLIC_FIREBASE_API_KEY || firebaseConfig.apiKey,
-    NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN:
-      process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || firebaseConfig.authDomain,
-    NEXT_PUBLIC_FIREBASE_PROJECT_ID:
-      process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || firebaseConfig.projectId,
-    NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET:
-      process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET ||
-      firebaseConfig.storageBucket,
-    NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID:
-      process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID ||
-      firebaseConfig.messagingSenderId,
-    NEXT_PUBLIC_FIREBASE_APP_ID:
-      process.env.NEXT_PUBLIC_FIREBASE_APP_ID || firebaseConfig.appId,
-    NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID:
-      process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID ||
-      firebaseConfig.measurementId,
-    FIREBASE_PROJECT_ID:
-      process.env.FIREBASE_PROJECT_ID || firebaseConfig.projectId,
+    NEXT_PUBLIC_FIREBASE_API_KEY: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+    NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+    NEXT_PUBLIC_FIREBASE_PROJECT_ID: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+    NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+    NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+    NEXT_PUBLIC_FIREBASE_APP_ID: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+    NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
+    FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID,
     FIREBASE_CLIENT_EMAIL: process.env.FIREBASE_CLIENT_EMAIL,
     FIREBASE_PRIVATE_KEY: process.env.FIREBASE_PRIVATE_KEY,
     NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
@@ -149,15 +144,19 @@ function parseEnv() {
   try {
     return envSchema.parse(envVars);
   } catch (error) {
-    console.error("❌ Environment validation failed:", error);
+    if (currentEnv === "development") {
+      logger.warn("⚠️ Environment validation failed in development mode:", error);
+      return envVars;
+    }
+    logger.error("❌ Environment validation failed:", error);
     throw new Error(
       `Environment configuration is invalid. Please check your environment variables.`
     );
   }
 }
 
-// Parse environment on module load
 export const env = parseEnv();
+export const isDevMode = !env.NEXT_PUBLIC_FIREBASE_API_KEY;
 
 // Export current environment info
 export const isProduction = env.NODE_ENV === "production";

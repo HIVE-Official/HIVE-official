@@ -21,4 +21,7 @@ export interface OnboardingData {
 
   // Step 5: Interests
   interests: string[];
+
+  // Completion Status
+  onboardingCompleted: boolean;
 } 

@@ -1,38 +1,15 @@
-"use strict";
-var __defProp = Object.defineProperty;
-var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
-var __getOwnPropNames = Object.getOwnPropertyNames;
-var __hasOwnProp = Object.prototype.hasOwnProperty;
-var __export = (target, all) => {
-  for (var name in all)
-    __defProp(target, name, { get: all[name], enumerable: true });
-};
-var __copyProps = (to, from, except, desc) => {
-  if (from && typeof from === "object" || typeof from === "function") {
-    for (let key of __getOwnPropNames(from))
-      if (!__hasOwnProp.call(to, key) && key !== except)
-        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
-  }
-  return to;
-};
-var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+'use strict';
 
-// src/index.ts
-var index_exports = {};
-__export(index_exports, {
-  useFocusTrap: () => useFocusTrap
-});
-module.exports = __toCommonJS(index_exports);
+var react = require('react');
 
 // src/use-focus-trap.ts
-var import_react = require("react");
 function useFocusTrap({
   enabled = true,
   onEscape
 } = {}) {
-  const elementRef = (0, import_react.useRef)(null);
-  const previousActiveElement = (0, import_react.useRef)(null);
-  const getFocusableElements = (0, import_react.useCallback)(() => {
+  const elementRef = react.useRef(null);
+  const previousActiveElement = react.useRef(null);
+  const getFocusableElements = react.useCallback(() => {
     if (!elementRef.current) return [];
     return Array.from(
       elementRef.current.querySelectorAll(
@@ -45,7 +22,7 @@ function useFocusTrap({
       );
     });
   }, []);
-  (0, import_react.useEffect)(() => {
+  react.useEffect(() => {
     if (!enabled) return;
     previousActiveElement.current = document.activeElement;
     const focusableElements = getFocusableElements();
@@ -58,7 +35,7 @@ function useFocusTrap({
       }
     };
   }, [enabled, getFocusableElements]);
-  (0, import_react.useEffect)(() => {
+  react.useEffect(() => {
     if (!enabled) return;
     const handleKeyDown = (event) => {
       if (event.key === "Escape" && onEscape) {
@@ -89,7 +66,7 @@ function useFocusTrap({
   }, [enabled, getFocusableElements, onEscape]);
   return elementRef;
 }
-// Annotate the CommonJS export names for ESM import in node:
-0 && (module.exports = {
-  useFocusTrap
-});
+
+exports.useFocusTrap = useFocusTrap;
+//# sourceMappingURL=index.js.map
+//# sourceMappingURL=index.js.map

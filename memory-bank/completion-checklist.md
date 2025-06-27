@@ -297,3 +297,97 @@ _This blueprint ensures every feature serves a clear user need while maintaining
 | :----------- | :--- | :----- | :---------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------- | :------- | :---- |
 | FEED‑QA‑01   | TASK | ☐      | E2E tests for Feed interactions.          | • Test infinite scroll and pull-to-refresh.<br/>• Mock a real-time event and assert the toast appears.<br/>• Test navigation from a card CTA. | —        | AI    |
 | FEED‑PERF‑01 | TASK | ☐      | Performance & a11y budgets for Feed page. | • LCP < 2.5s.<br/>• List virtualization should be used for the feed.<br/>• Axe-core accessibility score ≥ 95.                                 | —        | AI    |
+
+## PAGE 5.1 – Onboarding & Authentication Feature Slice Status (June 2024)
+
+**User Story:** As a new UB student, I need a robust, secure, and error-free onboarding experience that validates my identity and guides me through profile setup without technical issues or confusion.
+
+### 1️⃣ Authentication Core Implementation
+
+| ID | Type | Status | Description | Sub-Tasks | Blocks → | Owner |
+|:---|:-----|:-------|:------------|:----------|:---------|:------|
+| AUTH-CORE-01 | TASK | ✅ | Implement magic-link authentication. | • Email validation<br/>• Link generation<br/>• Token verification | AUTH-CORE-02 | AI |
+| AUTH-CORE-02 | TASK | ✅ | Set up Firebase Auth integration. | • Configure Firebase SDK<br/>• Add auth providers<br/>• Set up dev environment | AUTH-CORE-03 | AI |
+| AUTH-CORE-03 | TASK | ✅ | Implement auth state management. | • Add auth store<br/>• Add auth hooks<br/>• Add protected routes | AUTH-UI-01 | AI |
+| AUTH-SEC-01 | TASK | ☐ | Implement rate limiting for auth endpoints. | • Add IP-based rate limiting (5/min)<br/>• Add account-based rate limiting (10/hour)<br/>• Add proper error responses | AUTH-SEC-02 | AI |
+
+### 2️⃣ Authentication UI Components
+
+| ID | Type | Status | Description | Sub-Tasks | Blocks → | Owner |
+|:---|:-----|:-------|:------------|:----------|:---------|:------|
+| AUTH-UI-01 | TASK | ✅ | Build `/auth` page with email input. | • Add .edu validation<br/>• Add error states<br/>• Add loading states | AUTH-UI-02 | AI |
+| AUTH-UI-02 | TASK | ✅ | Build `/auth/check-email` page. | • Add countdown timer<br/>• Add resend option<br/>• Add back button | AUTH-UI-03 | AI |
+| AUTH-UI-03 | TASK | ✅ | Build `/auth/verify` callback page. | • Add loading spinner<br/>• Add error handling<br/>• Add redirect logic | ONBD-UI-01 | AI |
+| AUTH-UI-04 | TASK | ☐ | Add comprehensive error boundaries. | • Add error recovery UI<br/>• Add error reporting<br/>• Add retry mechanisms | - | AI |
+
+### 3️⃣ Onboarding Core Implementation
+
+| ID | Type | Status | Description | Sub-Tasks | Blocks → | Owner |
+|:---|:-----|:-------|:------------|:----------|:---------|:------|
+| ONBD-CORE-01 | TASK | ✅ | Set up onboarding data models. | • Define User model<br/>• Define onboarding steps<br/>• Add validation rules | ONBD-CORE-02 | AI |
+| ONBD-CORE-02 | TASK | ✅ | Implement onboarding state management. | • Add Zustand store<br/>• Add step tracking<br/>• Add data persistence | ONBD-UI-01 | AI |
+| ONBD-CORE-03 | TASK | ✅ | Set up onboarding API routes. | • Add step endpoints<br/>• Add validation<br/>• Add error handling | ONBD-UI-01 | AI |
+| ONBD-VAL-01 | TASK | ☐ | Add Zod schemas for all onboarding data. | • Create schemas for each step<br/>• Add runtime validation<br/>• Add type inference | - | AI |
+
+### 4️⃣ Onboarding UI Components
+
+| ID | Type | Status | Description | Sub-Tasks | Blocks → | Owner |
+|:---|:-----|:-------|:------------|:----------|:---------|:------|
+| ONBD-UI-01 | TASK | ✅ | Build `/onboarding/1` – Display Name. | • Add name input<br/>• Add handle generation<br/>• Add validation | ONBD-UI-02 | AI |
+| ONBD-UI-02 | TASK | ✅ | Build `/onboarding/2` – Leader Question. | • Add radio selection<br/>• Add conditional routing<br/>• Add validation | ONBD-UI-03 | AI |
+| ONBD-UI-03 | TASK | ✅ | Build `/onboarding/3` – Space Selection. | • Add space search<br/>• Add selection UI<br/>• Add validation | ONBD-UI-04 | AI |
+| ONBD-UI-04 | TASK | ✅ | Build `/onboarding/4` – Academic Info. | • Add major selection<br/>• Add grad year<br/>• Add validation | ONBD-UI-05 | AI |
+| ONBD-UI-05 | TASK | ✅ | Build `/onboarding/5` – Interests. | • Add interest grid<br/>• Add selection limit<br/>• Add validation | ONBD-UI-06 | AI |
+| ONBD-UI-06 | TASK | ✅ | Build `/onboarding/complete` page. | • Add success animation<br/>• Add redirect logic<br/>• Add analytics | - | AI |
+
+### 5️⃣ Profile & Avatar Components
+
+| ID | Type | Status | Description | Sub-Tasks | Blocks → | Owner |
+|:---|:-----|:-------|:------------|:----------|:---------|:------|
+| PROF-IMG-01 | TASK | ✅ | Update avatar to card format. | • Change from circle to 3:2 card<br/>• Add proper image cropping<br/>• Add loading states | PROF-IMG-02 | AI |
+| PROF-IMG-02 | TASK | ☐ | Add image upload error handling. | • Add size validation<br/>• Add format validation<br/>• Add upload retry logic | - | AI |
+| PROF-NAME-01 | TASK | ✅ | Enhance name validation. | • Block emoji input<br/>• Require first & last name<br/>• Add proper error messages | PROF-NAME-02 | AI |
+| PROF-NAME-02 | TASK | ✅ | Improve username generation. | • Lock username field<br/>• Auto-generate from full name<br/>• Add collision handling | - | AI |
+
+### 6️⃣ Testing & Quality Assurance
+
+| ID | Type | Status | Description | Sub-Tasks | Blocks → | Owner |
+|:---|:-----|:-------|:------------|:----------|:---------|:------|
+| TEST-01 | TASK | ✅ | Add unit tests for auth hooks. | • Test auth state<br/>• Test protected routes<br/>• Test error handling | TEST-02 | AI |
+| TEST-02 | TASK | ✅ | Add unit tests for onboarding store. | • Test state updates<br/>• Test persistence<br/>• Test validation | TEST-03 | AI |
+| TEST-03 | TASK | ☐ | Add E2E tests for complete flow. | • Test auth flow<br/>• Test all onboarding steps<br/>• Test error scenarios | - | AI |
+
+### 7️⃣ Performance & Analytics
+
+| ID | Type | Status | Description | Sub-Tasks | Blocks → | Owner |
+|:---|:-----|:-------|:------------|:----------|:---------|:------|
+| PERF-01 | TASK | ✅ | Optimize auth bundle size. | • Split auth code<br/>• Add dynamic imports<br/>• Verify < 60KB | PERF-02 | AI |
+| PERF-02 | TASK | ✅ | Add loading states and transitions. | • Add skeleton screens<br/>• Add fade transitions<br/>• Add progress indicators | - | AI |
+| ANALYTICS-01 | TASK | ☐ | Add step completion tracking. | • Track time per step<br/>• Track drop-off points<br/>• Track error frequencies | - | AI |
+
+### 8️⃣ Security Improvements
+
+| ID | Type | Status | Description | Sub-Tasks | Blocks → | Owner |
+|:---|:-----|:-------|:------------|:----------|:---------|:------|
+| SEC-01 | TASK | ✅ | Add .edu email validation. | • Add regex validation<br/>• Add domain check<br/>• Add error messages | SEC-02 | AI |
+| SEC-02 | TASK | ✅ | Add magic link expiration. | • Add 10-min expiration<br/>• Add expiration UI<br/>• Add reissue flow | SEC-03 | AI |
+| SEC-03 | TASK | ☐ | Add CSRF protection. | • Add CSRF tokens<br/>• Add validation middleware<br/>• Add tests | - | AI |
+
+---
+
+**Current Status Summary:**
+- ✅ Core Authentication: 75% Complete (3/4 tasks)
+- ✅ Auth UI: 75% Complete (3/4 tasks)
+- ✅ Onboarding Core: 75% Complete (3/4 tasks)
+- ✅ Onboarding UI: 100% Complete (6/6 tasks)
+- ✅ Profile Components: 75% Complete (3/4 tasks)
+- ✅ Testing: 67% Complete (2/3 tasks)
+- ✅ Performance: 67% Complete (2/3 tasks)
+- ✅ Security: 67% Complete (2/3 tasks)
+
+**Next Priority Tasks:**
+1. Add CSRF protection (SEC-03)
+2. Add image upload error handling (PROF-IMG-02)
+3. Add E2E tests (TEST-03)
+4. Add analytics tracking (ANALYTICS-01)
+5. Add rate limiting (AUTH-SEC-01)
