@@ -1,10 +1,10 @@
 // HIVE Design System - Typography Tokens
-// Font stack: Space Grotesk for headlines, Geist for body (S-tier Vercel feel)
+// Font stack: Space Grotesk for headlines, Geist Sans for body (S-tier Vercel feel)
 
 export const typography = {
-  // Font families - UPDATED for S-tier premium feel with Geist
+  // Font families - UPDATED for S-tier premium feel with Geist Sans
   fontFamily: {
-    sans: ["Geist", "Inter Variable", "Inter", "system-ui", "sans-serif"],
+    sans: ["Geist Sans", "Geist", "Inter Variable", "Inter", "system-ui", "sans-serif"],
     display: [
       "Space Grotesk Variable",
       "Space Grotesk",
@@ -23,7 +23,7 @@ export const typography = {
     bold: "700",
   },
 
-  // Type scale - aligned with Geist for premium feel
+  // Type scale - aligned with Geist Sans for premium feel
   fontSize: {
     // Display sizes - Space Grotesk Variable
     display: {
@@ -64,35 +64,35 @@ export const typography = {
       usage: "Card titles, minor headings",
     },
 
-    // Body text - Geist (S-tier premium)
+    // Body text - Geist Sans (S-tier premium)
     body: {
       size: "16px",
       lineHeight: "24px",
       fontWeight: "400",
-      fontFamily: "Geist",
+      fontFamily: "Geist Sans",
       usage: "Body text, paragraphs, default text",
     },
     bodySmall: {
       size: "14px",
       lineHeight: "20px",
       fontWeight: "400",
-      fontFamily: "Geist",
+      fontFamily: "Geist Sans",
       usage: "Smaller body text, captions",
     },
 
-    // UI text - Geist (S-tier premium)
+    // UI text - Geist Sans (S-tier premium)
     caption: {
       size: "12px",
       lineHeight: "18px",
       fontWeight: "400",
-      fontFamily: "Geist",
+      fontFamily: "Geist Sans",
       usage: "Labels, metadata, micro-copy",
     },
     button: {
       size: "14px",
       lineHeight: "20px",
       fontWeight: "500",
-      fontFamily: "Geist",
+      fontFamily: "Geist Sans",
       usage: "Button text, CTAs",
     },
 

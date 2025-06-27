@@ -1,3 +1,6 @@
+/* Import UI package styles (fonts, globals) */
+@import '/fonts/fonts.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
