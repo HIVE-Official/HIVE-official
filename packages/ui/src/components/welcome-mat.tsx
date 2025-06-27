@@ -51,7 +51,7 @@ export function WelcomeMat({
               </CardHeader>
               <CardContent className="flex flex-col gap-3 pt-0">
                 <Button onClick={onDismiss}>Explore Spaces</Button>
-                <Button variant="secondary" onClick={onDismiss}>
+                <Button variant="outline" onClick={onDismiss}>
                   View your profile →
                 </Button>
               </CardContent>

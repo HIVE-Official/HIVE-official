@@ -63,10 +63,10 @@ export const InterestsStep: React.FC<StepProps> = ({ onSubmit, onSkip }) => {
   };
 
   return (
-    <Card className="w-full max-w-lg bg-zinc-900 border-zinc-800">
+    <Card className="w-full max-w-lg bg-card border-border">
       <CardHeader>
-        <CardTitle className="text-white">What are you interested in?</CardTitle>
-        <CardDescription className="text-zinc-400">
+        <CardTitle className="text-card-foreground">What are you interested in?</CardTitle>
+        <CardDescription className="text-muted-foreground">
           Select your interests to help us personalize your experience and connect you with like-minded peers.
         </CardDescription>
       </CardHeader>
@@ -80,8 +80,8 @@ export const InterestsStep: React.FC<StepProps> = ({ onSubmit, onSkip }) => {
               className={`
                 px-3 py-2 text-sm rounded-md border transition-colors text-left
                 ${selectedInterests.includes(interest)
-                  ? 'bg-yellow-500 text-black border-yellow-500'
-                  : 'bg-zinc-800 text-zinc-300 border-zinc-700 hover:bg-zinc-700'
+                  ? 'bg-foreground text-background border-foreground'
+                  : 'bg-surface-01 text-foreground border-border hover:bg-surface-02'
                 }
               `}
             >
@@ -90,7 +90,7 @@ export const InterestsStep: React.FC<StepProps> = ({ onSubmit, onSkip }) => {
           ))}
         </div>
 
-        <div className="text-center text-sm text-zinc-500">
+        <div className="text-center text-sm text-muted-foreground">
           Selected: {selectedInterests.length} interests
         </div>
 
@@ -105,8 +105,9 @@ export const InterestsStep: React.FC<StepProps> = ({ onSubmit, onSkip }) => {
           </Button>
           <Button
             type="button"
+            variant="ritual"
             onClick={handleSubmit}
-            className="flex-1 bg-yellow-500 text-black hover:bg-yellow-600"
+            className="flex-1"
             disabled={selectedInterests.length === 0 || isLoading}
           >
             {isLoading ? (

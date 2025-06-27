@@ -1,16 +1,16 @@
 // HIVE Design System - Typography Tokens
-// Font stack: Space Grotesk for headlines, Inter Variable for body
+// Font stack: Space Grotesk for headlines, Geist for body (S-tier Vercel feel)
 export const typography = {
-    // Font families - CORRECTED to match design-checklist.md
+    // Font families - UPDATED for S-tier premium feel with Geist
     fontFamily: {
-        sans: ["Inter Variable", "Inter", "system-ui", "sans-serif"],
+        sans: ["Geist", "Inter Variable", "Inter", "system-ui", "sans-serif"],
         display: [
             "Space Grotesk Variable",
             "Space Grotesk",
             "system-ui",
             "sans-serif",
         ],
-        mono: ["JetBrains Mono", "Consolas", "Monaco", "monospace"],
+        mono: ["Geist Mono", "JetBrains Mono", "Consolas", "Monaco", "monospace"],
     },
     // Font weights
     fontWeight: {
@@ -20,7 +20,7 @@ export const typography = {
         semibold: "600",
         bold: "700",
     },
-    // Type scale - aligned with design-checklist.md
+    // Type scale - aligned with Geist for premium feel
     fontSize: {
         // Display sizes - Space Grotesk Variable
         display: {
@@ -59,42 +59,42 @@ export const typography = {
             fontFamily: "Space Grotesk Variable",
             usage: "Card titles, minor headings",
         },
-        // Body text - Inter Variable
+        // Body text - Geist (S-tier premium)
         body: {
             size: "16px",
             lineHeight: "24px",
             fontWeight: "400",
-            fontFamily: "Inter Variable",
+            fontFamily: "Geist",
             usage: "Body text, paragraphs, default text",
         },
         bodySmall: {
             size: "14px",
             lineHeight: "20px",
             fontWeight: "400",
-            fontFamily: "Inter Variable",
+            fontFamily: "Geist",
             usage: "Smaller body text, captions",
         },
-        // UI text - Inter Variable
+        // UI text - Geist (S-tier premium)
         caption: {
             size: "12px",
             lineHeight: "18px",
             fontWeight: "400",
-            fontFamily: "Inter Variable",
+            fontFamily: "Geist",
             usage: "Labels, metadata, micro-copy",
         },
         button: {
             size: "14px",
             lineHeight: "20px",
             fontWeight: "500",
-            fontFamily: "Inter Variable",
+            fontFamily: "Geist",
             usage: "Button text, CTAs",
         },
-        // Code text - JetBrains Mono
+        // Code text - Geist Mono (S-tier premium)
         code: {
             size: "14px",
             lineHeight: "20px",
             fontWeight: "400",
-            fontFamily: "JetBrains Mono",
+            fontFamily: "Geist Mono",
             usage: "Code snippets, technical content",
         },
     },

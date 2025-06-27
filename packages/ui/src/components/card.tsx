@@ -4,93 +4,114 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "../lib/utils"
 
 const cardVariants = cva(
-  // Base styles following HIVE brand guidelines
-  "bg-surface text-foreground transition-all duration-[180ms] ease-[cubic-bezier(0.25,0.46,0.45,0.94)]",
+  // Base styles following HIVE brand guidelines with gold accents
+  "bg-surface text-foreground transition-all duration-base ease-smooth",
   {
     variants: {
       variant: {
-        // Default elevated surface
+        // DEFAULT: Subtle surface with gold hover accent
         default: [
           "border border-border rounded-xl", // 12px radius per brand guidelines
           "shadow-sm hover:shadow-md",
-          "hover:border-[#4A4A4A] hover:bg-surface-02/50"
+          "hover:border-accent/30 hover:bg-surface-02/50 hover:shadow-accent/5"
         ],
         
-        // Elevated with more prominent shadow
+        // ACCENT: Gold border for featured content
+        accent: [
+          "border border-accent/30 rounded-xl",
+          "bg-surface shadow-md shadow-accent/5",
+          "hover:border-accent/50 hover:shadow-lg hover:shadow-accent/10 hover:bg-surface-02"
+        ],
+        
+        // ELEVATED: Enhanced elevation with gold glow
         elevated: [
           "border border-border rounded-xl",
-          "shadow-md hover:shadow-lg hover:shadow-black/20",
-          "hover:border-accent/20 hover:bg-surface-02"
+          "shadow-md hover:shadow-lg hover:shadow-accent/10",
+          "hover:border-accent/20 hover:bg-surface-02 hover:-translate-y-0.5"
         ],
         
-        // Outline style - transparent background
+        // OUTLINE: Transparent with border
         outline: [
           "border-2 border-border bg-transparent rounded-xl",
-          "hover:bg-surface-01/50 hover:border-accent/30"
+          "hover:bg-surface-01/50 hover:border-accent/40"
         ],
         
-        // Ghost - minimal styling
+        // GHOST: Minimal styling
         ghost: [
           "border-transparent bg-transparent rounded-xl",
-          "hover:bg-surface-01/50"
+          "hover:bg-surface-01/50 hover:border-accent/20"
         ],
         
-        // Accent variant for special content
-        accent: [
-          "border border-accent/20 rounded-xl",
-          "bg-surface shadow-lg shadow-accent/5",
-          "hover:shadow-accent/10 hover:border-accent/30 hover:bg-surface-02"
-        ],
-        
-        // Glassmorphism effect for modal-like surfaces
+        // GLASS: Glassmorphism effect with gold accents
         glass: [
           "border border-white/10 rounded-xl",
           "bg-surface/75 backdrop-blur-[12px] backdrop-saturate-180",
-          "shadow-lg hover:bg-surface/80"
+          "shadow-lg hover:bg-surface/80 hover:border-accent/20"
         ],
         
-        // Interactive card that responds to clicks
+        // INTERACTIVE: For clickable cards
         interactive: [
           "border border-border rounded-xl cursor-pointer",
-          "shadow-sm hover:shadow-md hover:border-accent/20",
-          "hover:-translate-y-0.5 hover:bg-surface-02/50",
+          "shadow-sm hover:shadow-lg hover:border-accent/30",
+          "hover:-translate-y-1 hover:bg-surface-02/50 hover:shadow-accent/10",
           "active:scale-[0.99] active:translate-y-0"
         ],
-      },
-      padding: {
-        none: "",
-        xs: "p-3", // 12px - using 8px grid
-        sm: "p-4", // 16px
-        default: "p-6", // 24px 
-        lg: "p-8", // 32px
-        xl: "p-12", // 48px
+        
+        // FEATURED: Special cards with gold treatment
+        featured: [
+          "border-2 border-accent/40 rounded-xl",
+          "bg-surface shadow-lg shadow-accent/10",
+          "hover:border-accent/60 hover:shadow-xl hover:shadow-accent/15 hover:-translate-y-0.5",
+          "ring-1 ring-accent/10"
+        ],
+        
+        // SURFACE-01/02/03: Different elevation levels
+        "surface-01": [
+          "border border-border rounded-xl bg-surface-01",
+          "shadow-sm hover:shadow-md hover:border-accent/20"
+        ],
+        "surface-02": [
+          "border border-border rounded-xl bg-surface-02",
+          "shadow-md hover:shadow-lg hover:border-accent/30"
+        ],
+        "surface-03": [
+          "border border-border rounded-xl bg-surface-03",
+          "shadow-lg hover:shadow-xl hover:border-accent/40"
+        ],
       },
       size: {
-        sm: "max-w-sm",
-        default: "max-w-none",
-        lg: "max-w-2xl",
-        xl: "max-w-4xl",
-        full: "w-full",
-      }
+        sm: "p-4",
+        default: "p-6",
+        lg: "p-8",
+        xl: "p-12",
+      },
+      spacing: {
+        none: "p-0",
+        compact: "p-3",
+        comfortable: "p-6",
+        spacious: "p-8",
+      },
     },
     defaultVariants: {
       variant: "default",
-      padding: "default",
       size: "default",
     },
   }
 )
 
-const Card = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & VariantProps<typeof cardVariants>
->(({ className, variant, padding, size, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn(cardVariants({ variant, padding, size, className }))}
-    {...props}
-  />
-))
+export interface CardProps
+  extends React.HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof cardVariants> {}
+
+const Card = React.forwardRef<HTMLDivElement, CardProps>(
+  ({ className, variant, size, spacing, ...props }, ref) => (
+    <div
+      ref={ref}
+      className={cn(cardVariants({ variant, size, spacing, className }))}
+      {...props}
+    />
+  )
+)
 Card.displayName = "Card"
 
 const CardHeader = React.forwardRef<
@@ -99,27 +120,21 @@ const CardHeader = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("flex flex-col space-y-2 pb-4", className)}
+    className={cn("flex flex-col space-y-1.5 p-6", className)}
     {...props}
   />
 ))
 CardHeader.displayName = "CardHeader"
 
 const CardTitle = React.forwardRef<
-  HTMLHeadingElement,
+  HTMLParagraphElement,
   React.HTMLAttributes<HTMLHeadingElement>
->(({ className, children, ...props }, ref) => (
+>(({ className, ...props }, ref) => (
   <h3
     ref={ref}
-    className={cn(
-      // Using Space Grotesk for card titles per brand guidelines
-      "font-display text-xl font-semibold leading-tight tracking-tight text-foreground",
-      className
-    )}
+    className={cn("text-h3 font-display font-semibold leading-none tracking-tight", className)}
     {...props}
-  >
-    {children}
-  </h3>
+  />
 ))
 CardTitle.displayName = "CardTitle"
 
@@ -129,11 +144,7 @@ const CardDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn(
-      // Using Geist for body text per brand guidelines
-      "font-sans text-sm text-muted leading-relaxed",
-      className
-    )}
+    className={cn("text-body font-sans text-muted-foreground", className)}
     {...props}
   />
 ))
@@ -143,7 +154,7 @@ const CardContent = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn("", className)} {...props} />
+  <div ref={ref} className={cn("p-6 pt-0", className)} {...props} />
 ))
 CardContent.displayName = "CardContent"
 
@@ -153,7 +164,7 @@ const CardFooter = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("flex items-center pt-4", className)}
+    className={cn("flex items-center p-6 pt-0", className)}
     {...props}
   />
 ))
@@ -210,13 +221,4 @@ const CardStatus = React.forwardRef<
 })
 CardStatus.displayName = "CardStatus"
 
-export { 
-  Card, 
-  CardHeader, 
-  CardFooter, 
-  CardTitle, 
-  CardDescription, 
-  CardContent, 
-  CardStatus,
-  cardVariants 
-} 
+export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent, CardStatus, cardVariants } 

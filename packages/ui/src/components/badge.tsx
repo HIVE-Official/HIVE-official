@@ -4,39 +4,52 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "../lib/utils"
 
 const badgeVariants = cva(
-  "inline-flex items-center rounded-full border font-sans text-caption font-medium transition-all duration-fast ease-smooth focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2",
+  "inline-flex items-center rounded-full border font-sans text-caption font-medium transition-all duration-base ease-smooth focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2",
   {
     variants: {
       variant: {
-        // Primary badge - high contrast
-        default: "border-transparent bg-foreground text-background hover:bg-foreground/90",
+        // DEFAULT: Gold border/line - the new HIVE standard
+        default: "border-accent bg-transparent text-accent hover:bg-accent/10 hover:shadow-sm hover:shadow-accent/20",
         
-        // Secondary badge - subtle surface
-        secondary: "border-transparent bg-surface-01 text-foreground hover:bg-surface-02",
+        // OUTLINE: Subtle border variant
+        outline: "border-border text-foreground hover:bg-accent/5 hover:border-accent/50 hover:text-accent",
         
-        // Ritual badge - ONLY allowed gold fill (for special HIVE moments)
-        ritual: "border-transparent bg-accent text-background hover:bg-accent/90 shadow-sm shadow-accent/20 font-semibold",
+        // ACCENT: Full gold treatment for special content
+        accent: "border-accent bg-accent/10 text-accent hover:bg-accent/20 hover:shadow-md hover:shadow-accent/20 font-semibold",
         
-        // Outline variants - no fills, borders/text only
-        outline: "border-border text-foreground hover:bg-accent/10 hover:border-accent/50",
-        ghost: "border-transparent text-muted hover:bg-accent/10 hover:text-foreground",
+        // RITUAL: ONLY allowed gold fill (for special HIVE moments)
+        ritual: "border-accent bg-accent text-background hover:bg-accent/90 shadow-sm shadow-accent/20 font-semibold",
         
-        // Muted variant for less important info
-        muted: "border-transparent bg-surface-02 text-muted hover:bg-surface-01",
+        // GHOST: Minimal styling
+        ghost: "border-transparent text-muted hover:bg-accent/10 hover:text-accent",
         
-        // Additional variants for special use cases
-        positive: "border-transparent bg-[#22C55E] text-background hover:bg-[#22C55E]/90",
-        neutral: "border-transparent bg-[#F59E0B] text-background hover:bg-[#F59E0B]/90",
-        accent: "border-transparent bg-accent text-background hover:bg-accent/90",
-        interactive: "border-border text-accent hover:bg-accent/10 hover:border-accent cursor-pointer",
-        mention: "border-accent/30 bg-accent/10 text-accent hover:bg-accent/20",
-        hashtag: "border-border text-muted hover:bg-surface-01 hover:text-foreground",
+        // SURFACE: Subtle surface styling
+        surface: "border-border bg-surface-01 text-foreground hover:bg-surface-02 hover:border-accent/30 hover:text-accent",
+        
+        // MUTED: For less important info
+        muted: "border-transparent bg-surface-02 text-muted hover:bg-surface-01 hover:text-foreground",
+        
+        // STATUS VARIANTS: Using gold as the primary with state colors as accents
+        positive: "border-green-500 bg-transparent text-green-400 hover:bg-green-500/10",
+        warning: "border-amber-500 bg-transparent text-amber-400 hover:bg-amber-500/10",
+        negative: "border-red-500 bg-transparent text-red-400 hover:bg-red-500/10",
+        info: "border-blue-500 bg-transparent text-blue-400 hover:bg-blue-500/10",
+        
+        // INTERACTIVE: Clickable badges with gold accent
+        interactive: "border-accent text-accent hover:bg-accent/10 hover:shadow-md hover:shadow-accent/20 cursor-pointer active:scale-[0.98]",
+        
+        // MENTION: For @mentions with gold styling
+        mention: "border-accent/30 bg-accent/10 text-accent hover:bg-accent/20 hover:border-accent/50",
+        
+        // HASHTAG: For #tags with subtle styling
+        hashtag: "border-border text-muted hover:bg-accent/5 hover:text-accent hover:border-accent/30",
       },
       size: {
-        xs: "px-1.5 py-0.5 text-xs min-h-[1.25rem]",
-        sm: "px-2 py-0.5 text-xs",
-        default: "px-2.5 py-0.5 text-caption",
-        lg: "px-3 py-1 text-body-sm",
+        xs: "px-1.5 py-0.5 text-xs",
+        sm: "px-2 py-0.5 text-caption",
+        default: "px-2.5 py-1 text-caption",
+        lg: "px-3 py-1.5 text-body-sm",
+        xl: "px-4 py-2 text-body",
       },
     },
     defaultVariants: {
@@ -53,11 +66,7 @@ export interface BadgeProps
 const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
   ({ className, variant, size, ...props }, ref) => {
     return (
-      <div 
-        ref={ref}
-        className={cn(badgeVariants({ variant, size }), className)} 
-        {...props} 
-      />
+      <div ref={ref} className={cn(badgeVariants({ variant, size }), className)} {...props} />
     )
   }
 )
@@ -98,7 +107,7 @@ const StatusBadge = React.forwardRef<
 >(({ status, ...props }, ref) => {
   const statusConfig = {
     online: { variant: "positive" as const, text: "Online" },
-    away: { variant: "neutral" as const, text: "Away" },
+    away: { variant: "muted" as const, text: "Away" },
     offline: { variant: "muted" as const, text: "Offline" },
     busy: { variant: "accent" as const, text: "Busy" },
   }

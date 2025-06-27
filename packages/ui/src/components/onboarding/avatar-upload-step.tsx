@@ -38,10 +38,10 @@ export const AvatarUploadStep: React.FC<StepProps> = ({ onSubmit, onSkip }) => {
   };
 
   return (
-    <Card className="w-full max-w-lg bg-zinc-900 border-zinc-800">
+    <Card className="w-full max-w-lg bg-card border-border">
       <CardHeader>
-        <CardTitle className="text-white">Upload your avatar</CardTitle>
-        <CardDescription className="text-zinc-400">
+        <CardTitle className="text-card-foreground">Upload your avatar</CardTitle>
+        <CardDescription className="text-muted-foreground">
           Choose a profile picture to help others recognize you.
         </CardDescription>
       </CardHeader>
@@ -56,12 +56,12 @@ export const AvatarUploadStep: React.FC<StepProps> = ({ onSubmit, onSkip }) => {
           />
           <label
             htmlFor="avatar-upload"
-            className="cursor-pointer bg-zinc-800 hover:bg-zinc-700 text-zinc-300 px-4 py-2 rounded-md transition-colors"
+            className="cursor-pointer bg-surface-01 hover:bg-surface-02 text-foreground px-4 py-2 rounded-md transition-colors"
           >
             Choose file
           </label>
           {selectedFile && (
-            <div className="text-zinc-400">
+            <div className="text-muted-foreground">
               Selected: {selectedFile.name}
             </div>
           )}
@@ -78,8 +78,9 @@ export const AvatarUploadStep: React.FC<StepProps> = ({ onSubmit, onSkip }) => {
           </Button>
           <Button
             type="button"
+            variant="primary-white"
             onClick={handleSubmit}
-            className="flex-1 bg-yellow-500 text-black hover:bg-yellow-600"
+            className="flex-1"
             disabled={!selectedFile || isLoading}
           >
             {isLoading ? (

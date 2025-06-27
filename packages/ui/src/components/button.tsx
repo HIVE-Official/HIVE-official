@@ -6,88 +6,97 @@ import { Loader2 } from "lucide-react"
 import { cn } from "../lib/utils"
 
 const buttonVariants = cva(
-  // Base styles following HIVE brand guidelines
-  "inline-flex items-center justify-center whitespace-nowrap font-medium ring-offset-background transition-all duration-[180ms] ease-[cubic-bezier(0.25,0.46,0.45,0.94)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 select-none",
+  // Base styles following HIVE brand guidelines - GOLD LINES FIRST
+  "inline-flex items-center justify-center whitespace-nowrap font-medium ring-offset-background transition-all duration-base ease-smooth focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 select-none",
   {
     variants: {
       variant: {
-        // BRAND COMPLIANT: Outline is the default (transparent with border)
+        // PRIMARY: Gold border/line - the new HIVE standard (Vercel-inspired)
+        default: [
+          "border-2 border-accent bg-transparent text-accent",
+          "hover:bg-accent/10 hover:border-accent/80 hover:text-accent hover:shadow-lg hover:shadow-accent/20",
+          "focus-visible:bg-accent/10 focus-visible:border-accent",
+          "active:scale-[0.98] active:bg-accent/15",
+          "disabled:border-accent/30 disabled:text-accent/30"
+        ],
+        
+        // OUTLINE: Subtle border variant
         outline: [
           "border border-border bg-transparent text-foreground",
-          "hover:bg-surface-03 hover:border-[#4A4A4A] hover:text-foreground",
+          "hover:border-accent/50 hover:text-accent hover:bg-accent/5",
           "focus-visible:border-accent focus-visible:text-accent",
           "active:scale-[0.98]",
-          "disabled:border-disabled disabled:text-disabled"
+          "disabled:border-border/50 disabled:text-muted"
         ],
         
-        // BRAND COMPLIANT: White fill for primary actions (use sparingly)
-        "primary-white": [
-          "bg-foreground text-background border border-foreground",
-          "hover:bg-foreground/90 hover:shadow-sm",
-          "focus-visible:ring-accent",
-          "active:scale-[0.98]",
-          "disabled:bg-disabled disabled:text-muted disabled:border-disabled"
-        ],
-        
-        // BRAND COMPLIANT: Black fill for secondary emphasis
-        "primary-black": [
-          "bg-background text-foreground border border-border",
-          "hover:bg-surface-03 hover:border-[#4A4A4A]",
-          "focus-visible:border-accent focus-visible:text-accent",
-          "active:scale-[0.98]",
-          "disabled:bg-disabled disabled:text-disabled disabled:border-disabled"
-        ],
-        
-        // BRAND COMPLIANT: ONLY allowed gold fill - for ritual moments
-        ritual: [
-          "bg-accent text-background border border-accent font-semibold",
-          "hover:bg-accent/90 hover:shadow-lg hover:shadow-accent/20",
-          "focus-visible:ring-background focus-visible:ring-offset-accent",
-          "active:scale-[0.98] active:shadow-md",
-          "disabled:bg-disabled disabled:text-muted disabled:border-disabled"
-        ],
-        
-        // Ghost variant - no border, subtle hover
+        // GHOST: Minimal, hover reveals gold
         ghost: [
           "bg-transparent text-foreground border-transparent",
-          "hover:bg-surface-03 hover:text-foreground",
-          "focus-visible:bg-surface-03 focus-visible:text-accent",
+          "hover:bg-accent/10 hover:text-accent",
+          "focus-visible:bg-accent/10 focus-visible:text-accent",
           "active:scale-[0.98]",
-          "disabled:text-disabled"
+          "disabled:text-muted"
         ],
         
-        // Secondary with surface background
-        secondary: [
-          "bg-surface text-foreground border border-transparent",
-          "hover:bg-surface-02 hover:border-border",
+        // ACCENT: Full gold treatment for special moments
+        accent: [
+          "border-2 border-accent bg-accent/10 text-accent font-semibold",
+          "hover:bg-accent/20 hover:shadow-lg hover:shadow-accent/25 hover:scale-[1.02]",
+          "focus-visible:ring-accent/50",
+          "active:scale-[0.98] active:bg-accent/25",
+          "disabled:bg-accent/5 disabled:border-accent/30 disabled:text-accent/30"
+        ],
+        
+        // RITUAL: ONLY gold fill allowed (special HIVE moments)
+        ritual: [
+          "bg-accent text-background border-2 border-accent font-semibold",
+          "hover:bg-accent/90 hover:shadow-xl hover:shadow-accent/30 hover:scale-[1.02]",
+          "focus-visible:ring-background focus-visible:ring-offset-accent",
+          "active:scale-[0.98] active:shadow-lg",
+          "disabled:bg-accent/50 disabled:text-background/70"
+        ],
+        
+        // SURFACE: Subtle surface interaction
+        surface: [
+          "bg-surface-01 text-foreground border border-border",
+          "hover:bg-surface-02 hover:border-accent/30 hover:text-accent",
           "focus-visible:border-accent focus-visible:text-accent",
           "active:scale-[0.98]",
-          "disabled:bg-disabled disabled:text-disabled"
+          "disabled:bg-surface-01/50 disabled:text-muted"
         ],
         
-        // Link style
+        // LINK: Text-only with gold accent
         link: [
           "text-foreground underline-offset-4 border-none bg-transparent p-0 h-auto",
           "hover:underline hover:text-accent",
           "focus-visible:ring-1 focus-visible:ring-accent",
-          "disabled:text-disabled disabled:no-underline"
+          "disabled:text-muted disabled:no-underline"
         ],
         
-        // Navigation style
+        // NAVIGATION: Subtle for nav items
         nav: [
           "bg-transparent text-muted border-transparent",
-          "hover:text-foreground hover:bg-surface-03",
-          "focus-visible:text-accent focus-visible:bg-surface-03",
+          "hover:text-accent hover:bg-accent/5",
+          "focus-visible:text-accent focus-visible:bg-accent/5",
           "active:scale-[0.98]",
-          "disabled:text-disabled"
+          "disabled:text-muted/50"
+        ],
+        
+        // DESTRUCTIVE: Red variant when needed
+        destructive: [
+          "border-2 border-red-500 bg-transparent text-red-500",
+          "hover:bg-red-500/10 hover:border-red-400",
+          "focus-visible:ring-red-500/50",
+          "active:scale-[0.98]",
+          "disabled:border-red-500/30 disabled:text-red-500/30"
         ],
       },
       size: {
-        xs: "h-7 px-2.5 text-xs rounded-md font-medium",
-        sm: "h-8 px-3 text-sm rounded-md font-medium", 
-        default: "h-10 px-4 text-sm rounded-lg font-medium",
-        lg: "h-12 px-6 text-base rounded-lg font-medium",
-        xl: "h-14 px-8 text-lg rounded-xl font-semibold",
+        xs: "h-7 px-2.5 text-caption rounded-md font-medium",
+        sm: "h-8 px-3 text-body-sm rounded-md font-medium", 
+        default: "h-10 px-4 text-body rounded-lg font-medium",
+        lg: "h-12 px-6 text-body rounded-lg font-medium",
+        xl: "h-14 px-8 text-h4 rounded-xl font-semibold",
         icon: "h-10 w-10 rounded-lg",
         "icon-sm": "h-8 w-8 rounded-md",
         "icon-lg": "h-12 w-12 rounded-xl",
@@ -98,7 +107,7 @@ const buttonVariants = cva(
       },
     },
     defaultVariants: {
-      variant: "outline",
+      variant: "default",
       size: "default",
       fullWidth: false,
     },

@@ -7,15 +7,15 @@ import { StepProps } from './types';
 
 export const OnboardingCompleteStep: React.FC<StepProps> = ({ onSubmit }) => {
   return (
-    <Card className="w-full max-w-lg bg-zinc-900 border-zinc-800">
+    <Card className="w-full max-w-lg bg-card border-border">
       <CardHeader>
-        <CardTitle className="text-white">Welcome to HIVE!</CardTitle>
-        <CardDescription className="text-zinc-400">
+        <CardTitle className="text-card-foreground">Welcome to HIVE!</CardTitle>
+        <CardDescription className="text-muted-foreground">
           You&apos;re all set up and ready to start connecting with your academic community.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
-        <div className="text-center text-zinc-300">
+        <div className="text-center text-card-foreground">
           <p>
             We&apos;ve created your profile and connected you with relevant communities based on your interests.
           </p>
@@ -25,8 +25,9 @@ export const OnboardingCompleteStep: React.FC<StepProps> = ({ onSubmit }) => {
         </div>
 
         <Button
+          variant="ritual"
           onClick={() => void onSubmit(null)}
-          className="w-full bg-yellow-500 text-black hover:bg-yellow-600"
+          className="w-full"
         >
           Get Started
         </Button>

@@ -5,7 +5,7 @@ import { useAuth } from "@hive/auth-logic";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { logger } from "@hive/core";
-import { Loader2 } from "lucide-react";
+import { PageLoader } from "@hive/ui";
 
 // Temporary type definition until UI package is updated
 interface OnboardingData {
@@ -31,11 +31,11 @@ function HiveOnboardingV3({
 }) {
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <div className="max-w-md w-full bg-zinc-900 border border-zinc-800 rounded-lg p-6 text-center">
-        <h1 className="text-2xl font-bold text-white mb-4">
+      <div className="max-w-md w-full bg-surface-01 border border-border rounded-lg p-6 text-center">
+        <h1 className="text-h2 font-display font-semibold text-foreground mb-4">
           Complete Your Profile
         </h1>
-        <p className="text-zinc-400 mb-6">
+        <p className="text-body font-sans text-muted mb-6 leading-relaxed">
           Onboarding component is being built. For now, you can skip to the main app.
         </p>
         <button
@@ -50,7 +50,7 @@ function HiveOnboardingV3({
               legalAccepted: true,
             });
           }}
-          className="w-full bg-accent hover:bg-accent-600 text-background font-semibold py-3 px-4 rounded-md transition-colors"
+          className="w-full bg-accent hover:bg-accent/90 text-background font-semibold py-3 px-4 rounded-lg transition-colors duration-base ease-smooth focus:ring-2 focus:ring-accent/30 focus:ring-offset-2 focus:ring-offset-background"
         >
           Continue to HIVE
         </button>
@@ -140,11 +140,7 @@ export default function OnboardingV3Page() {
   };
 
   if (isLoading || !user) {
-    return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <Loader2 className="h-12 w-12 text-yellow-500 animate-spin" />
-      </div>
-    );
+    return <PageLoader message="Loading your profile..." />;
   }
 
   void router.push('/onboarding/complete');

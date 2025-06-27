@@ -1,8 +1,8 @@
 export declare const typography: {
     readonly fontFamily: {
-        readonly sans: readonly ["Inter Variable", "Inter", "system-ui", "sans-serif"];
+        readonly sans: readonly ["Geist", "Inter Variable", "Inter", "system-ui", "sans-serif"];
         readonly display: readonly ["Space Grotesk Variable", "Space Grotesk", "system-ui", "sans-serif"];
-        readonly mono: readonly ["JetBrains Mono", "Consolas", "Monaco", "monospace"];
+        readonly mono: readonly ["Geist Mono", "JetBrains Mono", "Consolas", "Monaco", "monospace"];
     };
     readonly fontWeight: {
         readonly light: "300";
@@ -51,35 +51,35 @@ export declare const typography: {
             readonly size: "16px";
             readonly lineHeight: "24px";
             readonly fontWeight: "400";
-            readonly fontFamily: "Inter Variable";
+            readonly fontFamily: "Geist";
             readonly usage: "Body text, paragraphs, default text";
         };
         readonly bodySmall: {
             readonly size: "14px";
             readonly lineHeight: "20px";
             readonly fontWeight: "400";
-            readonly fontFamily: "Inter Variable";
+            readonly fontFamily: "Geist";
             readonly usage: "Smaller body text, captions";
         };
         readonly caption: {
             readonly size: "12px";
             readonly lineHeight: "18px";
             readonly fontWeight: "400";
-            readonly fontFamily: "Inter Variable";
+            readonly fontFamily: "Geist";
             readonly usage: "Labels, metadata, micro-copy";
         };
         readonly button: {
             readonly size: "14px";
             readonly lineHeight: "20px";
             readonly fontWeight: "500";
-            readonly fontFamily: "Inter Variable";
+            readonly fontFamily: "Geist";
             readonly usage: "Button text, CTAs";
         };
         readonly code: {
             readonly size: "14px";
             readonly lineHeight: "20px";
             readonly fontWeight: "400";
-            readonly fontFamily: "JetBrains Mono";
+            readonly fontFamily: "Geist Mono";
             readonly usage: "Code snippets, technical content";
         };
     };
@@ -98,10 +98,10 @@ export declare const typography: {
     };
 };
 export declare const getFontSize: (key: keyof typeof typography.fontSize) => {
-    fontSize: "12px" | "24px" | "64px" | "48px" | "32px" | "20px" | "16px" | "14px";
-    lineHeight: "24px" | "72px" | "56px" | "32px" | "40px" | "20px" | "28px" | "18px";
+    fontSize: "64px" | "48px" | "32px" | "24px" | "20px" | "16px" | "14px" | "12px";
+    lineHeight: "72px" | "56px" | "32px" | "40px" | "24px" | "20px" | "28px" | "18px";
     fontWeight: "400" | "500" | "600";
-    fontFamily: "Inter Variable" | "Space Grotesk Variable" | "JetBrains Mono";
+    fontFamily: "Geist" | "Space Grotesk Variable" | "Geist Mono";
 };
 export declare const tailwindFontSizes: {
     readonly display: readonly ["64px", "72px"];

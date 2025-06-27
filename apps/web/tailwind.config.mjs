@@ -82,9 +82,9 @@ const config = {
         20: "80px",
       },
       fontFamily: {
-        sans: ["var(--font-sans)", "Inter", "system-ui", "sans-serif"],
-        display: ["var(--font-display)", "Space Grotesk", "system-ui", "sans-serif"],
-        mono: ["var(--font-mono)", "JetBrains Mono", "monospace"],
+        sans: ["var(--font-sans)", "Geist", "Inter", "system-ui", "sans-serif"],
+        display: ["var(--font-display)", "Space Grotesk Variable", "Space Grotesk", "system-ui", "sans-serif"],
+        mono: ["var(--font-mono)", "Geist Mono", "JetBrains Mono", "monospace"],
       },
       fontSize: {
         xs: ["0.75rem", { lineHeight: "1rem" }],
@@ -101,14 +101,33 @@ const config = {
         "8xl": ["6rem", { lineHeight: "1" }],
         "9xl": ["8rem", { lineHeight: "1" }],
       },
+      fontSize: {
+        // HIVE Typography Scale - from packages/tokens/src/typography.ts
+        'display': ['64px', { lineHeight: '72px', fontWeight: '600' }],
+        'h1': ['48px', { lineHeight: '56px', fontWeight: '600' }],
+        'h2': ['32px', { lineHeight: '40px', fontWeight: '600' }],
+        'h3': ['24px', { lineHeight: '32px', fontWeight: '600' }],
+        'h4': ['20px', { lineHeight: '28px', fontWeight: '600' }],
+        'body': ['16px', { lineHeight: '24px', fontWeight: '400' }],
+        'body-sm': ['14px', { lineHeight: '20px', fontWeight: '400' }],
+        'caption': ['12px', { lineHeight: '18px', fontWeight: '400' }],
+        'button': ['14px', { lineHeight: '20px', fontWeight: '500' }],
+        'code': ['14px', { lineHeight: '20px', fontWeight: '400' }],
+      },
       transitionDuration: {
-        fast: "150ms",
-        base: "250ms",
-        slow: "350ms",
-        content: "500ms",
+        // HIVE Motion Timing - from packages/tokens/src/motion.ts
+        'instant': '50ms',     // Immediate feedback
+        'fast': '120ms',       // Micro-interactions
+        'base': '180ms',       // Content transitions  
+        'slow': '280ms',       // Complex animations
+        'ritual': '400ms',     // Special HIVE moments
       },
       transitionTimingFunction: {
-        "hive-smooth": "cubic-bezier(0.4, 0, 0.2, 1)",
+        // HIVE Brand Easing - from packages/tokens/src/motion.ts
+        'smooth': 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+        'snap': 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+        'elegant': 'cubic-bezier(0.23, 1, 0.32, 1)',
+        'brand': 'cubic-bezier(0.33, 0.65, 0, 1)',
       },
       boxShadow: {
         sm: "0 1px 2px 0 rgb(0 0 0 / 0.05)",

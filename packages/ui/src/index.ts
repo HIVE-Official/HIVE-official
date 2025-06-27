@@ -12,6 +12,9 @@ export { Textarea } from "./components/textarea";
 export { Select, SelectTrigger, SelectContent, SelectItem, SelectValue, SelectGroup } from "./components/select";
 export { Skeleton } from "./components/skeleton";
 
+// Export loading components
+export { LoadingSpinner, PageLoader, InlineLoader, CardLoader } from "./components/loading-spinner";
+
 // Export typography components
 export { Typography, Heading, Text, Caption, Code } from "./components/typography";
 

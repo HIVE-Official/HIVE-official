@@ -44,17 +44,17 @@ export const AcademicCardStep: React.FC<StepProps> = ({ onSubmit, onSkip }) => {
   const isFormValid = formData.institution && formData.department && formData.role;
 
   return (
-    <Card className="w-full max-w-lg bg-zinc-900 border-zinc-800">
+    <Card className="w-full max-w-lg bg-card border-border">
       <CardHeader>
-        <CardTitle className="text-white">Academic Information</CardTitle>
-        <CardDescription className="text-zinc-400">
+        <CardTitle className="text-card-foreground">Academic Information</CardTitle>
+        <CardDescription className="text-muted-foreground">
           Tell us about your academic background to help us connect you with relevant peers and content.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="space-y-4">
           <div>
-            <Label htmlFor="institution" className="text-zinc-300">
+            <Label htmlFor="institution" className="text-card-foreground">
               Institution
             </Label>
             <Input
@@ -63,12 +63,12 @@ export const AcademicCardStep: React.FC<StepProps> = ({ onSubmit, onSkip }) => {
               value={formData.institution}
               onChange={handleChange}
               placeholder="e.g., Stanford University"
-              className="bg-zinc-800 border-zinc-700 text-white"
+              className="bg-input border-border text-foreground"
             />
           </div>
 
           <div>
-            <Label htmlFor="department" className="text-zinc-300">
+            <Label htmlFor="department" className="text-card-foreground">
               Department
             </Label>
             <Input
@@ -77,12 +77,12 @@ export const AcademicCardStep: React.FC<StepProps> = ({ onSubmit, onSkip }) => {
               value={formData.department}
               onChange={handleChange}
               placeholder="e.g., Computer Science"
-              className="bg-zinc-800 border-zinc-700 text-white"
+              className="bg-input border-border text-foreground"
             />
           </div>
 
           <div>
-            <Label htmlFor="role" className="text-zinc-300">
+            <Label htmlFor="role" className="text-card-foreground">
               Role
             </Label>
             <Input
@@ -91,12 +91,12 @@ export const AcademicCardStep: React.FC<StepProps> = ({ onSubmit, onSkip }) => {
               value={formData.role}
               onChange={handleChange}
               placeholder="e.g., PhD Student"
-              className="bg-zinc-800 border-zinc-700 text-white"
+              className="bg-input border-border text-foreground"
             />
           </div>
 
           <div>
-            <Label htmlFor="graduationYear" className="text-zinc-300">
+            <Label htmlFor="graduationYear" className="text-card-foreground">
               Expected Graduation Year (Optional)
             </Label>
             <Input
@@ -105,7 +105,7 @@ export const AcademicCardStep: React.FC<StepProps> = ({ onSubmit, onSkip }) => {
               value={formData.graduationYear}
               onChange={handleChange}
               placeholder="e.g., 2025"
-              className="bg-zinc-800 border-zinc-700 text-white"
+              className="bg-input border-border text-foreground"
             />
           </div>
         </div>
@@ -121,8 +121,9 @@ export const AcademicCardStep: React.FC<StepProps> = ({ onSubmit, onSkip }) => {
           </Button>
           <Button
             type="button"
+            variant="primary-white"
             onClick={handleSubmit}
-            className="flex-1 bg-yellow-500 text-black hover:bg-yellow-600"
+            className="flex-1"
             disabled={!isFormValid || isLoading}
           >
             {isLoading ? (
