@@ -1,3 +1,7 @@
+@import '@fontsource/inter/index.css';
+@import '@fontsource/space-grotesk/index.css';
+@import '@fontsource/jetbrains-mono/index.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -28,6 +32,10 @@
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
+    /* Font variables to match the design system */
+    --font-sans: 'Inter', 'Geist', 'system-ui', sans-serif;
+    --font-display: 'Space Grotesk', 'system-ui', sans-serif;
+    --font-mono: 'JetBrains Mono', 'monospace';
   }
 }
 

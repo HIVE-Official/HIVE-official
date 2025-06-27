@@ -24,6 +24,9 @@
     "react-firebase-hooks": "^5.1.1",
     "react-hook-form": "^7.58.1",
     "sonner": "^2.0.5",
+    "@fontsource/inter": "^5.2.6",
+    "@fontsource/space-grotesk": "^5.2.8",
+    "@fontsource/jetbrains-mono": "^5.2.6",
     "zod": "^3.25.67"
   },
   "devDependencies": {

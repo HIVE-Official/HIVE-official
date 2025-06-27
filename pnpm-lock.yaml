@@ -61,6 +61,15 @@ importers:
 
   apps/admin:
     dependencies:
+      '@fontsource/inter':
+        specifier: ^5.2.6
+        version: 5.2.6
+      '@fontsource/jetbrains-mono':
+        specifier: ^5.2.6
+        version: 5.2.6
+      '@fontsource/space-grotesk':
+        specifier: ^5.2.8
+        version: 5.2.8
       '@hive/auth-logic':
         specifier: workspace:*
         version: link:../../packages/auth-logic

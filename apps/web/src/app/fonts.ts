@@ -1,29 +1,11 @@
-import { Inter, Space_Grotesk, JetBrains_Mono } from 'next/font/google';
-
-// Configure Inter for body text
-export const inter = Inter({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-sans',
-});
-
-// Configure Space Grotesk for display text
-export const spaceGrotesk = Space_Grotesk({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-display',
-});
-
-// Configure JetBrains Mono for code
-export const jetbrainsMono = JetBrains_Mono({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-mono',
-});
-
-// Export configured fonts
+// Map font family utility classes used across the app.
+// These classes are defined in the shared Tailwind config
+// (packages/ui/tailwind.config.ts) and rely on fonts imported
+// via global CSS.
 export const fonts = {
-  sans: inter.variable,
-  display: spaceGrotesk.variable,
-  mono: jetbrainsMono.variable,
-}; 
+  sans: 'font-sans',
+  display: 'font-display',
+  mono: 'font-mono',
+};
+
+export default fonts;

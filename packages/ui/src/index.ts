@@ -26,6 +26,7 @@ export { AppHeader } from "./components/AppHeader";
 export { BottomNavBar } from "./components/BottomNavBar";
 export { HiveLogo } from "./components/HiveLogo";
 export { WelcomeMat, useWelcomeMat } from "./components/welcome-mat";
+export { ToastProvider, useToast } from "./components/toast-provider";
 
 // Export authentication components
 export * from "./components/auth";

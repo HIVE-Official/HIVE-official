@@ -1,6 +1,8 @@
 'use client';
 
-import { AuthFlow, type School, type AuthFlowCallbacks } from '@hive/ui';
+import { AuthFlow, ToastProvider, type School, type AuthFlowCallbacks } from '@hive/ui';
+
+export const dynamic = 'force-dynamic';
 import { useState } from 'react';
 
 const mockSchools: School[] = [
@@ -115,12 +117,14 @@ export default function AuthFlowDemo() {
   }
 
   return (
-    <div>
-      <AuthFlow 
-        schools={mockSchools}
-        callbacks={callbacks}
-        initialStep="splash"
-      />
-    </div>
+    <ToastProvider>
+      <div>
+        <AuthFlow
+          schools={mockSchools}
+          callbacks={callbacks}
+          initialStep="splash"
+        />
+      </div>
+    </ToastProvider>
   );
-} 
+}

@@ -54,9 +54,10 @@ export default [
   // Storybook-specific configuration
   {
     files: ["src/**/*.stories.@(js|jsx|ts|tsx)"],
+    plugins: { storybook },
     rules: {
       "storybook/story-exports": "off", // Temporarily disable to debug
       "storybook/no-renderer-packages": "off", // Temporarily disable to debug
     }
   }
-]; 
+];
