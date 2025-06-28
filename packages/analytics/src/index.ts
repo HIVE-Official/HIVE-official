@@ -11,4 +11,8 @@ export type {
 } from './types';
 
 // Export analytics service
-export { AnalyticsService } from './tracking'; 
+export { AnalyticsService } from './tracking';
+
+export * from './analytics-client'
+export * from './analytics-types'
+export * from './analytics-hooks' 

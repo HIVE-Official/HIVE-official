@@ -90,7 +90,6 @@ export function OnboardingNameStep() {
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 placeholder="Enter your full name"
-                className="h-12"
                 required
                 minLength={2}
                 maxLength={50}
@@ -115,7 +114,7 @@ export function OnboardingNameStep() {
                   value={handle}
                   onChange={(e) => setHandle(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ''))}
                   placeholder="your_username"
-                  className="h-12 pl-8"
+                  className="pl-8"
                   required
                   minLength={3}
                   maxLength={20}
@@ -159,7 +158,8 @@ export function OnboardingNameStep() {
             {/* Submit Button */}
             <Button
               type="submit"
-              className="w-full h-12"
+              size="lg"
+              className="w-full"
               disabled={!isFormValid || isLoading}
             >
               {isLoading ? (

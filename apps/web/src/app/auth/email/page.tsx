@@ -70,7 +70,7 @@ export default function AuthEmailPage() {
 
   const handleSkipToOnboarding = () => {
     logger.info('Development mode: skipping to onboarding')
-    router.push('/onboarding/1')
+    router.push('/onboarding/welcome')
   }
 
   const getDomain = (email: string) => {

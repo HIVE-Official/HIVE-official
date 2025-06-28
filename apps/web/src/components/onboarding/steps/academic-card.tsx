@@ -59,7 +59,7 @@ export function AcademicCard() {
       graduationYear
     });
 
-    router.push('/onboarding/2'); // Navigate to space discovery
+    router.push('/onboarding/3'); // Navigate to interests step
   };
 
   return (

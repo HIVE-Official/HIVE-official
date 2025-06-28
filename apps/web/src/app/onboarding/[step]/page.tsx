@@ -16,12 +16,5 @@ export const metadata: Metadata = {
 export default async function OnboardingStepPage({ params }: OnboardingStepPageProps) {
   const { step } = await params;
   
-  return <OnboardingStepClient step={step as keyof typeof STEPS} />;
+  return <OnboardingStepClient step={step} />;
 }
-
-const STEPS = {
-  '1': 'AcademicCard',        // Start with academic info to build trust
-  '2': 'SpaceDiscovery',      // Auto-join based on major + choose others
-  '3': 'DisplayNameAvatar',   // Personal details after trust established
-  '4': 'Interests',           // Refine recommendations
-} as const;

@@ -6,6 +6,7 @@ import { UserLookup } from "../../components/user-lookup";
 import { BuilderQueue } from "../../components/builder-queue";
 import { FlagQueue } from "../../components/flag-queue";
 import { MetricCards } from "../../components/metric-cards";
+import { AnalyticsDashboard } from "../../components/analytics-dashboard";
 import { getCurrentAdmin } from "@/lib/auth";
 
 
@@ -23,48 +24,61 @@ export default function AdminDashboard() {
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-white">Admin Dashboard</h1>
           <p className="mt-2 text-gray-400">
-            Moderation tools and platform oversight
+            Platform oversight, analytics, and moderation tools
           </p>
         </div>
 
-        {/* Metric Cards */}
+        {/* Comprehensive Analytics Dashboard */}
         <div className="mb-8">
+          <AnalyticsDashboard />
+        </div>
+
+        {/* Legacy Metric Cards (for reference) */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-semibold text-white">Quick Overview</h2>
+            <span className="text-xs text-gray-500">Legacy metrics - see detailed analytics above</span>
+          </div>
           <MetricCards />
         </div>
 
-        {/* Main Tools Grid */}
-        <div className="grid gap-6 lg:grid-cols-2">
-          {/* User Lookup */}
-          <Card className="border-gray-700 bg-gray-900/50">
-            <CardHeader>
-              <CardTitle className="text-white">User Lookup</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <UserLookup />
-            </CardContent>
-          </Card>
+        {/* Admin Tools Grid */}
+        <div className="space-y-6">
+          <h2 className="text-xl font-semibold text-white">Admin Tools</h2>
+          
+          <div className="grid gap-6 lg:grid-cols-2">
+            {/* User Lookup */}
+            <Card className="border-gray-700 bg-gray-900/50">
+              <CardHeader>
+                <CardTitle className="text-white">User Lookup</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <UserLookup />
+              </CardContent>
+            </Card>
 
-          {/* Builder Approval Queue */}
-          <Card className="border-gray-700 bg-gray-900/50">
-            <CardHeader>
-              <CardTitle className="text-white">Builder Approvals</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <BuilderQueue />
-            </CardContent>
-          </Card>
-        </div>
+            {/* Builder Approval Queue */}
+            <Card className="border-gray-700 bg-gray-900/50">
+              <CardHeader>
+                <CardTitle className="text-white">Builder Approvals</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <BuilderQueue />
+              </CardContent>
+            </Card>
+          </div>
 
-        {/* Flag Queue - Full Width */}
-        <div className="mt-6">
-          <Card className="border-gray-700 bg-gray-900/50">
-            <CardHeader>
-              <CardTitle className="text-white">Content Flags</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <FlagQueue />
-            </CardContent>
-          </Card>
+          {/* Flag Queue - Full Width */}
+          <div>
+            <Card className="border-gray-700 bg-gray-900/50">
+              <CardHeader>
+                <CardTitle className="text-white">Content Flags</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <FlagQueue />
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
     </div>

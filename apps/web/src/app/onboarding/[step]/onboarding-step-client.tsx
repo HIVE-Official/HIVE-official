@@ -7,15 +7,13 @@ import { logger } from "@hive/core";
 import type { OnboardingData, AcademicLevel } from "@hive/core";
 import { Loader2 } from "lucide-react";
 import { useOnboardingStore } from '@/lib/stores/onboarding';
+import { WelcomeStep } from '@hive/ui';
 import { DisplayNameAvatar as DisplayNameAvatarBase } from '@/components/onboarding/steps/display-name-avatar';
-import { LeaderQuestion as LeaderQuestionBase } from '@/components/onboarding/steps/leader-question';
-import { SpaceVerification as SpaceVerificationBase } from '@/components/onboarding/steps/space-verification';
 import { AcademicCard as AcademicCardBase } from '@/components/onboarding/steps/academic-card';
 import { Interests as InterestsBase } from '@/components/onboarding/steps/interests';
-import SpaceDiscoveryStep from '@/components/onboarding/steps/space-discovery';
 
 interface OnboardingStepClientProps {
-  step: keyof typeof STEPS;
+  step: string;
 }
 
 interface StepComponentProps {
@@ -25,18 +23,19 @@ interface StepComponentProps {
 }
 
 // Wrapper components that adapt the existing components to the expected interface
+const Welcome: React.FC<StepComponentProps> = ({ onNext }) => {
+  return (
+    <WelcomeStep 
+      onNext={() => onNext?.(1)}
+      userEmail="student@university.edu" // TODO: Get from auth context
+    />
+  );
+};
+
 const DisplayNameAvatar: React.FC<StepComponentProps> = ({ onNext: _onNext, onPrev: _onPrev, data: _data }) => {
   // The existing component handles its own logic, so we just render it
   // The onNext/onPrev/data props are available if we need to customize behavior
   return <DisplayNameAvatarBase />;
-};
-
-const LeaderQuestion: React.FC<StepComponentProps> = ({ onNext: _onNext, onPrev: _onPrev, data: _data }) => {
-  return <LeaderQuestionBase />;
-};
-
-const SpaceVerification: React.FC<StepComponentProps> = ({ onNext: _onNext, onPrev: _onPrev, data: _data }) => {
-  return <SpaceVerificationBase />;
 };
 
 const AcademicCard: React.FC<StepComponentProps> = ({ onNext: _onNext, onPrev: _onPrev, data: _data }) => {
@@ -47,15 +46,11 @@ const Interests: React.FC<StepComponentProps> = ({ onNext: _onNext, onPrev: _onP
   return <InterestsBase />;
 };
 
-const SpaceDiscovery: React.FC<StepComponentProps> = ({ onNext: _onNext, onPrev: _onPrev, data: _data }) => {
-  return <SpaceDiscoveryStep />;
-};
-
 const STEPS: Record<string, React.ComponentType<StepComponentProps>> = {
-  '1': AcademicCard,        // Start with academic info to build trust
-  '2': SpaceDiscovery,      // Auto-join based on major + choose others  
-  '3': DisplayNameAvatar,   // Personal details after trust established
-  '4': Interests,           // Refine recommendations
+  'welcome': Welcome,       // Context setting and value proposition
+  '1': DisplayNameAvatar,   // Personal identity first - builds connection
+  '2': AcademicCard,        // Academic context - sets university context  
+  '3': Interests,           // Personalization - customize experience
 } as const;
 
 // Use the same check as auth hook for consistency
@@ -71,7 +66,7 @@ const initialDevData: Partial<OnboardingData> = {
   majors: ['Computer Science'],
   graduationYear: new Date().getFullYear() + 4,
   interests: [],
-  spaceId: undefined
+  consentGiven: false
 };
 
 export function OnboardingStepClient({ step }: OnboardingStepClientProps) {
@@ -102,13 +97,26 @@ export function OnboardingStepClient({ step }: OnboardingStepClientProps) {
     if (nextStep) {
       router.push(`/onboarding/${nextStep}`);
     } else {
-      router.push("/onboarding/complete");
+      // Determine next step based on current step
+      if (step === 'welcome') {
+        router.push('/onboarding/1');
+      } else if (step === '3') {
+        router.push("/onboarding/complete");
+      } else {
+        const currentNum = parseInt(step);
+        router.push(`/onboarding/${currentNum + 1}`);
+      }
     }
   };
 
   const handlePrev = () => {
-    if (parseInt(step) > 1) {
-      router.push(`/onboarding/${parseInt(step) - 1}`);
+    if (step === '1') {
+      router.push('/onboarding/welcome');
+    } else if (step !== 'welcome') {
+      const currentNum = parseInt(step);
+      if (currentNum > 1) {
+        router.push(`/onboarding/${currentNum - 1}`);
+      }
     }
   };
 
@@ -138,9 +146,10 @@ export function OnboardingStepClient({ step }: OnboardingStepClientProps) {
     }
   }, [onboardingData, update, isAuthLoading]);
 
-  // Handle invalid step numbers
-  if (isNaN(parseInt(step)) || parseInt(step) < 1 || parseInt(step) > Object.keys(STEPS).length) {
-    router.replace('/onboarding/1');
+  // Handle invalid step identifiers (support both 'welcome' and numeric steps)
+  const validSteps = Object.keys(STEPS);
+  if (!validSteps.includes(step)) {
+    router.replace('/onboarding/welcome');
     return null;
   }
 
@@ -183,10 +192,10 @@ export function OnboardingStepClient({ step }: OnboardingStepClientProps) {
               The requested onboarding step does not exist.
             </p>
             <button 
-              onClick={() => router.push('/onboarding/1')}
+              onClick={() => router.push('/onboarding/welcome')}
               className="px-4 py-2 bg-primary text-primary-foreground rounded-md"
             >
-              Go to Step 1
+              Go to Welcome
             </button>
           </div>
         </div>
@@ -214,32 +223,28 @@ export function OnboardingStepClient({ step }: OnboardingStepClientProps) {
   useEffect(() => {
     if (!isInitialized) return;
 
-    // If no onboarding data, start from beginning
-    if (!onboardingData && step !== '1') {
-      router.replace('/onboarding/1');
+    // If no onboarding data, start from welcome (except if already on welcome)
+    if (!onboardingData && step !== 'welcome' && step !== '1') {
+      router.replace('/onboarding/welcome');
       return;
     }
 
     // Step-specific validation
     switch (step) {
+      case '1':
+        // Step 1 can be accessed after welcome or if data exists
+        break;
       case '2':
+        // Step 2 (Academic) requires name and handle from Step 1
         if (!onboardingData?.fullName || !onboardingData?.handle) {
           router.replace('/onboarding/1');
         }
         break;
       case '3':
-        // Only show verification step if they are a student leader
-        if (!onboardingData?.isStudentLeader) {
-          router.replace('/onboarding/4');
-        }
-        break;
-      case '4':
-        if (!onboardingData?.fullName || !onboardingData?.handle) {
+        // Step 3 (Interests) requires previous steps completed
+        if (!onboardingData?.fullName || !onboardingData?.handle || 
+            !onboardingData?.academicLevel || !onboardingData?.majors?.length) {
           router.replace('/onboarding/1');
-        }
-        // If they're a leader, they must have selected a space
-        if (onboardingData?.isStudentLeader && !onboardingData?.spaceId) {
-          router.replace('/onboarding/2');
         }
         break;
     }
@@ -255,10 +260,10 @@ export function OnboardingStepClient({ step }: OnboardingStepClientProps) {
             The requested onboarding step does not exist.
           </p>
           <button 
-            onClick={() => router.push('/onboarding/1')}
+            onClick={() => router.push('/onboarding/welcome')}
             className="px-4 py-2 bg-primary text-primary-foreground rounded-md"
           >
-            Go to Step 1
+            Go to Welcome
           </button>
         </div>
       </div>

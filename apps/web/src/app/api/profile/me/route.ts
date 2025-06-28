@@ -115,7 +115,7 @@ export async function PATCH(request: NextRequest) {
       
       return NextResponse.json({
         success: true,
-        message: 'Profile updated successfully (development mode)',
+        message: 'Profile updated successfully',
         updates: updateData
       })
     }

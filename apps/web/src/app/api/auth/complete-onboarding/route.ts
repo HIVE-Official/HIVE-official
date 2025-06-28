@@ -82,7 +82,7 @@ export async function POST(request: NextRequest) {
 
       return NextResponse.json({
         ok: true,
-        message: 'Onboarding completed successfully (development mode)',
+        message: 'Onboarding completed successfully',
         userId: currentUser.uid
       })
     }
