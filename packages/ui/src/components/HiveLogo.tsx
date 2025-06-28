@@ -1,8 +1,10 @@
+"use client";
+
 import React from "react";
-import { motion } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
 import { cn } from "../lib/utils";
 
-interface HiveLogoProps extends React.HTMLProps<HTMLDivElement> {
+interface HiveLogoProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   variant?: "white" | "black" | "gold";
   size?: "sm" | "md" | "lg" | "xl" | "2xl" | "3xl";
   animationType?: "none" | "pulse" | "spin" | "gentle-float";
@@ -17,12 +19,12 @@ const sizeClasses = {
   "3xl": "h-48 w-48",
 };
 
-const animationVariants = {
+const animationVariants: Variants = {
   pulse: {
     scale: [1, 1.05, 1],
     transition: {
       duration: 2,
-      ease: "easeInOut",
+      ease: "easeInOut" as const,
       repeat: Infinity,
     },
   },
@@ -30,7 +32,7 @@ const animationVariants = {
     rotate: [0, 360],
     transition: {
       duration: 15,
-      ease: "linear",
+      ease: "linear" as const,
       repeat: Infinity,
     },
   },
@@ -38,7 +40,7 @@ const animationVariants = {
     y: ["-5%", "5%"],
     transition: {
       duration: 4,
-      ease: "easeInOut",
+      ease: "easeInOut" as const,
       repeat: Infinity,
       repeatType: "reverse" as const,
     },

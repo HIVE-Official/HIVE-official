@@ -269,7 +269,7 @@ export function SpaceClaiming({
             {onBack && (
               <Button
                 onClick={onBack}
-                variant="ghost"
+                variant="outline"
                 className="w-full"
                 disabled={isLoading}
               >
@@ -294,7 +294,7 @@ export function SpaceClaiming({
               </h3>
               <Button
                 onClick={() => setSelectedSpace(null)}
-                variant="ghost"
+                variant="outline"
                 size="sm"
                 disabled={isSubmitting}
               >
