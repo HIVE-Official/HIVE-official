@@ -1,4 +1,4 @@
-import type { AcademicLevel } from "@hive/core";
+import type { AcademicLevel } from "../types/onboarding";
 
 export const ACADEMIC_LEVELS: { value: AcademicLevel; label: string }[] = [
   { value: "undergraduate", label: "Undergraduate" },
