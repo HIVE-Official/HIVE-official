@@ -162,11 +162,13 @@ export async function GET(request: NextRequest) {
 
     logger.info(`Space discovery: Found ${allSpaces.length} spaces, ${autoJoinSpaces.length} auto-join matches`);
 
-    return NextResponse.json({
+    const response: SpaceDiscoveryResponse = {
       success: true,
       spaces: categorizedSpaces,
       autoJoinSpaces
-    });
+    };
+
+    return NextResponse.json(response);
 
   } catch (error) {
     logger.error('Error in space discovery:', error);

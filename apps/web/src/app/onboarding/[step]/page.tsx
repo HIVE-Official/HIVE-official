@@ -19,7 +19,7 @@ export default async function OnboardingStepPage({ params }: OnboardingStepPageP
   return <OnboardingStepClient step={step as keyof typeof STEPS} />;
 }
 
-const STEPS = {
+const _STEPS = {
   '1': 'AcademicCard',        // Start with academic info to build trust
   '2': 'SpaceDiscovery',      // Auto-join based on major + choose others
   '3': 'DisplayNameAvatar',   // Personal details after trust established

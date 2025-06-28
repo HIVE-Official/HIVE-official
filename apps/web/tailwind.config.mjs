@@ -87,6 +87,7 @@ const config = {
         mono: ["var(--font-mono)", "Geist Mono", "JetBrains Mono", "monospace"],
       },
       fontSize: {
+        // Standard Tailwind sizes
         xs: ["0.75rem", { lineHeight: "1rem" }],
         sm: ["0.875rem", { lineHeight: "1.25rem" }],
         base: ["1rem", { lineHeight: "1.5rem" }],
@@ -100,8 +101,6 @@ const config = {
         "7xl": ["4.5rem", { lineHeight: "1" }],
         "8xl": ["6rem", { lineHeight: "1" }],
         "9xl": ["8rem", { lineHeight: "1" }],
-      },
-      fontSize: {
         // HIVE Typography Scale - from packages/tokens/src/typography.ts
         'display': ['64px', { lineHeight: '72px', fontWeight: '600' }],
         'h1': ['48px', { lineHeight: '56px', fontWeight: '600' }],

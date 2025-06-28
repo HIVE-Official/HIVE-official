@@ -8,8 +8,8 @@ import type { OnboardingData, AcademicLevel } from "@hive/core";
 import { Loader2 } from "lucide-react";
 import { useOnboardingStore } from '@/lib/stores/onboarding';
 import { DisplayNameAvatar as DisplayNameAvatarBase } from '@/components/onboarding/steps/display-name-avatar';
-import { LeaderQuestion as LeaderQuestionBase } from '@/components/onboarding/steps/leader-question';
-import { SpaceVerification as SpaceVerificationBase } from '@/components/onboarding/steps/space-verification';
+// import { LeaderQuestion as LeaderQuestionBase } from '@/components/onboarding/steps/leader-question';
+// import { SpaceVerification as SpaceVerificationBase } from '@/components/onboarding/steps/space-verification';
 import { AcademicCard as AcademicCardBase } from '@/components/onboarding/steps/academic-card';
 import { Interests as InterestsBase } from '@/components/onboarding/steps/interests';
 import SpaceDiscoveryStep from '@/components/onboarding/steps/space-discovery';
@@ -31,13 +31,13 @@ const DisplayNameAvatar: React.FC<StepComponentProps> = ({ onNext: _onNext, onPr
   return <DisplayNameAvatarBase />;
 };
 
-const LeaderQuestion: React.FC<StepComponentProps> = ({ onNext: _onNext, onPrev: _onPrev, data: _data }) => {
-  return <LeaderQuestionBase />;
-};
+// const LeaderQuestion: React.FC<StepComponentProps> = ({ onNext: _onNext, onPrev: _onPrev, data: _data }) => {
+//   return <LeaderQuestionBase />;
+// };
 
-const SpaceVerification: React.FC<StepComponentProps> = ({ onNext: _onNext, onPrev: _onPrev, data: _data }) => {
-  return <SpaceVerificationBase />;
-};
+// const SpaceVerification: React.FC<StepComponentProps> = ({ onNext: _onNext, onPrev: _onPrev, data: _data }) => {
+//   return <SpaceVerificationBase />;
+// };
 
 const AcademicCard: React.FC<StepComponentProps> = ({ onNext: _onNext, onPrev: _onPrev, data: _data }) => {
   return <AcademicCardBase />;
