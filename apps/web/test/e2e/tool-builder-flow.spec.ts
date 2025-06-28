@@ -314,9 +314,9 @@ test.describe("Tool Builder - Happy Path", () => {
     );
 
     // Verify tool is accessible via public URL
-    const toolUrl = await page
+    const toolUrl = (await page
       .locator('[data-testid="public-url"]')
-      .textContent();
+      .textContent())!;
     await page.goto(toolUrl);
     await expect(page.locator('[data-testid="published-tool"]')).toBeVisible();
   });
@@ -332,9 +332,9 @@ test.describe("Tool Builder - Happy Path", () => {
     await page.click('[data-testid="create-share-link"]');
 
     // Copy share link
-    const shareLink = await page
+    const shareLink = (await page
       .locator('[data-testid="share-link"]')
-      .textContent();
+      .textContent())!;
     expect(shareLink).toContain("/tools/shared/");
 
     // Test share link in new tab
@@ -683,32 +683,32 @@ test.describe('Tool Builder Flow', () => {
     await page.click('[data-testid="create-tool"]')
 
     // Get tool URL from response
-    const toolUrl = await page.evaluate(() => {
+    const toolUrl = (await page.evaluate(() => {
       const urlElement = document.querySelector('[data-testid="tool-url"]')
       const href = urlElement?.getAttribute('href')
       return href !== null ? href : '/tools/test-tool'
-    })
+      })) as string
 
     // Navigate to tool
-    await page.goto(toolUrl)
+      await page.goto(toolUrl)
 
     // Share tool
     await page.click('[data-testid="share-button"]')
-    const shareLink = await page.evaluate(() => {
-      const linkElement = document.querySelector('[data-testid="share-link"]')
-      const value = linkElement?.getAttribute('value')
-      return value !== null ? value : '/tools/test-tool/share'
-    })
+      const shareLink = (await page.evaluate(() => {
+        const linkElement = document.querySelector('[data-testid="share-link"]')
+        const value = linkElement?.getAttribute('value')
+        return value !== null ? value : '/tools/test-tool/share'
+      })) as string
 
     // Open tool in new tab
     const newPage = await context.newPage()
-    await newPage.goto(shareLink)
+      await newPage.goto(shareLink!)
 
     // Verify tool loads in new tab
     await expect(newPage.locator('[data-testid="tool-name"]')).toContainText('Test Tool')
 
     // Navigate back to original tool
-    await page.goto(shareLink)
+      await page.goto(shareLink!)
     await expect(page.locator('[data-testid="tool-name"]')).toContainText('Test Tool')
   })
 })

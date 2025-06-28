@@ -26,7 +26,7 @@ import { Loader2, Upload } from "lucide-react";
 import { debounce } from "lodash";
 import { AuthUser } from "@hive/auth-logic";
 import { logger } from "@hive/core";
-import type { OnboardingData } from "@hive/core";
+import type { OnboardingState } from "@hive/core";
 
 // A utility to generate a handle from a name
 const generateHandle = (name: string) => {
@@ -39,9 +39,9 @@ const generateHandle = (name: string) => {
 
 interface StepProps {
   user: AuthUser;
-  onNext: (nextStep?: number, data?: Partial<OnboardingData>) => void;
+  onNext: (nextStep?: number, data?: Partial<OnboardingState>) => void;
   onPrev?: () => void;
-  data?: Partial<OnboardingData>;
+  data?: Partial<OnboardingState>;
 }
 
 export const DisplayNameAvatarStep: React.FC<StepProps> = ({
@@ -368,11 +368,11 @@ export const AcademicCardStep: React.FC<StepProps> = ({
 }) => {
   const handleSubmit = async (formData: { major: string; graduationYear: number } | null) => {
     if (!formData) return;
-    
+
     onNext(undefined, {
       major: formData.major,
       graduationYear: formData.graduationYear,
-    });
+    } as Partial<OnboardingState>);
   };
 
   return (

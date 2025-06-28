@@ -61,7 +61,7 @@ export function OnboardingInterestsStep() {
     try {
       await update({
         interests: [],
-        onboardingCompleted: true,
+        isComplete: true,
       });
 
       logger.info("Interests skipped, onboarding completed");
@@ -78,7 +78,7 @@ export function OnboardingInterestsStep() {
     try {
       await update({
         interests: selectedInterests,
-        onboardingCompleted: true,
+        isComplete: true,
       });
 
       logger.info("Interests saved, onboarding completed:", {
@@ -147,7 +147,7 @@ export function OnboardingInterestsStep() {
               <div key={category} className="space-y-3">
                 <h3 className="font-medium text-card-foreground">{category}</h3>
                 <div className="flex flex-wrap gap-2">
-                  {interests.map((interest) => (
+                  {interests.map((interest: string) => (
                     <Badge
                       key={interest}
                       variant={

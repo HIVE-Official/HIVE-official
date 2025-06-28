@@ -1,4 +1,5 @@
 import { z } from "zod";
+import type { ServiceAccount } from "firebase-admin";
 
 /**
  * Environment configuration schema - Development-friendly version
@@ -16,6 +17,7 @@ const envSchema = z.object({
   NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: z.string().min(1).optional(),
   NEXT_PUBLIC_FIREBASE_APP_ID: z.string().min(1).optional(),
   NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID: z.string().optional(),
+  NEXT_PUBLIC_DEBUG: z.string().optional(),
 
   // Firebase Admin Configuration (Server-side only) - All optional for development
   FIREBASE_PROJECT_ID: z.string().optional(),
@@ -46,6 +48,7 @@ try {
       NEXT_PUBLIC_FIREBASE_APP_ID: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
       NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID:
         process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
+      NEXT_PUBLIC_DEBUG: process.env.NEXT_PUBLIC_DEBUG,
       FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID,
       FIREBASE_CLIENT_EMAIL: process.env.FIREBASE_CLIENT_EMAIL,
       FIREBASE_PRIVATE_KEY: process.env.FIREBASE_PRIVATE_KEY,
@@ -93,7 +96,7 @@ export function getFirebaseConfig() {
 /**
  * Get Firebase Admin configuration for server-side operations
  */
-export function getFirebaseAdminConfig() {
+export function getFirebaseAdminConfig(): ServiceAccount | null {
   if (
     !env.FIREBASE_PROJECT_ID ||
     !env.FIREBASE_CLIENT_EMAIL ||
@@ -106,10 +109,9 @@ export function getFirebaseAdminConfig() {
   }
 
   return {
-    type: "service_account",
-    project_id: env.FIREBASE_PROJECT_ID,
-    client_email: env.FIREBASE_CLIENT_EMAIL,
-    private_key: env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n"),
+    projectId: env.FIREBASE_PROJECT_ID,
+    clientEmail: env.FIREBASE_CLIENT_EMAIL,
+    privateKey: env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n"),
   };
 }
 

@@ -5,6 +5,7 @@ import { useState, useEffect, useRef } from "react";
 import { Card, Button, Input, Label } from "@hive/ui";
 import { useOnboardingStore } from "@/lib/stores/onboarding";
 import { useHandleAvailability } from "@/hooks/use-handle-availability";
+import type { OnboardingState } from "@hive/core";
 import {
   XIcon,
   Upload,
@@ -20,11 +21,11 @@ import { httpsCallable } from "firebase/functions";
 
 interface DisplayNameAvatarProps {
   onNext: (data: {
-    fullName: string;
+    displayName: string;
     handle: string;
     avatarUrl?: string;
   }) => void;
-  data: Partial<OnboardingData>;
+  data: Partial<OnboardingState>;
 }
 
 function generateHandle(name: string): string {
@@ -57,7 +58,7 @@ export function DisplayNameAvatar({
   data: onboardingData,
 }: DisplayNameAvatarProps) {
   const { update } = useOnboardingStore();
-  const [fullName, setFullName] = useState(onboardingData?.fullName ?? "");
+  const [displayName, setDisplayName] = useState(onboardingData?.displayName ?? "");
   const [handle, setHandle] = useState(onboardingData?.handle ?? "");
   const [avatarUrl, setAvatarUrl] = useState(onboardingData?.avatarUrl ?? "");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -72,10 +73,10 @@ export function DisplayNameAvatar({
 
   // Update handle when name changes
   useEffect(() => {
-    if (fullName) {
-      setHandle(generateHandle(fullName));
+    if (displayName) {
+      setHandle(generateHandle(displayName));
     }
-  }, [fullName]);
+  }, [displayName]);
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -164,7 +165,7 @@ export function DisplayNameAvatar({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!validateName(fullName)) {
+    if (!validateName(displayName)) {
       setError(
         "Please enter your full name (first and last) without emojis or special characters"
       );
@@ -198,7 +199,7 @@ export function DisplayNameAvatar({
       }
 
       const submissionData = {
-        fullName,
+        displayName,
         handle,
         avatarUrl: finalAvatarUrl,
       };
@@ -314,13 +315,13 @@ export function DisplayNameAvatar({
 
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="fullName" className="text-foreground font-medium">
-                Full Name
+              <Label htmlFor="displayName" className="text-foreground font-medium">
+                Display Name
               </Label>
               <Input
-                id="fullName"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
+                id="displayName"
+                value={displayName}
+                onChange={(e) => setDisplayName(e.target.value)}
                 placeholder="Enter your first and last name"
                 className="bg-surface-02 border-border/30 focus:border-accent"
                 required
@@ -383,8 +384,8 @@ export function DisplayNameAvatar({
 
           <Button
             type="submit"
-            disabled={
-              !fullName ||
+          disabled={
+              !displayName ||
               !handle ||
               isUploading ||
               handleAvailability.isChecking ||

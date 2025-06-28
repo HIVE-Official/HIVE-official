@@ -49,9 +49,15 @@ export interface OnboardingState {
   isStudentLeader: boolean;
   verificationLevel: VerificationLevel; // Default 'verified', upgraded to 'verified+' after manual review
   spaceClaims?: SpaceClaim[]; // Spaces claimed by student leaders
+  spaceType?: SpaceType;
+  spaceId?: string;
+  verificationEmails?: string[];
 
   // Step 4: Interests
   interests: string[];
+  selectedSpaces?: string[];
+  autoJoinSpaces?: string[];
+  spaceDiscoveryCompleted?: boolean;
 
   // Step 5: Suggested Spaces (for all users)
   suggestedSpaces?: string[]; // Space IDs they can pre-join

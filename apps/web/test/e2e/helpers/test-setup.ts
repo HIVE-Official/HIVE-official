@@ -12,6 +12,7 @@ const mockUser: TestUser = {
   uid: 'test-user-123',
   emailVerified: true,
   isAnonymous: false,
+  customClaims: {},
   metadata: {
     creationTime: new Date().toISOString(),
     lastSignInTime: new Date().toISOString()

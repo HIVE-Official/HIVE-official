@@ -360,13 +360,13 @@ test.describe('Space Feed Flow', () => {
     // Verify analytics events were tracked
     expect(analyticsEvents.length).toBeGreaterThan(0)
     
-    const postCreatedEvent = analyticsEvents.find(e => e.event === 'post_created')
+    const postCreatedEvent = analyticsEvents.find(e => e.event === 'post_created')!
     expect(postCreatedEvent).toBeDefined()
     expect(postCreatedEvent.spaceId).toBe(testSpace.id)
     
-    const postReactedEvent = analyticsEvents.find(e => e.event === 'post_reaction')
+    const postReactedEvent = analyticsEvents.find(e => e.event === 'post_reaction')!
     expect(postReactedEvent).toBeDefined()
-    expect(postReactedEvent.metadata.reaction).toBe('heart')
+    expect(postReactedEvent.metadata!.reaction).toBe('heart')
   })
 
   test('create and interact with post', async ({ page }) => {

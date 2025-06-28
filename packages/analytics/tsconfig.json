@@ -15,7 +15,7 @@
     "sourceMap": true,
     "outDir": "dist",
     "rootDir": "src",
-    "composite": true,
+    "composite": false,
     "noEmit": false,
     "types": ["node"],
     "baseUrl": "."
