@@ -1,22 +1,31 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Card, Button, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@hive/ui';
-import { useOnboardingStore } from '@/lib/stores/onboarding';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import {
+  Card,
+  Button,
+  Label,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@hive/ui";
+import { useOnboardingStore } from "@/lib/stores/onboarding";
 
 // Mock spaces data for now - TODO: Replace with real API call
 const mockSpaces = {
   academic: [
-    { id: 'cs-majors', name: 'Computer Science Majors' },
-    { id: 'business-students', name: 'Business Students' },
-    { id: 'pre-med', name: 'Pre-Med Track' },
+    { id: "cs-majors", name: "Computer Science Majors" },
+    { id: "business-students", name: "Business Students" },
+    { id: "pre-med", name: "Pre-Med Track" },
   ],
   social: [
-    { id: 'gaming-club', name: 'Gaming Club' },
-    { id: 'intramural-sports', name: 'Intramural Sports' },
-    { id: 'music-lovers', name: 'Music Lovers' },
-  ]
+    { id: "gaming-club", name: "Gaming Club" },
+    { id: "intramural-sports", name: "Intramural Sports" },
+    { id: "music-lovers", name: "Music Lovers" },
+  ],
 };
 
 type Space = {
@@ -27,24 +36,28 @@ type Space = {
 export function LeaderQuestion() {
   const router = useRouter();
   const { data: onboardingData, update } = useOnboardingStore();
-  const [isLeader, setIsLeader] = useState(onboardingData?.isStudentLeader ?? false);
-  const [spaceType, setSpaceType] = useState(onboardingData?.spaceType ?? 'academic');
-  const [spaceId, setSpaceId] = useState(onboardingData?.spaceId ?? '');
+  const [isLeader, setIsLeader] = useState(
+    onboardingData?.isStudentLeader ?? false
+  );
+  const [spaceType, setSpaceType] = useState(
+    onboardingData?.spaceType ?? "academic"
+  );
+  const [spaceId, setSpaceId] = useState(onboardingData?.spaceId ?? "");
 
   // Get available spaces based on type
   const spaces = mockSpaces[spaceType as keyof typeof mockSpaces] || [];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     await update({
       isStudentLeader: isLeader,
       spaceId: isLeader ? spaceId : undefined,
-      spaceType: isLeader ? spaceType : undefined
+      spaceType: isLeader ? spaceType : undefined,
     });
 
     // If they are a leader, go to verification step, otherwise skip to academic
-    router.push(isLeader ? '/onboarding/3' : '/onboarding/4');
+    router.push(isLeader ? "/onboarding/3" : "/onboarding/4");
   };
 
   return (
@@ -52,7 +65,8 @@ export function LeaderQuestion() {
       <div className="space-y-4">
         <h2 className="text-2xl font-bold">Are you a student leader?</h2>
         <p className="text-muted-foreground">
-          Let us know if you're a leader of any student organizations, clubs, or academic groups.
+          We&apos;re looking for student leaders who want to help shape their
+          campus communities.
         </p>
       </div>
 
@@ -64,14 +78,14 @@ export function LeaderQuestion() {
               variant={isLeader ? "default" : "outline"}
               onClick={() => setIsLeader(true)}
             >
-              Yes, I'm a student leader
+              Yes, I&apos;m a student leader
             </Button>
             <Button
               type="button"
               variant={!isLeader ? "default" : "outline"}
               onClick={() => setIsLeader(false)}
             >
-              No, I'm not
+              No, I&apos;m not
             </Button>
           </div>
 
@@ -85,7 +99,9 @@ export function LeaderQuestion() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="clubs">Student Club</SelectItem>
-                    <SelectItem value="organizations">Student Organization</SelectItem>
+                    <SelectItem value="organizations">
+                      Student Organization
+                    </SelectItem>
                     <SelectItem value="academic">Academic Group</SelectItem>
                     <SelectItem value="greek">Greek Life</SelectItem>
                   </SelectContent>
@@ -113,7 +129,7 @@ export function LeaderQuestion() {
           )}
         </div>
 
-        <Button 
+        <Button
           type="submit"
           disabled={isLeader && (!spaceType || !spaceId)}
           className="w-full"
@@ -121,6 +137,24 @@ export function LeaderQuestion() {
           Continue
         </Button>
       </form>
+
+      <div className="space-y-4 mt-6">
+        <h2 className="text-2xl font-bold">
+          Why are you interested in leadership opportunities?
+        </h2>
+        <p className="text-center text-muted-foreground">
+          I&apos;m interested in leadership opportunities
+        </p>
+      </div>
+
+      <div className="space-y-4 mt-6">
+        <h2 className="text-2xl font-bold">
+          Why are you here to connect and learn?
+        </h2>
+        <p className="text-center text-muted-foreground">
+          I&apos;m here to connect and learn
+        </p>
+      </div>
     </Card>
   );
-} 
+}

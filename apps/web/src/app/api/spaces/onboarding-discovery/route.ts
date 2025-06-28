@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { dbAdmin } from '@/lib/firebase-admin';
-import { logger } from '@hive/core';
-import { generalApiRateLimit } from '@/lib/rate-limit';
+import { NextRequest, NextResponse } from "next/server";
+import { dbAdmin } from "@/lib/firebase-admin";
+import { logger } from "@hive/core";
+import { generalApiRateLimit } from "@/lib/rate-limit";
 
 interface SpaceTag {
   type: string;
@@ -13,12 +13,13 @@ interface FirestoreSpace {
   name: string;
   description: string;
   memberCount: number;
-  type: 'major' | 'residential' | 'interest' | 'creative' | 'organization';
+  type: "major" | "residential" | "interest" | "creative" | "organization";
   tags: SpaceTag[];
-  status: 'dormant' | 'activated' | 'frozen';
+  status: "dormant" | "activated" | "frozen";
   schoolId: string;
 }
 
+// Response type for space discovery - used for return type validation
 interface SpaceDiscoveryResponse {
   success: boolean;
   spaces: {
@@ -31,45 +32,53 @@ interface SpaceDiscoveryResponse {
   autoJoinSpaces: string[];
 }
 
-export async function GET(request: NextRequest) {
+export async function GET(
+  request: NextRequest
+): Promise<NextResponse<SpaceDiscoveryResponse>> {
   try {
     // Rate limiting
-    const ip = request.headers.get('x-forwarded-for') || 'unknown';
+    const ip = request.headers.get("x-forwarded-for") || "unknown";
     const rateLimitResult = await generalApiRateLimit.limit(ip);
-    
+
     if (!rateLimitResult.success) {
       return NextResponse.json(
-        { error: 'Rate limit exceeded' },
+        { error: "Rate limit exceeded" },
         { status: 429 }
       );
     }
 
     const { searchParams } = new URL(request.url);
-    const schoolId = searchParams.get('schoolId') || 'ub'; // Default to UB
-    const userMajors = searchParams.get('majors')?.split(',') || [];
+    const schoolId = searchParams.get("schoolId") || "ub"; // Default to UB
+    const userMajors = searchParams.get("majors")?.split(",") || [];
 
     // Define space types and their nested collection paths
-    const spaceTypes = ['major', 'residential', 'interest', 'creative', 'organization'] as const;
-    
+    const spaceTypes = [
+      "major",
+      "residential",
+      "interest",
+      "creative",
+      "organization",
+    ] as const;
+
     let allSpaces: FirestoreSpace[] = [];
 
     // Query each space type's nested collection
     for (const spaceType of spaceTypes) {
       try {
         const spacesSnapshot = await dbAdmin
-          .collection('spaces')
+          .collection("spaces")
           .doc(spaceType)
-          .collection('spaces')
-          .where('schoolId', '==', schoolId)
-          .where('status', '==', 'activated')
-          .orderBy('memberCount', 'desc')
+          .collection("spaces")
+          .where("schoolId", "==", schoolId)
+          .where("status", "==", "activated")
+          .orderBy("memberCount", "desc")
           .limit(20) // Limit per type to avoid overwhelming results
           .get();
 
-        const spaces = spacesSnapshot.docs.map(doc => ({
+        const spaces = spacesSnapshot.docs.map((doc) => ({
           id: doc.id,
           type: spaceType,
-          ...doc.data()
+          ...doc.data(),
         })) as FirestoreSpace[];
 
         allSpaces = allSpaces.concat(spaces);
@@ -85,45 +94,47 @@ export async function GET(request: NextRequest) {
       campusLiving: [] as FirestoreSpace[],
       greekLife: [] as FirestoreSpace[],
       studentOrganizations: [] as FirestoreSpace[],
-      universityOrganizations: [] as FirestoreSpace[]
+      universityOrganizations: [] as FirestoreSpace[],
     };
 
     const autoJoinSpaces: string[] = [];
 
-    allSpaces.forEach(space => {
+    allSpaces.forEach((space) => {
       switch (space.type) {
-        case 'major': {
+        case "major": {
           categorizedSpaces.academic.push(space);
-          
+
           // Auto-join logic: match user majors with space tags
           if (userMajors.length > 0) {
-            const matchesMajor = space.tags?.some(tag => 
-              userMajors.some(major => 
-                major.toLowerCase().includes(tag.sub_type.toLowerCase()) ||
-                tag.sub_type.toLowerCase().includes(major.toLowerCase())
+            const matchesMajor = space.tags?.some((tag) =>
+              userMajors.some(
+                (major) =>
+                  major.toLowerCase().includes(tag.sub_type.toLowerCase()) ||
+                  tag.sub_type.toLowerCase().includes(major.toLowerCase())
               )
             );
-            
+
             if (matchesMajor) {
               autoJoinSpaces.push(space.id);
             }
           }
           break;
         }
-        
-        case 'residential': {
+
+        case "residential": {
           categorizedSpaces.campusLiving.push(space);
           break;
         }
-        
-        case 'interest': {
+
+        case "interest": {
           // Check if it's Greek life based on tags
-          const isGreek = space.tags?.some(tag => 
-            tag.type === 'greek' || 
-            tag.sub_type?.toLowerCase().includes('fraternity') ||
-            tag.sub_type?.toLowerCase().includes('sorority')
+          const isGreek = space.tags?.some(
+            (tag) =>
+              tag.type === "greek" ||
+              tag.sub_type?.toLowerCase().includes("fraternity") ||
+              tag.sub_type?.toLowerCase().includes("sorority")
           );
-          
+
           if (isGreek) {
             categorizedSpaces.greekLife.push(space);
           } else {
@@ -131,16 +142,17 @@ export async function GET(request: NextRequest) {
           }
           break;
         }
-        
-        case 'creative':
-        case 'organization': {
+
+        case "creative":
+        case "organization": {
           // Check if it's a university organization based on tags
-          const isUniversityOrg = space.tags?.some(tag => 
-            tag.type === 'university' || 
-            tag.sub_type?.toLowerCase().includes('university') ||
-            tag.sub_type?.toLowerCase().includes('official')
+          const isUniversityOrg = space.tags?.some(
+            (tag) =>
+              tag.type === "university" ||
+              tag.sub_type?.toLowerCase().includes("university") ||
+              tag.sub_type?.toLowerCase().includes("official")
           );
-          
+
           if (isUniversityOrg) {
             categorizedSpaces.universityOrganizations.push(space);
           } else {
@@ -148,7 +160,7 @@ export async function GET(request: NextRequest) {
           }
           break;
         }
-        
+
         default:
           // Fallback to student organizations
           categorizedSpaces.studentOrganizations.push(space);
@@ -156,34 +168,35 @@ export async function GET(request: NextRequest) {
     });
 
     // Sort each category by member count (most popular first)
-    Object.values(categorizedSpaces).forEach(category => {
+    Object.values(categorizedSpaces).forEach((category) => {
       category.sort((a, b) => b.memberCount - a.memberCount);
     });
 
-    logger.info(`Space discovery: Found ${allSpaces.length} spaces, ${autoJoinSpaces.length} auto-join matches`);
+    logger.info(
+      `Space discovery: Found ${allSpaces.length} spaces, ${autoJoinSpaces.length} auto-join matches`
+    );
 
     return NextResponse.json({
       success: true,
       spaces: categorizedSpaces,
-      autoJoinSpaces
+      autoJoinSpaces,
     });
-
   } catch (error) {
-    logger.error('Error in space discovery:', error);
+    logger.error("Error in space discovery:", error);
     return NextResponse.json(
-      { 
-        success: false, 
-        error: 'Failed to fetch spaces',
+      {
+        success: false,
+        error: "Failed to fetch spaces",
         spaces: {
           academic: [],
           campusLiving: [],
           greekLife: [],
           studentOrganizations: [],
-          universityOrganizations: []
+          universityOrganizations: [],
         },
-        autoJoinSpaces: []
+        autoJoinSpaces: [],
       },
       { status: 500 }
     );
   }
-} 
+}

@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useAuth } from '@hive/auth-logic';
-import { WelcomeStep } from '@hive/ui';
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@hive/auth-logic";
+import { WelcomeStep } from "@hive/ui";
 
 export default function OnboardingWelcomePage() {
   const router = useRouter();
@@ -14,8 +14,8 @@ export default function OnboardingWelcomePage() {
     // Get user email from auth state or localStorage
     if (user?.email) {
       setUserEmail(user.email);
-    } else if (typeof window !== 'undefined') {
-      const storedEmail = localStorage.getItem('hive-auth-email');
+    } else if (typeof window !== "undefined") {
+      const storedEmail = localStorage.getItem("hive-auth-email");
       if (storedEmail) {
         setUserEmail(storedEmail);
       }
@@ -23,8 +23,8 @@ export default function OnboardingWelcomePage() {
   }, [user]);
 
   const handleNext = () => {
-    // Navigate to the name step (or first actual onboarding step)
-    router.push('/onboarding/name');
+    // Navigate to the first actual onboarding step
+    router.push("/onboarding/1");
   };
 
   // Show loading while auth state is being determined
@@ -37,4 +37,4 @@ export default function OnboardingWelcomePage() {
   }
 
   return <WelcomeStep onNext={handleNext} userEmail={userEmail} />;
-} 
+}

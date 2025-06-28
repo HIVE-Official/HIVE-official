@@ -4,10 +4,10 @@ import tailwindcssTypography from "@tailwindcss/typography";
 /** @type {import('tailwindcss').Config} */
 const config = {
   content: [
-    './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/components/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
-    '../../packages/ui/src/**/*.{js,ts,jsx,tsx,mdx}',
+    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "../../packages/ui/src/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     container: {
@@ -83,10 +83,17 @@ const config = {
       },
       fontFamily: {
         sans: ["var(--font-sans)", "Geist", "Inter", "system-ui", "sans-serif"],
-        display: ["var(--font-display)", "Space Grotesk Variable", "Space Grotesk", "system-ui", "sans-serif"],
+        display: [
+          "var(--font-display)",
+          "Space Grotesk Variable",
+          "Space Grotesk",
+          "system-ui",
+          "sans-serif",
+        ],
         mono: ["var(--font-mono)", "Geist Mono", "JetBrains Mono", "monospace"],
       },
       fontSize: {
+        // Standard Tailwind sizes
         xs: ["0.75rem", { lineHeight: "1rem" }],
         sm: ["0.875rem", { lineHeight: "1.25rem" }],
         base: ["1rem", { lineHeight: "1.5rem" }],
@@ -100,38 +107,37 @@ const config = {
         "7xl": ["4.5rem", { lineHeight: "1" }],
         "8xl": ["6rem", { lineHeight: "1" }],
         "9xl": ["8rem", { lineHeight: "1" }],
-      },
-      fontSize: {
         // HIVE Typography Scale - from packages/tokens/src/typography.ts
-        'display': ['64px', { lineHeight: '72px', fontWeight: '600' }],
-        'h1': ['48px', { lineHeight: '56px', fontWeight: '600' }],
-        'h2': ['32px', { lineHeight: '40px', fontWeight: '600' }],
-        'h3': ['24px', { lineHeight: '32px', fontWeight: '600' }],
-        'h4': ['20px', { lineHeight: '28px', fontWeight: '600' }],
-        'body': ['16px', { lineHeight: '24px', fontWeight: '400' }],
-        'body-sm': ['14px', { lineHeight: '20px', fontWeight: '400' }],
-        'caption': ['12px', { lineHeight: '18px', fontWeight: '400' }],
-        'button': ['14px', { lineHeight: '20px', fontWeight: '500' }],
-        'code': ['14px', { lineHeight: '20px', fontWeight: '400' }],
+        display: ["64px", { lineHeight: "72px", fontWeight: "600" }],
+        h1: ["48px", { lineHeight: "56px", fontWeight: "600" }],
+        h2: ["32px", { lineHeight: "40px", fontWeight: "600" }],
+        h3: ["24px", { lineHeight: "32px", fontWeight: "600" }],
+        h4: ["20px", { lineHeight: "28px", fontWeight: "600" }],
+        body: ["16px", { lineHeight: "24px", fontWeight: "400" }],
+        "body-sm": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+        caption: ["12px", { lineHeight: "18px", fontWeight: "400" }],
+        button: ["14px", { lineHeight: "20px", fontWeight: "500" }],
+        code: ["14px", { lineHeight: "20px", fontWeight: "400" }],
       },
       transitionDuration: {
         // HIVE Motion Timing - from packages/tokens/src/motion.ts
-        'instant': '50ms',     // Immediate feedback
-        'fast': '120ms',       // Micro-interactions
-        'base': '180ms',       // Content transitions  
-        'slow': '280ms',       // Complex animations
-        'ritual': '400ms',     // Special HIVE moments
+        instant: "50ms", // Immediate feedback
+        fast: "120ms", // Micro-interactions
+        base: "180ms", // Content transitions
+        slow: "280ms", // Complex animations
+        ritual: "400ms", // Special HIVE moments
       },
       transitionTimingFunction: {
         // HIVE Brand Easing - from packages/tokens/src/motion.ts
-        'smooth': 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-        'snap': 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
-        'elegant': 'cubic-bezier(0.23, 1, 0.32, 1)',
-        'brand': 'cubic-bezier(0.33, 0.65, 0, 1)',
+        smooth: "cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+        snap: "cubic-bezier(0.68, -0.55, 0.265, 1.55)",
+        elegant: "cubic-bezier(0.23, 1, 0.32, 1)",
+        brand: "cubic-bezier(0.33, 0.65, 0, 1)",
       },
       boxShadow: {
         sm: "0 1px 2px 0 rgb(0 0 0 / 0.05)",
-        DEFAULT: "0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)",
+        DEFAULT:
+          "0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)",
         md: "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
         lg: "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
         xl: "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)",

@@ -1,11 +1,22 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Card, Button, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Badge } from '@hive/ui';
-import { useOnboardingStore } from '@/lib/stores/onboarding';
-import { XIcon } from 'lucide-react';
-import type { AcademicLevel } from '@hive/core';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import {
+  Card,
+  Button,
+  Label,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+  Badge,
+  CardDescription,
+} from "@hive/ui";
+import { useOnboardingStore } from "@/lib/stores/onboarding";
+import { XIcon } from "lucide-react";
+import type { AcademicLevel } from "@hive/core";
 
 // List of majors (this should be moved to a constants file)
 const MAJORS = [
@@ -30,52 +41,62 @@ const MAJORS = [
   // Add more majors as needed
 ];
 
-const GRADUATION_YEARS = Array.from({ length: 8 }, (_, i) => new Date().getFullYear() + i);
+const GRADUATION_YEARS = Array.from(
+  { length: 8 },
+  (_, i) => new Date().getFullYear() + i
+);
 
 export function AcademicCard() {
   const router = useRouter();
   const { data: onboardingData, update } = useOnboardingStore();
-  const [academicLevel, setAcademicLevel] = useState<AcademicLevel>(onboardingData?.academicLevel ?? 'undergraduate');
+  const [academicLevel, setAcademicLevel] = useState<AcademicLevel>(
+    onboardingData?.academicLevel ?? "undergraduate"
+  );
   const [majors, setMajors] = useState<string[]>(onboardingData?.majors ?? []);
-  const [currentMajor, setCurrentMajor] = useState('');
-  const [graduationYear, setGraduationYear] = useState<number>(onboardingData?.graduationYear ?? GRADUATION_YEARS[0]);
+  const [currentMajor, setCurrentMajor] = useState("");
+  const [graduationYear, setGraduationYear] = useState<number>(
+    onboardingData?.graduationYear ?? GRADUATION_YEARS[0]
+  );
 
   const addMajor = () => {
     if (!currentMajor || majors.includes(currentMajor)) return;
     setMajors([...majors, currentMajor]);
-    setCurrentMajor('');
+    setCurrentMajor("");
   };
 
   const removeMajor = (major: string) => {
-    setMajors(majors.filter(m => m !== major));
+    setMajors(majors.filter((m) => m !== major));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     await update({
       academicLevel,
       majors,
-      graduationYear
+      graduationYear,
     });
 
-    router.push('/onboarding/3'); // Navigate to interests step
+    router.push("/onboarding/3"); // Navigate to interests step
   };
 
   return (
     <Card className="w-full max-w-lg p-6 space-y-6">
       <div className="space-y-4">
         <h2 className="text-2xl font-bold">Academic Information</h2>
-        <p className="text-muted-foreground">
-          Tell us about your academic journey.
-        </p>
+        <CardDescription className="text-muted-foreground font-sans">
+          Tell us about your studies to connect you with relevant communities
+        </CardDescription>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="space-y-4">
           <div className="space-y-2">
             <Label>Academic Level</Label>
-            <Select value={academicLevel} onValueChange={(value: AcademicLevel) => setAcademicLevel(value)}>
+            <Select
+              value={academicLevel}
+              onValueChange={(value: AcademicLevel) => setAcademicLevel(value)}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Select your academic level" />
               </SelectTrigger>
@@ -95,14 +116,16 @@ export function AcademicCard() {
                   <SelectValue placeholder="Select a major" />
                 </SelectTrigger>
                 <SelectContent>
-                  {MAJORS.filter(major => !majors.includes(major)).map(major => (
-                    <SelectItem key={major} value={major}>
-                      {major}
-                    </SelectItem>
-                  ))}
+                  {MAJORS.filter((major) => !majors.includes(major)).map(
+                    (major) => (
+                      <SelectItem key={major} value={major}>
+                        {major}
+                      </SelectItem>
+                    )
+                  )}
                 </SelectContent>
               </Select>
-              <Button 
+              <Button
                 type="button"
                 onClick={addMajor}
                 disabled={!currentMajor || majors.includes(currentMajor)}
@@ -112,8 +135,12 @@ export function AcademicCard() {
             </div>
 
             <div className="flex flex-wrap gap-2 pt-2">
-              {majors.map(major => (
-                <Badge key={major} variant="outline" className="flex items-center space-x-1">
+              {majors.map((major) => (
+                <Badge
+                  key={major}
+                  variant="outline"
+                  className="flex items-center space-x-1"
+                >
                   <span>{major}</span>
                   <button
                     type="button"
@@ -129,15 +156,15 @@ export function AcademicCard() {
 
           <div className="space-y-2">
             <Label>Expected Graduation Year</Label>
-            <Select 
-              value={graduationYear.toString()} 
+            <Select
+              value={graduationYear.toString()}
               onValueChange={(value) => setGraduationYear(parseInt(value))}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select graduation year" />
               </SelectTrigger>
               <SelectContent>
-                {GRADUATION_YEARS.map(year => (
+                {GRADUATION_YEARS.map((year) => (
                   <SelectItem key={year} value={year.toString()}>
                     {year}
                   </SelectItem>
@@ -147,7 +174,7 @@ export function AcademicCard() {
           </div>
         </div>
 
-        <Button 
+        <Button
           type="submit"
           disabled={majors.length === 0 || !graduationYear}
           className="w-full"
@@ -157,4 +184,4 @@ export function AcademicCard() {
       </form>
     </Card>
   );
-} 
+}
