@@ -11,17 +11,41 @@ export { Checkbox } from "./components/checkbox";
 export { RadioGroup, RadioGroupItem } from "./components/radio-group";
 export { Switch } from "./components/switch";
 export { Textarea } from "./components/textarea";
-export { Select, SelectTrigger, SelectContent, SelectItem, SelectValue, SelectGroup } from "./components/select";
+export {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+  SelectValue,
+  SelectGroup,
+} from "./components/select";
 export { Skeleton } from "./components/skeleton";
 
 // Export loading components
-export { LoadingSpinner, PageLoader, InlineLoader, CardLoader } from "./components/loading-spinner";
+export {
+  LoadingSpinner,
+  PageLoader,
+  InlineLoader,
+  CardLoader,
+} from "./components/loading-spinner";
 
 // Export typography components
-export { Typography, Heading, Text, Caption, Code } from "./components/typography";
+export {
+  Typography,
+  Heading,
+  Text,
+  Caption,
+  Code,
+} from "./components/typography";
 
 // Export card components from the main components directory (not ui subdirectory)
-export { Card, CardContent, CardDescription, CardHeader, CardTitle } from './components/card';
+export {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "./components/card";
 
 // Export layout components
 export { AppHeader } from "./components/AppHeader";
@@ -37,10 +61,15 @@ export { Toast } from "./components/toast";
 export * from "./components/auth";
 
 // Export onboarding components
-export { WelcomeStep } from './components/onboarding/welcome-step';
-export { ProgressIndicator } from './components/onboarding/progress-indicator';
-export { OnboardingLayout } from './components/onboarding/onboarding-layout';
+export { WelcomeStep } from "./components/onboarding/welcome-step";
+export { ProgressIndicator } from "./components/onboarding/progress-indicator";
+export { OnboardingLayout } from "./components/onboarding/onboarding-layout";
 export * from "./components/onboarding";
+
+// Onboarding step components
+export { RoleSelection } from "./components/onboarding/steps/role-selection";
+export { SpaceClaiming } from "./components/onboarding/steps/space-claiming";
+export { SuggestedSpaces } from "./components/onboarding/steps/suggested-spaces";
 
 // Export utilities
 export * from "./lib/utils";

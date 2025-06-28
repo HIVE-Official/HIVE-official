@@ -1,5 +1,5 @@
 {
-  "extends": "@hive/typescript-config/base.json",
+  "extends": "../config/typescript/base.json",
   "compilerOptions": {
     "outDir": "./dist",
     "rootDir": "./src",
@@ -8,11 +8,10 @@
     "noEmit": false,
     "esModuleInterop": true,
     "module": "esnext",
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "incremental": true,
     "declaration": true,
     "declarationMap": true
   },

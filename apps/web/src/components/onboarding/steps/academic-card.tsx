@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
   Card,
@@ -16,35 +16,11 @@ import {
 } from "@hive/ui";
 import { useOnboardingStore } from "@/lib/stores/onboarding";
 import { XIcon } from "lucide-react";
-import type { AcademicLevel } from "@hive/core";
-
-// List of majors (this should be moved to a constants file)
-const MAJORS = [
-  "Aerospace Engineering",
-  "Architecture",
-  "Biological Sciences",
-  "Business Administration",
-  "Chemical Engineering",
-  "Civil Engineering",
-  "Computer Science",
-  "Economics",
-  "Electrical Engineering",
-  "Environmental Science",
-  "Finance",
-  "History",
-  "Industrial Engineering",
-  "Mathematics",
-  "Mechanical Engineering",
-  "Physics",
-  "Political Science",
-  "Psychology",
-  // Add more majors as needed
-];
-
-const GRADUATION_YEARS = Array.from(
-  { length: 8 },
-  (_, i) => new Date().getFullYear() + i
-);
+import {
+  ACADEMIC_LEVELS,
+  GRADUATION_YEARS,
+  type AcademicLevel,
+} from "@hive/core";
 
 export function AcademicCard() {
   const router = useRouter();
@@ -53,10 +29,35 @@ export function AcademicCard() {
     onboardingData?.academicLevel ?? "undergraduate"
   );
   const [majors, setMajors] = useState<string[]>(onboardingData?.majors ?? []);
+  const [availableMajors, setAvailableMajors] = useState<string[]>([]);
+  const [isLoadingMajors, setIsLoadingMajors] = useState(true);
   const [currentMajor, setCurrentMajor] = useState("");
   const [graduationYear, setGraduationYear] = useState<number>(
     onboardingData?.graduationYear ?? GRADUATION_YEARS[0]
   );
+
+  useEffect(() => {
+    const fetchMajors = async () => {
+      if (!onboardingData?.schoolId) return;
+      setIsLoadingMajors(true);
+      try {
+        const response = await fetch(
+          `/api/schools/${onboardingData.schoolId}/majors`
+        );
+        const data = await response.json();
+        if (Array.isArray(data)) {
+          setAvailableMajors(data.map((major) => major.name));
+        }
+      } catch (error) {
+        // Handle error case, maybe show a toast
+        console.error("Failed to fetch majors", error);
+      } finally {
+        setIsLoadingMajors(false);
+      }
+    };
+
+    void fetchMajors();
+  }, [onboardingData?.schoolId]);
 
   const addMajor = () => {
     if (!currentMajor || majors.includes(currentMajor)) return;
@@ -101,9 +102,11 @@ export function AcademicCard() {
                 <SelectValue placeholder="Select your academic level" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="undergraduate">Undergraduate</SelectItem>
-                <SelectItem value="masters">Master's</SelectItem>
-                <SelectItem value="phd">Ph.D.</SelectItem>
+                {ACADEMIC_LEVELS.map((level) => (
+                  <SelectItem key={level.value} value={level.value}>
+                    {level.label}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
@@ -116,12 +119,18 @@ export function AcademicCard() {
                   <SelectValue placeholder="Select a major" />
                 </SelectTrigger>
                 <SelectContent>
-                  {MAJORS.filter((major) => !majors.includes(major)).map(
-                    (major) => (
-                      <SelectItem key={major} value={major}>
-                        {major}
-                      </SelectItem>
-                    )
+                  {isLoadingMajors ? (
+                    <SelectItem value="loading" disabled>
+                      Loading majors...
+                    </SelectItem>
+                  ) : (
+                    availableMajors
+                      .filter((major) => !majors.includes(major))
+                      .map((major) => (
+                        <SelectItem key={major} value={major}>
+                          {major}
+                        </SelectItem>
+                      ))
                   )}
                 </SelectContent>
               </Select>

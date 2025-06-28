@@ -1,54 +1,31 @@
 "use client";
 
-import React, { useState, useMemo } from 'react';
-import { useRouter } from 'next/navigation';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@hive/ui';
-import { Button } from '@hive/ui';
-import { Input } from '@hive/ui';
-import { Label } from '@hive/ui';
-import { Badge } from '@hive/ui';
-import { useOnboardingStore } from '@/lib/stores/onboarding';
-import { Heart, Search, Loader2 } from 'lucide-react';
-import { logger } from '@hive/core';
-
-// Interest categories and tags
-const INTEREST_CATEGORIES = {
-  'Academic': [
-    'Research', 'Study Groups', 'Tutoring', 'Academic Conferences', 'Honor Societies',
-    'Graduate School', 'Internships', 'Career Development'
-  ],
-  'Arts & Culture': [
-    'Music', 'Theater', 'Visual Arts', 'Photography', 'Writing', 'Film',
-    'Dance', 'Literature', 'Museums', 'Cultural Events'
-  ],
-  'Sports & Fitness': [
-    'Basketball', 'Soccer', 'Tennis', 'Swimming', 'Running', 'Gym',
-    'Yoga', 'Rock Climbing', 'Cycling', 'Martial Arts'
-  ],
-  'Technology': [
-    'Programming', 'Web Development', 'AI/ML', 'Cybersecurity', 'Gaming',
-    'Robotics', 'Data Science', 'Mobile Apps', 'Startups'
-  ],
-  'Social & Community': [
-    'Volunteering', 'Community Service', 'Social Justice', 'Environmental Action',
-    'Politics', 'Debate', 'Student Government', 'Activism'
-  ],
-  'Lifestyle': [
-    'Travel', 'Cooking', 'Fashion', 'Health & Wellness', 'Mindfulness',
-    'Sustainability', 'Gardening', 'DIY Projects', 'Board Games'
-  ]
-};
-
-
+import { useState, useMemo } from "react";
+import { useRouter } from "next/navigation";
+import {
+  Card,
+  Button,
+  Badge,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  Input,
+  Label,
+} from "@hive/ui";
+import { useOnboardingStore } from "@/lib/stores/onboarding";
+import { Heart, Search, Loader2 } from "lucide-react";
+import { logger } from "@hive/core";
+import { INTEREST_CATEGORIES } from "@hive/core";
 
 export function OnboardingInterestsStep() {
   const router = useRouter();
   const { data: onboardingData, update } = useOnboardingStore();
-  
+
   const [selectedInterests, setSelectedInterests] = useState<string[]>(
     onboardingData?.interests || []
   );
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   // Filter interests based on search query
@@ -56,23 +33,23 @@ export function OnboardingInterestsStep() {
     if (!searchQuery.trim()) {
       return INTEREST_CATEGORIES;
     }
-    
+
     const filtered: Record<string, string[]> = {};
     Object.entries(INTEREST_CATEGORIES).forEach(([category, interests]) => {
-      const matchingInterests = interests.filter(interest =>
+      const matchingInterests = interests.filter((interest) =>
         interest.toLowerCase().includes(searchQuery.toLowerCase())
       );
       if (matchingInterests.length > 0) {
         filtered[category] = matchingInterests;
       }
     });
-    
+
     return filtered;
   }, [searchQuery]);
 
   const handleInterestToggle = (interest: string) => {
     if (selectedInterests.includes(interest)) {
-      setSelectedInterests(selectedInterests.filter(i => i !== interest));
+      setSelectedInterests(selectedInterests.filter((i) => i !== interest));
     } else {
       setSelectedInterests([...selectedInterests, interest]);
     }
@@ -80,36 +57,36 @@ export function OnboardingInterestsStep() {
 
   const handleSkip = async () => {
     setIsLoading(true);
-    
+
     try {
       await update({
         interests: [],
-        onboardingCompleted: true
+        onboardingCompleted: true,
       });
 
-      logger.info('Interests skipped, onboarding completed');
-      router.push('/onboarding/complete');
-      
+      logger.info("Interests skipped, onboarding completed");
+      router.push("/onboarding/complete");
     } catch (error) {
-      logger.error('Failed to skip interests:', error);
+      logger.error("Failed to skip interests:", error);
       setIsLoading(false);
     }
   };
 
   const handleSubmit = async () => {
     setIsLoading(true);
-    
+
     try {
       await update({
         interests: selectedInterests,
-        onboardingCompleted: true
+        onboardingCompleted: true,
       });
 
-      logger.info('Interests saved, onboarding completed:', { interests: selectedInterests });
-      router.push('/onboarding/complete');
-      
+      logger.info("Interests saved, onboarding completed:", {
+        interests: selectedInterests,
+      });
+      router.push("/onboarding/complete");
     } catch (error) {
-      logger.error('Failed to save interests:', error);
+      logger.error("Failed to save interests:", error);
       setIsLoading(false);
     }
   };
@@ -127,7 +104,8 @@ export function OnboardingInterestsStep() {
             What Are You Interested In?
           </CardTitle>
           <CardDescription className="text-muted-foreground font-sans">
-            Select at least 3 interests to help us connect you with relevant communities
+            Select at least 3 interests to help us connect you with relevant
+            communities
           </CardDescription>
         </CardHeader>
 
@@ -172,7 +150,11 @@ export function OnboardingInterestsStep() {
                   {interests.map((interest) => (
                     <Badge
                       key={interest}
-                      variant={selectedInterests.includes(interest) ? "accent" : "outline"}
+                      variant={
+                        selectedInterests.includes(interest)
+                          ? "accent"
+                          : "outline"
+                      }
                       className="cursor-pointer transition-all hover:scale-105"
                       onClick={() => handleInterestToggle(interest)}
                     >
@@ -185,13 +167,14 @@ export function OnboardingInterestsStep() {
           </div>
 
           {/* No Results */}
-          {searchQuery.trim() && Object.keys(filteredInterests).length === 0 && (
-            <div className="text-center py-8">
-              <p className="text-muted-foreground">
-                No interests found matching &quot;{searchQuery}&quot;
-              </p>
-            </div>
-          )}
+          {searchQuery.trim() &&
+            Object.keys(filteredInterests).length === 0 && (
+              <div className="text-center py-8">
+                <p className="text-muted-foreground">
+                  No interests found matching &quot;{searchQuery}&quot;
+                </p>
+              </div>
+            )}
 
           {/* Selected Interests Summary */}
           {selectedInterests.length > 0 && (
@@ -236,7 +219,7 @@ export function OnboardingInterestsStep() {
                   Finishing...
                 </>
               ) : (
-                'Finish'
+                "Finish"
               )}
             </Button>
           </div>
@@ -244,4 +227,4 @@ export function OnboardingInterestsStep() {
       </Card>
     </div>
   );
-} 
+}

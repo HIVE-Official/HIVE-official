@@ -1,9 +1,11 @@
 import React from "react";
+import { motion } from "framer-motion";
 import { cn } from "../lib/utils";
 
-interface HiveLogoProps extends React.SVGProps<SVGSVGElement> {
-  variant?: "white" | "black";
-  size?: "sm" | "md" | "lg" | "xl";
+interface HiveLogoProps extends React.HTMLProps<HTMLDivElement> {
+  variant?: "white" | "black" | "gold";
+  size?: "sm" | "md" | "lg" | "xl" | "2xl" | "3xl";
+  animationType?: "none" | "pulse" | "spin" | "gentle-float";
 }
 
 const sizeClasses = {
@@ -11,32 +13,85 @@ const sizeClasses = {
   md: "h-6 w-6",
   lg: "h-8 w-8",
   xl: "h-12 w-12",
+  "2xl": "h-24 w-24",
+  "3xl": "h-48 w-48",
+};
+
+const animationVariants = {
+  pulse: {
+    scale: [1, 1.05, 1],
+    transition: {
+      duration: 2,
+      ease: "easeInOut",
+      repeat: Infinity,
+    },
+  },
+  spin: {
+    rotate: [0, 360],
+    transition: {
+      duration: 15,
+      ease: "linear",
+      repeat: Infinity,
+    },
+  },
+  "gentle-float": {
+    y: ["-5%", "5%"],
+    transition: {
+      duration: 4,
+      ease: "easeInOut",
+      repeat: Infinity,
+      repeatType: "reverse" as const,
+    },
+  },
 };
 
 export function HiveLogo({
   className,
   variant = "white",
   size = "md",
+  animationType = "none",
   ...props
 }: HiveLogoProps) {
-  const fillColor = variant === "white" ? "#FFFFFF" : "#000000";
+  // Use real logo files
+  const logoSrc =
+    variant === "black" ? "/assets/blacklogo.svg" : "/assets/whitelogo.svg";
+
+  const LogoImage = () => (
+    <img
+      src={logoSrc}
+      alt="HIVE Logo"
+      className={cn(
+        sizeClasses[size],
+        "object-contain",
+        variant === "gold" &&
+          "brightness-0 saturate-100 hue-rotate-45 contrast-150",
+        className
+      )}
+      {...props}
+    />
+  );
+
+  if (animationType !== "none") {
+    return (
+      <motion.div
+        className={cn(sizeClasses[size], "flex items-center justify-center")}
+        animate={animationType}
+        variants={animationVariants}
+      >
+        <LogoImage />
+      </motion.div>
+    );
+  }
 
   return (
-    <svg
-      id="hive-logo"
-      data-name="HIVE Logo"
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 1500 1500"
-      className={cn(sizeClasses[size], className)}
-      {...props}
+    <div
+      className={cn(
+        sizeClasses[size],
+        "flex items-center justify-center",
+        className
+      )}
     >
-      <defs>
-        <style>{`.hive-logo-path { fill: ${fillColor}; }`}</style>
-      </defs>
-      <path
-        className="hive-logo-path"
-        d="M432.83,133.2l373.8,216.95v173.77s-111.81,64.31-111.81,64.31v-173.76l-262.47-150.64-262.27,150.84.28,303.16,259.55,150.31,5.53-.33,633.4-365.81,374.52,215.84v433.92l-372.35,215.04h-2.88l-372.84-215.99-.27-174.53,112.08-63.56v173.76c87.89,49.22,174.62,101.14,262.48,150.69l261.99-151.64v-302.41s-261.51-151.27-261.51-151.27l-2.58.31-635.13,366.97c-121.32-69.01-241.36-140.28-362.59-209.44-4.21-2.4-8.42-5.15-13.12-6.55v-433.92l375.23-216h.96Z"
-      />
-    </svg>
+      <LogoImage />
+    </div>
   );
 }

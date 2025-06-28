@@ -1,23 +1,31 @@
 "use client";
 
-import { motion } from 'framer-motion'
-import Link from 'next/link'
-import { Button } from '@hive/ui'
-import { ArrowLeft, Mail, RefreshCw, ExternalLink, AlertCircle, CheckCircle } from 'lucide-react'
-import { useState, useEffect, useCallback, Suspense } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
-import { logger } from '@hive/core'
+import { motion } from "framer-motion";
+import Link from "next/link";
+import { Button } from "@hive/ui";
+import {
+  ArrowLeft,
+  Mail,
+  RefreshCw,
+  ExternalLink,
+  AlertCircle,
+  CheckCircle,
+} from "lucide-react";
+import { useState, useEffect, useCallback, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { logger } from "@hive/core";
+import { useOnboardingStore } from "@/lib/stores/onboarding";
 
 interface CountdownRingProps {
-  timeLeft: number
-  totalTime: number
+  timeLeft: number;
+  totalTime: number;
 }
 
 function CountdownRing({ timeLeft, totalTime }: CountdownRingProps) {
-  const radius = 45
-  const circumference = 2 * Math.PI * radius
-  const progress = ((totalTime - timeLeft) / totalTime) * 100
-  const strokeDashoffset = circumference - (progress / 100) * circumference
+  const radius = 45;
+  const circumference = 2 * Math.PI * radius;
+  const progress = ((totalTime - timeLeft) / totalTime) * 100;
+  const strokeDashoffset = circumference - (progress / 100) * circumference;
 
   return (
     <div className="relative w-24 h-24">
@@ -52,151 +60,169 @@ function CountdownRing({ timeLeft, totalTime }: CountdownRingProps) {
         </span>
       </div>
     </div>
-  )
+  );
 }
 
 function VerifyContent() {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const [verificationStatus, setVerificationStatus] = useState<'waiting' | 'verifying' | 'success' | 'error'>('waiting')
-  const [errorMessage, setErrorMessage] = useState<string>('')
-  const [timeLeft, setTimeLeft] = useState(300) // 5 minutes
-  const [canResend, setCanResend] = useState(false)
-  const [email, setEmail] = useState<string>('')
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { update } = useOnboardingStore();
+  const [verificationStatus, setVerificationStatus] = useState<
+    "waiting" | "verifying" | "success" | "error"
+  >("waiting");
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [timeLeft, setTimeLeft] = useState(300); // 5 minutes
+  const [canResend, setCanResend] = useState(false);
+  const [email, setEmail] = useState<string>("");
 
   const handleVerification = useCallback(async () => {
-    const urlEmail = searchParams.get('email')
-    const dev = searchParams.get('dev')
-    const storedEmail = typeof window !== 'undefined' ? localStorage.getItem('hive-auth-email') : null
-    const finalEmail = urlEmail || storedEmail
-    
+    const urlEmail = searchParams.get("email");
+    const dev = searchParams.get("dev");
+    const storedEmail =
+      typeof window !== "undefined"
+        ? localStorage.getItem("hive-auth-email")
+        : null;
+    const finalEmail = urlEmail || storedEmail;
+
     if (!finalEmail) {
-      setVerificationStatus('error')
-      setErrorMessage('No email found for verification. Please start the sign-in process again.')
-      return
+      setVerificationStatus("error");
+      setErrorMessage(
+        "No email found for verification. Please start the sign-in process again."
+      );
+      return;
     }
 
-    setVerificationStatus('verifying')
+    setVerificationStatus("verifying");
 
     try {
-      const response = await fetch('/api/auth/email/verify', {
-        method: 'POST',
+      const response = await fetch("/api/auth/email/verify", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           email: finalEmail,
           url: window.location.href,
           dev: dev || undefined,
         }),
-      })
+      });
 
-      const data = await response.json()
+      const data = await response.json();
 
       if (response.ok && data.ok) {
-        setVerificationStatus('success')
-        
+        setVerificationStatus("success");
+
         // Store auth data
-        if (typeof window !== 'undefined') {
-          localStorage.setItem('hive-auth-token', data.idToken)
-          localStorage.setItem('hive-user-data', JSON.stringify(data.user))
-          localStorage.removeItem('hive-auth-email') // Clean up
+        if (typeof window !== "undefined") {
+          localStorage.setItem("hive-auth-token", data.idToken);
+          localStorage.setItem("hive-user-data", JSON.stringify(data.user));
+          localStorage.removeItem("hive-auth-email"); // Clean up
         }
 
         // Redirect based on user status
         setTimeout(() => {
           if (data.user.isNewUser) {
-            router.push('/onboarding/welcome')
+            // Get schoolId from localStorage and update onboarding store
+            const schoolId = localStorage.getItem("hive-selected-school-id");
+            if (schoolId) {
+              update({ schoolId });
+            }
+            router.push("/onboarding/welcome");
           } else {
-            router.push('/feed')
+            router.push("/feed");
           }
-        }, 2000)
+        }, 2000);
       } else {
-        setVerificationStatus('error')
-        setErrorMessage(data.message || 'Verification failed')
+        setVerificationStatus("error");
+        setErrorMessage(data.message || "Verification failed");
       }
     } catch (error) {
-      logger.error('Verification error:', error)
-      setVerificationStatus('error')
-      setErrorMessage('Network error occurred. Please check your connection and try again.')
+      logger.error("Verification error:", error);
+      setVerificationStatus("error");
+      setErrorMessage(
+        "Network error occurred. Please check your connection and try again."
+      );
     }
-  }, [searchParams, router])
+  }, [searchParams, router, update]);
 
   // Get parameters from URL or localStorage
   useEffect(() => {
-    const urlEmail = searchParams.get('email')
-    const dev = searchParams.get('dev')
-    const oobCode = searchParams.get('oobCode')
-    const mode = searchParams.get('mode')
-    
+    const urlEmail = searchParams.get("email");
+    const dev = searchParams.get("dev");
+    const oobCode = searchParams.get("oobCode");
+    const mode = searchParams.get("mode");
+
     // Get email from URL or localStorage
-    const storedEmail = typeof window !== 'undefined' ? localStorage.getItem('hive-auth-email') : null
-    const finalEmail = urlEmail || storedEmail || ''
-    setEmail(finalEmail)
+    const storedEmail =
+      typeof window !== "undefined"
+        ? localStorage.getItem("hive-auth-email")
+        : null;
+    const finalEmail = urlEmail || storedEmail || "";
+    setEmail(finalEmail);
 
     // Auto-verify if this is a magic link
-    if ((oobCode && mode === 'signIn') || (dev === 'true' && finalEmail)) {
-      void handleVerification()
+    if ((oobCode && mode === "signIn") || (dev === "true" && finalEmail)) {
+      void handleVerification();
     }
-  }, [searchParams, handleVerification])
+  }, [searchParams, handleVerification]);
 
   // Countdown timer
   useEffect(() => {
-    if (timeLeft > 0 && verificationStatus === 'waiting') {
+    if (timeLeft > 0 && verificationStatus === "waiting") {
       const timer = setInterval(() => {
         setTimeLeft((prev) => {
           if (prev <= 1) {
-            setCanResend(true)
-            return 0
+            setCanResend(true);
+            return 0;
           }
-          return prev - 1
-        })
-      }, 1000)
+          return prev - 1;
+        });
+      }, 1000);
 
-      return () => clearInterval(timer)
+      return () => clearInterval(timer);
     }
-  }, [timeLeft, verificationStatus])
+  }, [timeLeft, verificationStatus]);
 
   const handleResend = async () => {
     if (!email) {
-      setErrorMessage('No email found to resend to.')
-      return
+      setErrorMessage("No email found to resend to.");
+      return;
     }
-    
+
     try {
-      const response = await fetch('/api/auth/email/start', {
-        method: 'POST',
+      const response = await fetch("/api/auth/email/start", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ email }),
-      })
+      });
 
       if (response.ok) {
-        setTimeLeft(300)
-        setCanResend(false)
-        setVerificationStatus('waiting')
-        setErrorMessage('')
-        
+        setTimeLeft(300);
+        setCanResend(false);
+        setVerificationStatus("waiting");
+        setErrorMessage("");
+
         // Store email again
-        if (typeof window !== 'undefined') {
-          localStorage.setItem('hive-auth-email', email)
+        if (typeof window !== "undefined") {
+          localStorage.setItem("hive-auth-email", email);
         }
       } else {
-        const error = await response.json()
-        setErrorMessage(error.message || 'Failed to resend email')
+        const error = await response.json();
+        setErrorMessage(error.message || "Failed to resend email");
       }
     } catch (error) {
-      logger.error('Resend error:', error)
-      setErrorMessage('Network error occurred')
+      logger.error("Resend error:", error);
+      setErrorMessage("Network error occurred");
     }
-  }
+  };
 
   const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60)
-    const secs = seconds % 60
-    return `${mins}:${secs.toString().padStart(2, '0')}`
-  }
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
+  };
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
@@ -214,39 +240,43 @@ function VerifyContent() {
             animate={{ scale: 1 }}
             transition={{ delay: 0.2, duration: 0.5, type: "spring" }}
           >
-            {verificationStatus === 'success' ? (
+            {verificationStatus === "success" ? (
               <CheckCircle className="w-8 h-8 text-green-500" />
-            ) : verificationStatus === 'error' ? (
+            ) : verificationStatus === "error" ? (
               <AlertCircle className="w-8 h-8 text-red-500" />
-            ) : verificationStatus === 'verifying' ? (
+            ) : verificationStatus === "verifying" ? (
               <RefreshCw className="w-8 h-8 text-accent animate-spin" />
             ) : (
               <Mail className="w-8 h-8 text-muted" />
             )}
           </motion.div>
-          
+
           <h1 className="text-2xl font-display font-semibold text-foreground mb-2">
-            {verificationStatus === 'success' && 'Welcome to HIVE!'}
-            {verificationStatus === 'error' && 'Verification Failed'}
-            {verificationStatus === 'verifying' && 'Verifying...'}
-            {verificationStatus === 'waiting' && 'Check Your Email'}
+            {verificationStatus === "success" && "Welcome to HIVE!"}
+            {verificationStatus === "error" && "Verification Failed"}
+            {verificationStatus === "verifying" && "Verifying..."}
+            {verificationStatus === "waiting" && "Check Your Email"}
           </h1>
 
           <p className="text-muted font-sans">
-            {verificationStatus === 'success' && 'Setting up your account...'}
-            {verificationStatus === 'error' && errorMessage}
-            {verificationStatus === 'verifying' && 'Please wait while we verify your email'}
-            {verificationStatus === 'waiting' && (
+            {verificationStatus === "success" && "Setting up your account..."}
+            {verificationStatus === "error" && errorMessage}
+            {verificationStatus === "verifying" &&
+              "Please wait while we verify your email"}
+            {verificationStatus === "waiting" && (
               <>
-                We sent a magic link to {email && <span className="text-white font-medium">{email}</span>}
-                {!email && 'your email'}
+                We sent a magic link to{" "}
+                {email && (
+                  <span className="text-white font-medium">{email}</span>
+                )}
+                {!email && "your email"}
               </>
             )}
           </p>
         </div>
 
         {/* Status Content */}
-        {verificationStatus === 'waiting' && (
+        {verificationStatus === "waiting" && (
           <motion.div
             className="text-center"
             initial={{ opacity: 0 }}
@@ -259,25 +289,31 @@ function VerifyContent() {
             </div>
 
             <p className="text-sm text-muted font-sans mb-2">
-              {timeLeft > 0 ? `Link expires in ${formatTime(timeLeft)}` : 'Link has expired'}
+              {timeLeft > 0
+                ? `Link expires in ${formatTime(timeLeft)}`
+                : "Link has expired"}
             </p>
 
             <p className="text-sm text-muted font-sans mb-6">
-              Didn&apos;t receive the email? Check your spam folder or{' '}
+              Didn&apos;t receive the email? Check your spam folder or{" "}
               <button
                 onClick={handleResend}
                 disabled={!canResend && timeLeft > 0}
                 className={`text-accent hover:text-accent/80 underline ${
-                  (!canResend && timeLeft > 0) ? 'opacity-50 cursor-not-allowed' : ''
+                  !canResend && timeLeft > 0
+                    ? "opacity-50 cursor-not-allowed"
+                    : ""
                 }`}
               >
-                {canResend || timeLeft === 0 ? 'send a new one' : `try again in ${formatTime(timeLeft)}`}
+                {canResend || timeLeft === 0
+                  ? "send a new one"
+                  : `try again in ${formatTime(timeLeft)}`}
               </button>
             </p>
           </motion.div>
         )}
 
-        {verificationStatus === 'verifying' && (
+        {verificationStatus === "verifying" && (
           <motion.div
             className="text-center"
             initial={{ opacity: 0 }}
@@ -295,7 +331,7 @@ function VerifyContent() {
           </motion.div>
         )}
 
-        {verificationStatus === 'success' && (
+        {verificationStatus === "success" && (
           <motion.div
             className="text-center"
             initial={{ opacity: 0 }}
@@ -307,13 +343,14 @@ function VerifyContent() {
                 <CheckCircle className="w-6 h-6 text-green-500" />
               </div>
               <p className="text-sm text-muted font-sans">
-                Your email has been verified successfully! Redirecting you now...
+                Your email has been verified successfully! Redirecting you
+                now...
               </p>
             </div>
           </motion.div>
         )}
 
-        {verificationStatus === 'error' && (
+        {verificationStatus === "error" && (
           <motion.div
             className="text-center"
             initial={{ opacity: 0 }}
@@ -335,11 +372,11 @@ function VerifyContent() {
                   disabled={!email}
                 >
                   <RefreshCw className="w-4 h-4 mr-2" />
-                  {email ? 'Send New Magic Link' : 'Start Over'}
+                  {email ? "Send New Magic Link" : "Start Over"}
                 </Button>
                 {!email && (
                   <Button
-                    onClick={() => router.push('/auth/email')}
+                    onClick={() => router.push("/auth/email")}
                     className="w-full"
                     variant="surface"
                   >
@@ -360,46 +397,51 @@ function VerifyContent() {
             </Button>
           </Link>
 
-          {email && email.includes('@') && (
+          {email && email.includes("@") && (
             <Button
               onClick={() => {
-                const domain = email.split('@')[1]
-                if (domain.includes('gmail')) {
-                  window.open('https://mail.google.com', '_blank')
-                } else if (domain.includes('outlook') || domain.includes('hotmail')) {
-                  window.open('https://outlook.live.com', '_blank')
-                } else if (domain.includes('yahoo')) {
-                  window.open('https://mail.yahoo.com', '_blank')
+                const domain = email.split("@")[1];
+                if (domain.includes("gmail")) {
+                  window.open("https://mail.google.com", "_blank");
+                } else if (
+                  domain.includes("outlook") ||
+                  domain.includes("hotmail")
+                ) {
+                  window.open("https://outlook.live.com", "_blank");
+                } else if (domain.includes("yahoo")) {
+                  window.open("https://mail.yahoo.com", "_blank");
                 } else {
-                  window.open(`https://${domain}`, '_blank')
+                  window.open(`https://${domain}`, "_blank");
                 }
               }}
               variant="ghost"
               className="w-full"
             >
               <ExternalLink className="w-4 h-4 mr-2" />
-              Open Email ({email.split('@')[1]})
+              Open Email ({email.split("@")[1]})
             </Button>
           )}
         </div>
       </motion.div>
     </div>
-  )
+  );
 }
 
 export default function VerifyPage() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 bg-surface-01 rounded-full flex items-center justify-center mx-auto mb-4">
-            <RefreshCw className="w-8 h-8 text-muted animate-spin" />
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-background flex items-center justify-center">
+          <div className="text-center">
+            <div className="w-16 h-16 bg-surface-01 rounded-full flex items-center justify-center mx-auto mb-4">
+              <RefreshCw className="w-8 h-8 text-muted animate-spin" />
+            </div>
+            <p className="text-muted font-sans">Loading verification...</p>
           </div>
-          <p className="text-muted font-sans">Loading verification...</p>
         </div>
-      </div>
-    }>
+      }
+    >
       <VerifyContent />
     </Suspense>
-  )
+  );
 }

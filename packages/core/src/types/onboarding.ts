@@ -1,32 +1,67 @@
-export type AcademicLevel = "undergraduate" | "masters" | "phd";
+export type AcademicLevel =
+  | "undergraduate"
+  | "graduate"
+  | "phd"
+  | "faculty"
+  | "alumni";
 
-export interface OnboardingData {
-  // Step 1: Display Name & Avatar
-  fullName: string;
-  handle: string;
+export type VerificationLevel = "verified" | "verified+" | "faculty" | "alumni";
+
+export type SpaceType =
+  | "academic"
+  | "social"
+  | "professional"
+  | "sports"
+  | "cultural"
+  | "service";
+
+export interface SpaceClaim {
+  spaceId: string;
+  spaceName: string;
+  spaceType: SpaceType;
+  claimReason: string;
+  status: "pending" | "approved" | "rejected";
+  submittedAt: Date;
+  reviewedAt?: Date;
+  reviewedBy?: string;
+}
+
+export interface OnboardingState {
+  // Basic Info
+  uid?: string;
+  email: string;
+  schoolId: string;
+
+  // Step 1: Welcome/Display Name
+  displayName: string;
   avatarUrl?: string;
 
-  // Step 2: Leader Question
-  isStudentLeader: boolean;
-  isLeader?: boolean; // Alias for isStudentLeader for compatibility
+  // Auto-generated unique handle
+  handle: string; // Auto-generated from displayName
 
-  // Note: Space creation/claiming deferred to main platform
-
-  // Step 4: Academic Card
+  // Step 2: Academic Card
   academicLevel: AcademicLevel;
-  majors: string[];  // Allow multiple majors
+  majors: string[]; // Allow multiple majors
   major?: string; // Single major compatibility
   graduationYear: number;
 
-  // Step 5: Interests
+  // Step 3: Role & Verification
+  isStudentLeader: boolean;
+  verificationLevel: VerificationLevel; // Default 'verified', upgraded to 'verified+' after manual review
+  spaceClaims?: SpaceClaim[]; // Spaces claimed by student leaders
+
+  // Step 4: Interests
   interests: string[];
 
+  // Step 5: Suggested Spaces (for all users)
+  suggestedSpaces?: string[]; // Space IDs they can pre-join
+  joinedSpaces?: string[]; // Spaces they chose to join during onboarding
+
   // Consent and Preferences
-  builderOptIn?: boolean;  // Opt-in to builder features
-  consentGiven: boolean;   // Privacy/terms consent
+  builderOptIn?: boolean; // Student leaders are automatically builders
+  consentGiven: boolean; // Privacy/terms consent
 
-  // Note: Space discovery deferred to main platform
-
-  // Completion Status
-  onboardingCompleted: boolean;
-} 
+  // Completion
+  isComplete: boolean;
+  completedAt?: Date;
+}

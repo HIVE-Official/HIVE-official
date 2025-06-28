@@ -1,6 +1,6 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "extends": "@hive/typescript-config/base.json",
+  "extends": "../config/typescript/base.json",
   "compilerOptions": {
     "target": "es2020",
     "lib": ["dom", "dom.iterable", "esnext"],
@@ -27,18 +27,7 @@
     "outDir": "./dist",
     "rootDir": "./src"
   },
-  "files": [
-    "src/index.ts",
-    "src/use-focus-trap.ts",
-    "src/useSpace.ts"
-  ],
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "**/*.stories.tsx"
-  ]
-} 
+  "files": ["src/index.ts", "src/use-focus-trap.ts", "src/useSpace.ts"],
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "exclude": ["node_modules", "dist", "**/*.stories.tsx"]
+}

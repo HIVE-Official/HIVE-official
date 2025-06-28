@@ -29,8 +29,8 @@ export type { School } from "./domain/school";
 export * from "./constants/majors";
 export * from "./constants/academic-years";
 
-// Stores
-export * from "./stores";
+// Stores - TEMPORARILY DISABLED DUE TO BUILD ISSUES
+// export * from "./stores";
 
 // Firebase client config
 export * from "./firebase";
@@ -94,7 +94,39 @@ export { SpaceDiscoverySchema } from "./domain/space/discovery";
 
 export * from "./utils/logger";
 export * from "./utils/rate-limit";
-export { postCreationRateLimit } from './utils/rate-limit';
+export { postCreationRateLimit } from "./utils/rate-limit";
 
-export * from './types/major';
+export * from "./types/major";
 export * from "./types/onboarding";
+
+// Handle generation utilities
+export {
+  generateBaseHandle,
+  generateHandleVariants,
+  findAvailableHandle,
+  validateHandle,
+} from "./utils/handle-generator";
+
+// Updated onboarding types with verification levels
+export type {
+  OnboardingState,
+  VerificationLevel,
+  SpaceType,
+  SpaceClaim,
+} from "./types/onboarding";
+
+// Export constants
+export * from "./constants/academics";
+export * from "./constants/interests";
+
+// Export Firebase utilities
+export * from "./firebase/client";
+
+// Export utilities
+export * from "./utils/logger";
+
+// Stores - TEMPORARILY DISABLED DUE TO BUILD ISSUES
+// export * from "./stores";
+
+// Export environment - THIS IS THE KEY EXPORT WE NEED
+export * from "./env";

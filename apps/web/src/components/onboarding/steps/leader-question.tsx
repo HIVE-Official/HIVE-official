@@ -49,7 +49,7 @@ export function LeaderQuestion() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    
     await update({
       isStudentLeader: isLeader,
       spaceId: isLeader ? spaceId : undefined,
@@ -129,7 +129,7 @@ export function LeaderQuestion() {
           )}
         </div>
 
-        <Button
+        <Button 
           type="submit"
           disabled={isLeader && (!spaceType || !spaceId)}
           className="w-full"
@@ -157,4 +157,4 @@ export function LeaderQuestion() {
       </div>
     </Card>
   );
-}
+} 
