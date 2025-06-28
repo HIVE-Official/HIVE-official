@@ -18,6 +18,8 @@ import {
   orderBy,
   limit as firestoreLimit,
 } from "firebase/firestore";
+import { dbAdmin } from '@/lib/firebase-admin';
+import { generalApiRateLimit } from '@/lib/rate-limit';
 
 /**
  * GET /api/spaces/discovery
@@ -25,6 +27,17 @@ import {
  */
 export async function GET(request: NextRequest) {
   try {
+    // Rate limiting
+    const ip = request.headers.get('x-forwarded-for') || 'unknown';
+    const rateLimitResult = await generalApiRateLimit.limit(ip);
+    
+    if (!rateLimitResult.success) {
+      return NextResponse.json(
+        { error: 'Rate limit exceeded' },
+        { status: 429 }
+      );
+    }
+
     // Authenticate user
     const user = await requireAuth(request);
 
@@ -57,6 +70,8 @@ export async function GET(request: NextRequest) {
       (searchParams.get("sortBy") as DiscoveryFilters["sortBy"]) || "relevance";
     const limit = parseInt(searchParams.get("limit") || "20");
     const offset = parseInt(searchParams.get("offset") || "0");
+    const schoolId = searchParams.get('schoolId') || 'university-at-buffalo'; // Default to UB
+    const majors = searchParams.get('majors')?.split(',') || [];
 
     // Build discovery filters
     const filters: DiscoveryFilters = {
@@ -149,10 +164,85 @@ export async function GET(request: NextRequest) {
       filters
     );
 
+    // Fetch spaces by type
+    const spacesByTypeQuery = dbAdmin
+      .collection('spaces')
+      .where('schoolId', '==', schoolId)
+      .where('status', '==', 'activated')
+      .limit(limit);
+
+    const spacesByTypeSnapshot = await spacesByTypeQuery.get();
+    const allSpaces = spacesByTypeSnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    })) as Space[];
+
+    // Categorize spaces
+    const categorizedSpaces: SpaceDiscoveryResponse = {
+      academic: [],
+      campusLiving: [],
+      greekLife: [],
+      studentOrganizations: [],
+      universityOrganizations: []
+    };
+
+    allSpaces.forEach(space => {
+      switch (space.type) {
+        case 'major':
+          categorizedSpaces.academic.push(space);
+          break;
+        case 'residential':
+          categorizedSpaces.campusLiving.push(space);
+          break;
+        case 'interest': {
+          // Check if it's Greek life based on tags
+          const isGreek = space.tags?.some(tag => 
+            tag.type === 'greek' || 
+            tag.sub_type?.toLowerCase().includes('fraternity') ||
+            tag.sub_type?.toLowerCase().includes('sorority')
+          );
+          if (isGreek) {
+            categorizedSpaces.greekLife.push(space);
+          } else {
+            categorizedSpaces.studentOrganizations.push(space);
+          }
+          break;
+        }
+        case 'organization':
+          categorizedSpaces.universityOrganizations.push(space);
+          break;
+        case 'creative':
+          categorizedSpaces.studentOrganizations.push(space);
+          break;
+        default:
+          categorizedSpaces.studentOrganizations.push(space);
+      }
+    });
+
+    // Sort by member count (most popular first)
+    Object.keys(categorizedSpaces).forEach(category => {
+      categorizedSpaces[category as keyof SpaceDiscoveryResponse].sort(
+        (a, b) => (b.memberCount || 0) - (a.memberCount || 0)
+      );
+    });
+
+    // If user has majors, prioritize matching academic spaces
+    if (majors.length > 0) {
+      const majorSpaces = categorizedSpaces.academic.filter(space =>
+        space.tags?.some(tag => majors.includes(tag.sub_type))
+      );
+      const otherAcademicSpaces = categorizedSpaces.academic.filter(space =>
+        !space.tags?.some(tag => majors.includes(tag.sub_type))
+      );
+      categorizedSpaces.academic = [...majorSpaces, ...otherAcademicSpaces];
+    }
+
     // Return formatted result
     return NextResponse.json({
       success: true,
       ...discoveryResult,
+      spaces: categorizedSpaces,
+      totalCount: allSpaces.length
     });
   } catch (error) {
     logger.error("Space discovery error:", error);

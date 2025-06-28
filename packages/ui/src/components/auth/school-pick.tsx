@@ -14,7 +14,10 @@ export interface School {
   id: string
   name: string
   domain: string
-  status: 'open' | 'coming-soon'
+  status: 'open' | 'coming-soon' | 'waitlist'
+  isFeatured?: boolean
+  spotsLeft?: number
+  waitlistCount?: number
 }
 
 const defaultSchools: School[] = [
@@ -177,11 +180,16 @@ export const SchoolPick: React.FC<SchoolPickProps> = ({
                   <p className="text-sm font-medium">
                     {school.status === 'open' ? (
                       <span className="text-success">Open now</span>
+                    ) : school.status === 'waitlist' ? (
+                      <span className="text-warning flex items-center gap-1">
+                        <Lock className="w-3 h-3" />
+                        Waitlist {school.spotsLeft ? `• ${school.spotsLeft} spots left` : ''}
+                      </span>
                     ) : (
                       <span className="text-muted flex items-center gap-1">
                         <Lock className="w-3 h-3" />
-                        Coming Soon • 3**
-                        </span>
+                        Coming Soon
+                      </span>
                     )}
                   </p>
                 </div>

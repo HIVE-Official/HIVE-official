@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Button,
   Card,
@@ -18,7 +18,6 @@ import {
   // Checkbox,
   // Import the new design system components
   AcademicCardStep as UIAcademicCardStep,
-  AvatarUploadStep as UIAvatarUploadStep,
   InterestsStep as UIInterestsStep,
   OnboardingCompleteStep as UIOnboardingCompleteStep,
   ClaimSpaceStep as UIClaimSpaceStep,

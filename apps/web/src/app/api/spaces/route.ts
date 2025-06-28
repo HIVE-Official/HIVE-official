@@ -10,33 +10,50 @@ export async function GET(request: Request) {
     const filterType = searchParams.get("type") as SpaceType | "all" | null;
     const searchTerm = searchParams.get("q")?.toLowerCase() || null;
 
-    let query: admin.firestore.Query = dbAdmin.collection("spaces");
+    let allSpaces: Space[] = [];
 
-    if (filterType && filterType !== "all") {
-      query = query.where("type", "==", filterType);
+    // Define space types to search through
+    const spaceTypes: SpaceType[] = ["major", "residential", "interest", "creative", "organization"];
+    const typesToSearch = filterType && filterType !== "all" ? [filterType] : spaceTypes;
+
+    // Search through each space type's nested collection
+    for (const spaceType of typesToSearch) {
+      let query: admin.firestore.Query = dbAdmin
+        .collection("spaces")
+        .doc(spaceType)
+        .collection("spaces");
+
+      // Apply text search if needed
+      if (searchTerm) {
+        query = query
+          .where("name_lowercase", ">=", searchTerm)
+          .where("name_lowercase", "<=", searchTerm + "\uf8ff");
+      }
+
+      const snapshot = await query.orderBy("name_lowercase").limit(50).get();
+
+      // Convert to array and add to results
+      const spaces = snapshot.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+        type: spaceType, // Ensure type is set from collection path
+      })) as Space[];
+
+      allSpaces = allSpaces.concat(spaces);
     }
 
-    // Note: Firestore doesn't support full-text search on its own.
-    // This search implementation is a basic "starts-with" search on the name.
-    // For a real-world application, a dedicated search service like Algolia or Typesense would be required.
-    if (searchTerm) {
-      query = query
-        .where("name_lowercase", ">=", searchTerm)
-        .where("name_lowercase", "<=", searchTerm + "\uf8ff");
-    }
+    // Sort by member count (most popular first) and name
+    allSpaces.sort((a, b) => {
+      if (b.memberCount !== a.memberCount) {
+        return b.memberCount - a.memberCount;
+      }
+      return a.name.localeCompare(b.name);
+    });
 
-    const snapshot = await query.orderBy("name_lowercase").limit(50).get();
+    // Limit total results
+    const limitedSpaces = allSpaces.slice(0, 50);
 
-    if (snapshot.empty) {
-      return NextResponse.json([], { status: 200 });
-    }
-
-    const spaces = snapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    })) as Space[];
-
-    return NextResponse.json(spaces, { status: 200 });
+    return NextResponse.json(limitedSpaces, { status: 200 });
   } catch (error) {
     logger.error("Error fetching spaces:", error);
     return NextResponse.json(

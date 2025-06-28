@@ -8,19 +8,24 @@ export interface OnboardingData {
 
   // Step 2: Leader Question
   isStudentLeader: boolean;
-  spaceId?: string;
-  spaceType?: string;
+  isLeader?: boolean; // Alias for isStudentLeader for compatibility
 
-  // Step 3: Space Verification (if leader)
-  verificationEmails?: string[];  // Max 4 emails to verify leadership
+  // Note: Space creation/claiming deferred to main platform
 
   // Step 4: Academic Card
   academicLevel: AcademicLevel;
   majors: string[];  // Allow multiple majors
+  major?: string; // Single major compatibility
   graduationYear: number;
 
   // Step 5: Interests
   interests: string[];
+
+  // Consent and Preferences
+  builderOptIn?: boolean;  // Opt-in to builder features
+  consentGiven: boolean;   // Privacy/terms consent
+
+  // Note: Space discovery deferred to main platform
 
   // Completion Status
   onboardingCompleted: boolean;

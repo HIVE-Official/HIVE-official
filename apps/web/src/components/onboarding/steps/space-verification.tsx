@@ -2,10 +2,20 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Card, Button, Input, Label, Alert, AlertDescription } from '@hive/ui';
+import { Card, Button, Input, Label } from '@hive/ui';
 import { useOnboardingStore } from '@/lib/stores/onboarding';
-import { useSpace } from '@hive/hooks';
 import { XIcon, PlusIcon } from 'lucide-react';
+
+// Simple Alert component since it's not available in @hive/ui
+const Alert = ({ variant, children }: { variant?: string; children: React.ReactNode }) => (
+  <div className={`p-3 rounded-md border ${variant === 'destructive' ? 'border-red-500 bg-red-50 text-red-700' : 'border-yellow-500 bg-yellow-50 text-yellow-700'}`}>
+    {children}
+  </div>
+);
+
+const AlertDescription = ({ children }: { children: React.ReactNode }) => (
+  <div className="text-sm">{children}</div>
+);
 
 export function SpaceVerification() {
   const router = useRouter();
@@ -14,8 +24,8 @@ export function SpaceVerification() {
   const [currentEmail, setCurrentEmail] = useState('');
   const [error, setError] = useState('');
 
-  // Fetch space details
-  const { data: space } = useSpace(onboardingData?.spaceId);
+  // Mock space data - TODO: Replace with real API call
+  const space = { name: onboardingData?.spaceType || 'your organization' };
 
   const addEmail = () => {
     if (!currentEmail) return;

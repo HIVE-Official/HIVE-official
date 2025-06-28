@@ -1,115 +1,87 @@
-interface RateLimitEntry {
-  count: number;
-  resetTime: number;
-}
+// Simple in-memory rate limiting for development
+// In production, use Redis or a proper rate limiting service
 
 interface RateLimitResult {
   success: boolean;
   limit: number;
   remaining: number;
-  reset: number;
-  pending?: Promise<void>;
+  resetTime: number;
 }
 
-// In-memory rate limit store
-// In production, this should be replaced with Redis
-const rateLimitStore = new Map<string, RateLimitEntry>();
+interface RateLimitEntry {
+  count: number;
+  resetTime: number;
+}
 
-/**
- * Simple rate limiter implementation
- */
-class SimpleRateLimit {
-  private maxRequests: number;
-  private windowMs: number;
-  private prefix: string;
+class RateLimiter {
+  private limits = new Map<string, RateLimitEntry>();
+  private readonly maxRequests: number;
+  private readonly windowMs: number;
 
-  constructor(maxRequests: number, windowMs: number, prefix: string = '') {
+  constructor(maxRequests: number, windowMs: number) {
     this.maxRequests = maxRequests;
     this.windowMs = windowMs;
-    this.prefix = prefix;
   }
 
   async limit(identifier: string): Promise<RateLimitResult> {
     const now = Date.now();
-    const key = `${this.prefix}:${identifier}`;
+    const entry = this.limits.get(identifier);
 
-    const entry = rateLimitStore.get(key);
+    // Clean up expired entries periodically
+    if (Math.random() < 0.1) {
+      this.cleanup();
+    }
 
-    // No existing entry or expired entry
     if (!entry || now > entry.resetTime) {
-      const newEntry: RateLimitEntry = {
+      // Create new entry or reset expired one
+      const newEntry = {
         count: 1,
-        resetTime: now + this.windowMs,
+        resetTime: now + this.windowMs
       };
-      rateLimitStore.set(key, newEntry);
-
+      this.limits.set(identifier, newEntry);
+      
       return {
         success: true,
         limit: this.maxRequests,
         remaining: this.maxRequests - 1,
-        reset: newEntry.resetTime,
+        resetTime: newEntry.resetTime
       };
     }
 
-    // Existing entry within window
     if (entry.count >= this.maxRequests) {
+      // Rate limit exceeded
       return {
         success: false,
         limit: this.maxRequests,
         remaining: 0,
-        reset: entry.resetTime,
+        resetTime: entry.resetTime
       };
     }
 
     // Increment count
-    entry.count += 1;
-    rateLimitStore.set(key, entry);
+    entry.count++;
+    this.limits.set(identifier, entry);
 
     return {
       success: true,
       limit: this.maxRequests,
       remaining: this.maxRequests - entry.count,
-      reset: entry.resetTime,
+      resetTime: entry.resetTime
     };
+  }
+
+  private cleanup() {
+    const now = Date.now();
+    for (const [key, entry] of this.limits.entries()) {
+      if (now > entry.resetTime) {
+        this.limits.delete(key);
+      }
+    }
   }
 }
 
-/**
- * Rate limit for post creation
- * Allows 5 posts per hour per user
- */
-export const postCreationRateLimit = new SimpleRateLimit(
-  5, // max requests
-  60 * 60 * 1000, // 1 hour in milliseconds
-  "hive:post-creation"
-);
-
-/**
- * Rate limit for authentication attempts
- * Allows 5 attempts per minute per IP
- */
-export const authRateLimit = new SimpleRateLimit(
-  5, // max requests
-  60 * 1000, // 1 minute in milliseconds
-  "hive:auth"
-);
-
-/**
- * Rate limit for API requests
- * Allows 100 requests per minute per user
- */
-export const apiRateLimit = new SimpleRateLimit(
-  100, // max requests
-  60 * 1000, // 1 minute in milliseconds
-  "hive:api"
-);
-
-/**
- * Rate limit for search requests
- * Allows 50 requests per minute per user
- */
-export const searchRateLimit = new SimpleRateLimit(
-  50, // max requests
-  60 * 1000, // 1 minute in milliseconds
-  "hive:search"
-); 
+// Rate limiters for different endpoints
+export const postCreationRateLimit = new RateLimiter(10, 60 * 1000); // 10 posts per minute
+export const handleCheckRateLimit = new RateLimiter(20, 60 * 1000);  // 20 handle checks per minute
+export const authRateLimit = new RateLimiter(5, 60 * 1000);          // 5 auth attempts per minute
+export const generalApiRateLimit = new RateLimiter(100, 60 * 1000);  // 100 API calls per minute 

@@ -1,10 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, Button, Input, Label } from '@hive/ui';
 import { useOnboardingStore } from '@/lib/stores/onboarding';
-import { XIcon, ImageIcon } from 'lucide-react';
+import { useHandleAvailability } from '@/hooks/use-handle-availability';
+import { XIcon, Upload, Camera, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 
 function generateHandle(name: string): string {
   return name
@@ -36,7 +37,13 @@ export function DisplayNameAvatar() {
   const [fullName, setFullName] = useState(onboardingData?.fullName ?? '');
   const [handle, setHandle] = useState(onboardingData?.handle ?? '');
   const [avatarUrl, setAvatarUrl] = useState(onboardingData?.avatarUrl ?? '');
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState('');
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  
+  // Real-time handle availability checking
+  const handleAvailability = useHandleAvailability(handle);
 
   // Update handle when name changes
   useEffect(() => {
@@ -44,6 +51,66 @@ export function DisplayNameAvatar() {
       setHandle(generateHandle(fullName));
     }
   }, [fullName]);
+
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        setError('Please select an image file');
+        return;
+      }
+
+      // Validate file size (5MB limit)
+      if (file.size > 5 * 1024 * 1024) {
+        setError('Image must be less than 5MB');
+        return;
+      }
+
+      setSelectedFile(file);
+      setError('');
+
+      // Create preview URL
+      const previewUrl = URL.createObjectURL(file);
+      setAvatarUrl(previewUrl);
+    }
+  };
+
+  const handleUploadClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleRemovePhoto = () => {
+    setSelectedFile(null);
+    setAvatarUrl('');
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  const uploadFile = async (file: File): Promise<string> => {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    // Get auth token (assuming useAuth hook provides it)
+    const token = localStorage.getItem('authToken'); // Adjust based on your auth implementation
+    
+    const response = await fetch('/api/auth/upload-avatar', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Upload failed');
+    }
+
+    const result = await response.json();
+    return result.avatarUrl;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,94 +120,209 @@ export function DisplayNameAvatar() {
       return;
     }
 
-    await update({
-      fullName,
-      handle,
-      avatarUrl
-    });
+    if (!handle || handle.length < 3) {
+      setError('Please enter a username with at least 3 characters');
+      return;
+    }
 
-    router.push('/onboarding/2');
+    if (handleAvailability.available === false) {
+      setError('Please choose an available username');
+      return;
+    }
+
+    if (handleAvailability.isChecking) {
+      setError('Please wait while we check username availability');
+      return;
+    }
+
+    setIsUploading(true);
+    setError('');
+
+    try {
+      let finalAvatarUrl = avatarUrl;
+
+      // Upload file if selected
+      if (selectedFile) {
+        finalAvatarUrl = await uploadFile(selectedFile);
+      }
+
+      await update({
+        fullName,
+        handle,
+        avatarUrl: finalAvatarUrl
+      });
+
+              router.push('/onboarding/4'); // Navigate to interests
+    } catch (err) {
+      setError('Failed to save profile. Please try again.');
+      console.error('Profile save error:', err);
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   return (
-    <Card className="w-full max-w-lg p-6 space-y-6">
-      <div className="space-y-4">
-        <h2 className="text-2xl font-bold">Welcome to HIVE</h2>
-        <p className="text-muted-foreground">
-          Let's start by setting up your profile.
-        </p>
+    <div className="w-full max-w-lg mx-auto">
+      {/* Progress indicator */}
+      <div className="mb-8">
+        <div className="flex items-center justify-between text-sm text-muted mb-2">
+          <span>Step 1 of 5</span>
+          <span>Profile Setup</span>
+        </div>
+        <div className="w-full bg-surface-02 rounded-full h-1">
+          <div className="bg-accent h-1 rounded-full transition-all duration-base" style={{ width: '20%' }} />
+        </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Photo Upload Card */}
-        <div className="relative aspect-[3/2] w-full overflow-hidden rounded-lg border border-dashed border-gray-300 dark:border-gray-600">
-          {avatarUrl ? (
-            <>
-              <img
-                src={avatarUrl}
-                alt="Profile"
-                className="h-full w-full object-cover"
-              />
-              <button
-                type="button"
-                onClick={() => setAvatarUrl('')}
-                className="absolute top-2 right-2 rounded-full bg-black/50 p-1 hover:bg-black/70"
-              >
-                <XIcon className="h-4 w-4 text-white" />
-              </button>
-            </>
-          ) : (
-            <div className="flex h-full flex-col items-center justify-center gap-2">
-              <ImageIcon className="h-8 w-8 text-gray-400" />
-              <Button type="button" variant="outline" size="sm">
-                Upload Photo
-              </Button>
-            </div>
-          )}
+      <Card className="p-6 space-y-6 bg-surface-01 border-border/20">
+        <div className="space-y-2 text-center">
+                      <h1 className="text-h2 font-display text-foreground">Welcome to HIVE</h1>
+            <p className="text-body text-muted">
+              Let&apos;s start by setting up your profile.
+            </p>
         </div>
 
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="fullName">Full Name</Label>
-            <Input
-              id="fullName"
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-              placeholder="Enter your first and last name"
-              required
-            />
-            {error && (
-              <p className="text-sm text-destructive">{error}</p>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Stack Card Photo Upload */}
+          <div className="space-y-3">
+            <Label className="text-foreground font-medium">Profile Photo</Label>
+            
+            {/* Stack Card Design */}
+            <div className="relative">
+              {/* Back cards (stack effect) */}
+              <div className="absolute inset-0 bg-surface-02 rounded-lg transform rotate-1 translate-x-1 translate-y-1 opacity-60" />
+              <div className="absolute inset-0 bg-surface-02 rounded-lg transform -rotate-1 translate-x-0.5 translate-y-0.5 opacity-80" />
+              
+              {/* Main card */}
+              <div className="relative bg-surface-01 border-2 border-dashed border-border/40 rounded-lg aspect-[4/3] overflow-hidden transition-all duration-base hover:border-accent/50 hover:bg-surface-02/50">
+                {avatarUrl ? (
+                  <>
+                    <img
+                      src={avatarUrl}
+                      alt="Profile preview"
+                      className="h-full w-full object-cover"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleRemovePhoto}
+                      className="absolute top-3 right-3 rounded-full bg-background/80 hover:bg-background p-2 transition-colors duration-fast backdrop-blur-sm"
+                    >
+                      <XIcon className="h-4 w-4 text-foreground" />
+                    </button>
+                  </>
+                ) : (
+                  <div className="flex h-full flex-col items-center justify-center gap-4 p-6">
+                    <div className="rounded-full bg-surface-02 p-4">
+                      <Camera className="h-8 w-8 text-accent" />
+                    </div>
+                    <div className="text-center space-y-2">
+                      <p className="font-medium text-foreground">Add your photo</p>
+                      <p className="text-sm text-muted">JPG, PNG or GIF up to 5MB</p>
+                    </div>
+                    <Button 
+                      type="button" 
+                      variant="outline" 
+                      size="sm"
+                      onClick={handleUploadClick}
+                      className="border-accent/30 text-accent hover:border-accent hover:bg-accent/10"
+                    >
+                      <Upload className="mr-2 h-4 w-4" />
+                      Choose Photo
+                    </Button>
+                  </div>
+                )}
+              </div>
+
+              {/* Hidden file input */}
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleFileSelect}
+                className="hidden"
+              />
+            </div>
+
+            {selectedFile && (
+              <div className="flex items-center gap-2 text-sm text-muted">
+                <div className="w-2 h-2 bg-accent rounded-full" />
+                <span>{selectedFile.name}</span>
+              </div>
             )}
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="handle">Username</Label>
-            <div className="relative">
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="fullName" className="text-foreground font-medium">Full Name</Label>
               <Input
-                id="handle"
-                value={handle}
-                readOnly
-                className="bg-muted pr-10"
+                id="fullName"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                placeholder="Enter your first and last name"
+                className="bg-surface-02 border-border/30 focus:border-accent"
+                required
               />
-              <div className="absolute inset-y-0 right-3 flex items-center">
-                <span className="text-sm text-muted-foreground">🔒</span>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="handle" className="text-foreground font-medium">Username</Label>
+              <div className="relative">
+                <Input
+                  id="handle"
+                  value={handle}
+                  onChange={(e) => setHandle(e.target.value.toLowerCase())}
+                  placeholder="Enter your username"
+                  className="bg-surface-02 border-border/30 focus:border-accent pr-10"
+                  required
+                />
+                <div className="absolute inset-y-0 right-3 flex items-center">
+                  {handleAvailability.isChecking ? (
+                    <Loader2 className="h-4 w-4 animate-spin text-muted" />
+                  ) : handleAvailability.available === true ? (
+                    <CheckCircle className="h-4 w-4 text-green-400" />
+                  ) : handleAvailability.available === false ? (
+                    <AlertCircle className="h-4 w-4 text-red-400" />
+                  ) : null}
+                </div>
+              </div>
+              <div className="min-h-[1.25rem]">
+                {handleAvailability.error ? (
+                  <p className="text-sm text-red-400">{handleAvailability.error}</p>
+                ) : handleAvailability.message ? (
+                  <p className={`text-sm ${handleAvailability.available ? 'text-green-400' : 'text-red-400'}`}>
+                    {handleAvailability.message}
+                  </p>
+                ) : (
+              <p className="text-sm text-muted">
+                    3-20 characters, lowercase letters, numbers, and underscores only
+              </p>
+                )}
               </div>
             </div>
-            <p className="text-sm text-muted-foreground">
-              Your username is automatically generated from your full name
-            </p>
           </div>
-        </div>
 
-        <Button 
-          type="submit"
-          disabled={!fullName || !handle}
-          className="w-full"
-        >
-          Continue
-        </Button>
-      </form>
-    </Card>
+          {error && (
+            <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-lg">
+              <p className="text-sm text-red-400">{error}</p>
+            </div>
+          )}
+
+          <Button 
+            type="submit"
+            disabled={!fullName || !handle || isUploading || handleAvailability.isChecking || handleAvailability.available === false}
+            className="w-full bg-foreground text-background hover:bg-foreground/90 font-medium"
+          >
+            {isUploading ? (
+              <>
+                <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-background border-t-transparent" />
+                Saving...
+              </>
+            ) : (
+              'Continue'
+            )}
+          </Button>
+        </form>
+      </Card>
+    </div>
   );
 } 

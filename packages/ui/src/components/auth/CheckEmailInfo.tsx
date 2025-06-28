@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
 import {
   Card,
   CardContent,
@@ -11,6 +10,7 @@ import {
   CardFooter,
 } from "../card";
 import { Button } from "../button";
+import { Link } from "../ui/link";
 
 interface CheckEmailInfoProps {
   email: string | null;

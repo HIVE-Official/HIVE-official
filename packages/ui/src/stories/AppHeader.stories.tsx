@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
 // @ts-nocheck
-// eslint-disable-next-line storybook/no-renderer-packages
+ 
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { AppHeader } from '../components/AppHeader';
 import { Button } from '../components/button';

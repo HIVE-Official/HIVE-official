@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
 // @ts-nocheck
-// eslint-disable-next-line storybook/no-renderer-packages
+ 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Star, Award, CheckCircle, User, Calendar, BookOpen, Users, Trophy, Shield, Heart } from 'lucide-react'
 

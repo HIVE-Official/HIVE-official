@@ -59,7 +59,7 @@ export function AcademicCard() {
       graduationYear
     });
 
-    router.push('/onboarding/5');
+    router.push('/onboarding/2'); // Navigate to space discovery
   };
 
   return (
@@ -113,7 +113,7 @@ export function AcademicCard() {
 
             <div className="flex flex-wrap gap-2 pt-2">
               {majors.map(major => (
-                <Badge key={major} variant="secondary" className="flex items-center space-x-1">
+                <Badge key={major} variant="outline" className="flex items-center space-x-1">
                   <span>{major}</span>
                   <button
                     type="button"

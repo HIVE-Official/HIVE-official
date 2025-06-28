@@ -25,6 +25,7 @@
     "@radix-ui/react-tooltip": "^1.2.7",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.0",
+    "firebase": "^11.9.1",
     "framer-motion": "^12.19.1",
     "next": "15.3.4",
     "react": "^19.1.0",

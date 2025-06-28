@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
 // @ts-nocheck
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Toast, type ToastProps } from '../components/toast'
 import { ToastProvider, useToast } from '../components/toast-provider'
 import { Button } from '../components/button'

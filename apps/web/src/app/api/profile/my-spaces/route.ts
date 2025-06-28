@@ -59,17 +59,26 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    // Collect space IDs from memberships
-    const spaceIds = allSpacesSnapshot.docs
+    // Collect space IDs and types from memberships (nested structure)
+    const spaceReferences = allSpacesSnapshot.docs
       .map((doc) => {
+        // Path: spaces/{spacetype}/spaces/{spaceid}/members/{userid}
         const spaceId = doc.ref.parent.parent?.id;
-        return spaceId;
+        const spaceType = doc.ref.parent.parent?.parent?.id;
+        return { spaceId, spaceType };
       })
-      .filter((id): id is string => Boolean(id));
+      .filter((ref): ref is { spaceId: string; spaceType: string } => 
+        Boolean(ref.spaceId && ref.spaceType));
 
-    // Batch fetch space details
-    const spacePromises = spaceIds.map(async (spaceId) => {
-      const spaceDoc = await dbAdmin.collection("spaces").doc(spaceId).get();
+    // Batch fetch space details from nested structure
+    const spacePromises = spaceReferences.map(async ({ spaceId, spaceType }) => {
+      const spaceDoc = await dbAdmin
+        .collection("spaces")
+        .doc(spaceType)
+        .collection("spaces")
+        .doc(spaceId)
+        .get();
+      
       if (!spaceDoc.exists) return null;
 
       const spaceData = spaceDoc.data() as SpaceData;

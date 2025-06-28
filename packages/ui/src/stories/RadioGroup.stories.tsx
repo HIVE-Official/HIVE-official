@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
 // @ts-nocheck
-// eslint-disable-next-line storybook/no-renderer-packages
+ 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { RadioGroup, RadioGroupItem } from '@/components/radio-group'
 import { Label } from '@/components/label'

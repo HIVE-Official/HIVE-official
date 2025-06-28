@@ -5,6 +5,7 @@ export { Button } from "./components/button";
 export { Dialog } from "./components/dialog";
 export { Input } from "./components/input";
 export { Label } from "./components/label";
+export { Link, type LinkProps } from "./components/ui/link";
 export { Progress } from "./components/progress";
 export { Checkbox } from "./components/checkbox";
 export { RadioGroup, RadioGroupItem } from "./components/radio-group";
@@ -40,3 +41,6 @@ export * from "./components/onboarding";
 
 // Export utilities
 export * from "./lib/utils";
+
+// Export Storybook-specific utilities
+export { StorybookThemeProvider } from "./components/ui/storybook-theme-provider";

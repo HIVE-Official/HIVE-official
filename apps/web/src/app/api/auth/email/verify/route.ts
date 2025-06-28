@@ -14,6 +14,21 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Development mode bypass
+    if (!process.env.NEXT_PUBLIC_FIREBASE_API_KEY) {
+      logger.info('🔥 Development mode: bypassing magic link verification')
+      return NextResponse.json({
+        ok: true,
+        user: {
+          uid: 'dev-user-uid',
+          email: email,
+          isNewUser: true,
+          emailVerified: true
+        },
+        idToken: 'dev-token'
+      })
+    }
+
     if (!auth) {
       logger.error('Firebase auth not initialized')
       return NextResponse.json(

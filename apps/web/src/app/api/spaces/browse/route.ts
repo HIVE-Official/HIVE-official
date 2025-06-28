@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getAuth } from "firebase-admin/auth";
 import { dbAdmin } from "@/lib/firebase-admin";
-import { type Space } from "@hive/core";
+import type { Space, SpaceType } from "@hive/core";
 import { logger } from "@hive/core";
 
 const browseSpacesSchema = z.object({
@@ -20,8 +20,9 @@ const browseSpacesSchema = z.object({
 /**
  * Browse available spaces at a user's school
  * Returns paginated list of spaces with membership status
+ * Now supports nested collection structure: spaces/{spacetype}/spaces/{spaceid}
  */
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
     // Parse query parameters
     const url = new URL(request.url);
@@ -60,145 +61,96 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    // Build the query
-    let query = dbAdmin
-      .collection("spaces")
-      .where("schoolId", "==", userSchoolId)
-      .where("status", "==", "activated");
+    let allSpaces: Space[] = [];
 
-    // Add type filter if specified
-    if (type) {
-      query = query.where("type", "==", type);
+    // Define space types to search through
+    const spaceTypes: SpaceType[] = ["major", "residential", "interest", "creative", "organization"];
+    const typesToSearch = type ? [type] : spaceTypes;
+
+    // Search through each space type's nested collection
+    for (const spaceType of typesToSearch) {
+      let query = dbAdmin
+        .collection("spaces")
+        .doc(spaceType)
+        .collection("spaces")
+        .where("schoolId", "==", userSchoolId)
+        .where("status", "==", "activated");
+
+      // Add subType filter if specified (using tags array)
+      if (subType) {
+        query = query.where("tags", "array-contains", {
+          type: spaceType,
+          sub_type: subType,
+        });
+      }
+
+      // Execute the query for this space type
+      const spacesSnapshot = await query.get();
+
+      // Convert to array and add to results
+      const spaces = spacesSnapshot.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+        type: spaceType, // Ensure type is set from collection path
+      })) as Space[];
+
+      allSpaces = allSpaces.concat(spaces);
     }
 
-    // Add subType filter if specified (using tags array)
-    if (subType) {
-      query = query.where("tags", "array-contains", {
-        type: type || "interest",
-        sub_type: subType,
-      });
-    }
-
-    // Execute the query
-    const spacesSnapshot = await query.get();
-
-    // Convert to array and apply text search if needed
-    let spaces = spacesSnapshot.docs.map((doc) => ({
-      ...doc.data(),
-      id: doc.id,
-    })) as Space[];
-
-    // Apply text search filter (case-insensitive)
+    // Apply text search if needed (client-side filtering)
     if (search) {
       const searchLower = search.toLowerCase();
-      spaces = spaces.filter(
+      allSpaces = allSpaces.filter(
         (space) =>
           space.name.toLowerCase().includes(searchLower) ||
-          (space.description &&
-            space.description.toLowerCase().includes(searchLower))
+          space.description.toLowerCase().includes(searchLower)
       );
     }
 
-    // Sort by member count (popular first) then by name
-    spaces.sort((a, b) => {
-      const memberCountA = a.memberCount || 0;
-      const memberCountB = b.memberCount || 0;
-
-      if (memberCountA !== memberCountB) {
-        return memberCountB - memberCountA; // Higher member count first
+    // Sort by member count (most popular first) and name
+    allSpaces.sort((a, b) => {
+      if (b.memberCount !== a.memberCount) {
+        return b.memberCount - a.memberCount;
       }
-
-      return a.name.localeCompare(b.name); // Alphabetical for ties
+      return a.name.localeCompare(b.name);
     });
 
     // Apply pagination
-    const totalCount = spaces.length;
-    const paginatedSpaces = spaces.slice(offset, offset + limit);
+    const paginatedSpaces = allSpaces.slice(offset, offset + limit);
 
-    // Get user's current memberships to mark joined spaces
-    const userMembershipsSnapshot = await dbAdmin
-      .collectionGroup("members")
-      .where("userId", "==", userId)
-      .get();
+    // Get user's memberships to show join status
+    const userMembershipsPromises = paginatedSpaces.map(async (space) => {
+      const memberDoc = await dbAdmin
+        .collection("spaces")
+        .doc(space.type)
+        .collection("spaces")
+        .doc(space.id)
+        .collection("members")
+        .doc(userId)
+        .get();
 
-    const userSpaceIds = new Set(
-      userMembershipsSnapshot.docs
-        .map((doc) => doc.ref.parent.parent?.id)
-        .filter(Boolean)
-    );
+      return {
+        ...space,
+        isMember: memberDoc.exists,
+        membershipStatus: memberDoc.exists ? memberDoc.data()?.status : null,
+      };
+    });
 
-    // Add membership status to each space
-    const spacesWithMembership = paginatedSpaces.map((space) => ({
-      id: space.id,
-      name: space.name,
-      description: space.description,
-      type: space.type,
-      tags: space.tags,
-      status: space.status,
-      memberCount: space.memberCount || 0,
-      createdAt: space.createdAt,
-      updatedAt: space.updatedAt,
-      isMember: userSpaceIds.has(space.id),
-    }));
-
-    // Group spaces by type for better organization
-    const spacesByType = spacesWithMembership.reduce(
-      (acc, space) => {
-        const spaceType = space.type;
-        if (!acc[spaceType]) {
-          acc[spaceType] = [];
-        }
-        acc[spaceType].push(space);
-        return acc;
-      },
-      {} as Record<string, typeof spacesWithMembership>
-    );
+    const spacesWithMembership = await Promise.all(userMembershipsPromises);
 
     return NextResponse.json({
-      success: true,
       spaces: spacesWithMembership,
-      spacesByType: spacesByType,
       pagination: {
+        total: allSpaces.length,
         limit,
         offset,
-        totalCount,
-        hasMore: offset + limit < totalCount,
-        nextOffset: offset + limit < totalCount ? offset + limit : null,
+        hasMore: offset + limit < allSpaces.length,
       },
-      filters: {
-        schoolId: userSchoolId,
-        type: type || null,
-        subType: subType || null,
-        search: search || null,
-      },
-      typeCounts: Object.keys(spacesByType).reduce(
-        (acc, type) => {
-          acc[type] = spacesByType[type].length;
-          return acc;
-        },
-        {} as Record<string, number>
-      ),
     });
-  } catch (error: unknown) {
-    logger.error("Browse spaces error:", error);
-
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: "Invalid query parameters", details: error.errors },
-        { status: 400 }
-      );
-    }
-
-    if (
-      error instanceof Error &&
-      "code" in error &&
-      (error as { code: string }).code === "auth/id-token-expired"
-    ) {
-      return NextResponse.json({ error: "Token expired" }, { status: 401 });
-    }
-
+  } catch (error) {
+    logger.error("Error browsing spaces:", error);
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: "Failed to browse spaces" },
       { status: 500 }
     );
   }

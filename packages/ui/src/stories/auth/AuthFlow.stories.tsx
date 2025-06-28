@@ -2,7 +2,7 @@
 // @ts-nocheck
 // @ts-nocheck
 // @ts-nocheck
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { AuthFlow, type AuthFlowProps, type School } from '../../components/auth';
 import { action } from '@storybook/addon-actions';
 

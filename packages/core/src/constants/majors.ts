@@ -49,6 +49,7 @@ export const UNDERGRADUATE_MAJORS: MajorType[] = [
   { name: 'Environmental Sustainability', level: 'undergraduate' },
   { name: 'Exercise Science', level: 'undergraduate' },
   { name: 'Film Studies', level: 'undergraduate' },
+  { name: 'Fine Arts', level: 'undergraduate' },
   { name: 'French', level: 'undergraduate' },
   { name: 'Geographic Information Science', level: 'undergraduate' },
   { name: 'Geography', level: 'undergraduate' },
@@ -69,17 +70,22 @@ export const UNDERGRADUATE_MAJORS: MajorType[] = [
   { name: 'Legal Studies', level: 'undergraduate' },
   { name: 'Linguistics', level: 'undergraduate' },
   { name: 'Materials Science & Engineering', level: 'undergraduate' },
+  { name: 'Mathematical Physics', level: 'undergraduate' },
   { name: 'Mathematics', level: 'undergraduate' },
+  { name: 'Mathematics-Economics', level: 'undergraduate' },
   { name: 'Mechanical Engineering', level: 'undergraduate' },
   { name: 'Media Study', level: 'undergraduate' },
   { name: 'Medical Laboratory Science', level: 'undergraduate' },
+  { name: 'Medicinal Chemistry', level: 'undergraduate' },
   { name: 'Music', level: 'undergraduate' },
+  { name: 'Music Performance', level: 'undergraduate' },
   { name: 'Music Theatre', level: 'undergraduate' },
   { name: 'Neuroscience', level: 'undergraduate' },
   { name: 'Nuclear Medicine Technology', level: 'undergraduate' },
   { name: 'Nursing', level: 'undergraduate' },
   { name: 'Nursing RN-to-BS', level: 'undergraduate' },
   { name: 'Nutrition Science', level: 'undergraduate' },
+  { name: 'Occupational Science', level: 'undergraduate' },
   { name: 'Occupational Therapy', level: 'undergraduate' },
   { name: 'Pharmaceutical Sciences', level: 'undergraduate' },
   { name: 'Pharmacology & Toxicology', level: 'undergraduate' },
@@ -95,7 +101,41 @@ export const UNDERGRADUATE_MAJORS: MajorType[] = [
   { name: 'Special Studies', level: 'undergraduate' },
   { name: 'Speech & Hearing Science', level: 'undergraduate' },
   { name: 'Statistics', level: 'undergraduate' },
+  { name: 'Studio Art', level: 'undergraduate' },
   { name: 'Theatre', level: 'undergraduate' },
   { name: 'Theatre Design/Technology', level: 'undergraduate' },
   { name: 'Urban & Public Policy Studies', level: 'undergraduate' }
 ];
+
+// Placeholder for future graduate programs
+export const MASTERS_MAJORS: MajorType[] = [
+  // Add master's programs when available
+];
+
+export const PHD_MAJORS: MajorType[] = [
+  // Add PhD programs when available  
+];
+
+// Combined list of all majors
+export const ALL_MAJORS: MajorType[] = [
+  ...UNDERGRADUATE_MAJORS,
+  ...MASTERS_MAJORS,
+  ...PHD_MAJORS
+];
+
+// Utility functions
+export const getMajorsByLevel = (level: MajorType['level']) => {
+  return ALL_MAJORS.filter(major => major.level === level);
+};
+
+export const getMajorsByCategory = (category: string) => {
+  // This would be extended when we add category information to majors
+  return ALL_MAJORS.filter(major => major.name.toLowerCase().includes(category.toLowerCase()));
+};
+
+export const searchMajors = (query: string) => {
+  const lowerQuery = query.toLowerCase();
+  return ALL_MAJORS.filter(major => 
+    major.name.toLowerCase().includes(lowerQuery)
+  );
+};

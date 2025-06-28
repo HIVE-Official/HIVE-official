@@ -380,11 +380,10 @@ async function seedSpaces() {
       name: "Computer Science Majors",
       description:
         "Connect with fellow CS students, share projects, and discuss the latest in tech.",
-      type: "academic",
-      subType: "major",
+      type: "major",
+      tags: [{ type: "major", sub_type: "Computer Science" }],
       schoolId: "ub",
       memberCount: 2,
-      isPublic: true,
       status: "activated",
     },
     {
@@ -392,11 +391,10 @@ async function seedSpaces() {
       name: "Psychology Majors",
       description:
         "A space for psychology students to discuss research, career paths, and mental health.",
-      type: "academic",
-      subType: "major",
+      type: "major",
+      tags: [{ type: "major", sub_type: "Psychology" }],
       schoolId: "ub",
       memberCount: 1,
-      isPublic: true,
       status: "activated",
     },
     {
@@ -404,11 +402,10 @@ async function seedSpaces() {
       name: "Business Administration",
       description:
         "Network with business students, share internship opportunities, and discuss entrepreneurship.",
-      type: "academic",
-      subType: "major",
+      type: "major",
+      tags: [{ type: "major", sub_type: "Business Administration" }],
       schoolId: "ub",
       memberCount: 1,
-      isPublic: true,
       status: "activated",
     },
     {
@@ -417,25 +414,72 @@ async function seedSpaces() {
       description:
         "For night owls who prefer studying after hours. Share tips and motivate each other!",
       type: "interest",
-      subType: "study",
+      tags: [{ type: "interest", sub_type: "study" }],
       schoolId: "ub",
       memberCount: 0,
-      isPublic: true,
+      status: "activated",
+    },
+    {
+      id: "ub-ellicott-complex",
+      name: "Ellicott Complex",
+      description:
+        "Connect with your neighbors in Ellicott Complex. Share events, study groups, and make friends!",
+      type: "residential",
+      tags: [{ type: "residential", sub_type: "Ellicott Complex" }],
+      schoolId: "ub",
+      memberCount: 15,
+      status: "activated",
+    },
+    {
+      id: "ub-alpha-phi-alpha",
+      name: "Alpha Phi Alpha Fraternity",
+      description:
+        "The first intercollegiate Greek-letter fraternity established for African Americans.",
+      type: "interest",
+      tags: [{ type: "greek", sub_type: "fraternity" }],
+      schoolId: "ub",
+      memberCount: 8,
+      status: "activated",
+    },
+    {
+      id: "ub-student-government",
+      name: "Student Government",
+      description:
+        "Official student government organization. Get involved in campus decisions and leadership.",
+      type: "organization",
+      tags: [{ type: "university", sub_type: "official" }],
+      schoolId: "ub",
+      memberCount: 12,
+      status: "activated",
+    },
+    {
+      id: "ub-gaming-club",
+      name: "Gaming Club",
+      description:
+        "For all gaming enthusiasts! Board games, video games, tournaments, and more.",
+      type: "interest",
+      tags: [{ type: "interest", sub_type: "gaming" }],
+      schoolId: "ub",
+      memberCount: 25,
       status: "activated",
     },
   ];
 
   for (const space of spaces) {
+    // Use the correct nested structure: spaces/{spacetype}/spaces/{spaceid}
     await db
+      .collection("spaces")
+      .doc(space.type)
       .collection("spaces")
       .doc(space.id)
       .set({
         ...space,
+        name_lowercase: space.name.toLowerCase(),
         createdAt: new Date(),
         updatedAt: new Date(),
       });
 
-    console.log(`  ✓ Created space: ${space.name}`);
+    console.log(`  ✓ Created ${space.type} space: ${space.name}`);
   }
 }
 

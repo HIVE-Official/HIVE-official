@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
 import {
   Card,
   CardContent,
@@ -13,6 +12,7 @@ import {
 import { Button } from "../button";
 import { Input } from "../input";
 import { Label } from "../label";
+import { Link } from "../ui/link";
 
 interface AuthFormProps {
   schoolName: string;

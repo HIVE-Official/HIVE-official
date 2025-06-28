@@ -1,13 +1,24 @@
 {
   "extends": "../../packages/config/typescript/base.json",
   "compilerOptions": {
-    "plugins": [{ "name": "next" }],
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
-      "@hive/*": ["../../packages/*/src"]
+      "@/*": [
+        "./src/*"
+      ],
+      "@hive/*": [
+        "../../packages/*/src"
+      ]
     },
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "allowJs": true,
+    "noEmit": true,
+    "incremental": true
   },
   "include": [
     "next-env.d.ts",
@@ -17,5 +28,7 @@
     "../../packages/ui/src/**/*.ts",
     "../../packages/ui/src/**/*.tsx"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules"
+  ]
 }
