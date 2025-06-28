@@ -18,23 +18,13 @@ const meta: Meta<typeof HiveLogo> = {
         { name: "light", value: "#F0F0F0" },
       ],
     },
-    size: {
-      control: { type: "select" },
-      options: ["sm", "md", "lg", "xl", "2xl", "3xl"],
-      description: "Logo size",
-    },
-    animationType: {
-      control: { type: "select" },
-      options: ["none", "pulse", "spin", "gentle-float"],
-      description: "Animation style for the logo",
-    },
   },
   tags: ["autodocs"],
   argTypes: {
     variant: {
       control: { type: "select" },
-      options: ["white", "black", "gold", "chrome", "glass", "neumorphic"],
-      description: "Logo color and style variant",
+      options: ["white", "black", "gold"],
+      description: "Logo color variant",
     },
     size: {
       control: { type: "select" },
@@ -57,7 +47,7 @@ export const Default: Story = {
   args: {
     variant: "white",
     size: "xl",
-    animationType: "pulse",
+    animationType: "none",
   },
   parameters: {
     backgrounds: { default: "dark" },
@@ -68,6 +58,9 @@ export const White: Story = {
   args: {
     variant: "white",
     size: "xl",
+  },
+  parameters: {
+    backgrounds: { default: "dark" },
   },
 };
 
@@ -86,42 +79,12 @@ export const Gold: Story = {
     variant: "gold",
     size: "xl",
   },
-};
-
-export const Chrome: Story = {
-  name: "Variant: Chrome",
-  args: {
-    variant: "chrome",
-    size: "2xl",
-  },
   parameters: {
     backgrounds: { default: "dark" },
   },
 };
 
-export const Glass: Story = {
-  name: "Variant: Glassmorphism",
-  args: {
-    variant: "glass",
-    size: "2xl",
-  },
-  parameters: {
-    backgrounds: { default: "dark" },
-  },
-};
-
-export const Neumorphic: Story = {
-  name: "Variant: Neumorphic",
-  args: {
-    variant: "neumorphic",
-    size: "2xl",
-  },
-  parameters: {
-    backgrounds: { default: "light" },
-  },
-};
-
-export const AllStyles: Story = {
+export const AllVariants: Story = {
   render: (args) => (
     <div className="p-8 bg-neutral-800 rounded-lg">
       <div className="grid grid-cols-3 gap-8 items-center p-4 bg-neutral-900 rounded-lg mb-4">
@@ -130,7 +93,9 @@ export const AllStyles: Story = {
           <p className="text-sm text-white">White</p>
         </div>
         <div className="text-center space-y-2">
-          <HiveLogo {...args} variant="black" size="xl" />
+          <div className="bg-white p-4 rounded">
+            <HiveLogo {...args} variant="black" size="xl" />
+          </div>
           <p className="text-sm text-white">Black</p>
         </div>
         <div className="text-center space-y-2">
@@ -138,25 +103,48 @@ export const AllStyles: Story = {
           <p className="text-sm text-white">Gold</p>
         </div>
       </div>
-      <div className="grid grid-cols-3 gap-8 items-center p-4 bg-neutral-300 rounded-lg">
-        <div className="text-center space-y-2">
-          <HiveLogo {...args} variant="chrome" size="xl" />
-          <p className="text-sm text-black">Chrome</p>
-        </div>
-        <div className="text-center space-y-2">
-          <HiveLogo {...args} variant="glass" size="xl" />
-          <p className="text-sm text-black">Glass</p>
-        </div>
-        <div className="text-center space-y-2">
-          <HiveLogo {...args} variant="neumorphic" size="xl" />
-          <p className="text-sm text-black">Neumorphic</p>
-        </div>
-      </div>
     </div>
   ),
   argTypes: {
     variant: { table: { disable: true } },
     size: { table: { disable: true } },
+  },
+  parameters: {
+    backgrounds: { default: "dark" },
+  },
+};
+
+export const Sizes: Story = {
+  render: () => (
+    <div className="flex items-end gap-8 p-8 bg-neutral-900 rounded-lg">
+      <div className="flex flex-col items-center gap-2">
+        <HiveLogo variant="white" size="sm" />
+        <p className="text-white text-xs">sm</p>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <HiveLogo variant="white" size="md" />
+        <p className="text-white text-xs">md</p>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <HiveLogo variant="white" size="lg" />
+        <p className="text-white text-xs">lg</p>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <HiveLogo variant="white" size="xl" />
+        <p className="text-white text-xs">xl</p>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <HiveLogo variant="white" size="2xl" />
+        <p className="text-white text-xs">2xl</p>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <HiveLogo variant="white" size="3xl" />
+        <p className="text-white text-xs">3xl</p>
+      </div>
+    </div>
+  ),
+  parameters: {
+    backgrounds: { default: "dark" },
   },
 };
 
@@ -172,7 +160,7 @@ export const Animations: Story = {
         <p className="text-white">Gentle Float</p>
       </div>
       <div className="flex flex-col items-center justify-center gap-4">
-        <HiveLogo variant="chrome" size="2xl" animationType="spin" />
+        <HiveLogo variant="gold" size="2xl" animationType="spin" />
         <p className="text-white">Spin</p>
       </div>
       <div className="flex flex-col items-center justify-center gap-4">
