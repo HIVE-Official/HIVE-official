@@ -6,6 +6,7 @@ import {
   type SpaceDiscoveryData,
   type UserDiscoveryContext,
   type DiscoveryFilters,
+  type Space,
   logger,
 } from "@hive/core";
 import { requireAuth } from "@/lib/auth";
@@ -20,6 +21,15 @@ import {
 } from "firebase/firestore";
 import { dbAdmin } from '@/lib/firebase-admin';
 import { generalApiRateLimit } from '@/lib/rate-limit';
+
+interface SpaceDiscoveryResponse {
+  academic: Space[];
+  campusLiving: Space[];
+  greekLife: Space[];
+  studentOrganizations: Space[];
+  universityOrganizations: Space[];
+  [key: string]: Space[];
+}
 
 /**
  * GET /api/spaces/discovery

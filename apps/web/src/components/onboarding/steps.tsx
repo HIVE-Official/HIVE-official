@@ -26,7 +26,7 @@ import { Loader2, Upload } from "lucide-react";
 import { debounce } from "lodash";
 import { AuthUser } from "@hive/auth-logic";
 import { logger } from "@hive/core";
-import type { OnboardingData } from "@hive/core";
+import type { OnboardingState } from "@hive/core";
 
 // A utility to generate a handle from a name
 const generateHandle = (name: string) => {
@@ -39,9 +39,9 @@ const generateHandle = (name: string) => {
 
 interface StepProps {
   user: AuthUser;
-  onNext: (nextStep?: number, data?: Partial<OnboardingData>) => void;
+  onNext: (nextStep?: number, data?: Partial<OnboardingState>) => void;
   onPrev?: () => void;
-  data?: Partial<OnboardingData>;
+  data?: Partial<OnboardingState>;
 }
 
 export const DisplayNameAvatarStep: React.FC<StepProps> = ({
@@ -50,7 +50,7 @@ export const DisplayNameAvatarStep: React.FC<StepProps> = ({
   onPrev,
   data,
 }) => {
-  const [fullName, setFullName] = useState<string>(data?.fullName || "");
+  const [displayName, setDisplayName] = useState<string>(data?.displayName || "");
   const [handle, setHandle] = useState<string>(data?.handle || "");
   const [isCheckingHandle, setIsCheckingHandle] = useState(false);
   const [handleError, setHandleError] = useState<string | null>(null);
@@ -69,7 +69,7 @@ export const DisplayNameAvatarStep: React.FC<StepProps> = ({
         .split(" ")
         .map((n) => n.charAt(0).toUpperCase() + n.slice(1))
         .join(" ");
-      setFullName(capitalized);
+      setDisplayName(capitalized);
       setHandle(generateHandle(capitalized));
     }
   }, [user]);
@@ -116,7 +116,7 @@ export const DisplayNameAvatarStep: React.FC<StepProps> = ({
       }
 
       onNext(undefined, {
-        fullName,
+        displayName,
         handle,
         avatarUrl,
       });
@@ -138,14 +138,14 @@ export const DisplayNameAvatarStep: React.FC<StepProps> = ({
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="fullName" className="text-zinc-300">
-              Full Name
+            <Label htmlFor="displayName" className="text-zinc-300">
+              Display Name
             </Label>
             <Input
-              id="fullName"
-              value={fullName}
+              id="displayName"
+              value={displayName}
               onChange={(e) => {
-                setFullName(e.target.value);
+                setDisplayName(e.target.value);
                 setHandle(generateHandle(e.target.value));
               }}
               className="bg-zinc-800 border-zinc-700"
@@ -354,7 +354,7 @@ export const ClaimSpaceStep: React.FC<StepProps> = ({
       spaceDescription={spaceDescription}
       onSpaceNameChange={(value: string) => setSpaceName(value)}
       onSpaceDescriptionChange={(value: string) => setSpaceDescription(value)}
-      onSubmit={handleSubmit}
+      onSubmit={handleSubmit as any}
       isLoading={isLoading}
       onBack={onPrev}
     />

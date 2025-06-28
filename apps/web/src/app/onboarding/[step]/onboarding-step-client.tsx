@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@hive/auth-logic";
 import { logger } from "@hive/core";
-import type { OnboardingData, AcademicLevel } from "@hive/core";
+import type { OnboardingState, AcademicLevel } from "@hive/core";
 import { Loader2 } from "lucide-react";
 import { useOnboardingStore } from "@/lib/stores/onboarding";
 import { WelcomeStep } from "@hive/ui";
@@ -17,9 +17,9 @@ interface OnboardingStepClientProps {
 }
 
 interface StepComponentProps {
-  onNext: (nextStep?: number, data?: Partial<OnboardingData>) => void;
+  onNext: (nextStep?: number, data?: Partial<OnboardingState>) => void;
   onPrev?: () => void;
-  data: Partial<OnboardingData>;
+  data: Partial<OnboardingState>;
 }
 
 // Wrapper components that adapt the existing components to the expected interface
@@ -63,8 +63,8 @@ const STEPS: Record<string, React.ComponentType<StepComponentProps>> = {
 // If Firebase env vars are missing, we're in dev mode
 const isDevMode = !process.env.NEXT_PUBLIC_FIREBASE_API_KEY;
 
-const initialDevData: Partial<OnboardingData> = {
-  fullName: "Dev User",
+const initialDevData: Partial<OnboardingState> = {
+  displayName: "Dev User",
   handle: "dev-user",
   onboardingCompleted: false,
   isStudentLeader: false,
@@ -97,7 +97,7 @@ export function OnboardingStepClient({ step }: OnboardingStepClientProps) {
 
   const handleNext = async (
     nextStep?: number,
-    data?: Partial<OnboardingData>
+    data?: Partial<OnboardingState>
   ) => {
     const updatedData = { ...onboardingData, ...data };
     update(updatedData);
@@ -253,14 +253,14 @@ export function OnboardingStepClient({ step }: OnboardingStepClientProps) {
         break;
       case "2":
         // Step 2 (Academic) requires name and handle from Step 1
-        if (!onboardingData?.fullName || !onboardingData?.handle) {
+        if (!onboardingData?.displayName || !onboardingData?.handle) {
           router.replace("/onboarding/1");
         }
         break;
       case "3":
         // Step 3 (Interests) requires previous steps completed
         if (
-          !onboardingData?.fullName ||
+          !onboardingData?.displayName ||
           !onboardingData?.handle ||
           !onboardingData?.academicLevel ||
           !onboardingData?.majors?.length
