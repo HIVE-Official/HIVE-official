@@ -19,7 +19,7 @@ const GRADUATION_YEARS = Array.from({ length: 8 }, (_, i) => new Date().getFullY
 
 const ACADEMIC_LEVELS: { value: AcademicLevel; label: string }[] = [
   { value: 'undergraduate', label: 'Undergraduate' },
-  { value: 'masters', label: "Master's" },
+  { value: 'graduate', label: "Master's" },
   { value: 'phd', label: 'Ph.D.' },
 ];
 

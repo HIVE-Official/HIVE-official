@@ -1,4 +1,5 @@
 import { z } from "zod";
+import type { ServiceAccount } from "firebase-admin";
 
 /**
  * Environment configuration schema - Development-friendly version
@@ -95,7 +96,7 @@ export function getFirebaseConfig() {
 /**
  * Get Firebase Admin configuration for server-side operations
  */
-export function getFirebaseAdminConfig() {
+export function getFirebaseAdminConfig(): ServiceAccount | null {
   if (
     !env.FIREBASE_PROJECT_ID ||
     !env.FIREBASE_CLIENT_EMAIL ||
@@ -108,10 +109,9 @@ export function getFirebaseAdminConfig() {
   }
 
   return {
-    type: "service_account",
-    project_id: env.FIREBASE_PROJECT_ID,
-    client_email: env.FIREBASE_CLIENT_EMAIL,
-    private_key: env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n"),
+    projectId: env.FIREBASE_PROJECT_ID,
+    clientEmail: env.FIREBASE_CLIENT_EMAIL,
+    privateKey: env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n"),
   };
 }
 

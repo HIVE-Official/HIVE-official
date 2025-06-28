@@ -29,6 +29,10 @@
     "../../packages/ui/src/**/*.tsx"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "test",
+    "src/app/api/**",
+    "src/app/(wip)/**",
+    "src/components/onboarding/**"
   ]
 }

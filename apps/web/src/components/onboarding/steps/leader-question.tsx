@@ -39,10 +39,10 @@ export function LeaderQuestion() {
   const [isLeader, setIsLeader] = useState(
     onboardingData?.isStudentLeader ?? false
   );
-  const [spaceType, setSpaceType] = useState(
+  const [spaceType, setSpaceType] = useState<string>(
     onboardingData?.spaceType ?? "academic"
   );
-  const [spaceId, setSpaceId] = useState(onboardingData?.spaceId ?? "");
+  const [spaceId, setSpaceId] = useState<string>(onboardingData?.spaceId ?? "");
 
   // Get available spaces based on type
   const spaces = mockSpaces[spaceType as keyof typeof mockSpaces] || [];

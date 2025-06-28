@@ -12,7 +12,7 @@ try {
     if (adminConfig) {
       admin.initializeApp({
         credential: admin.credential.cert(adminConfig),
-        projectId: adminConfig.project_id,
+        projectId: adminConfig.projectId,
       });
 
       dbAdmin = admin.firestore();
