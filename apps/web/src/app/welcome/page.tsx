@@ -225,7 +225,7 @@ export default function WelcomePage() {
                 onClick={handleWhatsComing}
                 className="border-accent text-accent hover:bg-accent hover:text-background px-8 py-3 text-lg"
               >
-                What's Coming
+                What&apos;s Coming
               </Button>
             </div>
           </motion.div>
