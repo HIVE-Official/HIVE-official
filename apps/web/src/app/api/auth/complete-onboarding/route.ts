@@ -31,7 +31,11 @@ export async function POST(request: NextRequest) {
   // During build time, return a mock response
   if (isBuildTime) {
     return NextResponse.json(
-      { message: "Build time - route will be available at runtime" },
+      { 
+        ok: true,
+        message: "Build time - mock onboarding completion",
+        userId: "build-time-user-id"
+      },
       { status: 200 }
     );
   }
