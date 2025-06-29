@@ -1,13 +1,72 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@hive/auth-logic";
-import { updateProfile } from "firebase/auth";
 import { logger } from "@hive/core";
-import { dbAdmin, authAdmin } from "@/lib/firebase-admin";
-import type { OnboardingState } from "@hive/core";
+import { dbAdmin, authAdmin } from "../../../../lib/firebase-admin";
+
+// Temporary inline type definition to avoid import issues
+interface OnboardingData {
+  displayName?: string;
+  major?: string;
+  majors?: string[];
+  handle?: string;
+  avatarUrl?: string;
+  builderOptIn?: boolean;
+  consentGiven?: boolean;
+  academicLevel?: string;
+  graduationYear?: number;
+  interests?: string[];
+  isStudentLeader?: boolean;
+  spaceClaims?: Array<{
+    spaceId: string;
+    spaceName: string;
+    spaceType: string;
+    claimReason: string;
+    status: string;
+  }>;
+}
+
+// Check if we're in build time
+const isBuildTime = process.env.NEXT_PHASE === "phase-production-build";
 
 export async function POST(request: NextRequest) {
+  // During build time, return a mock response
+  if (isBuildTime) {
+    return NextResponse.json(
+      { message: "Build time - route will be available at runtime" },
+      { status: 200 }
+    );
+  }
+
   try {
-    const onboardingData = (await request.json()) as Partial<OnboardingState>;
+    // Get the authorization header
+    const authHeader = request.headers.get('authorization');
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return NextResponse.json(
+        { message: "Authorization token required" },
+        { status: 401 }
+      );
+    }
+
+    const idToken = authHeader.split('Bearer ')[1];
+    
+    // Verify the ID token
+    let decodedToken;
+    try {
+      decodedToken = await authAdmin.verifyIdToken(idToken);
+    } catch (error) {
+      logger.error("Invalid ID token:", error);
+      return NextResponse.json(
+        { message: "Invalid or expired token" },
+        { status: 401 }
+      );
+    }
+
+    const currentUser = {
+      uid: decodedToken.uid,
+      email: decodedToken.email,
+      emailVerified: decodedToken.email_verified,
+    };
+
+    const onboardingData = (await request.json()) as Partial<OnboardingData>;
     const {
       displayName,
       major,
@@ -51,32 +110,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!auth) {
-      logger.error("Firebase auth not initialized");
-      return NextResponse.json(
-        { message: "Authentication service unavailable" },
-        { status: 500 }
-      );
-    }
-
-    // Get the current user
-    const currentUser = auth.currentUser;
-    if (!currentUser) {
-      return NextResponse.json(
-        { message: "User not authenticated" },
-        { status: 401 }
-      );
-    }
-
     // Development mode bypass
     if (!process.env.NEXT_PUBLIC_FIREBASE_API_KEY) {
       logger.info("🔥 Development mode: bypassing Firestore operations");
-
-      // Update Firebase Auth profile even in dev mode
-      await updateProfile(currentUser, {
-        displayName,
-        photoURL: avatarUrl || null,
-      });
 
       logger.info("Development mode onboarding completed for user:", {
         uid: currentUser.uid,
@@ -173,87 +209,35 @@ export async function POST(request: NextRequest) {
           for (const claim of spaceClaims) {
             const claimRef = dbAdmin
               .collection("verification")
-              .doc("space-claims")
-              .collection("pending")
               .doc();
             
             transaction.set(claimRef, {
               ...claim,
               userId: currentUser.uid,
-              userEmail: currentUser.email,
-              userDisplayName: displayName,
-              submittedAt: now,
-              status: "pending",
+              createdAt: now,
+              updatedAt: now,
+              status: "PENDING",
             });
           }
         }
-      });
-
-      // Update Firebase Auth profile
-      await updateProfile(currentUser, {
-        displayName,
-        photoURL: avatarUrl || null,
-      });
-
-      // Update Firebase Auth custom claims
-      try {
-        await authAdmin.setCustomUserClaims(currentUser.uid, {
-          onboardingCompleted: true,
-          verificationLevel: "verified",
-          isBuilder: builderOptIn || false,
-          emailVerified: currentUser.emailVerified,
-        });
-      } catch (claimsError) {
-        logger.warn(
-          "Failed to set custom user claims, continuing anyway:",
-          claimsError
-        );
-      }
-
-      logger.info("User onboarding completed successfully:", {
-        uid: currentUser.uid,
-        email: currentUser.email,
-        displayName,
-        handle,
-        isStudentLeader,
-        spaceClaims: spaceClaims.length,
       });
 
       return NextResponse.json({
         ok: true,
         message: "Onboarding completed successfully",
         userId: currentUser.uid,
-        handle,
-        isStudentLeader,
-        verificationLevel: "verified",
       });
     } catch (error) {
-      logger.error("Transaction failed:", error);
-
-      if (error instanceof Error && error.message.includes("Handle was taken")) {
-        return NextResponse.json(
-          {
-            message: "Handle was taken during processing. Please try again.",
-          },
-          { status: 409 }
-        );
-      }
-
+      logger.error("Error completing onboarding:", error);
       return NextResponse.json(
-        {
-          message: "Failed to complete onboarding",
-          error: error instanceof Error ? error.message : "Unknown error",
-        },
+        { message: "Failed to complete onboarding" },
         { status: 500 }
       );
     }
   } catch (error) {
-    logger.error("Onboarding completion failed:", error);
+    logger.error("Unexpected error during onboarding:", error);
     return NextResponse.json(
-      {
-        message: "Internal server error",
-        error: error instanceof Error ? error.message : "Unknown error",
-      },
+      { message: "Internal server error" },
       { status: 500 }
     );
   }
