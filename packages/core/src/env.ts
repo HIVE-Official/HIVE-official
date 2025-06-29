@@ -24,6 +24,25 @@ const baseSchema = z.object({
   FIREBASE_PRIVATE_KEY: z.string().optional(),
 });
 
+// Build-time schema is more lenient
+const buildTimeSchema = z.object({
+  NODE_ENV: z
+    .enum(["development", "production", "test"])
+    .default("development"),
+  // All other fields are optional during build
+  NEXT_PUBLIC_FIREBASE_API_KEY: z.string().optional(),
+  NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: z.string().optional(),
+  NEXT_PUBLIC_FIREBASE_PROJECT_ID: z.string().optional(),
+  NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: z.string().optional(),
+  NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: z.string().optional(),
+  NEXT_PUBLIC_FIREBASE_APP_ID: z.string().optional(),
+  NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID: z.string().optional(),
+  NEXT_PUBLIC_DEBUG: z.string().optional(),
+  FIREBASE_PROJECT_ID: z.string().optional(),
+  FIREBASE_CLIENT_EMAIL: z.string().optional(),
+  FIREBASE_PRIVATE_KEY: z.string().optional(),
+}).passthrough(); // Allow unknown fields during build
+
 // Parse environment with graceful fallbacks for build time
 let parsedEnv: z.infer<typeof baseSchema>;
 
@@ -32,8 +51,8 @@ const isBuildTime = process.env.NEXT_PHASE === "phase-production-build";
 const isServerSide = process.env.NEXT_RUNTIME === "nodejs";
 
 try {
-  // During build time, we want to be more lenient with validation
-  const schema = isBuildTime ? baseSchema : baseSchema;
+  // During build time, use the more lenient schema
+  const schema = isBuildTime ? buildTimeSchema : baseSchema;
   parsedEnv = schema.parse(process.env);
 } catch (error) {
   if (error instanceof z.ZodError) {
@@ -83,9 +102,17 @@ export const isProduction = env.NODE_ENV === "production";
  * Get Firebase configuration for the current environment
  */
 export function getFirebaseConfig() {
-  // During build time, return null to allow the build to proceed
+  // During build time, return mock config
   if (isBuildTime) {
-    return null;
+    return {
+      apiKey: "build-time-mock-key",
+      authDomain: "build-time-mock.firebaseapp.com",
+      projectId: "build-time-mock",
+      storageBucket: "build-time-mock.appspot.com",
+      messagingSenderId: "123456789",
+      appId: "1:123456789:web:abcdef",
+      measurementId: "G-ABCDEF123",
+    };
   }
 
   if (!env.NEXT_PUBLIC_FIREBASE_API_KEY) {
@@ -112,9 +139,14 @@ export function getFirebaseConfig() {
  * Get Firebase Admin configuration for server-side operations
  */
 export function getFirebaseAdminConfig() {
-  // During build time, return null to allow the build to proceed
+  // During build time, return mock config
   if (isBuildTime) {
-    return null;
+    return {
+      type: "service_account",
+      project_id: "build-time-mock",
+      client_email: "build-time@mock.iam.gserviceaccount.com",
+      private_key: "-----BEGIN PRIVATE KEY-----\nMOCK\n-----END PRIVATE KEY-----\n",
+    };
   }
 
   if (
