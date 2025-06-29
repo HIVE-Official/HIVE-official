@@ -282,7 +282,7 @@ export function SuggestedSpaces({
         {onBack && (
           <Button
             onClick={onBack}
-            variant="ghost"
+            variant="outline"
             className="w-full"
             disabled={isLoading}
           >

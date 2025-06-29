@@ -29,11 +29,11 @@ export type { School } from "./domain/school";
 export * from "./constants/majors";
 export * from "./constants/academic-years";
 
-// Stores - TEMPORARILY DISABLED DUE TO BUILD ISSUES
-// export * from "./stores";
+// Stores
+export * from "./stores";
 
-// Firebase client config
-export * from "./firebase";
+// Firebase client config - use client-specific implementation
+// export * from "./firebase";
 // export * from "./firebase-admin"; // TEMP: Commented out to avoid duplicate auth/db exports
 
 // Feed System Core
@@ -125,8 +125,8 @@ export * from "./firebase/client";
 // Export utilities
 export * from "./utils/logger";
 
-// Stores - TEMPORARILY DISABLED DUE TO BUILD ISSUES
-// export * from "./stores";
+// Stores
+export * from "./stores";
 
 // Export environment - THIS IS THE KEY EXPORT WE NEED
 export * from "./env";

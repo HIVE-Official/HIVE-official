@@ -1,5 +1,4 @@
-// Temporary stub for auth utilities
-// TODO: Implement proper server-side auth
+// Temporary server-side authentication utilities
 
 import type { AuthUser } from "@hive/auth-logic";
 

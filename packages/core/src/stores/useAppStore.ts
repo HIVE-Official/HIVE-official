@@ -10,4 +10,4 @@ interface AppState {
 export const useAppStore = create<AppState>((set) => ({
   theme: 'system',
   setTheme: (theme) => set({ theme }),
-})); 
+}));

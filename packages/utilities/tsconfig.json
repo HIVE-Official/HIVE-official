@@ -7,7 +7,7 @@
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
-    "composite": true
+    "composite": false
   },
   "include": ["src/**/*"],
   "exclude": ["dist", "node_modules"]
