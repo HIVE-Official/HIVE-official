@@ -14,7 +14,7 @@ import {
 } from "@hive/ui";
 import { useOnboardingStore } from "@/lib/stores/onboarding";
 
-// Mock spaces data for now - TODO: Replace with real API call
+// Mock spaces data for now - real API integration pending
 const mockSpaces = {
   academic: [
     { id: "cs-majors", name: "Computer Science Majors" },

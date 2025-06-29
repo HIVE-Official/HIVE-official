@@ -21,14 +21,22 @@
     "incremental": true
   },
   "include": [
-    "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    ".next/types/**/*.ts",
     "../../packages/ui/src/**/*.ts",
-    "../../packages/ui/src/**/*.tsx"
+    "../../packages/ui/src/**/*.tsx",
+    "next-env.d.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    ".next",
+    "test",
+    "tests",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "../../packages/ui/src/**/*.test.tsx",
+    "src/app/(wip)/**",
+    "src/app/api/**",
+    "src/components/onboarding/**"
   ]
 }

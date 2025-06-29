@@ -15,17 +15,17 @@ export function OnboardingNameStep() {
   const router = useRouter();
   const { data: onboardingData, update } = useOnboardingStore();
   
-  const [fullName, setFullName] = useState(onboardingData?.fullName || '');
+  const [displayName, setDisplayName] = useState(onboardingData?.displayName || '');
   const [handle, setHandle] = useState(onboardingData?.handle || '');
   const [isLoading, setIsLoading] = useState(false);
 
   // Handle availability checking
   const { available: isAvailable, isChecking, error: handleError } = useHandleAvailability(handle);
 
-  // Auto-generate handle from full name
+  // Auto-generate handle from display name
   useEffect(() => {
-    if (fullName && !handle) {
-      const generatedHandle = fullName
+    if (displayName && !handle) {
+      const generatedHandle = displayName
         .toLowerCase()
         .replace(/[^a-z0-9]/g, '_')
         .replace(/_+/g, '_')
@@ -33,9 +33,9 @@ export function OnboardingNameStep() {
         .substring(0, 20);
       setHandle(generatedHandle);
     }
-  }, [fullName, handle]);
+  }, [displayName, handle]);
 
-  const isFormValid = fullName.trim().length >= 2 && 
+  const isFormValid = displayName.trim().length >= 2 &&
                      handle.length >= 3 && 
                      isAvailable && 
                      !isChecking;
@@ -49,11 +49,11 @@ export function OnboardingNameStep() {
     
     try {
       await update({
-        fullName: fullName.trim(),
+        displayName: displayName.trim(),
         handle: handle.toLowerCase()
       });
 
-      logger.info('Name and handle saved:', { fullName, handle });
+      logger.info('Name and handle saved:', { displayName, handle });
       router.push('/onboarding/leader');
       
     } catch (error) {
@@ -81,14 +81,14 @@ export function OnboardingNameStep() {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Display Name */}
             <div className="space-y-3">
-              <Label htmlFor="fullName" className="text-sm font-medium text-card-foreground">
+              <Label htmlFor="displayName" className="text-sm font-medium text-card-foreground">
                 Display Name
               </Label>
               <Input
-                id="fullName"
+                id="displayName"
                 type="text"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
+                value={displayName}
+                onChange={(e) => setDisplayName(e.target.value)}
                 placeholder="Enter your full name"
                 required
                 minLength={2}

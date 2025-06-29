@@ -11,7 +11,7 @@ try {
 
     if (adminConfig) {
       admin.initializeApp({
-        credential: admin.credential.cert(adminConfig),
+        credential: admin.credential.cert(adminConfig as admin.ServiceAccount),
         projectId: adminConfig.project_id,
       });
 

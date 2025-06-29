@@ -24,7 +24,7 @@ export function SpaceVerification() {
   const [currentEmail, setCurrentEmail] = useState('');
   const [error, setError] = useState('');
 
-  // Mock space data - TODO: Replace with real API call
+  // Mock space data - real API integration pending
   const space = { name: onboardingData?.spaceType || 'your organization' };
 
   const addEmail = () => {

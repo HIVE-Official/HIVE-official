@@ -49,6 +49,14 @@ export interface OnboardingState {
   isStudentLeader: boolean;
   verificationLevel: VerificationLevel; // Default 'verified', upgraded to 'verified+' after manual review
   spaceClaims?: SpaceClaim[]; // Spaces claimed by student leaders
+  spaceType?: SpaceType; // Temporary field for onboarding flow
+  spaceId?: string; // Temporary field for onboarding flow
+  verificationEmails?: string[]; // Emails confirming leadership role
+  // Legacy/temporary fields used by web onboarding
+  isLeader?: boolean;
+  spaceName?: string;
+  spaceDescription?: string;
+  onboardingCompleted?: boolean;
 
   // Step 4: Interests
   interests: string[];
@@ -56,6 +64,7 @@ export interface OnboardingState {
   // Step 5: Suggested Spaces (for all users)
   suggestedSpaces?: string[]; // Space IDs they can pre-join
   joinedSpaces?: string[]; // Spaces they chose to join during onboarding
+  selectedSpaces?: string[]; // Spaces selected during onboarding
 
   // Consent and Preferences
   builderOptIn?: boolean; // Student leaders are automatically builders
