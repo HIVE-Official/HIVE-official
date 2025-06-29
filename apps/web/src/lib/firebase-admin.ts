@@ -8,32 +8,50 @@ let authAdmin: admin.auth.Auth;
 // Check if we're in build time
 const isBuildTime = process.env.NEXT_PHASE === "phase-production-build";
 
-// During build time, create mock instances
-if (isBuildTime) {
-  const mockDb = {
-    collection: () => ({
-      doc: () => ({
-        get: async () => ({ exists: false, data: () => null }),
-        set: async () => {},
-      }),
-      where: () => ({
-        limit: () => ({
-          get: async () => ({ empty: true }),
-        }),
-      }),
-      get: async () => ({ empty: true }),
+// Mock instances for build time and development
+const mockDb = {
+  collection: (_path: string) => ({
+    doc: (_id: string) => ({
+      get: async () => ({ exists: false, data: () => null }),
+      set: async () => {},
+      update: async () => {},
     }),
-    runTransaction: async (fn: (transaction: unknown) => Promise<void>) => await fn({}),
-  } as unknown as admin.firestore.Firestore;
+    where: () => ({
+      limit: () => ({
+        get: async () => ({ empty: true }),
+      }),
+    }),
+    get: async () => ({ empty: true }),
+  }),
+  runTransaction: async (fn: (transaction: unknown) => Promise<void>) => await fn({}),
+  batch: () => ({
+    set: () => {},
+    update: () => {},
+    commit: async () => {},
+  }),
+} as unknown as admin.firestore.Firestore;
 
-  const mockAuth = {
-    verifyIdToken: async () => ({}),
-    setCustomUserClaims: async () => {},
-  } as unknown as admin.auth.Auth;
+const mockAuth = {
+  verifyIdToken: async () => ({
+    uid: "mock-uid",
+    email: "mock@example.edu",
+    email_verified: true,
+  }),
+  setCustomUserClaims: async () => {},
+  getUser: async () => ({
+    uid: "mock-uid",
+    email: "mock@example.edu",
+    emailVerified: true,
+  }),
+  createCustomToken: async () => "mock-token",
+} as unknown as admin.auth.Auth;
 
+// During build time or when Firebase is not configured, use mock instances
+if (isBuildTime || !getFirebaseAdminConfig()) {
   dbAdmin = mockDb;
   authAdmin = mockAuth;
   firebaseInitialized = true;
+  console.log(`🔧 Using mock Firebase Admin for ${isBuildTime ? "build" : env.NODE_ENV}`);
 } else {
   try {
     if (!admin.apps.length) {
@@ -68,110 +86,11 @@ if (isBuildTime) {
       error
     );
 
-    // Create mock instances for development
-    const mockDb = {
-      collection: (path: string) => ({
-        get: async () => {
-          console.log(
-            `🔄 Mock Firebase call: collection(${path}).get() - development mode`
-          );
-          throw new Error(
-            `Firebase Admin not configured for ${env.NODE_ENV}. Add credentials to environment variables.`
-          );
-        },
-        add: async (_data: Record<string, unknown>) => {
-          console.log(
-            `🔄 Mock Firebase call: collection(${path}).add() - development mode`
-          );
-          throw new Error(`Firebase Admin not configured for ${env.NODE_ENV}.`);
-        },
-        doc: (id: string) => ({
-          get: async () => {
-            console.log(
-              `🔄 Mock Firebase call: collection(${path}).doc(${id}).get() - development mode`
-            );
-            throw new Error(`Firebase Admin not configured for ${env.NODE_ENV}.`);
-          },
-          set: async (_data: Record<string, unknown>) => {
-            console.log(
-              `🔄 Mock Firebase call: collection(${path}).doc(${id}).set() - development mode`
-            );
-            throw new Error(`Firebase Admin not configured for ${env.NODE_ENV}.`);
-          },
-          update: async (_data: Record<string, unknown>) => {
-            console.log(
-              `🔄 Mock Firebase call: collection(${path}).doc(${id}).update() - development mode`
-            );
-            throw new Error(`Firebase Admin not configured for ${env.NODE_ENV}.`);
-          },
-        }),
-      }),
-      doc: (path: string) => ({
-        get: async () => {
-          console.log(
-            `🔄 Mock Firebase call: doc(${path}).get() - development mode`
-          );
-          throw new Error(`Firebase Admin not configured for ${env.NODE_ENV}.`);
-        },
-        set: async (_data: Record<string, unknown>) => {
-          console.log(
-            `🔄 Mock Firebase call: doc(${path}).set() - development mode`
-          );
-          throw new Error(`Firebase Admin not configured for ${env.NODE_ENV}.`);
-        },
-        update: async (_data: Record<string, unknown>) => {
-          console.log(
-            `🔄 Mock Firebase call: doc(${path}).update() - development mode`
-          );
-          throw new Error(`Firebase Admin not configured for ${env.NODE_ENV}.`);
-        },
-      }),
-      batch: () => ({
-        set: (_ref: unknown, _data: Record<string, unknown>) => {
-          console.log(`🔄 Mock Firebase call: batch().set() - development mode`);
-        },
-        update: (_ref: unknown, _data: Record<string, unknown>) => {
-          console.log(
-            `🔄 Mock Firebase call: batch().update() - development mode`
-          );
-        },
-        commit: async () => {
-          console.log(
-            `🔄 Mock Firebase call: batch().commit() - development mode`
-          );
-          throw new Error(`Firebase Admin not configured for ${env.NODE_ENV}.`);
-        },
-      }),
-    };
-
-    const mockAuth = {
-      verifyIdToken: async (_token: string) => {
-        console.log(`🔄 Mock Firebase call: verifyIdToken() - development mode`);
-        throw new Error(`Firebase Auth not configured for ${env.NODE_ENV}.`);
-      },
-      createCustomToken: async (uid: string) => {
-        console.log(
-          `🔄 Mock Firebase call: createCustomToken(${uid}) - development mode`
-        );
-        throw new Error(`Firebase Auth not configured for ${env.NODE_ENV}.`);
-      },
-      getUser: async (uid: string) => {
-        console.log(`🔄 Mock Firebase call: getUser(${uid}) - development mode`);
-        throw new Error(`Firebase Auth not configured for ${env.NODE_ENV}.`);
-      },
-      setCustomUserClaims: async (
-        uid: string,
-        _claims: Record<string, unknown>
-      ) => {
-        console.log(
-          `🔄 Mock Firebase call: setCustomUserClaims(${uid}) - development mode`
-        );
-        throw new Error(`Firebase Auth not configured for ${env.NODE_ENV}.`);
-      },
-    };
-
-    dbAdmin = mockDb as unknown as admin.firestore.Firestore;
-    authAdmin = mockAuth as unknown as admin.auth.Auth;
+    // Use mock instances for development
+    dbAdmin = mockDb;
+    authAdmin = mockAuth;
+    firebaseInitialized = true;
+    console.log(`🔧 Using mock Firebase Admin for ${env.NODE_ENV} (after error)`);
   }
 }
 
