@@ -30,6 +30,7 @@ const nextConfig = {
     // Ensure our workspace packages are properly resolved
     config.resolve.alias = {
       ...config.resolve.alias,
+      '@': path.resolve(__dirname, './src'),
       '@hive/ui': path.resolve(__dirname, '../../packages/ui/src'),
       '@hive/core': path.resolve(__dirname, '../../packages/core/src'),
       '@hive/auth-logic': path.resolve(__dirname, '../../packages/auth-logic/src'),

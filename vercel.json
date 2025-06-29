@@ -1,0 +1,24 @@
+{
+  "buildCommand": "pnpm turbo run build --filter=web",
+  "outputDirectory": "apps/web/.next",
+  "installCommand": "pnpm install --frozen-lockfile",
+  "framework": "nextjs",
+  "functions": {
+    "apps/web/src/app/api/**": {
+      "maxDuration": 60
+    }
+  },
+  "env": {
+    "TURBO_TOKEN": "@turbo_token",
+    "TURBO_TEAM": "@turbo_team",
+    "NEXT_PUBLIC_FIREBASE_API_KEY": "@firebase_api_key",
+    "NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN": "@firebase_auth_domain",
+    "NEXT_PUBLIC_FIREBASE_PROJECT_ID": "@firebase_project_id",
+    "NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET": "@firebase_storage_bucket",
+    "NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID": "@firebase_messaging_sender_id",
+    "NEXT_PUBLIC_FIREBASE_APP_ID": "@firebase_app_id",
+    "FIREBASE_PROJECT_ID": "@firebase_admin_project_id",
+    "FIREBASE_CLIENT_EMAIL": "@firebase_admin_client_email",
+    "FIREBASE_PRIVATE_KEY": "@firebase_admin_private_key"
+  }
+} 

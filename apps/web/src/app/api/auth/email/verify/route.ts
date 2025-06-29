@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { adminAuth, adminDb } from "@/lib/firebase-admin";
+import { db, auth as firebaseAdmin } from "@/lib/firebase-admin";
 import { sendSignInLinkToEmail, signInWithEmailLink } from "firebase/auth";
 import { auth } from "@hive/core";
 import { logger } from "@hive/core";
 import { findAvailableHandle } from "@hive/core";
 
 async function checkHandleAvailability(handle: string): Promise<boolean> {
-  const handleDoc = await adminDb.collection("handles").doc(handle).get();
+  const handleDoc = await db.collection("handles").doc(handle).get();
   return !handleDoc.exists;
 }
 
@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
       try {
         let user;
         try {
-          user = await adminAuth.getUserByEmail(email);
+          user = await firebaseAdmin.getUserByEmail(email);
         } catch (error: any) {
           if (error.code === "auth/user-not-found") {
             // Create new user in development
@@ -38,20 +38,20 @@ export async function POST(request: NextRequest) {
               checkHandleAvailability
             );
 
-            user = await adminAuth.createUser({
+            user = await firebaseAdmin.createUser({
               email,
               emailVerified: true,
               displayName,
             });
 
             // Reserve the handle
-            await adminDb.collection("handles").doc(handle).set({
+            await db.collection("handles").doc(handle).set({
               userId: user.uid,
               createdAt: new Date(),
             });
 
             // Create user document with onboarding state
-            await adminDb
+            await db
               .collection("users")
               .doc(user.uid)
               .set({
@@ -80,8 +80,8 @@ export async function POST(request: NextRequest) {
           }
         }
 
-        const customToken = await adminAuth.createCustomToken(user.uid);
-        const userRecord = await adminAuth.getUser(user.uid);
+        const customToken = await firebaseAdmin.createCustomToken(user.uid);
+        const userRecord = await firebaseAdmin.getUser(user.uid);
 
         return NextResponse.json({
           ok: true,

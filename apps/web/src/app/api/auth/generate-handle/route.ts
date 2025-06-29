@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { adminDb } from "@/lib/firebase-admin";
+import { db } from "@/lib/firebase-admin";
 import { findAvailableHandle, validateHandle } from "@hive/core";
 import { z } from "zod";
 import { logger } from "@hive/core";
@@ -9,7 +9,7 @@ const generateHandleSchema = z.object({
 });
 
 async function checkHandleAvailability(handle: string): Promise<boolean> {
-  const handleDoc = await adminDb.collection("handles").doc(handle).get();
+  const handleDoc = await db.collection("handles").doc(handle).get();
   return !handleDoc.exists;
 }
 

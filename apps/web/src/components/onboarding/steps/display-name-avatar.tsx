@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 
-import { Card, Button, Input, Label } from "@hive/ui";
+import { Button, Input, Label } from "@hive/ui";
 import { useOnboardingStore } from "@/lib/stores/onboarding";
 import type { OnboardingState } from "@hive/core";
 import { useHandleAvailability } from "@/hooks/use-handle-availability";
@@ -199,204 +199,167 @@ export function DisplayNameAvatar({
         finalAvatarUrl = await uploadCroppedImage();
       }
 
-      const submissionData = {
+      const updatedData = {
         displayName,
         handle,
         avatarUrl: finalAvatarUrl,
       };
 
-      await update(submissionData);
-      onNext(submissionData);
-    } catch (err) {
+      // Update the store
+      update(updatedData);
+
+      // Call onNext with the data
+      onNext(updatedData);
+    } catch (error) {
+      console.error("Error submitting form:", error);
       setError("Failed to save profile. Please try again.");
-      console.error("Profile save error:", err);
     } finally {
       setIsUploading(false);
     }
   };
 
   return (
-    <div className="w-full max-w-lg mx-auto">
-      {/* Progress indicator */}
-      <div className="mb-8">
-        <div className="flex items-center justify-between text-sm text-muted mb-2">
-          <span>Step 1 of 5</span>
-          <span>Profile Setup</span>
-        </div>
-        <div className="w-full bg-surface-02 rounded-full h-1">
-          <div
-            className="bg-accent h-1 rounded-full transition-all duration-base"
-            style={{ width: "20%" }}
-          />
-        </div>
-      </div>
-
-      <Card className="p-6 space-y-6 bg-surface-01 border-border/20">
-        <div className="space-y-2 text-center">
-          <h1 className="text-h2 font-display text-foreground">
-            Welcome to HIVE
-          </h1>
-          <p className="text-body text-muted">
-            Let&apos;s start by setting up your profile.
+    <div className="flex min-h-screen items-center justify-center p-4 bg-background">
+      <div className="w-full max-w-lg bg-surface border border-border rounded-lg p-6 space-y-6">
+        {/* Header */}
+        <div className="text-center space-y-2">
+          <h2 className="text-2xl font-display font-medium text-foreground">
+            Create Your Profile
+          </h2>
+          <p className="text-muted font-sans">
+            Tell us about yourself to get started
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Stack Card Photo Upload */}
-          <div className="space-y-3">
-            <Label className="text-foreground font-medium">Profile Photo</Label>
-
-            {/* Stack Card Design */}
+          {/* Avatar Upload Section */}
+          <div className="flex flex-col items-center space-y-4">
             <div className="relative">
-              {/* Back cards (stack effect) */}
-              <div className="absolute inset-0 bg-surface-02 rounded-lg transform rotate-1 translate-x-1 translate-y-1 opacity-60" />
-              <div className="absolute inset-0 bg-surface-02 rounded-lg transform -rotate-1 translate-x-0.5 translate-y-0.5 opacity-80" />
-
-              {/* Main card */}
-              <div className="relative bg-surface-01 border-2 border-dashed border-border/40 rounded-lg aspect-[4/3] overflow-hidden transition-all duration-base hover:border-accent/50 hover:bg-surface-02/50">
-                {avatarUrl ? (
-                  <>
-                    <img
-                      src={avatarUrl}
-                      alt="Profile preview"
-                      className="h-full w-full object-cover"
-                    />
-                    <button
-                      type="button"
-                      onClick={handleRemovePhoto}
-                      className="absolute top-3 right-3 rounded-full bg-background/80 hover:bg-background p-2 transition-colors duration-fast backdrop-blur-sm"
-                    >
-                      <XIcon className="h-4 w-4 text-foreground" />
-                    </button>
-                  </>
-                ) : (
-                  <div className="flex h-full flex-col items-center justify-center gap-4 p-6">
-                    <div className="rounded-full bg-surface-02 p-4">
-                      <Camera className="h-8 w-8 text-accent" />
-                    </div>
-                    <div className="text-center space-y-2">
-                      <p className="font-medium text-foreground">
-                        Add your photo
-                      </p>
-                      <p className="text-sm text-muted">
-                        JPG, PNG or GIF up to 5MB
-                      </p>
-                    </div>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={handleUploadClick}
-                      className="border-accent/30 text-accent hover:border-accent hover:bg-accent/10"
-                    >
-                      <Upload className="mr-2 h-4 w-4" />
-                      Choose Photo
-                    </Button>
-                  </div>
-                )}
-              </div>
-
-              {/* Hidden file input */}
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                onChange={handleFileSelect}
-                className="hidden"
-              />
+              {avatarUrl || selectedFile ? (
+                <div className="relative">
+                  <img
+                    src={avatarUrl || (selectedFile ? URL.createObjectURL(selectedFile) : "")}
+                    alt="Profile"
+                    className="w-20 h-20 rounded-full object-cover border-2 border-border"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleRemovePhoto}
+                    className="absolute -top-1 -right-1 w-6 h-6 bg-surface-02 border border-border rounded-full flex items-center justify-center text-muted hover:text-accent transition-colors"
+                  >
+                    <XIcon className="w-3 h-3" />
+                  </button>
+                </div>
+              ) : (
+                <div className="w-20 h-20 bg-surface-01 border-2 border-dashed border-border rounded-full flex items-center justify-center">
+                  <Upload className="w-6 h-6 text-muted" />
+                </div>
+              )}
             </div>
 
-            {selectedFile && (
-              <div className="flex items-center gap-2 text-sm text-muted">
-                <div className="w-2 h-2 bg-accent rounded-full" />
-                <span>{selectedFile.name}</span>
-              </div>
-            )}
+            <div className="flex space-x-2">
+              <button
+                type="button"
+                onClick={handleUploadClick}
+                className="flex items-center space-x-2 px-3 py-2 bg-surface-01 border border-accent text-accent rounded-lg hover:bg-accent/5 transition-colors text-sm"
+              >
+                <Camera className="w-4 h-4" />
+                <span>{avatarUrl || selectedFile ? "Change" : "Add Photo"}</span>
+              </button>
+              
+              {(avatarUrl || selectedFile) && (
+                <button
+                  type="button"
+                  onClick={handleRemovePhoto}
+                  className="px-3 py-2 text-muted hover:text-accent transition-colors text-sm"
+                >
+                  Remove
+                </button>
+              )}
+            </div>
+
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleFileSelect}
+              className="hidden"
+            />
           </div>
 
+          {/* Form Fields */}
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="displayName" className="text-foreground font-medium">
-                Display Name
-              </Label>
+              <Label className="text-foreground font-medium">Full Name</Label>
               <Input
-                id="displayName"
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
-                placeholder="Enter your first and last name"
-                className="bg-surface-02 border-border/30 focus:border-accent"
-                required
+                placeholder="Enter your full name"
+                className="bg-surface-01 border-border text-foreground placeholder:text-muted"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="handle" className="text-foreground font-medium">
-                Username
-              </Label>
+              <Label className="text-foreground font-medium">Username</Label>
               <div className="relative">
                 <Input
-                  id="handle"
                   value={handle}
                   onChange={(e) => setHandle(e.target.value.toLowerCase())}
-                  placeholder="Enter your username"
-                  className="bg-surface-02 border-border/30 focus:border-accent pr-10"
-                  required
+                  placeholder="username"
+                  className="bg-surface-01 border-border text-foreground placeholder:text-muted pl-8"
                 />
-                <div className="absolute inset-y-0 right-3 flex items-center">
+                <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted">
+                  @
+                </span>
+              </div>
+              
+              {/* Handle availability feedback */}
+              {handle.length >= 3 && (
+                <div className="flex items-center space-x-2 text-sm">
                   {handleAvailability.isChecking ? (
-                    <Loader2 className="h-4 w-4 animate-spin text-muted" />
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin text-muted" />
+                      <span className="text-muted">Checking availability...</span>
+                    </>
                   ) : handleAvailability.available === true ? (
-                    <CheckCircle className="h-4 w-4 text-green-400" />
+                    <>
+                      <CheckCircle className="w-4 h-4 text-accent" />
+                      <span className="text-accent">@{handle} is available</span>
+                    </>
                   ) : handleAvailability.available === false ? (
-                    <AlertCircle className="h-4 w-4 text-red-400" />
+                    <>
+                      <AlertCircle className="w-4 h-4 text-muted" />
+                      <span className="text-muted">@{handle} is taken</span>
+                    </>
                   ) : null}
                 </div>
-              </div>
-              <div className="min-h-[1.25rem]">
-                {handleAvailability.error ? (
-                  <p className="text-sm text-red-400">
-                    {handleAvailability.error}
-                  </p>
-                ) : handleAvailability.message ? (
-                  <p
-                    className={`text-sm ${
-                      handleAvailability.available
-                        ? "text-green-400"
-                        : "text-red-400"
-                    }`}
-                  >
-                    {handleAvailability.message}
-                  </p>
-                ) : (
-                  <p className="text-sm text-muted">
-                    3-20 characters, lowercase letters, numbers, and underscores
-                    only
-                  </p>
-                )}
-              </div>
+              )}
             </div>
           </div>
 
+          {/* Error Message */}
           {error && (
-            <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-lg">
-              <p className="text-sm text-red-400">{error}</p>
+            <div className="p-3 bg-surface-02 border border-border rounded-lg">
+              <p className="text-sm text-muted">{error}</p>
             </div>
           )}
 
+          {/* Submit Button */}
           <Button
             type="submit"
             disabled={
               !displayName ||
               !handle ||
-              isUploading ||
+              handle.length < 3 ||
               handleAvailability.isChecking ||
-              handleAvailability.available === false
+              handleAvailability.available === false ||
+              isUploading
             }
-            className="w-full bg-foreground text-background hover:bg-foreground/90 font-medium"
+            className="w-full bg-accent text-background font-medium hover:bg-accent/90 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isUploading ? (
               <>
-                <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-background border-t-transparent" />
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                 Saving...
               </>
             ) : (
@@ -404,25 +367,47 @@ export function DisplayNameAvatar({
             )}
           </Button>
         </form>
-      </Card>
 
-      {imgSrc && (
-        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
-          <div className="bg-surface-01 p-4 rounded-lg">
-            <ReactCrop crop={crop} onChange={(c) => setCrop(c)}>
-              <img src={imgSrc} />
-            </ReactCrop>
-            <Button
-              onClick={() => {
-                // Here you would trigger the upload of the cropped image
-                setImgSrc(""); // Close the modal
-              }}
-            >
-              Confirm Crop
-            </Button>
+        {/* Image Cropping Modal */}
+        {selectedFile && imgSrc && (
+          <div className="fixed inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+            <div className="bg-surface border border-border rounded-lg p-6 max-w-md w-full">
+              <h3 className="text-lg font-medium text-foreground mb-4">Crop Your Photo</h3>
+              
+              <ReactCrop
+                crop={crop}
+                onChange={(c) => setCrop(c)}
+                className="mb-4"
+              >
+                <img src={imgSrc} alt="Crop preview" className="max-w-full" />
+              </ReactCrop>
+              
+              <div className="flex space-x-2">
+                <Button
+                  onClick={() => {
+                    setSelectedFile(null);
+                    setImgSrc("");
+                  }}
+                  variant="outline"
+                  className="flex-1 bg-surface-01 border-border text-foreground hover:bg-surface-02"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={() => {
+                    // Handle crop save
+                    setSelectedFile(null);
+                    setImgSrc("");
+                  }}
+                  className="flex-1 bg-accent text-background hover:bg-accent/90"
+                >
+                  Save
+                </Button>
+              </div>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

@@ -61,7 +61,7 @@ export { Toast } from "./components/toast";
 export * from "./components/auth";
 
 // Export onboarding components
-export { WelcomeStep } from "./components/onboarding/welcome-step";
+// WelcomeStep removed - going directly to step 1
 export { ProgressIndicator } from "./components/onboarding/progress-indicator";
 export { OnboardingLayout } from "./components/onboarding/onboarding-layout";
 export * from "./components/onboarding";

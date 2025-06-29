@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
-    "build": "echo 'Skipping UI build for deployment' && mkdir -p dist && echo 'export {}'>dist/index.js && echo 'export {}'>dist/index.mjs && echo 'export {}'>dist/index.d.ts",
+    "build": "tsup src/index.ts --format cjs,esm --dts",
     "lint": "eslint .",
     "typecheck": "npx tsc --noEmit",
     "clean": "rm -rf .turbo dist",

@@ -38,6 +38,12 @@
         "FIREBASE_PRIVATE_KEY"
       ]
     },
+    "//@hive/eslint-config#build": {
+      "outputs": []
+    },
+    "//@hive/typescript-config#build": {
+      "outputs": []
+    },
     "dev": {
       "cache": false,
       "persistent": true

@@ -145,3 +145,4 @@ firebase/serviceAccountKey.json
 .firebase/hosting.*/
 
 *storybook.log
+.vercel

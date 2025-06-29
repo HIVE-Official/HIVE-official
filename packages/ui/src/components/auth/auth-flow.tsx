@@ -112,6 +112,7 @@ export const AuthFlow: React.FC<AuthFlowProps> = ({
             <EmailGate
               schoolName={selectedSchool.name}
               schoolDomain={selectedSchool.domain}
+              schoolId={selectedSchool.id}
               onBack={() => setCurrentStep("school-pick")}
               onDevContinue={() => handleEmailSubmit("dev@buffalo.edu")}
             />

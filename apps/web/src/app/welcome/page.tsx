@@ -1,12 +1,14 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Link from "next/link";
-import { Button, Typography, Dialog } from "@hive/ui";
-import { useEffect, useState } from "react";
+import { Button, Typography, Dialog, HiveLogo } from "@hive/ui";
+import { useEffect, useState, useMemo } from "react";
+import { logger } from "@hive/core";
+import { useRouter } from "next/navigation";
 
 export default function WelcomePage() {
   const [mounted, setMounted] = useState(false);
+  const router = useRouter();
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
     hours: 0,
@@ -16,10 +18,11 @@ export default function WelcomePage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   // Launch date - July 9th, 2025
-  const launchDate = new Date("2025-07-09T00:00:00Z");
+  const launchDate = useMemo(() => new Date("2025-07-09T00:00:00Z"), []);
 
   useEffect(() => {
     setMounted(true);
+    logger.info("Welcome page mounted");
 
     const calculateTimeLeft = () => {
       const difference = launchDate.getTime() - new Date().getTime();
@@ -27,7 +30,7 @@ export default function WelcomePage() {
       if (difference > 0) {
         setTimeLeft({
           days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-          hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+          hours: Math.floor((difference / 1000 * 60 * 60) % 24),
           minutes: Math.floor((difference / 1000 / 60) % 60),
           seconds: Math.floor((difference / 1000) % 60),
         });
@@ -46,7 +49,13 @@ export default function WelcomePage() {
   }, [launchDate]);
 
   const handleWhatsComing = () => {
+    logger.info("What's Coming clicked");
     setIsDialogOpen(true);
+  };
+
+  const handleGetStarted = () => {
+    logger.info("Get Started clicked - navigating to school selection");
+    router.push("/auth/school-select");
   };
 
   if (!mounted) {
@@ -56,92 +65,140 @@ export default function WelcomePage() {
   const formatNumber = (num: number) => num.toString().padStart(2, "0");
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      {/* Clean black background */}
-      <div className="absolute inset-0 bg-black" />
+    <div className="min-h-screen bg-background text-foreground relative overflow-hidden">
+      {/* Grain texture overlay */}
+      <div className="absolute inset-0 opacity-[0.03] bg-[url('data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IiB3aWR0aD0iNTEycHgiIGhlaWdodD0iNTEycHgiIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA1MTIgNTEyOyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+PGNpcmNsZSBmaWxsPSIjZmZmZmZmIiBjeD0iMjU2IiBjeT0iMjU2IiByPSIyIi8+PC9zdmc+')] bg-repeat" />
+      
+      {/* Background gradient */}
+      <div className="absolute inset-0 bg-gradient-to-br from-background via-surface-01 to-background" />
 
       {/* Main Content */}
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6">
-        <div className="text-center max-w-4xl mx-auto">
-          {/* Clean Countdown Timer */}
+        <div className="text-center max-w-4xl mx-auto space-y-12">
+
+          {/* HIVE Brand Header */}
           <motion.div
-            className="mb-12"
+            className="space-y-6"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+          >
+            {/* Logo */}
+            <div className="flex justify-center">
+              <HiveLogo 
+                variant="white" 
+                size="3xl" 
+                animationType="gentle-float"
+                className="drop-shadow-2xl"
+              />
+            </div>
+            
+            {/* Brand Name */}
+            <div className="space-y-2">
+              <Typography
+                variant="hero"
+                align="center"
+                className="text-foreground font-display font-black tracking-tight"
+              >
+                HIVE
+              </Typography>
+              <Typography
+                variant="h2"
+                align="center"
+                className="text-muted font-display font-medium"
+              >
+                Your Campus OS
+              </Typography>
+            </div>
+          </motion.div>
+
+          {/* Countdown Section */}
+          <motion.div
+            className="space-y-8"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.8, delay: 0.5 }}
           >
             <Typography
-              variant="hero"
+              variant="h3"
               align="center"
-              className="text-accent font-mono tracking-widest mb-6"
+              className="text-accent font-mono tracking-widest"
             >
               LAUNCH IN
             </Typography>
 
             <div className="grid grid-cols-4 gap-6 mb-8">
               <div className="text-center">
-                <Typography
-                  variant="hero"
-                  align="center"
-                  className="text-accent font-mono tracking-widest"
-                >
-                  {formatNumber(timeLeft.days)}
-                </Typography>
+                <div className="bg-surface-02 border border-border rounded-lg p-4 mb-2">
+                  <Typography
+                    variant="hero"
+                    align="center"
+                    className="text-accent font-mono tracking-widest"
+                  >
+                    {formatNumber(timeLeft.days)}
+                  </Typography>
+                </div>
                 <Typography
                   variant="caption"
                   align="center"
-                  className="text-accent/60 font-mono uppercase tracking-wider mt-2"
+                  className="text-muted font-mono uppercase tracking-wider"
                 >
                   Days
                 </Typography>
               </div>
-
+              
               <div className="text-center">
-                <Typography
-                  variant="hero"
-                  align="center"
-                  className="text-accent font-mono tracking-widest"
-                >
-                  {formatNumber(timeLeft.hours)}
-                </Typography>
+                <div className="bg-surface-02 border border-border rounded-lg p-4 mb-2">
+                  <Typography
+                    variant="hero"
+                    align="center"
+                    className="text-accent font-mono tracking-widest"
+                  >
+                    {formatNumber(timeLeft.hours)}
+                  </Typography>
+                </div>
                 <Typography
                   variant="caption"
                   align="center"
-                  className="text-accent/60 font-mono uppercase tracking-wider mt-2"
+                  className="text-muted font-mono uppercase tracking-wider"
                 >
                   Hours
                 </Typography>
               </div>
-
+              
               <div className="text-center">
-                <Typography
-                  variant="hero"
-                  align="center"
-                  className="text-accent font-mono tracking-widest"
-                >
-                  {formatNumber(timeLeft.minutes)}
-                </Typography>
+                <div className="bg-surface-02 border border-border rounded-lg p-4 mb-2">
+                  <Typography
+                    variant="hero"
+                    align="center"
+                    className="text-accent font-mono tracking-widest"
+                  >
+                    {formatNumber(timeLeft.minutes)}
+                  </Typography>
+                </div>
                 <Typography
                   variant="caption"
                   align="center"
-                  className="text-accent/60 font-mono uppercase tracking-wider mt-2"
+                  className="text-muted font-mono uppercase tracking-wider"
                 >
                   Minutes
                 </Typography>
               </div>
-
+              
               <div className="text-center">
-                <Typography
-                  variant="hero"
-                  align="center"
-                  className="text-accent font-mono tracking-widest"
-                >
-                  {formatNumber(timeLeft.seconds)}
-                </Typography>
+                <div className="bg-surface-02 border border-border rounded-lg p-4 mb-2">
+                  <Typography
+                    variant="hero"
+                    align="center"
+                    className="text-accent font-mono tracking-widest"
+                  >
+                    {formatNumber(timeLeft.seconds)}
+                  </Typography>
+                </div>
                 <Typography
                   variant="caption"
                   align="center"
-                  className="text-accent/60 font-mono uppercase tracking-wider mt-2"
+                  className="text-muted font-mono uppercase tracking-wider"
                 >
                   Seconds
                 </Typography>
@@ -149,128 +206,70 @@ export default function WelcomePage() {
             </div>
           </motion.div>
 
-          {/* vBETA Signup Section */}
+          {/* Action Buttons */}
           <motion.div
+            className="space-y-4"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="mt-16 space-y-8"
+            transition={{ duration: 0.8, delay: 0.8 }}
           >
-            <Typography
-              variant="h3"
-              align="center"
-              className="text-accent font-mono uppercase tracking-wider"
-            >
-              Sign up for vBETA
-            </Typography>
-
-            <Typography
-              variant="body"
-              align="center"
-              className="text-accent/60 max-w-2xl mx-auto leading-relaxed font-sans"
-            >
-              Project will be fully released by July 9th, 2025, but we&apos;re
-              rolling out features in bits and pieces. Sign up now to get
-              notified as new elements unlock.
-            </Typography>
-
-            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-              <Link href="/auth/email">
-                <Button
-                  variant="outline"
-                  size="lg"
-                  className="border-accent/30 text-accent hover:bg-accent/10 hover:border-accent/50 px-10 py-4 font-sans"
-                >
-                  Get Started
-                </Button>
-              </Link>
-
-              <Button
-                variant="outline"
-                size="lg"
-                onClick={handleWhatsComing}
-                className="border-accent/30 text-accent hover:bg-accent/10 hover:border-accent/50 px-10 py-4 font-sans"
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button 
+                onClick={handleGetStarted}
+                className="bg-accent hover:bg-accent/90 text-background font-medium px-8 py-3 text-lg"
               >
-                What&apos;s Coming
+                Get Started
+              </Button>
+              <Button 
+                variant="outline" 
+                onClick={handleWhatsComing}
+                className="border-accent text-accent hover:bg-accent hover:text-background px-8 py-3 text-lg"
+              >
+                What's Coming
               </Button>
             </div>
           </motion.div>
 
-          {/* Status Text */}
+          {/* Footer Credo */}
           <motion.div
+            className="pt-12"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="mt-16"
+            transition={{ duration: 0.8, delay: 1.2 }}
           >
             <Typography
               variant="caption"
               align="center"
-              className="text-accent/40 font-mono uppercase tracking-widest"
+              className="text-muted font-sans tracking-wide"
             >
-              System Status: vBETA Development
+              Built by Students · Owned by Students.
             </Typography>
           </motion.div>
         </div>
       </div>
 
       {/* What's Coming Dialog */}
-      <Dialog
-        isOpen={isDialogOpen}
+      <Dialog 
+        isOpen={isDialogOpen} 
         onClose={() => setIsDialogOpen(false)}
-        title="🚀 What's Coming to HIVE vBETA"
-        description="We're rolling out features gradually. Here's what's on the roadmap:"
-        size="lg"
+        title="What's Coming to HIVE"
+        size="md"
       >
-        <div className="space-y-6">
-          <div className="flex items-start space-x-4 p-4 rounded-lg bg-surface-02/50 border border-border">
-            <div className="text-2xl">👤</div>
-            <div>
-              <Typography variant="h4" className="font-sans mb-2">
-                Profile Dashboard
-              </Typography>
-              <Typography variant="body" className="text-muted font-sans">
-                Complete user profiles with customization options, achievements,
-                and campus connections.
-              </Typography>
-            </div>
-          </div>
-
-          <div className="flex items-start space-x-4 p-4 rounded-lg bg-surface-02/50 border border-border">
-            <div className="text-2xl">🏠</div>
-            <div>
-              <Typography variant="h4" className="font-sans mb-2">
-                Spaces
-              </Typography>
-              <Typography variant="body" className="text-muted font-sans">
-                Create and join campus communities, clubs, study groups, and
-                interest-based spaces.
-              </Typography>
-            </div>
-          </div>
-
-          <div className="flex items-start space-x-4 p-4 rounded-lg bg-surface-02/50 border border-border">
-            <div className="text-2xl">📱</div>
-            <div>
-              <Typography variant="h4" className="font-sans mb-2">
-                Feed & Rituals Engine
-              </Typography>
-              <Typography variant="body" className="text-muted font-sans">
-                Share moments, discover campus traditions, and engage with your
-                community&apos;s daily life.
-              </Typography>
-            </div>
-          </div>
-
-          <div className="pt-4 border-t border-border">
-            <Typography
-              variant="body-sm"
-              className="text-muted font-sans text-center"
-            >
-              You&apos;ll be notified as each feature becomes available during
-              the vBETA rollout.
-            </Typography>
-          </div>
+        <div className="space-y-3 text-sm text-muted">
+          <div>🏫 <strong>Campus Spaces:</strong> Join clubs, organizations, and interest groups</div>
+          <div>📱 <strong>Smart Feed:</strong> Real-time campus events and updates</div>
+          <div>🛠️ <strong>Creator Tools:</strong> Build and share campus utilities</div>
+          <div>🎯 <strong>Event Discovery:</strong> Find parties, study groups, and activities</div>
+          <div>🔗 <strong>Real Connections:</strong> Meet people who share your interests</div>
+        </div>
+        <div className="mt-6 flex justify-end">
+          <Button 
+            variant="outline" 
+            onClick={() => setIsDialogOpen(false)}
+            className="border-accent text-accent hover:bg-accent hover:text-background"
+          >
+            Close
+          </Button>
         </div>
       </Dialog>
     </div>

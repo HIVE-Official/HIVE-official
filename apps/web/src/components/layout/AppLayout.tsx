@@ -13,42 +13,57 @@ import { Avatar, AvatarFallback, AvatarImage } from '@hive/ui'
 function DesktopNav() {
 	const pathname = usePathname()
 	return (
-		<AppHeader.Root>
-			<AppHeader.Content>
+		<AppHeader.Root className="border-b border-border bg-background/80 backdrop-blur-md">
+			<AppHeader.Content className="max-w-7xl mx-auto">
 				<AppHeader.Logo>
-					<HiveLogo />
+					<Link href="/feed" className="flex items-center space-x-3 group">
+						<HiveLogo 
+							variant="white" 
+							size="lg" 
+							animationType="none"
+							className="group-hover:scale-105 transition-transform duration-200"
+						/>
+						<span className="text-xl font-display font-bold text-foreground tracking-tight">
+							HIVE
+						</span>
+					</Link>
 				</AppHeader.Logo>
 				<AppHeader.Nav className='ml-10'>
 					<Link
 						href='/feed'
-						className={`text-sm font-medium transition-colors hover:text-white ${
-							pathname === '/feed' ? 'text-white' : 'text-neutral-400'
+						className={`text-sm font-medium transition-colors hover:text-accent ${
+							pathname === '/feed' ? 'text-foreground' : 'text-muted'
 						}`}
 					>
 						Feed
 					</Link>
 					<Link
 						href='/campus'
-						className={`text-sm font-medium transition-colors hover:text-white ${
-							pathname === '/campus' ? 'text-white' : 'text-neutral-400'
+						className={`text-sm font-medium transition-colors hover:text-accent ${
+							pathname === '/campus' ? 'text-foreground' : 'text-muted'
 						}`}
 					>
 						Campus
 					</Link>
 					<Link
 						href='/spaces'
-						className={`text-sm font-medium transition-colors hover:text-white ${
-							pathname === '/spaces' ? 'text-white' : 'text-neutral-400'
+						className={`text-sm font-medium transition-colors hover:text-accent ${
+							pathname === '/spaces' ? 'text-foreground' : 'text-muted'
 						}`}
 					>
 						Spaces
 					</Link>
 				</AppHeader.Nav>
 				<AppHeader.Actions>
-					<Button variant='default'>Create</Button>
-					<Avatar>
+					<Button 
+						variant='outline'
+						className="border-accent text-accent hover:bg-accent hover:text-background"
+					>
+						Create
+					</Button>
+					<Avatar className="border border-border">
 						<AvatarImage src='https://github.com/shadcn.png' alt='@shadcn' />
-						<AvatarFallback>CN</AvatarFallback>
+						<AvatarFallback className="bg-surface-02 text-foreground">CN</AvatarFallback>
 					</Avatar>
 				</AppHeader.Actions>
 			</AppHeader.Content>

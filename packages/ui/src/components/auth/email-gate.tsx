@@ -11,6 +11,7 @@ import { cn } from '@/lib/utils';
 interface EmailGateProps {
   schoolName: string;
   schoolDomain: string;
+  schoolId: string; // Added required schoolId prop
   onBack?: () => void;
   className?: string;
   onDevContinue?: () => void;
@@ -24,6 +25,7 @@ interface ApiError {
 export const EmailGate: React.FC<EmailGateProps> = ({
   schoolName,
   schoolDomain,
+  schoolId,
   onBack,
   className,
   onSuccess
@@ -55,7 +57,7 @@ export const EmailGate: React.FC<EmailGateProps> = ({
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, schoolId }),
       });
 
       const data = await response.json();

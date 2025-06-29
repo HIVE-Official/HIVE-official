@@ -52,6 +52,11 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // Surface alias for consistency
+        surface: {
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
+        },
         // HIVE-specific surface colors
         "surface-01": "hsl(var(--surface-01))",
         "surface-02": "hsl(var(--surface-02))",

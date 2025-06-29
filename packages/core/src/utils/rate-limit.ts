@@ -123,12 +123,42 @@ export const userRateLimit = rateLimitMiddleware(RateLimits.API);
 
 /**
  * Rate limit for post creation
+ * Uses Redis if available, otherwise falls back to in-memory store
  */
-export const postCreationRateLimit = new Ratelimit({
-  redis: Redis.fromEnv(),
-  limiter: Ratelimit.slidingWindow(5, "1 h"),
-  analytics: true,
-});
+export const postCreationRateLimit = (() => {
+  // Check if Redis environment variables are available
+  const hasRedisConfig = process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN;
+  
+  if (hasRedisConfig) {
+    // Use Redis-based rate limiting in production
+    return new Ratelimit({
+      redis: Redis.fromEnv(),
+      limiter: Ratelimit.slidingWindow(5, "1 h"),
+      analytics: true,
+    });
+  } else {
+    // Fallback to in-memory rate limiting for development
+    console.warn('⚠️ Redis not configured, using in-memory rate limiting for development');
+    
+    // Create a compatible interface that matches Ratelimit
+    return {
+      limit: async (identifier: string) => {
+        const result = checkRateLimit(identifier, {
+          maxRequests: 5,
+          windowMs: 60 * 60 * 1000, // 1 hour
+        });
+        
+        return {
+          success: result.success,
+          limit: result.limit,
+          remaining: result.remaining,
+          reset: new Date(result.resetTime),
+          pending: Promise.resolve(),
+        };
+      }
+    };
+  }
+})();
 
 /**
  * Rate limit for authentication attempts

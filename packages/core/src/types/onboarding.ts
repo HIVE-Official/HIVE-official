@@ -31,6 +31,7 @@ export interface OnboardingState {
   uid?: string;
   email: string;
   schoolId: string;
+  schoolName: string;
 
   // Step 1: Welcome/Display Name
   displayName: string;

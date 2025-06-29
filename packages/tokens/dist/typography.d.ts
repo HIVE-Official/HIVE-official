@@ -98,8 +98,8 @@ export declare const typography: {
     };
 };
 export declare const getFontSize: (key: keyof typeof typography.fontSize) => {
-    fontSize: "64px" | "48px" | "32px" | "24px" | "20px" | "16px" | "14px" | "12px";
-    lineHeight: "72px" | "56px" | "32px" | "40px" | "24px" | "20px" | "28px" | "18px";
+    fontSize: "12px" | "24px" | "64px" | "48px" | "32px" | "20px" | "16px" | "14px";
+    lineHeight: "24px" | "72px" | "56px" | "32px" | "40px" | "20px" | "28px" | "18px";
     fontWeight: "400" | "500" | "600";
     fontFamily: "Geist Sans" | "Space Grotesk Variable" | "Geist Mono";
 };
