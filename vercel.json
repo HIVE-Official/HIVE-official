@@ -1,13 +1,14 @@
 {
-  "buildCommand": "cd apps/web && pnpm install --no-frozen-lockfile && pnpm build",
+  "buildCommand": "cd apps/web && NEXT_FONT_SKIP_DOWNLOAD=1 pnpm build",
   "outputDirectory": "apps/web/.next",
-  "installCommand": "pnpm install --no-frozen-lockfile",
+  "installCommand": "npm install -g pnpm@9.1.1 && pnpm install --frozen-lockfile",
   "framework": "nextjs",
   "functions": {
     "apps/web/src/app/api/**": {
       "maxDuration": 30
     }
   },
+  "crons": [],
   "env": {
     "TURBO_TOKEN": "@turbo_token",
     "TURBO_TEAM": "@turbo_team",

@@ -23,7 +23,7 @@
     "appId",
     "measurementId"
   ],
-  "pipeline": {
+  "tasks": {
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
