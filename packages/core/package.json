@@ -16,7 +16,8 @@
     "dist"
   ],
   "scripts": {
-    "build": "cross-env NODE_OPTIONS=--max-old-space-size=4096 tsup src/index.ts --format cjs,esm --dts",
+    "prebuild": "pnpm run clean",
+    "build": "tsup src/index.ts --format cjs,esm --dts --sourcemap",
     "lint": "eslint .",
     "typecheck": "npx tsc --noEmit",
     "dev": "npx tsc --build --watch",

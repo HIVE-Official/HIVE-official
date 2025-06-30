@@ -19,6 +19,14 @@
     "NEXT_PUBLIC_FIREBASE_APP_ID": "@firebase_app_id",
     "FIREBASE_PROJECT_ID": "@firebase_admin_project_id",
     "FIREBASE_CLIENT_EMAIL": "@firebase_admin_client_email",
-    "FIREBASE_PRIVATE_KEY": "@firebase_admin_private_key"
+    "FIREBASE_PRIVATE_KEY": "@firebase_admin_private_key",
+    "apiKey": "@firebase_api_key",
+    "authDomain": "@firebase_auth_domain",
+    "projectId": "@firebase_project_id",
+    "storageBucket": "@firebase_storage_bucket",
+    "messagingSenderId": "@firebase_messaging_sender_id",
+    "appId": "@firebase_app_id",
+    "databaseURL": "@firebase_database_url",
+    "measurementId": "@firebase_measurement_id"
   }
 } 

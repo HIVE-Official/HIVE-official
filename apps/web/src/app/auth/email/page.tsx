@@ -159,15 +159,15 @@ export default function AuthEmailPage() {
 
         {/* School Context */}
         <motion.div
-          className="mb-6 p-3 bg-accent/10 border border-accent/20 rounded-lg"
+          className="mb-6 p-3 bg-surface-01 border border-border rounded-lg"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
         >
-          <p className="text-sm text-accent font-medium">
+          <p className="text-sm text-foreground font-medium">
             {selectedSchool.name}
           </p>
-          <p className="text-xs text-accent/70">
+          <p className="text-xs text-muted">
             Enter your {selectedSchool.domain} email address
           </p>
         </motion.div>
@@ -179,8 +179,8 @@ export default function AuthEmailPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
         >
-          <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-6">
-            <Mail className="w-8 h-8 text-accent" />
+          <div className="w-16 h-16 bg-surface-01 rounded-full flex items-center justify-center mx-auto mb-6">
+            <Mail className="w-8 h-8 text-foreground" />
           </div>
           
           <h1 className="text-2xl font-display font-medium mb-2 text-foreground">
@@ -226,7 +226,7 @@ export default function AuthEmailPage() {
                   <AlertCircle className="w-5 h-5 text-destructive" />
                 )}
                 {email && isValid && (
-                  <CheckCircle className="w-5 h-5 text-accent" />
+                  <CheckCircle className="w-5 h-5 text-green-500" />
                 )}
               </div>
             </div>
@@ -234,7 +234,7 @@ export default function AuthEmailPage() {
             {/* Domain Preview */}
             {email && isValid && (
               <motion.p
-                className="text-sm text-accent font-sans"
+                className="text-sm text-green-500 font-sans"
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3 }}
@@ -261,6 +261,7 @@ export default function AuthEmailPage() {
             type="submit"
             disabled={!isValid || isSubmitting || countdown > 0}
             className="w-full font-display font-semibold tracking-tight"
+            variant="default"
           >
             {isSubmitting ? (
               <div className="flex items-center">

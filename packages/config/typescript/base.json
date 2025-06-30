@@ -3,7 +3,7 @@
   "display": "Default",
   "compilerOptions": {
     "target": "es2020",
-    "composite": false,
+    "composite": true,
     "declaration": true,
     "declarationMap": true,
     "esModuleInterop": true,
@@ -20,7 +20,10 @@
     "module": "esnext",
     "resolveJsonModule": true,
     "types": ["node"],
-    "lib": ["dom", "dom.iterable", "esnext"]
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "sourceMap": true,
+    "incremental": true,
+    "noEmit": false
   },
-  "exclude": ["node_modules", "dist", "**/*.stories.tsx", "**/*.test.tsx"]
+  "exclude": ["node_modules", "dist", "**/*.stories.tsx", "**/*.test.tsx", "**/*.spec.*"]
 }

@@ -6,6 +6,6 @@ export const metadata: Metadata = {
 };
 
 export default function AuthPage() {
-  // Redirect directly to email auth
-  redirect('/auth/email');
+  // Redirect to school select by default
+  redirect('/auth/school-select');
 }

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { logger } from "@hive/core";
-import { dbAdmin, authAdmin } from "../../../../lib/firebase-admin";
+import { dbAdmin, authAdmin, environmentInfo } from "../../../../lib/firebase-admin";
 
 // Temporary inline type definition to avoid import issues
 interface OnboardingData {
@@ -24,19 +24,25 @@ interface OnboardingData {
   }>;
 }
 
-// Check if we're in build time
-const isBuildTime = process.env.NEXT_PHASE === "phase-production-build";
+// More robust build time detection
+const isBuildTime = environmentInfo.isBuildTime;
+
+// This is required for Next.js edge runtime compatibility
+export const runtime = 'nodejs';
 
 export async function POST(request: NextRequest) {
   // During build time, return a mock response
   if (isBuildTime) {
-    return NextResponse.json(
-      { 
+    return new NextResponse(
+      JSON.stringify({
         ok: true,
         message: "Build time - mock onboarding completion",
         userId: "build-time-user-id"
-      },
-      { status: 200 }
+      }),
+      { 
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      }
     );
   }
 

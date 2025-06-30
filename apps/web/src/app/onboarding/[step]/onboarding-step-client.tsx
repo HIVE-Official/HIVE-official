@@ -42,8 +42,8 @@ const LeaderStep: React.FC<StepComponentProps> = ({ onNext }) => {
     <div className="flex min-h-screen items-center justify-center p-4">
       <div className="w-full max-w-lg bg-surface border border-border rounded-lg p-6">
         <div className="text-center space-y-2 mb-6">
-          <div className="w-12 h-12 bg-accent/10 rounded-full flex items-center justify-center mx-auto">
-            <svg className="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="w-12 h-12 bg-surface-01 rounded-full flex items-center justify-center mx-auto">
+            <svg className="w-6 h-6 text-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3l14 0 0 14-14 0z" />
             </svg>
           </div>
@@ -58,11 +58,11 @@ const LeaderStep: React.FC<StepComponentProps> = ({ onNext }) => {
         <div className="space-y-4">
           <button
             onClick={() => handleLeaderChoice(true)}
-            className="w-full p-4 rounded-lg border-2 border-border hover:border-accent/50 transition-all text-left"
+            className="w-full p-4 rounded-lg border-2 border-border hover:border-foreground/20 hover:bg-surface-01 transition-all text-left"
           >
             <div className="flex items-start space-x-3">
-              <div className="w-8 h-8 bg-accent/10 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                <svg className="w-4 h-4 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-8 h-8 bg-surface-01 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                <svg className="w-4 h-4 text-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3l14 0 0 14-14 0z" />
                 </svg>
               </div>
@@ -79,11 +79,11 @@ const LeaderStep: React.FC<StepComponentProps> = ({ onNext }) => {
 
           <button
             onClick={() => handleLeaderChoice(false)}
-            className="w-full p-4 rounded-lg border-2 border-border hover:border-accent/50 transition-all text-left"
+            className="w-full p-4 rounded-lg border-2 border-border hover:border-foreground/20 hover:bg-surface-01 transition-all text-left"
           >
             <div className="flex items-start space-x-3">
-              <div className="w-8 h-8 bg-accent/10 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                <svg className="w-4 h-4 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-8 h-8 bg-surface-01 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                <svg className="w-4 h-4 text-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
               </div>
@@ -132,7 +132,7 @@ const Interests: React.FC<StepComponentProps> = ({ onNext }) => {
         </div>
         <button
           onClick={() => handleInterestsSubmit({ interests: [] })}
-          className="w-full bg-accent text-background font-medium py-3 px-4 rounded-lg hover:bg-accent/90 transition-colors"
+          className="w-full bg-foreground text-background font-medium py-3 px-4 rounded-lg hover:bg-foreground/90 transition-colors"
         >
           Continue
         </button>
@@ -297,7 +297,7 @@ export function OnboardingStepClient({ step }: OnboardingStepClientProps) {
             </p>
             <button
               onClick={() => router.push("/onboarding/1")}
-              className="px-4 py-2 bg-accent text-background rounded-md font-medium"
+              className="px-4 py-2 bg-foreground text-background rounded-md font-medium"
             >
               Go to Step 1
             </button>
@@ -374,7 +374,7 @@ export function OnboardingStepClient({ step }: OnboardingStepClientProps) {
           </p>
           <button
             onClick={() => router.push("/onboarding/1")}
-            className="px-4 py-2 bg-accent text-background rounded-md font-medium"
+            className="px-4 py-2 bg-foreground text-background rounded-md font-medium"
           >
             Go to Step 1
           </button>

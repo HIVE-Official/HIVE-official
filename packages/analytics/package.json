@@ -2,24 +2,27 @@
   "name": "@hive/analytics",
   "version": "0.1.0",
   "private": true,
-  "main": "./src/index.ts",
-  "types": "./src/index.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "npx tsc",
-    "typecheck": "tsc --noEmit",
-    "lint": "eslint ."
+    "build": "pnpm run clean && tsc --build",
+    "clean": "rm -rf dist",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@hive/core": "workspace:*",
     "zod": "^3.25.67"
   },
   "devDependencies": {
+    "@hive/eslint-config": "workspace:*",
     "@hive/typescript-config": "workspace:*",
     "@testing-library/jest-dom": "^6.6.3",
     "@types/node": "^24.0.4",
     "@types/testing-library__jest-dom": "^6.0.0",
     "@typescript-eslint/eslint-plugin": "^8.35.0",
     "@typescript-eslint/parser": "^8.35.0",
+    "eslint": "^9.29.0",
     "tsup": "^8.5.0",
     "typescript": "^5.8.3"
   }

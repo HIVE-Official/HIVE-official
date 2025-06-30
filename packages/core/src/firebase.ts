@@ -9,37 +9,58 @@ import { getStorage } from 'firebase/storage';
 import type { Analytics } from 'firebase/analytics';
 import { getAnalytics } from 'firebase/analytics';
 
-// Environment variable validation
-const requiredEnvVars = {
+// Required Firebase configuration fields
+const requiredConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
   projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+} as const;
+
+// Optional Firebase configuration fields
+const optionalConfig = {
   storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
   messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
+  databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL,
 } as const;
 
-// Check for missing environment variables
-const missingVars = Object.entries(requiredEnvVars)
+// Check for missing required environment variables
+const missingRequiredVars = Object.entries(requiredConfig)
   .filter(([_, value]) => !value)
   .map(([key]) => `NEXT_PUBLIC_FIREBASE_${key.toUpperCase()}`);
 
-if (missingVars.length > 0) {
-  console.warn(`🚨 Missing Firebase environment variables: ${missingVars.join(', ')}`);
+if (missingRequiredVars.length > 0) {
+  console.warn(`🚨 Missing required Firebase environment variables: ${missingRequiredVars.join(', ')}`);
   console.warn('Please create apps/web/.env.local with your Firebase configuration');
   console.warn('See apps/web/.env.example for the required format');
 }
 
-// Use environment variables or fallback values for development
+// Development fallback values
+const devFallbacks = {
+  apiKey: 'demo-api-key',
+  authDomain: 'demo-project.firebaseapp.com',
+  projectId: 'demo-project',
+  storageBucket: 'demo-project.appspot.com',
+  messagingSenderId: '123456789',
+  appId: '1:123456789:web:demo',
+  measurementId: 'G-DEMO',
+  databaseURL: undefined,
+};
+
+// Build Firebase config object with required and optional fields
 const firebaseConfig = {
-  apiKey: requiredEnvVars.apiKey || 'demo-api-key',
-  authDomain: requiredEnvVars.authDomain || 'demo-project.firebaseapp.com',
-  projectId: requiredEnvVars.projectId || 'demo-project',
-  storageBucket: requiredEnvVars.storageBucket || 'demo-project.appspot.com',
-  messagingSenderId: requiredEnvVars.messagingSenderId || '123456789',
-  appId: requiredEnvVars.appId || '1:123456789:web:demo',
-  measurementId: requiredEnvVars.measurementId || 'G-DEMO',
+  // Required fields (with fallbacks for development)
+  apiKey: requiredConfig.apiKey || devFallbacks.apiKey,
+  authDomain: requiredConfig.authDomain || devFallbacks.authDomain,
+  projectId: requiredConfig.projectId || devFallbacks.projectId,
+  
+  // Optional fields (only include if defined)
+  ...(optionalConfig.storageBucket && { storageBucket: optionalConfig.storageBucket }),
+  ...(optionalConfig.messagingSenderId && { messagingSenderId: optionalConfig.messagingSenderId }),
+  ...(optionalConfig.appId && { appId: optionalConfig.appId }),
+  ...(optionalConfig.measurementId && { measurementId: optionalConfig.measurementId }),
+  ...(optionalConfig.databaseURL && { databaseURL: optionalConfig.databaseURL }),
 };
 
 // Initialize Firebase app
@@ -54,7 +75,9 @@ try {
   db = getFirestore(app);
   auth = getAuth(app);
   storage = getStorage(app);
-  if (typeof window !== 'undefined') {
+  
+  // Only initialize analytics in the browser
+  if (typeof window !== 'undefined' && firebaseConfig.measurementId) {
     analytics = getAnalytics(app);
   }
 } catch (error) {

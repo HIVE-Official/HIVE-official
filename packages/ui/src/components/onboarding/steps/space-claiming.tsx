@@ -27,17 +27,17 @@ interface Space {
 }
 
 interface SpaceClaimingProps {
-  onNext: (data: { spaceClaims?: any[] }) => void;
+  onNext: (data: { spaceClaims?: Record<string, unknown>[] }) => void;
   onBack?: () => void;
   isLoading?: boolean;
-  schoolId: string;
+  _schoolId: string;
 }
 
 export function SpaceClaiming({
   onNext,
   onBack,
   isLoading = false,
-  schoolId,
+  _schoolId,
 }: SpaceClaimingProps) {
   const [availableSpaces, setAvailableSpaces] = useState<
     Record<string, Space[]>

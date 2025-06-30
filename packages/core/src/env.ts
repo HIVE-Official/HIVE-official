@@ -22,6 +22,11 @@ const baseSchema = z.object({
   FIREBASE_PROJECT_ID: z.string().optional(),
   FIREBASE_CLIENT_EMAIL: z.string().optional(),
   FIREBASE_PRIVATE_KEY: z.string().optional(),
+  
+  // Build environment detection
+  VERCEL: z.string().optional(),
+  VERCEL_ENV: z.string().optional(),
+  NEXT_PHASE: z.string().optional(),
 });
 
 // Build-time schema is more lenient
@@ -35,8 +40,11 @@ const buildTimeSchema = z.object({
 let parsedEnv: z.infer<typeof baseSchema>;
 
 const isProductionEnv = process.env.NODE_ENV === "production";
-const isBuildTime = process.env.NEXT_PHASE === "phase-production-build";
-const isServerSide = process.env.NEXT_RUNTIME === "nodejs";
+const isBuildTime = 
+  process.env.NEXT_PHASE === "phase-production-build" || 
+  process.env.VERCEL_ENV === "production" ||
+  (process.env.VERCEL === "1" && process.env.NODE_ENV === "production");
+const isServerSide = typeof window === 'undefined';
 
 try {
   // During build time, use the more lenient schema
@@ -66,6 +74,9 @@ try {
         FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID || "",
         FIREBASE_CLIENT_EMAIL: process.env.FIREBASE_CLIENT_EMAIL || "",
         FIREBASE_PRIVATE_KEY: process.env.FIREBASE_PRIVATE_KEY || "",
+        VERCEL: process.env.VERCEL || "",
+        VERCEL_ENV: process.env.VERCEL_ENV || "",
+        NEXT_PHASE: process.env.NEXT_PHASE || "",
       };
       console.log(`🔧 Using fallback environment configuration for ${context}`);
     }

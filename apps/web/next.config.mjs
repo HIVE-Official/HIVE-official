@@ -19,6 +19,34 @@ const nextConfig = {
     // We manage our own TypeScript configuration in our monorepo
     ignoreBuildErrors: true,
   },
+  // Development server configuration for subdomain support
+  ...(process.env.NODE_ENV === 'development' && {
+    async rewrites() {
+      return [
+        // Support for local subdomain development
+        {
+          source: '/:path*',
+          destination: '/:path*',
+          has: [
+            {
+              type: 'host',
+              value: 'dev.hive.local',
+            },
+          ],
+        },
+        {
+          source: '/:path*',
+          destination: '/:path*',
+          has: [
+            {
+              type: 'host',
+              value: 'staging.hive.local',
+            },
+          ],
+        },
+      ];
+    },
+  }),
   // SVG handling and workspace resolution
   webpack: (config, { isServer: _isServer }) => {
     // SVG handling

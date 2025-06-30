@@ -299,7 +299,7 @@ function VerifyContent() {
               <button
                 onClick={handleResend}
                 disabled={!canResend && timeLeft > 0}
-                className={`text-accent hover:text-accent/80 underline ${
+                className={`text-foreground hover:text-foreground/80 underline ${
                   !canResend && timeLeft > 0
                     ? "opacity-50 cursor-not-allowed"
                     : ""
@@ -320,9 +320,9 @@ function VerifyContent() {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4 }}
           >
-            <div className="bg-surface-01 border border-accent/20 rounded-lg p-6 mb-6">
-              <div className="w-12 h-12 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <RefreshCw className="w-6 h-6 text-accent animate-spin" />
+            <div className="bg-surface-01 border border-border rounded-lg p-6 mb-6">
+              <div className="w-12 h-12 bg-surface-01 rounded-full flex items-center justify-center mx-auto mb-4">
+                <RefreshCw className="w-6 h-6 text-foreground animate-spin" />
               </div>
               <p className="text-sm text-muted font-sans">
                 Verifying your email address...

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   Users,
   MapPin,
@@ -9,7 +9,6 @@ import {
   TrendingUp,
   Check,
   Plus,
-  Minus,
 } from "lucide-react";
 import { Button } from "../../ui/button";
 
@@ -25,6 +24,11 @@ interface SuggestedSpace {
   isActive: boolean;
 }
 
+interface UserProfile {
+  majors?: string[];
+  graduationYear?: number;
+}
+
 interface SuggestedSpacesProps {
   onNext: (data: { joinedSpaces: string[] }) => void;
   onBack?: () => void;
@@ -36,13 +40,13 @@ export function SuggestedSpaces({
   onBack,
   isLoading = false,
 }: SuggestedSpacesProps) {
-  const [suggestedSpaces, setSuggestedSpaces] = useState<SuggestedSpace[]>([]);
+  const [_suggestedSpaces, setSuggestedSpaces] = useState<SuggestedSpace[]>([]);
   const [groupedSpaces, setGroupedSpaces] = useState<
     Record<string, SuggestedSpace[]>
   >({});
   const [selectedSpaces, setSelectedSpaces] = useState<Set<string>>(new Set());
   const [isLoadingSpaces, setIsLoadingSpaces] = useState(true);
-  const [userProfile, setUserProfile] = useState<any>(null);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
 
   // Fetch suggested spaces
   useEffect(() => {

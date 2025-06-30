@@ -1,15 +1,14 @@
 {
-  "extends": "../config/typescript/base.json",
+  "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "dist",
-    "rootDir": "src",
-    "noEmit": false,
+    "outDir": "./dist",
+    "rootDir": "./src",
     "declaration": true,
     "declarationMap": true,
-    "sourceMap": true,
+    "emitDeclarationOnly": true,
+    "noEmit": false,
     "composite": true,
-    "incremental": true,
-    "baseUrl": "."
+    "skipLibCheck": true
   },
   "include": [
     "./src/**/*.ts",
@@ -21,8 +20,5 @@
     "**/*.test.*",
     "**/*.spec.*",
     "**/*.stories.*"
-  ],
-  "references": [
-    { "path": "../core" }
   ]
-}
+} 

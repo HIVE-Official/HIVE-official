@@ -5,28 +5,38 @@ let firebaseInitialized = false;
 let dbAdmin: admin.firestore.Firestore;
 let authAdmin: admin.auth.Auth;
 
-// Check if we're in build time
-const isBuildTime = process.env.NEXT_PHASE === "phase-production-build";
+// More robust build time detection
+const isBuildTime = process.env.NEXT_PHASE === "phase-production-build" || 
+                   process.env.VERCEL_ENV === "production" ||
+                   process.env.NODE_ENV === "production";
 
-// Mock instances for build time and development
+// Enhanced mock instances for build time and development
 const mockDb = {
   collection: (_path: string) => ({
-    doc: (_id: string) => ({
+    doc: (_id?: string) => ({
       get: async () => ({ exists: false, data: () => null }),
       set: async () => {},
       update: async () => {},
+      delete: async () => {},
     }),
     where: () => ({
       limit: () => ({
-        get: async () => ({ empty: true }),
+        get: async () => ({ empty: true, docs: [] }),
       }),
+      get: async () => ({ empty: true, docs: [] }),
     }),
-    get: async () => ({ empty: true }),
+    get: async () => ({ empty: true, docs: [] }),
   }),
-  runTransaction: async (fn: (transaction: unknown) => Promise<void>) => await fn({}),
+  runTransaction: async (fn: (transaction: unknown) => Promise<void>) => await fn({
+    get: async () => ({ empty: true, docs: [] }),
+    set: async () => {},
+    update: async () => {},
+    delete: async () => {},
+  }),
   batch: () => ({
     set: () => {},
     update: () => {},
+    delete: () => {},
     commit: async () => {},
   }),
 } as unknown as admin.firestore.Firestore;
@@ -42,8 +52,15 @@ const mockAuth = {
     uid: "mock-uid",
     email: "mock@example.edu",
     emailVerified: true,
+    customClaims: {},
   }),
   createCustomToken: async () => "mock-token",
+  updateUser: async () => ({ uid: "mock-uid" }),
+  getUserByEmail: async () => ({
+    uid: "mock-uid",
+    email: "mock@example.edu",
+    emailVerified: true,
+  }),
 } as unknown as admin.auth.Auth;
 
 // During build time or when Firebase is not configured, use mock instances
@@ -51,7 +68,11 @@ if (isBuildTime || !getFirebaseAdminConfig()) {
   dbAdmin = mockDb;
   authAdmin = mockAuth;
   firebaseInitialized = true;
-  console.log(`🔧 Using mock Firebase Admin for ${isBuildTime ? "build" : env.NODE_ENV}`);
+  
+  // Silent in production, log in development
+  if (isDevelopment) {
+    console.log(`🔧 Using mock Firebase Admin for ${isBuildTime ? "build" : env.NODE_ENV}`);
+  }
 } else {
   try {
     if (!admin.apps.length) {
@@ -67,9 +88,9 @@ if (isBuildTime || !getFirebaseAdminConfig()) {
         authAdmin = admin.auth();
         firebaseInitialized = true;
 
-        console.log(
-          `✅ Firebase Admin initialized successfully for ${env.NODE_ENV}`
-        );
+        if (isDevelopment) {
+          console.log(`✅ Firebase Admin initialized successfully for ${env.NODE_ENV}`);
+        }
       } else {
         throw new Error("No valid Firebase Admin credentials found");
       }
@@ -78,19 +99,24 @@ if (isBuildTime || !getFirebaseAdminConfig()) {
       dbAdmin = admin.firestore();
       authAdmin = admin.auth();
       firebaseInitialized = true;
-      console.log(`🔄 Firebase Admin: Using existing app for ${env.NODE_ENV}`);
+      
+      if (isDevelopment) {
+        console.log(`🔄 Firebase Admin: Using existing app for ${env.NODE_ENV}`);
+      }
     }
   } catch (error) {
-    console.warn(
-      `⚠️ Firebase Admin initialization failed for ${env.NODE_ENV}:`,
-      error
-    );
+    if (isDevelopment) {
+      console.warn(`⚠️ Firebase Admin initialization failed for ${env.NODE_ENV}:`, error);
+    }
 
-    // Use mock instances for development
+    // Use mock instances as fallback
     dbAdmin = mockDb;
     authAdmin = mockAuth;
     firebaseInitialized = true;
-    console.log(`🔧 Using mock Firebase Admin for ${env.NODE_ENV} (after error)`);
+    
+    if (isDevelopment) {
+      console.log(`🔧 Using mock Firebase Admin for ${env.NODE_ENV} (after error)`);
+    }
   }
 }
 
