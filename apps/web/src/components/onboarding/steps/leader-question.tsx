@@ -13,6 +13,7 @@ import {
   SelectValue,
 } from "@hive/ui";
 import { useOnboardingStore } from "@/lib/stores/onboarding";
+import type { SpaceType } from "@hive/core";
 
 // Mock spaces data for now - real API integration pending
 const mockSpaces = {
@@ -93,7 +94,10 @@ export function LeaderQuestion() {
             <div className="space-y-4 pt-4">
               <div className="space-y-2">
                 <Label>Select your organization type</Label>
-                <Select value={spaceType} onValueChange={setSpaceType}>
+                <Select
+                  value={spaceType}
+                  onValueChange={(value: string) => setSpaceType(value as SpaceType)}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Choose organization type" />
                   </SelectTrigger>

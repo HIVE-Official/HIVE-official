@@ -26,7 +26,7 @@ import { Loader2, Upload } from "lucide-react";
 import { debounce } from "lodash";
 import { AuthUser } from "@hive/auth-logic";
 import { logger } from "@hive/core";
-import type { OnboardingState } from "@hive/core";
+import type { OnboardingState, AcademicLevel } from "@hive/core";
 
 // A utility to generate a handle from a name
 const generateHandle = (name: string) => {
@@ -56,7 +56,7 @@ export const DisplayNameAvatarStep: React.FC<StepProps> = ({
   const [handleError, setHandleError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(data?.avatarUrl || null);
+  const [previewUrl, setPreviewUrl] = useState<string | undefined>(data?.avatarUrl);
 
   // Prefill from email
   useEffect(() => {
@@ -365,23 +365,29 @@ export const AcademicCardStep: React.FC<StepProps> = ({
   onPrev,
   data,
 }) => {
-  const handleSubmit = async (formData: { major: string; graduationYear: number } | null) => {
+  const handleSubmit = async (formData: Record<string, unknown> | null) => {
     if (!formData) return;
-    
+    const { academicLevel, majors, graduationYear } = formData as {
+      academicLevel: AcademicLevel;
+      majors: string[];
+      graduationYear: number;
+    };
+
     onNext(undefined, {
-      major: formData.major,
-      graduationYear: formData.graduationYear,
+      academicLevel,
+      majors,
+      graduationYear,
     });
   };
 
   return (
     <UIAcademicCardStep
       initialData={{
-        major: data?.major || "",
+        majors: data?.majors || (data?.major ? [data.major] : []),
         graduationYear: data?.graduationYear || new Date().getFullYear() + 4,
       }}
       onSubmit={handleSubmit}
-      onBack={onPrev}
+      onSkip={onPrev}
     />
   );
 };

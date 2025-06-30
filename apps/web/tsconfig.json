@@ -23,8 +23,8 @@
   "include": [
     "**/*.ts",
     "**/*.tsx",
-    "../../packages/ui/src/**/*.ts",
-    "../../packages/ui/src/**/*.tsx",
+    "../../packages/*/src/**/*.ts",
+    "../../packages/*/src/**/*.tsx",
     "next-env.d.ts",
     ".next/types/**/*.ts"
   ],
@@ -37,7 +37,6 @@
     "**/*.test.tsx",
     "../../packages/ui/src/**/*.test.tsx",
     "src/app/(wip)/**",
-    "src/app/api/**",
-    "src/components/onboarding/**"
+    "src/app/api/**"
   ]
 }
