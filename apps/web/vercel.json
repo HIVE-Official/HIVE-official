@@ -1,0 +1,6 @@
+{
+  "buildCommand": "NEXT_FONT_SKIP_DOWNLOAD=1 pnpm build",
+  "outputDirectory": ".next",
+  "installCommand": "cd ../.. && npm install -g pnpm@9.1.1 && pnpm install --frozen-lockfile",
+  "framework": "nextjs"
+} 
