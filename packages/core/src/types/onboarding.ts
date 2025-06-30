@@ -58,6 +58,10 @@ export interface OnboardingState {
   spaceName?: string;
   spaceDescription?: string;
   onboardingCompleted?: boolean;
+  shouldClaimSpace?: boolean;
+  spaceCreated?: boolean;
+  autoJoinSpaces?: string[];
+  spaceDiscoveryCompleted?: boolean;
 
   // Step 4: Interests
   interests: string[];
