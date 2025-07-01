@@ -1,5 +1,4 @@
-import { Button } from '@hive/ui';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@hive/ui';
+import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle } from '@hive/ui';
 import { XCircle } from 'lucide-react';
 import Link from 'next/link';
 

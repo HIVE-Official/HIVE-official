@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db, auth as firebaseAdmin } from "@/lib/firebase-admin";
 import { sendSignInLinkToEmail, signInWithEmailLink as _signInWithEmailLink } from "firebase/auth";
-import { auth } from "@hive/core";
-import { logger } from "@hive/core";
-import { findAvailableHandle } from "@hive/core";
+import { auth, logger, findAvailableHandle } from "@hive/core";
 
 async function checkHandleAvailability(handle: string): Promise<boolean> {
   const handleDoc = await db.collection("handles").doc(handle).get();

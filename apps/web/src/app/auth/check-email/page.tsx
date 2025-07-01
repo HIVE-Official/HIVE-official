@@ -1,8 +1,7 @@
 "use client";
 
-import React from "react";
+import React, { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import { Suspense } from "react";
 import { CheckEmailInfo } from "@hive/ui";
 
 function CheckEmailContent() {

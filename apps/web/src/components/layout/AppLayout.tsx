@@ -2,13 +2,9 @@
 
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
-import { AppHeader } from '@hive/ui'
-import { BottomNavBar } from '@hive/ui'
-import { HiveLogo } from '@hive/ui'
+import { AppHeader, BottomNavBar, HiveLogo, Button, Avatar, AvatarFallback, AvatarImage } from '@hive/ui'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { Home, Compass, User } from 'lucide-react'
-import { Button } from '@hive/ui'
-import { Avatar, AvatarFallback, AvatarImage } from '@hive/ui'
 
 function DesktopNav() {
 	const pathname = usePathname()
