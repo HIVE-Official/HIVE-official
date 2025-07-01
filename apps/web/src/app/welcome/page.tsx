@@ -1,59 +1,85 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Button, Typography, Dialog, HiveLogo } from "@hive/ui";
+import { Button, Typography, HiveLogo } from "@hive/ui";
 import { useEffect, useState } from "react";
 import { logger } from "@hive/core";
 import Link from "next/link";
 
 export default function WelcomePage() {
   const [mounted, setMounted] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
     hours: 0,
     minutes: 0,
     seconds: 0,
   });
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-
-  // Launch date - July 9th, 2025
-  const launchDate = new Date("2025-07-09T00:00:00Z");
+  const [showInfo, setShowInfo] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
-    logger.info("Welcome page mounted");
+    try {
+      // Launch date - July 9th, 2025
+      const launchDate = new Date("2025-07-09T00:00:00Z");
+      
+      setMounted(true);
+      logger.info("Welcome page mounted");
 
-    const calculateTimeLeft = () => {
-      const difference = launchDate.getTime() - new Date().getTime();
+      const calculateTimeLeft = () => {
+        const difference = launchDate.getTime() - new Date().getTime();
 
-      if (difference > 0) {
-        setTimeLeft({
-          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-          hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-          minutes: Math.floor((difference / 1000 / 60) % 60),
-          seconds: Math.floor((difference / 1000) % 60),
-        });
-      }
-    };
+        if (difference > 0) {
+          setTimeLeft({
+            days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+            hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+            minutes: Math.floor((difference / 1000 / 60) % 60),
+            seconds: Math.floor((difference / 1000) % 60),
+          });
+        }
+      };
 
-    // Initial calculation
-    calculateTimeLeft();
+      // Initial calculation
+      calculateTimeLeft();
 
-    // Update every second
-    const timer = setInterval(calculateTimeLeft, 1000);
+      // Update every second
+      const timer = setInterval(calculateTimeLeft, 1000);
 
-    return () => {
-      clearInterval(timer);
-    };
-  }, [launchDate]);
+      return () => {
+        clearInterval(timer);
+      };
+    } catch (err) {
+      logger.error("Error in welcome page mount:", err);
+      setError(err instanceof Error ? err : new Error("Failed to initialize welcome page"));
+    }
+  }, []);
 
-  const handleWhatsComing = () => {
-    logger.info("What's Coming clicked");
-    setIsDialogOpen(true);
-  };
-
+  // Show loading state while mounting
   if (!mounted) {
-    return null;
+    return (
+      <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <div className="w-8 h-8 border-2 border-accent border-t-transparent rounded-full animate-spin mx-auto"></div>
+          <p className="text-muted">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state if something went wrong
+  if (error) {
+    return (
+      <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-4">
+        <div className="text-center space-y-4">
+          <p className="text-destructive">Something went wrong</p>
+          <Button
+            variant="outline"
+            onClick={() => window.location.reload()}
+          >
+            Try Again
+          </Button>
+        </div>
+      </div>
+    );
   }
 
   const formatNumber = (num: number) => num.toString().padStart(2, "0");
@@ -140,7 +166,7 @@ export default function WelcomePage() {
               <Button
                 variant="outline"
                 size="lg"
-                onClick={handleWhatsComing}
+                onClick={() => setShowInfo(true)}
                 className="border-2 border-accent bg-transparent text-accent hover:bg-accent/10 transition-colors"
               >
                 What&apos;s Coming?
@@ -160,25 +186,45 @@ export default function WelcomePage() {
         </div>
       </div>
 
-      {/* What's Coming Dialog */}
-      <Dialog
-        isOpen={isDialogOpen}
-        onClose={() => setIsDialogOpen(false)}
-        title="What's Coming in HIVE"
-      >
-        <div className="space-y-4">
-          <Typography variant="body">
-            HIVE is transforming how students connect, collaborate, and create on campus.
-            Join us for the launch of the next generation of campus social networking.
-          </Typography>
-          <Typography variant="body">
-            • Exclusive campus-only communities
-            • Privacy-first social features
-            • Real-time campus events and updates
-            • Collaborative tools for student projects
-          </Typography>
-        </div>
-      </Dialog>
+      {/* What's Coming Info (Inline instead of Dialog) */}
+      {showInfo && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm"
+          onClick={() => setShowInfo(false)}
+        >
+          <motion.div
+            className="bg-surface-01 rounded-xl shadow-2xl border border-border p-6 max-w-md w-full"
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            onClick={e => e.stopPropagation()}
+          >
+            <h2 className="text-h3 font-display font-semibold mb-4">What&apos;s Coming in HIVE</h2>
+            <div className="space-y-4">
+              <Typography variant="body">
+                HIVE is transforming how students connect, collaborate, and create on campus.
+                Join us for the launch of the next generation of campus social networking.
+              </Typography>
+              <Typography variant="body">
+                • Exclusive campus-only communities
+                • Privacy-first social features
+                • Real-time campus events and updates
+                • Collaborative tools for student projects
+              </Typography>
+            </div>
+            <Button
+              variant="outline"
+              className="mt-4"
+              onClick={() => setShowInfo(false)}
+            >
+              Close
+            </Button>
+          </motion.div>
+        </motion.div>
+      )}
     </div>
   );
 }

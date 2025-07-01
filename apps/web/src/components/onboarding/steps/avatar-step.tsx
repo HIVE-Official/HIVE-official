@@ -7,6 +7,7 @@ import { Button } from '@hive/ui';
 import { useOnboardingStore } from '@/lib/stores/onboarding';
 import { Camera, Upload, X, Loader2 } from 'lucide-react';
 import { logger } from '@hive/core';
+import Image from 'next/image';
 
 export function OnboardingAvatarStep() {
   const router = useRouter();
@@ -137,10 +138,12 @@ export function OnboardingAvatarStep() {
             <div className="relative">
               <div className="w-32 h-32 rounded-full bg-accent/10 border-2 border-dashed border-border flex items-center justify-center overflow-hidden">
                 {previewUrl ? (
-                  <img
+                  <Image
                     src={previewUrl}
                     alt="Avatar preview"
-                    className="w-full h-full object-cover"
+                    width={128}
+                    height={128}
+                    className="object-cover"
                   />
                 ) : (
                   <Camera className="w-8 h-8 text-muted-foreground" />

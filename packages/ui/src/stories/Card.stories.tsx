@@ -2,6 +2,7 @@
 // @ts-nocheck
 // @ts-nocheck
  
+import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/card';
 

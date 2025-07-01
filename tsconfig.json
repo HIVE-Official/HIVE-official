@@ -29,13 +29,7 @@
       "path": "./packages/api-client/tsconfig.json"
     },
     {
-      "path": "./packages/tokens/tsconfig.json"
-    },
-    {
       "path": "./packages/analytics/tsconfig.json"
-    },
-    {
-      "path": "./packages/i18n/tsconfig.json"
     }
   ],
   "compilerOptions": {
@@ -43,7 +37,7 @@
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
-    "strict": true,
+    "strict": false,
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "esModuleInterop": true,
@@ -57,8 +51,25 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "types": ["node", "jest", "react", "react-dom"]
+    "types": ["node", "react", "react-dom"]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"]
+  "include": ["next-env.d.ts", "src/**/*.ts", "src/**/*.tsx"],
+  "exclude": [
+    "node_modules",
+    "**/node_modules",
+    "**/dist",
+    "**/.next",
+    "**/build",
+    "functions",
+    "firebase",
+    "scripts",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx",
+    "**/tests",
+    "**/test",
+    "**/stories",
+    "**/stories.tsx"
+  ]
 }

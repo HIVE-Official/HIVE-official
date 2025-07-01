@@ -19,7 +19,7 @@ import * as emailVerification from "./verification/email-verification";
 import * as roleClaims from "./verification/role-claims";
 
 // Import event state management functions
-import * as eventStateTransitions from "./events/state-transitions";
+import * as _eventStateTransitions from "./events/state-transitions";
 
 // Import new space denormalization functions
 import * as spaceDenormalization from "./spaces/denormalization";

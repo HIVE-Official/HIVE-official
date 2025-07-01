@@ -29,13 +29,6 @@ export type { School } from "./domain/school";
 export * from "./constants/majors";
 export * from "./constants/academic-years";
 
-// Stores
-export * from "./stores";
-
-// Firebase client config - use client-specific implementation
-// export * from "./firebase";
-// export * from "./firebase-admin"; // TEMP: Commented out to avoid duplicate auth/db exports
-
 // Feed System Core
 export * from "./domain/feed/top-strip";
 export * from "./domain/feed/main-feed";
@@ -81,17 +74,7 @@ export type {
 
 export { SpaceDiscoverySchema } from "./domain/space/discovery";
 
-// Note: ContentProcessor and PostValidator are now exported from domain/feed/posting
-
-// export * from "./domain/space/space.types"; // Obsolete – file removed
-// export * from "./domain/space/space.guards"; // Obsolete – file removed
-
-// export * from "./domain/feed/feed.types"; // Obsolete – file removed
-// export * from "./domain/feed/feed.guards"; // Obsolete – file removed
-
-// Types
-// export * from "./types/auth-types"; // TEMP: Commented out missing file
-
+// Export utilities
 export * from "./utils/logger";
 export * from "./utils/rate-limit";
 export { postCreationRateLimit } from "./utils/rate-limit";
@@ -122,11 +105,8 @@ export * from "./constants/interests";
 // Export Firebase utilities
 export * from "./firebase/client";
 
-// Export utilities
-export * from "./utils/logger";
-
-// Stores
+// Export stores
 export * from "./stores";
 
-// Export environment - THIS IS THE KEY EXPORT WE NEED
+// Export environment
 export * from "./env";

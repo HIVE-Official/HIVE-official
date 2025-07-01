@@ -1,22 +1,17 @@
 "use client";
 
 import React from "react";
-import { useAuth } from "@hive/auth-logic";
 import { Card } from "../card";
 import { Wrench } from "lucide-react";
 
-export function DevModePanel() {
+interface DevModePanelProps {
+  userEmail?: string | null;
+}
+
+export function DevModePanel({ userEmail }: DevModePanelProps) {
   // Only render in development
   if (process.env.NODE_ENV === 'production') {
     return null;
-  }
-
-  let authContext;
-  try {
-    authContext = useAuth();
-  } catch {
-    // Auth context not available
-    authContext = null;
   }
 
   // Temporary: Simple dev panel until dev mode functionality is implemented
@@ -32,7 +27,7 @@ export function DevModePanel() {
       
       <div className="text-sm text-zinc-400">
         <p>Developer tools will be available in future releases.</p>
-        <p className="mt-2">Current user: {authContext?.user?.email || 'Not logged in'}</p>
+        <p className="mt-2">Current user: {userEmail || 'Not logged in'}</p>
       </div>
     </Card>
   );

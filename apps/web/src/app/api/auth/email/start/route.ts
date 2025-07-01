@@ -171,18 +171,18 @@ export async function POST(request: NextRequest) {
         message: 'Sign-in link sent! Check your email.',
         email: trimmedEmail
       })
-    } catch (error: any) {
+    } catch (error: unknown) {
       logger.error('Failed to send magic link:', error)
       
       // Handle specific Firebase Auth errors
-      if (error.code === 'auth/invalid-email') {
+      if (error && typeof error === 'object' && 'code' in error && error.code === 'auth/invalid-email') {
         return NextResponse.json(
           { message: 'Invalid email address' },
           { status: 400 }
         )
       }
       
-      if (error.code === 'auth/email-already-in-use') {
+      if (error && typeof error === 'object' && 'code' in error && error.code === 'auth/email-already-in-use') {
         return NextResponse.json(
           { message: 'An account with this email already exists' },
           { status: 400 }

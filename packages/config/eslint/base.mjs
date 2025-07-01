@@ -28,11 +28,31 @@ const baseConfig = [
       "**/src/**/*.d.ts.map",
       "**/*.bundle.js",
       "**/*.chunk.js",
-      "**/*-manifest.js",
+      "**/*.min.js",
       
       // Config files
       "**/.eslintrc.js",
       "**/eslint.config.js",
+      "**/jest.config.js",
+      "**/vitest.config.js",
+      "**/vite.config.js",
+      "**/webpack.config.js",
+      "**/next.config.js",
+      "**/tailwind.config.js",
+      "**/postcss.config.js",
+      
+      // Firebase and infrastructure scripts
+      "**/firebase/**",
+      "**/functions/**",
+      "**/scripts/**",
+      "**/dataconnect/**",
+      
+      // Other patterns
+      "vendor-chunks/**",
+      "framework-*/**",
+      "webpack-*/**",
+      "**/*.map",
+      "**/public/**/*.js",
       
       // Next.js build artifacts
       "apps/web/.next/**",

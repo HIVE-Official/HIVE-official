@@ -1,24 +1,23 @@
 import { defineConfig } from 'tsup';
 
 export default defineConfig({
-  entry: ['src/index.ts'],
+  entry: [
+    'src/index.ts',
+    'src/stores/useAppStore.ts',
+    'src/stores/useUnseenCountStore.ts'
+  ],
   format: ['cjs', 'esm'],
-  dts: true,
+  dts: {
+    entry: {
+      index: 'src/index.ts',
+      'stores/useAppStore': 'src/stores/useAppStore.ts',
+      'stores/useUnseenCountStore': 'src/stores/useUnseenCountStore.ts'
+    }
+  },
   sourcemap: true,
   clean: true,
-  treeshake: true,
-  splitting: false,
-  minify: false,
-  external: ['react', 'react-dom', 'firebase', 'firebase-admin', 'zod', 'zustand'],
-  esbuildOptions(options) {
-    options.conditions = ['module'];
-  },
-  tsconfig: 'tsconfig.json',
-  bundle: true,
-  skipNodeModulesBundle: true,
-  outDir: 'dist',
   target: 'es2020',
-  env: {
-    NODE_ENV: process.env.NODE_ENV || 'development',
-  },
+  outDir: 'dist',
+  external: ['react'],
+  noExternal: ['zustand']
 }); 

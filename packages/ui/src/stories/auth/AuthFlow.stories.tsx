@@ -59,6 +59,11 @@ const mockOnCreateSchool = (schoolName: string) => {
   });
 };
 
+const defaultCallbacks = {
+  onMagicLinkRequest: mockOnMagicLinkRequest,
+  onCreateSchool: mockOnCreateSchool,
+};
+
 const baseArgs: AuthFlowProps = {
   schools: mockSchools,
   onMagicLinkRequest: mockOnMagicLinkRequest,

@@ -6,57 +6,61 @@ import { Button } from '@hive/ui'
 import { AlertTriangle, RefreshCw, ArrowLeft } from 'lucide-react'
 import { useSearchParams } from 'next/navigation'
 import { Suspense } from 'react'
+import { AuthErrorCode, getErrorMessage, getErrorRecoveryAction } from '@hive/auth-logic'
 
 function AuthErrorContent() {
   const searchParams = useSearchParams()
-  const code = searchParams.get('code') || 'UNKNOWN_ERROR'
-  const message = searchParams.get('message') || 'Something went wrong during authentication'
+  const errorCode = searchParams.get('code') || 'UNKNOWN_ERROR'
+  const code = AuthErrorCode[errorCode as keyof typeof AuthErrorCode] || AuthErrorCode.UNKNOWN_ERROR
+  const errorMessage = getErrorMessage(code)
+  const recovery = getErrorRecoveryAction(code)
 
-  const getErrorMessage = (errorCode: string) => {
-    switch (errorCode) {
-      case 'EXPIRED_LINK':
-        return 'Your magic link has expired. Please request a new one.'
-      case 'INVALID_TOKEN':
-        return 'This link is invalid or has already been used.'
-      case 'NETWORK_ERROR':
-        return 'Network connection failed. Please check your internet and try again.'
-      case 'SERVER_ERROR':
-        return 'Our servers are having trouble. Please try again in a few minutes.'
-      case 'INVALID_EMAIL':
-        return 'This email address is not eligible for HIVE access.'
-      default:
-        return message
-    }
-  }
-
-  const getRecoveryAction = (errorCode: string) => {
-    switch (errorCode) {
-      case 'EXPIRED_LINK':
-      case 'INVALID_TOKEN':
+  // Get action button configuration
+  const getActionButton = () => {
+    switch (recovery.type) {
+      case 'REDIRECT':
         return {
-          text: 'Get a new magic link',
-          href: '/auth/email'
+          text: code === AuthErrorCode.EXPIRED_LINK 
+            ? 'Get a new magic link'
+            : code === AuthErrorCode.INVALID_EMAIL
+            ? 'Use a different email'
+            : 'Try again',
+          href: recovery.path || '/welcome',
+          icon: RefreshCw
         }
-      case 'NETWORK_ERROR':
-      case 'SERVER_ERROR':
+      
+      case 'RETRY':
         return {
           text: 'Try again',
-          href: '/auth/choose'
+          href: '/auth/choose',
+          icon: RefreshCw
         }
-      case 'INVALID_EMAIL':
+      
+      case 'WAIT':
         return {
-          text: 'Use a different email',
-          href: '/auth/email'
+          text: `Wait ${recovery.waitMs ? recovery.waitMs / 1000 : 30} seconds`,
+          href: '#',
+          icon: RefreshCw,
+          disabled: true
         }
+      
+      case 'CONTACT_SUPPORT':
+        return {
+          text: 'Contact Support',
+          href: '/help',
+          icon: RefreshCw
+        }
+      
       default:
         return {
           text: 'Start over',
-          href: '/welcome'
+          href: '/welcome',
+          icon: RefreshCw
         }
     }
   }
 
-  const recovery = getRecoveryAction(code)
+  const action = getActionButton()
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -102,10 +106,10 @@ function AuthErrorContent() {
             Oops!
           </h1>
           <p className="text-lg text-foreground/80 font-sans mb-2">
-            {getErrorMessage(code)}
+            {errorMessage}
           </p>
           <p className="text-sm text-muted font-sans">
-            Error code: {code}
+            Error code: {errorCode}
           </p>
         </motion.div>
 
@@ -116,12 +120,13 @@ function AuthErrorContent() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.6 }}
         >
-          <Link href={recovery.href}>
+          <Link href={action.href}>
             <Button
               className="w-full bg-foreground hover:bg-foreground/90 text-background"
+              disabled={action.disabled}
             >
-              <RefreshCw className="w-4 h-4 mr-2" />
-              {recovery.text}
+              <action.icon className="w-4 h-4 mr-2" />
+              {action.text}
             </Button>
           </Link>
 

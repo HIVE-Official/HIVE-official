@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db, auth as firebaseAdmin } from "@/lib/firebase-admin";
-import { sendSignInLinkToEmail, signInWithEmailLink } from "firebase/auth";
+import { sendSignInLinkToEmail, signInWithEmailLink as _signInWithEmailLink } from "firebase/auth";
 import { auth } from "@hive/core";
 import { logger } from "@hive/core";
 import { findAvailableHandle } from "@hive/core";
@@ -29,8 +29,8 @@ export async function POST(request: NextRequest) {
         let user;
         try {
           user = await firebaseAdmin.getUserByEmail(email);
-        } catch (error: any) {
-          if (error.code === "auth/user-not-found") {
+        } catch (error: unknown) {
+          if (error && typeof error === 'object' && 'code' in error && error.code === "auth/user-not-found") {
             // Create new user in development
             const displayName = email.split("@")[0];
             const handle = await findAvailableHandle(
@@ -121,10 +121,10 @@ export async function POST(request: NextRequest) {
         ok: true,
         message: "Verification email sent",
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       logger.error("Magic link verification error:", error);
 
-      if (error.code === "auth/invalid-email") {
+      if (error && typeof error === 'object' && 'code' in error && error.code === "auth/invalid-email") {
         return NextResponse.json(
           { error: "Invalid email address", ok: false },
           { status: 400 }
@@ -143,4 +143,4 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
-}
+} 

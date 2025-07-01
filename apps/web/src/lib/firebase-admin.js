@@ -71,7 +71,7 @@ catch (error) {
                 console.log(`🔄 Mock Firebase call: collection(${path}).get() - returning development data`);
                 throw new Error(`Firebase Admin not configured for ${currentEnvironment}. Add credentials to environment variables.`);
             },
-            add: async (data) => {
+            add: async (_data) => {
                 console.log(`🔄 Mock Firebase call: collection(${path}).add() - development mode`);
                 throw new Error(`Firebase Admin not configured for ${currentEnvironment}.`);
             },
@@ -80,7 +80,7 @@ catch (error) {
                     console.log(`🔄 Mock Firebase call: collection(${path}).doc(${id}).get() - development mode`);
                     throw new Error(`Firebase Admin not configured for ${currentEnvironment}.`);
                 },
-                set: async (data) => {
+                set: async (_data) => {
                     console.log(`🔄 Mock Firebase call: collection(${path}).doc(${id}).set() - development mode`);
                     throw new Error(`Firebase Admin not configured for ${currentEnvironment}.`);
                 },
@@ -88,7 +88,7 @@ catch (error) {
         }),
     };
     authAdmin = {
-        verifyIdToken: async (token) => {
+        verifyIdToken: async (_token) => {
             console.log(`🔄 Mock Firebase call: verifyIdToken() - development mode`);
             throw new Error(`Firebase Auth not configured for ${currentEnvironment}.`);
         },

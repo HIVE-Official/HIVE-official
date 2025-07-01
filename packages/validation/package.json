@@ -5,16 +5,30 @@
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
   "scripts": {
-    "build": "npx tsc",
-    "lint": "eslint ."
+    "prebuild": "pnpm run clean",
+    "build": "tsc --emitDeclarationOnly && tsup src/index.ts --format cjs,esm --sourcemap",
+    "clean": "rm -rf dist",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "dev": "concurrently \"tsc --emitDeclarationOnly --watch\" \"tsup src/index.ts --format cjs,esm --sourcemap --watch\""
   },
   "dependencies": {
     "@hive/core": "workspace:*",
-    "zod": "^3.25.67"
+    "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@types/node": "^24.0.4",
+    "@hive/typescript-config": "workspace:*",
+    "@types/node": "^20.12.1",
+    "concurrently": "^8.0.0",
+    "tsup": "^8.5.0",
     "typescript": "^5.8.3"
   }
 }

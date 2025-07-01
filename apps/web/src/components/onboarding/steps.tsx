@@ -27,6 +27,7 @@ import { debounce } from "lodash";
 import { AuthUser } from "@hive/auth-logic";
 import { logger } from "@hive/core";
 import type { OnboardingState, AcademicLevel } from "@hive/core";
+import Image from "next/image";
 
 // A utility to generate a handle from a name
 const generateHandle = (name: string) => {
@@ -179,10 +180,12 @@ export const DisplayNameAvatarStep: React.FC<StepProps> = ({
               <div className="flex items-center gap-4">
                 {previewUrl ? (
                   <div className="relative w-20 h-20 rounded-full overflow-hidden">
-                    <img
+                    <Image
                       src={previewUrl}
                       alt="Avatar preview"
-                      className="w-full h-full object-cover"
+                      width={80}
+                      height={80}
+                      className="object-cover"
                     />
                   </div>
                 ) : (
@@ -328,23 +331,27 @@ export const ClaimSpaceStep: React.FC<StepProps> = ({
     }
   }, [data?.isLeader, onNext]);
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     if (!spaceName || !spaceDescription) return;
     
     setIsLoading(true);
-    try {
-      // Space creation API integration pending
-      logger.info("Creating space:", { spaceName, spaceDescription });
-      
-      onNext(undefined, {
-        spaceName,
-        spaceDescription,
-        spaceCreated: true,
-      });
-    } catch (error) {
-      logger.error("Failed to create space", error);
-      setIsLoading(false);
-    }
+    
+    // Execute async logic but don't return promise to match expected signature
+    void (async () => {
+      try {
+        // Space creation API integration pending
+        logger.info("Creating space:", { spaceName, spaceDescription });
+        
+        onNext(undefined, {
+          spaceName,
+          spaceDescription,
+          spaceCreated: true,
+        });
+      } catch (error) {
+        logger.error("Failed to create space", error);
+        setIsLoading(false);
+      }
+    })();
   };
 
   return (
@@ -353,7 +360,7 @@ export const ClaimSpaceStep: React.FC<StepProps> = ({
       spaceDescription={spaceDescription}
       onSpaceNameChange={(value: string) => setSpaceName(value)}
       onSpaceDescriptionChange={(value: string) => setSpaceDescription(value)}
-      onSubmit={handleSubmit as any}
+      onSubmit={handleSubmit}
       isLoading={isLoading}
       onBack={onPrev}
     />

@@ -1,33 +1,36 @@
 {
   "extends": "../config/typescript/base.json",
   "compilerOptions": {
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "forceConsistentCasingInFileNames": true,
-    "noEmit": false,
-    "esModuleInterop": true,
-    "module": "esnext",
+    "target": "ES2020",
+    "module": "ESNext",
     "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "preserve",
     "declaration": true,
     "declarationMap": true,
-    "composite": true,
     "sourceMap": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": true,
+    "esModuleInterop": true,
     "skipLibCheck": true,
-    "tsBuildInfoFile": "./dist/.tsbuildinfo"
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
+    "paths": {
+      "@hive/*": ["../*/src"]
+    }
   },
   "include": [
-    "./src/**/*.ts",
-    "./src/**/*.tsx"
+    "src/**/*.ts",
+    "src/**/*.tsx"
   ],
   "exclude": [
     "node_modules",
+    "**/node_modules",
     "dist",
+    "**/dist",
     "**/*.test.*",
     "**/*.spec.*",
-    "**/*.stories.*"
-  ],
-  "references": []
+    "**/*.stories.*",
+    "**/test",
+    "**/tests"
+  ]
 }

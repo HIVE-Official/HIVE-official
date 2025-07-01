@@ -19,6 +19,7 @@ import "react-image-crop/dist/ReactCrop.css";
 import { functions } from "@/lib/firebase-client";
 import { httpsCallable } from "firebase/functions";
 import { env } from "@hive/core";
+import Image from "next/image";
 
 interface DisplayNameAvatarProps {
   onNext: (data: {
@@ -237,10 +238,12 @@ export function DisplayNameAvatar({
             <div className="relative">
               {avatarUrl || selectedFile ? (
                 <div className="relative">
-                  <img
+                  <Image
                     src={avatarUrl || (selectedFile ? URL.createObjectURL(selectedFile) : "")}
                     alt="Profile"
-                    className="w-20 h-20 rounded-full object-cover border-2 border-border"
+                    width={80}
+                    height={80}
+                    className="rounded-full object-cover border-2 border-border"
                   />
                   <button
                     type="button"
@@ -379,7 +382,13 @@ export function DisplayNameAvatar({
                 onChange={(c) => setCrop(c)}
                 className="mb-4"
               >
-                <img src={imgSrc} alt="Crop preview" className="max-w-full" />
+                <Image
+                  src={imgSrc}
+                  alt="Crop preview"
+                  width={400}
+                  height={400}
+                  className="max-w-full"
+                />
               </ReactCrop>
               
               <div className="flex space-x-2">

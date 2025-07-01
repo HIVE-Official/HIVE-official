@@ -19,6 +19,16 @@ const nextConfig = {
     // We manage our own TypeScript configuration in our monorepo
     ignoreBuildErrors: true,
   },
+  // Domain and redirect configuration
+  async redirects() {
+    return [
+      {
+        source: '/',
+        destination: '/welcome',
+        permanent: false, // Use 307 temporary redirect
+      },
+    ];
+  },
   // Development server configuration for subdomain support
   ...(process.env.NODE_ENV === 'development' && {
     async rewrites() {

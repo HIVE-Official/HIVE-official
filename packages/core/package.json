@@ -17,17 +17,18 @@
   ],
   "scripts": {
     "prebuild": "pnpm run clean",
-    "build": "tsup src/index.ts --format cjs,esm --dts --sourcemap",
+    "build": "tsup",
     "lint": "eslint .",
-    "typecheck": "npx tsc --noEmit",
-    "dev": "npx tsc --build --watch",
+    "typecheck": "tsc --noEmit",
+    "dev": "tsup --watch",
     "clean": "rm -rf dist",
     "test": "vitest"
   },
   "devDependencies": {
     "@hive/eslint-config": "workspace:*",
     "@hive/typescript-config": "workspace:*",
-    "@types/node": "^24.0.4",
+    "@types/node": "^20.12.1",
+    "concurrently": "^8.0.0",
     "cross-env": "^7.0.3",
     "eslint": "^9.29.0",
     "tsup": "^8.5.0",
@@ -37,10 +38,10 @@
   "dependencies": {
     "@upstash/ratelimit": "^2.0.5",
     "@upstash/redis": "^1.35.0",
-    "firebase": "^11.9.1",
-    "firebase-admin": "^13.4.0",
-    "zod": "^3.25.67",
-    "zustand": "^5.0.5"
+    "firebase": "^11.0.0",
+    "firebase-admin": "^11.0.0",
+    "zod": "^3.22.4",
+    "zustand": "^4.5.2"
   },
   "keywords": [],
   "author": ""
