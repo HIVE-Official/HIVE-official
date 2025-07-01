@@ -101,7 +101,7 @@ class ErrorTracker {
   captureReactError(error: Error, errorInfo: React.ErrorInfo) {
     return this.captureError(error, {
       type: 'react_error_boundary',
-      componentStack: errorInfo.componentStack,
+      componentStack: errorInfo.componentStack ?? undefined,
       timestamp: new Date().toISOString(),
       location: typeof window !== 'undefined' ? window.location.href : 'server',
     });
@@ -152,7 +152,7 @@ export async function reportError(
     // Build the error report
     const errorReport = {
       // Don't generate UUID on client - let server handle sessionId if needed
-      sessionId: sessionStorage.getItem('hive_session_id'),
+      sessionId: sessionStorage.getItem('hive_session_id') ?? undefined,
       // userId will be undefined for non-authenticated users
       userId: window.__HIVE_USER_ID,
       ...errorData, // Include raw error data
