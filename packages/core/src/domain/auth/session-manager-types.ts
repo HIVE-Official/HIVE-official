@@ -1,5 +1,4 @@
-import type { SessionUser } from "./user-types";
-import { createDefaultUserPreferences } from "./user-types";
+import { createDefaultUserPreferences, type SessionUser } from "./user-types";
 import type { AuthenticationState, UserPermissions } from "./authentication-types";
 import type { SessionContext, SessionMetadata } from "./session-context-types";
 

@@ -2,19 +2,59 @@ import { initializeApp, getApps, type FirebaseApp } from "firebase/app";
 import { getAuth, type Auth, type User, type UserCredential, type IdTokenResult } from "firebase/auth";
 import { logger } from "@hive/core";
 
-// Development mode is when we're running locally without Firebase config
-const isDevelopment = process.env.NODE_ENV === 'development';
-
-// These are the production values - they will be overridden by .env.local in production
-const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "demo-api-key",
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "hive-9265c.firebaseapp.com",
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "hive-9265c",
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || "hive-9265c.appspot.com",
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || "573191826528",
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "1:573191826528:web:1d5eaeb8531276e4c1a705",
-  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID || "G-NK3E12MSFD"
+// Check if we're in development mode without proper Firebase config
+const isDevelopmentWithoutFirebase = () => {
+  return process.env.NODE_ENV === 'development' && 
+         (!process.env.NEXT_PUBLIC_FIREBASE_API_KEY || 
+          process.env.NEXT_PUBLIC_FIREBASE_API_KEY === 'demo-api-key');
 };
+
+// Get Firebase configuration from environment variables
+function getFirebaseConfig() {
+  // Check if all required Firebase config is available
+  const requiredVars = [
+    'NEXT_PUBLIC_FIREBASE_API_KEY',
+    'NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN', 
+    'NEXT_PUBLIC_FIREBASE_PROJECT_ID',
+    'NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET',
+    'NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID',
+    'NEXT_PUBLIC_FIREBASE_APP_ID'
+  ];
+
+  const missingVars = requiredVars.filter(varName => !process.env[varName]);
+  
+  if (missingVars.length > 0 && !isDevelopmentWithoutFirebase()) {
+    throw new Error(
+      `🚨 Firebase configuration error: Missing environment variables: ${missingVars.join(', ')}\n` +
+      `Please check your .env.local file or Vercel environment variables.\n` +
+      `See ENV_TEMPLATE.md for complete setup instructions.`
+    );
+  }
+
+  // Return demo config for development without Firebase
+  if (isDevelopmentWithoutFirebase()) {
+    return {
+      apiKey: "demo-api-key",
+      authDomain: "demo-project.firebaseapp.com",
+      projectId: "demo-project",
+      storageBucket: "demo-project.appspot.com",
+      messagingSenderId: "123456789",
+      appId: "1:123456789:web:abcdef123456",
+      measurementId: "G-DEMO"
+    };
+  }
+
+  // Return real config from environment variables
+  return {
+    apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY!,
+    authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN!,
+    projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID!,
+    storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET!,
+    messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID!,
+    appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID!,
+    measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
+  };
+}
 
 let app: FirebaseApp | null = null;
 let auth: Auth | null = null;
@@ -29,8 +69,8 @@ interface MockUser extends Partial<User> {
   getIdToken(): Promise<string>;
 }
 
-// In development, we'll use a mock auth object
-if (isDevelopment) {
+// Initialize Firebase or create mock auth for development
+if (isDevelopmentWithoutFirebase()) {
   logger.info("🔥 Running in development mode with mock auth");
   
   // Create a complete mock auth object with all necessary methods
@@ -77,12 +117,19 @@ if (isDevelopment) {
     updateProfile: () => Promise.reject(new Error("Mock auth - not implemented")),
     app: null,
     name: "mock-auth",
-    config: firebaseConfig,
+    config: getFirebaseConfig(),
   } as unknown as Auth;
 } else {
   // Production mode - use real Firebase
-  app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
-  auth = getAuth(app);
+  try {
+    const firebaseConfig = getFirebaseConfig();
+    app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+    auth = getAuth(app);
+    logger.info(`🚀 Firebase initialized successfully for project: ${firebaseConfig.projectId}`);
+  } catch (error) {
+    logger.error("❌ Failed to initialize Firebase:", error);
+    throw error;
+  }
 }
 
 export { auth };

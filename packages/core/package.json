@@ -20,7 +20,7 @@
     "build": "npx tsup && tsc --emitDeclarationOnly --declaration --declarationMap --outDir dist",
     "lint": "cross-env BROWSERSLIST_IGNORE_OLD_DATA=1 NO_UPDATE_NOTIFIER=1 eslint .",
     "typecheck": "tsc --noEmit",
-    "dev": "tsup --watch",
+    "dev": "concurrently \"tsup --watch\" \"tsc --emitDeclarationOnly --declaration --declarationMap --outDir dist --watch\"",
     "clean": "rm -rf dist",
     "test": "vitest"
   },

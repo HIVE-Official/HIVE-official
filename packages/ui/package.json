@@ -9,7 +9,7 @@
     "dist"
   ],
   "scripts": {
-    "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
+    "dev": "tsup --watch",
     "build": "echo 'Skipping UI build for deployment' && mkdir -p dist && echo 'export {}'>dist/index.js && echo 'export {}'>dist/index.mjs && echo 'export {}'>dist/index.d.ts",
     "lint": "cross-env BROWSERSLIST_IGNORE_OLD_DATA=1 BROWSERSLIST_UPDATE_DB=0 NO_UPDATE_NOTIFIER=1 eslint .",
     "typecheck": "npx tsc --noEmit",
