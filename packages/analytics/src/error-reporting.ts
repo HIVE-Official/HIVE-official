@@ -68,14 +68,19 @@ class ErrorTracker {
       // 2. Validate metadata
       const validMetadata = ErrorMetadataSchema.parse(metadata);
 
-      // 3. Prepare error payload
+      // 3. Prepare error payload (matching API schema)
       const errorPayload = {
         name: error.name,
         message: error.message,
         stack: error.stack,
-        ...validMetadata,
-        userAgent: typeof window !== 'undefined' ? window.navigator.userAgent : 'server',
-        platform: typeof window !== 'undefined' ? window.navigator.platform : 'server',
+        metadata: {
+          ...validMetadata,
+          extra: {
+            ...validMetadata.extra,
+            userAgent: typeof window !== 'undefined' ? window.navigator.userAgent : 'server',
+            platform: typeof window !== 'undefined' ? window.navigator.platform : 'server',
+          }
+        }
       };
 
       // 4. Send to error endpoint
@@ -149,20 +154,23 @@ export async function reportError(
       type: error instanceof Error ? error.constructor.name : 'string',
     };
 
-    // Build the error report
+    // Build the error report (matching API schema)
     const errorReport = {
-      // Don't generate UUID on client - let server handle sessionId if needed
-      sessionId: sessionStorage.getItem('hive_session_id') ?? undefined,
-      // userId will be undefined for non-authenticated users
-      userId: window.__HIVE_USER_ID,
-      ...errorData, // Include raw error data
-      error: errorData, // Also include as error object for flexibility
-      context: {
-        url: window.location.href,
-        userAgent: navigator.userAgent,
-        timestamp: Date.now(),
-        ...context,
-      },
+      name: errorData.type,
+      message: errorData.message,
+      stack: errorData.stack,
+      metadata: {
+        type: 'unknown' as const,
+        timestamp: new Date().toISOString(),
+        userId: window.__HIVE_USER_ID,
+        sessionId: sessionStorage.getItem('hive_session_id') ?? undefined,
+        location: window.location.href,
+        extra: {
+          userAgent: navigator.userAgent,
+          timestamp: Date.now(),
+          ...context,
+        }
+      }
     };
 
     const response = await fetch('/api/analytics/error', {
