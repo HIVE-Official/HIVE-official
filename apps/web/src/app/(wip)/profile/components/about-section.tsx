@@ -26,11 +26,9 @@ export const AboutSection = ({ user: _user }: AboutSectionProps) => {
         <div className="space-y-2 mt-4">
           <div className="text-sm text-zinc-400 font-medium">Interests</div>
           <div className="flex flex-wrap gap-2">
-            <>
-              <div className="h-6 bg-zinc-700 rounded w-20"></div>
+            <div className="h-6 bg-zinc-700 rounded w-20"></div>
               <div className="h-6 bg-zinc-700 rounded w-24"></div>
               <div className="h-6 bg-zinc-700 rounded w-16"></div>
-            </>
           </div>
         </div>
       </div>

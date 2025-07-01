@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { logger, validateEmailDomain } from '@hive/core'
+import { createCustomToken } from '@/lib/firebase-admin'
+import { signInWithCustomToken } from 'firebase/auth'
+import { auth } from '@/lib/firebase'
+import { User, logger, sendMagicLinkEmail, validateEmailDomain } from "@hive/core"
 import { db } from '../../../../../lib/firebase-admin'
 import { sendSignInLinkToEmail } from 'firebase/auth'
-import { auth } from '@hive/core'
 
 // Check if we're in build time
 const isBuildTime = process.env.NEXT_PHASE === 'phase-production-build'

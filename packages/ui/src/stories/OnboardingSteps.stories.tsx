@@ -206,6 +206,7 @@ export const CompleteFlow: Story = {
         <div className="space-y-4">
           <h2 className="text-lg font-semibold text-foreground mb-4">Interest Selection</h2>
           <InterestsStep 
+            initialInterests={["Software Development", "UI/UX Design"]}
             onSubmit={async () => {}} 
             onSkip={() => {}}
           />

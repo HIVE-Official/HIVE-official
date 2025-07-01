@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { logger } from '@hive/core';
 import { ErrorMetadataSchema } from '@hive/analytics';
 import { rateLimit } from '@/lib/rate-limit';
+import { RateLimiter } from "limiter";
 
 // Define error metadata schema directly here
 const ErrorMetadataSchema = z.object({
@@ -116,16 +117,53 @@ function shouldIgnoreError(error: any, userAgent: string | null): boolean {
   return false;
 }
 
+// Rate limit: 100 error reports per 15 minutes per IP
+const errorReportLimiter = new Map<string, RateLimiter>();
+
+function getIPAddress(request: NextRequest): string {
+  const forwarded = request.headers.get("x-forwarded-for");
+  const realIP = request.headers.get("x-real-ip");
+  
+  if (forwarded) {
+    return forwarded.split(",")[0].trim();
+  }
+  
+  if (realIP) {
+    return realIP;
+  }
+  
+  // Fallback to connection remote address (won't work in Vercel)
+  return "unknown";
+}
+
+function getRateLimiter(ip: string): RateLimiter {
+  if (!errorReportLimiter.has(ip)) {
+    // 100 tokens, refill 1 every 9 seconds (100 per 15 minutes)
+    errorReportLimiter.set(ip, new RateLimiter({ tokensPerInterval: 100, interval: 15 * 60 * 1000 }));
+  }
+  return errorReportLimiter.get(ip)!;
+}
+
+const _errorRateLimit = 100; // Keep for future use
+
+// Clean up old rate limiters every hour
+setInterval(() => {
+  errorReportLimiter.clear();
+}, 60 * 60 * 1000);
+
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
-    // 1. Rate limiting by IP
-    const ip = request.headers.get('x-forwarded-for') || 
-               request.headers.get('x-real-ip') || 
-               'unknown';
+    const ip = getIPAddress(request);
+    const limiter = getRateLimiter(ip);
     
-    if (!checkRateLimit(ip)) {
+    // Check rate limit
+    const allowed = await limiter.tryRemoveTokens(1);
+    if (!allowed) {
       return NextResponse.json(
-        { error: 'Rate limit exceeded' },
+        { 
+          error: "Rate limit exceeded",
+          retryAfter: 900 // 15 minutes
+        },
         { status: 429 }
       );
     }

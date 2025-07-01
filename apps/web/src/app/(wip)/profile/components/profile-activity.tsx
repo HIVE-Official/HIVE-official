@@ -8,8 +8,7 @@ import {
   MessageSquare,
   TrendingUp,
 } from "lucide-react";
-import type { User } from "@hive/core";
-import { logger } from "@hive/core";
+import { type User, logger } from "@hive/core";
 
 interface ProfileActivityProps {
   user: User;

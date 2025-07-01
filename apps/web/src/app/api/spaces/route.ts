@@ -27,7 +27,7 @@ export async function GET(request: Request) {
       if (searchTerm) {
         query = query
           .where("name_lowercase", ">=", searchTerm)
-          .where("name_lowercase", "<=", searchTerm + "\uf8ff");
+          .where("name_lowercase", "<=", `${searchTerm  }\uf8ff`);
       }
 
       const snapshot = await query.orderBy("name_lowercase").limit(50).get();

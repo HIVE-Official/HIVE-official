@@ -21,7 +21,7 @@ console.log(
 console.log(
   "FIREBASE_PRIVATE_KEY:",
   process.env.FIREBASE_PRIVATE_KEY
-    ? "✅ Present (length: " + process.env.FIREBASE_PRIVATE_KEY.length + ")"
+    ? `✅ Present (length: ${  process.env.FIREBASE_PRIVATE_KEY.length  })`
     : "❌ Missing"
 );
 

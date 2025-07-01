@@ -1,9 +1,8 @@
 import React from "react";
 import { notFound } from "next/navigation";
-import type { School } from "@hive/core";
+import { type School, logger } from "@hive/core";
 import { WaitlistProgress } from "./components/waitlist-progress";
 import { WaitlistForm } from "./components/waitlist-form";
-import { logger } from "@hive/core";
 
 type WaitlistPageProps = {
   params: Promise<{

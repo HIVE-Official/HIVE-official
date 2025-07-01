@@ -7,7 +7,7 @@ import React, {
   useContext,
 } from "react";
 import type { ReactNode } from "react";
-import { auth } from "../firebase-config";
+import { auth as firebaseAuth } from "../firebase-config";
 import { onAuthStateChanged, signInWithCustomToken as firebaseSignInWithCustomToken } from "firebase/auth";
 import type { AuthUser, AuthContextType, DevModeConfig } from "../types";
 import { logger } from "@hive/core";
@@ -44,8 +44,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [devMode, setDevMode] = useState<DevModeConfig>(defaultDevConfig);
 
   const signInWithCustomToken = async (token: string) => {
-    if (!auth) throw new Error("Firebase auth not initialized");
-    await firebaseSignInWithCustomToken(auth, token);
+    if (!firebaseAuth) throw new Error("Firebase auth not initialized");
+    await firebaseSignInWithCustomToken(firebaseAuth, token);
   };
 
   // Dev mode controls
@@ -99,12 +99,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     // Production auth handling
-    if (!auth) {
+    if (!firebaseAuth) {
       setIsLoading(false);
       return;
     }
 
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+    const unsubscribe = onAuthStateChanged(firebaseAuth, async (firebaseUser) => {
       if (firebaseUser) {
         const idTokenResult = await firebaseUser.getIdTokenResult();
         const onboardingCompleted = !!idTokenResult.claims.onboardingCompleted;

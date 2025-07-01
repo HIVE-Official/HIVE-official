@@ -470,8 +470,8 @@ export class PostCreationEngine {
       return {
         success: false,
         errors: [
-          "Failed to create post: " +
-            (error instanceof Error ? error.message : "Unknown error"),
+          `Failed to create post: ${ 
+            error instanceof Error ? error.message : "Unknown error"}`,
         ],
       };
     }
@@ -522,8 +522,8 @@ export class PostCreationEngine {
       return {
         success: false,
         errors: [
-          "Failed to update post: " +
-            (error instanceof Error ? error.message : "Unknown error"),
+          `Failed to update post: ${ 
+            error instanceof Error ? error.message : "Unknown error"}`,
         ],
       };
     }
@@ -545,8 +545,8 @@ export class PostCreationEngine {
       return {
         success: false,
         errors: [
-          "Failed to delete post: " +
-            (error instanceof Error ? error.message : "Unknown error"),
+          `Failed to delete post: ${ 
+            error instanceof Error ? error.message : "Unknown error"}`,
         ],
       };
     }
