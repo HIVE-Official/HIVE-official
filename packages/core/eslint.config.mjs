@@ -37,6 +37,8 @@ export default [
       "*.config.*",
       "**/*.d.ts",
       "**/*.js",
+      "**/*.test.*",
+      "**/*.spec.*",
     ],
   },
 ];

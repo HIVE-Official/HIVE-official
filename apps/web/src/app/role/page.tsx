@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { Button } from "@hive/ui";
-import { ArrowLeft, GraduationCap, Building2, Users } from "lucide-react";
+import { ArrowLeft, ArrowRight, GraduationCap, Building2, Users } from "lucide-react";
 import { useState } from "react";
 import { HiveLogo } from "@/components/brand/hive-logo";
 import { OrgAccessModal } from "@/components/modals/org-access-modal";
