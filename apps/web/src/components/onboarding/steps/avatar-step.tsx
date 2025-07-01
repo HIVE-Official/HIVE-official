@@ -2,8 +2,7 @@
 
 import React, { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@hive/ui';
-import { Button } from '@hive/ui';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, Button } from '@hive/ui';
 import { useOnboardingStore } from '@/lib/stores/onboarding';
 import { Camera, Upload, X, Loader2 } from 'lucide-react';
 import { logger } from '@hive/core';

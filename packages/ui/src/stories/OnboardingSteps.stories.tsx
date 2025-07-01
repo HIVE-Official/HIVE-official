@@ -73,10 +73,10 @@ export const InterestSelection: Story = {
   ),
   args: {
     onSubmit: async (data: Record<string, unknown> | null) => {
-      console.log('Interests submitted:', data);
+      console.warn('Interests submitted:', data);
       await new Promise(resolve => setTimeout(resolve, 1000));
     },
-    onSkip: () => console.log('Interests skipped'),
+    onSkip: () => console.warn('Interests skipped'),
     initialInterests: [],
   },
   parameters: {
@@ -107,10 +107,10 @@ export const AcademicInformation: Story = {
   ),
   args: {
     onSubmit: async (data: Record<string, unknown> | null) => {
-      console.log('Academic info submitted:', data);
+      console.warn('Academic info submitted:', data);
       await new Promise(resolve => setTimeout(resolve, 1000));
     },
-    onSkip: () => console.log('Academic info skipped'),
+    onSkip: () => console.warn('Academic info skipped'),
   },
   parameters: {
     docs: {
@@ -140,10 +140,10 @@ export const AvatarUpload: Story = {
   ),
   args: {
     onSubmit: async (data: Record<string, unknown> | null) => {
-      console.log('Avatar uploaded:', data);
+      console.warn('Avatar uploaded:', data);
       await new Promise(resolve => setTimeout(resolve, 1000));
     },
-    onSkip: () => console.log('Avatar upload skipped'),
+    onSkip: () => console.warn('Avatar upload skipped'),
   },
   parameters: {
     docs: {
@@ -173,7 +173,7 @@ export const OnboardingComplete: Story = {
   ),
   args: {
     onSubmit: async () => {
-      console.log('Onboarding completed!');
+      console.warn('Onboarding completed!');
       await new Promise(resolve => setTimeout(resolve, 500));
     },
   },

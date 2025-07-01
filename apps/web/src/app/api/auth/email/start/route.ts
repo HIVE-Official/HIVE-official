@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createCustomToken } from '@/lib/firebase-admin'
-import { signInWithCustomToken } from 'firebase/auth'
 import { auth } from '@/lib/firebase'
-import { User, logger, sendMagicLinkEmail, validateEmailDomain } from "@hive/core"
+import { logger, validateEmailDomain } from "@hive/core"
 import { db } from '../../../../../lib/firebase-admin'
 import { sendSignInLinkToEmail } from 'firebase/auth'
 

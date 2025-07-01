@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 
 import { Button, Input, Label } from "@hive/ui";
 import { useOnboardingStore } from "@/lib/stores/onboarding";
-import type { OnboardingState } from "@hive/core";
+import { env, type OnboardingState } from "@hive/core";
 import { useHandleAvailability } from "@/hooks/use-handle-availability";
 import {
   XIcon,
@@ -18,7 +18,6 @@ import ReactCrop, { type Crop } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
 import { functions } from "@/lib/firebase-client";
 import { httpsCallable } from "firebase/functions";
-import { env } from "@hive/core";
 import Image from "next/image";
 
 interface DisplayNameAvatarProps {

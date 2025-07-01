@@ -1,7 +1,5 @@
 import { getFunctions, httpsCallable } from "firebase/functions";
-import { logger } from "@hive/core";
-import { PostSchema } from "@hive/core";
-import type { Post } from '@hive/core';
+import { logger, PostSchema, type Post } from "@hive/core";
 // Unused imports removed - will be used when feed API is implemented
 // import {
 //   FeedPost,

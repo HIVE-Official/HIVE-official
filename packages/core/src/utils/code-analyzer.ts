@@ -11,12 +11,6 @@ interface ComplexityMetrics {
   potentialIssues: string[];
 }
 
-interface FunctionMetrics extends ComplexityMetrics {
-  name?: string;
-  async?: boolean;
-  returnType?: string;
-}
-
 interface ComponentMetrics extends ComplexityMetrics {
   name?: string;
   propsCount?: number;
@@ -274,16 +268,16 @@ export class CodeAnalyzer {
     function traverse(node: TSESTree.Node) {
       visitor(node);
       for (const key in node) {
-        const child = (node as any)[key];
+        const child = (node as unknown as Record<string, unknown>)[key];
         if (child && typeof child === 'object') {
           if (Array.isArray(child)) {
             child.forEach(item => {
               if (item && typeof item === 'object') {
-                traverse(item);
+                traverse(item as TSESTree.Node);
               }
             });
           } else if ('type' in child) {
-            traverse(child);
+            traverse(child as TSESTree.Node);
           }
         }
       }

@@ -1,7 +1,6 @@
 import { dbAdmin } from "@/lib/firebase-admin";
-import type { School } from "@hive/core";
+import { logger, type School } from "@hive/core";
 import { NextResponse } from "next/server";
-import { logger } from "@hive/core";
 
 // Mock schools data for development when Firebase is not configured
 const mockSchools: School[] = [

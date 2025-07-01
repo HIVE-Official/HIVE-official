@@ -1,6 +1,5 @@
-import { test, expect } from '@playwright/test'
+import { test, expect, type Page } from '@playwright/test'
 import { setupTestUser, cleanupTestData } from './helpers/test-setup'
-import type { Page } from '@playwright/test'
 
 // Define analytics event types for testing
 interface OnboardingAnalyticsEvent {

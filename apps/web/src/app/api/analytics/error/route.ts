@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { logger } from '@hive/core';
+import { _logger } from '@hive/core';
 import { ErrorMetadataSchema } from '@hive/analytics';
 import { rateLimit } from '@/lib/rate-limit';
 import { RateLimiter } from "limiter";
@@ -34,7 +34,7 @@ const ErrorPayloadSchema = z.object({
 });
 
 // Rate limiter for error reporting
-const errorRateLimit = rateLimit({
+const _errorRateLimit = rateLimit({
   uniqueTokenPerInterval: 500, // Max unique errors per interval
   interval: 60 * 1000, // 1 minute
 });
@@ -44,7 +44,7 @@ const rateLimitStore = new Map<string, { count: number; resetTime: number }>();
 const RATE_LIMIT_WINDOW = 60 * 1000; // 1 minute
 const RATE_LIMIT_MAX = 100; // 100 requests per minute
 
-function checkRateLimit(ip: string): boolean {
+function _checkRateLimit(ip: string): boolean {
   const now = Date.now();
   const key = ip;
   const current = rateLimitStore.get(key);
@@ -86,8 +86,8 @@ const SCREENSHOT_IGNORABLE_ERRORS = [
   }
 ];
 
-function categorizeError(error: any): { type: string; description: string } | null {
-  const errorMessage = error?.message || error?.toString() || '';
+function categorizeError(_error: unknown): { type: string; description: string } | null {
+  const errorMessage = _error?.message || _error?.toString() || '';
   
   for (const pattern of SCREENSHOT_IGNORABLE_ERRORS) {
     if (pattern.pattern.test(errorMessage)) {
@@ -98,10 +98,10 @@ function categorizeError(error: any): { type: string; description: string } | nu
   return null;
 }
 
-function shouldIgnoreError(error: any, userAgent: string | null): boolean {
+function _shouldIgnoreError(_error: unknown, userAgent: string | null): boolean {
   // Only apply special handling for Vercel screenshot bot
   if (userAgent?.toLowerCase().includes('vercel-screenshot')) {
-    const errorCategory = categorizeError(error);
+    const errorCategory = categorizeError(_error);
     
     // If it's a known screenshot-related error, ignore it
     if (errorCategory) {
@@ -144,7 +144,7 @@ function getRateLimiter(ip: string): RateLimiter {
   return errorReportLimiter.get(ip)!;
 }
 
-const _errorRateLimit = 100; // Keep for future use
+const __errorRateLimit = 100; // Keep for future use
 
 // Clean up old rate limiters every hour
 setInterval(() => {
@@ -236,11 +236,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 }
 
 // Helper functions
-function isKnownBotError(error: z.infer<typeof ErrorPayloadSchema>, headers: Headers): boolean {
-  const userAgent = headers.get('user-agent') || '';
+function _isKnownBotError(_error: z.infer<typeof ErrorPayloadSchema>, _headers: Headers): boolean {
+  const userAgent = _headers.get('user-agent') || '';
   
   // Ignore Vercel bot errors
-  if (userAgent.includes('Vercel') && error.message.includes('Screenshot')) {
+  if (userAgent.includes('Vercel') && _error.message.includes('Screenshot')) {
     return true;
   }
 
@@ -248,7 +248,7 @@ function isKnownBotError(error: z.infer<typeof ErrorPayloadSchema>, headers: Hea
   return false;
 }
 
-function isCriticalError(error: z.infer<typeof ErrorPayloadSchema>): boolean {
+function _isCriticalError(_error: z.infer<typeof ErrorPayloadSchema>): boolean {
   // Define what constitutes a critical error
   const criticalPatterns = [
     'FATAL',
@@ -259,31 +259,31 @@ function isCriticalError(error: z.infer<typeof ErrorPayloadSchema>): boolean {
   ];
 
   return criticalPatterns.some(pattern => 
-    error.message.includes(pattern) || error.name.includes(pattern)
+    _error.message.includes(pattern) || _error.name.includes(pattern)
   );
 }
 
-async function storeError(error: z.infer<typeof ErrorPayloadSchema>) {
+async function _storeError(_error: z.infer<typeof ErrorPayloadSchema>) {
   // Implement error storage logic (e.g., Firebase, PostgreSQL)
   // This is where you'd store the error for later analysis
 }
 
-async function notifyErrorService(error: z.infer<typeof ErrorPayloadSchema>) {
+async function _notifyErrorService(_error: z.infer<typeof ErrorPayloadSchema>) {
   // Implement notification logic for critical errors
   // This could be sending to Slack, email, or other monitoring services
 }
 
-async function handleReactError(error: z.infer<typeof ErrorPayloadSchema>) {
+async function _handleReactError(_error: z.infer<typeof ErrorPayloadSchema>) {
   // Specific handling for React errors
   // e.g., tracking component error patterns
 }
 
-async function handleApiError(error: z.infer<typeof ErrorPayloadSchema>) {
+async function _handleApiError(_error: z.infer<typeof ErrorPayloadSchema>) {
   // Specific handling for API errors
-  // e.g., tracking endpoint reliability
+  // e.g., tracking API endpoint error patterns
 }
 
-async function handleValidationError(error: z.infer<typeof ErrorPayloadSchema>) {
+async function _handleValidationError(_error: z.infer<typeof ErrorPayloadSchema>) {
   // Specific handling for validation errors
-  // e.g., tracking common validation failures
+  // e.g., tracking validation pattern failures
 } 

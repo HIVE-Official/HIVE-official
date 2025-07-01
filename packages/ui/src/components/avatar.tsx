@@ -81,8 +81,8 @@ AvatarFallback.displayName = AvatarPrimitive.Fallback.displayName
 
 // Presence indicator component for social platform features
 const AvatarPresence = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & {
+  React.ElementRef<"div">,
+  React.ComponentPropsWithoutRef<"div"> & {
     status: "online" | "away" | "offline"
     size?: "sm" | "default" | "lg"
   }
@@ -160,8 +160,8 @@ AvatarWithPresence.displayName = "AvatarWithPresence"
 
 // Avatar group for showing multiple users
 const AvatarGroup = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & {
+  React.ElementRef<"div">,
+  React.ComponentPropsWithoutRef<"div"> & {
     max?: number
     size?: VariantProps<typeof avatarVariants>["size"]
   }
@@ -177,7 +177,7 @@ const AvatarGroup = React.forwardRef<
       {...props}
     >
       {visibleChildren.map((child, index) => (
-        <div key={index} className="relative">
+        <div key={`avatar-${index}-${React.isValidElement(child) ? (child.key || index) : index}`} className="relative">
           {React.isValidElement(child) 
             ? React.cloneElement(child as React.ReactElement<{className?: string; size?: VariantProps<typeof avatarVariants>["size"]}>, { 
                 size,

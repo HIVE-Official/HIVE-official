@@ -2,11 +2,9 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@hive/ui';
-import { Button } from '@hive/ui';
-import { Checkbox } from '@hive/ui';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, Button, Checkbox } from '@hive/ui';
 import { useOnboardingStore } from '@/lib/stores/onboarding';
-import { Shield, ExternalLink, Loader2 } from 'lucide-react';
+import { FileCheck, Loader2, ExternalLink } from 'lucide-react';
 import { logger } from '@hive/core';
 
 export function OnboardingLegalStep() {
@@ -43,7 +41,7 @@ export function OnboardingLegalStep() {
       <Card className="w-full max-w-lg bg-card border-border">
         <CardHeader className="text-center space-y-2">
           <div className="w-12 h-12 bg-accent/10 rounded-full flex items-center justify-center mx-auto">
-            <Shield className="w-6 h-6 text-accent" />
+            <FileCheck className="w-6 h-6 text-accent" />
           </div>
           <CardTitle className="text-xl font-display text-card-foreground">
             Terms & Privacy

@@ -1,5 +1,5 @@
 // Re-export firebase client from core package
-import { logger, db, type Post, type User, type Space } from "@hive/core";
+import { logger, db, auth, type Post, type User, type Space } from "@hive/core";
 
-export { logger, db };
+export { logger, db, auth };
 export type { Post, User, Space };

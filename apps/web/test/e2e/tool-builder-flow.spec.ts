@@ -1,5 +1,4 @@
-import type { Page } from "@playwright/test";
-import { test, expect } from "@playwright/test";
+import { test, expect, type Page } from "@playwright/test";
 import { setupTestUser, cleanupTestData } from './helpers/test-setup'
 import type { TestTool, TestElement, ConfigValue as _ConfigValue, Position, ElementConfig, ToolBuilderEvent } from './types/tool-builder';
 

@@ -18,9 +18,6 @@
     "jsx": "preserve",
     "allowJs": true,
     "incremental": true,
-    "composite": true,
-    "declaration": true,
-    "declarationMap": true,
     "noEmit": true
   },
   "include": [

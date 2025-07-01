@@ -29,7 +29,7 @@ const SchoolCreationDemo = () => {
   const [isOpen, setIsOpen] = useState(false)
 
   const handleSubmit = (data: { name: string; domain: string }) => {
-    console.log('Submitted:', data)
+    console.warn('Submitted:', data)
     setIsOpen(false)
   }
 
@@ -55,6 +55,6 @@ export const AlwaysOpen: Story = {
   args: {
     isOpen: true,
     onClose: () => {},
-    onSubmit: (data: { name: string; domain: string }) => console.log('Submitted:', data),
+    onSubmit: (data: { name: string; domain: string }) => console.warn('Submitted:', data),
   },
 } 

@@ -15,8 +15,7 @@ import {
 } from "@hive/ui";
 import { useOnboardingStore } from "@/lib/stores/onboarding";
 import { Heart, Search, Loader2 } from "lucide-react";
-import { logger } from "@hive/core";
-import { INTEREST_CATEGORIES } from "@hive/core";
+import { logger, INTEREST_CATEGORIES } from "@hive/core";
 
 export function OnboardingInterestsStep() {
   const router = useRouter();

@@ -1,13 +1,8 @@
-import type { FirebaseApp } from "firebase/app";
-import { initializeApp, getApps, getApp } from "firebase/app";
-import type { Auth } from "firebase/auth";
-import { getAuth } from "firebase/auth";
-import type { Firestore } from "firebase/firestore";
-import { getFirestore } from "firebase/firestore";
-import type { FirebaseStorage } from "firebase/storage";
-import { getStorage } from "firebase/storage";
-import type { Analytics } from "firebase/analytics";
-import { getAnalytics } from "firebase/analytics";
+import { initializeApp, getApps, getApp, type FirebaseApp } from "firebase/app";
+import { getAuth, type Auth } from "firebase/auth";
+import { getFirestore, type Firestore } from "firebase/firestore";
+import { getStorage, type FirebaseStorage } from "firebase/storage";
+import { getAnalytics, type Analytics } from "firebase/analytics";
 
 // Required Firebase configuration fields
 const requiredConfig = {

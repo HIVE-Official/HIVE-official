@@ -2,8 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@hive/ui';
-import { Button } from '@hive/ui';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, Button } from '@hive/ui';
 import { useAuth } from '@hive/auth-logic';
 import { useOnboardingStore } from '@/lib/stores/onboarding';
 import { CheckCircle, AlertCircle, Loader2, Sparkles } from 'lucide-react';

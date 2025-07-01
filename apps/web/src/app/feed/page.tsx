@@ -1,12 +1,11 @@
 'use client'
 
 import { RouteGuard } from '@/components/auth/route-guard'
-import { useAuth } from '@hive/auth-logic'
+import { useAuth, auth } from '@hive/auth-logic'
 import { Button } from '@hive/ui'
 import { motion } from 'framer-motion'
 import { LogOut, User, Settings } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { auth } from '@hive/auth-logic'
 import { signOut } from 'firebase/auth'
 import { logger } from '@hive/core'
 

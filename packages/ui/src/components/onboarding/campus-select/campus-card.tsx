@@ -1,5 +1,6 @@
-import { cn } from '@/lib/utils';
-import { Badge } from '@/components/badge';
+import React from 'react';
+import { Badge } from '../../badge';
+import { cn } from '../../../lib/utils';
 
 export interface CampusCardProps {
   id: string;

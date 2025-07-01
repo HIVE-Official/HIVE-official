@@ -27,7 +27,7 @@ const preview: Preview = {
     },
   },
   decorators: [
-    withProviders,
+    withProviders, // Global ToastProvider wrapper for all stories
     withThemeByDataAttribute({
       themes: {
         light: 'light',

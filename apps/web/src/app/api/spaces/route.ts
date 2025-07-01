@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import type * as admin from "firebase-admin";
-import type { Space, SpaceType } from "@hive/core";
+import { logger, type Space, type SpaceType } from "@hive/core";
 import { dbAdmin } from "@/lib/firebase-admin";
-import { logger } from "@hive/core";
 
 export async function GET(request: Request) {
   try {

@@ -1,5 +1,4 @@
-import type { NextRequest } from "next/server";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getAuth } from "firebase-admin/auth";
 import { dbAdmin } from "@/lib/firebase-admin";
 import type { Timestamp } from "firebase-admin/firestore";

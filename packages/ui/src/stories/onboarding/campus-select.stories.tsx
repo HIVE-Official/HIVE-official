@@ -1,4 +1,3 @@
-// @ts-nocheck
 import type { Meta, StoryObj } from '@storybook/react';
 import { CampusSelector } from '../../components/onboarding/campus-select/campus-selector';
 import { CampusCard } from '../../components/onboarding/campus-select/campus-card';
@@ -46,13 +45,19 @@ const mockCampuses = [
   },
 ];
 
+// Storybook action mock
+const mockAction = (value: unknown) => {
+  // Use console.warn which is allowed by ESLint
+  console.warn('Storybook action:', value);
+};
+
 // CampusSelector Stories
 export const FullSelector: StoryObj<typeof CampusSelector> = {
   render: () => (
     <div className="w-[600px] p-6">
       <CampusSelector
         campuses={mockCampuses}
-        onSelect={console.log}
+        onSelect={mockAction}
       />
     </div>
   ),
@@ -64,7 +69,7 @@ export const WithSelection: StoryObj<typeof CampusSelector> = {
       <CampusSelector
         campuses={mockCampuses}
         selectedCampusId="ub"
-        onSelect={console.log}
+        onSelect={mockAction}
       />
     </div>
   ),
@@ -76,7 +81,7 @@ export const SearchInputStory: StoryObj<typeof SearchInput> = {
     <div className="w-[400px]">
       <SearchInput
         value=""
-        onChange={console.log}
+        onChange={mockAction}
       />
     </div>
   ),

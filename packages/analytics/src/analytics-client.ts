@@ -178,7 +178,7 @@ class AnalyticsClient {
 
     // In development, just log to console
     if (this.config.environment === 'development') {
-      console.log('📊 Analytics Event:', event)
+      console.warn('📊 Analytics Event:', event)
       return
     }
 

@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/firebase-admin";
-import { findAvailableHandle, validateHandle } from "@hive/core";
+import { findAvailableHandle, validateHandle, logger } from "@hive/core";
 import { z } from "zod";
-import { logger } from "@hive/core";
 
 const generateHandleSchema = z.object({
   displayName: z.string().min(1),

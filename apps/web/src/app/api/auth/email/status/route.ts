@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
 
     // TODO: Implement actual verification status checking
     // For now, simulate the process (always return false for demo)
-    console.log(`Checking verification status for: ${email}`)
+    console.warn(`Checking verification status for: ${email}`)
 
     // Simulate some users being verified (for testing purposes)
     // In a real implementation, this would check the database

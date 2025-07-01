@@ -78,7 +78,7 @@ try {
         VERCEL_ENV: process.env.VERCEL_ENV || "",
         NEXT_PHASE: process.env.NEXT_PHASE || "",
       };
-      console.log(`🔧 Using fallback environment configuration for ${context}`);
+      console.warn(`🔧 Using fallback environment configuration for ${context}`);
     }
   } else {
     throw error;

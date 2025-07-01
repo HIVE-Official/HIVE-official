@@ -1,5 +1,4 @@
-import type { NextRequest } from "next/server";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import {
   doc,
@@ -10,8 +9,7 @@ import {
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { getAuth } from "firebase-admin/auth";
-import type { Space } from "@hive/core";
-import { logger } from "@hive/core";
+import { logger, type Space } from "@hive/core";
 
 const leaveSpaceSchema = z.object({
   spaceId: z.string().min(1, "Space ID is required"),

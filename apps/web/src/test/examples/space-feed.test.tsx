@@ -1,9 +1,9 @@
+import React from "react";
 import { describe, it, expect, beforeEach } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
 import { userEvent } from "@testing-library/user-event";
-import type { SpaceAnalyticsEvent } from "../types";
-import { getAnalyticsEvents, getFirstElement } from "../types";
+import { type SpaceAnalyticsEvent, getAnalyticsEvents, getFirstElement } from "../types";
 import { createTestUser, createTestSpace } from "../setup";
 
 // Mock SpaceFeed component since it's just an example

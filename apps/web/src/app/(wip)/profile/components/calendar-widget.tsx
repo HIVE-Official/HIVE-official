@@ -81,8 +81,8 @@ export const CalendarWidget = () => {
       <CardContent className="space-y-4">
         {/* Calendar Grid */}
         <div className="grid grid-cols-7 gap-1 text-center">
-          {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, index) => (
-            <div key={`weekday-${day}-${index}`} className="h-8 w-8 flex items-center justify-center text-xs font-medium text-muted-foreground">
+          {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day) => (
+            <div key={`weekday-${day}`} className="h-8 w-8 flex items-center justify-center text-xs font-medium text-muted-foreground">
               {day}
             </div>
           ))}

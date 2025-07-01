@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
 
     // In development, just log
     if (process.env.NODE_ENV === 'development') {
-      console.log('📊 Analytics Event Received:', enrichedEvent)
+      console.warn('📊 Analytics Event Received:', enrichedEvent)
       return NextResponse.json({ success: true })
     }
 

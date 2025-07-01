@@ -2,14 +2,11 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@hive/ui';
-import { Button } from '@hive/ui';
-import { Input } from '@hive/ui';
-import { Label } from '@hive/ui';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, Button, Input, Label } from '@hive/ui';
 import { useOnboardingStore } from '@/lib/stores/onboarding';
-import { useHandleAvailability } from '@/hooks/use-handle-availability';
 import { User, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 import { logger } from '@hive/core';
+import { useHandleAvailability } from '@/hooks/use-handle-availability';
 
 export function OnboardingNameStep() {
   const router = useRouter();

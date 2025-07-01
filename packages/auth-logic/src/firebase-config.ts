@@ -1,7 +1,5 @@
-import { initializeApp, getApps } from "firebase/app";
-import type { FirebaseApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import type { Auth, User, UserCredential, IdTokenResult } from "firebase/auth";
+import { initializeApp, getApps, type FirebaseApp } from "firebase/app";
+import { getAuth, type Auth, type User, type UserCredential, type IdTokenResult } from "firebase/auth";
 import { logger } from "@hive/core";
 
 // Development mode is when we're running locally without Firebase config

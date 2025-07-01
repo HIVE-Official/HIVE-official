@@ -196,9 +196,9 @@ export const SpaceSelectionStep: React.FC<SpaceSelectionStepProps> = ({
               </div>
               
               <div className="grid gap-3 max-h-64 overflow-y-auto">
-                {filteredSpaces.map((space, index) => (
+                {filteredSpaces.map((space) => (
                   <div
-                    key={index}
+                    key={space.name}
                     onClick={() => setSelectedSpace(space.name)}
                     className={`p-4 border rounded-lg cursor-pointer transition-all ${
                       selectedSpace === space.name

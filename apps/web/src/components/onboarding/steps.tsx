@@ -25,8 +25,7 @@ import {
 import { Loader2, Upload } from "lucide-react";
 import { debounce } from "lodash";
 import { AuthUser } from "@hive/auth-logic";
-import { logger } from "@hive/core";
-import type { OnboardingState, AcademicLevel } from "@hive/core";
+import { logger, type OnboardingState, type AcademicLevel } from "@hive/core";
 import Image from "next/image";
 
 // A utility to generate a handle from a name

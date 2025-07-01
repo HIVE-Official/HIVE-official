@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
+import React, { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { AuthFlow, type School } from '../../components/auth';
 import { 
@@ -10,7 +11,6 @@ import {
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { StorybookThemeProvider } from '../../components/ui/storybook-theme-provider';
 import { ToastProvider } from '../../components/toast-provider';
-import { useState } from 'react';
 import { action } from '@storybook/addon-actions';
 
 // Full Website Layout Wrapper - simulates complete Next.js app structure

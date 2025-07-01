@@ -5,11 +5,19 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { AuthFlow, type AuthFlowProps } from '../../components/auth/auth-flow';
 import { type School } from '../../components/auth/school-pick';
+import { ToastProvider } from '../../components/toast-provider';
 import { action } from '@storybook/addon-actions';
 
 const meta: Meta<typeof AuthFlow> = {
   title: 'Auth/AuthFlow',
   component: AuthFlow,
+  decorators: [
+    (Story) => (
+      <ToastProvider>
+        <Story />
+      </ToastProvider>
+    ),
+  ],
   parameters: {
     layout: 'fullscreen',
     docs: {
@@ -32,7 +40,7 @@ const mockSchools: School[] = [
 
 const mockOnEmailSubmit = async (email: string) => {
   action('email-submitted')({ email });
-  console.debug('Submitting email:', email);
+  console.warn('Submitting email:', email);
   await new Promise(resolve => setTimeout(resolve, 1500));
   
   const success = Math.random() > 0.3;
@@ -43,7 +51,7 @@ const mockOnEmailSubmit = async (email: string) => {
 
 const mockOnSchoolCreate = async (data: { name: string; domain: string }) => {
   action('school-created')(data);
-  console.log('Creating school:', data);
+  console.warn('Creating school:', data);
   await new Promise(resolve => setTimeout(resolve, 1000));
 };
 

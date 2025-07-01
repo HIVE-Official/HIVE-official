@@ -1,5 +1,4 @@
-import { logger } from "@hive/core";
-import type { FeedPost, CreatePostRequest } from "@hive/core";
+import { logger, type FeedPost, type CreatePostRequest } from "@hive/core";
 import { ApiError } from "../errors";
 
 export class FeedApiClient {

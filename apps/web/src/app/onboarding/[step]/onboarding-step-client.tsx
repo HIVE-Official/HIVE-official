@@ -3,8 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@hive/auth-logic";
-import { logger } from "@hive/core";
-import type { OnboardingState, AcademicLevel } from "@hive/core";
+import { logger, type OnboardingState, type AcademicLevel } from "@hive/core";
 import { Loader2 } from "lucide-react";
 import { useOnboardingStore } from "@/lib/stores/onboarding";
 import { DisplayNameAvatar as DisplayNameAvatarBase } from "@/components/onboarding/steps/display-name-avatar";
@@ -173,7 +172,7 @@ export function OnboardingStepClient({ step }: OnboardingStepClientProps) {
   const [isInitialized, setIsInitialized] = useState(false);
 
   // Debug logging
-  console.log("🐛 OnboardingStepClient Debug:", {
+  console.warn("🐛 OnboardingStepClient Debug:", {
     step,
     isDevMode,
     isAuthLoading,
@@ -218,7 +217,7 @@ export function OnboardingStepClient({ step }: OnboardingStepClientProps) {
 
   // Initialize onboarding data in dev mode
   useEffect(() => {
-    console.log("🔄 Initialization useEffect triggered:", {
+    console.warn("🔄 Initialization useEffect triggered:", {
       isDevMode,
       hasOnboardingData: !!onboardingData,
       isAuthLoading,
@@ -228,15 +227,15 @@ export function OnboardingStepClient({ step }: OnboardingStepClientProps) {
       // In dev mode, always initialize with mock data
       if (!onboardingData) {
         logger.info("🔥 Development mode: initializing with mock data");
-        console.log("📝 Setting initial dev data");
+        console.warn("📝 Setting initial dev data");
         update(initialDevData);
       }
-      console.log("✅ Setting isInitialized = true (dev mode)");
+      console.warn("✅ Setting isInitialized = true (dev mode)");
       setIsInitialized(true);
     } else {
       // In production mode, wait for auth to load
       if (!isAuthLoading) {
-        console.log("✅ Setting isInitialized = true (production mode)");
+        console.warn("✅ Setting isInitialized = true (production mode)");
         setIsInitialized(true);
       }
     }
@@ -255,7 +254,7 @@ export function OnboardingStepClient({ step }: OnboardingStepClientProps) {
     : isAuthLoading || !isInitialized;
 
   if (shouldShowLoading) {
-    console.log("🔄 Showing loading state:", {
+    console.warn("🔄 Showing loading state:", {
       reason: isDevMode
         ? "waiting for dev mode initialization"
         : isAuthLoading

@@ -2,7 +2,7 @@
 // @ts-nocheck
 // @ts-nocheck
 import React, { useState } from 'react'
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Dialog } from '../components/dialog'
 import { Button } from '../components/button'
 
@@ -153,7 +153,7 @@ export const WithLongContent: Story = {
       <div className="flex flex-col gap-4">
         <div className="max-h-[60vh] overflow-y-auto pr-2">
           {Array.from({ length: 10 }).map((_, i) => (
-            <div key={i} className="mb-4">
+            <div key={`terms-section-${i}`} className="mb-4">
               <h3 className="mb-2 text-lg font-semibold">Section {i + 1}</h3>
               <p className="text-muted">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do

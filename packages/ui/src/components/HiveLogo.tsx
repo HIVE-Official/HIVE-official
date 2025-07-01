@@ -47,6 +47,29 @@ const animationVariants: Variants = {
   },
 };
 
+interface LogoImageProps {
+  logoSrc: string;
+  size: keyof typeof sizeClasses;
+  variant: "white" | "black" | "gold";
+  className?: string;
+  props?: React.ImgHTMLAttributes<HTMLImageElement>;
+}
+
+const LogoImage = ({ logoSrc, size, variant, className, ...props }: LogoImageProps) => (
+  <img
+    src={logoSrc}
+    alt="HIVE Logo"
+    className={cn(
+      sizeClasses[size],
+      "object-contain",
+      variant === "gold" &&
+        "brightness-0 saturate-100 hue-rotate-45 contrast-150",
+      className
+    )}
+    {...props}
+  />
+);
+
 export function HiveLogo({
   className,
   variant = "white",
@@ -58,21 +81,6 @@ export function HiveLogo({
   const logoSrc =
     variant === "black" ? "/assets/blacklogo.svg" : "/assets/whitelogo.svg";
 
-  const LogoImage = () => (
-    <img
-      src={logoSrc}
-      alt="HIVE Logo"
-      className={cn(
-        sizeClasses[size],
-        "object-contain",
-        variant === "gold" &&
-          "brightness-0 saturate-100 hue-rotate-45 contrast-150",
-        className
-      )}
-      {...props}
-    />
-  );
-
   if (animationType !== "none") {
     return (
       <motion.div
@@ -80,7 +88,7 @@ export function HiveLogo({
         animate={animationType}
         variants={animationVariants}
       >
-        <LogoImage />
+        <LogoImage logoSrc={logoSrc} size={size} variant={variant} className={className} {...props} />
       </motion.div>
     );
   }
@@ -93,7 +101,7 @@ export function HiveLogo({
         className
       )}
     >
-      <LogoImage />
+      <LogoImage logoSrc={logoSrc} size={size} variant={variant} className={className} {...props} />
     </div>
   );
 }

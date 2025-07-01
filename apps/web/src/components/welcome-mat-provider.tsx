@@ -1,5 +1,5 @@
 "use client";
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useMemo, useCallback } from 'react';
 // import { useAuth } from "@hive/hooks";
 // import { WelcomeMat, useWelcomeMat } from "@hive/ui";
 
@@ -14,11 +14,17 @@ const WelcomeMatContext = createContext<WelcomeMatContextType | undefined>(undef
 export const WelcomeMatProvider = ({ children }: { children: React.ReactNode }) => {
   const [isVisible, setIsVisible] = useState(false);
 
-  const showWelcomeMat = () => setIsVisible(true);
-  const hideWelcomeMat = () => setIsVisible(false);
+  const showWelcomeMat = useCallback(() => setIsVisible(true), []);
+  const hideWelcomeMat = useCallback(() => setIsVisible(false), []);
+
+  const value = useMemo(() => ({
+    isVisible,
+    showWelcomeMat,
+    hideWelcomeMat
+  }), [isVisible, showWelcomeMat, hideWelcomeMat]);
 
   return (
-    <WelcomeMatContext.Provider value={{ isVisible, showWelcomeMat, hideWelcomeMat }}>
+    <WelcomeMatContext.Provider value={value}>
       {children}
     </WelcomeMatContext.Provider>
   );

@@ -1,10 +1,8 @@
-import type { NextRequest } from "next/server";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { getAuth } from "firebase-admin/auth";
 import { getFirestore, FieldValue } from "firebase-admin/firestore";
-import type { Space, MemberRole } from "@hive/core";
-import { logger } from "@hive/core";
+import { logger, type Space, type MemberRole } from "@hive/core";
 
 // Server-side member type that allows FieldValue for timestamps
 interface ServerMember {

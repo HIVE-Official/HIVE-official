@@ -2,17 +2,10 @@
 
 import React, { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@hive/ui';
-import { Button } from '@hive/ui';
-import { Input } from '@hive/ui';
-import { Label } from '@hive/ui';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@hive/ui';
-import { Badge } from '@hive/ui';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, Button, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Badge } from '@hive/ui';
 import { useOnboardingStore } from '@/lib/stores/onboarding';
-import { ALL_MAJORS } from '@hive/core';
+import { ALL_MAJORS, logger, type AcademicLevel, type MajorType } from '@hive/core';
 import { GraduationCap, X, Loader2, Search } from 'lucide-react';
-import { logger } from '@hive/core';
-import type { AcademicLevel, MajorType } from '@hive/core';
 
 // Generate graduation years (current year + 8 years)
 const GRADUATION_YEARS = Array.from({ length: 8 }, (_, i) => new Date().getFullYear() + i);

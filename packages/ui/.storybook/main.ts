@@ -1,7 +1,6 @@
 import type { StorybookConfig } from "@storybook/react-vite";
 import { mergeConfig } from "vite";
-import { dirname, join } from "path";
-import path from "path";
+import { dirname, join, resolve } from "path";
 
 /**
  * This function is used to resolve the absolute path of a package.
@@ -38,12 +37,12 @@ const config: StorybookConfig = {
     return mergeConfig(config, {
       resolve: {
         alias: {
-          "@": path.resolve(__dirname, "../src"),
-          "@hive/ui": path.resolve(__dirname, "../src"),
-          "@hive/core": path.resolve(__dirname, "../../core/src"),
-          "@hive/hooks": path.resolve(__dirname, "../../hooks/src/index.ts"),
-          "@hive/tokens": path.resolve(__dirname, "../../tokens/src/index.ts"),
-          "@hive/analytics": path.resolve(__dirname, "../../analytics/src/index.ts"),
+          "@": resolve(__dirname, "../src"),
+          "@hive/ui": resolve(__dirname, "../src"),
+          "@hive/core": resolve(__dirname, "../../core/src"),
+          "@hive/hooks": resolve(__dirname, "../../hooks/src/index.ts"),
+          "@hive/tokens": resolve(__dirname, "../../tokens/src/index.ts"),
+          "@hive/analytics": resolve(__dirname, "../../analytics/src/index.ts"),
         },
       },
       optimizeDeps: {

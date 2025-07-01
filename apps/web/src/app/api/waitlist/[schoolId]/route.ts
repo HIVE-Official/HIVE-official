@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { getFirestore } from "firebase-admin/firestore";
-import type { School } from "@hive/core";
-import { logger } from "@hive/core";
+import { logger, type School } from "@hive/core";
 
 async function getSchool(schoolId: string): Promise<School | null> {
   try {

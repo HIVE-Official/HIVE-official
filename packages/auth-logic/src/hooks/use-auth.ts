@@ -5,8 +5,8 @@ import React, {
   useEffect,
   createContext,
   useContext,
+  type ReactNode
 } from "react";
-import type { ReactNode } from "react";
 import { auth as firebaseAuth } from "../firebase-config";
 import { onAuthStateChanged, signInWithCustomToken as firebaseSignInWithCustomToken } from "firebase/auth";
 import type { AuthUser, AuthContextType, DevModeConfig } from "../types";

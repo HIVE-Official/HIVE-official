@@ -2,10 +2,9 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@hive/ui';
-import { Button } from '@hive/ui';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, Button } from '@hive/ui';
 import { useOnboardingStore } from '@/lib/stores/onboarding';
-import { Crown, Users } from 'lucide-react';
+import { Users, Award } from 'lucide-react';
 import { logger } from '@hive/core';
 
 export function OnboardingLeaderStep() {
@@ -41,7 +40,7 @@ export function OnboardingLeaderStep() {
       <Card className="w-full max-w-lg bg-card border-border">
         <CardHeader className="text-center space-y-2">
           <div className="w-12 h-12 bg-accent/10 rounded-full flex items-center justify-center mx-auto">
-            <Crown className="w-6 h-6 text-accent" />
+            <Award className="w-6 h-6 text-accent" />
           </div>
           <CardTitle className="text-xl font-display text-card-foreground">
             Student Leadership
@@ -66,7 +65,7 @@ export function OnboardingLeaderStep() {
             >
               <div className="flex items-start space-x-3">
                 <div className="w-8 h-8 bg-accent/10 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                  <Crown className="w-4 h-4 text-accent" />
+                  <Award className="w-4 h-4 text-accent" />
                 </div>
                 <div className="flex-1">
                   <h3 className="font-medium text-card-foreground mb-1">
