@@ -6,7 +6,7 @@
   "types": "./src/index.ts",
   "scripts": {
     "typecheck": "npx tsc --noEmit",
-    "lint": "eslint ."
+    "lint": "cross-env BROWSERSLIST_IGNORE_OLD_DATA=1 BROWSERSLIST_UPDATE_DB=0 NO_UPDATE_NOTIFIER=1 eslint ."
   },
   "dependencies": {
     "@hive/core": "workspace:*",

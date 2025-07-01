@@ -11,7 +11,7 @@
   "scripts": {
     "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
     "build": "echo 'Skipping UI build for deployment' && mkdir -p dist && echo 'export {}'>dist/index.js && echo 'export {}'>dist/index.mjs && echo 'export {}'>dist/index.d.ts",
-    "lint": "eslint .",
+    "lint": "cross-env BROWSERSLIST_IGNORE_OLD_DATA=1 BROWSERSLIST_UPDATE_DB=0 NO_UPDATE_NOTIFIER=1 eslint .",
     "typecheck": "npx tsc --noEmit",
     "clean": "rm -rf .turbo dist",
     "build-storybook": "npx storybook build",
