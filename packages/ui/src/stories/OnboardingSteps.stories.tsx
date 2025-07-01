@@ -77,6 +77,7 @@ export const InterestSelection: Story = {
       await new Promise(resolve => setTimeout(resolve, 1000));
     },
     onSkip: () => console.log('Interests skipped'),
+    initialInterests: [],
   },
   parameters: {
     docs: {

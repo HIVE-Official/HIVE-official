@@ -1,6 +1,9 @@
+import React from 'react';
+
 export interface StepProps {
   onSubmit: (data: Record<string, unknown> | null) => Promise<void>;
   onSkip?: () => void;
+  initialInterests?: string[];
 }
 
 export type OnboardingStep = {
