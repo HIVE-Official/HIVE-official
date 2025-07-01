@@ -27,8 +27,13 @@ export const db = getFirestore(app);
 export let analytics: ReturnType<typeof getAnalytics> | null = null;
 if (typeof window !== "undefined") {
   void isSupported().then((supported) => {
-    if (supported) {
-      analytics = getAnalytics(app);
+    if (supported && firebaseConfig && firebaseConfig.apiKey !== "demo-api-key") {
+      try {
+        analytics = getAnalytics(app);
+      } catch (error) {
+        console.warn("Analytics initialization failed:", error);
+        // Don't throw - this is not critical for app functionality
+      }
     }
   });
 }

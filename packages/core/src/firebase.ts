@@ -71,9 +71,16 @@ try {
   auth = getAuth(app);
   storage = getStorage(app);
   
-  // Only initialize analytics in the browser
-  if (typeof window !== 'undefined' && firebaseConfig.measurementId) {
-    analytics = getAnalytics(app);
+  // Only initialize analytics in the browser with valid config
+  if (typeof window !== 'undefined' && firebaseConfig.measurementId && 
+      firebaseConfig.apiKey !== 'demo-api-key') {
+    try {
+      analytics = getAnalytics(app);
+    } catch (error) {
+      console.warn("Analytics initialization failed:", error);
+      // Don't throw - this is not critical for app functionality
+      analytics = undefined;
+    }
   }
 } catch (error) {
   console.error('Firebase initialization error:', error);
