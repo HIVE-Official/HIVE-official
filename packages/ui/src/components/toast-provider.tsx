@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useCallback, useState } from 'react'
+import React, { createContext, useContext, useCallback, useState, useMemo } from 'react'
 import { Toast, type ToastProps } from './toast'
 
 type ToastOptions = Omit<ToastProps, 'isVisible' | 'onClose' | 'message'>
@@ -46,8 +46,13 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
     })
   }, [])
 
+  const value = useMemo(() => ({
+    showToast,
+    hideToast,
+  }), [showToast, hideToast])
+
   return (
-    <ToastContext.Provider value={{ showToast, hideToast }}>
+    <ToastContext.Provider value={value}>
       {children}
       <Toast
         message={toast.message}

@@ -40,7 +40,7 @@ export function ExampleAuthComponent() {
       const errorDisplay = getErrorDisplay(error);
 
       // Show error to user
-      alert(
+      console.error(
         `${errorDisplay.message}\nAction: ${errorDisplay.actionButtonText}`
       );
 
@@ -154,6 +154,53 @@ export const commonErrorScenarios = {
     logger.debug("Message:", error.message); // Uses the original error message
     logger.debug("Code:", error.code); // "generic-error"
   },
+};
+
+export const demoAuthErrors = {
+  // Simulated Firebase Auth errors for testing
+  'auth/user-not-found': {
+    code: 'auth/user-not-found',
+    message: 'There is no user record corresponding to this identifier. The user may have been deleted.',
+  },
+  'auth/wrong-password': {
+    code: 'auth/wrong-password',
+    message: 'The password is invalid or the user does not have a password.',
+  },
+  'auth/email-already-in-use': {
+    code: 'auth/email-already-in-use',
+    message: 'The email address is already in use by another account.',
+  },
+  'auth/weak-password': {
+    code: 'auth/weak-password',
+    message: 'The password is too weak.',
+  },
+  'auth/invalid-email': {
+    code: 'auth/invalid-email',
+    message: 'The email address is badly formatted.',
+  },
+  'auth/user-disabled': {
+    code: 'auth/user-disabled',
+    message: 'The user account has been disabled by an administrator.',
+  },
+  'auth/too-many-requests': {
+    code: 'auth/too-many-requests',
+    message: 'We have blocked all requests from this device due to unusual activity. Try again later.',
+  },
+  'auth/operation-not-allowed': {
+    code: 'auth/operation-not-allowed',
+    message: 'The given sign-in provider is disabled for this Firebase project.',
+  },
+};
+
+export const triggerDemoError = (errorCode: keyof typeof demoAuthErrors) => {
+  const error = demoAuthErrors[errorCode];
+  if (error) {
+    console.error('🔥 Demo Firebase Error:', error);
+    throw new Error(`${error.code}: ${error.message}`);
+  } else {
+    console.error('🔥 Demo Firebase Error: Unknown error code:', errorCode);
+    throw new Error(`Unknown error code: ${errorCode}`);
+  }
 };
 
 export default {
