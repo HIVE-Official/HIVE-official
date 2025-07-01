@@ -1,96 +1,109 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@hive/ui";
+import { ChevronLeft, ChevronRight, Calendar, Clock } from "lucide-react";
+
+const events = [
+  { id: '1', date: '2024-01-15', title: 'CS 101 Study Group', time: '2:00 PM' },
+  { id: '2', date: '2024-01-16', title: 'Engineering Club Meeting', time: '4:00 PM' },
+  { id: '3', date: '2024-01-17', title: 'Career Fair', time: '10:00 AM' },
+  { id: '4', date: '2024-01-18', title: 'Math Tutoring', time: '3:00 PM' },
+];
 
 export const CalendarWidget = () => {
-  // April 2024 calendar data
-  const currentMonth = "April 2024";
-  const daysOfWeek = ["S", "M", "T", "W", "T", "F", "S"];
+  const [currentDate, setCurrentDate] = useState(new Date());
 
-  // Generate April 2024 calendar
-  const generateCalendarDays = () => {
-    const firstDay = new Date(2024, 3, 1).getDay(); // April 1, 2024 (0 = Sunday)
-    const daysInMonth = new Date(2024, 3, 0).getDate(); // Days in March (31)
-    const daysInApril = new Date(2024, 4, 0).getDate(); // Days in April (30)
+  const daysInMonth = new Date(
+    currentDate.getFullYear(),
+    currentDate.getMonth() + 1,
+    0
+  ).getDate();
 
+  const firstDayOfMonth = new Date(
+    currentDate.getFullYear(),
+    currentDate.getMonth(),
+    1
+  ).getDay();
+
+  const previousMonth = () => {
+    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1));
+  };
+
+  const nextMonth = () => {
+    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1));
+  };
+
+  const renderCalendarDays = () => {
     const days = [];
-
-    // Add empty cells for days before the first day of April
-    for (let i = 0; i < firstDay; i++) {
-      const prevMonthDay = daysInMonth - firstDay + i + 1;
-      days.push({
-        day: prevMonthDay,
-        isCurrentMonth: false,
-        isHighlighted: false,
-      });
+    
+    // Empty cells for days before the first day of the month
+    for (let i = 0; i < firstDayOfMonth; i++) {
+      days.push(
+        <div key={`empty-${i}`} className="h-8 w-8"></div>
+      );
     }
-
-    // Add all days of April
-    for (let day = 1; day <= daysInApril; day++) {
-      days.push({
-        day,
-        isCurrentMonth: true,
-        isHighlighted: day === 16, // Highlight the 16th as shown in mockup
-      });
+    
+    // Days of the month
+    for (let day = 1; day <= daysInMonth; day++) {
+      const dayKey = `day-${currentDate.getFullYear()}-${currentDate.getMonth()}-${day}`;
+      days.push(
+        <div
+          key={dayKey}
+          className="h-8 w-8 flex items-center justify-center text-sm hover:bg-accent rounded cursor-pointer"
+        >
+          {day}
+        </div>
+      );
     }
-
-    // Fill remaining cells with next month days
-    const totalCells = 42; // 6 rows × 7 days
-    const remainingCells = totalCells - days.length;
-    for (let day = 1; day <= remainingCells; day++) {
-      days.push({
-        day,
-        isCurrentMonth: false,
-        isHighlighted: false,
-      });
-    }
-
+    
     return days;
   };
 
-  const calendarDays = generateCalendarDays();
-
   return (
-    <div className="bg-zinc-900/50 backdrop-blur-sm border border-zinc-800 rounded-lg p-6">
-      {/* Calendar Header */}
-      <div className="text-center mb-6">
-        <h2 className="font-display text-2xl font-semibold text-white">
-          {currentMonth}
-        </h2>
-      </div>
-
-      {/* Days of Week Header */}
-      <div className="grid grid-cols-7 gap-2 mb-4">
-        {daysOfWeek.map((day, index) => (
-          <div
-            key={index}
-            className="text-center text-sm font-medium text-zinc-400 py-2"
-          >
-            {day}
+    <Card className="bg-card">
+      <CardHeader className="pb-3">
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-lg">Calendar</CardTitle>
+          <div className="flex items-center space-x-2">
+            <button onClick={previousMonth} className="p-1 hover:bg-accent rounded">
+              <ChevronLeft className="h-4 w-4" />
+            </button>
+            <span className="text-sm font-medium">
+              {currentDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+            </span>
+            <button onClick={nextMonth} className="p-1 hover:bg-accent rounded">
+              <ChevronRight className="h-4 w-4" />
+            </button>
           </div>
-        ))}
-      </div>
-
-      {/* Calendar Grid */}
-      <div className="grid grid-cols-7 gap-2">
-        {calendarDays.map((dayData, index) => (
-          <div
-            key={index}
-            className={`
-              aspect-square flex items-center justify-center text-sm font-medium rounded-lg transition-colors duration-200
-              ${
-                dayData.isCurrentMonth
-                  ? dayData.isHighlighted
-                    ? "bg-accent text-background font-semibold"
-                    : "text-white hover:bg-zinc-800"
-                  : "text-zinc-600"
-              }
-            `}
-          >
-            {dayData.day}
-          </div>
-        ))}
-      </div>
-    </div>
+        </div>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        {/* Calendar Grid */}
+        <div className="grid grid-cols-7 gap-1 text-center">
+          {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, index) => (
+            <div key={`weekday-${day}-${index}`} className="h-8 w-8 flex items-center justify-center text-xs font-medium text-muted-foreground">
+              {day}
+            </div>
+          ))}
+          {renderCalendarDays()}
+        </div>
+        
+        {/* Upcoming Events */}
+        <div className="space-y-2">
+          <h4 className="text-sm font-medium">Upcoming Events</h4>
+          {events.slice(0, 3).map((event) => (
+            <div key={event.id} className="flex items-center space-x-2 text-sm">
+              <Calendar className="h-3 w-3 text-muted-foreground" />
+              <span className="flex-1">{event.title}</span>
+              <div className="flex items-center text-muted-foreground">
+                <Clock className="h-3 w-3 mr-1" />
+                {event.time}
+              </div>
+            </div>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
   );
 };
