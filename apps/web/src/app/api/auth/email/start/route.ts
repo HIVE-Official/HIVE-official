@@ -136,20 +136,10 @@ export async function POST(request: NextRequest) {
     // Firebase is configured - send actual magic link
     try {
       const actionCodeSettings = {
-        url: `${process.env.NEXT_PUBLIC_APP_URL}/auth/verify?email=${encodeURIComponent(trimmedEmail)}`,
+        url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001'}/auth/verify?email=${encodeURIComponent(trimmedEmail)}`,
         handleCodeInApp: true,
-        // iOS settings
-        iOS: {
-          bundleId: 'com.hive.app'
-        },
-        // Android settings
-        android: {
-          packageName: 'com.hive.app',
-          installApp: true,
-          minimumVersion: '1'
-        },
-        // Whether to display the link across multiple devices
-        dynamicLinkDomain: process.env.NEXT_PUBLIC_FIREBASE_DYNAMIC_LINKS_DOMAIN
+        // Remove Dynamic Links requirement for now
+        // dynamicLinkDomain: process.env.NEXT_PUBLIC_FIREBASE_DYNAMIC_LINKS_DOMAIN
       }
 
       await sendSignInLinkToEmail(auth, trimmedEmail, actionCodeSettings)

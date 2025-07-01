@@ -13,6 +13,7 @@ export default defineConfig({
   treeshake: true,
   minify: false,
   target: 'es2020',
+  tsconfig: './tsconfig.json',
   esbuildOptions(options, context) {
     if (context.format === 'esm') {
       options.banner = {

@@ -26,6 +26,18 @@
     "types": ["node", "react", "react-dom"],
     "outDir": "./dist"
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "**/*.test.*", "**/*.spec.*"]
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/*.test.*",
+    "**/*.spec.*",
+    "**/*.stories.*",
+    ".storybook",
+    "storybook-static"
+  ]
 }

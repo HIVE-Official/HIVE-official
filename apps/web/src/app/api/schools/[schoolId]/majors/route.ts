@@ -4,10 +4,11 @@ import { logger } from "@hive/core";
 
 export async function GET(
   request: Request,
-  { params }: { params: { schoolId: string } }
+  { params }: { params: Promise<{ schoolId: string }> }
 ) {
+  const { schoolId } = await params;
+  
   try {
-    const schoolId = params.schoolId;
     if (!schoolId) {
       return NextResponse.json(
         { error: "School ID is required" },
@@ -35,7 +36,7 @@ export async function GET(
     return NextResponse.json(majors);
   } catch (error) {
     logger.error(
-      `Failed to fetch majors for school: ${params.schoolId}`,
+      `Failed to fetch majors for school: ${schoolId}`,
       error
     );
     return NextResponse.json(
