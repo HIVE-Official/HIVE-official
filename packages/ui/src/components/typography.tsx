@@ -1,4 +1,6 @@
+/// <reference lib="dom" />
 import * as React from "react"
+import type { ComponentPropsWithRef, ElementType, ReactNode } from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "../lib/utils"
@@ -59,16 +61,21 @@ const typographyVariants = cva(
   }
 )
 
+export type TypographyVariant = NonNullable<VariantProps<typeof typographyVariants>["variant"]>
+export type TypographyAlign = NonNullable<VariantProps<typeof typographyVariants>["align"]>
+export type TypographyWeight = NonNullable<VariantProps<typeof typographyVariants>["weight"]>
+
 export interface TypographyProps
-  extends React.HTMLAttributes<HTMLElement>,
+  extends ComponentPropsWithRef<"div">,
     VariantProps<typeof typographyVariants> {
-  as?: React.ElementType
+  as?: ElementType;
+  children?: ReactNode;
 }
 
-const Typography = React.forwardRef<HTMLElement, TypographyProps>(
+const Typography = React.forwardRef<any, TypographyProps>(
   ({ className, variant, align, weight, as, children, ...props }, ref) => {
     // Smart element mapping based on variant
-    const getElement = (): React.ElementType => {
+    const getElement = (): ElementType => {
       if (as) return as
       
       switch (variant) {
@@ -104,7 +111,7 @@ const Typography = React.forwardRef<HTMLElement, TypographyProps>(
 Typography.displayName = "Typography"
 
 // Convenience components for common use cases
-const Heading = React.forwardRef<HTMLHeadingElement, Omit<TypographyProps, "variant"> & { level: 1 | 2 | 3 | 4 }>(
+const Heading = React.forwardRef<any, Omit<TypographyProps, "variant"> & { level: 1 | 2 | 3 | 4 }>(
   ({ level, ...props }, ref) => {
     const variant = `h${level}` as "h1" | "h2" | "h3" | "h4"
     return <Typography {...props} variant={variant} ref={ref} />
@@ -112,17 +119,17 @@ const Heading = React.forwardRef<HTMLHeadingElement, Omit<TypographyProps, "vari
 )
 Heading.displayName = "Heading"
 
-const Text = React.forwardRef<HTMLParagraphElement, Omit<TypographyProps, "variant">>(
+const Text = React.forwardRef<any, Omit<TypographyProps, "variant">>(
   (props, ref) => <Typography {...props} variant="body" ref={ref} />
 )
 Text.displayName = "Text"
 
-const Caption = React.forwardRef<HTMLSpanElement, Omit<TypographyProps, "variant">>(
+const Caption = React.forwardRef<any, Omit<TypographyProps, "variant">>(
   (props, ref) => <Typography {...props} variant="caption" as="span" ref={ref} />
 )
 Caption.displayName = "Caption"
 
-const Code = React.forwardRef<HTMLElement, Omit<TypographyProps, "variant"> & { block?: boolean }>(
+const Code = React.forwardRef<any, Omit<TypographyProps, "variant"> & { block?: boolean }>(
   ({ block, ...props }, ref) => (
     <Typography {...props} variant={block ? "code-block" : "code"} ref={ref} />
   )

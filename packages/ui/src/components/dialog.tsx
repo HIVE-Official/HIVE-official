@@ -1,10 +1,11 @@
 "use client";
 
-import React from 'react'
+import * as React from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X } from 'lucide-react'
 import { cva, type VariantProps } from 'class-variance-authority'
-import { useFocusTrap } from '@hive/hooks'
+import { ErrorBoundary } from './error-boundary'
+import { cn } from '../lib/utils'
 
 const dialogVariants = cva(
   'relative bg-surface-01 rounded-xl shadow-2xl border border-border overflow-hidden',
@@ -32,7 +33,17 @@ export interface DialogProps extends VariantProps<typeof dialogVariants> {
   className?: string
 }
 
-export const Dialog: React.FC<DialogProps> = ({
+function DialogContent({
+  children,
+  className,
+}: {
+  children: React.ReactNode
+  className?: string
+}) {
+  return <div className={cn("px-6 pb-6", className)}>{children}</div>;
+}
+
+export const Dialog = React.forwardRef<HTMLDivElement, DialogProps>(({
   isOpen,
   onClose,
   title,
@@ -40,11 +51,30 @@ export const Dialog: React.FC<DialogProps> = ({
   children,
   size,
   className,
-}) => {
-  const dialogRef = useFocusTrap<HTMLDivElement>({
-    enabled: isOpen,
-    onEscape: onClose,
-  })
+}, ref) => {
+  const dialogRef = React.useRef<HTMLDivElement | null>(null)
+
+  React.useEffect(() => {
+    if (isOpen) {
+      const handleEscape = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') onClose()
+      }
+      document.addEventListener('keydown', handleEscape)
+      return () => document.removeEventListener('keydown', handleEscape)
+    }
+  }, [isOpen, onClose])
+
+  // Merge refs
+  const mergedRef = React.useMemo(() => {
+    if (ref) {
+      return (node: HTMLDivElement | null) => {
+        if (typeof ref === 'function') ref(node)
+        else if (ref) ref.current = node
+        dialogRef.current = node
+      }
+    }
+    return dialogRef
+  }, [ref])
 
   // Handle click outside
   const handleBackdropClick = (event: React.MouseEvent) => {
@@ -66,7 +96,7 @@ export const Dialog: React.FC<DialogProps> = ({
           role="presentation"
         >
           <motion.div
-            ref={dialogRef}
+            ref={mergedRef}
             role="dialog"
             aria-labelledby="dialog-title"
             aria-describedby={description ? 'dialog-description' : undefined}
@@ -98,11 +128,15 @@ export const Dialog: React.FC<DialogProps> = ({
               )}
             </div>
 
-            {/* Dialog content */}
-            <div className="px-6 pb-6">{children}</div>
+            {/* Dialog content with error boundary */}
+            <ErrorBoundary>
+              <DialogContent>{children}</DialogContent>
+            </ErrorBoundary>
           </motion.div>
         </motion.div>
       )}
     </AnimatePresence>
   )
-} 
+})
+
+Dialog.displayName = 'Dialog' 

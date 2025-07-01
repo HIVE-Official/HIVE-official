@@ -1,16 +1,14 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Button, Typography, HiveLogo, type ButtonProps, type TypographyProps } from "@hive/ui";
+import {
+  Button,
+  Typography,
+  HiveLogo,
+} from "@hive/ui";
 import { useEffect, useState } from "react";
 import { logger } from "@hive/core";
 import Link from "next/link";
-
-// Define the variant types based on the cva configuration
-type ButtonVariant = "default" | "outline" | "ghost" | "accent" | "ritual" | "surface" | "link" | "nav" | "destructive";
-type ButtonSize = "xs" | "sm" | "default" | "lg" | "xl" | "icon" | "icon-sm" | "icon-lg";
-type TypographyVariant = "display" | "h1" | "h2" | "h3" | "h4" | "body" | "body-sm" | "caption" | "button" | "label" | "nav" | "code" | "code-block" | "muted" | "subtle" | "small" | "hero" | "lead";
-type TypographyAlign = "left" | "center" | "right" | "justify";
 
 export default function WelcomePage() {
   const [mounted, setMounted] = useState(false);
@@ -170,7 +168,7 @@ export default function WelcomePage() {
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Button
-                variant="outline"
+                variant="accent"
                 size="lg"
                 onClick={() => setShowInfo(true)}
                 className="border-2 border-accent bg-transparent text-accent hover:bg-accent/10 transition-colors"
@@ -179,7 +177,7 @@ export default function WelcomePage() {
               </Button>
               <Button
                 asChild
-                variant="outline"
+                variant="accent"
                 size="lg"
                 className="border-2 border-accent bg-transparent text-accent hover:bg-accent/10 transition-colors"
               >
@@ -220,7 +218,7 @@ export default function WelcomePage() {
               </Typography>
             </div>
             <Button
-              variant="outline"
+              variant="ghost"
               className="mt-4"
               onClick={() => setShowInfo(false)}
             >

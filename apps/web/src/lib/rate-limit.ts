@@ -13,6 +13,16 @@ interface RateLimitEntry {
   resetTime: number;
 }
 
+interface RateLimitConfig {
+  uniqueTokenPerInterval: number;
+  interval: number;
+}
+
+interface RateLimitStore {
+  tokens: Map<string, number>;
+  lastReset: number;
+}
+
 class RateLimiter {
   private limits = new Map<string, RateLimitEntry>();
   private readonly maxRequests: number;
@@ -84,4 +94,39 @@ class RateLimiter {
 export const postCreationRateLimit = new RateLimiter(10, 60 * 1000); // 10 posts per minute
 export const handleCheckRateLimit = new RateLimiter(20, 60 * 1000);  // 20 handle checks per minute
 export const authRateLimit = new RateLimiter(5, 60 * 1000);          // 5 auth attempts per minute
-export const generalApiRateLimit = new RateLimiter(100, 60 * 1000);  // 100 API calls per minute 
+export const generalApiRateLimit = new RateLimiter(100, 60 * 1000);  // 100 API calls per minute
+
+export function rateLimit(config: RateLimitConfig) {
+  const store: RateLimitStore = {
+    tokens: new Map(),
+    lastReset: Date.now(),
+  };
+
+  return {
+    check: async (key: string, limit: number): Promise<void> => {
+      const now = Date.now();
+      
+      // Reset if interval has passed
+      if (now - store.lastReset >= config.interval) {
+        store.tokens.clear();
+        store.lastReset = now;
+      }
+
+      // Get current count for this key
+      const currentCount = store.tokens.get(key) || 0;
+
+      if (currentCount >= limit) {
+        throw new Error('Rate limit exceeded');
+      }
+
+      // Increment count
+      store.tokens.set(key, currentCount + 1);
+
+      // Clean up old tokens periodically
+      if (store.tokens.size > config.uniqueTokenPerInterval) {
+        const oldestKey = store.tokens.keys().next().value;
+        store.tokens.delete(oldestKey);
+      }
+    }
+  };
+} 

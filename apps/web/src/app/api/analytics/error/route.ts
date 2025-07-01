@@ -1,57 +1,59 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { logger } from '@hive/core';
+import { ErrorMetadataSchema } from '@hive/analytics';
+import { rateLimit } from '@/lib/rate-limit';
 
-// Schema for error reporting - made more flexible to handle various error formats
-const errorEventSchema = z.object({
-  // Make sessionId optional and allow any string (we'll generate UUID if missing)
-  sessionId: z.string().optional(),
+// Define error metadata schema directly here
+const ErrorMetadataSchema = z.object({
+  type: z.enum([
+    'react_error_boundary',
+    'api_error',
+    'network_error',
+    'validation_error',
+    'auth_error',
+    'firebase_error',
+    'unknown'
+  ]),
+  componentStack: z.string().optional(),
+  location: z.string().optional(),
+  timestamp: z.string().datetime(),
   userId: z.string().optional(),
-  // Allow string messages directly or error object
-  error: z.union([
-    z.string(),
-    z.object({
-      message: z.string(),
-      stack: z.string().optional(),
-      type: z.string().optional(),
-      code: z.string().optional(),
-    })
-  ]).optional(),
-  // Make the context structure more flexible
-  context: z.object({
-    url: z.string().optional(),
-    userAgent: z.string().optional(),
-    timestamp: z.number().optional(),
-    component: z.string().optional(),
-    additionalData: z.record(z.unknown()).optional(),
-  }).optional(),
-  // Allow raw error data to be passed
-  message: z.string().optional(),
-  stack: z.string().optional(),
-  type: z.string().optional(),
-}).refine(data => {
-  // Ensure we have at least some error information
-  return !!(data.error || (data.message));
-}, {
-  message: "Either 'error' object or 'message' must be provided"
+  sessionId: z.string().nullable().optional(),
+  tags: z.array(z.string()).optional(),
+  extra: z.record(z.unknown()).optional()
 });
 
-// Rate limiting to prevent abuse
+// Extended error payload schema
+const ErrorPayloadSchema = z.object({
+  name: z.string(),
+  message: z.string(),
+  stack: z.string().optional(),
+  metadata: ErrorMetadataSchema
+});
+
+// Rate limiter for error reporting
+const errorRateLimit = rateLimit({
+  uniqueTokenPerInterval: 500, // Max unique errors per interval
+  interval: 60 * 1000, // 1 minute
+});
+
+// Simple rate limiting using Map
 const rateLimitStore = new Map<string, { count: number; resetTime: number }>();
+const RATE_LIMIT_WINDOW = 60 * 1000; // 1 minute
+const RATE_LIMIT_MAX = 100; // 100 requests per minute
 
-function checkRateLimit(identifier: string): boolean {
+function checkRateLimit(ip: string): boolean {
   const now = Date.now();
-  const windowMs = 60 * 1000; // 1 minute
-  const maxRequests = 10; // 10 error reports per minute per client
-
-  const current = rateLimitStore.get(identifier);
+  const key = ip;
+  const current = rateLimitStore.get(key);
 
   if (!current || now > current.resetTime) {
-    rateLimitStore.set(identifier, { count: 1, resetTime: now + windowMs });
+    rateLimitStore.set(key, { count: 1, resetTime: now + RATE_LIMIT_WINDOW });
     return true;
   }
 
-  if (current.count >= maxRequests) {
+  if (current.count >= RATE_LIMIT_MAX) {
     return false;
   }
 
@@ -59,62 +61,191 @@ function checkRateLimit(identifier: string): boolean {
   return true;
 }
 
-export async function POST(request: NextRequest) {
+// Common React error patterns during screenshot generation
+const SCREENSHOT_IGNORABLE_ERRORS = [
+  {
+    type: 'network',
+    pattern: /failed to fetch/i,
+    description: 'Network fetch failure during screenshot'
+  },
+  {
+    type: 'react',
+    pattern: /React\.Children\.only/i,
+    description: 'React children validation during screenshot'
+  },
+  {
+    type: 'react',
+    pattern: /Cannot read properties of null/i,
+    description: 'Null property access during screenshot'
+  },
+  {
+    type: 'hydration',
+    pattern: /hydration/i,
+    description: 'Hydration mismatch during screenshot'
+  }
+];
+
+function categorizeError(error: any): { type: string; description: string } | null {
+  const errorMessage = error?.message || error?.toString() || '';
+  
+  for (const pattern of SCREENSHOT_IGNORABLE_ERRORS) {
+    if (pattern.pattern.test(errorMessage)) {
+      return pattern;
+    }
+  }
+  
+  return null;
+}
+
+function shouldIgnoreError(error: any, userAgent: string | null): boolean {
+  // Only apply special handling for Vercel screenshot bot
+  if (userAgent?.toLowerCase().includes('vercel-screenshot')) {
+    const errorCategory = categorizeError(error);
+    
+    // If it's a known screenshot-related error, ignore it
+    if (errorCategory) {
+      return true;
+    }
+    
+    // For screenshot bot, we might want to be more lenient with other errors
+    // but still log them for monitoring
+    return false;
+  }
+  
+  // For regular users, don't ignore any errors
+  return false;
+}
+
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
-    const data = await request.json();
+    // 1. Rate limiting by IP
+    const ip = request.headers.get('x-forwarded-for') || 
+               request.headers.get('x-real-ip') || 
+               'unknown';
     
-    // Validate the error report format
-    const validatedData = errorEventSchema.parse(data);
-    
-    // Use IP address for rate limiting if no sessionId
-    const identifier = validatedData.sessionId || 
-      request.headers.get('x-forwarded-for') || 
-      'unknown';
-    
-    // Check rate limit
-    if (!checkRateLimit(identifier)) {
+    if (!checkRateLimit(ip)) {
       return NextResponse.json(
         { error: 'Rate limit exceeded' },
         { status: 429 }
       );
     }
 
-    // Normalize the error data
-    const normalizedError = {
-      message: validatedData.error 
-        ? (typeof validatedData.error === 'string' 
-            ? validatedData.error 
-            : validatedData.error.message)
-        : validatedData.message,
-      stack: validatedData.error && typeof validatedData.error === 'object' 
-        ? validatedData.error.stack 
-        : validatedData.stack,
-      type: validatedData.error && typeof validatedData.error === 'object'
-        ? validatedData.error.type
-        : validatedData.type,
-    };
-
-    // Log the error
-    logger.error('Client Error:', {
-      ...validatedData,
-      error: normalizedError,
-      ip: request.headers.get('x-forwarded-for') || 'unknown',
-      userAgent: request.headers.get('user-agent'),
-      timestamp: new Date().toISOString(),
-    });
-
-    // In production, you might want to store these in a database
-    // or send them to an error tracking service
-    if (process.env.NODE_ENV === 'production') {
-      // TODO: Store in Firestore or send to error tracking service
+    // 2. Parse and validate request body
+    const body = await request.json() as unknown;
+    
+    let validatedError;
+    try {
+      validatedError = ErrorPayloadSchema.parse(body);
+    } catch (validationError) {
+      console.warn('Invalid error payload:', validationError);
+      return NextResponse.json(
+        { error: 'Invalid error payload' },
+        { status: 400 }
+      );
     }
 
-    return NextResponse.json({ success: true });
+    // 3. Extract metadata safely
+    const metadata = validatedError.metadata;
+    const userId = metadata.userId;
+    const sessionId = metadata.sessionId;
+
+    // 4. Skip errors from bots/crawlers
+    const userAgent = request.headers.get('user-agent') || '';
+    if (userAgent.includes('bot') || 
+        userAgent.includes('crawler') || 
+        userAgent.includes('spider')) {
+      return NextResponse.json({ status: 'ignored' });
+    }
+
+    // 5. Log structured error data
+    const errorData = {
+      timestamp: new Date().toISOString(),
+      name: validatedError.name,
+      message: validatedError.message,
+      stack: validatedError.stack,
+      metadata: {
+        type: metadata.type,
+        location: metadata.location,
+        userId,
+        sessionId,
+        userAgent,
+        ip: ip !== 'unknown' ? ip : undefined,
+      },
+    };
+
+    // 6. Send to logging service (console for now, could be replaced with external service)
+    console.error('Client Error:', JSON.stringify(errorData, null, 2));
+
+    // 7. Return success response
+    return NextResponse.json({ 
+      status: 'logged',
+      id: `error_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+    });
+
   } catch (error) {
-    logger.error('Error processing error report:', error);
+    // Handle any errors in the error handler itself
+    console.error('Error in error handler:', {
+      message: error instanceof Error ? error.message : 'Unknown error',
+      name: error instanceof Error ? error.name : 'UnknownError',
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+
     return NextResponse.json(
-      { error: 'Failed to process error report' },
+      { error: 'Internal server error' },
       { status: 500 }
     );
   }
+}
+
+// Helper functions
+function isKnownBotError(error: z.infer<typeof ErrorPayloadSchema>, headers: Headers): boolean {
+  const userAgent = headers.get('user-agent') || '';
+  
+  // Ignore Vercel bot errors
+  if (userAgent.includes('Vercel') && error.message.includes('Screenshot')) {
+    return true;
+  }
+
+  // Add more bot detection logic as needed
+  return false;
+}
+
+function isCriticalError(error: z.infer<typeof ErrorPayloadSchema>): boolean {
+  // Define what constitutes a critical error
+  const criticalPatterns = [
+    'FATAL',
+    'CRITICAL',
+    'SECURITY',
+    'AUTHENTICATION_FAILED',
+    'DATABASE_CONNECTION_ERROR'
+  ];
+
+  return criticalPatterns.some(pattern => 
+    error.message.includes(pattern) || error.name.includes(pattern)
+  );
+}
+
+async function storeError(error: z.infer<typeof ErrorPayloadSchema>) {
+  // Implement error storage logic (e.g., Firebase, PostgreSQL)
+  // This is where you'd store the error for later analysis
+}
+
+async function notifyErrorService(error: z.infer<typeof ErrorPayloadSchema>) {
+  // Implement notification logic for critical errors
+  // This could be sending to Slack, email, or other monitoring services
+}
+
+async function handleReactError(error: z.infer<typeof ErrorPayloadSchema>) {
+  // Specific handling for React errors
+  // e.g., tracking component error patterns
+}
+
+async function handleApiError(error: z.infer<typeof ErrorPayloadSchema>) {
+  // Specific handling for API errors
+  // e.g., tracking endpoint reliability
+}
+
+async function handleValidationError(error: z.infer<typeof ErrorPayloadSchema>) {
+  // Specific handling for validation errors
+  // e.g., tracking common validation failures
 } 

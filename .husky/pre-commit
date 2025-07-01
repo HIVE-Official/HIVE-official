@@ -1,0 +1,58 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+echo "🔍 Running code quality checks..."
+
+# Run ESLint with strict rules
+echo "Running ESLint..."
+npx eslint . --max-warnings 0 || {
+  echo "❌ ESLint check failed. Please fix the errors before committing."
+  exit 1
+}
+
+# Run TypeScript type checking
+echo "Running TypeScript checks..."
+pnpm typecheck || {
+  echo "❌ TypeScript check failed. Please fix type errors before committing."
+  exit 1
+}
+
+# Run code complexity analysis
+echo "Running code complexity analysis..."
+pnpm analyze-code || {
+  echo "❌ Code complexity check failed. Please simplify complex functions/components."
+  exit 1
+}
+
+# Run test suite
+echo "Running tests..."
+pnpm test || {
+  echo "❌ Tests failed. Please fix failing tests before committing."
+  exit 1
+}
+
+# Check for forbidden patterns
+echo "Checking for forbidden patterns..."
+! git diff --cached | grep -E "console\.(log|debug)" || {
+  echo "❌ Found console.log statements. Please remove them before committing."
+  exit 1
+}
+
+! git diff --cached | grep -E "debugger;" || {
+  echo "❌ Found debugger statements. Please remove them before committing."
+  exit 1
+}
+
+! git diff --cached | grep -E "TODO:" || {
+  echo "⚠️ Found TODO comments. Consider resolving them before committing."
+}
+
+# Check for large files
+find . -type f -size +500k ! -path "./node_modules/*" ! -path "./.git/*" -exec ls -lh {} \; | {
+  while read line; do
+    echo "⚠️ Large file detected: $line"
+  done
+}
+
+# Success message
+echo "✅ All checks passed! Proceeding with commit..." 

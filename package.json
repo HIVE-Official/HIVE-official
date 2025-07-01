@@ -7,13 +7,17 @@
     "lint": "turbo run lint",
     "clean": "turbo run clean",
     "typecheck": "turbo run typecheck",
-    "test": "turbo run test"
+    "test": "turbo run test",
+    "analyze-code": "ts-node scripts/analyze-code.ts",
+    "check-quality": "pnpm lint && pnpm typecheck && pnpm analyze-code && pnpm test",
+    "precommit": "pnpm check-quality"
   },
   "devDependencies": {
     "turbo": "^2.5.4"
   },
   "packageManager": "pnpm@9.1.1",
   "dependencies": {
+    "@radix-ui/react-slot": "^1.2.3",
     "@types/node": "^24.0.8",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",

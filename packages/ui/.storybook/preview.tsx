@@ -1,16 +1,7 @@
-import React from 'react';
-import type { Preview } from '@storybook/react-vite';
+import type { Preview } from '@storybook/react';
 import { withThemeByDataAttribute } from '@storybook/addon-themes';
+import { withProviders } from '../src/stories/decorators';
 import '../src/styles/globals.css';
-
-// Global decorator to wrap all stories
-const withProviders = (Story: React.ComponentType) => {
-  return (
-    <div className="min-h-screen bg-background text-foreground">
-      <Story />
-    </div>
-  );
-};
 
 const preview: Preview = {
   parameters: {
@@ -18,7 +9,7 @@ const preview: Preview = {
     controls: {
       matchers: {
         color: /(background|color)$/i,
-        date: /Date$/i,
+        date: /Date$/,
       },
     },
     backgrounds: {
@@ -26,15 +17,14 @@ const preview: Preview = {
       values: [
         {
           name: 'dark',
-          value: 'hsl(var(--background))',
+          value: '#000000',
         },
         {
           name: 'light',
-          value: 'hsl(var(--background-light))',
+          value: '#ffffff',
         },
       ],
     },
-    layout: 'centered',
   },
   decorators: [
     withProviders,

@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { Button, HiveLogo, type ButtonProps } from "@hive/ui";
+import { Button, HiveLogo } from "@hive/ui";
 import {
   ArrowLeft,
   ArrowRight,

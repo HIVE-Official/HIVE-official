@@ -43,6 +43,7 @@ const config: StorybookConfig = {
           "@hive/core": path.resolve(__dirname, "../../core/src"),
           "@hive/hooks": path.resolve(__dirname, "../../hooks/src/index.ts"),
           "@hive/tokens": path.resolve(__dirname, "../../tokens/src/index.ts"),
+          "@hive/analytics": path.resolve(__dirname, "../../analytics/src/index.ts"),
         },
       },
       optimizeDeps: {

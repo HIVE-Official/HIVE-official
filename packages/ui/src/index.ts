@@ -1,7 +1,7 @@
 // Export basic UI components
 export { Avatar, AvatarFallback, AvatarImage } from "./components/avatar";
 export { Badge } from "./components/badge";
-export { Button, type ButtonProps } from "./components/button";
+export { Button, type ButtonProps, type ButtonVariant, type ButtonSize } from "./components/button";
 export { Dialog } from "./components/dialog";
 export { Input } from "./components/input";
 export { Label } from "./components/label";
@@ -37,6 +37,9 @@ export {
   Caption,
   Code,
   type TypographyProps,
+  type TypographyVariant,
+  type TypographyAlign,
+  type TypographyWeight,
 } from "./components/typography";
 
 // Export card components from the main components directory (not ui subdirectory)

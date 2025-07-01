@@ -84,6 +84,16 @@ const baseConfig = [
       "functions/src/spaces/claim.ts",
     ],
   },
+  // Base JavaScript configuration
+  pluginJs.configs.recommended,
+  
+  // TypeScript configuration without strict type checking
+  ...tseslint.configs.recommended,
+  
+  // React configuration
+  pluginReact.configs.flat.recommended,
+  
+  // Main configuration
   {
     files: ["**/*.{js,mjs,cjs,ts,tsx}"],
     languageOptions: {
@@ -96,10 +106,7 @@ const baseConfig = [
         },
       },
       globals: {
-        // React
         React: true,
-        
-        // Browser globals
         window: true,
         document: true,
         navigator: true,
@@ -129,8 +136,6 @@ const baseConfig = [
         CustomEvent: true,
         EventListener: true,
         trustedTypes: true,
-        
-        // DOM Element Types
         HTMLElement: true,
         HTMLDivElement: true,
         HTMLSpanElement: true,
@@ -146,8 +151,6 @@ const baseConfig = [
         Element: true,
         Node: true,
         NodeList: true,
-        
-        // Event types
         Event: true,
         MouseEvent: true,
         KeyboardEvent: true,
@@ -155,8 +158,6 @@ const baseConfig = [
         ChangeEvent: true,
         FormEvent: true,
         PerformanceNavigationTiming: true,
-        
-        // Node.js globals
         process: true,
         module: true,
         require: true,
@@ -166,8 +167,6 @@ const baseConfig = [
         global: true,
         Buffer: true,
         NodeJS: true,
-        
-        // Web APIs and browser globals
         Request: true,
         Response: true,
         Headers: true,
@@ -175,14 +174,10 @@ const baseConfig = [
         MediaQueryListEvent: true,
         HTMLUListElement: true,
         HTMLLIElement: true,
-        
-        // Runtime globals
         Bun: true,
         Deno: true,
         FirebaseFirestore: true,
         logger: true,
-        
-        // Test globals
         describe: true,
         it: true,
         test: true,
@@ -195,46 +190,76 @@ const baseConfig = [
         vi: true,
       },
     },
-  },
-  pluginJs.configs.recommended,
-  ...tseslint.configs.recommended,
-  pluginReact.configs.flat.recommended,
-  {
     settings: {
       react: {
         version: "detect",
       },
     },
     rules: {
-      "@typescript-eslint/no-unused-vars": [
-        "error",
-        {
-          argsIgnorePattern: "^_",
-          varsIgnorePattern: "^_",
-        },
-      ],
-      "@typescript-eslint/no-explicit-any": "warn",
+      // Basic TypeScript Rules (without type checking)
+      "@typescript-eslint/no-unused-vars": ["error", {
+        argsIgnorePattern: "^_",
+        varsIgnorePattern: "^_",
+      }],
+      "@typescript-eslint/no-explicit-any": "error",
+      
+      // React Best Practices
       "react/react-in-jsx-scope": "off",
-      "no-console": "off",
       "react/prop-types": "off",
       "react/no-unescaped-entities": "off",
-      "@typescript-eslint/no-require-imports": "off",
-      "no-undef": "error",
-      "no-empty": "warn",
+      "react/no-children-prop": "error",
+      "react/jsx-key": ["error", { checkFragmentShorthand: true }],
+      "react/jsx-no-duplicate-props": "error",
+      "react/jsx-no-useless-fragment": "error",
+      "react/jsx-pascal-case": "error",
+      "react/no-array-index-key": "warn",
+      "react/no-danger": "error",
+      "react/no-deprecated": "error",
+      "react/no-direct-mutation-state": "error",
+      "react/no-find-dom-node": "error",
+      "react/no-render-return-value": "error",
+      "react/no-string-refs": "error",
+      "react/no-this-in-sfc": "error",
+      "react/no-typos": "error",
+      "react/no-unused-state": "error",
+      "react/prefer-es6-class": "error",
+      "react/void-dom-elements-no-children": "error",
+
+      // Performance Rules
+      "react/jsx-no-constructed-context-values": "error",
+      "react/no-unstable-nested-components": "error",
+
+      // Security Rules (basic ones)
+      "no-eval": "error",
+      "no-implied-eval": "error",
+
+      // Code Quality Rules
+      "complexity": ["warn", { max: 15 }],
+      "max-lines": ["warn", { max: 500, skipBlankLines: true, skipComments: true }],
+      "max-lines-per-function": ["warn", { max: 100, skipBlankLines: true, skipComments: true }],
+      "max-depth": ["warn", { max: 4 }],
+      "max-nested-callbacks": ["warn", { max: 3 }],
+      "max-params": ["warn", { max: 6 }],
+      "no-alert": "error",
+      "no-console": ["warn", { allow: ["warn", "error"] }],
+      "no-debugger": "error",
+      "no-duplicate-imports": "error",
+      "no-var": "error",
+      "prefer-const": "error",
+      "prefer-template": "error",
     },
   },
-];
-
-const storybookConfig = [
-  ...baseConfig,
-  ...storybook.configs["flat/recommended"],
+  
+  // Storybook configuration
   {
     files: ["**/*.stories.@(js|jsx|ts|tsx)"],
+    plugins: {
+      storybook: storybook,
+    },
     rules: {
-      "storybook/no-renderer-packages": "off", // Allow @storybook/react imports in stories
-      "no-undef": "off", // Disable no-undef for stories as they may have complex variable scoping
+      ...storybook.configs.recommended.rules,
     },
   },
 ];
 
-export { baseConfig, storybookConfig }; 
+export default baseConfig; 

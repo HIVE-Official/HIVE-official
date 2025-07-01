@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from 'uuid';
+import { z } from 'zod';
 
 interface ErrorContext {
   component?: string;
@@ -11,6 +11,128 @@ declare global {
     __HIVE_USER_ID?: string;
   }
 }
+
+// Error metadata schema
+export const ErrorMetadataSchema = z.object({
+  type: z.enum([
+    'react_error_boundary',
+    'api_error',
+    'network_error',
+    'validation_error',
+    'auth_error',
+    'firebase_error',
+    'unknown'
+  ]),
+  componentStack: z.string().optional(),
+  location: z.string().optional(),
+  timestamp: z.string().datetime(),
+  userId: z.string().optional(),
+  sessionId: z.string().optional(),
+  tags: z.array(z.string()).optional(),
+  extra: z.record(z.unknown()).optional()
+});
+
+export type ErrorMetadata = z.infer<typeof ErrorMetadataSchema>;
+
+// Rate limiting for error reporting
+const ERROR_RATE_LIMIT = {
+  maxErrors: 100, // Max errors per window
+  windowMs: 60 * 1000, // 1 minute window
+};
+
+class ErrorTracker {
+  private errorCount: number = 0;
+  private lastReset: number = Date.now();
+
+  constructor(private readonly config = ERROR_RATE_LIMIT) {}
+
+  private shouldThrottle(): boolean {
+    const now = Date.now();
+    if (now - this.lastReset > this.config.windowMs) {
+      this.errorCount = 0;
+      this.lastReset = now;
+      return false;
+    }
+    return this.errorCount >= this.config.maxErrors;
+  }
+
+  async captureError(error: Error, metadata: ErrorMetadata) {
+    try {
+      // 1. Rate limiting check
+      if (this.shouldThrottle()) {
+        console.warn('Error reporting rate limit exceeded');
+        return;
+      }
+      this.errorCount++;
+
+      // 2. Validate metadata
+      const validMetadata = ErrorMetadataSchema.parse(metadata);
+
+      // 3. Prepare error payload
+      const errorPayload = {
+        name: error.name,
+        message: error.message,
+        stack: error.stack,
+        ...validMetadata,
+        userAgent: typeof window !== 'undefined' ? window.navigator.userAgent : 'server',
+        platform: typeof window !== 'undefined' ? window.navigator.platform : 'server',
+      };
+
+      // 4. Send to error endpoint
+      const response = await fetch('/api/analytics/error', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(errorPayload),
+      });
+
+      if (!response.ok) {
+        console.error('Failed to report error:', await response.text());
+      }
+
+    } catch (e) {
+      // Fail silently in production, log in development
+      if (process.env.NODE_ENV !== 'production') {
+        console.error('Error in error reporting:', e);
+      }
+    }
+  }
+
+  // Helper method for React error boundaries
+  captureReactError(error: Error, errorInfo: React.ErrorInfo) {
+    return this.captureError(error, {
+      type: 'react_error_boundary',
+      componentStack: errorInfo.componentStack,
+      timestamp: new Date().toISOString(),
+      location: typeof window !== 'undefined' ? window.location.href : 'server',
+    });
+  }
+
+  // Helper method for API errors
+  captureApiError(error: Error, endpoint: string) {
+    return this.captureError(error, {
+      type: 'api_error',
+      timestamp: new Date().toISOString(),
+      extra: { endpoint },
+    });
+  }
+
+  // Helper method for validation errors
+  captureValidationError(error: Error, data: unknown) {
+    return this.captureError(error, {
+      type: 'validation_error',
+      timestamp: new Date().toISOString(),
+      extra: { invalidData: JSON.stringify(data) },
+    });
+  }
+}
+
+// Export singleton instance
+export const errorTracker = new ErrorTracker();
+
+// Export main capture function
+export const captureError = (error: Error, metadata: ErrorMetadata) => {
+  return errorTracker.captureError(error, metadata);
+};
 
 /**
  * Reports an error to the analytics endpoint
