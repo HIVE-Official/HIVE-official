@@ -2,27 +2,27 @@ import { parse } from '@typescript-eslint/parser';
 import type { TSESTree } from '@typescript-eslint/types';
 
 interface ComplexityMetrics {
-  cyclomaticComplexity: number;
-  cognitiveComplexity: number;
-  maintainabilityIndex: number;
-  numberOfParameters: number;
-  lineCount: number;
-  dependencies: string[];
+  cyclomaticComplexity?: number;
+  cognitiveComplexity?: number;
+  maintainabilityIndex?: number;
+  numberOfParameters?: number;
+  lineCount?: number;
+  dependencies?: string[];
   potentialIssues: string[];
 }
 
 interface FunctionMetrics extends ComplexityMetrics {
-  name: string;
-  async: boolean;
-  returnType: string;
+  name?: string;
+  async?: boolean;
+  returnType?: string;
 }
 
 interface ComponentMetrics extends ComplexityMetrics {
-  name: string;
-  propsCount: number;
-  stateCount: number;
-  effectCount: number;
-  renderCount: number;
+  name?: string;
+  propsCount?: number;
+  stateCount?: number;
+  effectCount?: number;
+  renderCount?: number;
 }
 
 export class CodeAnalyzer {
@@ -229,13 +229,6 @@ export class CodeAnalyzer {
         issues.push('Contains console statement');
       }
 
-      // Check for TODO comments
-      if (
-        node.type === 'Comment' &&
-        node.value.toLowerCase().includes('todo')
-      ) {
-        issues.push('Contains TODO comment');
-      }
 
       // Check for any type usage
       if (
@@ -262,15 +255,15 @@ export class CodeAnalyzer {
   private static identifyReactSpecificIssues(metrics: Partial<ComponentMetrics>): string[] {
     const issues: string[] = [];
 
-    if (metrics.propsCount > this.COMPLEXITY_THRESHOLDS.PROPS) {
+    if ((metrics.propsCount ?? 0) > this.COMPLEXITY_THRESHOLDS.PROPS) {
       issues.push(`High prop count (${metrics.propsCount})`);
     }
 
-    if (metrics.stateCount > this.COMPLEXITY_THRESHOLDS.STATE_VARS) {
+    if ((metrics.stateCount ?? 0) > this.COMPLEXITY_THRESHOLDS.STATE_VARS) {
       issues.push(`High state variable count (${metrics.stateCount})`);
     }
 
-    if (metrics.effectCount > this.COMPLEXITY_THRESHOLDS.EFFECTS) {
+    if ((metrics.effectCount ?? 0) > this.COMPLEXITY_THRESHOLDS.EFFECTS) {
       issues.push(`High useEffect count (${metrics.effectCount})`);
     }
 

@@ -7,7 +7,7 @@
   "scripts": {
     "build": "pnpm run clean && tsc --build",
     "clean": "rm -rf dist",
-    "lint": "eslint .",
+    "lint": "cross-env BROWSERSLIST_IGNORE_OLD_DATA=1 BROWSERSLIST_UPDATE_DB=0 NO_UPDATE_NOTIFIER=1 eslint .",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -19,6 +19,8 @@
     "@hive/typescript-config": "workspace:*",
     "@testing-library/jest-dom": "^6.6.3",
     "@types/node": "^24.0.4",
+    "@types/react": "19.1.8",
+    "@types/react-dom": "19.1.6",
     "@types/testing-library__jest-dom": "^6.0.0",
     "@typescript-eslint/eslint-plugin": "^8.35.0",
     "@typescript-eslint/parser": "^8.35.0",

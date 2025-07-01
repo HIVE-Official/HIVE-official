@@ -18,7 +18,7 @@
   "scripts": {
     "prebuild": "pnpm run clean",
     "build": "tsc",
-    "lint": "eslint .",
+    "lint": "cross-env BROWSERSLIST_IGNORE_OLD_DATA=1 BROWSERSLIST_UPDATE_DB=0 NO_UPDATE_NOTIFIER=1 eslint .",
     "typecheck": "tsc --noEmit",
     "dev": "npx tsc --build --watch",
     "clean": "rm -rf dist",
