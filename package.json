@@ -4,7 +4,7 @@
   "scripts": {
     "build": "pnpm --filter @hive/core build && pnpm --filter @hive/validation build && pnpm --filter @hive/auth-logic build && pnpm --filter @hive/analytics build && pnpm --filter @hive/ui build",
     "dev": "turbo run dev",
-    "lint": "turbo run lint",
+    "lint": "cross-env BROWSERSLIST_IGNORE_OLD_DATA=1 BROWSERSLIST_UPDATE_DB=0 NO_UPDATE_NOTIFIER=1 TURBO_TELEMETRY_DISABLED=1 CI=1 turbo run lint",
     "clean": "turbo run clean",
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",

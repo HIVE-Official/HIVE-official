@@ -10,7 +10,7 @@
   },
   "scripts": {
     "build": "npx tsc",
-    "lint": "eslint . --max-warnings 10",
+    "lint": "cross-env BROWSERSLIST_IGNORE_OLD_DATA=1 BROWSERSLIST_UPDATE_DB=0 NO_UPDATE_NOTIFIER=1 eslint . --max-warnings 10",
     "typecheck": "npx tsc --noEmit"
   },
   "dependencies": {

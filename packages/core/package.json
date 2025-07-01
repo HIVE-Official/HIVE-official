@@ -18,7 +18,7 @@
   "scripts": {
     "prebuild": "pnpm run clean",
     "build": "npx tsup && tsc --emitDeclarationOnly --declaration --declarationMap --outDir dist",
-    "lint": "eslint .",
+    "lint": "cross-env BROWSERSLIST_IGNORE_OLD_DATA=1 NO_UPDATE_NOTIFIER=1 eslint .",
     "typecheck": "tsc --noEmit",
     "dev": "tsup --watch",
     "clean": "rm -rf dist",
