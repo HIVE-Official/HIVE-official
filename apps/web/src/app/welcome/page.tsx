@@ -1,10 +1,16 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Button, Typography, HiveLogo } from "@hive/ui";
+import { Button, Typography, HiveLogo, type ButtonProps, type TypographyProps } from "@hive/ui";
 import { useEffect, useState } from "react";
 import { logger } from "@hive/core";
 import Link from "next/link";
+
+// Define the variant types based on the cva configuration
+type ButtonVariant = "default" | "outline" | "ghost" | "accent" | "ritual" | "surface" | "link" | "nav" | "destructive";
+type ButtonSize = "xs" | "sm" | "default" | "lg" | "xl" | "icon" | "icon-sm" | "icon-lg";
+type TypographyVariant = "display" | "h1" | "h2" | "h3" | "h4" | "body" | "body-sm" | "caption" | "button" | "label" | "nav" | "code" | "code-block" | "muted" | "subtle" | "small" | "hero" | "lead";
+type TypographyAlign = "left" | "center" | "right" | "justify";
 
 export default function WelcomePage() {
   const [mounted, setMounted] = useState(false);
@@ -177,9 +183,7 @@ export default function WelcomePage() {
                 size="lg"
                 className="border-2 border-accent bg-transparent text-accent hover:bg-accent/10 transition-colors"
               >
-                <Link href="/auth/school-select">
-                  Get Started
-                </Link>
+                <Link href="/auth/school-select">Get Started</Link>
               </Button>
             </div>
           </motion.div>
@@ -200,7 +204,7 @@ export default function WelcomePage() {
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            onClick={e => e.stopPropagation()}
+            onClick={(e: React.MouseEvent) => e.stopPropagation()}
           >
             <h2 className="text-h3 font-display font-semibold mb-4">What&apos;s Coming in HIVE</h2>
             <div className="space-y-4">

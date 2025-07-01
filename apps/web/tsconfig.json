@@ -17,7 +17,10 @@
     },
     "jsx": "preserve",
     "allowJs": true,
-    "incremental": true
+    "incremental": true,
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true
   },
   "include": [
     "**/*.ts",

@@ -1,15 +1,22 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ThemeProvider } from "next-themes";
 import { AuthProvider } from "@hive/auth-logic";
 import { ToastProvider, DevModePanel } from "@hive/ui";
 import { WelcomeMatProvider } from "@/components/welcome-mat-provider";
+import { setupGlobalErrorHandling } from '@hive/analytics';
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = React.useState(() => new QueryClient());
+
+  useEffect(() => {
+    // Set up global error handling
+    setupGlobalErrorHandling();
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider
@@ -22,8 +29,8 @@ export function Providers({ children }: { children: React.ReactNode }) {
           <ToastProvider>
             <WelcomeMatProvider>
               {children}
-              <DevModePanel />
             </WelcomeMatProvider>
+            <DevModePanel />
           </ToastProvider>
         </AuthProvider>
       </ThemeProvider>

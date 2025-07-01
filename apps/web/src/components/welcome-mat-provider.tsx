@@ -1,4 +1,5 @@
 "use client";
+import React from 'react';
 // import { useAuth } from "@hive/hooks";
 // import { WelcomeMat, useWelcomeMat } from "@hive/ui";
 
@@ -7,5 +8,6 @@ export function WelcomeMatProvider({
 }: {
   children: React.ReactNode;
 }) {
-  return <div>{children}</div>;
+  // Simply return children wrapped in a Fragment to maintain provider context
+  return <>{children}</>;
 }

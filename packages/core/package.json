@@ -17,7 +17,7 @@
   ],
   "scripts": {
     "prebuild": "pnpm run clean",
-    "build": "tsup && tsc -b tsconfig.json",
+    "build": "npx tsup && tsc --emitDeclarationOnly --declaration --declarationMap --outDir dist",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "dev": "tsup --watch",

@@ -1,9 +1,16 @@
+"use client";
+
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { Button } from "@hive/ui";
-import { ArrowLeft, ArrowRight, GraduationCap, Building2, Users } from "lucide-react";
+import { Button, HiveLogo, type ButtonProps } from "@hive/ui";
+import {
+  ArrowLeft,
+  ArrowRight,
+  Building2,
+  GraduationCap,
+  Users,
+} from "lucide-react";
 import { useState } from "react";
-import { HiveLogo } from "@/components/brand/hive-logo";
 import { OrgAccessModal } from "@/components/modals/org-access-modal";
 
 export default function RolePage() {
@@ -33,14 +40,14 @@ export default function RolePage() {
       <div className="text-center space-y-6 mb-12">
         {/* HIVE Logo */}
         <div className="flex justify-center">
-          <HiveLogo 
-            variant="white" 
-            size="2xl" 
+          <HiveLogo
+            variant="white"
+            size="2xl"
             animationType="gentle-float"
             className="drop-shadow-lg"
           />
         </div>
-        
+
         <div className="space-y-2">
           <h1 className="text-4xl font-display font-medium text-foreground">
             Choose Your Role
@@ -109,7 +116,7 @@ export default function RolePage() {
                 <Users className="w-6 h-6 text-muted" />
               </div>
               <div className="text-left">
-                <h3 className="font-display font-medium text-lg text-foreground">
+                <h3 className="font-display font-.medium text-lg text-foreground">
                   Alumni
                 </h3>
                 <p className="text-sm text-muted">
@@ -122,9 +129,9 @@ export default function RolePage() {
       </div>
 
       {/* Organization Access Modal */}
-      <OrgAccessModal 
-        isOpen={isOrgModalOpen} 
-        onClose={() => setIsOrgModalOpen(false)} 
+      <OrgAccessModal
+        isOpen={isOrgModalOpen}
+        onClose={() => setIsOrgModalOpen(false)}
       />
     </div>
   );

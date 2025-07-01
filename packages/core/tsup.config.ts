@@ -9,5 +9,6 @@ export default defineConfig({
   target: 'es2020',
   outDir: 'dist',
   external: ['react'],
-  noExternal: ['zustand']
+  noExternal: ['zustand'],
+  tsconfig: 'tsconfig.json',
 }); 
