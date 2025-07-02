@@ -1,6 +1,67 @@
 {
-  "buildCommand": "NEXT_FONT_SKIP_DOWNLOAD=1 npx next build",
+  "framework": "nextjs",
+  "buildCommand": "NEXT_FONT_SKIP_DOWNLOAD=1 pnpm build",
   "outputDirectory": ".next",
   "installCommand": "npm install -g pnpm@9.1.1 && pnpm install --frozen-lockfile",
-  "framework": "nextjs"
+  "functions": {
+    "src/app/api/auth/**": {
+      "maxDuration": 15,
+      "memory": 1024
+    },
+    "src/app/api/spaces/**": {
+      "maxDuration": 10,
+      "memory": 1024
+    },
+    "src/app/api/profile/**": {
+      "maxDuration": 10,
+      "memory": 1024
+    },
+    "src/app/api/**": {
+      "maxDuration": 30,
+      "memory": 1024
+    }
+  },
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=()"
+        }
+      ]
+    },
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store, max-age=0"
+        }
+      ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/health",
+      "destination": "/api/health"
+    }
+  ],
+  "regions": ["iad1"]
 } 

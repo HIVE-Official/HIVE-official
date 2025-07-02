@@ -552,8 +552,8 @@ export declare const ToolSchema: z.ZodObject<{
     publishedAt: z.ZodOptional<z.ZodDate>;
     lastUsedAt: z.ZodOptional<z.ZodDate>;
 }, "strip", z.ZodTypeAny, {
-    status: "draft" | "preview" | "published";
     id: string;
+    status: "draft" | "preview" | "published";
     config: {
         backgroundColor: string;
         theme: "auto" | "light" | "dark";
@@ -1320,8 +1320,8 @@ export declare const ShareToolSchema: z.ZodObject<{
     requiresApproval: boolean;
     expiresAt?: Date | undefined;
 }, {
-    permission?: "view" | "comment" | "edit" | undefined;
     expiresAt?: Date | undefined;
+    permission?: "view" | "comment" | "edit" | undefined;
     requiresApproval?: boolean | undefined;
 }>;
 export type ShareTool = z.infer<typeof ShareToolSchema>;
@@ -1382,18 +1382,18 @@ export declare const ToolUsageEventSchema: z.ZodObject<{
     metadata: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnknown>>;
 }, "strip", z.ZodTypeAny, {
     id: string;
+    timestamp: Date;
     toolId: string;
     sessionId: string;
     eventType: "start" | "view" | "complete" | "abandon" | "share" | "fork";
-    timestamp: Date;
     userId?: string | undefined;
     metadata?: Record<string, unknown> | undefined;
 }, {
     id: string;
+    timestamp: Date;
     toolId: string;
     sessionId: string;
     eventType: "start" | "view" | "complete" | "abandon" | "share" | "fork";
-    timestamp: Date;
     userId?: string | undefined;
     metadata?: Record<string, unknown> | undefined;
 }>;

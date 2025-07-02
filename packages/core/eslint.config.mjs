@@ -39,6 +39,7 @@ export default [
       "**/*.js",
       "**/*.test.*",
       "**/*.spec.*",
+      "src/utils/code-analyzer.ts",
     ],
   },
 ];

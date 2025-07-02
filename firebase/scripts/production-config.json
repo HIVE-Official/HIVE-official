@@ -1,4 +1,5 @@
 {
   "projectId": "hive-9265c",
-  "serviceAccountPath": "./service-account-prod.json"
+  "useEnvironmentVariables": true,
+  "note": "Service account credentials should be loaded from FIREBASE_CLIENT_EMAIL and FIREBASE_PRIVATE_KEY environment variables, not local files"
 } 

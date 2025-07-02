@@ -23,10 +23,26 @@ function getFirebaseConfig() {
 
   const missingVars = requiredVars.filter(varName => !process.env[varName]);
   
+  // Debug logging for client-side
+  if (typeof window !== 'undefined') {
+    console.log('🔍 Client-side Firebase config check:', {
+      missingVars,
+      NODE_ENV: process.env.NODE_ENV,
+      isDevelopmentWithoutFirebase: isDevelopmentWithoutFirebase(),
+      availableVars: requiredVars.map(varName => ({
+        [varName]: process.env[varName] ? '✅ Available' : '❌ Missing'
+      }))
+    });
+  }
+  
   if (missingVars.length > 0 && !isDevelopmentWithoutFirebase()) {
     // Check if this might be a Vercel screenshot service or similar
     const isLikelyScreenshotService = process.env.VERCEL_ENV && 
                                       !process.env.NEXT_PUBLIC_FIREBASE_API_KEY;
+    
+    // Check if this is client-side in development - use mock config
+    const isClientSideDevelopment = typeof window !== 'undefined' && 
+                                    process.env.NODE_ENV === 'development';
     
     if (isLikelyScreenshotService) {
       console.warn(
@@ -41,6 +57,22 @@ function getFirebaseConfig() {
         messagingSenderId: "000000000",
         appId: "1:000000000:web:screenshot",
         measurementId: "G-SCREENSHOT"
+      };
+    }
+    
+    if (isClientSideDevelopment) {
+      console.warn(
+        `⚠️ Client-side development: Firebase env vars missing, using mock config. Missing: ${missingVars.join(', ')}`
+      );
+      // Return demo config for client-side development
+      return {
+        apiKey: "demo-api-key",
+        authDomain: "demo-project.firebaseapp.com",
+        projectId: "demo-project",
+        storageBucket: "demo-project.appspot.com",
+        messagingSenderId: "123456789",
+        appId: "1:123456789:web:abcdef123456",
+        measurementId: "G-DEMO"
       };
     }
     
@@ -141,7 +173,7 @@ if (isDevelopmentWithoutFirebase() || isUsingMockConfig) {
     sendPasswordResetEmail: () => Promise.reject(new Error("Mock auth - not implemented")),
     updateProfile: () => Promise.reject(new Error("Mock auth - not implemented")),
     app: null,
-    name: "mock-auth", 
+    name: "mock-auth",
     config: firebaseConfig,
   } as unknown as Auth;
 } else {

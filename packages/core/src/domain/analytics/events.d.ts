@@ -1,97 +1,11 @@
 import { z } from 'zod';
-
-// Analytics Event Types for HIVE platform
-
-// Base event structure
-export interface BaseAnalyticsEvent {
-  timestamp: number;
-  sessionId: string;
-  userId?: string;
-  metadata?: Record<string, unknown>;
-}
-
-// Page view events
-export interface PageViewEvent extends BaseAnalyticsEvent {
-  type: "page_view";
-  page: string;
-  referrer?: string;
-}
-
-// User interaction events
-export interface UserInteractionEvent extends BaseAnalyticsEvent {
-  type: "user_interaction";
-  action: string;
-  element: string;
-  context?: Record<string, unknown>;
-}
-
-// Onboarding events
-export interface OnboardingEvent extends BaseAnalyticsEvent {
-  type: "onboarding_step" | "onboarding_complete";
-  step?: number;
-  data?: Record<string, unknown>;
-}
-
-// Generic analytics event (replacing any with unknown)
-export interface GenericAnalyticsEvent extends BaseAnalyticsEvent {
-  type: string;
-  data?: Record<string, unknown>;
-}
-
-// Feed events
-export interface FeedEvent extends BaseAnalyticsEvent {
-  type: "feed_view" | "post_create" | "post_interact";
-  spaceId?: string;
-  postId?: string;
-  action?: string;
-  metadata?: Record<string, unknown>;
-}
-
-// Space events
-export interface SpaceEvent extends BaseAnalyticsEvent {
-  type: "space_join" | "space_leave" | "space_create";
-  spaceId: string;
-  spaceType?: string;
-  metadata?: Record<string, unknown>;
-}
-
-// Union type for all analytics events
-export type AnalyticsEvent = 
-  | PageViewEvent
-  | UserInteractionEvent
-  | OnboardingEvent
-  | GenericAnalyticsEvent
-  | FeedEvent
-  | SpaceEvent;
-
-// Zod schemas for validation
-export const BaseAnalyticsEventSchema = z.object({
-  timestamp: z.number(),
-  sessionId: z.string(),
-  userId: z.string().optional(),
-  metadata: z.record(z.unknown()).optional(),
-});
-
-export const PageViewEventSchema = BaseAnalyticsEventSchema.extend({
-  type: z.literal("page_view"),
-  page: z.string(),
-  referrer: z.string().optional(),
-});
-
-export const UserInteractionEventSchema = BaseAnalyticsEventSchema.extend({
-  type: z.literal("user_interaction"),
-  action: z.string(),
-  element: z.string(),
-  context: z.record(z.unknown()).optional(),
-});
-
 export declare const AnalyticsEventSchema: z.ZodObject<{
     id: z.ZodString;
     type: z.ZodString;
     userId: z.ZodOptional<z.ZodString>;
     sessionId: z.ZodString;
     timestamp: z.ZodDate;
-    properties: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnknown>>;
+    properties: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodAny>>;
     context: z.ZodOptional<z.ZodObject<{
         userAgent: z.ZodOptional<z.ZodString>;
         ip: z.ZodOptional<z.ZodString>;
@@ -109,12 +23,12 @@ export declare const AnalyticsEventSchema: z.ZodObject<{
         ip?: string | undefined;
     }>>;
 }, "strip", z.ZodTypeAny, {
-    type: string;
     id: string;
-    sessionId: string;
+    type: string;
     timestamp: Date;
+    sessionId: string;
     userId?: string | undefined;
-    properties?: Record<string, unknown> | undefined;
+    properties?: Record<string, any> | undefined;
     context?: {
         url?: string | undefined;
         userAgent?: string | undefined;
@@ -122,12 +36,12 @@ export declare const AnalyticsEventSchema: z.ZodObject<{
         ip?: string | undefined;
     } | undefined;
 }, {
-    type: string;
     id: string;
-    sessionId: string;
+    type: string;
     timestamp: Date;
+    sessionId: string;
     userId?: string | undefined;
-    properties?: Record<string, unknown> | undefined;
+    properties?: Record<string, any> | undefined;
     context?: {
         url?: string | undefined;
         userAgent?: string | undefined;
@@ -203,14 +117,14 @@ export declare const BaseEventPropertiesSchema: z.ZodObject<{
     content: z.ZodOptional<z.ZodString>;
     term: z.ZodOptional<z.ZodString>;
 }, "strip", z.ZodTypeAny, {
-    medium?: string | undefined;
     content?: string | undefined;
+    medium?: string | undefined;
     source?: string | undefined;
     campaign?: string | undefined;
     term?: string | undefined;
 }, {
-    medium?: string | undefined;
     content?: string | undefined;
+    medium?: string | undefined;
     source?: string | undefined;
     campaign?: string | undefined;
     term?: string | undefined;

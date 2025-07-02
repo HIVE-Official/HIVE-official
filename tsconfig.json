@@ -1,31 +1,4 @@
 {
-  "files": [],
-  "references": [
-    {
-      "path": "./packages/ui/tsconfig.json"
-    },
-    {
-      "path": "./packages/core/tsconfig.json"
-    },
-    {
-      "path": "./packages/auth-logic/tsconfig.json"
-    },
-    {
-      "path": "./packages/hooks/tsconfig.json"
-    },
-    {
-      "path": "./packages/validation/tsconfig.json"
-    },
-    {
-      "path": "./packages/utilities/tsconfig.json"
-    },
-    {
-      "path": "./packages/api-client/tsconfig.json"
-    },
-    {
-      "path": "./packages/analytics/tsconfig.json"
-    }
-  ],
   "compilerOptions": {
     "target": "es2020",
     "lib": ["dom", "dom.iterable", "esnext"],
@@ -35,21 +8,18 @@
     "forceConsistentCasingInFileNames": true,
     "esModuleInterop": true,
     "module": "esnext",
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "incremental": true,
-    "composite": true,
-    "declaration": true,
-    "declarationMap": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@hive/*": ["./packages/*/src"]
     },
     "types": ["node", "react", "react-dom"]
   },
-  "include": ["next-env.d.ts", "src/**/*.ts", "src/**/*.tsx"],
+  "include": ["next-env.d.ts"],
   "exclude": [
     "node_modules",
     "**/node_modules",

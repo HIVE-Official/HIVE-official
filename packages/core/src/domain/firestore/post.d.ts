@@ -75,14 +75,14 @@ export declare const RichTextContentSchema: z.ZodObject<{
         start: z.ZodNumber;
         end: z.ZodNumber;
     }, "strip", z.ZodTypeAny, {
+        userId: string;
         start: number;
         end: number;
-        userId: string;
         handle: string;
     }, {
+        userId: string;
         start: number;
         end: number;
-        userId: string;
         handle: string;
     }>, "many">>;
 }, "strip", z.ZodTypeAny, {
@@ -94,9 +94,9 @@ export declare const RichTextContentSchema: z.ZodObject<{
         url?: string | undefined;
     }[] | undefined;
     mentions?: {
+        userId: string;
         start: number;
         end: number;
-        userId: string;
         handle: string;
     }[] | undefined;
 }, {
@@ -108,9 +108,9 @@ export declare const RichTextContentSchema: z.ZodObject<{
         url?: string | undefined;
     }[] | undefined;
     mentions?: {
+        userId: string;
         start: number;
         end: number;
-        userId: string;
         handle: string;
     }[] | undefined;
 }>;
@@ -284,14 +284,14 @@ export declare const PostSchema: z.ZodObject<{
             start: z.ZodNumber;
             end: z.ZodNumber;
         }, "strip", z.ZodTypeAny, {
+            userId: string;
             start: number;
             end: number;
-            userId: string;
             handle: string;
         }, {
+            userId: string;
             start: number;
             end: number;
-            userId: string;
             handle: string;
         }>, "many">>;
     }, "strip", z.ZodTypeAny, {
@@ -303,9 +303,9 @@ export declare const PostSchema: z.ZodObject<{
             url?: string | undefined;
         }[] | undefined;
         mentions?: {
+            userId: string;
             start: number;
             end: number;
-            userId: string;
             handle: string;
         }[] | undefined;
     }, {
@@ -317,9 +317,9 @@ export declare const PostSchema: z.ZodObject<{
             url?: string | undefined;
         }[] | undefined;
         mentions?: {
+            userId: string;
             start: number;
             end: number;
-            userId: string;
             handle: string;
         }[] | undefined;
     }>>;
@@ -428,13 +428,13 @@ export declare const PostSchema: z.ZodObject<{
     updatedAt: z.ZodDate;
     hardDeleteAt: z.ZodOptional<z.ZodDate>;
 }, "strip", z.ZodTypeAny, {
-    type: "text" | "event" | "image" | "poll" | "toolshare";
     id: string;
+    type: "text" | "event" | "image" | "poll" | "toolshare";
+    content: string;
     createdAt: Date;
     updatedAt: Date;
     spaceId: string;
     authorId: string;
-    content: string;
     reactions: {
         heart: number;
     };
@@ -461,9 +461,9 @@ export declare const PostSchema: z.ZodObject<{
             url?: string | undefined;
         }[] | undefined;
         mentions?: {
+            userId: string;
             start: number;
             end: number;
-            userId: string;
             handle: string;
         }[] | undefined;
     } | undefined;
@@ -505,11 +505,11 @@ export declare const PostSchema: z.ZodObject<{
     hardDeleteAt?: Date | undefined;
 }, {
     id: string;
+    content: string;
     createdAt: Date;
     updatedAt: Date;
     spaceId: string;
     authorId: string;
-    content: string;
     type?: "text" | "event" | "image" | "poll" | "toolshare" | undefined;
     author?: {
         id: string;
@@ -527,9 +527,9 @@ export declare const PostSchema: z.ZodObject<{
             url?: string | undefined;
         }[] | undefined;
         mentions?: {
+            userId: string;
             start: number;
             end: number;
-            userId: string;
             handle: string;
         }[] | undefined;
     } | undefined;
@@ -611,14 +611,14 @@ export declare const CreatePostSchema: z.ZodEffects<z.ZodObject<{
             start: z.ZodNumber;
             end: z.ZodNumber;
         }, "strip", z.ZodTypeAny, {
+            userId: string;
             start: number;
             end: number;
-            userId: string;
             handle: string;
         }, {
+            userId: string;
             start: number;
             end: number;
-            userId: string;
             handle: string;
         }>, "many">>;
     }, "strip", z.ZodTypeAny, {
@@ -630,9 +630,9 @@ export declare const CreatePostSchema: z.ZodEffects<z.ZodObject<{
             url?: string | undefined;
         }[] | undefined;
         mentions?: {
+            userId: string;
             start: number;
             end: number;
-            userId: string;
             handle: string;
         }[] | undefined;
     }, {
@@ -644,9 +644,9 @@ export declare const CreatePostSchema: z.ZodEffects<z.ZodObject<{
             url?: string | undefined;
         }[] | undefined;
         mentions?: {
+            userId: string;
             start: number;
             end: number;
-            userId: string;
             handle: string;
         }[] | undefined;
     }>>;
@@ -738,9 +738,9 @@ export declare const CreatePostSchema: z.ZodEffects<z.ZodObject<{
             url?: string | undefined;
         }[] | undefined;
         mentions?: {
+            userId: string;
             start: number;
             end: number;
-            userId: string;
             handle: string;
         }[] | undefined;
     } | undefined;
@@ -784,9 +784,9 @@ export declare const CreatePostSchema: z.ZodEffects<z.ZodObject<{
             url?: string | undefined;
         }[] | undefined;
         mentions?: {
+            userId: string;
             start: number;
             end: number;
-            userId: string;
             handle: string;
         }[] | undefined;
     } | undefined;
@@ -830,9 +830,9 @@ export declare const CreatePostSchema: z.ZodEffects<z.ZodObject<{
             url?: string | undefined;
         }[] | undefined;
         mentions?: {
+            userId: string;
             start: number;
             end: number;
-            userId: string;
             handle: string;
         }[] | undefined;
     } | undefined;
@@ -876,9 +876,9 @@ export declare const CreatePostSchema: z.ZodEffects<z.ZodObject<{
             url?: string | undefined;
         }[] | undefined;
         mentions?: {
+            userId: string;
             start: number;
             end: number;
-            userId: string;
             handle: string;
         }[] | undefined;
     } | undefined;
@@ -941,14 +941,14 @@ export declare const EditPostSchema: z.ZodObject<{
             start: z.ZodNumber;
             end: z.ZodNumber;
         }, "strip", z.ZodTypeAny, {
+            userId: string;
             start: number;
             end: number;
-            userId: string;
             handle: string;
         }, {
+            userId: string;
             start: number;
             end: number;
-            userId: string;
             handle: string;
         }>, "many">>;
     }, "strip", z.ZodTypeAny, {
@@ -960,9 +960,9 @@ export declare const EditPostSchema: z.ZodObject<{
             url?: string | undefined;
         }[] | undefined;
         mentions?: {
+            userId: string;
             start: number;
             end: number;
-            userId: string;
             handle: string;
         }[] | undefined;
     }, {
@@ -974,9 +974,9 @@ export declare const EditPostSchema: z.ZodObject<{
             url?: string | undefined;
         }[] | undefined;
         mentions?: {
+            userId: string;
             start: number;
             end: number;
-            userId: string;
             handle: string;
         }[] | undefined;
     }>>;
@@ -991,9 +991,9 @@ export declare const EditPostSchema: z.ZodObject<{
             url?: string | undefined;
         }[] | undefined;
         mentions?: {
+            userId: string;
             start: number;
             end: number;
-            userId: string;
             handle: string;
         }[] | undefined;
     } | undefined;
@@ -1008,9 +1008,9 @@ export declare const EditPostSchema: z.ZodObject<{
             url?: string | undefined;
         }[] | undefined;
         mentions?: {
+            userId: string;
             start: number;
             end: number;
-            userId: string;
             handle: string;
         }[] | undefined;
     } | undefined;

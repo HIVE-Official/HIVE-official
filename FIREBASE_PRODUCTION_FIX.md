@@ -149,7 +149,7 @@ NODE_ENV=production
 
 # Firebase Admin (Server-side)
 FIREBASE_PROJECT_ID=hive-9265c
-FIREBASE_CLIENT_EMAIL=firebase-adminsdk-883ue@hive-9265c.iam.gserviceaccount.com
+FIREBASE_CLIENT_EMAIL=firebase-adminsdk-fbsvc@hive-9265c.iam.gserviceaccount.com
 FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n[PRIVATE_KEY_CONTENT]\n-----END PRIVATE KEY-----"
 ```
 

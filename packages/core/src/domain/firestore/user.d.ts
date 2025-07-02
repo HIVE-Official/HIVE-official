@@ -118,8 +118,8 @@ export declare const UserSchema: z.ZodObject<{
     updatedAt: z.ZodUnion<[z.ZodDate, z.ZodNumber]>;
     lastActiveAt: z.ZodOptional<z.ZodUnion<[z.ZodDate, z.ZodNumber]>>;
 }, "strip", z.ZodTypeAny, {
-    status: "active" | "deleted" | "suspended";
     id: string;
+    status: "active" | "deleted" | "suspended";
     email: string;
     createdAt: number | Date;
     updatedAt: number | Date;

@@ -9,12 +9,11 @@
     "forceConsistentCasingInFileNames": true,
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "noEmit": true
+    "noEmit": true,
+    "types": ["jest", "node"]
   },
   "include": [
-    "tests/**/*",
-    "**/*.test.ts",
-    "scripts/**/*"
+    "**/*.ts"
   ],
   "exclude": [
     "node_modules"

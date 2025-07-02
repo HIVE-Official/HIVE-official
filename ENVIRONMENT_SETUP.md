@@ -1,154 +1,115 @@
-# HIVE Environment Variables Setup Guide
+# HIVE Environment Setup Guide
 
-## 📋 Overview
+## Environment File Structure
 
-This document provides a complete guide for setting up environment variables for the HIVE project across all environments (development, preview, production).
+All environment files should be located in the Next.js application directory (`apps/web/`):
 
-## 🚀 Quick Setup for New Developers
+```
+apps/web/
+├── .env.local          # Local development (not tracked in git)
+├── .env.example        # Template (tracked in git)
+├── .env.development    # Vercel development environment
+├── .env.preview        # Vercel preview environment
+└── .env.production     # Vercel production environment
+```
 
-1. **Copy the example file:**
+**Important**: Environment files should ONLY exist in `apps/web/`. Do not place environment files in the monorepo root.
+
+## Setting Up Your Development Environment
+
+1. Navigate to the web app directory:
+   ```bash
+   cd apps/web
+   ```
+
+2. Copy the example file:
    ```bash
    cp .env.example .env.local
    ```
 
-2. **Fill in the actual values** (get these from team lead or Firebase console)
+3. Fill in your environment variables in `.env.local`
 
-## 🔧 Environment Files Structure
+4. For Vercel environments, use the Vercel CLI:
+   ```bash
+   vercel env pull .env.production --environment=production
+   vercel env pull .env.preview --environment=preview
+   vercel env pull .env.development --environment=development
+   ```
 
-```
-hive_ui/
-├── .env.local          # Local development (git ignored)
-├── .env.example        # Template file (git tracked)
-├── .env.development    # Vercel development environment (git ignored) 
-├── .env.preview        # Vercel preview environment (git ignored)
-└── .env.production     # Vercel production environment (git ignored)
-```
+## Required Environment Variables
 
-**Note:** All environment files should be kept in the root directory. The monorepo structure allows all packages and apps to access these environment variables from the root.
-
-## 🔐 Required Environment Variables
-
-### Firebase Configuration (Client-side)
+### Firebase Configuration
 ```bash
-NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
-NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id  
-NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
-NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
-NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
-NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=your_measurement_id
+NEXT_PUBLIC_FIREBASE_API_KEY=
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=
+NEXT_PUBLIC_FIREBASE_APP_ID=
+NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=
 ```
 
 ### Firebase Admin (Server-side)
 ```bash
-FIREBASE_CLIENT_EMAIL=service-account@your_project.iam.gserviceaccount.com
-FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----"
+FIREBASE_CLIENT_EMAIL=
+FIREBASE_PRIVATE_KEY=
 ```
 
 ### NextAuth Configuration
 ```bash
-NEXTAUTH_SECRET=your_random_32_character_secret
-NEXTAUTH_URL=http://localhost:3000  # Local dev URL
-NEXT_PUBLIC_APP_URL=http://localhost:3000
+NEXTAUTH_SECRET=
+NEXTAUTH_URL=
+NEXT_PUBLIC_APP_URL=
 ```
 
-## 🌍 Environment-Specific URLs
-
-### Local Development
+## Development Configuration (Optional)
 ```bash
-NEXTAUTH_URL=http://localhost:3000
-NEXT_PUBLIC_APP_URL=http://localhost:3000
+NODE_ENV=development
+NEXT_PUBLIC_API_URL=http://localhost:3000/api
+NEXT_PUBLIC_BASE_URL=http://localhost:3000
+NEXT_PUBLIC_IS_DEVELOPMENT=true
+NEXT_PUBLIC_ENABLE_DEBUG=true
 ```
 
-### Production
-```bash
-NEXTAUTH_URL=https://hive.college
-NEXT_PUBLIC_APP_URL=https://hive.college
-```
+## Security Considerations
 
-### Preview/Staging
-```bash
-NEXTAUTH_URL=https://your-preview-url.vercel.app
-NEXT_PUBLIC_APP_URL=https://your-preview-url.vercel.app
-```
+1. Never commit environment files to git (except `.env.example`)
+2. Keep your Firebase Admin private key secure
+3. Use different values for each environment
+4. Regularly rotate sensitive credentials
 
-## 🔄 Syncing with Vercel
+## Troubleshooting
 
-To pull the latest environment variables from Vercel:
+### Missing Environment Variables
+If you see errors about missing environment variables:
 
-```bash
-# Pull production variables
-vercel env pull .env.production --environment=production
+1. Check that you're in `apps/web/` directory
+2. Verify `.env.local` exists and has all required variables
+3. For Vercel environments, re-pull using the CLI
+4. Restart your development server
 
-# Pull preview variables  
-vercel env pull .env.preview --environment=preview
+### Firebase Configuration Issues
+If Firebase fails to initialize:
 
-# Pull development variables
-vercel env pull .env.development --environment=development
-```
+1. Verify all NEXT_PUBLIC_FIREBASE_* variables are set
+2. Check Firebase Console for correct values
+3. Ensure FIREBASE_PRIVATE_KEY includes newlines
+4. Verify FIREBASE_CLIENT_EMAIL matches your service account
 
-## 🛡️ Security Considerations
+## Deployment
 
-### ✅ Safe to Share
-- Template files (`.env.example`)
-- Variable names and structure
-- Documentation
+### Vercel
+Environment variables are managed through the Vercel dashboard. After adding or updating variables:
 
-### ❌ Never Share
-- Actual environment files (`.env.local`, `.env.production`, etc.)
-- Firebase private keys
-- NextAuth secrets
-- Any values with real credentials
-
-## 🚨 Troubleshooting
-
-### Firebase Configuration Errors
-If you see "Missing environment variables" errors:
-
-1. **Check all required variables are set:**
+1. Pull latest variables to local environment:
    ```bash
-   # Check if variables are loaded
-   echo $NEXT_PUBLIC_FIREBASE_PROJECT_ID
+   cd apps/web
+   vercel env pull .env.production --environment=production
    ```
 
-2. **Verify .env.local exists and has correct values**
-
-3. **Restart your development server** after adding new variables
-
-4. **For Vercel deployments**, ensure all environments have the variables set
-
-### NextAuth Errors
-- Make sure `NEXTAUTH_SECRET` is a random 32+ character string
-- Verify `NEXTAUTH_URL` matches your actual domain/localhost
-- Check that URLs don't have trailing slashes
-
-## 📚 Additional Resources
-
-- [Firebase Configuration Guide](https://firebase.google.com/docs/web/setup)
-- [NextAuth.js Configuration](https://next-auth.js.org/configuration/options)
-- [Vercel Environment Variables](https://vercel.com/docs/concepts/projects/environment-variables)
-
-## 🔄 Updating Environment Variables
-
-When environment variables change:
-
-1. **Update Vercel first:**
+2. Verify configuration:
    ```bash
-   vercel env add VARIABLE_NAME
+   vercel env ls
    ```
 
-2. **Pull updates locally:**
-   ```bash
-   vercel env pull .env.local --environment=development
-   ```
-
-3. **Copy to web app if needed:**
-   ```bash
-   cp .env.local apps/web/.env.local
-   ```
-
-4. **Update documentation** if new variables are added
-
----
-
-**Note:** Environment files are protected by `.gitignore` to prevent accidental commits of sensitive data. Only `.env.example` is tracked in git. 
+Remember: Changes to environment variables require a redeploy to take effect. 

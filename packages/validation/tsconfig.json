@@ -1,5 +1,4 @@
 {
-  "extends": "../config/typescript/base.json",
   "compilerOptions": {
     "target": "ES2020",
     "module": "ESNext",
@@ -11,28 +10,17 @@
     "rootDir": "./src",
     "strict": true,
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "composite": true,
-    "tsBuildInfoFile": "./dist/.tsbuildinfo",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
     "noEmit": false,
     "baseUrl": ".",
-    "paths": {
-      "@hive/*": ["../*/src"]
-    }
+    "types": ["node"]
   },
-  "files": [
-    "src/index.ts",
-    "src/schemas.ts",
-    "src/user.schema.ts",
-    "src/profile.schema.ts",
-    "src/feed.schema.ts",
-    "src/schemas/user.schema.ts",
-    "src/schemas/space.schema.ts"
-  ],
   "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx"
+    "src/**/*"
   ],
   "exclude": [
     "node_modules",
@@ -40,8 +28,5 @@
     "**/*.test.*",
     "**/*.spec.*",
     "**/*.stories.*"
-  ],
-  "references": [
-    { "path": "../core" }
   ]
 } 

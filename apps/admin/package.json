@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "npx next dev --port 3001",
-    "build": "NEXT_FONT_SKIP_DOWNLOAD=1 npx next build",
+    "build": "next build",
     "start": "npx next start --port 3001",
     "lint": "cross-env BROWSERSLIST_IGNORE_OLD_DATA=1 BROWSERSLIST_UPDATE_DB=0 NO_UPDATE_NOTIFIER=1 eslint . --max-warnings 10",
     "test": "echo 'skipping tests'",

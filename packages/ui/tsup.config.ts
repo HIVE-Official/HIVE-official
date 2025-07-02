@@ -5,7 +5,7 @@ export default defineConfig({
     index: 'src/index.ts',
   },
   format: ['cjs', 'esm'],
-  dts: true,
+  dts: false,
   splitting: false,
   sourcemap: true,
   clean: true,
@@ -13,7 +13,6 @@ export default defineConfig({
   treeshake: true,
   minify: false,
   target: 'es2020',
-  tsconfig: './tsconfig.json',
   esbuildOptions(options, context) {
     if (context.format === 'esm') {
       options.banner = {

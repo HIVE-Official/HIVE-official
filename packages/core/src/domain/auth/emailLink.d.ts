@@ -1,4 +1,4 @@
-import { type ActionCodeSettings } from 'firebase/auth';
+import type { ActionCodeSettings } from "firebase/auth";
 /**
  * Configuration for sending magic link emails
  */
@@ -18,6 +18,10 @@ export interface SendMagicLinkResult {
  * Default action code settings for HIVE magic links
  */
 export declare const getDefaultActionCodeSettings: (schoolId: string) => ActionCodeSettings;
+/**
+ * Create action code settings with custom URL
+ */
+export declare const createActionCodeSettings: (customUrl: string, options?: Partial<ActionCodeSettings>) => ActionCodeSettings;
 /**
  * Validates an email domain against the school's domain
  */

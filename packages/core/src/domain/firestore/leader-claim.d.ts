@@ -19,17 +19,17 @@ export declare const LeaderClaimSchema: z.ZodObject<{
     createdAt: z.ZodUnion<[z.ZodDate, z.ZodNumber]>;
     updatedAt: z.ZodUnion<[z.ZodDate, z.ZodNumber]>;
 }, "strip", z.ZodTypeAny, {
-    status: "PENDING" | "APPROVED" | "REJECTED";
     id: string;
+    status: "PENDING" | "APPROVED" | "REJECTED";
+    userId: string;
     createdAt: number | Date;
     updatedAt: number | Date;
-    userId: string;
     requestedSpaceName: string;
 }, {
     id: string;
+    userId: string;
     createdAt: number | Date;
     updatedAt: number | Date;
-    userId: string;
     requestedSpaceName: string;
     status?: "PENDING" | "APPROVED" | "REJECTED" | undefined;
 }>;
@@ -40,7 +40,7 @@ export declare const CreateLeaderClaimSchema: z.ZodObject<Omit<{
     status: z.ZodDefault<z.ZodEnum<["PENDING", "APPROVED", "REJECTED"]>>;
     createdAt: z.ZodUnion<[z.ZodDate, z.ZodNumber]>;
     updatedAt: z.ZodUnion<[z.ZodDate, z.ZodNumber]>;
-}, "status" | "id" | "createdAt" | "updatedAt">, "strip", z.ZodTypeAny, {
+}, "id" | "status" | "createdAt" | "updatedAt">, "strip", z.ZodTypeAny, {
     userId: string;
     requestedSpaceName: string;
 }, {

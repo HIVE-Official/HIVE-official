@@ -13,12 +13,13 @@ export default [
   ...tseslint.configs.recommended,
   {
     ...react.configs.flat.recommended,
-    files: ["**/*.{js,jsx,ts,tsx}"],
+    files: ["src/**/*.{js,jsx,ts,tsx}"],
+    ignores: ["**/*.test.*", "**/*.spec.*"],
     languageOptions: {
       ...react.configs.flat.recommended.languageOptions,
       parser: tseslint.parser,
       parserOptions: {
-        project: true,
+        project: "./tsconfig.json",
         tsconfigRootDir: __dirname,
         ecmaFeatures: {
           jsx: true,
@@ -40,6 +41,23 @@ export default [
       "@typescript-eslint/consistent-type-imports": [
         "error",
         { prefer: "type-imports" },
+      ],
+    },
+  },
+  {
+    files: ["**/*.test.*", "**/*.spec.*"],
+    languageOptions: {
+      parser: tseslint.parser,
+      parserOptions: {
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
+    },
+    rules: {
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        { argsIgnorePattern: "^_" },
       ],
     },
   },

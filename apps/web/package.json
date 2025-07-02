@@ -7,7 +7,7 @@
     "dev:subdomain": "next dev --hostname dev.hive.local",
     "dev:staging": "next dev --hostname staging.hive.local --port 3000",
     "dev:admin": "next dev --hostname admin.hive.local --port 3001",
-    "build": "NEXT_FONT_SKIP_DOWNLOAD=1 npx next build",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "test": "vitest",

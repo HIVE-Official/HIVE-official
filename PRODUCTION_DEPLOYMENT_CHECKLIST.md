@@ -21,7 +21,7 @@ NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=G-NK3E12MSFD
 
 # Production Firebase Admin (Private)
 FIREBASE_PROJECT_ID=hive-9265c
-FIREBASE_CLIENT_EMAIL=firebase-adminsdk-XXXXX@hive-9265c.iam.gserviceaccount.com
+FIREBASE_CLIENT_EMAIL=firebase-adminsdk-fbsvc@hive-9265c.iam.gserviceaccount.com
 FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nYOUR_ACTUAL_PRODUCTION_KEY\n-----END PRIVATE KEY-----\n"
 ```
 

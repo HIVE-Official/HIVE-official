@@ -1513,11 +1513,11 @@ export declare const CountdownTimerConfigSchema: z.ZodObject<{
         type: z.ZodEnum<["message", "redirect", "trigger"]>;
         value: z.ZodString;
     }, "strip", z.ZodTypeAny, {
-        value: string;
         type: "message" | "trigger" | "redirect";
+        value: string;
     }, {
-        value: string;
         type: "message" | "trigger" | "redirect";
+        value: string;
     }>>;
     style: z.ZodOptional<z.ZodObject<{
         backgroundColor: z.ZodOptional<z.ZodString>;
@@ -1656,8 +1656,8 @@ export declare const CountdownTimerConfigSchema: z.ZodObject<{
     }[] | undefined;
     label?: string | undefined;
     onComplete?: {
-        value: string;
         type: "message" | "trigger" | "redirect";
+        value: string;
     } | undefined;
 }, {
     targetDate: string;
@@ -1693,8 +1693,8 @@ export declare const CountdownTimerConfigSchema: z.ZodObject<{
     label?: string | undefined;
     format?: "days" | "hours" | "minutes" | "seconds" | "dhms" | undefined;
     onComplete?: {
-        value: string;
         type: "message" | "trigger" | "redirect";
+        value: string;
     } | undefined;
 }>;
 export declare const ProgressBarConfigSchema: z.ZodObject<{
@@ -4273,11 +4273,11 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             type: z.ZodEnum<["message", "redirect", "trigger"]>;
             value: z.ZodString;
         }, "strip", z.ZodTypeAny, {
-            value: string;
             type: "message" | "trigger" | "redirect";
+            value: string;
         }, {
-            value: string;
             type: "message" | "trigger" | "redirect";
+            value: string;
         }>>;
         style: z.ZodOptional<z.ZodObject<{
             backgroundColor: z.ZodOptional<z.ZodString>;
@@ -4416,8 +4416,8 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }[] | undefined;
         label?: string | undefined;
         onComplete?: {
-            value: string;
             type: "message" | "trigger" | "redirect";
+            value: string;
         } | undefined;
     }, {
         targetDate: string;
@@ -4453,8 +4453,8 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         label?: string | undefined;
         format?: "days" | "hours" | "minutes" | "seconds" | "dhms" | undefined;
         onComplete?: {
-            value: string;
             type: "message" | "trigger" | "redirect";
+            value: string;
         } | undefined;
     }>;
 }, "strip", z.ZodTypeAny, {
@@ -4493,8 +4493,8 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }[] | undefined;
         label?: string | undefined;
         onComplete?: {
-            value: string;
             type: "message" | "trigger" | "redirect";
+            value: string;
         } | undefined;
     };
 }, {
@@ -4533,8 +4533,8 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         label?: string | undefined;
         format?: "days" | "hours" | "minutes" | "seconds" | "dhms" | undefined;
         onComplete?: {
-            value: string;
             type: "message" | "trigger" | "redirect";
+            value: string;
         } | undefined;
     };
 }>, z.ZodObject<{
@@ -5416,8 +5416,8 @@ export declare const ElementSchema: z.ZodObject<{
     createdAt: z.ZodDate;
     updatedAt: z.ZodDate;
 }, "strip", z.ZodTypeAny, {
-    type: "textBlock" | "imageBlock" | "divider" | "stack" | "button" | "choiceSelect" | "textInput" | "ratingStars" | "countdownTimer" | "progressBar" | "conditionGate" | "pingTrigger";
     id: string;
+    type: "textBlock" | "imageBlock" | "divider" | "stack" | "button" | "choiceSelect" | "textInput" | "ratingStars" | "countdownTimer" | "progressBar" | "conditionGate" | "pingTrigger";
     name: string;
     description: string;
     category: "Display & Layout" | "Inputs & Choices" | "Logic & Dynamics";
@@ -5441,8 +5441,8 @@ export declare const ElementSchema: z.ZodObject<{
     }[] | undefined;
     deprecationMessage?: string | undefined;
 }, {
-    type: "textBlock" | "imageBlock" | "divider" | "stack" | "button" | "choiceSelect" | "textInput" | "ratingStars" | "countdownTimer" | "progressBar" | "conditionGate" | "pingTrigger";
     id: string;
+    type: "textBlock" | "imageBlock" | "divider" | "stack" | "button" | "choiceSelect" | "textInput" | "ratingStars" | "countdownTimer" | "progressBar" | "conditionGate" | "pingTrigger";
     name: string;
     description: string;
     category: "Display & Layout" | "Inputs & Choices" | "Logic & Dynamics";

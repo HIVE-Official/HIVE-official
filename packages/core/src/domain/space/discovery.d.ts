@@ -113,8 +113,8 @@ export declare const SpaceDiscoverySchema: z.ZodObject<{
         builderCanOpen?: boolean | undefined;
     }>>;
 }, "strip", z.ZodTypeAny, {
-    status: SpaceStatus;
     id: string;
+    status: SpaceStatus;
     name: string;
     createdAt: Date;
     isVisible: boolean;
@@ -143,8 +143,8 @@ export declare const SpaceDiscoverySchema: z.ZodObject<{
         builderCanOpen?: boolean | undefined;
     } | undefined;
 }, {
-    status: SpaceStatus;
     id: string;
+    status: SpaceStatus;
     name: string;
     createdAt: Date;
     isVisible: boolean;
