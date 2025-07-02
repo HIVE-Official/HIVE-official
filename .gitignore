@@ -87,10 +87,16 @@ jspm_packages/
 
 # dotenv environment variable files
 .env
+.env.development
+.env.preview
+.env.production
 .env.development.local
 .env.test.local
 .env.production.local
 .env.local
+
+# Keep .env.example trackable for documentation
+!.env.example
 
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
@@ -134,6 +140,8 @@ storybook-static/
 
 # Firebase credentials should never be committed
 firebase/serviceAccountKey.json
+firebase/scripts/service-account*.json
+firebase/scripts/serviceAccount*.json
 
 # Firebase debug logs
 *.log
