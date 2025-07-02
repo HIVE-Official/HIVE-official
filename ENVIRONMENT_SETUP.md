@@ -6,13 +6,9 @@ This document provides a complete guide for setting up environment variables for
 
 ## 🚀 Quick Setup for New Developers
 
-1. **Copy the example files:**
+1. **Copy the example file:**
    ```bash
-   # Root level environment files
    cp .env.example .env.local
-   
-   # Web app environment files
-   cp apps/web/.env.example apps/web/.env.local
    ```
 
 2. **Fill in the actual values** (get these from team lead or Firebase console)
@@ -25,16 +21,10 @@ hive_ui/
 ├── .env.example        # Template file (git tracked)
 ├── .env.development    # Vercel development environment (git ignored) 
 ├── .env.preview        # Vercel preview environment (git ignored)
-├── .env.production     # Vercel production environment (git ignored)
-└── apps/web/          # Web app environment files (mirrored structure)
-    ├── .env.local      # Web app local development (git ignored)
-    ├── .env.example    # Web app template (git tracked)
-    ├── .env.development # Web app development environment (git ignored)
-    ├── .env.preview    # Web app preview environment (git ignored)
-    └── .env.production # Web app production environment (git ignored)
+└── .env.production     # Vercel production environment (git ignored)
 ```
 
-**Note:** The web app (`apps/web/`) maintains its own set of environment files that mirror the root configuration. This ensures proper environment variable access in both monorepo and web app contexts.
+**Note:** All environment files should be kept in the root directory. The monorepo structure allows all packages and apps to access these environment variables from the root.
 
 ## 🔐 Required Environment Variables
 
