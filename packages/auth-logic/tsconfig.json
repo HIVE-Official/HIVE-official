@@ -9,7 +9,7 @@
     "declarationMap": true,
     "sourceMap": true,
     "outDir": "./dist",
-    "rootDir": "./src",
+    "rootDir": "../",
     "strict": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
@@ -22,13 +22,15 @@
     "types": ["node"]
   },
   "include": [
-    "src/**/*"
+    "src/**/*",
+    "../core/src/**/*.ts"
   ],
   "exclude": [
     "node_modules",
     "dist",
     "**/*.test.*",
     "**/*.spec.*",
-    "**/*.stories.*"
+    "**/*.stories.*",
+    "../core/src/utils/code-analyzer.ts"
   ]
 }
