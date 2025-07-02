@@ -2,28 +2,29 @@
   "extends": "../config/typescript/base.json",
   "compilerOptions": {
     "outDir": "dist",
-    "rootDir": "src",
+    "rootDir": "../",
     "noEmit": false,
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
-    "composite": true,
-    "incremental": true,
     "baseUrl": ".",
+    "moduleResolution": "node",
+    "paths": {
+      "@hive/*": ["../*/src"]
+    },
     "types": ["node", "react"]
   },
   "include": [
     "./src/**/*.ts",
-    "./src/**/*.tsx"
+    "./src/**/*.tsx",
+    "../core/src/**/*.ts"
   ],
   "exclude": [
     "node_modules",
     "dist",
     "**/*.test.*",
     "**/*.spec.*",
-    "**/*.stories.*"
-  ],
-  "references": [
-    { "path": "../core" }
+    "**/*.stories.*",
+    "../core/src/utils/code-analyzer.ts"
   ]
 }

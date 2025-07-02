@@ -7,7 +7,7 @@
     "declarationMap": true,
     "sourceMap": true,
     "outDir": "./dist",
-    "rootDir": "./src",
+    "rootDir": "../",
     "strict": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
@@ -17,16 +17,22 @@
     "isolatedModules": true,
     "noEmit": false,
     "baseUrl": ".",
+    "moduleResolution": "node",
+    "paths": {
+      "@hive/*": ["../*/src"]
+    },
     "types": ["node"]
   },
   "include": [
-    "src/**/*"
+    "src/**/*",
+    "../core/src/**/*.ts"
   ],
   "exclude": [
     "node_modules",
     "dist",
     "**/*.test.*",
     "**/*.spec.*",
-    "**/*.stories.*"
+    "**/*.stories.*",
+    "../core/src/utils/code-analyzer.ts"
   ]
-} 
+}
