@@ -1,5 +1,4 @@
-import { dbAdmin } from "@/lib/firebase-admin";
-import { logger, type School } from "@hive/core";
+import { dbAdmin, logger, type School } from "@hive/core";
 import { NextResponse } from "next/server";
 
 // Mock schools data for development when Firebase is not configured
@@ -8,30 +7,50 @@ const mockSchools: School[] = [
     id: "ub",
     name: "University at Buffalo",
     domain: "buffalo.edu",
-    status: "active",
+    status: "open",
+    studentsUntilOpen: 0,
     waitlistCount: 0,
   },
   {
-    id: "cornell",
-    name: "Cornell University",
-    domain: "cornell.edu",
-    status: "active",
-    waitlistCount: 0,
-  },
-  {
-    id: "columbia",
-    name: "Columbia University",
-    domain: "columbia.edu",
+    id: "binghamton",
+    name: "Binghamton University",
+    domain: "binghamton.edu",
     status: "waitlist",
+    studentsUntilOpen: 350,
+    waitlistCount: 89,
+  },
+  {
+    id: "stony-brook",
+    name: "Stony Brook University",
+    domain: "stonybrook.edu",
+    status: "waitlist",
+    studentsUntilOpen: 350,
     waitlistCount: 156,
   },
   {
-    id: "nyu",
-    name: "New York University",
-    domain: "nyu.edu",
+    id: "st-bonaventure",
+    name: "St. Bonaventure University",
+    domain: "sbu.edu",
     status: "waitlist",
-    waitlistCount: 203,
+    studentsUntilOpen: 350,
+    waitlistCount: 73,
   },
+  {
+    id: "buffalo-state",
+    name: "Buffalo State University",
+    domain: "buffalostate.edu",
+    status: "waitlist",
+    studentsUntilOpen: 350,
+    waitlistCount: 45,
+  },
+  {
+    id: "syracuse",
+    name: "Syracuse University",
+    domain: "syr.edu",
+    status: "waitlist",
+    studentsUntilOpen: 350,
+    waitlistCount: 127,
+  }
 ];
 
 export async function GET() {
@@ -44,8 +63,6 @@ export async function GET() {
     return NextResponse.json(schools);
   } catch (error) {
     logger.error("Firebase connection failed, using mock data:", error);
-
-    // Return mock data for development
     return NextResponse.json(mockSchools);
   }
 }

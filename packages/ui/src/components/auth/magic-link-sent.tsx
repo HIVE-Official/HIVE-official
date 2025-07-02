@@ -4,7 +4,7 @@ import React from 'react'
 import { motion } from 'framer-motion'
 import { ArrowLeft, Mail } from 'lucide-react'
 import { Button } from '../button'
-import { type School } from './school-pick'
+import type { School } from '@hive/core'
 
 export interface MagicLinkSentProps {
   email: string
@@ -16,7 +16,7 @@ export interface MagicLinkSentProps {
 
 export const MagicLinkSent: React.FC<MagicLinkSentProps> = ({
   email,
-  school: _school,
+  school,
   onBack,
   onResend,
   className
@@ -51,7 +51,7 @@ export const MagicLinkSent: React.FC<MagicLinkSentProps> = ({
         </p>
 
         <p className="text-body-sm text-muted text-center mb-6">
-          Click the link in your email to complete sign-in. It will expire in 10 minutes.
+          Click the link in your email to complete sign-in at {school.name}. It will expire in 10 minutes.
         </p>
 
         <Button 

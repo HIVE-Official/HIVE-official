@@ -27,6 +27,28 @@ service cloud.firestore {
       return isAuthenticated() && 
         exists(/databases/$(database)/documents/spaces/$(spaceId)/leaders/$(request.auth.uid));
     }
+
+    // Schools collection
+    match /schools/{schoolId} {
+      // Anyone can read school data
+      allow read: if true;
+      
+      // Only admins can create/update/delete schools
+      allow write: if isAdmin();
+
+      // School waitlist subcollection
+      match /waitlist/{userId} {
+        // Users can read their own waitlist status
+        allow read: if isOwner(userId);
+        
+        // Users can join the waitlist
+        allow create: if isOwner(userId) && 
+          request.resource.data.timestamp == request.time;
+        
+        // Only admins can update/delete waitlist entries
+        allow update, delete: if isAdmin();
+      }
+    }
     
     // Security rules for verification collections
     match /emailVerifications/{docId} {

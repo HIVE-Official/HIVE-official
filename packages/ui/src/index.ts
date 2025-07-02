@@ -20,6 +20,7 @@ export {
   SelectGroup,
 } from "./components/select";
 export { Skeleton } from "./components/skeleton";
+export { Countdown } from "./components/countdown";
 
 // Export loading components
 export {

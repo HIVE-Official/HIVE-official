@@ -1,79 +1,33 @@
 "use client";
 
 import React, { useState } from 'react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { Search, ChevronRight, Lock } from 'lucide-react'
 import { Input } from '../input'
 import { Button } from '../button'
 import { cn } from '../../lib/utils'
 import { Dialog } from '../dialog'
 import { Label } from '../label'
-
-// Define School type here since we can't import from @hive/core in the UI package
-export interface School {
-  id: string
-  name: string
-  domain: string
-  status: 'open' | 'coming-soon' | 'waitlist'
-  isFeatured?: boolean
-  spotsLeft?: number
-  waitlistCount?: number
-}
-
-const defaultSchools: School[] = [
-  {
-    id: 'ub',
-    name: 'University at Buffalo',
-    domain: 'buffalo.edu',
-    status: 'open'
-  },
-  {
-    id: 'stony-brook',
-    name: 'Stony Brook University',
-    domain: 'stonybrook.edu',
-    status: 'coming-soon'
-  },
-  {
-    id: 'st-bonaventure',
-    name: 'St. Bonaventure University',
-    domain: 'sbu.edu',
-    status: 'coming-soon'
-  },
-  {
-    id: 'binghamton',
-    name: 'Binghamton University',
-    domain: 'binghamton.edu',
-    status: 'coming-soon'
-  },
-  {
-    id: 'buffalo-state',
-    name: 'Buffalo State University',
-    domain: 'buffalostate.edu',
-    status: 'coming-soon'
-  }
-]
+import type { School } from '@hive/core'
 
 interface SchoolPickProps {
-  schools?: School[]
-  onSchoolSelect: (school: School) => void
-  onCreateSchool?: () => void
-  className?: string
+  schools: School[];
+  onSchoolSelect: (school: School) => void;
+  className?: string;
 }
 
 export const SchoolPick: React.FC<SchoolPickProps> = ({
-  schools = defaultSchools,
+  schools,
   onSchoolSelect,
-  onCreateSchool: _onCreateSchool,
   className
 }) => {
-  const [searchTerm, setSearchTerm] = useState('')
+  const [searchQuery, setSearchQuery] = useState('')
   const [showWaitlistDialog, setShowWaitlistDialog] = useState(false)
   const [showSuccessDialog, setShowSuccessDialog] = useState(false)
   const [waitlistSchool, setWaitlistSchool] = useState<School | null>(null)
-  const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const filteredSchools = schools.filter(school =>
-    school.name.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredSchools = schools.filter((school) =>
+    school.name.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
   const handleSchoolClick = (school: School) => {
@@ -85,23 +39,11 @@ export const SchoolPick: React.FC<SchoolPickProps> = ({
     }
   }
 
-  const handleJoinWaitlist = async (_email: string) => {
-    if (!waitlistSchool) return
-
-    setIsSubmitting(true)
-    try {
-      // Here you would integrate with your waitlist API
-      // For now, we'll just simulate a delay
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      
-      // Close waitlist dialog and show success
+  const handleJoinWaitlist = async () => {
+    if (waitlistSchool) {
+      // For now, just close the dialog and show success
       setShowWaitlistDialog(false)
       setShowSuccessDialog(true)
-    } catch (error) {
-      // Handle error
-      console.error('Failed to join waitlist:', error)
-    } finally {
-      setIsSubmitting(false)
     }
   }
 
@@ -110,151 +52,89 @@ export const SchoolPick: React.FC<SchoolPickProps> = ({
     setWaitlistSchool(null)
   }
 
-  // Animation variants
-  const fadeInUp = {
-    initial: { opacity: 0, y: 20 },
-    animate: { opacity: 1, y: 0 },
-    exit: { opacity: 0, y: 20 }
-  }
-
   return (
-    <div className={cn("min-h-screen flex items-center justify-center p-6", className)}>
-      <div className="w-full max-w-md space-y-8">
-        {/* Header */}
-      <motion.div 
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-          className="text-center space-y-3"
-      >
-          <h1 className="text-4xl md:text-5xl font-display font-semibold text-foreground tracking-tight">
-            Choose Your Campus
-          </h1>
-          <p className="text-lg font-sans text-muted">
-            Join your university's exclusive HIVE community
-          </p>
-        </motion.div>
+    <div className={cn("w-full max-w-2xl mx-auto space-y-6", className)}>
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+        <Input
+          type="text"
+          placeholder="Search your school..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="pl-10 bg-surface-01/50 border-border focus:border-[#FFD700]/20 focus:ring-1 focus:ring-[#FFD700]/20"
+        />
+      </div>
 
-          {/* Search Field */}
-          <motion.div 
-            className="relative"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.1 }}
-          >
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted" />
-          <Input
-            type="text"
-            placeholder="Search your school..."
-            value={searchTerm}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
-            className="pl-10"
-          />
-          </motion.div>
-
-        {/* School List */}
-        <div className="space-y-3">
-          {filteredSchools.map((school) => (
-                <motion.button
+      <div className="space-y-2">
+        <AnimatePresence>
+          {filteredSchools.map((school, index) => (
+            <motion.div
               key={school.id}
-                  onClick={() => handleSchoolClick(school)}
-              initial="initial"
-              animate="animate"
-              exit="exit"
-              variants={fadeInUp}
-              whileHover={{ scale: 1.01 }}
-              whileTap={{ scale: 0.99 }}
-              className={cn(
-                    "w-full p-4 rounded-lg border text-left group",
-                "border-border bg-surface-01 hover:bg-[#FFD700]/5",
-                "transition-all duration-200 ease-smooth"
-              )}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2, delay: index * 0.05 }}
             >
-              <div className="flex items-center justify-between">
-                <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                    <h3 className="text-h4 font-display font-medium group-hover:text-[#FFD700]">
-                      {school.name}
-                    </h3>
+              <button
+                onClick={() => handleSchoolClick(school)}
+                className={cn(
+                  'w-full p-4 text-left rounded-lg border border-border bg-surface-01/50',
+                  'hover:bg-surface-01/80 hover:border-[#FFD700]/20 transition-all duration-200',
+                  'focus:outline-none focus:ring-2 focus:ring-[#FFD700]/20'
+                )}
+              >
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="font-medium">{school.name}</h3>
+                    <p className="text-sm text-muted-foreground">{school.domain}</p>
                   </div>
-                  <p className="text-sm font-medium">
+                  <div className="flex items-center gap-2">
                     {school.status === 'open' ? (
-                      <span className="text-success">Open now</span>
-                    ) : school.status === 'waitlist' ? (
-                      <span className="text-warning flex items-center gap-1">
-                        <Lock className="w-3 h-3" />
-                        Waitlist {school.spotsLeft ? `• ${school.spotsLeft} spots left` : ''}
-                      </span>
+                      <ChevronRight className="h-5 w-5 text-[#FFD700]" />
                     ) : (
-                      <span className="text-muted flex items-center gap-1">
-                        <Lock className="w-3 h-3" />
-                        Coming Soon
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm text-muted-foreground">
+                          {school.studentsUntilOpen} students until open
+                        </span>
+                        <Lock className="h-4 w-4 text-muted-foreground" />
+                      </div>
                     )}
-                  </p>
+                  </div>
                 </div>
-                <ChevronRight className="w-5 h-5 text-muted group-hover:text-[#FFD700] transition-colors duration-200" />
-              </div>
-                </motion.button>
+              </button>
+            </motion.div>
           ))}
-        </div>
+        </AnimatePresence>
       </div>
 
       {/* Waitlist Dialog */}
       <Dialog
         isOpen={showWaitlistDialog}
         onClose={() => setShowWaitlistDialog(false)}
-        title="Join the Waitlist"
-        description={`${waitlistSchool?.name} is coming soon! Join the waitlist to be notified when we launch.`}
+        title={`Join ${waitlistSchool?.name} Waitlist`}
+        description="Get notified when HIVE launches at your school."
       >
-        <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
-          e.preventDefault()
-          const formData = new FormData(e.currentTarget)
-          const email = formData.get('email') as string
-          handleJoinWaitlist(email)
-        }}>
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">School Email</Label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                placeholder={waitlistSchool ? `you@${waitlistSchool.domain}` : ''}
-                required
-                pattern={waitlistSchool ? `.*@${waitlistSchool.domain}$` : undefined}
-                title="Please use your school email address"
-              />
-            </div>
-            
-            <Button
-              variant="surface"
-              type="submit"
-              className="w-full font-display font-semibold tracking-tight"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? 'Joining...' : 'Join Waitlist'}
-            </Button>
+        <div className="mt-4 space-y-4">
+          <div>
+            <Label>School</Label>
+            <p className="text-sm text-muted-foreground">{waitlistSchool?.domain}</p>
           </div>
-        </form>
+          <Button onClick={handleJoinWaitlist} className="w-full">
+            Join Waitlist
+          </Button>
+        </div>
       </Dialog>
 
       {/* Success Dialog */}
       <Dialog
         isOpen={showSuccessDialog}
         onClose={handleCloseSuccess}
-        title="You're on the List!"
-        description={`We'll notify you as soon as ${waitlistSchool?.name} launches on HIVE. Get ready to join your campus community!`}
+        title="You're on the list!"
+        description="We'll notify you when HIVE launches at your school."
       >
-        <div className="mt-6">
-          <Button
-            variant="surface"
-            onClick={handleCloseSuccess}
-            className="w-full font-display font-semibold tracking-tight"
-          >
-            Close
-          </Button>
-        </div>
+        <Button onClick={handleCloseSuccess} className="mt-4 w-full">
+          Close
+        </Button>
       </Dialog>
     </div>
   )

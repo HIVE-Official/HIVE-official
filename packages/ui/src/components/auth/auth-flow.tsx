@@ -2,101 +2,81 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { SchoolPick, type School, EmailGate, MagicLinkSent } from ".";
-import { SchoolCreationDialog } from "./school-creation-dialog";
-import { useToast } from "../toast-provider";
+import { cn } from '../../lib/utils';
+import { SchoolPick, EmailGate, MagicLinkSent } from ".";
+import type { School } from '@hive/core';
 
 export type AuthStep = "school-pick" | "email-gate" | "magic-link-sent";
 
-export interface AuthFlowProps {
+interface AuthFlowProps {
   schools: School[];
+  onSchoolSelect: (school: School) => void;
   onEmailSubmit: (email: string) => Promise<void>;
-  onSchoolCreate: (data: { name: string; domain: string }) => Promise<void>;
-  initialStep?: AuthStep;
+  onCreateSchool?: () => void;
+  className?: string;
 }
 
 export const AuthFlow: React.FC<AuthFlowProps> = ({
   schools,
+  onSchoolSelect,
   onEmailSubmit,
-  onSchoolCreate,
-  initialStep = "school-pick",
+  onCreateSchool: _onCreateSchool,
+  className,
 }) => {
-  const [currentStep, setCurrentStep] = useState<AuthStep>(initialStep);
-  const [selectedSchoolId, setSelectedSchoolId] = useState<string | null>(null);
-  const [selectedEmail, setSelectedEmail] = useState<string>("");
-  const [isSchoolDialogOpen, setIsSchoolDialogOpen] = useState(false);
-  const { showToast } = useToast();
+  const [currentStep, setCurrentStep] = useState<AuthStep>("school-pick");
+  const [selectedSchool, setSelectedSchool] = useState<School | null>(null);
+  const [email, setEmail] = useState("");
+  const [direction, setDirection] = useState(0);
 
   const handleSchoolSelect = (school: School) => {
-    if (typeof window !== "undefined") {
-      localStorage.setItem("hive-selected-school-id", school.id);
-    }
-    setSelectedSchoolId(school.id);
+    setSelectedSchool(school);
+    onSchoolSelect(school);
+    setDirection(1);
     setCurrentStep("email-gate");
   };
 
-  const handleEmailSubmit = async (email: string) => {
-    try {
-      await onEmailSubmit(email);
-      setSelectedEmail(email);
-      setCurrentStep("magic-link-sent");
-      return true;
-    } catch {
-      showToast("Failed to send magic link. Please try again.", {
-        intent: "error",
-      });
-      return false;
-    }
-  };
 
-  const handleSchoolCreate = async (data: { name: string; domain: string }) => {
-    try {
-      await onSchoolCreate(data);
-      setIsSchoolDialogOpen(false);
-      showToast("Your school has been submitted for review.", {
-        intent: "success",
-      });
-    } catch {
-      showToast("Failed to submit school. Please try again.", {
-        intent: "error",
-      });
-    }
+  const handleEmailSubmit = async (email: string) => {
+    setEmail(email);
+    await onEmailSubmit(email);
+    setDirection(1);
+    setCurrentStep("magic-link-sent");
   };
 
   const handleResendMagicLink = async () => {
     try {
-      await onEmailSubmit(selectedEmail);
-      showToast("Magic link resent successfully.", {
-        intent: "success",
-      });
+      await onEmailSubmit(email);
       return true;
-    } catch {
-      showToast("Failed to resend magic link. Please try again.", {
-        intent: "error",
-      });
+    } catch (error) {
+      console.error('Failed to resend magic link:', error);
       return false;
     }
   };
 
-  const selectedSchool = selectedSchoolId
-    ? schools.find((s) => s.id === selectedSchoolId)
-    : null;
+  const handleBack = (step: AuthStep) => {
+    setDirection(-1);
+    setCurrentStep(step);
+  };
 
   return (
-    <>
-      <AnimatePresence mode="wait">
+    <div className={cn("w-full relative overflow-hidden", className)}>
+      <AnimatePresence initial={false} custom={direction}>
         {currentStep === "school-pick" && (
           <motion.div
             key="school-pick"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.2 }}
+            initial={{ opacity: 0, x: direction > 0 ? 1000 : -1000 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: direction < 0 ? 1000 : -1000 }}
+            transition={{
+              x: { type: "spring", stiffness: 300, damping: 30 },
+              opacity: { duration: 0.2 }
+            }}
+            className="absolute w-full"
           >
             <SchoolPick
               schools={schools}
               onSchoolSelect={handleSchoolSelect}
-              onCreateSchool={() => setIsSchoolDialogOpen(true)}
+              className="bg-transparent"
             />
           </motion.div>
         )}
@@ -104,17 +84,21 @@ export const AuthFlow: React.FC<AuthFlowProps> = ({
         {currentStep === "email-gate" && selectedSchool && (
           <motion.div
             key="email-gate"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.2 }}
+            initial={{ opacity: 0, x: direction > 0 ? 1000 : -1000 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: direction < 0 ? 1000 : -1000 }}
+            transition={{
+              x: { type: "spring", stiffness: 300, damping: 30 },
+              opacity: { duration: 0.2 }
+            }}
+            className="absolute w-full"
           >
             <EmailGate
               schoolName={selectedSchool.name}
               schoolDomain={selectedSchool.domain}
               schoolId={selectedSchool.id}
-              onBack={() => setCurrentStep("school-pick")}
-              onDevContinue={() => handleEmailSubmit("dev@buffalo.edu")}
+              onSuccess={handleEmailSubmit}
+              onBack={() => handleBack("school-pick")}
             />
           </motion.div>
         )}
@@ -122,26 +106,24 @@ export const AuthFlow: React.FC<AuthFlowProps> = ({
         {currentStep === "magic-link-sent" && selectedSchool && (
           <motion.div
             key="magic-link-sent"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.2 }}
+            initial={{ opacity: 0, x: direction > 0 ? 1000 : -1000 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: direction < 0 ? 1000 : -1000 }}
+            transition={{
+              x: { type: "spring", stiffness: 300, damping: 30 },
+              opacity: { duration: 0.2 }
+            }}
+            className="absolute w-full"
           >
             <MagicLinkSent
-              email={selectedEmail}
+              email={email}
               school={selectedSchool}
-              onBack={() => setCurrentStep("email-gate")}
+              onBack={() => handleBack("email-gate")}
               onResend={handleResendMagicLink}
             />
           </motion.div>
         )}
       </AnimatePresence>
-
-      <SchoolCreationDialog
-        isOpen={isSchoolDialogOpen}
-        onClose={() => setIsSchoolDialogOpen(false)}
-        onSubmit={handleSchoolCreate}
-      />
-    </>
+    </div>
   );
 };

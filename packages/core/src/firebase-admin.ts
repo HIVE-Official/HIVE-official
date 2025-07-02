@@ -8,7 +8,7 @@ const isProduction = process.env.NODE_ENV === 'production';
 const serviceAccountKey = process.env.FIREBASE_ADMIN_PRIVATE_KEY;
 
 let firebaseInitialized = false;
-let dbAdmin: Firestore | null = null;
+let firestoreAdmin: Firestore | null = null;
 let authAdmin: Auth | null = null;
 
 const initializeFirebaseAdmin = () => {
@@ -18,7 +18,7 @@ const initializeFirebaseAdmin = () => {
                 if (!serviceAccountKey) {
                         logger.warn('FIREBASE_ADMIN_PRIVATE_KEY is not set. Skipping Firebase Admin init.');
                         if (!isProduction) {
-                                dbAdmin = {} as Firestore;
+                                firestoreAdmin = {} as Firestore;
                                 authAdmin = {} as Auth;
                                 firebaseInitialized = true;
                                 return;
@@ -41,7 +41,7 @@ const initializeFirebaseAdmin = () => {
 		}
 
 		const app = getApp(appName);
-		dbAdmin = getFirestore(app);
+		firestoreAdmin = getFirestore(app);
 		authAdmin = getAuth(app);
 		firebaseInitialized = true;
 	} catch (error) {
@@ -52,7 +52,7 @@ const initializeFirebaseAdmin = () => {
 			logger.warn(
 				'Running in non-production without Firebase Admin. Using mock services.'
 			);
-			dbAdmin = {} as Firestore; // Mock object
+			firestoreAdmin = {} as Firestore; // Mock object
 			authAdmin = {} as Auth; // Mock object
 			firebaseInitialized = true; // Pretend it's initialized
 		} else {
@@ -66,8 +66,9 @@ const initializeFirebaseAdmin = () => {
 initializeFirebaseAdmin();
 
 // Re-export for compatibility with runtime checks
-export const db = dbAdmin!; // Safe after initialization
+export const db = firestoreAdmin!; // Safe after initialization
 export const auth = authAdmin!; // Safe after initialization
+export const dbAdmin = firestoreAdmin!; // Export dbAdmin for compatibility
 export const isFirebaseConfigured = firebaseInitialized;
 
 // Environment info for debugging

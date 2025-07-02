@@ -1,90 +1,66 @@
-import { initializeApp, getApps, getApp, type FirebaseApp } from "firebase/app";
-import { getAuth, type Auth } from "firebase/auth";
-import { getFirestore, type Firestore } from "firebase/firestore";
-import { getStorage, type FirebaseStorage } from "firebase/storage";
-import { getAnalytics, type Analytics } from "firebase/analytics";
+import { initializeApp, getApps, type FirebaseOptions } from "firebase/app";
+import { getAuth, connectAuthEmulator } from "firebase/auth";
+import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
+import { getAnalytics, isSupported } from "firebase/analytics";
+import { getFirebaseConfig, isDevelopment } from "./env";
 
-// Required Firebase configuration fields
-const requiredConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-} as const;
+// Get the Firebase configuration for the current environment
+const firebaseConfig = getFirebaseConfig();
 
-// Optional Firebase configuration fields
-const optionalConfig = {
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
-  databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL,
-} as const;
-
-// Check for missing required environment variables
-const missingRequiredVars = Object.entries(requiredConfig)
-  .filter(([_, value]) => !value)
-  .map(([key]) => `NEXT_PUBLIC_FIREBASE_${key.toUpperCase()}`);
-
-if (missingRequiredVars.length > 0) {
-  console.warn(`🚨 Missing required Firebase environment variables: ${missingRequiredVars.join(', ')}`);
-  console.warn('Please create apps/web/.env.local with your Firebase configuration');
-  console.warn('See apps/web/.env.example for the required format');
-}
-
-// Development fallback values
-const devFallbacks = {
-  apiKey: 'demo-api-key',
-  authDomain: 'demo-project.firebaseapp.com',
-  projectId: 'demo-project',
-  storageBucket: 'demo-project.appspot.com',
-  messagingSenderId: '123456789',
-  appId: '1:123456789:web:demo',
-  measurementId: 'G-DEMO',
-  databaseURL: undefined,
+// Fallback config for development when env vars are missing
+const fallbackConfig = {
+  apiKey: "demo-api-key",
+  appId: "demo-app",
+  projectId: "demo-project",
 };
 
-// Build Firebase config object with required and optional fields
-const firebaseConfig = {
-  // Required fields (with fallbacks for development)
-  apiKey: requiredConfig.apiKey || devFallbacks.apiKey,
-  authDomain: requiredConfig.authDomain || devFallbacks.authDomain,
-  projectId: requiredConfig.projectId || devFallbacks.projectId,
-  
-  // Optional fields (only include if defined)
-  ...(optionalConfig.storageBucket && { storageBucket: optionalConfig.storageBucket }),
-  ...(optionalConfig.messagingSenderId && { messagingSenderId: optionalConfig.messagingSenderId }),
-  ...(optionalConfig.appId && { appId: optionalConfig.appId }),
-  ...(optionalConfig.measurementId && { measurementId: optionalConfig.measurementId }),
-  ...(optionalConfig.databaseURL && { databaseURL: optionalConfig.databaseURL }),
-};
+// Initialize Firebase app (only once)
+const app = getApps().length === 0
+  ? initializeApp(firebaseConfig ?? (fallbackConfig as FirebaseOptions))
+  : getApps()[0];
 
-// Initialize Firebase app
-let app: FirebaseApp;
-let db: Firestore;
-let auth: Auth;
-let storage: FirebaseStorage;
-let analytics: Analytics | undefined;
+// Initialize Firebase services
+export const auth = getAuth(app);
+export const db = getFirestore(app);
 
-try {
-  app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
-  db = getFirestore(app);
-  auth = getAuth(app);
-  storage = getStorage(app);
-  
-  // Only initialize analytics in the browser with valid config
-  if (typeof window !== 'undefined' && firebaseConfig.measurementId && 
-      firebaseConfig.apiKey !== 'demo-api-key') {
-    try {
-      analytics = getAnalytics(app);
-    } catch (error) {
-      console.warn("Analytics initialization failed:", error);
-      // Don't throw - this is not critical for app functionality
-      analytics = undefined;
+// Initialize Analytics (only in browser and if supported)
+export let analytics: ReturnType<typeof getAnalytics> | null = null;
+if (typeof window !== "undefined") {
+  void isSupported().then((supported) => {
+    if (supported && firebaseConfig && firebaseConfig.apiKey !== "demo-api-key") {
+      try {
+        analytics = getAnalytics(app);
+      } catch (error) {
+        console.warn("Analytics initialization failed:", error);
+        // Don't throw - this is not critical for app functionality
+      }
     }
-  }
-} catch (error) {
-  console.error('Firebase initialization error:', error);
-  throw new Error('Failed to initialize Firebase. Please check your configuration.');
+  });
 }
 
-export { app, db, auth, storage, analytics };
+// Connect to emulators in development (if not already connected)
+if (isDevelopment && typeof window !== "undefined") {
+  try {
+    // Only connect to emulators if not already connected
+    // Check auth emulator connection status safely
+    const authConfig = auth.config as { emulator?: unknown };
+    if (!authConfig.emulator) {
+      connectAuthEmulator(auth, "http://localhost:9099", {
+        disableWarnings: true,
+      });
+    }
+
+    // Check firestore emulator connection status safely
+    const dbInternal = db as unknown as {
+      _delegate?: { _databaseId?: { projectId?: string } };
+    };
+    if (!dbInternal._delegate?._databaseId?.projectId?.includes("localhost")) {
+      connectFirestoreEmulator(db, "localhost", 8080);
+    }
+  } catch {
+    // Emulators might not be running, that's ok
+  }
+}
+
+export { app };
+export default app;

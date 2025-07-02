@@ -2,7 +2,8 @@
   "name": "hive-ui",
   "private": true,
   "scripts": {
-    "build": "pnpm --filter @hive/core build && pnpm --filter @hive/validation build && pnpm --filter @hive/auth-logic build && pnpm --filter @hive/analytics build && pnpm --filter @hive/ui build",
+    "build": "pnpm --filter @hive/core build && pnpm --filter @hive/validation build && pnpm --filter @hive/auth-logic build && pnpm --filter @hive/analytics build && pnpm --filter @hive/ui build && pnpm --filter web build",
+    "vercel-build": "pnpm install --no-frozen-lockfile && pnpm build && cd apps/web && pnpm next build",
     "dev": "turbo run dev",
     "lint": "cross-env BROWSERSLIST_IGNORE_OLD_DATA=1 BROWSERSLIST_UPDATE_DB=0 NO_UPDATE_NOTIFIER=1 TURBO_TELEMETRY_DISABLED=1 CI=1 turbo run lint",
     "clean": "turbo run clean",
@@ -28,5 +29,14 @@
     "next": "^15.3.4",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "@hive/core": "workspace:*",
+      "@hive/validation": "workspace:*",
+      "@hive/auth-logic": "workspace:*",
+      "@hive/analytics": "workspace:*",
+      "@hive/ui": "workspace:*"
+    }
   }
 }

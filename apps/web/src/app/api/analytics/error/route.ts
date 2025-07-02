@@ -3,55 +3,214 @@ import { z } from 'zod';
 // import { logger } from '@hive/core'; // Removed - not currently used
 import { RateLimiter } from "limiter";
 
-// Define error metadata schema directly here
+// Comprehensive error categorization
+const ERROR_TYPES = {
+  // Critical errors that need immediate attention
+  CRITICAL: {
+    AUTH_FAILURE: 'auth_failure',
+    DATABASE_ERROR: 'database_error', 
+    PAYMENT_ERROR: 'payment_error',
+    SECURITY_BREACH: 'security_breach'
+  },
+  // User experience errors
+  UX: {
+    VALIDATION_ERROR: 'validation_error',
+    NETWORK_TIMEOUT: 'network_timeout',
+    RATE_LIMIT: 'rate_limit_exceeded',
+    NOT_FOUND: 'resource_not_found'
+  },
+  // Development/build errors
+  DEV: {
+    HYDRATION_MISMATCH: 'hydration_mismatch',
+    COMPONENT_ERROR: 'component_error',
+    BUILD_ERROR: 'build_error',
+    TYPE_ERROR: 'type_error'
+  },
+  // External service errors
+  EXTERNAL: {
+    API_ERROR: 'external_api_error',
+    CDN_ERROR: 'cdn_error',
+    THIRD_PARTY: 'third_party_error'
+  },
+  // Bot/crawler noise
+  IGNORABLE: {
+    BOT_ERROR: 'bot_error',
+    SCREENSHOT_ERROR: 'screenshot_error',
+    CRAWLER_ERROR: 'crawler_error'
+  }
+} as const;
+
+// Specific error patterns with smart categorization
+const ERROR_PATTERNS = [
+  // Critical patterns - need immediate attention
+  {
+    category: ERROR_TYPES.CRITICAL.AUTH_FAILURE,
+    patterns: [/authentication failed/i, /unauthorized/i, /invalid token/i, /session expired/i],
+    priority: 'critical',
+    shouldAlert: true
+  },
+  {
+    category: ERROR_TYPES.CRITICAL.DATABASE_ERROR,
+    patterns: [/database connection/i, /firestore.*error/i, /transaction failed/i],
+    priority: 'critical',
+    shouldAlert: true
+  },
+  {
+    category: ERROR_TYPES.CRITICAL.SECURITY_BREACH,
+    patterns: [/xss/i, /csrf/i, /injection/i, /security/i],
+    priority: 'critical',
+    shouldAlert: true
+  },
+
+  // UX patterns - impact user experience
+  {
+    category: ERROR_TYPES.UX.VALIDATION_ERROR,
+    patterns: [/validation.*failed/i, /invalid.*input/i, /required field/i],
+    priority: 'high',
+    shouldAlert: false
+  },
+  {
+    category: ERROR_TYPES.UX.NETWORK_TIMEOUT,
+    patterns: [/timeout/i, /network.*error/i, /connection.*refused/i],
+    priority: 'medium',
+    shouldAlert: false
+  },
+  {
+    category: ERROR_TYPES.UX.NOT_FOUND,
+    patterns: [/404/i, /not found/i, /does not exist/i],
+    priority: 'low',
+    shouldAlert: false
+  },
+
+  // Dev patterns - development issues
+  {
+    category: ERROR_TYPES.DEV.HYDRATION_MISMATCH,
+    patterns: [/hydration/i, /server.*client.*mismatch/i],
+    priority: 'medium',
+    shouldAlert: false
+  },
+  {
+    category: ERROR_TYPES.DEV.COMPONENT_ERROR,
+    patterns: [/react.*children/i, /cannot read prop/i, /undefined.*not.*function/i],
+    priority: 'medium',
+    shouldAlert: false
+  },
+  {
+    category: ERROR_TYPES.DEV.TYPE_ERROR,
+    patterns: [/typescript/i, /type.*error/i, /cannot access before initialization/i],
+    priority: 'low',
+    shouldAlert: false
+  },
+
+  // External service patterns
+  {
+    category: ERROR_TYPES.EXTERNAL.API_ERROR,
+    patterns: [/api.*error/i, /external.*service/i, /upstream.*error/i],
+    priority: 'medium',
+    shouldAlert: false
+  },
+
+  // Ignorable patterns - bot/crawler noise
+  {
+    category: ERROR_TYPES.IGNORABLE.SCREENSHOT_ERROR,
+    patterns: [/vercel.*screenshot/i, /screenshot.*failed/i, /headless.*chrome/i],
+    priority: 'ignore',
+    shouldAlert: false
+  },
+  {
+    category: ERROR_TYPES.IGNORABLE.BOT_ERROR,
+    patterns: [/bot/i, /crawler/i, /spider/i, /scraper/i],
+    priority: 'ignore',
+    shouldAlert: false
+  }
+];
+
+// Enhanced error metadata schema
 const ErrorMetadataSchema = z.object({
-  type: z.enum([
-    'react_error_boundary',
-    'api_error',
-    'network_error',
-    'validation_error',
-    'auth_error',
-    'firebase_error',
-    'unknown'
-  ]),
+  type: z.string().default('unknown'),
+  priority: z.enum(['critical', 'high', 'medium', 'low', 'ignore']).default('medium'),
+  category: z.string().default('unknown'),
+  shouldAlert: z.boolean().default(false),
   componentStack: z.string().optional(),
   location: z.string().optional(),
-  timestamp: z.string().datetime(),
+  timestamp: z.string().datetime().default(() => new Date().toISOString()),
   userId: z.string().optional(),
   sessionId: z.string().nullable().optional(),
-  tags: z.array(z.string()).optional(),
-  extra: z.record(z.unknown()).optional()
+  userAgent: z.string().optional(),
+  url: z.string().optional(),
+  tags: z.array(z.string()).default([]),
+  context: z.record(z.unknown()).default({})
 });
 
-// Extended error payload schema - made more defensive
+// Streamlined error payload schema
 const ErrorPayloadSchema = z.object({
   name: z.string().default('UnknownError'),
   message: z.string().default('No error message provided'),
   stack: z.string().optional(),
-  metadata: ErrorMetadataSchema.default({
-    type: 'unknown',
-    timestamp: new Date().toISOString(),
-  })
+  metadata: ErrorMetadataSchema.default({})
 });
 
-// Rate limiter for error reporting (using limiter library directly)
+// Smart error categorization
+function categorizeError(error: { name: string; message: string; stack?: string }, userAgent?: string): {
+  category: string;
+  priority: 'critical' | 'high' | 'medium' | 'low' | 'ignore';
+  shouldAlert: boolean;
+} {
+  const fullErrorText = `${error.name} ${error.message} ${error.stack || ''}`.toLowerCase();
+  
+  // Check user agent first for bot detection
+  if (userAgent) {
+    const botPatterns = [/bot/i, /crawler/i, /spider/i, /vercel.*screenshot/i, /headless/i];
+    if (botPatterns.some(pattern => pattern.test(userAgent))) {
+      return {
+        category: ERROR_TYPES.IGNORABLE.BOT_ERROR,
+        priority: 'ignore',
+        shouldAlert: false
+      };
+    }
+  }
 
-// Simple rate limiting using Map
+  // Match against specific patterns
+  for (const pattern of ERROR_PATTERNS) {
+    if (pattern.patterns.some(regex => regex.test(fullErrorText))) {
+      return {
+        category: pattern.category,
+        priority: pattern.priority as any,
+        shouldAlert: pattern.shouldAlert
+      };
+    }
+  }
+
+  // Default categorization for unknown errors
+  return {
+    category: 'unknown_error',
+    priority: 'medium',
+    shouldAlert: false
+  };
+}
+
+// Simplified rate limiting
 const rateLimitStore = new Map<string, { count: number; resetTime: number }>();
-const RATE_LIMIT_WINDOW = 60 * 1000; // 1 minute
-const RATE_LIMIT_MAX = 100; // 100 requests per minute
+const RATE_LIMITS = {
+  critical: { max: 50, window: 5 * 60 * 1000 }, // 50 critical errors per 5 minutes
+  high: { max: 100, window: 10 * 60 * 1000 },   // 100 high priority per 10 minutes
+  medium: { max: 200, window: 15 * 60 * 1000 }, // 200 medium priority per 15 minutes
+  low: { max: 500, window: 30 * 60 * 1000 },    // 500 low priority per 30 minutes
+  ignore: { max: 10, window: 60 * 1000 }        // 10 ignored errors per minute
+};
 
-function _checkRateLimit(ip: string): boolean {
+function checkRateLimit(ip: string, priority: keyof typeof RATE_LIMITS): boolean {
   const now = Date.now();
-  const key = ip;
+  const limit = RATE_LIMITS[priority];
+  const key = `${ip}:${priority}`;
   const current = rateLimitStore.get(key);
 
   if (!current || now > current.resetTime) {
-    rateLimitStore.set(key, { count: 1, resetTime: now + RATE_LIMIT_WINDOW });
+    rateLimitStore.set(key, { count: 1, resetTime: now + limit.window });
     return true;
   }
 
-  if (current.count >= RATE_LIMIT_MAX) {
+  if (current.count >= limit.max) {
     return false;
   }
 
@@ -59,177 +218,148 @@ function _checkRateLimit(ip: string): boolean {
   return true;
 }
 
-// Common React error patterns during screenshot generation
-const SCREENSHOT_IGNORABLE_ERRORS = [
-  {
-    type: 'network',
-    pattern: /failed to fetch/i,
-    description: 'Network fetch failure during screenshot'
-  },
-  {
-    type: 'react',
-    pattern: /React\.Children\.only/i,
-    description: 'React children validation during screenshot'
-  },
-  {
-    type: 'react',
-    pattern: /Cannot read properties of null/i,
-    description: 'Null property access during screenshot'
-  },
-  {
-    type: 'hydration',
-    pattern: /hydration/i,
-    description: 'Hydration mismatch during screenshot'
-  }
-];
+function getClientIP(request: NextRequest): string {
+  return request.headers.get("x-forwarded-for")?.split(",")[0].trim() ||
+         request.headers.get("x-real-ip") ||
+         request.headers.get("cf-connecting-ip") ||
+         "unknown";
+}
 
-function categorizeError(_error: unknown): { type: string; description: string } | null {
-  const errorMessage = (_error as Error)?.message || _error?.toString() || '';
+// Enhanced logging with structured data
+function logError(errorData: any) {
+  const { priority, category, shouldAlert } = errorData.metadata;
   
-  for (const pattern of SCREENSHOT_IGNORABLE_ERRORS) {
-    if (pattern.pattern.test(errorMessage)) {
-      return pattern;
+  // Use different log levels based on priority
+  const logEntry = {
+    timestamp: new Date().toISOString(),
+    level: priority === 'critical' ? 'error' : priority === 'high' ? 'warn' : 'info',
+    category,
+    priority,
+    shouldAlert,
+    error: {
+      name: errorData.name,
+      message: errorData.message,
+      stack: errorData.stack
+    },
+    context: errorData.metadata.context,
+    user: {
+      id: errorData.metadata.userId,
+      sessionId: errorData.metadata.sessionId,
+      userAgent: errorData.metadata.userAgent,
+      url: errorData.metadata.url
     }
+  };
+
+  // Log with appropriate level
+  if (priority === 'critical') {
+    console.error('[CRITICAL ERROR]', JSON.stringify(logEntry, null, 2));
+  } else if (priority === 'high') {
+    console.warn('[HIGH PRIORITY ERROR]', JSON.stringify(logEntry, null, 2));
+  } else if (priority !== 'ignore') {
+    console.log('[ERROR]', JSON.stringify(logEntry, null, 2));
   }
-  
-  return null;
+
+  // In production, you'd send critical/high priority errors to monitoring services
+  if (shouldAlert && process.env.NODE_ENV === 'production') {
+    // Send to Sentry, DataDog, etc.
+    // await sendToMonitoringService(logEntry);
+  }
 }
-
-function _shouldIgnoreError(_error: unknown, userAgent: string | null): boolean {
-  // Only apply special handling for Vercel screenshot bot
-  if (userAgent?.toLowerCase().includes('vercel-screenshot')) {
-    const errorCategory = categorizeError(_error);
-    
-    // If it's a known screenshot-related error, ignore it
-    if (errorCategory) {
-      return true;
-    }
-    
-    // For screenshot bot, we might want to be more lenient with other errors
-    // but still log them for monitoring
-    return false;
-  }
-  
-  // For regular users, don't ignore any errors
-  return false;
-}
-
-// Rate limit: 100 error reports per 15 minutes per IP
-const errorReportLimiter = new Map<string, RateLimiter>();
-
-function getIPAddress(request: NextRequest): string {
-  const forwarded = request.headers.get("x-forwarded-for");
-  const realIP = request.headers.get("x-real-ip");
-  
-  if (forwarded) {
-    return forwarded.split(",")[0].trim();
-  }
-  
-  if (realIP) {
-    return realIP;
-  }
-  
-  // Fallback to connection remote address (won't work in Vercel)
-  return "unknown";
-}
-
-function getRateLimiter(ip: string): RateLimiter {
-  if (!errorReportLimiter.has(ip)) {
-    // 100 tokens, refill 1 every 9 seconds (100 per 15 minutes)
-    errorReportLimiter.set(ip, new RateLimiter(100, 15 * 60 * 1000));
-  }
-  return errorReportLimiter.get(ip)!;
-}
-
-const __errorRateLimit = 100; // Keep for future use
-
-// Clean up old rate limiters every hour
-setInterval(() => {
-  errorReportLimiter.clear();
-}, 60 * 60 * 1000);
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
-    const ip = getIPAddress(request);
-    const limiter = getRateLimiter(ip);
-    
-    // Check rate limit
-    const allowed = await limiter.tryRemoveTokens(1);
-    if (!allowed) {
-      return NextResponse.json(
-        { 
-          error: "Rate limit exceeded",
-          retryAfter: 900 // 15 minutes
-        },
-        { status: 429 }
-      );
-    }
+    const ip = getClientIP(request);
+    const userAgent = request.headers.get('user-agent') || '';
 
-    // 2. Parse and validate request body
+    // Parse request body
     const body = await request.json() as unknown;
     
     let validatedError;
     try {
       validatedError = ErrorPayloadSchema.parse(body);
     } catch (validationError) {
-      console.warn('Invalid error payload:', validationError);
+      console.warn('Invalid error payload received:', validationError);
       return NextResponse.json(
-        { error: 'Invalid error payload' },
+        { error: 'Invalid error payload format' },
         { status: 400 }
       );
     }
 
-    // 3. Extract metadata safely
-    const metadata = validatedError.metadata;
-    const userId = metadata.userId;
-    const sessionId = metadata.sessionId;
-
-    // 4. Skip errors from bots/crawlers
-    const userAgent = request.headers.get('user-agent') || '';
-    if (userAgent.includes('bot') || 
-        userAgent.includes('crawler') || 
-        userAgent.includes('spider')) {
-      return NextResponse.json({ status: 'ignored' });
+    // Smart categorization
+    const errorCategory = categorizeError(validatedError, userAgent);
+    
+    // Early return for ignored errors
+    if (errorCategory.priority === 'ignore') {
+      return NextResponse.json({ status: 'ignored', reason: 'bot_or_crawler' });
     }
 
-    // 5. Log structured error data
-    const errorData = {
-      timestamp: new Date().toISOString(),
-      name: validatedError.name,
-      message: validatedError.message,
-      stack: validatedError.stack,
+    // Apply priority-based rate limiting
+    if (!checkRateLimit(ip, errorCategory.priority)) {
+      const retryAfter = Math.ceil(RATE_LIMITS[errorCategory.priority].window / 1000);
+      return NextResponse.json(
+        { 
+          error: "Rate limit exceeded for error priority",
+          priority: errorCategory.priority,
+          retryAfter
+        },
+        { status: 429 }
+      );
+    }
+
+    // Enhance metadata with categorization results
+    const enhancedError = {
+      ...validatedError,
       metadata: {
-        type: metadata.type,
-        location: metadata.location,
-        userId,
-        sessionId,
+        ...validatedError.metadata,
+        ...errorCategory,
         userAgent,
+        url: request.headers.get('referer') || '',
         ip: ip !== 'unknown' ? ip : undefined,
-      },
+        context: {
+          ...validatedError.metadata.context,
+          timestamp: new Date().toISOString()
+        }
+      }
     };
 
-    // 6. Send to logging service (console for now, could be replaced with external service)
-    console.error('Client Error:', JSON.stringify(errorData, null, 2));
+    // Log the error with enhanced context
+    logError(enhancedError);
 
-    // 7. Return success response
+    // Return success with error ID for tracking
+    const errorId = `${errorCategory.priority}_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`;
+    
     return NextResponse.json({ 
       status: 'logged',
-      id: `error_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+      id: errorId,
+      category: errorCategory.category,
+      priority: errorCategory.priority
     });
 
   } catch (error) {
-    // Handle any errors in the error handler itself
-    console.error('Error in error handler:', {
+    // Handle errors in the error handler
+    console.error('Error handler failed:', {
       message: error instanceof Error ? error.message : 'Unknown error',
-      name: error instanceof Error ? error.name : 'UnknownError',
       stack: error instanceof Error ? error.stack : undefined,
+      timestamp: new Date().toISOString()
     });
 
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'Error handler internal error' },
       { status: 500 }
     );
   }
+}
+
+// Clean up rate limit store periodically
+if (typeof globalThis !== 'undefined') {
+  setInterval(() => {
+    const now = Date.now();
+    for (const [key, value] of rateLimitStore.entries()) {
+      if (now > value.resetTime) {
+        rateLimitStore.delete(key);
+      }
+    }
+  }, 5 * 60 * 1000); // Clean up every 5 minutes
 }
 
 // Helper functions

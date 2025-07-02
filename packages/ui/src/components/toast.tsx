@@ -29,7 +29,7 @@ const toastVariants = cva(
 )
 
 export interface ToastProps extends VariantProps<typeof toastVariants> {
-  message: string
+  message: React.ReactNode
   isVisible: boolean
   onClose: () => void
   className?: string
@@ -83,7 +83,7 @@ export const Toast: React.FC<ToastProps> = ({
                 : 'text-muted'
             }`}
           />
-          <p className="text-body flex-1">{message}</p>
+          <div className="text-body flex-1">{message}</div>
           <button
             onClick={onClose}
             className="text-muted hover:text-foreground transition-colors duration-base"

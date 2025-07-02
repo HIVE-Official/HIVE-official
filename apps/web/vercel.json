@@ -1,26 +1,8 @@
 {
   "framework": "nextjs",
-  "buildCommand": "NEXT_FONT_SKIP_DOWNLOAD=1 pnpm build",
+  "buildCommand": "cd ../.. && pnpm install && pnpm build && cd apps/web && pnpm next build",
+  "installCommand": "cd ../.. && pnpm install",
   "outputDirectory": ".next",
-  "installCommand": "npm install -g pnpm@9.1.1 && pnpm install --frozen-lockfile",
-  "functions": {
-    "src/app/api/auth/**": {
-      "maxDuration": 15,
-      "memory": 1024
-    },
-    "src/app/api/spaces/**": {
-      "maxDuration": 10,
-      "memory": 1024
-    },
-    "src/app/api/profile/**": {
-      "maxDuration": 10,
-      "memory": 1024
-    },
-    "src/app/api/**": {
-      "maxDuration": 30,
-      "memory": 1024
-    }
-  },
   "headers": [
     {
       "source": "/(.*)",
@@ -44,6 +26,10 @@
         {
           "key": "Permissions-Policy",
           "value": "camera=(), microphone=(), geolocation=()"
+        },
+        {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=31536000; includeSubDomains; preload"
         }
       ]
     },
@@ -55,12 +41,37 @@
           "value": "no-store, max-age=0"
         }
       ]
+    },
+    {
+      "source": "/_next/static/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/fonts/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
     }
   ],
   "rewrites": [
     {
       "source": "/health",
       "destination": "/api/health"
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/welcome",
+      "destination": "/",
+      "permanent": false
     }
   ],
   "regions": ["iad1"]

@@ -28,6 +28,8 @@ export type { School } from "./domain/school";
 // Constants
 export * from "./constants/majors";
 export * from "./constants/academic-years";
+export * from "./constants/academics";
+export * from "./constants/interests";
 
 // Feed System Core
 export * from "./domain/feed/top-strip";
@@ -103,7 +105,12 @@ export * from "./constants/academics";
 export * from "./constants/interests";
 
 // Export Firebase utilities
-export * from "./firebase/client";
+export {
+  app,
+  auth,
+  db,
+  analytics,
+} from "./firebase";
 
 // Export stores
 export * from "./stores/useAppStore";
@@ -111,3 +118,9 @@ export * from "./stores/useUnseenCountStore";
 
 // Export environment
 export * from "./env";
+
+// Export Firebase admin
+export { dbAdmin } from './firebase-admin';
+
+// Export logger
+export { logger } from './utils/logger';
