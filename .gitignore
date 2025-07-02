@@ -85,7 +85,7 @@ jspm_packages/
 # Yarn Integrity file
 .yarn-integrity
 
-# dotenv environment variable files
+# dotenv environment variable files (root level)
 .env
 .env.development
 .env.preview
@@ -94,9 +94,22 @@ jspm_packages/
 .env.test.local
 .env.production.local
 .env.local
+.env*.local
 
-# Keep .env.example trackable for documentation
+# dotenv environment variable files (web app)
+apps/web/.env
+apps/web/.env.development
+apps/web/.env.preview
+apps/web/.env.production
+apps/web/.env.development.local
+apps/web/.env.test.local
+apps/web/.env.production.local
+apps/web/.env.local
+apps/web/.env*.local
+
+# Keep example files trackable for documentation
 !.env.example
+!apps/web/.env.example
 
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
@@ -154,3 +167,4 @@ firebase/scripts/serviceAccount*.json
 
 *storybook.log
 .vercel
+.env*.local
