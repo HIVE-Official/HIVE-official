@@ -20,7 +20,7 @@
     "build": "tsc",
     "lint": "cross-env BROWSERSLIST_IGNORE_OLD_DATA=1 BROWSERSLIST_UPDATE_DB=0 NO_UPDATE_NOTIFIER=1 eslint .",
     "typecheck": "tsc --noEmit",
-    "dev": "npx tsc --build --watch",
+    "dev": "tsc --build --watch",
     "clean": "rm -rf dist",
     "test": "vitest"
   },
@@ -43,5 +43,6 @@
     "tsup": "^8.5.0",
     "typescript": "^5.8.3",
     "vitest": "^3.2.4"
-  }
+  },
+  "packageManager": "pnpm@9.1.1"
 }
