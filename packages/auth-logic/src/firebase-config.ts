@@ -24,6 +24,26 @@ function getFirebaseConfig() {
   const missingVars = requiredVars.filter(varName => !process.env[varName]);
   
   if (missingVars.length > 0 && !isDevelopmentWithoutFirebase()) {
+    // Check if this might be a Vercel screenshot service or similar
+    const isLikelyScreenshotService = process.env.VERCEL_ENV && 
+                                      !process.env.NEXT_PUBLIC_FIREBASE_API_KEY;
+    
+    if (isLikelyScreenshotService) {
+      console.warn(
+        `⚠️ Firebase config missing in screenshot environment. Missing: ${missingVars.join(', ')}`
+      );
+      // Return a minimal mock config for screenshot generation
+      return {
+        apiKey: "screenshot-mock-key",
+        authDomain: "screenshot-mock.firebaseapp.com", 
+        projectId: "screenshot-mock",
+        storageBucket: "screenshot-mock.appspot.com",
+        messagingSenderId: "000000000",
+        appId: "1:000000000:web:screenshot",
+        measurementId: "G-SCREENSHOT"
+      };
+    }
+    
     throw new Error(
       `🚨 Firebase configuration error: Missing environment variables: ${missingVars.join(', ')}\n` +
       `Please check your .env.local file or Vercel environment variables.\n` +
@@ -70,8 +90,13 @@ interface MockUser extends Partial<User> {
 }
 
 // Initialize Firebase or create mock auth for development
-if (isDevelopmentWithoutFirebase()) {
-  logger.info("🔥 Running in development mode with mock auth");
+const firebaseConfig = getFirebaseConfig();
+const isUsingMockConfig = firebaseConfig.projectId === "demo-project" || 
+                         firebaseConfig.projectId === "screenshot-mock";
+
+if (isDevelopmentWithoutFirebase() || isUsingMockConfig) {
+  const configType = firebaseConfig.projectId === "screenshot-mock" ? "screenshot" : "development";
+  logger.info(`🔥 Running in ${configType} mode with mock auth`);
   
   // Create a complete mock auth object with all necessary methods
   auth = {
@@ -116,13 +141,12 @@ if (isDevelopmentWithoutFirebase()) {
     sendPasswordResetEmail: () => Promise.reject(new Error("Mock auth - not implemented")),
     updateProfile: () => Promise.reject(new Error("Mock auth - not implemented")),
     app: null,
-    name: "mock-auth",
-    config: getFirebaseConfig(),
+    name: "mock-auth", 
+    config: firebaseConfig,
   } as unknown as Auth;
 } else {
   // Production mode - use real Firebase
   try {
-    const firebaseConfig = getFirebaseConfig();
     app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
     auth = getAuth(app);
     logger.info(`🚀 Firebase initialized successfully for project: ${firebaseConfig.projectId}`);
