@@ -1,3 +1,4 @@
+import React from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { motion } from "framer-motion";
 import { Button, Badge } from "../../index";
@@ -94,7 +95,10 @@ const LandingPage = () => {
               <Button
                 size="lg"
                 className="group h-14 w-full bg-foreground px-8 text-lg font-medium text-background hover:bg-foreground/90 sm:w-auto"
-                onClick={() => console.log('Get Started clicked!')}
+                onClick={() => {
+                  // In a real app, this would navigate to signup
+                  document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' });
+                }}
               >
                 Get Started
                 <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />

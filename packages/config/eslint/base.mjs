@@ -250,14 +250,40 @@ const baseConfig = [
     },
   },
   
-  // Storybook configuration
+  // Relaxed rules for Storybook stories
   {
     files: ["**/*.stories.@(js|jsx|ts|tsx)"],
     plugins: {
       storybook: storybook,
     },
     rules: {
-      ...storybook.configs.recommended.rules,
+      // Storybook specific rules
+      "storybook/await-interactions": "error",
+      "storybook/context-in-play-function": "error",
+      "storybook/default-exports": "error",
+      "storybook/hierarchy-separator": "warn",
+      "storybook/no-redundant-story-name": "warn",
+      "storybook/prefer-pascal-case": "warn",
+      "storybook/story-exports": "error",
+      "storybook/use-storybook-expect": "error",
+      "storybook/use-storybook-testing-library": "error",
+      
+      // Relaxed complexity for Storybook
+      "max-lines-per-function": ["warn", { max: 250, skipBlankLines: true, skipComments: true }],
+      "no-console": "off", // Allow console for Storybook documentation
+    },
+  },
+
+  // Relaxed rules for complex UI components (onboarding flows, etc.)
+  {
+    files: [
+      "**/onboarding/**/*.{ts,tsx}",
+      "**/auth/**/*.{ts,tsx}",
+      "**/components/**/steps/**/*.{ts,tsx}",
+    ],
+    rules: {
+      "max-lines-per-function": ["warn", { max: 375, skipBlankLines: true, skipComments: true }],
+      "complexity": ["warn", { max: 25 }],
     },
   },
 ];

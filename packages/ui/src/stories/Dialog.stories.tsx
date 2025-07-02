@@ -152,7 +152,7 @@ export const WithLongContent: Story = {
     children: (
       <div className="flex flex-col gap-4">
         <div className="max-h-[60vh] overflow-y-auto pr-2">
-          {Array.from({ length: 10 }).map((_, i) => (
+          {Array.from({ length: 10 }, (_, i) => (
             <div key={`terms-section-${i}`} className="mb-4">
               <h3 className="mb-2 text-lg font-semibold">Section {i + 1}</h3>
               <p className="text-muted">

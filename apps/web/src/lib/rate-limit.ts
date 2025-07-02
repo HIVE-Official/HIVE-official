@@ -125,7 +125,9 @@ export function rateLimit(config: RateLimitConfig) {
       // Clean up old tokens periodically
       if (store.tokens.size > config.uniqueTokenPerInterval) {
         const oldestKey = store.tokens.keys().next().value;
-        store.tokens.delete(oldestKey);
+        if (oldestKey !== undefined) {
+          store.tokens.delete(oldestKey);
+        }
       }
     }
   };

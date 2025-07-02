@@ -1,20 +1,12 @@
 "use client";
 
-import { motion } from "framer-motion";
-import Link from "next/link";
-import { Button } from "@hive/ui";
-import {
-  ArrowLeft,
-  Mail,
-  RefreshCw,
-  ExternalLink,
-  AlertCircle,
-  CheckCircle,
-} from "lucide-react";
 import { useState, useEffect, useCallback, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { logger } from "@hive/core";
+import { motion } from "framer-motion";
+import { CheckCircle, AlertCircle, RefreshCw, Mail, ArrowLeft } from "lucide-react";
+import { Button } from "@hive/ui";
 import { useOnboardingStore } from "@/lib/stores/onboarding";
+import { logger } from "@hive/core";
 
 interface CountdownRingProps {
   timeLeft: number;
@@ -22,73 +14,146 @@ interface CountdownRingProps {
 }
 
 function CountdownRing({ timeLeft, totalTime }: CountdownRingProps) {
-  const radius = 45;
-  const circumference = 2 * Math.PI * radius;
-  const progress = ((totalTime - timeLeft) / totalTime) * 100;
-  const strokeDashoffset = circumference - (progress / 100) * circumference;
+  const progress = (timeLeft / totalTime) * 100;
+  const strokeDasharray = 2 * Math.PI * 45; // radius = 45
+  const strokeDashoffset = strokeDasharray - (progress / 100) * strokeDasharray;
 
   return (
     <div className="relative w-24 h-24">
       <svg className="w-24 h-24 transform -rotate-90" viewBox="0 0 100 100">
-        {/* Background circle */}
         <circle
           cx="50"
           cy="50"
-          r={radius}
+          r="45"
           stroke="currentColor"
           strokeWidth="4"
           fill="transparent"
-          className="text-border/30"
+          className="text-surface-03"
         />
-        {/* Progress circle */}
         <circle
           cx="50"
           cy="50"
-          r={radius}
+          r="45"
           stroke="currentColor"
           strokeWidth="4"
           fill="transparent"
-          strokeDasharray={circumference}
+          strokeDasharray={strokeDasharray}
           strokeDashoffset={strokeDashoffset}
-          className="text-accent transition-all duration-1000 ease-in-out"
+          className="text-accent transition-all duration-1000 ease-linear"
           strokeLinecap="round"
         />
       </svg>
       <div className="absolute inset-0 flex items-center justify-center">
-        <span className="text-xl font-bold text-accent font-display">
-          {timeLeft}
+        <span className="text-sm font-mono text-muted">
+          {Math.floor(timeLeft / 60)}:
+          {(timeLeft % 60).toString().padStart(2, "0")}
         </span>
       </div>
     </div>
   );
 }
 
-function VerifyContent() {
+// Verification status icon component
+interface StatusIconProps {
+  status: "waiting" | "verifying" | "success" | "error";
+}
+
+function StatusIcon({ status }: StatusIconProps) {
+  const iconClass = "w-8 h-8";
+  
+  switch (status) {
+    case "success":
+      return <CheckCircle className={`${iconClass} text-green-500`} />;
+    case "error":
+      return <AlertCircle className={`${iconClass} text-red-500`} />;
+    case "verifying":
+      return <RefreshCw className={`${iconClass} text-accent animate-spin`} />;
+    default:
+      return <Mail className={`${iconClass} text-muted`} />;
+  }
+}
+
+// Status header component
+interface StatusHeaderProps {
+  status: "waiting" | "verifying" | "success" | "error";
+  errorMessage?: string;
+  email?: string;
+}
+
+function StatusHeader({ status, errorMessage, email }: StatusHeaderProps) {
+  const getTitle = () => {
+    switch (status) {
+      case "success":
+        return "Welcome to HIVE!";
+      case "error":
+        return "Verification Failed";
+      case "verifying":
+        return "Verifying...";
+      default:
+        return "Check Your Email";
+    }
+  };
+
+  const getDescription = () => {
+    switch (status) {
+      case "success":
+        return "Setting up your account...";
+      case "error":
+        return errorMessage;
+      case "verifying":
+        return "Please wait while we verify your email...";
+      default:
+        return email 
+          ? `We sent a verification email to ${email}. Click the link to sign in.`
+          : "We sent you a verification email. Click the link to sign in.";
+    }
+  };
+
+  return (
+    <div className="text-center mb-8">
+      <motion.div
+        className="w-16 h-16 bg-surface-01 rounded-full flex items-center justify-center mx-auto mb-4"
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        transition={{ delay: 0.2, duration: 0.5, type: "spring" }}
+      >
+        <StatusIcon status={status} />
+      </motion.div>
+
+      <h1 className="text-2xl font-display font-semibold text-foreground mb-2">
+        {getTitle()}
+      </h1>
+
+      <p className="text-muted font-sans">
+        {getDescription()}
+      </p>
+    </div>
+  );
+}
+
+// Email verification logic hook
+function useEmailVerification() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { update } = useOnboardingStore();
+  
   const [verificationStatus, setVerificationStatus] = useState<
     "waiting" | "verifying" | "success" | "error"
   >("waiting");
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const [timeLeft, setTimeLeft] = useState(300); // 5 minutes
-  const [canResend, setCanResend] = useState(false);
   const [email, setEmail] = useState<string>("");
 
   const handleVerification = useCallback(async () => {
     const urlEmail = searchParams.get("email");
     const dev = searchParams.get("dev");
-    const storedEmail =
-      typeof window !== "undefined"
-        ? localStorage.getItem("hive-auth-email")
-        : null;
+    const storedEmail = typeof window !== "undefined" 
+      ? localStorage.getItem("hive-auth-email") 
+      : null;
     const finalEmail = urlEmail || storedEmail;
 
     if (!finalEmail) {
       setVerificationStatus("error");
-      setErrorMessage(
-        "No email found for verification. Please start the sign-in process again."
-      );
+      setErrorMessage("No email found for verification. Please start the sign-in process again.");
       return;
     }
 
@@ -97,9 +162,7 @@ function VerifyContent() {
     try {
       const response = await fetch("/api/auth/email/verify", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email: finalEmail,
           url: window.location.href,
@@ -116,13 +179,12 @@ function VerifyContent() {
         if (typeof window !== "undefined") {
           localStorage.setItem("hive-auth-token", data.idToken);
           localStorage.setItem("hive-user-data", JSON.stringify(data.user));
-          localStorage.removeItem("hive-auth-email"); // Clean up
+          localStorage.removeItem("hive-auth-email");
         }
 
         // Redirect based on user status
         setTimeout(() => {
           if (data.user.isNewUser) {
-            // Get schoolId from localStorage and update onboarding store
             const schoolId = localStorage.getItem("hive-selected-school-id");
             if (schoolId) {
               update({ schoolId });
@@ -139,36 +201,28 @@ function VerifyContent() {
     } catch (error) {
       logger.error("Verification error:", error);
       setVerificationStatus("error");
-      setErrorMessage(
-        "Network error occurred. Please check your connection and try again."
-      );
+      setErrorMessage("Network error occurred. Please check your connection and try again.");
     }
   }, [searchParams, router, update]);
 
-  // Get parameters from URL or localStorage
+  return {
+    verificationStatus,
+    setVerificationStatus,
+    errorMessage,
+    setErrorMessage,
+    email,
+    setEmail,
+    handleVerification
+  };
+}
+
+// Timer logic hook
+function useVerificationTimer() {
+  const [timeLeft, setTimeLeft] = useState(300); // 5 minutes
+  const [canResend, setCanResend] = useState(false);
+
   useEffect(() => {
-    const urlEmail = searchParams.get("email");
-    const dev = searchParams.get("dev");
-    const oobCode = searchParams.get("oobCode");
-    const mode = searchParams.get("mode");
-
-    // Get email from URL or localStorage
-    const storedEmail =
-      typeof window !== "undefined"
-        ? localStorage.getItem("hive-auth-email")
-        : null;
-    const finalEmail = urlEmail || storedEmail || "";
-    setEmail(finalEmail);
-
-    // Auto-verify if this is a magic link
-    if ((oobCode && mode === "signIn") || (dev === "true" && finalEmail)) {
-      void handleVerification();
-    }
-  }, [searchParams, handleVerification]);
-
-  // Countdown timer
-  useEffect(() => {
-    if (timeLeft > 0 && verificationStatus === "waiting") {
+    if (timeLeft > 0) {
       const timer = setInterval(() => {
         setTimeLeft((prev) => {
           if (prev <= 1) {
@@ -181,7 +235,48 @@ function VerifyContent() {
 
       return () => clearInterval(timer);
     }
-  }, [timeLeft, verificationStatus]);
+  }, [timeLeft]);
+
+  const resetTimer = () => {
+    setTimeLeft(300);
+    setCanResend(false);
+  };
+
+  return { timeLeft, canResend, resetTimer };
+}
+
+function VerifyContent() {
+  const searchParams = useSearchParams();
+  const {
+    verificationStatus,
+    setVerificationStatus,
+    errorMessage,
+    setErrorMessage,
+    email,
+    setEmail,
+    handleVerification
+  } = useEmailVerification();
+  
+  const { timeLeft, canResend, resetTimer } = useVerificationTimer();
+
+  // Initialize email and auto-verify
+  useEffect(() => {
+    const urlEmail = searchParams.get("email");
+    const dev = searchParams.get("dev");
+    const oobCode = searchParams.get("oobCode");
+    const mode = searchParams.get("mode");
+
+    const storedEmail = typeof window !== "undefined" 
+      ? localStorage.getItem("hive-auth-email") 
+      : null;
+    const finalEmail = urlEmail || storedEmail || "";
+    setEmail(finalEmail);
+
+    // Auto-verify if this is a magic link
+    if ((oobCode && mode === "signIn") || (dev === "true" && finalEmail)) {
+      void handleVerification();
+    }
+  }, [searchParams, handleVerification, setEmail]);
 
   const handleResend = async () => {
     if (!email) {
@@ -192,19 +287,15 @@ function VerifyContent() {
     try {
       const response = await fetch("/api/auth/email/start", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
       });
 
       if (response.ok) {
-        setTimeLeft(300);
-        setCanResend(false);
+        resetTimer();
         setVerificationStatus("waiting");
         setErrorMessage("");
 
-        // Store email again
         if (typeof window !== "undefined") {
           localStorage.setItem("hive-auth-email", email);
         }
@@ -218,12 +309,6 @@ function VerifyContent() {
     }
   };
 
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, "0")}`;
-  };
-
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <motion.div
@@ -232,196 +317,108 @@ function VerifyContent() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
-        {/* Header */}
-        <div className="text-center mb-8">
-          <motion.div
-            className="w-16 h-16 bg-surface-01 rounded-full flex items-center justify-center mx-auto mb-4"
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 0.2, duration: 0.5, type: "spring" }}
-          >
-            {verificationStatus === "success" ? (
-              <CheckCircle className="w-8 h-8 text-green-500" />
-            ) : verificationStatus === "error" ? (
-              <AlertCircle className="w-8 h-8 text-red-500" />
-            ) : verificationStatus === "verifying" ? (
-              <RefreshCw className="w-8 h-8 text-accent animate-spin" />
-            ) : (
-              <Mail className="w-8 h-8 text-muted" />
-            )}
-          </motion.div>
+        <StatusHeader 
+          status={verificationStatus} 
+          errorMessage={errorMessage} 
+          email={email} 
+        />
 
-          <h1 className="text-2xl font-display font-semibold text-foreground mb-2">
-            {verificationStatus === "success" && "Welcome to HIVE!"}
-            {verificationStatus === "error" && "Verification Failed"}
-            {verificationStatus === "verifying" && "Verifying..."}
-            {verificationStatus === "waiting" && "Check Your Email"}
-          </h1>
-
-          <p className="text-muted font-sans">
-            {verificationStatus === "success" && "Setting up your account..."}
-            {verificationStatus === "error" && errorMessage}
-            {verificationStatus === "verifying" &&
-              "Please wait while we verify your email"}
-            {verificationStatus === "waiting" && (
-              <>
-                We sent a magic link to{" "}
-                {email && (
-                  <span className="text-white font-medium">{email}</span>
-                )}
-                {!email && "your email"}
-              </>
-            )}
-          </p>
-        </div>
-
-        {/* Status Content */}
+        {/* Timer and Actions */}
         {verificationStatus === "waiting" && (
           <motion.div
-            className="text-center"
+            className="text-center space-y-6"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.4 }}
+            transition={{ delay: 0.4, duration: 0.5 }}
           >
-            {/* Countdown */}
-            <div className="flex justify-center mb-6">
-              <CountdownRing timeLeft={timeLeft} totalTime={300} />
-            </div>
+            <CountdownRing timeLeft={timeLeft} totalTime={300} />
 
-            <p className="text-sm text-muted font-sans mb-2">
-              {timeLeft > 0
-                ? `Link expires in ${formatTime(timeLeft)}`
-                : "Link has expired"}
-            </p>
+            <div className="space-y-4">
+              <p className="text-sm text-muted font-sans">
+                {canResend
+                  ? "Didn't receive the email? You can request a new one."
+                  : `Email expires in ${Math.floor(timeLeft / 60)}:${(timeLeft % 60)
+                      .toString()
+                      .padStart(2, "0")}`}
+              </p>
 
-            <p className="text-sm text-muted font-sans mb-6">
-              Didn&apos;t receive the email? Check your spam folder or{" "}
-              <button
+              <Button
+                variant="outline"
                 onClick={handleResend}
-                disabled={!canResend && timeLeft > 0}
-                className={`text-foreground hover:text-foreground/80 underline ${
-                  !canResend && timeLeft > 0
-                    ? "opacity-50 cursor-not-allowed"
-                    : ""
-                }`}
+                disabled={!canResend}
+                className="w-full"
               >
-                {canResend || timeLeft === 0
-                  ? "send a new one"
-                  : `try again in ${formatTime(timeLeft)}`}
-              </button>
+                {canResend ? "Resend Email" : "Resend Available Soon"}
+              </Button>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Success State */}
+        {verificationStatus === "success" && (
+          <motion.div
+            className="text-center"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+          >
+            <div className="w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
+              <CheckCircle className="w-8 h-8 text-green-500" />
+            </div>
+            <p className="text-muted font-sans">
+              Redirecting you to your dashboard...
             </p>
           </motion.div>
         )}
 
+        {/* Error State */}
+        {verificationStatus === "error" && (
+          <motion.div
+            className="text-center space-y-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+          >
+            <Button
+              variant="outline"
+              onClick={() => window.location.href = "/auth/choose"}
+              className="w-full"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Sign In
+            </Button>
+          </motion.div>
+        )}
+
+        {/* Verifying State */}
         {verificationStatus === "verifying" && (
           <motion.div
             className="text-center"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.4 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
           >
-            <div className="bg-surface-01 border border-border rounded-lg p-6 mb-6">
-              <div className="w-12 h-12 bg-surface-01 rounded-full flex items-center justify-center mx-auto mb-4">
-                <RefreshCw className="w-6 h-6 text-foreground animate-spin" />
-              </div>
-              <p className="text-sm text-muted font-sans">
-                Verifying your email address...
-              </p>
+            <div className="flex justify-center">
+              <RefreshCw className="w-8 h-8 text-accent animate-spin" />
             </div>
           </motion.div>
         )}
 
-        {verificationStatus === "success" && (
-          <motion.div
-            className="text-center"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.4 }}
+        {/* Back link */}
+        <motion.div
+          className="text-center mt-8"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6, duration: 0.5 }}
+        >
+          <button
+            onClick={() => window.location.href = "/auth/choose"}
+            className="text-sm text-muted hover:text-foreground transition-colors inline-flex items-center gap-2 font-sans"
           >
-            <div className="bg-green-900/20 border border-green-500/20 rounded-lg p-6 mb-6">
-              <div className="w-12 h-12 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <CheckCircle className="w-6 h-6 text-green-500" />
-              </div>
-              <p className="text-sm text-muted font-sans">
-                Your email has been verified successfully! Redirecting you
-                now...
-              </p>
-            </div>
-          </motion.div>
-        )}
-
-        {verificationStatus === "error" && (
-          <motion.div
-            className="text-center"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.4 }}
-          >
-            <div className="bg-red-900/20 border border-red-500/20 rounded-lg p-6 mb-6">
-              <div className="w-12 h-12 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <AlertCircle className="w-6 h-6 text-red-500" />
-              </div>
-              <p className="text-sm text-muted font-sans mb-4">
-                {errorMessage}
-              </p>
-              <div className="space-y-2">
-                <Button
-                  onClick={handleResend}
-                  className="w-full"
-                  variant="outline"
-                  disabled={!email}
-                >
-                  <RefreshCw className="w-4 h-4 mr-2" />
-                  {email ? "Send New Magic Link" : "Start Over"}
-                </Button>
-                {!email && (
-                  <Button
-                    onClick={() => router.push("/auth/email")}
-                    className="w-full"
-                    variant="surface"
-                  >
-                    Start Sign In Process
-                  </Button>
-                )}
-              </div>
-            </div>
-          </motion.div>
-        )}
-
-        {/* Navigation */}
-        <div className="space-y-3">
-          <Link href="/auth/email">
-            <Button variant="outline" className="w-full">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Sign In
-            </Button>
-          </Link>
-
-          {email && email.includes("@") && (
-            <Button
-              onClick={() => {
-                const domain = email.split("@")[1];
-                if (domain.includes("gmail")) {
-                  window.open("https://mail.google.com", "_blank");
-                } else if (
-                  domain.includes("outlook") ||
-                  domain.includes("hotmail")
-                ) {
-                  window.open("https://outlook.live.com", "_blank");
-                } else if (domain.includes("yahoo")) {
-                  window.open("https://mail.yahoo.com", "_blank");
-                } else {
-                  window.open(`https://${domain}`, "_blank");
-                }
-              }}
-              variant="ghost"
-              className="w-full"
-            >
-              <ExternalLink className="w-4 h-4 mr-2" />
-              Open Email ({email.split("@")[1]})
-            </Button>
-          )}
-        </div>
+            <ArrowLeft className="w-4 h-4" />
+            Back to sign in options
+          </button>
+        </motion.div>
       </motion.div>
     </div>
   );
@@ -429,19 +426,17 @@ function VerifyContent() {
 
 export default function VerifyPage() {
   return (
-    <Suspense
-      fallback={
+    <div className="min-h-screen bg-background">
+      <Suspense fallback={
         <div className="min-h-screen bg-background flex items-center justify-center">
           <div className="text-center">
-            <div className="w-16 h-16 bg-surface-01 rounded-full flex items-center justify-center mx-auto mb-4">
-              <RefreshCw className="w-8 h-8 text-muted animate-spin" />
-            </div>
-            <p className="text-muted font-sans">Loading verification...</p>
+            <RefreshCw className="w-8 h-8 text-accent animate-spin mx-auto mb-4" />
+            <p className="text-muted font-sans">Loading...</p>
           </div>
         </div>
-      }
-    >
-      <VerifyContent />
-    </Suspense>
+      }>
+        <VerifyContent />
+      </Suspense>
+    </div>
   );
 }

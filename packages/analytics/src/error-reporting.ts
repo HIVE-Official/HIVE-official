@@ -143,31 +143,41 @@ export const captureError = (error: Error, metadata: ErrorMetadata) => {
  * Reports an error to the analytics endpoint
  */
 export async function reportError(
-  error: Error | string,
+  error: Error | string | null | undefined,
   context: ErrorContext = {}
 ): Promise<void> {
   try {
-    // Extract error information
+    // Handle null/undefined errors gracefully
+    if (!error) {
+      error = 'Unknown error occurred';
+    }
+
+    // Extract error information safely
     const errorData = {
-      message: error instanceof Error ? error.message : error,
+      message: error instanceof Error ? error.message : String(error),
       stack: error instanceof Error ? error.stack : undefined,
-      type: error instanceof Error ? error.constructor.name : 'string',
+      type: error instanceof Error ? error.constructor.name : 'UnknownError',
     };
+
+    // Ensure name and message are never empty
+    const errorName = errorData.type || 'UnknownError';
+    const errorMessage = errorData.message || 'No error message available';
 
     // Build the error report (matching API schema)
     const errorReport = {
-      name: errorData.type,
-      message: errorData.message,
+      name: errorName,
+      message: errorMessage,
       stack: errorData.stack,
       metadata: {
         type: 'unknown' as const,
         timestamp: new Date().toISOString(),
-        userId: window.__HIVE_USER_ID,
-        sessionId: sessionStorage.getItem('hive_session_id') ?? undefined,
-        location: window.location.href,
+        userId: typeof window !== 'undefined' ? window.__HIVE_USER_ID : undefined,
+        sessionId: typeof window !== 'undefined' ? sessionStorage.getItem('hive_session_id') ?? undefined : undefined,
+        location: typeof window !== 'undefined' ? window.location.href : undefined,
         extra: {
-          userAgent: navigator.userAgent,
+          userAgent: typeof window !== 'undefined' ? navigator.userAgent : 'server',
           timestamp: Date.now(),
+          originalErrorType: typeof error,
           ...context,
         }
       }
@@ -200,16 +210,40 @@ export function setupGlobalErrorHandling(): void {
 
   // Handle uncaught errors
   window.onerror = (message, source, lineno, colno, error) => {
-    reportError(error || String(message), {
+    // Create a meaningful error from the parameters
+    const errorToReport = error || new Error(String(message) || 'Unknown script error');
+    
+    reportError(errorToReport, {
       component: 'window.onerror',
-      additionalData: { source, lineno, colno },
+      additionalData: { 
+        source: source || 'unknown', 
+        lineno: lineno || 0, 
+        colno: colno || 0,
+        originalMessage: message
+      },
     });
   };
 
   // Handle unhandled promise rejections
   window.onunhandledrejection = (event) => {
-    reportError(event.reason || 'Unhandled Promise Rejection', {
+    // Handle various types of rejection reasons
+    let errorToReport: Error | string;
+    
+    if (event.reason instanceof Error) {
+      errorToReport = event.reason;
+    } else if (typeof event.reason === 'string') {
+      errorToReport = new Error(event.reason || 'Unhandled Promise Rejection');
+    } else {
+      // Handle objects, numbers, null, undefined, etc.
+      errorToReport = new Error(`Unhandled Promise Rejection: ${String(event.reason) || 'Unknown reason'}`);
+    }
+    
+    reportError(errorToReport, {
       component: 'window.onunhandledrejection',
+      additionalData: {
+        rejectionReason: String(event.reason),
+        reasonType: typeof event.reason
+      }
     });
   };
 
@@ -221,9 +255,9 @@ export function setupGlobalErrorHandling(): void {
       // Report React-specific errors
       const errorMessage = args.join(' ');
       if (errorMessage.includes('React') || errorMessage.includes('Warning:')) {
-        reportError(errorMessage, {
+        reportError(new Error(errorMessage), {
           component: 'React',
-          additionalData: { args },
+          additionalData: { args: args.map(arg => String(arg)) },
         });
       }
       originalConsoleError.apply(console, args);

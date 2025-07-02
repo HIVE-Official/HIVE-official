@@ -177,7 +177,7 @@ const AvatarGroup = React.forwardRef<
       {...props}
     >
       {visibleChildren.map((child, index) => (
-        <div key={`avatar-${index}-${React.isValidElement(child) ? (child.key || index) : index}`} className="relative">
+        <div key={React.isValidElement(child) && child.key ? child.key : `avatar-${index}`} className="relative">
           {React.isValidElement(child) 
             ? React.cloneElement(child as React.ReactElement<{className?: string; size?: VariantProps<typeof avatarVariants>["size"]}>, { 
                 size,

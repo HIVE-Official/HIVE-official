@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { _logger } from '@hive/core';
-import { ErrorMetadataSchema } from '@hive/analytics';
-import { rateLimit } from '@/lib/rate-limit';
+// import { logger } from '@hive/core'; // Removed - not currently used
 import { RateLimiter } from "limiter";
 
 // Define error metadata schema directly here
@@ -25,19 +23,18 @@ const ErrorMetadataSchema = z.object({
   extra: z.record(z.unknown()).optional()
 });
 
-// Extended error payload schema
+// Extended error payload schema - made more defensive
 const ErrorPayloadSchema = z.object({
-  name: z.string(),
-  message: z.string(),
+  name: z.string().default('UnknownError'),
+  message: z.string().default('No error message provided'),
   stack: z.string().optional(),
-  metadata: ErrorMetadataSchema
+  metadata: ErrorMetadataSchema.default({
+    type: 'unknown',
+    timestamp: new Date().toISOString(),
+  })
 });
 
-// Rate limiter for error reporting
-const _errorRateLimit = rateLimit({
-  uniqueTokenPerInterval: 500, // Max unique errors per interval
-  interval: 60 * 1000, // 1 minute
-});
+// Rate limiter for error reporting (using limiter library directly)
 
 // Simple rate limiting using Map
 const rateLimitStore = new Map<string, { count: number; resetTime: number }>();
@@ -87,7 +84,7 @@ const SCREENSHOT_IGNORABLE_ERRORS = [
 ];
 
 function categorizeError(_error: unknown): { type: string; description: string } | null {
-  const errorMessage = _error?.message || _error?.toString() || '';
+  const errorMessage = (_error as Error)?.message || _error?.toString() || '';
   
   for (const pattern of SCREENSHOT_IGNORABLE_ERRORS) {
     if (pattern.pattern.test(errorMessage)) {
@@ -139,7 +136,7 @@ function getIPAddress(request: NextRequest): string {
 function getRateLimiter(ip: string): RateLimiter {
   if (!errorReportLimiter.has(ip)) {
     // 100 tokens, refill 1 every 9 seconds (100 per 15 minutes)
-    errorReportLimiter.set(ip, new RateLimiter({ tokensPerInterval: 100, interval: 15 * 60 * 1000 }));
+    errorReportLimiter.set(ip, new RateLimiter(100, 15 * 60 * 1000));
   }
   return errorReportLimiter.get(ip)!;
 }
