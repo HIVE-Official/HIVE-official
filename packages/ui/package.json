@@ -9,14 +9,14 @@
     "dist"
   ],
   "scripts": {
-    "dev": "tsup --watch",
+    "dev": "tsc --watch",
     "build": "echo 'Skipping UI build for deployment' && mkdir -p dist && echo 'export {}'>dist/index.js && echo 'export {}'>dist/index.mjs && echo 'export {}'>dist/index.d.ts",
     "lint": "cross-env BROWSERSLIST_IGNORE_OLD_DATA=1 BROWSERSLIST_UPDATE_DB=0 NO_UPDATE_NOTIFIER=1 eslint .",
-    "typecheck": "npx tsc --noEmit",
+    "typecheck": "tsc --noEmit",
     "clean": "rm -rf .turbo dist",
-    "build-storybook": "npx storybook build",
+    "build-storybook": "storybook build",
     "test": "vitest",
-    "storybook": "npx storybook dev -p 6006 --config-dir ./.storybook"
+    "storybook": "storybook dev -p 6006 --config-dir ./.storybook"
   },
   "devDependencies": {
     "@hive/tokens": "workspace:*",
@@ -72,5 +72,6 @@
     "react": "19.1.0",
     "react-dom": "^19.1.0",
     "tailwind-merge": "^3.3.1"
-  }
+  },
+  "packageManager": "pnpm@9.1.1"
 }

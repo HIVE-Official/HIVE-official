@@ -17,7 +17,7 @@
   ],
   "scripts": {
     "prebuild": "pnpm run clean",
-    "build": "npx tsup && tsc --emitDeclarationOnly --declaration --declarationMap --outDir dist",
+    "build": "tsup && tsc --emitDeclarationOnly --declaration --declarationMap --outDir dist",
     "lint": "cross-env BROWSERSLIST_IGNORE_OLD_DATA=1 NO_UPDATE_NOTIFIER=1 eslint .",
     "typecheck": "tsc --noEmit",
     "dev": "concurrently \"tsup --watch\" \"tsc --emitDeclarationOnly --declaration --declarationMap --outDir dist --watch\"",
@@ -46,5 +46,6 @@
     "zustand": "^4.5.2"
   },
   "keywords": [],
-  "author": ""
+  "author": "",
+  "packageManager": "pnpm@9.1.1"
 }

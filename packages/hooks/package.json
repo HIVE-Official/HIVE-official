@@ -18,5 +18,6 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "lint": "cross-env BROWSERSLIST_IGNORE_OLD_DATA=1 BROWSERSLIST_UPDATE_DB=0 NO_UPDATE_NOTIFIER=1 eslint . --max-warnings 10"
-  }
+  },
+  "packageManager": "pnpm@9.1.1"
 }
