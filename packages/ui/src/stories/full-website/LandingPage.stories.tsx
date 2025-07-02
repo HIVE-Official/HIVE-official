@@ -1,5 +1,5 @@
 import React from "react";
-import type { Meta, StoryObj } from "@storybook/react-vite";
+import type { Meta, StoryObj } from "@storybook/react";
 import { motion } from "framer-motion";
 import { Button, Badge } from "../../index";
 import { ArrowRight, Sparkles, Users, Zap } from "lucide-react";
