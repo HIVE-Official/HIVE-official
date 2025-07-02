@@ -2,14 +2,21 @@
   "extends": "../config/typescript/base.json",
   "compilerOptions": {
     "outDir": "dist",
-    "rootDir": "src",
+    "rootDir": "../",
     "noEmit": false,
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
     "baseUrl": ".",
-    "paths": {}
+    "moduleResolution": "node",
+    "paths": {
+      "@hive/*": ["../*/src"]
+    }
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["src/**/*", "../core/src/**/*.ts"],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "../core/src/utils/code-analyzer.ts"
+  ]
 }

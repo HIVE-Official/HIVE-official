@@ -4,7 +4,11 @@
     "baseUrl": ".",
     "paths": {
       "@/*": [
-        "src/*"
+        "src/*",
+        "../../packages/ui/src/*"
+      ],
+      "@hive/*": [
+        "../../packages/*/src"
       ]
     },
     "plugins": [
@@ -29,7 +33,8 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "target": "ES2017",
-    "composite": true,
+    "rootDir": "../../",
+    "composite": false,
     "typeRoots": [
       "../../node_modules/@types",
       "../../node_modules",
@@ -46,14 +51,5 @@
     "node_modules",
     "dist"
   ],
-  "references": [
-    { "path": "../../packages/ui" },
-    { "path": "../../packages/core" },
-    { "path": "../../packages/auth-logic" },
-    { "path": "../../packages/hooks" },
-    { "path": "../../packages/validation" },
-    { "path": "../../packages/utilities" },
-    { "path": "../../packages/api-client" },
-    { "path": "../../packages/analytics" }
-  ]
+  "references": []
 }
