@@ -21,7 +21,7 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "lint": "npx eslint . --max-warnings 15"
+    "lint": "eslint . --max-warnings 15"
   },
   "packageManager": "pnpm@9.1.1"
 }

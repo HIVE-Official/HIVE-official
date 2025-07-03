@@ -17,9 +17,9 @@
     "dist/**"
   ],
   "scripts": {
-    "build": "tsup src/index.ts --format esm,cjs --dts --external react --sourcemap",
-    "dev": "tsup src/index.ts --format esm,cjs --watch --dts --external react --sourcemap",
-    "lint": "npx eslint src/ --max-warnings 15",
+    "build": "rm -f tsconfig.tsbuildinfo && tsup src/index.ts --format esm,cjs --external react --sourcemap && tsc -p tsconfig.json --emitDeclarationOnly",
+    "dev": "tsup src/index.ts --format esm,cjs --watch --external react --sourcemap & tsc -p tsconfig.json --watch --emitDeclarationOnly",
+    "lint": "eslint src/ --max-warnings 15",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
     "typecheck": "tsc --noEmit"
   },
