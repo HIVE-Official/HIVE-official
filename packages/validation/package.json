@@ -16,7 +16,7 @@
     "prebuild": "pnpm run clean",
     "build": "tsc --emitDeclarationOnly && tsup src/index.ts --format cjs,esm --sourcemap",
     "clean": "rm -rf dist",
-    "lint": "npx eslint . --max-warnings 15",
+    "lint": "eslint . --max-warnings 15",
     "typecheck": "tsc --noEmit",
     "dev": "concurrently \"tsc --emitDeclarationOnly --watch\" \"tsup src/index.ts --format cjs,esm --sourcemap --watch\""
   },

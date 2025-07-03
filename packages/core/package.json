@@ -27,9 +27,9 @@
     "dist/**"
   ],
   "scripts": {
-    "dev": "tsup src/index.ts --format esm,cjs --watch --dts --external react",
-    "build": "tsup src/index.ts --format esm,cjs --dts --external react",
-    "lint": "npx eslint . --max-warnings 15",
+    "dev": "tsup src/index.ts --format esm,cjs --watch --external react & tsc -p tsconfig.declarations.json --watch",
+    "build": "rm -f tsconfig.declarations.tsbuildinfo && tsup src/index.ts --format esm,cjs --external react && tsc -p tsconfig.declarations.json",
+    "lint": "eslint . --max-warnings 15",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
   },
   "dependencies": {

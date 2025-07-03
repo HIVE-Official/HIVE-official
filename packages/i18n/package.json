@@ -10,7 +10,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "lint": "npx eslint . --max-warnings 15",
+    "lint": "eslint . --max-warnings 15",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

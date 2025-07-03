@@ -18,7 +18,7 @@
   "scripts": {
     "prebuild": "pnpm run clean",
     "build": "tsc",
-    "lint": "npx eslint . --max-warnings 15",
+    "lint": "eslint . --max-warnings 15",
     "typecheck": "tsc --noEmit",
     "dev": "tsc --build --watch",
     "clean": "rm -rf dist",

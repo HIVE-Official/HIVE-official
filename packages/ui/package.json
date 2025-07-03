@@ -11,7 +11,7 @@
   "scripts": {
     "dev": "tsc --watch",
     "build": "tsup src/index.ts --format cjs,esm --sourcemap --clean && tsc --emitDeclarationOnly --declaration --declarationMap --outDir dist --skipLibCheck && cp dist/src/index.d.ts dist/index.d.ts",
-    "lint": "npx eslint . --max-warnings 15",
+    "lint": "eslint . --max-warnings 15",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf .turbo dist",
     "build-storybook": "storybook build",
