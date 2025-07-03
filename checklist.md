@@ -32,28 +32,28 @@ This phase ensures our development environment is clean, our design system is es
 
 Our first public release. A focused experience to capture user interest and validate our core `.edu` authentication flow.
 
--   [ ] **P1-1: Authentication Flow (The "Front Door")**
-    -   [ ] Create the master `AuthFlow` component that orchestrates the entire sign-up/login process.
-    -   [ ] **UI:** Build the `SplashScreen` component with the HIVE logo and tagline.
-    -   [ ] **UI:** Build the `EmailGate` component for users to enter their `.edu` email address.
-    -   [ ] **Logic:** Implement client-side validation to ensure only `.edu` emails are submitted.
-    -   [ ] **Backend:** Hook up the `EmailGate` to the `/api/auth/email/start` endpoint to send the magic link.
-    -   [ ] **UI:** Build the `CheckYourEmail` component displayed after the user submits their email.
-    -   [ ] **Routing:** Create the `/auth/verify` page that validates the magic link token.
-    -   [ ] **UI:** Build success and error states for token verification (e.g., "Login successful," "Link expired").
+-   [x] **P1-1: Authentication Flow (The "Front Door")**
+    -   [x] Create the master `AuthFlow` component that orchestrates the entire sign-up/login process.
+    -   [x] **UI:** Build the `SplashScreen` component with the HIVE logo and tagline.
+    -   [x] **UI:** Build the `EmailGate` component for users to enter their `.edu` email address.
+    -   [x] **Logic:** Implement client-side validation to ensure only `.edu` emails are submitted.
+    -   [x] **Backend:** Hook up the `EmailGate` to the `/api/auth/email/start` endpoint to send the magic link.
+    -   [x] **UI:** Build the `CheckYourEmail` component displayed after the user submits their email.
+    -   [x] **Routing:** Create the `/auth/verify` page that validates the magic link token.
+    -   [x] **UI:** Build success and error states for token verification (e.g., "Login successful," "Link expired").
     -   `Evidence:` Storybook stories for each auth component and a Vercel preview of the complete flow.
--   [ ] **P1-2: New User Onboarding**
-    -   [ ] Create the master `OnboardingFlow` component.
-    -   [ ] **UI:** Build the `Welcome` step, greeting the user after they first successfully log in.
-    -   [ ] **UI:** Build the `CreateProfile` step for setting username and full name.
-    -   [ ] **Logic:** Implement username availability checks against the database.
-    -   [ ] **Backend:** Hook up profile creation to the `/api/profile` endpoint.
-    -   [ ] **UI:** Build the `SchoolPledge` step, where user confirms their school affiliation (pre-filled from email).
-    -   [ ] **UI:** Build the `OnboardingComplete` step, which congratulates the user and directs them to the app.
+-   [x] **P1-2: New User Onboarding**
+    -   [x] Create the master `OnboardingFlow` component.
+    -   [x] **UI:** Build the `Welcome` step, greeting the user after they first successfully log in.
+    -   [x] **UI:** Build the `CreateProfile` step for setting username and full name.
+    -   [x] **Logic:** Implement username availability checks against the database.
+    -   [x] **Backend:** Hook up profile creation to the `/api/profile` endpoint.
+    -   [x] **UI:** Build the `SchoolPledge` step, where user confirms their school affiliation (pre-filled from email).
+    -   [x] **UI:** Build the `OnboardingComplete` step, which congratulates the user and directs them to the app.
     -   `Evidence:` Storybook stories for each onboarding step and a Vercel preview.
--   [ ] **P1-3: Legal & Compliance**
-    -   [ ] Create static pages for `Terms of Service`, `Privacy Policy`, and `Community Guidelines`.
-    -   [ ] Add a required checkbox to the `CreateProfile` step: "I agree to the Terms of Service and Privacy Policy."
+-   [x] **P1-3: Legal & Compliance**
+    -   [x] Create static pages for `Terms of Service`, `Privacy Policy`, and `Community Guidelines`.
+    -   [x] Add a required checkbox to the `CreateProfile` step: "I agree to the Terms of Service and Privacy Policy."
     -   `Evidence:` Links to the new legal pages on the Vercel preview.
 
 ---

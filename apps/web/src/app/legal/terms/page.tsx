@@ -1,4 +1,5 @@
 import { type Metadata } from "next";
+import { Heading, Typography } from "@hive/ui";
 
 export const metadata: Metadata = {
   title: "Terms of Service | HIVE",
@@ -7,54 +8,29 @@ export const metadata: Metadata = {
 
 export default function TermsOfServicePage() {
   return (
-    <div className="min-h-screen bg-background text-foreground py-16">
-      <div className="max-w-4xl mx-auto px-4">
-        <h1 className="text-h1 font-display font-semibold mb-8 text-accent">Terms of Service</h1>
-        
-        <div className="space-y-8">
-          <p className="text-body font-sans text-muted mb-8">
-            Last updated: [Date]
-          </p>
-
-          <section className="mb-8">
-            <h2 className="text-h2 font-display font-semibold mb-4 text-foreground">1. Acceptance of Terms</h2>
-            <p className="text-body font-sans text-muted mb-4 leading-relaxed">
-              By accessing and using HIVE, you accept and agree to be bound by the terms and 
-              provision of this agreement.
-            </p>
-          </section>
-
-          <section className="mb-8">
-            <h2 className="text-h2 font-display font-semibold mb-4 text-foreground">2. Description of Service</h2>
-            <p className="text-body font-sans text-muted mb-4 leading-relaxed">
-              HIVE is a social platform designed exclusively for verified college students to 
-              connect, collaborate, and engage with their campus community.
-            </p>
-          </section>
-
-          <section className="mb-8">
-            <h2 className="text-h2 font-display font-semibold mb-4 text-foreground">3. Eligibility</h2>
-            <p className="text-body font-sans text-muted mb-4 leading-relaxed">
-              You must be a currently enrolled student at an accredited university or college 
-              with a valid .edu email address to use HIVE.
-            </p>
-          </section>
-
-          <section className="mb-8">
-            <h2 className="text-h2 font-display font-semibold mb-4 text-foreground">4. User Conduct</h2>
-            <p className="text-body font-sans text-muted mb-4 leading-relaxed">
-              Users agree to use HIVE responsibly and in accordance with our Community Guidelines.
-            </p>
-          </section>
-
-          <section className="mb-8">
-            <h2 className="text-h2 font-display font-semibold mb-4 text-foreground">5. Privacy</h2>
-            <p className="text-body font-sans text-muted mb-4 leading-relaxed">
-              Your privacy is important to us. Please review our Privacy Policy to understand 
-              how we collect, use, and protect your information.
-            </p>
-          </section>
-        </div>
+    <div className="container mx-auto max-w-4xl py-12 px-4">
+      <Heading level={1} className="mb-8">
+        Terms of Service
+      </Heading>
+      <div className="space-y-6">
+        <Typography variant="lead">
+          Welcome to HIVE! These terms and conditions outline the rules and regulations for the use of HIVE's Website, located at hive.so.
+        </Typography>
+        <Typography>
+          By accessing this website we assume you accept these terms and conditions. Do not continue to use HIVE if you do not agree to take all of the terms and conditions stated on this page.
+        </Typography>
+        <Heading level={2} className="pt-4">
+          Cookies
+        </Heading>
+        <Typography>
+          We employ the use of cookies. By accessing HIVE, you agreed to use cookies in agreement with the HIVE's Privacy Policy.
+        </Typography>
+        <Heading level={2} className="pt-4">
+          License
+        </Heading>
+        <Typography>
+          Unless otherwise stated, HIVE and/or its licensors own the intellectual property rights for all material on HIVE. All intellectual property rights are reserved. You may access this from HIVE for your own personal use subjected to restrictions set in these terms and conditions.
+        </Typography>
       </div>
     </div>
   );

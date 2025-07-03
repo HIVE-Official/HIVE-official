@@ -224,19 +224,16 @@ function useVerificationTimer() {
   const [canResend, setCanResend] = useState(false);
 
   useEffect(() => {
-    if (timeLeft > 0) {
-      const timer = setInterval(() => {
-        setTimeLeft((prev) => {
-          if (prev <= 1) {
-            setCanResend(true);
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-
-      return () => clearInterval(timer);
+    if (timeLeft <= 0) {
+      setCanResend(true);
+      return;
     }
+
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => prev - 1);
+    }, 1000);
+
+    return () => clearInterval(timer);
   }, [timeLeft]);
 
   const resetTimer = () => {
@@ -248,6 +245,7 @@ function useVerificationTimer() {
 }
 
 function VerifyContent() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const {
     verificationStatus,
@@ -313,6 +311,88 @@ function VerifyContent() {
     }
   };
 
+  const renderStateContent = () => {
+    switch (verificationStatus) {
+      case "waiting":
+        return (
+          <motion.div
+            className="text-center space-y-6"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4, duration: 0.5 }}
+          >
+            <CountdownRing timeLeft={timeLeft} totalTime={300} />
+            <div className="space-y-4">
+              <p className="text-sm text-muted font-sans">
+                {canResend
+                  ? "Didn't receive the email? You can request a new one."
+                  : `Email expires in ${Math.floor(timeLeft / 60)}:${(timeLeft % 60)
+                      .toString()
+                      .padStart(2, "0")}`}
+              </p>
+              <Button
+                variant="outline"
+                onClick={handleResend}
+                disabled={!canResend}
+                className="w-full"
+              >
+                {canResend ? "Resend Email" : "Resend Available Soon"}
+              </Button>
+            </div>
+          </motion.div>
+        );
+      case "verifying":
+        return (
+          <motion.div
+            className="text-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+          >
+            <div className="flex justify-center">
+              <RefreshCw className="w-8 h-8 text-accent animate-spin" />
+            </div>
+          </motion.div>
+        );
+      case "success":
+        return (
+          <motion.div
+            className="text-center"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+          >
+            <div className="w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
+              <CheckCircle className="w-8 h-8 text-green-500" />
+            </div>
+            <p className="text-muted font-sans">
+              Redirecting you to your dashboard...
+            </p>
+          </motion.div>
+        );
+      case "error":
+        return (
+          <motion.div
+            className="text-center space-y-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+          >
+            <Button
+              variant="outline"
+              onClick={() => router.push('/auth/email')}
+              className="w-full"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Try Again
+            </Button>
+          </motion.div>
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <motion.div
@@ -327,102 +407,8 @@ function VerifyContent() {
           email={email} 
         />
 
-        {/* Timer and Actions */}
-        {verificationStatus === "waiting" && (
-          <motion.div
-            className="text-center space-y-6"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.4, duration: 0.5 }}
-          >
-            <CountdownRing timeLeft={timeLeft} totalTime={300} />
+        {renderStateContent()}
 
-            <div className="space-y-4">
-              <p className="text-sm text-muted font-sans">
-                {canResend
-                  ? "Didn't receive the email? You can request a new one."
-                  : `Email expires in ${Math.floor(timeLeft / 60)}:${(timeLeft % 60)
-                      .toString()
-                      .padStart(2, "0")}`}
-              </p>
-
-              <Button
-                variant="outline"
-                onClick={handleResend}
-                disabled={!canResend}
-                className="w-full"
-              >
-                {canResend ? "Resend Email" : "Resend Available Soon"}
-              </Button>
-            </div>
-          </motion.div>
-        )}
-
-        {/* Success State */}
-        {verificationStatus === "success" && (
-          <motion.div
-            className="text-center"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.2, duration: 0.5 }}
-          >
-            <div className="w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
-              <CheckCircle className="w-8 h-8 text-green-500" />
-            </div>
-            <p className="text-muted font-sans">
-              Redirecting you to your dashboard...
-            </p>
-          </motion.div>
-        )}
-
-        {/* Error State */}
-        {verificationStatus === "error" && (
-          <motion.div
-            className="text-center space-y-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2, duration: 0.5 }}
-          >
-            <Button
-              variant="outline"
-              onClick={() => window.location.href = "/auth/choose"}
-              className="w-full"
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Sign In
-            </Button>
-          </motion.div>
-        )}
-
-        {/* Verifying State */}
-        {verificationStatus === "verifying" && (
-          <motion.div
-            className="text-center"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2, duration: 0.5 }}
-          >
-            <div className="flex justify-center">
-              <RefreshCw className="w-8 h-8 text-accent animate-spin" />
-            </div>
-          </motion.div>
-        )}
-
-        {/* Back link */}
-        <motion.div
-          className="text-center mt-8"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.6, duration: 0.5 }}
-        >
-          <button
-            onClick={() => window.location.href = "/auth/choose"}
-            className="text-sm text-muted hover:text-foreground transition-colors inline-flex items-center gap-2 font-sans"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to sign in options
-          </button>
-        </motion.div>
       </motion.div>
     </div>
   );

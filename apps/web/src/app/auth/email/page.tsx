@@ -31,8 +31,8 @@ export default function EmailGatePage() {
         window.localStorage.setItem('emailForSignIn', email)
       }
       router.push(`/auth/email-sent?email=${encodeURIComponent(email)}`)
-    } catch (error: any) {
-      if (error.code === 'auth/invalid-email') {
+    } catch (error) {
+      if (error instanceof Error && 'code' in error && error.code === 'auth/invalid-email') {
         setApiError('Please enter a valid email address.')
       } else {
         setApiError('An unexpected error occurred. Please try again.')

@@ -1,37 +1,33 @@
 "use client";
 
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../card';
 import { Button } from '../button';
-import { StepProps } from './types';
+import { Heading, Text } from '../typography';
+import { motion } from 'framer-motion';
+import { CheckCircle } from 'lucide-react';
 
-export const OnboardingCompleteStep: React.FC<StepProps> = ({ onSubmit }) => {
+interface OnboardingCompleteStepProps {
+  onGoToFeed: () => void;
+}
+
+export const OnboardingCompleteStep: React.FC<OnboardingCompleteStepProps> = ({ onGoToFeed }) => {
   return (
-    <Card className="w-full max-w-lg bg-card border-border">
-      <CardHeader>
-        <CardTitle className="text-card-foreground">Welcome to HIVE!</CardTitle>
-        <CardDescription className="text-muted-foreground">
-          You&apos;re all set up and ready to start connecting with your academic community.
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        <div className="text-center text-card-foreground">
-          <p>
-            We&apos;ve created your profile and connected you with relevant communities based on your interests.
-          </p>
-          <p className="mt-2">
-            Start exploring, join discussions, and connect with fellow academics!
-          </p>
-        </div>
-
-        <Button
-          variant="ritual"
-          onClick={() => void onSubmit(null)}
-          className="w-full"
-        >
-          Get Started
-        </Button>
-      </CardContent>
-    </Card>
+    <motion.div
+      className="text-center"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
+      <Heading level={1} className="mb-4">
+        You're All Set!
+      </Heading>
+      <Text className="mb-8 text-muted-foreground">
+        Welcome to the community. Your profile is complete.
+      </Text>
+      <Button onClick={onGoToFeed} size="lg">
+        Go to Feed
+      </Button>
+    </motion.div>
   );
 }; 

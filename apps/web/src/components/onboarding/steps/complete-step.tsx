@@ -2,10 +2,10 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, Button } from '@hive/ui';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, Button, OnboardingCompleteStep as OnboardingCompleteStepUI } from '@hive/ui';
 import { useAuth } from '@hive/auth-logic';
 import { useOnboardingStore } from '@/lib/stores/onboarding';
-import { CheckCircle, AlertCircle, Loader2, Sparkles } from 'lucide-react';
+import { AlertCircle, Loader2 } from 'lucide-react';
 import { logger } from '@hive/core';
 
 export function OnboardingCompleteStep() {
@@ -114,40 +114,7 @@ export function OnboardingCompleteStep() {
   if (completionState === 'success') {
     return (
       <div className="flex min-h-screen items-center justify-center p-4">
-        <Card className="w-full max-w-lg bg-card border-border">
-          <CardHeader className="text-center space-y-2">
-            <div className="w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center mx-auto">
-              <CheckCircle className="h-8 w-8 text-green-500" />
-            </div>
-            <CardTitle className="text-xl font-display text-card-foreground">
-              Welcome to HIVE!
-            </CardTitle>
-            <CardDescription className="text-muted-foreground font-sans">
-              Your profile has been created successfully. You&apos;ll be redirected to your feed shortly.
-            </CardDescription>
-          </CardHeader>
-
-          <CardContent className="space-y-6">
-            <div className="p-4 bg-accent/5 rounded-lg border border-accent/20">
-              <div className="flex items-center space-x-3">
-                <Sparkles className="w-5 h-5 text-accent flex-shrink-0" />
-                <div>
-                  <h3 className="font-medium text-card-foreground">You&apos;re all set!</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Start exploring spaces, connecting with peers, and building your campus community.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <Button
-              className="w-full h-12"
-              onClick={() => router.push("/feed")}
-            >
-              Go to Feed Now
-            </Button>
-          </CardContent>
-        </Card>
+        <OnboardingCompleteStepUI onGoToFeed={() => router.push("/feed")} />
       </div>
     );
   }

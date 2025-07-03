@@ -1,13 +1,20 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@hive/auth-logic";
-import { logger, type OnboardingState, type AcademicLevel } from "@hive/core";
+import { env, logger, type OnboardingState, type AcademicLevel } from "@hive/core";
 import { Loader2 } from "lucide-react";
 import { useOnboardingStore } from "@/lib/stores/onboarding";
-import { DisplayNameAvatar as DisplayNameAvatarBase } from "@/components/onboarding/steps/display-name-avatar";
-import { AcademicCard as AcademicCardBase } from "@/components/onboarding/steps/academic-card";
+import {
+  Button,
+  WelcomeStep,
+  CreateProfileStep as CreateProfileStepUI,
+  SchoolPledgeStep,
+} from "@hive/ui";
+import { useHandleAvailability } from "@/hooks/use-handle-availability";
+import { functions } from "@/lib/firebase-client";
+import { httpsCallable } from "firebase/functions";
 
 interface OnboardingStepClientProps {
   step: string;
@@ -19,132 +26,121 @@ interface StepComponentProps {
   data: Partial<OnboardingState>;
 }
 
-// Wrapper components that adapt the existing components to the expected interface
-const DisplayNameAvatar: React.FC<StepComponentProps> = ({ onNext, data }) => {
+function generateHandle(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/[^a-z0-9 ]/g, "")
+    .replace(/\s+/g, ".")
+    .slice(0, 30);
+}
+
+const CreateProfileStepContainer: React.FC<StepComponentProps> = ({ onNext, data: onboardingData }) => {
+  const { update } = useOnboardingStore();
+  const [displayName, setDisplayName] = useState(onboardingData?.displayName ?? "");
+  const [handle, setHandle] = useState(onboardingData?.handle ?? "");
+  const [avatarUrl, setAvatarUrl] = useState(onboardingData?.avatarUrl ?? "");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [error, setError] = useState("");
+  const [termsAccepted, setTermsAccepted] = useState(false);
+
+  const handleAvailability = useHandleAvailability(handle);
+
+  useEffect(() => {
+    if (displayName) {
+      setHandle(generateHandle(displayName));
+    }
+  }, [displayName]);
+
+  const uploadCroppedImage = async (): Promise<string> => {
+    if (!selectedFile) {
+      throw new Error("No image to upload.");
+    }
+    const croppedImageBlob = selectedFile;
+    setIsUploading(true);
+    try {
+      const generateUploadUrl = httpsCallable(functions, "generateAvatarUploadUrl");
+      const uploadUrlResult = await generateUploadUrl({
+        fileType: croppedImageBlob.type,
+        fileSize: croppedImageBlob.size,
+      });
+      const { url, filePath } = uploadUrlResult.data as { success: boolean; url: string; filePath: string; };
+      await fetch(url, {
+        method: "PUT",
+        body: croppedImageBlob,
+        headers: { "Content-Type": croppedImageBlob.type },
+      });
+      const bucket = env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET ?? "demo-project.appspot.com";
+      return `https://storage.googleapis.com/${bucket}/${filePath}`;
+    } catch (error) {
+      console.error("Upload failed", error);
+      throw new Error("Could not upload image.");
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (handleAvailability.available === false) {
+      setError("Please choose an available username");
+      return;
+    }
+    if (handleAvailability.isChecking) {
+      setError("Please wait while we check username availability");
+      return;
+    }
+    setIsUploading(true);
+    setError("");
+    try {
+      let finalAvatarUrl = avatarUrl;
+      if (selectedFile) {
+        finalAvatarUrl = await uploadCroppedImage();
+      }
+      const updatedData = { displayName, handle, avatarUrl: finalAvatarUrl, consentGiven: termsAccepted };
+      update(updatedData);
+      onNext(undefined, updatedData);
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      setError("Failed to save profile. Please try again.");
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
   return (
-    <DisplayNameAvatarBase
-      onNext={(stepData: Partial<OnboardingState>) => onNext(undefined, stepData)}
-      data={data}
+    <CreateProfileStepUI
+      displayName={displayName}
+      onDisplayNameChange={setDisplayName}
+      handle={handle}
+      onHandleChange={setHandle}
+      handleAvailability={handleAvailability}
+      avatarUrl={avatarUrl}
+      onFileSelect={setSelectedFile}
+      onSubmit={handleSubmit}
+      isUploading={isUploading}
+      error={error}
+      selectedFile={selectedFile}
+      termsAccepted={termsAccepted}
+      onTermsAcceptedChange={setTermsAccepted}
     />
   );
 };
 
-const LeaderStep: React.FC<StepComponentProps> = ({ onNext }) => {
-  const { update } = useOnboardingStore();
-  
-  const handleLeaderChoice = async (isStudentLeader: boolean) => {
-    await update({ isStudentLeader });
-    onNext(undefined, { isStudentLeader });
-  };
-
+const SchoolPledgeStepContainer: React.FC<StepComponentProps> = ({ onNext, data }) => {
+  const schoolName = data.schoolName || "your school";
   return (
-    <div className="flex min-h-screen items-center justify-center p-4">
-      <div className="w-full max-w-lg bg-surface border border-border rounded-lg p-6">
-        <div className="text-center space-y-2 mb-6">
-          <div className="w-12 h-12 bg-surface-01 rounded-full flex items-center justify-center mx-auto">
-            <svg className="w-6 h-6 text-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3l14 0 0 14-14 0z" />
-            </svg>
-          </div>
-          <h2 className="text-xl font-display text-foreground">
-            Student Leadership
-          </h2>
-          <p className="text-muted font-sans">
-            Are you involved in student leadership or organizations?
-          </p>
-        </div>
-
-        <div className="space-y-4">
-          <button
-            onClick={() => handleLeaderChoice(true)}
-            className="w-full p-4 rounded-lg border-2 border-border hover:border-foreground/20 hover:bg-surface-01 transition-all text-left"
-          >
-            <div className="flex items-start space-x-3">
-              <div className="w-8 h-8 bg-surface-01 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                <svg className="w-4 h-4 text-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3l14 0 0 14-14 0z" />
-                </svg>
-              </div>
-              <div className="flex-1">
-                <h3 className="font-medium text-foreground mb-1">
-                  Yes, I'm a leader
-                </h3>
-                <p className="text-sm text-muted">
-                  I hold leadership positions in student organizations, clubs, or governance
-                </p>
-              </div>
-            </div>
-          </button>
-
-          <button
-            onClick={() => handleLeaderChoice(false)}
-            className="w-full p-4 rounded-lg border-2 border-border hover:border-foreground/20 hover:bg-surface-01 transition-all text-left"
-          >
-            <div className="flex items-start space-x-3">
-              <div className="w-8 h-8 bg-surface-01 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                <svg className="w-4 h-4 text-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
-              </div>
-              <div className="flex-1">
-                <h3 className="font-medium text-foreground mb-1">
-                  Not at this time
-                </h3>
-                <p className="text-sm text-muted">
-                  I'm focused on academics or not currently in leadership roles
-                </p>
-              </div>
-            </div>
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const AcademicCard: React.FC<StepComponentProps> = () => {
-  return (
-    <div className="flex min-h-screen items-center justify-center p-4">
-      <AcademicCardBase />
-    </div>
-  );
-};
-
-const Interests: React.FC<StepComponentProps> = ({ onNext }) => {
-  const { update } = useOnboardingStore();
-  
-  const handleInterestsSubmit = async (interestData: Partial<OnboardingState>) => {
-    await update(interestData);
-    onNext(undefined, interestData);
-  };
-
-  return (
-    <div className="flex min-h-screen items-center justify-center p-4">
-      <div className="w-full max-w-lg bg-surface border border-border rounded-lg p-6">
-        <div className="text-center space-y-2 mb-6">
-          <h2 className="text-xl font-display text-foreground">
-            Your Interests
-          </h2>
-          <p className="text-muted font-sans">
-            What are you passionate about? This helps us connect you with relevant communities.
-          </p>
-        </div>
-        <button
-          onClick={() => handleInterestsSubmit({ interests: [] })}
-          className="w-full bg-foreground text-background font-medium py-3 px-4 rounded-lg hover:bg-foreground/90 transition-colors"
-        >
-          Continue
-        </button>
-      </div>
-    </div>
+    <SchoolPledgeStep
+      schoolName={schoolName}
+      onNext={() => onNext()}
+    />
   );
 };
 
 const STEPS: Record<string, React.ComponentType<StepComponentProps>> = {
-  "1": DisplayNameAvatar, // Personal identity - builds connection
-  "2": LeaderStep, // Student leader question for space claiming
-  "3": AcademicCard, // Academic context - sets university context
-  "4": Interests, // Personalization - customize experience
+  "1": WelcomeStep,
+  "2": CreateProfileStepContainer,
+  "3": SchoolPledgeStepContainer,
 } as const;
 
 // Use the same check as auth hook for consistency
@@ -197,10 +193,10 @@ export function OnboardingStepClient({ step }: OnboardingStepClientProps) {
       router.push(`/onboarding/${nextStep}`);
     } else {
       // Determine next step based on current step
-      if (step === "4") {
+      const currentNum = parseInt(step);
+      if (currentNum >= Object.keys(STEPS).length) {
         router.push("/onboarding/complete");
       } else {
-        const currentNum = parseInt(step);
         router.push(`/onboarding/${currentNum + 1}`);
       }
     }
@@ -327,60 +323,13 @@ export function OnboardingStepClient({ step }: OnboardingStepClientProps) {
     if (!isInitialized) return;
 
     // Step-specific validation
-    switch (step) {
-      case "1":
-        // Step 1 (Profile) can always be accessed
-        break;
-      case "2":
-        // Step 2 (Leader) requires name and handle from Step 1
-        if (!onboardingData?.displayName || !onboardingData?.handle) {
-          router.replace("/onboarding/1");
-        }
-        break;
-      case "3":
-        // Step 3 (Academic) requires previous steps completed
-        if (
-          !onboardingData?.displayName ||
-          !onboardingData?.handle ||
-          onboardingData?.isStudentLeader === undefined
-        ) {
-          router.replace("/onboarding/1");
-        }
-        break;
-      case "4":
-        // Step 4 (Interests) requires all previous steps completed
-        if (
-          !onboardingData?.displayName ||
-          !onboardingData?.handle ||
-          onboardingData?.isStudentLeader === undefined ||
-          !onboardingData?.academicLevel ||
-          !onboardingData?.majors?.length
-        ) {
-          router.replace("/onboarding/1");
-        }
-        break;
+    if (step === "2" && !onboardingData?.schoolId) {
+      logger.warn("🚫 Missing schoolId for step 2, redirecting to step 1");
+      router.push("/onboarding/1");
     }
-  }, [isInitialized, onboardingData, router, step]);
+  }, [step, onboardingData, isInitialized, router]);
 
   const StepComponent = STEPS[step];
-  if (!StepComponent) {
-    return (
-      <div className="flex min-h-screen items-center justify-center p-4 bg-background">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4 text-foreground">Step {step} Not Found</h1>
-          <p className="text-muted mb-4">
-            The requested onboarding step does not exist.
-          </p>
-          <button
-            onClick={() => router.push("/onboarding/1")}
-            className="px-4 py-2 bg-foreground text-background rounded-md font-medium"
-          >
-            Go to Step 1
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="bg-background">

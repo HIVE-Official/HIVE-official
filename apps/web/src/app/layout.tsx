@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Providers } from "./providers";
-import { fonts } from "./fonts";
 import "./globals.css";
 
 // CORRECTED: Space Grotesk from Google Fonts for display text (HIVE Brand System v1.0)
+// Font loading is now handled by the globals.css import which pulls from @hive/ui
 
 export const metadata: Metadata = {
   title: "HIVE",
@@ -21,7 +21,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${fonts.sans} ${fonts.display} ${fonts.mono} dark`}
+      className="dark"
       suppressHydrationWarning
     >
       <body
@@ -35,7 +35,7 @@ export default function RootLayout({
 }
 
 // Brand compliance note: This layout now correctly:
-// 1. Sets the CSS variables for Space Grotesk and Geist Sans via the font packages.
+// 1. Relies on the app-level globals.css to import the master stylesheet from @hive/ui.
 // 2. Applies the 'dark' theme class globally.
 // 3. Relies on the tailwind.config.js (which consumes @hive/tokens) for all color,
 //    font-family, and other styles via utility classes like 'font-sans' and 'bg-background'.

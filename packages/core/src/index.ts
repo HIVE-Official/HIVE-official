@@ -24,6 +24,7 @@ export * from "./constants/majors";
 export * from "./constants/academic-years";
 export * from "./constants/academics";
 export * from "./constants/interests";
+export * from "./constants/school-domains";
 
 // Feed System Core - Assumed to be types and client-side logic
 export * from "./domain/feed/top-strip";
@@ -40,10 +41,10 @@ export type {
   PostAnalytics,
 } from "./domain/feed/posting";
 export type { Post as FeedPost } from "./domain/feed/posting";
-export { CreatePostSchema } from "./domain/feed/posting";
+export { CreatePostSchema, PostCreationEngine, PostAnalyticsTracker } from "./domain/feed/posting";
 
 // Space Discovery System - Types and client-side schemas
-export { SpaceSection, SpaceStatus, SpaceOwnerType } from "./domain/space/discovery";
+export { SpaceSection, SpaceStatus, SpaceOwnerType, SpaceDiscoveryEngine } from "./domain/space/discovery";
 export type {
   SpaceDiscoveryData,
   UserDiscoveryContext,
@@ -69,16 +70,13 @@ export { env, isDevelopment, isProduction, getFirebaseConfig, isDebugMode } from
 // Logger (client-side) - Safe
 export { logger } from './utils/logger';
 
-// Client-side utilities - TO BE VERIFIED
-// For now, assume they are not safe and do not export them.
-// export * from "./utils/rate-limit";
-// export { postCreationRateLimit } from "./utils/rate-limit";
-// export {
-//   generateBaseHandle,
-//   generateHandleVariants,
-//   findAvailableHandle,
-//   validateHandle,
-// } from "./utils/handle-generator";
+// Client-side utilities - Handle generation is safe for client-side use
+export {
+  generateBaseHandle,
+  generateHandleVariants,
+  findAvailableHandle,
+  validateHandle,
+} from "./utils/handle-generator";
 
 // Re-export server-side utilities
 export * from './server-index';

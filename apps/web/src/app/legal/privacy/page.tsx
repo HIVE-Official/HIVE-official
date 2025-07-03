@@ -1,4 +1,5 @@
 import { type Metadata } from "next";
+import { Heading, Typography } from "@hive/ui";
 // import Link from "next/link"; // Unused import removed
 
 export const metadata: Metadata = {
@@ -8,55 +9,29 @@ export const metadata: Metadata = {
 
 export default function PrivacyPolicyPage() {
   return (
-    <div className="min-h-screen bg-background text-foreground py-16">
-      <div className="max-w-4xl mx-auto px-4">
-        <h1 className="text-h1 font-display font-semibold mb-8 text-accent">Privacy Policy</h1>
-        
-        <div className="space-y-8">
-          <p className="text-body font-sans text-muted mb-8">
-            Last updated: [Date]
-          </p>
-
-          <section className="mb-8">
-            <h2 className="text-h2 font-display font-semibold mb-4 text-foreground">1. Information We Collect</h2>
-            <p className="text-body font-sans text-muted mb-4 leading-relaxed">
-              We collect information you provide directly to us, such as when you create an account, 
-              complete your profile, or contact us for support.
-            </p>
-          </section>
-
-          <section className="mb-8">
-            <h2 className="text-h2 font-display font-semibold mb-4 text-foreground">2. How We Use Your Information</h2>
-            <p className="text-body font-sans text-muted mb-4 leading-relaxed">
-              We use the information we collect to provide, maintain, and improve our services, 
-              communicate with you, and personalize your experience.
-            </p>
-          </section>
-
-          <section className="mb-8">
-            <h2 className="text-h2 font-display font-semibold mb-4 text-foreground">3. Information Sharing</h2>
-            <p className="text-body font-sans text-muted mb-4 leading-relaxed">
-              We do not sell, trade, or otherwise transfer your personal information to third parties 
-              without your consent, except as described in this policy.
-            </p>
-          </section>
-
-          <section className="mb-8">
-            <h2 className="text-h2 font-display font-semibold mb-4 text-foreground">4. Data Security</h2>
-            <p className="text-body font-sans text-muted mb-4 leading-relaxed">
-              We implement appropriate security measures to protect your personal information against 
-              unauthorized access, alteration, disclosure, or destruction.
-            </p>
-          </section>
-
-          <section className="mb-8">
-            <h2 className="text-h2 font-display font-semibold mb-4 text-foreground">5. Your Rights</h2>
-            <p className="text-body font-sans text-muted mb-4 leading-relaxed">
-              You have the right to access, update, or delete your personal information. 
-              Contact us if you wish to exercise these rights.
-            </p>
-          </section>
-        </div>
+    <div className="container mx-auto max-w-4xl py-12 px-4">
+      <Heading level={1} className="mb-8">
+        Privacy Policy
+      </Heading>
+      <div className="space-y-6">
+        <Typography variant="lead">
+          Your privacy is important to us. It is HIVE's policy to respect your privacy regarding any information we may collect from you across our website.
+        </Typography>
+        <Typography>
+          We only ask for personal information when we truly need it to provide a service to you. We collect it by fair and lawful means, with your knowledge and consent. We also let you know why we're collecting it and how it will be used.
+        </Typography>
+        <Heading level={2} className="pt-4">
+          Information We Collect
+        </Heading>
+        <Typography>
+          Log data: When you visit our website, our servers may automatically log the standard data provided by your web browser. It may include your computer's Internet Protocol (IP) address, your browser type and version, the pages you visit, the time and date of your visit, the time spent on each page, and other details.
+        </Typography>
+        <Heading level={2} className="pt-4">
+          Security
+        </Heading>
+        <Typography>
+          We take security seriously. We use commercially acceptable means to protect your personal information from loss or theft, as well as unauthorized access, disclosure, copying, use or modification.
+        </Typography>
       </div>
     </div>
   );

@@ -1,6 +1,8 @@
 import React from 'react'
 import { Button } from '../button'
 import { cn } from '../../lib/utils'
+import { HiveLogo } from '../HiveLogo'
+import { Countdown } from '../countdown'
 
 interface SplashScreenProps {
   onGetInside: () => void
@@ -11,6 +13,10 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
   onGetInside, 
   className 
 }) => {
+  // Placeholder for launch date - 7 days from now.
+  // This should be fetched from a remote config in a real-world scenario.
+  const launchDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
+
   return (
     <div className={cn(
       "min-h-screen bg-background text-foreground relative overflow-hidden flex items-center justify-center",
@@ -20,19 +26,20 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
       <div className="absolute inset-0 opacity-[0.08] bg-[url('data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IiB3aWR0aD0iNTEycHgiIGhlaWdodD0iNTEycHgiIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA1MTIgNTEyOyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+PGNpcmNsZSBmaWxsPSIjZmZmZmZmIiBjeD0iMjU2IiBjeT0iMjU2IiByPSIyIi8+PC9zdmc+')] bg-repeat"></div>
       
       {/* Main Content */}
-      <div className="relative z-10 text-center space-y-8 px-4">
-        {/* Logo/Brand Mark Area */}
-        <div className="space-y-4">
-          <h1 className="text-display font-display font-bold text-accent">
-            HIVE
-          </h1>
-          <p className="text-h3 font-display font-medium text-foreground">
-            Your Campus OS
-          </p>
-        </div>
-        
-        {/* CTA Button - Using new gold border aesthetic */}
-        <div className="pt-8">
+      <div className="relative z-10 flex flex-col items-center justify-center text-center h-full p-4">
+        <div className="flex-grow flex flex-col items-center justify-center space-y-10">
+          {/* Logo/Brand Mark Area */}
+          <div className="space-y-4 flex flex-col items-center">
+            <HiveLogo variant="white" size="lg" />
+            <p className="text-h3 font-display font-medium text-foreground">
+              Your Campus OS
+            </p>
+          </div>
+          
+          {/* Countdown Timer */}
+          <Countdown targetDate={launchDate} />
+
+          {/* CTA Button - Using new gold border aesthetic */}
           <Button 
             variant="accent" 
             size="xl" 
@@ -44,7 +51,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
         </div>
         
         {/* Footer Text */}
-        <div className="pt-16">
+        <div className="pb-8">
           <p className="text-caption font-sans text-muted">
             Built by Students · Owned by Students.
           </p>

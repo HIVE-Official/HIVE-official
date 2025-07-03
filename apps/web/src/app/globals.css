@@ -1,6 +1,3 @@
-/* Import fonts from public directory */
-@import url('/fonts/fonts.css');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
