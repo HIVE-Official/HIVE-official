@@ -11,7 +11,7 @@
   "scripts": {
     "dev": "tsc --watch",
     "build": "tsup src/index.ts --format cjs,esm --sourcemap --clean && tsc --emitDeclarationOnly --declaration --declarationMap --outDir dist --skipLibCheck && cp dist/src/index.d.ts dist/index.d.ts",
-    "lint": "cross-env BROWSERSLIST_IGNORE_OLD_DATA=1 BROWSERSLIST_UPDATE_DB=0 NO_UPDATE_NOTIFIER=1 eslint .",
+    "lint": "npx eslint . --max-warnings 15",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf .turbo dist",
     "build-storybook": "storybook build",
@@ -19,6 +19,7 @@
     "storybook": "storybook dev -p 6006 --config-dir ./.storybook"
   },
   "devDependencies": {
+    "@hive/eslint-config": "workspace:*",
     "@hive/tokens": "workspace:*",
     "@hive/typescript-config": "workspace:*",
     "@storybook/addon-docs": "^8.6.14",
@@ -35,6 +36,7 @@
     "@vitejs/plugin-react": "4.2.1",
     "autoprefixer": "^10.4.21",
     "chromatic": "^13.0.1",
+    "eslint": "^9.29.0",
     "eslint-plugin-storybook": "^0.10.2",
     "postcss": "^8.5.6",
     "postcss-import": "^16.0.0",
@@ -45,6 +47,7 @@
     "tailwindcss-animate": "^1.0.7",
     "tsup": "^8.5.0",
     "typescript": "^5.8.3",
+    "typescript-eslint": "^8.35.0",
     "vite": "5.1.4",
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^3.2.4"

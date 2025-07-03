@@ -18,7 +18,7 @@
   "scripts": {
     "prebuild": "pnpm run clean",
     "build": "tsc",
-    "lint": "cross-env BROWSERSLIST_IGNORE_OLD_DATA=1 BROWSERSLIST_UPDATE_DB=0 NO_UPDATE_NOTIFIER=1 eslint .",
+    "lint": "npx eslint . --max-warnings 15",
     "typecheck": "tsc --noEmit",
     "dev": "tsc --build --watch",
     "clean": "rm -rf dist",
@@ -40,6 +40,7 @@
     "@types/react-dom": "^19.0.0",
     "cross-env": "^7.0.3",
     "eslint": "^9.29.0",
+    "typescript-eslint": "^8.35.0",
     "tsup": "^8.5.0",
     "typescript": "^5.8.3",
     "vitest": "^3.2.4"

@@ -6,17 +6,18 @@
   "types": "./src/index.ts",
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "lint": "cross-env BROWSERSLIST_IGNORE_OLD_DATA=1 BROWSERSLIST_UPDATE_DB=0 NO_UPDATE_NOTIFIER=1 eslint ."
+    "lint": "npx eslint . --max-warnings 15"
   },
   "dependencies": {
     "@hive/core": "workspace:*",
     "firebase": "^11.0.0"
   },
   "devDependencies": {
+    "@hive/eslint-config": "workspace:*",
     "@hive/typescript-config": "workspace:*",
     "@types/node": "^24.0.4",
-    "@typescript-eslint/eslint-plugin": "^8.35.0",
-    "@typescript-eslint/parser": "^8.35.0",
+    "eslint": "^9.29.0",
+    "typescript-eslint": "^8.35.0",
     "typescript": "^5.8.3"
   },
   "packageManager": "pnpm@9.1.1"

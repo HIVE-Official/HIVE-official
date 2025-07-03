@@ -29,7 +29,7 @@
   "scripts": {
     "dev": "tsup src/index.ts --format esm,cjs --watch --dts --external react",
     "build": "tsup src/index.ts --format esm,cjs --dts --external react",
-    "lint": "eslint src/",
+    "lint": "npx eslint . --max-warnings 15",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
   },
   "dependencies": {
@@ -50,9 +50,10 @@
     "@types/node": "^24.0.8",
     "concurrently": "^8.0.0",
     "cross-env": "^7.0.3",
-    "eslint": "^8.40.0",
-    "@typescript-eslint/eslint-plugin": "^8.35.0",
-    "@typescript-eslint/parser": "^8.35.0",
+    "eslint": "^9.29.0",
+    "eslint-plugin-react": "^7.37.5",
+    "globals": "^15.0.0",
+    "typescript-eslint": "^8.35.0",
     "tsup": "^6.7.0",
     "typescript": "^5.8.3",
     "vitest": "^3.2.4",

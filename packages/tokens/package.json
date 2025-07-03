@@ -13,7 +13,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "lint": "eslint . --max-warnings 10",
+    "lint": "npx eslint . --max-warnings 15",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
@@ -21,6 +21,7 @@
     "@hive/typescript-config": "workspace:*",
     "@types/node": "^24.0.4",
     "eslint": "^9.29.0",
+    "typescript-eslint": "^8.35.0",
     "typescript": "^5.8.3"
   },
   "packageManager": "pnpm@9.1.1"

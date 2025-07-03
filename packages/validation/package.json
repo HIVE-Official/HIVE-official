@@ -16,7 +16,7 @@
     "prebuild": "pnpm run clean",
     "build": "tsc --emitDeclarationOnly && tsup src/index.ts --format cjs,esm --sourcemap",
     "clean": "rm -rf dist",
-    "lint": "cross-env BROWSERSLIST_IGNORE_OLD_DATA=1 BROWSERSLIST_UPDATE_DB=0 NO_UPDATE_NOTIFIER=1 eslint .",
+    "lint": "npx eslint . --max-warnings 15",
     "typecheck": "tsc --noEmit",
     "dev": "concurrently \"tsc --emitDeclarationOnly --watch\" \"tsup src/index.ts --format cjs,esm --sourcemap --watch\""
   },
@@ -25,11 +25,14 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@hive/eslint-config": "workspace:*",
     "@hive/typescript-config": "workspace:*",
     "@types/node": "^20.12.1",
     "concurrently": "^8.0.0",
+    "eslint": "^9.29.0",
     "tsup": "^8.5.0",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.35.0"
   },
   "packageManager": "pnpm@9.1.1"
 }

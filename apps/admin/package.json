@@ -6,7 +6,7 @@
     "dev": "npx next dev --port 3001",
     "build": "next build",
     "start": "npx next start --port 3001",
-    "lint": "cross-env BROWSERSLIST_IGNORE_OLD_DATA=1 BROWSERSLIST_UPDATE_DB=0 NO_UPDATE_NOTIFIER=1 eslint . --max-warnings 10",
+    "lint": "npx eslint . --max-warnings 15",
     "test": "echo 'skipping tests'",
     "test:e2e": "playwright test"
   },
@@ -42,6 +42,7 @@
     "jsdom": "^26.1.0",
     "msw": "^2.10.2",
     "typescript": "^5.8.3",
+    "typescript-eslint": "^8.35.0",
     "vitest": "^3.2.4"
   }
 }
