@@ -73,12 +73,12 @@ export default function NotFound() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.8, duration: 0.5 }}
         >
-          <Link href="/">
-            <Button className="w-full bg-accent hover:bg-accent/90 text-background font-medium">
+          <Button asChild className="w-full bg-accent hover:bg-accent/90 text-background font-medium">
+            <Link href="/">
               <Home className="w-4 h-4 mr-2" />
               Go to HIVE Home
-            </Button>
-          </Link>
+            </Link>
+          </Button>
           
           <Button
             variant="outline"
