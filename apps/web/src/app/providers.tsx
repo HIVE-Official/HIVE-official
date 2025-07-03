@@ -7,8 +7,9 @@ import { ThemeProvider } from "next-themes";
 import { AuthProvider } from "@hive/auth-logic";
 import { ToastProvider, DevModePanel } from "@hive/ui";
 import { WelcomeMatProvider } from "@/components/welcome-mat-provider";
-import { analytics, setupGlobalErrorHandling } from '@hive/analytics';
-import { logger } from '@hive/core';
+import { setupGlobalErrorHandling } from '@hive/analytics';
+// import { analytics, logger } from '@hive/analytics';
+// import { logger } from '@hive/core';
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = React.useState(() => new QueryClient());
@@ -16,7 +17,8 @@ export function Providers({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // Set up global error handling and inject analytics into the logger
     setupGlobalErrorHandling();
-    logger.setAnalyticsProvider(analytics);
+    // TODO: Temporarily disabled due to module resolution issue
+    // logger.setAnalyticsProvider(analytics);
   }, []);
 
   return (

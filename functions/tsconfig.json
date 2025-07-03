@@ -21,14 +21,7 @@
   "compileOnSave": true,
   "include": ["src/**/*"],
   "exclude": [
-    "node_modules/**/*",
-    "lib/**/*",
-    "../node_modules/**/*",
-    "../packages/**/*",
-    "../apps/**/*",
-    "**/node_modules/@google-cloud/**/*",
-    "**/node_modules/gaxios/**/*",
-    "**/node_modules/google-auth-library/**/*",
-    "**/node_modules/gtoken/**/*"
+    "node_modules",
+    "lib"
   ]
 }
