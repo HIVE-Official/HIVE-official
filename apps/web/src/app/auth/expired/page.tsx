@@ -19,11 +19,9 @@ export default function ExpiredPage() {
           <p className="text-sm text-zinc-500">
             Magic links expire after 15 minutes for security reasons.
           </p>
-          <Link href="/welcome">
-            <Button className="w-full bg-yellow-500 hover:bg-yellow-600 text-black font-medium">
-              Get a new link
-            </Button>
-          </Link>
+          <Button asChild className="w-full bg-yellow-500 hover:bg-yellow-600 text-black font-medium">
+            <Link href="/welcome">Get a new link</Link>
+          </Button>
         </CardContent>
       </Card>
     </div>

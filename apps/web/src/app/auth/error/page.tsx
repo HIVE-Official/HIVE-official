@@ -72,15 +72,12 @@ function AuthErrorContent() {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <Link href="/welcome">
-            <Button
-              variant="ghost"
-              className="text-muted hover:text-foreground group"
-            >
+          <Button asChild variant="ghost" className="text-muted hover:text-foreground group">
+            <Link href="/welcome">
               <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform duration-200" />
               Back to welcome
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         </motion.div>
 
         {/* Error Icon */}
@@ -120,24 +117,24 @@ function AuthErrorContent() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.6 }}
         >
-          <Link href={action.href}>
-            <Button
-              className="w-full bg-foreground hover:bg-foreground/90 text-background"
-              disabled={action.disabled}
-            >
+          <Button
+            asChild
+            className="w-full bg-foreground hover:bg-foreground/90 text-background"
+            disabled={action.disabled}
+          >
+            <Link href={action.href}>
               <action.icon className="w-4 h-4 mr-2" />
               {action.text}
-            </Button>
-          </Link>
+            </Link>
+          </Button>
 
-          <Link href="/welcome">
-            <Button
-              variant="outline"
-              className="w-full border-border text-muted hover:text-foreground hover:border-accent"
-            >
-              Go back to welcome
-            </Button>
-          </Link>
+          <Button
+            asChild
+            variant="outline"
+            className="w-full border-border text-muted hover:text-foreground hover:border-accent"
+          >
+            <Link href="/welcome">Go back to welcome</Link>
+          </Button>
         </motion.div>
 
         {/* Help Text */}

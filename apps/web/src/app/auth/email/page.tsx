@@ -148,15 +148,12 @@ export default function AuthEmailPage() {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <Link href="/auth/school-select">
-            <Button
-              variant="ghost"
-              className="text-muted hover:text-foreground group"
-            >
+          <Button asChild variant="ghost" className="text-muted hover:text-foreground group">
+            <Link href="/auth/school-select">
               <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform duration-200" />
               Change School
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         </motion.div>
 
         {/* School Context */}
