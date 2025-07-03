@@ -1,3 +1,6 @@
+/* Import the design system globals from the UI package */
+@import '@hive/ui/styles/globals.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

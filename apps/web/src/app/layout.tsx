@@ -3,7 +3,7 @@ import { Providers } from "./providers";
 import "./globals.css";
 
 // CORRECTED: Space Grotesk from Google Fonts for display text (HIVE Brand System v1.0)
-// Font loading is now handled by the globals.css import which pulls from @hive/ui
+// Font loading is now handled by the globals.css import which pulls in @hive/ui/styles
 
 export const metadata: Metadata = {
   title: "HIVE",
