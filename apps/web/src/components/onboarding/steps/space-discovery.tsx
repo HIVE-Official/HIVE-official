@@ -117,7 +117,9 @@ export default function SpaceDiscoveryStep() {
         }
         
       } catch (error) {
-        logger.error('Failed to fetch spaces:', error);
+        logger.error('Failed to fetch spaces', { 
+          error: error instanceof Error ? error : new Error(String(error))
+        });
       } finally {
         setLoading(false);
       }
@@ -154,7 +156,9 @@ export default function SpaceDiscoveryStep() {
       // Navigate to display name step
       router.push('/onboarding/3');
     } catch (error) {
-      logger.error('Failed to save space selections', error);
+      logger.error('Failed to save space selections', { 
+        error: error instanceof Error ? error : new Error(String(error))
+      });
     } finally {
       setIsSubmitting(false);
     }

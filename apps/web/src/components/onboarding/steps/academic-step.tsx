@@ -72,7 +72,9 @@ export function OnboardingAcademicStep() {
       router.push('/onboarding/avatar');
       
     } catch (error) {
-      logger.error('Failed to save academic info:', error);
+      logger.error('Failed to save academic info', { 
+        error: error instanceof Error ? error : new Error(String(error))
+      });
       setIsLoading(false);
     }
   };

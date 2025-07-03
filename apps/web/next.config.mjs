@@ -29,8 +29,8 @@ const nextConfig = {
     // We manage our own TypeScript configuration in our monorepo
     ignoreBuildErrors: true,
   },
-  // SVG handling and workspace resolution
-  webpack: (config, { isServer: _isServer }) => {
+  // SVG handling, workspace resolution & client-side stubs
+  webpack: (config, { isServer }) => {
     // SVG handling
     config.module.rules.push({
       test: /\.svg$/,
@@ -49,6 +49,15 @@ const nextConfig = {
       '@hive/utilities': path.resolve(__dirname, '../../packages/utilities/src'),
       '@hive/api-client': path.resolve(__dirname, '../../packages/api-client/src'),
       '@hive/analytics': path.resolve(__dirname, '../../packages/analytics/src'),
+      // Stub server-only SDKs & Node built-ins on the client bundle
+      ...(isServer
+        ? {}
+        : {
+            'firebase-admin': false,
+            fs: false,
+            path: false,
+            os: false,
+          }),
     };
 
     // Add proper module resolution for React

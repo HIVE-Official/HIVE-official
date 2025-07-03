@@ -380,15 +380,31 @@ export const validateElementConfig = (
   element: Element,
   config: unknown
 ): boolean => {
+  const schema = ElementConfigSchema.optionsMap.get(element.type);
+  if (!schema) {
+    logger.error(`Could not find schema for element type: ${element.type}`);
+    return false;
+  }
   try {
-    // const schema = JSON.parse(element.configSchema);
-    // In a real implementation, we'd use a JSON schema validator here
-    // For now, we'll use the Zod schemas we defined above
-    const configWithType = { type: element.type, config };
-    ElementConfigSchema.parse(configWithType);
+    const result = schema.safeParse(config);
+    if (!result.success) {
+      const flattened = result.error.flatten();
+      logger.error("Element config validation failed", { 
+        elementId: element.id,
+        error: {
+          name: "ValidationError",
+          message: JSON.stringify(flattened.formErrors),
+          ...flattened
+        }
+      });
+      return false;
+    }
     return true;
   } catch (error) {
-    logger.error("Element config validation failed:", error);
+    logger.error("Unexpected error during element config validation", { 
+      elementId: element.id,
+      error: error instanceof Error ? error : new Error(String(error))
+    });
     return false;
   }
 };

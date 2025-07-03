@@ -5,7 +5,6 @@ import { motion } from 'framer-motion';
 import { AlertTriangle, Home, RefreshCw } from 'lucide-react';
 import { Button } from '@hive/ui';
 import { useAnalytics } from '@hive/analytics';
-import { logger } from '@hive/core';
 
 export default function GlobalError({
   error,
@@ -26,7 +25,7 @@ export default function GlobalError({
       reset();
     } catch (error) {
       // If reset fails, log the error and reload the page
-      logger.error('Failed to reset error boundary:', error);
+      console.error('Failed to reset error boundary:', error);
       window.location.reload();
     }
   };

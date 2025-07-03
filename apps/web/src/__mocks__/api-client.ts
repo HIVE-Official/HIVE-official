@@ -104,22 +104,25 @@ const mockSchools: School[] = [
     id: "school-1",
     name: "University of Example",
     domain: "example.edu",
-    status: "active",
-    waitlistCount: 0
+    status: "open",
+    waitlistCount: 0,
+    studentsUntilOpen: 0
   },
   {
     id: "ub",
     name: "University at Buffalo",
     domain: "buffalo.edu",
-    status: "active",
-    waitlistCount: 0
+    status: "open",
+    waitlistCount: 0,
+    studentsUntilOpen: 0
   },
   {
     id: "binghamton",
     name: "Binghamton University",
     domain: "binghamton.edu",
-    status: "active",
-    waitlistCount: 0
+    status: "open",
+    waitlistCount: 0,
+    studentsUntilOpen: 0
   },
 ];
 

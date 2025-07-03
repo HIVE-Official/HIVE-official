@@ -1,8 +1,11 @@
 import tailwindcssAnimate from "tailwindcss-animate";
 import tailwindcssTypography from "@tailwindcss/typography";
+import preset from "@hive/config/tailwind/preset.js";
 
 /** @type {import('tailwindcss').Config} */
 const config = {
+  presets: [preset],
+  darkMode: ["class", "[data-mode='dark']"],
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",

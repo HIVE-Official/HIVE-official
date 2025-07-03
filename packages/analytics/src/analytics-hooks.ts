@@ -2,7 +2,7 @@
 
 import { useEffect, useCallback } from 'react'
 import { analytics } from './analytics-client'
-import type { OnboardingEvent, UserEngagementEvent } from './analytics-types'
+import type { OnboardingEvent, UserEngagementEvent, LogMetadata } from './analytics-types'
 
 /**
  * Hook to initialize analytics when user signs in
@@ -68,12 +68,8 @@ export function useAnalytics() {
   }, [])
 
   const trackError = useCallback((error: Error, component?: string, severity: 'low' | 'medium' | 'high' | 'critical' = 'medium') => {
-    analytics.trackError({
-      message: error.message,
-      stack: error.stack,
-      component,
-      severity
-    })
+    const metadata: LogMetadata = { component, severity };
+    analytics.trackError(error, metadata);
   }, [])
 
   return {
@@ -136,4 +132,16 @@ export function useEngagementTracking() {
   }, [])
 
   return { trackEngagement }
+}
+
+export function useErrorBoundary(component: string) {
+  return {
+    onError: (error: Error, errorInfo: { componentStack: string }) => {
+      const metadata: LogMetadata = {
+        component,
+        componentStack: errorInfo.componentStack
+      };
+      analytics.trackError(error, metadata);
+    }
+  };
 } 

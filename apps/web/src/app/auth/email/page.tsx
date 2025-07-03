@@ -103,7 +103,9 @@ export default function AuthEmailPage() {
       }
     } catch (error) {
       setError('Network error. Please try again.')
-      logger.error('Network error:', error)
+      logger.error('Network error occurred', { 
+        error: error instanceof Error ? error : new Error(String(error))
+      })
     } finally {
       setIsSubmitting(false)
     }

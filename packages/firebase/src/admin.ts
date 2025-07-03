@@ -22,7 +22,9 @@ const initializeFirebaseAdmin = () => {
     }
     return getApps()[0];
   } catch (error) {
-    logger.error("Error initializing Firebase Admin:", error);
+    logger.error("Error initializing Firebase Admin", { 
+      error: error instanceof Error ? error : new Error(String(error))
+    });
     throw error;
   }
 };

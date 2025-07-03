@@ -2,10 +2,7 @@ import { getApps, initializeApp, cert, getApp } from 'firebase-admin/app';
 import { getAuth, type Auth } from 'firebase-admin/auth';
 import { getFirestore, type Firestore } from 'firebase-admin/firestore';
 import { logger } from './utils/logger';
-
-// Environment detection
-const isProduction = process.env.NODE_ENV === 'production';
-const serviceAccountKey = process.env.FIREBASE_ADMIN_PRIVATE_KEY;
+import { getFirebaseAdminConfig, isProduction, isBuildTime } from './env';
 
 let firebaseInitialized = false;
 let firestoreAdmin: Firestore | null = null;
@@ -15,25 +12,26 @@ const initializeFirebaseAdmin = () => {
 	if (firebaseInitialized) return;
 
         try {
-                if (!serviceAccountKey) {
-                        logger.warn('FIREBASE_ADMIN_PRIVATE_KEY is not set. Skipping Firebase Admin init.');
-                        if (!isProduction) {
+                const adminConfig = getFirebaseAdminConfig();
+
+                if (!adminConfig) {
+                        logger.warn('Firebase Admin credentials not found, using mock services');
+                        if (!isProduction || isBuildTime) {
                                 firestoreAdmin = {} as Firestore;
                                 authAdmin = {} as Auth;
                                 firebaseInitialized = true;
                                 return;
                         }
-                        return;
+                        throw new Error('Firebase Admin credentials required in production');
                 }
 
-		const serviceAccount = JSON.parse(serviceAccountKey);
 		const appName = 'hive-admin-app';
 
 		if (!getApps().some((app) => app.name === appName)) {
 			initializeApp(
 				{
-					credential: cert(serviceAccount),
-					databaseURL: `https://${serviceAccount.project_id}.firebaseio.com`,
+					credential: cert(adminConfig),
+					databaseURL: `https://${adminConfig.projectId}.firebaseio.com`,
 				},
 				appName
 			);
@@ -45,18 +43,16 @@ const initializeFirebaseAdmin = () => {
 		authAdmin = getAuth(app);
 		firebaseInitialized = true;
 	} catch (error) {
-		logger.error('Firebase Admin SDK initialization failed:', error);
-		// In a non-production environment, you might want to mock the services
-		// to allow the application to run without a live Firebase connection.
-		if (!isProduction) {
-			logger.warn(
-				'Running in non-production without Firebase Admin. Using mock services.'
-			);
-			firestoreAdmin = {} as Firestore; // Mock object
-			authAdmin = {} as Auth; // Mock object
-			firebaseInitialized = true; // Pretend it's initialized
+		logger.error('Firebase Admin SDK initialization failed', { 
+			error: error instanceof Error ? error : new Error(String(error))
+		});
+
+		if (!isProduction || isBuildTime) {
+			logger.warn('Using mock services in non-production environment');
+			firestoreAdmin = {} as Firestore;
+			authAdmin = {} as Auth;
+			firebaseInitialized = true;
 		} else {
-			// In production, this is a fatal error.
 			throw error;
 		}
 	}
@@ -65,20 +61,11 @@ const initializeFirebaseAdmin = () => {
 // Initialize on first import
 initializeFirebaseAdmin();
 
-// Re-export for compatibility with runtime checks
-export const db = firestoreAdmin!; // Safe after initialization
-export const auth = authAdmin!; // Safe after initialization
-export const dbAdmin = firestoreAdmin!; // Export dbAdmin for compatibility
+// Export admin services
+export const dbAdmin = firestoreAdmin!;
+export const firebaseAuth = authAdmin!;
+
 export const isFirebaseConfigured = firebaseInitialized;
 
-// Environment info for debugging
-export const environmentInfo = {
-	environment: process.env.NODE_ENV || "development",
-	firebaseConfigured: firebaseInitialized,
-	projectId: process.env.FIREBASE_PROJECT_ID || "hive-dev-2025",
-	credentialSource: firebaseInitialized
-		? process.env.FIREBASE_ADMIN_PRIVATE_KEY
-			? "base64_key"
-			: "application_default"
-		: "none",
-};
+// Re-export environment info
+export { environmentInfo } from './env';

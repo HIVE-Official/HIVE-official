@@ -1,22 +1,25 @@
 // Analytics utilities for the HIVE platform
 // Export analytics functions here
 
-// Export analytics types
+// Export types
 export type {
   AnalyticsEvent,
-  OnboardingEvent,
-  OnboardingStartedEvent,
-  OnboardingStepCompletedEvent,
-  OnboardingAbandonedEvent,
-} from './types';
+  LogMetadata,
+  AnalyticsProvider,
+  LogEvent,
+} from './analytics-types';
 
 // Export analytics service
 export { AnalyticsService } from './tracking';
 
-export * from './analytics-client'
-export * from './analytics-types'
-export * from './analytics-hooks'
-export * from './error-reporting'
+// Export the analytics client class
+export { AnalyticsClient } from './analytics-client';
 
-// Re-export any other analytics functionality
-export * from './types'; 
+// Export hooks
+export * from './analytics-hooks';
+
+// Export singleton instance
+export { analytics } from './instance';
+
+// Export error handling
+export * from './error-reporting'; 

@@ -31,7 +31,7 @@ export function OnboardingCompleteStep() {
 
       try {
         setCompletionState('loading');
-        logger.info("Completing onboarding for user:", user.uid);
+        logger.info("Completing onboarding", { userId: user.uid });
 
         const response = await fetch('/api/auth/complete-onboarding', {
           method: 'POST',
@@ -63,7 +63,9 @@ export function OnboardingCompleteStep() {
         }, 3000);
 
       } catch (error) {
-        logger.error("Failed to complete onboarding:", error);
+        logger.error("Failed to complete onboarding", { 
+          error: error instanceof Error ? error : new Error(String(error))
+        });
         setCompletionState('error');
         setErrorMessage(error instanceof Error ? error.message : 'An unexpected error occurred');
       }

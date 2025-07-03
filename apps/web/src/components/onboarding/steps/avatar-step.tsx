@@ -85,7 +85,9 @@ export function OnboardingAvatarStep() {
       router.push('/onboarding/interests');
       
     } catch (error) {
-      logger.error('Failed to skip avatar upload:', error);
+      logger.error('Failed to skip avatar upload', { 
+        error: error instanceof Error ? error : new Error(String(error))
+      });
       setIsUploading(false);
     }
   };
@@ -111,7 +113,9 @@ export function OnboardingAvatarStep() {
       
     } catch (err) {
       setError('Failed to upload avatar. Please try again.');
-      logger.error('Avatar upload error:', err);
+      logger.error('Avatar upload error', { 
+        error: err instanceof Error ? err : new Error(String(err))
+      });
       setIsUploading(false);
     }
   };

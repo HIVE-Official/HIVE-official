@@ -40,7 +40,7 @@ export default function AuthPageClient() {
 
     try {
       // await sendMagicLink({ email: email.toLowerCase().trim(), schoolId: 'buffalo' });
-      logger.info("Requesting magic link for:", email);
+      logger.info("Requesting magic link", { email });
       router.push(`/auth/check-email?email=${encodeURIComponent(email)}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");

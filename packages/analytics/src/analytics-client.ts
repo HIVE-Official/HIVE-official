@@ -4,12 +4,13 @@ import type {
   UserEngagementEvent, 
   SystemMetric,
   AnalyticsConfig,
-  AnalyticsError 
+  AnalyticsEvent,
+  LogMetadata
 } from './analytics-types'
 
 class AnalyticsClient {
   private config: AnalyticsConfig
-  private eventQueue: Array<AuthEvent | OnboardingEvent | UserEngagementEvent | SystemMetric> = []
+  private eventQueue: Array<AuthEvent | OnboardingEvent | UserEngagementEvent | SystemMetric | AnalyticsEvent> = []
   private isInitialized = false
 
   constructor() {
@@ -52,7 +53,7 @@ class AnalyticsClient {
   trackAuth(event: Omit<AuthEvent, 'timestamp' | 'sessionId' | 'userAgent'>) {
     const authEvent: AuthEvent = {
       ...event,
-      timestamp: Date.now(),
+      timestamp: new Date().toISOString(),
       sessionId: this.config.sessionId,
       userAgent: typeof window !== 'undefined' ? navigator.userAgent : 'server'
     }
@@ -66,7 +67,7 @@ class AnalyticsClient {
   trackOnboarding(event: Omit<OnboardingEvent, 'timestamp' | 'sessionId'>) {
     const onboardingEvent: OnboardingEvent = {
       ...event,
-      timestamp: Date.now(),
+      timestamp: new Date().toISOString(),
       sessionId: this.config.sessionId,
       userId: this.config.userId
     }
@@ -80,7 +81,7 @@ class AnalyticsClient {
   trackEngagement(event: Omit<UserEngagementEvent, 'timestamp' | 'sessionId'>) {
     const engagementEvent: UserEngagementEvent = {
       ...event,
-      timestamp: Date.now(),
+      timestamp: new Date().toISOString(),
       sessionId: this.config.sessionId,
       userId: this.config.userId
     }
@@ -91,28 +92,37 @@ class AnalyticsClient {
   /**
    * Track system metrics
    */
-  trackMetric(metric: Omit<SystemMetric, 'timestamp'>) {
+  trackMetric(metric: Omit<SystemMetric, 'timestamp' | 'sessionId' | 'userId'>) {
     const systemMetric: SystemMetric = {
       ...metric,
-      timestamp: Date.now()
-    }
+      timestamp: new Date().toISOString(),
+      sessionId: this.config.sessionId,
+      userId: this.config.userId
+    };
 
-    this.sendEvent(systemMetric)
+    this.sendEvent(systemMetric);
   }
 
   /**
-   * Track errors
+   * Track errors with metadata
    */
-  trackError(error: Omit<AnalyticsError, 'timestamp' | 'sessionId'>) {
-    const errorEvent: AnalyticsError = {
-      ...error,
-      timestamp: Date.now(),
+  trackError(error: Error, metadata?: LogMetadata) {
+    const systemMetric: SystemMetric = {
+      type: 'error',
+      metric: error.name,
+      value: 1,
+      metadata: {
+        ...metadata,
+        message: error.message,
+        stack: error.stack,
+      },
+      timestamp: new Date().toISOString(),
       sessionId: this.config.sessionId,
-      userId: this.config.userId
-    }
+      userId: this.config.userId,
+    };
 
     // Send immediately for errors
-    this.sendEventToAPI('error', errorEvent)
+    this.sendEventToAPI('error', systemMetric);
   }
 
   /**
@@ -163,6 +173,20 @@ class AnalyticsClient {
     })
   }
 
+  /**
+   * Track generic analytics events (used by logger)
+   */
+  trackEvent(event: AnalyticsEvent) {
+    const enrichedEvent: AnalyticsEvent = {
+      ...event,
+      timestamp: event.timestamp ?? new Date().toISOString(),
+      sessionId: event.sessionId ?? this.config.sessionId,
+      userId: event.userId ?? this.config.userId
+    }
+
+    this.sendEvent(enrichedEvent)
+  }
+
   // Private methods
 
   private generateSessionId(): string {
@@ -170,7 +194,7 @@ class AnalyticsClient {
            Math.random().toString(36).substring(2, 15)
   }
 
-  private sendEvent(event: AuthEvent | OnboardingEvent | UserEngagementEvent | SystemMetric) {
+  private sendEvent(event: AuthEvent | OnboardingEvent | UserEngagementEvent | SystemMetric | AnalyticsEvent) {
     if (!this.isInitialized) {
       this.eventQueue.push(event)
       return
@@ -210,27 +234,30 @@ class AnalyticsClient {
   }
 
   private setupErrorTracking() {
-    if (typeof window === 'undefined') return
+    if (typeof window !== 'undefined') {
+      // Global error handler
+      window.onerror = (message, source, lineno, colno, error) => {
+        const metadata: LogMetadata = {
+          source,
+          lineno,
+          colno,
+          component: 'global'
+        };
+        this.trackError(error || new Error(String(message)), metadata);
+      };
 
-    // Global error handler
-    window.addEventListener('error', (event) => {
-      this.trackError({
-        message: event.message,
-        stack: event.error?.stack,
-        component: 'global',
-        severity: 'medium'
-      })
-    })
-
-    // Unhandled promise rejection handler
-    window.addEventListener('unhandledrejection', (event) => {
-      this.trackError({
-        message: event.reason?.message || 'Unhandled promise rejection',
-        stack: event.reason?.stack,
-        component: 'promise',
-        severity: 'high'
-      })
-    })
+      // Unhandled promise rejection handler
+      window.onunhandledrejection = (event) => {
+        const metadata: LogMetadata = {
+          component: 'promise',
+          reason: event.reason
+        };
+        this.trackError(
+          event.reason instanceof Error ? event.reason : new Error(String(event.reason)),
+          metadata
+        );
+      };
+    }
   }
 
   private setupPerformanceTracking() {

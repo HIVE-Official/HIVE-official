@@ -639,7 +639,7 @@ export class PostAnalyticsTracker {
       postId,
       userId,
       engagementType,
-      timestamp: new Date(),
+      timestamp: new Date().toISOString(),
     });
   }
 }

@@ -67,7 +67,9 @@ export function useHandleAvailability(handle: string, debounceMs: number = 500) 
       });
 
     } catch (error) {
-      logger.error('Handle availability check failed:', error);
+      logger.error('Handle availability check failed', { 
+        error: error instanceof Error ? error : new Error(String(error))
+      });
       setResult({
         available: null,
         message: '',

@@ -120,7 +120,9 @@ export const DisplayNameAvatarStep: React.FC<StepProps> = ({
         avatarUrl,
       });
     } catch (error) {
-      logger.error("Failed to save display name and avatar", error);
+      logger.error("Failed to save display name and avatar", { 
+        error: error instanceof Error ? error : new Error(String(error))
+      });
       setIsLoading(false);
     }
   };
@@ -347,7 +349,9 @@ export const ClaimSpaceStep: React.FC<StepProps> = ({
           spaceCreated: true,
         });
       } catch (error) {
-        logger.error("Failed to create space", error);
+        logger.error("Failed to create space", { 
+          error: error instanceof Error ? error : new Error(String(error))
+        });
         setIsLoading(false);
       }
     })();
@@ -429,7 +433,9 @@ export const OnboardingCompleteStep: React.FC<StepProps> = ({
       logger.info("Completing onboarding");
       onNext();
     } catch (error) {
-      logger.error("Failed to complete onboarding", error);
+      logger.error("Failed to complete onboarding", { 
+        error: error instanceof Error ? error : new Error(String(error))
+      });
     }
   };
 

@@ -52,7 +52,9 @@ export function RouteGuard({
 
         setIsChecking(false)
       } catch (error) {
-        logger.error('Failed to check route access', error)
+        logger.error('Failed to check route access', { 
+          error: error instanceof Error ? error : new Error(String(error))
+        })
         setIsChecking(false)
       }
     }

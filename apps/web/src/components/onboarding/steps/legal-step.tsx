@@ -29,7 +29,9 @@ export function OnboardingLegalStep() {
       router.push('/onboarding/name');
       
     } catch (error) {
-      logger.error('Failed to save legal consent:', error);
+      logger.error('Failed to save legal consent', { 
+        error: error instanceof Error ? error : new Error(String(error))
+      });
       setIsLoading(false);
     }
   };

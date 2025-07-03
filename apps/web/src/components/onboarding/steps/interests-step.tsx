@@ -66,7 +66,9 @@ export function OnboardingInterestsStep() {
       logger.info("Interests skipped, onboarding completed");
       router.push("/onboarding/complete");
     } catch (error) {
-      logger.error("Failed to skip interests:", error);
+      logger.error("Failed to skip interests", { 
+        error: error instanceof Error ? error : new Error(String(error))
+      });
       setIsLoading(false);
     }
   };
@@ -85,7 +87,9 @@ export function OnboardingInterestsStep() {
       });
       router.push("/onboarding/complete");
     } catch (error) {
-      logger.error("Failed to save interests:", error);
+      logger.error("Failed to save interests", { 
+        error: error instanceof Error ? error : new Error(String(error))
+      });
       setIsLoading(false);
     }
   };

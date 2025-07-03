@@ -186,11 +186,15 @@ export const heroContentSchema = z.object({
   cta: heroCtaSchema,
   background: heroBackgroundSchema,
   metadata: heroMetadataSchema,
-});
+}).strict();
 
 // Content Validation Functions
 export function validateHeroContent(content: unknown): HeroContent {
-  return heroContentSchema.parse(content);
+  const result = heroContentSchema.safeParse(content);
+  if (!result.success) {
+    throw new Error(`Invalid hero content: ${result.error.message}`);
+  }
+  return result.data as HeroContent;
 }
 
 export function isValidHeroContent(content: unknown): content is HeroContent {
@@ -290,45 +294,151 @@ export function createDefaultHeroContent(): HeroContent {
 // Content Variant Helpers
 export function createAnimatedHeroVariant(
   rotatingWords: string[]
-): Partial<HeroContent> {
+): HeroContent {
   return {
+    id: crypto.randomUUID(),
+    variant: {
+      type: "animated",
+      theme: "dark",
+      layout: "centered",
+    },
     headline: {
-      text: "Experience your [rotating-word]",
+      text: "HIVE",
       animated: {
         enabled: true,
         rotatingWords,
         intervalMs: 2200,
       },
       typography: {
-        size: "3xl",
-        weight: "bold",
+        size: "4xl",
+        weight: "black",
         gradient: {
           enabled: true,
-          colors: ["#ffffff", "#FFD700"],
+          colors: ["#ffffff", "#FFD700", "#0A0A0A", "#FFD700", "#ffffff"],
           animation: "flow",
         },
+      },
+    },
+    subline: "Real-time campus community",
+    cta: {
+      text: "Join now",
+      variant: "primary",
+      size: "lg",
+      action: {
+        type: "navigate",
+        target: "/campus",
+        analytics: {
+          event: "hero_cta_click",
+          properties: {
+            source: "landing_hero",
+            variant: "animated",
+          },
+        },
+      },
+      states: {
+        loading: false,
+        disabled: false,
+        success: false,
+      },
+    },
+    background: {
+      type: "gradient",
+      value: ["#0A0A0A", "#1A1A1A"],
+      overlay: {
+        enabled: true,
+        color: "#000000",
+        opacity: 0.5,
+      },
+      animation: {
+        enabled: true,
+        type: "flow",
+        duration: 4000,
+        easing: "ease-in-out",
+      },
+    },
+    metadata: {
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      version: "1.0.0",
+      author: "system",
+      tags: ["animated", "landing"],
+      analytics: {
+        impressions: 0,
+        clicks: 0,
+        conversionRate: 0,
       },
     },
   };
 }
 
-export function createMinimalHeroVariant(): Partial<HeroContent> {
+export function createMinimalHeroVariant(): HeroContent {
   return {
+    id: crypto.randomUUID(),
     variant: {
       type: "minimal",
-      theme: "dark",
-      layout: "centered",
+      theme: "light",
+      layout: "left-aligned",
     },
     headline: {
-      text: "HIVE",
+      text: "HIVE Campus",
       typography: {
-        size: "4xl",
-        weight: "black",
+        size: "2xl",
+        weight: "bold",
+        gradient: {
+          enabled: false,
+          colors: ["#000000"],
+          animation: "static",
+        },
+      },
+    },
+    subline: "Join your campus community",
+    cta: {
+      text: "Get Started",
+      variant: "primary",
+      size: "md",
+      action: {
+        type: "navigate",
+        target: "/onboarding",
+        analytics: {
+          event: "hero_cta_click",
+          properties: {
+            source: "landing_hero",
+            variant: "minimal",
+          },
+        },
+      },
+      states: {
+        loading: false,
+        disabled: false,
+        success: false,
       },
     },
     background: {
       type: "solid",
-      value: "#0A0A0A",
+      value: "#ffffff",
+      overlay: {
+        enabled: false,
+        color: "#000000",
+        opacity: 0,
+      },
+      animation: {
+        enabled: false,
+        type: "pulse",
+        duration: 2000,
+        easing: "ease-in-out",
+      },
+    },
+    metadata: {
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      version: "1.0.0",
+      author: "system",
+      tags: ["minimal", "landing"],
+      analytics: {
+        impressions: 0,
+        clicks: 0,
+        conversionRate: 0,
+      },
     },
   };
 }

@@ -54,7 +54,9 @@ export function OnboardingNameStep() {
       router.push('/onboarding/leader');
       
     } catch (error) {
-      logger.error('Failed to save name and handle:', error);
+      logger.error('Failed to save name and handle', { 
+        error: error instanceof Error ? error : new Error(String(error))
+      });
       setIsLoading(false);
     }
   };

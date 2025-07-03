@@ -7,14 +7,16 @@ import { ThemeProvider } from "next-themes";
 import { AuthProvider } from "@hive/auth-logic";
 import { ToastProvider, DevModePanel } from "@hive/ui";
 import { WelcomeMatProvider } from "@/components/welcome-mat-provider";
-import { setupGlobalErrorHandling } from '@hive/analytics';
+import { analytics, setupGlobalErrorHandling } from '@hive/analytics';
+import { logger } from '@hive/core';
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = React.useState(() => new QueryClient());
 
   useEffect(() => {
-    // Set up global error handling
+    // Set up global error handling and inject analytics into the logger
     setupGlobalErrorHandling();
+    logger.setAnalyticsProvider(analytics);
   }, []);
 
   return (
@@ -27,10 +29,12 @@ export function Providers({ children }: { children: React.ReactNode }) {
       >
         <AuthProvider>
           <ToastProvider>
-            <WelcomeMatProvider>
-              {children}
-            </WelcomeMatProvider>
-            <DevModePanel />
+            <>
+              <WelcomeMatProvider>
+                {children}
+              </WelcomeMatProvider>
+              <DevModePanel />
+            </>
           </ToastProvider>
         </AuthProvider>
       </ThemeProvider>

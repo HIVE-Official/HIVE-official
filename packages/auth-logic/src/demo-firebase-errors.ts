@@ -19,9 +19,9 @@ export async function exampleAuthOperation() {
   } catch (error) {
     const userFriendlyError = FirebaseErrorHandler.handleError(error);
 
-    logger.debug("User sees:", userFriendlyError.message);
-    logger.debug("Action:", userFriendlyError.action);
-    logger.debug("Can retry:", userFriendlyError.isRetryable);
+    logger.debug("User sees error", { message: userFriendlyError.message });
+    logger.debug("Error action", { action: userFriendlyError.action });
+    logger.debug("Error retry status", { isRetryable: userFriendlyError.isRetryable });
 
     return userFriendlyError;
   }
@@ -35,7 +35,7 @@ export function ExampleAuthComponent() {
     try {
       // Your Firebase Auth sign-in logic here
       // await signInWithEmailAndPassword(auth, email, password);
-      logger.info("Sign in successful for:", email);
+      logger.info("Sign in successful", { email });
     } catch (error) {
       const errorDisplay = getErrorDisplay(error);
 
@@ -125,16 +125,24 @@ export const commonErrorScenarios = {
     const error = FirebaseErrorHandler.handleAuthError(
       new Error("auth/user-not-found")
     );
-    logger.debug("Message:", error.message); // "No account found with this email address..."
-    logger.debug("Action:", error.action); // "sign-up"
+    logger.debug("Error details", { 
+      message: error.message,
+      action: error.action,
+      severity: error.severity,
+      code: error.code 
+    });
   },
 
   "auth/too-many-requests": () => {
     const error = FirebaseErrorHandler.handleAuthError(
       new Error("auth/too-many-requests")
     );
-    logger.debug("Message:", error.message); // "Too many failed attempts..."
-    logger.debug("Severity:", error.severity); // "warning"
+    logger.debug("Error details", { 
+      message: error.message,
+      action: error.action,
+      severity: error.severity,
+      code: error.code 
+    });
   },
 
   // Functions errors
@@ -142,8 +150,12 @@ export const commonErrorScenarios = {
     const error = FirebaseErrorHandler.handleFunctionsError(
       new Error("functions/permission-denied")
     );
-    logger.debug("Message:", error.message); // "You don't have permission..."
-    logger.debug("Action:", error.action); // "contact-support"
+    logger.debug("Error details", { 
+      message: error.message,
+      action: error.action,
+      severity: error.severity,
+      code: error.code 
+    });
   },
 
   // Generic errors
@@ -151,8 +163,10 @@ export const commonErrorScenarios = {
     const error = FirebaseErrorHandler.handleError(
       new Error("Something went wrong")
     );
-    logger.debug("Message:", error.message); // Uses the original error message
-    logger.debug("Code:", error.code); // "generic-error"
+    logger.debug("Error details", { 
+      message: error.message,
+      code: error.code 
+    });
   },
 };
 

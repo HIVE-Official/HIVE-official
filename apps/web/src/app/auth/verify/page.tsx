@@ -199,7 +199,9 @@ function useEmailVerification() {
         setErrorMessage(data.message || "Verification failed");
       }
     } catch (error) {
-      logger.error("Verification error:", error);
+      logger.error("Verification error occurred", { 
+        error: error instanceof Error ? error : new Error(String(error))
+      });
       setVerificationStatus("error");
       setErrorMessage("Network error occurred. Please check your connection and try again.");
     }
@@ -304,7 +306,9 @@ function VerifyContent() {
         setErrorMessage(error.message || "Failed to resend email");
       }
     } catch (error) {
-      logger.error("Resend error:", error);
+      logger.error("Resend error occurred", { 
+        error: error instanceof Error ? error : new Error(String(error))
+      });
       setErrorMessage("Network error occurred");
     }
   };

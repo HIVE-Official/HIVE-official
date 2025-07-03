@@ -226,13 +226,17 @@ export const landingUserContextSchema = z.object({
       timezone: z.string(),
     }),
   }),
-});
+}).strict();
 
 // Validation Functions
 export function validateLandingUserContext(
   context: unknown
 ): LandingUserContext {
-  return landingUserContextSchema.parse(context);
+  const result = landingUserContextSchema.safeParse(context);
+  if (!result.success) {
+    throw new Error(`Invalid landing user context: ${result.error.message}`);
+  }
+  return result.data as LandingUserContext;
 }
 
 export function isValidLandingUserContext(

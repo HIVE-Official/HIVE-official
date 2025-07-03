@@ -27,7 +27,10 @@ export const feedApi = {
     const response = await getFeed();
     const parsed = PostSchema.array().safeParse(response.data);
     if (!parsed.success) {
-      logger.error("Zod validation failed", parsed.error);
+      logger.error("Zod validation failed", { 
+        error: new Error(parsed.error.message),
+        details: parsed.error.errors
+      });
       throw new Error("Invalid response from getFeed");
     }
     return parsed.data;
@@ -49,7 +52,9 @@ export async function fetchFeed() {
     }
     return response.json();
   } catch (error) {
-    logger.error("Error fetching feed:", error);
+    logger.error("Error fetching feed", { 
+      error: error instanceof Error ? error : new Error(String(error))
+    });
     throw error;
   }
 }

@@ -7,7 +7,12 @@ export * from "./domain/creation/tool";
 export * from "./domain/firestore/handle";
 export * from "./domain/firestore/member";
 export * from "./domain/firestore/post";
-export type { Space, SpaceTag } from "./domain/firestore/space";
+export {
+  type Space,
+  type SpaceStatus,
+  type SpaceTag,
+  type SpaceType as FirestoreSpaceType,
+} from "./domain/firestore/space";
 export * from "./domain/firestore/user";
 export * from "./domain/firestore/leader-claim";
 export * from "./domain/auth/emailLink";
@@ -43,7 +48,7 @@ export type { Post as FeedPost } from "./domain/feed/posting";
 export { CreatePostSchema } from "./domain/feed/posting";
 
 // Space Discovery System - Types and client-side schemas
-export { SpaceSection, SpaceStatus, SpaceOwnerType } from "./domain/space/discovery";
+export { SpaceSection, SpaceOwnerType } from "./domain/space/discovery";
 export type {
   SpaceDiscoveryData,
   UserDiscoveryContext,
@@ -67,25 +72,4 @@ export * from "./stores/useUnseenCountStore";
 export { env, isDevelopment, isProduction, getFirebaseConfig, isDebugMode } from "./env";
 
 // Logger (client-side) - Safe
-export { logger } from './utils/logger';
-
-// Client-side utilities - TO BE VERIFIED
-// For now, assume they are not safe and do not export them.
-// export * from "./utils/rate-limit";
-// export { postCreationRateLimit } from "./utils/rate-limit";
-// export {
-//   generateBaseHandle,
-//   generateHandleVariants,
-//   findAvailableHandle,
-//   validateHandle,
-// } from "./utils/handle-generator";
-
-// Re-export server-side utilities
-export * from './server-index';
-
-// Re-export other modules
-export * from './env';
-export * from './domain/auth/user-context';
-export * from './domain/landing/hero-content';
-export * from './domain/creation/element';
-export * from './utils/logger';
+export { logger } from './utils/logger'; 

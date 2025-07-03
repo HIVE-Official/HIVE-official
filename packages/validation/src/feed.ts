@@ -22,7 +22,9 @@ export const validatePost = (data: unknown) => {
         issues: error.issues,
       });
     } else {
-      logger.error("Unexpected validation error:", error);
+      logger.error("Unexpected validation error", { 
+        error: error instanceof Error ? error : new Error(String(error))
+      });
     }
     throw error;
   }

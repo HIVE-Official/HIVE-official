@@ -30,7 +30,9 @@ export function OnboardingLeaderStep() {
       router.push('/onboarding/academic');
       
     } catch (error) {
-      logger.error('Failed to save leadership status:', error);
+      logger.error('Failed to save leadership status', { 
+        error: error instanceof Error ? error : new Error(String(error))
+      });
       setIsLoading(false);
     }
   };

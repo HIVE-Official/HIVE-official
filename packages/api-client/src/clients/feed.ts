@@ -16,7 +16,9 @@ export class FeedApiClient {
       logger.debug("Fetched feed posts", { count: posts.length });
       return posts;
     } catch (error) {
-      logger.error("Error fetching feed posts:", error);
+      logger.error("Error fetching feed posts", { 
+        error: error instanceof Error ? error : new Error(String(error))
+      });
       throw error;
     }
   }
@@ -37,7 +39,9 @@ export class FeedApiClient {
       logger.debug("Created new post", { postId: post.id });
       return post;
     } catch (error) {
-      logger.error("Error creating post:", error);
+      logger.error("Error creating post", { 
+        error: error instanceof Error ? error : new Error(String(error))
+      });
       throw error;
     }
   }

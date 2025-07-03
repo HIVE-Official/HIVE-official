@@ -21,7 +21,9 @@ function FeedContent() {
         router.push('/auth/email')
       }
     } catch (error) {
-      logger.error('Error signing out:', error)
+      logger.error('Error signing out', { 
+        error: error instanceof Error ? error : new Error(String(error))
+      })
     }
   }
 

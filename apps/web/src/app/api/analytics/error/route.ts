@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 // import { logger } from '@hive/core'; // Removed - not currently used
-import { RateLimiter } from "limiter";
 
 // Comprehensive error categorization
 const ERROR_TYPES = {
@@ -175,7 +174,7 @@ function categorizeError(error: { name: string; message: string; stack?: string 
     if (pattern.patterns.some(regex => regex.test(fullErrorText))) {
       return {
         category: pattern.category,
-        priority: pattern.priority as any,
+        priority: pattern.priority as 'critical' | 'high' | 'medium' | 'low' | 'ignore',
         shouldAlert: pattern.shouldAlert
       };
     }
@@ -226,7 +225,7 @@ function getClientIP(request: NextRequest): string {
 }
 
 // Enhanced logging with structured data
-function logError(errorData: any) {
+function logError(errorData: z.infer<typeof ErrorPayloadSchema>) {
   const { priority, category, shouldAlert } = errorData.metadata;
   
   // Use different log levels based on priority
