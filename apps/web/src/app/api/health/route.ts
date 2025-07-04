@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { env, isFirebaseAdminConfigured } from "../../../lib/env.js";
+import { env, isFirebaseAdminConfigured } from "../../../lib/env";
 
 export async function GET() {
   const healthCheck = {
