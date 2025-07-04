@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
-import { env, isFirebaseAdminConfigured } from "../../../lib/env";
+import { env } from "@hive/core";
 
 export async function GET() {
+  const isFirebaseAdminConfigured = !!(process.env.FIREBASE_ADMIN_PROJECT_ID && process.env.FIREBASE_ADMIN_PRIVATE_KEY);
+  
   const healthCheck = {
     status: 'healthy',
     timestamp: new Date().toISOString(),
