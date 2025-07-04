@@ -1,6 +1,28 @@
 // @ts-check
 
-import type { AnalyticsProvider, LogEvent, LogMetadata } from '@hive/analytics';
+// Optional analytics types - define locally to avoid dependency issues
+interface LogMetadata {
+  [key: string]: any;
+}
+
+interface LogEvent {
+  name: string;
+  type?: string;
+  level?: string;
+  message?: string;
+  metadata?: LogMetadata;
+  sessionId?: string;
+  properties?: LogMetadata;
+  timestamp?: number;
+}
+
+interface AnalyticsProvider {
+  trackError: (error: Error, metadata?: LogMetadata) => void;
+  trackEvent: (event: LogEvent) => void;
+  track: (name: string, properties?: LogMetadata) => void;
+  page: (name: string, properties?: LogMetadata) => void;
+  identify: (userId: string, traits?: LogMetadata) => void;
+}
 
 // Enhanced logger for HIVE UI with comprehensive debugging support
 

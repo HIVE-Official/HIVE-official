@@ -17,8 +17,5 @@
     "composite": true
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"],
-  "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "**/*.spec.tsx", "src/utils/code-analyzer.ts"],
-  "references": [
-    { "path": "../analytics" }
-  ]
+  "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "**/*.spec.tsx", "src/utils/code-analyzer.ts"]
 }
