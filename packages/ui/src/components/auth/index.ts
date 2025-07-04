@@ -7,4 +7,5 @@ export * from './magic-link-sent';
 export * from './auth-flow';
 export * from './dev-mode-panel';
 export * from './email-form';
-export * from './ub-email-popup'; 
+export * from './ub-email-popup';
+export * from './ub-email-demo'; 

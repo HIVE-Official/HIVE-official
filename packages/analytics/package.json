@@ -17,7 +17,6 @@
     "dist/**"
   ],
   "scripts": {
-    "prebuild": "pnpm run clean",
     "build": "tsup src/index.ts --format esm,cjs --dts --external react",
     "dev": "tsup src/index.ts --format esm,cjs --watch --external react --sourcemap & tsc -p tsconfig.json --watch --emitDeclarationOnly",
     "lint": "eslint src/ --max-warnings 15",

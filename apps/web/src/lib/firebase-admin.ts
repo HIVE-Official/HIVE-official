@@ -11,15 +11,50 @@ const isBuildTime = process.env.NEXT_PHASE === "phase-production-build" ||
                    process.env.VERCEL_ENV === "production" ||
                    process.env.NODE_ENV === "production";
 
+// Mock school data for development
+const mockSchoolData = {
+  buffalo: {
+    id: 'buffalo',
+    name: 'University at Buffalo',
+    domain: 'buffalo.edu',
+    status: 'open',
+    studentsUntilOpen: 0,
+    waitlistCount: 0
+  }
+};
+
 // Mock instances for build time or when Firebase is not configured
 const mockDb = {
-  collection: () => ({
-    doc: () => ({
-      get: async () => ({ exists: false, data: () => null }),
-      set: async () => {},
-      update: async () => {},
-      delete: async () => {},
+  collection: (collectionName: string) => ({
+    doc: (docId: string) => ({
+      get: async () => {
+        console.log(`🔄 Mock Firebase call: collection(${collectionName}).doc(${docId}).get() - development mode`);
+        
+        if (collectionName === 'schools' && mockSchoolData[docId as keyof typeof mockSchoolData]) {
+          const schoolData = mockSchoolData[docId as keyof typeof mockSchoolData];
+          return { 
+            exists: true, 
+            data: () => schoolData,
+            id: docId
+          };
+        }
+        
+        return { exists: false, data: () => null };
+      },
+      set: async () => {
+        console.log(`🔄 Mock Firebase call: collection(${collectionName}).doc(${docId}).set() - development mode`);
+      },
+      update: async () => {
+        console.log(`🔄 Mock Firebase call: collection(${collectionName}).doc(${docId}).update() - development mode`);
+      },
+      delete: async () => {
+        console.log(`🔄 Mock Firebase call: collection(${collectionName}).doc(${docId}).delete() - development mode`);
+      },
     }),
+    add: async (data: any) => {
+      console.log(`🔄 Mock Firebase call: collection(${collectionName}).add() - development mode`, data);
+      return { id: 'mock-doc-id' };
+    },
   }),
 } as unknown as admin.firestore.Firestore;
 
@@ -32,7 +67,9 @@ const mockAuth = {
 } as unknown as admin.auth.Auth;
 
 // During build time or when Firebase is not configured, use mock instances
-if (process.env.NEXT_PHASE === "phase-production-build" || !getFirebaseAdminConfig()) {
+const adminConfig = getFirebaseAdminConfig();
+if (process.env.NEXT_PHASE === "phase-production-build" || !adminConfig) {
+  console.log("🔥 Using mock Firebase Admin for development");
   dbAdmin = mockDb;
   authAdmin = mockAuth;
 } else {
@@ -56,7 +93,7 @@ if (process.env.NEXT_PHASE === "phase-production-build" || !getFirebaseAdminConf
           dbAdmin = admin.firestore();
           authAdmin = admin.auth();
         } else {
-          console.warn("Firebase Admin credentials not found, using mock services");
+          console.warn("🔥 Firebase Admin credentials not found, using mock services for development");
           dbAdmin = mockDb;
           authAdmin = mockAuth;
         }
@@ -65,7 +102,7 @@ if (process.env.NEXT_PHASE === "phase-production-build" || !getFirebaseAdminConf
         authAdmin = admin.auth();
       }
     } catch (error) {
-      console.error("Error initializing Firebase Admin:", error);
+      console.error("🔥 Error initializing Firebase Admin, falling back to mock:", error);
       dbAdmin = mockDb;
       authAdmin = mockAuth;
     }

@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { Mail, CheckCircle, AlertCircle, Loader2, X } from 'lucide-react';
 import { Button } from '../button';
 import { Input } from '../input';
@@ -99,35 +98,24 @@ export const UBEmailPopup: React.FC<UBEmailPopupProps> = ({
     onClose();
   };
 
+  if (!isOpen) return null;
+
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.18 }}
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md"
-          onClick={handleBackdropClick}
-          role="presentation"
-        >
-          <motion.div
-            role="dialog"
-            aria-labelledby="ub-email-title"
-            aria-describedby="ub-email-description"
-            aria-modal="true"
-            className={cn(
-              "relative bg-surface rounded-xl shadow-2xl border-2 border-accent/20 overflow-hidden ring-1 ring-white/10 w-full max-w-md",
-              className
-            )}
-            initial={{ opacity: 0, scale: 0.95, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            transition={{ 
-              duration: 0.18, 
-              ease: [0.33, 0.65, 0, 1] // Brand timing curve
-            }}
-          >
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md"
+      onClick={handleBackdropClick}
+      role="presentation"
+    >
+      <div
+        role="dialog"
+        aria-labelledby="ub-email-title"
+        aria-describedby="ub-email-description"
+        aria-modal="true"
+        className={cn(
+          "relative bg-surface rounded-xl shadow-2xl border-2 border-accent/20 overflow-hidden ring-1 ring-white/10 w-full max-w-md transition-all duration-300",
+          className
+        )}
+      >
             {/* Close button */}
             <button
               onClick={handleClose}
@@ -139,12 +127,7 @@ export const UBEmailPopup: React.FC<UBEmailPopupProps> = ({
 
             <div className="p-6">
               {isSuccess ? (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.1 }}
-                  className="text-center space-y-4"
-                >
+                <div className="text-center space-y-4">
                   <div className="flex justify-center">
                     <CheckCircle className="w-12 h-12 text-accent" />
                   </div>
@@ -166,7 +149,7 @@ export const UBEmailPopup: React.FC<UBEmailPopupProps> = ({
                   <div className="text-caption text-muted mt-4">
                     Didn't receive it? Check your spam folder or try again.
                   </div>
-                </motion.div>
+                </div>
               ) : (
                 <>
                   <div className="text-center space-y-4 mb-6">
@@ -190,17 +173,12 @@ export const UBEmailPopup: React.FC<UBEmailPopupProps> = ({
                   </div>
                   
                   {error && (
-                    <motion.div
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.18 }}
-                      className="bg-red-900/20 border border-red-500/20 rounded-lg p-3 mb-4"
-                    >
+                    <div className="bg-red-900/20 border border-red-500/20 rounded-lg p-3 mb-4">
                       <div className="flex items-center gap-2 text-red-400 text-sm">
                         <AlertCircle className="w-4 h-4" />
                         {error}
                       </div>
-                    </motion.div>
+                    </div>
                   )}
                   
                   <form onSubmit={handleSubmit} className="space-y-4">
@@ -232,14 +210,10 @@ export const UBEmailPopup: React.FC<UBEmailPopupProps> = ({
                       disabled={isSubmitting || !email.trim()}
                     >
                       {isSubmitting ? (
-                        <motion.div
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          className="flex items-center gap-2"
-                        >
+                        <div className="flex items-center gap-2">
                           <Loader2 className="h-4 w-4 animate-spin" />
                           Sending...
-                        </motion.div>
+                        </div>
                       ) : (
                         'Send Magic Link'
                       )}
@@ -248,9 +222,7 @@ export const UBEmailPopup: React.FC<UBEmailPopupProps> = ({
                 </>
               )}
             </div>
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+      </div>
+    </div>
   );
 };
