@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { AlertTriangle, Home, RefreshCw } from 'lucide-react';
 import { Button } from '@hive/ui';
-import { useAnalytics } from '@hive/analytics';
+import { analytics } from '@hive/analytics';
 
 export default function GlobalError({
   error,
@@ -13,12 +13,10 @@ export default function GlobalError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
-  const { trackError } = useAnalytics();
-
   useEffect(() => {
     // Track the error in analytics
-    trackError(error, 'global', 'high');
-  }, [error, trackError]);
+    analytics.trackError(error);
+  }, [error]);
 
   const handleReset = () => {
     try {

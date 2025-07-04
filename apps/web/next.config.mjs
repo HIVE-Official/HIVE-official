@@ -63,6 +63,11 @@ const nextConfig = {
     // Add proper module resolution for React
     config.resolve.mainFields = ["browser", "module", "main"];
 
+    config.module.rules.push({
+      test: /\.(woff|woff2|eot|ttf|otf)$/i,
+      type: 'asset/resource',
+    });
+
     return config;
   },
   // Ensure Next.js doesn't interfere with our workspace setup
@@ -76,6 +81,11 @@ const nextConfig = {
     '@hive/api-client',
     '@hive/analytics'
   ],
+  reactStrictMode: true,
+  // Font optimization is now enabled by default in Next.js 15
+  // experimental: {
+  //   optimizeFonts: true,
+  // },
 };
 
 export default nextConfig;

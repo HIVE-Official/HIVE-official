@@ -17,7 +17,7 @@
     "dist/**"
   ],
   "scripts": {
-    "build": "rm -f tsconfig.tsbuildinfo && tsup src/index.ts --format esm,cjs --external react --sourcemap && tsc -p tsconfig.json --emitDeclarationOnly",
+    "build": "tsc --build",
     "dev": "tsup src/index.ts --format esm,cjs --watch --external react --sourcemap & tsc -p tsconfig.json --watch --emitDeclarationOnly",
     "lint": "eslint src/ --max-warnings 15",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
@@ -26,11 +26,13 @@
   "peerDependencies": {
     "react": "^18.0.0"
   },
+  "dependencies": {
+    "tsup": "^6.7.0"
+  },
   "devDependencies": {
     "@hive/typescript-config": "workspace:*",
     "@types/react": "^18.2.0",
     "eslint": "^9.29.0",
-    "tsup": "^6.7.0",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.35.0"
   }

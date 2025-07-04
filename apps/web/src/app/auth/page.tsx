@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation';
 import type { Metadata } from "next";
+import { ROUTES } from '@/lib/routes';
 
 export const metadata: Metadata = {
   title: "Welcome to HIVE",
@@ -7,5 +8,5 @@ export const metadata: Metadata = {
 
 export default function AuthPage() {
   // Redirect to school select by default
-  redirect('/auth/school-select');
+  redirect(ROUTES.AUTH.SCHOOL_SELECT);
 }

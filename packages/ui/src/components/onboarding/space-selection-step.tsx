@@ -17,12 +17,12 @@ import { Badge } from "../badge";
 import { Loader2, Search, Users, Plus, Sparkles, GraduationCap, BookOpen, Coffee, Code } from "lucide-react";
 import { StepProps } from "./types";
 
-// Space categories for better organization
+// Space categories for better organization - HIVE monochrome system
 const SPACE_CATEGORIES = [
-  { value: "academic", label: "Academic", icon: GraduationCap, color: "text-blue-400" },
-  { value: "study", label: "Study Groups", icon: BookOpen, color: "text-green-400" },
-  { value: "social", label: "Social", icon: Coffee, color: "text-purple-400" },
-  { value: "project", label: "Projects", icon: Code, color: "text-amber-400" },
+  { value: "academic", label: "Academic", icon: GraduationCap, color: "text-muted" },
+  { value: "study", label: "Study Groups", icon: BookOpen, color: "text-muted" },
+  { value: "social", label: "Social", icon: Coffee, color: "text-muted" },
+  { value: "project", label: "Projects", icon: Code, color: "text-muted" },
 ];
 
 // Popular space suggestions based on category

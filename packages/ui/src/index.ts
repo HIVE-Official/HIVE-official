@@ -1,3 +1,6 @@
+// Import and export styles for side effects
+import "./styles/index.css";
+
 // Export basic UI components
 export { Avatar, AvatarFallback, AvatarImage } from "./components/avatar";
 export { Badge } from "./components/badge";
@@ -64,6 +67,7 @@ export { Toast } from "./components/toast";
 
 // Export authentication components
 export * from "./components/auth";
+export { DevModePanel } from "./components/auth/dev-mode-panel";
 
 // Export onboarding components
 // WelcomeStep removed - going directly to step 1
@@ -76,8 +80,18 @@ export { RoleSelection } from "./components/onboarding/steps/role-selection";
 export { SpaceClaiming } from "./components/onboarding/steps/space-claiming";
 export { SuggestedSpaces } from "./components/onboarding/steps/suggested-spaces";
 
+// Export landing page components
+export * from "./components/landing";
+
+// Export page transition components
+export * from "./components/page-transition";
+
 // Export utilities
 export * from "./lib/utils";
+
+// Export motion utilities
+export * from "./lib/motion";
+export * from "./lib/adaptive-motion";
 
 // Export Storybook-specific utilities
 export { StorybookThemeProvider } from "./components/ui/storybook-theme-provider";

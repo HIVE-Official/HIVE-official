@@ -8,7 +8,7 @@ import { ErrorBoundary } from './error-boundary'
 import { cn } from '../lib/utils'
 
 const dialogVariants = cva(
-  'relative bg-surface-01 rounded-xl shadow-2xl border border-border overflow-hidden',
+  'relative bg-surface rounded-xl shadow-2xl border-2 border-accent/20 overflow-hidden ring-1 ring-white/10',
   {
     variants: {
       size: {
@@ -91,7 +91,7 @@ export const Dialog = React.forwardRef<HTMLDivElement, DialogProps>(({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md"
           onClick={handleBackdropClick}
           role="presentation"
         >

@@ -17,7 +17,6 @@
     "isolatedModules": true,
     "noEmit": false,
     "baseUrl": ".",
-    "moduleResolution": "node",
     "paths": {
       "@hive/*": ["../*/src"]
     },

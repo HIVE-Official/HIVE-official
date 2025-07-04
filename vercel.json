@@ -1,5 +1,5 @@
 {
-  "buildCommand": "pnpm build",
-  "installCommand": "pnpm install",
+  "buildCommand": "NODE_ENV=development pnpm install && pnpm build",
+  "installCommand": "NODE_ENV=development pnpm install",
   "outputDirectory": "apps/web/.next"
 } 

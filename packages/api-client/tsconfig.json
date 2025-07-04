@@ -13,7 +13,7 @@
       "@hive/*": ["../*/src"]
     }
   },
-  "include": ["src/**/*", "../core/src/**/*.ts"],
+  "include": ["src/**/*", "../core/src/**/*.ts", "../analytics/src/**/*.ts"],
   "exclude": [
     "node_modules",
     "dist",

@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation';
+import { ROUTES } from '@/lib/routes';
 
 export default function OnboardingPage() {
-  redirect('/onboarding/1');
+  redirect(ROUTES.ONBOARDING.STEP_1);
 }

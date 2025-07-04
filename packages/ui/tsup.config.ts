@@ -9,15 +9,16 @@ export default defineConfig({
   splitting: false,
   sourcemap: true,
   clean: true,
-  external: ['react', 'react-dom'],
+  external: ['react', 'react-dom', 'framer-motion'],
   treeshake: true,
   minify: false,
   target: 'es2020',
-  esbuildOptions(options, context) {
-    if (context.format === 'esm') {
-      options.banner = {
-        js: '"use client";',
-      };
-    }
-  },
+  // Disabled client directive for production build
+  // esbuildOptions(options, context) {
+  //   if (context.format === 'esm') {
+  //     options.banner = {
+  //       js: '"use client";',
+  //     };
+  //   }
+  // },
 }); 

@@ -5,6 +5,7 @@ import { useRouter, usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { Loader2 } from 'lucide-react'
 import { logger } from '@hive/core'
+import { ROUTES } from '@/lib/routes'
 
 interface RouteGuardProps {
   children: React.ReactNode
@@ -36,7 +37,7 @@ export function RouteGuard({
         // Handle auth requirement
         if (requireAuth && !user) {
           logger.warn('🔒 No user found, redirecting to auth')
-          router.push(redirectTo || '/auth/email')
+          router.push(redirectTo || ROUTES.AUTH.EMAIL)
           return
         }
 
@@ -45,7 +46,7 @@ export function RouteGuard({
           // Don't redirect if we're already in the onboarding flow
           if (!pathname.startsWith('/onboarding')) {
             logger.info('📝 User needs onboarding, redirecting')
-            router.push('/onboarding/1')
+            router.push(ROUTES.ONBOARDING.STEP_1)
           return
         }
         }

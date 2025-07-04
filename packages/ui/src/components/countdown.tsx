@@ -31,18 +31,30 @@ const calculateTimeLeft = (targetDate: string): TimeLeft | null => {
 const NumberBox = ({ value, label }: { value: number; label: string }) => (
   <motion.div 
     className="flex flex-col items-center"
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    transition={{ duration: 0.5 }}
+    initial={{ opacity: 0, scale: 0.8, y: 20 }}
+    animate={{ opacity: 1, scale: 1, y: 0 }}
+    transition={{ 
+      duration: 0.18, 
+      ease: [0.33, 0.65, 0, 1] 
+    }}
   >
-    <div className="relative bg-[#111111] rounded-lg border border-[#FFD700]/20 p-4 w-[80px] md:w-[100px] overflow-hidden">
-      <div className="relative h-[36px] md:h-[44px] flex items-center justify-center">
-        <span className="font-mono text-3xl md:text-4xl font-medium text-[#FFD700]">
+    <div className="relative bg-transparent rounded-lg border border-[#FFD700]/30 p-3 sm:p-4 w-[60px] sm:w-[80px] md:w-[100px] overflow-hidden">
+      <div className="relative h-[30px] sm:h-[36px] md:h-[44px] flex items-center justify-center">
+        <motion.span 
+          className="font-mono text-2xl sm:text-3xl md:text-4xl font-normal text-[#FFD700]/90"
+          key={value}
+          initial={{ opacity: 0, y: 10, scale: 0.9 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ 
+            duration: 0.24, 
+            ease: [0.33, 0.65, 0, 1] 
+          }}
+        >
           {value.toString().padStart(2, '0')}
-        </span>
+        </motion.span>
       </div>
     </div>
-    <span className="mt-2 text-sm font-sans text-[#FFD700]/80 uppercase tracking-wider">
+    <span className="mt-2 text-xs sm:text-sm font-sans text-[#FFD700]/60 uppercase tracking-wider">
       {label}
     </span>
   </motion.div>
@@ -61,14 +73,14 @@ export const Countdown = ({ targetDate }: CountdownProps) => {
 
   if (!timeLeft) {
     return (
-      <div className="text-center font-display text-2xl text-white">
+      <div className="text-center font-display text-2xl text-foreground">
         Launch time!
       </div>
     );
   }
 
   return (
-    <div className="flex flex-wrap justify-center gap-4 md:gap-8">
+    <div className="flex flex-wrap justify-center gap-3 sm:gap-4 md:gap-8">
       <NumberBox value={timeLeft.days} label="Days" />
       <NumberBox value={timeLeft.hours} label="Hours" />
       <NumberBox value={timeLeft.minutes} label="Minutes" />

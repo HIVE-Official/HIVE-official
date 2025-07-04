@@ -129,7 +129,7 @@ class Logger {
           type: event.type,
           metadata: {
             ...event.metadata,
-            timestamp: new Date().toISOString(),
+            timestamp: Date.now(),
             userAgent: typeof window !== 'undefined' ? window.navigator.userAgent : 'server',
             platform: typeof window !== 'undefined' ? window.navigator.platform : 'server'
           }
@@ -166,11 +166,12 @@ class Logger {
     // Track in analytics for important logs
     if (level === 'ERROR' || level === 'WARN') {
       const logEvent: LogEvent = {
+        name: message,
         type: 'log',
         level,
         message,
         metadata,
-        timestamp: new Date().toISOString(),
+        timestamp: Date.now(),
         sessionId: (metadata && typeof metadata.sessionId === 'string') ? metadata.sessionId : 'unknown'
       };
       // Track the event if an analytics provider is available.

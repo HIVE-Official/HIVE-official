@@ -1,254 +1,54 @@
-/* Import the design system globals from the UI package */
-@import '@hive/ui/styles/globals.css';
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "../../../../packages/ui/src/styles/globals.css";
+@import "tailwindcss";
 
 @layer base {
+  /* Ensure all CSS custom properties are available */
   :root {
     --background: 0 0% 3.9%;
     --foreground: 0 0% 98%;
-    --card: 0 0% 7%;
+    --surface: 0 0% 6.7%;
+    --surface-01: 0 0% 9%;
+    --surface-02: 0 0% 12%;
+    --surface-03: 0 0% 15%;
+    --card: 0 0% 6.7%;
     --card-foreground: 0 0% 98%;
-    --popover: 0 0% 7%;
+    --popover: 0 0% 6.7%;
     --popover-foreground: 0 0% 98%;
-    --primary: 51 100% 50%;
-    --primary-foreground: 0 0% 4%;
-    --secondary: 0 0% 7%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 3.9%;
+    --secondary: 0 0% 16%;
     --secondary-foreground: 0 0% 98%;
     --muted: 0 0% 42%;
-    --muted-foreground: 0 0% 98%;
+    --muted-foreground: 0 0% 63.9%;
     --accent: 51 100% 50%;
-    --accent-foreground: 0 0% 4%;
-    --destructive: 0 0% 7%;
+    --accent-foreground: 0 0% 3.9%;
+    --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
     --border: 0 0% 16%;
     --input: 0 0% 16%;
     --ring: 51 100% 50%;
-    --radius: 0.5rem;
-    /* HIVE surface colors */
-    --surface-01: 0 0% 7%;
-    --surface-02: 0 0% 10%;
-    --surface-03: 0 0% 13%;
+    --radius: 0.75rem;
+    
+    --font-display: 'Space Grotesk Variable', 'Space Grotesk', system-ui, sans-serif;
+    --font-sans: 'Geist Sans', 'Geist', system-ui, sans-serif;
+    --font-mono: 'Geist Mono', 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
   }
-
-  .dark {
-    /* Values are the same for the dark theme */
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 7%;
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 7%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 51 100% 50%;
-    --primary-foreground: 0 0% 4%;
-    --secondary: 0 0% 7%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 42%;
-    --muted-foreground: 0 0% 98%;
-    --accent: 51 100% 50%;
-    --accent-foreground: 0 0% 4%;
-    --destructive: 0 0% 7%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 16%;
-    --input: 0 0% 16%;
-    --ring: 51 100% 50%;
-    /* HIVE surface colors */
-    --surface-01: 0 0% 7%;
-    --surface-02: 0 0% 10%;
-    --surface-03: 0 0% 13%;
-  }
-}
-
-@layer base {
+  
   * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
     border-color: hsl(var(--border));
   }
 
   html {
-    scroll-behavior: smooth;
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+    font-size: 16px;
   }
 
   body {
-    background-color: hsl(var(--background));
-    color: hsl(var(--foreground));
     font-family: var(--font-sans);
     line-height: 1.5;
-    font-feature-settings: "cv11", "ss01";
-  }
-
-  /* Typography classes */
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    font-family: var(--font-display);
-    font-weight: 600;
-    line-height: 1.2;
-    letter-spacing: -0.02em;
-  }
-
-  h1 {
-    font-size: 2rem;
-    line-height: 1.25;
-  }
-
-  h2 {
-    font-size: 1.5rem;
-    line-height: 1.33;
-  }
-
-  h3 {
-    font-size: 1.25rem;
-    line-height: 1.4;
-  }
-
-  h4 {
-    font-size: 1.125rem;
-    line-height: 1.44;
-  }
-
-  p,
-  span,
-  div {
-    font-family: var(--font-sans);
-  }
-
-  code,
-  pre {
-    font-family: var(--font-mono);
-  }
-
-  /* Focus ring system */
-  .focus-visible:focus-visible {
-    outline: 2px solid hsl(var(--ring));
-    outline-offset: 2px;
-    transition: outline 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
   }
 }
-
-@layer utilities {
-  /* CORRECTED: Fade in animation with proper timing */
-  .animate-fade-in {
-    animation: fadeIn var(--motion-content) var(--motion-easing) forwards;
-    opacity: 0;
-  }
-
-  /* CORRECTED: Shake animation for error feedback */
-  .animate-shake {
-    animation: shakeMicro var(--motion-fast) var(--motion-easing);
-  }
-
-  /* CORRECTED: Pulse animation for success feedback */
-  .animate-pulse-subtle {
-    animation: pulseSubtle var(--motion-content) var(--motion-easing);
-  }
-
-  /* CORRECTED: Ritual animation for special moments */
-  .animate-ritual {
-    animation: ritualBurst var(--motion-slow) var(--motion-easing);
-  }
-
-  /* Brand color utilities */
-  .text-brand-accent {
-    color: var(--accent);
-  }
-
-  .bg-brand-accent {
-    background-color: var(--accent);
-    color: var(--background);
-  }
-
-  .border-brand-accent {
-    border-color: var(--accent);
-  }
-
-  .text-brand-muted {
-    color: var(--muted);
-  }
-
-  .bg-brand-surface {
-    background-color: var(--surface);
-  }
-
-  .border-brand {
-    border-color: var(--border);
-  }
-}
-
-/* CORRECTED: Keyframe animations with proper timing */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(16px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes shakeMicro {
-  0%,
-  100% {
-    transform: translateX(0);
-  }
-  25% {
-    transform: translateX(-2px);
-  }
-  75% {
-    transform: translateX(2px);
-  }
-}
-
-@keyframes pulseSubtle {
-  0%,
-  100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.02);
-  }
-}
-
-@keyframes ritualBurst {
-  0% {
-    transform: scale(1) rotate(0deg);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.1) rotate(180deg);
-    opacity: 0.8;
-  }
-  100% {
-    transform: scale(1) rotate(360deg);
-    opacity: 1;
-  }
-}
-
-/* Respect reduced motion preferences */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-}
-
-/* Brand compliance note: This CSS enforces:
- * - Space Grotesk Variable + Geist Sans Variable fonts
- * - CORRECTED border color: #2A2A2A
- * - CORRECTED gold hover: #EAC200, active: #C4A500
- * - Motion timing: 90ms/220ms/300ms only
- * - Single easing: cubic-bezier(0.22, 0.61, 0.36, 1)
- * - Motion-based status feedback (no red/green colors)
- */

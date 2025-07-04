@@ -1,25 +1,30 @@
 // Analytics utilities for the HIVE platform
-// Export analytics functions here
+// Placeholder for analytics functionality
 
-// Export types
-export type {
-  AnalyticsEvent,
-  LogMetadata,
-  AnalyticsProvider,
-  LogEvent,
-} from './analytics-types';
+export type LogMetadata = Record<string, any>;
+export type LogEvent = {
+  name: string;
+  type?: string;
+  level?: string;
+  message?: string;
+  metadata?: LogMetadata;
+  sessionId?: string;
+  properties?: LogMetadata;
+  timestamp?: number;
+};
 
-// Export analytics service
-export { AnalyticsService } from './tracking';
+export interface AnalyticsProvider {
+  trackError: (error: Error, metadata?: LogMetadata) => void;
+  trackEvent: (event: LogEvent) => void;
+  track: (name: string, properties?: LogMetadata) => void;
+  page: (name: string, properties?: LogMetadata) => void;
+  identify: (userId: string, traits?: LogMetadata) => void;
+}
 
-// Export the analytics client class
-export { AnalyticsClient } from './analytics-client';
-
-// Export hooks
-export * from './analytics-hooks';
-
-// Export singleton instance
-export { analytics } from './instance';
-
-// Export error handling
-export * from './error-reporting'; 
+export const analytics: AnalyticsProvider = {
+  trackError: () => {},
+  trackEvent: () => {},
+  track: () => {},
+  page: () => {},
+  identify: () => {},
+}; 

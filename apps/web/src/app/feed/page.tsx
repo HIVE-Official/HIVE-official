@@ -6,6 +6,7 @@ import { Button } from '@hive/ui'
 import { motion } from 'framer-motion'
 import { LogOut, User, Settings } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import { ROUTES } from '@/lib/routes'
 import { signOut } from 'firebase/auth'
 import { logger } from '@hive/core'
 
@@ -18,7 +19,7 @@ function FeedContent() {
       if (auth) {
         await signOut(auth)
         logger.info('User signed out successfully')
-        router.push('/auth/email')
+        router.push(ROUTES.AUTH.EMAIL)
       }
     } catch (error) {
       logger.error('Error signing out', { 
@@ -115,7 +116,7 @@ function FeedContent() {
 
 export default function FeedPage() {
   return (
-    <RouteGuard requireAuth={true} redirectTo="/auth/email">
+    <RouteGuard requireAuth={true} redirectTo={ROUTES.AUTH.EMAIL}>
       <FeedContent />
     </RouteGuard>
   )

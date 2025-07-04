@@ -28,11 +28,11 @@ export const CheckEmailInfo = ({
           <CardTitle className="text-2xl">Check your inbox</CardTitle>
           <CardDescription>
             We&apos;ve sent a magic link to{" "}
-            <span className="font-bold text-white">{email || "your email address"}</span>.
+            <span className="font-semibold text-foreground">{email || "your email address"}</span>.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-gray-400">
+          <p className="text-sm text-muted">
             Click the link in the email to sign in or create your account.
           </p>
         </CardContent>

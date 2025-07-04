@@ -2,7 +2,7 @@
   "name": "hive-ui",
   "private": true,
   "scripts": {
-    "build": "pnpm --filter @hive/core build && pnpm --filter @hive/validation build && pnpm --filter @hive/auth-logic build && pnpm --filter @hive/analytics build && pnpm --filter @hive/ui build && pnpm --filter web build",
+    "build": "pnpm --filter @hive/analytics build && pnpm --filter @hive/core build && pnpm --filter @hive/validation build && pnpm --filter @hive/auth-logic build && pnpm --filter @hive/ui build && pnpm --filter web build",
     "vercel-build": "pnpm install --no-frozen-lockfile && pnpm build && cd apps/web && pnpm next build",
     "dev": "turbo run dev",
     "lint": "cross-env BROWSERSLIST_IGNORE_OLD_DATA=1 BROWSERSLIST_UPDATE_DB=0 NO_UPDATE_NOTIFIER=1 TURBO_TELEMETRY_DISABLED=1 CI=1 turbo run lint",
@@ -14,10 +14,11 @@
     "precommit": "pnpm check-quality"
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "eslint": "^9.30.0",
+    "ts-node": "^10.9.2",
     "turbo": "^2.5.4",
-    "typescript-eslint": "^8.35.1",
-    "cross-env": "^7.0.3"
+    "typescript-eslint": "^8.35.1"
   },
   "packageManager": "pnpm@9.1.1",
   "dependencies": {

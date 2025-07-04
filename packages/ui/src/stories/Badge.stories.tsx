@@ -1,14 +1,11 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-// @ts-nocheck
-// @ts-nocheck
- 
-import type { Meta, StoryObj } from '@storybook/react-vite'
+import React from 'react';
+import type { Meta, StoryObj } from '@storybook/react'
 import { Star, Award, CheckCircle, User, Calendar, BookOpen, Users, Trophy, Shield, Heart } from 'lucide-react'
 
 import { Badge } from '../components/badge'
 
 const meta = {
-  title: 'UI/Badge',
+  title: 'Design System/Badge',
   component: Badge,
   parameters: {
     layout: 'centered',
@@ -292,4 +289,94 @@ export const AchievementDisplay: Story = {
       </div>
     </div>
   ),
-} 
+};
+
+// === GROCERY STORE SHOWCASE ===
+export const GroceryShowcase: Story = {
+  name: "🛒 Badge Grocery Store",
+  render: () => (
+    <div className="space-y-8 p-8">
+      <div className="text-center space-y-2">
+        <h2 className="text-2xl font-bold text-white">HIVE Badge Grocery Store</h2>
+        <p className="text-gray-400">Pick your perfect badge variant</p>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Default Section */}
+        <div className="space-y-4 p-4 bg-gray-900 rounded-lg">
+          <h3 className="text-lg font-semibold text-white">Default</h3>
+          <div className="space-y-2">
+            <Badge size="sm">Small Default</Badge>
+            <Badge>Default Badge</Badge>
+            <Badge size="lg">Large Default</Badge>
+          </div>
+        </div>
+
+        {/* Secondary Section */}
+        <div className="space-y-4 p-4 bg-gray-900 rounded-lg">
+          <h3 className="text-lg font-semibold text-white">Secondary</h3>
+          <div className="space-y-2">
+            <Badge variant="secondary" size="sm">Small Secondary</Badge>
+            <Badge variant="secondary">Secondary Badge</Badge>
+            <Badge variant="secondary" size="lg">Large Secondary</Badge>
+          </div>
+        </div>
+
+        {/* Ritual Section */}
+        <div className="space-y-4 p-4 bg-gray-900 rounded-lg">
+          <h3 className="text-lg font-semibold text-white">Ritual (Gold)</h3>
+          <div className="space-y-2">
+            <Badge variant="ritual" size="sm">
+              <Star className="mr-1 h-2.5 w-2.5" />
+              Small Ritual
+            </Badge>
+            <Badge variant="ritual">
+              <Award className="mr-1 h-3 w-3" />
+              Ritual Badge
+            </Badge>
+            <Badge variant="ritual" size="lg">
+              <Trophy className="mr-1 h-3 w-3" />
+              Large Ritual
+            </Badge>
+          </div>
+        </div>
+
+        {/* Outline Section */}
+        <div className="space-y-4 p-4 bg-gray-900 rounded-lg">
+          <h3 className="text-lg font-semibold text-white">Outline</h3>
+          <div className="space-y-2">
+            <Badge variant="outline" size="sm">Small Outline</Badge>
+            <Badge variant="outline">Outline Badge</Badge>
+            <Badge variant="outline" size="lg">Large Outline</Badge>
+          </div>
+        </div>
+
+        {/* Ghost Section */}
+        <div className="space-y-4 p-4 bg-gray-900 rounded-lg">
+          <h3 className="text-lg font-semibold text-white">Ghost</h3>
+          <div className="space-y-2">
+            <Badge variant="ghost" size="sm">Small Ghost</Badge>
+            <Badge variant="ghost">Ghost Badge</Badge>
+            <Badge variant="ghost" size="lg">Large Ghost</Badge>
+          </div>
+        </div>
+
+        {/* Muted Section */}
+        <div className="space-y-4 p-4 bg-gray-900 rounded-lg">
+          <h3 className="text-lg font-semibold text-white">Muted</h3>
+          <div className="space-y-2">
+            <Badge variant="muted" size="sm">Small Muted</Badge>
+            <Badge variant="muted">Muted Badge</Badge>
+            <Badge variant="muted" size="lg">Large Muted</Badge>
+          </div>
+        </div>
+      </div>
+
+      <div className="text-center pt-8 border-t border-gray-800">
+        <p className="text-gray-400 text-sm">
+          🏅 Following HIVE Design System - Gold only for ritual achievements and special moments
+        </p>
+      </div>
+    </div>
+  ),
+}; 

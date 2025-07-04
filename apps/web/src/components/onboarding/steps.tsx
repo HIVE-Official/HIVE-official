@@ -439,5 +439,5 @@ export const OnboardingCompleteStep: React.FC<StepProps> = ({
     }
   };
 
-  return <UIOnboardingCompleteStep onSubmit={handleSubmit} />;
+  return <UIOnboardingCompleteStep onGoToFeed={handleSubmit} />;
 };

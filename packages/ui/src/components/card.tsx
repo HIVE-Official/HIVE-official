@@ -1,7 +1,10 @@
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
+import { motion } from "framer-motion"
 
 import { cn } from "../lib/utils"
+import { hivePresets, hiveVariants } from "../lib/motion"
+import { useAdaptiveMotion } from "../lib/adaptive-motion"
 
 const cardVariants = cva(
   // Base styles following HIVE brand guidelines with gold accents
@@ -101,16 +104,71 @@ const cardVariants = cva(
 
 export interface CardProps
   extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof cardVariants> {}
+    VariantProps<typeof cardVariants> {
+  enableMotion?: boolean
+  motionPreset?: 'entrance' | 'hover' | 'featured'
+}
 
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
-  ({ className, variant, size, spacing, ...props }, ref) => (
-    <div
-      ref={ref}
-      className={cn(cardVariants({ variant, size, spacing, className }))}
-      {...props}
-    />
-  )
+  ({ 
+    className, 
+    variant, 
+    size, 
+    spacing, 
+    enableMotion = true,
+    motionPreset = 'hover',
+    ...props 
+  }, ref) => {
+    const { variants } = useAdaptiveMotion('social');
+    
+    const getMotionProps = () => {
+      if (!enableMotion) return {};
+      
+      switch (motionPreset) {
+        case 'entrance':
+          return {
+            variants: hiveVariants.slideUp,
+            initial: "hidden",
+            animate: "visible",
+          };
+        case 'featured':
+          return {
+            ...hivePresets.cardHover,
+            variants: variants.hover,
+            initial: "rest",
+            whileHover: "hover",
+          };
+        case 'hover':
+        default:
+          return variant === 'interactive' || variant === 'featured'
+            ? hivePresets.cardHover
+            : {
+                whileHover: { 
+                  scale: 1.01, 
+                  y: -2,
+                  transition: { duration: 0.18, ease: [0.33, 0.65, 0, 1] as any }
+                }
+              };
+      }
+    };
+    
+    // Exclude HTML event handlers that conflict with Framer Motion
+    const { 
+      onDrag, onDragStart, onDragEnd, onDragOver, onDragEnter, onDragLeave, onDrop,
+      onAnimationStart, onAnimationEnd, onAnimationIteration,
+      onTransitionStart, onTransitionEnd, onTransitionRun, onTransitionCancel,
+      ...motionProps 
+    } = props
+    
+    return (
+      <motion.div
+        ref={ref}
+        className={cn(cardVariants({ variant, size, spacing, className }))}
+        {...getMotionProps()}
+        {...motionProps}
+      />
+    )
+  }
 )
 Card.displayName = "Card"
 

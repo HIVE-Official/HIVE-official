@@ -1,15 +1,255 @@
 "use client";
 
-import { useRouter } from 'next/navigation'
-import { SplashScreen } from '@hive/ui'
-import { useCallback } from 'react'
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { motion, AnimatePresence } from 'framer-motion';
+import { HiveLogo, Button, Countdown } from '@hive/ui';
+import { ArrowRight, X } from 'lucide-react';
+import { ROUTES } from '@/lib/routes';
+
+function HomePageContent() {
+  const router = useRouter();
+  const [mounted, setMounted] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const handleGetStarted = () => {
+    router.push(ROUTES.AUTH.SCHOOL_SELECT);
+  };
+
+  const handleWhatsComing = () => {
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+  };
+
+  // Set launch date to July 8th 8 AM 2025
+  const launchDate = new Date('2025-07-08T08:00:00');
+  const targetDate = launchDate.toISOString();
+
+  if (!mounted) {
+    return (
+      <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center">
+        <div className="animate-pulse">
+          <div className="w-24 h-24 bg-surface rounded-full"></div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-[#0A0A0A] text-foreground overflow-hidden relative">
+      {/* Background gradients */}
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,#111111,transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,#111111,transparent_50%)]" />
+      </div>
+
+      {/* Main content */}
+      <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-4 sm:px-6 text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ 
+            duration: 0.24, 
+            ease: [0.33, 0.65, 0, 1],
+            delay: 0.1 
+          }}
+          className="max-w-4xl space-y-8 sm:space-y-12 md:space-y-16"
+        >
+          {/* Logo and Title */}
+          <div className="flex items-center justify-center space-x-4 sm:space-x-6">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ 
+                duration: 0.8, 
+                ease: [0.33, 0.65, 0, 1],
+                delay: 0.3 
+              }}
+            >
+              <HiveLogo 
+                variant="white" 
+                size="3xl" 
+                className="drop-shadow-2xl w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 xl:w-36 xl:h-36"
+              />
+            </motion.div>
+            
+            <motion.h1
+              initial={{ opacity: 0, x: 40 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ 
+                duration: 0.8, 
+                ease: [0.33, 0.65, 0, 1],
+                delay: 0.9 
+              }}
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black tracking-tight text-foreground font-display"
+            >
+              HIVE
+            </motion.h1>
+          </div>
+
+          {/* Countdown */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ 
+              duration: 0.24, 
+              ease: [0.33, 0.65, 0, 1],
+              delay: 0.8 
+            }}
+            className="py-4 sm:py-6 md:py-8"
+          >
+            <Countdown targetDate={targetDate} />
+          </motion.div>
+
+          {/* Buttons */}
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ 
+              duration: 0.18, 
+              ease: [0.33, 0.65, 0, 1],
+              delay: 1.4 
+            }}
+            className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4"
+          >
+            <motion.div
+              whileHover={{ 
+                scale: 1.02, 
+                y: -1,
+              }}
+              whileTap={{ 
+                scale: 0.98, 
+                y: 0,
+              }}
+              transition={{ 
+                duration: 0.18, 
+                ease: [0.33, 0.65, 0, 1] 
+              }}
+            >
+              <Button
+                size="lg"
+                className="group h-12 sm:h-14 bg-transparent hover:bg-surface px-6 sm:px-8 text-base sm:text-lg font-medium text-foreground border border-[#2A2A2A] hover:border-[#FFD700]/50 transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] focus:ring-2 focus:ring-[#FFD700] focus:ring-offset-2 focus:ring-offset-[#0A0A0A]"
+                onClick={handleGetStarted}
+              >
+                Get Started
+                <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5 transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)]" />
+              </Button>
+            </motion.div>
+            
+            <motion.div
+              whileHover={{ 
+                scale: 1.02, 
+                y: -1,
+              }}
+              whileTap={{ 
+                scale: 0.98, 
+                y: 0,
+              }}
+              transition={{ 
+                duration: 0.18, 
+                ease: [0.33, 0.65, 0, 1] 
+              }}
+            >
+              <Button
+                size="lg"
+                className="group h-12 sm:h-14 bg-transparent hover:bg-surface px-6 sm:px-8 text-base sm:text-lg font-medium text-foreground border border-[#2A2A2A] hover:border-[#FFD700]/50 transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] focus:ring-2 focus:ring-[#FFD700] focus:ring-offset-2 focus:ring-offset-[#0A0A0A]"
+                onClick={handleWhatsComing}
+              >
+                What's Coming
+              </Button>
+            </motion.div>
+          </motion.div>
+
+          {/* Social Proof */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ 
+              duration: 0.18, 
+              ease: [0.33, 0.65, 0, 1],
+              delay: 1.2 
+            }}
+            className="pt-4 sm:pt-6 md:pt-8"
+          >
+            <p className="font-mono text-xs sm:text-sm text-muted/80">
+              Built by Students · Owned by Students
+            </p>
+          </motion.div>
+        </motion.div>
+      </div>
+
+      {/* What's Coming Modal */}
+      <AnimatePresence>
+        {showModal && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.18, ease: [0.33, 0.65, 0, 1] }}
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
+              onClick={closeModal}
+            />
+            
+            {/* Modal */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              transition={{ duration: 0.18, ease: [0.33, 0.65, 0, 1] }}
+              className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            >
+              <div className="relative bg-[#111111] border border-[#FFD700]/30 rounded-lg p-6 sm:p-8 max-w-md w-full shadow-xl">
+                {/* Gold accent line */}
+                <div className="absolute top-0 left-0 right-0 h-0.5 bg-[#FFD700] rounded-t-lg" />
+                
+                {/* Close button */}
+                <button
+                  onClick={closeModal}
+                  className="absolute top-4 right-4 text-muted hover:text-[#FFD700] transition-colors duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] focus:outline-none focus:ring-2 focus:ring-[#FFD700] focus:ring-offset-2 focus:ring-offset-[#111111] rounded-sm"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+
+                {/* Content */}
+                <div className="pr-8">
+                  <h2 className="text-xl font-display font-semibold text-foreground mb-4">
+                    What's Coming
+                  </h2>
+                  <p className="text-muted font-sans leading-relaxed mb-4">
+                    Campus community, reimagined by students.
+                  </p>
+                  <p className="text-muted font-sans leading-relaxed mb-6">
+                    Real-time spaces where you belong. Instant connections that matter. A platform built for how students actually connect.
+                  </p>
+                  
+                  {/* CTA Button */}
+                  <Button
+                    size="lg"
+                    className="w-full bg-transparent hover:bg-transparent text-muted/50 border border-[#2A2A2A]/50 transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] cursor-not-allowed"
+                    disabled
+                  >
+                    Get Early Access
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
 
 export default function HomePage() {
-  const router = useRouter()
-
-  const handleGetInside = useCallback(() => {
-    router.push('/auth/email')
-  }, [router])
-
-  return <SplashScreen onGetInside={handleGetInside} />
+  return <HomePageContent />;
 }

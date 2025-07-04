@@ -1,5 +1,3 @@
-import { fontFamily } from "tailwindcss/defaultTheme";
-
 /** @type {import('tailwindcss').Config} */
 const preset = {
   theme: {
@@ -46,6 +44,7 @@ const preset = {
           foreground: "hsl(var(--card-foreground))",
         },
         // HIVE-specific surface colors
+        surface: "hsl(var(--surface))",
         "surface-01": "hsl(var(--surface-01))",
         "surface-02": "hsl(var(--surface-02))",
         "surface-03": "hsl(var(--surface-03))",
@@ -56,9 +55,9 @@ const preset = {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        sans: ["Geist", "Geist Sans", ...fontFamily.sans],
-        mono: ["Geist Mono", ...fontFamily.mono],
-        display: ["Space Grotesk Variable", "Space Grotesk", ...fontFamily.sans],
+        sans: "var(--font-sans)",
+        mono: "var(--font-mono)",
+        display: "var(--font-display)",
       },
       fontSize: {
         // HIVE Typography Scale - from packages/tokens/src/typography.ts
@@ -97,10 +96,113 @@ const preset = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        // HIVE Brand Keyframes
+        "hive-fade-in": {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
+        },
+        "hive-slide-up": {
+          "0%": { opacity: "0", transform: "translateY(20px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        "hive-slide-down": {
+          "0%": { opacity: "0", transform: "translateY(-20px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        "hive-scale-in": {
+          "0%": { opacity: "0", transform: "scale(0.95)" },
+          "100%": { opacity: "1", transform: "scale(1)" },
+        },
+        "hive-gold-pulse": {
+          "0%, 100%": { boxShadow: "0 0 0 rgba(255, 215, 0, 0)" },
+          "50%": { boxShadow: "0 0 20px rgba(255, 215, 0, 0.3)" },
+        },
+        "hive-gold-glow": {
+          "0%": { filter: "drop-shadow(0 0 0 rgba(255, 215, 0, 0))" },
+          "50%": { filter: "drop-shadow(0 0 12px rgba(255, 215, 0, 0.4))" },
+          "100%": { filter: "drop-shadow(0 0 0 rgba(255, 215, 0, 0))" },
+        },
+        "hive-surface-rise": {
+          "0%": { 
+            opacity: "0", 
+            transform: "translateY(8px)",
+            backgroundColor: "hsl(var(--background))",
+          },
+          "100%": { 
+            opacity: "1", 
+            transform: "translateY(0)",
+            backgroundColor: "hsl(var(--surface))",
+          },
+        },
+        "hive-emboss-reveal": {
+          "0%": { 
+            opacity: "0",
+            boxShadow: "inset 0 0 0 rgba(255, 215, 0, 0)",
+          },
+          "100%": { 
+            opacity: "1",
+            boxShadow: "inset 0 1px 0 rgba(255, 215, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.2)",
+          },
+        },
+        "hive-ritual-burst": {
+          "0%": { 
+            transform: "scale(1)", 
+            opacity: "1",
+            filter: "brightness(1)",
+          },
+          "25%": { 
+            transform: "scale(1.05)", 
+            opacity: "0.9",
+            filter: "brightness(1.1)",
+          },
+          "50%": { 
+            transform: "scale(1.15)", 
+            opacity: "0.8",
+            filter: "brightness(1.2) drop-shadow(0 0 15px rgba(255, 215, 0, 0.4))",
+          },
+          "75%": { 
+            transform: "scale(1.05)", 
+            opacity: "0.9",
+            filter: "brightness(1.1)",
+          },
+          "100%": { 
+            transform: "scale(1)", 
+            opacity: "1",
+            filter: "brightness(1)",
+          },
+        },
+        "hive-space-join": {
+          "0%": { 
+            opacity: "0", 
+            transform: "scale(0.8) rotate(-2deg)",
+            filter: "blur(2px)",
+          },
+          "50%": { 
+            opacity: "0.7", 
+            transform: "scale(1.02) rotate(0deg)",
+            filter: "blur(0px) drop-shadow(0 0 10px rgba(255, 215, 0, 0.2))",
+          },
+          "100%": { 
+            opacity: "1", 
+            transform: "scale(1) rotate(0deg)",
+            filter: "blur(0px)",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 180ms cubic-bezier(0.25, 0.46, 0.45, 0.94)",
         "accordion-up": "accordion-up 180ms cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+        // HIVE Brand Animations
+        "hive-fade-in": "hive-fade-in 180ms cubic-bezier(0.33, 0.65, 0, 1)",
+        "hive-slide-up": "hive-slide-up 180ms cubic-bezier(0.33, 0.65, 0, 1)",
+        "hive-slide-down": "hive-slide-down 180ms cubic-bezier(0.33, 0.65, 0, 1)",
+        "hive-scale-in": "hive-scale-in 180ms cubic-bezier(0.33, 0.65, 0, 1)",
+        "hive-gold-pulse": "hive-gold-pulse 2s cubic-bezier(0.33, 0.65, 0, 1) infinite",
+        "hive-gold-glow": "hive-gold-glow 1.5s cubic-bezier(0.33, 0.65, 0, 1) infinite",
+        "hive-surface-rise": "hive-surface-rise 280ms cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+        "hive-emboss-reveal": "hive-emboss-reveal 180ms cubic-bezier(0.23, 1, 0.32, 1)",
+        "hive-ritual-burst": "hive-ritual-burst 400ms cubic-bezier(0.68, -0.55, 0.265, 1.55)",
+        "hive-space-join": "hive-space-join 400ms cubic-bezier(0.23, 1, 0.32, 1)",
       },
     },
   },

@@ -12,15 +12,15 @@ export const motion = {
     ritual: "400ms",   // Special HIVE moments, celebrations
   },
 
-  // HIVE brand easing (premium, not Material Design)
+  // HIVE brand easing (tech sleek + modular)
   easing: {
-    // Primary HIVE easing - smooth, premium feel
-    smooth: "cubic-bezier(0.25, 0.46, 0.45, 0.94)",     // Smooth, confident
-    snap: "cubic-bezier(0.68, -0.55, 0.265, 1.55)",     // Playful bounce for interactions
-    elegant: "cubic-bezier(0.23, 1, 0.32, 1)",          // Elegant, refined
+    // Primary HIVE curve for all interactions
+    hive: "cubic-bezier(0.33, 0.65, 0, 1)",            // Signature HIVE curve
     
-    // Special HIVE brand spring for gold accent moments
-    brand: "cubic-bezier(0.33, 0.65, 0, 1)",            // Signature HIVE spring
+    // Variations for specific contexts
+    smooth: "cubic-bezier(0.25, 0.46, 0.45, 0.94)",     // Smooth, confident
+    snap: "cubic-bezier(0.68, -0.55, 0.265, 1.55)",     // Playful bounce (minimal use)
+    elegant: "cubic-bezier(0.23, 1, 0.32, 1)",          // Elegant, refined
     
     // Performance easing (when needed)
     linear: "linear",
@@ -94,7 +94,7 @@ export const motion = {
 export const createHiveTransition = (
   property: string = "all",
   duration: keyof typeof motion.duration = "fast",
-  easing: keyof typeof motion.easing = "smooth"
+  easing: keyof typeof motion.easing = "hive"
 ) => {
   return `${property} ${motion.duration[duration]} ${motion.easing[easing]}`;
 };
@@ -103,7 +103,7 @@ export const createHiveHover = (
   scale: keyof typeof motion.scale = "micro"
 ) => {
   return {
-    transition: createHiveTransition("transform", "fast", "smooth"),
+    transition: createHiveTransition("transform", "fast", "hive"),
     "&:hover": {
       transform: `scale(${motion.scale[scale]})`,
     },
@@ -114,7 +114,7 @@ export const createGoldAccent = (
   duration: keyof typeof motion.duration = "fast"
 ) => {
   return {
-    transition: createHiveTransition("all", duration, "smooth"),
+    transition: createHiveTransition("all", duration, "hive"),
     "&:hover": {
       boxShadow: "0 0 20px rgba(255, 215, 0, 0.3)",
       borderColor: "#FFD700",
@@ -152,7 +152,7 @@ export const hiveAnimations = {
   
   // Ritual celebration (special HIVE moment)
   ritualCelebration: {
-    animation: `${motion.keyframes.ritualBurst} ${motion.duration.ritual} ${motion.easing.brand}`,
+    animation: `${motion.keyframes.ritualBurst} ${motion.duration.ritual} ${motion.easing.hive}`,
   },
 };
 

@@ -1,18 +1,17 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-// @ts-nocheck
-// @ts-nocheck
- 
-import type { Meta, StoryObj } from "@storybook/react-vite"
+import React from 'react';
+import type { Meta, StoryObj } from "@storybook/react";
 
-import { Typography, Heading, Text, Caption, Code } from "../components/typography"
+import { Typography, Heading, Text, Caption, Code } from "../components/typography";
 
 const meta: Meta<typeof Typography> = {
-	title: "UI/Typography",
+	title: "Design System/Typography",
 	component: Typography,
 	parameters: {
 		layout: "centered",
-		backgrounds: {
-			default: "dark",
+		docs: {
+			description: {
+				component: 'HIVE typography system using Space Grotesk for display text, Geist Sans for body text, and Geist Mono for code.',
+			},
 		},
 	},
 	argTypes: {
@@ -339,4 +338,192 @@ const discoverContent = (user: User) => {
 			</Typography>
 		</article>
 	),
-} 
+};
+
+// === GROCERY STORE SHOWCASE ===
+export const GroceryShowcase: Story = {
+	name: "🛒 Typography Grocery Store",
+	render: () => (
+		<div className="space-y-8 p-8">
+			<div className="text-center space-y-2">
+				<h2 className="text-2xl font-bold text-white">HIVE Typography Grocery Store</h2>
+				<p className="text-gray-400">Pick your perfect text variant</p>
+			</div>
+
+			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+				{/* Display & Headlines - Space Grotesk */}
+				<div className="space-y-4 p-6 bg-gray-900 rounded-lg">
+					<h3 className="text-lg font-semibold text-white mb-4">Display & Headlines</h3>
+					<div className="space-y-3">
+						<div>
+							<Typography variant="small" className="text-muted mb-1">Display</Typography>
+							<Typography variant="display">Welcome to HIVE</Typography>
+						</div>
+						<div>
+							<Typography variant="small" className="text-muted mb-1">H1</Typography>
+							<Typography variant="h1">Page Title</Typography>
+						</div>
+						<div>
+							<Typography variant="small" className="text-muted mb-1">H2</Typography>
+							<Typography variant="h2">Section Header</Typography>
+						</div>
+						<div>
+							<Typography variant="small" className="text-muted mb-1">H3</Typography>
+							<Typography variant="h3">Subsection</Typography>
+						</div>
+						<div>
+							<Typography variant="small" className="text-muted mb-1">H4</Typography>
+							<Typography variant="h4">Minor Heading</Typography>
+						</div>
+					</div>
+				</div>
+
+				{/* Body Text - Geist Sans */}
+				<div className="space-y-4 p-6 bg-gray-900 rounded-lg">
+					<h3 className="text-lg font-semibold text-white mb-4">Body Text</h3>
+					<div className="space-y-3">
+						<div>
+							<Typography variant="small" className="text-muted mb-1">Lead</Typography>
+							<Typography variant="lead">Large introductory text</Typography>
+						</div>
+						<div>
+							<Typography variant="small" className="text-muted mb-1">Body</Typography>
+							<Typography variant="body">Standard paragraph text</Typography>
+						</div>
+						<div>
+							<Typography variant="small" className="text-muted mb-1">Body Small</Typography>
+							<Typography variant="body-sm">Smaller supporting text</Typography>
+						</div>
+						<div>
+							<Typography variant="small" className="text-muted mb-1">Caption</Typography>
+							<Typography variant="caption">Metadata and timestamps</Typography>
+						</div>
+					</div>
+				</div>
+
+				{/* UI Elements - Geist Sans */}
+				<div className="space-y-4 p-6 bg-gray-900 rounded-lg">
+					<h3 className="text-lg font-semibold text-white mb-4">UI Elements</h3>
+					<div className="space-y-3">
+						<div>
+							<Typography variant="small" className="text-muted mb-1">Button</Typography>
+							<Typography variant="button">Get Started</Typography>
+						</div>
+						<div>
+							<Typography variant="small" className="text-muted mb-1">Label</Typography>
+							<Typography variant="label">Form Label</Typography>
+						</div>
+						<div>
+							<Typography variant="small" className="text-muted mb-1">Navigation</Typography>
+							<Typography variant="nav">Dashboard</Typography>
+						</div>
+						<div>
+							<Typography variant="small" className="text-muted mb-1">Small</Typography>
+							<Typography variant="small">Fine print text</Typography>
+						</div>
+					</div>
+				</div>
+
+				{/* Code Text - Geist Mono */}
+				<div className="space-y-4 p-6 bg-gray-900 rounded-lg">
+					<h3 className="text-lg font-semibold text-white mb-4">Code & Data</h3>
+					<div className="space-y-3">
+						<div>
+							<Typography variant="small" className="text-muted mb-1">Inline Code</Typography>
+							<Typography variant="code">npm install</Typography>
+						</div>
+						<div>
+							<Typography variant="small" className="text-muted mb-1">Code Block</Typography>
+							<Typography variant="code-block" className="text-xs">
+								{`const hello = "world";`}
+							</Typography>
+						</div>
+					</div>
+				</div>
+
+				{/* Utility Variants */}
+				<div className="space-y-4 p-6 bg-gray-900 rounded-lg">
+					<h3 className="text-lg font-semibold text-white mb-4">Utility Text</h3>
+					<div className="space-y-3">
+						<div>
+							<Typography variant="small" className="text-muted mb-1">Muted</Typography>
+							<Typography variant="muted">Secondary information</Typography>
+						</div>
+						<div>
+							<Typography variant="small" className="text-muted mb-1">Subtle</Typography>
+							<Typography variant="subtle">Very light metadata</Typography>
+						</div>
+					</div>
+				</div>
+
+				{/* Weight Variations */}
+				<div className="space-y-4 p-6 bg-gray-900 rounded-lg">
+					<h3 className="text-lg font-semibold text-white mb-4">Font Weights</h3>
+					<div className="space-y-3">
+						<Typography variant="body" weight="light">Light (300)</Typography>
+						<Typography variant="body" weight="normal">Normal (400)</Typography>
+						<Typography variant="body" weight="medium">Medium (500)</Typography>
+						<Typography variant="body" weight="semibold">Semibold (600)</Typography>
+						<Typography variant="body" weight="bold">Bold (700)</Typography>
+					</div>
+				</div>
+			</div>
+
+			{/* Campus Typography Examples */}
+			<div className="space-y-6">
+				<h3 className="text-xl font-semibold text-white text-center">Campus Content Examples</h3>
+				
+				<div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+					{/* Event Card Typography */}
+					<div className="p-6 bg-gray-900 rounded-lg space-y-3">
+						<Typography variant="h3">Study Group Tonight</Typography>
+						<Typography variant="body-sm" className="text-muted">Computer Science 101</Typography>
+						<Typography variant="body">
+							Join us for collaborative problem-solving and exam prep in the library.
+						</Typography>
+						<Typography variant="caption">Posted 2 hours ago • 12 attending</Typography>
+					</div>
+
+					{/* Achievement Typography */}
+					<div className="p-6 bg-gray-900 rounded-lg space-y-3">
+						<Typography variant="h3" className="text-accent">Achievement Unlocked!</Typography>
+						<Typography variant="body" weight="semibold">7-Day Study Streak</Typography>
+						<Typography variant="body-sm">
+							You've maintained consistent study habits for a full week.
+						</Typography>
+						<Typography variant="caption" className="text-accent">
+							+50 XP earned
+						</Typography>
+					</div>
+
+					{/* Course Info Typography */}
+					<div className="p-6 bg-gray-900 rounded-lg space-y-3">
+						<Typography variant="h3">Psychology 101</Typography>
+						<Typography variant="body" className="text-muted">Prof. Johnson • MWF 10:00 AM</Typography>
+						<Typography variant="body-sm">
+							Introduction to psychological principles and research methods.
+						</Typography>
+						<Typography variant="small">Progress: 75% complete</Typography>
+					</div>
+
+					{/* Social Post Typography */}
+					<div className="p-6 bg-gray-900 rounded-lg space-y-3">
+						<Typography variant="body" weight="semibold">@sarah_studies</Typography>
+						<Typography variant="body">
+							Just finished my midterm prep! The campus coffee shop was perfect ☕️
+						</Typography>
+						<Typography variant="caption" className="text-muted">
+							2 hours ago • 24 likes • 5 comments
+						</Typography>
+					</div>
+				</div>
+			</div>
+
+			<div className="text-center pt-8 border-t border-gray-800">
+				<p className="text-gray-400 text-sm">
+					🎨 Following HIVE Design System - Space Grotesk for display, Geist for UI, Geist Mono for code
+				</p>
+			</div>
+		</div>
+	),
+}; 

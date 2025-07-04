@@ -1,74 +1,83 @@
 /* Import font configuration */
 @import './fonts.css';
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 @layer base {
   :root {
-    --background: 0 0% 4%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 7%;
+    /* HIVE Brand Colors */
+    --background: 0 0% 3.9%; /* #0A0A0A - Primary Black */
+    --foreground: 0 0% 98%;   /* #FFFFFF - White text */
+    --surface: 0 0% 6.7%;     /* #111111 - Surface */
+    --surface-01: 0 0% 9%;    /* Slightly lighter surface */
+    --surface-02: 0 0% 12%;   /* Even lighter surface */
+    --surface-03: 0 0% 15%;   /* Lightest surface */
+    --card: 0 0% 6.7%;
     --card-foreground: 0 0% 98%;
-    --popover: 0 0% 7%;
+    --popover: 0 0% 6.7%;
     --popover-foreground: 0 0% 98%;
     --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 4%;
-    --secondary: 0 0% 9%;
+    --primary-foreground: 0 0% 3.9%;
+    --secondary: 0 0% 16%;     /* #2A2A2A - Border */
     --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 9%;
+    --muted: 0 0% 42%;         /* #6B7280 - Muted text */
     --muted-foreground: 0 0% 63.9%;
-    --accent: 0 0% 9%;
-    --accent-foreground: 0 0% 98%;
+    --accent: 51 100% 50%;     /* #FFD700 - Gold accent */
+    --accent-foreground: 0 0% 3.9%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 16%;
+    --border: 0 0% 16%;        /* #2A2A2A */
     --input: 0 0% 16%;
-    --ring: 60 100% 50%;
-    --radius: 0.5rem;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
+    --ring: 51 100% 50%;       /* Gold focus ring */
+    --radius: 0.75rem;         /* 12px border radius */
+    
+    /* Font families */
+    --font-display: 'Space Grotesk Variable', 'Space Grotesk', system-ui, sans-serif;
+    --font-sans: 'Geist Sans', 'Geist', system-ui, sans-serif;
+    --font-mono: 'Geist Mono', 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+    
+    /* Motion variables following HIVE design system */
+    --motion-curve: cubic-bezier(0.33, 0.65, 0, 1);
+    --motion-micro: 90ms;
+    --motion-standard: 180ms;
+    --motion-complex: 240ms;
+    --motion-cinematic: 400ms;
   }
 
   .dark {
-    --background: 0 0% 4%;
+    /* Same values for dark mode (HIVE is dark-first) */
+    --background: 0 0% 3.9%;
     --foreground: 0 0% 98%;
-    --card: 0 0% 7%;
+    --surface: 0 0% 6.7%;
+    --surface-01: 0 0% 9%;
+    --card: 0 0% 6.7%;
     --card-foreground: 0 0% 98%;
-    --popover: 0 0% 7%;
+    --popover: 0 0% 6.7%;
     --popover-foreground: 0 0% 98%;
     --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 4%;
-    --secondary: 0 0% 9%;
+    --primary-foreground: 0 0% 3.9%;
+    --secondary: 0 0% 16%;
     --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 9%;
+    --muted: 0 0% 42%;
     --muted-foreground: 0 0% 63.9%;
-    --accent: 0 0% 9%;
-    --accent-foreground: 0 0% 98%;
+    --accent: 51 100% 50%;
+    --accent-foreground: 0 0% 3.9%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
     --border: 0 0% 16%;
     --input: 0 0% 16%;
-    --ring: 60 100% 50%;
-    --radius: 0.5rem;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
+    --ring: 51 100% 50%;
+    --radius: 0.75rem;
   }
 }
 
 @layer base {
   * {
-    @apply border-border;
+    border-color: hsl(var(--border));
   }
   body {
-    @apply bg-background text-foreground;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -84,5 +93,203 @@
 
   code, pre {
     font-family: var(--font-mono);
+  }
+}
+
+/* HIVE Brand Keyframes */
+@layer utilities {
+  /* Entrance animations */
+  @keyframes hive-fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes hive-slide-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes hive-slide-down {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes hive-scale-in {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  /* Gold accent animations */
+  @keyframes hive-gold-pulse {
+    0%, 100% {
+      box-shadow: 0 0 0 rgba(255, 215, 0, 0);
+    }
+    50% {
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+    }
+  }
+
+  @keyframes hive-gold-glow {
+    0% {
+      filter: drop-shadow(0 0 0 rgba(255, 215, 0, 0));
+    }
+    50% {
+      filter: drop-shadow(0 0 12px rgba(255, 215, 0, 0.4));
+    }
+    100% {
+      filter: drop-shadow(0 0 0 rgba(255, 215, 0, 0));
+    }
+  }
+
+  /* Dark surface animations */
+  @keyframes hive-surface-rise {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+      background-color: hsl(var(--background));
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+      background-color: hsl(var(--surface));
+    }
+  }
+
+  @keyframes hive-emboss-reveal {
+    from {
+      opacity: 0;
+      box-shadow: inset 0 0 0 rgba(255, 215, 0, 0);
+    }
+    to {
+      opacity: 1;
+      box-shadow: inset 0 1px 0 rgba(255, 215, 0, 0.1), 
+                  0 1px 3px rgba(0, 0, 0, 0.2);
+    }
+  }
+
+  /* Special HIVE moments */
+  @keyframes hive-ritual-burst {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+      filter: brightness(1);
+    }
+    25% {
+      transform: scale(1.05);
+      opacity: 0.9;
+      filter: brightness(1.1);
+    }
+    50% {
+      transform: scale(1.15);
+      opacity: 0.8;
+      filter: brightness(1.2) drop-shadow(0 0 15px rgba(255, 215, 0, 0.4));
+    }
+    75% {
+      transform: scale(1.05);
+      opacity: 0.9;
+      filter: brightness(1.1);
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+      filter: brightness(1);
+    }
+  }
+
+  @keyframes hive-space-join {
+    0% {
+      opacity: 0;
+      transform: scale(0.8) rotate(-2deg);
+      filter: blur(2px);
+    }
+    50% {
+      opacity: 0.7;
+      transform: scale(1.02) rotate(0deg);
+      filter: blur(0px) drop-shadow(0 0 10px rgba(255, 215, 0, 0.2));
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1) rotate(0deg);
+      filter: blur(0px);
+    }
+  }
+
+  /* Animation utility classes */
+  .animate-hive-fade-in {
+    animation: hive-fade-in 180ms cubic-bezier(0.33, 0.65, 0, 1);
+  }
+
+  .animate-hive-slide-up {
+    animation: hive-slide-up 180ms cubic-bezier(0.33, 0.65, 0, 1);
+  }
+
+  .animate-hive-slide-down {
+    animation: hive-slide-down 180ms cubic-bezier(0.33, 0.65, 0, 1);
+  }
+
+  .animate-hive-scale-in {
+    animation: hive-scale-in 180ms cubic-bezier(0.33, 0.65, 0, 1);
+  }
+
+  .animate-hive-gold-pulse {
+    animation: hive-gold-pulse 2s cubic-bezier(0.33, 0.65, 0, 1) infinite;
+  }
+
+  .animate-hive-gold-glow {
+    animation: hive-gold-glow 1.5s cubic-bezier(0.33, 0.65, 0, 1) infinite;
+  }
+
+  .animate-hive-surface-rise {
+    animation: hive-surface-rise 280ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .animate-hive-emboss-reveal {
+    animation: hive-emboss-reveal 180ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  .animate-hive-ritual-burst {
+    animation: hive-ritual-burst 400ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+
+  .animate-hive-space-join {
+    animation: hive-space-join 400ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  /* Responsive animation controls */
+  @media (prefers-reduced-motion: reduce) {
+    .animate-hive-fade-in,
+    .animate-hive-slide-up,
+    .animate-hive-slide-down,
+    .animate-hive-scale-in,
+    .animate-hive-gold-pulse,
+    .animate-hive-gold-glow,
+    .animate-hive-surface-rise,
+    .animate-hive-emboss-reveal,
+    .animate-hive-ritual-burst,
+    .animate-hive-space-join {
+      animation: none;
+    }
   }
 } 

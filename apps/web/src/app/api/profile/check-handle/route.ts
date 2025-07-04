@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { logger } from '@hive/core'
+import { logger, generateHandleVariants, generateBaseHandle } from '@hive/core'
 import { dbAdmin } from '@/lib/firebase-admin'
 
 // Simple in-memory rate limiting (in production, use Redis or similar)
@@ -23,6 +23,30 @@ function checkRateLimit(ip: string): boolean {
   
   userLimit.count++
   return true
+}
+
+async function generateSuggestions(baseHandle: string): Promise<string[]> {
+  const variants = generateHandleVariants(baseHandle).slice(1, 6); // Get up to 5 suggestions
+  const suggestions: string[] = [];
+  
+  for (const variant of variants) {
+    try {
+      // Check if this variant is available
+      const variantQuery = await dbAdmin.collection('users')
+        .where('handle', '==', variant)
+        .limit(1)
+        .get();
+      
+      if (variantQuery.empty) {
+        suggestions.push(variant);
+        if (suggestions.length >= 3) break; // Limit to 3 suggestions
+      }
+    } catch (error) {
+      logger.error('Error checking variant availability:', error);
+    }
+  }
+  
+  return suggestions;
 }
 
 export async function POST(request: NextRequest) {
@@ -69,10 +93,18 @@ export async function POST(request: NextRequest) {
       const takenHandles = ['admin', 'test', 'user', 'hive', 'demo']
       const available = !takenHandles.includes(handle.toLowerCase())
       
+      let suggestions: string[] = [];
+      if (!available) {
+        // Generate simple suggestions in dev mode
+        const baseHandle = generateBaseHandle(handle);
+        suggestions = [`${baseHandle}1`, `${baseHandle}2`, `${baseHandle}_new`].slice(0, 3);
+      }
+      
       return NextResponse.json({
         available,
         handle,
-        message: available ? 'Handle is available' : 'Handle is already taken'
+        message: available ? 'Handle is available' : 'Handle is already taken',
+        suggestions
       })
     }
 
@@ -84,17 +116,25 @@ export async function POST(request: NextRequest) {
         .get()
 
       const available = handleQuery.empty
+      let suggestions: string[] = [];
+
+      // If handle is not available, generate suggestions
+      if (!available) {
+        suggestions = await generateSuggestions(generateBaseHandle(handle));
+      }
 
       logger.info('Handle availability check:', {
         handle,
         available,
-        querySize: handleQuery.size
+        querySize: handleQuery.size,
+        suggestionsCount: suggestions.length
       })
 
       return NextResponse.json({
         available,
         handle,
-        message: available ? 'Handle is available' : 'Handle is already taken'
+        message: available ? 'Handle is available' : 'Handle is already taken',
+        suggestions
       })
 
     } catch (firestoreError) {

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { ROUTES } from '@/lib/routes';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, Button, OnboardingCompleteStep as OnboardingCompleteStepUI } from '@hive/ui';
 import { useAuth } from '@hive/auth-logic';
 import { useOnboardingStore } from '@/lib/stores/onboarding';
@@ -19,13 +20,13 @@ export function OnboardingCompleteStep() {
     const completeOnboarding = async () => {
       if (!user) {
         logger.error("No authenticated user found");
-        router.push("/auth/email");
+        router.push(ROUTES.AUTH.EMAIL);
         return;
       }
 
       if (!onboardingData) {
         logger.error("No onboarding data found");
-        router.push("/onboarding/name");
+        router.push(ROUTES.ONBOARDING.STEP_2);
         return;
       }
 
@@ -59,7 +60,7 @@ export function OnboardingCompleteStep() {
         
         // Redirect to feed after a brief success display
         setTimeout(() => {
-          router.push("/feed");
+          router.push(ROUTES.APP.FEED);
         }, 3000);
 
       } catch (error) {
@@ -114,7 +115,7 @@ export function OnboardingCompleteStep() {
   if (completionState === 'success') {
     return (
       <div className="flex min-h-screen items-center justify-center p-4">
-        <OnboardingCompleteStepUI onGoToFeed={() => router.push("/feed")} />
+        <OnboardingCompleteStepUI onGoToFeed={() => router.push(ROUTES.APP.FEED)} />
       </div>
     );
   }
@@ -124,8 +125,8 @@ export function OnboardingCompleteStep() {
       <div className="flex min-h-screen items-center justify-center p-4">
         <Card className="w-full max-w-lg bg-card border-border">
           <CardHeader className="text-center space-y-2">
-            <div className="w-16 h-16 bg-destructive/10 rounded-full flex items-center justify-center mx-auto">
-              <AlertCircle className="h-8 w-8 text-destructive" />
+            <div className="w-16 h-16 bg-surface-01 border border-border rounded-full flex items-center justify-center mx-auto">
+              <AlertCircle className="h-8 w-8 text-muted" />
             </div>
             <CardTitle className="text-xl font-display text-card-foreground">
               Something went wrong
@@ -140,11 +141,12 @@ export function OnboardingCompleteStep() {
               <Button
                 variant="outline"
                 className="flex-1 h-12"
-                onClick={() => router.push("/onboarding/name")}
+                onClick={() => router.push(ROUTES.ONBOARDING.STEP_2)}
               >
                 Start Over
               </Button>
               <Button
+                variant="default"
                 className="flex-1 h-12"
                 onClick={() => window.location.reload()}
               >

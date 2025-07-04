@@ -28,23 +28,24 @@
   ],
   "scripts": {
     "dev": "tsup src/index.ts --format esm,cjs --watch --external react & tsc -p tsconfig.declarations.json --watch",
-    "build": "rm -f tsconfig.declarations.tsbuildinfo && tsup src/index.ts --format esm,cjs --external react && tsc -p tsconfig.declarations.json",
-    "lint": "eslint . --max-warnings 15",
+    "build": "rm -f tsconfig.declarations.tsbuildinfo && tsup src/index.ts --format esm,cjs --external react",
+    "lint": "../../node_modules/.bin/eslint . --max-warnings 15 || pnpm exec --package=eslint eslint . --max-warnings 15",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
   },
   "dependencies": {
+    "@hive/analytics": "workspace:*",
     "@upstash/ratelimit": "^2.0.5",
     "@upstash/redis": "^1.35.0",
     "firebase": "^11.0.0",
     "firebase-admin": "^11.0.0",
     "zod": "^3.25.67",
-    "zustand": "^4.0.0"
+    "zustand": "^4.0.0",
+    "tsup": "^6.7.0"
   },
   "keywords": [],
   "author": "",
   "packageManager": "pnpm@9.1.1",
   "devDependencies": {
-    "@hive/analytics": "workspace:*",
     "@hive/eslint-config": "workspace:*",
     "@hive/typescript-config": "workspace:*",
     "@types/node": "^24.0.8",
@@ -54,7 +55,6 @@
     "eslint-plugin-react": "^7.37.5",
     "globals": "^15.0.0",
     "typescript-eslint": "^8.35.0",
-    "tsup": "^6.7.0",
     "typescript": "^5.8.3",
     "vitest": "^3.2.4",
     "@types/react": "^18.2.0"

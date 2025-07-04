@@ -1,11 +1,12 @@
-import { getFirestore, FieldValue } from "firebase-admin/firestore";
+import { FieldValue } from "firebase-admin/firestore";
+import { dbAdmin } from "./firebase-admin";
 
 export async function joinWaitlist(email: string, schoolId: string): Promise<{ success: boolean; message?: string }> {
   if (!email || !schoolId) {
     throw new Error("Email and school ID are required.");
   }
 
-  const db = getFirestore();
+  const db = dbAdmin;
   const schoolRef = db.collection("schools").doc(schoolId);
   const waitlistRef = schoolRef.collection("waitlist_entries").doc(email);
 

@@ -8,23 +8,32 @@ import { Button } from '../button'
 import { cn } from '../../lib/utils'
 import { Dialog } from '../dialog'
 import { Label } from '../label'
+import { hiveVariants } from '../../lib/motion'
+import { useAdaptiveMotion } from '../../lib/adaptive-motion'
 import type { School } from '@hive/core'
 
 interface SchoolPickProps {
   schools: School[];
   onSchoolSelect: (school: School) => void;
   className?: string;
+  userEmail?: string;
 }
 
 export const SchoolPick: React.FC<SchoolPickProps> = ({
   schools,
   onSchoolSelect,
-  className
+  className,
+  userEmail
 }) => {
   const [searchQuery, setSearchQuery] = useState('')
   const [showWaitlistDialog, setShowWaitlistDialog] = useState(false)
   const [showSuccessDialog, setShowSuccessDialog] = useState(false)
   const [waitlistSchool, setWaitlistSchool] = useState<School | null>(null)
+  const [isJoiningWaitlist, setIsJoiningWaitlist] = useState(false)
+  const [waitlistError, setWaitlistError] = useState<string | null>(null)
+  const [waitlistEmail, setWaitlistEmail] = useState('')
+  
+  const { variants: _variants } = useAdaptiveMotion('social')
 
   const filteredSchools = schools.filter((school) =>
     school.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -40,77 +49,146 @@ export const SchoolPick: React.FC<SchoolPickProps> = ({
   }
 
   const handleJoinWaitlist = async () => {
-    if (waitlistSchool) {
-      // For now, just close the dialog and show success
+    const email = userEmail || waitlistEmail
+    if (!waitlistSchool || !email) {
+      setWaitlistError('Email is required to join the waitlist')
+      return
+    }
+
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(email)) {
+      setWaitlistError('Please enter a valid email address')
+      return
+    }
+
+    setIsJoiningWaitlist(true)
+    setWaitlistError(null)
+
+    try {
+      const response = await fetch('/api/waitlist/join', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          schoolId: waitlistSchool.id,
+        }),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to join waitlist')
+      }
+
       setShowWaitlistDialog(false)
       setShowSuccessDialog(true)
+    } catch (error) {
+      setWaitlistError(error instanceof Error ? error.message : 'An error occurred')
+    } finally {
+      setIsJoiningWaitlist(false)
     }
   }
 
   const handleCloseSuccess = () => {
     setShowSuccessDialog(false)
     setWaitlistSchool(null)
+    setWaitlistEmail('')
+    setWaitlistError(null)
+  }
+
+  const handleCloseWaitlist = () => {
+    setShowWaitlistDialog(false)
+    setWaitlistEmail('')
+    setWaitlistError(null)
   }
 
   return (
-    <div className={cn("w-full max-w-2xl mx-auto space-y-6", className)}>
-      <div className="relative">
+    <motion.div 
+      className={cn("w-full space-y-6", className)}
+      variants={hiveVariants.container}
+      initial="hidden"
+      animate="visible"
+    >
+      <motion.div className="relative" variants={hiveVariants.item}>
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
         <Input
           type="text"
           placeholder="Search your school..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="pl-10 bg-surface-01/50 border-border focus:border-[#FFD700]/20 focus:ring-1 focus:ring-[#FFD700]/20"
+          variant="accent"
+          className="pl-10"
         />
-      </div>
+      </motion.div>
 
-      <div className="space-y-2">
-        <AnimatePresence>
+      <motion.div className="space-y-3" variants={hiveVariants.item}>
+        <AnimatePresence mode="popLayout">
           {filteredSchools.map((school, index) => (
             <motion.div
               key={school.id}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.2, delay: index * 0.05 }}
+              variants={hiveVariants.slideUp}
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+              transition={{ delay: index * 0.05 }}
+              layout
             >
-              <button
+              <motion.button
                 onClick={() => handleSchoolClick(school)}
                 className={cn(
-                  'w-full p-4 text-left rounded-lg border border-border bg-surface-01/50',
-                  'hover:bg-surface-01/80 hover:border-[#FFD700]/20 transition-all duration-200',
-                  'focus:outline-none focus:ring-2 focus:ring-[#FFD700]/20'
+                  'w-full p-5 text-left rounded-xl border border-border bg-surface/50',
+                  'transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)]',
+                  'focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2',
+                  school.status === 'waitlist' && 'border-border/60'
                 )}
+                whileHover={{
+                  scale: 1.01,
+                  y: -2,
+                  borderColor: school.status === 'open' ? 'rgba(255, 215, 0, 0.3)' : 'rgba(255, 255, 255, 0.2)',
+                  backgroundColor: 'rgba(255, 255, 255, 0.02)',
+                  boxShadow: '0 8px 25px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 215, 0, 0.1)',
+                  transition: { duration: 0.18, ease: [0.33, 0.65, 0, 1] }
+                }}
+                whileTap={{ scale: 0.99 }}
               >
                 <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="font-medium">{school.name}</h3>
-                    <p className="text-sm text-muted-foreground">{school.domain}</p>
+                  <div className="flex-1">
+                    <h3 className="font-medium text-base">{school.name}</h3>
+                    <p className="text-sm text-muted-foreground mt-0.5">{school.domain}</p>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-4 ml-4">
                     {school.status === 'open' ? (
-                      <ChevronRight className="h-5 w-5 text-[#FFD700]" />
+                      <motion.div
+                        className="text-accent"
+                        whileHover={{ scale: 1.1 }}
+                        transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                      >
+                        <ChevronRight className="h-5 w-5" />
+                      </motion.div>
                     ) : (
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm text-muted-foreground">
-                          {school.studentsUntilOpen} students until open
-                        </span>
-                        <Lock className="h-4 w-4 text-muted-foreground" />
+                      <div className="flex items-center gap-4">
+                        <div className="text-right min-w-0">
+                          <div className="text-sm text-muted-foreground font-medium whitespace-nowrap">
+                            <span>{school.studentsUntilOpen.toString().charAt(0)}</span><span className="blur-[4px] select-none" style={{ filter: 'blur(4px)', textShadow: '0 0 4px currentColor' }}>{school.studentsUntilOpen.toString().slice(1)}</span> left
+                          </div>
+                        </div>
+                        <Lock className="h-4 w-4 text-muted-foreground flex-shrink-0" />
                       </div>
                     )}
                   </div>
                 </div>
-              </button>
+              </motion.button>
             </motion.div>
           ))}
         </AnimatePresence>
-      </div>
+      </motion.div>
 
       {/* Waitlist Dialog */}
       <Dialog
         isOpen={showWaitlistDialog}
-        onClose={() => setShowWaitlistDialog(false)}
+        onClose={handleCloseWaitlist}
         title={`Join ${waitlistSchool?.name} Waitlist`}
         description="Get notified when HIVE launches at your school."
       >
@@ -119,8 +197,34 @@ export const SchoolPick: React.FC<SchoolPickProps> = ({
             <Label>School</Label>
             <p className="text-sm text-muted-foreground">{waitlistSchool?.domain}</p>
           </div>
-          <Button onClick={handleJoinWaitlist} className="w-full">
-            Join Waitlist
+          {!userEmail && (
+            <div>
+              <Label htmlFor="waitlist-email">Email</Label>
+              <Input
+                id="waitlist-email"
+                type="email"
+                placeholder="Enter your email address"
+                value={waitlistEmail}
+                onChange={(e) => setWaitlistEmail(e.target.value)}
+                variant="accent"
+                className="mt-2"
+                required
+              />
+            </div>
+          )}
+          {waitlistError && (
+            <div className="p-3 rounded-xl bg-surface border border-border">
+              <p className="text-sm text-muted-foreground">{waitlistError}</p>
+            </div>
+          )}
+          <Button 
+            onClick={handleJoinWaitlist} 
+            variant="ritual"
+            ritualAnimation
+            fullWidth
+            disabled={isJoiningWaitlist || (!userEmail && !waitlistEmail)}
+          >
+            {isJoiningWaitlist ? 'Joining...' : 'Join Waitlist'}
           </Button>
         </div>
       </Dialog>
@@ -132,10 +236,15 @@ export const SchoolPick: React.FC<SchoolPickProps> = ({
         title="You're on the list!"
         description="We'll notify you when HIVE launches at your school."
       >
-        <Button onClick={handleCloseSuccess} className="mt-4 w-full">
+        <Button 
+          onClick={handleCloseSuccess} 
+          className="mt-4" 
+          variant="accent"
+          fullWidth
+        >
           Close
         </Button>
       </Dialog>
-    </div>
+    </motion.div>
   )
 } 

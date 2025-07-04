@@ -6,6 +6,7 @@ interface HandleAvailabilityResult {
   message: string;
   isChecking: boolean;
   error: string | null;
+  suggestions: string[];
 }
 
 export function useHandleAvailability(handle: string, debounceMs: number = 500) {
@@ -14,6 +15,7 @@ export function useHandleAvailability(handle: string, debounceMs: number = 500) 
     message: '',
     isChecking: false,
     error: null,
+    suggestions: [],
   });
 
   const checkAvailability = useCallback(async (handleToCheck: string) => {
@@ -23,6 +25,7 @@ export function useHandleAvailability(handle: string, debounceMs: number = 500) 
         message: '',
         isChecking: false,
         error: null,
+        suggestions: [],
       });
       return;
     }
@@ -35,6 +38,7 @@ export function useHandleAvailability(handle: string, debounceMs: number = 500) 
         message: 'Handle must be 3-20 characters, lowercase letters, numbers, and underscores only',
         isChecking: false,
         error: null,
+        suggestions: [],
       });
       return;
     }
@@ -64,6 +68,7 @@ export function useHandleAvailability(handle: string, debounceMs: number = 500) 
         message: data.message,
         isChecking: false,
         error: null,
+        suggestions: data.suggestions || [],
       });
 
     } catch (error) {
@@ -75,6 +80,7 @@ export function useHandleAvailability(handle: string, debounceMs: number = 500) 
         message: '',
         isChecking: false,
         error: error instanceof Error ? error.message : 'Failed to check handle availability',
+        suggestions: [],
       });
     }
   }, []);

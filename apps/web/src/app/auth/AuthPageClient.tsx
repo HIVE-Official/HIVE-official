@@ -1,18 +1,37 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { ROUTES } from "@/lib/routes";
 import { AuthForm } from "@hive/ui";
 import { logger } from "@hive/core";
 
 export default function AuthPageClient() {
   const router = useRouter();
-  // Hardcoding for UB for this slice
-  const schoolName = "University at Buffalo";
-  const schoolDomain = "buffalo.edu";
+  const [schoolName, setSchoolName] = useState<string>("");
+  const [schoolDomain, setSchoolDomain] = useState<string>("");
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Get school from localStorage (set by school selection page)
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const selectedSchoolId = localStorage.getItem("hive-selected-school-id");
+      const selectedSchoolName = localStorage.getItem("hive-selected-school-name");
+      const selectedSchoolDomain = localStorage.getItem("hive-selected-school-domain");
+      
+      if (selectedSchoolId && selectedSchoolName && selectedSchoolDomain) {
+        setSchoolName(selectedSchoolName);
+        setSchoolDomain(selectedSchoolDomain);
+        setIsLoading(false);
+      } else {
+        // No school selected, redirect to school selection
+        router.push(ROUTES.AUTH.SCHOOL_SELECT);
+      }
+    }
+  }, [router]);
 
   const [email, setEmail] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const validation = useMemo(() => {
@@ -35,18 +54,47 @@ export default function AuthPageClient() {
     e.preventDefault();
     if (!validation.isValid) return;
 
-    setIsLoading(true);
+    setIsSubmitting(true);
     setError(null);
 
     try {
-      // await sendMagicLink({ email: email.toLowerCase().trim(), schoolId: 'buffalo' });
-      logger.info("Requesting magic link", { email });
-      router.push(`/auth/check-email?email=${encodeURIComponent(email)}`);
+      const selectedSchoolId = localStorage.getItem("hive-selected-school-id");
+      const response = await fetch('/api/auth/email/start', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: email.toLowerCase().trim(),
+          schoolId: selectedSchoolId,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to send magic link');
+      }
+
+      logger.info("Magic link sent successfully", { email, schoolDomain });
+      router.push(`${ROUTES.AUTH.CHECK_EMAIL}?email=${encodeURIComponent(email)}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
-      setIsLoading(false);
+      setIsSubmitting(false);
     }
   };
+
+  // Show loading state while checking school selection
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <div className="flex flex-col items-center gap-4">
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-accent border-t-transparent"></div>
+          <p className="text-muted font-sans">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <AuthForm
@@ -55,11 +103,11 @@ export default function AuthPageClient() {
       email={email}
       onEmailChange={setEmail}
       onSubmit={handleSubmit}
-      isLoading={isLoading}
+      isLoading={isSubmitting}
       error={error}
       validationError={validation.error}
       isSubmitDisabled={!validation.isValid}
-      backLinkHref="/campus"
+      backLinkHref="/auth/school-select"
     />
   );
 } 
