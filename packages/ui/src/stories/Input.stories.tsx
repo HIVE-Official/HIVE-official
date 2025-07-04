@@ -19,7 +19,7 @@ const meta: Meta<typeof Input> = {
   argTypes: {
     variant: {
       control: 'select',
-      options: ['default', 'accent', 'outline', 'ghost', 'surface'],
+      options: ['chip', 'floating', 'search', 'minimal', 'accent', 'surface'],
       description: 'Input variant following HIVE design system',
     },
     inputSize: {
@@ -29,7 +29,7 @@ const meta: Meta<typeof Input> = {
     },
     state: {
       control: 'select',
-      options: ['default', 'error', 'success', 'warning'],
+      options: ['default', 'error', 'success', 'loading'],
       description: 'Input validation state',
     },
     type: {
@@ -61,14 +61,14 @@ export const Accent: Story = {
 
 export const Outline: Story = {
   args: {
-    variant: 'outline',
+    variant: 'chip',
     placeholder: 'Outline input with enhanced border',
   },
 };
 
 export const Ghost: Story = {
   args: {
-    variant: 'ghost',
+    variant: 'minimal',
     placeholder: 'Ghost input with minimal styling',
   },
 };
@@ -112,7 +112,7 @@ export const ValidationStates: Story = {
       </div>
       <div className="space-y-2">
         <Label htmlFor="warning-state">Warning State</Label>
-        <Input id="warning-state" state="warning" placeholder="Warning input" />
+        <Input id="warning-state" state="error" placeholder="Warning input" />
         <p className="text-sm text-amber-500">Double check this field</p>
       </div>
     </div>
@@ -324,9 +324,9 @@ export const GroceryShowcase: Story = {
         <div className="space-y-4 p-4 bg-gray-900 rounded-lg">
           <h3 className="text-lg font-semibold text-white">Outline</h3>
           <div className="space-y-2">
-            <Input variant="outline" inputSize="sm" placeholder="Small outline" />
-            <Input variant="outline" placeholder="Default outline" />
-            <Input variant="outline" inputSize="lg" placeholder="Large outline" />
+            <Input variant="chip" inputSize="sm" placeholder="Small outline" />
+            <Input variant="chip" placeholder="Default outline" />
+            <Input variant="chip" inputSize="lg" placeholder="Large outline" />
           </div>
         </div>
 
@@ -334,9 +334,9 @@ export const GroceryShowcase: Story = {
         <div className="space-y-4 p-4 bg-gray-900 rounded-lg">
           <h3 className="text-lg font-semibold text-white">Ghost</h3>
           <div className="space-y-2">
-            <Input variant="ghost" inputSize="sm" placeholder="Small ghost" />
-            <Input variant="ghost" placeholder="Default ghost" />
-            <Input variant="ghost" inputSize="lg" placeholder="Large ghost" />
+            <Input variant="minimal" inputSize="sm" placeholder="Small ghost" />
+            <Input variant="minimal" placeholder="Default ghost" />
+            <Input variant="minimal" inputSize="lg" placeholder="Large ghost" />
           </div>
         </div>
 
@@ -356,7 +356,7 @@ export const GroceryShowcase: Story = {
           <div className="space-y-2">
             <Input state="error" placeholder="Error state" />
             <Input state="success" placeholder="Success state" />
-            <Input state="warning" placeholder="Warning state" />
+            <Input state="error" placeholder="Warning state" />
           </div>
         </div>
       </div>

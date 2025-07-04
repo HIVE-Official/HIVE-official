@@ -5,7 +5,7 @@ import "./styles/index.css";
 export { Avatar, AvatarFallback, AvatarImage } from "./components/avatar";
 export { Badge } from "./components/badge";
 export { Button, type ButtonProps, type ButtonVariant, type ButtonSize } from "./components/button";
-export { Dialog } from "./components/dialog";
+// export { Dialog } from "./components/dialog"; // TEMPORARILY DISABLED - uses motion
 export { Input } from "./components/input";
 export { Label } from "./components/label";
 export { Link, type LinkProps } from "./components/ui/link";
@@ -23,15 +23,15 @@ export {
   SelectGroup,
 } from "./components/select";
 export { Skeleton } from "./components/skeleton";
-export { Countdown } from "./components/countdown";
+// export { Countdown } from "./components/countdown"; // TEMPORARILY DISABLED - uses motion
 
-// Export loading components
-export {
-  LoadingSpinner,
-  PageLoader,
-  InlineLoader,
-  CardLoader,
-} from "./components/loading-spinner";
+// Export loading components - TEMPORARILY DISABLED - uses motion
+// export {
+//   LoadingSpinner,
+//   PageLoader,
+//   InlineLoader,
+//   CardLoader,
+// } from "./components/loading-spinner";
 
 // Export typography components
 export {
@@ -53,12 +53,13 @@ export {
   CardDescription,
   CardHeader,
   CardTitle,
+  CardFooter,
 } from "./components/card";
 
-// Export layout components
-export { AppHeader } from "./components/AppHeader";
-export { BottomNavBar } from "./components/BottomNavBar";
-export { HiveLogo } from "./components/HiveLogo";
+// Export layout components - TEMPORARILY DISABLED - uses motion
+// export { AppHeader } from "./components/AppHeader";
+// export { BottomNavBar } from "./components/BottomNavBar";
+// export { HiveLogo } from "./components/HiveLogo";
 export { WelcomeMat, useWelcomeMat } from "./components/welcome-mat";
 
 // Export toast components
@@ -80,18 +81,18 @@ export { RoleSelection } from "./components/onboarding/steps/role-selection";
 export { SpaceClaiming } from "./components/onboarding/steps/space-claiming";
 export { SuggestedSpaces } from "./components/onboarding/steps/suggested-spaces";
 
-// Export landing page components
-export * from "./components/landing";
+// Export landing page components - TEMPORARILY DISABLED - uses motion
+// export * from "./components/landing";
 
-// Export page transition components
-export * from "./components/page-transition";
+// Export page transition components - TEMPORARILY DISABLED - uses motion
+// export * from "./components/page-transition";
 
 // Export utilities
 export * from "./lib/utils";
 
-// Export motion utilities
-export * from "./lib/motion";
-export * from "./lib/adaptive-motion";
+// Export motion utilities - TEMPORARILY DISABLED FOR BUILD
+// export * from "./lib/motion";
+// export * from "./lib/adaptive-motion";
 
 // Export Storybook-specific utilities
 export { StorybookThemeProvider } from "./components/ui/storybook-theme-provider";

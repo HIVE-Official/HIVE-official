@@ -17,7 +17,8 @@
     "dist/**"
   ],
   "scripts": {
-    "build": "tsc --build",
+    "prebuild": "pnpm run clean",
+    "build": "tsup src/index.ts --format esm,cjs --dts --external react",
     "dev": "tsup src/index.ts --format esm,cjs --watch --external react --sourcemap & tsc -p tsconfig.json --watch --emitDeclarationOnly",
     "lint": "eslint src/ --max-warnings 15",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
@@ -30,6 +31,7 @@
     "@hive/typescript-config": "workspace:*",
     "@types/react": "^18.2.0",
     "eslint": "^9.29.0",
+    "tsup": "^8.0.0",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.35.0"
   }

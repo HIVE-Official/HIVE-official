@@ -55,7 +55,7 @@ export const DesignSystemOverview: Story = {
             <Star className="mr-1 h-3 w-3" />
             v2.0 Ready
           </Badge>
-          <Badge variant="secondary">50+ Components</Badge>
+          <Badge variant="pill">50+ Components</Badge>
           <Badge variant="outline">Campus Optimized</Badge>
         </div>
       </div>
@@ -159,8 +159,8 @@ export const DesignSystemOverview: Story = {
                 <CardDescription>Forms with gold focus states</CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
-                <Input placeholder="Default input" size="sm" />
-                <Input variant="accent" placeholder="Gold accent" size="sm" />
+                <Input placeholder="Default input" inputSize="sm" />
+                <Input variant="accent" placeholder="Gold accent" inputSize="sm" />
               </CardContent>
             </Card>
 
@@ -307,7 +307,7 @@ export const DesignSystemOverview: Story = {
                     <CardTitle>Study Group Tonight</CardTitle>
                     <CardDescription>Computer Science 101</CardDescription>
                   </div>
-                  <Badge variant="secondary">Tonight</Badge>
+                  <Badge variant="pill">Tonight</Badge>
                 </div>
               </CardHeader>
               <CardContent>
@@ -423,8 +423,8 @@ export const QuickReference: Story = {
         <Card variant="outline" className="p-4">
           <Typography variant="h4" className="mb-3">Inputs</Typography>
           <div className="space-y-2">
-            <Input placeholder="Default" size="sm" />
-            <Input variant="accent" placeholder="Accent" size="sm" />
+            <Input placeholder="Default" inputSize="sm" />
+            <Input variant="accent" placeholder="Accent" inputSize="sm" />
           </div>
         </Card>
 

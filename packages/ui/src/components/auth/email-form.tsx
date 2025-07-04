@@ -85,7 +85,6 @@ export const EmailForm = ({
           type="submit" 
           disabled={!isValid || isLoading}
           variant="ritual"
-          ritualAnimation={isValid && !isLoading}
           fullWidth
         >
           {isLoading && <LoadingSpinner size="sm" className="mr-2" />}

@@ -44,7 +44,7 @@ The Badge component follows HIVE's monochrome + gold brand guidelines for clean 
   argTypes: {
     variant: {
       control: 'select',
-      options: ['default', 'secondary', 'ritual', 'outline', 'ghost', 'muted'],
+      options: ['chip', 'pill', 'accent', 'ritual', 'outline', 'interactive', 'removable', 'selectable', 'online', 'busy', 'away', 'mention', 'hashtag', 'floating'],
       description: 'Badge style variant following HIVE brand guidelines'
     },
     size: {
@@ -72,8 +72,8 @@ export const BrandShowcase: Story = {
         <div className="space-y-2">
           <h4 className="text-caption text-muted font-medium uppercase tracking-wide">Primary Badges</h4>
           <div className="flex gap-3 flex-wrap">
-            <Badge variant="default">Active</Badge>
-            <Badge variant="secondary">Member</Badge>
+            <Badge variant="chip">Active</Badge>
+            <Badge variant="pill">Member</Badge>
           </div>
         </div>
         
@@ -95,8 +95,8 @@ export const BrandShowcase: Story = {
           <h4 className="text-caption text-muted font-medium uppercase tracking-wide">Subtle Variants</h4>
           <div className="flex gap-3 flex-wrap">
             <Badge variant="outline">Student</Badge>
-            <Badge variant="ghost">Observer</Badge>
-            <Badge variant="muted">Inactive</Badge>
+            <Badge variant="outline">Observer</Badge>
+            <Badge variant="away">Inactive</Badge>
           </div>
         </div>
       </div>
@@ -113,7 +113,7 @@ export const Default: Story = {
 
 export const Secondary: Story = {
   args: {
-    variant: 'secondary',
+    variant: 'pill',
     children: 'Member',
   },
 }
@@ -134,14 +134,14 @@ export const Outline: Story = {
 
 export const Ghost: Story = {
   args: {
-    variant: 'ghost',
+    variant: 'outline',
     children: 'Observer',
   },
 }
 
 export const Muted: Story = {
   args: {
-    variant: 'muted',
+    variant: 'away',
     children: 'Inactive',
   },
 }
@@ -166,7 +166,7 @@ export const WithIcons: Story = {
     <div className="flex flex-col gap-4 bg-background p-6 rounded-lg border border-border">
       <h4 className="text-h4 font-display text-foreground mb-2">With Icons</h4>
       <div className="flex flex-wrap gap-3">
-        <Badge variant="default">
+        <Badge variant="chip">
           <CheckCircle className="mr-1 h-3 w-3" />
           Verified
         </Badge>
@@ -178,7 +178,7 @@ export const WithIcons: Story = {
           <Users className="mr-1 h-3 w-3" />
           123 Members
         </Badge>
-        <Badge variant="muted">
+        <Badge variant="away">
           <Calendar className="mr-1 h-3 w-3" />
           This Week
         </Badge>
@@ -204,16 +204,16 @@ export const UserProfile: Story = {
           </Badge>
         </div>
         <div className="flex flex-wrap gap-2">
-          <Badge variant="secondary" size="sm">Computer Science</Badge>
+          <Badge variant="pill" size="sm">Computer Science</Badge>
           <Badge variant="outline" size="sm">Sophomore</Badge>
-          <Badge variant="ghost" size="sm">Stanford</Badge>
+          <Badge variant="outline" size="sm">Stanford</Badge>
         </div>
         <div className="flex flex-wrap gap-2">
           <Badge variant="ritual" size="sm">
             <Trophy className="mr-1 h-2.5 w-2.5" />
             Top 10% Contributor
           </Badge>
-          <Badge variant="muted" size="sm">
+          <Badge variant="away" size="sm">
             <Calendar className="mr-1 h-2.5 w-2.5" />
             Joined Oct 2024
           </Badge>
@@ -234,9 +234,9 @@ export const SpaceInfo: Story = {
         <div>
           <h5 className="text-body font-medium text-foreground mb-2">CS 161: Algorithms</h5>
           <div className="flex flex-wrap gap-2">
-            <Badge variant="secondary">247 Members</Badge>
+            <Badge variant="pill">247 Members</Badge>
             <Badge variant="outline">Fall 2024</Badge>
-            <Badge variant="ghost">Stanford</Badge>
+            <Badge variant="outline">Stanford</Badge>
           </div>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -244,8 +244,8 @@ export const SpaceInfo: Story = {
             <Shield className="mr-1 h-2.5 w-2.5" />
             Official Course
           </Badge>
-          <Badge variant="default" size="sm">Active</Badge>
-          <Badge variant="muted" size="sm">Moderated</Badge>
+          <Badge variant="chip" size="sm">Active</Badge>
+          <Badge variant="away" size="sm">Moderated</Badge>
         </div>
       </div>
     </div>
@@ -280,10 +280,10 @@ export const AchievementDisplay: Story = {
         <div className="space-y-2">
           <h5 className="text-body-sm font-medium text-muted">Progress Indicators</h5>
           <div className="flex flex-wrap gap-2">
-            <Badge variant="default">Level 3</Badge>
-            <Badge variant="secondary">15 Posts</Badge>
+            <Badge variant="chip">Level 3</Badge>
+            <Badge variant="pill">15 Posts</Badge>
             <Badge variant="outline">42 Likes</Badge>
-            <Badge variant="ghost">Week 1</Badge>
+            <Badge variant="outline">Week 1</Badge>
           </div>
         </div>
       </div>
@@ -316,9 +316,9 @@ export const GroceryShowcase: Story = {
         <div className="space-y-4 p-4 bg-gray-900 rounded-lg">
           <h3 className="text-lg font-semibold text-white">Secondary</h3>
           <div className="space-y-2">
-            <Badge variant="secondary" size="sm">Small Secondary</Badge>
-            <Badge variant="secondary">Secondary Badge</Badge>
-            <Badge variant="secondary" size="lg">Large Secondary</Badge>
+            <Badge variant="pill" size="sm">Small Secondary</Badge>
+            <Badge variant="pill">Secondary Badge</Badge>
+            <Badge variant="pill" size="lg">Large Secondary</Badge>
           </div>
         </div>
 
@@ -355,9 +355,9 @@ export const GroceryShowcase: Story = {
         <div className="space-y-4 p-4 bg-gray-900 rounded-lg">
           <h3 className="text-lg font-semibold text-white">Ghost</h3>
           <div className="space-y-2">
-            <Badge variant="ghost" size="sm">Small Ghost</Badge>
-            <Badge variant="ghost">Ghost Badge</Badge>
-            <Badge variant="ghost" size="lg">Large Ghost</Badge>
+            <Badge variant="outline" size="sm">Small Ghost</Badge>
+            <Badge variant="outline">Ghost Badge</Badge>
+            <Badge variant="outline" size="lg">Large Ghost</Badge>
           </div>
         </div>
 
@@ -365,9 +365,9 @@ export const GroceryShowcase: Story = {
         <div className="space-y-4 p-4 bg-gray-900 rounded-lg">
           <h3 className="text-lg font-semibold text-white">Muted</h3>
           <div className="space-y-2">
-            <Badge variant="muted" size="sm">Small Muted</Badge>
-            <Badge variant="muted">Muted Badge</Badge>
-            <Badge variant="muted" size="lg">Large Muted</Badge>
+            <Badge variant="away" size="sm">Small Muted</Badge>
+            <Badge variant="away">Muted Badge</Badge>
+            <Badge variant="away" size="lg">Large Muted</Badge>
           </div>
         </div>
       </div>

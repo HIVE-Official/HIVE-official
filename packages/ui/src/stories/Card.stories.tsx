@@ -227,7 +227,7 @@ export const CampusContentCards: Story = {
               <CardTitle>Study Group Session</CardTitle>
               <CardDescription>Computer Science 101</CardDescription>
             </div>
-            <Badge variant="secondary">Tonight</Badge>
+            <Badge variant="pill">Tonight</Badge>
           </div>
         </CardHeader>
         <CardContent>

@@ -65,7 +65,7 @@ export function Interests() {
           {AVAILABLE_INTERESTS.map(interest => (
             <Badge
               key={interest}
-              variant={selectedInterests.includes(interest) ? "default" : "outline"}
+              variant={selectedInterests.includes(interest) ? "chip" : "outline"}
               className="cursor-pointer hover:bg-primary/90"
               onClick={() => toggleInterest(interest)}
             >

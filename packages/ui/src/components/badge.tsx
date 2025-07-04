@@ -372,7 +372,7 @@ ChipGroup.displayName = "ChipGroup"
 // Interactive Chip for selections
 const InteractiveChip = React.forwardRef<
   HTMLDivElement,
-  Omit<BadgeProps, 'variant'> & {
+  Omit<BadgeProps, 'variant' | 'onSelect' | 'onToggle'> & {
     value: string
     selected?: boolean
     onToggle?: (value: string, selected: boolean) => void

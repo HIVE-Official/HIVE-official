@@ -244,7 +244,6 @@ export const CreateProfileStep: React.FC<CreateProfileStepProps> = ({
           <Button 
             type="submit" 
             variant="ritual"
-            ritualAnimation={termsAccepted && !isUploading}
             fullWidth
             disabled={isUploading || !termsAccepted}
           >

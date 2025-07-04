@@ -27,4 +27,25 @@ export const analytics: AnalyticsProvider = {
   track: () => {},
   page: () => {},
   identify: () => {},
-}; 
+};
+
+export function setupGlobalErrorHandling() {
+  // Set up global error handling
+  if (typeof window !== 'undefined') {
+    window.addEventListener('error', (event) => {
+      analytics.trackError(event.error, {
+        message: event.message,
+        filename: event.filename,
+        lineno: event.lineno,
+        colno: event.colno,
+      });
+    });
+
+    window.addEventListener('unhandledrejection', (event) => {
+      analytics.trackError(new Error(event.reason), {
+        type: 'unhandledrejection',
+        reason: event.reason,
+      });
+    });
+  }
+} 

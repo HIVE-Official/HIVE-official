@@ -1,11 +1,8 @@
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
-import { motion } from "framer-motion"
 import { Check, X, AlertCircle, Eye, EyeOff } from "lucide-react"
 
 import { cn } from "../lib/utils"
-import { createGoldAccent } from "../lib/motion"
-import { useAdaptiveMotion } from "../lib/adaptive-motion"
 
 const inputVariants = cva(
   // Base chip-style input with 2025 AI feel
@@ -81,7 +78,6 @@ const inputVariants = cva(
 export interface InputProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size">,
     VariantProps<typeof inputVariants> {
-  enableMotion?: boolean
   label?: string
   hint?: string
   error?: string
@@ -99,7 +95,6 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     inputSize, 
     state, 
     type, 
-    enableMotion = true,
     label,
     hint,
     error,
@@ -115,7 +110,6 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     const [isFocused, setIsFocused] = React.useState(false)
     const [showPassword, setShowPassword] = React.useState(false)
     const [hasValue, setHasValue] = React.useState(Boolean(value || props.defaultValue))
-    const { createTransition } = useAdaptiveMotion('academic')
     
     // Determine actual input type
     const inputType = showPasswordToggle && type === 'password' 
@@ -124,22 +118,6 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     
     // Determine state based on props
     const currentState = error ? 'error' : success ? 'success' : loading ? 'loading' : state
-    
-    const getMotionProps = () => {
-      if (!enableMotion) return {}
-      
-      return {
-        whileFocus: { 
-          scale: 1.005,
-          transition: createTransition('fast')
-        },
-        whileHover: {
-          scale: 1.002,
-          transition: createTransition('fast')
-        },
-        ...(variant === 'accent' && createGoldAccent('fast'))
-      }
-    }
     
     const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
       setIsFocused(true)
@@ -166,13 +144,9 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           {icon && (
             <div className="absolute left-4 top-1/2 -translate-y-1/2 text-muted pointer-events-none z-10">
               {loading ? (
-                <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                  className="w-4 h-4"
-                >
+                <div className="w-4 h-4 animate-spin">
                   {icon}
-                </motion.div>
+                </div>
               ) : (
                 icon
               )}
@@ -181,28 +155,21 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           
           {/* Floating Label */}
           {showFloatingLabel && (
-            <motion.label
+            <label
               htmlFor={props.id}
               className={cn(
                 "absolute left-4 text-muted pointer-events-none transition-all duration-200 ease-smooth",
                 isLabelFloated 
-                  ? "top-2 text-caption text-accent font-medium" 
+                  ? "top-2 text-caption text-accent font-medium transform scale-85" 
                   : "top-1/2 -translate-y-1/2 text-body"
               )}
-              initial={false}
-              animate={{
-                y: isLabelFloated ? 0 : 0,
-                scale: isLabelFloated ? 0.85 : 1,
-                color: isLabelFloated ? (isFocused ? "rgb(255, 215, 0)" : "rgb(161, 161, 170)") : "rgb(161, 161, 170)"
-              }}
-              transition={{ duration: 0.2, ease: [0.33, 0.65, 0, 1] }}
             >
               {label}
-            </motion.label>
+            </label>
           )}
           
           {/* Input Field */}
-          <motion.input
+          <input
             ref={ref}
             type={inputType}
             value={value}
@@ -216,13 +183,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             onFocus={handleFocus}
             onBlur={handleBlur}
             onChange={handleChange}
-            {...getMotionProps()}
-            {...(({ 
-              onDrag, onDragStart, onDragEnd, onDragOver, onDragEnter, onDragLeave, onDrop,
-              onAnimationStart, onAnimationEnd, onAnimationIteration,
-              onTransitionStart, onTransitionEnd, onTransitionRun, onTransitionCancel,
-              ...rest 
-            }) => rest)(props)}
+            {...props}
           />
           
           {/* Right Icon / Password Toggle */}
@@ -256,11 +217,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         
         {/* Helper Text */}
         {(hint || error || success) && (
-          <motion.div
-            initial={{ opacity: 0, y: -5 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mt-2 px-1"
-          >
+          <div className="mt-2 px-1">
             {error && (
               <div className="flex items-center gap-1.5 text-caption text-muted-foreground">
                 <AlertCircle className="w-3 h-3 flex-shrink-0" />
@@ -278,7 +235,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
                 {hint}
               </div>
             )}
-          </motion.div>
+          </div>
         )}
       </div>
     )
@@ -288,36 +245,13 @@ Input.displayName = "Input"
 
 // Simple input without the wrapper (for backward compatibility)
 const SimpleInput = React.forwardRef<HTMLInputElement, Omit<InputProps, 'label' | 'hint' | 'error' | 'success' | 'icon' | 'rightIcon' | 'showPasswordToggle' | 'loading'>>(
-  ({ className, variant, inputSize, state, type, enableMotion = true, ...props }, ref) => {
-    const { createTransition } = useAdaptiveMotion('academic')
-    
-    const getMotionProps = () => {
-      if (!enableMotion) return {}
-      
-      return {
-        whileFocus: { 
-          scale: 1.005,
-          transition: createTransition('fast')
-        },
-        ...(variant === 'accent' && createGoldAccent('fast'))
-      }
-    }
-    
-    // Exclude HTML event handlers that conflict with Framer Motion
-    const { 
-      onDrag, onDragStart, onDragEnd, onDragOver, onDragEnter, onDragLeave, onDrop,
-      onAnimationStart, onAnimationEnd, onAnimationIteration,
-      onTransitionStart, onTransitionEnd, onTransitionRun, onTransitionCancel,
-      ...motionProps 
-    } = props
-    
+  ({ className, variant, inputSize, state, type, ...props }, ref) => {
     return (
-      <motion.input
+      <input
         ref={ref}
         type={type}
         className={cn(inputVariants({ variant, inputSize, state, className }))}
-        {...getMotionProps()}
-        {...motionProps}
+        {...props}
       />
     )
   }

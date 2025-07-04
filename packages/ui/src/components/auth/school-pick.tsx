@@ -220,7 +220,6 @@ export const SchoolPick: React.FC<SchoolPickProps> = ({
           <Button 
             onClick={handleJoinWaitlist} 
             variant="ritual"
-            ritualAnimation
             fullWidth
             disabled={isJoiningWaitlist || (!userEmail && !waitlistEmail)}
           >

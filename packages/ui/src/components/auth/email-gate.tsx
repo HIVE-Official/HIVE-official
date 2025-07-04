@@ -3,8 +3,8 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Mail, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
-import { Button } from '../ui/button';
-import { Input } from '../ui/input';
+import { Button } from '../button';
+import { Input } from '../input';
 import { Label } from '../ui/label';
 import { cn } from '@/lib/utils';
 
@@ -94,9 +94,9 @@ export const EmailGate: React.FC<EmailGateProps> = ({
         {isSuccess ? (
           <div className="text-center space-y-4">
             <div className="flex justify-center">
-              <CheckCircle className="w-12 h-12 text-green-500" />
+              <CheckCircle className="w-12 h-12 text-accent" />
             </div>
-            <h2 className="text-xl font-semibold text-white">Check Your Email</h2>
+            <h2 className="text-xl font-semibold text-white font-display">Check Your Email</h2>
             <p className="text-zinc-400">
               We sent a magic link to <span className="text-white font-medium">{email}</span>. 
               Click it to continue to HIVE.
@@ -113,7 +113,7 @@ export const EmailGate: React.FC<EmailGateProps> = ({
                 <Mail className="w-12 h-12 text-white" />
               </div>
               <div>
-                <h2 className="text-xl font-semibold text-white">Join {schoolName}</h2>
+                <h2 className="text-xl font-semibold text-white font-display">Join {schoolName}</h2>
                 <p className="text-zinc-400 mt-1">
                   Enter your {schoolDomain} email to continue
                 </p>
@@ -160,7 +160,7 @@ export const EmailGate: React.FC<EmailGateProps> = ({
                 )}
                 <Button
                   type="submit"
-                  variant="surface"
+                  variant="ritual"
                   size="lg"
                   className="w-full font-semibold"
                   disabled={isSubmitting || !email.trim()}

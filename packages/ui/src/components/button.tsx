@@ -2,11 +2,8 @@ import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
 import { Loader2 } from "lucide-react"
-import { motion } from "framer-motion"
 
 import { cn } from "../lib/utils"
-import { hivePresets, createHiveScale, createGoldAccent } from "../lib/motion"
-import { useAdaptiveMotion } from "../lib/adaptive-motion"
 
 const buttonVariants = cva(
   // Base styles following HIVE brand guidelines - GOLD LINES FIRST
@@ -125,8 +122,6 @@ export interface ButtonProps
     VariantProps<typeof buttonVariants> {
   asChild?: boolean
   loading?: boolean
-  enableMotion?: boolean
-  ritualAnimation?: boolean
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -139,49 +134,16 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     loading, 
     children, 
     disabled, 
-    enableMotion = true,
-    ritualAnimation = false,
     ...props 
   }, ref) => {
-    const { variants } = useAdaptiveMotion('navigation');
     const Comp = asChild ? Slot : "button"
     
-    // Choose animation preset based on variant
-    const getMotionProps = () => {
-      if (!enableMotion) return {};
-      
-      if (variant === 'ritual') {
-        return {
-          variants: variants.ritual,
-          initial: "rest",
-          whileHover: ritualAnimation ? "active" : "rest",
-          whileTap: { scale: 0.97 },
-          ...createGoldAccent('fast'),
-        };
-      }
-      
-      if (variant === 'accent' || variant === 'default') {
-        return {
-          ...hivePresets.button,
-          ...createGoldAccent('fast'),
-        };
-      }
-      
-      return {
-        ...createHiveScale(variant === 'ghost' ? 'micro' : 'small'),
-        whileTap: { scale: 0.97 },
-      };
-    };
-    
-    const MotionComp = motion(Comp);
-    
     return (
-      <MotionComp
+      <Comp
         className={cn(buttonVariants({ variant, size, fullWidth, className }))}
         ref={ref}
         disabled={disabled || loading}
         aria-busy={loading}
-        {...getMotionProps()}
         {...props}
       >
         <span className="inline-flex items-center justify-center">
@@ -190,7 +152,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           )}
           {children}
         </span>
-      </MotionComp>
+      </Comp>
     )
   }
 )

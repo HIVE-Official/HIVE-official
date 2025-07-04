@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { useState } from 'react'
-import { Star, Heart, Code, Music, Art, Book, Camera, Coffee } from 'lucide-react'
+import { Star, Heart, Code, Music, Palette, Book, Camera, Coffee } from 'lucide-react'
 import { Badge, ChipGroup, InteractiveChip, FilterChip } from '../components/badge'
 
 const meta: Meta<typeof Badge> = {
@@ -49,7 +49,7 @@ export const InteractiveChips: Story = {
     const skills = [
       { value: 'react', label: 'React', icon: <Code className="w-3 h-3" /> },
       { value: 'typescript', label: 'TypeScript', icon: <Code className="w-3 h-3" /> },
-      { value: 'design', label: 'Design', icon: <Art className="w-3 h-3" /> },
+      { value: 'design', label: 'Design', icon: <Palette className="w-3 h-3" /> },
       { value: 'music', label: 'Music', icon: <Music className="w-3 h-3" /> },
     ]
     
@@ -205,7 +205,7 @@ export const InterestTags: Story = {
       { value: 'coffee', label: 'Coffee', icon: <Coffee className="w-3 h-3" /> },
       { value: 'reading', label: 'Reading', icon: <Book className="w-3 h-3" /> },
       { value: 'music', label: 'Music', icon: <Music className="w-3 h-3" /> },
-      { value: 'art', label: 'Art', icon: <Art className="w-3 h-3" /> },
+      { value: 'art', label: 'Art', icon: <Palette className="w-3 h-3" /> },
       { value: 'coding', label: 'Coding', icon: <Code className="w-3 h-3" /> },
     ]
     
