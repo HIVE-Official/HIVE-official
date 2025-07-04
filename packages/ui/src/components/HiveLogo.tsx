@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import { motion, type Variants } from "framer-motion";
 import { cn } from "../lib/utils";
+import { MotionDiv } from "./motion-wrapper";
 
 interface HiveLogoProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   variant?: "white" | "black" | "gold";
@@ -19,7 +19,7 @@ const sizeClasses = {
   "3xl": "h-48 w-48",
 };
 
-const animationVariants: Variants = {
+const animationVariants = {
   pulse: {
     scale: [1, 1.05, 1],
     transition: {
@@ -83,13 +83,13 @@ export function HiveLogo({
 
   if (animationType !== "none") {
     return (
-      <motion.div
+      <MotionDiv
         className={cn(sizeClasses[size], "flex items-center justify-center")}
         animate={animationType}
         variants={animationVariants}
       >
         <LogoImage logoSrc={logoSrc} size={size} variant={variant} className={className} {...props} />
-      </motion.div>
+      </MotionDiv>
     );
   }
 

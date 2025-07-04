@@ -1,11 +1,9 @@
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { Loader2 } from "lucide-react"
-import { motion } from "framer-motion"
 
 import { cn } from "../lib/utils"
-import { hiveVariants } from "../lib/motion"
-import { useAdaptiveMotion } from "../lib/adaptive-motion"
+import { MotionDiv } from "./motion-wrapper"
 
 const spinnerVariants = cva(
   "animate-spin",
@@ -43,18 +41,8 @@ export interface LoadingSpinnerProps
 
 const LoadingSpinner = React.forwardRef<HTMLDivElement, LoadingSpinnerProps>(
   ({ className, variant, size, message, centered, ...props }, ref) => {
-    const { variants } = useAdaptiveMotion('navigation');
-    
-    // Exclude HTML event handlers that conflict with Framer Motion
-    const { 
-      onDrag, onDragStart, onDragEnd, onDragOver, onDragEnter, onDragLeave, onDrop,
-      onAnimationStart, onAnimationEnd, onAnimationIteration,
-      onTransitionStart, onTransitionEnd, onTransitionRun, onTransitionCancel,
-      ...motionProps 
-    } = props
-    
     const spinner = (
-      <motion.div
+      <MotionDiv
         ref={ref}
         className={cn(
           "flex items-center",
@@ -62,12 +50,12 @@ const LoadingSpinner = React.forwardRef<HTMLDivElement, LoadingSpinnerProps>(
           !centered && "justify-start",
           className
         )}
-        variants={hiveVariants.fadeIn}
-        initial="hidden"
-        animate="visible"
-        {...motionProps}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.18, ease: [0.33, 0.65, 0, 1] }}
+        {...props}
       >
-        <motion.div
+        <MotionDiv
           animate={{ 
             rotate: 360,
             scale: [1, 1.1, 1]
@@ -78,18 +66,13 @@ const LoadingSpinner = React.forwardRef<HTMLDivElement, LoadingSpinnerProps>(
           }}
         >
           <Loader2 className={cn(spinnerVariants({ variant, size }))} />
-        </motion.div>
+        </MotionDiv>
         {message && (
-          <motion.span 
-            className="ml-3 text-body font-sans text-muted"
-            variants={variants.fadeIn}
-            initial="hidden"
-            animate="visible"
-          >
+          <span className="ml-3 text-body font-sans text-muted">
             {message}
-          </motion.span>
+          </span>
         )}
-      </motion.div>
+      </MotionDiv>
     )
 
     if (centered) {

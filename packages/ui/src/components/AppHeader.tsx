@@ -1,8 +1,7 @@
 import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Bell, Menu, X } from 'lucide-react';
 import { cn } from '../lib/utils';
-import { hiveVariants, useAdaptiveMotion } from '../lib/motion';
+import { MotionDiv } from './motion-wrapper';
 
 const AppHeaderRoot = React.forwardRef<
     HTMLElement,
@@ -66,19 +65,17 @@ const AppHeaderRoot = React.forwardRef<
     } = props
     
     return (
-      <motion.header
+      <MotionDiv
           ref={ref}
           className={cn(getVariantStyles(), className)}
-          variants={hiveVariants.slideDown}
-          initial="hidden"
+          initial={{ y: -100, opacity: 0 }}
           animate={{ 
             y: isVisible ? 0 : -100,
             opacity: isVisible ? 1 : 0
           }}
           transition={{ 
-            type: "spring", 
-            stiffness: 400, 
-            damping: 30 
+            duration: 0.18, 
+            ease: [0.33, 0.65, 0, 1]
           }}
           {...motionProps}
       />
@@ -99,12 +96,12 @@ const AppHeaderContent = React.forwardRef<
     } = props
     
     return (
-        <motion.div 
+        <MotionDiv 
             ref={ref} 
             className={cn('container flex h-14 items-center', className)} 
-            variants={hiveVariants.container}
-            initial="hidden"
-            animate="visible"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.18, ease: [0.33, 0.65, 0, 1] }}
             {...motionProps} 
         />
     )
@@ -124,12 +121,14 @@ const AppHeaderLogo = React.forwardRef<
     } = props
     
     return (
-        <motion.div 
+        <MotionDiv 
             ref={ref} 
             className={cn('mr-4 flex items-center', className)} 
-            variants={hiveVariants.item}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
+            transition={{ duration: 0.18, ease: [0.33, 0.65, 0, 1] }}
             {...motionProps} 
         />
     )
@@ -149,10 +148,12 @@ const AppHeaderNav = React.forwardRef<
     } = props
     
     return (
-        <motion.nav 
+        <MotionDiv 
             ref={ref} 
             className={cn('flex items-center space-x-6 text-sm font-medium', className)} 
-            variants={hiveVariants.item}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.18, ease: [0.33, 0.65, 0, 1] }}
             {...motionProps} 
         />
     )
@@ -172,10 +173,12 @@ const AppHeaderActions = React.forwardRef<
     } = props
     
     return (
-        <motion.div 
+        <MotionDiv 
             ref={ref} 
             className={cn('flex flex-1 items-center justify-end space-x-4', className)} 
-            variants={hiveVariants.item}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.18, ease: [0.33, 0.65, 0, 1] }}
             {...motionProps} 
         />
     )
@@ -192,7 +195,6 @@ const AppHeaderSearch = React.forwardRef<
       onSearchClick?: () => void
     }
 >(({ className, placeholder = "Search...", variant = 'chip', shortcut = "⌘K", onSearchClick, ...props }, ref) => {
-    const { createTransition } = useAdaptiveMotion('academic')
     
     const getVariantStyles = () => {
       switch (variant) {
@@ -215,7 +217,7 @@ const AppHeaderSearch = React.forwardRef<
     } = props
     
     return (
-      <motion.div
+      <MotionDiv
         ref={ref}
         className={cn(
           'flex items-center gap-3 cursor-pointer transition-all duration-200 max-w-sm w-full',
@@ -224,13 +226,12 @@ const AppHeaderSearch = React.forwardRef<
         )}
         onClick={onSearchClick}
         whileHover={{ 
-          scale: 1.02,
-          transition: createTransition('fast')
+          scale: 1.02
         }}
         whileTap={{ 
-          scale: 0.98,
-          transition: createTransition('fast')
+          scale: 0.98
         }}
+        transition={{ duration: 0.18, ease: [0.33, 0.65, 0, 1] }}
         {...motionProps}
       >
         <Search className="w-4 h-4 text-muted flex-shrink-0" />
@@ -240,7 +241,7 @@ const AppHeaderSearch = React.forwardRef<
             {shortcut}
           </kbd>
         </div>
-      </motion.div>
+      </MotionDiv>
     )
 });
 AppHeaderSearch.displayName = 'AppHeaderSearch';
@@ -253,7 +254,6 @@ const AppHeaderMenuButton = React.forwardRef<
       variant?: 'chip' | 'minimal'
     }
 >(({ className, isOpen = false, variant = 'chip', ...props }, ref) => {
-    const { createTransition } = useAdaptiveMotion('navigation')
     
     const getVariantStyles = () => {
       switch (variant) {
@@ -274,7 +274,7 @@ const AppHeaderMenuButton = React.forwardRef<
     } = props
     
     return (
-      <motion.button
+      <MotionDiv
         ref={ref}
         className={cn(
           'inline-flex items-center justify-center text-muted hover:text-accent transition-colors md:hidden',
@@ -282,39 +282,20 @@ const AppHeaderMenuButton = React.forwardRef<
           className
         )}
         whileHover={{ 
-          scale: 1.05,
-          transition: createTransition('fast')
+          scale: 1.05
         }}
         whileTap={{ 
-          scale: 0.95,
-          transition: createTransition('fast')
+          scale: 0.95
         }}
+        transition={{ duration: 0.18, ease: [0.33, 0.65, 0, 1] }}
         {...motionProps}
       >
-        <AnimatePresence mode="wait">
-          {isOpen ? (
-            <motion.div
-              key="close"
-              initial={{ rotate: -90, opacity: 0 }}
-              animate={{ rotate: 0, opacity: 1 }}
-              exit={{ rotate: 90, opacity: 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              <X className="w-5 h-5" />
-            </motion.div>
-          ) : (
-            <motion.div
-              key="menu"
-              initial={{ rotate: 90, opacity: 0 }}
-              animate={{ rotate: 0, opacity: 1 }}
-              exit={{ rotate: -90, opacity: 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              <Menu className="w-5 h-5" />
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.button>
+        {isOpen ? (
+          <X className="w-5 h-5" />
+        ) : (
+          <Menu className="w-5 h-5" />
+        )}
+      </MotionDiv>
     )
 });
 AppHeaderMenuButton.displayName = 'AppHeaderMenuButton';
@@ -328,7 +309,6 @@ const AppHeaderNotifications = React.forwardRef<
       showDot?: boolean
     }
 >(({ className, count = 0, variant = 'chip', showDot = false, ...props }, ref) => {
-    const { createTransition } = useAdaptiveMotion('navigation')
     
     const getVariantStyles = () => {
       switch (variant) {
@@ -349,7 +329,7 @@ const AppHeaderNotifications = React.forwardRef<
     } = props
     
     return (
-      <motion.button
+      <MotionDiv
         ref={ref}
         className={cn(
           'relative inline-flex items-center justify-center text-muted hover:text-accent transition-colors',
@@ -357,20 +337,19 @@ const AppHeaderNotifications = React.forwardRef<
           className
         )}
         whileHover={{ 
-          scale: 1.05,
-          transition: createTransition('fast')
+          scale: 1.05
         }}
         whileTap={{ 
-          scale: 0.95,
-          transition: createTransition('fast')
+          scale: 0.95
         }}
+        transition={{ duration: 0.18, ease: [0.33, 0.65, 0, 1] }}
         {...motionProps}
       >
         <Bell className="w-5 h-5" />
         
         {/* Badge */}
         {(count > 0 || showDot) && (
-          <motion.div
+          <MotionDiv
             className={cn(
               "absolute -top-1 -right-1 flex items-center justify-center border-2 border-surface",
               count > 0 
@@ -379,12 +358,12 @@ const AppHeaderNotifications = React.forwardRef<
             )}
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
-            transition={{ type: "spring", stiffness: 500, damping: 30 }}
+            transition={{ duration: 0.18, ease: [0.33, 0.65, 0, 1] }}
           >
             {count > 0 && (count > 99 ? '99+' : count)}
-          </motion.div>
+          </MotionDiv>
         )}
-      </motion.button>
+      </MotionDiv>
     )
 });
 AppHeaderNotifications.displayName = 'AppHeaderNotifications';

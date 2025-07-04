@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { MotionDiv, MotionSpan } from "./motion-wrapper";
 
 interface CountdownProps {
   targetDate: string;
@@ -29,7 +29,7 @@ const calculateTimeLeft = (targetDate: string): TimeLeft | null => {
 };
 
 const NumberBox = ({ value, label }: { value: number; label: string }) => (
-  <motion.div 
+  <MotionDiv 
     className="flex flex-col items-center"
     initial={{ opacity: 0, scale: 0.8, y: 20 }}
     animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -40,7 +40,7 @@ const NumberBox = ({ value, label }: { value: number; label: string }) => (
   >
     <div className="relative bg-transparent rounded-lg border border-[#FFD700]/30 p-3 sm:p-4 w-[60px] sm:w-[80px] md:w-[100px] overflow-hidden">
       <div className="relative h-[30px] sm:h-[36px] md:h-[44px] flex items-center justify-center">
-        <motion.span 
+        <MotionSpan 
           className="font-mono text-2xl sm:text-3xl md:text-4xl font-normal text-[#FFD700]/90"
           key={value}
           initial={{ opacity: 0, y: 10, scale: 0.9 }}
@@ -51,13 +51,13 @@ const NumberBox = ({ value, label }: { value: number; label: string }) => (
           }}
         >
           {value.toString().padStart(2, '0')}
-        </motion.span>
+        </MotionSpan>
       </div>
     </div>
     <span className="mt-2 text-xs sm:text-sm font-sans text-[#FFD700]/60 uppercase tracking-wider">
       {label}
     </span>
-  </motion.div>
+  </MotionDiv>
 );
 
 export const Countdown = ({ targetDate }: CountdownProps) => {

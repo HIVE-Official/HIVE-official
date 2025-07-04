@@ -5,7 +5,7 @@ import "./styles/index.css";
 export { Avatar, AvatarFallback, AvatarImage } from "./components/avatar";
 export { Badge } from "./components/badge";
 export { Button, type ButtonProps, type ButtonVariant, type ButtonSize } from "./components/button";
-// export { Dialog } from "./components/dialog"; // TEMPORARILY DISABLED - uses motion
+export { Dialog } from "./components/dialog";
 export { Input } from "./components/input";
 export { Label } from "./components/label";
 export { Link, type LinkProps } from "./components/ui/link";
@@ -23,15 +23,15 @@ export {
   SelectGroup,
 } from "./components/select";
 export { Skeleton } from "./components/skeleton";
-// export { Countdown } from "./components/countdown"; // TEMPORARILY DISABLED - uses motion
+export { Countdown } from "./components/countdown";
 
-// Export loading components - TEMPORARILY DISABLED - uses motion
-// export {
-//   LoadingSpinner,
-//   PageLoader,
-//   InlineLoader,
-//   CardLoader,
-// } from "./components/loading-spinner";
+// Export loading components
+export {
+  LoadingSpinner,
+  PageLoader,
+  InlineLoader,
+  CardLoader,
+} from "./components/loading-spinner";
 
 // Export typography components
 export {
@@ -56,10 +56,10 @@ export {
   CardFooter,
 } from "./components/card";
 
-// Export layout components - TEMPORARILY DISABLED - uses motion
-// export { AppHeader } from "./components/AppHeader";
-// export { BottomNavBar } from "./components/BottomNavBar";
-// export { HiveLogo } from "./components/HiveLogo";
+// Export layout components
+export { AppHeader } from "./components/AppHeader";
+export { BottomNavBar } from "./components/BottomNavBar";
+export { HiveLogo } from "./components/HiveLogo";
 export { WelcomeMat, useWelcomeMat } from "./components/welcome-mat";
 
 // Export toast components
@@ -90,9 +90,8 @@ export { SuggestedSpaces } from "./components/onboarding/steps/suggested-spaces"
 // Export utilities
 export * from "./lib/utils";
 
-// Export motion utilities - TEMPORARILY DISABLED FOR BUILD
-// export * from "./lib/motion";
-// export * from "./lib/adaptive-motion";
+// Export motion utilities
+export { MotionProvider, MotionDiv, MotionSpan, MotionButton } from "./components/motion-wrapper";
 
 // Export Storybook-specific utilities
 export { StorybookThemeProvider } from "./components/ui/storybook-theme-provider";

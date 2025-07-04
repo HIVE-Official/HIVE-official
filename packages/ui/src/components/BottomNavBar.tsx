@@ -1,7 +1,6 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 import { cn } from '../lib/utils';
-import { createGoldAccent, useAdaptiveMotion } from '../lib/motion';
+import { MotionDiv } from './motion-wrapper';
 
 const BottomNavBarRoot = React.forwardRef<
   HTMLElement,
@@ -47,7 +46,7 @@ const BottomNavBarRoot = React.forwardRef<
   } = props
   
   return (
-    <motion.nav
+    <MotionDiv
       ref={ref}
       className={cn(
         'z-50 transition-all duration-300',
@@ -60,9 +59,8 @@ const BottomNavBarRoot = React.forwardRef<
         opacity: isVisible ? 1 : 0 
       }}
       transition={{ 
-        type: "spring", 
-        stiffness: 300, 
-        damping: 30 
+        duration: 0.18, 
+        ease: [0.33, 0.65, 0, 1]
       }}
       {...motionProps}
     />
@@ -111,7 +109,6 @@ const BottomNavBarItem = React.forwardRef<
   children,
   ...props 
 }, ref) => {
-  const { createTransition } = useAdaptiveMotion('navigation')
   
   const getVariantStyles = () => {
     const base = 'relative inline-flex items-center justify-center transition-all duration-200 ease-smooth'
@@ -154,14 +151,12 @@ const BottomNavBarItem = React.forwardRef<
     
     return {
       whileHover: { 
-        scale: isActive ? 1.1 : 1.05,
-        transition: createTransition('fast')
+        scale: isActive ? 1.1 : 1.05
       },
       whileTap: { 
-        scale: 0.95,
-        transition: createTransition('fast') 
+        scale: 0.95
       },
-      ...(isActive && createGoldAccent('fast'))
+      transition: { duration: 0.18, ease: [0.33, 0.65, 0, 1] }
     }
   }
   
@@ -174,9 +169,8 @@ const BottomNavBarItem = React.forwardRef<
   } = props
   
   return (
-    <motion.button
+    <MotionDiv
       ref={ref}
-      type="button"
       className={cn(getVariantStyles(), className)}
       {...getMotionProps()}
       {...motionProps}
@@ -189,17 +183,17 @@ const BottomNavBarItem = React.forwardRef<
         
         {/* Badge indicator */}
         {badge !== undefined && badge > 0 && (
-          <motion.div
+          <MotionDiv
             className="absolute -top-1 -right-1 flex items-center justify-center min-w-[1.25rem] h-5 text-xs font-semibold text-background bg-accent rounded-full border-2 border-surface"
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
-            transition={{ type: "spring", stiffness: 500, damping: 30 }}
+            transition={{ duration: 0.18, ease: [0.33, 0.65, 0, 1] }}
           >
             {badge > 99 ? '99+' : badge}
-          </motion.div>
+          </MotionDiv>
         )}
       </div>
-    </motion.button>
+    </MotionDiv>
   )
 });
 BottomNavBarItem.displayName = 'BottomNavBarItem';
@@ -268,13 +262,12 @@ const BottomNavBarIndicator = React.forwardRef<
   } = props
   
   return (
-    <motion.div
+    <MotionDiv
       ref={ref}
       className={cn(getVariantStyles(), className)}
       initial={{ scale: 0, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
-      exit={{ scale: 0, opacity: 0 }}
-      transition={{ type: "spring", stiffness: 500, damping: 30 }}
+      transition={{ duration: 0.18, ease: [0.33, 0.65, 0, 1] }}
       {...motionProps}
     />
   )

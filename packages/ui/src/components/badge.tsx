@@ -1,11 +1,8 @@
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
-import { motion } from "framer-motion"
 import { X, Plus } from "lucide-react"
 
 import { cn } from "../lib/utils"
-import { createGoldAccent } from "../lib/motion"
-import { useAdaptiveMotion } from "../lib/adaptive-motion"
 
 const badgeVariants = cva(
   // Modern chip base with 2025 AI feel
@@ -119,7 +116,6 @@ const badgeVariants = cva(
 export interface BadgeProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onSelect'>,
     VariantProps<typeof badgeVariants> {
-  enableMotion?: boolean
   removable?: boolean
   selectable?: boolean
   selected?: boolean
@@ -134,7 +130,6 @@ const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
     className, 
     variant, 
     size, 
-    enableMotion = true,
     removable = false,
     selectable = false,
     selected = false,
@@ -146,34 +141,8 @@ const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
     onClick,
     ...props 
   }, ref) => {
-    const { createTransition } = useAdaptiveMotion('social')
-    
     // Determine variant based on props
     const actualVariant = removable ? 'removable' : selectable ? 'selectable' : variant
-    
-    const getMotionProps = () => {
-      if (!enableMotion) return {}
-      
-      const baseMotion = {
-        whileHover: { 
-          scale: 1.02,
-          transition: createTransition('fast')
-        },
-        whileTap: { 
-          scale: 0.98,
-          transition: createTransition('fast')
-        }
-      }
-      
-      if (actualVariant === 'ritual' || actualVariant === 'accent') {
-        return {
-          ...baseMotion,
-          ...createGoldAccent('fast')
-        }
-      }
-      
-      return baseMotion
-    }
     
     const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
       if (selectable && onSelect) {
@@ -187,22 +156,13 @@ const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
       onRemove?.()
     }
     
-    // Exclude HTML event handlers that conflict with Framer Motion
-    const { 
-      onDrag, onDragStart, onDragEnd, onDragOver, onDragEnter, onDragLeave, onDrop,
-      onAnimationStart, onAnimationEnd, onAnimationIteration,
-      onTransitionStart, onTransitionEnd, onTransitionRun, onTransitionCancel,
-      ...motionProps 
-    } = props
-    
     return (
-      <motion.div
+      <div
         ref={ref}
         className={cn(badgeVariants({ variant: actualVariant, size }), className)}
         onClick={handleClick}
         data-selected={selectable ? selected : undefined}
-        {...getMotionProps()}
-        {...motionProps}
+        {...props}
       >
         {icon && (
           <span className="inline-flex items-center">
@@ -221,18 +181,16 @@ const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
         )}
         
         {removable && onRemove && (
-          <motion.button
+          <button
             type="button"
             onClick={handleRemove}
-            className="inline-flex items-center justify-center ml-1 rounded-full hover:bg-red-400/20 focus:outline-none focus:ring-1 focus:ring-red-400/50"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
+            className="inline-flex items-center justify-center ml-1 rounded-full hover:bg-red-400/20 focus:outline-none focus:ring-1 focus:ring-red-400/50 transition-transform hover:scale-110 active:scale-90"
             aria-label="Remove"
           >
             <X className="w-3 h-3" />
-          </motion.button>
+          </button>
         )}
-      </motion.div>
+      </div>
     )
   }
 )
