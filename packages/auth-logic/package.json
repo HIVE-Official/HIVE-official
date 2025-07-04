@@ -17,7 +17,7 @@
   ],
   "scripts": {
     "prebuild": "pnpm run clean",
-    "build": "tsup src/index.ts --format cjs,esm --sourcemap --clean",
+    "build": "tsc --build",
     "lint": "eslint . --max-warnings 15",
     "typecheck": "tsc --noEmit",
     "dev": "tsc --build --watch",
@@ -30,8 +30,7 @@
     "firebase-admin": "^11.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "zod": "^3.22.4",
-    "tsup": "^8.5.0"
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@hive/eslint-config": "workspace:*",

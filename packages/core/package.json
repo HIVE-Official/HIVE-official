@@ -28,7 +28,7 @@
   ],
   "scripts": {
     "dev": "tsup src/index.ts --format esm,cjs --watch --external react & tsc -p tsconfig.declarations.json --watch",
-    "build": "rm -f tsconfig.declarations.tsbuildinfo && tsup src/index.ts --format esm,cjs --external react",
+    "build": "tsc --build",
     "lint": "../../node_modules/.bin/eslint . --max-warnings 15 || pnpm exec --package=eslint eslint . --max-warnings 15",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
   },
@@ -39,8 +39,7 @@
     "firebase": "^11.0.0",
     "firebase-admin": "^11.0.0",
     "zod": "^3.25.67",
-    "zustand": "^4.0.0",
-    "tsup": "^6.7.0"
+    "zustand": "^4.0.0"
   },
   "keywords": [],
   "author": "",

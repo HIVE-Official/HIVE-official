@@ -26,9 +26,6 @@
   "peerDependencies": {
     "react": "^18.0.0"
   },
-  "dependencies": {
-    "tsup": "^6.7.0"
-  },
   "devDependencies": {
     "@hive/typescript-config": "workspace:*",
     "@types/react": "^18.2.0",
