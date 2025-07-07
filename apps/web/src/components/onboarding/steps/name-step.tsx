@@ -126,9 +126,9 @@ export function OnboardingNameStep() {
                     {isChecking ? (
                       <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
                     ) : isAvailable ? (
-                      <CheckCircle className="h-4 w-4 text-green-500" />
+                      <CheckCircle className="h-4 w-4 text-accent" />
                     ) : (
-                      <AlertCircle className="h-4 w-4 text-red-500" />
+                      <AlertCircle className="h-4 w-4 text-muted-foreground" />
                     )}
                   </div>
                 )}
@@ -140,11 +140,11 @@ export function OnboardingNameStep() {
                   {isChecking ? (
                     <span className="text-muted-foreground">Checking availability...</span>
                   ) : isAvailable ? (
-                    <span className="text-green-600">✓ Username is available</span>
+                    <span className="text-accent">✓ Username is available</span>
                   ) : handleError ? (
-                    <span className="text-red-600">✗ {handleError}</span>
+                    <span className="text-muted-foreground">✗ {handleError}</span>
                   ) : (
-                    <span className="text-red-600">✗ Username is not available</span>
+                    <span className="text-muted-foreground">✗ Username is not available</span>
                   )}
                 </div>
               )}

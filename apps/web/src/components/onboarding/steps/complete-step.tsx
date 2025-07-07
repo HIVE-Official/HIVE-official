@@ -20,7 +20,7 @@ export function OnboardingCompleteStep() {
     const completeOnboarding = async () => {
       if (!user) {
         logger.error("No authenticated user found");
-        router.push(ROUTES.AUTH.EMAIL);
+        router.push(ROUTES.AUTH.SCHOOL_SELECT);
         return;
       }
 

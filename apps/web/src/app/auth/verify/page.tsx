@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useEffect, useCallback, Suspense } from "react";
+import { useState, useEffect, useCallback, useRef, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { CheckCircle, AlertCircle, RefreshCw, Mail, ArrowLeft } from "lucide-react";
 import { Button } from "@hive/ui";
 import { useOnboardingStore } from "@/lib/stores/onboarding";
 import { logger } from "@hive/core";
+import { ROUTES } from "@/lib/routes";
 
 interface CountdownRingProps {
   timeLeft: number;
@@ -63,9 +64,9 @@ function StatusIcon({ status }: StatusIconProps) {
   
   switch (status) {
     case "success":
-      return <CheckCircle className={`${iconClass} text-green-500`} />;
+      return <CheckCircle className={`${iconClass} text-accent`} />;
     case "error":
-      return <AlertCircle className={`${iconClass} text-red-500`} />;
+      return <AlertCircle className={`${iconClass} text-foreground`} />;
     case "verifying":
       return <RefreshCw className={`${iconClass} text-accent animate-spin`} />;
     default:
@@ -142,8 +143,17 @@ function useEmailVerification() {
   >("waiting");
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [email, setEmail] = useState<string>("");
+  const verificationInProgress = useRef(false);
 
   const handleVerification = useCallback(async () => {
+    // Prevent duplicate calls
+    if (verificationInProgress.current) {
+      logger.info("🔥 Verification already in progress, skipping duplicate call");
+      return;
+    }
+    
+    verificationInProgress.current = true;
+    
     const urlEmail = searchParams.get("email");
     const dev = searchParams.get("dev");
     const storedEmail = typeof window !== "undefined" 
@@ -154,6 +164,7 @@ function useEmailVerification() {
     if (!finalEmail) {
       setVerificationStatus("error");
       setErrorMessage("No email found for verification. Please start the sign-in process again.");
+      verificationInProgress.current = false;
       return;
     }
 
@@ -175,25 +186,72 @@ function useEmailVerification() {
       if (response.ok && data.ok) {
         setVerificationStatus("success");
 
-        // Store auth data
-        if (typeof window !== "undefined") {
-          localStorage.setItem("hive-auth-token", data.idToken);
-          localStorage.setItem("hive-user-data", JSON.stringify(data.user));
-          localStorage.removeItem("hive-auth-email");
+        // In development mode, skip Firebase auth entirely and just redirect
+        if (dev === "true" || process.env.NODE_ENV === "development") {
+          logger.info("🔥 Development mode: skipping Firebase auth, redirecting directly", {
+            userData: data.user
+          });
+          
+          // Store user data locally for dev mode
+          if (typeof window !== "undefined") {
+            localStorage.setItem("hive-user-data", JSON.stringify(data.user));
+            localStorage.removeItem("hive-auth-email");
+          }
+        } else {
+          // Production magic link flow - try to sign in with Firebase
+          try {
+            const { signInWithCustomToken } = await import("firebase/auth");
+            const { auth } = await import("@hive/core");
+            
+            await signInWithCustomToken(auth, data.idToken);
+            
+            // Store user data locally
+            if (typeof window !== "undefined") {
+              localStorage.setItem("hive-auth-token", data.idToken);
+              localStorage.setItem("hive-user-data", JSON.stringify(data.user));
+              localStorage.removeItem("hive-auth-email");
+            }
+          } catch (authError) {
+            logger.error("Failed to sign in with custom token", authError);
+            setVerificationStatus("error");
+            setErrorMessage(`Authentication failed: ${authError instanceof Error ? authError.message : 'Unknown error'}`);
+            return;
+          }
         }
 
         // Redirect based on user status
         setTimeout(() => {
           if (data.user.isNewUser) {
+            // Transfer school selection data to onboarding store
             const schoolId = localStorage.getItem("hive-selected-school-id");
-            if (schoolId) {
-              update({ schoolId });
+            const schoolName = localStorage.getItem("hive-selected-school-name");
+            const schoolDomain = localStorage.getItem("hive-selected-school-domain");
+            
+            if (schoolId && schoolName) {
+              update({ 
+                schoolId, 
+                schoolName,
+                email: finalEmail,
+                uid: data.user.uid
+              });
+              
+              // Clear temporary localStorage items since they're now in onboarding store
+              localStorage.removeItem("hive-selected-school-id");
+              localStorage.removeItem("hive-selected-school-name"); 
+              localStorage.removeItem("hive-selected-school-domain");
             }
-            router.push("/onboarding/welcome");
+            
+            logger.info("🔥 Redirecting new user to onboarding step 1", { 
+              schoolId, 
+              schoolName,
+              email: finalEmail 
+            });
+            router.push(ROUTES.ONBOARDING.STEP_1);
           } else {
-            router.push("/feed");
+            logger.info("🔥 Redirecting existing user to feed");
+            router.push(ROUTES.APP.FEED);
           }
-        }, 2000);
+        }, 1000);
       } else {
         setVerificationStatus("error");
         setErrorMessage(data.message || "Verification failed");
@@ -204,6 +262,8 @@ function useEmailVerification() {
       });
       setVerificationStatus("error");
       setErrorMessage("Network error occurred. Please check your connection and try again.");
+    } finally {
+      verificationInProgress.current = false;
     }
   }, [searchParams, router, update]);
 
@@ -258,6 +318,7 @@ function VerifyContent() {
   } = useEmailVerification();
   
   const { timeLeft, canResend, resetTimer } = useVerificationTimer();
+  const hasAutoVerified = useRef(false);
 
   // Initialize email and auto-verify
   useEffect(() => {
@@ -272,11 +333,12 @@ function VerifyContent() {
     const finalEmail = urlEmail || storedEmail || "";
     setEmail(finalEmail);
 
-    // Auto-verify if this is a magic link
-    if ((oobCode && mode === "signIn") || (dev === "true" && finalEmail)) {
+    // Auto-verify if this is a magic link and we haven't already verified
+    if (!hasAutoVerified.current && ((oobCode && mode === "signIn") || (dev === "true" && finalEmail))) {
+      hasAutoVerified.current = true;
       void handleVerification();
     }
-  }, [searchParams, handleVerification, setEmail]);
+  }, [searchParams, setEmail]);
 
   const handleResend = async () => {
     if (!email) {
@@ -362,8 +424,8 @@ function VerifyContent() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2, duration: 0.5 }}
           >
-            <div className="w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
-              <CheckCircle className="w-8 h-8 text-green-500" />
+            <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-4">
+              <CheckCircle className="w-8 h-8 text-accent" />
             </div>
             <p className="text-muted font-sans">
               Redirecting you to your dashboard...
@@ -380,7 +442,7 @@ function VerifyContent() {
           >
             <Button
               variant="outline"
-              onClick={() => router.push('/auth/email')}
+              onClick={() => router.push(ROUTES.AUTH.SCHOOL_SELECT)}
               className="w-full"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />

@@ -81,6 +81,26 @@ export async function POST(request: NextRequest) {
         const customToken = await firebaseAdmin.createCustomToken(user.uid);
         const userRecord = await firebaseAdmin.getUser(user.uid);
 
+        // Check onboarding status from Firestore to determine if user is new
+        const userDoc = await db.collection("users").doc(user.uid).get();
+        const userData = userDoc.data();
+        let isOnboardingComplete = userData?.onboarding?.isComplete || false;
+        
+        // In development mode, always treat test users as new users for testing
+        if (dev === "true" && email.includes("test@")) {
+          logger.info(`🔥 Development mode: treating ${email} as new user for testing`);
+          isOnboardingComplete = false;
+          
+          // Reset the user's onboarding state in Firestore
+          if (userDoc.exists) {
+            await db.collection("users").doc(user.uid).update({
+              "onboarding.isComplete": false,
+              "onboarding.completedAt": null,
+              updatedAt: new Date(),
+            });
+          }
+        }
+
         return NextResponse.json({
           ok: true,
           idToken: customToken,
@@ -88,11 +108,7 @@ export async function POST(request: NextRequest) {
             uid: userRecord.uid,
             email: userRecord.email,
             displayName: userRecord.displayName,
-            isNewUser:
-              !userRecord.metadata.creationTime ||
-              Date.now() -
-                new Date(userRecord.metadata.creationTime).getTime() <
-                60000,
+            isNewUser: !isOnboardingComplete, // User is "new" if onboarding is not complete
           },
         });
       } catch (error) {

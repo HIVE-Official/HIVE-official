@@ -224,13 +224,13 @@
 - [ ] Basic unstyled dropdown
 - [ ] No search functionality
 - [ ] Missing school logos/branding
-- [ ] Poor mobile experience
+- [ ] **Poor mobile/PWA experience**: Touch targets, responsive layout
 
 **AI Collaboration Tasks**:
 - [ ] **READY FOR AI**: Design beautiful school selection interface
 - [ ] **READY FOR AI**: Add search and filter functionality
 - [ ] **READY FOR AI**: Implement school logos and proper styling
-- [ ] **READY FOR AI**: Make responsive for mobile
+- [ ] **READY FOR AI**: Make responsive for mobile/PWA users
 
 ---
 
@@ -347,13 +347,13 @@
 **Current Issues**:
 - [ ] **CRITICAL**: Purple, blue, green category colors (brand violation)
 - [ ] No monochrome + gold implementation
-- [ ] Poor mobile experience
+- [ ] **Poor mobile/PWA experience**: Touch targets, responsive layout
 - [ ] Missing HIVE typography
 
 **AI Collaboration Tasks**:
 - [ ] **CRITICAL FOR AI**: Remove all color violations
 - [ ] **CRITICAL FOR AI**: Implement monochrome + gold accent system
-- [ ] **READY FOR AI**: Improve mobile responsive design
+- [ ] **READY FOR AI**: Improve mobile/PWA responsive design
 - [ ] **READY FOR AI**: Apply HIVE typography system
 
 ---
@@ -369,6 +369,36 @@
 - [ ] **create-profile-step.tsx**: Critical color violations (green-500, red-500)
 - [ ] **space-selection-step.tsx**: Multiple color violations (blue-400, green-400, purple-400)
 - [ ] **welcome-step.tsx**: Update motion timing to HIVE standards
+
+---
+
+## 🚨 **CRITICAL TECHNICAL DEBT & REDUNDANCY ISSUES**
+
+*Identified during July 7, 2025 audit - must be addressed*
+
+### **🔴 High Priority Technical Issues**
+- [ ] **CRITICAL**: Color violation in `apps/web/src/app/onboarding/complete/page.tsx:115-116` (`text-red-500`)
+- [ ] **Navigation inconsistency**: Role selection using `window.location.href` instead of Next.js router
+- [ ] **Missing step validation**: Can access onboarding step 3 without completing step 2
+- [ ] **localStorage over-dependency**: Heavy reliance on localStorage for critical auth state transfer
+
+### **🟡 Redundancy & Consistency Issues**
+- [ ] **Dev mode inconsistency**: Multiple places check `process.env.NODE_ENV === 'development'` - needs consolidation
+- [ ] **Typography inconsistency**: Mix of `font-body`, `font-sans`, and `font-display` classes 
+- [ ] **Animation timing violations**: Using 500ms instead of brand-spec 180ms with cubic-bezier(0.33, 0.65, 0, 1)
+- [ ] **Duplicate error handling**: No consolidated error boundary system
+
+### **📱 Missing PWA Production Features**
+- [ ] **Session management**: No session timeout handling
+- [ ] **Progress indicators**: No visual progress through onboarding steps  
+- [ ] **Error recovery**: No retry mechanisms for failed operations
+- [ ] **Accessibility**: Missing ARIA labels and screen reader support
+- [ ] **Mobile/PWA optimization**: **CRITICAL** - Responsive design for mobile web users
+
+### **🔧 Code Quality Issues**
+- [ ] **Error boundaries**: No graceful error handling for network failures
+- [ ] **Magic link expiration**: 5-minute timer but unclear expired state messaging
+- [ ] **Data persistence**: Onboarding data only in Zustand store, not persisted between sessions
 
 ---
 

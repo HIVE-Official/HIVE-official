@@ -23,11 +23,11 @@ import { dbAdmin } from '@/lib/firebase-admin';
 import { generalApiRateLimit } from '@/lib/rate-limit';
 
 interface SpaceDiscoveryResponse {
-  academic: Space[];
-  campusLiving: Space[];
-  greekLife: Space[];
-  studentOrganizations: Space[];
-  universityOrganizations: Space[];
+  campus_living: Space[];
+  fraternity_and_sorority: Space[];
+  hive_exclusive: Space[];
+  student_organizations: Space[];
+  university_organizations: Space[];
   [key: string]: Space[];
 }
 
@@ -189,43 +189,32 @@ export async function GET(request: NextRequest) {
 
     // Categorize spaces
     const categorizedSpaces: SpaceDiscoveryResponse = {
-      academic: [],
-      campusLiving: [],
-      greekLife: [],
-      studentOrganizations: [],
-      universityOrganizations: []
+      campus_living: [],
+      fraternity_and_sorority: [],
+      hive_exclusive: [],
+      student_organizations: [],
+      university_organizations: []
     };
 
     allSpaces.forEach(space => {
       switch (space.type) {
-        case 'major':
-          categorizedSpaces.academic.push(space);
+        case 'campus_living':
+          categorizedSpaces.campus_living.push(space);
           break;
-        case 'residential':
-          categorizedSpaces.campusLiving.push(space);
+        case 'fraternity_and_sorority':
+          categorizedSpaces.fraternity_and_sorority.push(space);
           break;
-        case 'interest': {
-          // Check if it's Greek life based on tags
-          const isGreek = space.tags?.some(tag => 
-            tag.type === 'greek' || 
-            tag.sub_type?.toLowerCase().includes('fraternity') ||
-            tag.sub_type?.toLowerCase().includes('sorority')
-          );
-          if (isGreek) {
-            categorizedSpaces.greekLife.push(space);
-          } else {
-            categorizedSpaces.studentOrganizations.push(space);
-          }
+        case 'hive_exclusive':
+          categorizedSpaces.hive_exclusive.push(space);
           break;
-        }
-        case 'organization':
-          categorizedSpaces.universityOrganizations.push(space);
+        case 'student_organizations':
+          categorizedSpaces.student_organizations.push(space);
           break;
-        case 'creative':
-          categorizedSpaces.studentOrganizations.push(space);
+        case 'university_organizations':
+          categorizedSpaces.university_organizations.push(space);
           break;
         default:
-          categorizedSpaces.studentOrganizations.push(space);
+          categorizedSpaces.student_organizations.push(space);
       }
     });
 
@@ -236,15 +225,15 @@ export async function GET(request: NextRequest) {
       );
     });
 
-    // If user has majors, prioritize matching academic spaces
+    // If user has majors, prioritize matching university organization spaces
     if (majors.length > 0) {
-      const majorSpaces = categorizedSpaces.academic.filter(space =>
+      const majorSpaces = categorizedSpaces.university_organizations.filter(space =>
         space.tags?.some(tag => majors.includes(tag.sub_type))
       );
-      const otherAcademicSpaces = categorizedSpaces.academic.filter(space =>
+      const otherUniversitySpaces = categorizedSpaces.university_organizations.filter(space =>
         !space.tags?.some(tag => majors.includes(tag.sub_type))
       );
-      categorizedSpaces.academic = [...majorSpaces, ...otherAcademicSpaces];
+      categorizedSpaces.university_organizations = [...majorSpaces, ...otherUniversitySpaces];
     }
 
     // Return formatted result

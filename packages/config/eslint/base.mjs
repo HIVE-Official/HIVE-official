@@ -3,6 +3,7 @@ import pluginJs from "@eslint/js";
 import tseslint from "typescript-eslint";
 import pluginReact from "eslint-plugin-react";
 import storybook from "eslint-plugin-storybook";
+import hiveDesignSystem from "./hive-design-system.mjs";
 
 const baseConfig = [
   {
@@ -247,6 +248,15 @@ const baseConfig = [
       "no-var": "error",
       "prefer-const": "error",
       "prefer-template": "error",
+
+      // HIVE Design System Rules
+      "hive-design-system/no-unauthorized-colors": "error",
+      "hive-design-system/require-hive-motion": "warn",
+      "hive-design-system/no-hardcoded-spacing": "warn",
+      "hive-design-system/enforce-hive-typography": "warn",
+    },
+    plugins: {
+      "hive-design-system": hiveDesignSystem,
     },
   },
   

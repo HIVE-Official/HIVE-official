@@ -43,8 +43,8 @@ export async function POST(request: NextRequest) {
     if (majorSpacesSnapshot.empty) {
       // Create the major space if it doesn't exist
       const spaceName = majorData
-        ? `${majorData.name} Majors`
-        : `${user.majorId} Majors`;
+        ? majorData.name
+        : user.majorId;
       const majorSpaceRef = dbAdmin.collection("spaces").doc();
       majorSpaceId = majorSpaceRef.id;
 
@@ -155,6 +155,69 @@ export async function POST(request: NextRequest) {
     });
 
     spacesJoined.push(residentialSpaceId);
+
+    // 3. Handle Class Space (graduation year)
+    if (user.graduationYear) {
+      const classSpacesSnapshot = await dbAdmin
+        .collection("spaces")
+        .where("type", "==", "class")
+        .where("tags", "array-contains", {
+          type: "class",
+          sub_type: user.graduationYear.toString(),
+        })
+        .limit(1)
+        .get();
+
+      let classSpaceId: string;
+      if (classSpacesSnapshot.empty) {
+        // Create the class space if it doesn't exist
+        const classSpaceRef = dbAdmin.collection("spaces").doc();
+        classSpaceId = classSpaceRef.id;
+
+        const newClassSpace = {
+          name: `Class of ${user.graduationYear}`,
+          name_lowercase: `class of ${user.graduationYear}`,
+          description: `Connect with fellow students graduating in ${user.graduationYear}. Share experiences, plan events, and build lasting friendships with your graduating class.`,
+          memberCount: 0,
+          schoolId: user.schoolId,
+          type: "class",
+          tags: [
+            {
+              type: "class",
+              sub_type: user.graduationYear.toString(),
+            },
+          ],
+          status: "activated",
+          createdAt: FieldValue.serverTimestamp(),
+          updatedAt: FieldValue.serverTimestamp(),
+        };
+
+        batch.set(classSpaceRef, newClassSpace);
+      } else {
+        classSpaceId = classSpacesSnapshot.docs[0].id;
+      }
+
+      // Add user to class space
+      const classMemberRef = dbAdmin
+        .collection("spaces")
+        .doc(classSpaceId)
+        .collection("members")
+        .doc(uid);
+      batch.set(classMemberRef, {
+        uid: uid,
+        role: "member",
+        joinedAt: FieldValue.serverTimestamp(),
+      });
+
+      // Update class space member count
+      const classSpaceRef = dbAdmin.collection("spaces").doc(classSpaceId);
+      batch.update(classSpaceRef, {
+        memberCount: FieldValue.increment(1),
+        updatedAt: FieldValue.serverTimestamp(),
+      });
+
+      spacesJoined.push(classSpaceId);
+    }
 
     // Execute all operations atomically
     await batch.commit();

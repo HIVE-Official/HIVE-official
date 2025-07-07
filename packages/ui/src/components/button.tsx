@@ -82,13 +82,14 @@ const buttonVariants = cva(
           "disabled:text-muted/50"
         ],
         
-        // DESTRUCTIVE: Red variant when needed
+        // DESTRUCTIVE: HIVE monochrome system - uses motion and subtle styling for negative actions
         destructive: [
-          "border-2 border-red-500 bg-transparent text-red-500",
-          "hover:bg-red-500/10 hover:border-red-400",
-          "focus-visible:ring-red-500/50",
-          "active:scale-[0.98]",
-          "disabled:border-red-500/30 disabled:text-red-500/30"
+          "border-2 border-muted bg-transparent text-muted",
+          "hover:bg-surface-02 hover:border-foreground hover:text-foreground hover:shadow-lg",
+          "hover:animate-pulse", // Motion-based feedback instead of red color
+          "focus-visible:ring-muted/50 focus-visible:border-foreground focus-visible:text-foreground",
+          "active:scale-[0.95]", // More dramatic scale for destructive feedback
+          "disabled:border-muted/30 disabled:text-muted/30"
         ],
       },
       size: {

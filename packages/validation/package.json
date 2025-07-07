@@ -21,7 +21,6 @@
     "dev": "concurrently \"tsc --emitDeclarationOnly --watch\" \"tsup src/index.ts --format cjs,esm --sourcemap --watch\""
   },
   "dependencies": {
-    "@hive/core": "workspace:*",
     "zod": "^3.22.4"
   },
   "devDependencies": {

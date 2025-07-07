@@ -11,7 +11,7 @@ const labelVariants = cva(
       variant: {
         default: "text-foreground",
         muted: "text-muted-foreground",
-        required: "text-foreground after:content-['*'] after:ml-0.5 after:text-red-500",
+        required: "text-foreground after:content-['*'] after:ml-0.5 after:text-accent",
         optional: "text-muted-foreground after:content-['(optional)'] after:ml-1 after:text-xs",
       },
       size: {

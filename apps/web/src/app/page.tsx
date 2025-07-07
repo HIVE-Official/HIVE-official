@@ -28,8 +28,8 @@ function HomePageContent() {
     setShowModal(false);
   };
 
-  // Set launch date to July 8th 8 AM 2025
-  const launchDate = new Date('2025-07-08T08:00:00');
+  // Set launch date to July 31st 8 AM 2025
+  const launchDate = new Date('2025-07-31T08:00:00');
   const targetDate = launchDate.toISOString();
 
   if (!mounted) {
@@ -75,8 +75,8 @@ function HomePageContent() {
             >
               <HiveLogo 
                 variant="white" 
-                size="3xl" 
-                className="drop-shadow-2xl w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 xl:w-36 xl:h-36"
+                size="2xl" 
+                className="drop-shadow-2xl w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 xl:w-32 xl:h-32"
               />
             </motion.div>
             
@@ -162,7 +162,7 @@ function HomePageContent() {
                 className="group h-12 sm:h-14 bg-transparent hover:bg-surface px-6 sm:px-8 text-base sm:text-lg font-medium text-foreground border border-[#2A2A2A] hover:border-[#FFD700]/50 transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] focus:ring-2 focus:ring-[#FFD700] focus:ring-offset-2 focus:ring-offset-[#0A0A0A]"
                 onClick={handleWhatsComing}
               >
-                What's Coming
+                See What's Coming
               </Button>
             </motion.div>
           </motion.div>
@@ -222,14 +222,30 @@ function HomePageContent() {
                 {/* Content */}
                 <div className="pr-8">
                   <h2 className="text-xl font-display font-semibold text-foreground mb-4">
-                    What's Coming
+                    The Future of Campus Life
                   </h2>
-                  <p className="text-muted font-sans leading-relaxed mb-4">
-                    Campus community, reimagined by students.
+                  <p className="text-foreground font-sans leading-relaxed mb-4 font-medium">
+                    Skip the small talk. Find your people instantly.
+                  </p>
+                  <p className="text-muted font-sans leading-relaxed mb-2">
+                    • Live study groups that actually happen
+                  </p>
+                  <p className="text-muted font-sans leading-relaxed mb-2">
+                    • Spontaneous meetups in your building
                   </p>
                   <p className="text-muted font-sans leading-relaxed mb-6">
-                    Real-time spaces where you belong. Instant connections that matter. A platform built for how students actually connect.
+                    • Campus connections that last beyond graduation
                   </p>
+                  
+                  {/* Launch Info */}
+                  <div className="bg-[#FFD700]/10 border border-[#FFD700]/30 rounded-lg p-4 mb-4">
+                    <p className="text-[#FFD700] font-sans text-sm font-medium mb-1">
+                      Launching July 31st, 2025
+                    </p>
+                    <p className="text-muted font-sans text-xs">
+                      Join the countdown. Be first to experience the future of campus community.
+                    </p>
+                  </div>
                   
                   {/* CTA Button */}
                   <Button
@@ -237,7 +253,7 @@ function HomePageContent() {
                     className="w-full bg-transparent hover:bg-transparent text-muted/50 border border-[#2A2A2A]/50 transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] cursor-not-allowed"
                     disabled
                   >
-                    Get Early Access
+                    Launching Soon
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </div>

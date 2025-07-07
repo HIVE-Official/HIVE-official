@@ -326,7 +326,7 @@ export function SpaceClaiming({
           <div>
             <label className="block text-sm font-medium text-foreground mb-2">
               Why are you claiming this space?{" "}
-              <span className="text-red-500">*</span>
+              <span className="text-accent">*</span>
             </label>
             <Textarea
               placeholder="Please explain your role in this organization and why you should be granted access to manage this space..."
@@ -348,15 +348,15 @@ export function SpaceClaiming({
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
-                className="p-4 bg-green-500/10 border border-green-500/20 rounded-lg"
+                className="p-4 bg-accent/10 border border-accent/20 rounded-lg"
               >
                 <div className="flex items-center space-x-2">
-                  <CheckCircle className="w-5 h-5 text-green-500" />
+                  <CheckCircle className="w-5 h-5 text-accent" />
                   <div>
-                    <h4 className="font-medium text-green-500">
+                    <h4 className="font-medium text-accent">
                       Claim Submitted!
                     </h4>
-                    <p className="text-sm text-green-600">
+                    <p className="text-sm text-muted">
                       Your claim has been submitted for review. You'll be
                       notified once approved.
                     </p>
@@ -370,13 +370,13 @@ export function SpaceClaiming({
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
-                className="p-4 bg-red-500/10 border border-red-500/20 rounded-lg"
+                className="p-4 bg-surface-02 border border-border rounded-lg"
               >
                 <div className="flex items-center space-x-2">
-                  <AlertCircle className="w-5 h-5 text-red-500" />
+                  <AlertCircle className="w-5 h-5 text-muted" />
                   <div>
-                    <h4 className="font-medium text-red-500">Claim Failed</h4>
-                    <p className="text-sm text-red-600">{errorMessage}</p>
+                    <h4 className="font-medium text-foreground">Claim Failed</h4>
+                    <p className="text-sm text-muted">{errorMessage}</p>
                   </div>
                 </div>
               </motion.div>

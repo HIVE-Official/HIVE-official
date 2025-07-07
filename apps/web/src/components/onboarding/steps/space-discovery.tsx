@@ -23,11 +23,11 @@ interface SpaceData {
 interface SpacesResponse {
   success: boolean;
   spaces: {
-    academic: SpaceData[];
-    campusLiving: SpaceData[];
-    greekLife: SpaceData[];
-    studentOrganizations: SpaceData[];
-    universityOrganizations: SpaceData[];
+    campus_living: SpaceData[];
+    fraternity_and_sorority: SpaceData[];
+    hive_exclusive: SpaceData[];
+    student_organizations: SpaceData[];
+    university_organizations: SpaceData[];
   };
   totalCount: number;
 }
@@ -42,35 +42,35 @@ interface SpaceCategory {
 
 const SPACE_CATEGORIES: SpaceCategory[] = [
   {
-    id: 'academic',
-    title: 'Academic Programs',
-    description: 'Connect with students in your major and related fields',
-    icon: GraduationCap,
-    autoJoin: true,
-  },
-  {
-    id: 'campusLiving',
+    id: 'campus_living',
     title: 'Campus Living',
     description: 'Connect with your dorm, residence hall, or housing community',
     icon: Home,
   },
   {
-    id: 'greekLife',
+    id: 'fraternity_and_sorority',
     title: 'Greek Life',
     description: 'Fraternities, sororities, and Greek organizations',
     icon: Heart,
   },
   {
-    id: 'studentOrganizations',
+    id: 'hive_exclusive',
+    title: 'HIVE Exclusive',
+    description: 'Special HIVE-curated spaces and communities',
+    icon: GraduationCap,
+  },
+  {
+    id: 'student_organizations',
     title: 'Student Organizations',
     description: 'Clubs, societies, and student-run groups',
     icon: Users,
   },
   {
-    id: 'universityOrganizations',
+    id: 'university_organizations',
     title: 'University Organizations',
     description: 'Official university departments and programs',
     icon: Building,
+    autoJoin: true,
   }
 ];
 

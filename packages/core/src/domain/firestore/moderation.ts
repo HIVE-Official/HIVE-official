@@ -1,0 +1,332 @@
+import { z } from "zod";
+import {
+  ContentReportSchema,
+  ModerationQueueItemSchema,
+  ModerationActionLogSchema,
+  UserSafetyRecordSchema,
+  ContentFilterRuleSchema,
+  ContentTypeSchema,
+  ReportReasonSchema,
+  ReportStatusSchema,
+  ModerationActionSchema,
+  ReportSeveritySchema,
+  type ContentReport,
+  type ModerationQueueItem,
+  type ModerationActionLog,
+  type UserSafetyRecord,
+  type ContentFilterRule,
+  type ContentType,
+  type ReportReason,
+  type ReportStatus,
+  type ModerationAction,
+  type ReportSeverity
+} from "@hive/validation";
+
+// Re-export validation schemas
+export {
+  ContentReportSchema,
+  ModerationQueueItemSchema,
+  ModerationActionLogSchema,
+  UserSafetyRecordSchema,
+  ContentFilterRuleSchema,
+  ContentTypeSchema,
+  ReportReasonSchema,
+  ReportStatusSchema,
+  ModerationActionSchema,
+  ReportSeveritySchema,
+  type ContentReport,
+  type ModerationQueueItem,
+  type ModerationActionLog,
+  type UserSafetyRecord,
+  type ContentFilterRule,
+  type ContentType,
+  type ReportReason,
+  type ReportStatus,
+  type ModerationAction,
+  type ReportSeverity
+};
+
+// Firestore-specific helpers
+export const ContentReportConverter = {
+  toFirestore: (report: ContentReport) => ({
+    ...report,
+    assignedAt: report.assignedAt,
+    resolvedAt: report.resolvedAt,
+    appealedAt: report.appealedAt,
+    createdAt: report.createdAt,
+    updatedAt: report.updatedAt
+  }),
+  
+  fromFirestore: (data: any): ContentReport => {
+    return ContentReportSchema.parse({
+      ...data,
+      assignedAt: data.assignedAt?.toDate?.() || data.assignedAt,
+      resolvedAt: data.resolvedAt?.toDate?.() || data.resolvedAt,
+      appealedAt: data.appealedAt?.toDate?.() || data.appealedAt,
+      createdAt: data.createdAt?.toDate?.() || data.createdAt,
+      updatedAt: data.updatedAt?.toDate?.() || data.updatedAt
+    });
+  }
+};
+
+export const ModerationActionLogConverter = {
+  toFirestore: (log: ModerationActionLog) => ({
+    ...log,
+    expiresAt: log.expiresAt,
+    reversedAt: log.reversedAt,
+    createdAt: log.createdAt
+  }),
+  
+  fromFirestore: (data: any): ModerationActionLog => {
+    return ModerationActionLogSchema.parse({
+      ...data,
+      expiresAt: data.expiresAt?.toDate?.() || data.expiresAt,
+      reversedAt: data.reversedAt?.toDate?.() || data.reversedAt,
+      createdAt: data.createdAt?.toDate?.() || data.createdAt
+    });
+  }
+};
+
+// Collection paths
+export const MODERATION_COLLECTIONS = {
+  CONTENT_REPORTS: 'content_reports',
+  MODERATION_QUEUE: 'moderation_queue',
+  ACTION_LOGS: 'moderation_action_logs',
+  USER_SAFETY_RECORDS: 'user_safety_records',
+  FILTER_RULES: 'content_filter_rules',
+  SAFETY_REPORTS: 'safety_reports'
+} as const;
+
+// Moderation utility functions
+export const ModerationUtils = {
+  createReport: (
+    contentType: ContentType,
+    contentId: string,
+    reason: ReportReason,
+    description: string,
+    reportedBy: string,
+    contentAuthor: string,
+    options?: Partial<ContentReport>
+  ): Omit<ContentReport, 'id' | 'createdAt' | 'updatedAt'> => ({
+    contentType,
+    contentId,
+    reason,
+    description,
+    reportedBy,
+    reporterAnonymous: false,
+    contentAuthor,
+    severity: ModerationUtils.getSeverityFromReason(reason),
+    category: [],
+    status: 'pending',
+    priority: 3,
+    screenshots: [],
+    additionalEvidence: [],
+    appealable: true,
+    ...options
+  }),
+  
+  getSeverityFromReason: (reason: ReportReason): ReportSeverity => {
+    const severityMap: Record<ReportReason, ReportSeverity> = {
+      'spam': 'low',
+      'harassment': 'high',
+      'hate_speech': 'critical',
+      'violence': 'critical',
+      'sexual_content': 'high',
+      'misinformation': 'medium',
+      'copyright': 'medium',
+      'privacy_violation': 'high',
+      'impersonation': 'high',
+      'inappropriate_content': 'medium',
+      'off_topic': 'low',
+      'duplicate': 'low',
+      'other': 'medium'
+    };
+    
+    return severityMap[reason] || 'medium';
+  },
+  
+  calculatePriorityScore: (report: ContentReport): number => {
+    let score = 50; // Base score
+    
+    // Severity multipliers
+    const severityMultipliers = {
+      'low': 0.5,
+      'medium': 1.0,
+      'high': 1.5,
+      'critical': 2.0
+    };
+    
+    score *= severityMultipliers[report.severity];
+    
+    // Reason adjustments
+    if (report.reason === 'violence' || report.reason === 'hate_speech') {
+      score += 30;
+    }
+    
+    // Evidence bonus
+    if (report.screenshots.length > 0) score += 10;
+    if (report.additionalEvidence.length > 0) score += 5;
+    
+    // Time factor (newer reports get higher priority)
+    const hoursOld = (Date.now() - report.createdAt.getTime()) / (1000 * 60 * 60);
+    if (hoursOld < 1) score += 15;
+    else if (hoursOld < 6) score += 10;
+    else if (hoursOld < 24) score += 5;
+    
+    return Math.min(100, Math.max(0, Math.round(score)));
+  },
+  
+  shouldAutoFlag: (report: ContentReport): boolean => {
+    return report.severity === 'critical' || 
+           report.reason === 'violence' || 
+           report.reason === 'hate_speech';
+  },
+  
+  getEstimatedReviewTime: (report: ContentReport): number => {
+    // Returns estimated review time in minutes
+    const baseTime = {
+      'low': 5,
+      'medium': 15,
+      'high': 30,
+      'critical': 60
+    };
+    
+    let time = baseTime[report.severity];
+    
+    // Add time for evidence review
+    time += report.screenshots.length * 2;
+    time += report.additionalEvidence.length * 1;
+    
+    // Complex reasons take longer
+    if (['misinformation', 'copyright', 'privacy_violation'].includes(report.reason)) {
+      time *= 1.5;
+    }
+    
+    return Math.round(time);
+  },
+  
+  canAppeal: (report: ContentReport): boolean => {
+    return report.appealable && 
+           report.status === 'resolved' && 
+           !report.appealedAt;
+  },
+  
+  isStale: (report: ContentReport, staleDays: number = 30): boolean => {
+    const staleDate = new Date();
+    staleDate.setDate(staleDate.getDate() - staleDays);
+    return report.createdAt < staleDate && report.status === 'pending';
+  }
+};
+
+// User safety utilities
+export const UserSafetyUtils = {
+  calculateRiskLevel: (record: UserSafetyRecord): ReportSeverity => {
+    const violationRatio = record.totalReports > 0 
+      ? record.confirmedViolations / record.totalReports 
+      : 0;
+    
+    if (record.confirmedViolations >= 5 || violationRatio > 0.8) return 'critical';
+    if (record.confirmedViolations >= 3 || violationRatio > 0.6) return 'high';
+    if (record.confirmedViolations >= 1 || violationRatio > 0.3) return 'medium';
+    return 'low';
+  },
+  
+  shouldSuspend: (record: UserSafetyRecord): boolean => {
+    return record.confirmedViolations >= 3 || 
+           record.warnings >= 5 ||
+           record.behaviorScore < 20;
+  },
+  
+  shouldBan: (record: UserSafetyRecord): boolean => {
+    return record.confirmedViolations >= 5 || 
+           record.suspensions >= 3 ||
+           record.behaviorScore < 10;
+  },
+  
+  calculateRehabilitationProgress: (record: UserSafetyRecord): number => {
+    if (!record.lastViolation) return 100;
+    
+    const daysSince = (Date.now() - record.lastViolation.getTime()) / (1000 * 60 * 60 * 24);
+    const maxRehabDays = 90; // 3 months for full rehabilitation
+    
+    return Math.min(100, Math.round((daysSince / maxRehabDays) * 100));
+  },
+  
+  updateBehaviorScore: (
+    record: UserSafetyRecord, 
+    action: 'violation' | 'positive' | 'neutral'
+  ): number => {
+    let newScore = record.behaviorScore;
+    
+    switch (action) {
+      case 'violation':
+        newScore -= 20;
+        break;
+      case 'positive':
+        newScore += 5;
+        break;
+      case 'neutral':
+        // Gradual recovery over time
+        newScore += 0.1;
+        break;
+    }
+    
+    return Math.min(100, Math.max(0, newScore));
+  }
+};
+
+// Content filter utilities
+export const ContentFilterUtils = {
+  testContent: (content: string, rules: ContentFilterRule[]): {
+    matched: boolean;
+    rule?: ContentFilterRule;
+    confidence: number;
+  } => {
+    for (const rule of rules.filter(r => r.active)) {
+      for (const pattern of rule.patterns) {
+        try {
+          const regex = new RegExp(pattern, 'gi');
+          if (regex.test(content)) {
+            return {
+              matched: true,
+              rule,
+              confidence: rule.confidence
+            };
+          }
+        } catch {
+          // Invalid regex, skip
+          continue;
+        }
+      }
+      
+      // Check keywords
+      const lowerContent = content.toLowerCase();
+      for (const keyword of rule.keywords) {
+        if (lowerContent.includes(keyword.toLowerCase())) {
+          return {
+            matched: true,
+            rule,
+            confidence: rule.confidence
+          };
+        }
+      }
+    }
+    
+    return { matched: false, confidence: 0 };
+  },
+  
+  updateRuleAccuracy: (
+    rule: ContentFilterRule,
+    wasCorrect: boolean
+  ): Partial<ContentFilterRule> => {
+    const newMatches = rule.matches + 1;
+    const newFalsePositives = rule.falsePositives + (wasCorrect ? 0 : 1);
+    const newAccuracy = (newMatches - newFalsePositives) / newMatches;
+    
+    return {
+      matches: newMatches,
+      falsePositives: newFalsePositives,
+      accuracy: Math.max(0, newAccuracy)
+    };
+  }
+};

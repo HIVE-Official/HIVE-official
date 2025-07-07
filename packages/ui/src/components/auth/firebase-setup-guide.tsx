@@ -32,8 +32,8 @@ NEXT_PUBLIC_FIREBASE_APP_ID=1:123456789012:web:abcdefghijklmnop`;
       >
         <Card className="bg-card border-border">
           <CardHeader className="text-center space-y-4">
-            <div className="mx-auto w-16 h-16 bg-orange-500/10 rounded-full flex items-center justify-center">
-              <Settings className="w-8 h-8 text-orange-500" />
+            <div className="mx-auto w-16 h-16 bg-surface-02 rounded-full flex items-center justify-center">
+              <Settings className="w-8 h-8 text-accent" />
             </div>
             <CardTitle className="text-2xl font-display">Email System Setup Required</CardTitle>
             <p className="text-muted-foreground">
@@ -43,14 +43,14 @@ NEXT_PUBLIC_FIREBASE_APP_ID=1:123456789012:web:abcdefghijklmnop`;
 
           <CardContent className="space-y-6">
             {/* Quick Start for Development */}
-            <div className="bg-blue-500/5 border border-blue-500/20 rounded-lg p-4">
+            <div className="bg-surface-01 border border-border rounded-lg p-4">
               <div className="flex items-start gap-3">
-                <AlertTriangle className="w-5 h-5 text-blue-500 mt-0.5" />
+                <AlertTriangle className="w-5 h-5 text-accent mt-0.5" />
                 <div>
-                  <h3 className="font-semibold text-blue-700 dark:text-blue-300">
+                  <h3 className="font-semibold text-foreground">
                     Currently in Development Mode
                   </h3>
-                  <p className="text-sm text-blue-600 dark:text-blue-400 mt-1">
+                  <p className="text-sm text-muted mt-1">
                     The app is running without Firebase. Real email sending is disabled.
                   </p>
                 </div>
@@ -166,14 +166,14 @@ NEXT_PUBLIC_FIREBASE_APP_ID=1:123456789012:web:abcdefghijklmnop`;
 
             {/* For now, continue button */}
             <div className="border-t border-border pt-6">
-              <div className="bg-amber-500/5 border border-amber-500/20 rounded-lg p-4">
+              <div className="bg-surface-02 border border-accent/30 rounded-lg p-4">
                 <div className="flex items-center gap-3">
-                  <AlertTriangle className="w-5 h-5 text-amber-500" />
+                  <AlertTriangle className="w-5 h-5 text-accent" />
                   <div>
-                    <h4 className="font-semibold text-amber-700 dark:text-amber-300">
+                    <h4 className="font-semibold text-foreground">
                       Development Testing
                     </h4>
-                    <p className="text-sm text-amber-600 dark:text-amber-400 mt-1">
+                    <p className="text-sm text-muted mt-1">
                       For now, you can continue testing the UI flows. Real email sending will work once Firebase is configured.
                     </p>
                   </div>

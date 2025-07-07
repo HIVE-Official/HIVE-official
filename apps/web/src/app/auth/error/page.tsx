@@ -70,11 +70,11 @@ function AuthErrorContent() {
           className="self-start mb-8"
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.18, ease: [0.33, 0.65, 0, 1] }}
         >
           <Button asChild variant="ghost" className="text-muted hover:text-foreground group">
             <Link href="/welcome">
-              <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform duration-200" />
+              <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)]" />
               Back to welcome
             </Link>
           </Button>
@@ -85,10 +85,10 @@ function AuthErrorContent() {
           className="mb-8"
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
+          transition={{ duration: 0.18, delay: 0.05, ease: [0.33, 0.65, 0, 1] }}
         >
-          <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center">
-            <AlertTriangle className="w-8 h-8 text-red-500" />
+          <div className="w-16 h-16 bg-surface-01 rounded-full flex items-center justify-center">
+            <AlertTriangle className="w-8 h-8 text-muted" />
           </div>
         </motion.div>
 
@@ -97,9 +97,9 @@ function AuthErrorContent() {
           className="text-center mb-8 max-w-md"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
+          transition={{ duration: 0.18, delay: 0.1, ease: [0.33, 0.65, 0, 1] }}
         >
-          <h1 className="text-4xl font-bold font-display mb-4 text-red-500">
+          <h1 className="text-4xl font-bold font-display mb-4 text-foreground">
             Oops!
           </h1>
           <p className="text-lg text-foreground/80 font-sans mb-2">
@@ -115,7 +115,7 @@ function AuthErrorContent() {
           className="w-full max-w-md space-y-4"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
+          transition={{ duration: 0.18, delay: 0.15, ease: [0.33, 0.65, 0, 1] }}
         >
           <Button
             asChild
@@ -142,7 +142,7 @@ function AuthErrorContent() {
           className="text-center mt-8 max-w-md"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.8 }}
+          transition={{ duration: 0.18, delay: 0.2, ease: [0.33, 0.65, 0, 1] }}
         >
           <p className="text-xs text-muted font-sans">
             Still having trouble? The HIVE team is here to help.{' '}

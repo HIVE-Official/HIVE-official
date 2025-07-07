@@ -81,6 +81,9 @@ export { RoleSelection } from "./components/onboarding/steps/role-selection";
 export { SpaceClaiming } from "./components/onboarding/steps/space-claiming";
 export { SuggestedSpaces } from "./components/onboarding/steps/suggested-spaces";
 
+// Export spaces components
+export { SpaceRequestForm } from "./components/spaces/space-request-form";
+
 // Export landing page components - TEMPORARILY DISABLED - uses motion
 // export * from "./components/landing";
 
@@ -92,6 +95,16 @@ export * from "./lib/utils";
 
 // Export motion utilities
 export { MotionProvider, MotionDiv, MotionSpan, MotionButton } from "./components/motion-wrapper";
+export { hiveVariants, hiveTransitions } from "./lib/motion";
 
 // Export Storybook-specific utilities
 export { StorybookThemeProvider } from "./components/ui/storybook-theme-provider";
+
+// Export profile components
+export { BentoGrid, type BentoCard } from "./components/profile/bento-grid";
+export { BentoProfileDashboard } from "./components/profile/bento-profile-dashboard";
+export { ProfileHeaderCard } from "./components/profile/profile-header-card";
+export { HiveLabCard } from "./components/profile/hivelab-card";
+export { ToolsCard } from "./components/profile/tools-card";
+export { CalendarCard } from "./components/profile/calendar-card";
+export { GhostModeCard } from "./components/profile/ghost-mode-card";

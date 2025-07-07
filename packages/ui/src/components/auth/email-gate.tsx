@@ -90,19 +90,19 @@ export const EmailGate: React.FC<EmailGateProps> = ({
       animate={{ opacity: 1, y: 0 }}
       className={cn("w-full max-w-md", className)}
     >
-      <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
+      <div className="bg-surface border border-border rounded-lg p-6">
         {isSuccess ? (
           <div className="text-center space-y-4">
             <div className="flex justify-center">
               <CheckCircle className="w-12 h-12 text-accent" />
             </div>
             <h2 className="text-xl font-semibold text-white font-display">Check Your Email</h2>
-            <p className="text-zinc-400">
+            <p className="text-muted-foreground">
               We sent a magic link to <span className="text-white font-medium">{email}</span>. 
               Click it to continue to HIVE.
             </p>
             
-            <div className="text-xs text-zinc-500 mt-4">
+            <div className="text-xs text-muted-foreground mt-4">
               Didn't receive it? Check your spam folder or try again.
             </div>
           </div>
@@ -114,7 +114,7 @@ export const EmailGate: React.FC<EmailGateProps> = ({
               </div>
               <div>
                 <h2 className="text-xl font-semibold text-white font-display">Join {schoolName}</h2>
-                <p className="text-zinc-400 mt-1">
+                <p className="text-muted-foreground mt-1">
                   Enter your {schoolDomain} email to continue
                 </p>
               </div>
@@ -124,9 +124,9 @@ export const EmailGate: React.FC<EmailGateProps> = ({
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-red-900/20 border border-red-500/20 rounded-lg p-3 mb-4"
+                className="bg-surface/50 border border-border rounded-lg p-3 mb-4"
               >
-                <div className="flex items-center gap-2 text-red-400 text-sm">
+                <div className="flex items-center gap-2 text-muted-foreground text-sm">
                   <AlertCircle className="w-4 h-4" />
                   {error}
                 </div>
@@ -147,7 +147,7 @@ export const EmailGate: React.FC<EmailGateProps> = ({
                     setEmail(e.target.value);
                     setError(null); // Clear error when user types
                   }}
-                  className="bg-zinc-800 border-zinc-700"
+                  className="bg-primary border-border"
                   required
                   disabled={isSubmitting}
                 />

@@ -13,9 +13,8 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
   onGetInside, 
   className 
 }) => {
-  // Placeholder for launch date - 7 days from now.
-  // This should be fetched from a remote config in a real-world scenario.
-  const launchDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
+  // Launch date set to July 31st, 2025 at 8 AM
+  const launchDate = new Date('2025-07-31T08:00:00').toISOString();
 
   return (
     <div className={cn(

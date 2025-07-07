@@ -70,8 +70,9 @@ const nextConfig = {
 
     return config;
   },
-  // Ensure Next.js doesn't interfere with our workspace setup
+  // Turborepo monorepo package transpilation
   transpilePackages: [
+    // Internal workspace packages
     '@hive/ui',
     '@hive/core', 
     '@hive/auth-logic',

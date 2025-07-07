@@ -173,7 +173,7 @@ export const DisplayNameAvatarStep: React.FC<StepProps> = ({
               )}
             </div>
             {handleError && (
-              <p className="text-xs text-red-500 pt-1">{handleError}</p>
+              <p className="text-xs text-muted pt-1 animate-pulse">{handleError}</p>
             )}
           </div>
             <div className="space-y-2">

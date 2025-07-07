@@ -106,7 +106,7 @@ export const SchoolPick: React.FC<SchoolPickProps> = ({
 
   return (
     <motion.div 
-      className={cn("w-full space-y-6", className)}
+      className={cn("w-full space-y-8", className)}
       variants={hiveVariants.container}
       initial="hidden"
       animate="visible"
@@ -123,7 +123,7 @@ export const SchoolPick: React.FC<SchoolPickProps> = ({
         />
       </motion.div>
 
-      <motion.div className="space-y-3" variants={hiveVariants.item}>
+      <motion.div className="space-y-4" variants={hiveVariants.item}>
         <AnimatePresence mode="popLayout">
           {filteredSchools.map((school, index) => (
             <motion.div
@@ -138,7 +138,7 @@ export const SchoolPick: React.FC<SchoolPickProps> = ({
               <motion.button
                 onClick={() => handleSchoolClick(school)}
                 className={cn(
-                  'w-full p-5 text-left rounded-xl border border-border bg-surface/50',
+                  'w-full p-6 text-left rounded-xl border border-border bg-surface/50',
                   'transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)]',
                   'focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2',
                   school.status === 'waitlist' && 'border-border/60'
@@ -155,10 +155,10 @@ export const SchoolPick: React.FC<SchoolPickProps> = ({
               >
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
-                    <h3 className="font-medium text-base">{school.name}</h3>
-                    <p className="text-sm text-muted-foreground mt-0.5">{school.domain}</p>
+                    <h3 className="font-medium text-lg">{school.name}</h3>
+                    <p className="text-sm text-muted-foreground mt-1.5">{school.domain}</p>
                   </div>
-                  <div className="flex items-center gap-4 ml-4">
+                  <div className="flex items-center gap-5 ml-6">
                     {school.status === 'open' ? (
                       <motion.div
                         className="text-accent"
@@ -168,13 +168,13 @@ export const SchoolPick: React.FC<SchoolPickProps> = ({
                         <ChevronRight className="h-5 w-5" />
                       </motion.div>
                     ) : (
-                      <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-3">
                         <div className="text-right min-w-0">
                           <div className="text-sm text-muted-foreground font-medium whitespace-nowrap">
-                            <span>{school.studentsUntilOpen.toString().charAt(0)}</span><span className="blur-[4px] select-none" style={{ filter: 'blur(4px)', textShadow: '0 0 4px currentColor' }}>{school.studentsUntilOpen.toString().slice(1)}</span> left
+                            <span>{school.studentsUntilOpen.toString().charAt(0)}</span><span className="blur-[4px] select-none" style={{ filter: 'blur(4px)', textShadow: '0 0 4px currentColor' }}>{school.studentsUntilOpen.toString().slice(1)}</span> people till opening
                           </div>
                         </div>
-                        <Lock className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                        <Lock className="h-5 w-5 text-muted-foreground flex-shrink-0" />
                       </div>
                     )}
                   </div>
@@ -192,14 +192,14 @@ export const SchoolPick: React.FC<SchoolPickProps> = ({
         title={`Join ${waitlistSchool?.name} Waitlist`}
         description="Get notified when HIVE launches at your school."
       >
-        <div className="mt-4 space-y-4">
+        <div className="mt-6 space-y-6">
           <div>
-            <Label>School</Label>
-            <p className="text-sm text-muted-foreground">{waitlistSchool?.domain}</p>
+            <Label className="text-base">School</Label>
+            <p className="text-sm text-muted-foreground mt-2">{waitlistSchool?.domain}</p>
           </div>
           {!userEmail && (
             <div>
-              <Label htmlFor="waitlist-email">Email</Label>
+              <Label htmlFor="waitlist-email" className="text-base">Email</Label>
               <Input
                 id="waitlist-email"
                 type="email"
@@ -207,19 +207,20 @@ export const SchoolPick: React.FC<SchoolPickProps> = ({
                 value={waitlistEmail}
                 onChange={(e) => setWaitlistEmail(e.target.value)}
                 variant="accent"
-                className="mt-2"
+                className="mt-3"
                 required
               />
             </div>
           )}
           {waitlistError && (
-            <div className="p-3 rounded-xl bg-surface border border-border">
+            <div className="p-4 rounded-xl bg-surface border border-border">
               <p className="text-sm text-muted-foreground">{waitlistError}</p>
             </div>
           )}
           <Button 
             onClick={handleJoinWaitlist} 
             variant="ritual"
+            size="lg"
             fullWidth
             disabled={isJoiningWaitlist || (!userEmail && !waitlistEmail)}
           >
@@ -237,8 +238,9 @@ export const SchoolPick: React.FC<SchoolPickProps> = ({
       >
         <Button 
           onClick={handleCloseSuccess} 
-          className="mt-4" 
+          className="mt-6" 
           variant="accent"
+          size="lg"
           fullWidth
         >
           Close

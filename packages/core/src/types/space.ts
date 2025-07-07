@@ -1,4 +1,4 @@
-export type SpaceType = 'clubs' | 'organizations' | 'academic' | 'greek';
+export type SpaceType = 'campus_living' | 'fraternity_and_sorority' | 'hive_exclusive' | 'student_organizations' | 'university_organizations';
 
 export interface Space {
   id: string;

@@ -175,3 +175,11 @@ Required environment variables (see ENV_TEMPLATE.md):
 - **Motion:** Use brand timing curves and duration system
 - **Components:** Must pass brand design quality checklist
 - **Campus Energy:** Interface should adapt to student life cycles
+
+## Product Design Insights
+
+### Gen Z User Experience
+- Remember that for HIVE - UI and UX is going to have to be flawless considering that it is Gen Z using the platform. It is important to be flawless and consistent.
+
+## Product Architecture Considerations
+- Always question and find the best way to retain users within the collegiate experience

@@ -1,13 +1,93 @@
 /**
  * Handle Generation Utilities
- * Automatically generates unique handles from display names
+ * Automatically generates unique handles from display names with randomization and filtering
  */
+
+// Bad words filter - basic implementation
+const BAD_WORDS = [
+  'hate', 'nazi', 'kill', 'die', 'death', 'murder', 'terrorist', 'bomb', 'gun', 'weapon',
+  'drug', 'drugs', 'cocaine', 'heroin', 'meth', 'weed', 'marijuana', 'alcohol', 'drunk',
+  'sex', 'sexy', 'nude', 'naked', 'porn', 'adult', 'xxx', 'nsfw'
+];
 
 export function generateBaseHandle(displayName: string): string {
   return displayName
     .toLowerCase()
-    .replace(/[^a-z0-9]/g, "") // Remove non-alphanumeric characters
+    .replace(/[^a-z0-9._]/g, "") // Remove non-alphanumeric characters except dots and underscores
+    .replace(/\s+/g, ".") // Replace spaces with dots
     .slice(0, 15); // Limit to 15 characters
+}
+
+export function generateNameBasedHandles(displayName: string): string[] {
+  if (!displayName || displayName.trim().length === 0) {
+    return [];
+  }
+
+  const cleanName = displayName.trim();
+  const names = cleanName.split(/\s+/);
+  const firstName = names[0]?.toLowerCase().replace(/[^a-z0-9]/g, "") || "";
+  const lastName = names[names.length - 1]?.toLowerCase().replace(/[^a-z0-9]/g, "") || "";
+  
+  const variations: string[] = [];
+  
+  // Full name variations
+  const fullName = generateBaseHandle(cleanName);
+  if (fullName && !containsBadWords(fullName)) {
+    variations.push(fullName);
+    variations.push(`${fullName}${Math.floor(Math.random() * 99) + 1}`);
+  }
+  
+  // First name + last initial
+  if (firstName && lastName) {
+    const firstLastInitial = `${firstName}${lastName.charAt(0)}`;
+    if (!containsBadWords(firstLastInitial)) {
+      variations.push(firstLastInitial);
+      variations.push(`${firstLastInitial}${Math.floor(Math.random() * 99) + 1}`);
+    }
+  }
+  
+  // First initial + last name
+  if (firstName && lastName) {
+    const initialLast = `${firstName.charAt(0)}${lastName}`;
+    if (!containsBadWords(initialLast)) {
+      variations.push(initialLast);
+      variations.push(`${initialLast}${Math.floor(Math.random() * 99) + 1}`);
+    }
+  }
+  
+  // First name with dots
+  if (firstName && lastName) {
+    const dottedName = `${firstName}.${lastName}`;
+    if (!containsBadWords(dottedName)) {
+      variations.push(dottedName);
+    }
+  }
+  
+  // First name with underscore
+  if (firstName && lastName) {
+    const underscoredName = `${firstName}_${lastName}`;
+    if (!containsBadWords(underscoredName)) {
+      variations.push(underscoredName);
+    }
+  }
+  
+  // First name only with numbers
+  if (firstName && !containsBadWords(firstName)) {
+    variations.push(`${firstName}${Math.floor(Math.random() * 999) + 1}`);
+    variations.push(`${firstName}${new Date().getFullYear() % 100}`);
+  }
+  
+  // Remove duplicates and limit length
+  const uniqueVariations = [...new Set(variations)]
+    .filter(handle => handle.length >= 3 && handle.length <= 15)
+    .slice(0, 6);
+  
+  return uniqueVariations;
+}
+
+export function containsBadWords(text: string): boolean {
+  const lowerText = text.toLowerCase();
+  return BAD_WORDS.some(word => lowerText.includes(word));
 }
 
 export function generateHandleVariants(baseHandle: string): string[] {
@@ -81,11 +161,16 @@ export function validateHandle(handle: string): {
     return { valid: false, error: "Handle must be 15 characters or less" };
   }
 
-  if (!/^[a-z0-9]+$/.test(handle)) {
+  if (!/^[a-z0-9._]+$/.test(handle)) {
     return {
       valid: false,
-      error: "Handle can only contain lowercase letters and numbers",
+      error: "Handle can only contain lowercase letters, numbers, dots, and underscores",
     };
+  }
+
+  // Check for bad words
+  if (containsBadWords(handle)) {
+    return { valid: false, error: "Handle contains inappropriate content" };
   }
 
   // Reserved handles
@@ -119,4 +204,16 @@ export function validateHandle(handle: string): {
   }
 
   return { valid: true };
+}
+
+export function generateHandleSuggestions(displayName: string, count: number = 4): string[] {
+  if (!displayName || displayName.trim().length === 0) {
+    return [];
+  }
+
+  // Generate name-based variations
+  const nameBasedHandles = generateNameBasedHandles(displayName);
+  
+  // Return up to the requested count
+  return nameBasedHandles.slice(0, count);
 }

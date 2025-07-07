@@ -8,12 +8,13 @@ export type SpaceStatus = 'dormant' | 'activated' | 'frozen';
 
 /**
  * Represents the type of a Space, used for filtering and discovery.
- * - 'academic': Related to majors, departments, or courses.
- * - 'social': For clubs, hobbies, and social groups.
- * - 'residential': For dorms and on-campus housing.
- * - 'administrative': Official university announcements.
+ * - 'campus_living': Dorms, residential halls, and housing communities
+ * - 'fraternity_and_sorority': Greek life organizations  
+ * - 'hive_exclusive': Special HIVE-curated spaces and communities
+ * - 'student_organizations': Student-led clubs, societies, and groups
+ * - 'university_organizations': Official university departments and programs
  */
-export type SpaceType = 'academic' | 'social' | 'residential' | 'administrative';
+export type SpaceType = 'campus_living' | 'fraternity_and_sorority' | 'hive_exclusive' | 'student_organizations' | 'university_organizations';
 
 /**
  * Defines the tags for a Space, providing metadata for categorization.

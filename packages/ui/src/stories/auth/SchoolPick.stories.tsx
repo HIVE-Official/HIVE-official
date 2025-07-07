@@ -51,39 +51,44 @@ type Story = StoryObj<typeof meta>;
 
 const mockSchools = [
   {
-    id: 'ub',
+    id: 'buffalo',
     name: 'University at Buffalo',
     domain: 'buffalo.edu',
     status: 'open' as const,
-    isUB: true,
+    studentsUntilOpen: 0,
+    waitlistCount: 0,
   },
   {
     id: 'cornell',
     name: 'Cornell University',
     domain: 'cornell.edu',
     status: 'waitlist' as const,
-    waitlistCount: 127,
+    studentsUntilOpen: 127,
+    waitlistCount: 45,
   },
   {
     id: 'columbia',
     name: 'Columbia University',
     domain: 'columbia.edu',
     status: 'waitlist' as const,
-    waitlistCount: 261,
+    studentsUntilOpen: 261,
+    waitlistCount: 89,
   },
   {
     id: 'nyu',
     name: 'New York University',
     domain: 'nyu.edu',
     status: 'waitlist' as const,
-    waitlistCount: 156,
+    studentsUntilOpen: 156,
+    waitlistCount: 67,
   },
   {
     id: 'rit',
     name: 'Rochester Institute of Technology',
     domain: 'rit.edu',
     status: 'waitlist' as const,
-    waitlistCount: 73,
+    studentsUntilOpen: 73,
+    waitlistCount: 23,
   },
 ];
 
@@ -124,21 +129,24 @@ export const WaitlistStatus: Story = {
         name: 'Cornell University',
         domain: 'cornell.edu',
         status: 'waitlist' as const,
-        waitlistCount: 127,
+        studentsUntilOpen: 127,
+        waitlistCount: 45,
       },
       {
         id: 'columbia',
         name: 'Columbia University',
         domain: 'columbia.edu',
         status: 'waitlist' as const,
-        waitlistCount: 261,
+        studentsUntilOpen: 261,
+        waitlistCount: 89,
       },
       {
         id: 'harvard',
         name: 'Harvard University',
         domain: 'harvard.edu',
         status: 'waitlist' as const,
-        waitlistCount: 4, // Almost full
+        studentsUntilOpen: 4, // Almost full
+        waitlistCount: 289,
       },
     ],
     onSchoolSelect: action('school-selected'),

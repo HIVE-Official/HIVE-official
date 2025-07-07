@@ -1,4 +1,7 @@
 import type { School } from '../domain/school';
+import { Timestamp } from 'firebase/firestore';
+
+const now = Timestamp.now();
 
 export const SCHOOLS: School[] = [
   {
@@ -7,7 +10,20 @@ export const SCHOOLS: School[] = [
     domain: 'buffalo.edu',
     status: 'open',
     studentsUntilOpen: 0,
-    waitlistCount: 0
+    waitlistCount: 0,
+    city: 'Buffalo',
+    state: 'NY',
+    country: 'US',
+    timezone: 'America/New_York',
+    majors: [],
+    academicCalendar: 'semester',
+    allowsAutoJoin: true,
+    requiresVerification: false,
+    autoSpacesEnabled: true,
+    hasDormitories: true,
+    dormitoryList: [],
+    createdAt: now,
+    updatedAt: now
   },
   {
     id: 'buffalostate',
@@ -15,7 +31,20 @@ export const SCHOOLS: School[] = [
     domain: 'buffalostate.edu',
     status: 'waitlist',
     studentsUntilOpen: 350,
-    waitlistCount: 0
+    waitlistCount: 0,
+    city: 'Buffalo',
+    state: 'NY',
+    country: 'US',
+    timezone: 'America/New_York',
+    majors: [],
+    academicCalendar: 'semester',
+    allowsAutoJoin: true,
+    requiresVerification: false,
+    autoSpacesEnabled: true,
+    hasDormitories: true,
+    dormitoryList: [],
+    createdAt: now,
+    updatedAt: now
   },
   {
     id: 'binghamton',
@@ -23,7 +52,20 @@ export const SCHOOLS: School[] = [
     domain: 'binghamton.edu',
     status: 'waitlist',
     studentsUntilOpen: 350,
-    waitlistCount: 0
+    waitlistCount: 0,
+    city: 'Binghamton',
+    state: 'NY',
+    country: 'US',
+    timezone: 'America/New_York',
+    majors: [],
+    academicCalendar: 'semester',
+    allowsAutoJoin: true,
+    requiresVerification: false,
+    autoSpacesEnabled: true,
+    hasDormitories: true,
+    dormitoryList: [],
+    createdAt: now,
+    updatedAt: now
   },
   {
     id: 'stonybrook',
@@ -31,7 +73,20 @@ export const SCHOOLS: School[] = [
     domain: 'stonybrook.edu',
     status: 'waitlist',
     studentsUntilOpen: 350,
-    waitlistCount: 0
+    waitlistCount: 0,
+    city: 'Stony Brook',
+    state: 'NY',
+    country: 'US',
+    timezone: 'America/New_York',
+    majors: [],
+    academicCalendar: 'semester',
+    allowsAutoJoin: true,
+    requiresVerification: false,
+    autoSpacesEnabled: true,
+    hasDormitories: true,
+    dormitoryList: [],
+    createdAt: now,
+    updatedAt: now
   },
   {
     id: 'sbu',
@@ -39,7 +94,20 @@ export const SCHOOLS: School[] = [
     domain: 'sbu.edu',
     status: 'waitlist',
     studentsUntilOpen: 350,
-    waitlistCount: 0
+    waitlistCount: 0,
+    city: 'St. Bonaventure',
+    state: 'NY',
+    country: 'US',
+    timezone: 'America/New_York',
+    majors: [],
+    academicCalendar: 'semester',
+    allowsAutoJoin: true,
+    requiresVerification: false,
+    autoSpacesEnabled: true,
+    hasDormitories: true,
+    dormitoryList: [],
+    createdAt: now,
+    updatedAt: now
   },
   {
     id: 'cornell',
@@ -47,7 +115,20 @@ export const SCHOOLS: School[] = [
     domain: 'cornell.edu',
     status: 'waitlist',
     studentsUntilOpen: 350,
-    waitlistCount: 0
+    waitlistCount: 0,
+    city: 'Ithaca',
+    state: 'NY',
+    country: 'US',
+    timezone: 'America/New_York',
+    majors: [],
+    academicCalendar: 'semester',
+    allowsAutoJoin: true,
+    requiresVerification: false,
+    autoSpacesEnabled: true,
+    hasDormitories: true,
+    dormitoryList: [],
+    createdAt: now,
+    updatedAt: now
   },
   {
     id: 'syracuse',
@@ -55,7 +136,20 @@ export const SCHOOLS: School[] = [
     domain: 'syracuse.edu',
     status: 'waitlist',
     studentsUntilOpen: 350,
-    waitlistCount: 0
+    waitlistCount: 0,
+    city: 'Syracuse',
+    state: 'NY',
+    country: 'US',
+    timezone: 'America/New_York',
+    majors: [],
+    academicCalendar: 'semester',
+    allowsAutoJoin: true,
+    requiresVerification: false,
+    autoSpacesEnabled: true,
+    hasDormitories: true,
+    dormitoryList: [],
+    createdAt: now,
+    updatedAt: now
   },
   {
     id: 'rit',
@@ -63,7 +157,20 @@ export const SCHOOLS: School[] = [
     domain: 'rit.edu',
     status: 'waitlist',
     studentsUntilOpen: 350,
-    waitlistCount: 0
+    waitlistCount: 0,
+    city: 'Rochester',
+    state: 'NY',
+    country: 'US',
+    timezone: 'America/New_York',
+    majors: [],
+    academicCalendar: 'semester',
+    allowsAutoJoin: true,
+    requiresVerification: false,
+    autoSpacesEnabled: true,
+    hasDormitories: true,
+    dormitoryList: [],
+    createdAt: now,
+    updatedAt: now
   },
   {
     id: 'rochester',
@@ -71,7 +178,20 @@ export const SCHOOLS: School[] = [
     domain: 'rochester.edu',
     status: 'waitlist',
     studentsUntilOpen: 350,
-    waitlistCount: 0
+    waitlistCount: 0,
+    city: 'Rochester',
+    state: 'NY',
+    country: 'US',
+    timezone: 'America/New_York',
+    majors: [],
+    academicCalendar: 'semester',
+    allowsAutoJoin: true,
+    requiresVerification: false,
+    autoSpacesEnabled: true,
+    hasDormitories: true,
+    dormitoryList: [],
+    createdAt: now,
+    updatedAt: now
   },
   {
     id: 'albany',
@@ -79,7 +199,20 @@ export const SCHOOLS: School[] = [
     domain: 'albany.edu',
     status: 'waitlist',
     studentsUntilOpen: 350,
-    waitlistCount: 0
+    waitlistCount: 0,
+    city: 'Albany',
+    state: 'NY',
+    country: 'US',
+    timezone: 'America/New_York',
+    majors: [],
+    academicCalendar: 'semester',
+    allowsAutoJoin: true,
+    requiresVerification: false,
+    autoSpacesEnabled: true,
+    hasDormitories: true,
+    dormitoryList: [],
+    createdAt: now,
+    updatedAt: now
   }
 ];
 

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { env } from "@hive/core";
 
 export async function GET() {
-  const isFirebaseAdminConfigured = !!(process.env.FIREBASE_ADMIN_PROJECT_ID && process.env.FIREBASE_ADMIN_PRIVATE_KEY);
+  const isFirebaseAdminConfigured = !!(process.env.FIREBASE_PROJECT_ID && process.env.FIREBASE_PRIVATE_KEY);
   
   const healthCheck = {
     status: 'healthy',

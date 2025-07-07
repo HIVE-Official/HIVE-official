@@ -104,44 +104,56 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Check if Firebase is properly configured
-    const isFirebaseConfigured = process.env.NEXT_PUBLIC_FIREBASE_API_KEY && 
-                                 process.env.NEXT_PUBLIC_FIREBASE_API_KEY !== 'demo-api-key'
-
-    if (!isFirebaseConfigured) {
-      // Development/demo mode - comprehensive logging
-      logger.info('🔥 Development mode: Firebase not configured')
+    // In development mode, always use the fallback to avoid authentication setup issues
+    if (process.env.NODE_ENV === 'development') {
+      logger.info('🔥 Development mode: Using authentication bypass')
       logger.info(`📧 Would send magic link to: ${trimmedEmail}`)
       
-      if (process.env.NODE_ENV === 'development') {
-        // Store email for development verification - but don't tell the user it's dev mode
-        return NextResponse.json({
-          success: true,
-          message: 'Magic link sent! Check your email.',
-          email: trimmedEmail, // Return trimmed email so client can store it
-        })
-      } else {
-        // Production without Firebase config - this is an error
-        logger.error('🚨 PRODUCTION ERROR: Firebase not configured but running in production')
-        return NextResponse.json(
-          { 
-            message: 'Email service temporarily unavailable. Please try again later.',
-            error: 'FIREBASE_CONFIG_MISSING'
-          },
-          { status: 503 }
-        )
-      }
+      // Store email for development verification
+      return NextResponse.json({
+        success: true,
+        message: 'Magic link sent! Check your email.',
+        email: trimmedEmail,
+        dev_mode: true
+      })
+    }
+
+    // Check if Firebase is properly configured for production use
+    // We need both client config (public vars) and admin config (private vars)
+    const hasClientConfig = process.env.NEXT_PUBLIC_FIREBASE_API_KEY && 
+                           process.env.NEXT_PUBLIC_FIREBASE_API_KEY !== 'demo-api-key';
+    const hasAdminConfig = process.env.FIREBASE_PRIVATE_KEY && 
+                          process.env.FIREBASE_PRIVATE_KEY.trim() !== '' &&
+                          !process.env.FIREBASE_PRIVATE_KEY.includes('YOUR_PRIVATE_KEY_HERE') &&
+                          process.env.FIREBASE_CLIENT_EMAIL &&
+                          process.env.FIREBASE_CLIENT_EMAIL.trim() !== '';
+    
+    const isFirebaseConfigured = hasClientConfig && hasAdminConfig;
+    
+    logger.info(`🔍 Firebase config check: client=${hasClientConfig}, admin=${hasAdminConfig}, complete=${isFirebaseConfigured}`)
+
+    if (!isFirebaseConfigured) {
+      // Production without Firebase config - this is an error
+      logger.error('🚨 PRODUCTION ERROR: Firebase not configured but running in production')
+      return NextResponse.json(
+        { 
+          message: 'Email service temporarily unavailable. Please try again later.',
+          error: 'FIREBASE_CONFIG_MISSING'
+        },
+        { status: 503 }
+      )
     }
 
     // Firebase is configured - send actual magic link
     try {
       const actionCodeSettings = {
-        url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001'}/auth/verify?email=${encodeURIComponent(trimmedEmail)}`,
+        url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3003'}/auth/verify?email=${encodeURIComponent(trimmedEmail)}`,
         handleCodeInApp: true,
         // Remove Dynamic Links requirement for now
         // dynamicLinkDomain: process.env.NEXT_PUBLIC_FIREBASE_DYNAMIC_LINKS_DOMAIN
       }
 
+      logger.info(`📧 Attempting to send magic link with action URL: ${actionCodeSettings.url}`)
       await sendSignInLinkToEmail(auth, trimmedEmail, actionCodeSettings)
 
       // Store verification request in Firestore
@@ -165,18 +177,39 @@ export async function POST(request: NextRequest) {
       logger.error('Failed to send magic link:', error)
       
       // Handle specific Firebase Auth errors
-      if (error && typeof error === 'object' && 'code' in error && error.code === 'auth/invalid-email') {
-        return NextResponse.json(
-          { message: 'Invalid email address' },
-          { status: 400 }
-        )
-      }
-      
-      if (error && typeof error === 'object' && 'code' in error && error.code === 'auth/email-already-in-use') {
-        return NextResponse.json(
-          { message: 'An account with this email already exists' },
-          { status: 400 }
-        )
+      if (error && typeof error === 'object' && 'code' in error) {
+        const firebaseError = error as { code: string; message?: string }
+        
+        switch (firebaseError.code) {
+          case 'auth/invalid-email':
+            return NextResponse.json(
+              { message: 'Invalid email address' },
+              { status: 400 }
+            )
+          case 'auth/email-already-in-use':
+            return NextResponse.json(
+              { message: 'An account with this email already exists' },
+              { status: 400 }
+            )
+          case 'auth/configuration-not-found':
+            logger.error('🚨 Firebase Email Link authentication not properly configured. Please check Firebase Console settings.')
+            if (process.env.NODE_ENV === 'development') {
+              // In development, fall back to mock success
+              logger.info('💡 Development fallback: Simulating successful email send')
+              return NextResponse.json({
+                success: true,
+                message: 'Magic link sent! (Development mode - check console)',
+                email: trimmedEmail,
+                dev_note: 'Email link auth not configured - using development fallback'
+              })
+            }
+            return NextResponse.json(
+              { message: 'Email service configuration error. Please contact support.' },
+              { status: 503 }
+            )
+          default:
+            logger.error(`🚨 Unhandled Firebase error code: ${firebaseError.code}`)
+        }
       }
 
       return NextResponse.json(

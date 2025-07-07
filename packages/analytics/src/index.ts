@@ -1,7 +1,7 @@
 // Analytics utilities for the HIVE platform
 // Placeholder for analytics functionality
 
-export type LogMetadata = Record<string, any>;
+export type LogMetadata = Record<string, unknown>;
 export type LogEvent = {
   name: string;
   type?: string;

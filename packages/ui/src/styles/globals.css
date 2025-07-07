@@ -277,8 +277,21 @@
     animation: hive-space-join 400ms cubic-bezier(0.23, 1, 0.32, 1);
   }
 
-  /* Responsive animation controls */
+  /* ============================================================================
+   * ACCESSIBILITY & RESPONSIVE CONTROLS
+   * ============================================================================ */
+
+  /* Respect user motion preferences */
   @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+
     .animate-hive-fade-in,
     .animate-hive-slide-up,
     .animate-hive-slide-down,
@@ -289,7 +302,136 @@
     .animate-hive-emboss-reveal,
     .animate-hive-ritual-burst,
     .animate-hive-space-join {
-      animation: none;
+      animation: none !important;
     }
   }
-} 
+
+  /* High contrast mode support */
+  @media (prefers-contrast: high) {
+    :root {
+      --border: 0 0% 50%;  /* Increase border contrast */
+      --muted: 0 0% 70%;   /* Increase muted text contrast */
+    }
+  }
+
+  /* Print styles */
+  @media print {
+    *,
+    *::before,
+    *::after {
+      background: transparent !important;
+      color: black !important;
+      box-shadow: none !important;
+      text-shadow: none !important;
+    }
+
+    body {
+      background: white !important;
+      color: black !important;
+    }
+  }
+
+  /* ============================================================================
+   * COMPONENT RESET PATTERNS
+   * ============================================================================ */
+
+  /* Remove default button styles */
+  button {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    cursor: pointer;
+    outline: none;
+  }
+
+  /* Remove default input styles */
+  input, textarea, select {
+    font: inherit;
+    margin: 0;
+  }
+
+  /* Remove default link styles */
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  a:focus {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+
+  /* Lists */
+  ul, ol {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  /* Images */
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+}
+
+/* ============================================================================
+ * PLATFORM-WIDE DESIGN SYSTEM ENFORCEMENT
+ * ============================================================================ */
+
+/* Prevent unauthorized colors at build time */
+@layer utilities {
+  /* These classes should never exist - they violate HIVE brand guidelines */
+  .text-red-500,
+  .text-green-500,
+  .text-blue-500,
+  .bg-red-500,
+  .bg-green-500,
+  .bg-blue-500,
+  .border-red-500,
+  .border-green-500,
+  .border-blue-500 {
+    /* If you see this in DevTools, you have a design system violation */
+    background: #ff0000 !important;
+    color: #ffffff !important;
+    border: 2px solid #ff0000 !important;
+  }
+}
+
+/* ============================================================================
+ * DEVELOPMENT HELPERS
+ * ============================================================================ */
+
+/* Only show in development */
+body[data-dev-mode="true"] {
+  position: relative;
+}
+
+body[data-dev-mode="true"]::before {
+  content: 'HIVE Design System v2.0 Active';
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 9999;
+  background: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+  padding: 4px 8px;
+  font-size: 10px;
+  font-family: var(--font-mono);
+  pointer-events: none;
+}
+
+/* Design system debug grid */
+body[data-debug-grid="true"] {
+  background-image: 
+    linear-gradient(hsl(var(--accent) / 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, hsl(var(--accent) / 0.1) 1px, transparent 1px);
+  background-size: 8px 8px;
+}
+
+/* ============================================================================
+ * END HIVE DESIGN SYSTEM
+ * ============================================================================ */ 

@@ -4,13 +4,15 @@ import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { AppHeader, BottomNavBar, HiveLogo, Button, Avatar, AvatarFallback, AvatarImage } from '@hive/ui'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
+import { useAuth } from '@hive/auth-logic'
 import { Home, Compass, User } from 'lucide-react'
 
 function DesktopNav() {
 	const pathname = usePathname()
+	const { user } = useAuth()
 	return (
 		<AppHeader.Root className="border-b border-border bg-background/80 backdrop-blur-md">
-			<AppHeader.Content className="max-w-7xl mx-auto">
+			<AppHeader.Content className="max-w-7xl mx-auto px-4">
 				<AppHeader.Logo>
 					<Link href="/feed" className="flex items-center space-x-3 group">
 						<HiveLogo 
@@ -24,10 +26,10 @@ function DesktopNav() {
 						</span>
 					</Link>
 				</AppHeader.Logo>
-				<AppHeader.Nav className='ml-10'>
+				<AppHeader.Nav className='ml-8'>
 					<Link
 						href='/feed'
-						className={`text-sm font-medium transition-colors hover:text-accent ${
+						className={`text-sm font-medium transition-colors hover:text-[#FFD700] ${
 							pathname === '/feed' ? 'text-foreground' : 'text-muted'
 						}`}
 					>
@@ -35,7 +37,7 @@ function DesktopNav() {
 					</Link>
 					<Link
 						href='/campus'
-						className={`text-sm font-medium transition-colors hover:text-accent ${
+						className={`text-sm font-medium transition-colors hover:text-[#FFD700] ${
 							pathname === '/campus' ? 'text-foreground' : 'text-muted'
 						}`}
 					>
@@ -43,24 +45,36 @@ function DesktopNav() {
 					</Link>
 					<Link
 						href='/spaces'
-						className={`text-sm font-medium transition-colors hover:text-accent ${
+						className={`text-sm font-medium transition-colors hover:text-[#FFD700] ${
 							pathname === '/spaces' ? 'text-foreground' : 'text-muted'
 						}`}
 					>
 						Spaces
 					</Link>
+					<Link
+						href='/profile'
+						className={`text-sm font-medium transition-colors hover:text-[#FFD700] ${
+							pathname === '/profile' ? 'text-foreground' : 'text-muted'
+						}`}
+					>
+						Profile
+					</Link>
 				</AppHeader.Nav>
 				<AppHeader.Actions>
 					<Button 
 						variant='outline'
-						className="border-accent text-accent hover:bg-accent hover:text-background"
+						size="sm"
+						className="border-[#FFD700] text-[#FFD700] hover:bg-[#FFD700] hover:text-black transition-colors duration-[180ms]"
 					>
 						Create
 					</Button>
-					<Avatar className="border border-border">
-						<AvatarImage src='https://github.com/shadcn.png' alt='@shadcn' />
-						<AvatarFallback className="bg-surface-02 text-foreground">CN</AvatarFallback>
-					</Avatar>
+					<Link href="/profile">
+						<Avatar className="border border-border hover:border-[#FFD700]/50 transition-colors duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] w-8 h-8">
+							<AvatarFallback className="bg-[#2A2A2A] text-foreground text-sm">
+								{user?.fullName?.charAt(0) || user?.email?.charAt(0) || 'U'}
+							</AvatarFallback>
+						</Avatar>
+					</Link>
 				</AppHeader.Actions>
 			</AppHeader.Content>
 		</AppHeader.Root>

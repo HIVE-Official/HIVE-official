@@ -1,5 +1,6 @@
 import "./globals.css";
 import { SmoothScrollProvider } from "@/components/smooth-scroll-provider";
+import { Providers } from "./providers";
 
 export default function RootLayout({
   children,
@@ -13,9 +14,11 @@ export default function RootLayout({
         <title>HIVE</title>
       </head>
       <body>
-        <SmoothScrollProvider>
-          {children}
-        </SmoothScrollProvider>
+        <Providers>
+          <SmoothScrollProvider>
+            {children}
+          </SmoothScrollProvider>
+        </Providers>
       </body>
     </html>
   );

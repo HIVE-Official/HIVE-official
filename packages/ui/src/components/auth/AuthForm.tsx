@@ -62,11 +62,11 @@ export const AuthForm = ({
                 disabled={isLoading}
               />
               {validationError && (
-                <p className="text-sm text-red-500">{validationError}</p>
+                <p className="text-sm text-muted">{validationError}</p>
               )}
             </div>
             {error && (
-              <p className="text-sm text-red-500">{error}</p>
+              <p className="text-sm text-muted">{error}</p>
             )}
           </CardContent>
           <CardFooter className="flex flex-col">
@@ -77,7 +77,7 @@ export const AuthForm = ({
             >
               {isLoading ? "Sending..." : "Continue with Email"}
             </Button>
-            <p className="mt-4 text-xs text-center text-gray-400">
+            <p className="mt-4 text-xs text-center text-muted-foreground">
               By continuing, you agree to HIVE&apos;s{" "}
               <Link href="/legal/terms" className="underline">
                 Terms of Service
@@ -90,7 +90,7 @@ export const AuthForm = ({
             </p>
             <Link
               href={backLinkHref}
-              className="mt-2 text-sm text-center text-gray-400 hover:underline"
+              className="mt-2 text-sm text-center text-muted-foreground hover:underline"
             >
               Back
             </Link>

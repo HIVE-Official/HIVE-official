@@ -3,7 +3,8 @@ export type AcademicLevel =
   | "graduate"
   | "phd"
   | "faculty"
-  | "alumni";
+  | "alumni"
+  | "other";
 
 export type VerificationLevel = "verified" | "verified+" | "faculty" | "alumni";
 
@@ -33,9 +34,11 @@ export interface OnboardingState {
   schoolId: string;
   schoolName: string;
 
-  // Step 1: Welcome/Display Name
+  // Step 1: Welcome + Role Selection
+  userRole?: 'student' | 'faculty' | 'alumni';
   displayName: string;
   avatarUrl?: string;
+  avatarModerationStatus?: "pending" | "approved" | "rejected" | "under_review";
 
   // Auto-generated unique handle
   handle: string; // Auto-generated from displayName

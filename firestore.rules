@@ -83,11 +83,6 @@ service cloud.firestore {
       allow read: if true;
       allow write: if isAdmin();
       
-      match /waitlist_entries/{entryId} {
-        allow read: if false;
-        allow write: if false;
-      }
-      
       // School subcollections
       match /feed/{feedId} {
         allow read: if isAuthenticated();
@@ -103,6 +98,47 @@ service cloud.firestore {
         allow read: if isAdmin();
         allow write: if isAdmin();
       }
+    }
+
+    // ======== ONBOARDING & WAITLIST ========
+    
+    match /onboarding_sessions/{sessionId} {
+      allow read: if request.auth.uid == sessionId || 
+                 (request.auth != null && resource.data.userId == request.auth.uid);
+      allow create: if request.auth.uid == sessionId ||
+                   request.resource.data.userId == request.auth.uid;
+      allow update: if request.auth.uid == sessionId || 
+                   (request.auth != null && resource.data.userId == request.auth.uid);
+      allow delete: if isAdmin();
+    }
+    
+    match /waitlist_entries/{entryId} {
+      allow read: if request.auth != null && 
+                 (resource.data.email == request.auth.token.email || isAdmin());
+      allow create: if request.auth != null && 
+                   request.resource.data.email == request.auth.token.email;
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    match /school_invitations/{invitationId} {
+      allow read: if request.auth != null && 
+                 (resource.data.email == request.auth.token.email || 
+                  resource.data.invitedBy == request.auth.uid || 
+                  isAdmin());
+      allow create: if isAuthenticated() && isVerified() &&
+                   request.resource.data.invitedBy == request.auth.uid;
+      allow update: if request.auth != null && 
+                   resource.data.email == request.auth.token.email ||
+                   isAdmin();
+      allow delete: if isAdmin() || 
+                   resource.data.invitedBy == request.auth.uid;
+    }
+    
+    // School metrics (read-only for most, write for admins)
+    match /school_metrics/{schoolId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
     }
 
     // ======== SPACES ========

@@ -63,6 +63,7 @@ initializeFirebaseAdmin();
 
 // Export admin services
 export const dbAdmin = firestoreAdmin!;
+export const adminFirestore = firestoreAdmin!; // Alternative export name for compatibility
 export const firebaseAuth = authAdmin!;
 
 export const isFirebaseConfigured = firebaseInitialized;

@@ -9,11 +9,12 @@ import { Button } from "@hive/ui";
 import { ROUTES, getNextOnboardingStep, getPreviousOnboardingStep, isValidOnboardingStep } from "@/lib/routes";
 import { useOnboardingStore } from "@/lib/stores/onboarding";
 import {
-  WelcomeStep,
   CreateProfileStep as CreateProfileStepUI,
-  SchoolPledgeStep,
+  AcademicStep,
+  InterestsSelectionStep,
+  WelcomeRoleStep,
 } from "@hive/ui";
-import { useHandleAvailability } from "@/hooks/use-handle-availability";
+import { RoleSelectionStep, FacultyVerificationStep, AlumniComingSoonStep, type UserRole } from "@hive/ui";import { useHandleAvailability } from "@/hooks/use-handle-availability";
 import { functions } from "@/lib/firebase-client";
 import { httpsCallable } from "firebase/functions";
 
@@ -30,9 +31,9 @@ interface StepComponentProps {
 function generateHandle(name: string): string {
   return name
     .toLowerCase()
-    .replace(/[^a-z0-9 ]/g, "")
+    .replace(/[^a-z0-9._]/g, "")
     .replace(/\s+/g, ".")
-    .slice(0, 30);
+    .slice(0, 15);
 }
 
 const CreateProfileStepContainer: React.FC<StepComponentProps> = ({ onNext, data: onboardingData }) => {
@@ -98,7 +99,16 @@ const CreateProfileStepContainer: React.FC<StepComponentProps> = ({ onNext, data
       if (selectedFile) {
         finalAvatarUrl = await uploadCroppedImage();
       }
-      const updatedData = { displayName, handle, avatarUrl: finalAvatarUrl, consentGiven: termsAccepted };
+      const updatedData = { 
+        displayName, 
+        handle, 
+        avatarUrl: finalAvatarUrl, 
+        consentGiven: termsAccepted,
+        // Flag uploaded photos for moderation review
+        ...(selectedFile && finalAvatarUrl && {
+          avatarModerationStatus: "pending" as const
+        })
+      };
       update(updatedData);
       onNext(undefined, updatedData);
     } catch (error) {
@@ -117,6 +127,7 @@ const CreateProfileStepContainer: React.FC<StepComponentProps> = ({ onNext, data
       onHandleChange={setHandle}
       handleAvailability={handleAvailability}
       avatarUrl={avatarUrl}
+      avatarModerationStatus={onboardingData?.avatarModerationStatus}
       onFileSelect={setSelectedFile}
       onSubmit={handleSubmit}
       isUploading={isUploading}
@@ -124,148 +135,42 @@ const CreateProfileStepContainer: React.FC<StepComponentProps> = ({ onNext, data
       selectedFile={selectedFile}
       termsAccepted={termsAccepted}
       onTermsAcceptedChange={setTermsAccepted}
+      userRole={onboardingData?.userRole}
+      schoolName={onboardingData?.schoolName}
     />
   );
 };
 
-const SchoolPledgeStepContainer: React.FC<StepComponentProps> = ({ onNext, data }) => {
-  const schoolName = data.schoolName || "your school";
-  return (
-    <SchoolPledgeStep
-      schoolName={schoolName}
-      onNext={() => onNext()}
-    />
-  );
-};
 
-// Step 4: Academic Info Step Container - HIVE styled
+// Step 3: Academic Info Step Container - Using branded component
 const AcademicStepContainer: React.FC<StepComponentProps> = ({ onNext, onPrev, data }) => {
   const { update } = useOnboardingStore();
   const [academicLevel, setAcademicLevel] = useState<AcademicLevel>(data.academicLevel || "undergraduate");
-  const [majors, setMajors] = useState<string[]>(data.majors || []);
   const [graduationYear, setGraduationYear] = useState<number>(data.graduationYear || new Date().getFullYear() + 4);
   const [isLoading, setIsLoading] = useState(false);
 
-  const currentYear = new Date().getFullYear();
-
   const handleSubmit = async () => {
     setIsLoading(true);
-    const updatedData = { academicLevel, majors, graduationYear };
+    const updatedData = { academicLevel, graduationYear };
     update(updatedData);
     onNext(undefined, updatedData);
     setIsLoading(false);
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      {/* Background gradients */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,#111111,transparent_50%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_100%,#111111,transparent_50%)]" />
-      </div>
-
-      <div className="w-full max-w-md relative z-10">
-        {/* Progress indicator */}
-        <div className="flex justify-center mb-8">
-          <div className="flex space-x-2">
-            {[1, 2, 3, 4, 5].map((step) => (
-              <div
-                key={step}
-                className={`w-2 h-2 rounded-full transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] ${
-                  step < 4 ? 'bg-white' : step === 4 ? 'bg-accent' : 'bg-muted'
-                }`}
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* Content card */}
-        <div className="module-border module-surface module-padding space-y-6">
-          {/* Header */}
-          <div className="text-center space-y-3">
-            <h1 className="text-2xl font-display font-semibold text-foreground">
-              Academic Information
-            </h1>
-            <p className="text-muted font-body">
-              Tell us about your academic journey
-            </p>
-          </div>
-          
-          {/* Form fields */}
-          <div className="hive-stack">
-            {/* Academic Level */}
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-foreground font-body">
-                Academic Level
-              </label>
-              <select 
-                value={academicLevel}
-                onChange={(e) => setAcademicLevel(e.target.value as AcademicLevel)}
-                className="w-full px-3 py-2 border border-border rounded-md bg-surface-01 text-foreground font-body focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)]"
-              >
-                <option value="undergraduate">Undergraduate</option>
-                <option value="graduate">Graduate Student</option>
-                <option value="phd">PhD Student</option>
-                <option value="other">Other</option>
-              </select>
-            </div>
-            
-            {/* Graduation Year */}
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-foreground font-body">
-                Expected Graduation Year
-              </label>
-              <select
-                value={graduationYear}
-                onChange={(e) => setGraduationYear(parseInt(e.target.value))}
-                className="w-full px-3 py-2 border border-border rounded-md bg-surface-01 text-foreground font-body focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)]"
-              >
-                {Array.from({ length: 8 }, (_, i) => currentYear + i).map(year => (
-                  <option key={year} value={year}>{year}</option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          {/* Navigation buttons */}
-          <div className="flex gap-3 pt-4">
-            <Button
-              variant="outline"
-              onClick={onPrev}
-              className="flex-1 font-body"
-            >
-              Back
-            </Button>
-            <Button
-              variant="default"
-              onClick={handleSubmit}
-              disabled={isLoading}
-              className="flex-1 font-body"
-            >
-              {isLoading ? (
-                <>
-                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                  Saving...
-                </>
-              ) : (
-                'Continue'
-              )}
-            </Button>
-          </div>
-        </div>
-
-        {/* Step indicator */}
-        <div className="text-center mt-6">
-          <p className="text-sm text-muted font-body">
-            Step 4 of 5
-          </p>
-        </div>
-      </div>
-    </div>
+    <AcademicStep
+      academicLevel={academicLevel}
+      onAcademicLevelChange={setAcademicLevel}
+      graduationYear={graduationYear}
+      onGraduationYearChange={setGraduationYear}
+      onSubmit={handleSubmit}
+      onBack={onPrev}
+      isLoading={isLoading}
+    />
   );
 };
 
-// Step 5: Interests Step Container - HIVE styled
+// Step 4: Interests Step Container - Using branded component  
 const InterestsStepContainer: React.FC<StepComponentProps> = ({ onNext, onPrev, data }) => {
   const { update } = useOnboardingStore();
   const [selectedInterests, setSelectedInterests] = useState<string[]>(data.interests || []);
@@ -288,121 +193,61 @@ const InterestsStepContainer: React.FC<StepComponentProps> = ({ onNext, onPrev, 
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      {/* Background gradients */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,#111111,transparent_50%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_100%,#111111,transparent_50%)]" />
-      </div>
+    <InterestsSelectionStep
+      selectedInterests={selectedInterests}
+      onInterestToggle={handleInterestToggle}
+      onSubmit={handleSubmit}
+      onBack={onPrev}
+      isLoading={isLoading}
+      interestCategories={INTEREST_CATEGORIES as any}
+      minInterests={3}
+    />
+  );
+};
 
-      <div className="w-full max-w-2xl relative z-10">
-        {/* Progress indicator */}
-        <div className="flex justify-center mb-8">
-          <div className="flex space-x-2">
-            {[1, 2, 3, 4, 5].map((step) => (
-              <div
-                key={step}
-                className={`w-2 h-2 rounded-full transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] ${
-                  step < 5 ? 'bg-white' : step === 5 ? 'bg-accent' : 'bg-muted'
-                }`}
-              />
-            ))}
-          </div>
-        </div>
 
-        {/* Content card */}
-        <div className="module-border module-surface module-padding space-y-6">
-          {/* Header */}
-          <div className="text-center space-y-3">
-            <h1 className="text-2xl font-display font-semibold text-foreground">
-              What interests you?
-            </h1>
-            <p className="text-muted font-body">
-              Select at least 3 interests to help us connect you with relevant communities
-            </p>
-          </div>
-          
-          {/* Interest categories */}
-          <div className="hive-stack max-h-96 overflow-y-auto">
-            {Object.entries(INTEREST_CATEGORIES).map(([category, interests]) => (
-              <div key={category} className="space-y-3">
-                <h3 className="text-sm font-medium text-foreground font-body">{category}</h3>
-                <div className="flex flex-wrap gap-2">
-                  {interests.map((interest: string) => (
-                    <button
-                      key={interest}
-                      onClick={() => handleInterestToggle(interest)}
-                      className={`px-3 py-1.5 rounded-md text-sm font-body transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] ${
-                        selectedInterests.includes(interest)
-                          ? 'border border-accent bg-accent/10 text-accent hover:bg-accent/20'
-                          : 'border border-border bg-surface-01 text-muted hover:bg-surface-02 hover:border-accent/30 hover:text-accent'
-                      }`}
-                    >
-                      {interest}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
+// Step 1: Welcome + Role Selection Step Container
+const WelcomeRoleStepContainer: React.FC<StepComponentProps> = ({ onNext, data }) => {
+  const schoolName = data.schoolName || "your school";
+  const userEmail = data.email || "";
 
-          {/* Selection counter */}
-          <div className="text-center">
-            <p className="text-sm text-muted font-body">
-              {selectedInterests.length} interests selected
-              {selectedInterests.length < 3 && ` • select at least ${3 - selectedInterests.length} more`}
-            </p>
-          </div>
+  const handleRoleSelect = (role: UserRole) => {
+    if (role === "faculty") {
+      // Faculty can claim a space or continue to waitlist
+      // For now, redirect to faculty verification where they can choose
+      window.location.href = "/onboarding/faculty-verify";
+      return;
+    }
+    
+    if (role === "alumni") {
+      // Alumni get email input for future news
+      window.location.href = "/onboarding/alumni-soon";
+      return;
+    }
+    
+    // Only students continue to profile creation
+    const updatedData = { userRole: role };
+    onNext(undefined, updatedData);
+  };
 
-          {/* Navigation buttons */}
-          <div className="flex gap-3 pt-4">
-            <Button
-              variant="outline"
-              onClick={onPrev}
-              className="flex-1 font-body"
-            >
-              Back
-            </Button>
-            <Button
-              variant="default"
-              onClick={handleSubmit}
-              disabled={isLoading || selectedInterests.length < 3}
-              className="flex-1 font-body"
-            >
-              {isLoading ? (
-                <>
-                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                  Completing...
-                </>
-              ) : (
-                'Complete Setup'
-              )}
-            </Button>
-          </div>
-        </div>
-
-        {/* Step indicator */}
-        <div className="text-center mt-6">
-          <p className="text-sm text-muted font-body">
-            Step 5 of 5
-          </p>
-        </div>
-      </div>
-    </div>
+  return (
+    <WelcomeRoleStep
+      onRoleSelect={handleRoleSelect}
+      schoolName={schoolName}
+      userEmail={userEmail}
+    />
   );
 };
 
 const STEPS: Record<string, React.ComponentType<StepComponentProps>> = {
-  "1": WelcomeStep,
+  "1": WelcomeRoleStepContainer,
   "2": CreateProfileStepContainer,
-  "3": SchoolPledgeStepContainer,
-  "4": AcademicStepContainer,
-  "5": InterestsStepContainer,
+  "3": AcademicStepContainer,
+  "4": InterestsStepContainer,
 } as const;
 
-// Use the same check as auth hook for consistency
-// If Firebase env vars are missing, we're in dev mode
-const isDevMode = !process.env.NEXT_PUBLIC_FIREBASE_API_KEY;
+// Use NODE_ENV to determine development mode
+const isDevMode = process.env.NODE_ENV === 'development';
 
 const initialDevData: Partial<OnboardingState> = {
   schoolId: "ub",
@@ -420,7 +265,9 @@ const initialDevData: Partial<OnboardingState> = {
 
 export function OnboardingStepClient({ step }: OnboardingStepClientProps) {
   const router = useRouter();
-  const { user, isLoading: isAuthLoading } = useAuth();
+  // In development mode, completely bypass Firebase auth
+  const authResult = isDevMode ? { user: { uid: 'dev-user', email: 'test@buffalo.edu' }, isLoading: false } : useAuth();
+  const { user, isLoading: isAuthLoading } = authResult;
   const { data: onboardingData, update } = useOnboardingStore();
   const [isInitialized, setIsInitialized] = useState(false);
 
@@ -468,6 +315,7 @@ export function OnboardingStepClient({ step }: OnboardingStepClientProps) {
         isDevMode,
         hasOnboardingData: !!onboardingData,
         isAuthLoading,
+        isInitialized,
       });
     }
 
@@ -477,16 +325,19 @@ export function OnboardingStepClient({ step }: OnboardingStepClientProps) {
         logger.info("🔥 Development mode: initializing with mock data");
         update(initialDevData);
       }
-      setIsInitialized(true);
+      // Always set initialized in dev mode
+      if (!isInitialized) {
+        setIsInitialized(true);
+      }
     } else {
       // In production mode, wait for auth to load
-      if (!isAuthLoading) {
+      if (!isAuthLoading && !isInitialized) {
         setIsInitialized(true);
       }
     }
-  }, [onboardingData, update, isAuthLoading]);
+  }, [onboardingData, update, isAuthLoading, isInitialized, isDevMode]);
 
-  // Handle invalid step identifiers (support numeric steps only)
+  // Handle invalid step identifiers (support steps 1-5 only)
   if (!isValidOnboardingStep(step)) {
     router.replace(ROUTES.ONBOARDING.STEP_1);
     return null;

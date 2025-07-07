@@ -28,9 +28,12 @@
     "dev": "tsup src/index.ts --format esm,cjs --watch --external react & tsc -p tsconfig.declarations.json --watch",
     "build": "tsc --build",
     "lint": "../../node_modules/.bin/eslint . --max-warnings 15 || pnpm exec --package=eslint eslint . --max-warnings 15",
-    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
+    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
+    "db:init": "tsx src/scripts/init-database.ts",
+    "db:rules": "tsx src/scripts/update-security-rules.ts"
   },
   "dependencies": {
+    "@hive/validation": "workspace:*",
     "@upstash/ratelimit": "^2.0.5",
     "@upstash/redis": "^1.35.0",
     "firebase": "^11.0.0",
@@ -53,6 +56,7 @@
     "typescript-eslint": "^8.35.0",
     "typescript": "^5.8.3",
     "vitest": "^3.2.4",
-    "@types/react": "^18.2.0"
+    "@types/react": "^18.2.0",
+    "tsx": "^4.0.0"
   }
 }

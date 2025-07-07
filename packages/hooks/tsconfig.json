@@ -34,7 +34,8 @@
     "src/**/*.tsx",
     "../core/src/**/*.ts",
     "../api-client/src/**/*.ts",
-    "../analytics/src/**/*.ts"
+    "../analytics/src/**/*.ts",
+    "../validation/src/**/*.ts"
   ],
   "exclude": [
     "node_modules",

@@ -45,11 +45,11 @@ const badgeVariants = cva(
           "active:scale-[0.98] focus-visible:border-accent focus-visible:ring-accent/20"
         ],
         
-        // REMOVABLE: Chip with remove button
+        // REMOVABLE: Chip with remove button - HIVE monochrome system
         removable: [
           "rounded-2xl border border-border bg-surface-01 text-foreground cursor-pointer",
-          "hover:bg-surface-02 hover:border-red-400/40 hover:text-red-400",
-          "focus-visible:border-red-400 focus-visible:ring-red-400/20"
+          "hover:bg-surface-02 hover:border-muted hover:text-muted hover:animate-pulse",
+          "focus-visible:border-muted focus-visible:ring-muted/20"
         ],
         
         // SELECTABLE: Toggle-able chip
@@ -184,7 +184,7 @@ const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
           <button
             type="button"
             onClick={handleRemove}
-            className="inline-flex items-center justify-center ml-1 rounded-full hover:bg-red-400/20 focus:outline-none focus:ring-1 focus:ring-red-400/50 transition-transform hover:scale-110 active:scale-90"
+            className="inline-flex items-center justify-center ml-1 rounded-full hover:bg-muted/20 focus:outline-none focus:ring-1 focus:ring-muted/50 transition-transform hover:scale-110 active:scale-90 hover:animate-pulse"
             aria-label="Remove"
           >
             <X className="w-3 h-3" />
@@ -247,8 +247,8 @@ const StatusBadge = React.forwardRef<
     >
       <div className={cn(
         "w-2 h-2 rounded-full mr-1.5",
-        status === "online" && "bg-[#22C55E]",
-        status === "away" && "bg-[#F59E0B]",
+        status === "online" && "bg-accent", // Use gold for online status
+        status === "away" && "bg-muted",   // Use muted for away status
         status === "offline" && "bg-surface-03",
         status === "busy" && "bg-accent"
       )} />

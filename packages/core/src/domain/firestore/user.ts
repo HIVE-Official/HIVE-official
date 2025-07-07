@@ -15,6 +15,9 @@ export interface User {
   fullName: string;
   handle: string; // Unique, immutable after creation
   avatarUrl?: string;
+  avatarModerationStatus?: "pending" | "approved" | "rejected" | "under_review";
+  avatarModerationReason?: string;
+  avatarModerationReviewedAt?: Timestamp;
   interestTags: string[]; // Added for onboarding
 
   // Academic information
@@ -101,6 +104,9 @@ export const UserSchema = z.object({
   fullName: z.string(),
   handle: z.string(),
   avatarUrl: z.string().optional(),
+  avatarModerationStatus: z.enum(["pending", "approved", "rejected", "under_review"]).optional(),
+  avatarModerationReason: z.string().optional(),
+  avatarModerationReviewedAt: z.union([z.date(), z.number()]).optional(),
   interestTags: z.array(z.string()).default([]),
   majorId: z.string(),
   graduationYear: z.number().optional(),

@@ -85,13 +85,9 @@ export function getFirebaseConfig() {
  * Get Firebase Admin configuration for server-side operations
  */
 export function getFirebaseAdminConfig(): ServiceAccount | null {
-  // During build time, return mock config
+  // During build time, return null to avoid Firebase Admin initialization
   if (isBuildTime) {
-    return {
-      projectId: "build-time-mock",
-      clientEmail: "build-time@mock.iam.gserviceaccount.com",
-      privateKey: "-----BEGIN PRIVATE KEY-----\nMOCK\n-----END PRIVATE KEY-----\n",
-    } as ServiceAccount;
+    return null;
   }
 
   if (

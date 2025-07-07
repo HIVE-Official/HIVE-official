@@ -34,6 +34,13 @@ export default [
       "**/*.test.*",
       "**/*.spec.*",
       "src/utils/code-analyzer.ts",
+      "src/domain/firestore/analytics.ts",
+      "src/domain/firestore/moderation.ts",
+      "src/domain/firestore/notification.ts",
+      "src/domain/firestore/ritual.ts",
+      "src/domain/firestore/tool.ts",
+      "src/utils/database-helpers.ts",
+      "src/scripts/**",
     ],
   },
 ];

@@ -161,13 +161,13 @@ export const FilterChips: Story = {
 export const StatusChips: Story = {
   render: () => (
     <ChipGroup spacing="default">
-      <Badge variant="online" icon={<div className="w-2 h-2 rounded-full bg-green-500" />}>
+      <Badge variant="online" icon={<div className="w-2 h-2 rounded-full bg-accent" />}>
         Online
       </Badge>
       <Badge variant="busy" icon={<div className="w-2 h-2 rounded-full bg-accent" />}>
         Busy
       </Badge>
-      <Badge variant="away" icon={<div className="w-2 h-2 rounded-full bg-amber-500" />}>
+      <Badge variant="away" icon={<div className="w-2 h-2 rounded-full bg-muted-foreground" />}>
         Away
       </Badge>
     </ChipGroup>

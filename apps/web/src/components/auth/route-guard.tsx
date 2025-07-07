@@ -37,7 +37,7 @@ export function RouteGuard({
         // Handle auth requirement
         if (requireAuth && !user) {
           logger.warn('🔒 No user found, redirecting to auth')
-          router.push(redirectTo || ROUTES.AUTH.EMAIL)
+          router.push(redirectTo || ROUTES.AUTH.SCHOOL_SELECT)
           return
         }
 

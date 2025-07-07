@@ -2,7 +2,7 @@
   "name": "hive-ui",
   "private": true,
   "scripts": {
-    "build": "pnpm --filter @hive/analytics build && pnpm --filter @hive/core build && pnpm --filter @hive/validation build && pnpm --filter @hive/auth-logic build && pnpm --filter @hive/ui build && pnpm --filter web build",
+    "build": "turbo run build",
     "vercel-build": "pnpm install --no-frozen-lockfile && pnpm build && cd apps/web && pnpm next build",
     "dev": "turbo run dev",
     "lint": "cross-env BROWSERSLIST_IGNORE_OLD_DATA=1 BROWSERSLIST_UPDATE_DB=0 NO_UPDATE_NOTIFIER=1 TURBO_TELEMETRY_DISABLED=1 CI=1 turbo run lint",
@@ -10,12 +10,16 @@
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
     "analyze-code": "ts-node scripts/analyze-code.ts",
+    "init-db": "ts-node --project scripts/tsconfig.json scripts/init-schools-auth.ts",
+    "add-schools": "node scripts/add-schools-simple.js",
+    "add-schools-local": "node scripts/add-schools-web.js",
     "check-quality": "pnpm lint && pnpm typecheck && pnpm analyze-code && pnpm test",
     "precommit": "pnpm check-quality"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
     "eslint": "^9.30.0",
+    "firebase-admin": "^11.0.0",
     "ts-node": "^10.9.2",
     "turbo": "^2.5.4",
     "typescript-eslint": "^8.35.1"
@@ -30,7 +34,7 @@
     "firebase": "^11.10.0",
     "framer-motion": "^12.20.1",
     "lucide-react": "^0.525.0",
-    "next": "^15.3.4",
+    "next": "^15.3.5",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   },

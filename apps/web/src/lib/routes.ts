@@ -12,24 +12,25 @@ export const ROUTES = {
   // Authentication Flow
   AUTH: {
     ROOT: '/auth',
-    SCHOOL_SELECT: '/auth/school-select',  // Step 1: Choose school
-    EMAIL: '/auth/email',                   // Step 2: Enter email
-    CHECK_EMAIL: '/auth/check-email',       // Step 3: Check for magic link
-    VERIFY: '/auth/verify',                 // Verify magic link
+    SCHOOL_SELECT: '/auth/school-select',  // Step 1: Choose school + email (integrated)
+    CHECK_EMAIL: '/auth/check-email',      // Step 2: Check for magic link
+    VERIFY: '/auth/verify',                // Verify magic link
     ERROR: '/auth/error',
     EXPIRED: '/auth/expired',
-    // Remove: /auth/choose - not in checklist
+    // Removed: /auth/email - now integrated into school-select
   },
   
-  // 5-Step Onboarding Flow (numeric only)
+  // 4-Step Progressive Onboarding Flow
   ONBOARDING: {
     ROOT: '/onboarding',
-    STEP_1: '/onboarding/1',  // Welcome
+    STEP_1: '/onboarding/1',  // Welcome + Role Selection (student/faculty/alumni)
     STEP_2: '/onboarding/2',  // Profile Creation (name, handle, avatar)
-    STEP_3: '/onboarding/3',  // School Pledge
-    STEP_4: '/onboarding/4',  // Academic Info (level, graduation year)
-    STEP_5: '/onboarding/5',  // Interest Selection (67+ interests, 8 categories)
+    STEP_3: '/onboarding/3',  // Academic Info (level, graduation year)
+    STEP_4: '/onboarding/4',  // Interest Selection + Community Preview
     COMPLETE: '/onboarding/complete',
+    // Special flows
+    FACULTY_VERIFY: '/onboarding/faculty-verify',
+    ALUMNI_SOON: '/onboarding/alumni-soon',
     // Dynamic step helper
     STEP: (num: number) => `/onboarding/${num}` as const,
   },
@@ -43,6 +44,13 @@ export const ROUTES = {
     SETTINGS: '/settings',
   },
   
+  // Spaces
+  SPACES: {
+    ROOT: '/spaces',
+    REQUEST: '/spaces/request',
+    REQUEST_SUCCESS: '/spaces/request/success',
+  },
+  
   // Legal
   LEGAL: {
     TERMS: '/legal/terms',
@@ -53,7 +61,7 @@ export const ROUTES = {
 
 // Helper functions for navigation
 export const getNextOnboardingStep = (currentStep: number): string => {
-  if (currentStep >= 5) {
+  if (currentStep >= 4) {
     return ROUTES.ONBOARDING.COMPLETE;
   }
   return ROUTES.ONBOARDING.STEP(currentStep + 1);
@@ -61,17 +69,17 @@ export const getNextOnboardingStep = (currentStep: number): string => {
 
 export const getPreviousOnboardingStep = (currentStep: number): string | null => {
   if (currentStep <= 1) {
-    return null;
+    return null; // No step before step 1 (role selection)
   }
   return ROUTES.ONBOARDING.STEP(currentStep - 1);
 };
 
-// Type-safe route params
-export type OnboardingStep = 1 | 2 | 3 | 4 | 5;
+// Type-safe route params  
+export type OnboardingStep = 1 | 2 | 3 | 4;
 
 export const isValidOnboardingStep = (step: string): step is `${OnboardingStep}` => {
   const num = parseInt(step, 10);
-  return !isNaN(num) && num >= 1 && num <= 5;
+  return !isNaN(num) && num >= 1 && num <= 4; // 4-step progressive flow
 };
 
 // Route guards configuration
@@ -80,7 +88,6 @@ export const ROUTE_GUARDS = {
   PUBLIC: [
     ROUTES.HOME,
     ROUTES.AUTH.SCHOOL_SELECT,
-    ROUTES.AUTH.EMAIL,
     ROUTES.AUTH.CHECK_EMAIL,
     ROUTES.AUTH.VERIFY,
     ROUTES.AUTH.ERROR,
@@ -98,14 +105,13 @@ export const ROUTE_GUARDS = {
   REQUIRES_ONBOARDING: Object.values(ROUTES.APP),
 } as const;
 
-// Onboarding flow configuration
+// Progressive onboarding flow configuration
 export const ONBOARDING_FLOW = {
-  TOTAL_STEPS: 5,
+  TOTAL_STEPS: 4, // Progressive 4-step flow
   STEPS: {
-    1: { name: 'Welcome', path: ROUTES.ONBOARDING.STEP_1 },
+    1: { name: 'Welcome & Role', path: ROUTES.ONBOARDING.STEP_1 },
     2: { name: 'Create Profile', path: ROUTES.ONBOARDING.STEP_2 },
-    3: { name: 'School Pledge', path: ROUTES.ONBOARDING.STEP_3 },
-    4: { name: 'Academic Info', path: ROUTES.ONBOARDING.STEP_4 },
-    5: { name: 'Select Interests', path: ROUTES.ONBOARDING.STEP_5 },
+    3: { name: 'Academic Info', path: ROUTES.ONBOARDING.STEP_3 },
+    4: { name: 'Select Interests', path: ROUTES.ONBOARDING.STEP_4 },
   },
 } as const;

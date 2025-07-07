@@ -38,8 +38,10 @@ if (typeof window !== "undefined") {
   });
 }
 
-// Connect to emulators in development (if not already connected)
-if (isDevelopment && typeof window !== "undefined") {
+// Connect to emulators in development (disabled for now)
+// TODO: Enable emulators when needed for local development
+// eslint-disable-next-line no-constant-condition, no-constant-binary-expression
+if (false && isDevelopment && typeof window !== "undefined") {
   try {
     // Only connect to emulators if not already connected
     // Check auth emulator connection status safely

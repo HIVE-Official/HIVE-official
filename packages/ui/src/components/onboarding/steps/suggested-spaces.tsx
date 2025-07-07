@@ -101,8 +101,8 @@ export function SuggestedSpaces({
   };
 
   const getRelevanceColor = (score: number) => {
-    if (score >= 40) return "text-green-500";
-    if (score >= 25) return "text-yellow-500";
+    if (score >= 40) return "text-accent";
+    if (score >= 25) return "text-foreground";
     return "text-muted";
   };
 

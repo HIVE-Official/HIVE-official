@@ -2,7 +2,7 @@
 
 // Optional analytics types - define locally to avoid dependency issues
 interface LogMetadata {
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 interface LogEvent {

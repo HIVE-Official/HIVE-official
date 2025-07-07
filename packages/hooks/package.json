@@ -20,6 +20,7 @@
     "typescript": "^5.8.3"
   },
   "scripts": {
+    "build": "echo 'No build needed for hooks package (source-only)'",
     "typecheck": "tsc --noEmit",
     "lint": "eslint . --max-warnings 15"
   },

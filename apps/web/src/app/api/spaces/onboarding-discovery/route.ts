@@ -13,7 +13,7 @@ interface FirestoreSpace {
   name: string;
   description: string;
   memberCount: number;
-  type: "major" | "residential" | "interest" | "creative" | "organization";
+  type: "campus_living" | "fraternity_and_sorority" | "hive_exclusive" | "student_organizations" | "university_organizations";
   tags: SpaceTag[];
   status: "dormant" | "activated" | "frozen";
   schoolId: string;
@@ -23,11 +23,11 @@ interface FirestoreSpace {
 interface SpaceDiscoveryResponse {
   success: boolean;
   spaces: {
-    academic: FirestoreSpace[];
-    campusLiving: FirestoreSpace[];
-    greekLife: FirestoreSpace[];
-    studentOrganizations: FirestoreSpace[];
-    universityOrganizations: FirestoreSpace[];
+    campus_living: FirestoreSpace[];
+    fraternity_and_sorority: FirestoreSpace[];
+    hive_exclusive: FirestoreSpace[];
+    student_organizations: FirestoreSpace[];
+    university_organizations: FirestoreSpace[];
   };
   autoJoinSpaces: string[];
 }
@@ -53,11 +53,11 @@ export async function GET(
 
     // Define space types and their nested collection paths
     const spaceTypes = [
-      "major",
-      "residential",
-      "interest",
-      "creative",
-      "organization",
+      "campus_living",
+      "fraternity_and_sorority",
+      "hive_exclusive",
+      "student_organizations",
+      "university_organizations",
     ] as const;
 
     let allSpaces: FirestoreSpace[] = [];
@@ -90,19 +90,39 @@ export async function GET(
 
     // Categorize spaces for the frontend
     const categorizedSpaces = {
-      academic: [] as FirestoreSpace[],
-      campusLiving: [] as FirestoreSpace[],
-      greekLife: [] as FirestoreSpace[],
-      studentOrganizations: [] as FirestoreSpace[],
-      universityOrganizations: [] as FirestoreSpace[],
+      campus_living: [] as FirestoreSpace[],
+      fraternity_and_sorority: [] as FirestoreSpace[],
+      hive_exclusive: [] as FirestoreSpace[],
+      student_organizations: [] as FirestoreSpace[],
+      university_organizations: [] as FirestoreSpace[],
     };
 
     const autoJoinSpaces: string[] = [];
 
     allSpaces.forEach((space) => {
       switch (space.type) {
-        case "major": {
-          categorizedSpaces.academic.push(space);
+        case "campus_living": {
+          categorizedSpaces.campus_living.push(space);
+          break;
+        }
+
+        case "fraternity_and_sorority": {
+          categorizedSpaces.fraternity_and_sorority.push(space);
+          break;
+        }
+
+        case "hive_exclusive": {
+          categorizedSpaces.hive_exclusive.push(space);
+          break;
+        }
+
+        case "student_organizations": {
+          categorizedSpaces.student_organizations.push(space);
+          break;
+        }
+
+        case "university_organizations": {
+          categorizedSpaces.university_organizations.push(space);
 
           // Auto-join logic: match user majors with space tags
           if (userMajors.length > 0) {
@@ -121,49 +141,9 @@ export async function GET(
           break;
         }
 
-        case "residential": {
-          categorizedSpaces.campusLiving.push(space);
-          break;
-        }
-
-        case "interest": {
-          // Check if it's Greek life based on tags
-          const isGreek = space.tags?.some(
-            (tag) =>
-              tag.type === "greek" ||
-              tag.sub_type?.toLowerCase().includes("fraternity") ||
-              tag.sub_type?.toLowerCase().includes("sorority")
-          );
-
-          if (isGreek) {
-            categorizedSpaces.greekLife.push(space);
-          } else {
-            categorizedSpaces.studentOrganizations.push(space);
-          }
-          break;
-        }
-
-        case "creative":
-        case "organization": {
-          // Check if it's a university organization based on tags
-          const isUniversityOrg = space.tags?.some(
-            (tag) =>
-              tag.type === "university" ||
-              tag.sub_type?.toLowerCase().includes("university") ||
-              tag.sub_type?.toLowerCase().includes("official")
-          );
-
-          if (isUniversityOrg) {
-            categorizedSpaces.universityOrganizations.push(space);
-          } else {
-            categorizedSpaces.studentOrganizations.push(space);
-          }
-          break;
-        }
-
         default:
           // Fallback to student organizations
-          categorizedSpaces.studentOrganizations.push(space);
+          categorizedSpaces.student_organizations.push(space);
       }
     });
 
