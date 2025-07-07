@@ -297,14 +297,14 @@ export const GroceryShowcase: Story = {
   render: () => (
     <div className="space-y-8 p-8">
       <div className="text-center space-y-2">
-        <h2 className="text-2xl font-bold text-white">HIVE Badge Grocery Store</h2>
-        <p className="text-gray-400">Pick your perfect badge variant</p>
+        <h2 className="text-2xl font-bold text-foreground">HIVE Badge Grocery Store</h2>
+        <p className="text-muted-foreground">Pick your perfect badge variant</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {/* Default Section */}
-        <div className="space-y-4 p-4 bg-gray-900 rounded-lg">
-          <h3 className="text-lg font-semibold text-white">Default</h3>
+        <div className="space-y-4 p-4 bg-surface rounded-lg border border-border">
+          <h3 className="text-lg font-semibold text-foreground">Default</h3>
           <div className="space-y-2">
             <Badge size="sm">Small Default</Badge>
             <Badge>Default Badge</Badge>
@@ -313,8 +313,8 @@ export const GroceryShowcase: Story = {
         </div>
 
         {/* Secondary Section */}
-        <div className="space-y-4 p-4 bg-gray-900 rounded-lg">
-          <h3 className="text-lg font-semibold text-white">Secondary</h3>
+        <div className="space-y-4 p-4 bg-surface rounded-lg border border-border">
+          <h3 className="text-lg font-semibold text-foreground">Secondary</h3>
           <div className="space-y-2">
             <Badge variant="pill" size="sm">Small Secondary</Badge>
             <Badge variant="pill">Secondary Badge</Badge>
@@ -323,8 +323,8 @@ export const GroceryShowcase: Story = {
         </div>
 
         {/* Ritual Section */}
-        <div className="space-y-4 p-4 bg-gray-900 rounded-lg">
-          <h3 className="text-lg font-semibold text-white">Ritual (Gold)</h3>
+        <div className="space-y-4 p-4 bg-surface rounded-lg border border-border">
+          <h3 className="text-lg font-semibold text-foreground">Ritual (Gold)</h3>
           <div className="space-y-2">
             <Badge variant="ritual" size="sm">
               <Star className="mr-1 h-2.5 w-2.5" />
@@ -342,8 +342,8 @@ export const GroceryShowcase: Story = {
         </div>
 
         {/* Outline Section */}
-        <div className="space-y-4 p-4 bg-gray-900 rounded-lg">
-          <h3 className="text-lg font-semibold text-white">Outline</h3>
+        <div className="space-y-4 p-4 bg-surface rounded-lg border border-border">
+          <h3 className="text-lg font-semibold text-foreground">Outline</h3>
           <div className="space-y-2">
             <Badge variant="outline" size="sm">Small Outline</Badge>
             <Badge variant="outline">Outline Badge</Badge>
@@ -352,8 +352,8 @@ export const GroceryShowcase: Story = {
         </div>
 
         {/* Ghost Section */}
-        <div className="space-y-4 p-4 bg-gray-900 rounded-lg">
-          <h3 className="text-lg font-semibold text-white">Ghost</h3>
+        <div className="space-y-4 p-4 bg-surface rounded-lg border border-border">
+          <h3 className="text-lg font-semibold text-foreground">Ghost</h3>
           <div className="space-y-2">
             <Badge variant="outline" size="sm">Small Ghost</Badge>
             <Badge variant="outline">Ghost Badge</Badge>
@@ -362,8 +362,8 @@ export const GroceryShowcase: Story = {
         </div>
 
         {/* Muted Section */}
-        <div className="space-y-4 p-4 bg-gray-900 rounded-lg">
-          <h3 className="text-lg font-semibold text-white">Muted</h3>
+        <div className="space-y-4 p-4 bg-surface rounded-lg border border-border">
+          <h3 className="text-lg font-semibold text-foreground">Muted</h3>
           <div className="space-y-2">
             <Badge variant="away" size="sm">Small Muted</Badge>
             <Badge variant="away">Muted Badge</Badge>
@@ -372,8 +372,8 @@ export const GroceryShowcase: Story = {
         </div>
       </div>
 
-      <div className="text-center pt-8 border-t border-gray-800">
-        <p className="text-gray-400 text-sm">
+      <div className="text-center pt-8 border-t border-border">
+        <p className="text-muted-foreground text-sm">
           🏅 Following HIVE Design System - Gold only for ritual achievements and special moments
         </p>
       </div>

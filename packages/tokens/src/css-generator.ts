@@ -92,14 +92,14 @@ export function generateCSSVariables(): string {
 
   // Typography scale
   cssVars.push('/* Typography System */');
-  cssVars.push(`--font-display: ${typography.families.display};`);
-  cssVars.push(`--font-sans: ${typography.families.sans};`);
-  cssVars.push(`--font-mono: ${typography.families.mono};`);
+  cssVars.push(`--font-display: ${typography.fontFamily.display.join(', ')};`);
+  cssVars.push(`--font-sans: ${typography.fontFamily.sans.join(', ')};`);
+  cssVars.push(`--font-mono: ${typography.fontFamily.mono.join(', ')};`);
   cssVars.push('');
 
   cssVars.push('/* Typography Scale */');
-  Object.entries(typography.scale).forEach(([key, value]) => {
-    cssVars.push(`--text-${key}: ${value.fontSize};`);
+  Object.entries(typography.fontSize).forEach(([key, value]) => {
+    cssVars.push(`--text-${key}: ${value.size};`);
   });
   cssVars.push('');
 
@@ -112,12 +112,12 @@ export function generateCSSVariables(): string {
 
   // Motion system
   cssVars.push('/* Motion System - HIVE Brand Timing */');
-  Object.entries(motion.curves).forEach(([key, value]) => {
+  Object.entries(motion.easing).forEach(([key, value]) => {
     cssVars.push(`--motion-${key}: ${value};`);
   });
   cssVars.push('');
 
-  Object.entries(motion.durations).forEach(([key, value]) => {
+  Object.entries(motion.duration).forEach(([key, value]) => {
     cssVars.push(`--motion-${key}: ${value};`);
   });
   cssVars.push('');
@@ -138,21 +138,21 @@ export function generateUtilityClasses(): string {
 
   // Typography utilities
   utilities.push('/* Typography Utilities */');
-  Object.keys(typography.scale).forEach(key => {
+  Object.keys(typography.fontSize).forEach(key => {
     utilities.push(`.text-${key} {`);
     utilities.push(`  font-size: var(--text-${key});`);
-    utilities.push(`  line-height: ${typography.scale[key as keyof typeof typography.scale].lineHeight};`);
-    utilities.push(`  font-weight: ${typography.scale[key as keyof typeof typography.scale].fontWeight};`);
+    utilities.push(`  line-height: ${typography.fontSize[key as keyof typeof typography.fontSize].lineHeight};`);
+    utilities.push(`  font-weight: ${typography.fontSize[key as keyof typeof typography.fontSize].fontWeight};`);
     utilities.push('}');
     utilities.push('');
   });
 
   // Motion utilities
   utilities.push('/* Motion Utilities */');
-  Object.keys(motion.durations).forEach(key => {
+  Object.keys(motion.duration).forEach(key => {
     utilities.push(`.transition-hive-${key} {`);
     utilities.push(`  transition-duration: var(--motion-${key});`);
-    utilities.push(`  transition-timing-function: var(--motion-curve);`);
+    utilities.push(`  transition-timing-function: var(--motion-hive);`);
     utilities.push('}');
     utilities.push('');
   });
@@ -226,12 +226,12 @@ export function validateTokens(): { isValid: boolean; errors: string[] } {
   }
 
   // Check motion timing compliance
-  if (motion.durations.standard !== '180ms') {
-    errors.push(`Motion timing violation: Expected 180ms, got ${motion.durations.standard}`);
+  if (motion.duration.base !== '180ms') {
+    errors.push(`Motion timing violation: Expected 180ms, got ${motion.duration.base}`);
   }
 
-  if (motion.curves.brand !== 'cubic-bezier(0.33, 0.65, 0, 1)') {
-    errors.push(`Motion curve violation: Expected HIVE brand curve, got ${motion.curves.brand}`);
+  if (motion.easing.hive !== 'cubic-bezier(0.33, 0.65, 0, 1)') {
+    errors.push(`Motion curve violation: Expected HIVE brand curve, got ${motion.easing.hive}`);
   }
 
   return {

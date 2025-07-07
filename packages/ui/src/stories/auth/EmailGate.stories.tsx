@@ -1,0 +1,230 @@
+import type { Meta, StoryObj } from '@storybook/react';
+import { EmailGate } from '../../components/auth/email-gate';
+import { action } from '@storybook/addon-actions';
+import { userEvent, within } from '@storybook/test';
+
+const meta: Meta<typeof EmailGate> = {
+  title: 'Auth/EmailGate',
+  component: EmailGate,
+  parameters: {
+    layout: 'centered',
+    docs: {
+      description: {
+        component: `
+**EmailGate Component** - The email capture and magic link flow for school authentication.
+
+This component handles:
+- School-specific email validation (.edu domains)
+- Magic link generation and sending
+- Success state with email confirmation
+- Error handling with user feedback
+- Terms and privacy policy links
+- Back navigation with custom callback
+
+**Design Features:**
+- Branded mail icon with accent color
+- Smooth transitions and micro-interactions
+- Loading states with spinner animation
+- Error states with contextual messaging
+- Success state with check icon celebration
+        `,
+      },
+    },
+  },
+  argTypes: {
+    schoolName: {
+      description: 'Display name of the school',
+      control: 'text',
+    },
+    schoolDomain: {
+      description: 'Domain of the school (e.g., buffalo.edu)',
+      control: 'text',
+    },
+    schoolId: {
+      description: 'Unique identifier for the school',
+      control: 'text',
+    },
+    onBack: {
+      description: 'Callback when back button is clicked',
+      action: 'back-clicked',
+    },
+    onSuccess: {
+      description: 'Callback when magic link is sent successfully',
+      action: 'magic-link-sent',
+    },
+    showTermsAndPrivacy: {
+      description: 'Whether to show terms and privacy policy links',
+      control: 'boolean',
+    },
+    backLinkHref: {
+      description: 'Custom back link URL',
+      control: 'text',
+    },
+  },
+};
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const Default: Story = {
+  args: {
+    schoolName: 'University at Buffalo',
+    schoolDomain: 'buffalo.edu',
+    schoolId: 'buffalo',
+    onBack: action('back-clicked'),
+    onSuccess: action('magic-link-sent'),
+    showTermsAndPrivacy: true,
+    backLinkHref: undefined,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: `
+Default email gate flow for UB:
+- Clean email input with placeholder
+- Branded magic link button
+- Terms and privacy links
+- Back button functionality
+        `,
+      },
+    },
+  },
+};
+
+export const WithTypedEmail: Story = {
+  ...Default,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const emailInput = canvas.getByPlaceholderText('you@buffalo.edu');
+    await userEvent.type(emailInput, 'john.doe@buffalo.edu');
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: `
+Shows the component with a pre-typed email address.
+The magic link button becomes enabled when valid email is entered.
+        `,
+      },
+    },
+  },
+};
+
+export const InvalidEmail: Story = {
+  ...Default,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const emailInput = canvas.getByPlaceholderText('you@buffalo.edu');
+    await userEvent.type(emailInput, 'invalid-email');
+    const submitButton = canvas.getByText('Send Magic Link');
+    await userEvent.click(submitButton);
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: `
+Demonstrates email validation error:
+- Shows error message for invalid email format
+- Requires proper .edu domain
+- Error styling with alert icon
+        `,
+      },
+    },
+  },
+};
+
+export const WithoutBackButton: Story = {
+  args: {
+    ...Default.args,
+    onBack: undefined,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: `
+Email gate without back button functionality.
+Useful for flows where back navigation isn't needed.
+        `,
+      },
+    },
+  },
+};
+
+export const WithCustomBackLink: Story = {
+  args: {
+    ...Default.args,
+    onBack: undefined,
+    backLinkHref: '/schools',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: `
+Uses a custom back link instead of callback function.
+Provides alternative navigation pattern.
+        `,
+      },
+    },
+  },
+};
+
+export const WithoutTermsAndPrivacy: Story = {
+  args: {
+    ...Default.args,
+    showTermsAndPrivacy: false,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: `
+Email gate without terms and privacy policy links.
+Useful for internal flows or when legal links are shown elsewhere.
+        `,
+      },
+    },
+  },
+};
+
+export const DifferentSchool: Story = {
+  args: {
+    schoolName: 'Cornell University',
+    schoolDomain: 'cornell.edu',
+    schoolId: 'cornell',
+    onBack: action('back-clicked'),
+    onSuccess: action('magic-link-sent'),
+    showTermsAndPrivacy: true,
+    backLinkHref: undefined,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: `
+Shows the component configured for a different school.
+Email placeholder and school name update accordingly.
+        `,
+      },
+    },
+  },
+};
+
+export const BrandCompliance: Story = {
+  args: {
+    ...Default.args,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: `
+**Brand Compliance Check:**
+- ✅ Space Grotesk for "Join {School}" headline
+- ✅ Geist Sans for body text and labels
+- ✅ Gold accent (#FFD700) for mail icon and focus states
+- ✅ Ritual button styling for magic link
+- ✅ Proper contrast ratios and accessibility
+- ✅ Consistent spacing using 8dp grid
+- ✅ Brand motion timing (180ms transitions)
+        `,
+      },
+    },
+  },
+};

@@ -183,3 +183,38 @@ Required environment variables (see ENV_TEMPLATE.md):
 
 ## Product Architecture Considerations
 - Always question and find the best way to retain users within the collegiate experience
+
+## Product Vision
+
+### HIVE Core Definition
+- The programmable campus layer where students find their people, make decisions together, and build tools that spread.
+- Not another chat app or course manager—this is where your dorm votes on late-night food, your major shares actually useful resources, and someone creative makes tools that the whole campus adopts.
+
+### Core Product Layers
+- **PROFILE:** Your Campus Identity
+  - Bento Grid that matters: Avatar, year, major, "runs X spaces", impact stats
+  - Personal command center with social flair
+  - Includes calendar, personal tools, activity log, and ghost mode
+
+- **SPACES:** Where Campus Lives
+  - Pre-mapped containers for dorms, majors, clubs, classes
+  - Starts dormant, waiting for someone to run them
+  - 6 universal surfaces: Pinned, Posts, Events, Tools, Chat, Members
+  - No setup required—entire campus is already mapped
+
+- **TOOLS:** Modular Suites That Do Things
+  - Platform-shipped tools: Polls, Meet Up, Shared Stuff
+  - Student-built custom suites in HiveLAB
+  - Combine elements like timer, counter, poll, text, anonymous toggle
+  - Create specialized suites for specific group needs
+
+- **FEED:** Campus Pulse
+  - Intelligent activity stream
+  - Shows only Tool-generated content
+  - Filtered by user's Spaces
+  - Creates FOMO with participation stats
+
+- **RITUALS:** Campus-Wide Moments
+  - Weekly drops to engage entire campus
+  - Examples: Dining Hall Wars, Space Battles, Tool Drops, Anonymous Confessions
+  - Creates genuine engagement, not corporate interactions

@@ -48,7 +48,7 @@ const ConversionCard = () => (
       <CardTitle className="text-sm font-medium text-gray-300">
         Conversion Rate
       </CardTitle>
-      <TrendingUp className="h-4 w-4 text-green-500" />
+      <TrendingUp className="h-4 w-4 text-foreground" />
     </CardHeader>
     <CardContent>
       <div className="text-2xl font-bold text-white">
@@ -67,7 +67,7 @@ const DropoffCard = () => (
       <CardTitle className="text-sm font-medium text-gray-300">
         Drop-off Rate
       </CardTitle>
-      <AlertTriangle className="h-4 w-4 text-yellow-500" />
+      <AlertTriangle className="h-4 w-4 text-accent" />
     </CardHeader>
     <CardContent>
       <div className="text-2xl font-bold text-white">
@@ -103,15 +103,15 @@ const AlertBanner = () => {
   if (mockMetrics.flaggedContent <= 0) return null;
   
   return (
-    <Card className="border-red-500/20 bg-red-500/5">
+    <Card className="border-muted bg-surface">
       <CardContent className="pt-6">
         <div className="flex items-center gap-3">
-          <AlertTriangle className="h-5 w-5 text-red-500" />
+          <AlertTriangle className="h-5 w-5 text-foreground" />
           <div>
-            <p className="text-sm font-medium text-red-400">
+            <p className="text-sm font-medium text-foreground">
               {mockMetrics.flaggedContent} items require moderation
             </p>
-            <p className="text-xs text-red-300/70">
+            <p className="text-xs text-muted">
               Check the Content Flags section below
             </p>
           </div>

@@ -21,6 +21,19 @@ export const Default: Story = {
     isLoading: false,
     apiError: null,
   },
+  parameters: {
+    docs: {
+      description: {
+        story: `
+Default email form with:
+- Email validation using zod schema
+- Real-time form validation
+- Ritual button styling
+- Proper accessibility attributes
+        `,
+      },
+    },
+  },
 };
 
 export const WithInput: Story = {

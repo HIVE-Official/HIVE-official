@@ -43,6 +43,14 @@ According to the HIVE vBETA Authentication spec:
       description: 'Callback when user creates a new school',
       action: 'school-created',
     },
+    isLoading: {
+      description: 'Whether schools are loading',
+      control: 'boolean',
+    },
+    userEmail: {
+      description: 'User email for waitlist functionality',
+      control: 'text',
+    },
   },
 };
 
@@ -97,6 +105,30 @@ export const Default: Story = {
     schools: mockSchools,
     onSchoolSelect: action('school-selected'),
     onCreateSchool: action('school-created'),
+    isLoading: false,
+    userEmail: undefined,
+  },
+};
+
+export const Loading: Story = {
+  args: {
+    schools: mockSchools,
+    onSchoolSelect: action('school-selected'),
+    onCreateSchool: action('school-created'),
+    isLoading: true,
+    userEmail: undefined,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: `
+Shows skeleton loading state while schools are being fetched:
+- Animated pulse effects
+- Maintains proper spacing
+- Progressive reveal animation
+        `,
+      },
+    },
   },
 };
 
@@ -105,6 +137,8 @@ export const UBFeatured: Story = {
     schools: mockSchools,
     onSchoolSelect: action('school-selected'),
     onCreateSchool: action('school-created'),
+    isLoading: false,
+    userEmail: undefined,
   },
   parameters: {
     docs: {
@@ -151,6 +185,8 @@ export const WaitlistStatus: Story = {
     ],
     onSchoolSelect: action('school-selected'),
     onCreateSchool: action('school-created'),
+    isLoading: false,
+    userEmail: undefined,
   },
   parameters: {
     docs: {
@@ -171,6 +207,8 @@ export const SearchInteraction: Story = {
     schools: mockSchools,
     onSchoolSelect: action('school-selected'),
     onCreateSchool: action('school-created'),
+    isLoading: false,
+    userEmail: undefined,
   },
   parameters: {
     docs: {
@@ -186,11 +224,35 @@ Try typing in the search bar:
   },
 };
 
+export const WithUserEmail: Story = {
+  args: {
+    schools: mockSchools,
+    onSchoolSelect: action('school-selected'),
+    onCreateSchool: action('school-created'),
+    isLoading: false,
+    userEmail: 'john.doe@buffalo.edu',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: `
+When user email is provided, waitlist flow is streamlined:
+- Email field pre-populated in waitlist dialog
+- Faster waitlist signup process
+- Better user experience
+        `,
+      },
+    },
+  },
+};
+
 export const BrandValidation: Story = {
   args: {
     schools: mockSchools,
     onSchoolSelect: action('school-selected'),
     onCreateSchool: action('school-created'),
+    isLoading: false,
+    userEmail: undefined,
   },
   parameters: {
     docs: {

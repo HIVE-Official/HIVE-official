@@ -155,16 +155,16 @@ export const AnalyticsDashboard = ({ className }: AnalyticsDashboardProps) => {
   if (error) {
     return (
       <div className={`space-y-6 ${className}`}>
-        <Card className="border-red-500/20 bg-red-500/5">
+        <Card className="border-muted bg-surface">
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
-              <AlertTriangle className="h-5 w-5 text-red-500" />
+              <AlertTriangle className="h-5 w-5 text-foreground" />
               <div>
-                <p className="text-sm font-medium text-red-400">Analytics Error</p>
-                <p className="text-xs text-red-300/70">{error}</p>
+                <p className="text-sm font-medium text-foreground">Analytics Error</p>
+                <p className="text-xs text-muted">{error}</p>
                 <button 
                   onClick={fetchAnalytics}
-                  className="mt-2 text-xs text-red-300 hover:text-red-200 underline"
+                  className="mt-2 text-xs text-muted hover:text-foreground underline"
                 >
                   Try Again
                 </button>
@@ -200,13 +200,13 @@ export const AnalyticsDashboard = ({ className }: AnalyticsDashboardProps) => {
 
       {/* Critical Alerts */}
       {(data.authFunnel.conversionRate < 50 || data.onboardingFunnel.completionRate < 60 || data.technical.errorRate > 5) && (
-        <Card className="border-red-500/20 bg-red-500/5">
+        <Card className="border-muted bg-surface">
           <CardContent className="pt-6">
             <div className="flex items-center gap-3 mb-4">
-              <AlertTriangle className="h-5 w-5 text-red-500" />
-              <h3 className="text-sm font-medium text-red-400">Critical Issues Detected</h3>
+              <AlertTriangle className="h-5 w-5 text-foreground" />
+              <h3 className="text-sm font-medium text-foreground">Critical Issues Detected</h3>
             </div>
-            <div className="space-y-2 text-xs text-red-300/70">
+            <div className="space-y-2 text-xs text-muted">
               {data.authFunnel.conversionRate < 50 && (
                 <p>• Auth conversion rate is critically low ({data.authFunnel.conversionRate.toFixed(1)}%)</p>
               )}
@@ -228,7 +228,7 @@ export const AnalyticsDashboard = ({ className }: AnalyticsDashboardProps) => {
           <Card className="border-gray-700 bg-gray-900/50">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-gray-300">Emails Entered</CardTitle>
-              <Mail className="h-4 w-4 text-blue-500" />
+              <Mail className="h-4 w-4 text-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-white">{data.authFunnel.emailsEntered}</div>
@@ -239,7 +239,7 @@ export const AnalyticsDashboard = ({ className }: AnalyticsDashboardProps) => {
           <Card className="border-gray-700 bg-gray-900/50">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-gray-300">Links Sent</CardTitle>
-              <TrendingUp className="h-4 w-4 text-blue-400" />
+              <TrendingUp className="h-4 w-4 text-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-white">{data.authFunnel.magicLinksSent}</div>
@@ -252,7 +252,7 @@ export const AnalyticsDashboard = ({ className }: AnalyticsDashboardProps) => {
           <Card className="border-gray-700 bg-gray-900/50">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-gray-300">Links Clicked</CardTitle>
-              <MousePointer className="h-4 w-4 text-green-400" />
+              <MousePointer className="h-4 w-4 text-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-white">{data.authFunnel.magicLinksClicked}</div>

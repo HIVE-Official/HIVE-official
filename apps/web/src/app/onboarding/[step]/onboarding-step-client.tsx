@@ -26,6 +26,7 @@ interface StepComponentProps {
   onNext: (nextStep?: number, data?: Partial<OnboardingState>) => void;
   onPrev: () => void;
   data: Partial<OnboardingState>;
+  isNavigating?: boolean;
 }
 
 function generateHandle(name: string): string {
@@ -270,6 +271,7 @@ export function OnboardingStepClient({ step }: OnboardingStepClientProps) {
   const { user, isLoading: isAuthLoading } = authResult;
   const { data: onboardingData, update } = useOnboardingStore();
   const [isInitialized, setIsInitialized] = useState(false);
+  const [isNavigating, setIsNavigating] = useState(false);
 
   // Development mode logging (only in dev)
   if (process.env.NODE_ENV === 'development') {
@@ -287,9 +289,13 @@ export function OnboardingStepClient({ step }: OnboardingStepClientProps) {
     nextStep?: number,
     data?: Partial<OnboardingState>
   ) => {
+    setIsNavigating(true);
     const updatedData = { ...onboardingData, ...data };
     update(updatedData);
     logger.info("Updating onboarding data:", updatedData);
+
+    // Add small delay for better UX feedback
+    await new Promise(resolve => setTimeout(resolve, 180));
 
     if (nextStep) {
       router.push(ROUTES.ONBOARDING.STEP(nextStep));
@@ -300,7 +306,12 @@ export function OnboardingStepClient({ step }: OnboardingStepClientProps) {
     }
   };
 
-  const handlePrev = () => {
+  const handlePrev = async () => {
+    setIsNavigating(true);
+    
+    // Add small delay for better UX feedback
+    await new Promise(resolve => setTimeout(resolve, 180));
+    
     const currentNum = parseInt(step);
     const prevRoute = getPreviousOnboardingStep(currentNum);
     if (prevRoute) {
@@ -403,12 +414,23 @@ export function OnboardingStepClient({ step }: OnboardingStepClientProps) {
     }
 
     return (
-      <div className="bg-background">
+      <div className="bg-background relative">
         <StepComponent
           onNext={handleNext}
           onPrev={handlePrev}
           data={onboardingData || initialDevData}
+          isNavigating={isNavigating}
         />
+        
+        {/* Navigation Loading Overlay */}
+        {isNavigating && (
+          <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center">
+            <div className="flex flex-col items-center gap-3">
+              <Loader2 className="h-6 w-6 animate-spin text-accent" />
+              <p className="text-sm text-muted-foreground font-medium">Loading next step...</p>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
@@ -433,12 +455,23 @@ export function OnboardingStepClient({ step }: OnboardingStepClientProps) {
   const StepComponent = STEPS[step];
 
   return (
-    <div className="bg-background">
+    <div className="bg-background relative">
       <StepComponent
         onNext={handleNext}
         onPrev={handlePrev}
         data={onboardingData || {}}
+        isNavigating={isNavigating}
       />
+      
+      {/* Navigation Loading Overlay */}
+      {isNavigating && (
+        <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center">
+          <div className="flex flex-col items-center gap-3">
+            <Loader2 className="h-6 w-6 animate-spin text-accent" />
+            <p className="text-sm text-muted-foreground font-medium">Loading next step...</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

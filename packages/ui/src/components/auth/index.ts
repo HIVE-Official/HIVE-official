@@ -1,4 +1,3 @@
-export * from "./AuthForm";
 export * from "./CheckEmailInfo";
 export * from './splash-screen';
 export * from './school-pick';

@@ -4,7 +4,7 @@
 // @ts-nocheck
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { AuthFlow, type AuthFlowProps } from '../../components/auth/auth-flow';
-import { type School } from '../../components/auth/school-pick';
+import type { School } from '@hive/core';
 import { ToastProvider } from '../../components/toast-provider';
 import { action } from '@storybook/addon-actions';
 
@@ -32,10 +32,10 @@ export default meta;
 type Story = StoryObj<AuthFlowProps>;
 
 const mockSchools: School[] = [
-  { id: '1', name: 'University at Buffalo', domain: 'buffalo.edu', status: 'active', remainingSpots: 50 },
-  { id: '2', name: 'Rochester Institute of Technology', domain: 'rit.edu', status: 'coming_soon' },
-  { id: '3', name: 'Syracuse University', domain: 'syr.edu', status: 'coming_soon' },
-  { id: '4', name: 'Cornell University', domain: 'cornell.edu', status: 'coming_soon' },
+  { id: '1', name: 'University at Buffalo', domain: 'buffalo.edu', status: 'open', studentsUntilOpen: 0, waitlistCount: 0 },
+  { id: '2', name: 'Rochester Institute of Technology', domain: 'rit.edu', status: 'waitlist', studentsUntilOpen: 73, waitlistCount: 23 },
+  { id: '3', name: 'Syracuse University', domain: 'syr.edu', status: 'waitlist', studentsUntilOpen: 156, waitlistCount: 45 },
+  { id: '4', name: 'Cornell University', domain: 'cornell.edu', status: 'waitlist', studentsUntilOpen: 127, waitlistCount: 67 },
 ];
 
 const mockOnEmailSubmit = async (email: string) => {
@@ -57,8 +57,9 @@ const mockOnSchoolCreate = async (data: { name: string; domain: string }) => {
 
 const baseArgs: AuthFlowProps = {
   schools: mockSchools,
+  onSchoolSelect: action('school-selected'),
   onEmailSubmit: mockOnEmailSubmit,
-  onSchoolCreate: mockOnSchoolCreate,
+  onCreateSchool: mockOnSchoolCreate,
 };
 
 export const Default: Story = {

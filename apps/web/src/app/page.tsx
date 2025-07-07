@@ -4,13 +4,14 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { HiveLogo, Button, Countdown } from '@hive/ui';
-import { ArrowRight, X } from 'lucide-react';
+import { ArrowRight, X, Check } from 'lucide-react';
 import { ROUTES } from '@/lib/routes';
 
 function HomePageContent() {
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [checkedItems, setCheckedItems] = useState(new Set());
 
   useEffect(() => {
     setMounted(true);
@@ -22,10 +23,21 @@ function HomePageContent() {
 
   const handleWhatsComing = () => {
     setShowModal(true);
+    setCheckedItems(new Set());
+    // Start checking items with staggered animation
+    setTimeout(() => {
+      const items = [0, 1, 2, 3];
+      items.forEach((item, index) => {
+        setTimeout(() => {
+          setCheckedItems(prev => new Set([...prev, item]));
+        }, index * 600);
+      });
+    }, 1000);
   };
 
   const closeModal = () => {
     setShowModal(false);
+    setCheckedItems(new Set());
   };
 
   // Set launch date to July 31st 8 AM 2025
@@ -207,7 +219,7 @@ function HomePageContent() {
               transition={{ duration: 0.18, ease: [0.33, 0.65, 0, 1] }}
               className="fixed inset-0 z-50 flex items-center justify-center p-4"
             >
-              <div className="relative bg-[#111111] border border-[#FFD700]/30 rounded-lg p-6 sm:p-8 max-w-md w-full shadow-xl">
+              <div className="relative bg-[#111111] border border-[#FFD700]/30 rounded-lg p-6 sm:p-8 max-w-lg w-full shadow-xl max-h-[90vh] overflow-y-auto">
                 {/* Gold accent line */}
                 <div className="absolute top-0 left-0 right-0 h-0.5 bg-[#FFD700] rounded-t-lg" />
                 
@@ -222,20 +234,58 @@ function HomePageContent() {
                 {/* Content */}
                 <div className="pr-8">
                   <h2 className="text-xl font-display font-semibold text-foreground mb-4">
-                    The Future of Campus Life
+                    What Jacob's Building
                   </h2>
-                  <p className="text-foreground font-sans leading-relaxed mb-4 font-medium">
-                    Skip the small talk. Find your people instantly.
+                  <p className="text-muted font-sans leading-relaxed mb-6 text-sm">
+                    Our founder is pulling all-nighters so you don't have to study alone 😴
                   </p>
-                  <p className="text-muted font-sans leading-relaxed mb-2">
-                    • Live study groups that actually happen
-                  </p>
-                  <p className="text-muted font-sans leading-relaxed mb-2">
-                    • Spontaneous meetups in your building
-                  </p>
-                  <p className="text-muted font-sans leading-relaxed mb-6">
-                    • Campus connections that last beyond graduation
-                  </p>
+                  
+                  {/* Jacob's Todo List */}
+                  <div className="space-y-4 mb-6">
+                    {[
+                      { text: "🎨 Profile creation flow", category: "Foundation" },
+                      { text: "🏠 Campus spaces discovery", category: "Community" },
+                      { text: "📊 Personal dashboard", category: "Experience" },
+                      { text: "⚡ Daily rituals system", category: "Habits" }
+                    ].map((item, index) => (
+                      <motion.div
+                        key={index}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ 
+                          duration: 0.3, 
+                          delay: index * 0.1,
+                          ease: [0.33, 0.65, 0, 1]
+                        }}
+                        className="flex items-start space-x-3"
+                      >
+                        <motion.div
+                          initial={{ scale: 0 }}
+                          animate={{ scale: checkedItems.has(index) ? 1 : 0 }}
+                          transition={{ 
+                            duration: 0.3, 
+                            delay: index * 0.6 + 1.0,
+                            ease: [0.33, 0.65, 0, 1]
+                          }}
+                          className="mt-0.5"
+                        >
+                          <div className="w-4 h-4 bg-[#FFD700] rounded-sm flex items-center justify-center">
+                            <Check className="w-3 h-3 text-[#0A0A0A]" />
+                          </div>
+                        </motion.div>
+                        <div className="flex-1">
+                          <p className={`text-sm font-sans transition-colors duration-300 ${
+                            checkedItems.has(index) ? 'text-foreground line-through' : 'text-muted'
+                          }`}>
+                            {item.text}
+                          </p>
+                          <p className="text-xs text-muted/60 font-mono">
+                            {item.category}
+                          </p>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
                   
                   {/* Launch Info */}
                   <div className="bg-[#FFD700]/10 border border-[#FFD700]/30 rounded-lg p-4 mb-4">
@@ -243,7 +293,7 @@ function HomePageContent() {
                       Launching July 31st, 2025
                     </p>
                     <p className="text-muted font-sans text-xs">
-                      Join the countdown. Be first to experience the future of campus community.
+                      Early signups get July preview access. Jacob's caffeinated and ready! ☕
                     </p>
                   </div>
                   

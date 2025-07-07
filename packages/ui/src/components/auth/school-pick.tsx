@@ -17,13 +17,34 @@ interface SchoolPickProps {
   onSchoolSelect: (school: School) => void;
   className?: string;
   userEmail?: string;
+  isLoading?: boolean;
 }
+
+// Skeleton Loading Component
+const SchoolCardSkeleton = ({ index }: { index: number }) => (
+  <motion.div
+    variants={hiveVariants.slideUp}
+    initial="hidden"
+    animate="visible"
+    transition={{ delay: index * 0.05 }}
+    className="w-full p-6 rounded-xl border border-border bg-surface/50 animate-pulse"
+  >
+    <div className="flex items-center justify-between">
+      <div className="flex-1">
+        <div className="h-6 bg-muted/20 rounded w-48 mb-2"></div>
+        <div className="h-4 bg-muted/20 rounded w-32"></div>
+      </div>
+      <div className="h-5 w-5 bg-muted/20 rounded"></div>
+    </div>
+  </motion.div>
+);
 
 export const SchoolPick: React.FC<SchoolPickProps> = ({
   schools,
   onSchoolSelect,
   className,
-  userEmail
+  userEmail,
+  isLoading = false
 }) => {
   const [searchQuery, setSearchQuery] = useState('')
   const [showWaitlistDialog, setShowWaitlistDialog] = useState(false)
@@ -125,7 +146,13 @@ export const SchoolPick: React.FC<SchoolPickProps> = ({
 
       <motion.div className="space-y-4" variants={hiveVariants.item}>
         <AnimatePresence mode="popLayout">
-          {filteredSchools.map((school, index) => (
+          {isLoading ? (
+            // Show skeleton loading while schools are loading
+            Array.from({ length: 6 }).map((_, index) => (
+              <SchoolCardSkeleton key={`skeleton-${index}`} index={index} />
+            ))
+          ) : (
+            filteredSchools.map((school, index) => (
             <motion.div
               key={school.id}
               variants={hiveVariants.slideUp}
@@ -181,7 +208,8 @@ export const SchoolPick: React.FC<SchoolPickProps> = ({
                 </div>
               </motion.button>
             </motion.div>
-          ))}
+            ))
+          )}
         </AnimatePresence>
       </motion.div>
 

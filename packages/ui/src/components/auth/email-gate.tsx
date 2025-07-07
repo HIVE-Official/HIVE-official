@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { Mail, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 import { Button } from '../button';
 import { Input } from '../input';
-import { Label } from '../ui/label';
+import { Label } from '../label';
 import { cn } from '@/lib/utils';
 
 interface EmailGateProps {
@@ -16,6 +16,8 @@ interface EmailGateProps {
   className?: string;
   onDevContinue?: () => void;
   onSuccess?: (email: string) => void; // Called when magic link is sent successfully
+  showTermsAndPrivacy?: boolean; // Whether to show terms and privacy links
+  backLinkHref?: string; // Custom back link URL
 }
 
 interface ApiError {
@@ -28,7 +30,9 @@ export const EmailGate: React.FC<EmailGateProps> = ({
   schoolId,
   onBack,
   className,
-  onSuccess
+  onSuccess,
+  showTermsAndPrivacy = true,
+  backLinkHref
 }) => {
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -179,6 +183,33 @@ export const EmailGate: React.FC<EmailGateProps> = ({
                   )}
                 </Button>
               </div>
+              
+              {/* Terms and Privacy Policy */}
+              {showTermsAndPrivacy && (
+                <div className="mt-4 text-xs text-center text-muted-foreground">
+                  By continuing, you agree to HIVE's{' '}
+                  <a href="/legal/terms" className="underline hover:text-foreground transition-colors">
+                    Terms of Service
+                  </a>{' '}
+                  and{' '}
+                  <a href="/legal/privacy" className="underline hover:text-foreground transition-colors">
+                    Privacy Policy
+                  </a>
+                  .
+                </div>
+              )}
+              
+              {/* Custom Back Link */}
+              {backLinkHref && (
+                <div className="mt-2 text-center">
+                  <a 
+                    href={backLinkHref}
+                    className="text-sm text-muted-foreground hover:text-foreground hover:underline transition-colors"
+                  >
+                    Back
+                  </a>
+                </div>
+              )}
             </form>
           </>
         )}
