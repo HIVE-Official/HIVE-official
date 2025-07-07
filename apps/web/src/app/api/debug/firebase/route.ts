@@ -2,6 +2,14 @@ import { NextResponse } from 'next/server';
 import { getFirebaseAdminConfig, getFirebaseConfig } from '@hive/core';
 
 export async function GET() {
+  // Only allow in development environment
+  if (process.env.NODE_ENV === 'production') {
+    return NextResponse.json(
+      { error: 'Debug endpoints are disabled in production' },
+      { status: 404 }
+    );
+  }
+
   try {
     const clientConfig = getFirebaseConfig();
     const adminConfig = getFirebaseAdminConfig();
