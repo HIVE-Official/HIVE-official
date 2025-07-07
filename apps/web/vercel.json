@@ -1,5 +1,5 @@
 {
-  "buildCommand": "cd ../.. && pnpm install --no-frozen-lockfile && pnpm exec turbo build --filter=web",
+  "buildCommand": "cd ../.. && pnpm install --no-frozen-lockfile && pnpm --filter=@hive/validation build && pnpm install --filter=@hive/core && pnpm --filter=@hive/core build && pnpm --filter=web... build",
   "installCommand": "npm i -g pnpm@9.1.1",
   "outputDirectory": ".next",
   "framework": "nextjs"
