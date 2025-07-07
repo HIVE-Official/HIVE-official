@@ -235,7 +235,7 @@ export const PostCardPremium: React.FC<PostCardPremiumProps> = ({
                 {/* Online status indicator */}
                 {author.isOnline && (
                   <motion.div
-                    className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-green-400 rounded-full border-2 border-surface"
+                    className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-accent rounded-full border-2 border-surface"
                     animate={{ scale: [1, 1.1, 1] }}
                     transition={{ duration: 2, repeat: Infinity }}
                   />

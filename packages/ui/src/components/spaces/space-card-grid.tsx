@@ -80,8 +80,8 @@ const statusConfig = {
   active: {
     label: 'Active',
     icon: Flame,
-    color: 'text-green-400',
-    bgColor: 'bg-green-400/10',
+    color: 'text-accent',
+    bgColor: 'bg-accent/10',
   },
   invite_only: {
     label: 'Invite Only',

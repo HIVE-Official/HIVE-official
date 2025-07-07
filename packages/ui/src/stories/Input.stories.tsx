@@ -103,17 +103,17 @@ export const ValidationStates: Story = {
       <div className="space-y-2">
         <Label htmlFor="error-state">Error State</Label>
         <Input id="error-state" state="error" placeholder="Error input" />
-        <p className="text-sm text-red-500">This field is required</p>
+        <p className="text-sm text-muted">This field is required</p>
       </div>
       <div className="space-y-2">
         <Label htmlFor="success-state">Success State</Label>
         <Input id="success-state" state="success" placeholder="Success input" />
-        <p className="text-sm text-green-500">Looks good!</p>
+        <p className="text-sm text-accent">Looks good!</p>
       </div>
       <div className="space-y-2">
         <Label htmlFor="warning-state">Warning State</Label>
         <Input id="warning-state" state="error" placeholder="Warning input" />
-        <p className="text-sm text-amber-500">Double check this field</p>
+        <p className="text-sm text-muted">Double check this field</p>
       </div>
     </div>
   ),

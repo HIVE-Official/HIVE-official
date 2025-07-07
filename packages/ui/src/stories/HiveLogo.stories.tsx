@@ -175,9 +175,9 @@ export const NavigationUsage: Story = {
             <span className="text-xl font-bold text-white tracking-tight">HIVE</span>
           </div>
           <div className="flex items-center space-x-6">
-            <a href="#" className="text-neutral-400 hover:text-yellow-400 transition-colors">Feed</a>
-            <a href="#" className="text-neutral-400 hover:text-yellow-400 transition-colors">Campus</a>
-            <a href="#" className="text-neutral-400 hover:text-yellow-400 transition-colors">Spaces</a>
+            <a href="#" className="text-neutral-400 hover:text-accent transition-colors">Feed</a>
+            <a href="#" className="text-neutral-400 hover:text-accent transition-colors">Campus</a>
+            <a href="#" className="text-neutral-400 hover:text-accent transition-colors">Spaces</a>
           </div>
         </div>
       </div>
@@ -208,8 +208,8 @@ export const NavigationUsage: Story = {
 export const BrandCompliance: Story = {
   render: () => (
     <div className="p-6 space-y-6">
-      <div className="bg-green-900/20 border border-green-700 rounded-lg p-4">
-        <h3 className="text-green-400 font-semibold mb-2">✅ Correct Usage</h3>
+      <div className="bg-accent/10 border border-accent/30 rounded-lg p-4">
+        <h3 className="text-accent font-semibold mb-2">✅ Correct Usage</h3>
         <div className="grid grid-cols-2 gap-4">
           <div className="bg-black p-4 rounded flex items-center justify-center">
             <HiveLogo variant="white" size="xl" />
@@ -218,25 +218,25 @@ export const BrandCompliance: Story = {
             <HiveLogo variant="black" size="xl" />
           </div>
         </div>
-        <p className="text-green-300 text-sm mt-2">Proper contrast on backgrounds</p>
+        <p className="text-accent text-sm mt-2">Proper contrast on backgrounds</p>
       </div>
 
-      <div className="bg-red-900/20 border border-red-700 rounded-lg p-4">
-        <h3 className="text-red-400 font-semibold mb-2">❌ Incorrect Usage</h3>
+      <div className="bg-surface-02 border border-border rounded-lg p-4">
+        <h3 className="text-muted font-semibold mb-2">❌ Incorrect Usage</h3>
         <div className="grid grid-cols-2 gap-4">
           <div className="bg-gray-400 p-4 rounded flex items-center justify-center">
             <HiveLogo variant="white" size="xl" className="opacity-40" />
           </div>
-          <div className="bg-yellow-200 p-4 rounded flex items-center justify-center">
+          <div className="bg-surface-01 p-4 rounded flex items-center justify-center">
             <HiveLogo variant="black" size="xl" className="opacity-30" />
           </div>
         </div>
-        <p className="text-red-300 text-sm mt-2">Poor contrast, unreadable</p>
+        <p className="text-muted text-sm mt-2">Poor contrast, unreadable</p>
       </div>
 
-      <div className="bg-blue-900/20 border border-blue-700 rounded-lg p-4">
-        <h3 className="text-blue-400 font-semibold mb-2">💡 Brand Guidelines</h3>
-        <ul className="text-blue-300 text-sm space-y-1">
+      <div className="bg-surface-01 border border-border rounded-lg p-4">
+        <h3 className="text-foreground font-semibold mb-2">💡 Brand Guidelines</h3>
+        <ul className="text-muted text-sm space-y-1">
           <li>• Maintain 1× logo height clear space on all sides</li>
           <li>• Use white variant on dark backgrounds (#0A0A0A)</li>
           <li>• Use black variant on light backgrounds</li>

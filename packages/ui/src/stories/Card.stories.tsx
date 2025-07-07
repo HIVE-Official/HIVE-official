@@ -141,7 +141,7 @@ export const Featured: Story = {
 
 export const Glass: Story = {
   render: () => (
-    <div className="bg-gradient-to-br from-purple-900/20 to-blue-900/20 p-8 rounded-lg">
+    <div className="bg-gradient-to-br from-surface-02 to-surface p-8 rounded-lg">
       <Card variant="glass" className="w-[320px]">
         <CardHeader>
           <CardTitle>Glass Card</CardTitle>
@@ -485,7 +485,7 @@ export const GroceryShowcase: Story = {
         </Card>
 
         {/* Glass */}
-        <div className="bg-gradient-to-br from-purple-900/20 to-blue-900/20 p-4 rounded-lg">
+        <div className="bg-gradient-to-br from-surface-02 to-surface p-4 rounded-lg">
           <Card variant="glass" className="w-[200px]">
             <CardHeader>
               <CardTitle className="text-sm">Glass</CardTitle>

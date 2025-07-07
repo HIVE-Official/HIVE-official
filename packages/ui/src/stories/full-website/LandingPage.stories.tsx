@@ -275,7 +275,7 @@ export const BrandShowcase: Story = {
           </div>
           
           <div className="space-y-2">
-            <h4 className="text-sm font-medium text-red-400">❌ Avoided</h4>
+            <h4 className="text-sm font-medium text-muted">❌ Avoided</h4>
             <ul className="text-sm text-muted space-y-1">
               <li>• Gold button backgrounds</li>
               <li>• Success/error colors</li>
