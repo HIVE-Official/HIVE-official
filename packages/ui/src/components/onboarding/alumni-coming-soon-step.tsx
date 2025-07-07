@@ -120,7 +120,7 @@ export const AlumniComingSoonStep: React.FC<AlumniComingSoonStepProps> = ({
                   'Stay updated with campus news and developments'
                 ].map((feature, index) => (
                   <motion.li
-                    key={index}
+                    key={feature}
                     className="flex items-start gap-3 text-muted font-body"
                     variants={hiveVariants.item}
                     transition={{ delay: index * 0.1 }}

@@ -1,6 +1,6 @@
 import React from 'react';
 import { cn } from '../lib/utils';
-import { MotionDiv } from './motion-wrapper';
+import { MotionDiv, MotionButton } from './motion-wrapper';
 
 const BottomNavBarRoot = React.forwardRef<
   HTMLElement,
@@ -39,9 +39,9 @@ const BottomNavBarRoot = React.forwardRef<
   
   // Exclude HTML event handlers that conflict with Framer Motion
   const { 
-    onDrag, onDragStart, onDragEnd, onDragOver, onDragEnter, onDragLeave, onDrop,
-    onAnimationStart, onAnimationEnd, onAnimationIteration,
-    onTransitionStart, onTransitionEnd, onTransitionRun, onTransitionCancel,
+    onDrag: _onDrag, onDragStart: _onDragStart, onDragEnd: _onDragEnd, onDragOver: _onDragOver, onDragEnter: _onDragEnter, onDragLeave: _onDragLeave, onDrop: _onDrop,
+    onAnimationStart: _onAnimationStart, onAnimationEnd: _onAnimationEnd, onAnimationIteration: _onAnimationIteration,
+    onTransitionStart: _onTransitionStart, onTransitionEnd: _onTransitionEnd, onTransitionRun: _onTransitionRun, onTransitionCancel: _onTransitionCancel,
     ...motionProps 
   } = props
   
@@ -162,14 +162,14 @@ const BottomNavBarItem = React.forwardRef<
   
   // Exclude HTML event handlers that conflict with Framer Motion
   const { 
-    onDrag, onDragStart, onDragEnd, onDragOver, onDragEnter, onDragLeave, onDrop,
-    onAnimationStart, onAnimationEnd, onAnimationIteration,
-    onTransitionStart, onTransitionEnd, onTransitionRun, onTransitionCancel,
+    onDrag: _onDrag2, onDragStart: _onDragStart2, onDragEnd: _onDragEnd2, onDragOver: _onDragOver2, onDragEnter: _onDragEnter2, onDragLeave: _onDragLeave2, onDrop: _onDrop2,
+    onAnimationStart: _onAnimationStart2, onAnimationEnd: _onAnimationEnd2, onAnimationIteration: _onAnimationIteration2,
+    onTransitionStart: _onTransitionStart2, onTransitionEnd: _onTransitionEnd2, onTransitionRun: _onTransitionRun2, onTransitionCancel: _onTransitionCancel2,
     ...motionProps 
   } = props
   
   return (
-    <MotionDiv
+    <MotionButton
       ref={ref}
       className={cn(getVariantStyles(), className)}
       {...getMotionProps()}
@@ -193,7 +193,7 @@ const BottomNavBarItem = React.forwardRef<
           </MotionDiv>
         )}
       </div>
-    </MotionDiv>
+    </MotionButton>
   )
 });
 BottomNavBarItem.displayName = 'BottomNavBarItem';
@@ -255,9 +255,9 @@ const BottomNavBarIndicator = React.forwardRef<
   
   // Exclude HTML event handlers that conflict with Framer Motion
   const { 
-    onDrag, onDragStart, onDragEnd, onDragOver, onDragEnter, onDragLeave, onDrop,
-    onAnimationStart, onAnimationEnd, onAnimationIteration,
-    onTransitionStart, onTransitionEnd, onTransitionRun, onTransitionCancel,
+    onDrag: _onDrag3, onDragStart: _onDragStart3, onDragEnd: _onDragEnd3, onDragOver: _onDragOver3, onDragEnter: _onDragEnter3, onDragLeave: _onDragLeave3, onDrop: _onDrop3,
+    onAnimationStart: _onAnimationStart3, onAnimationEnd: _onAnimationEnd3, onAnimationIteration: _onAnimationIteration3,
+    onTransitionStart: _onTransitionStart3, onTransitionEnd: _onTransitionEnd3, onTransitionRun: _onTransitionRun3, onTransitionCancel: _onTransitionCancel3,
     ...motionProps 
   } = props
   

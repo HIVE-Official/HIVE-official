@@ -67,9 +67,9 @@ export const FeaturesSection: React.FC<FeaturesSectionProps> = ({
 
         {/* Features Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {features.map((feature, index) => (
+          {features.map((feature) => (
             <div
-              key={index}
+              key={feature.title}
               className={`p-6 rounded-lg border transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] hover:border-accent/30 ${
                 feature.highlight 
                   ? 'bg-surface border-accent/20 ring-1 ring-accent/10' 

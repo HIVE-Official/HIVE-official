@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Button } from '../button';
 import { Badge } from '../badge';
 import { cn } from '../../lib/utils';
@@ -96,14 +96,14 @@ const urgencyConfig = {
 };
 
 export const RitualCardCountdown: React.FC<RitualCardCountdownProps> = ({
-  id,
+  id: _id,
   title,
   description,
   type,
   participantCount,
   startTime,
   endTime,
-  isActive,
+  isActive: _isActive,
   hasParticipated,
   urgencyLevel,
   onParticipate,

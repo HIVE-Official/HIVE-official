@@ -7,7 +7,7 @@ export interface BentoCard {
   id: string;
   size: "1x1" | "2x1" | "2x2" | "1x2";
   priority: number;
-  component: React.ComponentType<any>;
+  component: React.ComponentType<Record<string, unknown>>;
   permissions?: string[];
   isLocked?: boolean;
   title?: string;

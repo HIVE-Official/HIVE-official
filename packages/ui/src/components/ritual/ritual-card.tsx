@@ -61,7 +61,7 @@ const ritualConfig = {
 };
 
 export const RitualCard: React.FC<RitualCardProps> = ({
-  id,
+  id: _id,
   title,
   description,
   type,

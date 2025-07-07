@@ -117,7 +117,7 @@ const engagementVelocityConfig = {
 };
 
 export const PostCardPremium: React.FC<PostCardPremiumProps> = ({
-  id,
+  id: _id,
   author,
   content,
   type,

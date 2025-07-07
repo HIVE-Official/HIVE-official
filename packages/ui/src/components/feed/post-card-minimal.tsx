@@ -38,7 +38,7 @@ const verificationConfig = {
 };
 
 export const PostCardMinimal: React.FC<PostCardMinimalProps> = ({
-  id,
+  id: _id,
   author,
   content,
   type,

@@ -55,9 +55,9 @@ export const OnboardingCompleteStep: React.FC<OnboardingCompleteStepProps> = ({
       <AnimatePresence>
         {showCelebration && (
           <div className="absolute inset-0 pointer-events-none">
-            {Array.from({ length: 6 }).map((_, i) => (
+            {Array.from({ length: 6 }, (_, i) => `particle-${i}`).map((particleId, i) => (
               <motion.div
-                key={i}
+                key={particleId}
                 className="absolute w-2 h-2 bg-accent rounded-full"
                 initial={{ 
                   x: "50vw", 

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { hiveVariants, hivePresets } from '../lib/motion';
+import { hiveVariants } from '../lib/motion';
 import { useAdaptiveMotion } from '../lib/adaptive-motion';
 
 interface PageTransitionProps {
@@ -128,11 +128,11 @@ export const RouteTransition: React.FC<RouteTransitionProps> = ({
 };
 
 // Higher-order component for page animations
-export function withPageTransition<P extends Record<string, any>>(
+export function withPageTransition<P extends Record<string, unknown>>(
   Component: React.ComponentType<P>,
   options: Partial<PageTransitionProps> = {}
 ) {
-  const WrappedComponent = React.forwardRef<HTMLElement, P>((props, ref) => (
+  const WrappedComponent = React.forwardRef<HTMLElement, P>((props, _ref) => (
     <PageTransition {...options}>
       <Component {...(props as P)} />
     </PageTransition>

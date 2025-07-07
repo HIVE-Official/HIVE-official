@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Button } from '../button';
 import { Badge } from '../badge';
 import { cn } from '../../lib/utils';
@@ -111,7 +111,7 @@ const verificationConfig = {
 };
 
 export const PostCardDetailed: React.FC<PostCardDetailedProps> = ({
-  id,
+  id: _id,
   author,
   content,
   type,
@@ -304,7 +304,7 @@ export const PostCardDetailed: React.FC<PostCardDetailedProps> = ({
               className="flex items-center gap-2 text-sm text-muted hover:text-foreground transition-colors"
             >
               <div className="flex -space-x-1">
-                {engagement.recentLikes.slice(0, 3).map((user, i) => (
+                {engagement.recentLikes.slice(0, 3).map((user, _i) => (
                   <div key={user.id} className="w-5 h-5 rounded-full bg-surface-02 border border-surface flex-shrink-0" />
                 ))}
               </div>

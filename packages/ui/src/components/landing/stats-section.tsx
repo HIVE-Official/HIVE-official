@@ -54,9 +54,9 @@ export const StatsSection: React.FC<StatsSectionProps> = ({
 
         {/* Stats Grid */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-          {stats.map((stat, index) => (
+          {stats.map((stat) => (
             <div
-              key={index}
+              key={stat.label}
               className="text-center p-6 rounded-lg bg-background border border-border hover:border-accent/30 transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)]"
             >
               <div className="mb-3">

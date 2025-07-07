@@ -1,7 +1,7 @@
 import React from 'react';
 import { Search, Bell, Menu, X } from 'lucide-react';
 import { cn } from '../lib/utils';
-import { MotionDiv } from './motion-wrapper';
+import { MotionDiv, MotionButton } from './motion-wrapper';
 
 const AppHeaderRoot = React.forwardRef<
     HTMLElement,
@@ -58,9 +58,9 @@ const AppHeaderRoot = React.forwardRef<
     
     // Exclude HTML event handlers that conflict with Framer Motion
     const { 
-      onDrag, onDragStart, onDragEnd, onDragOver, onDragEnter, onDragLeave, onDrop,
-      onAnimationStart, onAnimationEnd, onAnimationIteration,
-      onTransitionStart, onTransitionEnd, onTransitionRun, onTransitionCancel,
+      onDrag: _onDrag, onDragStart: _onDragStart, onDragEnd: _onDragEnd, onDragOver: _onDragOver, onDragEnter: _onDragEnter, onDragLeave: _onDragLeave, onDrop: _onDrop,
+      onAnimationStart: _onAnimationStart, onAnimationEnd: _onAnimationEnd, onAnimationIteration: _onAnimationIteration,
+      onTransitionStart: _onTransitionStart, onTransitionEnd: _onTransitionEnd, onTransitionRun: _onTransitionRun, onTransitionCancel: _onTransitionCancel,
       ...motionProps 
     } = props
     
@@ -89,9 +89,9 @@ const AppHeaderContent = React.forwardRef<
 >(({ className, ...props }, ref) => {
     // Exclude HTML event handlers that conflict with Framer Motion
     const { 
-      onDrag, onDragStart, onDragEnd, onDragOver, onDragEnter, onDragLeave, onDrop,
-      onAnimationStart, onAnimationEnd, onAnimationIteration,
-      onTransitionStart, onTransitionEnd, onTransitionRun, onTransitionCancel,
+      onDrag: _onDrag, onDragStart: _onDragStart, onDragEnd: _onDragEnd, onDragOver: _onDragOver, onDragEnter: _onDragEnter, onDragLeave: _onDragLeave, onDrop: _onDrop,
+      onAnimationStart: _onAnimationStart, onAnimationEnd: _onAnimationEnd, onAnimationIteration: _onAnimationIteration,
+      onTransitionStart: _onTransitionStart, onTransitionEnd: _onTransitionEnd, onTransitionRun: _onTransitionRun, onTransitionCancel: _onTransitionCancel,
       ...motionProps 
     } = props
     
@@ -114,9 +114,9 @@ const AppHeaderLogo = React.forwardRef<
 >(({ className, ...props }, ref) => {
     // Exclude HTML event handlers that conflict with Framer Motion
     const { 
-      onDrag, onDragStart, onDragEnd, onDragOver, onDragEnter, onDragLeave, onDrop,
-      onAnimationStart, onAnimationEnd, onAnimationIteration,
-      onTransitionStart, onTransitionEnd, onTransitionRun, onTransitionCancel,
+      onDrag: _onDrag, onDragStart: _onDragStart, onDragEnd: _onDragEnd, onDragOver: _onDragOver, onDragEnter: _onDragEnter, onDragLeave: _onDragLeave, onDrop: _onDrop,
+      onAnimationStart: _onAnimationStart, onAnimationEnd: _onAnimationEnd, onAnimationIteration: _onAnimationIteration,
+      onTransitionStart: _onTransitionStart, onTransitionEnd: _onTransitionEnd, onTransitionRun: _onTransitionRun, onTransitionCancel: _onTransitionCancel,
       ...motionProps 
     } = props
     
@@ -141,9 +141,9 @@ const AppHeaderNav = React.forwardRef<
 >(({ className, ...props }, ref) => {
     // Exclude HTML event handlers that conflict with Framer Motion
     const { 
-      onDrag, onDragStart, onDragEnd, onDragOver, onDragEnter, onDragLeave, onDrop,
-      onAnimationStart, onAnimationEnd, onAnimationIteration,
-      onTransitionStart, onTransitionEnd, onTransitionRun, onTransitionCancel,
+      onDrag: _onDrag, onDragStart: _onDragStart, onDragEnd: _onDragEnd, onDragOver: _onDragOver, onDragEnter: _onDragEnter, onDragLeave: _onDragLeave, onDrop: _onDrop,
+      onAnimationStart: _onAnimationStart, onAnimationEnd: _onAnimationEnd, onAnimationIteration: _onAnimationIteration,
+      onTransitionStart: _onTransitionStart, onTransitionEnd: _onTransitionEnd, onTransitionRun: _onTransitionRun, onTransitionCancel: _onTransitionCancel,
       ...motionProps 
     } = props
     
@@ -166,9 +166,9 @@ const AppHeaderActions = React.forwardRef<
 >(({ className, ...props }, ref) => {
     // Exclude HTML event handlers that conflict with Framer Motion
     const { 
-      onDrag, onDragStart, onDragEnd, onDragOver, onDragEnter, onDragLeave, onDrop,
-      onAnimationStart, onAnimationEnd, onAnimationIteration,
-      onTransitionStart, onTransitionEnd, onTransitionRun, onTransitionCancel,
+      onDrag: _onDrag, onDragStart: _onDragStart, onDragEnd: _onDragEnd, onDragOver: _onDragOver, onDragEnter: _onDragEnter, onDragLeave: _onDragLeave, onDrop: _onDrop,
+      onAnimationStart: _onAnimationStart, onAnimationEnd: _onAnimationEnd, onAnimationIteration: _onAnimationIteration,
+      onTransitionStart: _onTransitionStart, onTransitionEnd: _onTransitionEnd, onTransitionRun: _onTransitionRun, onTransitionCancel: _onTransitionCancel,
       ...motionProps 
     } = props
     
@@ -210,9 +210,9 @@ const AppHeaderSearch = React.forwardRef<
     
     // Exclude HTML event handlers that conflict with Framer Motion
     const { 
-      onDrag, onDragStart, onDragEnd, onDragOver, onDragEnter, onDragLeave, onDrop,
-      onAnimationStart, onAnimationEnd, onAnimationIteration,
-      onTransitionStart, onTransitionEnd, onTransitionRun, onTransitionCancel,
+      onDrag: _onDrag, onDragStart: _onDragStart, onDragEnd: _onDragEnd, onDragOver: _onDragOver, onDragEnter: _onDragEnter, onDragLeave: _onDragLeave, onDrop: _onDrop,
+      onAnimationStart: _onAnimationStart, onAnimationEnd: _onAnimationEnd, onAnimationIteration: _onAnimationIteration,
+      onTransitionStart: _onTransitionStart, onTransitionEnd: _onTransitionEnd, onTransitionRun: _onTransitionRun, onTransitionCancel: _onTransitionCancel,
       ...motionProps 
     } = props
     
@@ -267,14 +267,14 @@ const AppHeaderMenuButton = React.forwardRef<
     
     // Exclude HTML event handlers that conflict with Framer Motion
     const { 
-      onDrag, onDragStart, onDragEnd, onDragOver, onDragEnter, onDragLeave, onDrop,
-      onAnimationStart, onAnimationEnd, onAnimationIteration,
-      onTransitionStart, onTransitionEnd, onTransitionRun, onTransitionCancel,
+      onDrag: _onDrag, onDragStart: _onDragStart, onDragEnd: _onDragEnd, onDragOver: _onDragOver, onDragEnter: _onDragEnter, onDragLeave: _onDragLeave, onDrop: _onDrop,
+      onAnimationStart: _onAnimationStart, onAnimationEnd: _onAnimationEnd, onAnimationIteration: _onAnimationIteration,
+      onTransitionStart: _onTransitionStart, onTransitionEnd: _onTransitionEnd, onTransitionRun: _onTransitionRun, onTransitionCancel: _onTransitionCancel,
       ...motionProps 
     } = props
     
     return (
-      <MotionDiv
+      <MotionButton
         ref={ref}
         className={cn(
           'inline-flex items-center justify-center text-muted hover:text-accent transition-colors md:hidden',
@@ -295,7 +295,7 @@ const AppHeaderMenuButton = React.forwardRef<
         ) : (
           <Menu className="w-5 h-5" />
         )}
-      </MotionDiv>
+      </MotionButton>
     )
 });
 AppHeaderMenuButton.displayName = 'AppHeaderMenuButton';
@@ -322,14 +322,14 @@ const AppHeaderNotifications = React.forwardRef<
     
     // Exclude HTML event handlers that conflict with Framer Motion
     const { 
-      onDrag, onDragStart, onDragEnd, onDragOver, onDragEnter, onDragLeave, onDrop,
-      onAnimationStart, onAnimationEnd, onAnimationIteration,
-      onTransitionStart, onTransitionEnd, onTransitionRun, onTransitionCancel,
+      onDrag: _onDrag, onDragStart: _onDragStart, onDragEnd: _onDragEnd, onDragOver: _onDragOver, onDragEnter: _onDragEnter, onDragLeave: _onDragLeave, onDrop: _onDrop,
+      onAnimationStart: _onAnimationStart, onAnimationEnd: _onAnimationEnd, onAnimationIteration: _onAnimationIteration,
+      onTransitionStart: _onTransitionStart, onTransitionEnd: _onTransitionEnd, onTransitionRun: _onTransitionRun, onTransitionCancel: _onTransitionCancel,
       ...motionProps 
     } = props
     
     return (
-      <MotionDiv
+      <MotionButton
         ref={ref}
         className={cn(
           'relative inline-flex items-center justify-center text-muted hover:text-accent transition-colors',
@@ -363,7 +363,7 @@ const AppHeaderNotifications = React.forwardRef<
             {count > 0 && (count > 99 ? '99+' : count)}
           </MotionDiv>
         )}
-      </MotionDiv>
+      </MotionButton>
     )
 });
 AppHeaderNotifications.displayName = 'AppHeaderNotifications';

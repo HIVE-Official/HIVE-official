@@ -1,30 +1,28 @@
 "use client";
 
-import React, { useState, useEffect, createContext, useContext } from "react";
+import React, { useState, useEffect, createContext, useContext, useMemo, forwardRef, type CSSProperties } from "react";
+import { motion, type HTMLMotionProps } from "framer-motion";
 
 // Global motion context to share motion state across components
-const MotionContext = createContext<{ motion: any; isLoaded: boolean }>({ 
-  motion: null, 
+const MotionContext = createContext<{ isLoaded: boolean }>({ 
   isLoaded: false 
 });
 
 // Provider component to wrap the app
 export function MotionProvider({ children }: { children: React.ReactNode }) {
-  const [motion, setMotion] = useState<any>(null);
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     // Only load on client side
     if (typeof window !== 'undefined') {
-      import("framer-motion").then((framerMotion) => {
-        setMotion(framerMotion.motion);
-        setIsLoaded(true);
-      });
+      setIsLoaded(true);
     }
   }, []);
 
+  const contextValue = useMemo(() => ({ isLoaded }), [isLoaded]);
+
   return (
-    <MotionContext.Provider value={{ motion, isLoaded }}>
+    <MotionContext.Provider value={contextValue}>
       {children}
     </MotionContext.Provider>
   );
@@ -35,55 +33,114 @@ function useMotion() {
   const context = useContext(MotionContext);
   if (!context) {
     // Fallback if provider is not used
-    return { motion: null, isLoaded: false };
+    return { isLoaded: false };
   }
   return context;
 }
 
+// Extract only safe props for fallback
+function extractSafeProps(props: Record<string, unknown>) {
+  const {
+    animate: _animate,
+    initial: _initial,
+    transition: _transition,
+    variants: _variants,
+    whileHover: _whileHover,
+    whileTap: _whileTap,
+    whileInView: _whileInView,
+    whileFocus: _whileFocus,
+    whileDrag: _whileDrag,
+    exit: _exit,
+    layout: _layout,
+    layoutId: _layoutId,
+    layoutDependency: _layoutDependency,
+    onUpdate: _onUpdate,
+    onAnimationStart: _onAnimationStart,
+    onAnimationComplete: _onAnimationComplete,
+    onHoverStart: _onHoverStart,
+    onHoverEnd: _onHoverEnd,
+    onTapStart: _onTapStart,
+    onTap: _onTap,
+    onTapCancel: _onTapCancel,
+    onPan: _onPan,
+    onPanStart: _onPanStart,
+    onPanEnd: _onPanEnd,
+    onDrag: _onDrag,
+    onDragStart: _onDragStart,
+    onDragEnd: _onDragEnd,
+    ...safeProps
+  } = props;
+  return safeProps;
+}
+
 interface MotionWrapperProps {
   children?: React.ReactNode;
-  animate?: any;
-  initial?: any;
-  transition?: any;
-  variants?: any;
-  whileHover?: any;
-  whileTap?: any;
   className?: string;
-  onClick?: (e: React.MouseEvent<any>) => void;
-  [key: string]: any;
+  style?: CSSProperties;
+  onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
+  [key: string]: unknown;
 }
 
-export function MotionDiv({ children, ...props }: MotionWrapperProps) {
-  const { motion, isLoaded } = useMotion();
-  
-  // During SSR or before motion loads, render a regular div
-  if (!isLoaded || !motion) {
-    const { animate, initial, transition, variants, whileHover, whileTap, ...divProps } = props;
-    return <div {...divProps}>{children}</div>;
+export const MotionDiv = forwardRef<HTMLDivElement, MotionWrapperProps>(
+  ({ children, ...props }, ref) => {
+    const { isLoaded } = useMotion();
+    
+    // During SSR or before motion loads, render a regular div
+    if (!isLoaded) {
+      const safeProps = extractSafeProps(props);
+      return <div ref={ref} {...safeProps}>{children}</div>;
+    }
+
+    // On client with motion loaded, render motion.div
+    return <motion.div ref={ref} {...(props as HTMLMotionProps<"div">)}>{children}</motion.div>;
   }
+);
 
-  // On client with motion loaded, render motion.div
-  return <motion.div {...props}>{children}</motion.div>;
+MotionDiv.displayName = "MotionDiv";
+
+interface MotionSpanWrapperProps {
+  children?: React.ReactNode;
+  className?: string;
+  style?: CSSProperties;
+  [key: string]: unknown;
 }
 
-export function MotionSpan({ children, ...props }: MotionWrapperProps) {
-  const { motion, isLoaded } = useMotion();
-  
-  if (!isLoaded || !motion) {
-    const { animate, initial, transition, variants, whileHover, whileTap, ...spanProps } = props;
-    return <span {...spanProps}>{children}</span>;
+interface MotionButtonWrapperProps {
+  children?: React.ReactNode;
+  className?: string;
+  style?: CSSProperties;
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  disabled?: boolean;
+  type?: "button" | "submit" | "reset";
+  [key: string]: unknown;
+}
+
+export const MotionSpan = forwardRef<HTMLSpanElement, MotionSpanWrapperProps>(
+  ({ children, ...props }, ref) => {
+    const { isLoaded } = useMotion();
+    
+    if (!isLoaded) {
+      const safeProps = extractSafeProps(props);
+      return <span ref={ref} {...safeProps}>{children}</span>;
+    }
+
+    return <motion.span ref={ref} {...(props as HTMLMotionProps<"span">)}>{children}</motion.span>;
   }
+);
 
-  return <motion.span {...props}>{children}</motion.span>;
-}
+MotionSpan.displayName = "MotionSpan";
 
-export function MotionButton({ children, ...props }: MotionWrapperProps) {
-  const { motion, isLoaded } = useMotion();
-  
-  if (!isLoaded || !motion) {
-    const { animate, initial, transition, variants, whileHover, whileTap, ...buttonProps } = props;
-    return <button {...buttonProps}>{children}</button>;
+export const MotionButton = forwardRef<HTMLButtonElement, MotionButtonWrapperProps>(
+  ({ children, ...props }, ref) => {
+    const { isLoaded } = useMotion();
+    
+    if (!isLoaded) {
+      const safeProps = extractSafeProps(props);
+      return <button ref={ref} {...safeProps}>{children}</button>;
+    }
+
+    return <motion.button ref={ref} {...(props as HTMLMotionProps<"button">)}>{children}</motion.button>;
   }
+);
 
-  return <motion.button {...props}>{children}</motion.button>;
-}
+MotionButton.displayName = "MotionButton";

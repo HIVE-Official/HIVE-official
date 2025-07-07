@@ -248,9 +248,9 @@ export const ModernHeader: StoryObj = {
           
           {/* Scroll content */}
           <div className="space-y-4">
-            {Array.from({ length: 20 }).map((_, i) => (
-              <div key={i} className="p-4 border border-border rounded-lg">
-                <h3 className="font-semibold">Content Block {i + 1}</h3>
+            {Array.from({ length: 20 }, (_, i) => ({ id: `content-block-${i}`, index: i })).map((block) => (
+              <div key={block.id} className="p-4 border border-border rounded-lg">
+                <h3 className="font-semibold">Content Block {block.index + 1}</h3>
                 <p className="text-muted">This is sample content to demonstrate scrolling behavior.</p>
               </div>
             ))}

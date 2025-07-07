@@ -7,7 +7,6 @@ import { Badge } from '../badge';
 import { cn } from '../../lib/utils';
 import { 
   Users, 
-  Calendar, 
   Sparkles, 
   Star,
   ArrowRight,
@@ -98,7 +97,7 @@ const activityLevelConfig = {
 };
 
 export const SpaceCardGrid: React.FC<SpaceCardGridProps> = ({
-  id,
+  id: _id,
   name,
   description,
   type,
@@ -117,7 +116,7 @@ export const SpaceCardGrid: React.FC<SpaceCardGridProps> = ({
   const [isHovered, setIsHovered] = useState(false);
   const config = spaceTypeConfig[type];
   const statusInfo = statusConfig[status];
-  const activityInfo = activityLevelConfig[activityLevel];
+  const _activityInfo = activityLevelConfig[activityLevel];
 
   const displayMemberCount = status === 'preview' ? potentialMembers : memberCount;
 
@@ -165,7 +164,7 @@ export const SpaceCardGrid: React.FC<SpaceCardGridProps> = ({
           {name}
         </h3>
         
-        <Badge variant={config.color as any} className="text-xs mb-3">
+        <Badge variant={config.color as 'accent' | 'chip'} className="text-xs mb-3">
           {config.label}
         </Badge>
       </div>
@@ -216,7 +215,7 @@ export const SpaceCardGrid: React.FC<SpaceCardGridProps> = ({
             <div className="text-xs text-muted mb-2">Leaders</div>
             <div className="flex items-center gap-1">
               <div className="flex -space-x-1">
-                {leaders.slice(0, 3).map((leader, index) => (
+                {leaders.slice(0, 3).map((leader) => (
                   <div
                     key={leader.id}
                     className="w-5 h-5 rounded-full bg-surface-02 border border-surface flex-shrink-0"

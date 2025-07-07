@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Button } from '../button';
 import { Badge } from '../badge';
 import { cn } from '../../lib/utils';
@@ -69,7 +69,7 @@ const postTypeConfig = {
 };
 
 export const PostCard: React.FC<PostCardProps> = ({
-  id,
+  id: _id,
   author,
   content,
   type,

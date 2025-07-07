@@ -7,7 +7,6 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../select";
-import { Badge } from "../badge";
 import { 
   Crown, 
   Users, 
@@ -15,12 +14,7 @@ import {
   CheckCircle, 
   AlertCircle,
   ArrowLeft,
-  Loader2,
-  GraduationCap,
-  Building,
-  Coffee,
-  Briefcase,
-  Star
+  Loader2
 } from "lucide-react";
 
 export interface SpaceActivationRequestFormProps {

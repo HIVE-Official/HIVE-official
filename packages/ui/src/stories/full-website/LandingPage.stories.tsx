@@ -66,7 +66,7 @@ const LandingPage = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.3 }}
               className="text-6xl font-black tracking-tight text-foreground md:text-7xl lg:text-8xl"
-              style={{ fontFamily: 'Space Grotesk Variable, system-ui, sans-serif' }}
+              style={{ fontFamily: 'var(--font-display)' }}
             >
               HIVE
             </motion.h1>
@@ -77,7 +77,7 @@ const LandingPage = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
               className="mx-auto max-w-2xl text-xl leading-relaxed text-muted md:text-2xl"
-              style={{ fontFamily: 'Geist, system-ui, sans-serif' }}
+              style={{ fontFamily: 'var(--font-sans)' }}
             >
               Minimal surface.{" "}
               <span className="text-accent font-medium">Maximal spark.</span>
@@ -166,10 +166,10 @@ const LandingPage = () => {
                   className="group rounded-lg border border-border bg-surface p-6 transition-all duration-200 hover:border-accent/50"
                 >
                   <feature.icon className="mb-4 h-8 w-8 text-accent" />
-                  <h3 className="mb-2 text-lg font-semibold text-foreground" style={{ fontFamily: 'Space Grotesk Variable, system-ui, sans-serif' }}>
+                  <h3 className="mb-2 text-lg font-semibold text-foreground" style={{ fontFamily: 'var(--font-display)' }}>
                     {feature.title}
                   </h3>
-                  <p className="text-muted" style={{ fontFamily: 'Geist, system-ui, sans-serif' }}>
+                  <p className="text-muted" style={{ fontFamily: 'var(--font-sans)' }}>
                     {feature.description}
                   </p>
                 </motion.div>

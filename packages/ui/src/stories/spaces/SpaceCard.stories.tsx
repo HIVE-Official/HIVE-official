@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { SpaceCard } from '../../components/spaces/space-card';
+import { SpaceCard, type SpaceCardProps } from '../../components/spaces/space-card';
 import { fn } from '@storybook/test';
 
 const meta: Meta<typeof SpaceCard> = {
@@ -178,12 +178,12 @@ export const PreviewModeShowcase: Story = {
       <div className="grid gap-4 md:grid-cols-2">
         <div className="space-y-2">
           <h4 className="text-body font-medium text-foreground">📊 Preview Mode</h4>
-          <SpaceCard {...AcademicPreview.args!} />
+          <SpaceCard {...(AcademicPreview.args as SpaceCardProps)} />
         </div>
         
         <div className="space-y-2">
           <h4 className="text-body font-medium text-foreground">🚀 Activated</h4>
-          <SpaceCard {...AcademicActive.args!} />
+          <SpaceCard {...(AcademicActive.args as SpaceCardProps)} />
         </div>
       </div>
     </div>
@@ -209,11 +209,11 @@ export const SpaceTypesShowcase: Story = {
       </div>
       
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        <SpaceCard {...AcademicActive.args!} />
-        <SpaceCard {...ResidentialActive.args!} />
-        <SpaceCard {...InterestGroup.args!} />
-        <SpaceCard {...GreekLife.args!} />
-        <SpaceCard {...Organization.args!} />
+        <SpaceCard {...(AcademicActive.args as SpaceCardProps)} />
+        <SpaceCard {...(ResidentialActive.args as SpaceCardProps)} />
+        <SpaceCard {...(InterestGroup.args as SpaceCardProps)} />
+        <SpaceCard {...(GreekLife.args as SpaceCardProps)} />
+        <SpaceCard {...(Organization.args as SpaceCardProps)} />
       </div>
     </div>
   ),
@@ -255,8 +255,8 @@ export const DesignSystemCompliance: Story = {
       </div>
       
       <div className="grid gap-4 md:grid-cols-2">
-        <SpaceCard {...AcademicActive.args!} />
-        <SpaceCard {...GreekLife.args!} />
+        <SpaceCard {...(AcademicActive.args as SpaceCardProps)} />
+        <SpaceCard {...(GreekLife.args as SpaceCardProps)} />
       </div>
     </div>
   ),

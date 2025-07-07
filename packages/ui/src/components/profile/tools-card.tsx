@@ -85,7 +85,7 @@ export function ToolsCard({
             </div>
 
             {/* Secondary tools */}
-            {displayTools.slice(1, 3).map((tool, index) => (
+            {displayTools.slice(1, 3).map((tool, _index) => (
               <div key={tool.id} className="bg-[#2A2A2A]/40 rounded-lg p-3 border border-[#2A2A2A]/50 hover:border-[#FFD700]/20 hover:bg-[#2A2A2A]/60 transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] group cursor-pointer">
                 <div className="flex items-center gap-3">
                   <span className="text-lg">{tool.icon || "🛠️"}</span>

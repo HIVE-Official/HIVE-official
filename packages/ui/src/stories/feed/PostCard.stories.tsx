@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { PostCard } from '../../components/feed/post-card';
+import { PostCard, type PostCardProps } from '../../components/feed/post-card';
 import { fn } from '@storybook/test';
 
 const meta: Meta<typeof PostCard> = {
@@ -156,12 +156,12 @@ export const VerificationLevels: Story = {
     <div className="space-y-4 max-w-lg">
       <div className="space-y-2">
         <h4 className="text-body font-medium text-foreground">Verified Student</h4>
-        <PostCard {...TextPost.args!} />
+        <PostCard {...(TextPost.args as PostCardProps)} />
       </div>
       
       <div className="space-y-2">
         <h4 className="text-body font-medium text-foreground">Verified+ Leader</h4>
-        <PostCard {...RitualResponse.args!} />
+        <PostCard {...(RitualResponse.args as PostCardProps)} />
       </div>
     </div>
   ),
@@ -178,10 +178,10 @@ export const VerificationLevels: Story = {
 export const FeedSimulation: Story = {
   render: () => (
     <div className="space-y-4 max-w-lg">
-      <PostCard {...FirstLightPost.args!} />
-      <PostCard {...RitualResponse.args!} />
-      <PostCard {...SpaceUpdate.args!} />
-      <PostCard {...WithSpace.args!} />
+      <PostCard {...(FirstLightPost.args as PostCardProps)} />
+      <PostCard {...(RitualResponse.args as PostCardProps)} />
+      <PostCard {...(SpaceUpdate.args as PostCardProps)} />
+      <PostCard {...(WithSpace.args as PostCardProps)} />
     </div>
   ),
   parameters: {
@@ -221,7 +221,7 @@ export const DesignSystemValidation: Story = {
         </div>
       </div>
       
-      <PostCard {...LikedPost.args!} />
+      <PostCard {...(LikedPost.args as PostCardProps)} />
     </div>
   ),
   parameters: {

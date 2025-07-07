@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '../button';
 import { Input } from '../input';
 import { Label } from '../label';
-import { X, Users, CheckCircle, Loader2, GraduationCap, Building, Shield, Star, BookOpen, Award } from 'lucide-react';
+import { X, Users, Loader2, Building, Shield, Star, BookOpen, Award } from 'lucide-react';
 import { hiveVariants } from '../../lib/motion';
 
 interface FacultyModalProps {
@@ -27,7 +27,7 @@ export const FacultyModal: React.FC<FacultyModalProps> = ({
   const [lastName, setLastName] = useState('');
   const [role, setRole] = useState('');
   const [selectedSpaceId, setSelectedSpaceId] = useState('');
-  const [availableSpaces, setAvailableSpaces] = useState<any[]>([]);
+  const [availableSpaces, setAvailableSpaces] = useState<Array<{ id: string; name: string; spaceType: string }>>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoadingSpaces, setIsLoadingSpaces] = useState(false);
 

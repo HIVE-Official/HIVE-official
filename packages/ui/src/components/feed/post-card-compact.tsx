@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Button } from '../button';
 import { Badge } from '../badge';
 import { cn } from '../../lib/utils';
@@ -87,7 +87,7 @@ const verificationConfig = {
 };
 
 export const PostCardCompact: React.FC<PostCardCompactProps> = ({
-  id,
+  id: _id,
   author,
   content,
   type,

@@ -1,4 +1,5 @@
-import { dbAdmin, logger, type School } from "@hive/core";
+import { logger, type School } from "@hive/core";
+import { dbAdmin } from "@/lib/firebase-admin";
 import { NextResponse } from "next/server";
 
 // Mock schools data for development when Firebase is not configured

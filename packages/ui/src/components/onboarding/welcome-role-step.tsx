@@ -12,7 +12,7 @@ import { FacultyModal } from './faculty-modal';
 type UserRole = 'student' | 'faculty' | 'alumni';
 
 interface WelcomeRoleStepProps {
-  onRoleSelect: (role: UserRole, data?: any) => void;
+  onRoleSelect: (role: UserRole, data?: { firstName: string; lastName: string; role: string; selectedSpaceId: string }) => void;
   schoolName: string;
   userEmail: string;
 }

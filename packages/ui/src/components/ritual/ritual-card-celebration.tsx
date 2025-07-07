@@ -104,7 +104,7 @@ const Particle: React.FC<{ delay: number; color: string }> = ({ delay, color }) 
 );
 
 export const RitualCardCelebration: React.FC<RitualCardCelebrationProps> = ({
-  id,
+  id: _id,
   title,
   description,
   type,

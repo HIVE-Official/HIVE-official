@@ -11,7 +11,6 @@ import {
   Sparkles, 
   Clock,
   Star,
-  ArrowRight,
   Eye,
   Zap
 } from 'lucide-react';
@@ -69,7 +68,7 @@ const spaceTypeConfig = {
 };
 
 export const SpaceCardPreview: React.FC<SpaceCardPreviewProps> = ({
-  id,
+  id: _id,
   name,
   description,
   type,
@@ -124,7 +123,7 @@ export const SpaceCardPreview: React.FC<SpaceCardPreviewProps> = ({
                 {name}
               </h3>
               <div className="flex items-center gap-2 mt-1">
-                <Badge variant={config.color as any} className="text-xs">
+                <Badge variant={config.color as 'accent' | 'chip'} className="text-xs">
                   {config.label}
                 </Badge>
                 <span className="text-xs text-muted">{category}</span>
@@ -147,9 +146,9 @@ export const SpaceCardPreview: React.FC<SpaceCardPreviewProps> = ({
         {/* Keywords */}
         {keywords.length > 0 && (
           <div className="flex flex-wrap gap-1 mb-4">
-            {keywords.slice(0, 4).map((keyword, index) => (
+            {keywords.slice(0, 4).map((keyword) => (
               <span
-                key={index}
+                key={keyword}
                 className="text-xs px-2 py-1 bg-surface-01 border border-border rounded-md text-muted"
               >
                 {keyword}

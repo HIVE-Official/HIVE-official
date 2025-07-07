@@ -185,9 +185,9 @@ export const StaggeredAnimations: Story = {
           animate="visible"
           className="space-y-3"
         >
-          {items.map((item, index) => (
+          {items.map((item) => (
             <motion.div
-              key={index}
+              key={item.replace(/\s+/g, '-').toLowerCase()}
               variants={hiveVariants.item}
             >
               <DemoCard>{item}</DemoCard>

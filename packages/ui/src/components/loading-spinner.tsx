@@ -41,6 +41,18 @@ export interface LoadingSpinnerProps
 
 const LoadingSpinner = React.forwardRef<HTMLDivElement, LoadingSpinnerProps>(
   ({ className, variant, size, message, centered, ...props }, ref) => {
+    // Extract conflicting HTML animation events
+    const { 
+      onAnimationStart: _onAnimationStart, 
+      onAnimationEnd: _onAnimationEnd, 
+      onAnimationIteration: _onAnimationIteration,
+      onTransitionStart: _onTransitionStart,
+      onTransitionEnd: _onTransitionEnd,
+      onTransitionRun: _onTransitionRun,
+      onTransitionCancel: _onTransitionCancel,
+      ...motionProps 
+    } = props;
+    
     const spinner = (
       <MotionDiv
         ref={ref}
@@ -53,7 +65,7 @@ const LoadingSpinner = React.forwardRef<HTMLDivElement, LoadingSpinnerProps>(
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.18, ease: [0.33, 0.65, 0, 1] }}
-        {...props}
+        {...motionProps}
       >
         <MotionDiv
           animate={{ 

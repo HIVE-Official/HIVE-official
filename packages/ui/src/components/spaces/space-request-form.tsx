@@ -18,7 +18,7 @@ interface ExistingSpace {
   name: string;
   description: string;
   memberCount: number;
-  tags?: any[];
+  tags?: string[];
 }
 
 interface SpaceRequestFormProps {

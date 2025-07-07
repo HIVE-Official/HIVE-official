@@ -101,7 +101,7 @@ export function CalendarCard({ events = [], className }: CalendarCardProps) {
         {/* Weekday headers */}
         <div className="grid grid-cols-7 gap-1 mb-2">
           {["S", "M", "T", "W", "T", "F", "S"].map((day, index) => (
-            <div key={index} className="text-center text-xs text-muted font-medium py-1">
+            <div key={`weekday-${day}-${index}`} className="text-center text-xs text-muted font-medium py-1">
               {day}
             </div>
           ))}
@@ -111,7 +111,7 @@ export function CalendarCard({ events = [], className }: CalendarCardProps) {
         <div className="grid grid-cols-7 gap-1">
           {calendarDays.map((day, index) => (
             <div
-              key={index}
+              key={day ? `day-${day}` : `empty-${index}`}
               className={cn(
                 "aspect-square flex items-center justify-center text-xs relative",
                 day && "cursor-pointer hover:bg-[#2A2A2A] rounded transition-colors duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)]",

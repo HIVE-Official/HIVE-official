@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { RitualCard } from '../../components/ritual/ritual-card';
+import { RitualCard, type RitualCardProps } from '../../components/ritual/ritual-card';
 import { fn } from '@storybook/test';
 
 const meta: Meta<typeof RitualCard> = {
@@ -139,10 +139,10 @@ export const Inactive: Story = {
 export const RitualFeed: Story = {
   render: () => (
     <div className="space-y-4 max-w-md">
-      <RitualCard {...FirstLight.args!} />
-      <RitualCard {...TorchPass.args!} />
-      <RitualCard {...SpaceHunt.args!} />
-      <RitualCard {...Wave.args!} />
+      <RitualCard {...(FirstLight.args as RitualCardProps)} />
+      <RitualCard {...(TorchPass.args as RitualCardProps)} />
+      <RitualCard {...(SpaceHunt.args as RitualCardProps)} />
+      <RitualCard {...(Wave.args as RitualCardProps)} />
     </div>
   ),
   parameters: {
@@ -168,17 +168,17 @@ export const DesignSystemShowcase: Story = {
       <div className="grid gap-4">
         <div className="space-y-2">
           <h4 className="text-body font-medium text-foreground">🎨 Monochrome + Gold System</h4>
-          <RitualCard {...FirstLight.args!} />
+          <RitualCard {...(FirstLight.args as RitualCardProps)} />
         </div>
         
         <div className="space-y-2">
           <h4 className="text-body font-medium text-foreground">✨ Motion-Based States</h4>
-          <RitualCard {...TorchPass.args!} />
+          <RitualCard {...(TorchPass.args as RitualCardProps)} />
         </div>
         
         <div className="space-y-2">
           <h4 className="text-body font-medium text-foreground">🏆 Completed State</h4>
-          <RitualCard {...Wave.args!} />
+          <RitualCard {...(Wave.args as RitualCardProps)} />
         </div>
       </div>
     </div>

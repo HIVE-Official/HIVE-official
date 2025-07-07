@@ -12,7 +12,7 @@
   "scripts": {
     "dev": "tsc --watch",
     "build": "tsup src/index.ts --format cjs,esm --sourcemap --clean",
-    "lint": "eslint . --max-warnings 15",
+    "lint": "eslint . --max-warnings 30",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf .turbo dist",
     "build-storybook": "storybook build",

@@ -148,8 +148,8 @@ export const SchoolPick: React.FC<SchoolPickProps> = ({
         <AnimatePresence mode="popLayout">
           {isLoading ? (
             // Show skeleton loading while schools are loading
-            Array.from({ length: 6 }).map((_, index) => (
-              <SchoolCardSkeleton key={`skeleton-${index}`} index={index} />
+            Array.from({ length: 6 }, (_, index) => ({ id: `skeleton-${index}`, index })).map((skeleton) => (
+              <SchoolCardSkeleton key={skeleton.id} index={skeleton.index} />
             ))
           ) : (
             filteredSchools.map((school, index) => (

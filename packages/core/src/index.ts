@@ -135,8 +135,8 @@ export {
 // Photo moderation utilities - temporarily commented out
 // export { PhotoModerationUtils } from "./utils/photo-moderation";
 
-// Re-export server-side utilities
-export * from './server-index';
+// Server-side utilities are available via separate import from @hive/core/server
+// Do not re-export here to avoid bundling server-side code in client bundles
 
 // Re-export other modules
 export * from './env';
