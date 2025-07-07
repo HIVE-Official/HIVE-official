@@ -201,12 +201,14 @@ AvatarGroup.displayName = "AvatarGroup"
 
 // Utility function to generate initials from name
 export const getInitials = (name: string): string => {
+  if (!name) return "?";
   return name
     .split(" ")
-    .map(word => word.charAt(0))
+    .map(word => word?.charAt(0))
+    .filter(Boolean)
     .join("")
     .toUpperCase()
-    .slice(0, 2)
+    .slice(0, 2) || "?"
 }
 
 export { 

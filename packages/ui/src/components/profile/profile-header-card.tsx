@@ -21,7 +21,7 @@ export function ProfileHeaderCard({
   major,
   graduationYear,
   isBuilder = false,
-  profileViews = 0,
+  profileViews: _profileViews = 0,
   className
 }: ProfileHeaderCardProps) {
   return (
@@ -39,7 +39,7 @@ export function ProfileHeaderCard({
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center text-[#FFD700] font-bold text-2xl">
-                {fullName.charAt(0)}
+                {fullName?.charAt(0) || "?"}
               </div>
             )}
           </div>

@@ -89,7 +89,7 @@ const statusConfig = {
 };
 
 export const SpaceCard: React.FC<SpaceCardProps> = ({
-  id,
+  id: _id,
   name,
   description,
   type,
@@ -233,7 +233,7 @@ export const SpaceCard: React.FC<SpaceCardProps> = ({
                       className="w-full h-full rounded-full object-cover"
                     />
                   ) : (
-                    leader.name.charAt(0).toUpperCase()
+                    leader.name?.charAt(0)?.toUpperCase() || "?"
                   )}
                 </div>
               ))}

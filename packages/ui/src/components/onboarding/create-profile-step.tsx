@@ -148,7 +148,7 @@ export const CreateProfileStep: React.FC<CreateProfileStepProps> = ({
       
       if (firstName && lastName && firstName !== lastName) {
         fallbackSuggestions.push(`${firstName}.${lastName}`);
-        fallbackSuggestions.push(`${firstName}${lastName.charAt(0)}`);
+        fallbackSuggestions.push(`${firstName}${lastName?.charAt(0) || ""}`);
       }
       
       if (firstName) {
