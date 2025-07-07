@@ -2,8 +2,8 @@
   "name": "hive-ui",
   "private": true,
   "scripts": {
-    "build": "turbo run build",
-    "vercel-build": "pnpm install --no-frozen-lockfile && pnpm --filter=@hive/validation build && pnpm --filter=@hive/core build && pnpm --filter=web... build",
+    "build": "pnpm --filter=@hive/validation build && pnpm --filter=@hive/core build && pnpm --filter=web... build",
+    "vercel-build": "pnpm install --no-frozen-lockfile && pnpm run build",
     "dev": "turbo run dev",
     "lint": "cross-env BROWSERSLIST_IGNORE_OLD_DATA=1 BROWSERSLIST_UPDATE_DB=0 NO_UPDATE_NOTIFIER=1 TURBO_TELEMETRY_DISABLED=1 CI=1 turbo run lint",
     "clean": "turbo run clean",

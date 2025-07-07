@@ -225,7 +225,7 @@ function useEmailVerification() {
             // Transfer school selection data to onboarding store
             const schoolId = localStorage.getItem("hive-selected-school-id");
             const schoolName = localStorage.getItem("hive-selected-school-name");
-            const schoolDomain = localStorage.getItem("hive-selected-school-domain");
+            // const schoolDomain = localStorage.getItem("hive-selected-school-domain");
             
             if (schoolId && schoolName) {
               update({ 

@@ -29,7 +29,7 @@ interface SpacesResponse {
     student_organizations: SpaceData[];
     university_organizations: SpaceData[];
   };
-  totalCount: number;
+  autoJoinSpaces: string[];
 }
 
 interface SpaceCategory {
@@ -99,9 +99,9 @@ export default function SpaceDiscoveryStep() {
         const data: SpacesResponse = await response.json();
         setSpaces(data.spaces);
         
-                 // Auto-select academic spaces based on user's majors
-         if (onboardingData?.majors && data.spaces.academic.length > 0) {
-           const matchingAcademicSpaces = data.spaces.academic
+                 // Auto-select university organization spaces based on user's majors
+         if (onboardingData?.majors && data.spaces.university_organizations.length > 0) {
+           const matchingAcademicSpaces = data.spaces.university_organizations
              .filter(space => 
                space.tags?.some(tag => 
                  onboardingData.majors?.some(major => 
@@ -205,7 +205,7 @@ export default function SpaceDiscoveryStep() {
               <h3 className="font-semibold text-foreground">Auto-Joining Based on Your Major</h3>
             </div>
             <div className="space-y-2">
-              {spaces?.academic
+              {spaces?.university_organizations
                 .filter(space => autoJoinSpaces.includes(space.id))
                 .map((space) => (
                   <div key={space.id} className="flex items-center justify-between p-3 bg-surface-02 rounded-lg">

@@ -10,8 +10,35 @@ export default function GlobalError({
   reset: () => void;
 }) {
   useEffect(() => {
-    // Log the error
-    console.error('Global error:', error);
+    // Log detailed error information
+    console.error('Global error caught:', {
+      name: error.name,
+      message: error.message,
+      stack: error.stack,
+      digest: error.digest,
+      cause: error.cause
+    });
+    
+    // Also send to external logging if possible
+    try {
+      fetch('/api/log-error', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: error.name,
+          message: error.message,
+          stack: error.stack,
+          digest: error.digest,
+          url: window.location.href,
+          userAgent: navigator.userAgent,
+          timestamp: new Date().toISOString()
+        })
+      }).catch(() => {
+        // Ignore fetch errors - we don't want to create more errors
+      });
+    } catch (e) {
+      // Ignore any errors in error logging
+    }
   }, [error]);
 
   const handleReset = () => {

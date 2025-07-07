@@ -3,7 +3,7 @@ import { dbAdmin } from "@/lib/firebase-admin";
 import { NextResponse } from "next/server";
 
 // Mock schools data for development when Firebase is not configured
-const mockSchools: School[] = [
+const mockSchools: any[] = [
   {
     id: "ub",
     name: "University at Buffalo",
@@ -22,8 +22,8 @@ const mockSchools: School[] = [
     autoSpacesEnabled: true,
     hasDormitories: true,
     dormitoryList: ["Ellicott Complex", "South Campus", "Governors Complex"],
-    createdAt: new Date('2024-01-01') as any,
-    updatedAt: new Date('2024-01-01') as any,
+    createdAt: new Date('2024-01-01').toISOString(),
+    updatedAt: new Date('2024-01-01').toISOString(),
   },
   {
     id: "binghamton",
@@ -43,8 +43,8 @@ const mockSchools: School[] = [
     autoSpacesEnabled: true,
     hasDormitories: true,
     dormitoryList: ["College-in-the-Woods", "Mountainview", "Susquehanna"],
-    createdAt: new Date('2024-01-01') as any,
-    updatedAt: new Date('2024-01-01') as any,
+    createdAt: new Date('2024-01-01').toISOString(),
+    updatedAt: new Date('2024-01-01').toISOString(),
   },
   {
     id: "stony-brook",
@@ -64,8 +64,8 @@ const mockSchools: School[] = [
     autoSpacesEnabled: true,
     hasDormitories: true,
     dormitoryList: ["Roosevelt Quad", "Mendelsohn Quad", "Roth Quad"],
-    createdAt: new Date('2024-01-01') as any,
-    updatedAt: new Date('2024-01-01') as any,
+    createdAt: new Date('2024-01-01').toISOString(),
+    updatedAt: new Date('2024-01-01').toISOString(),
   },
   {
     id: "st-bonaventure",
@@ -85,8 +85,8 @@ const mockSchools: School[] = [
     autoSpacesEnabled: true,
     hasDormitories: true,
     dormitoryList: ["Francis Hall", "Robinson Hall", "Shay-Loughlen Hall"],
-    createdAt: new Date('2024-01-01') as any,
-    updatedAt: new Date('2024-01-01') as any,
+    createdAt: new Date('2024-01-01').toISOString(),
+    updatedAt: new Date('2024-01-01').toISOString(),
   },
   {
     id: "buffalo-state",
@@ -106,8 +106,8 @@ const mockSchools: School[] = [
     autoSpacesEnabled: true,
     hasDormitories: true,
     dormitoryList: ["Moore Complex", "Neumann Hall", "Porter Hall"],
-    createdAt: new Date('2024-01-01') as any,
-    updatedAt: new Date('2024-01-01') as any,
+    createdAt: new Date('2024-01-01').toISOString(),
+    updatedAt: new Date('2024-01-01').toISOString(),
   },
   {
     id: "syracuse",
@@ -127,8 +127,8 @@ const mockSchools: School[] = [
     autoSpacesEnabled: true,
     hasDormitories: true,
     dormitoryList: ["Ernie Davis Hall", "Lawrinson Hall", "Sadler Hall"],
-    createdAt: new Date('2024-01-01') as any,
-    updatedAt: new Date('2024-01-01') as any,
+    createdAt: new Date('2024-01-01').toISOString(),
+    updatedAt: new Date('2024-01-01').toISOString(),
   }
 ];
 
@@ -138,8 +138,15 @@ export async function GET() {
     if (dbAdmin) {
       const schoolsSnapshot = await dbAdmin.collection("schools").get();
       const schools = schoolsSnapshot.docs.map(
-        (doc) => ({ id: doc.id, ...doc.data() }) as School
+        (doc: any) => ({ id: doc.id, ...doc.data() }) as School
       );
+      
+      // If no schools in database, return mock data
+      if (schools.length === 0) {
+        logger.info("No schools found in database, using mock data");
+        return NextResponse.json(mockSchools);
+      }
+      
       return NextResponse.json(schools);
     } else {
       logger.info("Firebase not configured, using mock data");
@@ -147,6 +154,11 @@ export async function GET() {
     }
   } catch (error) {
     logger.error("Firebase connection failed, using mock data:", error);
-    return NextResponse.json(mockSchools);
+    try {
+      return NextResponse.json(mockSchools);
+    } catch (jsonError) {
+      logger.error("Failed to serialize mock data:", jsonError);
+      return NextResponse.json({ error: "Failed to load schools data" }, { status: 500 });
+    }
   }
 }

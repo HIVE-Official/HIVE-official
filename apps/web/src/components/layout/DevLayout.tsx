@@ -4,7 +4,7 @@ import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { AppHeader, BottomNavBar, HiveLogo, Button, Avatar, AvatarFallback } from '@hive/ui'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
-import { Home, Compass, User, Settings } from 'lucide-react'
+import { Home, Compass, User } from 'lucide-react'
 
 // Mock user data for development
 const mockUser = {

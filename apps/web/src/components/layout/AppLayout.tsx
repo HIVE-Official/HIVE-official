@@ -2,7 +2,7 @@
 
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
-import { AppHeader, BottomNavBar, HiveLogo, Button, Avatar, AvatarFallback, AvatarImage } from '@hive/ui'
+import { AppHeader, BottomNavBar, HiveLogo, Button, Avatar, AvatarFallback } from '@hive/ui'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { useAuth } from '@hive/auth-logic'
 import { Home, Compass, User } from 'lucide-react'

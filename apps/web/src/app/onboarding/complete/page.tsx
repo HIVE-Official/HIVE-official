@@ -52,7 +52,7 @@ export default function OnboardingCompletePage() {
     };
 
     if (onboardingData) {
-      completeOnboarding();
+      void completeOnboarding();
     } else {
       // No onboarding data, redirect to start
       router.push(ROUTES.ONBOARDING.STEP_2);
