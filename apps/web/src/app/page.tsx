@@ -83,7 +83,12 @@ function HomePageContent() {
                 ease: [0.33, 0.65, 0, 1],
                 delay: 0.9 
               }}
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black tracking-tight text-foreground font-display"
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tight text-white"
+              style={{ 
+                fontFamily: 'Space Grotesk, system-ui, sans-serif',
+                fontWeight: 700,
+                letterSpacing: '-0.02em'
+              }}
             >
               HIVE
             </MotionDiv>
@@ -130,8 +135,12 @@ function HomePageContent() {
             >
               <Button
                 size="lg"
-                className="group h-12 sm:h-14 bg-transparent cursor-not-allowed px-6 sm:px-8 text-base sm:text-lg font-medium text-muted border border-[#2A2A2A]/50 transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)]"
+                className="group h-12 sm:h-14 bg-transparent cursor-not-allowed px-6 sm:px-8 text-base sm:text-lg font-medium text-[#6B7280] border border-[#2A2A2A]/50 transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)]"
                 disabled
+                style={{
+                  fontFamily: 'Geist Sans, system-ui, sans-serif',
+                  fontWeight: 500
+                }}
               >
                 <Lock className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
                 Locked
@@ -154,8 +163,12 @@ function HomePageContent() {
             >
               <Button
                 size="lg"
-                className="group h-12 sm:h-14 bg-transparent hover:bg-surface px-6 sm:px-8 text-base sm:text-lg font-medium text-foreground border border-[#2A2A2A] hover:border-[#FFD700]/50 transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] focus:ring-2 focus:ring-[#FFD700] focus:ring-offset-2 focus:ring-offset-[#0A0A0A]"
+                className="group h-12 sm:h-14 bg-transparent hover:bg-[#111111] px-6 sm:px-8 text-base sm:text-lg font-medium text-white border border-[#2A2A2A] hover:border-[#FFD700]/50 transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] focus:ring-2 focus:ring-[#FFD700] focus:ring-offset-2 focus:ring-offset-[#0A0A0A]"
                 onClick={handleWhatsComing}
+                style={{
+                  fontFamily: 'Geist Sans, system-ui, sans-serif',
+                  fontWeight: 500
+                }}
               >
                 See What's Coming
               </Button>
@@ -173,7 +186,10 @@ function HomePageContent() {
             }}
             className="pt-4 sm:pt-6 md:pt-8"
           >
-            <p className="font-mono text-xs sm:text-sm text-muted/80">
+            <p className="text-sm text-[#6B7280]" style={{ 
+              fontFamily: 'Geist Mono, ui-monospace, monospace',
+              fontWeight: 400 
+            }}>
               🛠️ Campus Tools · Launching July 31st, 2025
             </p>
           </MotionDiv>
@@ -216,20 +232,26 @@ function HomePageContent() {
 
                 {/* Content */}
                 <div className="pr-8">
-                  <h2 className="text-xl font-display font-semibold text-foreground mb-4">
+                  <h2 className="text-xl font-semibold text-white mb-4" style={{
+                    fontFamily: 'Space Grotesk, system-ui, sans-serif',
+                    fontWeight: 600
+                  }}>
                     HIVE is Currently Locked
                   </h2>
-                  <p className="text-muted font-sans leading-relaxed mb-6 text-sm">
-                    Campus utility tools launching July 31st. Early access starts throughout July.
+                  <p className="text-[#6B7280] leading-relaxed mb-6 text-sm" style={{
+                    fontFamily: 'Geist Sans, system-ui, sans-serif',
+                    fontWeight: 400
+                  }}>
+                    The programmable campus layer where students find their people, make decisions together, and build tools that spread.
                   </p>
                   
                   {/* Core Features List */}
                   <div className="space-y-4 mb-6">
                     {[
-                      { text: "Profile", icon: "👤", description: "Your campus command center" },
-                      { text: "Spaces", icon: "🏛️", description: "Pre-mapped campus containers" },
-                      { text: "Tools", icon: "🛠️", description: "Build campus utilities" },
-                      { text: "Rituals", icon: "⚡", description: "Campus-wide moments" }
+                      { text: "Profile", icon: "👤", description: "Your campus identity and command center" },
+                      { text: "Spaces", icon: "🏛️", description: "Where campus communities live and thrive" },
+                      { text: "Tools", icon: "🛠️", description: "Build utilities that actually solve problems" },
+                      { text: "Rituals", icon: "⚡", description: "Campus-wide moments that bring everyone together" }
                     ].map((item, index) => (
                       <MotionDiv
                         key={index}
@@ -246,10 +268,16 @@ function HomePageContent() {
                           <span className="text-lg">{item.icon}</span>
                         </div>
                         <div className="flex-1">
-                          <p className="text-sm font-semibold text-foreground font-sans">
+                          <p className="text-sm font-medium text-white" style={{
+                            fontFamily: 'Geist Sans, system-ui, sans-serif',
+                            fontWeight: 500
+                          }}>
                             {item.text}
                           </p>
-                          <p className="text-xs text-muted">
+                          <p className="text-xs text-[#6B7280]" style={{
+                            fontFamily: 'Geist Sans, system-ui, sans-serif',
+                            fontWeight: 400
+                          }}>
                             {item.description}
                           </p>
                         </div>
@@ -260,11 +288,17 @@ function HomePageContent() {
                   
                   {/* Launch Info */}
                   <div className="bg-[#111111] border border-[#2A2A2A] rounded-lg p-4 mb-4">
-                    <p className="text-foreground font-sans text-sm font-medium mb-1">
+                    <p className="text-white text-sm font-medium mb-1" style={{
+                      fontFamily: 'Geist Sans, system-ui, sans-serif',
+                      fontWeight: 500
+                    }}>
                       🛠️ Campus Tools Launch July 31st
                     </p>
-                    <p className="text-muted font-sans text-xs">
-                      Early access begins throughout July. Build the tools your campus actually needs.
+                    <p className="text-[#6B7280] text-xs" style={{
+                      fontFamily: 'Geist Sans, system-ui, sans-serif',
+                      fontWeight: 400
+                    }}>
+                      Join the future of campus connection. Early access throughout July.
                     </p>
                   </div>
                   
