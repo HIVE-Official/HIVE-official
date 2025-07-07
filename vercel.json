@@ -1,6 +1,0 @@
-{
-  "buildCommand": "pnpm install --no-frozen-lockfile && pnpm --filter=@hive/validation build && pnpm --filter=@hive/core build && pnpm --filter=web build",
-  "installCommand": "npm i -g pnpm@9.1.1",
-  "outputDirectory": "apps/web/.next",
-  "framework": "nextjs"
-}
