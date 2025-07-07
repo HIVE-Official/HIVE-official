@@ -22,8 +22,8 @@ const mockSchools: School[] = [
     autoSpacesEnabled: true,
     hasDormitories: true,
     dormitoryList: ["Ellicott Complex", "South Campus", "Governors Complex"],
-    createdAt: new Date('2024-01-01'),
-    updatedAt: new Date('2024-01-01'),
+    createdAt: new Date('2024-01-01') as any,
+    updatedAt: new Date('2024-01-01') as any,
   },
   {
     id: "binghamton",
@@ -43,8 +43,8 @@ const mockSchools: School[] = [
     autoSpacesEnabled: true,
     hasDormitories: true,
     dormitoryList: ["College-in-the-Woods", "Mountainview", "Susquehanna"],
-    createdAt: new Date('2024-01-01'),
-    updatedAt: new Date('2024-01-01'),
+    createdAt: new Date('2024-01-01') as any,
+    updatedAt: new Date('2024-01-01') as any,
   },
   {
     id: "stony-brook",
@@ -64,8 +64,8 @@ const mockSchools: School[] = [
     autoSpacesEnabled: true,
     hasDormitories: true,
     dormitoryList: ["Roosevelt Quad", "Mendelsohn Quad", "Roth Quad"],
-    createdAt: new Date('2024-01-01'),
-    updatedAt: new Date('2024-01-01'),
+    createdAt: new Date('2024-01-01') as any,
+    updatedAt: new Date('2024-01-01') as any,
   },
   {
     id: "st-bonaventure",
@@ -85,8 +85,8 @@ const mockSchools: School[] = [
     autoSpacesEnabled: true,
     hasDormitories: true,
     dormitoryList: ["Francis Hall", "Robinson Hall", "Shay-Loughlen Hall"],
-    createdAt: new Date('2024-01-01'),
-    updatedAt: new Date('2024-01-01'),
+    createdAt: new Date('2024-01-01') as any,
+    updatedAt: new Date('2024-01-01') as any,
   },
   {
     id: "buffalo-state",
@@ -106,8 +106,8 @@ const mockSchools: School[] = [
     autoSpacesEnabled: true,
     hasDormitories: true,
     dormitoryList: ["Moore Complex", "Neumann Hall", "Porter Hall"],
-    createdAt: new Date('2024-01-01'),
-    updatedAt: new Date('2024-01-01'),
+    createdAt: new Date('2024-01-01') as any,
+    updatedAt: new Date('2024-01-01') as any,
   },
   {
     id: "syracuse",
@@ -127,8 +127,8 @@ const mockSchools: School[] = [
     autoSpacesEnabled: true,
     hasDormitories: true,
     dormitoryList: ["Ernie Davis Hall", "Lawrinson Hall", "Sadler Hall"],
-    createdAt: new Date('2024-01-01'),
-    updatedAt: new Date('2024-01-01'),
+    createdAt: new Date('2024-01-01') as any,
+    updatedAt: new Date('2024-01-01') as any,
   }
 ];
 
