@@ -265,7 +265,7 @@ export const AnalyticsDashboard = ({ className }: AnalyticsDashboardProps) => {
           <Card className="border-gray-700 bg-gray-900/50">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-gray-300">Auth Success</CardTitle>
-              <CheckCircle className="h-4 w-4 text-green-500" />
+              <CheckCircle className="h-4 w-4 text-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-white">{data.authFunnel.authSuccesses}</div>
@@ -273,13 +273,13 @@ export const AnalyticsDashboard = ({ className }: AnalyticsDashboardProps) => {
             </CardContent>
           </Card>
 
-          <Card className={`border-gray-700 bg-gray-900/50 ${data.authFunnel.conversionRate < 60 ? 'border-yellow-500/30' : ''}`}>
+          <Card className={`border-gray-700 bg-gray-900/50 ${data.authFunnel.conversionRate < 60 ? 'border-accent/30' : ''}`}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-gray-300">Conversion Rate</CardTitle>
-              <BarChart3 className={`h-4 w-4 ${data.authFunnel.conversionRate < 60 ? 'text-yellow-500' : 'text-gold'}`} />
+              <BarChart3 className={`h-4 w-4 ${data.authFunnel.conversionRate < 60 ? 'text-accent' : 'text-accent'}`} />
             </CardHeader>
             <CardContent>
-              <div className={`text-2xl font-bold ${data.authFunnel.conversionRate < 60 ? 'text-yellow-400' : 'text-green-400'}`}>
+              <div className={`text-2xl font-bold ${data.authFunnel.conversionRate < 60 ? 'text-accent' : 'text-accent'}`}>
                 {data.authFunnel.conversionRate.toFixed(1)}%
               </div>
               <p className="text-xs text-gray-500">Overall success rate</p>
@@ -295,7 +295,7 @@ export const AnalyticsDashboard = ({ className }: AnalyticsDashboardProps) => {
           <Card className="border-gray-700 bg-gray-900/50">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-gray-300">Step 1 (Academic)</CardTitle>
-              <Users className="h-4 w-4 text-blue-500" />
+              <Users className="h-4 w-4 text-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-white">{data.onboardingFunnel.step1Completed}</div>
@@ -308,7 +308,7 @@ export const AnalyticsDashboard = ({ className }: AnalyticsDashboardProps) => {
           <Card className="border-gray-700 bg-gray-900/50">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-gray-300">Step 2 (Discovery)</CardTitle>
-              <Activity className="h-4 w-4 text-blue-400" />
+              <Activity className="h-4 w-4 text-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-white">{data.onboardingFunnel.step2Completed}</div>
@@ -321,7 +321,7 @@ export const AnalyticsDashboard = ({ className }: AnalyticsDashboardProps) => {
           <Card className="border-gray-700 bg-gray-900/50">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-gray-300">Step 3 (Profile)</CardTitle>
-              <Users className="h-4 w-4 text-green-400" />
+              <Users className="h-4 w-4 text-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-white">{data.onboardingFunnel.step3Completed}</div>
@@ -334,7 +334,7 @@ export const AnalyticsDashboard = ({ className }: AnalyticsDashboardProps) => {
           <Card className="border-gray-700 bg-gray-900/50">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-gray-300">Flow Complete</CardTitle>
-              <CheckCircle className="h-4 w-4 text-green-500" />
+              <CheckCircle className="h-4 w-4 text-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-white">{data.onboardingFunnel.flowCompleted}</div>
@@ -350,13 +350,13 @@ export const AnalyticsDashboard = ({ className }: AnalyticsDashboardProps) => {
       <div className="space-y-4">
         <h3 className="text-lg font-semibold text-white">Technical Health</h3>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          <Card className={`border-gray-700 bg-gray-900/50 ${data.technical.errorRate > 3 ? 'border-red-500/30' : ''}`}>
+          <Card className={`border-gray-700 bg-gray-900/50 ${data.technical.errorRate > 3 ? 'border-muted/30' : ''}`}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-gray-300">Error Rate</CardTitle>
-              <AlertTriangle className={`h-4 w-4 ${data.technical.errorRate > 3 ? 'text-red-500' : 'text-green-500'}`} />
+              <AlertTriangle className={`h-4 w-4 ${data.technical.errorRate > 3 ? 'text-foreground' : 'text-foreground'}`} />
             </CardHeader>
             <CardContent>
-              <div className={`text-2xl font-bold ${data.technical.errorRate > 3 ? 'text-red-400' : 'text-green-400'}`}>
+              <div className={`text-2xl font-bold ${data.technical.errorRate > 3 ? 'text-foreground' : 'text-foreground'}`}>
                 {data.technical.errorRate.toFixed(1)}%
               </div>
               <p className="text-xs text-gray-500">Error rate today</p>
@@ -366,7 +366,7 @@ export const AnalyticsDashboard = ({ className }: AnalyticsDashboardProps) => {
           <Card className="border-gray-700 bg-gray-900/50">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-gray-300">Load Time</CardTitle>
-              <Activity className="h-4 w-4 text-blue-400" />
+              <Activity className="h-4 w-4 text-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-white">{data.technical.avgLoadTime}ms</div>
@@ -377,7 +377,7 @@ export const AnalyticsDashboard = ({ className }: AnalyticsDashboardProps) => {
           <Card className="border-gray-700 bg-gray-900/50">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-gray-300">Mobile Users</CardTitle>
-              <Smartphone className="h-4 w-4 text-green-400" />
+              <Smartphone className="h-4 w-4 text-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-white">{data.technical.mobileUsage}</div>
@@ -390,7 +390,7 @@ export const AnalyticsDashboard = ({ className }: AnalyticsDashboardProps) => {
           <Card className="border-gray-700 bg-gray-900/50">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-gray-300">Desktop Users</CardTitle>
-              <Monitor className="h-4 w-4 text-blue-400" />
+              <Monitor className="h-4 w-4 text-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-white">{data.technical.desktopUsage}</div>

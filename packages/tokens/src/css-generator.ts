@@ -23,9 +23,8 @@ function hexToHsl(hex: string): string {
 
   const max = Math.max(r, g, b);
   const min = Math.min(r, g, b);
-  let h: number, s: number, l: number;
-
-  l = (max + min) / 2;
+  let h: number, s: number;
+  const l = (max + min) / 2;
 
   if (max === min) {
     h = s = 0; // achromatic
@@ -105,7 +104,7 @@ export function generateCSSVariables(): string {
 
   // Spacing scale
   cssVars.push('/* Spacing System */');
-  Object.entries(spacing.scale).forEach(([key, value]) => {
+  Object.entries(spacing).forEach(([key, value]) => {
     cssVars.push(`--spacing-${key}: ${value};`);
   });
   cssVars.push('');

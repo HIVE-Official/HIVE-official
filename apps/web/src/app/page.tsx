@@ -18,7 +18,18 @@ function HomePageContent() {
   }, []);
 
   const handleGetStarted = () => {
-    router.push(ROUTES.AUTH.SCHOOL_SELECT);
+    // Platform is locked - show modal instead
+    setShowModal(true);
+    setCheckedItems(new Set());
+    // Start checking items with staggered animation
+    setTimeout(() => {
+      const items = [0, 1, 2, 3];
+      items.forEach((item, index) => {
+        setTimeout(() => {
+          setCheckedItems(prev => new Set([...prev, item]));
+        }, index * 600);
+      });
+    }, 1000);
   };
 
   const handleWhatsComing = () => {
@@ -147,10 +158,10 @@ function HomePageContent() {
             >
               <Button
                 size="lg"
-                className="group h-12 sm:h-14 bg-transparent hover:bg-surface px-6 sm:px-8 text-base sm:text-lg font-medium text-foreground border border-[#2A2A2A] hover:border-[#FFD700]/50 transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] focus:ring-2 focus:ring-[#FFD700] focus:ring-offset-2 focus:ring-offset-[#0A0A0A]"
+                className="group h-12 sm:h-14 bg-transparent hover:bg-surface px-6 sm:px-8 text-base sm:text-lg font-medium text-muted border border-[#2A2A2A]/50 hover:border-[#FFD700]/30 transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] focus:ring-2 focus:ring-[#FFD700] focus:ring-offset-2 focus:ring-offset-[#0A0A0A]"
                 onClick={handleGetStarted}
               >
-                Get Started
+                Coming Soon
                 <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5 transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)]" />
               </Button>
             </motion.div>
@@ -191,7 +202,7 @@ function HomePageContent() {
             className="pt-4 sm:pt-6 md:pt-8"
           >
             <p className="font-mono text-xs sm:text-sm text-muted/80">
-              Built by Students · Owned by Students
+              🔒 Platform Locked · Launching July 31st, 2025
             </p>
           </motion.div>
         </motion.div>
@@ -234,10 +245,10 @@ function HomePageContent() {
                 {/* Content */}
                 <div className="pr-8">
                   <h2 className="text-xl font-display font-semibold text-foreground mb-4">
-                    What Jacob's Building
+                    HIVE is Currently Locked
                   </h2>
                   <p className="text-muted font-sans leading-relaxed mb-6 text-sm">
-                    Our founder is pulling all-nighters so you don't have to study alone 😴
+                    We're putting the finishing touches on your future campus experience. Here's what Jacob is building for you:
                   </p>
                   
                   {/* Jacob's Todo List */}
@@ -290,10 +301,10 @@ function HomePageContent() {
                   {/* Launch Info */}
                   <div className="bg-[#FFD700]/10 border border-[#FFD700]/30 rounded-lg p-4 mb-4">
                     <p className="text-[#FFD700] font-sans text-sm font-medium mb-1">
-                      Launching July 31st, 2025
+                      🔒 Platform Locked Until July 31st, 2025
                     </p>
                     <p className="text-muted font-sans text-xs">
-                      Early signups get July preview access. Jacob's caffeinated and ready! ☕
+                      No access available until launch. The platform will open all at once for the best campus experience.
                     </p>
                   </div>
                   

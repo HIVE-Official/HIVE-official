@@ -7,6 +7,6 @@ export const metadata: Metadata = {
 };
 
 export default function AuthPage() {
-  // Redirect to school select by default
-  redirect(ROUTES.AUTH.SCHOOL_SELECT);
+  // Platform is locked - redirect to home
+  redirect(ROUTES.HOME);
 }

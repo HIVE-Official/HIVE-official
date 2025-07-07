@@ -1,5 +1,6 @@
 import { type Metadata } from "next";
-import { OnboardingStepClient } from "./onboarding-step-client";
+import { redirect } from 'next/navigation';
+import { ROUTES } from '@/lib/routes';
 
 interface OnboardingStepPageProps {
   params: Promise<{
@@ -9,12 +10,11 @@ interface OnboardingStepPageProps {
 }
 
 export const metadata: Metadata = {
-  title: "Onboarding | HIVE",
-  description: "Complete your HIVE profile setup",
+  title: "HIVE | Coming Soon",
+  description: "HIVE platform is currently locked",
 };
 
 export default async function OnboardingStepPage({ params }: OnboardingStepPageProps) {
-  const { step } = await params;
-  
-  return <OnboardingStepClient step={step} />;
+  // Platform is locked - redirect to home
+  redirect(ROUTES.HOME);
 }
