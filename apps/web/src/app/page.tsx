@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
-import { HiveLogo, Button, Countdown } from '@hive/ui';
+import { AnimatePresence } from 'framer-motion';
+import { HiveLogo, Button, Countdown, MotionDiv } from '@hive/ui';
 import { ArrowRight, X, Check, Lock } from 'lucide-react';
 import { ROUTES } from '@/lib/routes';
 
@@ -47,7 +47,7 @@ function HomePageContent() {
 
       {/* Main content */}
       <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-4 sm:px-6 text-center">
-        <motion.div
+        <MotionDiv
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ 
@@ -59,7 +59,7 @@ function HomePageContent() {
         >
           {/* Logo and Title */}
           <div className="flex items-center justify-center space-x-4 sm:space-x-6">
-            <motion.div
+            <MotionDiv
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ 
@@ -73,9 +73,9 @@ function HomePageContent() {
                 size="2xl" 
                 className="drop-shadow-2xl w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 xl:w-32 xl:h-32"
               />
-            </motion.div>
+            </MotionDiv>
             
-            <motion.h1
+            <MotionDiv
               initial={{ opacity: 0, x: 40 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ 
@@ -84,13 +84,14 @@ function HomePageContent() {
                 delay: 0.9 
               }}
               className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black tracking-tight text-foreground font-display"
+              style={{ fontFamily: 'inherit' }} // Ensure it renders as h1 content
             >
               HIVE
-            </motion.h1>
+            </MotionDiv>
           </div>
 
           {/* Countdown */}
-          <motion.div
+          <MotionDiv
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ 
@@ -101,10 +102,10 @@ function HomePageContent() {
             className="py-4 sm:py-6 md:py-8"
           >
             <Countdown targetDate={targetDate} />
-          </motion.div>
+          </MotionDiv>
 
           {/* Buttons */}
-          <motion.div
+          <MotionDiv
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ 
@@ -114,7 +115,7 @@ function HomePageContent() {
             }}
             className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4"
           >
-            <motion.div
+            <MotionDiv
               whileHover={{ 
                 scale: 1.02, 
                 y: -1,
@@ -136,9 +137,9 @@ function HomePageContent() {
                 <Lock className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
                 Locked
               </Button>
-            </motion.div>
+            </MotionDiv>
             
-            <motion.div
+            <MotionDiv
               whileHover={{ 
                 scale: 1.02, 
                 y: -1,
@@ -159,11 +160,11 @@ function HomePageContent() {
               >
                 See What's Coming
               </Button>
-            </motion.div>
-          </motion.div>
+            </MotionDiv>
+          </MotionDiv>
 
           {/* Social Proof */}
-          <motion.div
+          <MotionDiv
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ 
@@ -176,8 +177,8 @@ function HomePageContent() {
             <p className="font-mono text-xs sm:text-sm text-muted/80">
               🛠️ Campus Tools · Launching July 31st, 2025
             </p>
-          </motion.div>
-        </motion.div>
+          </MotionDiv>
+        </MotionDiv>
       </div>
 
       {/* What's Coming Modal */}
@@ -185,7 +186,7 @@ function HomePageContent() {
         {showModal && (
           <>
             {/* Backdrop */}
-            <motion.div
+            <MotionDiv
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -195,7 +196,7 @@ function HomePageContent() {
             />
             
             {/* Modal */}
-            <motion.div
+            <MotionDiv
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
@@ -231,7 +232,7 @@ function HomePageContent() {
                       { text: "Tools", icon: "🛠️", description: "Build campus utilities" },
                       { text: "Rituals", icon: "⚡", description: "Campus-wide moments" }
                     ].map((item, index) => (
-                      <motion.div
+                      <MotionDiv
                         key={index}
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
@@ -254,13 +255,13 @@ function HomePageContent() {
                           </p>
                         </div>
                         <Lock className="w-4 h-4 text-muted" />
-                      </motion.div>
+                      </MotionDiv>
                     ))}
                   </div>
                   
                   {/* Launch Info */}
-                  <div className="bg-[#FFD700]/10 border border-[#FFD700]/30 rounded-lg p-4 mb-4">
-                    <p className="text-[#FFD700] font-sans text-sm font-medium mb-1">
+                  <div className="bg-[#111111] border border-[#2A2A2A] rounded-lg p-4 mb-4">
+                    <p className="text-foreground font-sans text-sm font-medium mb-1">
                       🛠️ Campus Tools Launch July 31st
                     </p>
                     <p className="text-muted font-sans text-xs">
@@ -279,7 +280,7 @@ function HomePageContent() {
                   </Button>
                 </div>
               </div>
-            </motion.div>
+            </MotionDiv>
           </>
         )}
       </AnimatePresence>
