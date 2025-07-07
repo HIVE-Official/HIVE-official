@@ -1,5 +1,5 @@
 {
-  "buildCommand": "NODE_ENV=development pnpm install && npx turbo run build --filter=^web && cd apps/web && npm run build",
-  "installCommand": "NODE_ENV=development pnpm install",
+  "buildCommand": "pnpm vercel-build",
+  "installCommand": "npm i -g pnpm@9.1.1",
   "outputDirectory": "apps/web/.next"
-} 
+}
