@@ -26,9 +26,15 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
+      "outputs": ["dist/**", ".next/**", "!.next/cache/**", "storybook-static/**"]
     },
     "lint": {
+      "outputs": []
+    },
+    "@hive/eslint-config#build": {
+      "outputs": []
+    },
+    "@hive/typescript-config#build": {
       "outputs": []
     },
     "typecheck": {

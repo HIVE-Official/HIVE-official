@@ -48,7 +48,7 @@
     "vitest": "^3.2.4"
   },
   "peerDependencies": {
-    "react": "19.0.0-rc-f994737d14-20240522"
+    "react": "^19.0.0"
   },
   "dependencies": {
     "@hive/auth-logic": "workspace:*",

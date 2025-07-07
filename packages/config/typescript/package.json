@@ -11,5 +11,8 @@
     "./base.json": "./base.json",
     "./nextjs.json": "./nextjs.json",
     "./react-library.json": "./react-library.json"
+  },
+  "scripts": {
+    "build": "echo 'No build needed for TypeScript config package'"
   }
 } 

@@ -1,7 +1,7 @@
 {
   "framework": "nextjs",
-  "buildCommand": "cd ../.. && pnpm install && npx turbo run build --filter=^web && cd apps/web && npm run build",
-  "installCommand": "cd ../.. && pnpm install",
+  "installCommand": "npm i -g pnpm@9.1.1",
+  "buildCommand": "cd ../.. && pnpm vercel-build",
   "outputDirectory": ".next",
   "headers": [
     {
