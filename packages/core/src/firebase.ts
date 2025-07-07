@@ -33,8 +33,8 @@ if (firebaseConfig) {
 }
 
 // Initialize Firebase services
-export const auth = getAuth(app);
-export const db = getFirestore(app);
+export const auth = getAuth(app!);
+export const db = getFirestore(app!);
 
 // Initialize Analytics (only in browser and if supported)
 export let analytics: ReturnType<typeof getAnalytics> | null = null;
@@ -42,7 +42,7 @@ if (typeof window !== "undefined") {
   void isSupported().then((supported) => {
     if (supported && firebaseConfig && firebaseConfig.apiKey !== "demo-api-key") {
       try {
-        analytics = getAnalytics(app);
+        analytics = getAnalytics(app!);
       } catch (error) {
         console.warn("Analytics initialization failed:", error);
         // Don't throw - this is not critical for app functionality
