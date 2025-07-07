@@ -7,17 +7,30 @@ import { getFirebaseConfig, isDevelopment } from "./env";
 // Get the Firebase configuration for the current environment
 const firebaseConfig = getFirebaseConfig();
 
-// Fallback config for development when env vars are missing
+// Fallback config for when Firebase is disabled
 const fallbackConfig = {
   apiKey: "demo-api-key",
   appId: "demo-app",
   projectId: "demo-project",
+  authDomain: "demo.firebaseapp.com",
+  storageBucket: "demo.appspot.com",
+  messagingSenderId: "123456789",
 };
 
-// Initialize Firebase app (only once)
-const app = getApps().length === 0
-  ? initializeApp(firebaseConfig ?? (fallbackConfig as FirebaseOptions))
-  : getApps()[0];
+// Only initialize Firebase if we have a valid config
+let app: ReturnType<typeof initializeApp> | null = null;
+
+if (firebaseConfig) {
+  // Initialize Firebase app (only once)
+  app = getApps().length === 0
+    ? initializeApp(firebaseConfig)
+    : getApps()[0];
+} else {
+  // Use fallback config in development or when Firebase is disabled
+  app = getApps().length === 0
+    ? initializeApp(fallbackConfig as FirebaseOptions)
+    : getApps()[0];
+}
 
 // Initialize Firebase services
 export const auth = getAuth(app);

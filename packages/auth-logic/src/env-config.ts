@@ -108,18 +108,10 @@ export function getFirebaseConfig(): FirebaseConfig {
   }
 
   if (missingVars.length > 0) {
-    // If we're on client-side and variables are missing, use mock config in development
-    if (isClientSide && isDevelopment) {
-      console.warn(`⚠️ Client-side missing vars: ${missingVars.join(', ')}, using mock config`);
-      return MOCK_CONFIG;
-    }
-    
-    // In production or server-side, throw error
-    throw new Error(
-      `🚨 Firebase configuration error: Missing environment variables: ${missingVars.join(', ')}\n` +
-      `Environment: ${isClientSide ? 'client' : 'server'}\n` +
-      `Please check your .env.local file or Vercel environment variables.`
-    );
+    // Always use mock config when environment variables are missing
+    // This prevents Firebase initialization errors in production
+    console.warn(`⚠️ Firebase config missing vars: ${missingVars.join(', ')}, using mock config`);
+    return MOCK_CONFIG;
   }
 
   // Return production configuration
