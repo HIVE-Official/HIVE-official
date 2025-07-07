@@ -1,10 +1,6 @@
 'use client';
 
 import { useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { AlertTriangle, Home, RefreshCw } from 'lucide-react';
-import { Button } from '@hive/ui';
-import { analytics } from '@hive/analytics';
 
 export default function GlobalError({
   error,
@@ -14,8 +10,8 @@ export default function GlobalError({
   reset: () => void;
 }) {
   useEffect(() => {
-    // Track the error in analytics
-    analytics.trackError(error);
+    // Log the error
+    console.error('Global error:', error);
   }, [error]);
 
   const handleReset = () => {
@@ -30,63 +26,48 @@ export default function GlobalError({
 
   const handleGoHome = () => {
     // Use window.location for hard navigation
-    window.location.href = '/welcome';
+    window.location.href = '/';
   };
 
   return (
     <html>
       <body>
-        <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-4">
-          <motion.div
-            className="w-full max-w-lg"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <div className="rounded-lg border bg-card p-8 shadow-lg">
+        <div className="min-h-screen bg-[#0A0A0A] text-white flex items-center justify-center p-4">
+          <div className="w-full max-w-lg">
+            <div className="rounded-lg border border-gray-700 bg-gray-900 p-8 shadow-lg">
               <div className="flex flex-col items-center gap-6 text-center">
-                <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ type: "spring", duration: 0.5 }}
-                >
-                  <div className="rounded-full bg-destructive/10 p-3">
-                    <AlertTriangle className="h-6 w-6 text-destructive" />
-                  </div>
-                </motion.div>
+                <div className="rounded-full bg-red-900/20 p-3">
+                  <div className="h-6 w-6 text-red-400">⚠️</div>
+                </div>
 
                 <div className="space-y-2">
                   <h1 className="text-2xl font-bold tracking-tight">
                     Something went wrong!
                   </h1>
-                  <p className="text-muted-foreground">
+                  <p className="text-gray-400">
                     We encountered an error while loading the page.
                     Please try again or return to the home page.
                   </p>
                 </div>
 
                 <div className="flex gap-4">
-                  <Button
-                    variant="outline"
+                  <button
                     onClick={handleReset}
-                    className="gap-2"
+                    className="px-4 py-2 border border-gray-600 rounded-lg hover:bg-gray-800 transition-colors"
                   >
-                    <RefreshCw className="h-4 w-4" />
-                    Try Again
-                  </Button>
-                  <Button
-                    variant="default"
+                    🔄 Try Again
+                  </button>
+                  <button
                     onClick={handleGoHome}
-                    className="gap-2"
+                    className="px-4 py-2 bg-gray-700 rounded-lg hover:bg-gray-600 transition-colors"
                   >
-                    <Home className="h-4 w-4" />
-                    Go Home
-                  </Button>
+                    🏠 Go Home
+                  </button>
                 </div>
 
                 {/* Show error details in development */}
                 {process.env.NODE_ENV === 'development' && (
-                  <div className="mt-4 rounded border bg-muted/50 p-4 text-left text-sm text-muted-foreground">
+                  <div className="mt-4 rounded border border-gray-600 bg-gray-800 p-4 text-left text-sm text-gray-300">
                     <p className="font-mono">{error.name}: {error.message}</p>
                     {error.digest && (
                       <p className="mt-2 font-mono text-xs">
@@ -96,18 +77,18 @@ export default function GlobalError({
                   </div>
                 )}
 
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-gray-400">
                   Need help? Contact{' '}
                   <a
                     href="mailto:support@thehiveuni.com"
-                    className="text-primary hover:underline"
+                    className="text-yellow-400 hover:underline"
                   >
                     support@thehiveuni.com
                   </a>
                 </p>
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
       </body>
     </html>
