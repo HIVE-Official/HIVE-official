@@ -4,51 +4,23 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { HiveLogo, Button, Countdown } from '@hive/ui';
-import { ArrowRight, X, Check } from 'lucide-react';
+import { ArrowRight, X, Check, Lock } from 'lucide-react';
 import { ROUTES } from '@/lib/routes';
 
 function HomePageContent() {
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [checkedItems, setCheckedItems] = useState(new Set());
-
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  const handleGetStarted = () => {
-    // Platform is locked - show modal instead
-    setShowModal(true);
-    setCheckedItems(new Set());
-    // Start checking items with staggered animation
-    setTimeout(() => {
-      const items = [0, 1, 2, 3];
-      items.forEach((item, index) => {
-        setTimeout(() => {
-          setCheckedItems(prev => new Set([...prev, item]));
-        }, index * 600);
-      });
-    }, 1000);
-  };
-
   const handleWhatsComing = () => {
     setShowModal(true);
-    setCheckedItems(new Set());
-    // Start checking items with staggered animation
-    setTimeout(() => {
-      const items = [0, 1, 2, 3];
-      items.forEach((item, index) => {
-        setTimeout(() => {
-          setCheckedItems(prev => new Set([...prev, item]));
-        }, index * 600);
-      });
-    }, 1000);
   };
 
   const closeModal = () => {
     setShowModal(false);
-    setCheckedItems(new Set());
   };
 
   // Set launch date to July 31st 8 AM 2025
@@ -158,11 +130,11 @@ function HomePageContent() {
             >
               <Button
                 size="lg"
-                className="group h-12 sm:h-14 bg-transparent hover:bg-surface px-6 sm:px-8 text-base sm:text-lg font-medium text-muted border border-[#2A2A2A]/50 hover:border-[#FFD700]/30 transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] focus:ring-2 focus:ring-[#FFD700] focus:ring-offset-2 focus:ring-offset-[#0A0A0A]"
-                onClick={handleGetStarted}
+                className="group h-12 sm:h-14 bg-transparent cursor-not-allowed px-6 sm:px-8 text-base sm:text-lg font-medium text-muted border border-[#2A2A2A]/50 transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)]"
+                disabled
               >
-                Coming Soon
-                <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5 transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)]" />
+                <Lock className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
+                Locked
               </Button>
             </motion.div>
             
@@ -248,16 +220,16 @@ function HomePageContent() {
                     HIVE is Currently Locked
                   </h2>
                   <p className="text-muted font-sans leading-relaxed mb-6 text-sm">
-                    We're putting the finishing touches on your future campus experience. Here's what Jacob is building for you:
+                    Your campus experience is being built. Here's what's coming:
                   </p>
                   
-                  {/* Jacob's Todo List */}
+                  {/* Core Features List */}
                   <div className="space-y-4 mb-6">
                     {[
-                      { text: "🎨 Profile creation flow", category: "Foundation" },
-                      { text: "🏠 Campus spaces discovery", category: "Community" },
-                      { text: "📊 Personal dashboard", category: "Experience" },
-                      { text: "⚡ Daily rituals system", category: "Habits" }
+                      { text: "Profile", icon: "👤", description: "Your campus identity" },
+                      { text: "Spaces", icon: "🏛️", description: "Find your communities" },
+                      { text: "Feed", icon: "📝", description: "Campus conversations" },
+                      { text: "Rituals", icon: "⚡", description: "Daily campus habits" }
                     ].map((item, index) => (
                       <motion.div
                         key={index}
@@ -268,32 +240,20 @@ function HomePageContent() {
                           delay: index * 0.1,
                           ease: [0.33, 0.65, 0, 1]
                         }}
-                        className="flex items-start space-x-3"
+                        className="flex items-center space-x-3 p-3 rounded-lg bg-surface/30 border border-[#2A2A2A]/50"
                       >
-                        <motion.div
-                          initial={{ scale: 0 }}
-                          animate={{ scale: checkedItems.has(index) ? 1 : 0 }}
-                          transition={{ 
-                            duration: 0.3, 
-                            delay: index * 0.6 + 1.0,
-                            ease: [0.33, 0.65, 0, 1]
-                          }}
-                          className="mt-0.5"
-                        >
-                          <div className="w-4 h-4 bg-[#FFD700] rounded-sm flex items-center justify-center">
-                            <Check className="w-3 h-3 text-[#0A0A0A]" />
-                          </div>
-                        </motion.div>
+                        <div className="w-8 h-8 bg-[#2A2A2A] rounded-lg flex items-center justify-center">
+                          <span className="text-lg">{item.icon}</span>
+                        </div>
                         <div className="flex-1">
-                          <p className={`text-sm font-sans transition-colors duration-300 ${
-                            checkedItems.has(index) ? 'text-foreground line-through' : 'text-muted'
-                          }`}>
+                          <p className="text-sm font-semibold text-foreground font-sans">
                             {item.text}
                           </p>
-                          <p className="text-xs text-muted/60 font-mono">
-                            {item.category}
+                          <p className="text-xs text-muted">
+                            {item.description}
                           </p>
                         </div>
+                        <Lock className="w-4 h-4 text-muted" />
                       </motion.div>
                     ))}
                   </div>
