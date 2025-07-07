@@ -12,7 +12,7 @@
     "rootDir": "src",
     "module": "esnext",
     "target": "esnext",
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",
     "pretty": true,
     "composite": true
   },
