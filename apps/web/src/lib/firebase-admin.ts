@@ -51,6 +51,14 @@ const mockDb = {
         console.log(`🔄 Mock Firebase call: collection(${collectionName}).doc(${docId}).delete() - development mode`);
       },
     }),
+    get: async () => {
+      console.log(`🔄 Mock Firebase call: collection(${collectionName}).get() - development mode`);
+      return {
+        docs: [],
+        size: 0,
+        empty: true
+      };
+    },
     add: async (data: any) => {
       console.log(`🔄 Mock Firebase call: collection(${collectionName}).add() - development mode`, data);
       return { id: 'mock-doc-id' };

@@ -3,8 +3,8 @@ import { cn } from '../lib/utils';
 import { MotionDiv, MotionButton } from './motion-wrapper';
 
 const BottomNavBarRoot = React.forwardRef<
-  HTMLElement,
-  React.HTMLAttributes<HTMLElement> & {
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement> & {
     variant?: 'fixed' | 'floating' | 'dock'
     hideOnScroll?: boolean
   }

@@ -39,7 +39,8 @@ function useMotion() {
 }
 
 // Extract only safe props for fallback
-function extractSafeProps(props: Record<string, unknown>) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function extractSafeProps(props: Record<string, any>) {
   const {
     animate: _animate,
     initial: _initial,
@@ -78,7 +79,8 @@ interface MotionWrapperProps {
   className?: string;
   style?: CSSProperties;
   onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
-  [key: string]: unknown;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [key: string]: any;
 }
 
 export const MotionDiv = forwardRef<HTMLDivElement, MotionWrapperProps>(
@@ -102,7 +104,8 @@ interface MotionSpanWrapperProps {
   children?: React.ReactNode;
   className?: string;
   style?: CSSProperties;
-  [key: string]: unknown;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [key: string]: any;
 }
 
 interface MotionButtonWrapperProps {
@@ -112,7 +115,8 @@ interface MotionButtonWrapperProps {
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   disabled?: boolean;
   type?: "button" | "submit" | "reset";
-  [key: string]: unknown;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [key: string]: any;
 }
 
 export const MotionSpan = forwardRef<HTMLSpanElement, MotionSpanWrapperProps>(

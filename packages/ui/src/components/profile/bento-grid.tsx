@@ -7,7 +7,8 @@ export interface BentoCard {
   id: string;
   size: "1x1" | "2x1" | "2x2" | "1x2";
   priority: number;
-  component: React.ComponentType<Record<string, unknown>>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  component: React.ComponentType<any>;
   permissions?: string[];
   isLocked?: boolean;
   title?: string;

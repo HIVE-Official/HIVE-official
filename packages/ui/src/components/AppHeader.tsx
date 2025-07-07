@@ -4,8 +4,8 @@ import { cn } from '../lib/utils';
 import { MotionDiv, MotionButton } from './motion-wrapper';
 
 const AppHeaderRoot = React.forwardRef<
-    HTMLElement,
-    React.HTMLAttributes<HTMLElement> & {
+    HTMLDivElement,
+    React.HTMLAttributes<HTMLDivElement> & {
       variant?: 'default' | 'minimal' | 'floating'
       transparent?: boolean
       hideOnScroll?: boolean
@@ -136,8 +136,8 @@ const AppHeaderLogo = React.forwardRef<
 AppHeaderLogo.displayName = 'AppHeaderLogo';
 
 const AppHeaderNav = React.forwardRef<
-    HTMLElement,
-    React.HTMLAttributes<HTMLElement>
+    HTMLDivElement,
+    React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => {
     // Exclude HTML event handlers that conflict with Framer Motion
     const { 

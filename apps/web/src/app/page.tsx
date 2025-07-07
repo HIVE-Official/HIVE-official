@@ -174,7 +174,7 @@ function HomePageContent() {
             className="pt-4 sm:pt-6 md:pt-8"
           >
             <p className="font-mono text-xs sm:text-sm text-muted/80">
-              🔒 Platform Locked · Launching July 31st, 2025
+              🛠️ Campus Tools · Launching July 31st, 2025
             </p>
           </motion.div>
         </motion.div>
@@ -220,16 +220,16 @@ function HomePageContent() {
                     HIVE is Currently Locked
                   </h2>
                   <p className="text-muted font-sans leading-relaxed mb-6 text-sm">
-                    Your campus experience is being built. Here's what's coming:
+                    Campus utility tools launching July 31st. Early access starts throughout July.
                   </p>
                   
                   {/* Core Features List */}
                   <div className="space-y-4 mb-6">
                     {[
-                      { text: "Profile", icon: "👤", description: "Your campus identity" },
-                      { text: "Spaces", icon: "🏛️", description: "Find your communities" },
-                      { text: "Feed", icon: "📝", description: "Campus conversations" },
-                      { text: "Rituals", icon: "⚡", description: "Daily campus habits" }
+                      { text: "Profile", icon: "👤", description: "Your campus command center" },
+                      { text: "Spaces", icon: "🏛️", description: "Pre-mapped campus containers" },
+                      { text: "Tools", icon: "🛠️", description: "Build campus utilities" },
+                      { text: "Rituals", icon: "⚡", description: "Campus-wide moments" }
                     ].map((item, index) => (
                       <motion.div
                         key={index}
@@ -261,10 +261,10 @@ function HomePageContent() {
                   {/* Launch Info */}
                   <div className="bg-[#FFD700]/10 border border-[#FFD700]/30 rounded-lg p-4 mb-4">
                     <p className="text-[#FFD700] font-sans text-sm font-medium mb-1">
-                      🔒 Platform Locked Until July 31st, 2025
+                      🛠️ Campus Tools Launch July 31st
                     </p>
                     <p className="text-muted font-sans text-xs">
-                      No access available until launch. The platform will open all at once for the best campus experience.
+                      Early access begins throughout July. Build the tools your campus actually needs.
                     </p>
                   </div>
                   

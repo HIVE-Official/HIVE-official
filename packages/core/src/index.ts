@@ -107,6 +107,7 @@ export { SpaceDiscoverySchema } from "./domain/space/discovery";
 // Type exports - Safe
 export * from "./types/major";
 export * from "./types/onboarding";
+export type { AcademicLevel } from "./types/onboarding";
 
 // Client-side Firebase utilities - Safe
 export { app, auth, db } from "./firebase";
