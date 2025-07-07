@@ -58,7 +58,7 @@ function HomePageContent() {
           className="max-w-4xl space-y-8 sm:space-y-12 md:space-y-16"
         >
           {/* Logo and Title */}
-          <div className="flex items-center justify-center space-x-4 sm:space-x-6">
+          <div className="flex items-center justify-center space-x-6 sm:space-x-8 md:space-x-10">
             <MotionDiv
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -71,7 +71,7 @@ function HomePageContent() {
               <HiveLogo 
                 variant="white" 
                 size="2xl" 
-                className="drop-shadow-2xl w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 xl:w-32 xl:h-32"
+                className="drop-shadow-2xl w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 xl:w-36 xl:h-36"
               />
             </MotionDiv>
             
@@ -83,11 +83,13 @@ function HomePageContent() {
                 ease: [0.33, 0.65, 0, 1],
                 delay: 0.9 
               }}
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tight text-white"
               style={{ 
                 fontFamily: 'Space Grotesk, system-ui, sans-serif',
                 fontWeight: 700,
-                letterSpacing: '-0.02em'
+                letterSpacing: '-0.04em',
+                fontSize: 'clamp(5rem, 15vw, 10rem)',
+                lineHeight: '0.85',
+                color: '#FFFFFF'
               }}
             >
               HIVE
