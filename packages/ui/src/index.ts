@@ -8,7 +8,7 @@ export { Button, type ButtonProps, type ButtonVariant, type ButtonSize } from ".
 export { Dialog } from "./components/dialog";
 export { Input } from "./components/input";
 export { Label } from "./components/label";
-export { Link, type LinkProps } from "./components/ui/link";
+// export { Link, type LinkProps } from "./components/ui/link"; // TODO: Create Link component
 export { Progress } from "./components/progress";
 export { Checkbox } from "./components/checkbox";
 export { RadioGroup, RadioGroupItem } from "./components/radio-group";
@@ -84,8 +84,8 @@ export { SuggestedSpaces } from "./components/onboarding/steps/suggested-spaces"
 // Export spaces components
 export { SpaceRequestForm } from "./components/spaces/space-request-form";
 
-// Export landing page components - TEMPORARILY DISABLED - uses motion
-// export * from "./components/landing";
+// Export landing page components
+export * from "./components/landing";
 
 // Export page transition components - TEMPORARILY DISABLED - uses motion
 // export * from "./components/page-transition";

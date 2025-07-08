@@ -10,7 +10,7 @@ import {
   CardFooter,
 } from "../card";
 import { Button } from "../button";
-import { Link } from "../ui/link";
+import Link from "next/link";
 
 interface CheckEmailInfoProps {
   email: string | null;
