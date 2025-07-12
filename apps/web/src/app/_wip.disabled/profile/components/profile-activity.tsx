@@ -41,7 +41,7 @@ const mockActivities = [
 
 export const ProfileActivity = ({ user }: ProfileActivityProps) => {
   // TODO: Use user data for personalized activity
-  logger.info("Profile activity for user:", user.uid);
+  logger.info("Profile activity for user:", { userId: user.uid });
 
   const formatTimeAgo = (timestamp: number) => {
     const now = Date.now();

@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { db, auth as firebaseAdmin } from "@/lib/firebase-admin";
 import { sendSignInLinkToEmail, signInWithEmailLink as _signInWithEmailLink } from "firebase/auth";
 import { auth, logger, findAvailableHandle } from "@hive/core";
+import { authRateLimit } from "@/lib/rate-limit";
+import { validateAndSanitize, apiSchemas, generateRateLimitKey, securityErrors } from "@/lib/security/input-validation";
 
 async function checkHandleAvailability(handle: string): Promise<boolean> {
   const handleDoc = await db.collection("handles").doc(handle).get();
@@ -10,13 +12,26 @@ async function checkHandleAvailability(handle: string): Promise<boolean> {
 
 export async function POST(request: NextRequest) {
   try {
-    const { email, dev } = await request.json();
+    // 🔒 SECURITY: Rate limiting
+    const rateLimitKey = generateRateLimitKey(request, 'auth-verify')
+    const rateLimitResult = await authRateLimit.limit(rateLimitKey)
+    
+    if (!rateLimitResult.success) {
+      logger.warn(`Auth rate limit exceeded for key: ${rateLimitKey}`)
+      return NextResponse.json(securityErrors.rateLimitExceeded, { status: 429 })
+    }
 
-    if (!email) {
-      return NextResponse.json(
-        { error: "Email is required", ok: false },
-        { status: 400 }
-      );
+    // 🔒 SECURITY: Input validation and sanitization
+    const body = await request.json()
+    const validatedData = validateAndSanitize(apiSchemas.emailVerification, body)
+    const { email, schoolId } = validatedData
+    const dev = body.dev // Extract dev parameter for development mode
+
+    logger.info(`Auth verification attempt for email: ${email.substring(0, 3)}***`)
+    
+    // 🔒 SECURITY: Additional email validation for security
+    if (email.includes('..') || email.startsWith('.') || email.endsWith('.')) {
+      return NextResponse.json(securityErrors.invalidInput, { status: 400 })
     }
 
     // Development mode bypass
@@ -87,7 +102,7 @@ export async function POST(request: NextRequest) {
         let isOnboardingComplete = userData?.onboarding?.isComplete || false;
         
         // In development mode, always treat test users as new users for testing
-        if (dev === "true" && email.includes("test@")) {
+        if (dev === "true" && (email.includes("test@") || email.includes("tst@"))) {
           logger.info(`🔥 Development mode: treating ${email} as new user for testing`);
           isOnboardingComplete = false;
           

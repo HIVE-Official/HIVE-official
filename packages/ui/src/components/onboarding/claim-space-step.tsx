@@ -1,11 +1,11 @@
 "use client";
 
 import React from "react";
-import { Button } from "../ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
-import { Textarea } from "../ui/textarea";
+import { Button } from "../button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../card";
+import { Input } from "../input";
+import { Label } from "../label";
+import { Textarea } from "../textarea";
 import { Loader2 } from "lucide-react";
 
 export interface ClaimSpaceStepProps {

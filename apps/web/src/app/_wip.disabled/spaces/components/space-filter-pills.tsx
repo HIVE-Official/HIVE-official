@@ -6,11 +6,12 @@ import { cn } from "@/lib/utils";
 
 const spaceFilters: { name: string; type: SpaceType | "all" }[] = [
   { name: "All", type: "all" },
-  { name: "Major", type: "major" },
-  { name: "Residential", type: "residential" },
-  { name: "Interest", type: "interest" },
-  { name: "Creative", type: "creative" },
-  { name: "Organizations", type: "organization" },
+  { name: "Academic", type: "academic" },
+  { name: "Social", type: "social" },
+  { name: "Professional", type: "professional" },
+  { name: "Sports", type: "sports" },
+  { name: "Cultural", type: "cultural" },
+  { name: "Service", type: "service" },
 ];
 
 interface SpaceFilterPillsProps {

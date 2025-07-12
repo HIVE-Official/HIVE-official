@@ -1,0 +1,281 @@
+/* HIVE Enhanced Animations */
+
+/* KEYFRAMES */
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-10px) rotate(1deg); }
+  50% { transform: translateY(-5px) rotate(-1deg); }
+  75% { transform: translateY(-15px) rotate(0.5deg); }
+}
+
+@keyframes pulse-subtle {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.9; transform: scale(1.02); }
+}
+
+@keyframes flicker-subtle {
+  0%, 100% { opacity: 1; }
+  98% { opacity: 1; }
+  99% { opacity: 0.8; }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { 
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+    filter: brightness(1);
+  }
+  50% { 
+    box-shadow: 0 0 40px rgba(255, 215, 0, 0.6);
+    filter: brightness(1.1);
+  }
+}
+
+@keyframes energy-flow {
+  0% { 
+    background-position: 0% 50%;
+    filter: hue-rotate(0deg);
+  }
+  50% { 
+    background-position: 100% 50%;
+    filter: hue-rotate(10deg);
+  }
+  100% { 
+    background-position: 0% 50%;
+    filter: hue-rotate(0deg);
+  }
+}
+
+@keyframes magnetic-pull {
+  0% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-2px) scale(1.05); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+@keyframes scan {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+@keyframes shine {
+  0% { transform: translateX(-100%) skewX(-15deg); }
+  100% { transform: translateX(200%) skewX(-15deg); }
+}
+
+@keyframes campus-breathe {
+  0%, 100% { 
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  50% { 
+    transform: scale(1.01);
+    filter: brightness(1.05);
+  }
+}
+
+@keyframes neon-flicker {
+  0%, 100% { 
+    text-shadow: 
+      0 0 10px rgba(255, 215, 0, 0.8),
+      0 0 20px rgba(255, 215, 0, 0.6),
+      0 0 30px rgba(255, 215, 0, 0.4);
+  }
+  2% {
+    text-shadow: 
+      0 0 5px rgba(255, 215, 0, 0.4),
+      0 0 10px rgba(255, 215, 0, 0.3),
+      0 0 15px rgba(255, 215, 0, 0.2);
+  }
+  8% {
+    text-shadow: 
+      0 0 10px rgba(255, 215, 0, 0.8),
+      0 0 20px rgba(255, 215, 0, 0.6),
+      0 0 30px rgba(255, 215, 0, 0.4);
+  }
+}
+
+@keyframes holographic {
+  0% { filter: hue-rotate(0deg); }
+  25% { filter: hue-rotate(90deg); }
+  50% { filter: hue-rotate(180deg); }
+  75% { filter: hue-rotate(270deg); }
+  100% { filter: hue-rotate(360deg); }
+}
+
+/* UTILITY CLASSES */
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 2s ease-in-out infinite;
+}
+
+.animate-flicker-subtle {
+  animation: flicker-subtle 3s ease-in-out infinite;
+}
+
+.animate-glow-pulse {
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+.animate-energy-flow {
+  animation: energy-flow 3s linear infinite;
+  background-size: 200% 200%;
+}
+
+.animate-magnetic-pull {
+  animation: magnetic-pull 0.3s ease-out;
+}
+
+.animate-scan {
+  animation: scan 2s linear infinite;
+}
+
+.animate-shine {
+  animation: shine 2s ease-out;
+}
+
+.animate-campus-breathe {
+  animation: campus-breathe 4s ease-in-out infinite;
+}
+
+.animate-neon-flicker {
+  animation: neon-flicker 4s linear infinite;
+}
+
+.animate-holographic {
+  animation: holographic 3s linear infinite;
+}
+
+.animate-spin-slow {
+  animation: spin 3s linear infinite;
+}
+
+/* TRANSFORM UTILITIES */
+.scale-subtle {
+  transform: scale(1.02);
+}
+
+.hover-lift {
+  transition: transform 0.2s ease-out;
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+}
+
+/* GRADIENT UTILITIES */
+.bg-gradient-radial {
+  background: radial-gradient(circle, var(--tw-gradient-stops));
+}
+
+.bg-size-200 {
+  background-size: 200% 200%;
+}
+
+.bg-pos-0 {
+  background-position: 0% 50%;
+}
+
+.bg-pos-100 {
+  background-position: 100% 50%;
+}
+
+/* TEXT SHADOW UTILITIES */
+.text-shadow-sm {
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.text-shadow-lg {
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.text-shadow-xl {
+  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.7);
+}
+
+/* BORDER UTILITIES */
+.border-3 {
+  border-width: 3px;
+}
+
+.border-4 {
+  border-width: 4px;
+}
+
+/* CLIP PATH UTILITIES */
+.clip-path-polygon {
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%);
+}
+
+/* GLOW EFFECTS */
+.glow-accent {
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+}
+
+.glow-accent-strong {
+  box-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
+}
+
+.glow-white {
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+}
+
+/* ENERGY STATES */
+.energy-high {
+  filter: brightness(1.1) saturate(1.2);
+  animation: glow-pulse 1.5s ease-in-out infinite;
+}
+
+.energy-medium {
+  filter: brightness(1.05) saturate(1.1);
+  animation: campus-breathe 3s ease-in-out infinite;
+}
+
+.energy-low {
+  filter: brightness(0.9) saturate(0.8);
+  opacity: 0.8;
+}
+
+/* CAMPUS SPECIFIC */
+.campus-sticker {
+  transform: rotate(-1deg);
+  filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.campus-sticker:hover {
+  transform: rotate(0deg) scale(1.05);
+}
+
+.bulletin-pin {
+  position: relative;
+}
+
+.bulletin-pin::before {
+  content: '';
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  width: 12px;
+  height: 12px;
+  background: #FFD700;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+}
+
+/* INTERACTION FEEDBACK */
+.feedback-success {
+  animation: magnetic-pull 0.3s ease-out;
+  filter: brightness(1.2);
+}
+
+.feedback-error {
+  animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}

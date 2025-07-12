@@ -38,20 +38,20 @@ const AppHeaderRoot = React.forwardRef<
             'sticky top-0 z-50 w-full',
             transparent || !isScrolled 
               ? 'bg-transparent border-transparent' 
-              : 'bg-background/80 border-b backdrop-blur-xl'
+              : 'bg-black/80 border-b border-white/10 backdrop-blur-xl'
           )
         case 'floating':
           return cn(
-            'fixed top-4 left-1/2 -translate-x-1/2 z-50 rounded-2xl border shadow-lg max-w-4xl mx-auto',
-            'bg-surface/90 backdrop-blur-xl'
+            'fixed top-4 left-1/2 -translate-x-1/2 z-50 rounded-2xl border border-white/10 shadow-lg max-w-4xl mx-auto',
+            'bg-black/90 backdrop-blur-xl'
           )
         case 'default':
         default:
           return cn(
-            'sticky top-0 z-50 w-full border-b transition-all duration-300',
+            'sticky top-0 z-50 w-full border-b transition-all duration-200',
             transparent && !isScrolled 
               ? 'bg-transparent border-transparent' 
-              : 'bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60'
+              : 'bg-black/95 border-white/10 backdrop-blur supports-[backdrop-filter]:bg-black/80'
           )
       }
     }
@@ -199,12 +199,12 @@ const AppHeaderSearch = React.forwardRef<
     const getVariantStyles = () => {
       switch (variant) {
         case 'minimal':
-          return 'rounded-lg bg-transparent border border-transparent hover:border-border hover:bg-surface-01/50 px-3 py-2'
+          return 'rounded-lg bg-transparent border border-transparent hover:border-white/20 hover:bg-white/5 px-3 py-2'
         case 'command':
-          return 'rounded-xl bg-surface-01/50 border border-border hover:border-accent/30 hover:bg-surface-01 px-4 py-2.5 shadow-sm'
+          return 'rounded-xl bg-white/5 border border-white/10 hover:border-accent/30 hover:bg-white/10 px-4 py-2.5 shadow-sm'
         case 'chip':
         default:
-          return 'rounded-2xl bg-surface-01/30 border border-border hover:border-accent/40 hover:bg-surface-01 px-4 py-2'
+          return 'rounded-2xl bg-white/5 border border-white/10 hover:border-accent/40 hover:bg-white/10 px-4 py-2'
       }
     }
     
@@ -234,10 +234,10 @@ const AppHeaderSearch = React.forwardRef<
         transition={{ duration: 0.18, ease: [0.33, 0.65, 0, 1] }}
         {...motionProps}
       >
-        <Search className="w-4 h-4 text-muted flex-shrink-0" />
-        <span className="flex-1 text-muted text-sm font-medium">{placeholder}</span>
-        <div className="flex items-center gap-1 text-xs text-muted/70">
-          <kbd className="hidden sm:inline-flex h-5 px-1.5 items-center border border-border/50 bg-surface-02/50 rounded text-[11px] font-medium">
+        <Search className="w-4 h-4 text-white/40 flex-shrink-0" />
+        <span className="flex-1 text-white/60 text-sm font-medium">{placeholder}</span>
+        <div className="flex items-center gap-1 text-xs text-white/40">
+          <kbd className="hidden sm:inline-flex h-5 px-1.5 items-center border border-white/20 bg-white/5 rounded text-[11px] font-medium">
             {shortcut}
           </kbd>
         </div>
@@ -258,10 +258,10 @@ const AppHeaderMenuButton = React.forwardRef<
     const getVariantStyles = () => {
       switch (variant) {
         case 'minimal':
-          return 'rounded-lg p-2 hover:bg-surface-01/50'
+          return 'rounded-lg p-2 hover:bg-white/5'
         case 'chip':
         default:
-          return 'rounded-2xl p-2.5 bg-surface-01/30 border border-border hover:border-accent/40 hover:bg-surface-01'
+          return 'rounded-2xl p-2.5 bg-white/5 border border-white/10 hover:border-accent/40 hover:bg-white/10'
       }
     }
     
@@ -277,7 +277,7 @@ const AppHeaderMenuButton = React.forwardRef<
       <MotionButton
         ref={ref}
         className={cn(
-          'inline-flex items-center justify-center text-muted hover:text-accent transition-colors md:hidden',
+          'inline-flex items-center justify-center text-white/60 hover:text-accent transition-colors md:hidden',
           getVariantStyles(),
           className
         )}
@@ -313,10 +313,10 @@ const AppHeaderNotifications = React.forwardRef<
     const getVariantStyles = () => {
       switch (variant) {
         case 'minimal':
-          return 'rounded-lg p-2 hover:bg-surface-01/50'
+          return 'rounded-lg p-2 hover:bg-white/5'
         case 'chip':
         default:
-          return 'rounded-2xl p-2.5 bg-surface-01/30 border border-border hover:border-accent/40 hover:bg-surface-01'
+          return 'rounded-2xl p-2.5 bg-white/5 border border-white/10 hover:border-accent/40 hover:bg-white/10'
       }
     }
     
@@ -332,7 +332,7 @@ const AppHeaderNotifications = React.forwardRef<
       <MotionButton
         ref={ref}
         className={cn(
-          'relative inline-flex items-center justify-center text-muted hover:text-accent transition-colors',
+          'relative inline-flex items-center justify-center text-white/60 hover:text-accent transition-colors',
           getVariantStyles(),
           className
         )}
@@ -351,9 +351,9 @@ const AppHeaderNotifications = React.forwardRef<
         {(count > 0 || showDot) && (
           <MotionDiv
             className={cn(
-              "absolute -top-1 -right-1 flex items-center justify-center border-2 border-surface",
+              "absolute -top-1 -right-1 flex items-center justify-center border-2 border-black",
               count > 0 
-                ? "min-w-[1.25rem] h-5 text-xs font-semibold text-background bg-accent rounded-full" 
+                ? "min-w-[1.25rem] h-5 text-xs font-semibold text-black bg-accent rounded-full" 
                 : "w-2 h-2 bg-accent rounded-full"
             )}
             initial={{ scale: 0 }}

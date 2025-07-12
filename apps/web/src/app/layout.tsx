@@ -1,5 +1,4 @@
 import "./globals.css";
-import { SmoothScrollProvider } from "@/components/smooth-scroll-provider";
 import { Providers } from "./providers";
 
 export default function RootLayout({
@@ -15,9 +14,7 @@ export default function RootLayout({
       </head>
       <body>
         <Providers>
-          <SmoothScrollProvider>
-            {children}
-          </SmoothScrollProvider>
+          {children}
         </Providers>
       </body>
     </html>

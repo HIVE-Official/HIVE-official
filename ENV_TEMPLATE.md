@@ -1,5 +1,12 @@
 # 🔐 HIVE Environment Configuration Guide
 
+## 🚨 **CRITICAL SECURITY NOTICE**
+
+**NEVER commit real credentials to version control!** 
+- Use environment variables for all secrets
+- Rotate credentials immediately if exposed
+- Use separate credentials for each environment
+
 ## 📋 **REQUIRED ENVIRONMENT VARIABLES**
 
 Copy the appropriate variables below to your `.env.local` file or Vercel environment variables.
@@ -103,34 +110,63 @@ TURBO_TEAM=your-vercel-team-slug
 
 ### **1. Get Firebase Service Account Credentials**
 
+🔒 **SECURITY: Handle credentials securely**
+
 1. Go to [Firebase Console](https://console.firebase.google.com)
-2. Select your project (hive-dev-2025, hive-staging-2025, or hive-9265c)
+2. Select your project (hive-9265c)
 3. Go to **Project Settings** → **Service Accounts**
 4. Click **"Generate new private key"**
-5. Download the JSON file
+5. Download the JSON file to a secure location
 6. Extract these values:
    - `client_email` → Use as `FIREBASE_CLIENT_EMAIL`
    - `private_key` → Use as `FIREBASE_PRIVATE_KEY`
+7. **IMPORTANT**: Delete the downloaded JSON file after extracting values
+8. Store credentials in your password manager or secure vault
 
 ### **2. Generate NextAuth Secret**
 
+🔒 **SECURITY: Use cryptographically secure random values**
+
 ```bash
-# Option 1: Using OpenSSL
+# Option 1: Using OpenSSL (recommended)
 openssl rand -base64 32
 
-# Option 2: Online generator
+# Option 2: Using Node.js
+node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
+
+# Option 3: Online generator (use with caution)
 # Visit: https://generate-secret.vercel.app/32
 ```
 
-### **3. Set Vercel Environment Variables**
+### **3. Set Environment Variables Securely**
 
+#### **For Local Development:**
+1. Create `.env.local` in `apps/web/` directory
+2. Copy template values and replace with real credentials
+3. **NEVER commit this file to git** (already in .gitignore)
+
+#### **For Vercel Deployment:**
 1. Go to [Vercel Dashboard](https://vercel.com/dashboard)
 2. Select your HIVE project
 3. Go to **Settings** → **Environment Variables**
 4. Add each variable for the appropriate environment:
-   - **Development**: For local testing
-   - **Preview**: For staging deployments
+   - **Development**: For preview deployments
+   - **Preview**: For staging deployments  
    - **Production**: For production deployments
+5. Use different credentials for each environment when possible
+
+### **4. Security Best Practices**
+
+🔒 **MANDATORY SECURITY MEASURES:**
+
+- **Rotate credentials monthly** or immediately after any potential exposure
+- **Use least-privilege principles** - only grant necessary permissions
+- **Monitor access logs** for unusual activity
+- **Enable 2FA** on Firebase Console and Vercel accounts
+- **Use separate Firebase projects** for production vs development (recommended)
+- **Never share credentials** via email, Slack, or other insecure channels
+- **Review Firebase Security Rules** regularly
+- **Monitor error logs** for credential-related failures
 
 ## ⚠️ **DEPLOYMENT CHECKLIST**
 

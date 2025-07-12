@@ -90,11 +90,13 @@ class RateLimiter {
   }
 }
 
-// Rate limiters for different endpoints
-export const postCreationRateLimit = new RateLimiter(10, 60 * 1000); // 10 posts per minute
-export const handleCheckRateLimit = new RateLimiter(20, 60 * 1000);  // 20 handle checks per minute
-export const authRateLimit = new RateLimiter(5, 60 * 1000);          // 5 auth attempts per minute
-export const generalApiRateLimit = new RateLimiter(100, 60 * 1000);  // 100 API calls per minute
+// 🔒 PRODUCTION SECURITY RATE LIMITERS
+export const postCreationRateLimit = new RateLimiter(5, 60 * 1000);   // 5 posts per minute (stricter)
+export const handleCheckRateLimit = new RateLimiter(10, 60 * 1000);   // 10 handle checks per minute (stricter)
+export const authRateLimit = new RateLimiter(3, 60 * 1000);           // 3 auth attempts per minute (stricter)
+export const generalApiRateLimit = new RateLimiter(50, 60 * 1000);    // 50 API calls per minute (stricter)
+export const adminApiRateLimit = new RateLimiter(10, 60 * 1000);      // 10 admin API calls per minute
+export const uploadRateLimit = new RateLimiter(3, 60 * 1000);         // 3 uploads per minute
 
 export function rateLimit(config: RateLimitConfig) {
   const store: RateLimitStore = {

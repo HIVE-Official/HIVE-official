@@ -33,7 +33,7 @@ export interface DialogProps extends VariantProps<typeof dialogVariants> {
   className?: string
 }
 
-function DialogContent({
+export function DialogContent({
   children,
   className,
 }: {
@@ -41,6 +41,48 @@ function DialogContent({
   className?: string
 }) {
   return <div className={cn("px-6 pb-6", className)}>{children}</div>;
+}
+
+export function DialogHeader({
+  children,
+  className,
+}: {
+  children: React.ReactNode
+  className?: string
+}) {
+  return <div className={cn("p-6 pb-4", className)}>{children}</div>;
+}
+
+export function DialogTitle({
+  children,
+  className,
+}: {
+  children: React.ReactNode
+  className?: string
+}) {
+  return <h2 className={cn("text-h3 font-display font-semibold", className)}>{children}</h2>;
+}
+
+export function DialogDescription({
+  children,
+  className,
+}: {
+  children: React.ReactNode
+  className?: string
+}) {
+  return <p className={cn("mt-2 text-body text-muted", className)}>{children}</p>;
+}
+
+export function DialogTrigger({
+  children,
+  onClick,
+  className,
+}: {
+  children: React.ReactNode
+  onClick?: () => void
+  className?: string
+}) {
+  return <button onClick={onClick} className={className}>{children}</button>;
 }
 
 export const Dialog = React.forwardRef<HTMLDivElement, DialogProps>(({
@@ -117,16 +159,12 @@ export const Dialog = React.forwardRef<HTMLDivElement, DialogProps>(({
             </button>
 
             {/* Dialog header */}
-            <div className="p-6 pb-4">
-              <h2 id="dialog-title" className="text-h3 font-display font-semibold">
-                {title}
-              </h2>
+            <DialogHeader>
+              <DialogTitle>{title}</DialogTitle>
               {description && (
-                <p id="dialog-description" className="mt-2 text-body text-muted">
-                  {description}
-                </p>
+                <DialogDescription>{description}</DialogDescription>
               )}
-            </div>
+            </DialogHeader>
 
             {/* Dialog content with error boundary */}
             <ErrorBoundary>

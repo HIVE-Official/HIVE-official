@@ -1,83 +1,82 @@
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
-import { Check, X, AlertCircle, Eye, EyeOff } from "lucide-react"
+import { Check, X, AlertCircle, Eye, EyeOff, CheckCircle, Loader2 } from "lucide-react"
 
 import { cn } from "../lib/utils"
 
+export type InputState = 'default' | 'error' | 'success' | 'loading';
+
 const inputVariants = cva(
-  // Base chip-style input with 2025 AI feel
-  "flex w-full bg-background text-foreground font-sans transition-all duration-base ease-smooth file:border-0 file:bg-transparent file:font-medium placeholder:text-muted/60 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 selection:bg-accent/20",
+  // Base: Clean chip-style inputs for social platform
+  "flex w-full bg-background text-white font-medium transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] file:border-0 file:bg-transparent file:font-medium placeholder:text-muted focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 selection:bg-accent/20",
   {
     variants: {
       variant: {
-        // CHIP: Modern chip-style (default 2025 look)
-        chip: [
-          "rounded-2xl border border-border px-4 py-3",
-          "focus-visible:border-accent focus-visible:ring-2 focus-visible:ring-accent/20 focus-visible:shadow-lg focus-visible:shadow-accent/5",
-          "hover:border-accent/50 hover:bg-surface-01/50",
-          "placeholder:text-muted/50"
+        // DEFAULT: Clean chip with gold focus border
+        default: [
+          "rounded-xl border border-border px-4 py-3",
+          "focus-visible:border-accent focus-visible:ring-2 focus-visible:ring-accent/20",
+          "hover:border-accent/50 hover:bg-surface"
+        ],
+        
+        // FILLED: Elevated chip surface
+        filled: [
+          "rounded-xl border border-border bg-surface px-4 py-3",
+          "focus-visible:border-accent focus-visible:bg-surface",
+          "hover:bg-border"
         ],
         
         // FLOATING: Chip with floating label
         floating: [
-          "rounded-2xl border border-border px-4 pt-6 pb-2",
-          "focus-visible:border-accent focus-visible:ring-2 focus-visible:ring-accent/20 focus-visible:shadow-lg focus-visible:shadow-accent/5",
-          "hover:border-accent/50 hover:bg-surface-01/50"
+          "rounded-xl border border-border px-4 pt-6 pb-2",
+          "focus-visible:border-accent focus-visible:ring-2 focus-visible:ring-accent/20",
+          "hover:border-accent/50"
         ],
         
-        // SEARCH: Pill-shaped search input
+        // SEARCH: Pill-shaped for search
         search: [
           "rounded-full border border-border px-6 py-3",
-          "focus-visible:border-accent focus-visible:ring-2 focus-visible:ring-accent/20 focus-visible:shadow-lg focus-visible:shadow-accent/5",
-          "hover:border-accent/50 hover:bg-surface-01/50",
-          "placeholder:text-muted/60"
+          "focus-visible:border-accent focus-visible:ring-2 focus-visible:ring-accent/20",
+          "hover:border-accent/50"
         ],
         
-        // MINIMAL: Ghost chip
+        // MINIMAL: Ghost style
         minimal: [
-          "rounded-2xl border border-transparent bg-surface-01/50 px-4 py-3",
-          "focus-visible:border-accent focus-visible:ring-2 focus-visible:ring-accent/20 focus-visible:bg-surface-01",
-          "hover:bg-surface-01 hover:border-border/50"
+          "rounded-xl border border-transparent bg-surface px-4 py-3",
+          "focus-visible:border-accent focus-visible:ring-2 focus-visible:ring-accent/20",
+          "hover:bg-border"
         ],
         
-        // ACCENT: Gold accent chip for special inputs
+        // ACCENT: Highlighted with gold border
         accent: [
-          "rounded-2xl border border-accent/30 bg-accent/5 px-4 py-3",
-          "focus-visible:border-accent focus-visible:ring-2 focus-visible:ring-accent/30 focus-visible:shadow-lg focus-visible:shadow-accent/10",
-          "hover:border-accent/50 hover:bg-accent/10"
-        ],
-        
-        // SURFACE: Elevated chip surface
-        surface: [
-          "rounded-2xl border border-border bg-surface-01 px-4 py-3 shadow-sm",
-          "focus-visible:border-accent focus-visible:ring-2 focus-visible:ring-accent/20 focus-visible:bg-surface-02 focus-visible:shadow-md",
-          "hover:border-accent/40 hover:bg-surface-02"
-        ],
+          "rounded-xl border border-accent bg-background px-4 py-3",
+          "focus-visible:border-accent focus-visible:ring-2 focus-visible:ring-accent/20",
+          "hover:bg-accent/5"
+        ]
       },
       inputSize: {
-        sm: "h-10 text-body-sm",
-        default: "h-12 text-body",
-        lg: "h-14 text-body",
-        xl: "h-16 text-h4",
+        sm: "h-9 text-sm",
+        md: "h-10 text-sm", 
+        lg: "h-12 text-base"
       },
       state: {
         default: "",
-        error: "border-border focus-visible:border-accent focus-visible:ring-accent/20 bg-surface/50",
-        success: "border-accent/60 focus-visible:border-accent focus-visible:ring-accent/20 bg-accent/5",
-        loading: "animate-pulse border-accent/30 bg-accent/5",
-      },
+        error: "border-border focus-visible:border-accent bg-surface/50",
+        success: "border-accent focus-visible:border-accent bg-accent/5",
+        loading: "border-accent/30 bg-accent/5"
+      }
     },
     defaultVariants: {
-      variant: "chip",
-      inputSize: "default", 
-      state: "default",
-    },
+      variant: "default",
+      inputSize: "md", 
+      state: "default"
+    }
   }
 )
 
 export interface InputProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size">,
-    VariantProps<typeof inputVariants> {
+    Omit<VariantProps<typeof inputVariants>, "state"> {
   label?: string
   hint?: string
   error?: string
@@ -86,7 +85,34 @@ export interface InputProps
   rightIcon?: React.ReactNode
   showPasswordToggle?: boolean
   loading?: boolean
+  state?: InputState
 }
+
+// Helper function to determine input type
+const getInputType = (showPasswordToggle: boolean, type: string | undefined, showPassword: boolean) => {
+  return showPasswordToggle && type === 'password' 
+    ? (showPassword ? 'text' : 'password') 
+    : type;
+};
+
+// Helper function to determine current state
+const getCurrentState = (error: string | undefined, success: string | undefined, loading: boolean, state?: InputState): InputState => {
+  return error ? 'error' : success ? 'success' : loading ? 'loading' : state || 'default';
+};
+
+// Helper function to get state icon
+const _getStateIcon = (currentState: InputState | undefined) => {
+  switch (currentState) {
+    case 'error':
+      return <AlertCircle className="h-4 w-4 text-muted" />;
+    case 'success':
+      return <CheckCircle className="h-4 w-4 text-accent" />;
+    case 'loading':
+      return <Loader2 className="h-4 w-4 animate-spin text-muted" />;
+    default:
+      return null;
+  }
+};
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ 
@@ -112,12 +138,10 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     const [hasValue, setHasValue] = React.useState(Boolean(value || props.defaultValue))
     
     // Determine actual input type
-    const inputType = showPasswordToggle && type === 'password' 
-      ? (showPassword ? 'text' : 'password') 
-      : type
+    const inputType = getInputType(showPasswordToggle, type, showPassword);
     
     // Determine state based on props
-    const currentState = error ? 'error' : success ? 'success' : loading ? 'loading' : state
+    const currentState = getCurrentState(error, success, loading, state);
     
     const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
       setIsFocused(true)

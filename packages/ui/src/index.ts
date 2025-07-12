@@ -8,7 +8,7 @@ export { Button, type ButtonProps, type ButtonVariant, type ButtonSize } from ".
 export { Dialog } from "./components/dialog";
 export { Input } from "./components/input";
 export { Label } from "./components/label";
-// export { Link, type LinkProps } from "./components/ui/link"; // TODO: Create Link component
+export { Link, type LinkProps } from "./components/link";
 export { Progress } from "./components/progress";
 export { Checkbox } from "./components/checkbox";
 export { RadioGroup, RadioGroupItem } from "./components/radio-group";
@@ -98,7 +98,7 @@ export { MotionProvider, MotionDiv, MotionSpan, MotionButton } from "./component
 export { hiveVariants, hiveTransitions } from "./lib/motion";
 
 // Export Storybook-specific utilities
-export { StorybookThemeProvider } from "./components/ui/storybook-theme-provider";
+// export { StorybookThemeProvider } from "./components/ui/storybook-theme-provider"; // TODO: Fix storybook theme provider path
 
 // Export profile components
 export { BentoGrid, type BentoCard } from "./components/profile/bento-grid";
@@ -108,3 +108,9 @@ export { HiveLabCard } from "./components/profile/hivelab-card";
 export { ToolsCard } from "./components/profile/tools-card";
 export { CalendarCard } from "./components/profile/calendar-card";
 export { GhostModeCard } from "./components/profile/ghost-mode-card";
+export { RequestAccessCard } from "./components/profile/request-access-card";
+
+// Page Layouts
+export * from "./components/page-layouts/homepage-options"
+export * from "./components/page-layouts/advanced-homepage-options"
+export * from "./components/page-layouts/profile-layout-alternatives"

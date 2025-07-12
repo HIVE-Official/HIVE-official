@@ -10,7 +10,7 @@ import {
   Check,
   Plus,
 } from "lucide-react";
-import { Button } from "../../ui/button";
+import { Button } from "../../button";
 
 interface SuggestedSpace {
   id: string;

@@ -6,112 +6,109 @@ import { Loader2 } from "lucide-react"
 import { cn } from "../lib/utils"
 
 const buttonVariants = cva(
-  // Base styles following HIVE brand guidelines - GOLD LINES FIRST
-  "inline-flex items-center justify-center whitespace-nowrap font-medium ring-offset-background transition-all duration-base ease-smooth focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 select-none",
+  // Base: Clean, tech social platform with minimal gold usage
+  "inline-flex items-center justify-center whitespace-nowrap font-medium relative overflow-hidden transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 select-none group",
   {
     variants: {
       variant: {
-        // PRIMARY: Gold border/line - the new HIVE standard (Vercel-inspired)
-        default: [
-          "border-2 border-accent bg-transparent text-accent",
-          "hover:bg-accent/10 hover:border-accent/80 hover:text-accent hover:shadow-lg hover:shadow-accent/20",
-          "focus-visible:bg-accent/10 focus-visible:border-accent",
-          "active:scale-[0.98] active:bg-accent/15",
-          "disabled:border-accent/30 disabled:text-accent/30"
+        // PRIMARY: Clean black with gold outline on hover/click (main CTAs)
+        primary: [
+          "bg-background border border-border text-white",
+          "hover:bg-background/90 hover:border-accent",
+          "focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2",
+          "active:scale-[0.98] active:bg-background/80 active:border-accent",
+          "shadow-sm hover:shadow-lg hover:shadow-background/50"
         ],
         
-        // OUTLINE: Subtle border variant
-        outline: [
-          "border border-border bg-transparent text-foreground",
-          "hover:border-accent/50 hover:text-accent hover:bg-accent/5",
-          "focus-visible:border-accent focus-visible:text-accent",
-          "active:scale-[0.98]",
-          "disabled:border-border/50 disabled:text-muted"
+        // SECONDARY: Sophisticated border treatment with gold outline (secondary actions)
+        secondary: [
+          "bg-transparent border border-border text-white",
+          "hover:bg-surface hover:border-accent",
+          "focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2",
+          "active:scale-[0.98] active:border-accent"
         ],
         
-        // GHOST: Minimal, hover reveals gold
-        ghost: [
-          "bg-transparent text-foreground border-transparent",
-          "hover:bg-accent/10 hover:text-accent",
-          "focus-visible:bg-accent/10 focus-visible:text-accent",
-          "active:scale-[0.98]",
-          "disabled:text-muted"
-        ],
-        
-        // ACCENT: Full gold treatment for special moments
+        // ACCENT: Minimal gold fill (key moments only)
         accent: [
-          "border-2 border-accent bg-accent/10 text-accent font-semibold",
-          "hover:bg-accent/20 hover:shadow-lg hover:shadow-accent/25 hover:scale-[1.02]",
-          "focus-visible:ring-accent/50",
-          "active:scale-[0.98] active:bg-accent/25",
-          "disabled:bg-accent/5 disabled:border-accent/30 disabled:text-accent/30"
-        ],
-        
-        // RITUAL: ONLY gold fill allowed (special HIVE moments)
-        ritual: [
-          "bg-accent text-background border-2 border-accent font-semibold",
-          "hover:bg-accent/90 hover:shadow-xl hover:shadow-accent/30 hover:scale-[1.02]",
-          "focus-visible:ring-background focus-visible:ring-offset-accent",
-          "active:scale-[0.98] active:shadow-lg",
-          "disabled:bg-accent/50 disabled:text-background/70"
-        ],
-        
-        // SURFACE: Subtle surface interaction
-        surface: [
-          "bg-surface-01 text-foreground border border-border",
-          "hover:bg-surface-02 hover:border-accent/30 hover:text-accent",
-          "focus-visible:border-accent focus-visible:text-accent",
+          "bg-accent text-background border border-accent",
+          "hover:bg-accent/90 hover:shadow-lg hover:shadow-accent/20",
+          "focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2",
           "active:scale-[0.98]",
-          "disabled:bg-surface-01/50 disabled:text-muted"
+          "font-semibold"
         ],
         
-        // LINK: Text-only with gold accent
-        link: [
-          "text-foreground underline-offset-4 border-none bg-transparent p-0 h-auto",
-          "hover:underline hover:text-accent",
-          "focus-visible:ring-1 focus-visible:ring-accent",
-          "disabled:text-muted disabled:no-underline"
+        // GHOST: Invisible until hover with gold outline (navigation, tertiary)
+        ghost: [
+          "text-muted hover:text-white hover:bg-surface",
+          "hover:border hover:border-accent",
+          "focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2",
+          "active:scale-[0.98] active:border-accent"
         ],
         
-        // NAVIGATION: Subtle for nav items
-        nav: [
-          "bg-transparent text-muted border-transparent",
-          "hover:text-accent hover:bg-accent/5",
-          "focus-visible:text-accent focus-visible:bg-accent/5",
-          "active:scale-[0.98]",
-          "disabled:text-muted/50"
-        ],
-        
-        // DESTRUCTIVE: HIVE monochrome system - uses motion and subtle styling for negative actions
+        // DESTRUCTIVE: Monochrome approach with gold outline (no red violations)
         destructive: [
-          "border-2 border-muted bg-transparent text-muted",
-          "hover:bg-surface-02 hover:border-foreground hover:text-foreground hover:shadow-lg",
-          "hover:animate-pulse", // Motion-based feedback instead of red color
-          "focus-visible:ring-muted/50 focus-visible:border-foreground focus-visible:text-foreground",
-          "active:scale-[0.95]", // More dramatic scale for destructive feedback
-          "disabled:border-muted/30 disabled:text-muted/30"
+          "bg-surface/50 border border-border text-muted",
+          "hover:bg-surface hover:border-accent hover:text-white",
+          "focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2",
+          "active:scale-[0.98] active:border-accent"
         ],
+        
+        // OUTLINE: Border-only variant with gold outline (legacy support)
+        outline: [
+          "bg-transparent border border-border text-white",
+          "hover:bg-surface hover:border-accent",
+          "focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2",
+          "active:scale-[0.98] active:border-accent"
+        ],
+        
+        // DEFAULT: Same as primary (legacy support)
+        default: [
+          "bg-background border border-border text-white",
+          "hover:bg-background/90 hover:border-accent",
+          "focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2",
+          "active:scale-[0.98] active:bg-background/80 active:border-accent",
+          "shadow-sm hover:shadow-lg hover:shadow-background/50"
+        ],
+        
+        // RITUAL: Full gold fill for special HIVE moments (legacy support)
+        ritual: [
+          "bg-accent text-background border border-accent",
+          "hover:bg-accent/90 hover:shadow-xl hover:shadow-accent/30 hover:scale-[1.02]",
+          "focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2",
+          "active:scale-[0.98]",
+          "font-semibold"
+        ],
+        
+        // SURFACE: Surface-level variant (legacy support)
+        surface: [
+          "bg-surface border border-border text-white",
+          "hover:bg-surface/90 hover:border-accent",
+          "focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2",
+          "active:scale-[0.98] active:border-accent"
+        ]
       },
+      
       size: {
-        xs: "h-7 px-2.5 text-caption rounded-md font-medium",
-        sm: "h-8 px-3 text-body-sm rounded-md font-medium", 
-        default: "h-10 px-4 text-body rounded-lg font-medium",
-        lg: "h-12 px-6 text-body rounded-lg font-medium",
-        xl: "h-14 px-8 text-h4 rounded-xl font-semibold",
-        icon: "h-10 w-10 rounded-lg",
+        sm: "h-8 px-3 text-sm rounded-md",
+        md: "h-9 px-4 text-sm rounded-lg",
+        lg: "h-10 px-6 text-base rounded-lg",
+        xl: "h-12 px-8 text-lg rounded-xl",
+        icon: "h-9 w-9 rounded-lg",
         "icon-sm": "h-8 w-8 rounded-md",
-        "icon-lg": "h-12 w-12 rounded-xl",
+        "icon-lg": "h-10 w-10 rounded-lg"
       },
+      
       fullWidth: {
         true: "w-full",
-        false: "",
-      },
+        false: ""
+      }
     },
+    
     defaultVariants: {
-      variant: "default",
-      size: "default",
-      fullWidth: false,
-    },
+      variant: "primary",
+      size: "md",
+      fullWidth: false
+    }
   }
 )
 
@@ -141,18 +138,20 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     
     return (
       <Comp
-        className={cn(buttonVariants({ variant, size, fullWidth, className }))}
+        className={cn(buttonVariants({ variant, size, fullWidth }), className)}
         ref={ref}
         disabled={disabled || loading}
         aria-busy={loading}
         {...props}
       >
-        <span className="inline-flex items-center justify-center">
-          {loading && (
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          )}
-          {children}
-        </span>
+        {loading ? (
+          <div className="flex items-center gap-2">
+            <Loader2 className="h-4 w-4 animate-spin" />
+            <span className="opacity-80">Loading...</span>
+          </div>
+        ) : (
+          children
+        )}
       </Comp>
     )
   }

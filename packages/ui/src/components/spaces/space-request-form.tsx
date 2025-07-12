@@ -9,8 +9,7 @@ import { Textarea } from '../textarea';
 import { ArrowLeft, Building2, Users, Briefcase, Trophy, Heart, Loader2, Search, UserCheck } from 'lucide-react';
 import { hiveVariants } from '../../lib/motion';
 import { useAdaptiveMotion } from '../../lib/adaptive-motion';
-
-export type SpaceType = "campus_living" | "fraternity_and_sorority" | "hive_exclusive" | "student_organizations" | "university_organizations";
+import { type SpaceType } from '@hive/core';
 
 interface ExistingSpace {
   id: string;
@@ -36,33 +35,39 @@ interface SpaceRequestFormProps {
 
 const SPACE_TYPES: { value: SpaceType; label: string; description: string; icon: React.ComponentType<{ className?: string }> }[] = [
   {
-    value: "campus_living",
-    label: "Campus Living",
-    description: "Dorms, residential halls, housing communities",
+    value: "social",
+    label: "Social",
+    description: "Social clubs, Greek life, and community groups",
     icon: Users,
   },
   {
-    value: "fraternity_and_sorority", 
-    label: "Greek Life",
-    description: "Fraternities, sororities, and Greek organizations",
+    value: "academic", 
+    label: "Academic",
+    description: "Academic clubs, study groups, and major-specific groups",
     icon: Trophy,
   },
   {
-    value: "hive_exclusive",
-    label: "HIVE Exclusive", 
-    description: "Special HIVE-curated spaces and communities",
-    icon: Heart,
-  },
-  {
-    value: "student_organizations",
-    label: "Student Organizations",
-    description: "Student-led clubs, societies, and groups",
+    value: "professional",
+    label: "Professional", 
+    description: "Professional development and career-focused groups",
     icon: Briefcase,
   },
   {
-    value: "university_organizations",
-    label: "University Organizations",
-    description: "Official university departments and programs",
+    value: "sports",
+    label: "Sports",
+    description: "Sports clubs, intramurals, and athletic groups",
+    icon: Trophy,
+  },
+  {
+    value: "cultural",
+    label: "Cultural",
+    description: "Cultural clubs, heritage groups, and diversity organizations",
+    icon: Heart,
+  },
+  {
+    value: "service",
+    label: "Service",
+    description: "Community service and volunteer organizations",
     icon: Building2,
   },
 ];

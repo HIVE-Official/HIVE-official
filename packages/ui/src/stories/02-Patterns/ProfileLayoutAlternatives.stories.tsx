@@ -1,0 +1,590 @@
+import type { Meta, StoryObj } from '@storybook/react';
+import { 
+  BentoGridProfile,
+  CardGridProfile,
+  TimelineProfile
+} from '../../components/page-layouts/profile-layout-alternatives';
+
+const meta = {
+  title: 'Page Layouts/👤 Profile Layout Alternatives',
+  parameters: {
+    layout: 'fullscreen',
+    docs: {
+      description: {
+        component: `
+# HIVE Profile Page Layout Alternatives
+
+Three distinct profile page layouts designed to optimize for different user goals and interaction patterns. Each layout emphasizes different aspects of the student profile and campus experience.
+
+## 🎯 **Layout Philosophies**
+
+### 1. **Bento Grid** - Modern Dashboard Experience
+- **Goal**: Create a visual, dashboard-like interface that shows information at a glance
+- **Psychology**: Users want to see comprehensive information organized visually
+- **Best for**: Power users, students with high campus engagement
+- **Key Feature**: Modular cards that can be rearranged and customized
+
+### 2. **Card Grid** - Traditional & Structured
+- **Goal**: Provide familiar, structured information hierarchy
+- **Psychology**: Users prefer clear sections and traditional layouts
+- **Best for**: Broad user base, accessibility, information discovery
+- **Key Feature**: Clean sections with consistent information architecture
+
+### 3. **Timeline** - Social & Activity-Focused
+- **Goal**: Showcase student activity and achievements chronologically
+- **Psychology**: Users enjoy seeing progress and sharing accomplishments
+- **Best for**: Social users, achievement-oriented students
+- **Key Feature**: Activity feed with engagement and social proof
+
+## 🎨 **Design Quality Features**
+
+### **Consistent Brand System**
+- **Colors**: #FFD700 gold with proper contrast ratios (7:1 for WCAG AAA)
+- **Typography**: Geist Sans for professional readability with -0.01em to -0.04em tracking
+- **Spacing**: 8px grid system throughout for pixel-perfect alignment
+- **Motion**: Smooth transitions and hover states for interactive elements
+
+### **Profile Data Organization**
+- **Identity**: Avatar, name, major, year, campus level consistently displayed
+- **Stats**: Student connections, spaces run, tools created, achievements
+- **Activity**: Current status, recent actions, schedule, and engagement
+- **Social**: Spaces, connections, achievements, and campus impact
+
+### **User Experience Patterns**
+- **Progressive Disclosure**: Information revealed based on user needs
+- **Action-Oriented**: Clear CTAs for profile editing, sharing, and interactions
+- **Status Indicators**: Online/offline, current activity, ghost mode
+- **Responsive Design**: Mobile-first approach with touch-friendly interactions
+
+## 🧪 **A/B Testing Applications**
+
+Each layout targets different user behaviors:
+
+### **Bento Grid Layout**
+- **Target**: Power users who want comprehensive information at a glance
+- **Metrics**: Time spent on profile, information discovery rate
+- **Hypothesis**: Visual organization increases engagement with profile features
+
+### **Card Grid Layout**
+- **Target**: Broad user base preferring familiar, structured layouts
+- **Metrics**: Profile completion rate, information findability
+- **Hypothesis**: Traditional structure increases usability and adoption
+
+### **Timeline Layout**
+- **Target**: Social users who enjoy sharing achievements and activity
+- **Metrics**: Profile sharing rate, social engagement
+- **Hypothesis**: Activity focus increases social interaction and retention
+
+## 📊 **Layout Comparison Matrix**
+
+| Layout | Information Density | Social Features | Customization | Learning Curve |
+|--------|-------------------|-----------------|---------------|----------------|
+| Bento Grid | ⚡⚡⚡ | ⭐⭐ | ⚡⚡⚡ | ⭐⭐ |
+| Card Grid | ⭐⭐⭐ | ⭐⭐⭐ | ⭐⭐ | ⚡⚡⚡ |
+| Timeline | ⭐⭐ | ⚡⚡⚡ | ⭐⭐ | ⭐⭐⭐ |
+
+## 🔧 **Implementation Features**
+
+### **Core Profile Data**
+- Student identity (name, major, year, campus level)
+- Impact metrics (connections, spaces run, tools created)
+- Current status and activity
+- Achievements and recognition
+
+### **Interactive Elements**
+- Profile editing and customization
+- Ghost mode for privacy
+- Social sharing and connections
+- Quick actions for common tasks
+
+### **Responsive Considerations**
+- Mobile-first design approach
+- Touch-friendly interaction areas
+- Collapsible sections for mobile
+- Optimized loading for different screen sizes
+
+### **Accessibility Features**
+- WCAG AAA contrast compliance
+- Keyboard navigation support
+- Screen reader optimization
+- Focus management and indicators
+
+Each layout is production-ready and can be deployed independently for A/B testing different user segments and profile optimization strategies.
+        `,
+      },
+    },
+  },
+  tags: ['autodocs'],
+} satisfies Meta;
+
+export default meta;
+
+type Story = StoryObj<typeof meta>;
+
+export const BentoGrid: Story = {
+  render: () => <BentoGridProfile />,
+  parameters: {
+    docs: {
+      description: {
+        story: `
+### Bento Grid Profile Layout
+Modern dashboard experience with visual, modular information cards. Perfect for power users who want comprehensive information at a glance.
+
+**Key Features:**
+- Modular card system with different sizes and content types
+- Visual hierarchy with prominent stats and achievements
+- Quick actions panel for common tasks
+- Current status indicator with real-time updates
+- Ghost mode toggle for privacy
+
+**Best for:** Power users, students with high campus engagement, dashboard lovers
+        `,
+      },
+    },
+  },
+};
+
+export const CardGrid: Story = {
+  render: () => <CardGridProfile />,
+  parameters: {
+    docs: {
+      description: {
+        story: `
+### Card Grid Profile Layout
+Traditional, structured layout with clear information hierarchy. Provides familiar user experience with excellent information organization.
+
+**Key Features:**
+- Clean three-column layout with logical grouping
+- Comprehensive about section with contact info
+- Activity feed with detailed timestamps
+- Skills and achievements displayed prominently
+- Current status with location and activity details
+
+**Best for:** Broad user base, accessibility focus, information discovery
+        `,
+      },
+    },
+  },
+};
+
+export const Timeline: Story = {
+  render: () => <TimelineProfile />,
+  parameters: {
+    docs: {
+      description: {
+        story: `
+### Timeline Profile Layout
+Social media inspired layout focused on activity and achievements. Chronological presentation of student accomplishments and campus engagement.
+
+**Key Features:**
+- Chronological activity timeline with rich content
+- Social engagement metrics (reactions, comments)
+- Achievement celebrations and recognition
+- Cover photo and prominent profile display
+- Activity-based content organization
+
+**Best for:** Social users, achievement-oriented students, engagement focus
+        `,
+      },
+    },
+  },
+};
+
+export const AllLayoutsComparison: Story = {
+  render: () => (
+    <div className="bg-[#0A0A0A] text-white font-['Geist_Sans']">
+      <div className="p-8 text-center border-b border-white/10">
+        <h1 className="text-3xl font-bold mb-4">HIVE Profile Layout Alternatives</h1>
+        <p className="text-white/70 max-w-3xl mx-auto leading-relaxed">
+          Three distinct profile layouts optimized for different user goals and interaction patterns. 
+          Each layout emphasizes different aspects of the student experience and campus engagement.
+        </p>
+      </div>
+      
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 p-8">
+        {/* Bento Grid Preview */}
+        <div className="space-y-4">
+          <div className="aspect-[4/5] bg-[#111111] border border-white/10 rounded-lg overflow-hidden relative">
+            <div className="absolute inset-0 bg-gradient-to-br from-[#FFD700]/5 to-transparent"></div>
+            <div className="p-4 space-y-3">
+              {/* Profile Header */}
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-xl bg-[#FFD700] flex items-center justify-center">
+                  <span className="font-black text-black text-sm">JS</span>
+                </div>
+                <div>
+                  <div className="font-bold text-sm">Jacob Smith</div>
+                  <div className="text-xs text-white/60">CS • 2026</div>
+                </div>
+              </div>
+              
+              {/* Grid Layout Preview */}
+              <div className="grid grid-cols-12 gap-2">
+                {/* Main Stats */}
+                <div className="col-span-8 bg-white/5 rounded p-2">
+                  <div className="text-xs text-white/60 mb-1">Campus Impact</div>
+                  <div className="text-lg font-bold text-[#FFD700]">1,247</div>
+                  <div className="text-xs text-white/60">Students Connected</div>
+                </div>
+                
+                {/* Quick Actions */}
+                <div className="col-span-4 bg-white/5 rounded p-2">
+                  <div className="text-xs text-white/60 mb-1">Quick</div>
+                  <div className="space-y-1">
+                    <div className="h-1 bg-white/20 rounded"></div>
+                    <div className="h-1 bg-white/20 rounded"></div>
+                    <div className="h-1 bg-white/20 rounded"></div>
+                  </div>
+                </div>
+                
+                {/* Current Status */}
+                <div className="col-span-4 bg-[#FFD700]/10 rounded p-2">
+                  <div className="text-xs text-[#FFD700] mb-1">Currently</div>
+                  <div className="text-xs">Studying CS 301</div>
+                </div>
+                
+                {/* Achievements */}
+                <div className="col-span-8 bg-white/5 rounded p-2">
+                  <div className="text-xs text-white/60 mb-1">Achievements</div>
+                  <div className="space-y-1">
+                    <div className="h-1 bg-[#FFD700]/30 rounded"></div>
+                    <div className="h-1 bg-[#FFD700]/30 rounded"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="space-y-2">
+            <h3 className="font-semibold text-[#FFD700]">Bento Grid</h3>
+            <p className="text-sm text-white/70 leading-relaxed">
+              Modern dashboard with visual, modular information cards
+            </p>
+            <div className="flex items-center gap-2 text-xs">
+              <span className="px-2 py-1 bg-[#FFD700]/20 text-[#FFD700] rounded">🎯 Power Users</span>
+              <span className="px-2 py-1 bg-accent/20 text-accent rounded">📊 Visual</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Card Grid Preview */}
+        <div className="space-y-4">
+          <div className="aspect-[4/5] bg-[#111111] border border-white/10 rounded-lg overflow-hidden relative">
+            <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent"></div>
+            <div className="p-4 space-y-3">
+              {/* Header Card */}
+              <div className="bg-white/5 rounded p-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-[#FFD700] flex items-center justify-center">
+                    <span className="font-black text-black text-xs">JS</span>
+                  </div>
+                  <div>
+                    <div className="font-bold text-sm">Jacob Smith</div>
+                    <div className="text-xs text-white/60">Computer Science • 2026</div>
+                  </div>
+                </div>
+                <div className="grid grid-cols-4 gap-2 mt-2">
+                  <div className="text-center">
+                    <div className="text-sm font-bold text-[#FFD700]">1,247</div>
+                    <div className="text-xs text-white/60">Connected</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-sm font-bold text-[#FFD700]">23</div>
+                    <div className="text-xs text-white/60">Spaces</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-sm font-bold text-[#FFD700]">89</div>
+                    <div className="text-xs text-white/60">Tools</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-sm font-bold text-[#FFD700]">12</div>
+                    <div className="text-xs text-white/60">Level</div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Content Cards */}
+              <div className="grid grid-cols-3 gap-2">
+                <div className="bg-white/5 rounded p-2">
+                  <div className="text-xs text-white/60 mb-1">About</div>
+                  <div className="space-y-1">
+                    <div className="h-1 bg-white/20 rounded"></div>
+                    <div className="h-1 bg-white/20 rounded"></div>
+                  </div>
+                </div>
+                <div className="bg-white/5 rounded p-2">
+                  <div className="text-xs text-white/60 mb-1">Activity</div>
+                  <div className="space-y-1">
+                    <div className="h-1 bg-white/20 rounded"></div>
+                    <div className="h-1 bg-white/20 rounded"></div>
+                  </div>
+                </div>
+                <div className="bg-[#FFD700]/10 rounded p-2">
+                  <div className="text-xs text-[#FFD700] mb-1">Status</div>
+                  <div className="space-y-1">
+                    <div className="h-1 bg-[#FFD700]/30 rounded"></div>
+                    <div className="h-1 bg-[#FFD700]/30 rounded"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="space-y-2">
+            <h3 className="font-semibold text-[#FFD700]">Card Grid</h3>
+            <p className="text-sm text-white/70 leading-relaxed">
+              Traditional, structured layout with clear information hierarchy
+            </p>
+            <div className="flex items-center gap-2 text-xs">
+              <span className="px-2 py-1 bg-accent/20 text-accent rounded">👥 Broad Appeal</span>
+              <span className="px-2 py-1 bg-accent/20 text-accent rounded">♿ Accessible</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Timeline Preview */}
+        <div className="space-y-4">
+          <div className="aspect-[4/5] bg-[#111111] border border-white/10 rounded-lg overflow-hidden relative">
+            <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent"></div>
+            <div className="p-4 space-y-3">
+              {/* Profile Header */}
+              <div className="relative">
+                <div className="h-12 bg-gradient-to-r from-[#FFD700]/20 to-transparent rounded"></div>
+                <div className="flex items-center gap-3 -mt-6 px-2">
+                  <div className="w-12 h-12 rounded-full bg-[#FFD700] flex items-center justify-center border-2 border-[#111111]">
+                    <span className="font-black text-black text-sm">JS</span>
+                  </div>
+                  <div>
+                    <div className="font-bold text-sm">Jacob Smith</div>
+                    <div className="text-xs text-white/60">CS • Stanford • 2026</div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Timeline Items */}
+              <div className="space-y-2">
+                <div className="flex gap-2">
+                  <div className="w-6 h-6 rounded-full bg-[#FFD700]/20 flex items-center justify-center flex-shrink-0">
+                    <div className="w-2 h-2 bg-[#FFD700] rounded-full"></div>
+                  </div>
+                  <div className="bg-white/5 rounded p-2 flex-1">
+                    <div className="text-xs text-white/60 mb-1">Achievement Unlocked</div>
+                    <div className="text-xs font-medium">Study Streak Master</div>
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <div className="w-6 h-6 rounded-full bg-accent/20 flex items-center justify-center flex-shrink-0">
+                    <div className="w-2 h-2 bg-accent rounded-full"></div>
+                  </div>
+                  <div className="bg-white/5 rounded p-2 flex-1">
+                    <div className="text-xs text-white/60 mb-1">Created Tool</div>
+                    <div className="text-xs font-medium">Study Session Timer</div>
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <div className="w-6 h-6 rounded-full bg-accent/20 flex items-center justify-center flex-shrink-0">
+                    <div className="w-2 h-2 bg-accent rounded-full"></div>
+                  </div>
+                  <div className="bg-white/5 rounded p-2 flex-1">
+                    <div className="text-xs text-white/60 mb-1">Joined Space</div>
+                    <div className="text-xs font-medium">Algorithm Club</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="space-y-2">
+            <h3 className="font-semibold text-[#FFD700]">Timeline</h3>
+            <p className="text-sm text-white/70 leading-relaxed">
+              Social media inspired with activity and achievement focus
+            </p>
+            <div className="flex items-center gap-2 text-xs">
+              <span className="px-2 py-1 bg-accent/20 text-accent rounded">📱 Social</span>
+              <span className="px-2 py-1 bg-[#FFD700]/20 text-[#FFD700] rounded">🏆 Achievements</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Comparison Table */}
+      <div className="border-t border-white/5 p-8">
+        <h2 className="text-2xl font-bold mb-8 text-center">Layout Comparison Matrix</h2>
+        
+        <div className="max-w-4xl mx-auto">
+          <div className="grid grid-cols-6 gap-4 text-sm">
+            <div className="font-semibold">Layout</div>
+            <div className="font-semibold text-center">Info Density</div>
+            <div className="font-semibold text-center">Social Features</div>
+            <div className="font-semibold text-center">Customization</div>
+            <div className="font-semibold text-center">Learning Curve</div>
+            <div className="font-semibold text-center">Best For</div>
+            
+            <div className="font-medium">Bento Grid</div>
+            <div className="text-center">⚡⚡⚡</div>
+            <div className="text-center">⭐⭐</div>
+            <div className="text-center">⚡⚡⚡</div>
+            <div className="text-center">⭐⭐</div>
+            <div className="text-center text-xs">Power Users</div>
+            
+            <div className="font-medium">Card Grid</div>
+            <div className="text-center">⭐⭐⭐</div>
+            <div className="text-center">⭐⭐⭐</div>
+            <div className="text-center">⭐⭐</div>
+            <div className="text-center">⚡⚡⚡</div>
+            <div className="text-center text-xs">Broad Appeal</div>
+            
+            <div className="font-medium">Timeline</div>
+            <div className="text-center">⭐⭐</div>
+            <div className="text-center">⚡⚡⚡</div>
+            <div className="text-center">⭐⭐</div>
+            <div className="text-center">⭐⭐⭐</div>
+            <div className="text-center text-xs">Social Users</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: `
+### Layout Comparison Overview
+Side-by-side comparison of all three profile layouts, showing different approaches to student profile organization with their respective strengths and target audiences.
+        `,
+      },
+    },
+  },
+};
+
+export const ResponsiveExamples: Story = {
+  render: () => (
+    <div className="bg-[#0A0A0A] text-white font-['Geist_Sans'] p-8 space-y-8">
+      <h2 className="text-2xl font-bold text-[#FFD700] text-center mb-8">Responsive Design Examples</h2>
+      
+      <div className="space-y-8">
+        {/* Mobile Layout Examples */}
+        <div className="space-y-4">
+          <h3 className="text-lg font-semibold text-center">Mobile Layout Adaptations</h3>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="space-y-4">
+              <h4 className="font-medium text-[#FFD700] text-center">Bento Grid Mobile</h4>
+              <div className="max-w-xs mx-auto aspect-[9/16] bg-[#111111] border border-white/10 rounded-lg overflow-hidden">
+                <div className="p-4 space-y-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-xl bg-[#FFD700] flex items-center justify-center">
+                      <span className="font-black text-black text-sm">JS</span>
+                    </div>
+                    <div>
+                      <div className="font-bold text-sm">Jacob Smith</div>
+                      <div className="text-xs text-white/60">CS • 2026</div>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="bg-white/5 rounded p-3">
+                      <div className="text-xs text-white/60 mb-1">Impact</div>
+                      <div className="text-lg font-bold text-[#FFD700]">1,247</div>
+                    </div>
+                    <div className="bg-[#FFD700]/10 rounded p-3">
+                      <div className="text-xs text-[#FFD700] mb-1">Currently</div>
+                      <div className="text-xs">Studying CS 301</div>
+                    </div>
+                    <div className="bg-white/5 rounded p-3">
+                      <div className="text-xs text-white/60 mb-1">Quick Actions</div>
+                      <div className="space-y-1">
+                        <div className="h-1 bg-white/20 rounded"></div>
+                        <div className="h-1 bg-white/20 rounded"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="space-y-4">
+              <h4 className="font-medium text-[#FFD700] text-center">Card Grid Mobile</h4>
+              <div className="max-w-xs mx-auto aspect-[9/16] bg-[#111111] border border-white/10 rounded-lg overflow-hidden">
+                <div className="p-4 space-y-3">
+                  <div className="bg-white/5 rounded p-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-[#FFD700] flex items-center justify-center">
+                        <span className="font-black text-black text-xs">JS</span>
+                      </div>
+                      <div>
+                        <div className="font-bold text-sm">Jacob Smith</div>
+                        <div className="text-xs text-white/60">CS • 2026</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="bg-white/5 rounded p-3">
+                      <div className="text-xs text-white/60 mb-1">About</div>
+                      <div className="space-y-1">
+                        <div className="h-1 bg-white/20 rounded"></div>
+                        <div className="h-1 bg-white/20 rounded"></div>
+                      </div>
+                    </div>
+                    <div className="bg-[#FFD700]/10 rounded p-3">
+                      <div className="text-xs text-[#FFD700] mb-1">Status</div>
+                      <div className="space-y-1">
+                        <div className="h-1 bg-[#FFD700]/30 rounded"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="space-y-4">
+              <h4 className="font-medium text-[#FFD700] text-center">Timeline Mobile</h4>
+              <div className="max-w-xs mx-auto aspect-[9/16] bg-[#111111] border border-white/10 rounded-lg overflow-hidden">
+                <div className="p-4 space-y-3">
+                  <div className="relative">
+                    <div className="h-8 bg-gradient-to-r from-[#FFD700]/20 to-transparent rounded"></div>
+                    <div className="flex items-center gap-3 -mt-4 px-2">
+                      <div className="w-8 h-8 rounded-full bg-[#FFD700] flex items-center justify-center border-2 border-[#111111]">
+                        <span className="font-black text-black text-xs">JS</span>
+                      </div>
+                      <div>
+                        <div className="font-bold text-xs">Jacob Smith</div>
+                        <div className="text-xs text-white/60">CS • 2026</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="flex gap-2">
+                      <div className="w-4 h-4 rounded-full bg-[#FFD700]/20 flex items-center justify-center flex-shrink-0">
+                        <div className="w-1.5 h-1.5 bg-[#FFD700] rounded-full"></div>
+                      </div>
+                      <div className="bg-white/5 rounded p-2 flex-1">
+                        <div className="text-xs text-white/60 mb-1">Achievement</div>
+                        <div className="text-xs font-medium">Study Streak</div>
+                      </div>
+                    </div>
+                    <div className="flex gap-2">
+                      <div className="w-4 h-4 rounded-full bg-accent/20 flex items-center justify-center flex-shrink-0">
+                        <div className="w-1.5 h-1.5 bg-accent rounded-full"></div>
+                      </div>
+                      <div className="bg-white/5 rounded p-2 flex-1">
+                        <div className="text-xs text-white/60 mb-1">Created Tool</div>
+                        <div className="text-xs font-medium">Study Timer</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: `
+### Responsive Design Examples
+Mobile-first responsive adaptations of each profile layout, showing how information hierarchy and interaction patterns adapt to different screen sizes.
+        `,
+      },
+    },
+  },
+};

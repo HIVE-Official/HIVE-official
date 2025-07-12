@@ -26,7 +26,8 @@
   ],
   "scripts": {
     "dev": "tsup src/index.ts --format esm,cjs --watch --external react & tsc -p tsconfig.declarations.json --watch",
-    "build": "tsc --build",
+    "build": "tsup src/index.ts --format esm,cjs && tsc --declaration --emitDeclarationOnly --outDir dist",
+    "typecheck": "tsc --noEmit",
     "lint": "../../node_modules/.bin/eslint . --max-warnings 15 || pnpm exec --package=eslint eslint . --max-warnings 15",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
     "db:init": "tsx src/scripts/init-database.ts",

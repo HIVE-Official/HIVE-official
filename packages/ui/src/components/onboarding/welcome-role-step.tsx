@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '../button';
-import { GraduationCap, Users, BookOpen, ArrowRight, Sparkles } from 'lucide-react';
+import { GraduationCap, Users, BookOpen, ArrowRight, Zap } from 'lucide-react';
 import { hiveVariants } from '../../lib/motion';
 import { useAdaptiveMotion } from '../../lib/adaptive-motion';
 import { AlumniWaitlistModal } from './alumni-waitlist-modal';
@@ -40,14 +40,14 @@ export const WelcomeRoleStep: React.FC<WelcomeRoleStepProps> = ({
     {
       value: 'student',
       label: 'Student',
-      description: 'Connect with classmates, join communities, and make the most of campus life',
+      description: 'Find your people, join spaces, and build tools that spread across campus',
       icon: GraduationCap,
       available: true,
     },
     {
       value: 'faculty',
       label: 'Faculty/Staff',
-      description: 'Guide students, build academic communities, and enhance campus connections',
+      description: 'Guide student communities and help build the campus experience',
       icon: Users,
       available: true,
     },
@@ -86,7 +86,7 @@ export const WelcomeRoleStep: React.FC<WelcomeRoleStepProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
+    <div className="min-h-screen bg-background flex items-center justify-center p-6">
       {/* Background gradients */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,#111111,transparent_50%)]" />
@@ -94,22 +94,22 @@ export const WelcomeRoleStep: React.FC<WelcomeRoleStepProps> = ({
       </div>
 
       <motion.div 
-        className="w-full max-w-2xl relative z-10"
+        className="w-full max-w-xl relative z-10"
         variants={hiveVariants.container}
         initial="hidden"
         animate="visible"
       >
         {/* Progress indicator */}
         <motion.div 
-          className="flex justify-center mb-8"
+          className="flex justify-center mb-12"
           variants={hiveVariants.item}
         >
-          <div className="flex space-x-2">
+          <div className="flex space-x-3">
             {[1, 2, 3, 4].map((stepNum, index) => (
               <div
                 key={stepNum}
-                className={`w-2 h-2 rounded-full transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] ${
-                  index === 0 ? 'bg-accent' : 'bg-muted'
+                className={`w-3 h-3 rounded-full transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] ${
+                  index === 0 ? 'bg-accent' : 'bg-surface-02'
                 }`}
               />
             ))}
@@ -118,31 +118,31 @@ export const WelcomeRoleStep: React.FC<WelcomeRoleStepProps> = ({
 
         {/* Content card */}
         <motion.div 
-          className="module-border module-surface module-padding space-y-8"
+          className="bg-surface-01 border border-border rounded-2xl p-8 space-y-10"
           variants={hiveVariants.item}
         >
           {/* Header */}
           <motion.div 
-            className="text-center space-y-4"
+            className="text-center space-y-6"
             variants={hiveVariants.item}
           >
-            <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto">
-              <Sparkles className="w-8 h-8 text-accent" />
+            <div className="w-20 h-20 bg-accent/10 rounded-2xl flex items-center justify-center mx-auto">
+              <Zap className="w-10 h-10 text-accent" />
             </div>
             
-            <div className="space-y-2">
-              <h1 className="text-2xl font-display font-semibold text-foreground">
-                How do you connect with {schoolName}?
+            <div className="space-y-3">
+              <h1 className="text-3xl font-display font-semibold text-foreground leading-tight">
+                What's your role at {schoolName}?
               </h1>
-              <p className="text-muted font-body">
-                Help us create the perfect campus experience for you
+              <p className="text-muted-foreground font-body text-lg">
+                Join the programmable campus layer where your community lives
               </p>
             </div>
           </motion.div>
 
           {/* Role Selection */}
-          <motion.div className="space-y-4" variants={hiveVariants.container}>
-            <div className="space-y-3">
+          <motion.div className="space-y-6" variants={hiveVariants.container}>
+            <div className="space-y-4">
               {roleOptions.map((option, index) => {
                 const Icon = option.icon;
                 const isSelected = selectedRole === option.value;
@@ -153,32 +153,32 @@ export const WelcomeRoleStep: React.FC<WelcomeRoleStepProps> = ({
                     key={option.value}
                     onClick={() => handleRoleSelect(option.value)}
                     disabled={isDisabled}
-                    className={`w-full p-4 rounded-lg border-2 transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] text-left ${
+                    className={`w-full p-6 rounded-xl border-2 transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] text-left ${
                       isSelected
-                        ? 'border-accent bg-accent/10'
+                        ? 'border-accent bg-accent/10 shadow-lg'
                         : isDisabled
                         ? 'border-border bg-surface-01 opacity-60 cursor-not-allowed'
-                        : 'border-border bg-surface-01 hover:border-accent/30 hover:bg-surface-02'
+                        : 'border-border bg-surface-02 hover:border-accent/40 hover:bg-surface-03 hover:shadow-md'
                     }`}
                     variants={hiveVariants.item}
                     whileHover={!isDisabled ? { scale: 1.01 } : undefined}
                     whileTap={!isDisabled ? { scale: 0.99 } : undefined}
                     transition={{ delay: index * 0.1 }}
                   >
-                    <div className="flex items-start gap-4">
-                      <div className={`p-3 rounded-lg flex-shrink-0 ${
+                    <div className="flex items-start gap-5">
+                      <div className={`p-4 rounded-xl flex-shrink-0 ${
                         isSelected 
                           ? 'bg-accent text-background' 
                           : isDisabled
-                          ? 'bg-surface-02 text-muted'
-                          : 'bg-surface-02 text-foreground'
+                          ? 'bg-surface-03 text-muted'
+                          : 'bg-surface-03 text-foreground'
                       }`}>
-                        <Icon className="w-5 h-5" />
+                        <Icon className="w-6 h-6" />
                       </div>
                       
                       <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
-                          <h3 className={`font-medium font-body ${
+                        <div className="flex items-center gap-3 mb-2">
+                          <h3 className={`font-semibold font-body text-lg ${
                             isSelected ? 'text-accent' : 'text-foreground'
                           }`}>
                             {option.label}
@@ -189,7 +189,7 @@ export const WelcomeRoleStep: React.FC<WelcomeRoleStepProps> = ({
                             </span>
                           )}
                         </div>
-                        <p className="text-sm text-muted font-body">
+                        <p className="text-muted-foreground font-body leading-relaxed">
                           {option.description}
                         </p>
                       </div>
@@ -222,15 +222,15 @@ export const WelcomeRoleStep: React.FC<WelcomeRoleStepProps> = ({
               disabled={!selectedRole}
               variant="ritual"
               size="lg"
-              className="w-full"
+              className="w-full h-14 text-lg font-semibold"
             >
               Continue Setup
-              <ArrowRight className="w-4 h-4 ml-2" />
+              <ArrowRight className="w-5 h-5 ml-2" />
             </Button>
             
             {selectedRole && (
               <motion.p 
-                className="text-center text-xs text-muted font-body mt-3"
+                className="text-center text-sm text-muted-foreground font-body mt-4"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
               >
@@ -242,10 +242,10 @@ export const WelcomeRoleStep: React.FC<WelcomeRoleStepProps> = ({
 
         {/* Step indicator */}
         <motion.div 
-          className="text-center mt-6"
+          className="text-center mt-8"
           variants={hiveVariants.item}
         >
-          <p className="text-sm text-muted font-body">
+          <p className="text-sm text-muted-foreground font-body">
             Step 1 of 4
           </p>
         </motion.div>

@@ -181,7 +181,7 @@ export default function CampusSelectionPage() {
                           <CheckCircle className="w-5 h-5 text-accent" />
                         )}
                         {selectedUniversity?.id === university.id && (
-                          <Badge variant="default" className="bg-accent text-background font-medium">
+                          <Badge variant="accent" className="bg-accent text-background font-medium">
                             Selected
                           </Badge>
                         )}

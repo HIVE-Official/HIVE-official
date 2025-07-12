@@ -3,6 +3,7 @@ import { auth } from '@/lib/firebase'
 import { logger, validateEmailDomain } from "@hive/core"
 import { db } from '../../../../../lib/firebase-admin'
 import { sendSignInLinkToEmail } from 'firebase/auth'
+import { getSchoolById } from '@hive/core/constants/school-domains'
 
 // Check if we're in build time
 const isBuildTime = process.env.NEXT_PHASE === 'phase-production-build'
@@ -104,8 +105,15 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // In development mode, always use the fallback to avoid authentication setup issues
-    if (process.env.NODE_ENV === 'development') {
+    // Check if we're in development mode (NODE_ENV might not be set, so also check for localhost)
+    const isDev = process.env.NODE_ENV === 'development' || 
+                  process.env.VERCEL_ENV === 'development' ||
+                  (typeof window === 'undefined' && request.url.includes('localhost'));
+    
+    logger.info(`🔍 Environment check: NODE_ENV=${process.env.NODE_ENV}, VERCEL_ENV=${process.env.VERCEL_ENV}, isDev=${isDev}`)
+    
+    // Development mode: bypass Firebase email and provide direct link
+    if (isDev) {
       logger.info('🔥 Development mode: Using authentication bypass')
       logger.info(`📧 Would send magic link to: ${trimmedEmail}`)
       
@@ -114,7 +122,9 @@ export async function POST(request: NextRequest) {
         success: true,
         message: 'Magic link sent! Check your email.',
         email: trimmedEmail,
-        dev_mode: true
+        dev_mode: true,
+        // Include a dev verify URL for E2E testing
+        dev_verify_url: `/auth/verify?email=${encodeURIComponent(trimmedEmail)}&dev=true`
       })
     }
 
@@ -147,7 +157,7 @@ export async function POST(request: NextRequest) {
     // Firebase is configured - send actual magic link
     try {
       const actionCodeSettings = {
-        url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3003'}/auth/verify?email=${encodeURIComponent(trimmedEmail)}`,
+        url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/auth/verify?email=${encodeURIComponent(trimmedEmail)}`,
         handleCodeInApp: true,
         // Remove Dynamic Links requirement for now
         // dynamicLinkDomain: process.env.NEXT_PUBLIC_FIREBASE_DYNAMIC_LINKS_DOMAIN

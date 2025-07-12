@@ -11,9 +11,9 @@ import {
   AlertCircle,
   CheckCircle,
 } from "lucide-react";
-import { Button } from "../../ui/button";
-import { Input } from "../../ui/input";
-import { Textarea } from "../../ui/textarea";
+import { Button } from "../../button";
+import { Input } from "../../input";
+import { Textarea } from "../../textarea";
 
 interface Space {
   id: string;

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Users, User, Crown, Shield } from "lucide-react";
-import { Button } from "../../ui/button";
+import { Button } from "../../button";
 
 interface RoleSelectionProps {
   onNext: (data: { isStudentLeader: boolean }) => void;

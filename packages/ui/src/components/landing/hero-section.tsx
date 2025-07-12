@@ -67,18 +67,18 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         <div className="flex flex-col items-center justify-center gap-4 pt-8 sm:flex-row sm:gap-6">
           <Button
             size="lg"
-            className="group h-14 w-full bg-muted/20 px-8 text-lg font-medium text-muted/50 sm:w-auto transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] cursor-not-allowed"
-            disabled
+            onClick={_onGetStarted}
+            className="group h-14 w-full bg-accent/20 hover:bg-accent/30 px-8 text-lg font-medium text-accent sm:w-auto transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)]"
           >
             Get Started
-            <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)]" />
+            <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] group-hover:translate-x-1" />
           </Button>
 
           <Button
             variant="outline"
             size="lg"
-            className="h-14 w-full border-border/30 px-8 text-lg font-medium text-muted/50 sm:w-auto transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] cursor-not-allowed"
-            disabled
+            onClick={_onLearnMore}
+            className="h-14 w-full border-border/30 hover:border-accent/30 px-8 text-lg font-medium text-foreground hover:text-accent sm:w-auto transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)]"
           >
             Learn More
           </Button>

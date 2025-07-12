@@ -34,36 +34,36 @@ const spaceTypeConfig = {
     label: 'Academic',
     icon: Star,
     color: 'accent',
-    bgGradient: 'from-accent/5 to-transparent',
-    borderColor: 'border-accent/20',
+    bgGradient: 'from-surface-02/30 to-transparent',
+    borderColor: 'border-border',
   },
   residential: {
     label: 'Residential',
     icon: Users,
     color: 'chip',
-    bgGradient: 'from-muted/5 to-transparent',
+    bgGradient: 'from-surface-02/20 to-transparent',
     borderColor: 'border-border',
   },
   interest: {
     label: 'Interest',
     icon: Sparkles,
     color: 'chip',
-    bgGradient: 'from-muted/5 to-transparent',
+    bgGradient: 'from-surface-02/20 to-transparent',
     borderColor: 'border-border',
   },
   organization: {
     label: 'Organization',
     icon: Users,
     color: 'chip',
-    bgGradient: 'from-muted/5 to-transparent',
+    bgGradient: 'from-surface-02/20 to-transparent',
     borderColor: 'border-border',
   },
   greek: {
     label: 'Greek Life',
     icon: Star,
     color: 'accent',
-    bgGradient: 'from-accent/5 to-transparent',
-    borderColor: 'border-accent/20',
+    bgGradient: 'from-surface-02/30 to-transparent',
+    borderColor: 'border-border',
   },
 };
 
@@ -101,7 +101,7 @@ export const SpaceCardPreview: React.FC<SpaceCardPreviewProps> = ({
       )}
     >
       {/* Preview Status Banner */}
-      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-accent/50 via-accent/20 to-transparent" />
+      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-accent/30 via-accent/10 to-transparent" />
       
       {/* Content */}
       <div className="p-6">
@@ -186,7 +186,7 @@ export const SpaceCardPreview: React.FC<SpaceCardPreviewProps> = ({
         </div>
 
         {/* Preview Message */}
-        <div className="mb-6 p-4 bg-accent/5 border border-accent/20 rounded-lg">
+        <div className="mb-6 p-4 bg-surface-01 border border-border rounded-lg">
           <div className="flex items-start gap-3">
             <Zap className="h-4 w-4 text-accent flex-shrink-0 mt-0.5" />
             <div>
@@ -232,7 +232,7 @@ export const SpaceCardPreview: React.FC<SpaceCardPreviewProps> = ({
         animate={{ opacity: isHovered ? 1 : 0 }}
         transition={{ duration: 0.2 }}
       >
-        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-accent/5 via-transparent to-transparent" />
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-surface-02/50 via-transparent to-transparent" />
         
         {/* Floating elements */}
         <motion.div

@@ -74,10 +74,50 @@ const mockAuth = {
   deleteUser: async () => {},
 } as unknown as admin.auth.Auth;
 
+// 🔒 SECURITY: Validate credentials before using them
+function validateFirebaseCredentials(config: any): boolean {
+  if (!config) return false;
+  
+  // Check for placeholder/invalid values
+  const invalidPatterns = [
+    'YOUR_PRIVATE_KEY_HERE',
+    'your-service-account@',
+    'demo-',
+    'mock-',
+    'test-',
+    'localhost'
+  ];
+  
+  const hasInvalidPattern = invalidPatterns.some(pattern => 
+    config.privateKey?.includes(pattern) || 
+    config.clientEmail?.includes(pattern) || 
+    config.projectId?.includes(pattern)
+  );
+  
+  if (hasInvalidPattern) {
+    console.warn("🔒 SECURITY: Firebase credentials contain placeholder values");
+    return false;
+  }
+  
+  // Validate structure
+  if (!config.privateKey?.includes('BEGIN PRIVATE KEY')) {
+    console.warn("🔒 SECURITY: Invalid private key format");
+    return false;
+  }
+  
+  return true;
+}
+
 // During build time or when Firebase is not configured, use mock instances
 const adminConfig = getFirebaseAdminConfig();
-if (process.env.NEXT_PHASE === "phase-production-build" || !adminConfig) {
-  console.log("🔥 Using mock Firebase Admin for development");
+const isValidConfig = validateFirebaseCredentials(adminConfig);
+
+if (process.env.NEXT_PHASE === "phase-production-build" || !adminConfig || !isValidConfig) {
+  if (!isValidConfig && adminConfig) {
+    console.error("🔒 SECURITY: Invalid Firebase credentials detected, using mock services");
+  } else {
+    console.log("🔥 Using mock Firebase Admin for development");
+  }
   dbAdmin = mockDb;
   authAdmin = mockAuth;
 } else {
@@ -85,32 +125,34 @@ if (process.env.NEXT_PHASE === "phase-production-build" || !adminConfig) {
   if (!firebaseInitialized) {
     try {
       if (!admin.apps.length) {
-        const adminConfig = getFirebaseAdminConfig();
-
-        if (adminConfig) {
-          admin.initializeApp({
-            credential: admin.credential.cert({
-              projectId: adminConfig.projectId,
-              clientEmail: adminConfig.clientEmail,
-              privateKey: adminConfig.privateKey,
-            }),
+        console.log("🔥 Initializing Firebase Admin with validated credentials");
+        
+        admin.initializeApp({
+          credential: admin.credential.cert({
             projectId: adminConfig.projectId,
-          });
+            clientEmail: adminConfig.clientEmail,
+            privateKey: adminConfig.privateKey,
+          }),
+          projectId: adminConfig.projectId,
+        });
 
-          firebaseInitialized = true;
-          dbAdmin = admin.firestore();
-          authAdmin = admin.auth();
-        } else {
-          console.warn("🔥 Firebase Admin credentials not found, using mock services for development");
-          dbAdmin = mockDb;
-          authAdmin = mockAuth;
-        }
+        firebaseInitialized = true;
+        dbAdmin = admin.firestore();
+        authAdmin = admin.auth();
+        
+        console.log("✅ Firebase Admin initialized successfully");
       } else {
         dbAdmin = admin.firestore();
         authAdmin = admin.auth();
       }
     } catch (error) {
       console.error("🔥 Error initializing Firebase Admin, falling back to mock:", error);
+      
+      // 🔒 SECURITY: Log credential validation errors in production
+      if (isProduction) {
+        console.error("🚨 PRODUCTION ERROR: Firebase Admin initialization failed with valid-looking credentials");
+      }
+      
       dbAdmin = mockDb;
       authAdmin = mockAuth;
     }

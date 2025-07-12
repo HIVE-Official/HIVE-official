@@ -204,6 +204,34 @@ const preset = {
         "hive-ritual-burst": "hive-ritual-burst 400ms cubic-bezier(0.68, -0.55, 0.265, 1.55)",
         "hive-space-join": "hive-space-join 400ms cubic-bezier(0.23, 1, 0.32, 1)",
       },
+      // HIVE spacing scale following 8px grid
+      spacing: {
+        'xs': '4px',
+        'sm': '8px',
+        'md': '12px',
+        'lg': '16px',
+        'xl': '24px',
+        '2xl': '32px',
+        '3xl': '48px',
+        '4xl': '64px',
+      },
+      // HIVE shadow system
+      boxShadow: {
+        'elevation-1': '0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06)',
+        'elevation-2': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+        'elevation-3': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+        'elevation-4': '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+        'gold-glow': '0 0 20px rgba(255, 215, 0, 0.3)',
+        'gold-focus': '0 0 0 2px rgba(255, 215, 0, 0.8)',
+      },
+      // HIVE scale system
+      scale: {
+        'micro': '1.01',
+        'subtle': '1.02',
+        'small': '1.05',
+        'medium': '1.1',
+        'large': '1.15',
+      },
     },
   },
 };

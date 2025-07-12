@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Image, Users, AlertTriangle, Clock, CheckCircle, XCircle } from 'lucide-react';
+import { Image, Users, AlertTriangle, Clock, CheckCircle } from 'lucide-react';
 
 interface DashboardStats {
   pendingPhotoReviews: number;

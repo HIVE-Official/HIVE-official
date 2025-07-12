@@ -54,7 +54,7 @@ export default function SchoolSearch() {
   }, [query, schools]);
 
   const handleSchoolSelect = (school: School) => {
-    if (school.status === "active") {
+    if (school.status === "open") {
       router.push(
         `/auth/login?schoolId=${school.id}&schoolName=${encodeURIComponent(school.name)}&domain=${encodeURIComponent(school.domain)}`
       );

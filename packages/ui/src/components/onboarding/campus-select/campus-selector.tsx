@@ -82,7 +82,7 @@ export const CampusSelector = ({
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="text-center text-gray-400"
+            className="text-center text-muted-foreground"
           >
             No schools found matching "{searchQuery}"
           </motion.p>

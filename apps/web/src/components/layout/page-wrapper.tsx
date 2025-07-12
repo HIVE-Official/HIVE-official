@@ -37,11 +37,11 @@ export function PageWrapper({
     pathname.startsWith("/auth") || pathname.startsWith("/welcome");
 
   if (isAuthPage) {
-    return <main className="min-h-screen bg-black text-white">{children}</main>;
+    return <main className="min-h-screen bg-[#0A0A0A] text-white">{children}</main>;
   }
 
   return (
-    <div className="min-h-screen bg-bg-root font-body text-text-primary">
+    <div className="min-h-screen bg-[#0A0A0A] font-sans text-white">
       {/* <Navbar /> */}
       <main className="pt-16">
         <div className="mx-auto max-w-7xl">{children}</div>

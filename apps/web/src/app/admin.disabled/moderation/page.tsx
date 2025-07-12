@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Button } from '@hive/ui';
-import { CheckCircle, XCircle, Eye, Clock, AlertTriangle } from 'lucide-react';
+import { CheckCircle, XCircle, Eye, Clock } from 'lucide-react';
 
 interface PendingPhoto {
   id: string;
@@ -146,6 +146,7 @@ export default function ModerationPage() {
               >
                 {/* Photo */}
                 <div className="relative">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={photo.avatarUrl}
                     alt={`${photo.userName}'s profile photo`}

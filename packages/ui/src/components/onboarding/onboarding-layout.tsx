@@ -3,7 +3,7 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ProgressIndicator } from './progress-indicator';
-import { Button } from '../ui/button';
+import { Button } from '../button';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 
 interface OnboardingLayoutProps {

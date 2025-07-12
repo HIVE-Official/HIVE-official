@@ -218,3 +218,6 @@ Required environment variables (see ENV_TEMPLATE.md):
   - Weekly drops to engage entire campus
   - Examples: Dining Hall Wars, Space Battles, Tool Drops, Anonymous Confessions
   - Creates genuine engagement, not corporate interactions
+
+## Startup Considerations
+- Remember that we are building a startup.

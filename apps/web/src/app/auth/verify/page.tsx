@@ -338,7 +338,7 @@ function VerifyContent() {
       hasAutoVerified.current = true;
       void handleVerification();
     }
-  }, [searchParams, setEmail]);
+  }, [searchParams, setEmail, handleVerification]);
 
   const handleResend = async () => {
     if (!email) {

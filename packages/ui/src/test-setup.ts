@@ -19,7 +19,7 @@ global.IntersectionObserver = class MockIntersectionObserver {
   unobserve() {}
   disconnect() {}
   takeRecords() { return [] }
-} as any
+} as unknown as typeof IntersectionObserver
 
 // Mock matchMedia
 Object.defineProperty(window, 'matchMedia', {

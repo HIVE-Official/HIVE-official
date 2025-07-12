@@ -77,9 +77,9 @@ function ErrorState({ error }: { error: Error }) {
 
 function SpaceStatusBadge({ status }: { status: Space["status"] }) {
   const statusConfig = {
-    dormant: { label: "Coming Soon", variant: "secondary" as const },
+    dormant: { label: "Coming Soon", variant: "outline" as const },
     frozen: { label: "View Only", variant: "outline" as const },
-    activated: { label: "Active", variant: "default" as const },
+    activated: { label: "Active", variant: "accent" as const },
   };
 
   const config = statusConfig[status] || statusConfig.activated;
@@ -177,7 +177,7 @@ export default function SpaceDetailPage({
                   <span>{space.memberCount.toLocaleString()} members</span>
                 </div>
 
-                <Badge variant="secondary" className="capitalize text-xs">
+                <Badge variant="chip" className="capitalize text-xs">
                   {space.type}
                 </Badge>
 

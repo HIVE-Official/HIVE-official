@@ -1,0 +1,227 @@
+import type { Meta, StoryObj } from '@storybook/react';
+import { SpaceCard } from '../../components/spaces/space-card';
+import { SpaceCardPreview } from '../../components/spaces/space-card-preview';
+
+const meta: Meta = {
+  title: '03-Features/Space Cards',
+  parameters: {
+    layout: 'padded',
+    docs: {
+      description: {
+        component: 'Space cards for displaying active and preview mode spaces in the discovery interface.',
+      },
+    },
+  },
+};
+
+export default meta;
+
+// Active Space Card Stories
+export const ActiveSpaceCard: StoryObj<typeof SpaceCard> = {
+  render: () => (
+    <div className="max-w-sm">
+      <SpaceCard
+        id="cs-dept"
+        name="Computer Science Department"
+        description="Official CS department space for announcements, resources, and academic discussions."
+        type="academic"
+        status="active"
+        memberCount={1247}
+        upcomingEvents={5}
+        recentActivity="Discussion about data structures assignment"
+        leaders={[
+          { id: '1', name: 'Prof Smith' },
+          { id: '2', name: 'TA Johnson' }
+        ]}
+        onJoin={() => console.log('Join clicked')}
+        onViewSpace={() => console.log('View clicked')}
+      />
+    </div>
+  ),
+};
+
+export const ResidentialSpace: StoryObj<typeof SpaceCard> = {
+  render: () => (
+    <div className="max-w-sm">
+      <SpaceCard
+        id="north-campus"
+        name="North Campus Residents"
+        description="Connect with your neighbors, organize events, and build community."
+        type="residential"
+        status="active"
+        memberCount={892}
+        upcomingEvents={3}
+        recentActivity="Pizza night planning for Friday"
+        leaders={[
+          { id: '1', name: 'RA Mike' }
+        ]}
+        onJoin={() => console.log('Join clicked')}
+        onViewSpace={() => console.log('View clicked')}
+      />
+    </div>
+  ),
+};
+
+export const GreekSpace: StoryObj<typeof SpaceCard> = {
+  render: () => (
+    <div className="max-w-sm">
+      <SpaceCard
+        id="alpha-phi-alpha"
+        name="Alpha Phi Alpha"
+        description="Brotherhood, scholarship, and service since 1906."
+        type="greek"
+        status="invite_only"
+        memberCount={45}
+        upcomingEvents={2}
+        leaders={[
+          { id: '1', name: 'Brother James' }
+        ]}
+        onRequestAccess={() => console.log('Request access clicked')}
+        onViewSpace={() => console.log('View clicked')}
+      />
+    </div>
+  ),
+};
+
+// Preview Mode Space Card Stories
+export const PreviewSpaceCard: StoryObj<typeof SpaceCardPreview> = {
+  render: () => (
+    <div className="max-w-sm">
+      <SpaceCardPreview
+        id="math-dept-preview"
+        name="Mathematics Department"
+        description="Connect with math students, get help with problem sets, and discuss advanced topics."
+        type="academic"
+        category="Academic"
+        potentialMembers={892}
+        anticipatedEvents={5}
+        keywords={['calculus', 'linear algebra', 'study groups']}
+        onRequestActivation={() => console.log('Request activation clicked')}
+        onLearnMore={() => console.log('Learn more clicked')}
+      />
+    </div>
+  ),
+};
+
+export const PreviewStudentOrg: StoryObj<typeof SpaceCardPreview> = {
+  render: () => (
+    <div className="max-w-sm">
+      <SpaceCardPreview
+        id="robotics-club-preview"
+        name="Robotics Club"
+        description="Build robots, compete in competitions, and learn about automation and AI."
+        type="organization"
+        category="Student Organizations"
+        potentialMembers={156}
+        anticipatedEvents={8}
+        keywords={['arduino', 'programming', 'competitions', 'engineering']}
+        onRequestActivation={() => console.log('Request activation clicked')}
+        onLearnMore={() => console.log('Learn more clicked')}
+      />
+    </div>
+  ),
+};
+
+export const PreviewGreekLife: StoryObj<typeof SpaceCardPreview> = {
+  render: () => (
+    <div className="max-w-sm">
+      <SpaceCardPreview
+        id="gamma-phi-beta-preview"
+        name="Gamma Phi Beta"
+        description="Building strong, confident women through sisterhood and philanthropy."
+        type="greek"
+        category="Greek Life"
+        potentialMembers={89}
+        anticipatedEvents={6}
+        keywords={['sisterhood', 'philanthropy', 'leadership']}
+        onRequestActivation={() => console.log('Request activation clicked')}
+        onLearnMore={() => console.log('Learn more clicked')}
+      />
+    </div>
+  ),
+};
+
+// Grid Layout Demo
+export const SpaceCardGrid: StoryObj = {
+  render: () => (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <SpaceCard
+        id="cs-dept"
+        name="Computer Science Department"
+        description="Official CS department space for announcements, resources, and academic discussions."
+        type="academic"
+        status="active"
+        memberCount={1247}
+        upcomingEvents={5}
+        onJoin={() => console.log('Join clicked')}
+        onViewSpace={() => console.log('View clicked')}
+      />
+      
+      <SpaceCardPreview
+        id="math-dept-preview"
+        name="Mathematics Department"
+        description="Connect with math students, get help with problem sets, and discuss advanced topics."
+        type="academic"
+        category="Academic"
+        potentialMembers={892}
+        anticipatedEvents={5}
+        keywords={['calculus', 'linear algebra', 'study groups']}
+        onRequestActivation={() => console.log('Request activation clicked')}
+        onLearnMore={() => console.log('Learn more clicked')}
+      />
+      
+      <SpaceCard
+        id="gaming-society"
+        name="Gaming Society"
+        description="For gamers by gamers. Weekly tournaments, LAN parties, and gaming discussions."
+        type="organization"
+        status="active"
+        memberCount={324}
+        upcomingEvents={7}
+        onJoin={() => console.log('Join clicked')}
+        onViewSpace={() => console.log('View clicked')}
+      />
+      
+      <SpaceCardPreview
+        id="robotics-club-preview"
+        name="Robotics Club"
+        description="Build robots, compete in competitions, and learn about automation and AI."
+        type="organization"
+        category="Student Organizations"
+        potentialMembers={156}
+        anticipatedEvents={8}
+        keywords={['arduino', 'programming', 'competitions']}
+        onRequestActivation={() => console.log('Request activation clicked')}
+        onLearnMore={() => console.log('Learn more clicked')}
+      />
+      
+      <SpaceCard
+        id="north-campus"
+        name="North Campus Residents"
+        description="Connect with your neighbors, organize events, and build community."
+        type="residential"
+        status="active"
+        memberCount={892}
+        upcomingEvents={3}
+        onJoin={() => console.log('Join clicked')}
+        onViewSpace={() => console.log('View clicked')}
+      />
+      
+      <SpaceCardPreview
+        id="gamma-phi-beta-preview"
+        name="Gamma Phi Beta"
+        description="Building strong, confident women through sisterhood and philanthropy."
+        type="greek"
+        category="Greek Life"
+        potentialMembers={89}
+        anticipatedEvents={6}
+        keywords={['sisterhood', 'philanthropy', 'leadership']}
+        onRequestActivation={() => console.log('Request activation clicked')}
+        onLearnMore={() => console.log('Learn more clicked')}
+      />
+    </div>
+  ),
+  parameters: {
+    layout: 'padded',
+  },
+};

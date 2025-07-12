@@ -8,9 +8,9 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "../ui/card";
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
+} from "../card";
+import { Input } from "../input";
+import { Label } from "../label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../select";
 import { Badge } from "../badge";
 import { Loader2, X, Plus, GraduationCap } from "lucide-react";

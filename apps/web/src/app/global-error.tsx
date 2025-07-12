@@ -1,6 +1,8 @@
 'use client';
 
 import { useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { AlertTriangle, Home, RefreshCw } from 'lucide-react';
 
 export default function GlobalError({
   error,
@@ -36,7 +38,7 @@ export default function GlobalError({
       }).catch(() => {
         // Ignore fetch errors - we don't want to create more errors
       });
-    } catch (e) {
+    } catch {
       // Ignore any errors in error logging
     }
   }, [error]);
@@ -58,64 +60,128 @@ export default function GlobalError({
 
   return (
     <html>
-      <body>
-        <div className="min-h-screen bg-[#0A0A0A] text-white flex items-center justify-center p-4">
-          <div className="w-full max-w-lg">
-            <div className="rounded-lg border border-gray-700 bg-gray-900 p-8 shadow-lg">
+      <body style={{ margin: 0, padding: 0 }}>
+        {/* Background gradients matching home page */}
+        <div className="fixed inset-0 bg-[#0A0A0A]">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,#111111,transparent_50%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,#111111,transparent_50%)]" />
+        </div>
+
+        <div className="relative z-10 min-h-screen flex items-center justify-center p-4">
+          <motion.div
+            className="w-full max-w-lg"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.24, ease: [0.33, 0.65, 0, 1] }}
+          >
+            <div className="rounded-lg border border-[#FFD700]/30 bg-[#111111] p-8 shadow-xl">
+              {/* Gold accent line */}
+              <div className="h-1 bg-gradient-to-r from-[#FFD700] to-[#FFD700]/50 rounded-full mb-6" />
+              
               <div className="flex flex-col items-center gap-6 text-center">
-                <div className="rounded-full bg-red-900/20 p-3">
-                  <div className="h-6 w-6 text-red-400">⚠️</div>
-                </div>
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ type: "spring", duration: 0.5, ease: [0.33, 0.65, 0, 1] }}
+                >
+                  <div className="rounded-full bg-[#FFD700]/10 p-3">
+                    <AlertTriangle className="h-6 w-6 text-[#FFD700]" />
+                  </div>
+                </motion.div>
 
                 <div className="space-y-2">
-                  <h1 className="text-2xl font-bold tracking-tight">
+                  <h1 
+                    className="text-2xl font-bold tracking-tight text-white"
+                    style={{
+                      fontFamily: 'Space Grotesk, system-ui, sans-serif',
+                      fontWeight: 600
+                    }}
+                  >
                     Something went wrong!
                   </h1>
-                  <p className="text-gray-400">
+                  <p 
+                    className="text-[#6B7280] leading-relaxed"
+                    style={{
+                      fontFamily: 'Geist Sans, system-ui, sans-serif',
+                      fontWeight: 400
+                    }}
+                  >
                     We encountered an error while loading the page.
                     Please try again or return to the home page.
                   </p>
                 </div>
 
-                <div className="flex gap-4">
-                  <button
+                <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+                  <motion.button
                     onClick={handleReset}
-                    className="px-4 py-2 border border-gray-600 rounded-lg hover:bg-gray-800 transition-colors"
+                    className="flex items-center justify-center gap-2 px-6 py-3 bg-transparent border border-[#2A2A2A] rounded-lg hover:bg-[#111111] hover:border-[#FFD700]/50 text-white transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] focus:ring-2 focus:ring-[#FFD700] focus:ring-offset-2 focus:ring-offset-[#0A0A0A]"
+                    whileHover={{ scale: 1.02, y: -1 }}
+                    whileTap={{ scale: 0.98 }}
+                    style={{
+                      fontFamily: 'Geist Sans, system-ui, sans-serif',
+                      fontWeight: 500
+                    }}
                   >
-                    🔄 Try Again
-                  </button>
-                  <button
+                    <RefreshCw className="h-4 w-4" />
+                    Try Again
+                  </motion.button>
+                  <motion.button
                     onClick={handleGoHome}
-                    className="px-4 py-2 bg-gray-700 rounded-lg hover:bg-gray-600 transition-colors"
+                    className="flex items-center justify-center gap-2 px-6 py-3 bg-[#FFD700] text-[#0A0A0A] rounded-lg hover:bg-[#FFD700]/90 transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] focus:ring-2 focus:ring-[#FFD700] focus:ring-offset-2 focus:ring-offset-[#0A0A0A]"
+                    whileHover={{ scale: 1.02, y: -1 }}
+                    whileTap={{ scale: 0.98 }}
+                    style={{
+                      fontFamily: 'Geist Sans, system-ui, sans-serif',
+                      fontWeight: 600
+                    }}
                   >
-                    🏠 Go Home
-                  </button>
+                    <Home className="h-4 w-4" />
+                    Go Home
+                  </motion.button>
                 </div>
 
                 {/* Show error details in development */}
                 {process.env.NODE_ENV === 'development' && (
-                  <div className="mt-4 rounded border border-gray-600 bg-gray-800 p-4 text-left text-sm text-gray-300">
-                    <p className="font-mono">{error.name}: {error.message}</p>
+                  <div className="mt-4 w-full rounded-lg border border-[#2A2A2A] bg-[#0A0A0A] p-4 text-left">
+                    <p 
+                      className="text-[#6B7280] text-sm"
+                      style={{ fontFamily: 'Geist Mono, ui-monospace, monospace' }}
+                    >
+                      {error.name}: {error.message}
+                    </p>
                     {error.digest && (
-                      <p className="mt-2 font-mono text-xs">
+                      <p 
+                        className="mt-2 text-[#6B7280] text-xs"
+                        style={{ fontFamily: 'Geist Mono, ui-monospace, monospace' }}
+                      >
                         Digest: {error.digest}
                       </p>
                     )}
                   </div>
                 )}
 
-                <p className="text-sm text-gray-400">
+                <p 
+                  className="text-sm text-[#6B7280]"
+                  style={{
+                    fontFamily: 'Geist Sans, system-ui, sans-serif',
+                    fontWeight: 400
+                  }}
+                >
                   Need help? Contact{' '}
                   <a
                     href="mailto:support@thehiveuni.com"
-                    className="text-yellow-400 hover:underline"
+                    className="text-[#FFD700] hover:text-[#FFD700]/80 transition-colors duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)]"
+                    style={{
+                      fontFamily: 'Geist Sans, system-ui, sans-serif',
+                      fontWeight: 500
+                    }}
                   >
                     support@thehiveuni.com
                   </a>
                 </p>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </body>
     </html>

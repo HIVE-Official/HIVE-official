@@ -346,7 +346,7 @@ export function OnboardingStepClient({ step }: OnboardingStepClientProps) {
         setIsInitialized(true);
       }
     }
-  }, [onboardingData, update, isAuthLoading, isInitialized, isDevMode]);
+  }, [onboardingData, update, isAuthLoading, isInitialized]);
 
   // Handle invalid step identifiers (support steps 1-5 only)
   if (!isValidOnboardingStep(step)) {

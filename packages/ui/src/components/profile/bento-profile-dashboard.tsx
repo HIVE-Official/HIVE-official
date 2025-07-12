@@ -7,6 +7,7 @@ import { HiveLabCard } from "./hivelab-card";
 import { ToolsCard } from "./tools-card";
 import { CalendarCard } from "./calendar-card";
 import { GhostModeCard } from "./ghost-mode-card";
+import { RequestAccessCard } from "./request-access-card";
 
 // Define static components outside of render
 const SocialPreviewCard = React.memo(() => (
@@ -39,17 +40,17 @@ interface BentoProfileDashboardProps {
   className?: string;
 }
 
-export function BentoProfileDashboard({ user: _user, className }: BentoProfileDashboardProps) {
-  const [_ghostMode, _setGhostMode] = React.useState(false);
+export function BentoProfileDashboard({ user, className }: BentoProfileDashboardProps) {
+  const [ghostMode, setGhostMode] = React.useState(false);
   const [isLoaded, setIsLoaded] = React.useState(false);
 
-  const _mockTools = [
-    { id: "1", name: "Study Timer" },
-    { id: "2", name: "GPA Calc" },
-    { id: "3", name: "Schedule" }
+  const mockTools = [
+    { id: "1", name: "Study Timer", category: "Productivity", users: 1247, icon: "⏱️" },
+    { id: "2", name: "GPA Calc", category: "Academic", users: 892, icon: "📊" },
+    { id: "3", name: "Campus Map", category: "Navigation", users: 2156, icon: "🗺️" }
   ];
 
-  const _mockEvents = [
+  const mockEvents = [
     {
       id: "1",
       title: "CS 250 Exam",
@@ -69,41 +70,99 @@ export function BentoProfileDashboard({ user: _user, className }: BentoProfileDa
     return () => clearTimeout(timer);
   }, []);
 
+  // Create components with props bound
+  const ProfileHeaderCardWithProps = React.useMemo(() => 
+    () => (
+      <ProfileHeaderCard
+        fullName={user.fullName}
+        handle={user.handle}
+        avatarUrl={user.avatarUrl}
+        major={user.major}
+        graduationYear={user.graduationYear}
+        isBuilder={user.isBuilder}
+      />
+    ), [user]
+  );
+
+  const HiveLabCardWithProps = React.useMemo(() => 
+    () => (
+      <HiveLabCard
+        isBuilder={user.isBuilder || false}
+        toolsCreated={user.builderAchievements?.toolsCreated || 0}
+        totalEngagement={user.builderAchievements?.totalEngagement || 0}
+        countdownDate={user.isBuilder ? undefined : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)} // 30 days from now
+      />
+    ), [user]
+  );
+
+  const ToolsCardWithProps = React.useMemo(() => 
+    () => (
+      <ToolsCard tools={mockTools} />
+    ), []
+  );
+
+  const CalendarCardWithProps = React.useMemo(() => 
+    () => (
+      <CalendarCard events={mockEvents} />
+    ), []
+  );
+
+  const GhostModeCardWithProps = React.useMemo(() => 
+    () => (
+      <GhostModeCard 
+        isGhostMode={ghostMode}
+        onToggle={setGhostMode}
+      />
+    ), [ghostMode]
+  );
+
+  const RequestAccessCardWithProps = React.useMemo(() => 
+    () => (
+      <RequestAccessCard />
+    ), []
+  );
+
   const cards: BentoCard[] = [
     {
       id: "profile-header",
       size: "2x1",
       priority: 1,
-      component: ProfileHeaderCard
+      component: ProfileHeaderCardWithProps
     },
     {
       id: "hivelab",
       size: "1x2",
       priority: 2,
-      component: HiveLabCard
+      component: HiveLabCardWithProps
     },
     {
       id: "calendar",
       size: "1x2", 
       priority: 3,
-      component: CalendarCard
+      component: CalendarCardWithProps
     },
     {
       id: "tools",
       size: "2x2",
       priority: 4,
-      component: ToolsCard
+      component: ToolsCardWithProps
     },
     {
       id: "ghost-mode",
       size: "1x1",
       priority: 5,
-      component: GhostModeCard
+      component: GhostModeCardWithProps
+    },
+    {
+      id: "request-access",
+      size: "1x2",
+      priority: 6,
+      component: RequestAccessCardWithProps
     },
     {
       id: "social-preview",
       size: "1x1",
-      priority: 6,
+      priority: 7,
       isLocked: true,
       component: SocialPreviewCard
     }

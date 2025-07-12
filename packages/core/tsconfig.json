@@ -10,11 +10,15 @@
     "declarationMap": true,
     "sourceMap": true,
     "rootDir": "src",
-    "module": "esnext",
-    "target": "esnext",
+    "module": "commonjs",
+    "target": "es2020",
     "moduleResolution": "node",
     "pretty": true,
-    "composite": true
+    "composite": true,
+    "emitDeclarationOnly": false,
+    "allowJs": true,
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"],
   "exclude": [

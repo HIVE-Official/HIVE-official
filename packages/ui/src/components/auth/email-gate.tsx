@@ -77,6 +77,13 @@ export const EmailGate: React.FC<EmailGateProps> = ({
 
       setIsSuccess(true);
       
+      // In development mode with dev_verify_url, redirect immediately
+      if (data.dev_mode && data.dev_verify_url) {
+        setTimeout(() => {
+          window.location.href = data.dev_verify_url;
+        }, 1000);
+      }
+      
       // Call success callback
       onSuccess?.(email);
       

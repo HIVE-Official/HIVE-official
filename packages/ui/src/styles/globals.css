@@ -1,6 +1,9 @@
 /* Import font configuration */
 @import './fonts.css';
 
+/* Import enhanced animations for visual improvements */
+@import './enhanced-animations.css';
+
 @import "tailwindcss";
 
 @layer base {
@@ -75,6 +78,12 @@
   * {
     border-color: hsl(var(--border));
   }
+  
+  /* Reset borders for elements that shouldn't have them */
+  html, body, div, span, p, h1, h2, h3, h4, h5, h6 {
+    border-width: 0;
+  }
+  
   body {
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
@@ -395,9 +404,9 @@
   .border-green-500,
   .border-blue-500 {
     /* If you see this in DevTools, you have a design system violation */
-    background: #ff0000 !important;
-    color: #ffffff !important;
-    border: 2px solid #ff0000 !important;
+    background: #FFD700 !important;
+    color: #0A0A0A !important;
+    border: 2px solid #FFD700 !important;
   }
 }
 

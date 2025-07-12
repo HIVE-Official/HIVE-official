@@ -68,7 +68,7 @@ const SplashScreen = ({
       </motion.div>
       <motion.p
         variants={taglineVariants}
-        className="mt-4 text-lg font-medium text-gray-400"
+        className="mt-4 text-lg font-medium text-muted-foreground"
       >
         {tagline}
       </motion.p>
