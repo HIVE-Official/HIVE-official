@@ -185,7 +185,7 @@ export async function POST(
     const decodedToken = await auth.verifyIdToken(token);
 
     // Check rate limiting
-    const rateLimitResult = postCreationRateLimit(decodedToken.uid);
+    const rateLimitResult = postCreationRateLimit.check(decodedToken.uid);
     if (!rateLimitResult.success) {
       return NextResponse.json(
         {

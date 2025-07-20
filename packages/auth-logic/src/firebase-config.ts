@@ -1,5 +1,5 @@
-import { initializeApp, getApps } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { initializeApp, getApps, type FirebaseApp } from "firebase/app";
+import { getAuth, type Auth } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "demo-api-key",
@@ -21,8 +21,8 @@ const isDevWithoutFirebase =
   process.env.NODE_ENV === "development" &&
   !process.env.NEXT_PUBLIC_FIREBASE_API_KEY;
 
-let app: any = null;
-let auth: any = null;
+let app: FirebaseApp | null = null;
+let auth: Auth | null = null;
 
 if (!isDevWithoutFirebase) {
   // Initialize Firebase only if it hasn't been initialized already
@@ -35,7 +35,7 @@ if (!isDevWithoutFirebase) {
     currentUser: null,
     onAuthStateChanged: () => () => {},
     signOut: () => Promise.resolve(),
-  };
+  } as unknown as Auth;
 }
 
 export { auth };

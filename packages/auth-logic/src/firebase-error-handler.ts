@@ -1,5 +1,5 @@
-import { FirebaseError } from "firebase/app";
-import { AuthError } from "firebase/auth";
+import type { FirebaseError } from "firebase/app";
+import type { AuthError } from "firebase/auth";
 
 // User-friendly error messages for common Firebase Auth errors
 export const AUTH_ERROR_MESSAGES: Record<string, string> = {
@@ -81,7 +81,7 @@ export class FirebaseErrorHandler {
     return (
       error instanceof Error &&
       "code" in error &&
-      typeof (error as any).code === "string"
+      typeof (error as { code?: unknown }).code === "string"
     );
   }
 

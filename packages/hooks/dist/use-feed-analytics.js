@@ -1,18 +1,21 @@
-import { useEffect, useRef, useCallback, useState } from 'react';
-import { useAnalytics } from './use-analytics';
-import { createFeedEvent, hashUserIdForFeed } from '@hive/core';
-export const useFeedAnalytics = ({ spaceId, userId, config = {}, }) => {
-    const { track } = useAnalytics();
-    const [isSessionActive, setIsSessionActive] = useState(false);
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.useFeedAnalytics = void 0;
+const react_1 = require("react");
+const use_analytics_1 = require("./use-analytics");
+const core_1 = require("@hive/core");
+const useFeedAnalytics = ({ spaceId, userId, config = {}, }) => {
+    const { track } = (0, use_analytics_1.useAnalytics)();
+    const [isSessionActive, setIsSessionActive] = (0, react_1.useState)(false);
     // Session and heartbeat management
-    const sessionIdRef = useRef();
-    const heartbeatIntervalRef = useRef();
-    const lastInteractionRef = useRef(new Date());
-    const activeTimeRef = useRef(0);
-    const lastHeartbeatRef = useRef(new Date());
+    const sessionIdRef = (0, react_1.useRef)();
+    const heartbeatIntervalRef = (0, react_1.useRef)();
+    const lastInteractionRef = (0, react_1.useRef)(new Date());
+    const activeTimeRef = (0, react_1.useRef)(0);
+    const lastHeartbeatRef = (0, react_1.useRef)(new Date());
     // Event batching
-    const eventBatchRef = useRef([]);
-    const batchTimeoutRef = useRef();
+    const eventBatchRef = (0, react_1.useRef)([]);
+    const batchTimeoutRef = (0, react_1.useRef)();
     // Configuration with defaults
     const analyticsConfig = {
         batchSize: 100,
@@ -27,11 +30,11 @@ export const useFeedAnalytics = ({ spaceId, userId, config = {}, }) => {
         ...config,
     };
     // Generate session ID
-    const generateSessionId = useCallback(() => {
+    const generateSessionId = (0, react_1.useCallback)(() => {
         return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
     }, []);
     // Flush event batch
-    const flushEvents = useCallback(() => {
+    const flushEvents = (0, react_1.useCallback)(() => {
         if (eventBatchRef.current.length === 0)
             return;
         const events = [...eventBatchRef.current];
@@ -43,7 +46,7 @@ export const useFeedAnalytics = ({ spaceId, userId, config = {}, }) => {
                 properties: {
                     events,
                     spaceId,
-                    userId: analyticsConfig.hashUserIds ? hashUserIdForFeed(userId) : userId,
+                    userId: analyticsConfig.hashUserIds ? (0, core_1.hashUserIdForFeed)(userId) : userId,
                     batchSize: events.length,
                     timestamp: new Date(),
                 }
@@ -56,7 +59,7 @@ export const useFeedAnalytics = ({ spaceId, userId, config = {}, }) => {
         }
     }, [track, spaceId, userId, analyticsConfig.hashUserIds]);
     // Add event to batch
-    const addEventToBatch = useCallback((event) => {
+    const addEventToBatch = (0, react_1.useCallback)((event) => {
         // Apply sampling
         if (Math.random() > analyticsConfig.sampleRate)
             return;
@@ -74,11 +77,11 @@ export const useFeedAnalytics = ({ spaceId, userId, config = {}, }) => {
         }
     }, [analyticsConfig.batchSize, analyticsConfig.sampleRate, analyticsConfig.flushInterval, flushEvents]);
     // Track user interaction
-    const trackInteraction = useCallback(() => {
+    const trackInteraction = (0, react_1.useCallback)(() => {
         lastInteractionRef.current = new Date();
     }, []);
     // Heartbeat function
-    const sendHeartbeat = useCallback(() => {
+    const sendHeartbeat = (0, react_1.useCallback)(() => {
         if (!isSessionActive || !sessionIdRef.current)
             return;
         const now = new Date();
@@ -91,9 +94,9 @@ export const useFeedAnalytics = ({ spaceId, userId, config = {}, }) => {
         }
         lastHeartbeatRef.current = now;
         // Send heartbeat event
-        const heartbeatEvent = createFeedEvent('space_heartbeat', {
+        const heartbeatEvent = (0, core_1.createFeedEvent)('space_heartbeat', {
             spaceId,
-            userId: analyticsConfig.hashUserIds ? hashUserIdForFeed(userId) : userId,
+            userId: analyticsConfig.hashUserIds ? (0, core_1.hashUserIdForFeed)(userId) : userId,
             metadata: {
                 sessionId: sessionIdRef.current,
                 activeTime: activeTimeRef.current,
@@ -105,7 +108,7 @@ export const useFeedAnalytics = ({ spaceId, userId, config = {}, }) => {
         addEventToBatch(heartbeatEvent);
     }, [isSessionActive, analyticsConfig.hashUserIds, userId, spaceId, addEventToBatch]);
     // Start session
-    const startSession = useCallback(() => {
+    const startSession = (0, react_1.useCallback)(() => {
         if (isSessionActive)
             return;
         sessionIdRef.current = generateSessionId();
@@ -116,9 +119,9 @@ export const useFeedAnalytics = ({ spaceId, userId, config = {}, }) => {
         // Start heartbeat
         heartbeatIntervalRef.current = setInterval(sendHeartbeat, 30000); // Every 30 seconds
         // Track session start with space heartbeat
-        const sessionStartEvent = createFeedEvent('space_heartbeat', {
+        const sessionStartEvent = (0, core_1.createFeedEvent)('space_heartbeat', {
             spaceId,
-            userId: analyticsConfig.hashUserIds ? hashUserIdForFeed(userId) : userId,
+            userId: analyticsConfig.hashUserIds ? (0, core_1.hashUserIdForFeed)(userId) : userId,
             metadata: {
                 sessionId: sessionIdRef.current,
                 activeTime: 0,
@@ -130,7 +133,7 @@ export const useFeedAnalytics = ({ spaceId, userId, config = {}, }) => {
         addEventToBatch(sessionStartEvent);
     }, [isSessionActive, generateSessionId, sendHeartbeat, spaceId, userId, analyticsConfig.hashUserIds, addEventToBatch]);
     // End session
-    const endSession = useCallback(() => {
+    const endSession = (0, react_1.useCallback)(() => {
         if (!isSessionActive || !sessionIdRef.current)
             return;
         // Clear heartbeat
@@ -139,9 +142,9 @@ export const useFeedAnalytics = ({ spaceId, userId, config = {}, }) => {
             heartbeatIntervalRef.current = undefined;
         }
         // Track session end with final heartbeat
-        const sessionEndEvent = createFeedEvent('space_heartbeat', {
+        const sessionEndEvent = (0, core_1.createFeedEvent)('space_heartbeat', {
             spaceId,
-            userId: analyticsConfig.hashUserIds ? hashUserIdForFeed(userId) : userId,
+            userId: analyticsConfig.hashUserIds ? (0, core_1.hashUserIdForFeed)(userId) : userId,
             metadata: {
                 sessionId: sessionIdRef.current,
                 activeTime: activeTimeRef.current,
@@ -157,12 +160,12 @@ export const useFeedAnalytics = ({ spaceId, userId, config = {}, }) => {
         sessionIdRef.current = undefined;
     }, [isSessionActive, spaceId, userId, analyticsConfig.hashUserIds, addEventToBatch, flushEvents]);
     // Event tracking functions
-    const trackPostCreated = useCallback((data) => {
+    const trackPostCreated = (0, react_1.useCallback)((data) => {
         trackInteraction();
-        const event = createFeedEvent('post_created', {
+        const event = (0, core_1.createFeedEvent)('post_created', {
             postId: data.postId,
             spaceId,
-            userId: analyticsConfig.hashUserIds ? hashUserIdForFeed(userId) : userId,
+            userId: analyticsConfig.hashUserIds ? (0, core_1.hashUserIdForFeed)(userId) : userId,
             metadata: {
                 postType: data.postType,
                 contentLength: data.contentLength,
@@ -174,12 +177,12 @@ export const useFeedAnalytics = ({ spaceId, userId, config = {}, }) => {
         });
         addEventToBatch(event);
     }, [trackInteraction, spaceId, userId, analyticsConfig.hashUserIds, addEventToBatch]);
-    const trackPostReacted = useCallback((data) => {
+    const trackPostReacted = (0, react_1.useCallback)((data) => {
         trackInteraction();
-        const event = createFeedEvent('post_reacted', {
+        const event = (0, core_1.createFeedEvent)('post_reacted', {
             postId: data.postId,
             spaceId,
-            userId: analyticsConfig.hashUserIds ? hashUserIdForFeed(userId) : userId,
+            userId: analyticsConfig.hashUserIds ? (0, core_1.hashUserIdForFeed)(userId) : userId,
             metadata: {
                 reaction: data.reaction,
                 action: data.action,
@@ -190,12 +193,12 @@ export const useFeedAnalytics = ({ spaceId, userId, config = {}, }) => {
         });
         addEventToBatch(event);
     }, [trackInteraction, spaceId, userId, analyticsConfig.hashUserIds, addEventToBatch]);
-    const trackPostViewed = useCallback((data) => {
+    const trackPostViewed = (0, react_1.useCallback)((data) => {
         trackInteraction();
-        const event = createFeedEvent('post_viewed', {
+        const event = (0, core_1.createFeedEvent)('post_viewed', {
             postId: data.postId,
             spaceId,
-            userId: analyticsConfig.hashUserIds ? hashUserIdForFeed(userId) : userId,
+            userId: analyticsConfig.hashUserIds ? (0, core_1.hashUserIdForFeed)(userId) : userId,
             metadata: {
                 viewDuration: data.viewDuration,
                 scrolledToEnd: data.scrolledToEnd,
@@ -206,12 +209,12 @@ export const useFeedAnalytics = ({ spaceId, userId, config = {}, }) => {
         });
         addEventToBatch(event);
     }, [trackInteraction, spaceId, userId, analyticsConfig.hashUserIds, addEventToBatch]);
-    const trackPostEdited = useCallback((data) => {
+    const trackPostEdited = (0, react_1.useCallback)((data) => {
         trackInteraction();
-        const event = createFeedEvent('post_edited', {
+        const event = (0, core_1.createFeedEvent)('post_edited', {
             postId: data.postId,
             spaceId,
-            userId: analyticsConfig.hashUserIds ? hashUserIdForFeed(userId) : userId,
+            userId: analyticsConfig.hashUserIds ? (0, core_1.hashUserIdForFeed)(userId) : userId,
             metadata: {
                 editTime: data.editTime,
                 contentLengthBefore: data.contentLengthBefore,
@@ -221,12 +224,12 @@ export const useFeedAnalytics = ({ spaceId, userId, config = {}, }) => {
         });
         addEventToBatch(event);
     }, [trackInteraction, spaceId, userId, analyticsConfig.hashUserIds, addEventToBatch]);
-    const trackPostDeleted = useCallback((data) => {
+    const trackPostDeleted = (0, react_1.useCallback)((data) => {
         trackInteraction();
-        const event = createFeedEvent('post_deleted', {
+        const event = (0, core_1.createFeedEvent)('post_deleted', {
             postId: data.postId,
             spaceId,
-            userId: analyticsConfig.hashUserIds ? hashUserIdForFeed(userId) : userId,
+            userId: analyticsConfig.hashUserIds ? (0, core_1.hashUserIdForFeed)(userId) : userId,
             metadata: {
                 deletedBy: data.deletedBy,
                 postAge: data.postAge,
@@ -237,11 +240,11 @@ export const useFeedAnalytics = ({ spaceId, userId, config = {}, }) => {
         });
         addEventToBatch(event);
     }, [trackInteraction, spaceId, userId, analyticsConfig.hashUserIds, addEventToBatch]);
-    const trackSpaceJoined = useCallback((data) => {
+    const trackSpaceJoined = (0, react_1.useCallback)((data) => {
         trackInteraction();
-        const event = createFeedEvent('space_joined', {
+        const event = (0, core_1.createFeedEvent)('space_joined', {
             spaceId,
-            userId: analyticsConfig.hashUserIds ? hashUserIdForFeed(userId) : userId,
+            userId: analyticsConfig.hashUserIds ? (0, core_1.hashUserIdForFeed)(userId) : userId,
             metadata: {
                 joinMethod: data.joinMethod,
                 referrerSpaceId: data.referrerSpaceId,
@@ -250,11 +253,11 @@ export const useFeedAnalytics = ({ spaceId, userId, config = {}, }) => {
         });
         addEventToBatch(event);
     }, [trackInteraction, spaceId, userId, analyticsConfig.hashUserIds, addEventToBatch]);
-    const trackSpaceLeft = useCallback((data) => {
+    const trackSpaceLeft = (0, react_1.useCallback)((data) => {
         trackInteraction();
-        const event = createFeedEvent('space_left', {
+        const event = (0, core_1.createFeedEvent)('space_left', {
             spaceId,
-            userId: analyticsConfig.hashUserIds ? hashUserIdForFeed(userId) : userId,
+            userId: analyticsConfig.hashUserIds ? (0, core_1.hashUserIdForFeed)(userId) : userId,
             metadata: {
                 membershipDuration: data.membershipDuration,
                 postsCreated: data.postsCreated,
@@ -265,11 +268,11 @@ export const useFeedAnalytics = ({ spaceId, userId, config = {}, }) => {
         });
         addEventToBatch(event);
     }, [trackInteraction, spaceId, userId, analyticsConfig.hashUserIds, addEventToBatch]);
-    const trackBuilderAction = useCallback((data) => {
+    const trackBuilderAction = (0, react_1.useCallback)((data) => {
         trackInteraction();
-        const event = createFeedEvent('builder_action', {
+        const event = (0, core_1.createFeedEvent)('builder_action', {
             spaceId,
-            userId: analyticsConfig.hashUserIds ? hashUserIdForFeed(userId) : userId,
+            userId: analyticsConfig.hashUserIds ? (0, core_1.hashUserIdForFeed)(userId) : userId,
             metadata: {
                 action: data.action,
                 targetId: data.targetId,
@@ -279,11 +282,11 @@ export const useFeedAnalytics = ({ spaceId, userId, config = {}, }) => {
         });
         addEventToBatch(event);
     }, [trackInteraction, spaceId, userId, analyticsConfig.hashUserIds, addEventToBatch]);
-    const trackFeedViewed = useCallback((data) => {
+    const trackFeedViewed = (0, react_1.useCallback)((data) => {
         trackInteraction();
-        const event = createFeedEvent('space_feed_viewed', {
+        const event = (0, core_1.createFeedEvent)('space_feed_viewed', {
             spaceId,
-            userId: analyticsConfig.hashUserIds ? hashUserIdForFeed(userId) : userId,
+            userId: analyticsConfig.hashUserIds ? (0, core_1.hashUserIdForFeed)(userId) : userId,
             metadata: {
                 postsVisible: data.postsVisible,
                 scrollDepth: data.scrollDepth,
@@ -294,7 +297,7 @@ export const useFeedAnalytics = ({ spaceId, userId, config = {}, }) => {
         addEventToBatch(event);
     }, [trackInteraction, spaceId, userId, analyticsConfig.hashUserIds, addEventToBatch]);
     // Auto-start session on mount
-    useEffect(() => {
+    (0, react_1.useEffect)(() => {
         startSession();
         // Handle visibility change
         const handleVisibilityChange = () => {
@@ -329,4 +332,5 @@ export const useFeedAnalytics = ({ spaceId, userId, config = {}, }) => {
         isSessionActive,
     };
 };
+exports.useFeedAnalytics = useFeedAnalytics;
 //# sourceMappingURL=use-feed-analytics.js.map

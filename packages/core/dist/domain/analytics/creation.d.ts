@@ -33,15 +33,15 @@ export declare const CreationAnalyticsEventSchema: z.ZodObject<{
     optedOut: z.ZodDefault<z.ZodBoolean>;
     anonymized: z.ZodDefault<z.ZodBoolean>;
 }, "strip", z.ZodTypeAny, {
+    timestamp: Date;
     sessionId: string;
     eventType: "tool_created" | "tool_updated" | "tool_deleted" | "tool_published" | "tool_shared" | "tool_forked" | "tool_fork_source" | "tool_opened" | "tool_preview" | "tool_exported" | "element_added" | "element_removed" | "element_configured" | "element_moved" | "element_resized" | "element_duplicated" | "element_preset_used" | "builder_session_start" | "builder_session_end" | "canvas_mode_changed" | "device_mode_changed" | "element_library_searched" | "properties_panel_used" | "json_viewer_used" | "undo_action" | "redo_action" | "tool_instance_opened" | "tool_instance_submitted" | "tool_instance_abandoned" | "tool_element_interacted" | "tool_validation_error" | "tool_data_saved" | "share_link_created" | "share_link_accessed" | "tool_embedded" | "tool_feed_posted";
-    timestamp: Date;
     eventId: string;
     optedOut: boolean;
     anonymized: boolean;
+    metadata?: Record<string, any> | undefined;
     elementId?: string | undefined;
     elementType?: string | undefined;
-    metadata?: Record<string, any> | undefined;
     spaceId?: string | undefined;
     isSpaceTool?: boolean | undefined;
     toolId?: string | undefined;
@@ -58,13 +58,13 @@ export declare const CreationAnalyticsEventSchema: z.ZodObject<{
     loadTime?: number | undefined;
     renderTime?: number | undefined;
 }, {
+    timestamp: Date;
     sessionId: string;
     eventType: "tool_created" | "tool_updated" | "tool_deleted" | "tool_published" | "tool_shared" | "tool_forked" | "tool_fork_source" | "tool_opened" | "tool_preview" | "tool_exported" | "element_added" | "element_removed" | "element_configured" | "element_moved" | "element_resized" | "element_duplicated" | "element_preset_used" | "builder_session_start" | "builder_session_end" | "canvas_mode_changed" | "device_mode_changed" | "element_library_searched" | "properties_panel_used" | "json_viewer_used" | "undo_action" | "redo_action" | "tool_instance_opened" | "tool_instance_submitted" | "tool_instance_abandoned" | "tool_element_interacted" | "tool_validation_error" | "tool_data_saved" | "share_link_created" | "share_link_accessed" | "tool_embedded" | "tool_feed_posted";
-    timestamp: Date;
     eventId: string;
+    metadata?: Record<string, any> | undefined;
     elementId?: string | undefined;
     elementType?: string | undefined;
-    metadata?: Record<string, any> | undefined;
     spaceId?: string | undefined;
     isSpaceTool?: boolean | undefined;
     toolId?: string | undefined;
@@ -123,29 +123,29 @@ export declare const ToolCreatedEventSchema: z.ZodObject<{
     }, "strip", z.ZodTypeAny, {
         hasDescription: boolean;
         initialElementsCount: number;
-        creationSource: "fork" | "scratch" | "template";
+        creationSource: "template" | "fork" | "scratch";
         templateUsed?: string | undefined;
     }, {
         hasDescription: boolean;
         initialElementsCount: number;
-        creationSource: "fork" | "scratch" | "template";
+        creationSource: "template" | "fork" | "scratch";
         templateUsed?: string | undefined;
     }>>;
 }, "strip", z.ZodTypeAny, {
+    timestamp: Date;
     sessionId: string;
     eventType: "tool_created";
-    timestamp: Date;
     eventId: string;
     optedOut: boolean;
     anonymized: boolean;
-    elementId?: string | undefined;
-    elementType?: string | undefined;
     metadata?: {
         hasDescription: boolean;
         initialElementsCount: number;
-        creationSource: "fork" | "scratch" | "template";
+        creationSource: "template" | "fork" | "scratch";
         templateUsed?: string | undefined;
     } | undefined;
+    elementId?: string | undefined;
+    elementType?: string | undefined;
     spaceId?: string | undefined;
     isSpaceTool?: boolean | undefined;
     toolId?: string | undefined;
@@ -162,18 +162,18 @@ export declare const ToolCreatedEventSchema: z.ZodObject<{
     loadTime?: number | undefined;
     renderTime?: number | undefined;
 }, {
+    timestamp: Date;
     sessionId: string;
     eventType: "tool_created";
-    timestamp: Date;
     eventId: string;
-    elementId?: string | undefined;
-    elementType?: string | undefined;
     metadata?: {
         hasDescription: boolean;
         initialElementsCount: number;
-        creationSource: "fork" | "scratch" | "template";
+        creationSource: "template" | "fork" | "scratch";
         templateUsed?: string | undefined;
     } | undefined;
+    elementId?: string | undefined;
+    elementType?: string | undefined;
     spaceId?: string | undefined;
     isSpaceTool?: boolean | undefined;
     toolId?: string | undefined;
@@ -246,14 +246,12 @@ export declare const ToolUpdatedEventSchema: z.ZodObject<{
         editDuration: number;
     }>>;
 }, "strip", z.ZodTypeAny, {
+    timestamp: Date;
     sessionId: string;
     eventType: "tool_updated";
-    timestamp: Date;
     eventId: string;
     optedOut: boolean;
     anonymized: boolean;
-    elementId?: string | undefined;
-    elementType?: string | undefined;
     metadata?: {
         versionChanged: boolean;
         newVersion: string;
@@ -262,6 +260,8 @@ export declare const ToolUpdatedEventSchema: z.ZodObject<{
         fieldsChanged: string[];
         editDuration: number;
     } | undefined;
+    elementId?: string | undefined;
+    elementType?: string | undefined;
     spaceId?: string | undefined;
     isSpaceTool?: boolean | undefined;
     toolId?: string | undefined;
@@ -278,12 +278,10 @@ export declare const ToolUpdatedEventSchema: z.ZodObject<{
     loadTime?: number | undefined;
     renderTime?: number | undefined;
 }, {
+    timestamp: Date;
     sessionId: string;
     eventType: "tool_updated";
-    timestamp: Date;
     eventId: string;
-    elementId?: string | undefined;
-    elementType?: string | undefined;
     metadata?: {
         versionChanged: boolean;
         newVersion: string;
@@ -292,6 +290,8 @@ export declare const ToolUpdatedEventSchema: z.ZodObject<{
         fieldsChanged: string[];
         editDuration: number;
     } | undefined;
+    elementId?: string | undefined;
+    elementType?: string | undefined;
     spaceId?: string | undefined;
     isSpaceTool?: boolean | undefined;
     toolId?: string | undefined;
@@ -376,14 +376,12 @@ export declare const ElementAddedEventSchema: z.ZodObject<{
         librarySearchQuery?: string | undefined;
     }>>;
 }, "strip", z.ZodTypeAny, {
+    timestamp: Date;
     sessionId: string;
     eventType: "element_added";
-    timestamp: Date;
     eventId: string;
     optedOut: boolean;
     anonymized: boolean;
-    elementId?: string | undefined;
-    elementType?: string | undefined;
     metadata?: {
         position: {
             x: number;
@@ -394,6 +392,8 @@ export declare const ElementAddedEventSchema: z.ZodObject<{
         presetUsed?: string | undefined;
         librarySearchQuery?: string | undefined;
     } | undefined;
+    elementId?: string | undefined;
+    elementType?: string | undefined;
     spaceId?: string | undefined;
     isSpaceTool?: boolean | undefined;
     toolId?: string | undefined;
@@ -410,12 +410,10 @@ export declare const ElementAddedEventSchema: z.ZodObject<{
     loadTime?: number | undefined;
     renderTime?: number | undefined;
 }, {
+    timestamp: Date;
     sessionId: string;
     eventType: "element_added";
-    timestamp: Date;
     eventId: string;
-    elementId?: string | undefined;
-    elementType?: string | undefined;
     metadata?: {
         position: {
             x: number;
@@ -426,6 +424,8 @@ export declare const ElementAddedEventSchema: z.ZodObject<{
         presetUsed?: string | undefined;
         librarySearchQuery?: string | undefined;
     } | undefined;
+    elementId?: string | undefined;
+    elementType?: string | undefined;
     spaceId?: string | undefined;
     isSpaceTool?: boolean | undefined;
     toolId?: string | undefined;
@@ -495,14 +495,12 @@ export declare const ElementConfiguredEventSchema: z.ZodObject<{
         validationErrors?: string[] | undefined;
     }>>;
 }, "strip", z.ZodTypeAny, {
+    timestamp: Date;
     sessionId: string;
     eventType: "element_configured";
-    timestamp: Date;
     eventId: string;
     optedOut: boolean;
     anonymized: boolean;
-    elementId?: string | undefined;
-    elementType?: string | undefined;
     metadata?: {
         configMethod: "properties_panel" | "json_editor" | "inline_edit";
         propertiesChanged: string[];
@@ -510,6 +508,8 @@ export declare const ElementConfiguredEventSchema: z.ZodObject<{
         timeSpent: number;
         validationErrors?: string[] | undefined;
     } | undefined;
+    elementId?: string | undefined;
+    elementType?: string | undefined;
     spaceId?: string | undefined;
     isSpaceTool?: boolean | undefined;
     toolId?: string | undefined;
@@ -526,12 +526,10 @@ export declare const ElementConfiguredEventSchema: z.ZodObject<{
     loadTime?: number | undefined;
     renderTime?: number | undefined;
 }, {
+    timestamp: Date;
     sessionId: string;
     eventType: "element_configured";
-    timestamp: Date;
     eventId: string;
-    elementId?: string | undefined;
-    elementType?: string | undefined;
     metadata?: {
         configMethod: "properties_panel" | "json_editor" | "inline_edit";
         propertiesChanged: string[];
@@ -539,6 +537,8 @@ export declare const ElementConfiguredEventSchema: z.ZodObject<{
         timeSpent: number;
         validationErrors?: string[] | undefined;
     } | undefined;
+    elementId?: string | undefined;
+    elementType?: string | undefined;
     spaceId?: string | undefined;
     isSpaceTool?: boolean | undefined;
     toolId?: string | undefined;
@@ -605,8 +605,8 @@ export declare const BuilderSessionEventSchema: z.ZodObject<{
         elementsConfigured?: number | undefined;
         undoCount?: number | undefined;
         redoCount?: number | undefined;
-        modesUsed?: ("preview" | "code" | "design")[] | undefined;
-        deviceModesUsed?: ("desktop" | "tablet" | "mobile")[] | undefined;
+        modesUsed?: ("code" | "preview" | "design")[] | undefined;
+        deviceModesUsed?: ("mobile" | "desktop" | "tablet")[] | undefined;
         exitReason?: "abandon" | "share" | "save" | "publish" | undefined;
     }, {
         sessionDuration?: number | undefined;
@@ -615,19 +615,17 @@ export declare const BuilderSessionEventSchema: z.ZodObject<{
         elementsConfigured?: number | undefined;
         undoCount?: number | undefined;
         redoCount?: number | undefined;
-        modesUsed?: ("preview" | "code" | "design")[] | undefined;
-        deviceModesUsed?: ("desktop" | "tablet" | "mobile")[] | undefined;
+        modesUsed?: ("code" | "preview" | "design")[] | undefined;
+        deviceModesUsed?: ("mobile" | "desktop" | "tablet")[] | undefined;
         exitReason?: "abandon" | "share" | "save" | "publish" | undefined;
     }>>;
 }, "strip", z.ZodTypeAny, {
+    timestamp: Date;
     sessionId: string;
     eventType: "builder_session_start" | "builder_session_end";
-    timestamp: Date;
     eventId: string;
     optedOut: boolean;
     anonymized: boolean;
-    elementId?: string | undefined;
-    elementType?: string | undefined;
     metadata?: {
         sessionDuration?: number | undefined;
         elementsAdded?: number | undefined;
@@ -635,10 +633,12 @@ export declare const BuilderSessionEventSchema: z.ZodObject<{
         elementsConfigured?: number | undefined;
         undoCount?: number | undefined;
         redoCount?: number | undefined;
-        modesUsed?: ("preview" | "code" | "design")[] | undefined;
-        deviceModesUsed?: ("desktop" | "tablet" | "mobile")[] | undefined;
+        modesUsed?: ("code" | "preview" | "design")[] | undefined;
+        deviceModesUsed?: ("mobile" | "desktop" | "tablet")[] | undefined;
         exitReason?: "abandon" | "share" | "save" | "publish" | undefined;
     } | undefined;
+    elementId?: string | undefined;
+    elementType?: string | undefined;
     spaceId?: string | undefined;
     isSpaceTool?: boolean | undefined;
     toolId?: string | undefined;
@@ -655,12 +655,10 @@ export declare const BuilderSessionEventSchema: z.ZodObject<{
     loadTime?: number | undefined;
     renderTime?: number | undefined;
 }, {
+    timestamp: Date;
     sessionId: string;
     eventType: "builder_session_start" | "builder_session_end";
-    timestamp: Date;
     eventId: string;
-    elementId?: string | undefined;
-    elementType?: string | undefined;
     metadata?: {
         sessionDuration?: number | undefined;
         elementsAdded?: number | undefined;
@@ -668,10 +666,12 @@ export declare const BuilderSessionEventSchema: z.ZodObject<{
         elementsConfigured?: number | undefined;
         undoCount?: number | undefined;
         redoCount?: number | undefined;
-        modesUsed?: ("preview" | "code" | "design")[] | undefined;
-        deviceModesUsed?: ("desktop" | "tablet" | "mobile")[] | undefined;
+        modesUsed?: ("code" | "preview" | "design")[] | undefined;
+        deviceModesUsed?: ("mobile" | "desktop" | "tablet")[] | undefined;
         exitReason?: "abandon" | "share" | "save" | "publish" | undefined;
     } | undefined;
+    elementId?: string | undefined;
+    elementType?: string | undefined;
     spaceId?: string | undefined;
     isSpaceTool?: boolean | undefined;
     toolId?: string | undefined;
@@ -727,31 +727,31 @@ export declare const ToolInstanceOpenedEventSchema: z.ZodObject<{
         isFirstTime: z.ZodBoolean;
         deviceType: z.ZodEnum<["desktop", "tablet", "mobile"]>;
     }, "strip", z.ZodTypeAny, {
-        deviceType: "desktop" | "tablet" | "mobile";
+        deviceType: "mobile" | "desktop" | "tablet";
         source: "feed" | "direct" | "share_link" | "embed";
         isFirstTime: boolean;
         referrer?: string | undefined;
     }, {
-        deviceType: "desktop" | "tablet" | "mobile";
+        deviceType: "mobile" | "desktop" | "tablet";
         source: "feed" | "direct" | "share_link" | "embed";
         isFirstTime: boolean;
         referrer?: string | undefined;
     }>>;
 }, "strip", z.ZodTypeAny, {
+    timestamp: Date;
     sessionId: string;
     eventType: "tool_instance_opened";
-    timestamp: Date;
     eventId: string;
     optedOut: boolean;
     anonymized: boolean;
-    elementId?: string | undefined;
-    elementType?: string | undefined;
     metadata?: {
-        deviceType: "desktop" | "tablet" | "mobile";
+        deviceType: "mobile" | "desktop" | "tablet";
         source: "feed" | "direct" | "share_link" | "embed";
         isFirstTime: boolean;
         referrer?: string | undefined;
     } | undefined;
+    elementId?: string | undefined;
+    elementType?: string | undefined;
     spaceId?: string | undefined;
     isSpaceTool?: boolean | undefined;
     toolId?: string | undefined;
@@ -768,18 +768,18 @@ export declare const ToolInstanceOpenedEventSchema: z.ZodObject<{
     loadTime?: number | undefined;
     renderTime?: number | undefined;
 }, {
+    timestamp: Date;
     sessionId: string;
     eventType: "tool_instance_opened";
-    timestamp: Date;
     eventId: string;
-    elementId?: string | undefined;
-    elementType?: string | undefined;
     metadata?: {
-        deviceType: "desktop" | "tablet" | "mobile";
+        deviceType: "mobile" | "desktop" | "tablet";
         source: "feed" | "direct" | "share_link" | "embed";
         isFirstTime: boolean;
         referrer?: string | undefined;
     } | undefined;
+    elementId?: string | undefined;
+    elementType?: string | undefined;
     spaceId?: string | undefined;
     isSpaceTool?: boolean | undefined;
     toolId?: string | undefined;
@@ -852,14 +852,12 @@ export declare const ToolInstanceSubmittedEventSchema: z.ZodObject<{
         retryCount: number;
     }>>;
 }, "strip", z.ZodTypeAny, {
+    timestamp: Date;
     sessionId: string;
     eventType: "tool_instance_submitted";
-    timestamp: Date;
     eventId: string;
     optedOut: boolean;
     anonymized: boolean;
-    elementId?: string | undefined;
-    elementType?: string | undefined;
     metadata?: {
         isAnonymous: boolean;
         validationErrors: number;
@@ -868,6 +866,8 @@ export declare const ToolInstanceSubmittedEventSchema: z.ZodObject<{
         dataSize: number;
         retryCount: number;
     } | undefined;
+    elementId?: string | undefined;
+    elementType?: string | undefined;
     spaceId?: string | undefined;
     isSpaceTool?: boolean | undefined;
     toolId?: string | undefined;
@@ -884,12 +884,10 @@ export declare const ToolInstanceSubmittedEventSchema: z.ZodObject<{
     loadTime?: number | undefined;
     renderTime?: number | undefined;
 }, {
+    timestamp: Date;
     sessionId: string;
     eventType: "tool_instance_submitted";
-    timestamp: Date;
     eventId: string;
-    elementId?: string | undefined;
-    elementType?: string | undefined;
     metadata?: {
         isAnonymous: boolean;
         validationErrors: number;
@@ -898,6 +896,8 @@ export declare const ToolInstanceSubmittedEventSchema: z.ZodObject<{
         dataSize: number;
         retryCount: number;
     } | undefined;
+    elementId?: string | undefined;
+    elementType?: string | undefined;
     spaceId?: string | undefined;
     isSpaceTool?: boolean | undefined;
     toolId?: string | undefined;
@@ -985,14 +985,12 @@ export declare const ToolElementInteractedEventSchema: z.ZodObject<{
         nextElement?: string | undefined;
     }>>;
 }, "strip", z.ZodTypeAny, {
+    timestamp: Date;
     sessionId: string;
     eventType: "tool_element_interacted";
-    timestamp: Date;
     eventId: string;
     optedOut: boolean;
     anonymized: boolean;
-    elementId?: string | undefined;
-    elementType?: string | undefined;
     metadata?: {
         interactionType: "click" | "hover" | "input" | "select" | "drag";
         elementPosition: {
@@ -1004,6 +1002,8 @@ export declare const ToolElementInteractedEventSchema: z.ZodObject<{
         previousElement?: string | undefined;
         nextElement?: string | undefined;
     } | undefined;
+    elementId?: string | undefined;
+    elementType?: string | undefined;
     spaceId?: string | undefined;
     isSpaceTool?: boolean | undefined;
     toolId?: string | undefined;
@@ -1020,12 +1020,10 @@ export declare const ToolElementInteractedEventSchema: z.ZodObject<{
     loadTime?: number | undefined;
     renderTime?: number | undefined;
 }, {
+    timestamp: Date;
     sessionId: string;
     eventType: "tool_element_interacted";
-    timestamp: Date;
     eventId: string;
-    elementId?: string | undefined;
-    elementType?: string | undefined;
     metadata?: {
         interactionType: "click" | "hover" | "input" | "select" | "drag";
         elementPosition: {
@@ -1037,6 +1035,8 @@ export declare const ToolElementInteractedEventSchema: z.ZodObject<{
         previousElement?: string | undefined;
         nextElement?: string | undefined;
     } | undefined;
+    elementId?: string | undefined;
+    elementType?: string | undefined;
     spaceId?: string | undefined;
     isSpaceTool?: boolean | undefined;
     toolId?: string | undefined;
@@ -1103,20 +1103,20 @@ export declare const ShareLinkCreatedEventSchema: z.ZodObject<{
         recipientCount?: number | undefined;
     }>>;
 }, "strip", z.ZodTypeAny, {
+    timestamp: Date;
     sessionId: string;
     eventType: "share_link_created";
-    timestamp: Date;
     eventId: string;
     optedOut: boolean;
     anonymized: boolean;
-    elementId?: string | undefined;
-    elementType?: string | undefined;
     metadata?: {
         shareType: "view" | "edit" | "fork";
         hasExpiration: boolean;
         shareMethod: "embed" | "direct_link" | "social";
         recipientCount?: number | undefined;
     } | undefined;
+    elementId?: string | undefined;
+    elementType?: string | undefined;
     spaceId?: string | undefined;
     isSpaceTool?: boolean | undefined;
     toolId?: string | undefined;
@@ -1133,18 +1133,18 @@ export declare const ShareLinkCreatedEventSchema: z.ZodObject<{
     loadTime?: number | undefined;
     renderTime?: number | undefined;
 }, {
+    timestamp: Date;
     sessionId: string;
     eventType: "share_link_created";
-    timestamp: Date;
     eventId: string;
-    elementId?: string | undefined;
-    elementType?: string | undefined;
     metadata?: {
         shareType: "view" | "edit" | "fork";
         hasExpiration: boolean;
         shareMethod: "embed" | "direct_link" | "social";
         recipientCount?: number | undefined;
     } | undefined;
+    elementId?: string | undefined;
+    elementType?: string | undefined;
     spaceId?: string | undefined;
     isSpaceTool?: boolean | undefined;
     toolId?: string | undefined;
@@ -1214,14 +1214,12 @@ export declare const ToolForkedEventSchema: z.ZodObject<{
         forkReason?: "customize" | "learn" | "remix" | "backup" | undefined;
     }>>;
 }, "strip", z.ZodTypeAny, {
+    timestamp: Date;
     sessionId: string;
     eventType: "tool_forked";
-    timestamp: Date;
     eventId: string;
     optedOut: boolean;
     anonymized: boolean;
-    elementId?: string | undefined;
-    elementType?: string | undefined;
     metadata?: {
         originalToolId: string;
         elementsCount: number;
@@ -1229,6 +1227,8 @@ export declare const ToolForkedEventSchema: z.ZodObject<{
         modificationsBeforeFork: number;
         forkReason?: "customize" | "learn" | "remix" | "backup" | undefined;
     } | undefined;
+    elementId?: string | undefined;
+    elementType?: string | undefined;
     spaceId?: string | undefined;
     isSpaceTool?: boolean | undefined;
     toolId?: string | undefined;
@@ -1245,12 +1245,10 @@ export declare const ToolForkedEventSchema: z.ZodObject<{
     loadTime?: number | undefined;
     renderTime?: number | undefined;
 }, {
+    timestamp: Date;
     sessionId: string;
     eventType: "tool_forked";
-    timestamp: Date;
     eventId: string;
-    elementId?: string | undefined;
-    elementType?: string | undefined;
     metadata?: {
         originalToolId: string;
         elementsCount: number;
@@ -1258,6 +1256,8 @@ export declare const ToolForkedEventSchema: z.ZodObject<{
         modificationsBeforeFork: number;
         forkReason?: "customize" | "learn" | "remix" | "backup" | undefined;
     } | undefined;
+    elementId?: string | undefined;
+    elementType?: string | undefined;
     spaceId?: string | undefined;
     isSpaceTool?: boolean | undefined;
     toolId?: string | undefined;

@@ -1,132 +1,154 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@hive/ui";
-import { Loader2, CheckCircle, XCircle } from "lucide-react";
-import { Button } from "@hive/ui";
+import { Loader2 } from "lucide-react";
+import { AuthLayout } from "../../../components/auth/auth-layout";
+import { AuthStatus } from "../../../components/auth/auth-status";
 
-export default function VerifyPage() {
+function VerifyPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const token = searchParams.get("token");
-
-  const [status, setStatus] = useState<"loading" | "success" | "error">(
-    "loading"
-  );
+  
+  const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!token) {
-      setStatus("error");
-      setError("No verification token provided");
-      return;
-    }
-
-    const verifyToken = async () => {
+    const handleMagicLink = async () => {
       try {
-        const response = await fetch("/api/auth/verify-magic-link", {
-          method: "POST",
+        const urlParams = new URLSearchParams(window.location.search);
+        const oobCode = urlParams.get('oobCode');
+        const mode = urlParams.get('mode');
+        const email = urlParams.get('email');
+        const schoolId = urlParams.get('schoolId');
+        
+        // Get email from URL or local storage
+        let userEmail = email || window.localStorage.getItem("emailForSignIn");
+        
+        if (!userEmail) {
+          userEmail = window.prompt("Please provide your email for confirmation:");
+        }
+
+        if (!userEmail) {
+          setStatus("error");
+          setError("Email is required to complete sign in");
+          return;
+        }
+
+        if (!schoolId) {
+          setStatus("error");
+          setError("School information is missing");
+          return;
+        }
+
+        // Clear email from local storage
+        window.localStorage.removeItem("emailForSignIn");
+
+        // Call our backend API to verify the magic link
+        const response = await fetch('/api/auth/verify-magic-link', {
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ token }),
+          body: JSON.stringify({
+            email: userEmail,
+            schoolId: schoolId,
+            token: oobCode || 'DEV_MODE', // Use oobCode as token, fallback to DEV_MODE
+          }),
         });
 
-        const data = (await response.json()) as {
-          error?: string;
-          needsOnboarding?: boolean;
-        };
+        const data = await response.json();
 
         if (!response.ok) {
-          throw new Error(data.error || "Verification failed");
+          throw new Error(data.error || 'Failed to verify magic link');
         }
 
         setStatus("success");
 
-        // Redirect based on user status
-        if (data.needsOnboarding) {
-          void router.push("/onboarding");
-        } else {
-          void router.push("/spaces");
+        // Store user session info for the frontend
+        if (data.userId) {
+          // For development mode, we can store some basic info
+          const userSession = {
+            userId: data.userId,
+            email: userEmail,
+            schoolId: schoolId,
+            needsOnboarding: data.needsOnboarding,
+            verifiedAt: new Date().toISOString(),
+          };
+          
+          window.localStorage.setItem('hive_session', JSON.stringify(userSession));
+          
+          // Set development mode flag if needed
+          if (oobCode === 'DEV_MODE') {
+            window.localStorage.setItem('dev_auth_mode', 'true');
+          }
         }
-      } catch (err) {
+
+        // Redirect based on onboarding status
+        setTimeout(() => {
+          if (data.needsOnboarding) {
+            router.push("/onboarding");
+          } else {
+            router.push("/");
+          }
+        }, 1500);
+
+      } catch (err: any) {
+        console.error("Magic link verification error:", err);
         setStatus("error");
-        setError(err instanceof Error ? err.message : "Something went wrong");
+        setError(err.message || "Failed to verify magic link. The link may have expired or been used already.");
       }
     };
 
-    verifyToken();
-  }, [token, router]);
+    // Run magic link verification
+    handleMagicLink();
+  }, [router]);
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center p-4">
-      <Card className="w-full max-w-md bg-zinc-900 border-zinc-800">
-        <CardHeader className="text-center">
-          {status === "loading" && (
-            <>
-              <div className="mx-auto w-12 h-12 bg-yellow-500/10 rounded-full flex items-center justify-center mb-4">
-                <Loader2 className="w-6 h-6 text-yellow-500 animate-spin" />
-              </div>
-              <CardTitle className="text-white">Verifying...</CardTitle>
-              <CardDescription className="text-zinc-400">
-                Please wait while we verify your magic link
-              </CardDescription>
-            </>
-          )}
+    <AuthLayout title="Verifying Access">
+      {status === "loading" && (
+        <AuthStatus
+          type="loading"
+          title="Verifying your access"
+          message="Please wait while we verify your magic link"
+        />
+      )}
 
-          {status === "success" && (
-            <>
-              <div className="mx-auto w-12 h-12 bg-green-500/10 rounded-full flex items-center justify-center mb-4">
-                <CheckCircle className="w-6 h-6 text-green-500" />
-              </div>
-              <CardTitle className="text-white">Welcome to HIVE!</CardTitle>
-              <CardDescription className="text-zinc-400">
-                You&apos;ve been successfully signed in
-              </CardDescription>
-            </>
-          )}
+      {status === "success" && (
+        <AuthStatus
+          type="success"
+          title="Welcome to HIVE!"
+          message="You've been successfully signed in. Taking you to your digital campus..."
+        />
+      )}
 
-          {status === "error" && (
-            <>
-              <div className="mx-auto w-12 h-12 bg-red-500/10 rounded-full flex items-center justify-center mb-4">
-                <XCircle className="w-6 h-6 text-red-500" />
-              </div>
-              <CardTitle className="text-white">Verification Failed</CardTitle>
-              <CardDescription className="text-zinc-400">
-                {error || "Unable to verify your magic link"}
-              </CardDescription>
-            </>
-          )}
-        </CardHeader>
-
-        {status === "success" && (
-          <CardContent className="text-center">
-            <p className="text-sm text-zinc-500">Redirecting you to HIVE...</p>
-          </CardContent>
-        )}
-
-        {status === "error" && (
-          <CardContent className="text-center space-y-4">
-            <p className="text-sm text-zinc-500">
-              The link may have expired or been used already.
-            </p>
-            <Button
-              variant="outline"
-              className="w-full"
-              onClick={() => router.push("/welcome")}
+      {status === "error" && (
+        <AuthStatus
+          type="error"
+          title="Verification Failed"
+          message={error || "Unable to verify your magic link. The link may have expired or been used already."}
+          action={
+            <button
+              className="w-full hive-button-secondary px-6 py-3"
+              onClick={() => router.push("/schools")}
             >
               Try again
-            </Button>
-          </CardContent>
-        )}
-      </Card>
-    </div>
+            </button>
+          }
+        />
+      )}
+    </AuthLayout>
+  );
+}
+
+export default function VerifyPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-[var(--hive-background-primary)] flex items-center justify-center">
+        <Loader2 className="h-8 w-8 text-[var(--hive-brand-primary)] animate-spin" />
+      </div>
+    }>
+      <VerifyPageContent />
+    </Suspense>
   );
 }

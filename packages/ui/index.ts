@@ -1,50 +1,101 @@
+// ==========================================================================
+// HIVE DESIGN SYSTEM - BRANDED COMPONENTS (Primary Exports)
+// ==========================================================================
+
 // Layout Components
-export { Box } from "./src/components/box";
-export { Stack } from "./src/components/stack";
-export { Grid } from "./src/components/grid";
-export {
-  Card,
-  CardHeader,
-  CardFooter,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "./src/components/ui/card";
+export { Box } from "./src/components/Box";
+export { Stack } from "./src/components/Stack";
+export { Grid } from "./src/components/Grid";
+
+// HIVE Core Components  
+export { HiveButton, Button, hiveButtonVariants, buttonVariants } from "./src/components/hive-button";
+export { HiveCard, Card, hiveCardVariants, cardVariants, HiveCardHeader, CardHeader, HiveCardTitle, CardTitle, HiveCardDescription, CardDescription, HiveCardContent, CardContent, HiveCardFooter, CardFooter } from "./src/components/hive-card";
+export { HiveInput, Input, InputAdvanced, HiveToolNameInput, HiveSpaceNameInput, HiveSearchInput, HivePasswordInput, hiveInputVariants } from "./src/components/hive-input";
+export { HiveBadge } from "./src/components/hive-badge";
+export { HiveModal } from "./src/components/hive-modal";
+export { HiveSelect } from "./src/components/hive-select";
+export { HiveFileUpload } from "./src/components/hive-file-upload";
+export { HiveProgressBar, HiveCircularProgress, HiveStepProgress } from "./src/components/hive-progress";
+export { HiveCommandPalette, useHiveCommandPalette, builderCategories } from "./src/components/hive-command-palette";
+export { HiveBreadcrumbs } from "./src/components/hive-breadcrumbs";
+export { HiveMenu } from "./src/components/hive-menu";
+export { HiveSidebar } from "./src/components/hive-sidebar";
+export { HiveTable } from "./src/components/hive-table";
+export { HiveForm } from "./src/components/hive-form";
+export { HiveIcons } from "./src/components/hive-icons";
+export { HiveBarChart, HiveDonutChart, HiveLineChart } from "./src/components/hive-charts";
+
+// HIVE Modular Components
+export { 
+  ModularCard, 
+  moduleVariants,
+  HeaderModule,
+  ContentModule, 
+  FooterModule,
+  AccentModule,
+  ActionModule,
+  ModularStack,
+  ModularGrid
+} from "./src/components/hive-modular-card";
+
+// HIVE Logo System
+export { HiveLogo, HiveLogoInteractive } from "./src/components/hive-logo";
+export { 
+  HiveLogoAnimated, 
+  HiveLogoSpinner, 
+  HiveLogoPulse, 
+  HiveLogoAssembly,
+  HiveGlyphSimple,
+  HiveLogoOutlined,
+  HiveMonogram,
+  HiveLogoGlass,
+  HiveLogoNeon,
+  HiveLogoHolographic,
+  HiveLogoParticles,
+  HiveLogoProgress,
+  HiveLogoContextual
+} from "./src/components/hive-logo-variants";
+export { 
+  HiveLogoResponsive,
+  HiveLogoNavigation, 
+  HiveLogofavicon,
+  HiveLogoThemeAdaptive,
+  HiveLogoLoading,
+  HiveLogoUserStatus,
+  HiveLogoApp
+} from "./src/components/hive-logo-responsive";
+export { HiveLogoHighPerformance } from "./src/components/hive-logo-performance";
+export { HiveLogoAccessible, HiveLogoAccessibilityTest } from "./src/components/hive-logo-accessibility";
+export { HiveLogoEnterprise, HiveLogoProvider, useHiveLogoConfig } from "./src/components/hive-logo-enterprise";
+
+// Typography Components
+export { Heading, Muted, Text } from "./src/components/Typography";
 
 // Form Components
-export { Button } from "./src/components/ui/button";
-export { Input } from "./src/components/ui/input";
-export { Textarea } from "./src/components/ui/textarea";
-export { Label } from "./src/components/label";
 export { WaitlistForm } from "./src/components/waitlist-form";
-export { Switch } from "./src/components/ui/switch";
-export {
-  Avatar,
-  AvatarImage,
-  AvatarFallback,
-} from "./src/components/ui/avatar";
 
-// UI Elements
-export { Alert, AlertTitle, AlertDescription } from "./src/components/alert";
-export { Badge } from "./src/components/ui/badge";
-export { Progress } from "./src/components/progress";
-export {
-  Tabs,
-  TabsList,
-  TabsTrigger,
-  TabsContent,
-} from "./src/components/ui/tabs";
-export { ScrollArea } from "./src/components/ui/scroll-area";
-export {
-  ResizableHandle,
-  ResizablePanel,
-  ResizablePanelGroup,
-} from "./src/components/ui/resizable";
+// ==========================================================================
+// SHELL SYSTEM - APPLICATION LAYOUT
+// ==========================================================================
 
-// Typography & UI Elements
-export { Heading, Muted, Text } from "./src/components/typography";
+export * from "./src/components/shell";
 
-// Creator Components
+// ==========================================================================
+// SURFACE SYSTEM - SPACE COMPONENTS
+// ==========================================================================
+
+export * from "./src/components/surfaces";
+
+// ==========================================================================
+// BUILDER SYSTEM - TOOL CREATION
+// ==========================================================================
+
+export * from "./src/components/builders";
+
+// ==========================================================================
+// CREATOR SYSTEM - LEGACY (Backwards Compatibility)
+// ==========================================================================
+
 export {
   ElementPicker,
   ElementCard,
@@ -75,21 +126,70 @@ export type {
   ElementConfigSchema,
 } from "./src/components/creator/ElementConfig";
 
-// Welcome Components
+// ==========================================================================
+// SOCIAL COMPONENTS
+// ==========================================================================
+
+export { HiveSpaceCard } from "./src/components/hive-space-card";
+export { HiveSpaceDirectory } from "./src/components/hive-space-directory";
+
+// ==========================================================================
+// WELCOME & ONBOARDING
+// ==========================================================================
+
 export {
   WelcomeMat,
   useWelcomeMat,
 } from "./src/components/welcome/welcome-mat";
 
-// Social Components
-export { PostCard } from "./src/components/post-card";
-export { SpaceCard } from "./src/components/space-card";
+// ==========================================================================
+// THEME & MOTION SYSTEM
+// ==========================================================================
 
-// Theme Provider
 export { ThemeProvider } from "./src/components/theme-provider";
 
-// Framer Motion Proxy
+// Unified HIVE Motion System
+export * from "./src/motion";
+
+// Legacy motion exports (deprecated)
+// export { motion, AnimatePresence } from "framer-motion"; // Use HIVE motion system instead
+
+// ==========================================================================
+// BASE UI COMPONENTS (Legacy Support - Use HIVE components instead)
+// ==========================================================================
+
+// Note: These are provided for backwards compatibility only.
+// New code should use HIVE-prefixed components above.
+
+// export {
+//   Card,
+//   CardHeader,
+//   CardFooter,
+//   CardTitle,
+//   CardDescription,
+//   CardContent,
+// } from "./src/components/ui/card"; // DEPRECATED: Use HiveCard instead
+// export { Button } from "./src/components/ui/button"; // DEPRECATED: Use HiveButton instead
+// export { Input } from "./src/components/ui/input"; // DEPRECATED: Use HiveInput instead
+export { Badge } from "./src/components/ui/badge";
+export { Alert, AlertTitle, AlertDescription } from "./src/components/ui/alert";
+export { Label } from "./src/components/ui/label";
+export { Textarea } from "./src/components/ui/textarea";
+export { Switch } from "./src/components/ui/switch";
 export {
-  MotionDiv,
-  AnimatePresence,
-} from "./src/components/framer-motion-proxy";
+  Avatar,
+  AvatarImage,
+  AvatarFallback,
+} from "./src/components/ui/avatar";
+export {
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from "./src/components/ui/tabs";
+export { ScrollArea } from "./src/components/ui/scroll-area";
+export {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "./src/components/ui/resizable";

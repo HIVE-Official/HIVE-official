@@ -15,6 +15,7 @@ export interface User {
   fullName: string;
   handle: string; // Unique, immutable after creation
   avatarUrl?: string;
+  bio?: string; // User biography/description
 
   // Academic information
   major: string;
@@ -77,6 +78,7 @@ export const UserSchema = z.object({
   fullName: z.string(),
   handle: z.string(),
   avatarUrl: z.string().optional(),
+  bio: z.string().max(500).optional(),
   major: z.string(),
   graduationYear: z.number().optional(),
   schoolId: z.string(),

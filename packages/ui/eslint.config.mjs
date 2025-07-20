@@ -3,8 +3,10 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import js from "@eslint/js";
 import { FlatCompat } from "@eslint/eslintrc";
-import { fixupConfigRules } from "@eslint/compat";
+import { fixupConfigRules, fixupPluginRules } from "@eslint/compat";
 import tseslint from "typescript-eslint";
+import importPlugin from "eslint-plugin-import";
+import storybookPlugin from "eslint-plugin-storybook";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -35,6 +37,9 @@ export default [
       "**/*.test.{js,jsx,ts,tsx}",
       "**/*.spec.{js,jsx,ts,tsx}",
     ],
+    plugins: {
+      import: fixupPluginRules(importPlugin),
+    },
     languageOptions: {
       parser: tseslint.parser,
       parserOptions: {
@@ -66,6 +71,9 @@ export default [
   // Story files WITHOUT TypeScript project parsing to avoid config conflicts
   {
     files: ["**/*.stories.@(js|jsx|ts|tsx)"],
+    plugins: {
+      storybook: fixupPluginRules(storybookPlugin),
+    },
     languageOptions: {
       parser: tseslint.parser,
       // NO project parsing for stories - they're excluded from tsconfig

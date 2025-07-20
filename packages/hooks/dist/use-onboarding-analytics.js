@@ -1,21 +1,24 @@
-import { useCallback, useRef, useEffect } from 'react';
-import { useAnalytics } from './use-analytics';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.useOnboardingAnalytics = void 0;
+const react_1 = require("react");
+const use_analytics_1 = require("./use-analytics");
 /**
  * Hook for tracking onboarding analytics events
  * Uses the general analytics pipeline
  */
-export const useOnboardingAnalytics = () => {
-    const { track } = useAnalytics();
-    const sessionStartTime = useRef(null);
-    const stepTimings = useRef(new Map());
-    const currentStep = useRef(null);
+const useOnboardingAnalytics = () => {
+    const { track } = (0, use_analytics_1.useAnalytics)();
+    const sessionStartTime = (0, react_1.useRef)(null);
+    const stepTimings = (0, react_1.useRef)(new Map());
+    const currentStep = (0, react_1.useRef)(null);
     // Initialize session on mount
-    useEffect(() => {
+    (0, react_1.useEffect)(() => {
         if (!sessionStartTime.current) {
             sessionStartTime.current = Date.now();
         }
     }, []);
-    const trackOnboardingStarted = useCallback(() => {
+    const trackOnboardingStarted = (0, react_1.useCallback)(() => {
         sessionStartTime.current = Date.now();
         track({
             name: 'onboarding_started',
@@ -31,7 +34,7 @@ export const useOnboardingAnalytics = () => {
             },
         });
     }, [track]);
-    const trackStepStarted = useCallback((stepName) => {
+    const trackStepStarted = (0, react_1.useCallback)((stepName) => {
         const now = Date.now();
         // Complete previous step timing if exists
         if (currentStep.current) {
@@ -57,7 +60,7 @@ export const useOnboardingAnalytics = () => {
             },
         });
     }, [track]);
-    const trackStepCompleted = useCallback((stepName, data) => {
+    const trackStepCompleted = (0, react_1.useCallback)((stepName, data) => {
         const now = Date.now();
         const timing = stepTimings.current.get(stepName);
         if (timing) {
@@ -77,7 +80,7 @@ export const useOnboardingAnalytics = () => {
             },
         });
     }, [track]);
-    const trackStepSkipped = useCallback((stepName, reason) => {
+    const trackStepSkipped = (0, react_1.useCallback)((stepName, reason) => {
         const now = Date.now();
         const timing = stepTimings.current.get(stepName);
         const stepDuration = timing ? now - timing.startTime : 0;
@@ -94,7 +97,7 @@ export const useOnboardingAnalytics = () => {
             },
         });
     }, [track]);
-    const trackValidationError = useCallback((stepName, field, error) => {
+    const trackValidationError = (0, react_1.useCallback)((stepName, field, error) => {
         const now = Date.now();
         track({
             name: 'onboarding_validation_error',
@@ -109,7 +112,7 @@ export const useOnboardingAnalytics = () => {
             },
         });
     }, [track]);
-    const trackOnboardingCompleted = useCallback((totalDuration, completedSteps) => {
+    const trackOnboardingCompleted = (0, react_1.useCallback)((totalDuration, completedSteps) => {
         const now = Date.now();
         const actualDuration = sessionStartTime.current ? now - sessionStartTime.current : totalDuration;
         // Calculate step-by-step timings
@@ -136,7 +139,7 @@ export const useOnboardingAnalytics = () => {
         stepTimings.current.clear();
         currentStep.current = null;
     }, [track]);
-    const trackOnboardingAbandoned = useCallback((lastStep, reason) => {
+    const trackOnboardingAbandoned = (0, react_1.useCallback)((lastStep, reason) => {
         const now = Date.now();
         const sessionDuration = sessionStartTime.current ? now - sessionStartTime.current : 0;
         // Get completed steps
@@ -172,6 +175,7 @@ export const useOnboardingAnalytics = () => {
         trackOnboardingAbandoned,
     };
 };
+exports.useOnboardingAnalytics = useOnboardingAnalytics;
 /**
  * Get the index of an onboarding step for analytics
  */

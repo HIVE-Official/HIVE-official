@@ -19,10 +19,24 @@ export async function GET(
       );
     }
 
-    const spaceRef = dbAdmin.collection("spaces").doc(spaceId);
-    const doc = await spaceRef.get();
+    // Find the space in the nested structure: spaces/[spacetype]/spaces/spaceID
+    const spaceTypes = ['campus_living', 'fraternity_and_sorority', 'hive_exclusive', 'student_organizations', 'university_organizations'];
+    let doc: any = null;
+    let spaceType: string | null = null;
 
-    if (!doc.exists) {
+    // Search through all space types to find the space
+    for (const type of spaceTypes) {
+      const potentialSpaceRef = dbAdmin.collection("spaces").doc(type).collection("spaces").doc(spaceId);
+      const potentialDoc = await potentialSpaceRef.get();
+      
+      if (potentialDoc.exists) {
+        doc = potentialDoc;
+        spaceType = type;
+        break;
+      }
+    }
+
+    if (!doc || !doc.exists) {
       return NextResponse.json({ error: "Space not found" }, { status: 404 });
     }
 

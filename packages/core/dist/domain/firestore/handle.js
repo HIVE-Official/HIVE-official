@@ -1,7 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.HANDLE_RULES = void 0;
+exports.isValidHandle = isValidHandle;
+exports.normalizeHandle = normalizeHandle;
 /**
  * Validation rules for handles
  */
-export const HANDLE_RULES = {
+exports.HANDLE_RULES = {
     MIN_LENGTH: 3,
     MAX_LENGTH: 20,
     PATTERN: /^[a-zA-Z0-9_]+$/, // Letters, numbers, underscores only
@@ -36,21 +41,21 @@ export const HANDLE_RULES = {
 /**
  * Validate a handle string
  */
-export function isValidHandle(handle) {
+function isValidHandle(handle) {
     if (!handle || typeof handle !== 'string')
         return false;
-    if (handle.length < HANDLE_RULES.MIN_LENGTH || handle.length > HANDLE_RULES.MAX_LENGTH)
+    if (handle.length < exports.HANDLE_RULES.MIN_LENGTH || handle.length > exports.HANDLE_RULES.MAX_LENGTH)
         return false;
-    if (!HANDLE_RULES.PATTERN.test(handle))
+    if (!exports.HANDLE_RULES.PATTERN.test(handle))
         return false;
-    if (HANDLE_RULES.RESERVED_HANDLES.includes(handle.toLowerCase()))
+    if (exports.HANDLE_RULES.RESERVED_HANDLES.includes(handle.toLowerCase()))
         return false;
     return true;
 }
 /**
  * Normalize a handle for storage (lowercase)
  */
-export function normalizeHandle(handle) {
+function normalizeHandle(handle) {
     return handle.toLowerCase().trim();
 }
 //# sourceMappingURL=handle.js.map

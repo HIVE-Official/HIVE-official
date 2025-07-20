@@ -3,10 +3,15 @@ import { Space_Grotesk as SpaceGrotesk } from "next/font/google";
 import { Providers } from "./providers";
 import "./globals.css";
 import { WelcomeMatProvider } from "../components/welcome-mat-provider";
+import { FeedbackToast } from "../components/feedback-toast";
+
+// Using Geist Sans via CSS import in globals.css instead of Next.js font optimization
+// to match the HIVE design system approach
 
 const spaceGrotesk = SpaceGrotesk({
   subsets: ["latin"],
   variable: "--font-display",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -25,9 +30,10 @@ export default function RootLayout({
       className={`${spaceGrotesk.variable} dark`}
       style={{ colorScheme: "dark" }}
     >
-      <body>
+      <body className="antialiased bg-hive-background-primary text-hive-text-primary" style={{ backgroundColor: '#0A0A0B' }}>
         <Providers>
           <WelcomeMatProvider>{children}</WelcomeMatProvider>
+          <FeedbackToast />
         </Providers>
       </body>
     </html>

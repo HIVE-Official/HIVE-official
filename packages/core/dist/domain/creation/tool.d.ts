@@ -552,6 +552,13 @@ export declare const ToolSchema: z.ZodObject<{
     publishedAt: z.ZodOptional<z.ZodDate>;
     lastUsedAt: z.ZodOptional<z.ZodDate>;
 }, "strip", z.ZodTypeAny, {
+    metadata: {
+        language: string;
+        tags?: string[] | undefined;
+        category?: string | undefined;
+        difficulty?: "beginner" | "intermediate" | "advanced" | undefined;
+        estimatedTime?: number | undefined;
+    };
     status: "preview" | "draft" | "published";
     id: string;
     config: {
@@ -618,13 +625,6 @@ export declare const ToolSchema: z.ZodObject<{
         config?: unknown;
         parentId?: string | undefined;
     }[];
-    metadata: {
-        language: string;
-        tags?: string[] | undefined;
-        category?: string | undefined;
-        difficulty?: "beginner" | "intermediate" | "advanced" | undefined;
-        estimatedTime?: number | undefined;
-    };
     isPublic: boolean;
     forkCount: number;
     viewCount: number;
@@ -659,6 +659,13 @@ export declare const ToolSchema: z.ZodObject<{
         isVisible?: boolean | undefined;
         isLocked?: boolean | undefined;
     }[];
+    metadata?: {
+        tags?: string[] | undefined;
+        category?: string | undefined;
+        difficulty?: "beginner" | "intermediate" | "advanced" | undefined;
+        estimatedTime?: number | undefined;
+        language?: string | undefined;
+    } | undefined;
     status?: "preview" | "draft" | "published" | undefined;
     config?: {
         backgroundColor?: string | undefined;
@@ -704,13 +711,6 @@ export declare const ToolSchema: z.ZodObject<{
         isStable?: boolean | undefined;
         deprecatedAt?: Date | undefined;
     }[] | undefined;
-    metadata?: {
-        tags?: string[] | undefined;
-        category?: string | undefined;
-        difficulty?: "beginner" | "intermediate" | "advanced" | undefined;
-        estimatedTime?: number | undefined;
-        language?: string | undefined;
-    } | undefined;
     isPublic?: boolean | undefined;
     shareToken?: string | undefined;
     forkCount?: number | undefined;
@@ -900,6 +900,13 @@ export declare const CreateToolSchema: z.ZodObject<{
     name: string;
     description: string;
     isSpaceTool: boolean;
+    metadata?: {
+        tags?: string[] | undefined;
+        category?: string | undefined;
+        difficulty?: "beginner" | "intermediate" | "advanced" | undefined;
+        estimatedTime?: number | undefined;
+        language?: string | undefined;
+    } | undefined;
     config?: {
         backgroundColor?: string | undefined;
         theme?: "auto" | "light" | "dark" | undefined;
@@ -929,6 +936,10 @@ export declare const CreateToolSchema: z.ZodObject<{
         trackingEnabled?: boolean | undefined;
         allowAnalyticsOptOut?: boolean | undefined;
     } | undefined;
+    spaceId?: string | undefined;
+}, {
+    name: string;
+    description: string;
     metadata?: {
         tags?: string[] | undefined;
         category?: string | undefined;
@@ -936,10 +947,6 @@ export declare const CreateToolSchema: z.ZodObject<{
         estimatedTime?: number | undefined;
         language?: string | undefined;
     } | undefined;
-    spaceId?: string | undefined;
-}, {
-    name: string;
-    description: string;
     config?: {
         backgroundColor?: string | undefined;
         theme?: "auto" | "light" | "dark" | undefined;
@@ -968,13 +975,6 @@ export declare const CreateToolSchema: z.ZodObject<{
         notificationEmail?: string | undefined;
         trackingEnabled?: boolean | undefined;
         allowAnalyticsOptOut?: boolean | undefined;
-    } | undefined;
-    metadata?: {
-        tags?: string[] | undefined;
-        category?: string | undefined;
-        difficulty?: "beginner" | "intermediate" | "advanced" | undefined;
-        estimatedTime?: number | undefined;
-        language?: string | undefined;
     } | undefined;
     spaceId?: string | undefined;
     isSpaceTool?: boolean | undefined;
@@ -1200,6 +1200,13 @@ export declare const UpdateToolSchema: z.ZodObject<{
     }>>;
     changelog: z.ZodOptional<z.ZodString>;
 }, "strip", z.ZodTypeAny, {
+    metadata?: {
+        tags?: string[] | undefined;
+        category?: string | undefined;
+        difficulty?: "beginner" | "intermediate" | "advanced" | undefined;
+        estimatedTime?: number | undefined;
+        language?: string | undefined;
+    } | undefined;
     config?: {
         backgroundColor?: string | undefined;
         theme?: "auto" | "light" | "dark" | undefined;
@@ -1247,6 +1254,7 @@ export declare const UpdateToolSchema: z.ZodObject<{
         config?: unknown;
         parentId?: string | undefined;
     }[] | undefined;
+}, {
     metadata?: {
         tags?: string[] | undefined;
         category?: string | undefined;
@@ -1254,7 +1262,6 @@ export declare const UpdateToolSchema: z.ZodObject<{
         estimatedTime?: number | undefined;
         language?: string | undefined;
     } | undefined;
-}, {
     config?: {
         backgroundColor?: string | undefined;
         theme?: "auto" | "light" | "dark" | undefined;
@@ -1302,13 +1309,6 @@ export declare const UpdateToolSchema: z.ZodObject<{
         isVisible?: boolean | undefined;
         isLocked?: boolean | undefined;
     }[] | undefined;
-    metadata?: {
-        tags?: string[] | undefined;
-        category?: string | undefined;
-        difficulty?: "beginner" | "intermediate" | "advanced" | undefined;
-        estimatedTime?: number | undefined;
-        language?: string | undefined;
-    } | undefined;
 }>;
 export type UpdateTool = z.infer<typeof UpdateToolSchema>;
 export declare const ShareToolSchema: z.ZodObject<{
@@ -1353,7 +1353,7 @@ export declare const ToolDataRecordSchema: z.ZodObject<{
     sessionId?: string | undefined;
     validationErrors?: string[] | undefined;
     completionTime?: number | undefined;
-    deviceType?: "desktop" | "tablet" | "mobile" | undefined;
+    deviceType?: "mobile" | "desktop" | "tablet" | undefined;
     referrer?: string | undefined;
 }, {
     id: string;
@@ -1368,7 +1368,7 @@ export declare const ToolDataRecordSchema: z.ZodObject<{
     isValid?: boolean | undefined;
     validationErrors?: string[] | undefined;
     completionTime?: number | undefined;
-    deviceType?: "desktop" | "tablet" | "mobile" | undefined;
+    deviceType?: "mobile" | "desktop" | "tablet" | undefined;
     referrer?: string | undefined;
 }>;
 export type ToolDataRecord = z.infer<typeof ToolDataRecordSchema>;
@@ -1381,19 +1381,19 @@ export declare const ToolUsageEventSchema: z.ZodObject<{
     sessionId: z.ZodString;
     metadata: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodAny>>;
 }, "strip", z.ZodTypeAny, {
+    timestamp: Date;
     id: string;
     toolId: string;
     sessionId: string;
-    eventType: "start" | "view" | "complete" | "abandon" | "share" | "fork";
-    timestamp: Date;
+    eventType: "view" | "complete" | "abandon" | "start" | "share" | "fork";
     userId?: string | undefined;
     metadata?: Record<string, any> | undefined;
 }, {
+    timestamp: Date;
     id: string;
     toolId: string;
     sessionId: string;
-    eventType: "start" | "view" | "complete" | "abandon" | "share" | "fork";
-    timestamp: Date;
+    eventType: "view" | "complete" | "abandon" | "start" | "share" | "fork";
     userId?: string | undefined;
     metadata?: Record<string, any> | undefined;
 }>;

@@ -19,7 +19,7 @@ import * as emailVerification from './verification/email-verification';
 import * as roleClaims from './verification/role-claims';
 
 // Import event state management functions
-import * as eventStateTransitions from './events/state-transitions';
+import * as eventStateTransitions from './event_state_transitions';
 
 // Import new space denormalization functions
 import * as spaceDenormalization from './spaces/denormalization';
@@ -132,3 +132,4 @@ export * from "./auth/checkHandleUniqueness";
 export * from "./auth/completeOnboarding";
 export * from "./auth/updateUserAvatar";
 export * from "./auth/joinWaitlist";
+export * from "./auth/onAuthUserCreate";

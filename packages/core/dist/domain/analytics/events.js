@@ -1,21 +1,24 @@
-import { z } from 'zod';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.BaseEventPropertiesSchema = exports.EventContextSchema = exports.AnalyticsEventType = exports.AnalyticsEventSchema = void 0;
+const zod_1 = require("zod");
 // Base analytics event schema
-export const AnalyticsEventSchema = z.object({
-    id: z.string(),
-    type: z.string(),
-    userId: z.string().optional(),
-    sessionId: z.string(),
-    timestamp: z.date(),
-    properties: z.record(z.any()).optional(),
-    context: z.object({
-        userAgent: z.string().optional(),
-        ip: z.string().optional(),
-        referrer: z.string().optional(),
-        url: z.string().optional(),
+exports.AnalyticsEventSchema = zod_1.z.object({
+    id: zod_1.z.string(),
+    type: zod_1.z.string(),
+    userId: zod_1.z.string().optional(),
+    sessionId: zod_1.z.string(),
+    timestamp: zod_1.z.date(),
+    properties: zod_1.z.record(zod_1.z.any()).optional(),
+    context: zod_1.z.object({
+        userAgent: zod_1.z.string().optional(),
+        ip: zod_1.z.string().optional(),
+        referrer: zod_1.z.string().optional(),
+        url: zod_1.z.string().optional(),
     }).optional(),
 });
 // Core event types
-export const AnalyticsEventType = z.enum([
+exports.AnalyticsEventType = zod_1.z.enum([
     // User events
     'user_signup',
     'user_login',
@@ -36,27 +39,27 @@ export const AnalyticsEventType = z.enum([
     'load_time',
 ]);
 // Event context for additional metadata
-export const EventContextSchema = z.object({
-    userAgent: z.string().optional(),
-    ip: z.string().optional(),
-    referrer: z.string().optional(),
-    url: z.string().optional(),
-    viewport: z.object({
-        width: z.number(),
-        height: z.number(),
+exports.EventContextSchema = zod_1.z.object({
+    userAgent: zod_1.z.string().optional(),
+    ip: zod_1.z.string().optional(),
+    referrer: zod_1.z.string().optional(),
+    url: zod_1.z.string().optional(),
+    viewport: zod_1.z.object({
+        width: zod_1.z.number(),
+        height: zod_1.z.number(),
     }).optional(),
-    device: z.object({
-        type: z.enum(['desktop', 'tablet', 'mobile']),
-        os: z.string().optional(),
-        browser: z.string().optional(),
+    device: zod_1.z.object({
+        type: zod_1.z.enum(['desktop', 'tablet', 'mobile']),
+        os: zod_1.z.string().optional(),
+        browser: zod_1.z.string().optional(),
     }).optional(),
 });
 // Base event properties
-export const BaseEventPropertiesSchema = z.object({
-    source: z.string().optional(),
-    medium: z.string().optional(),
-    campaign: z.string().optional(),
-    content: z.string().optional(),
-    term: z.string().optional(),
+exports.BaseEventPropertiesSchema = zod_1.z.object({
+    source: zod_1.z.string().optional(),
+    medium: zod_1.z.string().optional(),
+    campaign: zod_1.z.string().optional(),
+    content: zod_1.z.string().optional(),
+    term: zod_1.z.string().optional(),
 });
 //# sourceMappingURL=events.js.map

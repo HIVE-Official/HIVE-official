@@ -1,184 +1,140 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { type User, UB_MAJORS } from "@hive/core";
+import { z } from "zod";
 import { dbAdmin } from "@/lib/firebase-admin";
 import { FieldValue } from "firebase-admin/firestore";
 
+const autoJoinSchema = z.object({
+  userId: z.string().min(1, "User ID is required"),
+});
+
 /**
- * Auto-join a user to relevant spaces (major and residential).
- * Creates spaces if they don't exist.
+ * Auto-join a user to default/popular spaces after onboarding
  * POST /api/spaces/auto-join
  */
 export async function POST(request: NextRequest) {
   try {
-    const { userId } = await request.json();
+    // Parse and validate request body
+    const body = (await request.json()) as unknown;
+    const { userId } = autoJoinSchema.parse(body);
 
-    if (!userId) {
-      return NextResponse.json(
-        { error: "User ID is required" },
-        { status: 400 }
-      );
-    }
-
-    // Get user data
+    // Get user data to understand their profile
     const userDoc = await dbAdmin.collection("users").doc(userId).get();
-
+    
     if (!userDoc.exists) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    const user = userDoc.data() as User;
+    const userData = userDoc.data();
+    const userMajor = userData?.major;
 
-    if (!user.major || !user.schoolId) {
+    // Define default spaces to auto-join new users
+    // Start with a few popular/default spaces across categories
+    const defaultSpaces = [
+      // HIVE Exclusive - always join
+      { type: "hive_exclusive", id: "general-discussion" },
+      { type: "hive_exclusive", id: "announcements" },
+      
+      // Campus Living - common residential options
+      { type: "campus_living", id: "off-campus-housing" },
+      { type: "campus_living", id: "roommate-finder" },
+      
+      // Student Organizations - general interest
+      { type: "student_organizations", id: "study-groups" },
+      { type: "student_organizations", id: "tutoring-exchange" },
+    ];
+
+    // Add major-specific spaces if available
+    if (userMajor) {
+      // Convert major to potential space ID (lowercase, replace spaces with dashes)
+      const majorSpaceId = userMajor.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+      defaultSpaces.push({ type: "student_organizations", id: majorSpaceId });
+    }
+
+    const joinResults = [];
+    const errors = [];
+
+    // Attempt to join each default space
+    for (const { type, id } of defaultSpaces) {
+      try {
+        // Check if space exists
+        const spaceRef = dbAdmin.collection("spaces").doc(type).collection("spaces").doc(id);
+        const spaceDoc = await spaceRef.get();
+        
+        if (!spaceDoc.exists) {
+          console.log(`Space ${type}/${id} not found, skipping`);
+          continue;
+        }
+
+        // Check if user is already a member
+        const memberRef = spaceRef.collection("members").doc(userId);
+        const memberDoc = await memberRef.get();
+        
+        if (memberDoc.exists) {
+          console.log(`User ${userId} already member of ${type}/${id}, skipping`);
+          continue;
+        }
+
+        // Join the space using a batch operation
+        const batch = dbAdmin.batch();
+
+        // Add user to members sub-collection
+        const newMember = {
+          uid: userId,
+          role: "member",
+          joinedAt: FieldValue.serverTimestamp(),
+        };
+
+        batch.set(memberRef, newMember);
+
+        // Increment the space's member count
+        batch.update(spaceRef, {
+          memberCount: FieldValue.increment(1),
+          updatedAt: FieldValue.serverTimestamp(),
+        });
+
+        // Execute the batch
+        await batch.commit();
+
+        joinResults.push({
+          spaceType: type,
+          spaceId: id,
+          spaceName: spaceDoc.data()?.name || id,
+          joined: true,
+        });
+
+        console.log(`Successfully auto-joined user ${userId} to ${type}/${id}`);
+        
+      } catch (spaceError) {
+        console.error(`Failed to auto-join ${type}/${id}:`, spaceError);
+        errors.push({
+          spaceType: type,
+          spaceId: id,
+          error: spaceError instanceof Error ? spaceError.message : "Unknown error",
+        });
+      }
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: `Auto-joined user to ${joinResults.length} spaces`,
+      joined: joinResults,
+      errors: errors.length > 0 ? errors : undefined,
+      userId,
+    });
+
+  } catch (error) {
+    console.error("Auto-join error:", error);
+
+    if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: "User missing required fields (major, schoolId)" },
+        { error: "Invalid request data", details: error.errors },
         { status: 400 }
       );
     }
 
-    // Find if the user's major exists in our UB_MAJORS list
-    const majorData = UB_MAJORS.find((m) => m.name === user.major);
-
-    const batch = dbAdmin.batch();
-    const spacesJoined: string[] = [];
-
-    // 1. Handle Major Space
-    const majorSpacesSnapshot = await dbAdmin
-      .collection("spaces")
-      .where("type", "==", "major")
-      .where("tags", "array-contains", { type: "major", sub_type: user.major })
-      .limit(1)
-      .get();
-
-    let majorSpaceId: string;
-    if (majorSpacesSnapshot.empty) {
-      // Create the major space if it doesn't exist
-      const spaceName = majorData
-        ? `${majorData.name} Majors`
-        : `${user.major} Majors`;
-      const majorSpaceRef = dbAdmin.collection("spaces").doc();
-      majorSpaceId = majorSpaceRef.id;
-
-      const newMajorSpace = {
-        name: spaceName,
-        name_lowercase: spaceName.toLowerCase(),
-        description: `Connect with fellow ${user.major} students, share resources, and collaborate on projects.`,
-        memberCount: 0,
-        schoolId: user.schoolId,
-        type: "major",
-        tags: [
-          {
-            type: "major",
-            sub_type: user.major,
-          },
-        ],
-        status: "activated",
-        createdAt: FieldValue.serverTimestamp(),
-        updatedAt: FieldValue.serverTimestamp(),
-      };
-
-      batch.set(majorSpaceRef, newMajorSpace);
-    } else {
-      majorSpaceId = majorSpacesSnapshot.docs[0].id;
-    }
-
-    // Add user to major space
-    const majorMemberRef = dbAdmin
-      .collection("spaces")
-      .doc(majorSpaceId)
-      .collection("members")
-      .doc(userId);
-    batch.set(majorMemberRef, {
-      uid: userId,
-      role: "member",
-      joinedAt: FieldValue.serverTimestamp(),
-    });
-
-    // Update major space member count
-    const majorSpaceRef = dbAdmin.collection("spaces").doc(majorSpaceId);
-    batch.update(majorSpaceRef, {
-      memberCount: FieldValue.increment(1),
-      updatedAt: FieldValue.serverTimestamp(),
-    });
-
-    spacesJoined.push(majorSpaceId);
-
-    // 2. Handle General Residential Space
-    const residentialSpacesSnapshot = await dbAdmin
-      .collection("spaces")
-      .where("type", "==", "residential")
-      .where("tags", "array-contains", {
-        type: "residential",
-        sub_type: "general",
-      })
-      .limit(1)
-      .get();
-
-    let residentialSpaceId: string;
-    if (residentialSpacesSnapshot.empty) {
-      // Create a general residential space if it doesn't exist
-      const residentialSpaceRef = dbAdmin.collection("spaces").doc();
-      residentialSpaceId = residentialSpaceRef.id;
-
-      const newResidentialSpace = {
-        name: "UB Community",
-        name_lowercase: "ub community",
-        description:
-          "A general community space for all UB students to connect, share experiences, and build friendships.",
-        memberCount: 0,
-        schoolId: user.schoolId,
-        type: "residential",
-        tags: [
-          {
-            type: "residential",
-            sub_type: "general",
-          },
-        ],
-        status: "activated",
-        createdAt: FieldValue.serverTimestamp(),
-        updatedAt: FieldValue.serverTimestamp(),
-      };
-
-      batch.set(residentialSpaceRef, newResidentialSpace);
-    } else {
-      residentialSpaceId = residentialSpacesSnapshot.docs[0].id;
-    }
-
-    // Add user to residential space
-    const residentialMemberRef = dbAdmin
-      .collection("spaces")
-      .doc(residentialSpaceId)
-      .collection("members")
-      .doc(userId);
-    batch.set(residentialMemberRef, {
-      uid: userId,
-      role: "member",
-      joinedAt: FieldValue.serverTimestamp(),
-    });
-
-    // Update residential space member count
-    const residentialSpaceRef = dbAdmin
-      .collection("spaces")
-      .doc(residentialSpaceId);
-    batch.update(residentialSpaceRef, {
-      memberCount: FieldValue.increment(1),
-      updatedAt: FieldValue.serverTimestamp(),
-    });
-
-    spacesJoined.push(residentialSpaceId);
-
-    // Execute all operations atomically
-    await batch.commit();
-
-    return NextResponse.json({
-      success: true,
-      message: `Successfully auto-joined user to ${spacesJoined.length} spaces`,
-      spacesJoined,
-    });
-  } catch (error) {
-    console.error("Auto-join error:", error);
     return NextResponse.json(
-      { error: "Failed to auto-join user to spaces" },
+      { error: "Failed to process auto-join request" },
       { status: 500 }
     );
   }

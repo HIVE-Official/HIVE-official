@@ -10,7 +10,7 @@ import {
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { getAuth } from "firebase-admin/auth";
-import type { Space } from "@hive/core/src/domain/firestore/space";
+import type { Space } from "@hive/core";
 
 const leaveSpaceSchema = z.object({
   spaceId: z.string().min(1, "Space ID is required"),
@@ -51,18 +51,33 @@ export async function POST(request: NextRequest) {
     const body = (await request.json()) as unknown;
     const { spaceId } = leaveSpaceSchema.parse(body);
 
-    // Check if space exists
-    const spaceDocRef = doc(db, "spaces", spaceId);
-    const spaceDoc = await getDoc(spaceDocRef);
+    // Find the space in the nested structure: SPACES/[spacetype]/SPACES/spaceID
+    const spaceTypes = ['campus_living', 'fraternity_and_sorority', 'hive_exclusive', 'student_organizations', 'university_organizations'];
+    let spaceDoc: any = null;
+    let spaceDocRef: any = null;
+    let spaceType: string | null = null;
 
-    if (!spaceDoc.exists()) {
+    // Search through all space types to find the space
+    for (const type of spaceTypes) {
+      const potentialSpaceRef = doc(db, "spaces", type, "spaces", spaceId);
+      const potentialSpaceDoc = await getDoc(potentialSpaceRef);
+      
+      if (potentialSpaceDoc.exists()) {
+        spaceDoc = potentialSpaceDoc;
+        spaceDocRef = potentialSpaceRef;
+        spaceType = type;
+        break;
+      }
+    }
+
+    if (!spaceDoc || !spaceDoc.exists()) {
       return NextResponse.json({ error: "Space not found" }, { status: 404 });
     }
 
     const space = spaceDoc.data() as Space;
 
     // Check if user is actually a member
-    const memberDocRef = doc(db, "spaces", spaceId, "members", userId);
+    const memberDocRef = doc(db, "spaces", spaceType!, "spaces", spaceId, "members", userId);
     const memberDoc = await getDoc(memberDocRef);
 
     if (!memberDoc.exists()) {

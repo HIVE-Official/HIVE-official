@@ -1,7 +1,40 @@
 "use client";
 
-import React, { Component, ReactNode, ErrorInfo } from "react";
-import { FirebaseErrorHandler, UserFriendlyError } from "@hive/auth-logic";
+import React, { Component, type ReactNode, type ErrorInfo } from "react";
+
+// Self-contained error types for Storybook compatibility
+interface UserFriendlyError {
+  message: string;
+  code: string;
+  severity: "error" | "warning" | "info";
+  isRetryable: boolean;
+  action?: "retry" | "contact-support" | "sign-in" | "sign-up" | "check-email";
+}
+
+// Simplified error handler for UI package
+class SimpleErrorHandler {
+  static handleError(error: Error): UserFriendlyError {
+    // Basic error handling for UI components
+    return {
+      message: error.message || "An unexpected error occurred",
+      code: error.name || "UNKNOWN_ERROR",
+      severity: "error",
+      isRetryable: true,
+      action: "retry"
+    };
+  }
+
+  static getActionButtonText(error: UserFriendlyError): string {
+    switch (error.action) {
+      case "retry": return "Try Again";
+      case "contact-support": return "Contact Support";
+      case "sign-in": return "Sign In";
+      case "sign-up": return "Sign Up";
+      case "check-email": return "Check Email";
+      default: return "Continue";
+    }
+  }
+}
 
 interface Props {
   children: ReactNode;
@@ -54,7 +87,7 @@ export class FirebaseErrorBoundary extends Component<Props, State> {
 
   render() {
     if (this.state.hasError && this.state.error) {
-      const userFriendlyError = FirebaseErrorHandler.handleError(
+      const userFriendlyError = SimpleErrorHandler.handleError(
         this.state.error
       );
 
@@ -114,75 +147,67 @@ function DefaultErrorFallback({
 
   return (
     <div className="min-h-[200px] flex items-center justify-center p-4">
-      <div
-        className={`
-        max-w-md w-full rounded-lg border-2 p-6 text-center space-y-4
-        ${getSeverityColor(error.severity)}
-      `}
-      >
-        <div className="text-4xl mb-2">
-          {getIconForSeverity(error.severity)}
+      <div className="max-w-md w-full bg-black/20 backdrop-blur-xl border border-red-500/20 rounded-xl p-6 text-center space-y-4">
+        <div className="mx-auto w-16 h-16 bg-red-500/20 backdrop-blur-xl rounded-full flex items-center justify-center border border-red-500/30 mb-4">
+          <span className="text-2xl">{getIconForSeverity(error.severity)}</span>
         </div>
 
-        <h3 className="text-lg font-semibold">Something went wrong</h3>
+        <h3 className="text-lg font-semibold text-white">Something went wrong</h3>
 
-        <p className="text-sm leading-relaxed">{error.message}</p>
+        <p className="text-sm leading-relaxed text-white/70">{error.message}</p>
 
         <div className="space-y-2 pt-2">
           {error.action === "retry" && error.isRetryable && (
             <button
               onClick={onRetry}
-              className="w-full px-4 py-2 bg-white border border-current rounded-md hover:bg-opacity-90 transition-colors font-medium"
+              className="w-full px-4 py-2 bg-red-500/20 border border-red-500/30 rounded-lg hover:bg-red-500/30 transition-colors font-medium text-white"
             >
-              {FirebaseErrorHandler.getActionButtonText(error)}
+              {SimpleErrorHandler.getActionButtonText(error)}
             </button>
           )}
 
           {error.action === "contact-support" && (
             <button
               onClick={() => {
-                // In a real app, this would open a support form or mailto link
                 console.log("Contact support clicked", {
                   errorId,
                   errorCode: error.code,
                 });
               }}
-              className="w-full px-4 py-2 bg-white border border-current rounded-md hover:bg-opacity-90 transition-colors font-medium"
+              className="w-full px-4 py-2 bg-red-500/20 border border-red-500/30 rounded-lg hover:bg-red-500/30 transition-colors font-medium text-white"
             >
-              {FirebaseErrorHandler.getActionButtonText(error)}
+              {SimpleErrorHandler.getActionButtonText(error)}
             </button>
           )}
 
           {error.action === "sign-in" && (
             <button
               onClick={() => {
-                // In a real app, this would redirect to sign-in
-                window.location.href = "/auth/login";
+                window.location.href = "/schools";
               }}
-              className="w-full px-4 py-2 bg-white border border-current rounded-md hover:bg-opacity-90 transition-colors font-medium"
+              className="w-full px-4 py-2 bg-red-500/20 border border-red-500/30 rounded-lg hover:bg-red-500/30 transition-colors font-medium text-white"
             >
-              {FirebaseErrorHandler.getActionButtonText(error)}
+              {SimpleErrorHandler.getActionButtonText(error)}
             </button>
           )}
 
           {error.action === "sign-up" && (
             <button
               onClick={() => {
-                // In a real app, this would redirect to sign-up
-                window.location.href = "/auth/signup";
+                window.location.href = "/schools";
               }}
-              className="w-full px-4 py-2 bg-white border border-current rounded-md hover:bg-opacity-90 transition-colors font-medium"
+              className="w-full px-4 py-2 bg-red-500/20 border border-red-500/30 rounded-lg hover:bg-red-500/30 transition-colors font-medium text-white"
             >
-              {FirebaseErrorHandler.getActionButtonText(error)}
+              {SimpleErrorHandler.getActionButtonText(error)}
             </button>
           )}
 
           {error.action === "check-email" && (
             <div className="text-xs space-y-2">
-              <p>Please check your email and click the verification link.</p>
+              <p className="text-white/60">Please check your email and click the verification link.</p>
               <button
                 onClick={onRetry}
-                className="w-full px-4 py-2 bg-white border border-current rounded-md hover:bg-opacity-90 transition-colors font-medium"
+                className="w-full px-4 py-2 bg-red-500/20 border border-red-500/30 rounded-lg hover:bg-red-500/30 transition-colors font-medium text-white"
               >
                 I've verified my email
               </button>
@@ -192,8 +217,8 @@ function DefaultErrorFallback({
 
         {process.env.NODE_ENV === "development" && (
           <details className="text-xs text-left">
-            <summary className="cursor-pointer font-medium">Debug Info</summary>
-            <div className="mt-2 p-2 bg-white rounded border font-mono">
+            <summary className="cursor-pointer font-medium text-white/80">Debug Info</summary>
+            <div className="mt-2 p-2 bg-black/40 rounded border border-white/10 font-mono text-white/60">
               <div>Error ID: {errorId}</div>
               <div>Code: {error.code}</div>
               <div>Retryable: {error.isRetryable ? "Yes" : "No"}</div>

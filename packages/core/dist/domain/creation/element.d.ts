@@ -858,8 +858,8 @@ export declare const ButtonConfigSchema: z.ZodObject<{
         }[];
     }>, "many">>;
 }, "strip", z.ZodTypeAny, {
-    text: string;
     variant: "primary" | "secondary" | "outline" | "ghost";
+    text: string;
     size: "sm" | "lg" | "md";
     disabled: boolean;
     style?: {
@@ -898,6 +898,7 @@ export declare const ButtonConfigSchema: z.ZodObject<{
     } | undefined;
 }, {
     text: string;
+    variant?: "primary" | "secondary" | "outline" | "ghost" | undefined;
     style?: {
         backgroundColor?: string | undefined;
         textColor?: string | undefined;
@@ -927,7 +928,6 @@ export declare const ButtonConfigSchema: z.ZodObject<{
             targetProperty?: string | undefined;
         }[];
     }[] | undefined;
-    variant?: "primary" | "secondary" | "outline" | "ghost" | undefined;
     size?: "sm" | "lg" | "md" | undefined;
     disabled?: boolean | undefined;
     onClick?: {
@@ -3284,8 +3284,8 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             }[];
         }>, "many">>;
     }, "strip", z.ZodTypeAny, {
-        text: string;
         variant: "primary" | "secondary" | "outline" | "ghost";
+        text: string;
         size: "sm" | "lg" | "md";
         disabled: boolean;
         style?: {
@@ -3324,6 +3324,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         } | undefined;
     }, {
         text: string;
+        variant?: "primary" | "secondary" | "outline" | "ghost" | undefined;
         style?: {
             backgroundColor?: string | undefined;
             textColor?: string | undefined;
@@ -3353,7 +3354,6 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 targetProperty?: string | undefined;
             }[];
         }[] | undefined;
-        variant?: "primary" | "secondary" | "outline" | "ghost" | undefined;
         size?: "sm" | "lg" | "md" | undefined;
         disabled?: boolean | undefined;
         onClick?: {
@@ -3365,8 +3365,8 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
 }, "strip", z.ZodTypeAny, {
     type: "button";
     config: {
-        text: string;
         variant: "primary" | "secondary" | "outline" | "ghost";
+        text: string;
         size: "sm" | "lg" | "md";
         disabled: boolean;
         style?: {
@@ -3408,6 +3408,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
     type: "button";
     config: {
         text: string;
+        variant?: "primary" | "secondary" | "outline" | "ghost" | undefined;
         style?: {
             backgroundColor?: string | undefined;
             textColor?: string | undefined;
@@ -3437,7 +3438,6 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 targetProperty?: string | undefined;
             }[];
         }[] | undefined;
-        variant?: "primary" | "secondary" | "outline" | "ghost" | undefined;
         size?: "sm" | "lg" | "md" | undefined;
         disabled?: boolean | undefined;
         onClick?: {

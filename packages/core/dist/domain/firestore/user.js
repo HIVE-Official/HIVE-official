@@ -1,35 +1,39 @@
-import { z } from "zod";
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.UpdateUserSchema = exports.CreateUserSchema = exports.UserSchema = void 0;
+const zod_1 = require("zod");
 // Zod validation schemas
-export const UserSchema = z.object({
-    id: z.string(),
-    uid: z.string(),
-    email: z.string().email(),
-    fullName: z.string(),
-    handle: z.string(),
-    avatarUrl: z.string().optional(),
-    major: z.string(),
-    graduationYear: z.number().optional(),
-    schoolId: z.string(),
-    isPublic: z.boolean().default(false),
-    consentGiven: z.boolean(),
-    builderOptIn: z.boolean().default(false),
-    isBuilder: z.boolean().default(false),
-    builderAnalyticsEnabled: z.boolean().default(true),
-    onboardingCompleted: z.boolean().default(false),
-    isVerified: z.boolean().default(false),
-    status: z.enum(["active", "suspended", "deleted"]).default("active"),
-    createdAt: z.number(),
-    updatedAt: z.number(),
-    lastActiveAt: z.number().optional(),
+exports.UserSchema = zod_1.z.object({
+    id: zod_1.z.string(),
+    uid: zod_1.z.string(),
+    email: zod_1.z.string().email(),
+    fullName: zod_1.z.string(),
+    handle: zod_1.z.string(),
+    avatarUrl: zod_1.z.string().optional(),
+    bio: zod_1.z.string().max(500).optional(),
+    major: zod_1.z.string(),
+    graduationYear: zod_1.z.number().optional(),
+    schoolId: zod_1.z.string(),
+    isPublic: zod_1.z.boolean().default(false),
+    consentGiven: zod_1.z.boolean(),
+    builderOptIn: zod_1.z.boolean().default(false),
+    isBuilder: zod_1.z.boolean().default(false),
+    builderAnalyticsEnabled: zod_1.z.boolean().default(true),
+    onboardingCompleted: zod_1.z.boolean().default(false),
+    isVerified: zod_1.z.boolean().default(false),
+    status: zod_1.z.enum(["active", "suspended", "deleted"]).default("active"),
+    createdAt: zod_1.z.number(),
+    updatedAt: zod_1.z.number(),
+    lastActiveAt: zod_1.z.number().optional(),
 });
-export const CreateUserSchema = UserSchema.omit({
+exports.CreateUserSchema = exports.UserSchema.omit({
     id: true,
     uid: true,
     createdAt: true,
     updatedAt: true,
     lastActiveAt: true,
 });
-export const UpdateUserSchema = UserSchema.partial().omit({
+exports.UpdateUserSchema = exports.UserSchema.partial().omit({
     id: true,
     uid: true,
     handle: true,

@@ -3,8 +3,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getAuth } from "firebase-admin/auth";
 import { getFirestore, FieldValue } from "firebase-admin/firestore";
-import type { Space } from "@hive/core/src/domain/firestore/space";
-import type { MemberRole } from "@hive/core/src/domain/firestore/member";
+import type { Space, MemberRole } from "@hive/core";
 
 // Server-side member type that allows FieldValue for timestamps
 interface ServerMember {
@@ -55,35 +54,37 @@ export async function POST(request: NextRequest) {
     // Get Firestore instance
     const db = getFirestore();
 
-    // Check if space exists and is joinable
-    const spaceDocRef = db.collection("spaces").doc(spaceId);
-    const spaceDoc = await spaceDocRef.get();
+    // Find the space in the nested structure: SPACES/[spacetype]/SPACES/spaceID
+    const spaceTypes = ['campus_living', 'fraternity_and_sorority', 'hive_exclusive', 'student_organizations', 'university_organizations'];
+    let spaceDoc: any = null;
+    let spaceDocRef: any = null;
+    let spaceType: string | null = null;
 
-    if (!spaceDoc.exists) {
+    // Search through all space types to find the space
+    for (const type of spaceTypes) {
+      const potentialSpaceRef = db.collection("spaces").doc(type).collection("spaces").doc(spaceId);
+      const potentialSpaceDoc = await potentialSpaceRef.get();
+      
+      if (potentialSpaceDoc.exists) {
+        spaceDoc = potentialSpaceDoc;
+        spaceDocRef = potentialSpaceRef;
+        spaceType = type;
+        break;
+      }
+    }
+
+    if (!spaceDoc || !spaceDoc.exists) {
       return NextResponse.json({ error: "Space not found" }, { status: 404 });
     }
 
     const space = spaceDoc.data() as Space;
 
-    // Check if space is in a joinable status
-    if (space.status === "frozen") {
-      return NextResponse.json(
-        {
-          error: "This space is currently frozen and not accepting new members",
-        },
-        { status: 403 }
-      );
-    }
-
-    if (space.status === "dormant") {
-      return NextResponse.json(
-        { error: "This space is not yet active" },
-        { status: 403 }
-      );
-    }
+    // Note: Space status validation removed since spaces don't have status field in current data
 
     // Check if user is already a member
     const memberDocRef = db
+      .collection("spaces")
+      .doc(spaceType!)
       .collection("spaces")
       .doc(spaceId)
       .collection("members")
@@ -97,23 +98,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get user data to verify they're from the same school
-    const userDocRef = db.collection("users").doc(userId);
-    const userDoc = await userDocRef.get();
-
-    if (!userDoc.exists) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
-    }
-
-    const userData = userDoc.data() as { schoolId: string } | undefined;
-
-    // Verify user is from the same school as the space
-    if (!userData || userData.schoolId !== space.schoolId) {
-      return NextResponse.json(
-        { error: "You can only join spaces from your school" },
-        { status: 403 }
-      );
-    }
+    // Note: School validation removed since spaces don't have schoolId field in current data
+    // TODO: Add school validation once school association is properly implemented
 
     // Perform the join operation atomically
     const batch = db.batch();

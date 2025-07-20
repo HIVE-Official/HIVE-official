@@ -6,6 +6,7 @@ import { FlatCompat } from "@eslint/eslintrc";
 import { fixupConfigRules, fixupPluginRules } from "@eslint/compat";
 import tseslint from "typescript-eslint";
 import unicorn from "eslint-plugin-unicorn";
+import importPlugin from "eslint-plugin-import";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -38,6 +39,7 @@ export default [
   {
     plugins: {
       unicorn: fixupPluginRules(unicorn),
+      import: fixupPluginRules(importPlugin),
     },
     
     languageOptions: {
@@ -87,6 +89,10 @@ export default [
       ".next/",
       "**/eslint.config.mjs",
       "**/eslint.config.js",
+      "**/*.d.ts",
+      "**/*.d.ts.map",
+      "**/src/**/*.js",
+      "**/src/**/*.js.map",
     ],
   },
 ]; 

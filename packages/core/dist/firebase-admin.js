@@ -1,4 +1,40 @@
-import * as admin from "firebase-admin";
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.environmentInfo = exports.isFirebaseConfigured = exports.auth = exports.db = exports.authAdmin = exports.dbAdmin = void 0;
+const admin = __importStar(require("firebase-admin"));
 // Environment detection
 function getCurrentEnvironment() {
     const env = process.env.NODE_ENV || "development";
@@ -57,8 +93,8 @@ try {
                 credential: credential,
                 projectId: process.env.FIREBASE_PROJECT_ID || "hive-dev-2025",
             });
-            dbAdmin = admin.firestore();
-            authAdmin = admin.auth();
+            exports.dbAdmin = dbAdmin = admin.firestore();
+            exports.authAdmin = authAdmin = admin.auth();
             firebaseInitialized = true;
             console.log(`✅ Firebase Admin initialized successfully for ${currentEnvironment}`);
         }
@@ -68,8 +104,8 @@ try {
     }
     else {
         // App already initialized
-        dbAdmin = admin.firestore();
-        authAdmin = admin.auth();
+        exports.dbAdmin = dbAdmin = admin.firestore();
+        exports.authAdmin = authAdmin = admin.auth();
         firebaseInitialized = true;
         console.log(`🔄 Firebase Admin: Using existing app for ${currentEnvironment}`);
     }
@@ -77,13 +113,13 @@ try {
 catch (error) {
     console.warn(`⚠️ Firebase Admin initialization failed for ${currentEnvironment}:`, error);
     // Create mock instances for development
-    dbAdmin = {
+    exports.dbAdmin = dbAdmin = {
         collection: (path) => ({
             get: async () => {
                 console.log(`🔄 Mock Firebase call: collection(${path}).get() - returning development data`);
                 throw new Error(`Firebase Admin not configured for ${currentEnvironment}. Add credentials to environment variables.`);
             },
-            add: async (data) => {
+            add: async () => {
                 console.log(`🔄 Mock Firebase call: collection(${path}).add() - development mode`);
                 throw new Error(`Firebase Admin not configured for ${currentEnvironment}.`);
             },
@@ -92,15 +128,15 @@ catch (error) {
                     console.log(`🔄 Mock Firebase call: collection(${path}).doc(${id}).get() - development mode`);
                     throw new Error(`Firebase Admin not configured for ${currentEnvironment}.`);
                 },
-                set: async (data) => {
+                set: async () => {
                     console.log(`🔄 Mock Firebase call: collection(${path}).doc(${id}).set() - development mode`);
                     throw new Error(`Firebase Admin not configured for ${currentEnvironment}.`);
                 },
             }),
         }),
     };
-    authAdmin = {
-        verifyIdToken: async (token) => {
+    exports.authAdmin = authAdmin = {
+        verifyIdToken: async () => {
             console.log(`🔄 Mock Firebase call: verifyIdToken() - development mode`);
             throw new Error(`Firebase Auth not configured for ${currentEnvironment}.`);
         },
@@ -110,13 +146,12 @@ catch (error) {
         },
     };
 }
-export { dbAdmin, authAdmin };
 // Re-export for compatibility
-export const db = dbAdmin;
-export const auth = authAdmin;
-export const isFirebaseConfigured = firebaseInitialized;
+exports.db = dbAdmin;
+exports.auth = authAdmin;
+exports.isFirebaseConfigured = firebaseInitialized;
 // Environment info for debugging
-export const environmentInfo = {
+exports.environmentInfo = {
     environment: currentEnvironment,
     firebaseConfigured: firebaseInitialized,
     projectId: process.env.FIREBASE_PROJECT_ID || "hive-dev-2025",

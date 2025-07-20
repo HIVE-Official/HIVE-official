@@ -26,6 +26,13 @@ declare global {
   interface Buffer {
     toString(encoding?: string): string;
   }
+
+  var btoa: (str: string) => string;
+  var atob: (str: string) => string;
+  var crypto: {
+    randomUUID(): string;
+    getRandomValues(array: Uint8Array): Uint8Array;
+  };
 }
 
 export {}; 

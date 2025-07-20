@@ -1,4 +1,7 @@
-import { useState, useEffect } from 'react';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.useDebounce = useDebounce;
+const react_1 = require("react");
 /**
  * A custom React hook that debounces a value.
  *
@@ -6,9 +9,9 @@ import { useState, useEffect } from 'react';
  * @param {number} delay The debounce delay in milliseconds.
  * @returns {T} The debounced value.
  */
-export function useDebounce(value, delay) {
-    const [debouncedValue, setDebouncedValue] = useState(value);
-    useEffect(() => {
+function useDebounce(value, delay) {
+    const [debouncedValue, setDebouncedValue] = (0, react_1.useState)(value);
+    (0, react_1.useEffect)(() => {
         // Set a timer to update the debounced value after the specified delay
         const handler = setTimeout(() => {
             setDebouncedValue(value);

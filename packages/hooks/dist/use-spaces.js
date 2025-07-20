@@ -1,11 +1,14 @@
-import { useState, useEffect, useCallback } from 'react';
-import { useAuth } from './use-auth';
-export function useSpaces() {
-    const [spaces, setSpaces] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const { user, isAuthenticated } = useAuth();
-    const fetchSpaces = useCallback(async () => {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.useSpaces = useSpaces;
+const react_1 = require("react");
+const use_auth_1 = require("./use-auth");
+function useSpaces() {
+    const [spaces, setSpaces] = (0, react_1.useState)([]);
+    const [isLoading, setIsLoading] = (0, react_1.useState)(true);
+    const [error, setError] = (0, react_1.useState)(null);
+    const { user, isAuthenticated } = (0, use_auth_1.useAuth)();
+    const fetchSpaces = (0, react_1.useCallback)(async () => {
         if (!isAuthenticated || !user) {
             setSpaces([]);
             setIsLoading(false);
@@ -45,7 +48,7 @@ export function useSpaces() {
             setIsLoading(false);
         }
     }, [isAuthenticated, user]);
-    useEffect(() => {
+    (0, react_1.useEffect)(() => {
         void fetchSpaces();
     }, [fetchSpaces]);
     const refetch = () => {

@@ -11,13 +11,12 @@ import {
   MousePointer,
   CheckSquare,
   TextCursor,
-  Star,
   Clock,
   BarChart3,
   GitBranch,
   Zap,
 } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion } from "../../framer-motion-proxy";
 import type { Element } from "@hive/core";
 
 // Map element types to Lucide icons
@@ -29,7 +28,6 @@ const ELEMENT_ICONS = {
   button: MousePointer,
   choiceSelect: CheckSquare,
   textInput: TextCursor,
-  ratingStars: Star,
   countdownTimer: Clock,
   progressBar: BarChart3,
   conditionGate: GitBranch,

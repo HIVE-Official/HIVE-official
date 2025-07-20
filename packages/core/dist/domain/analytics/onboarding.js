@@ -1,18 +1,21 @@
-import { z } from "zod";
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.createOnboardingEvent = exports.OnboardingFunnelEventSchema = exports.OnboardingAbandonedEventSchema = exports.OnboardingCompletedEventSchema = exports.OnboardingValidationErrorEventSchema = exports.OnboardingStepSkippedEventSchema = exports.OnboardingStepCompletedEventSchema = exports.OnboardingStepStartedEventSchema = exports.OnboardingStartedEventSchema = void 0;
+const zod_1 = require("zod");
 // Base onboarding event schema
-const BaseOnboardingEventSchema = z.object({
-    timestamp: z.number(),
-    sessionId: z.string(),
-    metadata: z.record(z.unknown()).optional(),
+const BaseOnboardingEventSchema = zod_1.z.object({
+    timestamp: zod_1.z.number(),
+    sessionId: zod_1.z.string(),
+    metadata: zod_1.z.record(zod_1.z.unknown()).optional(),
 });
 // Onboarding started event
-export const OnboardingStartedEventSchema = BaseOnboardingEventSchema.extend({
-    type: z.literal("onboarding_started"),
+exports.OnboardingStartedEventSchema = BaseOnboardingEventSchema.extend({
+    type: zod_1.z.literal("onboarding_started"),
 });
 // Step started event
-export const OnboardingStepStartedEventSchema = BaseOnboardingEventSchema.extend({
-    type: z.literal("onboarding_step_started"),
-    stepName: z.enum([
+exports.OnboardingStepStartedEventSchema = BaseOnboardingEventSchema.extend({
+    type: zod_1.z.literal("onboarding_step_started"),
+    stepName: zod_1.z.enum([
         "welcome",
         "name",
         "academics",
@@ -23,9 +26,9 @@ export const OnboardingStepStartedEventSchema = BaseOnboardingEventSchema.extend
     ]),
 });
 // Step completed event
-export const OnboardingStepCompletedEventSchema = BaseOnboardingEventSchema.extend({
-    type: z.literal("onboarding_step_completed"),
-    stepName: z.enum([
+exports.OnboardingStepCompletedEventSchema = BaseOnboardingEventSchema.extend({
+    type: zod_1.z.literal("onboarding_step_completed"),
+    stepName: zod_1.z.enum([
         "welcome",
         "name",
         "academics",
@@ -34,12 +37,12 @@ export const OnboardingStepCompletedEventSchema = BaseOnboardingEventSchema.exte
         "builder",
         "legal",
     ]),
-    stepDuration: z.number(),
+    stepDuration: zod_1.z.number(),
 });
 // Step skipped event
-export const OnboardingStepSkippedEventSchema = BaseOnboardingEventSchema.extend({
-    type: z.literal("onboarding_step_skipped"),
-    stepName: z.enum([
+exports.OnboardingStepSkippedEventSchema = BaseOnboardingEventSchema.extend({
+    type: zod_1.z.literal("onboarding_step_skipped"),
+    stepName: zod_1.z.enum([
         "welcome",
         "name",
         "academics",
@@ -48,12 +51,12 @@ export const OnboardingStepSkippedEventSchema = BaseOnboardingEventSchema.extend
         "builder",
         "legal",
     ]),
-    stepDuration: z.number(),
+    stepDuration: zod_1.z.number(),
 });
 // Validation error event
-export const OnboardingValidationErrorEventSchema = BaseOnboardingEventSchema.extend({
-    type: z.literal("onboarding_validation_error"),
-    stepName: z.enum([
+exports.OnboardingValidationErrorEventSchema = BaseOnboardingEventSchema.extend({
+    type: zod_1.z.literal("onboarding_validation_error"),
+    stepName: zod_1.z.enum([
         "welcome",
         "name",
         "academics",
@@ -64,14 +67,14 @@ export const OnboardingValidationErrorEventSchema = BaseOnboardingEventSchema.ex
     ]),
 });
 // Onboarding completed event
-export const OnboardingCompletedEventSchema = BaseOnboardingEventSchema.extend({
-    type: z.literal("onboarding_completed"),
-    totalDuration: z.number(),
+exports.OnboardingCompletedEventSchema = BaseOnboardingEventSchema.extend({
+    type: zod_1.z.literal("onboarding_completed"),
+    totalDuration: zod_1.z.number(),
 });
 // Onboarding abandoned event
-export const OnboardingAbandonedEventSchema = BaseOnboardingEventSchema.extend({
-    type: z.literal("onboarding_abandoned"),
-    stepName: z.enum([
+exports.OnboardingAbandonedEventSchema = BaseOnboardingEventSchema.extend({
+    type: zod_1.z.literal("onboarding_abandoned"),
+    stepName: zod_1.z.enum([
         "welcome",
         "name",
         "academics",
@@ -80,20 +83,20 @@ export const OnboardingAbandonedEventSchema = BaseOnboardingEventSchema.extend({
         "builder",
         "legal",
     ]),
-    totalDuration: z.number(),
+    totalDuration: zod_1.z.number(),
 });
 // Union of all onboarding events
-export const OnboardingFunnelEventSchema = z.discriminatedUnion("type", [
-    OnboardingStartedEventSchema,
-    OnboardingStepStartedEventSchema,
-    OnboardingStepCompletedEventSchema,
-    OnboardingStepSkippedEventSchema,
-    OnboardingValidationErrorEventSchema,
-    OnboardingCompletedEventSchema,
-    OnboardingAbandonedEventSchema,
+exports.OnboardingFunnelEventSchema = zod_1.z.discriminatedUnion("type", [
+    exports.OnboardingStartedEventSchema,
+    exports.OnboardingStepStartedEventSchema,
+    exports.OnboardingStepCompletedEventSchema,
+    exports.OnboardingStepSkippedEventSchema,
+    exports.OnboardingValidationErrorEventSchema,
+    exports.OnboardingCompletedEventSchema,
+    exports.OnboardingAbandonedEventSchema,
 ]);
 // Helper functions for analytics
-export const createOnboardingEvent = {
+exports.createOnboardingEvent = {
     started: (sessionId, metadata) => ({
         type: "onboarding_started",
         timestamp: Date.now(),

@@ -20,7 +20,7 @@ echo "Created backup directory: $BACKUP_DIR"
 echo "1. Backing up and removing template_feature directory..."
 if [ -d "lib/features/template_feature" ]; then
   cp -r lib/features/template_feature "$BACKUP_DIR/"
-  rm -rf lib/features/template_feature
+  npx rimraf lib/features/template_feature
   echo "✅ template_feature backed up and removed"
 else
   echo "⚠️ template_feature directory not found"
@@ -30,7 +30,7 @@ fi
 echo "2. Backing up and removing features/debug directory..."
 if [ -d "lib/features/debug" ]; then
   cp -r lib/features/debug "$BACKUP_DIR/"
-  rm -rf lib/features/debug
+  npx rimraf lib/features/debug
   echo "✅ features/debug backed up and removed"
 else
   echo "⚠️ features/debug directory not found"
@@ -60,7 +60,7 @@ echo "This includes moving unique functionality and updating import references"
 echo ""
 echo "❗ Important: After testing that the application works without these directories,"
 echo "❗ you can remove them completely with:"
-echo "rm -rf lib/features/profiles"
-echo "rm -rf lib/features/clubs"
+echo "npx rimraf lib/features/profiles"
+echo "npx rimraf lib/features/clubs"
 echo ""
 echo "Directory structure cleanup completed 🎉" 

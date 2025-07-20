@@ -48,6 +48,20 @@ const envSchema = z.object({
     .min(32, "NextAuth secret must be at least 32 characters")
     .optional(),
   NEXTAUTH_URL: z.string().url().optional(),
+
+  // Redis Config (for rate limiting and caching)
+  REDIS_URL: z.string().url().optional(),
+  REDIS_PASSWORD: z.string().optional(),
+  REDIS_USERNAME: z.string().optional(),
+  UPSTASH_REDIS_REST_URL: z.string().url().optional(),
+
+  // Email Service Config
+  SENDGRID_API_KEY: z.string().optional(),
+  FROM_EMAIL: z.string().email().optional(),
+
+  // Error Monitoring Config
+  SENTRY_DSN: z.string().url().optional(),
+  NEXT_PUBLIC_SENTRY_DSN: z.string().url().optional(),
 });
 
 
@@ -62,7 +76,17 @@ function getCurrentEnvironment(): "development" | "staging" | "production" {
   if (vercelEnv === "production") return "production";
   if (vercelEnv === "preview") return "staging";
 
-  // Local development or other environments
+  // Check if we're in local development (not deployed)
+  // This allows development features to work even when NODE_ENV=production for builds
+  const isLocalDev = !process.env.VERCEL && !process.env.RAILWAY_ENVIRONMENT && 
+                     !process.env.HEROKU_APP_NAME && !process.env.AWS_LAMBDA_FUNCTION_NAME;
+
+  // Additional check for Next.js development mode
+  const isNextDev = process.env.NODE_ENV === "development" || process.env.__NEXT_PROCESSED_ENV;
+
+  if (isLocalDev || isNextDev) return "development";
+
+  // Deployed environments
   if (env === "production") return "production";
   if (env === "staging") return "staging";
 
@@ -102,6 +126,14 @@ function parseEnv() {
     FIREBASE_PRIVATE_KEY: process.env.FIREBASE_PRIVATE_KEY,
     NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
+    REDIS_URL: process.env.REDIS_URL,
+    REDIS_PASSWORD: process.env.REDIS_PASSWORD,
+    REDIS_USERNAME: process.env.REDIS_USERNAME,
+    UPSTASH_REDIS_REST_URL: process.env.UPSTASH_REDIS_REST_URL,
+    SENDGRID_API_KEY: process.env.SENDGRID_API_KEY,
+    FROM_EMAIL: process.env.FROM_EMAIL,
+    SENTRY_DSN: process.env.SENTRY_DSN,
+    NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
   };
 
   try {

@@ -1,11 +1,13 @@
+"use client";
+
 import React, { useState, useCallback, useRef } from "react";
 import {
   useInfiniteQuery,
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "../ui/card";
+import { Button } from "../ui/button";
 import { Loader2, RefreshCw, AlertCircle } from "lucide-react";
 import { FeedComposer } from "./feed-composer";
 import { PostCard } from "./post-card";

@@ -16,4 +16,5 @@ export type { School } from "./domain/school";
 export * from "./constants/majors";
 export * from "./stores/useAppStore";
 export * from "./firebase";
+export * from "./feature-flags";
 //# sourceMappingURL=index.d.ts.map

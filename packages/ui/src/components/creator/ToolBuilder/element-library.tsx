@@ -17,7 +17,6 @@ import {
   Layers,
   MousePointer,
   ChevronDown,
-  Star,
   Clock,
   BarChart3,
   GitBranch,
@@ -53,7 +52,6 @@ const ElementIcon: React.FC<{ iconName: string; className?: string }> = ({
     Layers: Layers,
     MousePointer: MousePointer,
     ChevronDown: ChevronDown,
-    Star: Star,
     Clock: Clock,
     BarChart3: BarChart3,
     GitBranch: GitBranch,
@@ -91,7 +89,7 @@ const DraggableElement: React.FC<DraggableElementProps> = ({
 
   return (
     <div
-      ref={drag}
+      ref={drag as React.LegacyRef<HTMLDivElement>}
       onClick={handleClick}
       className={cn(
         "group relative p-3 border rounded-lg cursor-pointer transition-all hover:border-primary hover:shadow-sm",

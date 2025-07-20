@@ -43,10 +43,10 @@ export async function GET(request: NextRequest) {
     const decodedToken = await auth.verifyIdToken(token);
     const userId = decodedToken.uid;
 
-    // Get all space memberships for the user
+    // Get all space memberships for the user using collectionGroup
     const allSpacesSnapshot = await dbAdmin
       .collectionGroup("members")
-      .where("userId", "==", userId)
+      .where("uid", "==", userId)
       .get();
 
     if (allSpacesSnapshot.empty) {
@@ -57,28 +57,30 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    // Collect space IDs from memberships
-    const spaceIds = allSpacesSnapshot.docs
-      .map((doc) => {
-        const spaceId = doc.ref.parent.parent?.id;
-        return spaceId;
-      })
-      .filter((id): id is string => Boolean(id));
-
-    // Batch fetch space details
-    const spacePromises = spaceIds.map(async (spaceId) => {
-      const spaceDoc = await dbAdmin.collection("spaces").doc(spaceId).get();
+    // Collect space information from nested structure
+    const spacePromises = allSpacesSnapshot.docs.map(async (memberDoc) => {
+      // Get space ID and space type from document path
+      // Path: spaces/[spacetype]/spaces/[spaceId]/members/[userId]
+      const pathParts = memberDoc.ref.path.split('/');
+      if (pathParts.length !== 6) return null;
+      
+      const spaceType = pathParts[1]; // spaces/[spacetype]/...
+      const spaceId = pathParts[3];   // .../spaces/[spaceId]/...
+      
+      // Fetch space document from nested structure
+      const spaceDoc = await dbAdmin
+        .collection("spaces")
+        .doc(spaceType)
+        .collection("spaces")
+        .doc(spaceId)
+        .get();
+        
       if (!spaceDoc.exists) return null;
 
       const spaceData = spaceDoc.data() as SpaceData;
 
-      // Get membership details for this space
-      const membershipDoc = allSpacesSnapshot.docs.find(
-        (doc) => doc.ref.parent.parent?.id === spaceId
-      );
-      const membershipData = membershipDoc?.data() as
-        | MembershipData
-        | undefined;
+      // Get membership details from current document
+      const membershipData = memberDoc.data() as MembershipData;
 
       return {
         id: spaceId,
@@ -88,7 +90,7 @@ export async function GET(request: NextRequest) {
         subType: spaceData.subType,
         status: spaceData.status,
         memberCount: spaceData.memberCount || 0,
-        schoolId: spaceData.schoolId,
+        spaceType: spaceType,
         createdAt: spaceData.createdAt,
         updatedAt: spaceData.updatedAt,
         // Membership details

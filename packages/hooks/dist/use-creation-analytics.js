@@ -1,28 +1,31 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import { useAuth } from "./use-auth";
-import { createAnalyticsEvent, shouldTrackEvent, batchAnalyticsEvents, } from "@hive/core";
-export const useCreationAnalytics = (options = {}) => {
-    const authResult = useAuth();
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.useCreationAnalytics = void 0;
+const react_1 = require("react");
+const use_auth_1 = require("./use-auth");
+const core_1 = require("@hive/core");
+const useCreationAnalytics = (options = {}) => {
+    const authResult = (0, use_auth_1.useAuth)();
     const user = authResult.user;
     const { toolId, spaceId, batchSize = 100, flushInterval = 30000, // 30 seconds
     enableDebugLogging = false, } = options;
     // Session management
-    const [sessionId] = useState(() => crypto.randomUUID());
-    const [sessionStartTime] = useState(() => Date.now());
-    const [isSessionActive, setIsSessionActive] = useState(true);
+    const [sessionId] = (0, react_1.useState)(() => crypto.randomUUID());
+    const [sessionStartTime] = (0, react_1.useState)(() => Date.now());
+    const [isSessionActive, setIsSessionActive] = (0, react_1.useState)(true);
     // Event batching
-    const eventQueue = useRef([]);
-    const flushTimer = useRef();
-    const lastFlushTime = useRef(Date.now());
+    const eventQueue = (0, react_1.useRef)([]);
+    const flushTimer = (0, react_1.useRef)();
+    const lastFlushTime = (0, react_1.useRef)(Date.now());
     // User preferences
-    const [userPreferences, setUserPreferences] = useState({});
+    const [userPreferences, setUserPreferences] = (0, react_1.useState)({});
     // Context tracking
-    const [currentContext, setCurrentContext] = useState({
+    const [currentContext, setCurrentContext] = (0, react_1.useState)({
         toolId,
         spaceId,
     });
     // Load user preferences
-    useEffect(() => {
+    (0, react_1.useEffect)(() => {
         const loadPreferences = () => {
             if (!user)
                 return;
@@ -41,7 +44,7 @@ export const useCreationAnalytics = (options = {}) => {
         loadPreferences();
     }, [user]);
     // Flush events to analytics service
-    const flushEvents = useCallback(async (force = false) => {
+    const flushEvents = (0, react_1.useCallback)(async (force = false) => {
         if (eventQueue.current.length === 0)
             return;
         const now = Date.now();
@@ -55,7 +58,7 @@ export const useCreationAnalytics = (options = {}) => {
         eventQueue.current = [];
         lastFlushTime.current = now;
         try {
-            const batches = batchAnalyticsEvents(eventsToFlush, batchSize);
+            const batches = (0, core_1.batchAnalyticsEvents)(eventsToFlush, batchSize);
             for (const batch of batches) {
                 // Send to analytics service
                 const idToken = user ? await user.getIdToken() : "";
@@ -79,7 +82,7 @@ export const useCreationAnalytics = (options = {}) => {
         }
     }, [user, batchSize, flushInterval, enableDebugLogging]);
     // Auto-flush timer
-    useEffect(() => {
+    (0, react_1.useEffect)(() => {
         flushTimer.current = setInterval(() => {
             void flushEvents();
         }, flushInterval);
@@ -90,17 +93,17 @@ export const useCreationAnalytics = (options = {}) => {
         };
     }, [flushEvents, flushInterval]);
     // Flush on unmount
-    useEffect(() => {
+    (0, react_1.useEffect)(() => {
         return () => {
             void flushEvents(true);
         };
     }, [flushEvents]);
     // Track event
-    const trackEvent = useCallback((eventType, metadata, context) => {
-        if (!shouldTrackEvent(eventType, userPreferences)) {
+    const trackEvent = (0, react_1.useCallback)((eventType, metadata, context) => {
+        if (!(0, core_1.shouldTrackEvent)(eventType, userPreferences)) {
             return;
         }
-        const event = createAnalyticsEvent(eventType, {
+        const event = (0, core_1.createAnalyticsEvent)(eventType, {
             userId: user?.uid,
             sessionId,
             toolId: context?.toolId || currentContext.toolId,
@@ -146,11 +149,11 @@ export const useCreationAnalytics = (options = {}) => {
         flushEvents,
     ]);
     // Update context
-    const updateContext = useCallback((context) => {
+    const updateContext = (0, react_1.useCallback)((context) => {
         setCurrentContext((prev) => ({ ...prev, ...context }));
     }, []);
     // Builder session tracking
-    const startBuilderSession = useCallback((toolId, toolName) => {
+    const startBuilderSession = (0, react_1.useCallback)((toolId, toolName) => {
         updateContext({ toolId, toolName });
         trackEvent("builder_session_start", {
             toolId,
@@ -163,7 +166,7 @@ export const useCreationAnalytics = (options = {}) => {
         });
         setIsSessionActive(true);
     }, [trackEvent, updateContext]);
-    const endBuilderSession = useCallback((exitReason = "abandon") => {
+    const endBuilderSession = (0, react_1.useCallback)((exitReason = "abandon") => {
         const sessionDuration = (Date.now() - sessionStartTime) / 1000; // seconds
         trackEvent("builder_session_end", {
             sessionDuration,
@@ -176,7 +179,7 @@ export const useCreationAnalytics = (options = {}) => {
         void flushEvents(true); // Force flush on session end
     }, [trackEvent, sessionStartTime, flushEvents]);
     // Tool lifecycle events
-    const trackToolCreated = useCallback((toolData) => {
+    const trackToolCreated = (0, react_1.useCallback)((toolData) => {
         updateContext({
             toolId: toolData.toolId,
             toolName: toolData.toolName,
@@ -189,10 +192,10 @@ export const useCreationAnalytics = (options = {}) => {
             templateUsed: toolData.templateUsed,
         });
     }, [trackEvent, updateContext]);
-    const trackToolUpdated = useCallback((updateData) => {
+    const trackToolUpdated = (0, react_1.useCallback)((updateData) => {
         trackEvent("tool_updated", updateData);
     }, [trackEvent]);
-    const trackToolPublished = useCallback((toolData) => {
+    const trackToolPublished = (0, react_1.useCallback)((toolData) => {
         updateContext({ toolStatus: "published" });
         trackEvent("tool_published", {
             elementsCount: toolData.elementsCount,
@@ -201,50 +204,50 @@ export const useCreationAnalytics = (options = {}) => {
         });
     }, [trackEvent, updateContext, sessionStartTime]);
     // Element interaction events
-    const trackElementAdded = useCallback((elementData) => {
+    const trackElementAdded = (0, react_1.useCallback)((elementData) => {
         trackEvent("element_added", elementData, {
             elementId: elementData.elementId,
             elementType: elementData.elementType,
         });
     }, [trackEvent]);
-    const trackElementConfigured = useCallback((configData) => {
+    const trackElementConfigured = (0, react_1.useCallback)((configData) => {
         trackEvent("element_configured", configData, {
             elementId: configData.elementId,
             elementType: configData.elementType,
         });
     }, [trackEvent]);
-    const trackElementRemoved = useCallback((elementData) => {
+    const trackElementRemoved = (0, react_1.useCallback)((elementData) => {
         trackEvent("element_removed", elementData, {
             elementId: elementData.elementId,
             elementType: elementData.elementType,
         });
     }, [trackEvent]);
     // Builder interaction events
-    const trackCanvasModeChanged = useCallback((mode) => {
+    const trackCanvasModeChanged = (0, react_1.useCallback)((mode) => {
         trackEvent("canvas_mode_changed", {
             mode,
             previousMode: currentContext.toolStatus,
         });
     }, [trackEvent, currentContext]);
-    const trackDeviceModeChanged = useCallback((deviceMode) => {
+    const trackDeviceModeChanged = (0, react_1.useCallback)((deviceMode) => {
         trackEvent("device_mode_changed", { deviceMode });
     }, [trackEvent]);
-    const trackElementLibrarySearched = useCallback((searchQuery, resultsCount) => {
+    const trackElementLibrarySearched = (0, react_1.useCallback)((searchQuery, resultsCount) => {
         trackEvent("element_library_searched", { searchQuery, resultsCount });
     }, [trackEvent]);
     // Tool usage events (for end users)
-    const trackToolInstanceOpened = useCallback((instanceData) => {
+    const trackToolInstanceOpened = (0, react_1.useCallback)((instanceData) => {
         trackEvent("tool_instance_opened", instanceData, {
             toolId: instanceData.toolId,
         });
     }, [trackEvent]);
-    const trackToolInstanceSubmitted = useCallback((submissionData) => {
+    const trackToolInstanceSubmitted = (0, react_1.useCallback)((submissionData) => {
         trackEvent("tool_instance_submitted", submissionData, {
             toolId: submissionData.toolId,
         });
     }, [trackEvent]);
     // Privacy controls
-    const updatePrivacyPreferences = useCallback((preferences) => {
+    const updatePrivacyPreferences = (0, react_1.useCallback)((preferences) => {
         setUserPreferences((prev) => ({ ...prev, ...preferences }));
         // Save to localStorage
         if (user) {
@@ -281,4 +284,5 @@ export const useCreationAnalytics = (options = {}) => {
         queueSize: eventQueue.current.length,
     };
 };
+exports.useCreationAnalytics = useCreationAnalytics;
 //# sourceMappingURL=use-creation-analytics.js.map

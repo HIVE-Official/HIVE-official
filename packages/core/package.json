@@ -4,13 +4,25 @@
   "private": true,
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js",
+      "import": "./dist/index.js"
+    },
+    "./server": {
+      "types": "./dist/server.d.ts",
+      "require": "./dist/server.js",
+      "import": "./dist/server.js"
+    }
+  },
   "files": [
     "dist"
   ],
   "scripts": {
     "build": "npx tsc",
     "dev": "npx tsc --watch",
-    "clean": "rm -rf dist",
+    "clean": "npx rimraf dist",
     "lint": "npx eslint . --max-warnings 10",
     "typecheck": "npx tsc --noEmit"
   },
@@ -19,6 +31,7 @@
     "@hive/typescript-config": "workspace:*",
     "@types/node": "^20.0.0",
     "eslint": "^9.28.0",
+    "rimraf": "^6.0.1",
     "typescript": "^5.8.3"
   },
   "dependencies": {

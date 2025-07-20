@@ -1,6 +1,9 @@
-import { z } from "zod";
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.shouldRetainEvent = exports.batchAnalyticsEvents = exports.shouldTrackEvent = exports.createAnalyticsEvent = exports.hashUserId = exports.BuilderBehaviorSchema = exports.ToolPerformanceSchema = exports.ElementPopularitySchema = exports.ToolForkedEventSchema = exports.ShareLinkCreatedEventSchema = exports.ToolElementInteractedEventSchema = exports.ToolInstanceSubmittedEventSchema = exports.ToolInstanceOpenedEventSchema = exports.BuilderSessionEventSchema = exports.ElementConfiguredEventSchema = exports.ElementAddedEventSchema = exports.ToolUpdatedEventSchema = exports.ToolCreatedEventSchema = exports.CreationAnalyticsEventSchema = exports.CreationEventType = void 0;
+const zod_1 = require("zod");
 // Creation Engine Analytics Events
-export const CreationEventType = z.enum([
+exports.CreationEventType = zod_1.z.enum([
     // Tool Builder Events
     "tool_created",
     "tool_updated",
@@ -44,247 +47,248 @@ export const CreationEventType = z.enum([
     "tool_feed_posted",
 ]);
 // Base analytics event schema
-export const CreationAnalyticsEventSchema = z.object({
+exports.CreationAnalyticsEventSchema = zod_1.z.object({
     // Event identification
-    eventType: CreationEventType,
-    eventId: z.string().uuid(),
-    timestamp: z.date(),
+    eventType: exports.CreationEventType,
+    eventId: zod_1.z.string().uuid(),
+    timestamp: zod_1.z.date(),
     // User identification (hashed for privacy)
-    userIdHash: z.string().optional(), // SHA-256 hash of user ID
-    sessionId: z.string(),
+    userIdHash: zod_1.z.string().optional(), // SHA-256 hash of user ID
+    sessionId: zod_1.z.string(),
     // Tool context
-    toolId: z.string().optional(),
-    toolName: z.string().optional(),
-    toolVersion: z.string().optional(),
-    toolStatus: z.enum(["draft", "preview", "published"]).optional(),
+    toolId: zod_1.z.string().optional(),
+    toolName: zod_1.z.string().optional(),
+    toolVersion: zod_1.z.string().optional(),
+    toolStatus: zod_1.z.enum(["draft", "preview", "published"]).optional(),
     // Space context
-    spaceId: z.string().optional(),
-    isSpaceTool: z.boolean().optional(),
+    spaceId: zod_1.z.string().optional(),
+    isSpaceTool: zod_1.z.boolean().optional(),
     // Element context
-    elementId: z.string().optional(), // Element instance ID
-    elementType: z.string().optional(), // Element definition type
-    elementVersion: z.number().optional(),
+    elementId: zod_1.z.string().optional(), // Element instance ID
+    elementType: zod_1.z.string().optional(), // Element definition type
+    elementVersion: zod_1.z.number().optional(),
     // Event-specific data
-    metadata: z.record(z.any()).optional(),
+    metadata: zod_1.z.record(zod_1.z.any()).optional(),
     // Technical context
-    userAgent: z.string().optional(),
-    viewport: z
+    userAgent: zod_1.z.string().optional(),
+    viewport: zod_1.z
         .object({
-        width: z.number(),
-        height: z.number(),
+        width: zod_1.z.number(),
+        height: zod_1.z.number(),
     })
         .optional(),
     // Performance metrics
-    loadTime: z.number().optional(), // milliseconds
-    renderTime: z.number().optional(), // milliseconds
+    loadTime: zod_1.z.number().optional(), // milliseconds
+    renderTime: zod_1.z.number().optional(), // milliseconds
     // Privacy controls
-    optedOut: z.boolean().default(false),
-    anonymized: z.boolean().default(false),
+    optedOut: zod_1.z.boolean().default(false),
+    anonymized: zod_1.z.boolean().default(false),
 });
 // Specific event schemas with typed metadata
 // Tool Builder Events
-export const ToolCreatedEventSchema = CreationAnalyticsEventSchema.extend({
-    eventType: z.literal("tool_created"),
-    metadata: z
+exports.ToolCreatedEventSchema = exports.CreationAnalyticsEventSchema.extend({
+    eventType: zod_1.z.literal("tool_created"),
+    metadata: zod_1.z
         .object({
-        hasDescription: z.boolean(),
-        initialElementsCount: z.number(),
-        templateUsed: z.string().optional(),
-        creationSource: z.enum(["scratch", "template", "fork"]),
+        hasDescription: zod_1.z.boolean(),
+        initialElementsCount: zod_1.z.number(),
+        templateUsed: zod_1.z.string().optional(),
+        creationSource: zod_1.z.enum(["scratch", "template", "fork"]),
     })
         .optional(),
 });
-export const ToolUpdatedEventSchema = CreationAnalyticsEventSchema.extend({
-    eventType: z.literal("tool_updated"),
-    metadata: z
+exports.ToolUpdatedEventSchema = exports.CreationAnalyticsEventSchema.extend({
+    eventType: zod_1.z.literal("tool_updated"),
+    metadata: zod_1.z
         .object({
-        versionChanged: z.boolean(),
-        newVersion: z.string(),
-        elementsCount: z.number(),
-        changeType: z.enum(["major", "minor", "patch"]),
-        fieldsChanged: z.array(z.string()),
-        editDuration: z.number(), // seconds
+        versionChanged: zod_1.z.boolean(),
+        newVersion: zod_1.z.string(),
+        elementsCount: zod_1.z.number(),
+        changeType: zod_1.z.enum(["major", "minor", "patch"]),
+        fieldsChanged: zod_1.z.array(zod_1.z.string()),
+        editDuration: zod_1.z.number(), // seconds
     })
         .optional(),
 });
-export const ElementAddedEventSchema = CreationAnalyticsEventSchema.extend({
-    eventType: z.literal("element_added"),
-    metadata: z
+exports.ElementAddedEventSchema = exports.CreationAnalyticsEventSchema.extend({
+    eventType: zod_1.z.literal("element_added"),
+    metadata: zod_1.z
         .object({
-        addMethod: z.enum(["drag_drop", "click", "preset", "duplicate"]),
-        presetUsed: z.string().optional(),
-        position: z.object({ x: z.number(), y: z.number() }),
-        canvasElementsCount: z.number(),
-        librarySearchQuery: z.string().optional(),
+        addMethod: zod_1.z.enum(["drag_drop", "click", "preset", "duplicate"]),
+        presetUsed: zod_1.z.string().optional(),
+        position: zod_1.z.object({ x: zod_1.z.number(), y: zod_1.z.number() }),
+        canvasElementsCount: zod_1.z.number(),
+        librarySearchQuery: zod_1.z.string().optional(),
     })
         .optional(),
 });
-export const ElementConfiguredEventSchema = CreationAnalyticsEventSchema.extend({
-    eventType: z.literal("element_configured"),
-    metadata: z
+exports.ElementConfiguredEventSchema = exports.CreationAnalyticsEventSchema.extend({
+    eventType: zod_1.z.literal("element_configured"),
+    metadata: zod_1.z
         .object({
-        configMethod: z.enum([
+        configMethod: zod_1.z.enum([
             "properties_panel",
             "json_editor",
             "inline_edit",
         ]),
-        propertiesChanged: z.array(z.string()),
-        configComplexity: z.enum(["basic", "advanced"]),
-        validationErrors: z.array(z.string()).optional(),
-        timeSpent: z.number(), // seconds
+        propertiesChanged: zod_1.z.array(zod_1.z.string()),
+        configComplexity: zod_1.z.enum(["basic", "advanced"]),
+        validationErrors: zod_1.z.array(zod_1.z.string()).optional(),
+        timeSpent: zod_1.z.number(), // seconds
     })
         .optional(),
 });
-export const BuilderSessionEventSchema = CreationAnalyticsEventSchema.extend({
-    eventType: z.enum(["builder_session_start", "builder_session_end"]),
-    metadata: z
+exports.BuilderSessionEventSchema = exports.CreationAnalyticsEventSchema.extend({
+    eventType: zod_1.z.enum(["builder_session_start", "builder_session_end"]),
+    metadata: zod_1.z
         .object({
-        sessionDuration: z.number().optional(), // seconds (for end events)
-        elementsAdded: z.number().optional(),
-        elementsRemoved: z.number().optional(),
-        elementsConfigured: z.number().optional(),
-        undoCount: z.number().optional(),
-        redoCount: z.number().optional(),
-        modesUsed: z.array(z.enum(["design", "preview", "code"])).optional(),
-        deviceModesUsed: z
-            .array(z.enum(["desktop", "tablet", "mobile"]))
+        sessionDuration: zod_1.z.number().optional(), // seconds (for end events)
+        elementsAdded: zod_1.z.number().optional(),
+        elementsRemoved: zod_1.z.number().optional(),
+        elementsConfigured: zod_1.z.number().optional(),
+        undoCount: zod_1.z.number().optional(),
+        redoCount: zod_1.z.number().optional(),
+        modesUsed: zod_1.z.array(zod_1.z.enum(["design", "preview", "code"])).optional(),
+        deviceModesUsed: zod_1.z
+            .array(zod_1.z.enum(["desktop", "tablet", "mobile"]))
             .optional(),
-        exitReason: z.enum(["save", "abandon", "publish", "share"]).optional(),
+        exitReason: zod_1.z.enum(["save", "abandon", "publish", "share"]).optional(),
     })
         .optional(),
 });
 // Tool Usage Events (end-user interactions)
-export const ToolInstanceOpenedEventSchema = CreationAnalyticsEventSchema.extend({
-    eventType: z.literal("tool_instance_opened"),
-    metadata: z
+exports.ToolInstanceOpenedEventSchema = exports.CreationAnalyticsEventSchema.extend({
+    eventType: zod_1.z.literal("tool_instance_opened"),
+    metadata: zod_1.z
         .object({
-        source: z.enum(["direct", "feed", "share_link", "embed"]),
-        referrer: z.string().optional(),
-        isFirstTime: z.boolean(),
-        deviceType: z.enum(["desktop", "tablet", "mobile"]),
+        source: zod_1.z.enum(["direct", "feed", "share_link", "embed"]),
+        referrer: zod_1.z.string().optional(),
+        isFirstTime: zod_1.z.boolean(),
+        deviceType: zod_1.z.enum(["desktop", "tablet", "mobile"]),
     })
         .optional(),
 });
-export const ToolInstanceSubmittedEventSchema = CreationAnalyticsEventSchema.extend({
-    eventType: z.literal("tool_instance_submitted"),
-    metadata: z
+exports.ToolInstanceSubmittedEventSchema = exports.CreationAnalyticsEventSchema.extend({
+    eventType: zod_1.z.literal("tool_instance_submitted"),
+    metadata: zod_1.z
         .object({
-        completionTime: z.number(), // seconds
-        elementsInteracted: z.number(),
-        validationErrors: z.number(),
-        dataSize: z.number(), // bytes
-        isAnonymous: z.boolean(),
-        retryCount: z.number(),
+        completionTime: zod_1.z.number(), // seconds
+        elementsInteracted: zod_1.z.number(),
+        validationErrors: zod_1.z.number(),
+        dataSize: zod_1.z.number(), // bytes
+        isAnonymous: zod_1.z.boolean(),
+        retryCount: zod_1.z.number(),
     })
         .optional(),
 });
-export const ToolElementInteractedEventSchema = CreationAnalyticsEventSchema.extend({
-    eventType: z.literal("tool_element_interacted"),
-    metadata: z
+exports.ToolElementInteractedEventSchema = exports.CreationAnalyticsEventSchema.extend({
+    eventType: zod_1.z.literal("tool_element_interacted"),
+    metadata: zod_1.z
         .object({
-        interactionType: z.enum(["click", "input", "select", "drag", "hover"]),
-        elementPosition: z.object({ x: z.number(), y: z.number() }),
-        valueChanged: z.boolean(),
-        timeOnElement: z.number(), // milliseconds
-        previousElement: z.string().optional(),
-        nextElement: z.string().optional(),
+        interactionType: zod_1.z.enum(["click", "input", "select", "drag", "hover"]),
+        elementPosition: zod_1.z.object({ x: zod_1.z.number(), y: zod_1.z.number() }),
+        valueChanged: zod_1.z.boolean(),
+        timeOnElement: zod_1.z.number(), // milliseconds
+        previousElement: zod_1.z.string().optional(),
+        nextElement: zod_1.z.string().optional(),
     })
         .optional(),
 });
 // Sharing & Distribution Events
-export const ShareLinkCreatedEventSchema = CreationAnalyticsEventSchema.extend({
-    eventType: z.literal("share_link_created"),
-    metadata: z
+exports.ShareLinkCreatedEventSchema = exports.CreationAnalyticsEventSchema.extend({
+    eventType: zod_1.z.literal("share_link_created"),
+    metadata: zod_1.z
         .object({
-        shareType: z.enum(["view", "edit", "fork"]),
-        hasExpiration: z.boolean(),
-        shareMethod: z.enum(["direct_link", "social", "embed"]),
-        recipientCount: z.number().optional(),
+        shareType: zod_1.z.enum(["view", "edit", "fork"]),
+        hasExpiration: zod_1.z.boolean(),
+        shareMethod: zod_1.z.enum(["direct_link", "social", "embed"]),
+        recipientCount: zod_1.z.number().optional(),
     })
         .optional(),
 });
-export const ToolForkedEventSchema = CreationAnalyticsEventSchema.extend({
-    eventType: z.literal("tool_forked"),
-    metadata: z
+exports.ToolForkedEventSchema = exports.CreationAnalyticsEventSchema.extend({
+    eventType: zod_1.z.literal("tool_forked"),
+    metadata: zod_1.z
         .object({
-        originalToolId: z.string(),
-        originalToolName: z.string(),
-        elementsCount: z.number(),
-        modificationsBeforeFork: z.number(),
-        forkReason: z.enum(["customize", "learn", "remix", "backup"]).optional(),
+        originalToolId: zod_1.z.string(),
+        originalToolName: zod_1.z.string(),
+        elementsCount: zod_1.z.number(),
+        modificationsBeforeFork: zod_1.z.number(),
+        forkReason: zod_1.z.enum(["customize", "learn", "remix", "backup"]).optional(),
     })
         .optional(),
 });
 // Element popularity and usage tracking
-export const ElementPopularitySchema = z.object({
-    elementId: z.string(),
-    elementType: z.string(),
-    usageCount: z.number(),
-    configurationComplexity: z.object({
-        basic: z.number(),
-        advanced: z.number(),
+exports.ElementPopularitySchema = zod_1.z.object({
+    elementId: zod_1.z.string(),
+    elementType: zod_1.z.string(),
+    usageCount: zod_1.z.number(),
+    configurationComplexity: zod_1.z.object({
+        basic: zod_1.z.number(),
+        advanced: zod_1.z.number(),
     }),
-    popularPresets: z.array(z.object({
-        presetId: z.string(),
-        usageCount: z.number(),
+    popularPresets: zod_1.z.array(zod_1.z.object({
+        presetId: zod_1.z.string(),
+        usageCount: zod_1.z.number(),
     })),
-    averageConfigTime: z.number(), // seconds
-    errorRate: z.number(), // percentage
-    retentionRate: z.number(), // percentage of elements that stay in final tool
+    averageConfigTime: zod_1.z.number(), // seconds
+    errorRate: zod_1.z.number(), // percentage
+    retentionRate: zod_1.z.number(), // percentage of elements that stay in final tool
 });
 // Tool performance metrics
-export const ToolPerformanceSchema = z.object({
-    toolId: z.string(),
-    metrics: z.object({
-        averageLoadTime: z.number(), // milliseconds
-        averageRenderTime: z.number(), // milliseconds
-        errorRate: z.number(), // percentage
-        completionRate: z.number(), // percentage
-        abandonmentRate: z.number(), // percentage
-        averageSessionDuration: z.number(), // seconds
-        elementsPerTool: z.number(),
-        configComplexityScore: z.number(), // 1-10 scale
+exports.ToolPerformanceSchema = zod_1.z.object({
+    toolId: zod_1.z.string(),
+    metrics: zod_1.z.object({
+        averageLoadTime: zod_1.z.number(), // milliseconds
+        averageRenderTime: zod_1.z.number(), // milliseconds
+        errorRate: zod_1.z.number(), // percentage
+        completionRate: zod_1.z.number(), // percentage
+        abandonmentRate: zod_1.z.number(), // percentage
+        averageSessionDuration: zod_1.z.number(), // seconds
+        elementsPerTool: zod_1.z.number(),
+        configComplexityScore: zod_1.z.number(), // 1-10 scale
     }),
-    timeframe: z.object({
-        start: z.date(),
-        end: z.date(),
+    timeframe: zod_1.z.object({
+        start: zod_1.z.date(),
+        end: zod_1.z.date(),
     }),
 });
 // Builder behavior insights
-export const BuilderBehaviorSchema = z.object({
-    userIdHash: z.string(),
-    insights: z.object({
-        preferredElements: z.array(z.string()),
-        averageToolComplexity: z.number(),
-        buildingPatterns: z.array(z.string()),
-        commonMistakes: z.array(z.string()),
-        learningProgression: z.object({
-            beginnerElements: z.number(),
-            intermediateElements: z.number(),
-            advancedElements: z.number(),
+exports.BuilderBehaviorSchema = zod_1.z.object({
+    userIdHash: zod_1.z.string(),
+    insights: zod_1.z.object({
+        preferredElements: zod_1.z.array(zod_1.z.string()),
+        averageToolComplexity: zod_1.z.number(),
+        buildingPatterns: zod_1.z.array(zod_1.z.string()),
+        commonMistakes: zod_1.z.array(zod_1.z.string()),
+        learningProgression: zod_1.z.object({
+            beginnerElements: zod_1.z.number(),
+            intermediateElements: zod_1.z.number(),
+            advancedElements: zod_1.z.number(),
         }),
-        collaborationStyle: z.enum(["solo", "collaborative", "mixed"]),
-        shareFrequency: z.enum(["never", "rarely", "sometimes", "often", "always"]),
+        collaborationStyle: zod_1.z.enum(["solo", "collaborative", "mixed"]),
+        shareFrequency: zod_1.z.enum(["never", "rarely", "sometimes", "often", "always"]),
     }),
-    timeframe: z.object({
-        start: z.date(),
-        end: z.date(),
+    timeframe: zod_1.z.object({
+        start: zod_1.z.date(),
+        end: zod_1.z.date(),
     }),
 });
 // Utility functions for analytics
-export const hashUserId = (userId) => {
+const hashUserId = (userId) => {
     // In a real implementation, use a proper crypto library
     // This is a simplified example
     return btoa(userId)
         .replace(/[^a-zA-Z0-9]/g, "")
         .substring(0, 16);
 };
-export const createAnalyticsEvent = (eventType, context) => {
+exports.hashUserId = hashUserId;
+const createAnalyticsEvent = (eventType, context) => {
     return {
         eventType,
         eventId: crypto.randomUUID(),
         timestamp: new Date(),
-        userIdHash: context.userId ? hashUserId(context.userId) : undefined,
+        userIdHash: context.userId ? (0, exports.hashUserId)(context.userId) : undefined,
         sessionId: context.sessionId,
         toolId: context.toolId,
         elementId: context.elementId,
@@ -293,7 +297,8 @@ export const createAnalyticsEvent = (eventType, context) => {
         anonymized: false,
     };
 };
-export const shouldTrackEvent = (eventType, userPreferences = {}) => {
+exports.createAnalyticsEvent = createAnalyticsEvent;
+const shouldTrackEvent = (eventType, userPreferences = {}) => {
     // Respect user opt-out preferences
     if (userPreferences.analyticsOptOut) {
         return false;
@@ -306,18 +311,21 @@ export const shouldTrackEvent = (eventType, userPreferences = {}) => {
     ];
     return criticalEvents.includes(eventType) || !userPreferences.analyticsOptOut;
 };
+exports.shouldTrackEvent = shouldTrackEvent;
 // Event batching for performance
-export const batchAnalyticsEvents = (events, maxBatchSize = 100) => {
+const batchAnalyticsEvents = (events, maxBatchSize = 100) => {
     const batches = [];
     for (let i = 0; i < events.length; i += maxBatchSize) {
         batches.push(events.slice(i, i + maxBatchSize));
     }
     return batches;
 };
+exports.batchAnalyticsEvents = batchAnalyticsEvents;
 // Privacy-compliant data retention
-export const shouldRetainEvent = (event, retentionDays = 90) => {
+const shouldRetainEvent = (event, retentionDays = 90) => {
     const eventAge = Date.now() - event.timestamp.getTime();
     const maxAge = retentionDays * 24 * 60 * 60 * 1000; // Convert to milliseconds
     return eventAge < maxAge;
 };
+exports.shouldRetainEvent = shouldRetainEvent;
 //# sourceMappingURL=creation.js.map

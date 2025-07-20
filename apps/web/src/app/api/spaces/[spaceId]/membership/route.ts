@@ -41,9 +41,24 @@ export async function GET(
     const decodedToken = await auth.verifyIdToken(token);
     const requestingUserId = decodedToken.uid;
 
-    // Check if space exists
-    const spaceDoc = await dbAdmin.collection("spaces").doc(spaceId).get();
-    if (!spaceDoc.exists) {
+    // Find the space in the nested structure: spaces/[spacetype]/spaces/spaceID
+    const spaceTypes = ['campus_living', 'fraternity_and_sorority', 'hive_exclusive', 'student_organizations', 'university_organizations'];
+    let spaceDoc: any = null;
+    let spaceType: string | null = null;
+
+    // Search through all space types to find the space
+    for (const type of spaceTypes) {
+      const potentialSpaceRef = dbAdmin.collection("spaces").doc(type).collection("spaces").doc(spaceId);
+      const potentialDoc = await potentialSpaceRef.get();
+      
+      if (potentialDoc.exists) {
+        spaceDoc = potentialDoc;
+        spaceType = type;
+        break;
+      }
+    }
+
+    if (!spaceDoc || !spaceDoc.exists) {
       return NextResponse.json({ error: "Space not found" }, { status: 404 });
     }
 
@@ -58,6 +73,8 @@ export async function GET(
 
     // Check if requesting user is a member of this space
     const requestingUserMemberDoc = await dbAdmin
+      .collection("spaces")
+      .doc(spaceType!)
       .collection("spaces")
       .doc(spaceId)
       .collection("members")
@@ -83,6 +100,8 @@ export async function GET(
     // Build members query
     let membersQuery = dbAdmin
       .collection("spaces")
+      .doc(spaceType!)
+      .collection("spaces")
       .doc(spaceId)
       .collection("members")
       .orderBy("joinedAt", "desc");
@@ -100,6 +119,8 @@ export async function GET(
 
     // Get total count for pagination
     const totalMembersSnapshot = await dbAdmin
+      .collection("spaces")
+      .doc(spaceType!)
       .collection("spaces")
       .doc(spaceId)
       .collection("members")

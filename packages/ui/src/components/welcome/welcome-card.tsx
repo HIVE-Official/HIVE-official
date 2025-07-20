@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { motion } from 'framer-motion';
+import { motion } from '../framer-motion-proxy';
 import {
   Card,
   CardContent,

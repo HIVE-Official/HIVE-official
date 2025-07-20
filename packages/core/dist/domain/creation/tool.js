@@ -1,160 +1,163 @@
-import { z } from 'zod';
-import { ElementInstanceSchema } from './element';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.validateToolStructure = exports.determineChangeType = exports.getNextVersion = exports.canUserViewTool = exports.canUserEditTool = exports.generateShareToken = exports.createToolDefaults = exports.ToolUsageEventSchema = exports.ToolDataRecordSchema = exports.ShareToolSchema = exports.UpdateToolSchema = exports.CreateToolSchema = exports.ToolSchema = exports.ToolVersionSchema = exports.ToolConfigSchema = exports.ToolDataSchemaSchema = exports.ToolMetadataSchema = exports.ToolCollaboratorSchema = exports.ToolPermission = exports.ToolStatus = void 0;
+const zod_1 = require("zod");
+const element_1 = require("./element");
 // Tool status for Draft → Preview → Publish workflow
-export const ToolStatus = z.enum(['draft', 'preview', 'published']);
+exports.ToolStatus = zod_1.z.enum(['draft', 'preview', 'published']);
 // Tool sharing permissions
-export const ToolPermission = z.enum(['view', 'comment', 'edit']);
+exports.ToolPermission = zod_1.z.enum(['view', 'comment', 'edit']);
 // Tool collaborator with role-based permissions
-export const ToolCollaboratorSchema = z.object({
-    userId: z.string(),
-    permission: ToolPermission,
-    addedAt: z.date(),
-    addedBy: z.string(),
+exports.ToolCollaboratorSchema = zod_1.z.object({
+    userId: zod_1.z.string(),
+    permission: exports.ToolPermission,
+    addedAt: zod_1.z.date(),
+    addedBy: zod_1.z.string(),
 });
 // Tool metadata for analytics and discovery
-export const ToolMetadataSchema = z.object({
-    tags: z.array(z.string()).max(10).optional(),
-    difficulty: z.enum(['beginner', 'intermediate', 'advanced']).optional(),
-    estimatedTime: z.number().min(1).max(300).optional(), // minutes
-    category: z.string().max(50).optional(),
-    language: z.string().length(2).default('en'), // ISO 639-1
+exports.ToolMetadataSchema = zod_1.z.object({
+    tags: zod_1.z.array(zod_1.z.string()).max(10).optional(),
+    difficulty: zod_1.z.enum(['beginner', 'intermediate', 'advanced']).optional(),
+    estimatedTime: zod_1.z.number().min(1).max(300).optional(), // minutes
+    category: zod_1.z.string().max(50).optional(),
+    language: zod_1.z.string().length(2).default('en'), // ISO 639-1
 });
 // Tool data schema configuration
-export const ToolDataSchemaSchema = z.object({
-    fields: z.array(z.object({
-        name: z.string().max(50),
-        type: z.enum(['string', 'number', 'boolean', 'date', 'array', 'object']),
-        required: z.boolean().default(false),
-        validation: z.object({
-            min: z.number().optional(),
-            max: z.number().optional(),
-            pattern: z.string().optional(),
-            enum: z.array(z.string()).optional(),
+exports.ToolDataSchemaSchema = zod_1.z.object({
+    fields: zod_1.z.array(zod_1.z.object({
+        name: zod_1.z.string().max(50),
+        type: zod_1.z.enum(['string', 'number', 'boolean', 'date', 'array', 'object']),
+        required: zod_1.z.boolean().default(false),
+        validation: zod_1.z.object({
+            min: zod_1.z.number().optional(),
+            max: zod_1.z.number().optional(),
+            pattern: zod_1.z.string().optional(),
+            enum: zod_1.z.array(zod_1.z.string()).optional(),
         }).optional(),
     })),
-    maxRecords: z.number().min(1).max(1000).default(100),
-    allowAnonymous: z.boolean().default(false),
+    maxRecords: zod_1.z.number().min(1).max(1000).default(100),
+    allowAnonymous: zod_1.z.boolean().default(false),
 });
 // Tool configuration and settings
-export const ToolConfigSchema = z.object({
+exports.ToolConfigSchema = zod_1.z.object({
     // Appearance
-    theme: z.enum(['light', 'dark', 'auto']).default('auto'),
-    primaryColor: z.string().default('#3b82f6'),
-    backgroundColor: z.string().default('#ffffff'),
+    theme: zod_1.z.enum(['light', 'dark', 'auto']).default('auto'),
+    primaryColor: zod_1.z.string().default('#3b82f6'),
+    backgroundColor: zod_1.z.string().default('#ffffff'),
     // Behavior
-    allowMultipleSubmissions: z.boolean().default(false),
-    requireAuthentication: z.boolean().default(true),
-    showProgressBar: z.boolean().default(false),
-    autoSave: z.boolean().default(true),
+    allowMultipleSubmissions: zod_1.z.boolean().default(false),
+    requireAuthentication: zod_1.z.boolean().default(true),
+    showProgressBar: zod_1.z.boolean().default(false),
+    autoSave: zod_1.z.boolean().default(true),
     // Data handling
-    dataSchema: ToolDataSchemaSchema.optional(),
-    dataRetentionDays: z.number().min(1).max(365).default(90),
+    dataSchema: exports.ToolDataSchemaSchema.optional(),
+    dataRetentionDays: zod_1.z.number().min(1).max(365).default(90),
     // Notifications
-    notifyOnSubmission: z.boolean().default(false),
-    notificationEmail: z.string().email().optional(),
+    notifyOnSubmission: zod_1.z.boolean().default(false),
+    notificationEmail: zod_1.z.string().email().optional(),
     // Analytics
-    trackingEnabled: z.boolean().default(true),
-    allowAnalyticsOptOut: z.boolean().default(true),
+    trackingEnabled: zod_1.z.boolean().default(true),
+    allowAnalyticsOptOut: zod_1.z.boolean().default(true),
 });
 // Tool version for immutable versioning
-export const ToolVersionSchema = z.object({
-    version: z.string().regex(/^\d+\.\d+\.\d+$/, 'Version must follow semver format (e.g., 1.0.0)'),
-    changelog: z.string().max(1000).optional(),
-    createdAt: z.date(),
-    createdBy: z.string(),
-    isStable: z.boolean().default(false),
-    deprecatedAt: z.date().optional(),
+exports.ToolVersionSchema = zod_1.z.object({
+    version: zod_1.z.string().regex(/^\d+\.\d+\.\d+$/, 'Version must follow semver format (e.g., 1.0.0)'),
+    changelog: zod_1.z.string().max(1000).optional(),
+    createdAt: zod_1.z.date(),
+    createdBy: zod_1.z.string(),
+    isStable: zod_1.z.boolean().default(false),
+    deprecatedAt: zod_1.z.date().optional(),
 });
 // Main Tool schema
-export const ToolSchema = z.object({
-    id: z.string(),
-    name: z.string().min(1).max(100),
-    description: z.string().max(500),
+exports.ToolSchema = zod_1.z.object({
+    id: zod_1.z.string(),
+    name: zod_1.z.string().min(1).max(100),
+    description: zod_1.z.string().max(500),
     // Ownership and collaboration
-    ownerId: z.string(),
-    collaborators: z.array(ToolCollaboratorSchema).default([]),
+    ownerId: zod_1.z.string(),
+    collaborators: zod_1.z.array(exports.ToolCollaboratorSchema).default([]),
     // Status and versioning
-    status: ToolStatus.default('draft'),
-    currentVersion: z.string().regex(/^\d+\.\d+\.\d+$/).default('1.0.0'),
-    versions: z.array(ToolVersionSchema).default([]),
+    status: exports.ToolStatus.default('draft'),
+    currentVersion: zod_1.z.string().regex(/^\d+\.\d+\.\d+$/).default('1.0.0'),
+    versions: zod_1.z.array(exports.ToolVersionSchema).default([]),
     // Tool structure
-    elements: z.array(ElementInstanceSchema).max(50), // ELEMENT_LIMITS.MAX_ELEMENTS_PER_TOOL
-    config: ToolConfigSchema.default({}),
-    metadata: ToolMetadataSchema.default({}),
+    elements: zod_1.z.array(element_1.ElementInstanceSchema).max(50), // ELEMENT_LIMITS.MAX_ELEMENTS_PER_TOOL
+    config: exports.ToolConfigSchema.default({}),
+    metadata: exports.ToolMetadataSchema.default({}),
     // Sharing and distribution
-    isPublic: z.boolean().default(false),
-    shareToken: z.string().optional(), // For share-by-link
-    forkCount: z.number().min(0).default(0),
-    originalToolId: z.string().optional(), // If this is a fork
+    isPublic: zod_1.z.boolean().default(false),
+    shareToken: zod_1.z.string().optional(), // For share-by-link
+    forkCount: zod_1.z.number().min(0).default(0),
+    originalToolId: zod_1.z.string().optional(), // If this is a fork
     // Analytics and usage
-    viewCount: z.number().min(0).default(0),
-    useCount: z.number().min(0).default(0),
-    rating: z.number().min(0).max(5).optional(),
-    ratingCount: z.number().min(0).default(0),
+    viewCount: zod_1.z.number().min(0).default(0),
+    useCount: zod_1.z.number().min(0).default(0),
+    rating: zod_1.z.number().min(0).max(5).optional(),
+    ratingCount: zod_1.z.number().min(0).default(0),
     // Space integration
-    spaceId: z.string().optional(), // If tool belongs to a specific space
-    isSpaceTool: z.boolean().default(false),
+    spaceId: zod_1.z.string().optional(), // If tool belongs to a specific space
+    isSpaceTool: zod_1.z.boolean().default(false),
     // Timestamps
-    createdAt: z.date(),
-    updatedAt: z.date(),
-    publishedAt: z.date().optional(),
-    lastUsedAt: z.date().optional(),
+    createdAt: zod_1.z.date(),
+    updatedAt: zod_1.z.date(),
+    publishedAt: zod_1.z.date().optional(),
+    lastUsedAt: zod_1.z.date().optional(),
 });
 // Tool creation schema (for API)
-export const CreateToolSchema = z.object({
-    name: z.string().min(1).max(100),
-    description: z.string().max(500),
-    spaceId: z.string().optional(),
-    isSpaceTool: z.boolean().default(false),
-    config: ToolConfigSchema.partial().optional(),
-    metadata: ToolMetadataSchema.partial().optional(),
+exports.CreateToolSchema = zod_1.z.object({
+    name: zod_1.z.string().min(1).max(100),
+    description: zod_1.z.string().max(500),
+    spaceId: zod_1.z.string().optional(),
+    isSpaceTool: zod_1.z.boolean().default(false),
+    config: exports.ToolConfigSchema.partial().optional(),
+    metadata: exports.ToolMetadataSchema.partial().optional(),
 });
 // Tool update schema (for API)
-export const UpdateToolSchema = z.object({
-    name: z.string().min(1).max(100).optional(),
-    description: z.string().max(500).optional(),
-    elements: z.array(ElementInstanceSchema).max(50).optional(),
-    config: ToolConfigSchema.partial().optional(),
-    metadata: ToolMetadataSchema.partial().optional(),
-    changelog: z.string().max(1000).optional(),
+exports.UpdateToolSchema = zod_1.z.object({
+    name: zod_1.z.string().min(1).max(100).optional(),
+    description: zod_1.z.string().max(500).optional(),
+    elements: zod_1.z.array(element_1.ElementInstanceSchema).max(50).optional(),
+    config: exports.ToolConfigSchema.partial().optional(),
+    metadata: exports.ToolMetadataSchema.partial().optional(),
+    changelog: zod_1.z.string().max(1000).optional(),
 });
 // Tool sharing schema
-export const ShareToolSchema = z.object({
-    permission: ToolPermission.default('view'),
-    expiresAt: z.date().optional(),
-    requiresApproval: z.boolean().default(false),
+exports.ShareToolSchema = zod_1.z.object({
+    permission: exports.ToolPermission.default('view'),
+    expiresAt: zod_1.z.date().optional(),
+    requiresApproval: zod_1.z.boolean().default(false),
 });
 // Tool data record (stored in tools/{id}/records subcollection)
-export const ToolDataRecordSchema = z.object({
-    id: z.string(),
-    toolId: z.string(),
-    data: z.record(z.any()), // Validated against tool's dataSchema
-    submittedBy: z.string().optional(), // userId if authenticated
-    submittedAt: z.date(),
-    ipAddress: z.string().optional(), // For anonymous submissions
-    userAgent: z.string().optional(),
-    sessionId: z.string().optional(),
+exports.ToolDataRecordSchema = zod_1.z.object({
+    id: zod_1.z.string(),
+    toolId: zod_1.z.string(),
+    data: zod_1.z.record(zod_1.z.any()), // Validated against tool's dataSchema
+    submittedBy: zod_1.z.string().optional(), // userId if authenticated
+    submittedAt: zod_1.z.date(),
+    ipAddress: zod_1.z.string().optional(), // For anonymous submissions
+    userAgent: zod_1.z.string().optional(),
+    sessionId: zod_1.z.string().optional(),
     // Metadata
-    isAnonymous: z.boolean().default(false),
-    isValid: z.boolean().default(true),
-    validationErrors: z.array(z.string()).optional(),
+    isAnonymous: zod_1.z.boolean().default(false),
+    isValid: zod_1.z.boolean().default(true),
+    validationErrors: zod_1.z.array(zod_1.z.string()).optional(),
     // Analytics
-    completionTime: z.number().optional(), // milliseconds
-    deviceType: z.enum(['desktop', 'tablet', 'mobile']).optional(),
-    referrer: z.string().optional(),
+    completionTime: zod_1.z.number().optional(), // milliseconds
+    deviceType: zod_1.z.enum(['desktop', 'tablet', 'mobile']).optional(),
+    referrer: zod_1.z.string().optional(),
 });
 // Tool usage events for analytics
-export const ToolUsageEventSchema = z.object({
-    id: z.string(),
-    toolId: z.string(),
-    userId: z.string().optional(),
-    eventType: z.enum(['view', 'start', 'complete', 'abandon', 'share', 'fork']),
-    timestamp: z.date(),
-    sessionId: z.string(),
-    metadata: z.record(z.any()).optional(),
+exports.ToolUsageEventSchema = zod_1.z.object({
+    id: zod_1.z.string(),
+    toolId: zod_1.z.string(),
+    userId: zod_1.z.string().optional(),
+    eventType: zod_1.z.enum(['view', 'start', 'complete', 'abandon', 'share', 'fork']),
+    timestamp: zod_1.z.date(),
+    sessionId: zod_1.z.string(),
+    metadata: zod_1.z.record(zod_1.z.any()).optional(),
 });
 // Utility functions
-export const createToolDefaults = (ownerId, data) => ({
+const createToolDefaults = (ownerId, data) => ({
     name: data.name,
     description: data.description,
     ownerId,
@@ -163,8 +166,8 @@ export const createToolDefaults = (ownerId, data) => ({
     currentVersion: '1.0.0',
     versions: [],
     elements: [],
-    config: { ...ToolConfigSchema.parse({}), ...data.config },
-    metadata: { ...ToolMetadataSchema.parse({}), ...data.metadata },
+    config: { ...exports.ToolConfigSchema.parse({}), ...data.config },
+    metadata: { ...exports.ToolMetadataSchema.parse({}), ...data.metadata },
     isPublic: false,
     forkCount: 0,
     viewCount: 0,
@@ -175,22 +178,26 @@ export const createToolDefaults = (ownerId, data) => ({
     publishedAt: undefined,
     lastUsedAt: undefined,
 });
-export const generateShareToken = () => {
+exports.createToolDefaults = createToolDefaults;
+const generateShareToken = () => {
     return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 };
-export const canUserEditTool = (tool, userId) => {
+exports.generateShareToken = generateShareToken;
+const canUserEditTool = (tool, userId) => {
     if (tool.ownerId === userId)
         return true;
     return tool.collaborators.some(collab => collab.userId === userId && collab.permission === 'edit');
 };
-export const canUserViewTool = (tool, userId) => {
+exports.canUserEditTool = canUserEditTool;
+const canUserViewTool = (tool, userId) => {
     if (tool.isPublic)
         return true;
     if (tool.ownerId === userId)
         return true;
     return tool.collaborators.some(collab => collab.userId === userId);
 };
-export const getNextVersion = (currentVersion, changeType) => {
+exports.canUserViewTool = canUserViewTool;
+const getNextVersion = (currentVersion, changeType) => {
     const [major, minor, patch] = currentVersion.split('.').map(Number);
     switch (changeType) {
         case 'major':
@@ -203,7 +210,8 @@ export const getNextVersion = (currentVersion, changeType) => {
             throw new Error(`Invalid change type: ${changeType}`);
     }
 };
-export const determineChangeType = (oldElements, newElements) => {
+exports.getNextVersion = getNextVersion;
+const determineChangeType = (oldElements, newElements) => {
     // Major: Breaking changes (removed elements, changed element types)
     const oldElementIds = new Set(oldElements.map(el => el.id));
     const newElementIds = new Set(newElements.map(el => el.id));
@@ -242,7 +250,8 @@ export const determineChangeType = (oldElements, newElements) => {
     // Patch: Minor changes (position, visibility, etc.)
     return 'patch';
 };
-export const validateToolStructure = (elements) => {
+exports.determineChangeType = determineChangeType;
+const validateToolStructure = (elements) => {
     const errors = [];
     // Check element count limit
     if (elements.length > 50) { // ELEMENT_LIMITS.MAX_ELEMENTS_PER_TOOL
@@ -291,4 +300,5 @@ export const validateToolStructure = (elements) => {
         errors
     };
 };
+exports.validateToolStructure = validateToolStructure;
 //# sourceMappingURL=tool.js.map

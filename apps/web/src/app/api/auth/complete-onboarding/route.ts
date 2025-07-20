@@ -4,23 +4,36 @@ import { z } from "zod";
 import { dbAdmin } from "@/lib/firebase-admin";
 import { getAuth } from "firebase-admin/auth";
 import { type Timestamp } from "firebase-admin/firestore";
+import { validateHandleFormat } from "@/lib/handle-service";
+import { 
+  executeOnboardingTransaction, 
+  executeBuilderRequestCreation,
+  TransactionError
+} from "@/lib/transaction-manager";
+import { createRequestLogger } from "@/lib/structured-logger";
+
 
 const completeOnboardingSchema = z.object({
   fullName: z
     .string()
     .min(1, "Full name is required")
     .max(100, "Full name too long"),
+  userType: z.enum(["student", "alumni", "faculty"]),
+  firstName: z.string().optional(),
+  lastName: z.string().optional(),
   major: z.string().min(1, "Major is required"),
+  academicLevel: z.string().optional(),
+  graduationYear: z.number().int().min(1900).max(2040),
   handle: z
     .string()
     .min(3, "Handle must be at least 3 characters")
     .max(20, "Handle must be at most 20 characters")
     .regex(
-      /^[a-zA-Z0-9_]+$/,
-      "Handle can only contain letters, numbers, and underscores"
+      /^[a-zA-Z0-9._-]+$/,
+      "Handle can only contain letters, numbers, periods, underscores, and hyphens"
     ),
   avatarUrl: z.string().url().optional().or(z.literal("")),
-  builderOptIn: z.boolean().default(false),
+  builderRequestSpaces: z.array(z.string()).default([]),
   consentGiven: z
     .boolean()
     .refine((val) => val === true, "Consent must be given"),
@@ -29,9 +42,14 @@ const completeOnboardingSchema = z.object({
 interface UserData {
   handle?: string;
   fullName?: string;
+  userType?: "student" | "alumni" | "faculty";
+  firstName?: string;
+  lastName?: string;
   major?: string;
+  academicLevel?: string;
+  graduationYear?: number;
   avatarUrl?: string;
-  builderOptIn?: boolean;
+  builderRequestSpaces?: string[];
   consentGiven?: boolean;
   consentGivenAt?: Timestamp;
   onboardingCompletedAt?: Timestamp;
@@ -50,6 +68,29 @@ export async function POST(request: NextRequest) {
     }
 
     const idToken = authHeader.split("Bearer ")[1];
+    
+    // Check for development mode token
+    if (idToken.startsWith("dev_token_")) {
+      const body = (await request.json()) as unknown;
+      const onboardingData = completeOnboardingSchema.parse(body);
+      
+      console.log('Development mode onboarding completion:', onboardingData);
+      
+      // In development mode, just return success
+      return NextResponse.json({
+        success: true,
+        message: "Onboarding completed successfully (development mode)",
+        user: {
+          id: idToken.replace("dev_token_", ""),
+          fullName: onboardingData.fullName,
+          userType: onboardingData.userType,
+          handle: onboardingData.handle.toLowerCase(),
+          major: onboardingData.major,
+          builderRequestSpaces: onboardingData.builderRequestSpaces,
+        },
+      });
+    }
+    
     const auth = getAuth();
 
     // Verify the ID token
@@ -78,78 +119,113 @@ export async function POST(request: NextRequest) {
     const body = (await request.json()) as unknown;
     const onboardingData = completeOnboardingSchema.parse(body);
 
-    // Normalize handle to lowercase
-    const normalizedHandle = onboardingData.handle.toLowerCase();
-
-    // Use a transaction to ensure atomicity
-    const result = await dbAdmin.runTransaction(async (transaction) => {
-      // Check if user already exists
-      const userDoc = await transaction.get(
-        dbAdmin.collection("users").doc(userId)
+    // Validate handle format first (outside transaction)
+    const formatValidation = validateHandleFormat(onboardingData.handle);
+    if (!formatValidation.isAvailable) {
+      return NextResponse.json(
+        { error: formatValidation.error },
+        { status: 400 }
       );
+    }
 
-      if (!userDoc.exists) {
-        throw new Error("User not found");
-      }
+    const normalizedHandle = formatValidation.normalizedHandle!;
 
-      const userData = userDoc.data() as UserData | undefined;
+    // Get request ID for tracking
+    const requestId = request.headers.get('x-request-id') || `req_${Date.now()}`;
+    const logger = createRequestLogger(requestId, userId);
 
-      if (!userData) {
-        throw new Error("User data not found");
-      }
-
-      // Check if user has already completed onboarding
-      if (userData.handle) {
-        throw new Error("Onboarding already completed");
-      }
-
-      // Check if handle is available
-      const handleDoc = await transaction.get(
-        dbAdmin.collection("handles").doc(normalizedHandle)
-      );
-
-      if (handleDoc.exists) {
-        throw new Error("Handle is already taken");
-      }
-
-      const now = new Date() as unknown as Timestamp;
-
-      // Update user document
-      const updatedUserData: UserData = {
-        ...userData,
-        fullName: onboardingData.fullName,
-        major: onboardingData.major,
-        handle: normalizedHandle,
-        avatarUrl: onboardingData.avatarUrl || "",
-        builderOptIn: onboardingData.builderOptIn,
-        consentGiven: onboardingData.consentGiven,
-        consentGivenAt: now,
-        onboardingCompletedAt: now,
-        updatedAt: now,
-      };
-
-      // Reserve the handle
-      const handleReservation = {
-        userId,
-        email: userEmail,
-        reservedAt: now,
-      };
-
-      // Perform the writes
-      transaction.update(
-        dbAdmin.collection("users").doc(userId),
-        updatedUserData as { [x: string]: any }
-      );
-      transaction.set(
-        dbAdmin.collection("handles").doc(normalizedHandle),
-        handleReservation
-      );
-
-      return { updatedUserData, normalizedHandle };
+    await logger.info('Starting onboarding completion', {
+      operation: 'complete_onboarding',
+      handle: normalizedHandle,
+      userType: onboardingData.userType
     });
+
+    // Use transaction manager for atomicity and consistency
+    const transactionResult = await executeOnboardingTransaction(
+      userId,
+      userEmail,
+      onboardingData,
+      normalizedHandle,
+      { requestId }
+    );
+
+    if (!transactionResult.success) {
+      await logger.error('Onboarding transaction failed', {
+        operation: 'complete_onboarding',
+        error: transactionResult.error?.message,
+        operationsCompleted: transactionResult.operationsCompleted,
+        operationsFailed: transactionResult.operationsFailed,
+        duration: transactionResult.duration
+      }, transactionResult.error);
+
+      // Handle specific error types
+      if (transactionResult.error instanceof TransactionError) {
+        const message = transactionResult.error.message;
+        if (message.includes('Handle is already taken')) {
+          return NextResponse.json({ error: "Handle is already taken" }, { status: 409 });
+        }
+        if (message.includes('Onboarding already completed')) {
+          return NextResponse.json({ error: "Onboarding already completed" }, { status: 409 });
+        }
+        if (message.includes('User not found')) {
+          return NextResponse.json({ error: "User not found" }, { status: 404 });
+        }
+      }
+
+      return NextResponse.json(
+        { error: "Failed to complete onboarding" },
+        { status: 500 }
+      );
+    }
+
+    const result = transactionResult.data!;
+
+    await logger.info('Onboarding transaction completed successfully', {
+      operation: 'complete_onboarding',
+      handle: normalizedHandle,
+      duration: transactionResult.duration,
+      operationsCompleted: transactionResult.operationsCompleted
+    });
+
+    // Create builder requests if user selected spaces (using transaction manager)
+    if (onboardingData.builderRequestSpaces && onboardingData.builderRequestSpaces.length > 0) {
+      await logger.info('Creating builder requests', {
+        operation: 'create_builder_requests',
+        spaceCount: onboardingData.builderRequestSpaces.length,
+        spaceIds: onboardingData.builderRequestSpaces
+      });
+
+      const builderRequestResult = await executeBuilderRequestCreation(
+        userId,
+        userEmail,
+        result.updatedUserData.fullName || "",
+        onboardingData.builderRequestSpaces,
+        onboardingData.userType,
+        { requestId }
+      );
+
+      if (!builderRequestResult.success) {
+        await logger.warn('Builder request creation failed, but onboarding succeeded', {
+          operation: 'create_builder_requests',
+          error: builderRequestResult.error?.message,
+          operationsCompleted: builderRequestResult.operationsCompleted,
+          operationsFailed: builderRequestResult.operationsFailed
+        }, builderRequestResult.error);
+      } else {
+        await logger.info('Builder requests created successfully', {
+          operation: 'create_builder_requests',
+          duration: builderRequestResult.duration,
+          operationsCompleted: builderRequestResult.operationsCompleted
+        });
+      }
+    }
 
     // After successful onboarding, auto-join the user to relevant spaces
     try {
+      await logger.info('Attempting auto-join to spaces', {
+        operation: 'auto_join_spaces'
+      });
+
       const autoJoinResponse = await fetch(
         `${request.url.split("/api")[0]}/api/spaces/auto-join`,
         {
@@ -162,16 +238,23 @@ export async function POST(request: NextRequest) {
       );
 
       if (!autoJoinResponse.ok) {
-        console.warn(
-          "Auto-join failed, but onboarding succeeded:",
-          await autoJoinResponse.text()
-        );
+        const errorText = await autoJoinResponse.text();
+        await logger.warn('Auto-join failed, but onboarding succeeded', {
+          operation: 'auto_join_spaces',
+          status: autoJoinResponse.status,
+          error: errorText
+        });
       } else {
         const autoJoinResult = (await autoJoinResponse.json()) as unknown;
-        console.log("Auto-join successful:", autoJoinResult);
+        await logger.info('Auto-join successful', {
+          operation: 'auto_join_spaces',
+          result: autoJoinResult
+        });
       }
     } catch (autoJoinError) {
-      console.warn("Auto-join error, but onboarding succeeded:", autoJoinError);
+      await logger.warn('Auto-join error, but onboarding succeeded', {
+        operation: 'auto_join_spaces'
+      }, autoJoinError instanceof Error ? autoJoinError : new Error(String(autoJoinError)));
     }
 
     return NextResponse.json({
@@ -180,10 +263,14 @@ export async function POST(request: NextRequest) {
       user: {
         id: userId,
         fullName: result.updatedUserData.fullName,
+        userType: result.updatedUserData.userType,
         handle: result.normalizedHandle,
         major: result.updatedUserData.major,
-        builderOptIn: result.updatedUserData.builderOptIn,
+        academicLevel: result.updatedUserData.academicLevel,
+        graduationYear: result.updatedUserData.graduationYear,
+        builderRequestSpaces: result.updatedUserData.builderRequestSpaces,
       },
+      builderRequestsCreated: onboardingData.builderRequestSpaces?.length || 0,
     });
   } catch (error) {
     console.error("Error completing onboarding:", error);

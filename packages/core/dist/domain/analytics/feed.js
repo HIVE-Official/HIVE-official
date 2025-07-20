@@ -1,229 +1,234 @@
-import { z } from 'zod';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.calculateEngagementScore = exports.hashUserIdForFeed = exports.createFeedEvent = exports.FeedAnalyticsConfigSchema = exports.UserFeedBehaviorSchema = exports.SpaceEngagementMetricsSchema = exports.FeedAnalyticsEventSchema = void 0;
+const zod_1 = require("zod");
 // Feed Analytics Events Schema
-export const FeedAnalyticsEventSchema = z.discriminatedUnion('event', [
+exports.FeedAnalyticsEventSchema = zod_1.z.discriminatedUnion('event', [
     // Space Feed Events
-    z.object({
-        event: z.literal('space_feed_viewed'),
-        spaceId: z.string(),
-        userId: z.string(),
-        timestamp: z.date(),
-        metadata: z.object({
-            postsVisible: z.number(),
-            scrollDepth: z.number().min(0).max(1), // 0-1 representing scroll percentage
-            timeSpent: z.number(), // milliseconds
-            deviceType: z.enum(['mobile', 'tablet', 'desktop']).optional(),
+    zod_1.z.object({
+        event: zod_1.z.literal('space_feed_viewed'),
+        spaceId: zod_1.z.string(),
+        userId: zod_1.z.string(),
+        timestamp: zod_1.z.date(),
+        metadata: zod_1.z.object({
+            postsVisible: zod_1.z.number(),
+            scrollDepth: zod_1.z.number().min(0).max(1), // 0-1 representing scroll percentage
+            timeSpent: zod_1.z.number(), // milliseconds
+            deviceType: zod_1.z.enum(['mobile', 'tablet', 'desktop']).optional(),
         }),
     }),
     // Post Creation Events
-    z.object({
-        event: z.literal('post_created'),
-        spaceId: z.string(),
-        postId: z.string(),
-        userId: z.string(),
-        timestamp: z.date(),
-        metadata: z.object({
-            postType: z.enum(['text', 'image', 'poll', 'event', 'toolshare']),
-            contentLength: z.number(),
-            hasMentions: z.boolean(),
-            hasRichFormatting: z.boolean(),
-            draftTime: z.number().optional(), // Time spent drafting in milliseconds
-            composerSource: z.enum(['inline', 'modal']).default('inline'),
+    zod_1.z.object({
+        event: zod_1.z.literal('post_created'),
+        spaceId: zod_1.z.string(),
+        postId: zod_1.z.string(),
+        userId: zod_1.z.string(),
+        timestamp: zod_1.z.date(),
+        metadata: zod_1.z.object({
+            postType: zod_1.z.enum(['text', 'image', 'poll', 'event', 'toolshare']),
+            contentLength: zod_1.z.number(),
+            hasMentions: zod_1.z.boolean(),
+            hasRichFormatting: zod_1.z.boolean(),
+            draftTime: zod_1.z.number().optional(), // Time spent drafting in milliseconds
+            composerSource: zod_1.z.enum(['inline', 'modal']).default('inline'),
         }),
     }),
     // Post Engagement Events
-    z.object({
-        event: z.literal('post_reacted'),
-        spaceId: z.string(),
-        postId: z.string(),
-        userId: z.string(),
-        timestamp: z.date(),
-        metadata: z.object({
-            reaction: z.enum(['heart']),
-            action: z.enum(['add', 'remove']),
-            postAge: z.number(), // Age of post in milliseconds when reacted
-            authorId: z.string(),
-            isOwnPost: z.boolean(),
+    zod_1.z.object({
+        event: zod_1.z.literal('post_reacted'),
+        spaceId: zod_1.z.string(),
+        postId: zod_1.z.string(),
+        userId: zod_1.z.string(),
+        timestamp: zod_1.z.date(),
+        metadata: zod_1.z.object({
+            reaction: zod_1.z.enum(['heart']),
+            action: zod_1.z.enum(['add', 'remove']),
+            postAge: zod_1.z.number(), // Age of post in milliseconds when reacted
+            authorId: zod_1.z.string(),
+            isOwnPost: zod_1.z.boolean(),
         }),
     }),
-    z.object({
-        event: z.literal('post_viewed'),
-        spaceId: z.string(),
-        postId: z.string(),
-        userId: z.string(),
-        timestamp: z.date(),
-        metadata: z.object({
-            viewDuration: z.number(), // Time spent viewing in milliseconds
-            scrolledToEnd: z.boolean(),
-            authorId: z.string(),
-            postType: z.enum(['text', 'image', 'poll', 'event', 'toolshare']),
-            postAge: z.number(), // Age of post when viewed
+    zod_1.z.object({
+        event: zod_1.z.literal('post_viewed'),
+        spaceId: zod_1.z.string(),
+        postId: zod_1.z.string(),
+        userId: zod_1.z.string(),
+        timestamp: zod_1.z.date(),
+        metadata: zod_1.z.object({
+            viewDuration: zod_1.z.number(), // Time spent viewing in milliseconds
+            scrolledToEnd: zod_1.z.boolean(),
+            authorId: zod_1.z.string(),
+            postType: zod_1.z.enum(['text', 'image', 'poll', 'event', 'toolshare']),
+            postAge: zod_1.z.number(), // Age of post when viewed
         }),
     }),
     // Post Management Events
-    z.object({
-        event: z.literal('post_edited'),
-        spaceId: z.string(),
-        postId: z.string(),
-        userId: z.string(),
-        timestamp: z.date(),
-        metadata: z.object({
-            editTime: z.number(), // Time after creation when edited
-            contentLengthBefore: z.number(),
-            contentLengthAfter: z.number(),
-            editReason: z.enum(['typo', 'clarification', 'addition', 'other']).optional(),
+    zod_1.z.object({
+        event: zod_1.z.literal('post_edited'),
+        spaceId: zod_1.z.string(),
+        postId: zod_1.z.string(),
+        userId: zod_1.z.string(),
+        timestamp: zod_1.z.date(),
+        metadata: zod_1.z.object({
+            editTime: zod_1.z.number(), // Time after creation when edited
+            contentLengthBefore: zod_1.z.number(),
+            contentLengthAfter: zod_1.z.number(),
+            editReason: zod_1.z.enum(['typo', 'clarification', 'addition', 'other']).optional(),
         }),
     }),
-    z.object({
-        event: z.literal('post_deleted'),
-        spaceId: z.string(),
-        postId: z.string(),
-        userId: z.string(),
-        timestamp: z.date(),
-        metadata: z.object({
-            deletedBy: z.enum(['author', 'builder', 'admin']),
-            postAge: z.number(), // Age when deleted
-            hadReactions: z.boolean(),
-            reactionCount: z.number(),
-            deleteReason: z.enum(['inappropriate', 'spam', 'mistake', 'other']).optional(),
+    zod_1.z.object({
+        event: zod_1.z.literal('post_deleted'),
+        spaceId: zod_1.z.string(),
+        postId: zod_1.z.string(),
+        userId: zod_1.z.string(),
+        timestamp: zod_1.z.date(),
+        metadata: zod_1.z.object({
+            deletedBy: zod_1.z.enum(['author', 'builder', 'admin']),
+            postAge: zod_1.z.number(), // Age when deleted
+            hadReactions: zod_1.z.boolean(),
+            reactionCount: zod_1.z.number(),
+            deleteReason: zod_1.z.enum(['inappropriate', 'spam', 'mistake', 'other']).optional(),
         }),
     }),
     // Space Engagement Events
-    z.object({
-        event: z.literal('space_joined'),
-        spaceId: z.string(),
-        userId: z.string(),
-        timestamp: z.date(),
-        metadata: z.object({
-            joinMethod: z.enum(['invite', 'browse', 'search', 'auto']),
-            referrerSpaceId: z.string().optional(),
-            invitedBy: z.string().optional(),
+    zod_1.z.object({
+        event: zod_1.z.literal('space_joined'),
+        spaceId: zod_1.z.string(),
+        userId: zod_1.z.string(),
+        timestamp: zod_1.z.date(),
+        metadata: zod_1.z.object({
+            joinMethod: zod_1.z.enum(['invite', 'browse', 'search', 'auto']),
+            referrerSpaceId: zod_1.z.string().optional(),
+            invitedBy: zod_1.z.string().optional(),
         }),
     }),
-    z.object({
-        event: z.literal('space_left'),
-        spaceId: z.string(),
-        userId: z.string(),
-        timestamp: z.date(),
-        metadata: z.object({
-            membershipDuration: z.number(), // Time as member in milliseconds
-            postsCreated: z.number(),
-            reactionsGiven: z.number(),
-            lastActiveAt: z.date(),
-            leaveReason: z.enum(['inactive', 'content', 'privacy', 'other']).optional(),
+    zod_1.z.object({
+        event: zod_1.z.literal('space_left'),
+        spaceId: zod_1.z.string(),
+        userId: zod_1.z.string(),
+        timestamp: zod_1.z.date(),
+        metadata: zod_1.z.object({
+            membershipDuration: zod_1.z.number(), // Time as member in milliseconds
+            postsCreated: zod_1.z.number(),
+            reactionsGiven: zod_1.z.number(),
+            lastActiveAt: zod_1.z.date(),
+            leaveReason: zod_1.z.enum(['inactive', 'content', 'privacy', 'other']).optional(),
         }),
     }),
     // Builder Actions
-    z.object({
-        event: z.literal('builder_action'),
-        spaceId: z.string(),
-        userId: z.string(),
-        timestamp: z.date(),
-        metadata: z.object({
-            action: z.enum(['pin_post', 'unpin_post', 'delete_post', 'mute_user', 'unmute_user']),
-            targetId: z.string(), // postId or userId
-            targetType: z.enum(['post', 'user']),
-            reason: z.string().optional(),
+    zod_1.z.object({
+        event: zod_1.z.literal('builder_action'),
+        spaceId: zod_1.z.string(),
+        userId: zod_1.z.string(),
+        timestamp: zod_1.z.date(),
+        metadata: zod_1.z.object({
+            action: zod_1.z.enum(['pin_post', 'unpin_post', 'delete_post', 'mute_user', 'unmute_user']),
+            targetId: zod_1.z.string(), // postId or userId
+            targetType: zod_1.z.enum(['post', 'user']),
+            reason: zod_1.z.string().optional(),
         }),
     }),
     // Time Tracking (Heartbeat)
-    z.object({
-        event: z.literal('space_heartbeat'),
-        spaceId: z.string(),
-        userId: z.string(),
-        timestamp: z.date(),
-        metadata: z.object({
-            sessionId: z.string(),
-            activeTime: z.number(), // Active time in last 30 seconds
-            tabVisible: z.boolean(),
-            scrollPosition: z.number(),
-            lastInteraction: z.date(),
+    zod_1.z.object({
+        event: zod_1.z.literal('space_heartbeat'),
+        spaceId: zod_1.z.string(),
+        userId: zod_1.z.string(),
+        timestamp: zod_1.z.date(),
+        metadata: zod_1.z.object({
+            sessionId: zod_1.z.string(),
+            activeTime: zod_1.z.number(), // Active time in last 30 seconds
+            tabVisible: zod_1.z.boolean(),
+            scrollPosition: zod_1.z.number(),
+            lastInteraction: zod_1.z.date(),
         }),
     }),
 ]);
 // Aggregated Analytics Schemas
-export const SpaceEngagementMetricsSchema = z.object({
-    spaceId: z.string(),
-    date: z.string(), // YYYY-MM-DD format
-    metrics: z.object({
+exports.SpaceEngagementMetricsSchema = zod_1.z.object({
+    spaceId: zod_1.z.string(),
+    date: zod_1.z.string(), // YYYY-MM-DD format
+    metrics: zod_1.z.object({
         // Member Activity
-        activeMembers: z.number(),
-        newMembers: z.number(),
-        leftMembers: z.number(),
+        activeMembers: zod_1.z.number(),
+        newMembers: zod_1.z.number(),
+        leftMembers: zod_1.z.number(),
         // Content Creation
-        postsCreated: z.number(),
-        postsByType: z.record(z.number()),
-        avgPostLength: z.number(),
+        postsCreated: zod_1.z.number(),
+        postsByType: zod_1.z.record(zod_1.z.number()),
+        avgPostLength: zod_1.z.number(),
         // Engagement
-        totalReactions: z.number(),
-        avgReactionsPerPost: z.number(),
-        totalViewTime: z.number(), // Total time spent viewing feed
-        avgSessionDuration: z.number(),
+        totalReactions: zod_1.z.number(),
+        avgReactionsPerPost: zod_1.z.number(),
+        totalViewTime: zod_1.z.number(), // Total time spent viewing feed
+        avgSessionDuration: zod_1.z.number(),
         // Builder Activity
-        builderActions: z.number(),
-        postsModerated: z.number(),
+        builderActions: zod_1.z.number(),
+        postsModerated: zod_1.z.number(),
         // Top Content
-        topPosts: z.array(z.object({
-            postId: z.string(),
-            reactions: z.number(),
-            views: z.number(),
-            engagementScore: z.number(),
+        topPosts: zod_1.z.array(zod_1.z.object({
+            postId: zod_1.z.string(),
+            reactions: zod_1.z.number(),
+            views: zod_1.z.number(),
+            engagementScore: zod_1.z.number(),
         })).max(10),
     }),
 });
 // User Feed Behavior Schema
-export const UserFeedBehaviorSchema = z.object({
-    userId: z.string(),
-    date: z.string(), // YYYY-MM-DD format
-    metrics: z.object({
+exports.UserFeedBehaviorSchema = zod_1.z.object({
+    userId: zod_1.z.string(),
+    date: zod_1.z.string(), // YYYY-MM-DD format
+    metrics: zod_1.z.object({
         // Activity
-        spacesVisited: z.number(),
-        postsCreated: z.number(),
-        reactionsGiven: z.number(),
+        spacesVisited: zod_1.z.number(),
+        postsCreated: zod_1.z.number(),
+        reactionsGiven: zod_1.z.number(),
         // Engagement Patterns
-        avgSessionDuration: z.number(),
-        peakActivityHour: z.number(), // 0-23
-        mostActiveSpaceId: z.string().optional(),
+        avgSessionDuration: zod_1.z.number(),
+        peakActivityHour: zod_1.z.number(), // 0-23
+        mostActiveSpaceId: zod_1.z.string().optional(),
         // Content Preferences
-        preferredPostTypes: z.array(z.string()),
-        avgPostLength: z.number(),
-        mentionsUsed: z.number(),
+        preferredPostTypes: zod_1.z.array(zod_1.z.string()),
+        avgPostLength: zod_1.z.number(),
+        mentionsUsed: zod_1.z.number(),
         // Social Behavior
-        reactionsReceived: z.number(),
-        postsViewed: z.number(),
-        scrollDepthAvg: z.number(),
+        reactionsReceived: zod_1.z.number(),
+        postsViewed: zod_1.z.number(),
+        scrollDepthAvg: zod_1.z.number(),
     }),
 });
 // Analytics Pipeline Configuration
-export const FeedAnalyticsConfigSchema = z.object({
+exports.FeedAnalyticsConfigSchema = zod_1.z.object({
     // Event Collection
-    batchSize: z.number().default(100),
-    flushInterval: z.number().default(30000), // 30 seconds
+    batchSize: zod_1.z.number().default(100),
+    flushInterval: zod_1.z.number().default(30000), // 30 seconds
     // Privacy Settings
-    hashUserIds: z.boolean().default(true),
-    retentionDays: z.number().default(90),
+    hashUserIds: zod_1.z.boolean().default(true),
+    retentionDays: zod_1.z.number().default(90),
     // Sampling
-    sampleRate: z.number().min(0).max(1).default(1), // 1 = 100% sampling
+    sampleRate: zod_1.z.number().min(0).max(1).default(1), // 1 = 100% sampling
     // BigQuery Integration
-    dataset: z.string().default('hive_analytics'),
-    feedEventsTable: z.string().default('feed_events'),
-    spaceMetricsTable: z.string().default('space_metrics'),
-    userBehaviorTable: z.string().default('user_behavior'),
+    dataset: zod_1.z.string().default('hive_analytics'),
+    feedEventsTable: zod_1.z.string().default('feed_events'),
+    spaceMetricsTable: zod_1.z.string().default('space_metrics'),
+    userBehaviorTable: zod_1.z.string().default('user_behavior'),
 });
 // Utility functions for analytics
-export const createFeedEvent = (event, data) => {
+const createFeedEvent = (event, data) => {
     return {
         event,
         timestamp: data.timestamp || new Date(),
         ...data,
     };
 };
+exports.createFeedEvent = createFeedEvent;
 // Privacy-safe user ID hashing
-export const hashUserIdForFeed = (userId, salt = 'hive-analytics') => {
+const hashUserIdForFeed = (userId, salt = 'hive-analytics') => {
     // In production, use proper crypto hashing
     return btoa(`${salt}:${userId}`).replace(/[^a-zA-Z0-9]/g, '').substring(0, 16);
 };
+exports.hashUserIdForFeed = hashUserIdForFeed;
 // Calculate engagement score for posts
-export const calculateEngagementScore = (reactions, views, postAge, // in hours
+const calculateEngagementScore = (reactions, views, postAge, // in hours
 spaceSize) => {
     // Weighted engagement score considering recency and space size
     const reactionWeight = 3;
@@ -232,4 +237,5 @@ spaceSize) => {
     const sizeNormalization = Math.log(spaceSize + 1) / Math.log(100); // Normalize for space size
     return ((reactions * reactionWeight + views * viewWeight) * ageDecay) / sizeNormalization;
 };
+exports.calculateEngagementScore = calculateEngagementScore;
 //# sourceMappingURL=feed.js.map

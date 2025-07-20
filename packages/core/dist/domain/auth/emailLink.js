@@ -1,7 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.validateEmailDomain = exports.getDefaultActionCodeSettings = void 0;
 /**
  * Default action code settings for HIVE magic links
  */
-export const getDefaultActionCodeSettings = (schoolId) => ({
+const getDefaultActionCodeSettings = (schoolId) => ({
     url: `${process.env.NEXT_PUBLIC_APP_URL}/auth/verify?schoolId=${schoolId}`,
     handleCodeInApp: true,
     iOS: {
@@ -13,11 +16,13 @@ export const getDefaultActionCodeSettings = (schoolId) => ({
         minimumVersion: '1',
     },
 });
+exports.getDefaultActionCodeSettings = getDefaultActionCodeSettings;
 /**
  * Validates an email domain against the school's domain
  */
-export const validateEmailDomain = (email, schoolDomain) => {
+const validateEmailDomain = (email, schoolDomain) => {
     const emailDomain = email.split('@')[1]?.toLowerCase();
     return emailDomain === schoolDomain.toLowerCase();
 };
+exports.validateEmailDomain = validateEmailDomain;
 //# sourceMappingURL=emailLink.js.map

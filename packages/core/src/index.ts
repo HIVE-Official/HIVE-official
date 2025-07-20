@@ -32,3 +32,6 @@ export * from "./stores/useAppStore";
 
 // Firebase client config
 export * from "./firebase";
+
+// Feature flags
+export * from "./feature-flags";

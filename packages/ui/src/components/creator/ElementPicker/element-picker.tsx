@@ -123,22 +123,6 @@ const MOCK_ELEMENTS: Element[] = [
     updatedAt: new Date(),
   },
   {
-    id: "ratingStars-v1",
-    name: "Rating Stars",
-    type: "ratingStars",
-    category: "Inputs & Choices",
-    description: "Star-based rating input",
-    icon: "Star",
-    version: 1,
-    configSchema: "{}",
-    defaultConfig: {},
-    isOfficial: true,
-    isDeprecated: false,
-    usageCount: 0,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  {
     id: "countdownTimer-v1",
     name: "Countdown Timer",
     type: "countdownTimer",
@@ -232,7 +216,7 @@ function CategorySection({
       {/* Category Header */}
       <button
         className={cn(
-          "flex w-full items-center justify-between px-4 py-3",
+          "flex w-full items-center justify-between px-6 py-3",
           "text-left hover:bg-white/5 transition-colors",
           "focus:outline-none focus:ring-1 focus:ring-yellow-400/50"
         )}
@@ -240,10 +224,10 @@ function CategorySection({
         aria-expanded={!isCollapsed}
         aria-controls={`category-${category.replace(/\s+/g, "-").toLowerCase()}`}
       >
-        <h3 className="text-sm font-medium text-white">{category}</h3>
+        <h3 className="text-sm font-medium text-[var(--hive-text-primary)]">{category}</h3>
         <div className="flex items-center gap-2">
-          <span className="text-xs text-white/60">{elements.length}</span>
-          <ChevronIcon className="h-4 w-4 text-white/60" strokeWidth={1.5} />
+          <span className="text-xs text-[var(--hive-text-secondary)]">{elements.length}</span>
+          <ChevronIcon className="h-4 w-4 text-[var(--hive-text-secondary)]" strokeWidth={1.5} />
         </div>
       </button>
 
@@ -251,7 +235,7 @@ function CategorySection({
       {!isCollapsed && (
         <div
           id={`category-${category.replace(/\s+/g, "-").toLowerCase()}`}
-          className="grid gap-2 p-4 pt-0"
+          className="grid gap-2 p-6 pt-0"
         >
           {elements.map((element) => (
             <ElementCard
@@ -306,12 +290,12 @@ export function ElementPicker({
       <div
         className={cn(
           "flex h-96 w-80 flex-col items-center justify-center",
-          "rounded-lg border border-white/10 bg-black/40 backdrop-blur-sm",
+          "rounded-lg border border-[var(--hive-border-glass)] bg-[var(--hive-background-secondary)]/40 backdrop-blur-sm",
           className
         )}
       >
-        <Loader2 className="h-8 w-8 animate-spin text-yellow-400" />
-        <p className="mt-2 text-sm text-white/60">Loading elements...</p>
+        <Loader2 className="h-8 w-8 animate-spin text-[var(--hive-brand-primary)]" />
+        <p className="mt-2 text-sm text-[var(--hive-text-secondary)]">Loading elements...</p>
       </div>
     );
   }
@@ -320,12 +304,12 @@ export function ElementPicker({
     <div
       className={cn(
         "flex h-96 w-80 flex-col overflow-hidden",
-        "rounded-lg border border-white/10 bg-black/40 backdrop-blur-sm",
+        "rounded-lg border border-[var(--hive-border-glass)] bg-[var(--hive-background-secondary)]/40 backdrop-blur-sm",
         className
       )}
     >
       {/* Header */}
-      <div className="border-b border-white/10 p-4">
+      <div className="border-b border-white/10 p-6">
         <h2 className="text-lg font-semibold text-white">Elements</h2>
         <p className="text-sm text-white/60">
           Click or drag to add to your tool

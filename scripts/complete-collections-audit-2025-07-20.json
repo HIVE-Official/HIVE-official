@@ -1,0 +1,94 @@
+{
+  "timestamp": "2025-07-20T05:01:51.589Z",
+  "auditType": "complete-collections-audit",
+  "summary": {
+    "totalCollections": 7,
+    "activeCollections": 0,
+    "totalEndpoints": 25,
+    "workingEndpoints": 0,
+    "healthPercentage": 0
+  },
+  "collections": [
+    {
+      "name": "users",
+      "endpoint": "/profile/route",
+      "status": 0,
+      "insights": [],
+      "errors": [
+        "/profile/route: 500: Internal Server Error",
+        "/profile/my-spaces: 500: Internal Server Error",
+        "/profile/activity: 401: Unauthorized",
+        "/profile/stats: 500: Internal Server Error",
+        "/auth/session: 401: Unauthorized"
+      ]
+    },
+    {
+      "name": "posts",
+      "endpoint": "/feed",
+      "status": 0,
+      "insights": [],
+      "errors": [
+        "/feed/route: 404: Not Found",
+        "/feed/aggregation: 500: Internal Server Error",
+        "/feed/algorithm: 500: Internal Server Error",
+        "/feed/updates: 500: Internal Server Error"
+      ]
+    },
+    {
+      "name": "events",
+      "endpoint": "/calendar",
+      "status": 0,
+      "insights": [],
+      "errors": [
+        "/calendar/route: 500: Internal Server Error",
+        "/calendar/free-time: 500: Internal Server Error",
+        "/calendar/conflicts: 500: Internal Server Error"
+      ]
+    },
+    {
+      "name": "tools",
+      "endpoint": "/tools",
+      "status": 0,
+      "insights": [],
+      "errors": [
+        "/tools/route: 500: Internal Server Error",
+        "/tools/execute: 500: Internal Server Error",
+        "/tools/deploy: 500: Internal Server Error",
+        "/tools/feed-integration: 500: Internal Server Error"
+      ]
+    },
+    {
+      "name": "admin",
+      "endpoint": "/admin",
+      "status": 0,
+      "insights": [],
+      "errors": [
+        "/admin/dashboard: 500: Internal Server Error",
+        "/admin/users: 500: Internal Server Error",
+        "/admin/spaces: 500: Internal Server Error",
+        "/admin/activity-logs: 500: Internal Server Error"
+      ]
+    },
+    {
+      "name": "schools",
+      "endpoint": "/schools",
+      "status": 0,
+      "insights": [],
+      "errors": [
+        "/schools/route: 500: Internal Server Error",
+        "/waitlist/join: 500: Internal Server Error"
+      ]
+    },
+    {
+      "name": "analytics",
+      "endpoint": "/activity",
+      "status": 0,
+      "insights": [],
+      "errors": [
+        "/activity/route: 500: Internal Server Error",
+        "/activity/batch: 500: Internal Server Error",
+        "/activity/insights: 500: Internal Server Error"
+      ]
+    }
+  ]
+}

@@ -1,125 +1,128 @@
-import { z } from 'zod';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.isWithinEditWindow = exports.canModeratePost = exports.createPostDefaults = exports.PostModerationSchema = exports.PostReactionSchema = exports.FeedQuerySchema = exports.EditPostSchema = exports.CreatePostSchema = exports.PostSchema = exports.PostReactedUsersSchema = exports.PostReactionsSchema = exports.PostAuthorSchema = exports.ToolShareMetadataSchema = exports.EventMetadataSchema = exports.PollMetadataSchema = exports.ImageMetadataSchema = exports.RichTextContentSchema = exports.PostType = void 0;
+const zod_1 = require("zod");
 /**
  * Post types supported in HIVE
  */
-export const PostType = z.enum(['text', 'image', 'poll', 'event', 'toolshare']);
+exports.PostType = zod_1.z.enum(['text', 'image', 'poll', 'event', 'toolshare']);
 /**
  * Rich text content schema (lite version with basic formatting)
  */
-export const RichTextContentSchema = z.object({
-    text: z.string().min(1).max(500), // 500 char limit as per requirements
-    formatting: z.array(z.object({
-        type: z.enum(['bold', 'italic', 'link']),
-        start: z.number(),
-        end: z.number(),
-        url: z.string().url().optional(), // For links
+exports.RichTextContentSchema = zod_1.z.object({
+    text: zod_1.z.string().min(1).max(500), // 500 char limit as per requirements
+    formatting: zod_1.z.array(zod_1.z.object({
+        type: zod_1.z.enum(['bold', 'italic', 'link']),
+        start: zod_1.z.number(),
+        end: zod_1.z.number(),
+        url: zod_1.z.string().url().optional(), // For links
     })).optional(),
-    mentions: z.array(z.object({
-        userId: z.string(),
-        handle: z.string(),
-        start: z.number(),
-        end: z.number(),
+    mentions: zod_1.z.array(zod_1.z.object({
+        userId: zod_1.z.string(),
+        handle: zod_1.z.string(),
+        start: zod_1.z.number(),
+        end: zod_1.z.number(),
     })).optional(),
 });
 /**
  * Post metadata schemas for different types
  */
-export const ImageMetadataSchema = z.object({
-    url: z.string().url(),
-    alt: z.string().optional(),
-    width: z.number().optional(),
-    height: z.number().optional(),
-    size: z.number().max(5 * 1024 * 1024), // 5MB limit
+exports.ImageMetadataSchema = zod_1.z.object({
+    url: zod_1.z.string().url(),
+    alt: zod_1.z.string().optional(),
+    width: zod_1.z.number().optional(),
+    height: zod_1.z.number().optional(),
+    size: zod_1.z.number().max(5 * 1024 * 1024), // 5MB limit
 });
-export const PollMetadataSchema = z.object({
-    question: z.string().min(1).max(200),
-    options: z.array(z.string().min(1).max(100)).min(2).max(6),
-    votes: z.record(z.array(z.string())).optional(), // optionIndex -> userIds
-    allowMultiple: z.boolean().default(false),
-    expiresAt: z.date().optional(),
+exports.PollMetadataSchema = zod_1.z.object({
+    question: zod_1.z.string().min(1).max(200),
+    options: zod_1.z.array(zod_1.z.string().min(1).max(100)).min(2).max(6),
+    votes: zod_1.z.record(zod_1.z.array(zod_1.z.string())).optional(), // optionIndex -> userIds
+    allowMultiple: zod_1.z.boolean().default(false),
+    expiresAt: zod_1.z.date().optional(),
 });
-export const EventMetadataSchema = z.object({
-    title: z.string().min(1).max(100),
-    description: z.string().max(500).optional(),
-    startTime: z.date(),
-    endTime: z.date().optional(),
-    location: z.string().max(200).optional(),
-    attendees: z.array(z.string()).optional(), // userIds
+exports.EventMetadataSchema = zod_1.z.object({
+    title: zod_1.z.string().min(1).max(100),
+    description: zod_1.z.string().max(500).optional(),
+    startTime: zod_1.z.date(),
+    endTime: zod_1.z.date().optional(),
+    location: zod_1.z.string().max(200).optional(),
+    attendees: zod_1.z.array(zod_1.z.string()).optional(), // userIds
 });
-export const ToolShareMetadataSchema = z.object({
-    toolId: z.string(),
-    toolName: z.string(),
-    toolDescription: z.string().optional(),
-    shareType: z.enum(['created', 'updated', 'featured']),
+exports.ToolShareMetadataSchema = zod_1.z.object({
+    toolId: zod_1.z.string(),
+    toolName: zod_1.z.string(),
+    toolDescription: zod_1.z.string().optional(),
+    shareType: zod_1.z.enum(['created', 'updated', 'featured']),
 });
 /**
  * Author information embedded in posts
  */
-export const PostAuthorSchema = z.object({
-    id: z.string(),
-    fullName: z.string(),
-    handle: z.string(),
-    photoURL: z.string().url().optional(),
-    role: z.enum(['member', 'builder', 'admin']).optional(),
+exports.PostAuthorSchema = zod_1.z.object({
+    id: zod_1.z.string(),
+    fullName: zod_1.z.string(),
+    handle: zod_1.z.string(),
+    photoURL: zod_1.z.string().url().optional(),
+    role: zod_1.z.enum(['member', 'builder', 'admin']).optional(),
 });
 /**
  * Reaction system (heart only for vBETA)
  */
-export const PostReactionsSchema = z.object({
-    heart: z.number().default(0),
+exports.PostReactionsSchema = zod_1.z.object({
+    heart: zod_1.z.number().default(0),
 });
-export const PostReactedUsersSchema = z.object({
-    heart: z.array(z.string()).default([]),
+exports.PostReactedUsersSchema = zod_1.z.object({
+    heart: zod_1.z.array(zod_1.z.string()).default([]),
 });
 /**
  * Main Post schema
  */
-export const PostSchema = z.object({
-    id: z.string(),
-    spaceId: z.string(),
-    authorId: z.string(),
-    author: PostAuthorSchema.optional(), // Populated when fetching
+exports.PostSchema = zod_1.z.object({
+    id: zod_1.z.string(),
+    spaceId: zod_1.z.string(),
+    authorId: zod_1.z.string(),
+    author: exports.PostAuthorSchema.optional(), // Populated when fetching
     // Content
-    type: PostType.default('text'),
-    content: z.string().min(1).max(500),
-    richContent: RichTextContentSchema.optional(),
+    type: exports.PostType.default('text'),
+    content: zod_1.z.string().min(1).max(500),
+    richContent: exports.RichTextContentSchema.optional(),
     // Type-specific metadata
-    imageMetadata: ImageMetadataSchema.optional(),
-    pollMetadata: PollMetadataSchema.optional(),
-    eventMetadata: EventMetadataSchema.optional(),
-    toolShareMetadata: ToolShareMetadataSchema.optional(),
+    imageMetadata: exports.ImageMetadataSchema.optional(),
+    pollMetadata: exports.PollMetadataSchema.optional(),
+    eventMetadata: exports.EventMetadataSchema.optional(),
+    toolShareMetadata: exports.ToolShareMetadataSchema.optional(),
     // Engagement
-    reactions: PostReactionsSchema.default({ heart: 0 }),
-    reactedUsers: PostReactedUsersSchema.default({ heart: [] }),
+    reactions: exports.PostReactionsSchema.default({ heart: 0 }),
+    reactedUsers: exports.PostReactedUsersSchema.default({ heart: [] }),
     // Moderation & Status
-    isPinned: z.boolean().default(false),
-    pinnedAt: z.date().optional(),
-    pinnedBy: z.string().optional(),
-    isEdited: z.boolean().default(false),
-    isDeleted: z.boolean().default(false),
-    deletedAt: z.date().optional(),
-    deletedBy: z.string().optional(),
-    isFlagged: z.boolean().default(false),
-    flaggedAt: z.date().optional(),
-    flaggedBy: z.string().optional(),
-    flagReason: z.string().optional(),
+    isPinned: zod_1.z.boolean().default(false),
+    pinnedAt: zod_1.z.date().optional(),
+    pinnedBy: zod_1.z.string().optional(),
+    isEdited: zod_1.z.boolean().default(false),
+    isDeleted: zod_1.z.boolean().default(false),
+    deletedAt: zod_1.z.date().optional(),
+    deletedBy: zod_1.z.string().optional(),
+    isFlagged: zod_1.z.boolean().default(false),
+    flaggedAt: zod_1.z.date().optional(),
+    flaggedBy: zod_1.z.string().optional(),
+    flagReason: zod_1.z.string().optional(),
     // Timestamps
-    createdAt: z.date(),
-    updatedAt: z.date(),
-    hardDeleteAt: z.date().optional(), // For 24h soft delete window
+    createdAt: zod_1.z.date(),
+    updatedAt: zod_1.z.date(),
+    hardDeleteAt: zod_1.z.date().optional(), // For 24h soft delete window
 });
 /**
  * Schema for creating new posts
  */
-export const CreatePostSchema = z.object({
-    type: PostType.default('text'),
-    content: z.string().min(1).max(500),
-    richContent: RichTextContentSchema.optional(),
+exports.CreatePostSchema = zod_1.z.object({
+    type: exports.PostType.default('text'),
+    content: zod_1.z.string().min(1).max(500),
+    richContent: exports.RichTextContentSchema.optional(),
     // Type-specific metadata
-    imageMetadata: ImageMetadataSchema.optional(),
-    pollMetadata: PollMetadataSchema.optional(),
-    eventMetadata: EventMetadataSchema.optional(),
-    toolShareMetadata: ToolShareMetadataSchema.optional(),
+    imageMetadata: exports.ImageMetadataSchema.optional(),
+    pollMetadata: exports.PollMetadataSchema.optional(),
+    eventMetadata: exports.EventMetadataSchema.optional(),
+    toolShareMetadata: exports.ToolShareMetadataSchema.optional(),
 }).refine((data) => {
     // Ensure metadata matches post type
     if (data.type === 'image' && !data.imageMetadata)
@@ -137,36 +140,36 @@ export const CreatePostSchema = z.object({
 /**
  * Schema for editing posts (limited fields)
  */
-export const EditPostSchema = z.object({
-    content: z.string().min(1).max(500),
-    richContent: RichTextContentSchema.optional(),
+exports.EditPostSchema = zod_1.z.object({
+    content: zod_1.z.string().min(1).max(500),
+    richContent: exports.RichTextContentSchema.optional(),
 });
 /**
  * Feed query parameters
  */
-export const FeedQuerySchema = z.object({
-    limit: z.number().min(1).max(50).default(20),
-    lastPostId: z.string().optional(),
-    includeDeleted: z.boolean().default(false), // For moderation views
+exports.FeedQuerySchema = zod_1.z.object({
+    limit: zod_1.z.number().min(1).max(50).default(20),
+    lastPostId: zod_1.z.string().optional(),
+    includeDeleted: zod_1.z.boolean().default(false), // For moderation views
 });
 /**
  * Post reaction schema
  */
-export const PostReactionSchema = z.object({
-    reaction: z.enum(['heart']),
-    action: z.enum(['add', 'remove']),
+exports.PostReactionSchema = zod_1.z.object({
+    reaction: zod_1.z.enum(['heart']),
+    action: zod_1.z.enum(['add', 'remove']),
 });
 /**
  * Post moderation actions
  */
-export const PostModerationSchema = z.object({
-    action: z.enum(['pin', 'unpin', 'flag', 'unflag', 'delete']),
-    reason: z.string().optional(),
+exports.PostModerationSchema = zod_1.z.object({
+    action: zod_1.z.enum(['pin', 'unpin', 'flag', 'unflag', 'delete']),
+    reason: zod_1.z.string().optional(),
 });
 /**
  * Utility functions for post creation
  */
-export const createPostDefaults = (authorId, spaceId, data) => ({
+const createPostDefaults = (authorId, spaceId, data) => ({
     spaceId,
     authorId,
     type: data.type,
@@ -183,18 +186,21 @@ export const createPostDefaults = (authorId, spaceId, data) => ({
     isDeleted: false,
     isFlagged: false,
 });
+exports.createPostDefaults = createPostDefaults;
 /**
  * Helper to check if user can moderate post
  */
-export const canModeratePost = (userRole, isAuthor) => {
+const canModeratePost = (userRole, isAuthor) => {
     return isAuthor || userRole === 'builder' || userRole === 'admin';
 };
+exports.canModeratePost = canModeratePost;
 /**
  * Helper to check if post is within edit window
  */
-export const isWithinEditWindow = (createdAt, windowMinutes = 15) => {
+const isWithinEditWindow = (createdAt, windowMinutes = 15) => {
     const now = new Date();
     const windowMs = windowMinutes * 60 * 1000;
     return (now.getTime() - createdAt.getTime()) <= windowMs;
 };
+exports.isWithinEditWindow = isWithinEditWindow;
 //# sourceMappingURL=post.js.map
