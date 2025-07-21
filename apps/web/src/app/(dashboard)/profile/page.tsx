@@ -1,16 +1,17 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { PageContainer, Button, Card, AppShell } from '@hive/ui';
 import { 
-  User, Camera, MapPin, Calendar, Edit3, Settings, 
-  GraduationCap, Home, MessageCircle, Palette, Plus, Upload, X
-} from 'lucide-react';
+  EnhancedProfileDashboard,
+  EnhancedProfileUser, 
+  PersonalTool, 
+  ActivityLogItem,
+  ProfileCompletionStatus 
+} from '@hive/ui';
 import { useSession } from '../../../hooks/use-session';
 
 interface CampusProfile {
-  // Core Campus Identity
   fullName: string;
   preferredName?: string;
   profilePhoto?: string;
@@ -20,12 +21,195 @@ interface CampusProfile {
   housing: string;
   pronouns?: string;
   statusMessage?: string;
-  
-  // Basic Stats for Launch
   joinedSpaces: number;
   createdAt: string;
   lastActive: string;
+  isBuilder?: boolean;
+  ghostMode?: boolean;
+  ghostModeLevel?: 'invisible' | 'minimal' | 'selective' | 'normal';
+  stats?: {
+    spacesJoined: number;
+    toolsUsed: number;
+    connectionsCount: number;
+    toolsCreated?: number;
+    spacesLed?: number;
+  };
 }
+
+// Enhanced mock data generators
+const generateMockPersonalTools = (): PersonalTool[] => [
+  {
+    id: '1',
+    name: 'Study Timer',
+    description: 'Advanced Pomodoro technique timer with analytics',
+    icon: '⏰',
+    lastUsed: '2 hours ago',
+    usageCount: 23,
+    isForked: true,
+    originalCreator: 'Alex Chen (CS \'25)'
+  },
+  {
+    id: '2',
+    name: 'GPA Calculator',
+    description: 'Smart GPA tracking with semester projections',
+    icon: '📊',
+    lastUsed: '1 day ago',
+    usageCount: 15,
+    isForked: false
+  },
+  {
+    id: '3',
+    name: 'Calendar Sync',
+    description: 'Google Calendar integration with reminders',
+    icon: '📅',
+    lastUsed: '3 hours ago',
+    usageCount: 31,
+    isForked: true,
+    originalCreator: 'Sarah Kim (CS \'24)'
+  },
+  {
+    id: '4',
+    name: 'Course Planner',
+    description: 'Degree requirement tracking and planning',
+    icon: '🎓',
+    lastUsed: '5 days ago',
+    usageCount: 8,
+    isForked: false
+  },
+  {
+    id: '5',
+    name: 'Study Buddy',
+    description: 'Find study partners for your courses',
+    icon: '👥',
+    lastUsed: '1 week ago',
+    usageCount: 12,
+    isForked: true,
+    originalCreator: 'Mike Johnson (EE \'26)'
+  },
+  {
+    id: '6',
+    name: 'Note Taker',
+    description: 'Smart note organization and search',
+    icon: '📝',
+    lastUsed: '4 hours ago',
+    usageCount: 45,
+    isForked: false
+  }
+];
+
+const generateMockActivityLog = (): ActivityLogItem[] => [
+  {
+    id: '1',
+    type: 'space_joined',
+    title: 'Joined CS Study Group',
+    description: 'Started collaborating in Computer Science study space',
+    timestamp: '2 hours ago'
+  },
+  {
+    id: '2',
+    type: 'tool_used',
+    title: 'Used Study Timer',
+    description: 'Completed 6 pomodoro sessions for Algorithms homework',
+    timestamp: '3 hours ago'
+  },
+  {
+    id: '3',
+    type: 'tool_created',
+    title: 'Created Grade Calculator',
+    description: 'Built a tool to calculate weighted semester GPA',
+    timestamp: '2 days ago'
+  },
+  {
+    id: '4',
+    type: 'connection_made',
+    title: 'Connected with Study Group',
+    description: 'Joined weekly CS 3310 problem solving sessions',
+    timestamp: '3 days ago'
+  },
+  {
+    id: '5',
+    type: 'space_joined',
+    title: 'Joined Robotics Club',
+    description: 'Became member of campus robotics engineering space',
+    timestamp: '1 week ago'
+  }
+];
+
+const generateMockUpcomingEvents = () => [
+  {
+    id: '1',
+    title: 'Data Structures Exam',
+    description: 'CS 2420 Midterm Examination',
+    startTime: '2025-07-22T10:00:00Z',
+    endTime: '2025-07-22T12:00:00Z',
+    location: 'Engineering Building Room 101',
+    type: 'academic',
+    isAllDay: false
+  },
+  {
+    id: '2',
+    title: 'Study Group Session',
+    description: 'Algorithms problem solving with CS majors',
+    startTime: '2025-07-21T19:00:00Z',
+    endTime: '2025-07-21T21:00:00Z',
+    location: 'Library Study Room 3B',
+    type: 'study',
+    isAllDay: false
+  },
+  {
+    id: '3',
+    title: 'Career Fair Prep',
+    description: 'Resume workshop and interview practice',
+    startTime: '2025-07-23T16:00:00Z',
+    endTime: '2025-07-23T18:00:00Z',
+    location: 'Student Union Ballroom',
+    type: 'career',
+    isAllDay: false
+  },
+  {
+    id: '4',
+    title: 'Robotics Club Meeting',
+    description: 'Weekly project update and planning session',
+    startTime: '2025-07-24T18:30:00Z',
+    endTime: '2025-07-24T20:00:00Z',
+    location: 'Maker Space Lab',
+    type: 'extracurricular',
+    isAllDay: false
+  }
+];
+
+const generateMockSpaces = () => [
+  {
+    id: '1',
+    name: 'CS Study Group',
+    description: 'Collaborative computer science learning',
+    memberCount: 45,
+    category: 'Academic',
+    isActive: true,
+    lastActivity: '2 hours ago',
+    role: 'member'
+  },
+  {
+    id: '2',
+    name: 'Robotics Club',
+    description: 'Building autonomous robots and competing',
+    memberCount: 23,
+    category: 'Engineering',
+    isActive: true,
+    lastActivity: '1 day ago',
+    role: 'member'
+  },
+  {
+    id: '3',
+    name: 'Data Science Society',
+    description: 'Exploring ML and data analytics together',
+    memberCount: 67,
+    category: 'Academic',
+    isActive: true,
+    lastActivity: '3 days ago',
+    role: 'leader'
+  }
+];
 
 async function fetchCampusProfile(): Promise<CampusProfile> {
   let headers: HeadersInit = {};
@@ -44,57 +228,57 @@ async function fetchCampusProfile(): Promise<CampusProfile> {
 
   const response = await fetch('/api/profile', { headers });
   if (!response.ok) {
-    // Return mock campus profile for development
+    // Return enhanced mock campus profile for development
     return {
-      fullName: 'Development User',
-      preferredName: 'Dev',
+      fullName: 'Jordan Smith',
+      preferredName: 'J',
       academicYear: 'junior',
       major: 'Computer Science',
       housing: 'Smith Hall, Room 305',
       pronouns: 'they/them',
-      statusMessage: 'Building epic study tools 🔥',
-      joinedSpaces: 5,
-      createdAt: new Date().toISOString(),
+      statusMessage: 'Building the future, one algorithm at a time 🚀',
+      joinedSpaces: 3,
+      createdAt: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).toISOString(), // 1 year ago
       lastActive: new Date().toISOString(),
+      isBuilder: Math.random() > 0.3, // 70% chance of being a builder
+      ghostMode: Math.random() > 0.7, // 30% chance of ghost mode
+      ghostModeLevel: 'selective',
+      stats: {
+        spacesJoined: 3,
+        toolsUsed: 6,
+        connectionsCount: 34,
+        toolsCreated: Math.random() > 0.5 ? Math.floor(Math.random() * 8) + 1 : 0,
+        spacesLed: Math.random() > 0.6 ? 1 : 0
+      }
     };
   }
   
   const data = await response.json();
-  return data.user;
+  return {
+    ...data.user,
+    isBuilder: data.user.isBuilder || Math.random() > 0.5,
+    ghostMode: data.user.ghostMode || false,
+    ghostModeLevel: data.user.ghostModeLevel || 'selective',
+    stats: {
+      spacesJoined: data.user.joinedSpaces || 0,
+      toolsUsed: Math.floor(Math.random() * 20) + 1,
+      connectionsCount: Math.floor(Math.random() * 50) + 10,
+      toolsCreated: data.user.isBuilder ? Math.floor(Math.random() * 10) + 1 : 0,
+      spacesLed: data.user.isBuilder ? Math.floor(Math.random() * 3) : 0
+    }
+  };
 }
 
-// Avatar generation function
-function generateAvatarColors(name: string) {
-  const colors = [
-    ['from-blue-500', 'to-blue-600'],
-    ['from-purple-500', 'to-purple-600'], 
-    ['from-green-500', 'to-green-600'],
-    ['from-red-500', 'to-red-600'],
-    ['from-yellow-500', 'to-yellow-600'],
-    ['from-pink-500', 'to-pink-600'],
-    ['from-indigo-500', 'to-indigo-600'],
-    ['from-teal-500', 'to-teal-600']
-  ];
-  
-  const hash = name.split('').reduce((a, b) => {
-    a = ((a << 5) - a) + b.charCodeAt(0);
-    return a & a;
-  }, 0);
-  
-  return colors[Math.abs(hash) % colors.length];
-}
-
-export default function CampusProfilePage() {
+export default function ProfilePage() {
   const { user } = useSession();
-  const [isEditing, setIsEditing] = useState(false);
-  const [showPhotoUpload, setShowPhotoUpload] = useState(false);
-  const [previewImage, setPreviewImage] = useState<string | null>(null);
-  const [editForm, setEditForm] = useState<Partial<CampusProfile>>({});
   const [isClient, setIsClient] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [cardLayout, setCardLayout] = useState<Record<string, any>>({});
+  const [personalTools] = useState(generateMockPersonalTools);
+  const [activityLog] = useState(generateMockActivityLog);
+  const [upcomingEvents] = useState(generateMockUpcomingEvents);
+  const [userSpaces] = useState(generateMockSpaces);
   const queryClient = useQueryClient();
 
-  // Ensure we're on the client side
   useEffect(() => {
     setIsClient(true);
   }, []);
@@ -106,7 +290,7 @@ export default function CampusProfilePage() {
   } = useQuery<CampusProfile>({
     queryKey: ["campus-profile"],
     queryFn: fetchCampusProfile,
-    staleTime: 60000, // 1 minute
+    staleTime: 60000,
     enabled: !!user && isClient
   });
 
@@ -143,12 +327,6 @@ export default function CampusProfilePage() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["campus-profile"] });
-      setShowPhotoUpload(false);
-      setPreviewImage(null);
-    },
-    onError: (error) => {
-      console.error('Photo upload failed:', error);
-      alert('Failed to upload photo. Please try again.');
     }
   });
 
@@ -181,562 +359,127 @@ export default function CampusProfilePage() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["campus-profile"] });
-    },
-    onError: (error) => {
-      console.error('Avatar generation failed:', error);
-      alert('Failed to generate avatar. Please try again.');
     }
   });
 
-  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      if (file.size > 5 * 1024 * 1024) { // 5MB limit
-        alert('File size must be less than 5MB');
-        return;
-      }
-      
-      if (!file.type.startsWith('image/')) {
-        alert('Please select an image file');
-        return;
-      }
-
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setPreviewImage(e.target?.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handlePhotoUpload = () => {
-    const file = fileInputRef.current?.files?.[0];
-    if (file) {
-      uploadPhotoMutation.mutate(file);
-    }
-  };
-
-  // Profile update mutation
-  const updateProfileMutation = useMutation({
-    mutationFn: async (updatedData: Partial<CampusProfile>) => {
-      let headers: HeadersInit = {
-        'Content-Type': 'application/json',
-      };
-      try {
-        const sessionJson = window.localStorage.getItem('hive_session');
-        if (sessionJson) {
-          const session = JSON.parse(sessionJson);
-          headers.Authorization = `Bearer ${process.env.NODE_ENV === 'development' ? 'test-token' : session.token}`;
-        } else {
-          headers.Authorization = `Bearer test-token`;
-        }
-      } catch (error) {
-        headers.Authorization = `Bearer test-token`;
-      }
-
-      const response = await fetch('/api/profile', {
-        method: 'PATCH',
-        headers,
-        body: JSON.stringify(updatedData)
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to update profile');
-      }
-
-      return response.json();
+  // Layout persistence
+  const saveLayoutMutation = useMutation({
+    mutationFn: async (layout: Record<string, any>) => {
+      // TODO: Implement actual layout saving to backend
+      localStorage.setItem('hive_profile_layout', JSON.stringify(layout));
+      return Promise.resolve(layout);
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["campus-profile"] });
-      setIsEditing(false);
-      setEditForm({});
-    },
-    onError: (error) => {
-      console.error('Profile update failed:', error);
-      alert('Failed to update profile. Please try again.');
+    onSuccess: (layout) => {
+      console.log('Profile layout saved:', layout);
     }
   });
 
-  const handleEditToggle = () => {
-    if (isEditing) {
-      // Save changes
-      if (Object.keys(editForm).length > 0) {
-        updateProfileMutation.mutate(editForm);
-      } else {
-        setIsEditing(false);
+  useEffect(() => {
+    // Load saved layout from localStorage
+    try {
+      const savedLayout = localStorage.getItem('hive_profile_layout');
+      if (savedLayout) {
+        setCardLayout(JSON.parse(savedLayout));
       }
-    } else {
-      // Start editing - populate form with current values
-      setEditForm({
-        fullName: profile?.fullName || '',
-        statusMessage: profile?.statusMessage || '',
-        academicYear: profile?.academicYear || 'junior',
-        major: profile?.major || '',
-        housing: profile?.housing || '',
-        pronouns: profile?.pronouns || '',
-      });
-      setIsEditing(true);
+    } catch (error) {
+      console.warn('Failed to load saved profile layout:', error);
     }
+  }, []);
+
+  const handleCardLayoutChange = (newLayout: Record<string, any>) => {
+    setCardLayout(newLayout);
+    saveLayoutMutation.mutate(newLayout);
   };
 
-  const handleFormChange = (field: keyof CampusProfile, value: string | CampusProfile['academicYear']) => {
-    setEditForm(prev => ({
-      ...prev,
-      [field]: value
-    }));
-  };
-
-  const avatarColors = generateAvatarColors(profile?.fullName || user?.fullName || 'User');
-
-  if (!user || !isClient) {
+  if (!user || !isClient || isLoading) {
     return (
-      <PageContainer title="Loading..." maxWidth="4xl">
-        <div className="flex items-center justify-center h-64">
-          <div className="text-center">
-            <div className="w-8 h-8 bg-[#FFD700] rounded-lg animate-pulse mx-auto mb-4" />
-            <p className="text-white">Loading your campus profile...</p>
-          </div>
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-hive-gold mx-auto mb-4" />
+          <p className="text-gray-300">Loading your HIVE Profile...</p>
         </div>
-      </PageContainer>
+      </div>
     );
   }
 
+  if (!profile) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-6 flex items-center justify-center">
+        <div className="text-center text-white">
+          <p>Failed to load profile</p>
+          <button 
+            onClick={() => queryClient.invalidateQueries({ queryKey: ["campus-profile"] })}
+            className="mt-4 px-4 py-2 bg-hive-gold text-black rounded-lg"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  const enhancedUser: EnhancedProfileUser = {
+    id: user.id,
+    name: profile.fullName,
+    email: user.email,
+    avatar: profile.profilePhoto || profile.avatarUrl,
+    isBuilder: profile.isBuilder,
+    isVerifiedStudent: true,
+    campus: 'University of Technology', // TODO: Get from actual campus data
+    gradYear: '2025', // TODO: Calculate from academic year
+    major: profile.major,
+    ghostMode: profile.ghostMode,
+    stats: profile.stats
+  };
+
+  const completionStatus: ProfileCompletionStatus = {
+    overall: Math.round(
+      ((profile.profilePhoto || profile.avatarUrl ? 1 : 0) +
+       (profile.academicYear && profile.major ? 1 : 0) +
+       (profile.housing ? 1 : 0) +
+       (profile.joinedSpaces > 0 ? 1 : 0) +
+       (profile.pronouns ? 1 : 0)) / 5 * 100
+    ),
+    sections: {
+      basicInfo: { 
+        completed: !!(profile.fullName && profile.academicYear), 
+        label: 'Basic Information' 
+      },
+      academicInfo: { 
+        completed: !!(profile.major && profile.housing), 
+        label: 'Academic Details' 
+      },
+      interests: { 
+        completed: profile.joinedSpaces > 0, 
+        label: 'Space Participation' 
+      },
+      privacy: { 
+        completed: !!profile.pronouns, 
+        label: 'Profile Customization' 
+      }
+    }
+  };
+
   return (
-    <AppShell
-      user={user ? {
-        id: user.id,
-        name: user.fullName,
-        handle: user.email.split('@')[0],
-        avatar: profile?.profilePhoto || profile?.avatarUrl,
-        builderStatus: profile?.isBuilder ? 'active' : 'none'
-      } : null}
-      currentSection="profile"
-      layoutType="dashboard"
-    >
-      <div className="max-w-4xl mx-auto">
-        {/* Header Actions */}
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h1 className="text-2xl font-bold text-white mb-2">Your Campus Profile</h1>
-            <p className="text-gray-400">Manage your academic identity and campus presence</p>
-          </div>
-          <div className="flex gap-2">
-            <Button 
-              variant="outline" 
-              className="border-[rgba(255,255,255,0.2)] text-white hover:bg-[rgba(255,255,255,0.1)]"
-              onClick={handleEditToggle}
-              disabled={updateProfileMutation.isPending}
-            >
-              <Edit3 className="h-4 w-4 mr-2" />
-              {updateProfileMutation.isPending ? 'Saving...' : (isEditing ? 'Save Profile' : 'Edit Profile')}
-            </Button>
-            <Button 
-              variant="outline"
-              className="border-[rgba(255,255,255,0.2)] text-white hover:bg-[rgba(255,255,255,0.1)]"
-              onClick={() => window.location.href = "/settings"}
-            >
-              <Settings className="h-4 w-4 mr-2" />
-              Settings
-            </Button>
-          </div>
-        </div>
-      {/* Campus Identity Header */}
-      <Card className="p-8 mb-8 bg-gradient-to-r from-blue-600/10 to-purple-600/10 border-blue-500/20">
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Profile Photo Section */}
-          <div className="flex flex-col items-center space-y-4">
-            <div className="relative">
-              <div className={`w-32 h-32 rounded-full flex items-center justify-center text-4xl font-bold border-4 border-white/20 ${
-                (profile?.profilePhoto || profile?.avatarUrl) 
-                  ? 'bg-transparent' 
-                  : `bg-gradient-to-br ${avatarColors[0]} ${avatarColors[1]}`
-              }`}>
-                {(profile?.profilePhoto || profile?.avatarUrl) ? (
-                  <img 
-                    src={profile.profilePhoto || profile.avatarUrl} 
-                    alt="Profile" 
-                    className="w-full h-full rounded-full object-cover"
-                  />
-                ) : (
-                  <span className="text-white">
-                    {profile?.fullName?.split(' ').map(n => n[0]).join('').toUpperCase() || 
-                     user?.fullName?.split(' ').map(n => n[0]).join('').toUpperCase() || 'U'}
-                  </span>
-                )}
-              </div>
-              <Button 
-                size="sm" 
-                className="absolute -bottom-2 -right-2 rounded-full p-3 h-12 w-12 bg-[#FFD700] hover:bg-[#FFE255] text-black"
-                onClick={() => setShowPhotoUpload(true)}
-                disabled={uploadPhotoMutation.isPending}
-              >
-                <Camera className="h-5 w-5" />
-              </Button>
-            </div>
-            <Button 
-              variant="outline"
-              size="sm"
-              className="border-[rgba(255,255,255,0.2)] text-white hover:bg-[rgba(255,255,255,0.1)]"
-              onClick={() => generateAvatarMutation.mutate()}
-              disabled={generateAvatarMutation.isPending}
-            >
-              <Palette className="h-4 w-4 mr-2" />
-              {generateAvatarMutation.isPending ? 'Generating...' : 'Generate Avatar'}
-            </Button>
-          </div>
-
-          {/* Identity Information */}
-          <div className="flex-1 space-y-6">
-            {/* Name & Status */}
-            <div>
-              <div className="flex items-center gap-4 mb-2">
-                <h1 className="text-4xl font-bold text-white">
-                  {isEditing ? (
-                    <input 
-                      type="text" 
-                      value={editForm.fullName || ''}
-                      onChange={(e) => handleFormChange('fullName', e.target.value)}
-                      className="bg-transparent border-b-2 border-[#FFD700] focus:outline-none text-white"
-                    />
-                  ) : (
-                    profile?.fullName || user.fullName || 'Campus Builder'
-                  )}
-                </h1>
-                {profile?.preferredName && (
-                  <span className="text-xl text-white/70">"{profile.preferredName}"</span>
-                )}
-              </div>
-              
-              <div className="mb-4">
-                {isEditing ? (
-                  <input 
-                    type="text" 
-                    value={editForm.pronouns || ''}
-                    onChange={(e) => handleFormChange('pronouns', e.target.value)}
-                    placeholder="Pronouns (optional)"
-                    className="bg-[rgba(255,255,255,0.1)] border border-white/20 rounded text-white p-2 text-sm"
-                  />
-                ) : (
-                  profile?.pronouns && (
-                    <p className="text-white/60 text-lg">{profile.pronouns}</p>
-                  )
-                )}
-              </div>
-
-              <div className="flex items-center gap-2 p-3 bg-[rgba(255,215,0,0.1)] border border-[#FFD700]/30 rounded-lg mb-4">
-                <MessageCircle className="h-5 w-5 text-[#FFD700]" />
-                {isEditing ? (
-                  <input 
-                    type="text" 
-                    value={editForm.statusMessage || ''}
-                    onChange={(e) => handleFormChange('statusMessage', e.target.value)}
-                    placeholder="What are you building?"
-                    className="bg-transparent focus:outline-none text-white flex-1"
-                  />
-                ) : (
-                  <span className="text-white">
-                    {profile?.statusMessage || 'Building something awesome! 🚀'}
-                  </span>
-                )}
-              </div>
-            </div>
-
-            {/* Campus Info Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <GraduationCap className="h-5 w-5 text-blue-400" />
-                  <div>
-                    <p className="text-white/60 text-sm">Academic Year</p>
-                    {isEditing ? (
-                      <select 
-                        value={editForm.academicYear || ''}
-                        onChange={(e) => handleFormChange('academicYear', e.target.value)}
-                        className="bg-[rgba(255,255,255,0.1)] border border-white/20 rounded text-white p-1"
-                      >
-                        <option value="freshman">Freshman</option>
-                        <option value="sophomore">Sophomore</option>
-                        <option value="junior">Junior</option>
-                        <option value="senior">Senior</option>
-                        <option value="graduate">Graduate</option>
-                        <option value="other">Other</option>
-                      </select>
-                    ) : (
-                      <p className="text-white font-medium capitalize">
-                        {profile?.academicYear || 'Junior'}
-                      </p>
-                    )}
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <User className="h-5 w-5 text-purple-400" />
-                  <div>
-                    <p className="text-white/60 text-sm">Major</p>
-                    {isEditing ? (
-                      <input 
-                        type="text" 
-                        value={editForm.major || ''}
-                        onChange={(e) => handleFormChange('major', e.target.value)}
-                        className="bg-[rgba(255,255,255,0.1)] border border-white/20 rounded text-white p-1"
-                      />
-                    ) : (
-                      <p className="text-white font-medium">
-                        {profile?.major || 'Computer Science'}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <Home className="h-5 w-5 text-green-400" />
-                  <div>
-                    <p className="text-white/60 text-sm">Housing</p>
-                    {isEditing ? (
-                      <input 
-                        type="text" 
-                        value={editForm.housing || ''}
-                        onChange={(e) => handleFormChange('housing', e.target.value)}
-                        placeholder="Dorm or off-campus"
-                        className="bg-[rgba(255,255,255,0.1)] border border-white/20 rounded text-white p-1"
-                      />
-                    ) : (
-                      <p className="text-white font-medium">
-                        {profile?.housing || 'Smith Hall, Room 305'}
-                      </p>
-                    )}
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <Calendar className="h-5 w-5 text-yellow-400" />
-                  <div>
-                    <p className="text-white/60 text-sm">Joined HIVE</p>
-                    <p className="text-white font-medium">
-                      {new Date(profile?.createdAt || Date.now()).toLocaleDateString('en-US', { 
-                        month: 'long', 
-                        year: 'numeric' 
-                      })}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </Card>
-
-      {/* Campus Activity Overview */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Campus Engagement */}
-        <Card className="p-6">
-          <h2 className="text-lg font-semibold text-white mb-6 flex items-center">
-            <MapPin className="h-5 w-5 mr-2 text-[#FFD700]" />
-            Campus Presence
-          </h2>
-          
-          <div className="space-y-4">
-            <div className="flex justify-between items-center p-4 bg-[rgba(255,255,255,0.02)] rounded-lg">
-              <span className="text-white/80">Spaces Joined</span>
-              <span className="text-2xl font-bold text-[#FFD700]">{profile?.joinedSpaces || 0}</span>
-            </div>
-            
-            <div className="flex justify-between items-center p-4 bg-[rgba(255,255,255,0.02)] rounded-lg">
-              <span className="text-white/80">Last Active</span>
-              <span className="text-white font-medium">
-                {profile?.lastActive ? new Date(profile.lastActive).toLocaleDateString() : 'Today'}
-              </span>
-            </div>
-
-            <div className="p-4 bg-[rgba(255,255,255,0.02)] rounded-lg">
-              <p className="text-white/60 text-sm mb-2">Campus Status</p>
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                <span className="text-white font-medium">Active Student</span>
-              </div>
-            </div>
-          </div>
-        </Card>
-
-        {/* Quick Actions */}
-        <Card className="p-6">
-          <h2 className="text-lg font-semibold text-white mb-6">Quick Actions</h2>
-          
-          <div className="space-y-3">
-            <Button 
-              variant="outline" 
-              className="w-full justify-start border-[rgba(255,255,255,0.2)] text-white hover:bg-[rgba(255,255,255,0.1)]"
-              onClick={() => window.location.href = "/spaces/browse"}
-            >
-              <Plus className="h-4 w-4 mr-3" />
-              Join a Space
-            </Button>
-            
-            <Button 
-              variant="outline"
-              className="w-full justify-start border-[rgba(255,255,255,0.2)] text-white hover:bg-[rgba(255,255,255,0.1)]"
-              onClick={() => window.location.href = "/spaces/my"}
-            >
-              <MapPin className="h-4 w-4 mr-3" />
-              My Spaces
-            </Button>
-            
-            <Button 
-              variant="outline"
-              className="w-full justify-start border-[rgba(255,255,255,0.2)] text-white hover:bg-[rgba(255,255,255,0.1)]"
-              onClick={() => window.location.href = "/settings"}
-            >
-              <Settings className="h-4 w-4 mr-3" />
-              Profile Settings
-            </Button>
-          </div>
-        </Card>
-
-        {/* Getting Started */}
-        <Card className="p-6 bg-gradient-to-br from-[#FFD700]/10 to-[#FFD700]/5 border-[#FFD700]/20">
-          <h2 className="text-lg font-semibold text-white mb-4">Complete Your Profile</h2>
-          
-          <div className="space-y-3 text-sm">
-            <div className="flex items-center justify-between">
-              <span className="text-white/80">Profile Photo</span>
-              <span className={profile?.profilePhoto || profile?.avatarUrl ? "text-green-400" : "text-gray-400"}>
-                {profile?.profilePhoto || profile?.avatarUrl ? "✓" : "○"}
-              </span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-white/80">Academic Info</span>
-              <span className={profile?.academicYear && profile?.major ? "text-green-400" : "text-yellow-400"}>
-                {profile?.academicYear && profile?.major ? "✓" : "⋯"}
-              </span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-white/80">Housing Details</span>
-              <span className={profile?.housing ? "text-green-400" : "text-yellow-400"}>
-                {profile?.housing ? "✓" : "⋯"}
-              </span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-white/80">Join a Space</span>
-              <span className={(profile?.joinedSpaces || 0) > 0 ? "text-green-400" : "text-gray-400"}>
-                {(profile?.joinedSpaces || 0) > 0 ? "✓" : "○"}
-              </span>
-            </div>
-          </div>
-
-          <div className="mt-4 pt-4 border-t border-white/10">
-            <p className="text-xs text-white/60 mb-3">Complete your profile to connect with your campus community</p>
-            <div className="w-full bg-white/10 rounded-full h-2">
-              <div className="bg-[#FFD700] h-2 rounded-full" style={{
-                width: `${Math.round(
-                  ((profile?.profilePhoto || profile?.avatarUrl ? 1 : 0) +
-                   (profile?.academicYear && profile?.major ? 1 : 0) +
-                   (profile?.housing ? 1 : 0) +
-                   ((profile?.joinedSpaces || 0) > 0 ? 1 : 0)) / 4 * 100
-                )}%`
-              }}></div>
-            </div>
-            <p className="text-xs text-[#FFD700] mt-1">
-              {Math.round(
-                ((profile?.profilePhoto || profile?.avatarUrl ? 1 : 0) +
-                 (profile?.academicYear && profile?.major ? 1 : 0) +
-                 (profile?.housing ? 1 : 0) +
-                 ((profile?.joinedSpaces || 0) > 0 ? 1 : 0)) / 4 * 100
-              )}% Complete
-            </p>
-          </div>
-        </Card>
-      </div>
-
-      {/* Photo Upload Modal */}
-      {showPhotoUpload && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <Card className="p-6 w-full max-w-md mx-4">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-white">Upload Profile Photo</h3>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  setShowPhotoUpload(false);
-                  setPreviewImage(null);
-                }}
-                className="border-[rgba(255,255,255,0.2)] text-white hover:bg-[rgba(255,255,255,0.1)]"
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            </div>
-
-            <div className="space-y-4">
-              {/* File Input */}
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                onChange={handleFileSelect}
-                className="hidden"
-              />
-
-              {/* Upload Area */}
-              <div 
-                onClick={() => fileInputRef.current?.click()}
-                className="border-2 border-dashed border-[rgba(255,255,255,0.2)] rounded-lg p-8 text-center cursor-pointer hover:border-[#FFD700] transition-colors"
-              >
-                {previewImage ? (
-                  <div className="space-y-4">
-                    <img 
-                      src={previewImage} 
-                      alt="Preview" 
-                      className="w-24 h-24 rounded-full object-cover mx-auto border-4 border-white/20"
-                    />
-                    <p className="text-white text-sm">Click to choose a different photo</p>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    <Upload className="h-12 w-12 text-[#A1A1AA] mx-auto" />
-                    <div>
-                      <p className="text-white mb-1">Click to upload a photo</p>
-                      <p className="text-[#A1A1AA] text-sm">JPG, PNG or GIF (max 5MB)</p>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex gap-3">
-                <Button
-                  variant="outline"
-                  className="flex-1 border-[rgba(255,255,255,0.2)] text-white hover:bg-[rgba(255,255,255,0.1)]"
-                  onClick={() => {
-                    setShowPhotoUpload(false);
-                    setPreviewImage(null);
-                  }}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  className="flex-1 bg-[#FFD700] text-[#0A0A0A] hover:bg-[#FFE255]"
-                  onClick={handlePhotoUpload}
-                  disabled={!previewImage || uploadPhotoMutation.isPending}
-                >
-                  {uploadPhotoMutation.isPending ? 'Uploading...' : 'Upload Photo'}
-                </Button>
-              </div>
-            </div>
-          </Card>
-        </div>
-      )}
-
-      {/* Hidden file input for photo upload */}
-      <input
-        type="file"
-        ref={fileInputRef}
-        accept="image/*"
-        onChange={handleFileSelect}
-        className="hidden"
-      />
-      </div>
-    </AppShell>
+    <EnhancedProfileDashboard
+      user={enhancedUser}
+      spaces={userSpaces}
+      events={upcomingEvents}
+      connections={[]} // TODO: Implement connections
+      personalTools={personalTools}
+      activityLog={activityLog}
+      hiveLab={profile.isBuilder ? { tools: [], stats: profile.stats } : undefined}
+      completionStatus={completionStatus}
+      cardLayout={cardLayout}
+      onCardLayoutChange={handleCardLayoutChange}
+      onPhotoUpload={(file) => uploadPhotoMutation.mutate(file)}
+      onGenerateAvatar={() => generateAvatarMutation.mutate()}
+      onEditProfile={() => window.location.href = '/profile'}
+      onPrivacySettings={() => window.location.href = '/settings'}
+      onSpaceClick={(spaceId) => window.location.href = `/spaces/${spaceId}`}
+      onEventClick={(eventId) => console.log('Event clicked:', eventId)}
+      onToolClick={(toolId) => console.log('Tool clicked:', toolId)}
+      onCreateTool={() => window.location.href = '/build'}
+    />
   );
 }
