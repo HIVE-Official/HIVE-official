@@ -24,6 +24,9 @@ export type { SpaceMember } from "./domain/member";
 export type { WaitlistEntry } from "./domain/waitlistEntry";
 export type { School } from "./domain/school";
 
+// Cohort utilities
+export * from "./domain/cohort/cohort-spaces";
+
 // Constants
 export * from "./constants/majors";
 
@@ -35,3 +38,6 @@ export * from "./firebase";
 
 // Feature flags
 export * from "./feature-flags";
+
+// Privacy utilities
+export * from "./utils/privacy-utils";
