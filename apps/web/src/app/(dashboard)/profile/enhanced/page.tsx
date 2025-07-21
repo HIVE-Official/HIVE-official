@@ -2,14 +2,13 @@
 
 import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-// Temporary direct import until UI package builds
 import { 
   EnhancedProfileDashboard,
   EnhancedProfileUser, 
   PersonalTool, 
-  ActivityLogItem 
-} from '../../../../../packages/ui/src/components/profile-cards/enhanced-profile-dashboard';
-import { ProfileCompletionStatus } from '../../../../../packages/ui/src/components/profile-cards/avatar-card';
+  ActivityLogItem,
+  ProfileCompletionStatus
+} from '@hive/ui';
 import { useSession } from '../../../../hooks/use-session';
 
 interface CampusProfile {

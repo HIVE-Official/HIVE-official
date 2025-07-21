@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { PageContainer, Button, Card, HiveShell } from '@hive/ui';
+import { PageContainer, Button, Card, AppShell } from '@hive/ui';
 import { 
   User, Camera, MapPin, Calendar, Edit3, Settings, 
   GraduationCap, Home, MessageCircle, Palette, Plus, Upload, X
@@ -302,35 +302,44 @@ export default function CampusProfilePage() {
   }
 
   return (
-    <HiveShell
-      layout="profile"
-      pageTitle="Your Campus Profile"
-      breadcrumbs={[
-        { label: "Profile", href: "/profile", icon: User }
-      ]}
-      actions={
-        <div className="flex gap-2">
-          <Button 
-            variant="outline" 
-            className="border-[rgba(255,255,255,0.2)] text-white hover:bg-[rgba(255,255,255,0.1)]"
-            onClick={handleEditToggle}
-            disabled={updateProfileMutation.isPending}
-          >
-            <Edit3 className="h-4 w-4 mr-2" />
-            {updateProfileMutation.isPending ? 'Saving...' : (isEditing ? 'Save Profile' : 'Edit Profile')}
-          </Button>
-          <Button 
-            variant="outline"
-            className="border-[rgba(255,255,255,0.2)] text-white hover:bg-[rgba(255,255,255,0.1)]"
-            onClick={() => window.location.href = "/settings"}
-          >
-            <Settings className="h-4 w-4 mr-2" />
-            Settings
-          </Button>
-        </div>
-      }
+    <AppShell
+      user={user ? {
+        id: user.id,
+        name: user.fullName,
+        handle: user.email.split('@')[0],
+        avatar: profile?.profilePhoto || profile?.avatarUrl,
+        builderStatus: profile?.isBuilder ? 'active' : 'none'
+      } : null}
+      currentSection="profile"
+      layoutType="dashboard"
     >
       <div className="max-w-4xl mx-auto">
+        {/* Header Actions */}
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h1 className="text-2xl font-bold text-white mb-2">Your Campus Profile</h1>
+            <p className="text-gray-400">Manage your academic identity and campus presence</p>
+          </div>
+          <div className="flex gap-2">
+            <Button 
+              variant="outline" 
+              className="border-[rgba(255,255,255,0.2)] text-white hover:bg-[rgba(255,255,255,0.1)]"
+              onClick={handleEditToggle}
+              disabled={updateProfileMutation.isPending}
+            >
+              <Edit3 className="h-4 w-4 mr-2" />
+              {updateProfileMutation.isPending ? 'Saving...' : (isEditing ? 'Save Profile' : 'Edit Profile')}
+            </Button>
+            <Button 
+              variant="outline"
+              className="border-[rgba(255,255,255,0.2)] text-white hover:bg-[rgba(255,255,255,0.1)]"
+              onClick={() => window.location.href = "/settings"}
+            >
+              <Settings className="h-4 w-4 mr-2" />
+              Settings
+            </Button>
+          </div>
+        </div>
       {/* Campus Identity Header */}
       <Card className="p-8 mb-8 bg-gradient-to-r from-blue-600/10 to-purple-600/10 border-blue-500/20">
         <div className="flex flex-col lg:flex-row gap-8">
@@ -728,6 +737,6 @@ export default function CampusProfilePage() {
         className="hidden"
       />
       </div>
-    </HiveShell>
+    </AppShell>
   );
 }
