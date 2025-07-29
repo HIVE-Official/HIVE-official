@@ -12,7 +12,7 @@ import {
   Calendar,
   BookOpen
 } from 'lucide-react';
-import { Button } from '../ui/button';
+import { Button } from '../../atomic/atoms/button-enhanced';
 import { cn } from '../../lib/utils';
 
 interface CommandPaletteProps {
@@ -196,18 +196,18 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center pt-24 bg-black/50 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-start justify-center pt-24 bg-[var(--hive-background-primary)]/50 backdrop-blur-sm">
       <div className="w-full max-w-lg mx-4">
-        <div className="bg-[rgba(10,10,10,0.95)] backdrop-blur-xl border border-[rgba(255,255,255,0.12)] rounded-xl shadow-2xl overflow-hidden">
+        <div className="bg-[color-mix(in_srgb,var(--hive-background-primary)_95%,transparent)] backdrop-blur-xl border border-[color-mix(in_srgb,var(--hive-border-hover)_60%,transparent)] rounded-xl shadow-2xl overflow-hidden">
           {/* Search Input */}
-          <div className="flex items-center px-4 py-3 border-b border-[rgba(255,255,255,0.06)]">
-            <Search className="h-4 w-4 text-[#A1A1AA] mr-3" />
+          <div className="flex items-center px-4 py-3 border-b border-[color-mix(in_srgb,var(--hive-interactive-active)_60%,transparent)]">
+            <Search className="h-4 w-4 text-[var(--hive-text-tertiary)] mr-3" />
             <input
               type="text"
               placeholder="Search commands..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="flex-1 bg-transparent outline-none text-white placeholder:text-[#A1A1AA]"
+              className="flex-1 bg-transparent outline-none text-[var(--hive-text-primary)] placeholder:text-[var(--hive-text-tertiary)]"
               autoFocus
             />
           </div>
@@ -215,7 +215,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
           {/* Commands List */}
           <div className="max-h-80 overflow-y-auto">
             {filteredCommands.length === 0 ? (
-              <div className="px-4 py-8 text-center text-[#A1A1AA]">
+              <div className="px-4 py-8 text-center text-[var(--hive-text-tertiary)]">
                 No commands found for "{query}"
               </div>
             ) : (
@@ -230,8 +230,8 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
                       variant="ghost"
                       className={cn(
                         "w-full justify-start px-4 py-3 h-auto text-left rounded-none",
-                        "hover:bg-[rgba(255,255,255,0.08)]",
-                        isSelected && "bg-[rgba(255,215,0,0.1)] text-[#FFD700]"
+                        "hover:bg-[color-mix(in_srgb,var(--hive-interactive-active)_80%,transparent)]",
+                        isSelected && "bg-[color-mix(in_srgb,var(--hive-brand-secondary)_10%,transparent)] text-[var(--hive-brand-secondary)]"
                       )}
                       onClick={() => {
                         command.action();
@@ -242,7 +242,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
                       <div className="flex-1 min-w-0">
                         <div className="font-medium">{command.label}</div>
                         {command.description && (
-                          <div className="text-xs text-[#A1A1AA] mt-0.5">
+                          <div className="text-xs text-[var(--hive-text-tertiary)] mt-0.5">
                             {command.description}
                           </div>
                         )}
@@ -255,7 +255,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
           </div>
 
           {/* Footer */}
-          <div className="px-4 py-2 border-t border-[rgba(255,255,255,0.06)] text-xs text-[#A1A1AA] flex items-center justify-between">
+          <div className="px-4 py-2 border-t border-[color-mix(in_srgb,var(--hive-interactive-active)_60%,transparent)] text-xs text-[var(--hive-text-tertiary)] flex items-center justify-between">
             <span>Use ↑↓ to navigate, ↵ to select</span>
             <span>ESC to close</span>
           </div>

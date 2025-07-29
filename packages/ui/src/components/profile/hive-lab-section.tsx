@@ -16,8 +16,8 @@ export const HiveLabSection: React.FC<HiveLabSectionProps> = ({
   if (isLoading) {
     return (
       <HiveCard className="p-6">
-        <div className="flex items-center justify-center py-8">
-          <Loader2 className="h-6 w-6 animate-spin text-hive-gold" />
+        <div className="flex items-center justify-center py-4">
+          <Loader2 className="h-6 w-6 animate-spin text-[var(--hive-brand-secondary)]" />
         </div>
       </HiveCard>
     );
@@ -39,8 +39,8 @@ export const HiveLabSection: React.FC<HiveLabSectionProps> = ({
   return (
     <HiveCard className="p-6">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-semibold text-white flex items-center gap-2">
-          <Wrench className="h-5 w-5 text-hive-gold" />
+        <h2 className="text-xl font-semibold text-[var(--hive-text-primary)] flex items-center gap-2">
+          <Wrench className="h-5 w-5 text-[var(--hive-brand-secondary)]" />
           HiveLAB
           {hiveLab.isLocked && <Lock className="h-4 w-4 text-gray-400" />}
         </h2>
@@ -59,11 +59,11 @@ export const HiveLabSection: React.FC<HiveLabSectionProps> = ({
       </div>
 
       {hiveLab.isLocked ? (
-        <div className="text-center py-8">
+        <div className="text-center py-4">
           <div className="w-16 h-16 bg-gradient-to-br from-hive-gold/20 to-yellow-400/20 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Lock className="h-8 w-8 text-hive-gold" />
+            <Lock className="h-8 w-8 text-[var(--hive-brand-secondary)]" />
           </div>
-          <h3 className="text-lg font-medium text-white mb-2">HiveLAB Coming Soon</h3>
+          <h3 className="text-lg font-medium text-[var(--hive-text-primary)] mb-2">HiveLAB Coming Soon</h3>
           <p className="text-gray-400 mb-4">
             Personal tool creation will be available soon. For now, enjoy our calendar tool!
           </p>
@@ -78,10 +78,10 @@ export const HiveLabSection: React.FC<HiveLabSectionProps> = ({
                   className="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg border border-hive-gold/30"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-hive-gold/20 rounded-lg flex items-center justify-center">
+                    <div className="w-8 h-8 bg-[var(--hive-brand-secondary)]/20 rounded-lg flex items-center justify-center">
                       {getToolIcon(tool)}
                     </div>
-                    <span className="text-white font-medium">{tool}</span>
+                    <span className="text-[var(--hive-text-primary)] font-medium">{tool}</span>
                   </div>
                   <HiveButton 
                     variant="outline" 
@@ -100,21 +100,21 @@ export const HiveLabSection: React.FC<HiveLabSectionProps> = ({
           {/* Available Tools */}
           {hiveLab.availableTools.length > 0 && (
             <div>
-              <h3 className="text-lg font-medium text-white mb-3 flex items-center gap-2">
-                <Star className="h-4 w-4 text-hive-gold" />
+              <h3 className="text-lg font-medium text-[var(--hive-text-primary)] mb-3 flex items-center gap-2">
+                <Star className="h-4 w-4 text-[var(--hive-brand-secondary)]" />
                 Available Tools
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {hiveLab.availableTools.map((tool) => (
                   <div 
                     key={tool} 
-                    className="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg border border-gray-700/50 hover:border-hive-gold/30 transition-colors"
+                    className="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg border border-[var(--hive-border-default)]/50 hover:border-hive-gold/30 transition-colors"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-hive-gold/20 rounded-lg flex items-center justify-center">
+                      <div className="w-8 h-8 bg-[var(--hive-brand-secondary)]/20 rounded-lg flex items-center justify-center">
                         {getToolIcon(tool)}
                       </div>
-                      <span className="text-white font-medium">{tool}</span>
+                      <span className="text-[var(--hive-text-primary)] font-medium">{tool}</span>
                     </div>
                     <HiveButton 
                       variant="outline" 
@@ -132,7 +132,7 @@ export const HiveLabSection: React.FC<HiveLabSectionProps> = ({
           {/* Created Tools */}
           {hiveLab.createdTools.length > 0 && (
             <div>
-              <h3 className="text-lg font-medium text-white mb-3 flex items-center gap-2">
+              <h3 className="text-lg font-medium text-[var(--hive-text-primary)] mb-3 flex items-center gap-2">
                 <Zap className="h-4 w-4 text-purple-400" />
                 Your Tools
               </h3>
@@ -147,7 +147,7 @@ export const HiveLabSection: React.FC<HiveLabSectionProps> = ({
                         {getToolIcon(tool)}
                       </div>
                       <div>
-                        <span className="text-white font-medium">{tool}</span>
+                        <span className="text-[var(--hive-text-primary)] font-medium">{tool}</span>
                         <div className="flex items-center gap-2 mt-1">
                           <HiveBadge variant="skill-tag" className="text-xs">
                             Created by you
@@ -180,7 +180,7 @@ export const HiveLabSection: React.FC<HiveLabSectionProps> = ({
           {/* Coming Soon */}
           {hiveLab.comingSoon.length > 0 && (
             <div>
-              <h3 className="text-lg font-medium text-white mb-3 flex items-center gap-2">
+              <h3 className="text-lg font-medium text-[var(--hive-text-primary)] mb-3 flex items-center gap-2">
                 <AlertCircle className="h-4 w-4 text-blue-400" />
                 Coming Soon
               </h3>
@@ -188,7 +188,7 @@ export const HiveLabSection: React.FC<HiveLabSectionProps> = ({
                 {hiveLab.comingSoon.map((tool) => (
                   <div 
                     key={tool} 
-                    className="flex items-center gap-3 p-3 bg-gray-800/30 rounded-lg border border-gray-700/30"
+                    className="flex items-center gap-3 p-3 bg-gray-800/30 rounded-lg border border-[var(--hive-border-default)]/30"
                   >
                     <div className="w-8 h-8 bg-gray-600/30 rounded-lg flex items-center justify-center">
                       {getToolIcon(tool)}
@@ -209,8 +209,8 @@ export const HiveLabSection: React.FC<HiveLabSectionProps> = ({
       {hiveLab.isLocked && (
         <div className="mt-6 p-4 bg-gradient-to-r from-hive-gold/10 to-yellow-400/10 rounded-lg border border-hive-gold/20">
           <div className="flex items-center gap-2 mb-2">
-            <Wrench className="h-4 w-4 text-hive-gold" />
-            <span className="text-sm font-medium text-white">Unlock HiveLAB</span>
+            <Wrench className="h-4 w-4 text-[var(--hive-brand-secondary)]" />
+            <span className="text-sm font-medium text-[var(--hive-text-primary)]">Unlock HiveLAB</span>
           </div>
           <p className="text-xs text-gray-300 mb-3">
             Join the HIVE Builder Program to create custom tools for your student workflow.

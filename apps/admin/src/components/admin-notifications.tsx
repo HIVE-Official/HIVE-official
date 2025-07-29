@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Button, Card, CardContent, CardHeader, CardTitle, Badge } from "@hive/ui";
+import { HiveButton as Button, HiveCard as Card, CardContent, CardHeader, CardTitle, HiveBadge as Badge } from "@hive/ui";
 import { useAdminAuth } from "@/lib/auth";
 import { AdminNotification, NotificationPriority, NotificationType } from "@/lib/admin-notifications";
 

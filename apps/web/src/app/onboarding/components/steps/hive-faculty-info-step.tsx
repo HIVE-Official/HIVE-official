@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion } from "@hive/ui/src/components/framer-motion-proxy";
 import { BookOpen, User, Mail } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { HiveCard, HiveInput } from "@hive/ui";

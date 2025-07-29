@@ -6,13 +6,20 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../lib/utils';
 import { liquidMetal, motionDurations, liquidFlow } from '../motion/hive-motion-system';
 import { Eye, EyeOff } from 'lucide-react';
+import { getFormA11yProps, getTestProps, getInteractiveA11yProps } from '../lib/accessibility-foundation';
+import { responsiveSpace, touchTargets, responsiveText } from '../lib/responsive-foundation';
+import { componentBase, getValidationProps, createLoadingIndicator } from '../lib/component-foundation';
 
 // HIVE Input System - Builder's Toolkit with Liquid Metal Motion
 // Matte obsidian glass with floating labels and premium interactions
 
 const hiveInputVariants = cva(
-  // Base styles - matte obsidian glass with heavy radius using semantic tokens
-  "relative w-full bg-[var(--hive-background-secondary)]/40 backdrop-blur-xl border rounded-xl transition-all hive-motion-base focus-within:bg-[var(--hive-background-secondary)]/60",
+  // Base styles - matte obsidian glass with accessibility and mobile support
+  cn(
+    componentBase.input,
+    "relative bg-[var(--hive-background-secondary)]/40 backdrop-blur-xl border rounded-xl transition-all hive-motion-base focus-within:bg-[var(--hive-background-secondary)]/60",
+    touchTargets.comfortable
+  ),
   {
     variants: {
       variant: {
@@ -36,10 +43,10 @@ const hiveInputVariants = cva(
       },
       
       size: {
-        sm: "h-9",
-        default: "h-11", 
-        lg: "h-13",
-        xl: "h-16",
+        sm: "h-9 text-sm",
+        default: "h-11 text-sm", 
+        lg: "h-13 text-base",
+        xl: "h-16 text-lg",
       },
       
       radius: {
@@ -114,6 +121,12 @@ export interface HiveInputProps
   floatingLabel?: boolean;
   // For basic Input compatibility
   asChild?: boolean;
+  // Accessibility props
+  'aria-label'?: string;
+  'aria-describedby'?: string;
+  'data-testid'?: string;
+  // Enhanced validation
+  required?: boolean;
 }
 
 const HiveInput = React.forwardRef<HTMLInputElement, HiveInputProps>(
@@ -137,6 +150,11 @@ const HiveInput = React.forwardRef<HTMLInputElement, HiveInputProps>(
     value,
     defaultValue,
     disabled,
+    required = false,
+    'aria-label': ariaLabel,
+    'aria-describedby': ariaDescribedby,
+    'data-testid': testId,
+    id,
     ...props 
   }, ref) => {
     
@@ -151,6 +169,23 @@ const HiveInput = React.forwardRef<HTMLInputElement, HiveInputProps>(
     
     // Determine current state variant
     const currentVariant = errorText ? 'error' : successText ? 'success' : variant;
+    
+    // Generate unique ID for accessibility
+    const inputId = id || `hive-input-${Math.random().toString(36).substr(2, 9)}`;
+    const descriptionId = `${inputId}-description`;
+    const errorId = `${inputId}-error`;
+    
+    // Accessibility props
+    const a11yProps = getFormA11yProps(
+      inputId,
+      ariaLabel || label || '',
+      helperText ? descriptionId : undefined,
+      errorText ? errorId : undefined,
+      required
+    );
+    
+    const testingProps = getTestProps(testId, 'HiveInput');
+    const validationProps = getValidationProps(errorText, Boolean(successText));
     
     // Character count logic
     const currentLength = String(internalValue).length;
@@ -223,6 +258,7 @@ const HiveInput = React.forwardRef<HTMLInputElement, HiveInputProps>(
               defaultValue={defaultValue}
               disabled={disabled || loading}
               maxLength={maxLength}
+              required={required}
               className={cn(
                 "w-full h-full bg-transparent text-[var(--hive-text-primary)] placeholder-[var(--hive-text-placeholder)] focus:outline-none relative z-20",
                 leftIcon ? "pl-10" : "pl-3",
@@ -231,7 +267,8 @@ const HiveInput = React.forwardRef<HTMLInputElement, HiveInputProps>(
                 size === 'sm' && "text-sm",
                 size === 'default' && "text-sm", 
                 size === 'lg' && "text-base",
-                size === 'xl' && "text-lg"
+                size === 'xl' && "text-lg",
+                validationProps.className
               )}
               onFocus={(e) => {
                 setIsFocused(true);
@@ -242,6 +279,9 @@ const HiveInput = React.forwardRef<HTMLInputElement, HiveInputProps>(
                 props.onBlur?.(e);
               }}
               onChange={handleChange}
+              {...a11yProps}
+              {...testingProps}
+              {...validationProps}
               {...props}
             />
             
@@ -314,6 +354,9 @@ const HiveInput = React.forwardRef<HTMLInputElement, HiveInputProps>(
         <AnimatePresence mode="wait">
           {statusMessage && (
             <motion.div
+              id={errorText ? errorId : helperText ? descriptionId : undefined}
+              role={errorText ? 'alert' : 'status'}
+              aria-live={errorText ? 'assertive' : 'polite'}
               className={cn(
                 "text-sm px-1 mt-2",
                 errorText && "text-[var(--hive-status-error)]",

@@ -109,19 +109,17 @@ export async function POST(request: NextRequest) {
 
     const { email, schoolId } = validationResult.data!;
     
-    // Debug logging for development
-    console.log(`🔍 Auth Debug - Environment: ${currentEnvironment}, Email: ${email}, SchoolId: ${schoolId}`);
-    console.log(`🔍 Auth Debug - VERCEL env: ${process.env.VERCEL}, NODE_ENV: ${process.env.NODE_ENV}`);
-    console.log(`🔍 Auth Debug - isDevUser: ${isDevUser(email)}, validateDevSchool: ${validateDevSchool(schoolId)}`);
-    
-    // DEVELOPMENT: Handle development users differently
+    // DEVELOPMENT: Handle development users FIRST before any validation
     // Check for development users regardless of environment detection to ensure dev access works
     const isDevelopmentUser = isDevUser(email) && validateDevSchool(schoolId);
     const isLocalEnvironment = currentEnvironment === 'development' || !process.env.VERCEL;
     
+    console.log(`🔍 Auth Debug - Environment: ${currentEnvironment}, Email: ${email}, SchoolId: ${schoolId}`);
     console.log(`🔍 Auth Debug - isDevelopmentUser: ${isDevelopmentUser}, isLocalEnvironment: ${isLocalEnvironment}`);
     
     if (isDevelopmentUser && isLocalEnvironment) {
+      console.log('🔧 Development user detected, bypassing school validation');
+      
       // Create development session directly
       const devSession = await createDevSession(email, request);
       
@@ -133,7 +131,8 @@ export async function POST(request: NextRequest) {
         const response = NextResponse.json({
           success: true,
           message: "Development authentication successful",
-          dev: true
+          dev: true,
+          user: devSession.user
         });
 
         // Set session cookies
@@ -157,15 +156,15 @@ export async function POST(request: NextRequest) {
       if (!isFirebaseAdminConfigured) {
         return NextResponse.json(
           { 
-            error: "Firebase not configured. Use development users: student@test.edu, faculty@test.edu, admin@test.edu",
-            availableUsers: ["student@test.edu", "faculty@test.edu", "admin@test.edu"]
+            error: "Firebase not configured. Use development users: student@test.edu, faculty@test.edu, admin@test.edu, jacob@test.edu",
+            availableUsers: ["student@test.edu", "faculty@test.edu", "admin@test.edu", "jacob@test.edu"]
           },
           { status: 503 }
         );
       }
     }
     
-    // Validate school exists and is active
+    // Validate school exists and is active (only for non-development users)
     const schoolData = await validateSchool(schoolId);
     if (!schoolData) {
       await auditAuthEvent('failure', request, {
@@ -225,18 +224,45 @@ export async function POST(request: NextRequest) {
     try {
       magicLink = await auth.generateSignInWithEmailLink(email, actionCodeSettings);
     } catch (firebaseError: any) {
-      await auditAuthEvent('failure', request, {
-        operation: 'send_magic_link',
-        error: 'firebase_generation_failed'
-      });
-      
       console.error('Firebase magic link generation failed:', firebaseError);
       
-      // Don't expose Firebase error details
-      return NextResponse.json(
-        { error: "Unable to generate magic link" },
-        { status: 500 }
-      );
+      // For development: if Dynamic Links is not configured, create a simple fallback
+      if (currentEnvironment === 'development' && 
+          firebaseError.message?.includes('DYNAMIC_LINK_NOT_ACTIVATED')) {
+        
+        console.log('🔧 Development mode: Using fallback magic link since Dynamic Links not configured');
+        
+        // Create a simple development magic link using custom token
+        try {
+          const customToken = await auth.createCustomToken(email.replace('@', '_at_').replace('.', '_dot_'));
+          magicLink = `${process.env.NEXT_PUBLIC_APP_URL}/auth/verify?token=${customToken}&schoolId=${schoolId}&email=${encodeURIComponent(email)}`;
+          
+          console.log('✅ Development magic link created successfully');
+        } catch (tokenError) {
+          console.error('Failed to create development token:', tokenError);
+          
+          await auditAuthEvent('failure', request, {
+            operation: 'send_magic_link',
+            error: 'firebase_generation_failed'
+          });
+          
+          return NextResponse.json(
+            { error: "Unable to generate magic link" },
+            { status: 500 }
+          );
+        }
+      } else {
+        await auditAuthEvent('failure', request, {
+          operation: 'send_magic_link',
+          error: 'firebase_generation_failed'
+        });
+        
+        // Don't expose Firebase error details
+        return NextResponse.json(
+          { error: "Unable to generate magic link" },
+          { status: 500 }
+        );
+      }
     }
     
     // Send the magic link via email

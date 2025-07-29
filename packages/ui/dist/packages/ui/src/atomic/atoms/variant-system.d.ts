@@ -1,0 +1,14 @@
+export type HiveBaseVariant = 'default' | 'outline' | 'filled' | 'ghost';
+export type HiveButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'destructive';
+export type HiveFormVariant = 'default' | 'outline' | 'filled' | 'ghost';
+export type HiveLabelVariant = 'default' | 'inline' | 'floating';
+export type HiveTagVariant = 'default' | 'outline' | 'filled' | 'ghost' | 'gradient';
+export type HiveTooltipVariant = 'default' | 'dark' | 'light';
+export type HiveProgressVariant = 'default' | 'gradient' | 'striped' | 'circular';
+export type HiveStatusVariant = 'dot' | 'pulse' | 'glow' | 'ring';
+export type HiveSeparatorVariant = 'solid' | 'dashed' | 'dotted' | 'gradient';
+export type HiveImageVariant = 'default' | 'rounded' | 'circle' | 'square';
+export type HiveContainerVariant = 'default' | 'card' | 'panel' | 'section';
+export type HiveSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+export type HiveBreakpoint = 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+//# sourceMappingURL=variant-system.d.ts.map

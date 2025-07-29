@@ -12,7 +12,7 @@ import {
   Calendar,
   Settings
 } from 'lucide-react';
-import { Button } from '../ui/button';
+import { Button } from '../../atomic/atoms/button-enhanced';
 import { Avatar, AvatarImage, AvatarFallback } from '../ui/avatar';
 import { cn } from '../../lib/utils';
 
@@ -143,16 +143,16 @@ export function NotificationCenter({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-end pt-16 pr-4 bg-black/20">
+    <div className="fixed inset-0 z-50 flex items-start justify-end pt-16 pr-4 bg-[var(--hive-background-primary)]/20">
       <div className="w-80 mt-4">
-        <div className="bg-[rgba(10,10,10,0.95)] backdrop-blur-xl border border-[rgba(255,255,255,0.12)] rounded-xl shadow-2xl overflow-hidden">
+        <div className="bg-[color-mix(in_srgb,var(--hive-background-primary)_95%,transparent)] backdrop-blur-xl border border-[color-mix(in_srgb,var(--hive-border-hover)_60%,transparent)] rounded-xl shadow-2xl overflow-hidden">
           {/* Header */}
-          <div className="flex items-center justify-between px-4 py-3 border-b border-[rgba(255,255,255,0.06)]">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-[color-mix(in_srgb,var(--hive-interactive-active)_60%,transparent)]">
             <div className="flex items-center space-x-2">
               <Bell className="h-4 w-4" />
               <h3 className="font-medium">Notifications</h3>
               {unreadCount > 0 && (
-                <span className="bg-[#FFD700] text-[#0A0A0A] text-xs px-1.5 py-0.5 rounded-full font-medium">
+                <span className="bg-[var(--hive-brand-secondary)] text-[var(--hive-background-primary)] text-xs px-1.5 py-0.5 rounded-full font-medium">
                   {unreadCount}
                 </span>
               )}
@@ -163,7 +163,7 @@ export function NotificationCenter({
                   variant="ghost"
                   size="sm"
                   onClick={markAllAsRead}
-                  className="h-7 px-2 text-xs hover:bg-[rgba(255,255,255,0.08)]"
+                  className="h-7 px-2 text-xs hover:bg-[color-mix(in_srgb,var(--hive-interactive-active)_80%,transparent)]"
                 >
                   <Check className="h-3 w-3 mr-1" />
                   Mark all read
@@ -173,7 +173,7 @@ export function NotificationCenter({
                 variant="ghost"
                 size="sm"
                 onClick={onClose}
-                className="h-7 w-7 p-0 hover:bg-[rgba(255,255,255,0.08)]"
+                className="h-7 w-7 p-0 hover:bg-[color-mix(in_srgb,var(--hive-interactive-active)_80%,transparent)]"
               >
                 <X className="h-3 w-3" />
               </Button>
@@ -183,12 +183,12 @@ export function NotificationCenter({
           {/* Notifications List */}
           <div className="max-h-96 overflow-y-auto">
             {localNotifications.length === 0 ? (
-              <div className="px-4 py-8 text-center text-[#A1A1AA]">
+              <div className="px-4 py-8 text-center text-[var(--hive-text-tertiary)]">
                 <Bell className="h-8 w-8 mx-auto mb-2 opacity-50" />
                 <p>No notifications yet</p>
               </div>
             ) : (
-              <div className="divide-y divide-[rgba(255,255,255,0.06)]">
+              <div className="divide-y divide-[color-mix(in_srgb,var(--hive-interactive-active)_60%,transparent)]">
                 {localNotifications.map((notification) => {
                   const Icon = getNotificationIcon(notification.type);
                   const initials = notification.actor?.name
@@ -202,8 +202,8 @@ export function NotificationCenter({
                     <div
                       key={notification.id}
                       className={cn(
-                        "px-4 py-3 hover:bg-[rgba(255,255,255,0.04)] cursor-pointer transition-colors",
-                        !notification.read && "bg-[rgba(255,215,0,0.05)]"
+                        "px-4 py-3 hover:bg-[color-mix(in_srgb,var(--hive-interactive-hover)_80%,transparent)] cursor-pointer transition-colors",
+                        !notification.read && "bg-[color-mix(in_srgb,var(--hive-brand-secondary)_5%,transparent)]"
                       )}
                       onClick={() => markAsRead(notification.id)}
                     >
@@ -213,13 +213,13 @@ export function NotificationCenter({
                           {notification.actor ? (
                             <Avatar className="h-8 w-8">
                               <AvatarImage src={notification.actor.avatar} />
-                              <AvatarFallback className="bg-[#FFD700] text-[#0A0A0A] text-xs">
+                              <AvatarFallback className="bg-[var(--hive-brand-secondary)] text-[var(--hive-background-primary)] text-xs">
                                 {initials}
                               </AvatarFallback>
                             </Avatar>
                           ) : (
-                            <div className="h-8 w-8 rounded-full bg-[rgba(255,255,255,0.08)] flex items-center justify-center">
-                              <Icon className="h-4 w-4 text-[#FFD700]" />
+                            <div className="h-8 w-8 rounded-full bg-[color-mix(in_srgb,var(--hive-interactive-active)_80%,transparent)] flex items-center justify-center">
+                              <Icon className="h-4 w-4 text-[var(--hive-brand-secondary)]" />
                             </div>
                           )}
                         </div>
@@ -227,17 +227,17 @@ export function NotificationCenter({
                         {/* Content */}
                         <div className="flex-1 min-w-0">
                           <div className="flex items-start justify-between">
-                            <p className="text-sm font-medium text-white">
+                            <p className="text-sm font-medium text-[var(--hive-text-primary)]">
                               {notification.title}
                             </p>
                             {!notification.read && (
-                              <div className="w-2 h-2 bg-[#FFD700] rounded-full flex-shrink-0 mt-1" />
+                              <div className="w-2 h-2 bg-[var(--hive-brand-secondary)] rounded-full flex-shrink-0 mt-1" />
                             )}
                           </div>
-                          <p className="text-sm text-[#A1A1AA] mt-0.5">
+                          <p className="text-sm text-[var(--hive-text-tertiary)] mt-0.5">
                             {notification.message}
                           </p>
-                          <p className="text-xs text-[#A1A1AA] mt-1">
+                          <p className="text-xs text-[var(--hive-text-tertiary)] mt-1">
                             {formatRelativeTime(notification.timestamp)}
                           </p>
                         </div>
@@ -250,11 +250,11 @@ export function NotificationCenter({
           </div>
 
           {/* Footer */}
-          <div className="px-4 py-3 border-t border-[rgba(255,255,255,0.06)]">
+          <div className="px-4 py-3 border-t border-[color-mix(in_srgb,var(--hive-interactive-active)_60%,transparent)]">
             <Button
               variant="ghost"
               size="sm"
-              className="w-full justify-center text-[#A1A1AA] hover:text-white hover:bg-[rgba(255,255,255,0.08)]"
+              className="w-full justify-center text-[var(--hive-text-tertiary)] hover:text-[var(--hive-text-primary)] hover:bg-[color-mix(in_srgb,var(--hive-interactive-active)_80%,transparent)]"
             >
               View all notifications
             </Button>

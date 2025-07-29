@@ -114,26 +114,44 @@ export async function POST(request: NextRequest) {
     // PRODUCTION: Use Firebase Admin SDK for magic link verification
     const auth = getAuth();
     
-    // Verify the magic link token is a valid Firebase action code
+    // Verify the magic link token
     let actionCodeInfo;
+    let isCustomToken = false;
+    
     try {
-      // This verifies the token is a valid Firebase magic link
+      // First try to verify as a Firebase action code (normal magic link)
       actionCodeInfo = await auth.checkActionCode(token);
     } catch (firebaseError: any) {
-      await auditAuthEvent('failure', request, {
-        operation: 'verify_magic_link',
-        error: 'invalid_magic_link_token'
-      });
-      
-      // Don't expose Firebase error details
-      return NextResponse.json(
-        { error: "Invalid or expired magic link" },
-        { status: 400 }
-      );
+      // If it's development, allow a simple bypass for testing
+      if (currentEnvironment === 'development') {
+        console.log('🔧 Development mode: Bypassing Firebase action code verification');
+        
+        isCustomToken = true;
+        
+        // Create a mock action code info for consistency
+        actionCodeInfo = {
+          data: {
+            email: email
+          }
+        };
+        
+        console.log('✅ Development token accepted');
+      } else {
+        await auditAuthEvent('failure', request, {
+          operation: 'verify_magic_link',
+          error: 'invalid_magic_link_token'
+        });
+        
+        // Don't expose Firebase error details
+        return NextResponse.json(
+          { error: "Invalid or expired magic link" },
+          { status: 400 }
+        );
+      }
     }
     
-    // Verify the email matches the action code
-    if (actionCodeInfo.data.email !== email) {
+    // Verify the email matches (skip for custom tokens since we use modified UIDs)
+    if (!isCustomToken && actionCodeInfo.data.email !== email) {
       await auditAuthEvent('failure', request, {
         operation: 'verify_magic_link',
         error: 'email_mismatch'
@@ -145,8 +163,10 @@ export async function POST(request: NextRequest) {
       );
     }
     
-    // Apply the action code to complete the sign-in
-    await auth.applyActionCode(token);
+    // Apply the action code to complete the sign-in (only for regular magic links)
+    if (!isCustomToken) {
+      await auth.applyActionCode(token);
+    }
     
     // Get or create user record
     let userRecord;

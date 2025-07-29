@@ -15,49 +15,61 @@ export default function ResourcesPage() {
     >
       {/* Quick Links */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
-        <Card className="p-4 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)] hover:bg-[rgba(255,255,255,0.04)] transition-colors cursor-pointer">
+        <Card 
+          className="p-4 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)] hover:bg-[rgba(255,255,255,0.04)] transition-colors cursor-pointer group"
+          onClick={() => window.open('https://docs.hive.university/api', '_blank')}
+        >
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-[#FFD700] rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-[#FFD700] rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
               <Code className="h-4 w-4 text-[#0A0A0A]" />
             </div>
             <div>
-              <h3 className="text-sm font-medium text-white">API Docs</h3>
+              <h3 className="text-sm font-medium text-white group-hover:text-[#FFD700] transition-colors">API Docs</h3>
               <p className="text-xs text-[#A1A1AA]">Technical reference</p>
             </div>
           </div>
         </Card>
 
-        <Card className="p-4 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)] hover:bg-[rgba(255,255,255,0.04)] transition-colors cursor-pointer">
+        <Card 
+          className="p-4 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)] hover:bg-[rgba(255,255,255,0.04)] transition-colors cursor-pointer group"
+          onClick={() => window.open('https://university.hive.com/tutorials', '_blank')}
+        >
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-[rgba(255,255,255,0.1)] rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-[rgba(255,255,255,0.1)] rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
               <Video className="h-4 w-4 text-white" />
             </div>
             <div>
-              <h3 className="text-sm font-medium text-white">Tutorials</h3>
+              <h3 className="text-sm font-medium text-white group-hover:text-[#FFD700] transition-colors">Tutorials</h3>
               <p className="text-xs text-[#A1A1AA]">Step-by-step guides</p>
             </div>
           </div>
         </Card>
 
-        <Card className="p-4 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)] hover:bg-[rgba(255,255,255,0.04)] transition-colors cursor-pointer">
+        <Card 
+          className="p-4 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)] hover:bg-[rgba(255,255,255,0.04)] transition-colors cursor-pointer group"
+          onClick={() => window.open('https://discord.gg/hive-university', '_blank')}
+        >
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-[rgba(255,255,255,0.1)] rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-[rgba(255,255,255,0.1)] rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
               <Users className="h-4 w-4 text-white" />
             </div>
             <div>
-              <h3 className="text-sm font-medium text-white">Community</h3>
+              <h3 className="text-sm font-medium text-white group-hover:text-[#FFD700] transition-colors">Community</h3>
               <p className="text-xs text-[#A1A1AA]">Get help & share</p>
             </div>
           </div>
         </Card>
 
-        <Card className="p-4 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)] hover:bg-[rgba(255,255,255,0.04)] transition-colors cursor-pointer">
+        <Card 
+          className="p-4 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)] hover:bg-[rgba(255,255,255,0.04)] transition-colors cursor-pointer group"
+          onClick={() => window.location.href = '/build?tab=templates'}
+        >
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-[rgba(255,255,255,0.1)] rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-[rgba(255,255,255,0.1)] rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
               <Download className="h-4 w-4 text-white" />
             </div>
             <div>
-              <h3 className="text-sm font-medium text-white">Templates</h3>
+              <h3 className="text-sm font-medium text-white group-hover:text-[#FFD700] transition-colors">Templates</h3>
               <p className="text-xs text-[#A1A1AA]">Ready-to-use tools</p>
             </div>
           </div>
@@ -73,10 +85,13 @@ export default function ResourcesPage() {
             Getting Started
           </h2>
           <div className="space-y-4">
-            <Card className="p-6 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)]">
+            <Card 
+              className="p-6 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)] hover:bg-[rgba(255,255,255,0.04)] transition-colors cursor-pointer group"
+              onClick={() => window.location.href = '/build?tutorial=first-tool'}
+            >
               <div className="flex items-start justify-between">
                 <div className="flex-1">
-                  <h3 className="text-white font-medium mb-2">Your First Tool</h3>
+                  <h3 className="text-white font-medium mb-2 group-hover:text-[#FFD700] transition-colors">Your First Tool</h3>
                   <p className="text-[#A1A1AA] text-sm mb-3">
                     Learn how to create your first tool using HiveLab's visual builder.
                   </p>
@@ -85,7 +100,7 @@ export default function ResourcesPage() {
                     <span>10 min video</span>
                   </div>
                 </div>
-                <ExternalLink className="h-4 w-4 text-[#A1A1AA] flex-shrink-0 ml-4" />
+                <ExternalLink className="h-4 w-4 text-[#A1A1AA] group-hover:text-[#FFD700] flex-shrink-0 ml-4 transition-colors" />
               </div>
             </Card>
 
@@ -196,16 +211,28 @@ export default function ResourcesPage() {
             { name: "Room Finder", downloads: "1.1k", category: "Campus" },
             { name: "Event Planner", downloads: "950", category: "Social" },
           ].map((template, i) => (
-            <Card key={i} className="p-6 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)] hover:bg-[rgba(255,255,255,0.04)] transition-colors cursor-pointer">
+            <Card 
+              key={i} 
+              className="p-6 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)] hover:bg-[rgba(255,255,255,0.04)] transition-colors cursor-pointer group"
+              onClick={() => window.location.href = `/build?template=${template.name.toLowerCase().replace(/\s+/g, '-')}`}
+            >
               <div className="flex items-start justify-between mb-4">
-                <div className="w-10 h-10 bg-[rgba(255,215,0,0.1)] rounded-lg flex items-center justify-center">
+                <div className="w-10 h-10 bg-[rgba(255,215,0,0.1)] rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
                   <Download className="h-5 w-5 text-[#FFD700]" />
                 </div>
-                <Button variant="ghost" size="sm" className="h-8 px-3 text-xs">
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="h-8 px-3 text-xs hover:bg-[#FFD700] hover:text-[#0A0A0A]"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    window.location.href = `/build?template=${template.name.toLowerCase().replace(/\s+/g, '-')}`;
+                  }}
+                >
                   Use Template
                 </Button>
               </div>
-              <h3 className="text-white font-medium mb-2">{template.name}</h3>
+              <h3 className="text-white font-medium mb-2 group-hover:text-[#FFD700] transition-colors">{template.name}</h3>
               <div className="flex items-center justify-between text-xs text-[#A1A1AA]">
                 <span>{template.category}</span>
                 <span>{template.downloads} downloads</span>
@@ -223,11 +250,18 @@ export default function ResourcesPage() {
             Join our community Discord or schedule office hours with the HIVE team.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Button className="bg-[#FFD700] text-[#0A0A0A] hover:bg-[#FFE255]">
+            <Button 
+              className="bg-[#FFD700] text-[#0A0A0A] hover:bg-[#FFE255]"
+              onClick={() => window.open('https://discord.gg/hive-university', '_blank')}
+            >
               <Users className="h-4 w-4 mr-2" />
               Join Discord
             </Button>
-            <Button variant="outline" className="border-[rgba(255,255,255,0.2)] text-white hover:bg-[rgba(255,255,255,0.1)]">
+            <Button 
+              variant="outline" 
+              className="border-[rgba(255,255,255,0.2)] text-white hover:bg-[rgba(255,255,255,0.1)]"
+              onClick={() => window.open('https://calendly.com/hive-university/office-hours', '_blank')}
+            >
               Schedule Office Hours
             </Button>
           </div>

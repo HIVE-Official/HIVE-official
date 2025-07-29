@@ -1,0 +1,233 @@
+/* HIVE PRD-Aligned Design Token CSS Custom Properties */
+/* Runtime token switching for seamless migration */
+
+:root {
+  /* === PRD CORE COLORS === */
+  /* Background System (Vercel-inspired monochrome) */
+  --hive-bg-primary: #000000;          /* Pure black base */
+  --hive-bg-secondary: #171717;        /* Card backgrounds */
+  --hive-bg-tertiary: #262626;         /* Elevated surfaces */
+  --hive-bg-interactive: #404040;      /* Interactive elements */
+  --hive-bg-overlay: rgba(0, 0, 0, 0.6); /* Modal overlays */
+
+  /* Text Hierarchy (High contrast) */
+  --hive-text-primary: #ffffff;        /* Primary content */
+  --hive-text-secondary: #d4d4d4;      /* Supporting content */
+  --hive-text-tertiary: #a3a3a3;       /* Metadata */
+  --hive-text-disabled: #525252;       /* Disabled state */
+  --hive-text-inverse: #000000;        /* Text on light backgrounds */
+
+  /* Brand System (Focused) */
+  --hive-brand-primary: #0070f3;       /* Primary brand (Vercel blue) */
+  --hive-brand-secondary: #ffd700;     /* Secondary accent (gold) */
+  --hive-brand-hover: #0761d1;         /* Hover states */
+
+  /* Interactive States */
+  --hive-interactive-hover: rgba(255, 255, 255, 0.04);  /* Subtle hover */
+  --hive-interactive-focus: #2d7ff9;   /* Focus rings */
+  --hive-interactive-active: rgba(255, 255, 255, 0.08); /* Active state */
+  --hive-interactive-disabled: #404040; /* Disabled state */
+
+  /* Status Colors (Minimal) */
+  --hive-status-success: #00d46a;      /* Success green */
+  --hive-status-warning: #ffb800;      /* Warning amber */
+  --hive-status-error: #ff3737;        /* Error red */
+  --hive-status-info: #0070f3;         /* Info blue */
+
+  /* Border System (Subtle) */
+  --hive-border-default: rgba(255, 255, 255, 0.08);  /* Subtle dividers */
+  --hive-border-hover: rgba(255, 255, 255, 0.16);    /* Hover borders */
+  --hive-border-focus: #2d7ff9;        /* Focus borders */
+  --hive-border-strong: #404040;       /* Strong borders */
+
+  /* === PRD SPACING SYSTEM === */
+  /* 4px base unit system (Apple-like generous values) */
+  --hive-space-1: 4px;
+  --hive-space-2: 8px;
+  --hive-space-3: 12px;
+  --hive-space-4: 16px;
+  --hive-space-5: 20px;
+  --hive-space-6: 24px;
+  --hive-space-8: 32px;
+  --hive-space-10: 40px;
+  --hive-space-12: 48px;
+  --hive-space-16: 64px;
+  --hive-space-20: 80px;
+  --hive-space-24: 96px;
+
+  /* === PRD BORDER RADIUS === */
+  /* Apple-like generous values */
+  --hive-radius-sm: 12px;      /* Small elements */
+  --hive-radius-md: 16px;      /* Buttons, inputs */
+  --hive-radius-lg: 20px;      /* Cards */
+  --hive-radius-xl: 24px;      /* Large cards */
+  --hive-radius-2xl: 32px;     /* Modals */
+  --hive-radius-3xl: 40px;     /* Hero elements */
+  --hive-radius-full: 9999px;  /* Pills, avatars */
+
+  /* Component-specific radius */
+  --hive-radius-button: var(--hive-radius-md);
+  --hive-radius-input: var(--hive-radius-md);
+  --hive-radius-card: var(--hive-radius-lg);
+  --hive-radius-modal: var(--hive-radius-2xl);
+  --hive-radius-widget: var(--hive-radius-xl);
+
+  /* === PRD TYPOGRAPHY === */
+  /* Font stacks */
+  --hive-font-sans: 'Geist', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --hive-font-display: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+  --hive-font-mono: 'Geist Mono', 'SF Mono', Monaco, 'Cascadia Code', monospace;
+
+  /* Font sizes (4px base scale) */
+  --hive-text-xs: 12px;
+  --hive-text-sm: 14px;
+  --hive-text-base: 16px;
+  --hive-text-lg: 18px;
+  --hive-text-xl: 20px;
+  --hive-text-2xl: 24px;
+  --hive-text-3xl: 30px;
+  --hive-text-4xl: 36px;
+  --hive-text-5xl: 48px;
+
+  /* Line heights */
+  --hive-leading-tight: 1.25;
+  --hive-leading-normal: 1.5;
+  --hive-leading-relaxed: 1.75;
+
+  /* === PRD SHADOWS === */
+  /* Subtle elevation system */
+  --hive-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.5);
+  --hive-shadow-md: 0 4px 8px rgba(0, 0, 0, 0.6);
+  --hive-shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.7);
+  --hive-shadow-xl: 0 12px 24px rgba(0, 0, 0, 0.8);
+  --hive-shadow-2xl: 0 24px 48px rgba(0, 0, 0, 0.9);
+
+  /* === PRD MOTION === */
+  /* Animation durations */
+  --hive-duration-fast: 150ms;
+  --hive-duration-base: 200ms;
+  --hive-duration-slow: 300ms;
+  --hive-duration-slower: 500ms;
+
+  /* Easing functions */
+  --hive-ease-out: cubic-bezier(0.0, 0.0, 0.2, 1);
+  --hive-ease-in-out: cubic-bezier(0.4, 0.0, 0.2, 1);
+  --hive-ease-smooth: cubic-bezier(0.4, 0.0, 0.6, 1);
+}
+
+/* === LEGACY TOKEN MAPPING === */
+/* Backward compatibility for existing components */
+:root {
+  /* Map legacy luxury tokens to PRD equivalents */
+  --hive-obsidian: var(--hive-bg-primary);
+  --hive-charcoal: var(--hive-bg-secondary);
+  --hive-graphite: var(--hive-bg-tertiary);
+  --hive-slate: var(--hive-bg-interactive);
+  
+  --hive-platinum: var(--hive-text-primary);
+  --hive-silver: var(--hive-text-secondary);
+  --hive-mercury: var(--hive-text-tertiary);
+  --hive-pewter: var(--hive-text-disabled);
+  
+  --hive-gold: var(--hive-brand-secondary);
+  --hive-champagne: var(--hive-brand-secondary);
+  --hive-bronze: var(--hive-brand-secondary);
+  
+  --hive-emerald: var(--hive-status-success);
+  --hive-ruby: var(--hive-status-error);
+  --hive-sapphire: var(--hive-status-info);
+  --hive-citrine: var(--hive-status-warning);
+}
+
+/* === RESPONSIVE ADJUSTMENTS === */
+/* Mobile: Slightly more generous values for touch */
+@media (max-width: 768px) {
+  :root {
+    --hive-radius-button: 18px;
+    --hive-radius-input: 18px;
+    --hive-radius-card: 24px;
+    --hive-radius-modal: 40px;
+    
+    /* Larger touch targets */
+    --hive-space-touch: 44px;
+  }
+}
+
+/* === UTILITY CLASSES === */
+/* PRD-aligned utility classes using CSS custom properties */
+
+/* Background utilities */
+.hive-bg-primary { background-color: var(--hive-bg-primary); }
+.hive-bg-secondary { background-color: var(--hive-bg-secondary); }
+.hive-bg-tertiary { background-color: var(--hive-bg-tertiary); }
+.hive-bg-interactive { background-color: var(--hive-bg-interactive); }
+
+/* Text utilities */
+.hive-text-primary { color: var(--hive-text-primary); }
+.hive-text-secondary { color: var(--hive-text-secondary); }
+.hive-text-tertiary { color: var(--hive-text-tertiary); }
+.hive-text-disabled { color: var(--hive-text-disabled); }
+
+/* Brand utilities */
+.hive-text-brand { color: var(--hive-brand-primary); }
+.hive-text-accent { color: var(--hive-brand-secondary); }
+.hive-bg-brand { background-color: var(--hive-brand-primary); }
+/* .hive-bg-accent removed - no gold backgrounds allowed */
+
+/* Border utilities */
+.hive-border-default { border-color: var(--hive-border-default); }
+.hive-border-hover { border-color: var(--hive-border-hover); }
+.hive-border-focus { border-color: var(--hive-border-focus); }
+
+/* Status utilities */
+.hive-text-success { color: var(--hive-status-success); }
+.hive-text-warning { color: var(--hive-status-warning); }
+.hive-text-error { color: var(--hive-status-error); }
+.hive-text-info { color: var(--hive-status-info); }
+
+/* Radius utilities */
+.hive-rounded-sm { border-radius: var(--hive-radius-sm); }
+.hive-rounded-md { border-radius: var(--hive-radius-md); }
+.hive-rounded-lg { border-radius: var(--hive-radius-lg); }
+.hive-rounded-xl { border-radius: var(--hive-radius-xl); }
+.hive-rounded-2xl { border-radius: var(--hive-radius-2xl); }
+.hive-rounded-full { border-radius: var(--hive-radius-full); }
+
+/* Component utilities */
+.hive-button-radius { border-radius: var(--hive-radius-button); }
+.hive-input-radius { border-radius: var(--hive-radius-input); }
+.hive-card-radius { border-radius: var(--hive-radius-card); }
+.hive-modal-radius { border-radius: var(--hive-radius-modal); }
+
+/* Shadow utilities */
+.hive-shadow-sm { box-shadow: var(--hive-shadow-sm); }
+.hive-shadow-md { box-shadow: var(--hive-shadow-md); }
+.hive-shadow-lg { box-shadow: var(--hive-shadow-lg); }
+.hive-shadow-xl { box-shadow: var(--hive-shadow-xl); }
+.hive-shadow-2xl { box-shadow: var(--hive-shadow-2xl); }
+
+/* === THEME SWITCHING SUPPORT === */
+/* Allows runtime switching between token themes */
+[data-theme="prd"] {
+  /* PRD theme is default - no overrides needed */
+}
+
+[data-theme="legacy"] {
+  /* Legacy luxury theme overrides */
+  --hive-bg-secondary: #111113;
+  --hive-bg-tertiary: #1a1a1c;
+  --hive-brand-primary: #ffd700;
+  --hive-brand-secondary: #ffd700;
+}
+
+/* === MIGRATION HELPERS === */
+/* Temporary classes to help with migration */
+.migrating-from-legacy {
+  /* Add this class to components being migrated */
+  transition: all var(--hive-duration-base) var(--hive-ease-out);
+}
+
+.prd-aligned {
+  /* Add this class to confirm PRD alignment */
+  --migration-status: "aligned";
+}

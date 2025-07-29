@@ -80,9 +80,9 @@ const hiveCardBaseVariants = cva(
       motionType: {
         none: "",
         subtle: "hover:scale-[1.01] hover:translate-y-[-1px]",
-        medium: "hover:scale-[1.02] hover:translate-y-[-2px]",
-        strong: "hover:scale-[1.03] hover:translate-y-[-4px]",
-        magnetic: "hover:scale-[1.02] hover:translate-y-[-2px]", // Enhanced by magnetic component
+        medium: "hover:scale-[1.02] hover:translate-y-[-0.5]",
+        strong: "hover:scale-[1.03] hover:translate-y-[-1]",
+        magnetic: "hover:scale-[1.02] hover:translate-y-[-0.5]", // Enhanced by magnetic component
       },
       
       // Glass morphism variants

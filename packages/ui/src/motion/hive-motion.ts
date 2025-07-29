@@ -37,8 +37,8 @@ export const hiveDuration = {
 export const hiveMotion = {
   // Signature Hover - Silk smooth lift
   hoverLift: {
-    transform: 'translateY(-2px) scale(1.01)',
-    boxShadow: '0 8px 25px rgba(0, 0, 0, 0.3)',
+    transform: 'translateY(-0.5) scale(1.01)',
+    boxShadow: '0 2 6 color-mix(in_srgb,var(--hive-background-primary)_30%,transparent)',
     transition: `all ${hiveDuration.smooth} ${hiveEasing.silk}`,
   },
   
@@ -50,15 +50,15 @@ export const hiveMotion = {
   
   // Card Float State
   cardFloat: {
-    transform: 'translateY(-4px)',
-    boxShadow: '0 12px 40px rgba(0, 0, 0, 0.4)',
+    transform: 'translateY(-1)',
+    boxShadow: '0 3 10 color-mix(in_srgb,var(--hive-background-primary)_40%,transparent)',
     transition: `all ${hiveDuration.liquid} ${hiveEasing.liquid}`,
   },
   
   // Magnetic Selection
   magneticSelect: {
     transform: 'scale(1.02)',
-    boxShadow: '0 0 0 2px rgba(255, 215, 0, 0.3), 0 8px 25px rgba(255, 215, 0, 0.15)',
+    boxShadow: '0 0 0 0.5 color-mix(in_srgb,var(--hive-brand-secondary)_30%,transparent), 0 2 6 color-mix(in_srgb,var(--hive-brand-secondary)_15%,transparent)',
     transition: `all ${hiveDuration.smooth} ${hiveEasing.magnetic}`,
   },
   
@@ -71,7 +71,7 @@ export const hiveMotion = {
   // Fade Cascade (for sequential reveals)
   fadeCascade: {
     opacity: 0,
-    transform: 'translateY(20px)',
+    transform: 'translateY(5)',
     transition: `opacity ${hiveDuration.liquid} ${hiveEasing.molten}, transform ${hiveDuration.liquid} ${hiveEasing.molten}`,
   },
   
@@ -103,10 +103,10 @@ export const createRippleKeyframes = () => `
 export const createShimmerKeyframes = () => `
   @keyframes hive-shimmer {
     0% {
-      background-position: -200px 0;
+      background-position: -50 0;
     }
     100% {
-      background-position: calc(200px + 100%) 0;
+      background-position: calc(50 + 100%) 0;
     }
   }
 `;
@@ -117,7 +117,7 @@ export const createFloatKeyframes = () => `
       transform: translateY(0px);
     }
     50% {
-      transform: translateY(-6px);
+      transform: translateY(-1.5);
     }
   }
 `;

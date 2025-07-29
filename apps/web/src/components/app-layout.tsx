@@ -3,8 +3,6 @@
 import React from 'react';
 import { EnhancedAppShell } from '@hive/ui';
 import { useSession } from '../hooks/use-session';
-import { TopNavLayout } from './navigation/top-nav-layout';
-import { CommandNavLayout } from './navigation/command-nav-layout';
 // import { darkLuxury, luxuryRadius, luxurySpacing } from '@hive/ui/src/theme/dark-luxury';
 
 interface AppLayoutProps {
@@ -65,7 +63,9 @@ export function AppLayout({ children, hideShell = false }: AppLayoutProps) {
     id: user.id,
     name: user.fullName || user.email?.split('@')[0] || 'User',
     handle: user.handle || user.email?.split('@')[0] || 'user',
-    avatar: user.avatarUrl
+    avatar: user.avatarUrl,
+    builderStatus: (user.builderOptIn ? 'active' : 'none') as 'none' | 'pending' | 'active',
+    role: 'student' as 'student' | 'faculty' | 'admin' // Default to student, could be enhanced with real role data
   } : null;
 
   return (

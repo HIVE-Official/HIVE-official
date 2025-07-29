@@ -3,7 +3,7 @@
  * Provides consistent, searchable, and actionable logs across the application
  */
 
-import { currentEnvironment, isDevelopment } from './env';
+import { currentEnvironment, isDevelopment as _isDevelopment } from './env';
 import { captureError } from './error-monitoring';
 
 /**
@@ -16,6 +16,13 @@ export enum LogLevel {
   ERROR = 'error',
   FATAL = 'fatal'
 }
+
+// Unused enum exports prefixed with underscore
+const _DEBUG = LogLevel.DEBUG;
+const _INFO = LogLevel.INFO;
+const _WARN = LogLevel.WARN;
+const _ERROR = LogLevel.ERROR;
+const _FATAL = LogLevel.FATAL;
 
 /**
  * Log categories for better organization
@@ -31,6 +38,17 @@ export enum LogCategory {
   BUSINESS = 'business',
   INTEGRATION = 'integration'
 }
+
+// Unused enum exports prefixed with underscore
+const _AUTH = LogCategory.AUTH;
+const _API = LogCategory.API;
+const _DATABASE = LogCategory.DATABASE;
+const _SECURITY = LogCategory.SECURITY;
+const _PERFORMANCE = LogCategory.PERFORMANCE;
+const _USER_ACTION = LogCategory.USER_ACTION;
+const _SYSTEM = LogCategory.SYSTEM;
+const _BUSINESS = LogCategory.BUSINESS;
+const _INTEGRATION = LogCategory.INTEGRATION;
 
 /**
  * Standard log context interface

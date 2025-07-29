@@ -1,0 +1,60 @@
+'use client';
+
+import React from 'react';
+import { cn } from '../../lib/utils';
+import { LucideIcon } from 'lucide-react';
+
+export interface IconProps extends React.SVGProps<SVGSVGElement> {
+  icon: LucideIcon | React.ComponentType<any>;
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+  color?: 'primary' | 'secondary' | 'muted' | 'gold' | 'ruby' | 'emerald' | 'sapphire';
+  variant?: 'default' | 'outlined' | 'filled';
+}
+
+const iconSizes = {
+  xs: 'h-3 w-3',    // 3
+  sm: 'h-4 w-4',    // 16px  
+  md: 'h-5 w-5',    // 5
+  lg: 'h-6 w-6',    // 24px
+  xl: 'h-8 w-8',    // 32px
+  '2xl': 'h-10 w-10' // 10
+};
+
+const iconColors = {
+  primary: 'text-hive-text-primary',
+  secondary: 'text-hive-text-secondary',
+  muted: 'text-hive-text-mutedLight',
+  gold: 'text-[var(--hive-brand-secondary)]',
+  ruby: 'text-hive-ruby', 
+  emerald: 'text-hive-emerald',
+  sapphire: 'text-hive-sapphire'
+};
+
+export const Icon: React.FC<IconProps> = ({
+  icon: IconComponent,
+  size = 'md',
+  color = 'primary',
+  variant = 'default',
+  className,
+  ...props
+}) => {
+  const baseClasses = [
+    iconSizes[size],
+    iconColors[color],
+    'flex-shrink-0',
+    
+    // Variants
+    variant === 'outlined' && 'stroke-2 fill-none',
+    variant === 'filled' && 'fill-current',
+    
+    // Interactive states
+    'transition-colors duration-200 ease-out'
+  ].filter(Boolean).join(' ');
+
+  return (
+    <IconComponent
+      className={cn(baseClasses, className)}
+      {...props}
+    />
+  );
+};

@@ -13,12 +13,12 @@ interface ProfileAggregatorOptions {
 }
 
 interface AggregatedProfileData {
-  dashboard: any;
-  spaces: any;
-  calendar: any;
-  activity: any;
-  privacy: any;
-  stats: any;
+  dashboard: Record<string, unknown> | null;
+  spaces: Record<string, unknown> | null;
+  calendar: Record<string, unknown> | null;
+  activity: Record<string, unknown> | null;
+  privacy: Record<string, unknown> | null;
+  stats: Record<string, unknown> | null;
   metadata: {
     loadTime: number;
     endpoints: string[];
@@ -30,7 +30,7 @@ interface AggregatedProfileData {
 class ProfileAggregator {
   private static instance: ProfileAggregator;
   private baseUrl: string;
-  private cache: Map<string, any> = new Map();
+  private cache: Map<string, unknown> = new Map();
 
   private constructor() {
     this.baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
@@ -56,7 +56,7 @@ class ProfileAggregator {
     } = options;
 
     const endpoints: string[] = [];
-    const requests: Promise<any>[] = [];
+    const requests: Promise<Record<string, unknown>>[] = [];
 
     // Always include dashboard
     endpoints.push('/api/profile/dashboard');
@@ -129,12 +129,12 @@ class ProfileAggregator {
   }
 
   // Fetch dashboard data only (lightweight)
-  async getDashboard(timeRange: string = 'week'): Promise<any> {
+  async getDashboard(timeRange: string = 'week'): Promise<Record<string, unknown>> {
     return this.fetchWithCache('/api/profile/dashboard', { timeRange });
   }
 
   // Fetch space data with activity
-  async getSpacesWithActivity(timeRange: string = 'week'): Promise<any> {
+  async getSpacesWithActivity(timeRange: string = 'week'): Promise<Record<string, unknown>> {
     return this.fetchWithCache('/api/profile/spaces', { 
       includeActivity: 'true',
       includeStats: 'true',
@@ -143,8 +143,8 @@ class ProfileAggregator {
   }
 
   // Fetch calendar events
-  async getCalendarEvents(startDate?: string, endDate?: string): Promise<any> {
-    const params: any = { includeSpaceEvents: 'true' };
+  async getCalendarEvents(startDate?: string, endDate?: string): Promise<Record<string, unknown>> {
+    const params: Record<string, string> = { includeSpaceEvents: 'true' };
     if (startDate) params.startDate = startDate;
     if (endDate) params.endDate = endDate;
     
@@ -152,7 +152,7 @@ class ProfileAggregator {
   }
 
   // Fetch activity analytics
-  async getActivityAnalytics(timeRange: string = 'week'): Promise<any> {
+  async getActivityAnalytics(timeRange: string = 'week'): Promise<Record<string, unknown>> {
     return this.fetchWithCache('/api/activity', { 
       timeRange,
       includeDetails: 'true'
@@ -160,7 +160,7 @@ class ProfileAggregator {
   }
 
   // Fetch advanced activity insights
-  async getActivityInsights(timeRange: string = 'week'): Promise<any> {
+  async getActivityInsights(timeRange: string = 'week'): Promise<Record<string, unknown>> {
     return this.fetchWithCache('/api/activity/insights', { 
       timeRange,
       analysisType: 'comprehensive'
@@ -168,12 +168,12 @@ class ProfileAggregator {
   }
 
   // Fetch privacy settings
-  async getPrivacySettings(): Promise<any> {
+  async getPrivacySettings(): Promise<Record<string, unknown>> {
     return this.fetchWithCache('/api/privacy');
   }
 
   // Fetch detailed statistics
-  async getDetailedStats(timeRange: string = 'month'): Promise<any> {
+  async getDetailedStats(timeRange: string = 'month'): Promise<Record<string, unknown>> {
     return this.fetchWithCache('/api/profile/stats', { 
       timeRange,
       includeComparisons: 'true'
@@ -181,7 +181,7 @@ class ProfileAggregator {
   }
 
   // Fetch space recommendations
-  async getSpaceRecommendations(type: string = 'all', limit: number = 10): Promise<any> {
+  async getSpaceRecommendations(type: string = 'all', limit: number = 10): Promise<Record<string, unknown>> {
     return this.fetchWithCache('/api/profile/spaces/recommendations', { 
       type,
       limit: limit.toString()
@@ -190,14 +190,14 @@ class ProfileAggregator {
 
   // Batch update profile data
   async batchUpdateProfile(updates: {
-    privacy?: any;
-    preferences?: any;
+    privacy?: Record<string, unknown>;
+    preferences?: Record<string, unknown>;
     spaceActions?: Array<{
       spaceId: string;
       action: string;
-      value?: any;
+      value?: unknown;
     }>;
-  }): Promise<any> {
+  }): Promise<Record<string, unknown>[]> {
     const results = [];
 
     if (updates.privacy) {
@@ -218,7 +218,7 @@ class ProfileAggregator {
   }
 
   // Helper method to update privacy settings
-  private async updatePrivacySettings(settings: any): Promise<any> {
+  private async updatePrivacySettings(settings: Record<string, unknown>): Promise<Record<string, unknown>> {
     const response = await fetch(`${this.baseUrl}/api/privacy`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
@@ -229,11 +229,11 @@ class ProfileAggregator {
       throw new Error(`Failed to update privacy settings: ${response.statusText}`);
     }
 
-    return response.json();
+    return response.json() as Promise<Record<string, unknown>>;
   }
 
   // Helper method to perform space actions
-  private async performSpaceAction(spaceId: string, action: string, value?: any): Promise<any> {
+  private async performSpaceAction(spaceId: string, action: string, value?: unknown): Promise<Record<string, unknown>> {
     const response = await fetch(`${this.baseUrl}/api/profile/spaces/actions`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -244,15 +244,15 @@ class ProfileAggregator {
       throw new Error(`Failed to perform space action: ${response.statusText}`);
     }
 
-    return response.json();
+    return response.json() as Promise<Record<string, unknown>>;
   }
 
   // Helper method to fetch with caching
-  private async fetchWithCache(endpoint: string, params: Record<string, string> = {}): Promise<any> {
+  private async fetchWithCache(endpoint: string, params: Record<string, string> = {}): Promise<Record<string, unknown>> {
     const cacheKey = `${endpoint}?${new URLSearchParams(params).toString()}`;
     
     if (this.cache.has(cacheKey)) {
-      return this.cache.get(cacheKey);
+      return this.cache.get(cacheKey) as Record<string, unknown>;
     }
 
     const url = `${this.baseUrl}${endpoint}?${new URLSearchParams(params).toString()}`;
@@ -265,7 +265,7 @@ class ProfileAggregator {
       throw new Error(`Failed to fetch ${endpoint}: ${response.statusText}`);
     }
 
-    const data = await response.json();
+    const data = await response.json() as Record<string, unknown>;
     
     // Cache for 2 minutes
     this.cache.set(cacheKey, data);
@@ -348,7 +348,7 @@ export function withProfileData<T>(
           setProfileData(data);
           setLoading(false);
         })
-        .catch(err => {
+        .catch((err: Error) => {
           setError(err.message);
           setLoading(false);
         });
@@ -374,24 +374,26 @@ export function withProfileData<T>(
 export const profileUtils = {
   // Calculate engagement score
   calculateEngagementScore: (profileData: AggregatedProfileData): number => {
-    const dashboard = profileData.dashboard?.dashboard;
-    if (!dashboard) return 0;
+    const dashboard = profileData.dashboard as { dashboard?: { summary?: Record<string, number> } };
+    const summaryData = dashboard?.dashboard?.summary;
+    if (!summaryData) return 0;
 
-    const timeWeight = Math.min(dashboard.summary.weeklyActivity / 120, 1) * 30; // Max 30 points for 2 hours
-    const spaceWeight = Math.min(dashboard.summary.activeSpaces / 5, 1) * 25; // Max 25 points for 5 spaces
-    const contentWeight = Math.min(dashboard.summary.contentCreated / 10, 1) * 25; // Max 25 points for 10 content
-    const socialWeight = Math.min(dashboard.summary.socialInteractions / 20, 1) * 20; // Max 20 points for 20 interactions
+    const timeWeight = Math.min((summaryData.weeklyActivity || 0) / 120, 1) * 30; // Max 30 points for 2 hours
+    const spaceWeight = Math.min((summaryData.activeSpaces || 0) / 5, 1) * 25; // Max 25 points for 5 spaces
+    const contentWeight = Math.min((summaryData.contentCreated || 0) / 10, 1) * 25; // Max 25 points for 10 content
+    const socialWeight = Math.min((summaryData.socialInteractions || 0) / 20, 1) * 20; // Max 20 points for 20 interactions
 
     return Math.round(timeWeight + spaceWeight + contentWeight + socialWeight);
   },
 
   // Get activity trend
   getActivityTrend: (profileData: AggregatedProfileData): 'up' | 'down' | 'stable' => {
-    const activity = profileData.activity?.analytics;
-    if (!activity) return 'stable';
+    const activity = profileData.activity as { analytics?: { totalTimeSpent?: number } };
+    const analyticsData = activity?.analytics;
+    if (!analyticsData) return 'stable';
 
     // Simple trend calculation - would be more sophisticated in real implementation
-    const recent = activity.totalTimeSpent || 0;
+    const recent = analyticsData.totalTimeSpent || 0;
     const baseline = 60; // 1 hour baseline
 
     if (recent > baseline * 1.1) return 'up';
@@ -410,11 +412,15 @@ export const profileUtils = {
   },
 
   // Get top spaces
-  getTopSpaces: (profileData: AggregatedProfileData, limit: number = 3): any[] => {
-    const spaces = profileData.spaces?.memberships || [];
+  getTopSpaces: (profileData: AggregatedProfileData, limit: number = 3): Array<Record<string, unknown>> => {
+    const spaces = (profileData.spaces as { memberships?: Array<Record<string, unknown>> })?.memberships || [];
     return spaces
-      .filter((space: any) => space.status === 'active')
-      .sort((a: any, b: any) => b.recentActivity.timeSpent - a.recentActivity.timeSpent)
+      .filter((space) => (space.status as string) === 'active')
+      .sort((a, b) => {
+        const aTime = ((a.recentActivity as Record<string, unknown>)?.timeSpent as number) || 0;
+        const bTime = ((b.recentActivity as Record<string, unknown>)?.timeSpent as number) || 0;
+        return bTime - aTime;
+      })
       .slice(0, limit);
   }
 };

@@ -6,7 +6,7 @@ import { Heading, Muted, Text } from "./Typography";
 import { motion, AnimatePresence } from "./framer-motion-proxy";
 import { गति } from "../lib/motion-utils";
 import { CheckCircle } from "lucide-react";
-import { Stack } from ".";
+import { Stack } from "./elements/stack";
 
 interface WaitlistFormProps {
   onSubmit: (email: string) => Promise<void>;
@@ -36,8 +36,8 @@ export const WaitlistForm: React.FC<WaitlistFormProps> = ({ onSubmit }) => {
   };
 
   return (
-    <HiveCard className="w-[400px] overflow-hidden" variant="elevated" size="lg">
-      <AnimatePresence mode="wait">
+    <HiveCard className="w-100 overflow-hidden" variant="elevated" size="lg">
+      <AnimatePresence>
         {success ? (
           <motion.div
             key="success"
@@ -47,7 +47,7 @@ export const WaitlistForm: React.FC<WaitlistFormProps> = ({ onSubmit }) => {
             exit="exit"
             className="p-6"
           >
-            <Stack align="center" gap={4}>
+            <Stack config={{ direction: 'vertical', alignment: 'center', spacing: 4, wrap: false }}>
               <CheckCircle className="w-12 h-12 text-[var(--hive-status-success)]" />
               <Heading level={3}>You&apos;re on the list!</Heading>
               <Text>We&apos;ll notify you at {email} when HIVE is ready.</Text>

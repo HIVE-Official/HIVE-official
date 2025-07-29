@@ -170,7 +170,7 @@ export function PersonalTools({
                 variant="outline" 
                 size="sm"
                 onClick={onAddTool}
-                className="bg-white"
+                className="bg-[var(--hive-text-primary)]"
               >
                 <Plus className="h-4 w-4 mr-2" />
                 Add Tool

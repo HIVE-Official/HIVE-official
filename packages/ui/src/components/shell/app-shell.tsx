@@ -56,7 +56,7 @@ export function AppShell({
   sidebarWidth = 'standard',
   headerHeight = 'standard'
 }: AppShellProps) {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
 
   // Dynamic sidebar widths for different contexts
   const sidebarSizes = {
@@ -105,7 +105,7 @@ export function AppShell({
         <NavigationSidebar 
           collapsed={sidebarCollapsed}
           user={user}
-          currentSection={currentSection}
+          currentPath={currentSection}
           width={sidebarWidth}
           layoutType={layoutType}
         />

@@ -73,10 +73,10 @@ const upcomingFeatures: Feature[] = [
 ];
 
 const categoryColors = {
-  "Platform": "255, 191, 0", // #FFBF00
-  "HiveLAB": "0, 212, 255",  // #00D4FF
-  "Spaces": "0, 255, 159",   // #00FF9F
-  "Rituals": "255, 107, 157" // #FF6B9D
+  "Platform": "255, 191, 0", // var(--hive-brand-secondary)
+  "HiveLAB": "0, 212, 255",  // var(--hive-status-info)
+  "Spaces": "0, 255, 159",   // var(--hive-status-success)
+  "Rituals": "255, 107, 157" // var(--hive-brand-secondary)
 };
 
 export interface HiveComingSoonModalProps {
@@ -113,7 +113,7 @@ const HiveComingSoonModal = React.forwardRef<HTMLDivElement, HiveComingSoonModal
                 Coming in vBETA
               </span>
             </div>
-            <h1 className="text-4xl md:text-5xl font-black text-white mb-4">
+            <h1 className="text-4xl md:text-5xl font-black text-[var(--hive-text-primary)] mb-4">
               What's Coming
             </h1>
             <p className="text-lg text-gray-400 max-w-3xl mx-auto leading-relaxed">
@@ -129,8 +129,8 @@ const HiveComingSoonModal = React.forwardRef<HTMLDivElement, HiveComingSoonModal
               className={cn(
                 "px-4 py-2 rounded-lg font-medium transition-all text-sm",
                 !selectedCategory 
-                  ? 'bg-white/10 text-white border border-yellow-500/30' 
-                  : 'bg-white/5 text-gray-400 hover:text-white border border-white/10'
+                  ? 'bg-[var(--hive-text-primary)]/10 text-[var(--hive-text-primary)] border border-yellow-500/30' 
+                  : 'bg-[var(--hive-text-primary)]/5 text-gray-400 hover:text-[var(--hive-text-primary)] border border-white/10'
               )}
             >
               All Features
@@ -142,12 +142,12 @@ const HiveComingSoonModal = React.forwardRef<HTMLDivElement, HiveComingSoonModal
                 className={cn(
                   "px-4 py-2 rounded-lg font-medium transition-all text-sm border",
                   selectedCategory === category 
-                    ? 'bg-white/10 text-white' 
-                    : 'bg-white/5 text-gray-400 hover:text-white border-white/10'
+                    ? 'bg-[var(--hive-text-primary)]/10 text-[var(--hive-text-primary)]' 
+                    : 'bg-[var(--hive-text-primary)]/5 text-gray-400 hover:text-[var(--hive-text-primary)] border-white/10'
                 )}
                 style={{ 
                   borderColor: selectedCategory === category 
-                    ? `rgba(${categoryColors[category as keyof typeof categoryColors]}, 0.3)` 
+                    ? `color-mix(in_srgb,var(--hive-brand-secondary)_30%,transparent)` 
                     : undefined
                 }}
               >
@@ -162,17 +162,17 @@ const HiveComingSoonModal = React.forwardRef<HTMLDivElement, HiveComingSoonModal
               {filteredFeatures.map((feature) => (
                 <div
                   key={feature.id}
-                  className="bg-white/5 p-5 rounded-xl border hover:border-opacity-60 transition-all group cursor-pointer"
+                  className="bg-[var(--hive-text-primary)]/5 p-5 rounded-xl border hover:border-opacity-60 transition-all group cursor-pointer"
                   style={{ 
-                    borderColor: `rgba(${categoryColors[feature.category as keyof typeof categoryColors]}, 0.2)`,
+                    borderColor: `color-mix(in_srgb,var(--hive-brand-secondary)_20%,transparent)`,
                   }}
                 >
                   <div className="flex items-start justify-between mb-3">
                     <div 
                       className="p-2 rounded-lg"
                       style={{ 
-                        backgroundColor: `rgba(${categoryColors[feature.category as keyof typeof categoryColors]}, 0.1)`,
-                        color: `rgb(${categoryColors[feature.category as keyof typeof categoryColors]})`
+                        backgroundColor: `color-mix(in_srgb,var(--hive-brand-secondary)_10%,transparent)`,
+                        color: `var(--hive-brand-secondary)`
                       }}
                     >
                       {feature.icon}
@@ -181,8 +181,8 @@ const HiveComingSoonModal = React.forwardRef<HTMLDivElement, HiveComingSoonModal
                       <span 
                         className="text-xs px-2 py-1 rounded-full font-medium"
                         style={{ 
-                          backgroundColor: `rgba(${categoryColors[feature.category as keyof typeof categoryColors]}, 0.2)`,
-                          color: `rgb(${categoryColors[feature.category as keyof typeof categoryColors]})`
+                          backgroundColor: `color-mix(in_srgb,var(--hive-brand-secondary)_20%,transparent)`,
+                          color: `var(--hive-brand-secondary)`
                         }}
                       >
                         {feature.category}
@@ -190,7 +190,7 @@ const HiveComingSoonModal = React.forwardRef<HTMLDivElement, HiveComingSoonModal
                     </div>
                   </div>
                   
-                  <h3 className="text-lg font-bold mb-2 text-white">
+                  <h3 className="text-lg font-bold mb-2 text-[var(--hive-text-primary)]">
                     {feature.title}
                   </h3>
                   
@@ -216,8 +216,8 @@ const HiveComingSoonModal = React.forwardRef<HTMLDivElement, HiveComingSoonModal
 
           {/* CTA Section */}
           <div className="text-center pt-4 border-t border-white/10">
-            <div className="bg-white/5 p-6 rounded-xl border border-yellow-500/30">
-              <h2 className="text-2xl font-bold mb-3 text-white">
+            <div className="bg-[var(--hive-text-primary)]/5 p-6 rounded-xl border border-yellow-500/30">
+              <h2 className="text-2xl font-bold mb-3 text-[var(--hive-text-primary)]">
                 Ready to Build Your Campus?
               </h2>
               <p className="text-gray-400 mb-6">

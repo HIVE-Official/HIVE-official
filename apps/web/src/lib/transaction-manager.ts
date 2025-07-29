@@ -13,8 +13,8 @@ import { logger } from './structured-logger';
 export interface TransactionOperation {
   id: string;
   description: string;
-  execute: (transaction: Transaction) => Promise<any>;
-  rollback?: (transaction: Transaction) => Promise<void>;
+  execute: (_transaction: Transaction) => Promise<any>;
+  rollback?: (_transaction: Transaction) => Promise<void>;
 }
 
 /**
@@ -23,7 +23,7 @@ export interface TransactionOperation {
 export interface BatchOperation {
   id: string;
   description: string;
-  execute: (batch: WriteBatch) => void;
+  execute: (_batch: WriteBatch) => void;
 }
 
 /**
@@ -531,8 +531,8 @@ export async function executeBuilderRequestCreation(
 export class TransactionError extends Error {
   constructor(
     message: string,
-    public readonly operation: string,
-    public readonly cause?: Error
+    public readonly _operation: string,
+    public readonly _cause?: Error
   ) {
     super(message);
     this.name = 'TransactionError';

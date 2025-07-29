@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@hive/ui";
+import { HiveCard as Card, CardContent, CardHeader, CardTitle } from "@hive/ui";
 import { useAdminAuth } from "@/lib/auth";
 import { AdminNavigation } from "./admin-navigation";
 import { UserManagementDashboard } from "./user-management-dashboard";

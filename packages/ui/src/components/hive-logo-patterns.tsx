@@ -13,11 +13,11 @@ const patternVariants = cva(
   {
     variants: {
       variant: {
-        tessellation: "bg-[#0A0A0B]",
+        tessellation: "bg-[var(--hive-background-primary)]",
         watermark: "bg-transparent",
         border: "border-current",
-        glow: "bg-black",
-        gradient: "bg-gradient-to-br from-[#0A0A0B] to-[#1A1A1B]",
+        glow: "bg-[var(--hive-background-primary)]",
+        gradient: "bg-gradient-to-br from-[var(--hive-background-primary)] to-[var(--hive-background-tertiary)]",
       },
       density: {
         sparse: "opacity-20",
@@ -80,7 +80,7 @@ export const HiveTessellation = ({
       {...props}
     >
       {/* Hexagon grid */}
-      <div className="absolute inset-0 text-white/10">
+      <div className="absolute inset-0 text-[var(--hive-text-primary)]/10">
         {Array.from({ length: rows }, (_, row) =>
           Array.from({ length: cols }, (_, col) => (
             <motion.div
@@ -122,7 +122,7 @@ export const HiveWatermark = ({
   return (
     <div className={cn("relative", className)} {...props}>
       {/* Large watermark logos */}
-      <div className={cn("absolute inset-0 pointer-events-none text-white/5", patternVariants({ density }))}>
+      <div className={cn("absolute inset-0 pointer-events-none text-[var(--hive-text-primary)]/5", patternVariants({ density }))}>
         {Array.from({ length: 6 }, (_, i) => (
           <motion.div
             key={i}
@@ -215,7 +215,7 @@ export const HiveGlow = ({
   const glowStrength = intensity === "low" ? 10 : intensity === "normal" ? 20 : 40;
   
   return (
-    <div className={cn("relative bg-black", className)} {...props}>
+    <div className={cn("relative bg-[var(--hive-background-primary)]", className)} {...props}>
       {/* Glow hexagons */}
       {Array.from({ length: 8 }, (_, i) => (
         <motion.div
@@ -268,7 +268,7 @@ export const HiveFloating = ({
       {Array.from({ length: count }, (_, i) => (
         <motion.div
           key={i}
-          className="absolute text-white/10"
+          className="absolute text-[var(--hive-text-primary)]/10"
           style={{
             left: `${Math.random() * 100}%`,
             top: `${Math.random() * 100}%`,

@@ -4,11 +4,19 @@ import { dbAdmin } from '@/lib/firebase-admin';
 import { FieldValue } from 'firebase-admin/firestore';
 import { z } from 'zod';
 
+// In-memory store for development mode profile data
+const devProfileStore: Record<string, any> = {};
+
 // Validation schema for profile updates
 const updateProfileSchema = z.object({
   fullName: z.string().min(1).max(100).optional(),
   major: z.string().min(1).max(100).optional(),
+  academicYear: z.enum(['freshman', 'sophomore', 'junior', 'senior', 'graduate', 'other']).optional(),
+  housing: z.string().max(200).optional(),
+  pronouns: z.string().max(50).optional(),
+  statusMessage: z.string().max(200).optional(),
   avatarUrl: z.string().url().optional().or(z.literal("")),
+  profilePhoto: z.string().url().optional().or(z.literal("")),
   isPublic: z.boolean().optional(),
   builderOptIn: z.boolean().optional(),
 });
@@ -32,20 +40,32 @@ export async function GET(request: NextRequest) {
     // Handle development mode tokens
     if (token.startsWith('dev_token_')) {
       const userId = token.replace('dev_token_', '');
+      
+      // Get stored development profile data or use defaults
+      const storedProfile = devProfileStore[userId] || {};
+      
       return NextResponse.json({
         success: true,
         user: {
           id: userId,
           email: `dev_user_${userId}@example.com`,
-          fullName: 'Development User',
-          handle: `dev_user_${userId}`,
-          major: 'Computer Science',
-          avatarUrl: '',
+          fullName: storedProfile.fullName || 'Development User',
+          handle: storedProfile.handle || `dev_user_${userId}`,
+          major: storedProfile.major || 'Computer Science',
+          academicYear: storedProfile.academicYear || 'junior',
+          housing: storedProfile.housing || 'Smith Hall, Room 305',
+          pronouns: storedProfile.pronouns || 'they/them',
+          statusMessage: storedProfile.statusMessage || 'Building epic study tools 🔥',
+          profilePhoto: storedProfile.profilePhoto || storedProfile.avatarUrl || '',
+          avatarUrl: storedProfile.avatarUrl || '',
           schoolId: 'dev_school',
           emailVerified: true,
-          builderOptIn: false,
-          isPublic: true,
+          builderOptIn: storedProfile.builderOptIn || false,
+          isPublic: storedProfile.isPublic || true,
           onboardingCompleted: true,
+          joinedSpaces: 5,
+          createdAt: new Date().toISOString(),
+          lastActive: new Date().toISOString(),
           developmentMode: true,
         },
       });
@@ -128,10 +148,18 @@ export async function PATCH(request: NextRequest) {
     
     // Handle development mode tokens
     if (token.startsWith('dev_token_')) {
+      const userId = token.replace('dev_token_', '');
       const body = await request.json();
       const updateData = updateProfileSchema.parse(body);
       
+      // Store the updated data in development mode
+      devProfileStore[userId] = {
+        ...devProfileStore[userId],
+        ...updateData,
+      };
+      
       console.log('Development mode profile update:', updateData);
+      console.log('Stored dev profile data:', devProfileStore[userId]);
       
       return NextResponse.json({
         success: true,

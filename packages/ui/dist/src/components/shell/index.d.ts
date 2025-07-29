@@ -6,9 +6,10 @@ export { UserMenu } from './user-menu';
 export { BreadcrumbNavigation } from './breadcrumb-navigation';
 export { CommandPalette } from './command-palette';
 export { NotificationCenter } from './notification-center';
-export { PageContainer } from './page-container';
+export { PageContainer as ShellPageContainer } from './page-container';
 export { ShellProvider, useShell } from './shell-provider';
 export { NotificationProvider, useNotifications } from './notification-service';
 export { ProfileLayout, SpaceLayout, FeedLayout, HiveLabLayout, RitualLayout, SplitLayout, ModalLayout } from './page-layouts';
 export type { Notification } from './notification-service';
 export type { HivePlatformSection, HiveLayoutType } from './app-shell';
+//# sourceMappingURL=index.d.ts.map

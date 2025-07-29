@@ -40,7 +40,7 @@ const breadcrumbItemVariants = {
   rest: {
     x: 0,
     scale: 1,
-    color: 'rgba(255, 255, 255, 0.6)',
+    color: 'color-mix(in_srgb,var(--hive-text-primary)_60%,transparent)',
     transition: {
       duration: motionDurations.quick,
       ease: liquidMetal.easing as any,
@@ -49,7 +49,7 @@ const breadcrumbItemVariants = {
   hover: {
     x: 2,
     scale: 1.02,
-    color: 'rgba(255, 255, 255, 0.9)',
+    color: 'color-mix(in_srgb,var(--hive-text-primary)_90%,transparent)',
     transition: {
       duration: motionDurations.quick,
       ease: liquidMetal.easing as any,
@@ -58,7 +58,7 @@ const breadcrumbItemVariants = {
   active: {
     x: 0,
     scale: 1,
-    color: 'rgba(255, 212, 0, 1)',
+    color: 'var(--hive-brand-secondary)',
     transition: {
       duration: motionDurations.quick,
       ease: liquidMetal.easing as any,
@@ -138,9 +138,9 @@ const HiveBreadcrumbs = React.forwardRef<HTMLDivElement, HiveBreadcrumbsProps>(
         case 'arrow':
           return <ArrowRight size={14} />;
         case 'slash':
-          return <span className="text-white/40">/</span>;
+          return <span className="text-[var(--hive-text-primary)]/40">/</span>;
         case 'dot':
-          return <span className="text-white/40">•</span>;
+          return <span className="text-[var(--hive-text-primary)]/40">•</span>;
         case 'chevron':
         default:
           return <ChevronRight size={14} />;
@@ -164,7 +164,7 @@ const HiveBreadcrumbs = React.forwardRef<HTMLDivElement, HiveBreadcrumbsProps>(
         {showHome && (
           <>
             <motion.button
-              className="flex items-center space-x-1 text-white/60 hover:text-white/90 transition-colors"
+              className="flex items-center space-x-1 text-[var(--hive-text-primary)]/60 hover:text-[var(--hive-text-primary)]/90 transition-colors"
               variants={breadcrumbItemVariants}
               initial="rest"
               whileHover="hover"
@@ -176,7 +176,7 @@ const HiveBreadcrumbs = React.forwardRef<HTMLDivElement, HiveBreadcrumbsProps>(
             
             {displayItems.length > 0 && (
               <motion.div
-                className="text-white/40"
+                className="text-[var(--hive-text-primary)]/40"
                 variants={separatorVariants}
                 initial="rest"
                 whileHover="hover"
@@ -215,8 +215,8 @@ const HiveBreadcrumbs = React.forwardRef<HTMLDivElement, HiveBreadcrumbsProps>(
                 <span className={cn(
                   "truncate font-medium",
                   isLast && "text-yellow-400",
-                  !isLast && !isOverflow && "text-white/60",
-                  isOverflow && "text-white/40"
+                  !isLast && !isOverflow && "text-[var(--hive-text-primary)]/60",
+                  isOverflow && "text-[var(--hive-text-primary)]/40"
                 )}>
                   {item.label}
                 </span>
@@ -224,7 +224,7 @@ const HiveBreadcrumbs = React.forwardRef<HTMLDivElement, HiveBreadcrumbsProps>(
               
               {!isLast && (
                 <motion.div
-                  className="text-white/40 shrink-0"
+                  className="text-[var(--hive-text-primary)]/40 shrink-0"
                   variants={separatorVariants}
                   initial="rest"
                   whileHover="hover"

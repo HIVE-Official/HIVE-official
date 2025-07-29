@@ -90,7 +90,7 @@
   --hive-shadow-ruby-glow: 0 0 20px rgba(239, 68, 68, 0.3);
   --hive-shadow-rubyGlow: 0 0 20px rgba(239, 68, 68, 0.3);
 
-  /* HIVE Spacing */
+  /* HIVE Spacing - Mobile-optimized */
   --hive-spacing-0: 0px;
   --hive-spacing-1: 0.25rem;
   --hive-spacing-2: 0.5rem;
@@ -116,17 +116,17 @@
   --hive-radius-3xl: 2.5rem;
   --hive-radius-full: 9999px;
 
-  /* HIVE Typography */
-  --hive-font-size-xs: 0.75rem;
-  --hive-font-size-sm: 0.875rem;
-  --hive-font-size-base: 1rem;
-  --hive-font-size-lg: 1.125rem;
-  --hive-font-size-xl: 1.25rem;
-  --hive-font-size-2xl: 1.5rem;
-  --hive-font-size-3xl: 1.875rem;
-  --hive-font-size-4xl: 2.25rem;
-  --hive-font-size-5xl: 3rem;
-  --hive-font-size-6xl: 3.75rem;
+  /* HIVE Typography - Mobile-optimized */
+  --hive-font-size-xs: 0.625rem;
+  --hive-font-size-sm: 0.75rem;
+  --hive-font-size-base: 0.875rem;
+  --hive-font-size-lg: 1rem;
+  --hive-font-size-xl: 1.125rem;
+  --hive-font-size-2xl: 1.25rem;
+  --hive-font-size-3xl: 1.5rem;
+  --hive-font-size-4xl: 1.75rem;
+  --hive-font-size-5xl: 2rem;
+  --hive-font-size-6xl: 2.25rem;
 
   /* HIVE Typography */
   --hive-font-family-sans: 'Geist Sans', system-ui, sans-serif;
@@ -138,6 +138,13 @@
   --hive-font-weight-semibold: 600;
   --hive-font-weight-bold: 700;
 
+  /* HIVE Responsive System */
+  --hive-component-density: 0.875;
+  --hive-layout-density: 1;
+  --hive-spacing-mobile: 0.875;
+  --hive-spacing-tablet: 1;
+  --hive-spacing-desktop: 1.125;
+  
   /* HIVE Motion */
   --hive-duration-instant: 0.1s;
   --hive-duration-quick: 0.2s;
@@ -232,11 +239,12 @@
   }
 
   * {
-    @apply border-border;
+    border-color: var(--hive-border-primary);
   }
   
   body {
-    @apply bg-background text-foreground;
+    background-color: var(--background);
+    color: var(--foreground);
     font-feature-settings: "rlig" 1, "calt" 1;
     font-family: 'Geist Sans', system-ui, sans-serif;
   }
@@ -601,6 +609,27 @@
     }
   }
 
+  /* HIVE Responsive Density System */
+  .hive-density-compact {
+    --hive-component-density: 0.75;
+  }
+  
+  .hive-density-standard {
+    --hive-component-density: 0.875;
+  }
+  
+  .hive-density-comfortable {
+    --hive-component-density: 1;
+  }
+  
+  .hive-spacing-responsive {
+    padding: calc(var(--hive-spacing-4) * var(--hive-component-density));
+  }
+  
+  .hive-gap-responsive {
+    gap: calc(var(--hive-spacing-4) * var(--hive-layout-density));
+  }
+
   /* HIVE Spacing System Extensions */
   .hive-gap-xs { gap: 0.25rem; }
   .hive-gap-sm { gap: 0.5rem; }
@@ -611,6 +640,28 @@
   .hive-gap-3xl { gap: 4rem; }
   .hive-gap-4xl { gap: 6rem; }
   .hive-gap-5xl { gap: 8rem; }
+}
+
+/* HIVE Responsive Breakpoints */
+@media (min-width: 768px) {
+  :root {
+    --hive-component-density: 1;
+    --hive-layout-density: 1.125;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --hive-component-density: 1.125;
+    --hive-layout-density: 1.25;
+  }
+}
+
+@media (min-width: 1280px) {
+  :root {
+    --hive-component-density: 1.25;
+    --hive-layout-density: 1.375;
+  }
 }
 
 /* Word Cycling Animation */

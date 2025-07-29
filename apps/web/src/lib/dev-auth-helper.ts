@@ -32,6 +32,13 @@ const DEV_USERS = {
     handle: 'test-admin',
     schoolId: 'test-university',
     role: 'admin'
+  },
+  'jacob@test.edu': {
+    userId: 'dev-user-jacob',
+    email: 'jacob@test.edu',
+    handle: 'jacob-founder',
+    schoolId: 'test-university',
+    role: 'founder'
   }
 } as const;
 
@@ -82,7 +89,7 @@ export async function createDevSession(
   if (!(email in DEV_USERS)) {
     return {
       success: false,
-      error: 'Development user not found. Use: student@test.edu, faculty@test.edu, or admin@test.edu'
+      error: 'Development user not found. Use: student@test.edu, faculty@test.edu, admin@test.edu, or jacob@test.edu'
     };
   }
 

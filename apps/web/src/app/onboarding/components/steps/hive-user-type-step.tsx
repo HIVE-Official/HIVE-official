@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion } from "@hive/ui/src/components/framer-motion-proxy";
 import { GraduationCap, Users, BookOpen, ArrowRight, Mail, CheckCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { HiveCard, HiveButton, HiveInput } from "@hive/ui";
@@ -105,8 +105,8 @@ export function HiveUserTypeStep({ data, updateData, onNext }: HiveUserTypeStepP
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.2 }}
         >
-          <h2 className="text-3xl font-bold text-[var(--hive-text-primary)] mb-4">
-            Alumni Access Coming Soon
+          <h2 className="text-3xl font-bold text-[#FFD700] mb-4">
+            ⚡ Jacob, get on it! ⚡
           </h2>
           <p className="text-[var(--hive-text-secondary)] text-lg mb-8">
             We're building something special for alumni. Stay tuned for updates!

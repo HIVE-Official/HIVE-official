@@ -1,26 +1,78 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { useAuth } from '@hive/auth-logic';
 import { getFeatureFlags, trackVariantEvent, type FeatureFlags } from '@hive/core';
 
 export function useFeatureFlags(): FeatureFlags & { 
   trackEvent: (feature: keyof FeatureFlags, action: 'view' | 'interact' | 'complete' | 'abandon', metadata?: Record<string, unknown>) => void 
 } {
-  const { user } = useAuth();
   const [flags, setFlags] = useState<FeatureFlags>(getFeatureFlags('default'));
+  const [userId, setUserId] = useState<string | null>(null);
 
   useEffect(() => {
-    if (user?.uid) {
-      const userFlags = getFeatureFlags(user.uid);
+    // Check for user session in localStorage (matches the web app's auth pattern)
+    const checkUserSession = () => {
+      try {
+        // Check for hive session (used in web app)
+        const hiveSession = window.localStorage.getItem('hive_session');
+        if (hiveSession) {
+          const session = JSON.parse(hiveSession);
+          if (session.user?.uid) {
+            setUserId(session.user.uid);
+            return;
+          }
+        }
+
+        // Check for dev mode user
+        const devAuthMode = window.localStorage.getItem('dev_auth_mode');
+        const devUserData = window.localStorage.getItem('dev_user');
+        if (devAuthMode === 'true' && devUserData) {
+          const devUser = JSON.parse(devUserData);
+          if (devUser.uid) {
+            setUserId(devUser.uid);
+            return;
+          }
+        }
+
+        // Fallback to test user for development
+        if (process.env.NODE_ENV === 'development') {
+          setUserId('test-user-id');
+          return;
+        }
+      } catch (error) {
+        console.warn('Error checking user session for feature flags:', error);
+      }
+
+      setUserId(null);
+    };
+
+    checkUserSession();
+
+    // Listen for storage changes to update user session
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'hive_session' || e.key === 'dev_user' || e.key === 'dev_auth_mode') {
+        checkUserSession();
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
+
+  useEffect(() => {
+    if (userId) {
+      const userFlags = getFeatureFlags(userId);
       setFlags(userFlags);
+    } else {
+      const defaultFlags = getFeatureFlags('default');
+      setFlags(defaultFlags);
     }
-  }, [user?.uid]);
+  }, [userId]);
 
   const trackEvent = (feature: keyof FeatureFlags, action: 'view' | 'interact' | 'complete' | 'abandon', metadata?: Record<string, unknown>) => {
-    if (user?.uid) {
+    if (userId) {
       trackVariantEvent({
-        userId: user.uid,
+        userId,
         variant: String(flags[feature]),
         feature,
         action,

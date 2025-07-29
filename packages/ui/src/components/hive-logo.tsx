@@ -12,8 +12,8 @@ const hiveLogoVariants = cva(
   {
     variants: {
       variant: {
-        primary: "text-white",
-        inverted: "text-black",
+        primary: "text-[var(--hive-text-primary)]",
+        inverted: "text-[var(--hive-background-primary)]",
         gold: "text-[var(--hive-color-gold)]",
         monochrome: "text-current",
       },
@@ -64,10 +64,10 @@ const HiveGlyph = ({
   variant: string;
   className?: string;
 }) => {
-  const glyphColor = variant === "inverted" ? "#000000" 
-                  : variant === "gold" ? "#FFD700"
+  const glyphColor = variant === "inverted" ? "var(--hive-background-primary)" 
+                  : variant === "gold" ? "var(--hive-brand-secondary)"
                   : variant === "monochrome" ? "currentColor"
-                  : "#FFFFFF";
+                  : "var(--hive-text-primary)";
 
   return (
     <svg

@@ -138,7 +138,7 @@ export async function validateRequest(
       }
     }
 
-    let validationData: any = {};
+    const validationData: any = {};
 
     // SECURITY: Validate request body
     if (validateBody && ['POST', 'PUT', 'PATCH'].includes(request.method)) {
@@ -374,7 +374,7 @@ async function validateAuthentication(request: NextRequest): Promise<{
     return { valid: false };
   }
 
-  const token = authHeader.substring(7);
+  const _token = authHeader.substring(7);
   
   // Implement your token validation logic here
   // This is a placeholder - you should validate JWT tokens or session tokens
@@ -386,7 +386,7 @@ async function validateAuthentication(request: NextRequest): Promise<{
  * Create validation middleware wrapper for API routes
  */
 export function withValidation(
-  handler: (request: NextRequest, validatedData: any, context?: any) => Promise<NextResponse>,
+  handler: (_request: NextRequest, _validatedData: any, _context?: any) => Promise<NextResponse>,
   options: ValidationMiddlewareOptions
 ) {
   return async (request: NextRequest, context: any = {}): Promise<NextResponse> => {
@@ -423,7 +423,7 @@ export const ValidationHelpers = {
    * Authentication endpoint validation
    */
   auth: (schema: z.ZodSchema<any>, operation: string) => 
-    withValidation((req, data) => Promise.resolve(NextResponse.json({})), {
+    withValidation((_req, _data) => Promise.resolve(NextResponse.json({})), {
       schema,
       securityLevel: 'AUTHENTICATION',
       operation,
@@ -435,7 +435,7 @@ export const ValidationHelpers = {
    * User data endpoint validation
    */
   userData: (schema: z.ZodSchema<any>, operation: string) =>
-    withValidation((req, data) => Promise.resolve(NextResponse.json({})), {
+    withValidation((_req, _data) => Promise.resolve(NextResponse.json({})), {
       schema,
       securityLevel: 'USER_DATA',
       operation,
@@ -447,7 +447,7 @@ export const ValidationHelpers = {
    * Content creation endpoint validation
    */
   content: (schema: z.ZodSchema<any>, operation: string) =>
-    withValidation((req, data) => Promise.resolve(NextResponse.json({})), {
+    withValidation((_req, _data) => Promise.resolve(NextResponse.json({})), {
       schema,
       securityLevel: 'CONTENT_CREATION',
       operation,
@@ -459,7 +459,7 @@ export const ValidationHelpers = {
    * Public read endpoint validation
    */
   publicRead: (operation: string) =>
-    withValidation((req, data) => Promise.resolve(NextResponse.json({})), {
+    withValidation((_req, _data) => Promise.resolve(NextResponse.json({})), {
       securityLevel: 'PUBLIC_READ',
       operation,
       validateBody: false,
@@ -471,7 +471,7 @@ export const ValidationHelpers = {
    * Admin endpoint validation
    */
   admin: (schema: z.ZodSchema<any>, operation: string) =>
-    withValidation((req, data) => Promise.resolve(NextResponse.json({})), {
+    withValidation((_req, _data) => Promise.resolve(NextResponse.json({})), {
       schema,
       securityLevel: 'ADMIN',
       operation,

@@ -5,6 +5,9 @@ export * from './hive-navigation-variants';
 export * from './hive-navigation-shell';
 export * from './hive-campus-navigation';
 export * from './hive-navigation-routes';
+export * from './enhanced-navigation-bar';
+export * from './mobile-navigation-menu';
+export * from './universal-bottom-nav';
 
 // Main navigation shell (recommended)
 export { HiveNavigationShell as Navigation } from './hive-navigation-shell';

@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircle, X, Send, Loader2 } from "lucide-react";
-import { HiveLogo, HiveButton, HiveInput } from "@hive/ui";
+import { MessageCircle, X, Send, Loader2, Hexagon } from "lucide-react";
+import { HiveButton, HiveInput } from "@hive/ui";
 
 export function FeedbackToast() {
   const [isOpen, setIsOpen] = useState(false);
@@ -77,7 +77,7 @@ export function FeedbackToast() {
                      flex items-center gap-3 max-w-xs"
           >
             <div className="flex-shrink-0">
-              <HiveLogo variant="symbol" size="sm" className="w-6 h-6" />
+              <Hexagon className="w-6 h-6 text-[var(--hive-brand-primary)]" />
             </div>
             
             <div className="text-left">
@@ -107,11 +107,13 @@ export function FeedbackToast() {
             {/* Header */}
             <div className="p-4 border-b border-[var(--hive-border-subtle)] bg-[var(--hive-background-tertiary)]">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <HiveLogo variant="symbol" size="sm" className="w-6 h-6" />
-                  <div>
+                <div className="flex items-center gap-4">
+                  <div className="flex-shrink-0">
+                    <Hexagon className="w-6 h-6 text-[var(--hive-brand-primary)]" />
+                  </div>
+                  <div className="min-w-0 flex-1">
                     <div className="text-sm font-semibold text-[var(--hive-text-primary)]">
-                      HIVE Feedback
+                      Feedback
                     </div>
                     <div className="text-xs text-[var(--hive-text-secondary)]">
                       We're new and improving!
@@ -130,18 +132,18 @@ export function FeedbackToast() {
             </div>
 
             {/* Content */}
-            <div className="p-4">
+            <div className="p-6">
               {isSubmitted ? (
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="text-center py-4"
+                  className="text-center py-6"
                 >
                   <div className="w-12 h-12 bg-[var(--hive-background-tertiary)] rounded-full 
-                                flex items-center justify-center mx-auto mb-3 border border-[var(--hive-status-success)]">
+                                flex items-center justify-center mx-auto mb-4 border border-[var(--hive-status-success)]">
                     <MessageCircle className="w-6 h-6 text-[var(--hive-status-success)]" />
                   </div>
-                  <div className="text-sm font-medium text-[var(--hive-text-primary)] mb-1">
+                  <div className="text-sm font-medium text-[var(--hive-text-primary)] mb-2">
                     Thanks for your feedback!
                   </div>
                   <div className="text-xs text-[var(--hive-text-secondary)]">
@@ -149,8 +151,8 @@ export function FeedbackToast() {
                   </div>
                 </motion.div>
               ) : (
-                <div className="space-y-4">
-                  <div className="text-xs text-[var(--hive-text-secondary)]">
+                <div className="space-y-5">
+                  <div className="text-sm text-[var(--hive-text-secondary)] leading-relaxed">
                     Found a bug? Have a feature request? Just want to say hi? 
                     We'd love to hear from you!
                   </div>
@@ -160,26 +162,26 @@ export function FeedbackToast() {
                       placeholder="Tell us what's on your mind..."
                       value={feedback}
                       onChange={(e) => setFeedback(e.target.value)}
-                      rows={3}
+                      rows={4}
                       maxLength={500}
-                      className="w-full px-3 py-2 bg-[var(--hive-background-secondary)] 
-                               border-2 border-[var(--hive-border-subtle)] rounded-lg
+                      className="w-full px-4 py-3 bg-[var(--hive-background-secondary)] 
+                               border border-[var(--hive-border-subtle)] rounded-xl
                                text-sm text-[var(--hive-text-primary)]
                                placeholder:text-[var(--hive-text-muted)]
                                focus:outline-none focus:ring-2 focus:ring-[var(--hive-brand-primary)]/50
                                focus:border-[var(--hive-brand-primary)]/50
-                               resize-none transition-colors"
+                               resize-none transition-all duration-200"
                     />
-                    <div className="absolute bottom-2 right-2 text-xs text-[var(--hive-text-muted)]">
+                    <div className="absolute bottom-3 right-3 text-xs text-[var(--hive-text-muted)] bg-[var(--hive-background-primary)] px-2 py-1 rounded">
                       {feedback.length}/500
                     </div>
                   </div>
                   
-                  <div className="flex justify-between items-center">
+                  <div className="flex justify-between items-center pt-2">
                     <button
                       onClick={() => setIsOpen(false)}
-                      className="text-xs text-[var(--hive-text-muted)] hover:text-[var(--hive-text-secondary)] 
-                               transition-colors"
+                      className="text-sm text-[var(--hive-text-muted)] hover:text-[var(--hive-text-secondary)] 
+                               transition-colors px-2 py-1 rounded hover:bg-[var(--hive-background-tertiary)]"
                     >
                       Maybe later
                     </button>
@@ -188,11 +190,11 @@ export function FeedbackToast() {
                       onClick={handleSubmit}
                       disabled={!feedback.trim() || isSubmitting}
                       variant="premium"
-                      size="sm"
+                      size="md"
                       leftIcon={isSubmitting ? (
-                        <Loader2 className="w-3 h-3 animate-spin" />
+                        <Loader2 className="w-4 h-4 animate-spin" />
                       ) : (
-                        <Send className="w-3 h-3" />
+                        <Send className="w-4 h-4" />
                       )}
                     >
                       {isSubmitting ? "Sending..." : "Send"}

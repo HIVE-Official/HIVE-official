@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { BreadcrumbNavigation } from './breadcrumb-navigation';
+// import { BreadcrumbNavigation } from './breadcrumb-navigation'; // Temporarily disabled
 import { cn } from '../../lib/utils';
 
 interface BreadcrumbItem {
@@ -57,7 +57,23 @@ export function PageContainer({
         {/* Breadcrumbs */}
         {breadcrumbs && breadcrumbs.length > 0 && (
           <div className="mb-6">
-            <BreadcrumbNavigation items={breadcrumbs} />
+            {/* <BreadcrumbNavigation items={breadcrumbs} /> */}
+            <nav className="flex" aria-label="Breadcrumb">
+              <ol className="flex items-center space-x-1 text-sm">
+                {breadcrumbs.map((item, index) => (
+                  <li key={index} className="flex items-center">
+                    {index > 0 && <span className="mx-2 text-zinc-400">/</span>}
+                    {item.href ? (
+                      <a href={item.href} className="text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100">
+                        {item.label}
+                      </a>
+                    ) : (
+                      <span className="text-zinc-900 dark:text-zinc-100">{item.label}</span>
+                    )}
+                  </li>
+                ))}
+              </ol>
+            </nav>
           </div>
         )}
 
@@ -67,12 +83,12 @@ export function PageContainer({
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div className="min-w-0 flex-1">
                 {title && (
-                  <h1 className="text-2xl md:text-3xl font-semibold text-white font-['Space_Grotesk'] tracking-tight">
+                  <h1 className="text-2xl md:text-3xl font-semibold text-[var(--hive-text-primary)] font-['Space_Grotesk'] tracking-tight">
                     {title}
                   </h1>
                 )}
                 {subtitle && (
-                  <p className="mt-2 text-[#A1A1AA] text-base md:text-lg">
+                  <p className="mt-2 text-[var(--hive-text-tertiary)] text-base md:text-lg">
                     {subtitle}
                   </p>
                 )}

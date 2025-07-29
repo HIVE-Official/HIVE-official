@@ -246,9 +246,9 @@ export const butteryInteractions = {
       scale: [1, 1.15, 1],
       opacity: [1, 0.9, 1],
       boxShadow: [
-        "0 0 0 0 rgba(255, 215, 0, 0.4)",
-        "0 0 0 4px rgba(255, 215, 0, 0.2)",
-        "0 0 0 0 rgba(255, 215, 0, 0)"
+        "0 0 0 0 color-mix(in_srgb,var(--hive-brand-secondary)_40%,transparent)",
+        "0 0 0 1 color-mix(in_srgb,var(--hive-brand-secondary)_20%,transparent)",
+        "0 0 0 0 transparent"
       ],
       transition: {
         duration: 1.5,
@@ -458,7 +458,7 @@ export const butteryInteractions = {
     shareButton: {
       rest: {
         scale: 1,
-        boxShadow: "0 0 0 0 rgba(255, 215, 0, 0)",
+        boxShadow: "0 0 0 0 transparent",
         transition: {
           duration: motionDurations.smooth,
           ease: liquidMetal.easing as any,
@@ -468,9 +468,9 @@ export const butteryInteractions = {
       shared: {
         scale: [1, 1.1, 1],
         boxShadow: [
-          "0 0 0 0 rgba(255, 215, 0, 0.4)",
-          "0 0 0 20px rgba(255, 215, 0, 0)",
-          "0 0 0 0 rgba(255, 215, 0, 0)"
+          "0 0 0 0 color-mix(in_srgb,var(--hive-brand-secondary)_40%,transparent)",
+          "0 0 0 5 transparent",
+          "0 0 0 0 transparent"
         ],
         transition: {
           duration: 0.6,

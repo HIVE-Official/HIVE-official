@@ -39,8 +39,21 @@ export default function OnboardingPage() {
 
         setIsAuthenticated(true);
         
-        // Check onboarding status
-        if (session.onboardingCompleted) {
+        // Check onboarding status with dev auth logic
+        const devAuth = window.localStorage.getItem('dev_auth_mode');
+        const onboardingCompleted = session.onboardingCompleted || 
+          (devAuth === 'true' && !!session.profileData?.fullName);
+          
+        console.log('🔍 Onboarding page auth check:', {
+          sessionOnboardingCompleted: session.onboardingCompleted,
+          sessionNeedsOnboarding: session.needsOnboarding,
+          devAuth,
+          hasProfileData: !!session.profileData?.fullName,
+          finalOnboardingCompleted: onboardingCompleted
+        });
+          
+        if (onboardingCompleted) {
+          console.log('🔄 Redirecting to dashboard');
           setOnboardingCompleted(true);
           router.push("/");
           return;

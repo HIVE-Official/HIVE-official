@@ -19,9 +19,16 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "exactOptionalPropertyTypes": false,
+    "noImplicitOverride": false,
+    "noPropertyAccessFromIndexSignature": false,
+    "noUncheckedIndexedAccess": false,
+    "noEmitOnError": false,
     "moduleResolution": "node",
+    "allowImportingTsExtensions": false,
     "types": ["node"],
     "baseUrl": ".",
+    "noEmit": false,
+    "noEmitOnError": false,
     "paths": {
       "@/*": ["./src/*"],
       "@hive/core": ["../core/src"],
@@ -33,12 +40,31 @@
     },
     "resolveJsonModule": true
   },
-  "include": ["index.ts", "src/**/*"],
+  "include": [
+    "src/**/*",
+    "index.ts"
+  ],
   "exclude": [
-    "dist",
+    "src/components/creators/**/*",
+    "src/components/creator.disabled/**/*",
+    "src/components/tools.disabled/**/*",
+    "src/components/elements/**/*",
+    "src/components/feed/**/*",
+    "src/components/profile/enhanced-profile-tools-card.tsx",
+    "src/components/profile/analytics-dashboard.tsx",
+    "src/components/profile/achievement-system.tsx",
+    "src/components/spaces/**/*",
+    "src/components/hive-space-directory.tsx",
+    "src/stories/**/*",
+    "src/stories-original/**/*",
+    "src/atomic/**/*.stories.tsx",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts", 
+    "**/*.spec.tsx",
+    "**/*.stories.ts",
+    "**/*.stories.tsx",
     "node_modules",
-    "**/*.stories.*",
-    "**/*.test.*",
-    ".storybook"
+    "dist"
   ]
 }

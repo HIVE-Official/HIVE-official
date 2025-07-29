@@ -1,11 +1,78 @@
 "use client";
 
+import { useState } from 'react';
 import { PageContainer, Button, Card } from '@hive/ui';
-import { Settings, User, Bell, Shield, Palette, Globe, Smartphone, LogOut } from 'lucide-react';
+import { Settings, User, Bell, Shield, Palette, Globe, Smartphone, LogOut, Download, Trash2 } from 'lucide-react';
 import { useSession } from '../../../hooks/use-session';
 
 export default function SettingsPage() {
   const { user, logout } = useSession();
+  const [isSaving, setIsSaving] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  
+  // Form state
+  const [formData, setFormData] = useState({
+    fullName: user?.fullName || '',
+    handle: user?.handle || '',
+    bio: ''
+  });
+
+  const handleSaveChanges = async () => {
+    setIsSaving(true);
+    try {
+      // Mock API call - in real app would update user profile
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      alert('Profile updated successfully!');
+    } catch (error) {
+      alert('Failed to update profile. Please try again.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleDownloadData = async () => {
+    setIsDownloading(true);
+    try {
+      // Mock data download - in real app would generate and download user data
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      // Create mock download
+      const userData = {
+        profile: user,
+        spaces: ['CS Study Group', 'Math Tutoring'],
+        tools: ['GPA Calculator', 'Study Planner'],
+        exportDate: new Date().toISOString()
+      };
+      
+      const blob = new Blob([JSON.stringify(userData, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `hive-data-${user?.handle || 'user'}-${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      
+      alert('Your data has been downloaded successfully!');
+    } catch (error) {
+      alert('Failed to download data. Please try again.');
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    try {
+      // Mock account deletion - in real app would delete user account
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      alert('Account deletion initiated. You will receive an email confirmation.');
+      setShowDeleteConfirm(false);
+    } catch (error) {
+      alert('Failed to delete account. Please try again.');
+    }
+  };
 
   return (
     <PageContainer
@@ -57,7 +124,8 @@ export default function SettingsPage() {
                   <label className="block text-sm font-medium text-white mb-2">Full Name</label>
                   <input 
                     type="text" 
-                    defaultValue={user?.fullName || ''}
+                    value={formData.fullName}
+                    onChange={(e) => setFormData(prev => ({ ...prev, fullName: e.target.value }))}
                     className="w-full px-3 py-2 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.12)] rounded-lg text-white placeholder:text-[#A1A1AA] focus:border-[#FFD700] focus:outline-none"
                   />
                 </div>
@@ -65,7 +133,8 @@ export default function SettingsPage() {
                   <label className="block text-sm font-medium text-white mb-2">Handle</label>
                   <input 
                     type="text" 
-                    defaultValue={user?.handle || ''}
+                    value={formData.handle}
+                    onChange={(e) => setFormData(prev => ({ ...prev, handle: e.target.value }))}
                     className="w-full px-3 py-2 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.12)] rounded-lg text-white placeholder:text-[#A1A1AA] focus:border-[#FFD700] focus:outline-none"
                   />
                 </div>
@@ -84,14 +153,20 @@ export default function SettingsPage() {
                 <label className="block text-sm font-medium text-white mb-2">Bio</label>
                 <textarea 
                   rows={3}
+                  value={formData.bio}
+                  onChange={(e) => setFormData(prev => ({ ...prev, bio: e.target.value }))}
                   className="w-full px-3 py-2 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.12)] rounded-lg text-white placeholder:text-[#A1A1AA] focus:border-[#FFD700] focus:outline-none"
                   placeholder="Tell others about yourself..."
                 />
               </div>
             </div>
             <div className="flex justify-end mt-6">
-              <Button className="bg-[#FFD700] text-[#0A0A0A] hover:bg-[#FFE255]">
-                Save Changes
+              <Button 
+                onClick={handleSaveChanges}
+                disabled={isSaving}
+                className="bg-[#FFD700] text-[#0A0A0A] hover:bg-[#FFE255] disabled:opacity-50"
+              >
+                {isSaving ? 'Saving...' : 'Save Changes'}
               </Button>
             </div>
           </Card>
@@ -149,10 +224,21 @@ export default function SettingsPage() {
             <div className="border-t border-[rgba(255,255,255,0.06)] pt-4 mt-6">
               <h4 className="text-white text-sm font-medium mb-4">Data Management</h4>
               <div className="flex flex-col sm:flex-row gap-3">
-                <Button variant="outline" className="border-[rgba(255,255,255,0.2)] text-white hover:bg-[rgba(255,255,255,0.1)]">
-                  Download My Data
+                <Button 
+                  variant="outline" 
+                  onClick={handleDownloadData}
+                  disabled={isDownloading}
+                  className="border-[rgba(255,255,255,0.2)] text-white hover:bg-[rgba(255,255,255,0.1)] disabled:opacity-50"
+                >
+                  <Download className="h-4 w-4 mr-2" />
+                  {isDownloading ? 'Downloading...' : 'Download My Data'}
                 </Button>
-                <Button variant="outline" className="border-red-500/20 text-red-400 hover:bg-red-500/10">
+                <Button 
+                  variant="outline" 
+                  onClick={() => setShowDeleteConfirm(true)}
+                  className="border-red-500/20 text-red-400 hover:bg-red-500/10"
+                >
+                  <Trash2 className="h-4 w-4 mr-2" />
                   Delete Account
                 </Button>
               </div>
@@ -178,6 +264,51 @@ export default function SettingsPage() {
           </Card>
         </div>
       </div>
+
+      {/* Delete Account Confirmation Modal */}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <Card className="p-6 w-full max-w-md mx-4 bg-[rgba(0,0,0,0.9)] border-red-500/30">
+            <div className="text-center space-y-4">
+              <div className="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto">
+                <Trash2 className="h-8 w-8 text-red-400" />
+              </div>
+              
+              <div>
+                <h3 className="text-lg font-semibold text-white mb-2">Delete Account</h3>
+                <p className="text-[#A1A1AA] text-sm">
+                  This action cannot be undone. This will permanently delete your account and remove all your data from HIVE.
+                </p>
+              </div>
+              
+              <div className="pt-4">
+                <p className="text-sm text-white mb-4">Type "DELETE" to confirm:</p>
+                <input 
+                  type="text" 
+                  placeholder="Type DELETE"
+                  className="w-full p-3 bg-[rgba(255,255,255,0.05)] border border-red-500/30 rounded-lg text-white placeholder:text-[#A1A1AA] focus:outline-none focus:border-red-500"
+                />
+              </div>
+              
+              <div className="flex gap-3 pt-4">
+                <Button
+                  variant="outline"
+                  onClick={() => setShowDeleteConfirm(false)}
+                  className="flex-1 border-[rgba(255,255,255,0.2)] text-white hover:bg-[rgba(255,255,255,0.1)]"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleDeleteAccount}
+                  className="flex-1 bg-red-500 text-white hover:bg-red-600"
+                >
+                  Delete Account
+                </Button>
+              </div>
+            </div>
+          </Card>
+        </div>
+      )}
     </PageContainer>
   );
 }

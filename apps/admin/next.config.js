@@ -10,6 +10,10 @@ const nextConfig = {
   trailingSlash: false,
   // Remove output: 'standalone' for now to avoid build issues
   transpilePackages: ['@hive/ui', '@hive/core', '@hive/hooks', '@hive/tokens'],
+  // Disable static optimization entirely to avoid Html import issues
+  experimental: {
+    forceSwcTransforms: true,
+  },
   webpack: (config) => {
     // Ensure proper handling of client-side modules
     config.resolve.fallback = {

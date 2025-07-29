@@ -87,8 +87,8 @@ const WCAG_COLORS = {
   aaa: {
     white: 'var(--hive-text-primary)',
     black: 'var(--hive-color-void)',
-    gold: '#8B6914', // Even darker gold
-    accent: '#003D6B', // Darker blue
+    gold: 'var(--hive-brand-secondary)', // Even darker gold
+    accent: 'var(--hive-status-info)', // Darker blue
   }
 };
 
@@ -106,9 +106,9 @@ const accessibilityVariants = cva(
   {
     variants: {
       variant: {
-        primary: "text-white",
+        primary: "text-[var(--hive-text-primary)]",
         gold: "text-[var(--hive-color-bronze)]", // WCAG AA compliant gold
-        inverted: "text-black",
+        inverted: "text-[var(--hive-background-primary)]",
         monochrome: "text-current",
       },
       size: {
@@ -127,8 +127,8 @@ const accessibilityVariants = cva(
         maximum: "contrast-200 brightness-125",
       },
       focusRing: {
-        default: "focus:ring-2 focus:ring-[var(--hive-color-gold)] focus:ring-offset-2 focus:ring-offset-[#0A0A0B]",
-        enhanced: "focus:ring-4 focus:ring-[var(--hive-color-gold)] focus:ring-offset-4 focus:ring-offset-[#0A0A0B] focus:shadow-lg",
+        default: "focus:ring-2 focus:ring-[var(--hive-color-gold)] focus:ring-offset-2 focus:ring-offset-[var(--hive-background-primary)]",
+        enhanced: "focus:ring-4 focus:ring-[var(--hive-color-gold)] focus:ring-offset-4 focus:ring-offset-[var(--hive-background-primary)] focus:shadow-lg",
         custom: "focus:ring-2 focus:ring-blue-500 focus:ring-offset-2",
       },
       touchTarget: {
@@ -470,8 +470,8 @@ export const HiveSkipLink: React.FC<{
       href={href}
       className={cn(
         "sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50",
-        "px-4 py-2 bg-[var(--hive-color-gold)] text-black font-semibold rounded-lg",
-        "focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[var(--hive-color-gold)]",
+        "px-4 py-2 bg-transparent border border-[var(--hive-brand-secondary)] text-[var(--hive-brand-secondary)] font-semibold rounded-lg",
+        "focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[var(--hive-brand-secondary)]",
         className
       )}
     >
@@ -495,7 +495,7 @@ export const HiveLogoAccessibilityTest: React.FC<{
     // Run accessibility tests
     const runTests = () => {
       // Color contrast test
-      const contrastRatio = calculateContrastRatio('var(--hive-text-primary)', '#0A0A0B');
+      const contrastRatio = calculateContrastRatio('var(--hive-text-primary)', 'var(--hive-background-primary)');
       
       // Keyboard accessibility test
       const keyboardAccessible = checkKeyboardAccessibility();
@@ -539,12 +539,12 @@ export const HiveLogoAccessibilityTest: React.FC<{
   };
   
   return (
-    <div className={cn("p-6 bg-black/20 rounded-xl space-y-4", className)}>
-      <h3 className="text-lg font-bold text-white">Accessibility Test Results</h3>
+    <div className={cn("p-6 bg-[var(--hive-background-primary)]/20 rounded-xl space-y-4", className)}>
+      <h3 className="text-lg font-bold text-[var(--hive-text-primary)]">Accessibility Test Results</h3>
       
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <span className="text-white/70">Contrast Ratio:</span>
+          <span className="text-[var(--hive-text-primary)]/70">Contrast Ratio:</span>
           <span className={cn(
             "font-semibold",
             testResults.contrastRatio >= 4.5 ? "text-green-400" : "text-red-400"
@@ -554,7 +554,7 @@ export const HiveLogoAccessibilityTest: React.FC<{
         </div>
         
         <div className="flex items-center justify-between">
-          <span className="text-white/70">Keyboard Accessible:</span>
+          <span className="text-[var(--hive-text-primary)]/70">Keyboard Accessible:</span>
           <span className={cn(
             "font-semibold",
             testResults.keyboardAccessible ? "text-green-400" : "text-red-400"
@@ -564,7 +564,7 @@ export const HiveLogoAccessibilityTest: React.FC<{
         </div>
         
         <div className="flex items-center justify-between">
-          <span className="text-white/70">Screen Reader Support:</span>
+          <span className="text-[var(--hive-text-primary)]/70">Screen Reader Support:</span>
           <span className={cn(
             "font-semibold",
             testResults.screenReaderFriendly ? "text-green-400" : "text-red-400"
@@ -574,7 +574,7 @@ export const HiveLogoAccessibilityTest: React.FC<{
         </div>
         
         <div className="flex items-center justify-between">
-          <span className="text-white/70">Touch Target Size:</span>
+          <span className="text-[var(--hive-text-primary)]/70">Touch Target Size:</span>
           <span className={cn(
             "font-semibold",
             testResults.touchTargetSize >= 44 ? "text-green-400" : "text-red-400"

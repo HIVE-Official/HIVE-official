@@ -14,8 +14,8 @@ export const ProfileStats: React.FC<ProfileStatsProps> = ({
   if (isLoading) {
     return (
       <HiveCard className="p-6">
-        <div className="flex items-center justify-center py-8">
-          <Loader2 className="h-6 w-6 animate-spin text-hive-gold" />
+        <div className="flex items-center justify-center py-4">
+          <Loader2 className="h-6 w-6 animate-spin text-[var(--hive-brand-secondary)]" />
         </div>
       </HiveCard>
     );
@@ -54,7 +54,7 @@ export const ProfileStats: React.FC<ProfileStatsProps> = ({
       label: 'Day Streak',
       value: stats.streakDays,
       subValue: 'Keep it up!',
-      color: 'text-hive-gold',
+      color: 'text-[var(--hive-brand-secondary)]',
       bgColor: 'from-hive-gold/20 to-yellow-400/20',
       borderColor: 'border-hive-gold/30'
     },
@@ -72,8 +72,8 @@ export const ProfileStats: React.FC<ProfileStatsProps> = ({
   return (
     <HiveCard className="p-6">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-semibold text-white flex items-center gap-2">
-          <TrendingUp className="h-5 w-5 text-hive-gold" />
+        <h2 className="text-xl font-semibold text-[var(--hive-text-primary)] flex items-center gap-2">
+          <TrendingUp className="h-5 w-5 text-[var(--hive-brand-secondary)]" />
           Your Stats
         </h2>
         <HiveButton variant="outline" size="sm">
@@ -88,11 +88,11 @@ export const ProfileStats: React.FC<ProfileStatsProps> = ({
             key={stat.label}
             className={`bg-gradient-to-r ${stat.bgColor} border ${stat.borderColor} rounded-lg p-4 text-center hover:border-opacity-60 transition-all`}
           >
-            <div className={`w-12 h-12 bg-white/10 rounded-lg flex items-center justify-center mx-auto mb-3 ${stat.color}`}>
+            <div className={`w-12 h-12 bg-[var(--hive-text-primary)]/10 rounded-lg flex items-center justify-center mx-auto mb-3 ${stat.color}`}>
               {stat.icon}
             </div>
             
-            <div className="text-2xl font-bold text-white mb-1">
+            <div className="text-2xl font-bold text-[var(--hive-text-primary)] mb-1">
               {stat.value}
             </div>
             
@@ -109,16 +109,16 @@ export const ProfileStats: React.FC<ProfileStatsProps> = ({
 
       {/* Achievements */}
       <div className="mt-8 pt-6 border-t border-hive-border-secondary">
-        <h3 className="text-lg font-medium text-white mb-4">Recent Achievements</h3>
+        <h3 className="text-lg font-medium text-[var(--hive-text-primary)] mb-4">Recent Achievements</h3>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {stats.streakDays >= 7 && (
-            <div className="flex items-center gap-3 p-3 bg-hive-gold/10 rounded-lg border border-hive-gold/20">
-              <div className="w-10 h-10 bg-hive-gold/20 rounded-lg flex items-center justify-center">
-                <Zap className="h-5 w-5 text-hive-gold" />
+            <div className="flex items-center gap-3 p-3 bg-[var(--hive-brand-secondary)]/10 rounded-lg border border-hive-gold/20">
+              <div className="w-10 h-10 bg-[var(--hive-brand-secondary)]/20 rounded-lg flex items-center justify-center">
+                <Zap className="h-5 w-5 text-[var(--hive-brand-secondary)]" />
               </div>
               <div>
-                <div className="font-medium text-white">Week Warrior</div>
+                <div className="font-medium text-[var(--hive-text-primary)]">Week Warrior</div>
                 <div className="text-sm text-gray-400">7+ day activity streak</div>
               </div>
             </div>
@@ -130,7 +130,7 @@ export const ProfileStats: React.FC<ProfileStatsProps> = ({
                 <Users className="h-5 w-5 text-blue-400" />
               </div>
               <div>
-                <div className="font-medium text-white">Community Explorer</div>
+                <div className="font-medium text-[var(--hive-text-primary)]">Community Explorer</div>
                 <div className="text-sm text-gray-400">Joined 5+ spaces</div>
               </div>
             </div>
@@ -142,7 +142,7 @@ export const ProfileStats: React.FC<ProfileStatsProps> = ({
                 <Wrench className="h-5 w-5 text-purple-400" />
               </div>
               <div>
-                <div className="font-medium text-white">Tool Creator</div>
+                <div className="font-medium text-[var(--hive-text-primary)]">Tool Creator</div>
                 <div className="text-sm text-gray-400">Built your first tool</div>
               </div>
             </div>
@@ -154,7 +154,7 @@ export const ProfileStats: React.FC<ProfileStatsProps> = ({
                 <Users className="h-5 w-5 text-green-400" />
               </div>
               <div>
-                <div className="font-medium text-white">Super Connector</div>
+                <div className="font-medium text-[var(--hive-text-primary)]">Super Connector</div>
                 <div className="text-sm text-gray-400">50+ campus connections</div>
               </div>
             </div>
@@ -165,17 +165,17 @@ export const ProfileStats: React.FC<ProfileStatsProps> = ({
       {/* Progress Insights */}
       <div className="mt-6 p-4 bg-gradient-to-r from-hive-gold/10 to-yellow-400/10 rounded-lg border border-hive-gold/20">
         <div className="flex items-center gap-2 mb-2">
-          <Activity className="h-4 w-4 text-hive-gold" />
-          <span className="text-sm font-medium text-white">Activity Insights</span>
+          <Activity className="h-4 w-4 text-[var(--hive-brand-secondary)]" />
+          <span className="text-sm font-medium text-[var(--hive-text-primary)]">Activity Insights</span>
         </div>
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div>
             <div className="text-gray-400">Most Active</div>
-            <div className="text-white">Weekday afternoons</div>
+            <div className="text-[var(--hive-text-primary)]">Weekday afternoons</div>
           </div>
           <div>
             <div className="text-gray-400">Best Streak</div>
-            <div className="text-white">{Math.max(stats.streakDays, 12)} days</div>
+            <div className="text-[var(--hive-text-primary)]">{Math.max(stats.streakDays, 12)} days</div>
           </div>
         </div>
       </div>

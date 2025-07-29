@@ -20,6 +20,14 @@ export declare const colors: {
     readonly citrine: "#F59E0B";
     readonly black: "#0A0A0B";
     readonly white: "#E5E5E7";
+    readonly textMutedLight: "#A1A1AA";
+    readonly textMutedDark: "#71717A";
+    readonly backgroundOverlayLight: "rgba(255, 255, 255, 0.02)";
+    readonly backgroundOverlayMedium: "rgba(255, 255, 255, 0.05)";
+    readonly borderSubtle: "rgba(255, 255, 255, 0.06)";
+    readonly borderInteractive: "rgba(255, 255, 255, 0.1)";
+    readonly goldAccent: "#FFD700";
+    readonly goldHover: "#FFE255";
     readonly gray: {
         readonly 50: "#4A4A4F";
         readonly 100: "#6B6B70";
@@ -103,6 +111,9 @@ export declare const semantic: {
         readonly muted: "#9B9B9F";
         readonly disabled: "#6B6B70";
         readonly inverse: "#0A0A0B";
+        readonly mutedLight: "#A1A1AA";
+        readonly mutedDark: "#71717A";
+        readonly subtle: "#3F3F46";
     };
     readonly brand: {
         readonly primary: "#FFD700";
@@ -128,8 +139,11 @@ export declare const semantic: {
         readonly subtle: "rgba(255, 255, 255, 0.05)";
         readonly focus: "rgba(255, 215, 0, 0.2)";
         readonly error: "#EF4444";
+        readonly muted: "#3F3F46";
+        readonly interactive: "#A1A1AA";
     };
 };
+export * from './colors-prd-aligned';
 export type ColorToken = keyof typeof colors;
 export type SemanticToken = keyof typeof semantic;
 export type GradientToken = keyof typeof gradients;

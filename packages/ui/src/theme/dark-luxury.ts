@@ -4,83 +4,83 @@
 // Core Dark Luxury Palette
 export const darkLuxury = {
   // Rich Blacks - Multiple depths
-  void: '#000000',           // Pure void
-  obsidian: '#0A0A0B',      // Main background - rich black
-  charcoal: '#111113',      // Card backgrounds
-  graphite: '#1A1A1C',      // Elevated surfaces
-  slate: '#222225',         // Interactive elements
-  steel: '#2A2A2D',         // Borders and dividers
+  void: 'var(--hive-background-primary)',           // Pure void
+  obsidian: 'var(--hive-background-primary)',      // Main background - rich black
+  charcoal: 'var(--hive-background-secondary)',      // Card backgrounds
+  graphite: 'var(--hive-background-tertiary)',      // Elevated surfaces
+  slate: 'var(--hive-background-interactive)',         // Interactive elements
+  steel: 'var(--hive-border-default)',         // Borders and dividers
   
   // Luxury Grays - Sophisticated neutrals
-  platinum: '#E5E5E7',      // Primary text
-  silver: '#C1C1C4',        // Secondary text
-  mercury: '#9B9B9F',       // Muted text
-  pewter: '#6B6B70',        // Disabled text
-  smoke: '#4A4A4F',         // Subtle elements
+  platinum: 'var(--hive-text-primary)',      // Primary text
+  silver: 'var(--hive-text-secondary)',        // Secondary text
+  mercury: 'var(--hive-text-tertiary)',       // Muted text
+  pewter: 'var(--hive-text-disabled)',        // Disabled text
+  smoke: 'var(--hive-text-disabled)',         // Subtle elements
   
   // Accent Gold - Premium highlights
-  gold: '#FFD700',          // Primary accent
-  champagne: '#F7E98E',     // Lighter gold
-  amber: '#FFA500',         // Warning states
-  bronze: '#CD7F32',        // Muted accent
+  gold: 'var(--hive-brand-secondary)',          // Primary accent
+  champagne: 'var(--hive-brand-secondary)',     // Lighter gold
+  amber: 'var(--hive-status-warning)',         // Warning states
+  bronze: 'var(--hive-brand-secondary)',        // Muted accent
   
   // Status Colors - Refined versions
-  emerald: '#10B981',       // Success
-  ruby: '#EF4444',          // Error
-  sapphire: '#3B82F6',      // Info
-  citrine: '#F59E0B',       // Warning
+  emerald: 'var(--hive-status-success)',       // Success
+  ruby: 'var(--hive-status-error)',          // Error
+  sapphire: 'var(--hive-status-info)',      // Info
+  citrine: 'var(--hive-status-warning)',       // Warning
   
   // Transparent Overlays
-  goldGlow: 'rgba(255, 215, 0, 0.15)',
-  shadowDeep: 'rgba(0, 0, 0, 0.4)',
-  shadowSoft: 'rgba(0, 0, 0, 0.2)',
-  glassMatte: 'rgba(255, 255, 255, 0.05)',
-  glassShine: 'rgba(255, 255, 255, 0.1)',
+  goldGlow: 'color-mix(in_srgb,var(--hive-brand-secondary)_15%,transparent)',
+  shadowDeep: 'color-mix(in_srgb,var(--hive-background-primary)_40%,transparent)',
+  shadowSoft: 'color-mix(in_srgb,var(--hive-background-primary)_20%,transparent)',
+  glassMatte: 'var(--hive-interactive-hover)',
+  glassShine: 'var(--hive-interactive-active)',
 } as const;
 
 // Luxury Gradients - Subtle sophistication
 export const luxuryGradients = {
   // Background gradients
-  midnight: 'linear-gradient(135deg, #0A0A0B 0%, #111113 100%)',
-  obsidian: 'linear-gradient(180deg, #0A0A0B 0%, #1A1A1C 100%)',
-  charcoal: 'linear-gradient(45deg, #111113 0%, #222225 100%)',
+  midnight: 'linear-gradient(135deg, var(--hive-background-primary) 0%, var(--hive-background-secondary) 100%)',
+  obsidian: 'linear-gradient(180deg, var(--hive-background-primary) 0%, var(--hive-background-tertiary) 100%)',
+  charcoal: 'linear-gradient(45deg, var(--hive-background-secondary) 0%, var(--hive-background-interactive) 100%)',
   
   // Interactive gradients
-  goldShimmer: 'linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.1), transparent)',
-  silverSheen: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent)',
+  goldShimmer: 'linear-gradient(90deg, transparent, color-mix(in_srgb,var(--hive-brand-secondary)_10%,transparent), transparent)',
+  silverSheen: 'linear-gradient(90deg, transparent, var(--hive-interactive-hover), transparent)',
   
   // Glass morphism
-  glassDark: 'linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05))',
-  glassGold: 'linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05))',
+  glassDark: 'linear-gradient(135deg, var(--hive-interactive-active), var(--hive-interactive-hover))',
+  glassGold: 'linear-gradient(135deg, color-mix(in_srgb,var(--hive-brand-secondary)_10%,transparent), color-mix(in_srgb,var(--hive-brand-secondary)_5%,transparent))',
   
   // Depth gradients
-  surfaceElevated: 'linear-gradient(180deg, #1A1A1C 0%, #222225 100%)',
-  surfacePressed: 'linear-gradient(180deg, #111113 0%, #0A0A0B 100%)',
+  surfaceElevated: 'linear-gradient(180deg, var(--hive-background-tertiary) 0%, var(--hive-background-interactive) 100%)',
+  surfacePressed: 'linear-gradient(180deg, var(--hive-background-secondary) 0%, var(--hive-background-primary) 100%)',
 } as const;
 
 // Shadow System - Layered depth
 export const luxuryShadows = {
   // Elevation shadows
-  level1: '0 1px 3px rgba(0, 0, 0, 0.3)',
-  level2: '0 4px 6px rgba(0, 0, 0, 0.3)',
-  level3: '0 8px 15px rgba(0, 0, 0, 0.3)',
-  level4: '0 12px 25px rgba(0, 0, 0, 0.4)',
-  level5: '0 20px 40px rgba(0, 0, 0, 0.5)',
+  level1: '0 1px 3px color-mix(in_srgb,var(--hive-background-primary)_30%,transparent)',
+  level2: '0 1 1.5 color-mix(in_srgb,var(--hive-background-primary)_30%,transparent)',
+  level3: '0 2 15px color-mix(in_srgb,var(--hive-background-primary)_30%,transparent)',
+  level4: '0 3 6 color-mix(in_srgb,var(--hive-background-primary)_40%,transparent)',
+  level5: '0 5 10 color-mix(in_srgb,var(--hive-background-primary)_50%,transparent)',
   
   // Interactive shadows
-  hover: '0 8px 25px rgba(0, 0, 0, 0.3)',
-  active: '0 4px 12px rgba(0, 0, 0, 0.4)',
-  focus: '0 0 0 2px rgba(255, 215, 0, 0.3)',
+  hover: '0 2 6 color-mix(in_srgb,var(--hive-background-primary)_30%,transparent)',
+  active: '0 1 3 color-mix(in_srgb,var(--hive-background-primary)_40%,transparent)',
+  focus: '0 0 0 0.5 color-mix(in_srgb,var(--hive-brand-secondary)_30%,transparent)',
   
   // Glow effects
-  goldGlow: '0 0 20px rgba(255, 215, 0, 0.3)',
-  goldGlowStrong: '0 0 30px rgba(255, 215, 0, 0.4)',
-  emeraldGlow: '0 0 20px rgba(16, 185, 129, 0.3)',
-  rubyGlow: '0 0 20px rgba(239, 68, 68, 0.3)',
+  goldGlow: '0 0 5 color-mix(in_srgb,var(--hive-brand-secondary)_30%,transparent)',
+  goldGlowStrong: '0 0 30px color-mix(in_srgb,var(--hive-brand-secondary)_40%,transparent)',
+  emeraldGlow: '0 0 5 color-mix(in_srgb,var(--hive-status-success)_30%,transparent)',
+  rubyGlow: '0 0 5 color-mix(in_srgb,var(--hive-status-error)_30%,transparent)',
   
   // Inner shadows
-  insetDeep: 'inset 0 2px 4px rgba(0, 0, 0, 0.3)',
-  insetSoft: 'inset 0 1px 2px rgba(0, 0, 0, 0.2)',
+  insetDeep: 'inset 0 0.5 1 color-mix(in_srgb,var(--hive-background-primary)_30%,transparent)',
+  insetSoft: 'inset 0 1px 0.5 color-mix(in_srgb,var(--hive-background-primary)_20%,transparent)',
 } as const;
 
 // Z-Index Scale - Spatial hierarchy
@@ -98,28 +98,28 @@ export const luxuryDepth = {
 
 // Border Radius Scale - Soft brutalism
 export const luxuryRadius = {
-  none: '0px',
-  subtle: '2px',
-  soft: '4px',
-  medium: '8px',
-  large: '12px',
-  xl: '16px',
-  pill: '9999px',
+  none: '0',
+  subtle: '0.5',
+  soft: '1',
+  medium: '2',
+  large: '3',
+  xl: '4',
+  pill: 'full',
   circle: '50%',
 } as const;
 
 // Spacing Scale - Refined proportions
 export const luxurySpacing = {
-  xs: '4px',
-  sm: '8px',
-  md: '12px',
-  lg: '16px',
-  xl: '20px',
-  '2xl': '24px',
-  '3xl': '32px',
-  '4xl': '40px',
-  '5xl': '48px',
-  '6xl': '64px',
+  xs: '1',
+  sm: '2',
+  md: '3',
+  lg: '4',
+  xl: '5',
+  '2xl': '6',
+  '3xl': '8',
+  '4xl': '10',
+  '5xl': '12',
+  '6xl': '16',
 } as const;
 
 // Typography Scale - Premium hierarchy
@@ -135,16 +135,16 @@ export const luxuryTypography = {
   
   // Font sizes - Fluid scale
   sizes: {
-    xs: '12px',
-    sm: '14px',
-    base: '16px',
-    lg: '18px',
-    xl: '20px',
-    '2xl': '24px',
-    '3xl': '30px',
-    '4xl': '36px',
-    '5xl': '48px',
-    '6xl': '60px',
+    xs: 'text-xs',
+    sm: 'text-sm',
+    base: 'text-base',
+    lg: 'text-lg',
+    xl: 'text-xl',
+    '2xl': 'text-2xl',
+    '3xl': 'text-3xl',
+    '4xl': 'text-4xl',
+    '5xl': 'text-5xl',
+    '6xl': 'text-6xl',
   },
   
   // Line heights
@@ -168,23 +168,23 @@ export const luxuryTypography = {
 export const glassEffects = {
   // Background blur for glass elements
   backdrop: {
-    backdropFilter: 'blur(12px) saturate(180%)',
+    backdropFilter: 'blur(3) saturate(180%)',
     backgroundColor: darkLuxury.glassMatte,
     border: `1px solid ${darkLuxury.glassShine}`,
   },
   
   // Frosted glass
   frosted: {
-    backdropFilter: 'blur(8px)',
-    backgroundColor: 'rgba(255, 255, 255, 0.03)',
-    border: `1px solid rgba(255, 255, 255, 0.08)`,
+    backdropFilter: 'blur(2)',
+    backgroundColor: 'color-mix(in_srgb,var(--hive-interactive-hover)_60%,transparent)',
+    border: `1px solid color-mix(in_srgb,var(--hive-interactive-active)_80%,transparent)`,
   },
   
   // Premium glass with gold tint
   goldGlass: {
-    backdropFilter: 'blur(12px) saturate(180%)',
+    backdropFilter: 'blur(3) saturate(180%)',
     backgroundColor: darkLuxury.goldGlow,
-    border: `1px solid rgba(255, 215, 0, 0.2)`,
+    border: `1px solid color-mix(in_srgb,var(--hive-brand-secondary)_20%,transparent)`,
   },
 } as const;
 
@@ -237,7 +237,7 @@ export const luxuryComponents = {
 
 // Utility functions
 export const withLuxuryGlow = (color: string, intensity: number = 0.3) => 
-  `0 0 20px ${color.replace(')', `, ${intensity})`)}`;
+  `0 0 5 ${color.replace(')', `, ${intensity})`)}`;
 
 export const createLuxuryGradient = (from: string, to: string, direction: number = 135) =>
   `linear-gradient(${direction}deg, ${from} 0%, ${to} 100%)`;

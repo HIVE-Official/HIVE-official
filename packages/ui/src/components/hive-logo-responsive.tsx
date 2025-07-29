@@ -25,11 +25,11 @@ const responsiveVariants = cva(
         icon: "justify-center",
       },
       theme: {
-        light: "text-black",
-        dark: "text-white",
+        light: "text-[var(--hive-background-primary)]",
+        dark: "text-[var(--hive-text-primary)]",
         auto: "text-current",
         gold: "text-[var(--hive-color-gold)]",
-        brand: "text-white",
+        brand: "text-[var(--hive-text-primary)]",
       }
     },
     defaultVariants: {
@@ -216,8 +216,8 @@ export const HiveLogofavicon = ({
   const contextColors = {
     default: "currentColor",
     notification: "var(--hive-color-gold)",
-    activity: "#00FF88",
-    error: "#FF4444",
+    activity: "var(--hive-status-success)",
+    error: "var(--hive-status-error)",
   };
 
   const shouldPulse = context !== "default";
@@ -355,8 +355,8 @@ export const HiveLogoLoading = ({
 
       {/* Progress text */}
       <div className="text-center">
-        <div className="text-white font-medium">{message}</div>
-        <div className="text-white/60 text-sm">{Math.round(progress)}%</div>
+        <div className="text-[var(--hive-text-primary)] font-medium">{message}</div>
+        <div className="text-[var(--hive-text-primary)]/60 text-sm">{Math.round(progress)}%</div>
       </div>
     </motion.div>
   );
@@ -374,10 +374,10 @@ export const HiveLogoUserStatus = ({
   showStatus?: boolean;
 }) => {
   const statusColors = {
-    online: "#00FF88",
+    online: "var(--hive-status-success)",
     away: "var(--hive-color-gold)", 
-    busy: "#FF4444",
-    offline: "#666666",
+    busy: "var(--hive-status-error)",
+    offline: "var(--hive-text-disabled)",
   };
 
   const statusAnimation = {
@@ -397,7 +397,7 @@ export const HiveLogoUserStatus = ({
       
       {showStatus && (
         <motion.div
-          className="absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-[#0A0A0B]"
+          className="absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-[var(--hive-background-primary)]"
           style={{ backgroundColor: statusColors[status] }}
           animate={statusAnimation[status]}
           transition={{ 
@@ -422,9 +422,9 @@ export const HiveLogoApp = ({
   const sectionColors = {
     dashboard: "var(--hive-text-primary)",
     spaces: "var(--hive-color-gold)", 
-    profile: "#00FFFF",
-    settings: "#FF6B35",
-    tools: "#9400D3",
+    profile: "var(--hive-status-info)",
+    settings: "var(--hive-status-warning)",
+    tools: "var(--hive-brand-secondary)",
   };
 
   const sectionEffects = {

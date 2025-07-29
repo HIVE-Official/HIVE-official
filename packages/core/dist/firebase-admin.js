@@ -33,7 +33,7 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.environmentInfo = exports.isFirebaseConfigured = exports.auth = exports.db = exports.authAdmin = exports.dbAdmin = void 0;
+exports.environmentInfo = exports.getAuthAdmin = exports.getFirestoreAdmin = exports.isFirebaseConfigured = exports.auth = exports.db = exports.authAdmin = exports.dbAdmin = void 0;
 const admin = __importStar(require("firebase-admin"));
 // Environment detection
 function getCurrentEnvironment() {
@@ -150,6 +150,11 @@ catch (error) {
 exports.db = dbAdmin;
 exports.auth = authAdmin;
 exports.isFirebaseConfigured = firebaseInitialized;
+// Function exports for compatibility
+const getFirestoreAdmin = () => dbAdmin;
+exports.getFirestoreAdmin = getFirestoreAdmin;
+const getAuthAdmin = () => authAdmin;
+exports.getAuthAdmin = getAuthAdmin;
 // Environment info for debugging
 exports.environmentInfo = {
     environment: currentEnvironment,

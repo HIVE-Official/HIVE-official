@@ -105,10 +105,10 @@ export const responsiveLayoutConfigs: Record<DeviceType, ResponsiveLayoutConfig>
     },
     content: {
       maxWidth: '100%',
-      padding: '16px',
+      padding: '4px',
       columns: 1,
       gridGap: '16px',
-      cardSpacing: '12px'
+      cardSpacing: '3'
     },
     feed: {
       itemsPerPage: 10,
@@ -143,7 +143,7 @@ export const responsiveLayoutConfigs: Record<DeviceType, ResponsiveLayoutConfig>
     },
     content: {
       maxWidth: '100%',
-      padding: '24px',
+      padding: '6px',
       columns: 2,
       gridGap: '24px',
       cardSpacing: '16px'
@@ -181,10 +181,10 @@ export const responsiveLayoutConfigs: Record<DeviceType, ResponsiveLayoutConfig>
     },
     content: {
       maxWidth: '1200px',
-      padding: '32px',
+      padding: '8px',
       columns: 3,
       gridGap: '32px',
-      cardSpacing: '20px'
+      cardSpacing: '5'
     },
     feed: {
       itemsPerPage: 20,
@@ -219,9 +219,9 @@ export const responsiveLayoutConfigs: Record<DeviceType, ResponsiveLayoutConfig>
     },
     content: {
       maxWidth: '1440px',
-      padding: '40px',
+      padding: '10',
       columns: 4,
-      gridGap: '40px',
+      gridGap: '10',
       cardSpacing: '24px'
     },
     feed: {
@@ -538,7 +538,7 @@ export function MobileBottomTabs({ tabs, onTabClick, className }: MobileBottomTa
               <div className="relative mb-1">
                 <Icon className="w-5 h-5" />
                 {tab.badge && tab.badge > 0 && (
-                  <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
+                  <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-[var(--hive-text-primary)] text-xs rounded-full flex items-center justify-center">
                     {tab.badge > 9 ? '9+' : tab.badge}
                   </div>
                 )}
@@ -596,7 +596,8 @@ export function generateResponsiveClasses(
 ): string {
   const classes = [baseClass];
   
-  Object.entries(variants).forEach(([breakpoint, variant]) => {
+  if (variants) {
+    Object.entries(variants).forEach(([breakpoint, variant]) => {
     switch (breakpoint as DeviceType) {
       case 'mobile':
         classes.push(`max-md:${variant}`);
@@ -611,7 +612,8 @@ export function generateResponsiveClasses(
         classes.push(`xl:${variant}`);
         break;
     }
-  });
+    });
+  }
   
   return classes.join(' ');
 }

@@ -146,21 +146,21 @@ function DefaultErrorFallback({
   };
 
   return (
-    <div className="min-h-[200px] flex items-center justify-center p-4">
-      <div className="max-w-md w-full bg-black/20 backdrop-blur-xl border border-red-500/20 rounded-xl p-6 text-center space-y-4">
+    <div className="min-h-50 flex items-center justify-center p-4">
+      <div className="max-w-md w-full bg-[var(--hive-background-primary)]/20 backdrop-blur-xl border border-red-500/20 rounded-xl p-6 text-center space-y-4">
         <div className="mx-auto w-16 h-16 bg-red-500/20 backdrop-blur-xl rounded-full flex items-center justify-center border border-red-500/30 mb-4">
           <span className="text-2xl">{getIconForSeverity(error.severity)}</span>
         </div>
 
-        <h3 className="text-lg font-semibold text-white">Something went wrong</h3>
+        <h3 className="text-lg font-semibold text-[var(--hive-text-primary)]">Something went wrong</h3>
 
-        <p className="text-sm leading-relaxed text-white/70">{error.message}</p>
+        <p className="text-sm leading-relaxed text-[var(--hive-text-primary)]/70">{error.message}</p>
 
         <div className="space-y-2 pt-2">
           {error.action === "retry" && error.isRetryable && (
             <button
               onClick={onRetry}
-              className="w-full px-4 py-2 bg-red-500/20 border border-red-500/30 rounded-lg hover:bg-red-500/30 transition-colors font-medium text-white"
+              className="w-full px-4 py-2 bg-red-500/20 border border-red-500/30 rounded-lg hover:bg-red-500/30 transition-colors font-medium text-[var(--hive-text-primary)]"
             >
               {SimpleErrorHandler.getActionButtonText(error)}
             </button>
@@ -174,7 +174,7 @@ function DefaultErrorFallback({
                   errorCode: error.code,
                 });
               }}
-              className="w-full px-4 py-2 bg-red-500/20 border border-red-500/30 rounded-lg hover:bg-red-500/30 transition-colors font-medium text-white"
+              className="w-full px-4 py-2 bg-red-500/20 border border-red-500/30 rounded-lg hover:bg-red-500/30 transition-colors font-medium text-[var(--hive-text-primary)]"
             >
               {SimpleErrorHandler.getActionButtonText(error)}
             </button>
@@ -185,7 +185,7 @@ function DefaultErrorFallback({
               onClick={() => {
                 window.location.href = "/schools";
               }}
-              className="w-full px-4 py-2 bg-red-500/20 border border-red-500/30 rounded-lg hover:bg-red-500/30 transition-colors font-medium text-white"
+              className="w-full px-4 py-2 bg-red-500/20 border border-red-500/30 rounded-lg hover:bg-red-500/30 transition-colors font-medium text-[var(--hive-text-primary)]"
             >
               {SimpleErrorHandler.getActionButtonText(error)}
             </button>
@@ -196,7 +196,7 @@ function DefaultErrorFallback({
               onClick={() => {
                 window.location.href = "/schools";
               }}
-              className="w-full px-4 py-2 bg-red-500/20 border border-red-500/30 rounded-lg hover:bg-red-500/30 transition-colors font-medium text-white"
+              className="w-full px-4 py-2 bg-red-500/20 border border-red-500/30 rounded-lg hover:bg-red-500/30 transition-colors font-medium text-[var(--hive-text-primary)]"
             >
               {SimpleErrorHandler.getActionButtonText(error)}
             </button>
@@ -204,10 +204,10 @@ function DefaultErrorFallback({
 
           {error.action === "check-email" && (
             <div className="text-xs space-y-2">
-              <p className="text-white/60">Please check your email and click the verification link.</p>
+              <p className="text-[var(--hive-text-primary)]/60">Please check your email and click the verification link.</p>
               <button
                 onClick={onRetry}
-                className="w-full px-4 py-2 bg-red-500/20 border border-red-500/30 rounded-lg hover:bg-red-500/30 transition-colors font-medium text-white"
+                className="w-full px-4 py-2 bg-red-500/20 border border-red-500/30 rounded-lg hover:bg-red-500/30 transition-colors font-medium text-[var(--hive-text-primary)]"
               >
                 I've verified my email
               </button>
@@ -217,8 +217,8 @@ function DefaultErrorFallback({
 
         {process.env.NODE_ENV === "development" && (
           <details className="text-xs text-left">
-            <summary className="cursor-pointer font-medium text-white/80">Debug Info</summary>
-            <div className="mt-2 p-2 bg-black/40 rounded border border-white/10 font-mono text-white/60">
+            <summary className="cursor-pointer font-medium text-[var(--hive-text-primary)]/80">Debug Info</summary>
+            <div className="mt-2 p-2 bg-[var(--hive-background-primary)]/40 rounded border border-white/10 font-mono text-[var(--hive-text-primary)]/60">
               <div>Error ID: {errorId}</div>
               <div>Code: {error.code}</div>
               <div>Retryable: {error.isRetryable ? "Yes" : "No"}</div>

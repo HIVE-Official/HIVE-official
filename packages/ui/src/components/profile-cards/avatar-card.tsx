@@ -51,7 +51,7 @@ const badgeVariants = {
   builder: {
     icon: Trophy,
     label: 'Builder',
-    color: 'bg-hive-gold/20 text-hive-gold border-hive-gold/30',
+    color: 'bg-[var(--hive-brand-secondary)]/20 text-[var(--hive-brand-secondary)] border-hive-gold/30',
   },
   verified: {
     icon: Shield,
@@ -101,17 +101,23 @@ export const AvatarCard: React.FC<AvatarCardProps> = ({
   };
 
   return (
-    <HiveCard className={cn('h-full flex flex-col', className)}>
+    <HiveCard 
+      variant={user.isBuilder ? "gold-featured" : "elevated"}
+      magneticHover={true}
+      magneticIntensity="medium"
+      interactive={true}
+      className={cn('h-full flex flex-col', className)}
+    >
       <div className="p-6 flex-1">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-lg font-semibold text-white">Your Profile</h2>
+          <h2 className="text-lg font-semibold text-[var(--hive-text-primary)]">Your Profile</h2>
           {isEditMode && (
             <HiveButton
               variant="ghost"
               size="sm"
               onClick={onEditProfile}
-              className="text-hive-gold hover:text-hive-gold/80"
+              className="text-[var(--hive-brand-secondary)] hover:text-[var(--hive-brand-secondary)]/80"
             >
               Edit
             </HiveButton>
@@ -133,7 +139,7 @@ export const AvatarCard: React.FC<AvatarCardProps> = ({
                 alt={user.name}
                 className="object-cover"
               />
-              <AvatarFallback className="bg-gradient-to-br from-hive-gold/20 to-hive-gold/5 text-hive-gold text-xl font-semibold">
+              <AvatarFallback className="bg-gradient-to-br from-hive-gold/20 to-hive-gold/5 text-[var(--hive-brand-secondary)] text-xl font-semibold">
                 {getInitials(user.name)}
               </AvatarFallback>
             </Avatar>
@@ -145,17 +151,17 @@ export const AvatarCard: React.FC<AvatarCardProps> = ({
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="absolute inset-0 rounded-full bg-black/60 flex items-center justify-center"
+                  className="absolute inset-0 rounded-full bg-[var(--hive-background-primary)]/60 flex items-center justify-center"
                 >
                   {isUploading ? (
                     <motion.div
                       animate={{ rotate: 360 }}
                       transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                     >
-                      <Upload className="h-5 w-5 text-white" />
+                      <Upload className="h-5 w-5 text-[var(--hive-text-primary)]" />
                     </motion.div>
                   ) : (
-                    <Camera className="h-5 w-5 text-white" />
+                    <Camera className="h-5 w-5 text-[var(--hive-text-primary)]" />
                   )}
                 </motion.div>
               )}
@@ -205,7 +211,7 @@ export const AvatarCard: React.FC<AvatarCardProps> = ({
 
           {/* Name & Basic Info */}
           <div className="text-center mt-4">
-            <h3 className="text-xl font-semibold text-white mb-1">{user.name}</h3>
+            <h3 className="text-xl font-semibold text-[var(--hive-text-primary)] mb-1">{user.name}</h3>
             {user.campus && (
               <p className="text-sm text-gray-400 mb-2">
                 {user.major ? `${user.major} • ` : ''}{user.campus}
@@ -260,8 +266,8 @@ export const AvatarCard: React.FC<AvatarCardProps> = ({
           >
             <div className="mb-3">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-white">Profile Completion</span>
-                <span className="text-sm text-hive-gold font-medium">
+                <span className="text-sm font-medium text-[var(--hive-text-primary)]">Profile Completion</span>
+                <span className="text-sm text-[var(--hive-brand-secondary)] font-medium">
                   {completionStatus.overall}%
                 </span>
               </div>
@@ -273,7 +279,7 @@ export const AvatarCard: React.FC<AvatarCardProps> = ({
 
             {/* Completion Tasks */}
             <div className="space-y-2">
-              {Object.entries(completionStatus.sections).map(([key, section]) => (
+              {completionStatus.sections && Object.entries(completionStatus.sections).map(([key, section]) => (
                 !section.completed && (
                   <motion.div
                     key={key}
@@ -281,7 +287,7 @@ export const AvatarCard: React.FC<AvatarCardProps> = ({
                     animate={{ opacity: 1, x: 0 }}
                     className="flex items-center gap-2 text-xs"
                   >
-                    <Plus className="h-3 w-3 text-hive-gold" />
+                    <Plus className="h-3 w-3 text-[var(--hive-brand-secondary)]" />
                     <span className="text-gray-300">Add {section.label}</span>
                   </motion.div>
                 )
@@ -294,19 +300,19 @@ export const AvatarCard: React.FC<AvatarCardProps> = ({
         {user.stats && (
           <div className="grid grid-cols-3 gap-4 text-center">
             <div>
-              <div className="text-lg font-semibold text-white">
+              <div className="text-lg font-semibold text-[var(--hive-text-primary)]">
                 {user.stats.spacesJoined}
               </div>
               <div className="text-xs text-gray-400">Spaces</div>
             </div>
             <div>
-              <div className="text-lg font-semibold text-white">
+              <div className="text-lg font-semibold text-[var(--hive-text-primary)]">
                 {user.stats.toolsUsed}
               </div>
               <div className="text-xs text-gray-400">Tools</div>
             </div>
             <div>
-              <div className="text-lg font-semibold text-white">
+              <div className="text-lg font-semibold text-[var(--hive-text-primary)]">
                 {user.stats.connectionsCount}
               </div>
               <div className="text-xs text-gray-400 flex items-center justify-center gap-1">
@@ -324,9 +330,9 @@ export const AvatarCard: React.FC<AvatarCardProps> = ({
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="mt-4 p-3 rounded-lg bg-hive-gold/10 border border-hive-gold/20"
+              className="mt-4 p-3 rounded-lg bg-[var(--hive-brand-secondary)]/10 border border-hive-gold/20"
             >
-              <p className="text-xs text-hive-gold text-center">
+              <p className="text-xs text-[var(--hive-brand-secondary)] text-center">
                 Complete your profile to unlock more HIVE features
               </p>
             </motion.div>

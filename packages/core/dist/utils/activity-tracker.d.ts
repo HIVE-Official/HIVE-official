@@ -6,7 +6,7 @@ interface ActivityTrackingOptions {
     toolId?: string;
     contentId?: string;
     duration?: number;
-    metadata?: Record<string, any>;
+    metadata?: Record<string, unknown>;
 }
 declare class ActivityTracker {
     private static instance;
@@ -21,9 +21,9 @@ declare class ActivityTracker {
     endSession(userId: string): void;
     enterSpace(userId: string, spaceId: string): void;
     exitSpace(userId: string): void;
-    trackToolInteraction(userId: string, toolId: string, spaceId?: string, metadata?: Record<string, any>): void;
-    trackContentCreation(userId: string, contentId: string, spaceId?: string, metadata?: Record<string, any>): void;
-    trackSocialInteraction(userId: string, spaceId?: string, metadata?: Record<string, any>): void;
+    trackToolInteraction(userId: string, toolId: string, spaceId?: string, metadata?: Record<string, unknown>): void;
+    trackContentCreation(userId: string, contentId: string, spaceId?: string, metadata?: Record<string, unknown>): void;
+    trackSocialInteraction(userId: string, spaceId?: string, metadata?: Record<string, unknown>): void;
     trackBatch(events: ActivityTrackingOptions[]): Promise<void>;
 }
 export declare const activityTracker: ActivityTracker;
@@ -32,10 +32,10 @@ export declare function withSpaceTracking<T extends {
     spaceId: string;
 }>(Component: React.ComponentType<T>): (props: T) => import("react/jsx-runtime").JSX.Element;
 export declare const trackingUtils: {
-    trackPageView: (userId: string, page: string, metadata?: Record<string, any>) => void;
-    trackButtonClick: (userId: string, buttonId: string, spaceId?: string, metadata?: Record<string, any>) => void;
-    trackFormSubmission: (userId: string, formType: string, spaceId?: string, metadata?: Record<string, any>) => void;
-    trackSearch: (userId: string, query: string, results: number, metadata?: Record<string, any>) => void;
+    trackPageView: (userId: string, page: string, metadata?: Record<string, unknown>) => void;
+    trackButtonClick: (userId: string, buttonId: string, spaceId?: string, metadata?: Record<string, unknown>) => void;
+    trackFormSubmission: (userId: string, formType: string, spaceId?: string, metadata?: Record<string, unknown>) => void;
+    trackSearch: (userId: string, query: string, results: number, metadata?: Record<string, unknown>) => void;
 };
 export default ActivityTracker;
 //# sourceMappingURL=activity-tracker.d.ts.map

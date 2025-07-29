@@ -9,11 +9,19 @@ export const motion = {
   button: (props: any) => <button {...props} />,
   span: (props: any) => <span {...props} />,
   section: (props: any) => <section {...props} />,
+  nav: (props: any) => <nav {...props} />,
+  a: (props: any) => <a {...props} />,
   // Add more elements as needed
 };
 
 // Simple AnimatePresence fallback that just renders children
-export const AnimatePresence: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AnimatePresence: React.FC<{ 
+  children: React.ReactNode;
+  mode?: string;
+  initial?: boolean;
+  exitBeforeEnter?: boolean;
+  onExitComplete?: () => void;
+}> = ({ children }) => {
   return <>{children}</>;
 };
 

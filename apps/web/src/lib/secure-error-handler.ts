@@ -214,7 +214,7 @@ export async function handleSecureError(
   let errorCode = 'UNKNOWN_ERROR';
   let statusCode = 500;
   let securityLevel = ErrorSecurityLevel.INTERNAL;
-  let originalError = error;
+  const originalError = error;
   
   // Process different error types
   if (error instanceof z.ZodError) {

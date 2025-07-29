@@ -109,7 +109,7 @@ const surfaceConfig = {
 } as const;
 
 const hiveSpaceLayoutVariants = cva(
-  "relative w-full min-h-screen bg-black/5 backdrop-blur-sm",
+  "relative w-full min-h-screen bg-[var(--hive-background-primary)]/5 backdrop-blur-sm",
   {
     variants: {
       mode: {
@@ -355,7 +355,7 @@ export const HiveSpaceLayout = React.forwardRef<HTMLDivElement, HiveSpaceLayoutP
       >
         {/* Space Header */}
         <motion.header
-          className="sticky top-0 z-40 bg-black/80 backdrop-blur-xl border-b border-white/10"
+          className="sticky top-0 z-40 bg-[var(--hive-background-primary)]/80 backdrop-blur-xl border-b border-white/10"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: motionDurations.smooth }}
@@ -365,7 +365,7 @@ export const HiveSpaceLayout = React.forwardRef<HTMLDivElement, HiveSpaceLayoutP
               {/* Space Info */}
               <div className="flex items-center gap-4">
                 <motion.button
-                  className="p-2 text-gray-400 hover:text-white rounded-lg hover:bg-white/5 transition-all duration-200"
+                  className="p-2 text-gray-400 hover:text-[var(--hive-text-primary)] rounded-lg hover:bg-[var(--hive-text-primary)]/5 transition-all duration-200"
                   onClick={onBackToDirectory}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -374,7 +374,7 @@ export const HiveSpaceLayout = React.forwardRef<HTMLDivElement, HiveSpaceLayoutP
                 </motion.button>
                 
                 <div>
-                  <h1 className="text-xl font-bold text-white">{space.name}</h1>
+                  <h1 className="text-xl font-bold text-[var(--hive-text-primary)]">{space.name}</h1>
                   <div className="flex items-center gap-3 text-sm text-gray-400">
                     <span>{space.memberCount} members</span>
                     <span>•</span>
@@ -395,7 +395,7 @@ export const HiveSpaceLayout = React.forwardRef<HTMLDivElement, HiveSpaceLayoutP
               {/* Actions */}
               <div className="flex items-center gap-2">
                 {/* Surface Navigation */}
-                <div className="hidden md:flex items-center gap-1 bg-black/20 rounded-xl p-1 border border-white/10">
+                <div className="hidden md:flex items-center gap-1 bg-[var(--hive-background-primary)]/20 rounded-xl p-1 border border-white/10">
                   {activeSurfaces.map((surface) => {
                     const Icon = surface.config.icon;
                     const isCollapsed = collapsedSurfaces.has(surface.type);
@@ -409,7 +409,7 @@ export const HiveSpaceLayout = React.forwardRef<HTMLDivElement, HiveSpaceLayoutP
                             ? "bg-yellow-500/20 text-yellow-400"
                             : isCollapsed
                             ? "text-gray-500"
-                            : "text-gray-300 hover:text-white hover:bg-white/5"
+                            : "text-gray-300 hover:text-[var(--hive-text-primary)] hover:bg-[var(--hive-text-primary)]/5"
                         )}
                         onClick={() => handleSurfaceToggle(surface.type)}
                         onMouseEnter={() => setHoveredSurface(surface.type)}
@@ -436,7 +436,7 @@ export const HiveSpaceLayout = React.forwardRef<HTMLDivElement, HiveSpaceLayoutP
                       "flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium border transition-all duration-200",
                       mode === 'builder'
                         ? "bg-yellow-500/20 text-yellow-400 border-yellow-500/30"
-                        : "bg-black/20 text-gray-400 border-white/10 hover:text-white hover:border-white/20"
+                        : "bg-[var(--hive-background-primary)]/20 text-gray-400 border-white/10 hover:text-[var(--hive-text-primary)] hover:border-white/20"
                     )}
                     onClick={onBuilderMode}
                     whileHover={{ scale: 1.02 }}
@@ -450,7 +450,7 @@ export const HiveSpaceLayout = React.forwardRef<HTMLDivElement, HiveSpaceLayoutP
                 {/* Space Settings */}
                 {canEdit && (
                   <motion.button
-                    className="p-2 text-gray-400 hover:text-white rounded-lg hover:bg-white/5 transition-all duration-200"
+                    className="p-2 text-gray-400 hover:text-[var(--hive-text-primary)] rounded-lg hover:bg-[var(--hive-text-primary)]/5 transition-all duration-200"
                     onClick={onSpaceSettings}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
@@ -461,7 +461,7 @@ export const HiveSpaceLayout = React.forwardRef<HTMLDivElement, HiveSpaceLayoutP
                 
                 {/* More Actions */}
                 <motion.button
-                  className="p-2 text-gray-400 hover:text-white rounded-lg hover:bg-white/5 transition-all duration-200"
+                  className="p-2 text-gray-400 hover:text-[var(--hive-text-primary)] rounded-lg hover:bg-[var(--hive-text-primary)]/5 transition-all duration-200"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
@@ -491,7 +491,7 @@ export const HiveSpaceLayout = React.forwardRef<HTMLDivElement, HiveSpaceLayoutP
                       <div className={cn(
                         "w-4 h-4 rounded-full border-2 flex items-center justify-center",
                         item.completed
-                          ? "bg-green-500 border-green-500 text-white"
+                          ? "bg-green-500 border-green-500 text-[var(--hive-text-primary)]"
                           : "border-yellow-500/50 text-yellow-400"
                       )}>
                         {item.completed && <span className="text-xs">✓</span>}
@@ -557,20 +557,20 @@ export const HiveSpaceLayout = React.forwardRef<HTMLDivElement, HiveSpaceLayoutP
         <AnimatePresence>
           {showBuilderHints && mode === 'builder' && (
             <motion.div
-              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-6"
+              className="fixed inset-0 bg-[var(--hive-background-primary)]/60 backdrop-blur-sm z-50 flex items-center justify-center p-6"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
             >
               <motion.div
-                className="max-w-md bg-black/80 backdrop-blur-xl border border-yellow-500/30 rounded-2xl p-6"
+                className="max-w-md bg-[var(--hive-background-primary)]/80 backdrop-blur-xl border border-yellow-500/30 rounded-2xl p-6"
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
               >
                 <div className="text-center">
                   <Sparkles className="w-12 h-12 text-yellow-400 mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold text-white mb-2">Builder Mode Active</h3>
+                  <h3 className="text-lg font-semibold text-[var(--hive-text-primary)] mb-2">Builder Mode Active</h3>
                   <p className="text-gray-400 mb-6">
                     You can now customize your Space by adding Tools, editing content, and organizing surfaces.
                   </p>
@@ -622,7 +622,7 @@ const SurfaceContainer: React.FC<SurfaceContainerProps> = ({
   return (
     <motion.section
       className={cn(
-        "relative bg-black/20 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden",
+        "relative bg-[var(--hive-background-primary)]/20 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden",
         builderMode && "ring-2 ring-yellow-500/20 ring-offset-2 ring-offset-black/20",
         compact && "lg:max-h-96"
       )}
@@ -636,7 +636,7 @@ const SurfaceContainer: React.FC<SurfaceContainerProps> = ({
         <div className="flex items-center gap-3">
           <Icon className={cn("w-5 h-5", surface.config.color)} />
           <div>
-            <h3 className="font-medium text-white">
+            <h3 className="font-medium text-[var(--hive-text-primary)]">
               {surface.customTitle || surface.config.label}
             </h3>
             <p className="text-xs text-gray-400">{surface.config.description}</p>
@@ -652,7 +652,7 @@ const SurfaceContainer: React.FC<SurfaceContainerProps> = ({
           
           {canEdit && (
             <motion.button
-              className="p-1.5 text-gray-400 hover:text-white rounded-lg hover:bg-white/5 transition-all duration-200"
+              className="p-1.5 text-gray-400 hover:text-[var(--hive-text-primary)] rounded-lg hover:bg-[var(--hive-text-primary)]/5 transition-all duration-200"
               onClick={onSettings}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -662,7 +662,7 @@ const SurfaceContainer: React.FC<SurfaceContainerProps> = ({
           )}
           
           <motion.button
-            className="p-1.5 text-gray-400 hover:text-white rounded-lg hover:bg-white/5 transition-all duration-200"
+            className="p-1.5 text-gray-400 hover:text-[var(--hive-text-primary)] rounded-lg hover:bg-[var(--hive-text-primary)]/5 transition-all duration-200"
             onClick={onToggle}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}

@@ -156,7 +156,7 @@ export const HiveSidebarLayout: React.FC<SidebarLayoutProps> = ({
         {collapsible && (
           <button
             onClick={() => setCollapsed(!collapsed)}
-            className="w-full p-4 text-left text-white hover:bg-white/5 transition-colors"
+            className="w-full p-4 text-left text-[var(--hive-text-primary)] hover:bg-[var(--hive-text-primary)]/5 transition-colors"
           >
             {collapsed ? '→' : '←'}
           </button>
@@ -359,19 +359,19 @@ export const HiveGlassPanel: React.FC<GlassPanelProps> = ({
 }) => {
   const intensityMap = {
     light: {
-      backdropFilter: 'blur(8px)',
-      backgroundColor: 'rgba(255, 255, 255, 0.03)',
-      border: '1px solid rgba(255, 255, 255, 0.08)',
+      backdropFilter: 'blur(2)',
+      backgroundColor: 'color-mix(in_srgb,var(--hive-interactive-hover)_60%,transparent)',
+      border: '1px solid color-mix(in_srgb,var(--hive-interactive-active)_80%,transparent)',
     },
     medium: {
-      backdropFilter: 'blur(12px) saturate(180%)',
-      backgroundColor: 'rgba(255, 255, 255, 0.05)',
-      border: '1px solid rgba(255, 255, 255, 0.1)',
+      backdropFilter: 'blur(3) saturate(180%)',
+      backgroundColor: 'var(--hive-interactive-hover)',
+      border: '1px solid var(--hive-interactive-active)',
     },
     heavy: {
-      backdropFilter: 'blur(16px) saturate(200%)',
-      backgroundColor: 'rgba(255, 255, 255, 0.08)',
-      border: '1px solid rgba(255, 255, 255, 0.15)',
+      backdropFilter: 'blur(4) saturate(200%)',
+      backgroundColor: 'color-mix(in_srgb,var(--hive-interactive-active)_80%,transparent)',
+      border: '1px solid color-mix(in_srgb,var(--hive-border-hover)_75%,transparent)',
     },
   };
 

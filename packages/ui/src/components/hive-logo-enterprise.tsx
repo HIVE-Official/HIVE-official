@@ -438,9 +438,9 @@ export const HiveLogoEnterprise = memo(({
     {
       variants: {
         variant: {
-          primary: "text-white",
+          primary: "text-[var(--hive-text-primary)]",
           gold: "text-[var(--hive-color-gold)]",
-          inverted: "text-black",
+          inverted: "text-[var(--hive-background-primary)]",
           custom: "text-current",
         },
         size: {
@@ -514,14 +514,14 @@ export const HiveLogoEnterprise = memo(({
       
       {/* Performance metrics overlay (development only) */}
       {config.performance?.enableMetrics && process.env.NODE_ENV === 'development' && (
-        <div className="absolute -top-8 left-0 text-xs text-white/60 bg-black/80 p-1 rounded whitespace-nowrap">
+        <div className="absolute -top-8 left-0 text-xs text-[var(--hive-text-primary)]/60 bg-[var(--hive-background-primary)]/80 p-1 rounded whitespace-nowrap">
           {performanceMetrics.renderTime.toFixed(1)}ms
         </div>
       )}
       
       {/* A/B test indicator (development only) */}
       {experimentId && process.env.NODE_ENV === 'development' && (
-        <div className="absolute -bottom-6 left-0 text-xs text-[var(--hive-color-gold)] bg-black/80 p-1 rounded whitespace-nowrap">
+        <div className="absolute -bottom-6 left-0 text-xs text-[var(--hive-color-gold)] bg-[var(--hive-background-primary)]/80 p-1 rounded whitespace-nowrap">
           A/B: {abVariant}
         </div>
       )}
@@ -560,62 +560,62 @@ export const HiveLogoAnalyticsDashboard: React.FC<{
   }, [dateRange]);
   
   return (
-    <div className={cn("p-6 bg-black/20 rounded-xl space-y-6", className)}>
-      <h3 className="text-xl font-bold text-white">HIVE Logo Analytics</h3>
+    <div className={cn("p-6 bg-[var(--hive-background-primary)]/20 rounded-xl space-y-6", className)}>
+      <h3 className="text-xl font-bold text-[var(--hive-text-primary)]">HIVE Logo Analytics</h3>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="p-4 bg-white/5 rounded-lg">
+        <div className="p-4 bg-[var(--hive-text-primary)]/5 rounded-lg">
           <div className="text-2xl font-bold text-[var(--hive-color-gold)]">
             {analyticsData.totalViews.toLocaleString()}
           </div>
-          <div className="text-white/70 text-sm">Total Views</div>
+          <div className="text-[var(--hive-text-primary)]/70 text-sm">Total Views</div>
         </div>
         
-        <div className="p-4 bg-white/5 rounded-lg">
+        <div className="p-4 bg-[var(--hive-text-primary)]/5 rounded-lg">
           <div className="text-2xl font-bold text-[var(--hive-color-gold)]">
             {analyticsData.totalClicks.toLocaleString()}
           </div>
-          <div className="text-white/70 text-sm">Total Clicks</div>
+          <div className="text-[var(--hive-text-primary)]/70 text-sm">Total Clicks</div>
         </div>
         
-        <div className="p-4 bg-white/5 rounded-lg">
+        <div className="p-4 bg-[var(--hive-text-primary)]/5 rounded-lg">
           <div className="text-2xl font-bold text-[var(--hive-color-gold)]">
             {(analyticsData.clickThroughRate * 100).toFixed(1)}%
           </div>
-          <div className="text-white/70 text-sm">Click-through Rate</div>
+          <div className="text-[var(--hive-text-primary)]/70 text-sm">Click-through Rate</div>
         </div>
       </div>
       
       <div className="space-y-4">
-        <h4 className="text-lg font-semibold text-white">Top Performing Variants</h4>
+        <h4 className="text-lg font-semibold text-[var(--hive-text-primary)]">Top Performing Variants</h4>
         {analyticsData.topVariants.map((variant, index) => (
-          <div key={variant.variant} className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
-            <span className="text-white">{variant.variant}</span>
+          <div key={variant.variant} className="flex items-center justify-between p-3 bg-[var(--hive-text-primary)]/5 rounded-lg">
+            <span className="text-[var(--hive-text-primary)]">{variant.variant}</span>
             <span className="text-[var(--hive-color-gold)] font-semibold">{variant.count}</span>
           </div>
         ))}
       </div>
       
       <div className="space-y-4">
-        <h4 className="text-lg font-semibold text-white">Performance Metrics</h4>
+        <h4 className="text-lg font-semibold text-[var(--hive-text-primary)]">Performance Metrics</h4>
         <div className="grid grid-cols-3 gap-4">
           <div className="text-center">
-            <div className="text-lg font-bold text-white">
+            <div className="text-lg font-bold text-[var(--hive-text-primary)]">
               {analyticsData.performanceMetrics.averageRenderTime.toFixed(1)}ms
             </div>
-            <div className="text-white/70 text-xs">Avg Render</div>
+            <div className="text-[var(--hive-text-primary)]/70 text-xs">Avg Render</div>
           </div>
           <div className="text-center">
-            <div className="text-lg font-bold text-white">
+            <div className="text-lg font-bold text-[var(--hive-text-primary)]">
               {analyticsData.performanceMetrics.fastestRender.toFixed(1)}ms
             </div>
-            <div className="text-white/70 text-xs">Fastest</div>
+            <div className="text-[var(--hive-text-primary)]/70 text-xs">Fastest</div>
           </div>
           <div className="text-center">
-            <div className="text-lg font-bold text-white">
+            <div className="text-lg font-bold text-[var(--hive-text-primary)]">
               {analyticsData.performanceMetrics.slowestRender.toFixed(1)}ms
             </div>
-            <div className="text-white/70 text-xs">Slowest</div>
+            <div className="text-[var(--hive-text-primary)]/70 text-xs">Slowest</div>
           </div>
         </div>
       </div>

@@ -6,30 +6,30 @@ export const typography = {
         mono: ['JetBrains Mono', 'monospace'],
     },
     fontSize: {
-        // Display Scale (Hero/Marketing)
-        'display-2xl': '4.5rem', // 72px - Hero headlines
-        'display-xl': '3.75rem', // 60px - Large headlines
-        'display-lg': '3rem', // 48px - Section headlines
-        'display-md': '2.25rem', // 36px - Page titles
-        'display-sm': '1.875rem', // 30px - Subsection titles
-        // Heading Scale
-        'heading-xl': '1.5rem', // 24px - Main headings
-        'heading-lg': '1.25rem', // 20px - Section headings
-        'heading-md': '1.125rem', // 18px - Subsection headings
-        'heading-sm': '1rem', // 16px - Small headings
-        // Body Scale
-        'body-lg': '1.125rem', // 18px - Large body text
-        'body-md': '1rem', // 16px - Standard body text
-        'body-sm': '0.875rem', // 14px - Small body text
-        'body-xs': '0.75rem', // 12px - Small text
-        'body-2xs': '0.625rem', // 10px - Captions
-        // Legacy aliases for backwards compatibility
-        xs: '0.75rem', // 12px (body-xs)
-        sm: '0.875rem', // 14px (body-sm)
-        base: '1rem', // 16px (body-md)
-        lg: '1.125rem', // 18px (body-lg)
-        xl: '1.25rem', // 20px (heading-lg)
-        '2xl': '1.5rem', // 24px (heading-xl)
+        // Display Scale (Hero/Marketing) - Mobile-optimized
+        'display-2xl': '2.5rem', // 40px - Hero headlines
+        'display-xl': '2.25rem', // 36px - Large headlines
+        'display-lg': '2rem', // 32px - Section headlines
+        'display-md': '1.75rem', // 28px - Page titles
+        'display-sm': '1.5rem', // 24px - Subsection titles
+        // Heading Scale - Mobile-optimized
+        'heading-xl': '1.25rem', // 20px - Main headings
+        'heading-lg': '1.125rem', // 18px - Section headings
+        'heading-md': '1rem', // 16px - Subsection headings
+        'heading-sm': '0.875rem', // 14px - Small headings
+        // Body Scale - Mobile-optimized
+        'body-lg': '1rem', // 16px - Large body text
+        'body-md': '0.875rem', // 14px - Standard body text
+        'body-sm': '0.75rem', // 12px - Small body text
+        'body-xs': '0.625rem', // 10px - Small text
+        'body-2xs': '0.5rem', // 8px - Captions
+        // Legacy aliases for backwards compatibility - Mobile-optimized
+        xs: '0.625rem', // 10px (body-xs)
+        sm: '0.75rem', // 12px (body-sm)
+        base: '0.875rem', // 14px (body-md)
+        lg: '1rem', // 16px (body-lg)
+        xl: '1.125rem', // 18px (heading-lg)
+        '2xl': '1.25rem', // 20px (heading-xl)
     },
     fontWeight: {
         light: '300', // Light text

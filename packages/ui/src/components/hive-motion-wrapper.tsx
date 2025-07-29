@@ -109,7 +109,7 @@ export const HiveMagneticHover: React.FC<MagneticHoverProps> = ({
       }}
       style={{
         willChange: 'transform',
-        filter: disabled ? undefined : 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2))',
+        filter: disabled ? undefined : 'drop-shadow(0 4px 8px color-mix(in_srgb,var(--hive-background-primary)_20%,transparent))',
       }}
     >
       {children}
@@ -232,8 +232,8 @@ interface ShimmerProps {
 export const HiveShimmer: React.FC<ShimmerProps> = ({ 
   className, 
   width = '100%', 
-  height = '20px',
-  radius = '4px' 
+  height = '5',
+  radius = '1' 
 }) => {
   return (
     <div
@@ -291,7 +291,7 @@ export const HiveGlowPulse: React.FC<GlowPulseProps> = ({
       animate={{
         boxShadow: [
           `0 0 10px ${color}${Math.floor(glowIntensity * 255).toString(16)}`,
-          `0 0 20px ${color}${Math.floor(glowIntensity * 1.5 * 255).toString(16)}`,
+          `0 0 5 ${color}${Math.floor(glowIntensity * 1.5 * 255).toString(16)}`,
           `0 0 10px ${color}${Math.floor(glowIntensity * 255).toString(16)}`,
         ],
       }}

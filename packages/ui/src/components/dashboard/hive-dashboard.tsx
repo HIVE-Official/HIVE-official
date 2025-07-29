@@ -23,7 +23,7 @@ import { Button } from '../hive-button';
 import { Badge } from '../ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { Progress } from '../hive-progress';
-import { Switch } from '../ui/switch';
+import { Switch } from '../hive-switch';
 
 // Dashboard data types (matching API structure)
 export interface ProfileDashboardData {
@@ -243,7 +243,7 @@ export function HiveDashboard({
         <div className="flex items-center space-x-4">
           <Avatar className="h-16 w-16">
             <AvatarImage src={data.user.profilePhotoUrl} />
-            <AvatarFallback className="text-xl font-semibold bg-gradient-to-br from-blue-500 to-purple-600 text-white">
+            <AvatarFallback className="text-xl font-semibold bg-gradient-to-br from-blue-500 to-purple-600 text-[var(--hive-text-primary)]">
               {data.user.name.split(' ').map(n => n[0]).join('').toUpperCase()}
             </AvatarFallback>
           </Avatar>

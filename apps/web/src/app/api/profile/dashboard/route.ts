@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { collection, doc, query, where, getDocs, getDoc, orderBy, limit } from 'firebase/firestore';
 import { db } from '@hive/core/server';
-import { getCurrentUser } from '@hive/auth-logic';
+import { getCurrentUser } from '../../../../lib/auth-server';
 
 // Profile dashboard data interface
 interface ProfileDashboardData {
@@ -256,7 +256,8 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    const user = await getCurrentUser();
+    // Authenticate user
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }

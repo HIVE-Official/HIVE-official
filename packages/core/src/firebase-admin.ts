@@ -42,7 +42,7 @@ try {
             process.env.FIREBASE_SERVICE_ACCOUNT_KEY,
             "base64"
           ).toString("ascii")
-        );
+        ) as admin.ServiceAccount;
         credential = admin.credential.cert(serviceAccountJson);
         console.log(
           `🔐 Firebase Admin: Using base64 service account for ${currentEnvironment}`
@@ -134,7 +134,7 @@ try {
         },
       }),
     }),
-  } as any;
+  } as unknown as admin.firestore.Firestore;
 
   authAdmin = {
     verifyIdToken: async () => {
@@ -151,7 +151,7 @@ try {
         `Firebase Auth not configured for ${currentEnvironment}.`
       );
     },
-  } as any;
+  } as unknown as admin.auth.Auth;
 }
 
 export { dbAdmin, authAdmin };
@@ -160,6 +160,10 @@ export { dbAdmin, authAdmin };
 export const db = dbAdmin;
 export const auth = authAdmin;
 export const isFirebaseConfigured = firebaseInitialized;
+
+// Function exports for compatibility
+export const getFirestoreAdmin = () => dbAdmin;
+export const getAuthAdmin = () => authAdmin;
 
 // Environment info for debugging
 export const environmentInfo = {

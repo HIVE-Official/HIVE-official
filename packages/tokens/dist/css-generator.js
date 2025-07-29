@@ -1,7 +1,7 @@
 // CSS Custom Properties Generator for HIVE Design Tokens
 import { colors, semantic, overlay, gradients, shadows, border } from './colors';
 import { typography } from './typography';
-import { spacing } from './spacing';
+import { spacing, layoutSizes } from './spacing';
 import { radius } from './radius';
 import { motion } from './motion';
 import { effects } from './effects';
@@ -43,10 +43,13 @@ export function generateCSSCustomProperties() {
         cssVars.push(`  --hive-shadow-${key}: ${value};`);
     });
     cssVars.push('');
-    cssVars.push('  /* HIVE Borders */');
+    cssVars.push('  /* HIVE Border Colors */');
     Object.entries(border).forEach(([key, value]) => {
         cssVars.push(`  --hive-border-${key}: ${value};`);
     });
+    // Add missing border variants that components expect
+    cssVars.push(`  --hive-border-gold-strong: rgba(255, 215, 0, 0.4);`);
+    cssVars.push(`  --hive-border-glass-strong: rgba(255, 255, 255, 0.12);`);
     // Typography
     cssVars.push('');
     cssVars.push('  /* HIVE Typography */');
@@ -67,6 +70,15 @@ export function generateCSSCustomProperties() {
     cssVars.push('  /* HIVE Spacing */');
     Object.entries(spacing).forEach(([key, value]) => {
         cssVars.push(`  --hive-spacing-${key}: ${value};`);
+    });
+    // Layout sizes for hybrid approach
+    cssVars.push('');
+    cssVars.push('  /* HIVE Layout Sizes */');
+    Object.entries(layoutSizes.height).forEach(([key, value]) => {
+        cssVars.push(`  --hive-height-${key}: ${value};`);
+    });
+    Object.entries(layoutSizes.width).forEach(([key, value]) => {
+        cssVars.push(`  --hive-width-${key}: ${value};`);
     });
     // Radius
     cssVars.push('');
@@ -95,6 +107,10 @@ export function generateCSSCustomProperties() {
     Object.entries(effects.boxShadow).forEach(([key, value]) => {
         cssVars.push(`  --hive-shadow-${key}: ${value};`);
     });
+    // Add missing shadow variants that components expect
+    cssVars.push(`  --hive-shadow-gold-glow: 0 0 20px rgba(255, 215, 0, 0.3);`);
+    cssVars.push(`  --hive-shadow-gold-glow-strong: 0 0 30px rgba(255, 215, 0, 0.4);`);
+    cssVars.push(`  --hive-shadow-emerald-glow: 0 0 20px rgba(16, 185, 129, 0.3);`);
     Object.entries(effects.backdropBlur).forEach(([key, value]) => {
         cssVars.push(`  --hive-backdrop-blur-${key}: ${value};`);
     });

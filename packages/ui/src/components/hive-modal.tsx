@@ -12,7 +12,7 @@ import { X } from 'lucide-react';
 
 const hiveModalVariants = cva(
   // Base modal styles - matte obsidian glass with heavy radius
-  "relative bg-black/60 backdrop-blur-2xl border rounded-2xl shadow-2xl max-w-lg w-full mx-4",
+  "relative bg-[var(--hive-background-primary)]/60 backdrop-blur-2xl border rounded-2xl shadow-2xl max-w-lg w-full mx-4",
   {
     variants: {
       size: {
@@ -169,7 +169,7 @@ const HiveModal = React.forwardRef<HTMLDivElement, HiveModalProps>(
           >
             {/* Backdrop */}
             <motion.div
-              className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+              className="absolute inset-0 bg-[var(--hive-background-primary)]/80 backdrop-blur-sm"
               variants={backdropVariants}
               onClick={handleBackdropClick}
             />
@@ -186,7 +186,7 @@ const HiveModal = React.forwardRef<HTMLDivElement, HiveModalProps>(
                 <div className="flex items-start justify-between p-8 pb-4">
                   <div className="space-y-2">
                     {title && (
-                      <h2 className="text-2xl font-bold text-white">
+                      <h2 className="text-2xl font-bold text-[var(--hive-text-primary)]">
                         {title}
                       </h2>
                     )}
@@ -199,7 +199,7 @@ const HiveModal = React.forwardRef<HTMLDivElement, HiveModalProps>(
                   
                   {showCloseButton && (
                     <motion.button
-                      className="text-white/60 hover:text-white/80 transition-colors p-2 -mt-2 -mr-2"
+                      className="text-[var(--hive-text-primary)]/60 hover:text-[var(--hive-text-primary)]/80 transition-colors p-2 -mt-2 -mr-2"
                       onClick={onClose}
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.9 }}
@@ -263,7 +263,7 @@ const HiveConfirmModal = React.forwardRef<HTMLDivElement, HiveConfirmModalProps>
     };
     
     const confirmButtonClass = {
-      default: "bg-white/10 hover:bg-white/20 text-white border-white/20",
+      default: "bg-[var(--hive-text-primary)]/10 hover:bg-[var(--hive-text-primary)]/20 text-[var(--hive-text-primary)] border-white/20",
       destructive: "bg-red-500/20 hover:bg-red-500/30 text-red-400 border-red-500/30",
       premium: "bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-400 border-yellow-500/30"
     }[confirmVariant];
@@ -272,7 +272,7 @@ const HiveConfirmModal = React.forwardRef<HTMLDivElement, HiveConfirmModalProps>
       <HiveModal ref={ref} onClose={onClose} {...props}>
         <div className="flex justify-end space-x-4 mt-8">
           <motion.button
-            className="px-6 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-white/80 border border-white/10 transition-all"
+            className="px-6 py-3 rounded-xl bg-[var(--hive-text-primary)]/5 hover:bg-[var(--hive-text-primary)]/10 text-[var(--hive-text-primary)]/80 border border-white/10 transition-all"
             onClick={handleCancel}
             disabled={loading}
             whileHover={{ scale: 1.02 }}

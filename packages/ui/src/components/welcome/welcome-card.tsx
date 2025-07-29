@@ -56,7 +56,7 @@ const WelcomeCard = React.forwardRef<HTMLDivElement, WelcomeCardProps>(
         variants={cardVariants}
         {...props}
       >
-        <Card className="border-white/10 bg-white/5 backdrop-blur-sm">
+        <Card className="border-white/10 bg-[var(--hive-text-primary)]/5 backdrop-blur-sm">
           <CardHeader className="text-center space-y-4">
             <motion.div variants={logoVariants} className="mb-4">
               <div className="flex justify-center">

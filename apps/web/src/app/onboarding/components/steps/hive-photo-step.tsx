@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "@hive/ui/src/components/framer-motion-proxy";
 import { Camera, Upload, X, CheckCircle, User, Crop, RotateCcw } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { HiveButton, HiveCard, HiveFileUpload } from "@hive/ui";
@@ -142,8 +142,8 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
       const imgWidth = cropImageRef.current.width;
       const imgHeight = cropImageRef.current.height;
 
-      let newPos = { ...startPos };
-      let newSize = { ...startSize };
+      const newPos = { ...startPos };
+      const newSize = { ...startSize };
       
       // Card aspect ratio (5:6 - width:height)
       const aspectRatio = 5/6;

@@ -4,6 +4,12 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Bundle analyzer
+import bundleAnalyzer from '@next/bundle-analyzer';
+const withBundleAnalyzer = bundleAnalyzer({
+  enabled: process.env.ANALYZE === 'true',
+});
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // App directory is now stable in Next.js 15, no experimental flag needed
@@ -13,7 +19,10 @@ const nextConfig = {
   // Experimental features for Next.js 15
   experimental: {
     // instrumentationHook is now default in Next.js 15
+    serverComponentsExternalPackages: ['framer-motion'],
   },
+  
+  transpilePackages: ['@hive/ui', '@hive/core', '@hive/hooks'],
   
   eslint: {
     // Disable ESLint during build due to Windows path resolution issues
@@ -94,10 +103,15 @@ const nextConfig = {
       use: ["@svgr/webpack"],
     });
 
+    // Handle Framer Motion server-side rendering
+    if (isServer) {
+      config.externals = [...(config.externals || []), 'framer-motion'];
+    }
+
     // Resolve workspace packages to built dist files for proper exports
     config.resolve.alias = {
       ...config.resolve.alias,
-      "@hive/ui": path.resolve(__dirname, "../../packages/ui/src"), // UI uses source for dev
+      "@hive/ui": path.resolve(__dirname, "../../packages/ui/dist/ui"), // Use built UI dist
       "@hive/core": path.resolve(__dirname, "../../packages/core/dist"), // Use built core
       "@hive/hooks": path.resolve(__dirname, "../../packages/hooks/dist"), // Use built hooks
       "@hive/auth-logic": path.resolve(
@@ -149,4 +163,4 @@ const nextConfig = {
   }),
 };
 
-export default nextConfig;
+export default withBundleAnalyzer(nextConfig);

@@ -115,10 +115,10 @@ const ChartContainer: React.FC<BaseChartProps & { children: React.ReactNode }> =
           <div className="flex items-start justify-between">
             <div className="space-y-1">
               {title && (
-                <h3 className="text-lg font-semibold text-white">{title}</h3>
+                <h3 className="text-lg font-semibold text-[var(--hive-text-primary)]">{title}</h3>
               )}
               {subtitle && (
-                <p className="text-sm text-white/60">{subtitle}</p>
+                <p className="text-sm text-[var(--hive-text-primary)]/60">{subtitle}</p>
               )}
             </div>
             
@@ -135,7 +135,7 @@ const ChartContainer: React.FC<BaseChartProps & { children: React.ReactNode }> =
       <div className="relative flex-1 p-6">
         {loading ? (
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="flex items-center space-x-2 text-white/60">
+            <div className="flex items-center space-x-2 text-[var(--hive-text-primary)]/60">
               <motion.div
                 className="w-5 h-5 border-2 border-white/20 border-t-yellow-400 rounded-full"
                 animate={{ rotate: 360 }}
@@ -182,7 +182,7 @@ export const HiveMetricCard: React.FC<HiveMetricCardProps> = ({
       case 'decrease':
         return <ArrowDown size={16} className="text-red-400" />;
       default:
-        return <Minus size={16} className="text-white/40" />;
+        return <Minus size={16} className="text-[var(--hive-text-primary)]/40" />;
     }
   };
   
@@ -193,7 +193,7 @@ export const HiveMetricCard: React.FC<HiveMetricCardProps> = ({
       case 'decrease':
         return 'text-red-400';
       default:
-        return 'text-white/60';
+        return 'text-[var(--hive-text-primary)]/60';
     }
   };
   
@@ -209,16 +209,16 @@ export const HiveMetricCard: React.FC<HiveMetricCardProps> = ({
         <div className="space-y-3 flex-1">
           <div className="flex items-center space-x-2">
             {data.icon && (
-              <div className={cn("text-white/60", data.color)}>
+              <div className={cn("text-[var(--hive-text-primary)]/60", data.color)}>
                 {data.icon}
               </div>
             )}
-            <span className="text-sm font-medium text-white/80">{data.label}</span>
+            <span className="text-sm font-medium text-[var(--hive-text-primary)]/80">{data.label}</span>
           </div>
           
           <div className="space-y-1">
             <motion.div 
-              className="text-3xl font-bold text-white"
+              className="text-3xl font-bold text-[var(--hive-text-primary)]"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: motionDurations.smooth, ease: liquidMetal.easing as any }}
@@ -227,7 +227,7 @@ export const HiveMetricCard: React.FC<HiveMetricCardProps> = ({
             </motion.div>
             
             {data.subtitle && (
-              <div className="text-xs text-white/50">{data.subtitle}</div>
+              <div className="text-xs text-[var(--hive-text-primary)]/50">{data.subtitle}</div>
             )}
             
             {data.change !== undefined && (
@@ -282,7 +282,7 @@ const MiniSparkline: React.FC<{
     return `M ${points.join(' L ')}`;
   }, [data]);
   
-  const trendColor = trend === 'up' ? '#10b981' : trend === 'down' ? '#ef4444' : '#6b7280';
+  const trendColor = trend === 'up' ? 'var(--hive-status-success)' : trend === 'down' ? 'var(--hive-status-error)' : 'var(--hive-text-disabled)';
   
   return (
     <svg ref={svgRef} width="64" height="32" className="overflow-visible">
@@ -314,7 +314,7 @@ export const HiveBarChart: React.FC<HiveBarChartProps> = ({
   horizontal = false,
   showValues = true,
   showLegend = false,
-  colorScheme = ['#fbbf24', '#3b82f6', '#10b981', '#ef4444', '#8b5cf6'],
+  colorScheme = ['var(--hive-brand-secondary)', 'var(--hive-status-info)', 'var(--hive-status-success)', 'var(--hive-status-error)', 'var(--hive-status-info)'],
   animated = true,
   ...props
 }) => {
@@ -352,7 +352,7 @@ export const HiveBarChart: React.FC<HiveBarChartProps> = ({
                   >
                     {showValues && (
                       <motion.div
-                        className="absolute -top-6 left-1/2 transform -translate-x-1/2 text-xs font-medium text-white"
+                        className="absolute -top-6 left-1/2 transform -translate-x-1/2 text-xs font-medium text-[var(--hive-text-primary)]"
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ 
@@ -365,7 +365,7 @@ export const HiveBarChart: React.FC<HiveBarChartProps> = ({
                     )}
                   </motion.div>
                 </div>
-                <div className="text-xs text-white/60 text-center truncate w-full">
+                <div className="text-xs text-[var(--hive-text-primary)]/60 text-center truncate w-full">
                   {item.label}
                 </div>
               </div>
@@ -378,12 +378,12 @@ export const HiveBarChart: React.FC<HiveBarChartProps> = ({
             {data.map((item, index) => (
               <div key={index} className="space-y-1">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-white/80 truncate">{item.label}</span>
+                  <span className="text-sm text-[var(--hive-text-primary)]/80 truncate">{item.label}</span>
                   {showValues && (
-                    <span className="text-sm font-medium text-white">{item.value}</span>
+                    <span className="text-sm font-medium text-[var(--hive-text-primary)]">{item.value}</span>
                   )}
                 </div>
-                <div className="w-full bg-white/10 rounded-full h-2 overflow-hidden">
+                <div className="w-full bg-[var(--hive-text-primary)]/10 rounded-full h-2 overflow-hidden">
                   <motion.div
                     className="h-full rounded-full"
                     style={{ 
@@ -415,7 +415,7 @@ export const HiveBarChart: React.FC<HiveBarChartProps> = ({
                   className="w-3 h-3 rounded-full"
                   style={{ backgroundColor: item.color || colorScheme[index % colorScheme.length] }}
                 />
-                <span className="text-xs text-white/60">{item.label}</span>
+                <span className="text-xs text-[var(--hive-text-primary)]/60">{item.label}</span>
               </div>
             ))}
           </div>
@@ -438,7 +438,7 @@ export const HiveDonutChart: React.FC<HiveDonutChartProps> = ({
   data,
   innerRadius = 0.6,
   showLegend = true,
-  colorScheme = ['#fbbf24', '#3b82f6', '#10b981', '#ef4444', '#8b5cf6'],
+  colorScheme = ['var(--hive-brand-secondary)', 'var(--hive-status-info)', 'var(--hive-status-success)', 'var(--hive-status-error)', 'var(--hive-status-info)'],
   animated = true,
   ...props
 }) => {
@@ -498,7 +498,7 @@ export const HiveDonutChart: React.FC<HiveDonutChartProps> = ({
                 key={index}
                 d={segment.pathData}
                 fill={segment.color}
-                stroke="rgba(0,0,0,0.1)"
+                stroke="color-mix(in_srgb,var(--hive-background-primary)_10%,transparent)"
                 strokeWidth={1}
                 initial={{ opacity: 0, scale: 0 }}
                 animate={{ opacity: 0.8, scale: 1 }}
@@ -520,14 +520,14 @@ export const HiveDonutChart: React.FC<HiveDonutChartProps> = ({
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="text-center">
               <motion.div 
-                className="text-2xl font-bold text-white"
+                className="text-2xl font-bold text-[var(--hive-text-primary)]"
                 initial={{ opacity: 0, scale: 0.5 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: motionDurations.smooth, delay: 0.5 }}
               >
                 {total}
               </motion.div>
-              <div className="text-xs text-white/60">Total</div>
+              <div className="text-xs text-[var(--hive-text-primary)]/60">Total</div>
             </div>
           </div>
         </div>
@@ -551,8 +551,8 @@ export const HiveDonutChart: React.FC<HiveDonutChartProps> = ({
                   style={{ backgroundColor: segment.color }}
                 />
                 <div className="space-y-1">
-                  <div className="text-sm text-white/80">{segment.label}</div>
-                  <div className="text-xs text-white/60">
+                  <div className="text-sm text-[var(--hive-text-primary)]/80">{segment.label}</div>
+                  <div className="text-xs text-[var(--hive-text-primary)]/60">
                     {segment.value} ({segment.percentage.toFixed(1)}%)
                   </div>
                 </div>
@@ -581,7 +581,7 @@ export const HiveLineChart: React.FC<HiveLineChartProps> = ({
   smooth = true,
   area = false,
   gradient = true,
-  color = '#fbbf24',
+  color = 'var(--hive-brand-secondary)',
   animated = true,
   ...props
 }) => {
@@ -678,7 +678,7 @@ export const HiveLineChart: React.FC<HiveLineChartProps> = ({
               cy={point.y}
               r={4}
               fill={color}
-              stroke="rgba(0,0,0,0.2)"
+              stroke="color-mix(in_srgb,var(--hive-background-primary)_20%,transparent)"
               strokeWidth={2}
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
@@ -715,7 +715,7 @@ export const ChartActions: React.FC<{
   <div className="flex items-center space-x-2">
     {onToggleVisibility && (
       <motion.button
-        className="p-2 text-white/60 hover:text-white/80 hover:bg-white/10 rounded-lg transition-colors"
+        className="p-2 text-[var(--hive-text-primary)]/60 hover:text-[var(--hive-text-primary)]/80 hover:bg-[var(--hive-text-primary)]/10 rounded-lg transition-colors"
         onClick={onToggleVisibility}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
@@ -726,7 +726,7 @@ export const ChartActions: React.FC<{
     
     {onMaximize && (
       <motion.button
-        className="p-2 text-white/60 hover:text-white/80 hover:bg-white/10 rounded-lg transition-colors"
+        className="p-2 text-[var(--hive-text-primary)]/60 hover:text-[var(--hive-text-primary)]/80 hover:bg-[var(--hive-text-primary)]/10 rounded-lg transition-colors"
         onClick={onMaximize}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
@@ -737,7 +737,7 @@ export const ChartActions: React.FC<{
     
     {onDownload && (
       <motion.button
-        className="p-2 text-white/60 hover:text-white/80 hover:bg-white/10 rounded-lg transition-colors"
+        className="p-2 text-[var(--hive-text-primary)]/60 hover:text-[var(--hive-text-primary)]/80 hover:bg-[var(--hive-text-primary)]/10 rounded-lg transition-colors"
         onClick={onDownload}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
@@ -748,7 +748,7 @@ export const ChartActions: React.FC<{
     
     {onShare && (
       <motion.button
-        className="p-2 text-white/60 hover:text-white/80 hover:bg-white/10 rounded-lg transition-colors"
+        className="p-2 text-[var(--hive-text-primary)]/60 hover:text-[var(--hive-text-primary)]/80 hover:bg-[var(--hive-text-primary)]/10 rounded-lg transition-colors"
         onClick={onShare}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
@@ -881,8 +881,8 @@ export const HiveCharts: React.FC<HiveChartsProps> = ({
         <div className="flex flex-col items-center justify-center h-full text-center space-y-4">
           <div className="text-6xl opacity-30">📊</div>
           <div className="space-y-2">
-            <h3 className="text-lg font-medium text-white/80">No Data Available</h3>
-            <p className="text-sm text-white/60">Start building tools to see analytics</p>
+            <h3 className="text-lg font-medium text-[var(--hive-text-primary)]/80">No Data Available</h3>
+            <p className="text-sm text-[var(--hive-text-primary)]/60">Start building tools to see analytics</p>
           </div>
           <button className="px-4 py-2 bg-yellow-500/20 text-yellow-400 rounded-lg hover:bg-yellow-500/30 transition-colors">
             {emptyStateAction}

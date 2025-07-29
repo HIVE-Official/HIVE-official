@@ -8,7 +8,7 @@ import {
   Search, Bell, Settings, Plus, ChevronDown,
   MapPin, Building, Coffee, Beaker
 } from 'lucide-react';
-import { Button } from '../ui/button';
+import { Button } from '../../atomic/atoms/button-enhanced';
 import { 
   useNavigation, 
   NavigationContainer, 
@@ -58,7 +58,7 @@ export function CampusBar() {
       className="sticky top-0 z-50 backdrop-blur-xl border-b"
       style={{
         backgroundColor: 'var(--hive-background-primary)',
-        backdropFilter: 'blur(12px) saturate(180%)',
+        backdropFilter: 'blur(3) saturate(180%)',
         borderColor: 'var(--hive-border-primary)',
       }}
     >

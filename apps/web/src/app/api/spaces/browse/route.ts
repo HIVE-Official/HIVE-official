@@ -7,7 +7,7 @@ import { type Space } from '@hive/core';
 
 const browseSpacesSchema = z.object({
   schoolId: z.string().optional(),
-  type: z.enum(['campus_living', 'fraternity_and_sorority', 'hive_exclusive', 'student_organizations', 'university_organizations']).optional(),
+  type: z.enum(['student_organizations', 'university_organizations', 'greek_life', 'campus_living', 'hive_exclusive', 'cohort']).optional(),
   subType: z.string().optional(),
   limit: z.coerce.number().min(1).max(50).default(20),
   offset: z.coerce.number().min(0).default(0),
@@ -55,11 +55,12 @@ export async function GET(request: NextRequest) {
 
     // Define space types for nested structure and their Firebase collection names
     const spaceTypeMapping = {
-      'campus_living': 'campus_living',
-      'fraternity_and_sorority': 'fraternity_and_sorority', 
-      'hive_exclusive': 'hive_exclusive',
       'student_organizations': 'student_organizations',
-      'university_organizations': 'university_organizations'
+      'university_organizations': 'university_organizations',
+      'greek_life': 'greek_life',
+      'campus_living': 'campus_living',
+      'hive_exclusive': 'hive_exclusive',
+      'cohort': 'cohort'
     };
 
     const spaceTypes = Object.keys(spaceTypeMapping);
@@ -87,7 +88,7 @@ export async function GET(request: NextRequest) {
             name: data.name,
             description: data.description,
             type: spaceType, // Use our API space type
-            status: 'activated', // Default since field doesn't exist
+            status: data.status || 'dormant', // Use actual status from data
             memberCount: data.metrics?.memberCount || 0,
             createdAt: data.createdAt,
             updatedAt: data.updatedAt,

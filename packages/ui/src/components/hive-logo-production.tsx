@@ -85,11 +85,11 @@ const productionLogoVariants = cva(
   {
     variants: {
       variant: {
-        primary: "text-white",
+        primary: "text-[var(--hive-text-primary)]",
         gold: "text-[var(--hive-color-gold)]",
-        inverted: "text-black",
+        inverted: "text-[var(--hive-background-primary)]",
         monochrome: "text-current",
-        brand: "text-white",
+        brand: "text-[var(--hive-text-primary)]",
         custom: "text-current",
       },
       size: {
@@ -109,7 +109,7 @@ const productionLogoVariants = cva(
         sidebar: "cursor-pointer hover:scale-102",
         modal: "cursor-default",
         email: "cursor-default",
-        print: "print:text-black",
+        print: "print:text-[var(--hive-background-primary)]",
       }
     },
     defaultVariants: {
@@ -401,7 +401,7 @@ export const HiveLogoProductionAnimated = memo(({
       
       {/* Performance metrics overlay (development only) */}
       {enablePerformanceMetrics && environment === 'development' && (
-        <div className="absolute -top-8 left-0 text-xs text-white/60 whitespace-nowrap">
+        <div className="absolute -top-8 left-0 text-xs text-[var(--hive-text-primary)]/60 whitespace-nowrap">
           {metrics.renderTime?.toFixed(1)}ms
         </div>
       )}
@@ -551,7 +551,7 @@ export const HiveLogoInteractiveAdvanced = memo(({
       },
       whileFocus: { 
         scale: 1.02,
-        boxShadow: "0 0 0 2px rgba(255, 215, 0, 0.5)",
+        boxShadow: "0 0 0 0.5 color-mix(in_srgb,var(--hive-brand-secondary)_50%,transparent)",
         transition: { duration: 0.2 }
       },
       whileTap: { 
@@ -659,7 +659,7 @@ export const HiveLogoAccessible = memo(({
     <div
       className={cn(
         productionLogoVariants({ variant, size, context, className }),
-        "focus:outline-none focus:ring-2 focus:ring-[var(--hive-color-gold)] focus:ring-offset-2 focus:ring-offset-[#0A0A0B] rounded-lg",
+        "focus:outline-none focus:ring-2 focus:ring-[var(--hive-color-gold)] focus:ring-offset-2 focus:ring-offset-[var(--hive-background-primary)] rounded-lg",
         accessibility.focusable && "cursor-pointer"
       )}
       tabIndex={accessibility.focusable ? accessibility.tabIndex || 0 : -1}
@@ -786,7 +786,7 @@ export const HiveLogoPerformanceMonitored = memo(({
       
       {/* Performance metrics display (development only) */}
       {enablePerformanceMetrics && environment === 'development' && (
-        <div className="absolute -top-16 left-0 text-xs text-white/60 bg-black/80 p-2 rounded whitespace-nowrap">
+        <div className="absolute -top-16 left-0 text-xs text-[var(--hive-text-primary)]/60 bg-[var(--hive-background-primary)]/80 p-2 rounded whitespace-nowrap">
           <div>Render: {performanceData.renderTime?.toFixed(2)}ms</div>
           <div>Frames: {performanceData.animationFrames}/s</div>
           <div>Memory: {performanceData.memoryUsage ? `${(performanceData.memoryUsage / 1024 / 1024).toFixed(1)}MB` : 'N/A'}</div>

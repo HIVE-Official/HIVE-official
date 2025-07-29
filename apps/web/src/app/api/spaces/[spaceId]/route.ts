@@ -19,8 +19,8 @@ export async function GET(
       );
     }
 
-    // Find the space in the nested structure: spaces/[spacetype]/spaces/spaceID
-    const spaceTypes = ['campus_living', 'fraternity_and_sorority', 'hive_exclusive', 'student_organizations', 'university_organizations'];
+    // Find the space in the nested structure: spaces/[spacetype]/spaces/spaceID - aligned with new HIVE categories
+    const spaceTypes = ['student_organizations', 'university_organizations', 'greek_life', 'campus_living', 'hive_exclusive', 'cohort'];
     let doc: any = null;
     let spaceType: string | null = null;
 

@@ -1,0 +1,66 @@
+'use client';
+
+import React from 'react';
+import { cn } from '../../lib/utils';
+import { 
+  User, 
+  Grid3X3, 
+  Wrench, 
+  Activity, 
+  FlaskConical, 
+  Calendar, 
+  Eye, 
+  GraduationCap,
+  Star,
+  TestTube,
+  Hexagon
+} from 'lucide-react';
+
+export interface PlatformIconProps {
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+  className?: string;
+}
+
+const iconSizes = {
+  xs: 16,
+  sm: 20, 
+  md: 24,
+  lg: 32,
+  xl: 40
+};
+
+// HIVE Logo Component (fallback to Hexagon if SVG not found)
+export const HiveIcon: React.FC<PlatformIconProps> = ({ size = 'md', className }) => {
+  const [imgError, setImgError] = React.useState(false);
+  
+  if (imgError) {
+    // Fallback to Lucide Hexagon icon
+    return <Hexagon size={iconSizes[size]} className={className} />;
+  }
+  
+  return (
+    <img 
+      src="/assets/hive-logo-white.svg" 
+      alt="HIVE"
+      width={iconSizes[size]}
+      height={iconSizes[size]}
+      className={cn('inline-block', className)}
+      onError={() => setImgError(true)}
+    />
+  );
+};
+
+// Platform icons using Lucide
+export const PlatformIcons = {
+  Hive: HiveIcon,
+  Profile: User,
+  Spaces: Grid3X3,
+  Tools: Wrench,
+  Feed: Activity,
+  Lab: FlaskConical,
+  Calendar: Calendar,
+  Ghost: Eye,
+  University: GraduationCap,
+  Builder: Star,
+  Beta: TestTube
+};

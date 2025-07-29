@@ -31,16 +31,16 @@ export function getFeatureFlags(userId: string): FeatureFlags {
   
   return {
     // Distribute tool builder variants evenly
-    toolBuilderVariant: ['visual', 'wizard', 'template', 'code'][hash % 4] as any,
+    toolBuilderVariant: (['visual', 'wizard', 'template', 'code'] as const)[hash % 4] as FeatureFlags['toolBuilderVariant'],
     
     // Test navigation patterns
-    navigationVariant: ['sidebar', 'topnav', 'command'][hash % 3] as any,
+    navigationVariant: (['sidebar', 'topnav', 'command'] as const)[hash % 3] as FeatureFlags['navigationVariant'],
     
     // Dashboard experiments
-    dashboardLayout: ['cards', 'list'][hash % 2] as any,
+    dashboardLayout: (['cards', 'list'] as const)[hash % 2] as FeatureFlags['dashboardLayout'],
     
     // Space discovery testing
-    spaceDiscovery: ['grid', 'feed'][hash % 2] as any,
+    spaceDiscovery: (['grid', 'feed'] as const)[hash % 2] as FeatureFlags['spaceDiscovery'],
     
     // Feature toggles based on user cohort
     enableAdvancedBuilder: hash % 10 < 3, // 30% of users
@@ -67,7 +67,7 @@ export interface VariantEvent {
   feature: keyof FeatureFlags;
   action: 'view' | 'interact' | 'complete' | 'abandon';
   timestamp: Date;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 export function trackVariantEvent(event: Omit<VariantEvent, 'timestamp'>): void {

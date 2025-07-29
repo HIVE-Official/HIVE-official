@@ -1,5 +1,6 @@
-// HIVE Luxury Color Design System
-// Dark Luxury • Matte Black Sports Car • Premium Rebellion
+// HIVE Color Design System
+// PRD-Aligned: Vercel-inspired monochrome with gold accent
+// Legacy: Dark luxury theme (preserved for backward compatibility)
 
 // Core Dark Luxury Palette - Rich blacks and sophisticated metals
 export const colors = {
@@ -33,6 +34,16 @@ export const colors = {
   // Legacy Support - Keep for backwards compatibility
   black: '#0A0A0B',         // Map to obsidian
   white: '#E5E5E7',         // Map to platinum
+  
+  // Semantic Color Mappings - For consistent hardcoded value replacements
+  textMutedLight: '#A1A1AA', // Most used muted text color
+  textMutedDark: '#71717A',  // Secondary muted text
+  backgroundOverlayLight: 'rgba(255, 255, 255, 0.02)', // Light background overlay
+  backgroundOverlayMedium: 'rgba(255, 255, 255, 0.05)', // Medium background overlay
+  borderSubtle: 'rgba(255, 255, 255, 0.06)', // Subtle borders
+  borderInteractive: 'rgba(255, 255, 255, 0.1)', // Interactive borders
+  goldAccent: '#FFD700',     // Primary gold accent (already exists but for clarity)
+  goldHover: '#FFE255',      // Gold hover state
   
   // Gray Scale - Luxury metal hierarchy
   gray: {
@@ -157,6 +168,10 @@ export const semantic = {
     muted: colors.mercury,              // #9B9B9F - Muted text
     disabled: colors.pewter,            // #6B6B70 - Disabled text
     inverse: colors.obsidian,           // #0A0A0B - Text on gold/light
+    // NEW: Add missing commonly used text colors from audit
+    mutedLight: '#A1A1AA',             // Most used non-tokenized color (60+ uses)
+    mutedDark: '#71717A',              // Secondary muted text color
+    subtle: '#3F3F46',                 // Very subtle text elements
   },
   
   brand: {
@@ -186,8 +201,15 @@ export const semantic = {
     subtle: border.glass,               // Glass subtle borders
     focus: border.gold,                 // Gold focus borders
     error: colors.ruby,                 // Red error borders
+    // NEW: Add missing commonly used border colors from audit  
+    muted: '#3F3F46',                   // Subtle borders (commonly used)
+    interactive: '#A1A1AA',             // Interactive element borders
   },
 } as const;
+
+// === PRD-ALIGNED COLOR SYSTEM (PRIMARY) ===
+// Import the new PRD-aligned color system for migration
+export * from './colors-prd-aligned';
 
 // Type exports
 export type ColorToken = keyof typeof colors;

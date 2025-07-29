@@ -22,8 +22,8 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
       {showGraduationBanner && (
         <div className="mb-4 p-3 bg-gradient-to-r from-hive-gold/20 to-yellow-400/20 rounded-lg border border-hive-gold/30">
           <div className="flex items-center gap-2">
-            <GraduationCap className="h-5 w-5 text-hive-gold" />
-            <span className="text-white font-medium">Graduation in 3 weeks! 🎓</span>
+            <GraduationCap className="h-5 w-5 text-[var(--hive-brand-secondary)]" />
+            <span className="text-[var(--hive-text-primary)] font-medium">Graduation in 3 weeks! 🎓</span>
           </div>
         </div>
       )}
@@ -32,7 +32,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
         <div className="mb-4 p-3 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-lg border border-blue-500/30">
           <div className="flex items-center gap-2">
             <Shield className="h-5 w-5 text-blue-400" />
-            <span className="text-white font-medium">Ghost Mode Active - Limited visibility</span>
+            <span className="text-[var(--hive-text-primary)] font-medium">Ghost Mode Active - Limited visibility</span>
           </div>
         </div>
       )}
@@ -42,7 +42,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
         <div className="mb-4 p-3 bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-lg border border-green-500/30">
           <div className="flex items-center justify-between">
             <div>
-              <span className="text-white font-medium">Profile {completionStatus.percentage}% complete</span>
+              <span className="text-[var(--hive-text-primary)] font-medium">Profile {completionStatus.percentage}% complete</span>
               <p className="text-sm text-gray-400">Add {completionStatus.missing.join(', ')} to unlock full features</p>
             </div>
             <HiveButton size="sm" onClick={onEditProfile}>
@@ -63,21 +63,21 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
               className="w-20 h-20 rounded-full object-cover border-2 border-hive-gold/30"
             />
           ) : (
-            <div className="w-20 h-20 bg-gradient-to-br from-hive-gold to-yellow-400 rounded-full flex items-center justify-center text-2xl font-bold text-black">
+            <div className="w-20 h-20 bg-gradient-to-br from-hive-gold to-yellow-400 rounded-full flex items-center justify-center text-2xl font-bold text-[var(--hive-background-primary)]">
               {user.fullName?.[0] || user.email?.[0] || 'U'}
             </div>
           )}
           
           {/* Online Status */}
           {user.onlineStatus === 'online' && (
-            <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 rounded-full border-2 border-gray-800" />
+            <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 rounded-full border-2 border-[var(--hive-border-default)]" />
           )}
         </div>
 
         {/* Profile Details */}
         <div className="flex-1">
           <div className="flex items-center gap-3 mb-2">
-            <h1 className="text-2xl font-bold text-white">{user.fullName}</h1>
+            <h1 className="text-2xl font-bold text-[var(--hive-text-primary)]">{user.fullName}</h1>
             {user.isBuilder && (
               <HiveBadge variant="active-tag" className="text-xs">
                 {user.builderLevel || 'Builder'}
@@ -86,7 +86,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
           </div>
 
           <div className="flex items-center gap-2 mb-3">
-            <span className="text-hive-gold font-medium">@{user.handle}</span>
+            <span className="text-[var(--hive-brand-secondary)] font-medium">@{user.handle}</span>
             {user.isPublic && (
               <HiveBadge variant="skill-tag" className="text-xs">
                 Public
@@ -170,19 +170,19 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
       <div className="mt-6 pt-6 border-t border-hive-border-secondary">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
           <div>
-            <div className="text-xl font-bold text-white">{user.stats.totalSpaces}</div>
+            <div className="text-xl font-bold text-[var(--hive-text-primary)]">{user.stats.totalSpaces}</div>
             <div className="text-sm text-gray-400">Spaces</div>
           </div>
           <div>
-            <div className="text-xl font-bold text-white">{user.stats.connectionsCount}</div>
+            <div className="text-xl font-bold text-[var(--hive-text-primary)]">{user.stats.connectionsCount}</div>
             <div className="text-sm text-gray-400">Connections</div>
           </div>
           <div>
-            <div className="text-xl font-bold text-white">{user.stats.streakDays}</div>
+            <div className="text-xl font-bold text-[var(--hive-text-primary)]">{user.stats.streakDays}</div>
             <div className="text-sm text-gray-400">Day Streak</div>
           </div>
           <div>
-            <div className="text-xl font-bold text-white">{user.stats.toolsCreated}</div>
+            <div className="text-xl font-bold text-[var(--hive-text-primary)]">{user.stats.toolsCreated}</div>
             <div className="text-sm text-gray-400">Tools Created</div>
           </div>
         </div>

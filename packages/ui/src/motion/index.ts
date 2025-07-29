@@ -36,6 +36,6 @@ export {
 // Motion wrapper component
 export { HiveMotionWrapper } from '../components/hive-motion-wrapper';
 
-// Re-export framer motion for convenience
-export { motion, AnimatePresence, useAnimation, useInView } from 'framer-motion';
-export type { Variants, Transition, MotionProps } from 'framer-motion';
+// Re-export framer motion for convenience - specific named exports only for NextJS client boundary compatibility
+export { motion, AnimatePresence, useAnimation, useInView, useTransform, useSpring, useMotionValue } from 'framer-motion';
+export type { Variants, Transition, MotionProps, MotionValue } from 'framer-motion';

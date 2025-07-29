@@ -10,7 +10,7 @@ interface ActivityTrackingOptions {
   toolId?: string;
   contentId?: string;
   duration?: number;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 class ActivityTracker {
@@ -107,7 +107,7 @@ class ActivityTracker {
   }
 
   // Tool interaction tracking
-  trackToolInteraction(userId: string, toolId: string, spaceId?: string, metadata?: Record<string, any>): void {
+  trackToolInteraction(userId: string, toolId: string, spaceId?: string, metadata?: Record<string, unknown>): void {
     this.trackActivity({
       userId,
       type: 'tool_interaction',
@@ -118,7 +118,7 @@ class ActivityTracker {
   }
 
   // Content creation tracking
-  trackContentCreation(userId: string, contentId: string, spaceId?: string, metadata?: Record<string, any>): void {
+  trackContentCreation(userId: string, contentId: string, spaceId?: string, metadata?: Record<string, unknown>): void {
     this.trackActivity({
       userId,
       type: 'content_creation',
@@ -129,7 +129,7 @@ class ActivityTracker {
   }
 
   // Social interaction tracking
-  trackSocialInteraction(userId: string, spaceId?: string, metadata?: Record<string, any>): void {
+  trackSocialInteraction(userId: string, spaceId?: string, metadata?: Record<string, unknown>): void {
     this.trackActivity({
       userId,
       type: 'social_interaction',
@@ -189,7 +189,7 @@ export function withSpaceTracking<T extends { spaceId: string }>(
 // Utility functions for common tracking scenarios
 export const trackingUtils = {
   // Track page views
-  trackPageView: (userId: string, page: string, metadata?: Record<string, any>) => {
+  trackPageView: (userId: string, page: string, metadata?: Record<string, unknown>) => {
     activityTracker.trackActivity({
       userId,
       type: 'social_interaction',
@@ -198,7 +198,7 @@ export const trackingUtils = {
   },
 
   // Track button clicks
-  trackButtonClick: (userId: string, buttonId: string, spaceId?: string, metadata?: Record<string, any>) => {
+  trackButtonClick: (userId: string, buttonId: string, spaceId?: string, metadata?: Record<string, unknown>) => {
     activityTracker.trackActivity({
       userId,
       type: 'social_interaction',
@@ -208,7 +208,7 @@ export const trackingUtils = {
   },
 
   // Track form submissions
-  trackFormSubmission: (userId: string, formType: string, spaceId?: string, metadata?: Record<string, any>) => {
+  trackFormSubmission: (userId: string, formType: string, spaceId?: string, metadata?: Record<string, unknown>) => {
     activityTracker.trackActivity({
       userId,
       type: 'content_creation',
@@ -218,7 +218,7 @@ export const trackingUtils = {
   },
 
   // Track search queries
-  trackSearch: (userId: string, query: string, results: number, metadata?: Record<string, any>) => {
+  trackSearch: (userId: string, query: string, results: number, metadata?: Record<string, unknown>) => {
     activityTracker.trackActivity({
       userId,
       type: 'social_interaction',

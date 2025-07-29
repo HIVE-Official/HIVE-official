@@ -274,7 +274,7 @@ interface LiquidRippleProps {
 export const HiveLiquidRipple: React.FC<LiquidRippleProps> = ({
   children,
   className,
-  rippleColor = 'rgb(255, 215, 0)',
+  rippleColor = 'var(--hive-brand-secondary)',
   intensity = 'medium',
   disabled = false,
   onRippleComplete
@@ -427,8 +427,8 @@ export const HiveMagneticTarget: React.FC<MagneticTargetProps> = ({
         <motion.div
           className="absolute inset-0 pointer-events-none"
           style={{
-            background: 'radial-gradient(circle, rgba(255, 215, 0, 0.1) 0%, transparent 70%)',
-            border: '2px dashed rgba(255, 215, 0, 0.3)',
+            background: 'radial-gradient(circle, color-mix(in_srgb,var(--hive-brand-secondary)_10%,transparent) 0%, transparent 70%)',
+            border: '0.5 dashed color-mix(in_srgb,var(--hive-brand-secondary)_30%,transparent)',
             borderRadius: '50%',
           }}
           animate={{

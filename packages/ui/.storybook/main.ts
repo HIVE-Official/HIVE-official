@@ -3,7 +3,18 @@ import { mergeConfig } from 'vite';
 import path from 'path';
 
 const config: StorybookConfig = {
-  stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
+  stories: [
+    // ORGANIZED ATOMIC DESIGN SYSTEM - Clean structure
+    '../src/stories/00-foundation/**/*.stories.@(js|jsx|ts|tsx)',
+    '../src/stories/01-atoms/**/*.stories.@(js|jsx|ts|tsx)',
+    '../src/stories/02-molecules/**/*.stories.@(js|jsx|ts|tsx)', // Re-enabled with comprehensive new stories
+    '../src/stories/03-organisms/**/*.stories.@(js|jsx|ts|tsx)',
+    '../src/stories/04-templates/**/*.stories.@(js|jsx|ts|tsx)',
+    '../src/stories/05-pages/**/*.stories.@(js|jsx|ts|tsx)',
+    
+    // Include all MDX docs
+    '../src/**/*.mdx'
+  ],
   addons: [
     '@storybook/addon-links',
     '@storybook/addon-essentials',

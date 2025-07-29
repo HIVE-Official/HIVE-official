@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../lib/utils';
@@ -137,17 +137,17 @@ export interface Member {
   bio?: string;
   role: keyof typeof memberRoles;
   status: keyof typeof memberStatuses;
-  joinedAt: Date;
-  lastActive: Date;
-  isVerified: boolean;
-  badges: string[];
-  stats: {
+  joinedAt: Date | { toDate: () => Date };
+  lastActive: Date | { toDate: () => Date };
+  isVerified?: boolean;
+  badges?: string[];
+  stats?: {
     postsCount: number;
     likesReceived: number;
     eventsAttended: number;
     contributionScore: number;
   };
-  interests: string[];
+  interests?: string[];
   major?: string;
   graduationYear?: number;
   location?: string;
@@ -158,11 +158,14 @@ export interface Member {
     linkedin?: string;
     website?: string;
   };
-  permissions: {
+  permissions?: {
     canMessage: boolean;
     canViewProfile: boolean;
     canInviteOthers: boolean;
   };
+  // Additional fields from API
+  spaceRole?: string;
+  isOnline?: boolean;
 }
 
 export interface HiveMembersSurfaceProps
@@ -183,14 +186,60 @@ export interface HiveMembersSurfaceProps
   showOfflineMembers?: boolean;
   showMemberStats?: boolean;
   maxMembers?: number;
+  // New props for real data fetching
+  autoFetch?: boolean;
+  authToken?: string;
 }
+
+// Helper function to get auth token from session storage
+const getAuthToken = (): string | null => {
+  if (typeof window === 'undefined') return null;
+  
+  try {
+    const sessionJson = localStorage.getItem('hive_session');
+    if (sessionJson) {
+      const session = JSON.parse(sessionJson);
+      return process.env.NODE_ENV === 'development' 
+        ? `dev_token_${session.uid}` 
+        : session.token;
+    }
+  } catch (error) {
+    console.error('Error getting session:', error);
+  }
+  return null;
+};
+
+// API function to fetch members
+const fetchMembers = async (spaceId: string, limit = 50): Promise<{ members: Member[]; summary: any }> => {
+  const token = getAuthToken();
+  if (!token) {
+    throw new Error('No authentication token available');
+  }
+
+  const response = await fetch(`/api/spaces/${spaceId}/members?limit=${limit}&includeOffline=true`, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch members: ${response.statusText}`);
+  }
+
+  const data = await response.json();
+  return {
+    members: data.members || [],
+    summary: data.summary || { totalMembers: 0, onlineMembers: 0, activeMembers: 0 }
+  };
+};
 
 export const HiveMembersSurface = React.forwardRef<HTMLDivElement, HiveMembersSurfaceProps>(
   ({ 
     className,
     mode,
     space,
-    members = [],
+    members: propMembers,
     currentUserId,
     isBuilder = false,
     canModerate = false,
@@ -204,6 +253,8 @@ export const HiveMembersSurface = React.forwardRef<HTMLDivElement, HiveMembersSu
     showOfflineMembers = true,
     showMemberStats = true,
     maxMembers = 20,
+    autoFetch = true,
+    authToken,
     ...props 
   }, ref) => {
     
@@ -212,9 +263,67 @@ export const HiveMembersSurface = React.forwardRef<HTMLDivElement, HiveMembersSu
     const [currentViewMode, setCurrentViewMode] = useState(viewMode);
     const [hoveredMember, setHoveredMember] = useState<string | null>(null);
     const [showMemberMenu, setShowMemberMenu] = useState<string | null>(null);
+    const [fetchedMembers, setFetchedMembers] = useState<Member[]>([]);
+    const [membersSummary, setMembersSummary] = useState<any>(null);
+    const [isLoading, setIsLoading] = useState(autoFetch);
+    const [error, setError] = useState<string | null>(null);
     
-    // Filter and sort members
-    const filteredMembers = members
+    // Fetch members from API if autoFetch is enabled
+    useEffect(() => {
+      if (!autoFetch || !space?.id) return;
+      
+      const loadMembers = async () => {
+        try {
+          setIsLoading(true);
+          setError(null);
+          const { members, summary } = await fetchMembers(space.id, maxMembers);
+          setFetchedMembers(members);
+          setMembersSummary(summary);
+        } catch (error) {
+          console.error('Failed to fetch members:', error);
+          setError(error instanceof Error ? error.message : 'Failed to fetch members');
+        } finally {
+          setIsLoading(false);
+        }
+      };
+
+      loadMembers();
+    }, [autoFetch, space?.id, maxMembers]);
+    
+    // Use either provided members or fetched members
+    const members = propMembers || fetchedMembers;
+    
+    // Normalize member data and filter members
+    const normalizedMembers = members.map(member => ({
+      ...member,
+      // Normalize date fields
+      joinedAt: member.joinedAt && typeof member.joinedAt === 'object' && 'toDate' in member.joinedAt 
+        ? member.joinedAt.toDate() 
+        : new Date(member.joinedAt),
+      lastActive: member.lastActive && typeof member.lastActive === 'object' && 'toDate' in member.lastActive 
+        ? member.lastActive.toDate() 
+        : new Date(member.lastActive),
+      // Ensure required fields have defaults
+      isVerified: member.isVerified || false,
+      badges: member.badges || [],
+      stats: member.stats || {
+        postsCount: 0,
+        likesReceived: 0,
+        eventsAttended: 0,
+        contributionScore: 0,
+      },
+      interests: member.interests || [],
+      permissions: member.permissions || {
+        canMessage: true,
+        canViewProfile: true,
+        canInviteOthers: false,
+      },
+      // Map role to match our role system
+      role: (member.role === 'owner' || member.role === 'admin') ? 'builder' : 
+            (member.role in memberRoles ? member.role : 'member') as keyof typeof memberRoles,
+    }));
+
+    const filteredMembers = normalizedMembers
       .filter(member => {
         // Role filter
         const roleMatch = selectedRole === 'all' || member.role === selectedRole;
@@ -224,7 +333,7 @@ export const HiveMembersSurface = React.forwardRef<HTMLDivElement, HiveMembersSu
           member.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
           member.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
           member.bio?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          member.interests.some(interest => 
+          member.interests?.some(interest => 
             interest.toLowerCase().includes(searchQuery.toLowerCase())
           );
         
@@ -274,6 +383,91 @@ export const HiveMembersSurface = React.forwardRef<HTMLDivElement, HiveMembersSu
       return iconMap[platform] || Globe;
     };
     
+    // Loading state
+    if (isLoading) {
+      return (
+        <div
+          ref={ref}
+          className={cn(hiveMembersSurfaceVariants({ mode, className }))}
+          {...props}
+        >
+          <div className="space-y-4">
+            {/* Loading skeleton for member cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className="bg-[var(--hive-background-primary)]/10 backdrop-blur-sm border border-white/5 rounded-xl p-4 animate-pulse">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-12 h-12 bg-gray-600 rounded-full"></div>
+                    <div className="flex-1">
+                      <div className="h-4 bg-gray-600 rounded mb-2 w-24"></div>
+                      <div className="h-3 bg-gray-700 rounded w-16"></div>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="h-3 bg-gray-600 rounded w-full"></div>
+                    <div className="h-3 bg-gray-600 rounded w-3/4"></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Error state
+    if (error) {
+      return (
+        <div
+          ref={ref}
+          className={cn(hiveMembersSurfaceVariants({ mode, className }))}
+          {...props}
+        >
+          <motion.div
+            className="text-center py-12"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: motionDurations.smooth }}
+          >
+            <motion.div
+              className="w-16 h-16 mx-auto mb-6 bg-red-500/20 rounded-2xl flex items-center justify-center"
+              whileHover={{ scale: 1.05, rotate: 5 }}
+              transition={{ duration: motionDurations.quick }}
+            >
+              <Users className="w-8 h-8 text-red-400" />
+            </motion.div>
+            
+            <h3 className="text-xl font-semibold text-[var(--hive-text-primary)] mb-3">Unable to Load Members</h3>
+            <p className="text-[var(--hive-text-secondary)] text-sm max-w-md mx-auto mb-8 leading-relaxed">
+              {error}
+            </p>
+            
+            <motion.button
+              className="inline-flex items-center gap-2 px-6 py-3 bg-gray-500/20 text-gray-400 border border-gray-500/30 rounded-xl hover:bg-gray-500/30 transition-all duration-200 font-medium"
+              onClick={() => {
+                setError(null);
+                setIsLoading(true);
+                // Retry fetching
+                if (autoFetch && space?.id) {
+                  fetchMembers(space.id, maxMembers)
+                    .then(({ members, summary }) => {
+                      setFetchedMembers(members);
+                      setMembersSummary(summary);
+                    })
+                    .catch(e => setError(e.message))
+                    .finally(() => setIsLoading(false));
+                }
+              }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              Try Again
+            </motion.button>
+          </motion.div>
+        </div>
+      );
+    }
+    
     // Empty state
     if (members.length === 0) {
       return (
@@ -296,7 +490,7 @@ export const HiveMembersSurface = React.forwardRef<HTMLDivElement, HiveMembersSu
               <Users className="w-8 h-8 text-gray-400" />
             </motion.div>
             
-            <h3 className="text-xl font-semibold text-white mb-3">No Members Yet</h3>
+            <h3 className="text-xl font-semibold text-[var(--hive-text-primary)] mb-3">No Members Yet</h3>
             <p className="text-gray-400 text-sm max-w-md mx-auto mb-8 leading-relaxed">
               Invite people to join your Space and build a thriving community together.
             </p>
@@ -326,7 +520,7 @@ export const HiveMembersSurface = React.forwardRef<HTMLDivElement, HiveMembersSu
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-4">
-            <h3 className="text-lg font-semibold text-white">Members</h3>
+            <h3 className="text-lg font-semibold text-[var(--hive-text-primary)]">Members</h3>
             <div className="flex items-center gap-3 text-sm text-gray-400">
               <span>{members.length} total</span>
               <span>•</span>
@@ -339,7 +533,7 @@ export const HiveMembersSurface = React.forwardRef<HTMLDivElement, HiveMembersSu
           
           <div className="flex items-center gap-2">
             {/* View Mode Toggle */}
-            <div className="flex bg-black/20 rounded-xl border border-white/10 p-1">
+            <div className="flex bg-[var(--hive-background-primary)]/20 rounded-xl border border-white/10 p-1">
               {[
                 { key: 'grid', icon: Grid },
                 { key: 'list', icon: List }
@@ -350,7 +544,7 @@ export const HiveMembersSurface = React.forwardRef<HTMLDivElement, HiveMembersSu
                     "p-2 rounded-lg transition-all duration-200",
                     currentViewMode === key
                       ? "bg-gray-500/20 text-gray-400"
-                      : "text-gray-400 hover:text-white"
+                      : "text-gray-400 hover:text-[var(--hive-text-primary)]"
                   )}
                   onClick={() => setCurrentViewMode(key as any)}
                   whileHover={{ scale: 1.05 }}
@@ -386,14 +580,14 @@ export const HiveMembersSurface = React.forwardRef<HTMLDivElement, HiveMembersSu
               placeholder="Search members..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-12 pr-4 py-3 bg-black/20 backdrop-blur-sm border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500/50 focus:border-gray-500/30 transition-all duration-200"
+              className="w-full pl-12 pr-4 py-3 bg-[var(--hive-background-primary)]/20 backdrop-blur-sm border border-white/10 rounded-xl text-[var(--hive-text-primary)] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500/50 focus:border-gray-500/30 transition-all duration-200"
             />
           </div>
           
           {/* Role Filters */}
           <div className="flex items-center gap-2 overflow-x-auto pb-2">
             {[
-              { key: 'all', label: 'All Members', icon: Users, color: 'text-white', count: members.length },
+              { key: 'all', label: 'All Members', icon: Users, color: 'text-[var(--hive-text-primary)]', count: members.length },
               ...Object.entries(memberRoles).map(([key, config]) => ({
                 key,
                 label: config.label,
@@ -412,7 +606,7 @@ export const HiveMembersSurface = React.forwardRef<HTMLDivElement, HiveMembersSu
                     "flex items-center gap-2 px-3 py-1.5 rounded-xl border text-sm font-medium transition-all duration-200 whitespace-nowrap",
                     isActive
                       ? "bg-gray-500/20 text-gray-400 border-gray-500/30"
-                      : "bg-black/20 text-gray-400 border-white/10 hover:border-white/20 hover:text-white"
+                      : "bg-[var(--hive-background-primary)]/20 text-gray-400 border-white/10 hover:border-white/20 hover:text-[var(--hive-text-primary)]"
                   )}
                   onClick={() => setSelectedRole(filter.key as any)}
                   whileHover={{ scale: 1.02 }}
@@ -424,7 +618,7 @@ export const HiveMembersSurface = React.forwardRef<HTMLDivElement, HiveMembersSu
                     "px-1.5 py-0.5 rounded-full text-xs",
                     isActive 
                       ? "bg-gray-500/30 text-gray-300"
-                      : "bg-white/10 text-gray-500"
+                      : "bg-[var(--hive-text-primary)]/10 text-gray-500"
                   )}>
                     {filter.count}
                   </span>
@@ -451,7 +645,7 @@ export const HiveMembersSurface = React.forwardRef<HTMLDivElement, HiveMembersSu
               <motion.article
                 key={member.id}
                 className={cn(
-                  "relative group bg-black/10 backdrop-blur-sm border border-white/5 rounded-xl overflow-hidden transition-all duration-200 cursor-pointer",
+                  "relative group bg-[var(--hive-background-primary)]/10 backdrop-blur-sm border border-white/5 rounded-xl overflow-hidden transition-all duration-200 cursor-pointer",
                   isHovered && "border-white/10",
                   isCurrentUser && "ring-1 ring-blue-500/30 bg-blue-500/5",
                   mode === 'edit' && "hover:ring-2 hover:ring-gray-500/30"
@@ -476,7 +670,7 @@ export const HiveMembersSurface = React.forwardRef<HTMLDivElement, HiveMembersSu
                       ) : (
                         <div className="w-full h-full bg-gradient-to-br from-gray-500/20 to-gray-700/20 flex items-center justify-center">
                           <span className={cn(
-                            "font-medium text-white",
+                            "font-medium text-[var(--hive-text-primary)]",
                             currentViewMode === 'grid' ? "text-lg" : "text-sm"
                           )}>
                             {member.name.charAt(0).toUpperCase()}
@@ -514,7 +708,7 @@ export const HiveMembersSurface = React.forwardRef<HTMLDivElement, HiveMembersSu
                   )}>
                     <div className="flex items-center gap-2 mb-1">
                       <h4 className={cn(
-                        "font-medium text-white truncate",
+                        "font-medium text-[var(--hive-text-primary)] truncate",
                         currentViewMode === 'grid' && "text-center w-full"
                       )}>
                         {member.name}
@@ -567,7 +761,7 @@ export const HiveMembersSurface = React.forwardRef<HTMLDivElement, HiveMembersSu
                         {member.interests.slice(0, 3).map((interest, i) => (
                           <span
                             key={i}
-                            className="px-2 py-0.5 bg-white/5 rounded text-xs text-gray-300"
+                            className="px-2 py-0.5 bg-[var(--hive-text-primary)]/5 rounded text-xs text-gray-300"
                           >
                             {interest}
                           </span>
@@ -603,7 +797,7 @@ export const HiveMembersSurface = React.forwardRef<HTMLDivElement, HiveMembersSu
                     {canModerate && !isCurrentUser && (
                       <div className="relative">
                         <motion.button
-                          className="p-2 text-gray-400 hover:text-white rounded-lg hover:bg-white/5 transition-all duration-200"
+                          className="p-2 text-gray-400 hover:text-[var(--hive-text-primary)] rounded-lg hover:bg-[var(--hive-text-primary)]/5 transition-all duration-200"
                           onClick={(e) => {
                             e.stopPropagation();
                             setShowMemberMenu(showMemberMenu === member.id ? null : member.id);
@@ -618,7 +812,7 @@ export const HiveMembersSurface = React.forwardRef<HTMLDivElement, HiveMembersSu
                         <AnimatePresence>
                           {showMemberMenu === member.id && (
                             <motion.div
-                              className="absolute top-full right-0 mt-2 w-48 bg-black/80 backdrop-blur-xl border border-white/10 rounded-xl overflow-hidden z-20"
+                              className="absolute top-full right-0 mt-2 w-48 bg-[var(--hive-background-primary)]/80 backdrop-blur-xl border border-white/10 rounded-xl overflow-hidden z-20"
                               initial={{ opacity: 0, y: -10 }}
                               animate={{ opacity: 1, y: 0 }}
                               exit={{ opacity: 0, y: -10 }}
@@ -626,7 +820,7 @@ export const HiveMembersSurface = React.forwardRef<HTMLDivElement, HiveMembersSu
                             >
                               <div className="p-2">
                                 <motion.button
-                                  className="w-full flex items-center gap-3 p-2 text-left rounded-lg hover:bg-white/5 transition-all duration-200 text-sm text-white"
+                                  className="w-full flex items-center gap-3 p-2 text-left rounded-lg hover:bg-[var(--hive-text-primary)]/5 transition-all duration-200 text-sm text-[var(--hive-text-primary)]"
                                   onClick={() => onChangeRole?.(member.id, 'moderator')}
                                   whileHover={{ x: 4 }}
                                 >

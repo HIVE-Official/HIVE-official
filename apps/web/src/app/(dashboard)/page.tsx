@@ -1,54 +1,28 @@
 "use client";
 
-import { useState, useEffect } from 'react';
-import { HiveDashboard } from '@hive/ui';
-import { useSession } from '../../hooks/use-session';
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { PageContainer } from '@hive/ui';
+import { Activity } from 'lucide-react';
 
+// Dashboard now redirects to FEED per @hive.md four-pillar structure
+// Profile is the "Personal Campus Dashboard" with bento grid layout
 export default function DashboardPage() {
-  const { user } = useSession();
   const router = useRouter();
-  const [dashboardData, setDashboardData] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  // Load dashboard data
+  
   useEffect(() => {
-    const loadDashboardData = async () => {
-      try {
-        const response = await fetch('/api/profile/dashboard');
-        if (response.ok) {
-          const data = await response.json();
-          setDashboardData(data.dashboard); // Extract dashboard from response
-        }
-      } catch (error) {
-        console.error('Failed to load dashboard data:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    if (user) {
-      loadDashboardData();
-    } else {
-      setIsLoading(false);
-    }
-  }, [user]);
-
-  const handleRefresh = () => {
-    setIsLoading(true);
-    window.location.reload();
-  };
-
-  const handleNavigate = (path: string) => {
-    router.push(path);
-  };
-
+    // Redirect to feed since dashboard functionality moved to profile per @hive.md
+    router.replace('/feed');
+  }, [router]);
+  
   return (
-    <HiveDashboard
-      data={dashboardData}
-      isLoading={isLoading}
-      onRefresh={handleRefresh}
-      onNavigate={handleNavigate}
-    />
+    <PageContainer title="Redirecting to Feed..." maxWidth="xl">
+      <div className="flex items-center justify-center h-64">
+        <div className="text-center">
+          <Activity className="w-8 h-8 bg-hive-gold rounded-lg animate-pulse mx-auto mb-4 text-hive-obsidian p-1" />
+          <p className="text-white">Redirecting to your campus feed...</p>
+        </div>
+      </div>
+    </PageContainer>
   );
 }

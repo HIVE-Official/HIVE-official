@@ -81,13 +81,13 @@ const hiveFormFieldVariants = cva(
 );
 
 const formInputVariants = cva(
-  "w-full px-4 py-3 bg-black/40 backdrop-blur-xl border rounded-xl transition-all focus:outline-none",
+  "w-full px-4 py-3 bg-[var(--hive-background-primary)]/40 backdrop-blur-xl border rounded-xl transition-all focus:outline-none",
   {
     variants: {
       variant: {
-        default: "border-white/20 focus:border-yellow-500/50 text-white placeholder-white/50",
-        premium: "border-yellow-500/30 focus:border-yellow-500 text-white placeholder-white/50",
-        minimal: "border-white/10 focus:border-white/30 text-white placeholder-white/50",
+        default: "border-white/20 focus:border-yellow-500/50 text-[var(--hive-text-primary)] placeholder-white/50",
+        premium: "border-yellow-500/30 focus:border-yellow-500 text-[var(--hive-text-primary)] placeholder-white/50",
+        minimal: "border-white/10 focus:border-white/30 text-[var(--hive-text-primary)] placeholder-white/50",
       },
       
       state: {
@@ -399,7 +399,7 @@ export const HiveFormInput = React.forwardRef<HTMLInputElement, HiveFormInputPro
       <div className={cn(hiveFormFieldVariants({ variant, state: fieldState }))}>
         {/* Label */}
         {label && (
-          <label className="block text-sm font-medium text-white mb-2">
+          <label className="block text-sm font-medium text-[var(--hive-text-primary)] mb-2">
             {label}
             {rules.some(r => r.type === 'required') && (
               <span className="text-red-400 ml-1">*</span>
@@ -409,7 +409,7 @@ export const HiveFormInput = React.forwardRef<HTMLInputElement, HiveFormInputPro
         
         {/* Description */}
         {description && (
-          <p className="text-sm text-white/60 mb-3">{description}</p>
+          <p className="text-sm text-[var(--hive-text-primary)]/60 mb-3">{description}</p>
         )}
         
         {/* Input Container */}
@@ -443,7 +443,7 @@ export const HiveFormInput = React.forwardRef<HTMLInputElement, HiveFormInputPro
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="text-white/60 hover:text-white/80 transition-colors"
+                className="text-[var(--hive-text-primary)]/60 hover:text-[var(--hive-text-primary)]/80 transition-colors"
               >
                 {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
@@ -547,7 +547,7 @@ export const HiveFormTextarea = React.forwardRef<HTMLTextAreaElement, HiveFormTe
       <div className={cn(hiveFormFieldVariants({ variant, state: fieldState }))}>
         {/* Label */}
         {label && (
-          <label className="block text-sm font-medium text-white mb-2">
+          <label className="block text-sm font-medium text-[var(--hive-text-primary)] mb-2">
             {label}
             {rules.some(r => r.type === 'required') && (
               <span className="text-red-400 ml-1">*</span>
@@ -557,7 +557,7 @@ export const HiveFormTextarea = React.forwardRef<HTMLTextAreaElement, HiveFormTe
         
         {/* Description */}
         {description && (
-          <p className="text-sm text-white/60 mb-3">{description}</p>
+          <p className="text-sm text-[var(--hive-text-primary)]/60 mb-3">{description}</p>
         )}
         
         {/* Textarea */}
@@ -569,14 +569,14 @@ export const HiveFormTextarea = React.forwardRef<HTMLTextAreaElement, HiveFormTe
             onChange={handleChange}
             onBlur={handleBlur}
             className={cn(
-              "w-full px-4 py-3 bg-black/40 backdrop-blur-xl border rounded-xl transition-all focus:outline-none resize-none",
+              "w-full px-4 py-3 bg-[var(--hive-background-primary)]/40 backdrop-blur-xl border rounded-xl transition-all focus:outline-none resize-none",
               variant === 'default' && "border-white/20 focus:border-yellow-500/50",
               variant === 'premium' && "border-yellow-500/30 focus:border-yellow-500",
               variant === 'minimal' && "border-white/10 focus:border-white/30",
               fieldState === 'error' && "border-red-500/50 focus:border-red-500",
               fieldState === 'success' && "border-green-500/50 focus:border-green-500",
               fieldState === 'validating' && "border-blue-500/50 focus:border-blue-500",
-              "text-white placeholder-white/50",
+              "text-[var(--hive-text-primary)] placeholder-white/50",
               className
             )}
             {...props}

@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { collection, doc, getDoc, setDoc, updateDoc, query, where, getDocs, addDoc, deleteDoc, Timestamp } from 'firebase/firestore';
-import { db } from '@hive/core/server';
-import { getCurrentUser } from '@hive/auth-logic';
+import { dbAdmin as db } from '@/lib/firebase-admin';
+import { getCurrentUser } from '@/lib/auth-server';
 
 // Tool deployment interface
 interface ToolDeployment {
@@ -51,13 +50,15 @@ interface ToolExecutionContext {
 // POST - Deploy tool to profile or space
 export async function POST(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const body = await request.json();
     const { toolId, deployTo, targetId, surface, config, permissions, settings } = body;
+
+    console.log(`🚀 Deploying tool ${toolId} to ${deployTo}:${targetId} by user ${user.uid}`);
 
     // Validate required fields
     if (!toolId || !deployTo || !targetId) {
@@ -69,8 +70,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Get tool details
-    const toolDoc = await getDoc(doc(db, 'tools', toolId));
-    if (!toolDoc.exists()) {
+    const toolDoc = await db.collection('tools').doc(toolId).get();
+    if (!toolDoc.exists) {
       return NextResponse.json({ error: 'Tool not found' }, { status: 404 });
     }
 
@@ -88,25 +89,16 @@ export async function POST(request: NextRequest) {
 
     if (deployTo === 'space') {
       // Check space membership and permissions
-      const spaceDoc = await getDoc(doc(db, 'spaces', targetId));
-      if (!spaceDoc.exists()) {
+      const spaceDoc = await db.collection('spaces').doc(targetId).get();
+      if (!spaceDoc.exists) {
         return NextResponse.json({ error: 'Space not found' }, { status: 404 });
       }
 
-      const membershipQuery = query(
-        collection(db, 'members'),
-        where('userId', '==', user.uid),
-        where('spaceId', '==', targetId),
-        where('status', '==', 'active')
-      );
-      const membershipSnapshot = await getDocs(membershipQuery);
-      
-      if (membershipSnapshot.empty) {
-        return NextResponse.json({ error: 'Not a member of this space' }, { status: 403 });
-      }
+      // Check if user has permission to deploy tools in this space
+      const spaceData = spaceDoc.data();
+      const userRole = spaceData?.members?.[user.uid]?.role;
 
-      const memberData = membershipSnapshot.docs[0].data();
-      if (!['builder', 'admin', 'moderator'].includes(memberData.role)) {
+      if (!userRole || !['builder', 'admin', 'moderator'].includes(userRole)) {
         return NextResponse.json({ error: 'Insufficient permissions to deploy tools' }, { status: 403 });
       }
 
@@ -117,14 +109,12 @@ export async function POST(request: NextRequest) {
     }
 
     // Check for existing deployment
-    const existingQuery = query(
-      collection(db, 'deployedTools'),
-      where('toolId', '==', toolId),
-      where('deployedTo', '==', deployTo),
-      where('targetId', '==', targetId),
-      where('status', '!=', 'disabled')
-    );
-    const existingSnapshot = await getDocs(existingQuery);
+    const existingSnapshot = await db.collection('deployedTools')
+      .where('toolId', '==', toolId)
+      .where('deployedTo', '==', deployTo)
+      .where('targetId', '==', targetId)
+      .where('status', 'in', ['active', 'paused'])
+      .get();
     
     if (!existingSnapshot.empty) {
       return NextResponse.json({ error: 'Tool already deployed to this target' }, { status: 409 });
@@ -132,13 +122,11 @@ export async function POST(request: NextRequest) {
 
     // Check space tool limits (20 max per space)
     if (deployTo === 'space') {
-      const spaceToolsQuery = query(
-        collection(db, 'deployedTools'),
-        where('deployedTo', '==', 'space'),
-        where('targetId', '==', targetId),
-        where('status', '==', 'active')
-      );
-      const spaceToolsSnapshot = await getDocs(spaceToolsQuery);
+      const spaceToolsSnapshot = await db.collection('deployedTools')
+        .where('deployedTo', '==', 'space')
+        .where('targetId', '==', targetId)
+        .where('status', '==', 'active')
+        .get();
       
       if (spaceToolsSnapshot.size >= 20) {
         return NextResponse.json({ error: 'Space has reached maximum tool limit (20)' }, { status: 409 });
@@ -180,28 +168,27 @@ export async function POST(request: NextRequest) {
       }
     };
 
-    const deploymentRef = await addDoc(collection(db, 'deployedTools'), deployment);
+    const deploymentRef = await db.collection('deployedTools').add(deployment);
 
     // Update tool usage stats
-    await updateDoc(doc(db, 'tools', toolId), {
+    await db.collection('tools').doc(toolId).update({
       deploymentCount: (toolData.deploymentCount || 0) + 1,
       lastDeployedAt: now
     });
 
     // Log activity event
-    await addDoc(collection(db, 'activityEvents'), {
+    await db.collection('analytics_events').add({
+      eventType: 'tool_deployed',
       userId: user.uid,
-      type: 'tool_interaction',
       toolId,
       spaceId: deployTo === 'space' ? targetId : undefined,
+      timestamp: new Date(),
       metadata: {
         action: 'tool_deployed',
         deploymentId: deploymentRef.id,
         deployedTo,
         surface
-      },
-      timestamp: now,
-      date: now.split('T')[0]
+      }
     });
 
     const createdDeployment = {
@@ -222,7 +209,7 @@ export async function POST(request: NextRequest) {
 // GET - List deployed tools
 export async function GET(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -233,26 +220,26 @@ export async function GET(request: NextRequest) {
     const surface = searchParams.get('surface');
     const status = searchParams.get('status') || 'active';
 
-    let deploymentsQuery = query(collection(db, 'deployedTools'));
+    let deploymentsQuery = db.collection('deployedTools');
 
     // Filter by deployment target
     if (deployedTo) {
-      deploymentsQuery = query(deploymentsQuery, where('deployedTo', '==', deployedTo));
+      deploymentsQuery = deploymentsQuery.where('deployedTo', '==', deployedTo);
     }
 
     if (targetId) {
-      deploymentsQuery = query(deploymentsQuery, where('targetId', '==', targetId));
+      deploymentsQuery = deploymentsQuery.where('targetId', '==', targetId);
     }
 
     if (surface) {
-      deploymentsQuery = query(deploymentsQuery, where('surface', '==', surface));
+      deploymentsQuery = deploymentsQuery.where('surface', '==', surface);
     }
 
     if (status) {
-      deploymentsQuery = query(deploymentsQuery, where('status', '==', status));
+      deploymentsQuery = deploymentsQuery.where('status', '==', status);
     }
 
-    const deploymentsSnapshot = await getDocs(deploymentsQuery);
+    const deploymentsSnapshot = await deploymentsQuery.get();
     const deployments = deploymentsSnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
@@ -263,16 +250,17 @@ export async function GET(request: NextRequest) {
     for (const deployment of deployments) {
       if (await canUserAccessDeployment(user.uid, deployment)) {
         // Fetch tool details
-        const toolDoc = await getDoc(doc(db, 'tools', deployment.toolId));
-        if (toolDoc.exists()) {
+        const toolDoc = await db.collection('tools').doc(deployment.toolId).get();
+        if (toolDoc.exists) {
+          const toolData = toolDoc.data();
           accessibleDeployments.push({
             ...deployment,
             toolData: {
               id: toolDoc.id,
-              name: toolDoc.data().name,
-              description: toolDoc.data().description,
-              currentVersion: toolDoc.data().currentVersion,
-              elements: toolDoc.data().elements
+              name: toolData?.name,
+              description: toolData?.description,
+              currentVersion: toolData?.currentVersion,
+              elements: toolData?.elements
             }
           });
         }
@@ -292,18 +280,16 @@ export async function GET(request: NextRequest) {
 // Helper function to get next position for deployment
 async function getNextPosition(deployedTo: string, targetId: string, surface?: string): Promise<number> {
   try {
-    let positionQuery = query(
-      collection(db, 'deployedTools'),
-      where('deployedTo', '==', deployedTo),
-      where('targetId', '==', targetId),
-      where('status', '==', 'active')
-    );
+    let positionQuery = db.collection('deployedTools')
+      .where('deployedTo', '==', deployedTo)
+      .where('targetId', '==', targetId)
+      .where('status', '==', 'active');
 
     if (surface) {
-      positionQuery = query(positionQuery, where('surface', '==', surface));
+      positionQuery = positionQuery.where('surface', '==', surface);
     }
 
-    const positionSnapshot = await getDocs(positionQuery);
+    const positionSnapshot = await positionQuery.get();
     return positionSnapshot.size;
   } catch (error) {
     console.error('Error getting next position:', error);
@@ -326,17 +312,11 @@ async function canUserAccessDeployment(userId: string, deployment: any): Promise
 
     // Check space membership for space deployments
     if (deployment.deployedTo === 'space') {
-      const membershipQuery = query(
-        collection(db, 'members'),
-        where('userId', '==', userId),
-        where('spaceId', '==', deployment.targetId),
-        where('status', '==', 'active')
-      );
-      const membershipSnapshot = await getDocs(membershipQuery);
-      
-      if (!membershipSnapshot.empty) {
-        const memberData = membershipSnapshot.docs[0].data();
-        return deployment.permissions.allowedRoles?.includes(memberData.role) || false;
+      const spaceDoc = await db.collection('spaces').doc(deployment.targetId).get();
+      if (spaceDoc.exists) {
+        const spaceData = spaceDoc.data();
+        const userRole = spaceData?.members?.[userId]?.role;
+        return deployment.permissions.allowedRoles?.includes(userRole) || false;
       }
     }
 

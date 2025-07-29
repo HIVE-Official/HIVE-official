@@ -18,8 +18,8 @@ export const Alert: React.FC<AlertProps> = ({
     <div
       className={cn(
         'relative w-full rounded-lg border p-4',
-        variant === 'default' && 'bg-[#111113] border-[#2A2A2D] text-[#E5E5E7]',
-        variant === 'destructive' && 'bg-[#EF4444]/10 border-[#EF4444]/20 text-[#EF4444]',
+        variant === 'default' && 'bg-[var(--hive-background-secondary)] border-[var(--hive-border-default)] text-[var(--hive-text-primary)]',
+        variant === 'destructive' && 'bg-[var(--hive-status-error)]/10 border-[var(--hive-status-error)]/20 text-[var(--hive-status-error)]',
         className
       )}
     >

@@ -139,9 +139,16 @@ export const GhostModeCard: React.FC<GhostModeCardProps> = ({
   const IconComponent = currentConfig.icon;
 
   return (
-    <HiveCard className={cn('h-full p-6', className)}>
-      {/* Header */}
-      <div className="flex items-center justify-between mb-4">
+    <HiveCard 
+      variant={isActive ? "gold-accent" : "default"}
+      magneticHover={true}
+      magneticIntensity="subtle"
+      interactive={true}
+      className={cn('h-full', className)}
+    >
+      <div className="p-6 h-full flex flex-col">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
           <div className={cn(
             'p-2 rounded-lg',
@@ -153,7 +160,7 @@ export const GhostModeCard: React.FC<GhostModeCardProps> = ({
             )} />
           </div>
           <div>
-            <h3 className="text-lg font-semibold text-white">Ghost Mode</h3>
+            <h3 className="text-lg font-semibold text-[var(--hive-text-primary)]">Ghost Mode</h3>
             <p className="text-xs text-gray-400">Privacy & Visibility Control</p>
           </div>
         </div>
@@ -163,7 +170,7 @@ export const GhostModeCard: React.FC<GhostModeCardProps> = ({
             variant="ghost"
             size="sm"
             onClick={onSettings}
-            className="text-gray-400 hover:text-white"
+            className="text-gray-400 hover:text-[var(--hive-text-primary)]"
           >
             <Settings className="h-4 w-4" />
           </HiveButton>
@@ -247,7 +254,7 @@ export const GhostModeCard: React.FC<GhostModeCardProps> = ({
             variant="ghost"
             size="sm"
             onClick={() => setShowLevelSelector(!showLevelSelector)}
-            className="w-full text-gray-400 hover:text-white"
+            className="w-full text-gray-400 hover:text-[var(--hive-text-primary)]"
           >
             <Settings className="h-4 w-4 mr-2" />
             Change Privacy Level
@@ -262,7 +269,7 @@ export const GhostModeCard: React.FC<GhostModeCardProps> = ({
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="mt-4 space-y-2 border-t border-gray-700 pt-4"
+            className="mt-4 space-y-2 border-t border-[var(--hive-border-default)] pt-4"
           >
             <p className="text-xs text-gray-400 mb-3">Choose your privacy level:</p>
             
@@ -280,8 +287,8 @@ export const GhostModeCard: React.FC<GhostModeCardProps> = ({
                   className={cn(
                     'w-full p-3 rounded-lg border text-left transition-colors',
                     isSelected
-                      ? 'bg-hive-gold/20 border-hive-gold/30 text-hive-gold'
-                      : 'bg-gray-800/50 border-gray-700 hover:border-gray-600 text-gray-300'
+                      ? 'bg-[var(--hive-brand-secondary)]/20 border-hive-gold/30 text-[var(--hive-brand-secondary)]'
+                      : 'bg-gray-800/50 border-[var(--hive-border-default)] hover:border-gray-600 text-gray-300'
                   )}
                 >
                   <div className="flex items-center gap-3">
@@ -291,7 +298,7 @@ export const GhostModeCard: React.FC<GhostModeCardProps> = ({
                       <p className="text-xs opacity-75 truncate">{config.description}</p>
                     </div>
                     {isSelected && (
-                      <div className="w-2 h-2 rounded-full bg-hive-gold flex-shrink-0" />
+                      <div className="w-2 h-2 rounded-full bg-[var(--hive-brand-secondary)] flex-shrink-0" />
                     )}
                   </div>
                 </motion.button>
@@ -319,6 +326,7 @@ export const GhostModeCard: React.FC<GhostModeCardProps> = ({
           </div>
         </motion.div>
       )}
+      </div>
     </HiveCard>
   );
 };

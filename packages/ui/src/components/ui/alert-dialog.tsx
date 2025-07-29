@@ -84,7 +84,7 @@ export const AlertDialog: React.FC<AlertDialogProps> = ({
     <AlertDialogContext.Provider value={{ isOpen, setIsOpen }}>
       <div
         className={cn(
-          "fixed inset-0 z-50 flex items-center justify-center bg-black/50",
+          "fixed inset-0 z-50 flex items-center justify-center bg-[var(--hive-background-primary)]/50",
           className
         )}
         onClick={(e) => {

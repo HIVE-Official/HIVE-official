@@ -31,7 +31,7 @@ const hiveFileUploadVariants = cva(
   {
     variants: {
       variant: {
-        default: "border-white/20 bg-black/20 hover:border-white/30 hover:bg-black/30",
+        default: "border-white/20 bg-[var(--hive-background-primary)]/20 hover:border-white/30 hover:bg-[var(--hive-background-primary)]/30",
         premium: "border-yellow-500/30 bg-yellow-500/5 hover:border-yellow-500/50 hover:bg-yellow-500/10",
         minimal: "border-white/10 bg-transparent hover:border-white/20",
       },
@@ -406,27 +406,27 @@ const HiveFileUpload = React.forwardRef<HTMLDivElement, HiveFileUploadProps>(
                 size={48} 
                 className={cn(
                   "mx-auto mb-4",
-                  dragOver ? "text-yellow-400" : "text-white/60"
+                  dragOver ? "text-yellow-400" : "text-[var(--hive-text-primary)]/60"
                 )} 
               />
             </motion.div>
             
-            <h3 className="text-xl font-semibold text-white mb-2">
+            <h3 className="text-xl font-semibold text-[var(--hive-text-primary)] mb-2">
               {dragOver ? "Drop files here" : "Upload Files"}
             </h3>
             
-            <p className="text-white/60 mb-4">
+            <p className="text-[var(--hive-text-primary)]/60 mb-4">
               {dropzoneText}
             </p>
             
             {maxSize && (
-              <p className="text-sm text-white/40">
+              <p className="text-sm text-[var(--hive-text-primary)]/40">
                 Maximum file size: {formatFileSize(maxSize)}
               </p>
             )}
             
             {allowedTypes && (
-              <p className="text-sm text-white/40 mt-1">
+              <p className="text-sm text-[var(--hive-text-primary)]/40 mt-1">
                 Accepted types: {allowedTypes.join(', ')}
               </p>
             )}
@@ -439,13 +439,13 @@ const HiveFileUpload = React.forwardRef<HTMLDivElement, HiveFileUploadProps>(
         {hasFiles && (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h4 className="text-lg font-semibold text-white">
+              <h4 className="text-lg font-semibold text-[var(--hive-text-primary)]">
                 Files ({files.length})
               </h4>
               
               <div className="flex space-x-2">
                 <motion.button
-                  className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl transition-colors"
+                  className="px-4 py-2 bg-[var(--hive-text-primary)]/10 hover:bg-[var(--hive-text-primary)]/20 text-[var(--hive-text-primary)] rounded-xl transition-colors"
                   onClick={openFileBrowser}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
@@ -478,7 +478,7 @@ const HiveFileUpload = React.forwardRef<HTMLDivElement, HiveFileUploadProps>(
               {files.map((fileItem) => (
                 <motion.div
                   key={fileItem.id}
-                  className="bg-black/20 backdrop-blur-sm border border-white/10 rounded-xl p-4"
+                  className="bg-[var(--hive-background-primary)]/20 backdrop-blur-sm border border-white/10 rounded-xl p-4"
                   variants={fileItemVariants}
                   initial="hidden"
                   animate="visible"
@@ -495,7 +495,7 @@ const HiveFileUpload = React.forwardRef<HTMLDivElement, HiveFileUploadProps>(
                           className="w-12 h-12 object-cover rounded-lg border border-white/10"
                         />
                       ) : (
-                        <div className="w-12 h-12 bg-white/10 rounded-lg border border-white/10 flex items-center justify-center text-white/60">
+                        <div className="w-12 h-12 bg-[var(--hive-text-primary)]/10 rounded-lg border border-white/10 flex items-center justify-center text-[var(--hive-text-primary)]/60">
                           {getFileIcon(fileItem.type)}
                         </div>
                       )}
@@ -504,7 +504,7 @@ const HiveFileUpload = React.forwardRef<HTMLDivElement, HiveFileUploadProps>(
                     {/* File Info */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between mb-1">
-                        <h5 className="font-medium text-white truncate">
+                        <h5 className="font-medium text-[var(--hive-text-primary)] truncate">
                           {fileItem.name}
                         </h5>
                         
@@ -523,7 +523,7 @@ const HiveFileUpload = React.forwardRef<HTMLDivElement, HiveFileUploadProps>(
                           {/* Actions */}
                           {fileItem.url && (
                             <motion.button
-                              className="text-white/60 hover:text-white/80 p-1"
+                              className="text-[var(--hive-text-primary)]/60 hover:text-[var(--hive-text-primary)]/80 p-1"
                               onClick={() => window.open(fileItem.url, '_blank')}
                               whileHover={{ scale: 1.1 }}
                               whileTap={{ scale: 0.9 }}
@@ -533,7 +533,7 @@ const HiveFileUpload = React.forwardRef<HTMLDivElement, HiveFileUploadProps>(
                           )}
                           
                           <motion.button
-                            className="text-white/60 hover:text-red-400 p-1"
+                            className="text-[var(--hive-text-primary)]/60 hover:text-red-400 p-1"
                             onClick={() => removeFile(fileItem.id)}
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
@@ -543,7 +543,7 @@ const HiveFileUpload = React.forwardRef<HTMLDivElement, HiveFileUploadProps>(
                         </div>
                       </div>
                       
-                      <div className="flex items-center justify-between text-sm text-white/60">
+                      <div className="flex items-center justify-between text-sm text-[var(--hive-text-primary)]/60">
                         <span>{formatFileSize(fileItem.size)}</span>
                         <span className="capitalize">{fileItem.status}</span>
                       </div>
@@ -558,7 +558,7 @@ const HiveFileUpload = React.forwardRef<HTMLDivElement, HiveFileUploadProps>(
                       {/* Progress Bar */}
                       {showProgress && fileItem.status === 'uploading' && (
                         <div className="mt-2">
-                          <div className="bg-white/10 rounded-full h-2 overflow-hidden">
+                          <div className="bg-[var(--hive-text-primary)]/10 rounded-full h-2 overflow-hidden">
                             <motion.div
                               className="bg-yellow-400 h-full rounded-full"
                               variants={progressVariants}
@@ -567,7 +567,7 @@ const HiveFileUpload = React.forwardRef<HTMLDivElement, HiveFileUploadProps>(
                               custom={fileItem.progress}
                             />
                           </div>
-                          <div className="text-xs text-white/60 mt-1">
+                          <div className="text-xs text-[var(--hive-text-primary)]/60 mt-1">
                             {fileItem.progress}%
                           </div>
                         </div>

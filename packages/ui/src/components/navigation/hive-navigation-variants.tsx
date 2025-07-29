@@ -8,7 +8,7 @@ import {
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { colors, semantic, shadows, gradients } from '@hive/tokens';
-import { Button } from '../ui/button';
+import { Button } from '../../atomic/atoms/button-enhanced';
 import { 
   useNavigation, 
   NavigationContainer, 
@@ -47,7 +47,7 @@ export function SidebarNavigation() {
       )}
       style={{
         backgroundColor: 'var(--hive-background-primary)',
-        backdropFilter: 'blur(12px) saturate(180%)',
+        backdropFilter: 'blur(3) saturate(180%)',
         borderRight: `1px solid var(--hive-border-primary)`,
       }}
     >
@@ -136,7 +136,7 @@ export function TopbarNavigation() {
       )}
       style={{
         backgroundColor: 'var(--hive-background-primary)',
-        backdropFilter: 'blur(12px) saturate(180%)',
+        backdropFilter: 'blur(3) saturate(180%)',
         borderBottom: `1px solid var(--hive-border-primary)`,
       }}
     >
@@ -381,7 +381,7 @@ export function CommandNavigation() {
           <div className="flex min-h-full items-start justify-center p-4 pt-16">
             <div 
               className="fixed inset-0 backdrop-blur-sm"
-              style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+              style={{ backgroundColor: 'color-mix(in_srgb,var(--hive-background-primary)_50%,transparent)' }}
               onClick={() => setSearchOpen(false)}
             />
             

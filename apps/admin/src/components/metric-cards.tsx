@@ -1,6 +1,6 @@
 'use client'
 
-import { Card, CardContent, CardHeader, CardTitle } from '@hive/ui'
+import { HiveCard as Card, CardContent, CardHeader, CardTitle } from '@hive/ui'
 import { Users, TrendingUp, AlertTriangle, Wrench } from 'lucide-react'
 
 // Mock data - will be replaced with real Firestore data from daily cron

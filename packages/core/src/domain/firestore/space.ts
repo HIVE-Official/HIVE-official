@@ -10,18 +10,21 @@ export type SpaceStatus = 'dormant' | 'activated' | 'frozen';
 
 /**
  * Defines the type of a space, used for categorization and discovery.
- * - 'campus_living': Dorms, residential communities, and housing.
- * - 'fraternity_and_sorority': Greek life organizations.
- * - 'hive_exclusive': Special HIVE platform spaces.
- * - 'student_organizations': Student-run clubs and organizations.
- * - 'university_organizations': Official university departments and services.
+ * Firebase Collection Mapping:
+ * - 'student_organizations': Student-led grassroots communities (120 spaces)
+ * - 'university_organizations': Official institutional communities (180 spaces)  
+ * - 'greek_life': Exclusive lifelong social organizations (23 spaces)
+ * - 'campus_living': Geography-based living communities (37 spaces)
+ * - 'hive_exclusive': Special HIVE platform spaces
+ * - 'cohort': Academic cohorts (majors, graduation years, class groups)
  */
 export type SpaceType =
-  | 'campus_living'
-  | 'fraternity_and_sorority'
-  | 'hive_exclusive'
   | 'student_organizations'
-  | 'university_organizations';
+  | 'university_organizations'
+  | 'greek_life'
+  | 'campus_living'
+  | 'hive_exclusive'
+  | 'cohort';
 
 /**
  * Tags provide metadata for filtering and identifying spaces.

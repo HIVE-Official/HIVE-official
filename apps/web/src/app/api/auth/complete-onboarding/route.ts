@@ -220,7 +220,50 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // After successful onboarding, auto-join the user to relevant spaces
+    // After successful onboarding, create and auto-join cohort spaces
+    try {
+      await logger.info('Creating cohort spaces', {
+        operation: 'create_cohort_spaces',
+        major: onboardingData.major,
+        graduationYear: onboardingData.graduationYear
+      });
+
+      const cohortResponse = await fetch(
+        `${request.url.split("/api")[0]}/api/spaces/cohort/auto-create`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${idToken}`,
+          },
+          body: JSON.stringify({
+            major: onboardingData.major,
+            graduationYear: onboardingData.graduationYear
+          }),
+        }
+      );
+
+      if (!cohortResponse.ok) {
+        const errorText = await cohortResponse.text();
+        await logger.warn('Cohort space creation failed, but onboarding succeeded', {
+          operation: 'create_cohort_spaces',
+          status: cohortResponse.status,
+          error: errorText
+        });
+      } else {
+        const cohortResult = await cohortResponse.json();
+        await logger.info('Cohort spaces created successfully', {
+          operation: 'create_cohort_spaces',
+          result: cohortResult
+        });
+      }
+    } catch (cohortError) {
+      await logger.warn('Cohort space creation error, but onboarding succeeded', {
+        operation: 'create_cohort_spaces'
+      }, cohortError instanceof Error ? cohortError : new Error(String(cohortError)));
+    }
+
+    // After cohort space creation, auto-join the user to other relevant spaces
     try {
       await logger.info('Attempting auto-join to spaces', {
         operation: 'auto_join_spaces'

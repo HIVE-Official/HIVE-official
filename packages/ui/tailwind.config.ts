@@ -1,4 +1,6 @@
 import type { Config } from "tailwindcss";
+import { prdTailwindColors } from "../../tokens/src/colors-prd-aligned";
+import { prdTailwindRadius } from "../../tokens/src/radius-prd-aligned";
 
 const config = {
   darkMode: ["class"],
@@ -40,6 +42,10 @@ const config = {
         '4': '0px 25px 50px -12px rgba(0, 0, 0, 0.25)',
       },
       colors: {
+        // === PRD-ALIGNED TOKENS (Primary) ===
+        ...prdTailwindColors,
+        
+        // === LEGACY TOKENS (Backward Compatibility) ===
         'bg-canvas': '#0A0A0A',
         'bg-card': 'rgba(255,255,255,0.02)',
         'accent-gold': '#FFD700',
@@ -83,6 +89,10 @@ const config = {
         },
       },
       borderRadius: {
+        // === PRD-ALIGNED RADIUS (Primary) ===
+        ...prdTailwindRadius,
+        
+        // === LEGACY RADIUS (Backward Compatibility) ===
         sm: '4px',
         DEFAULT: '12px',
         lg: '12px',
@@ -90,8 +100,10 @@ const config = {
         full: '9999px',
       },
       fontFamily: {
-        sans: ['Inter', 'sans-serif'],
-        display: ['Space Grotesk', 'sans-serif'],
+        // === PRD-ALIGNED FONTS ===
+        sans: ['Geist', 'Inter', 'sans-serif'],      // Primary font
+        display: ['Space Grotesk', 'sans-serif'],    // Display font  
+        mono: ['Geist Mono', 'monospace'],           // Code font
       },
       fontSize: {
         'display': ['48px', '56px'],

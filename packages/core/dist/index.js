@@ -31,6 +31,8 @@ __exportStar(require("./domain/analytics/creation"), exports);
 __exportStar(require("./domain/analytics/onboarding"), exports);
 __exportStar(require("./domain/analytics/feed"), exports);
 __exportStar(require("./domain/analytics/events"), exports);
+// Cohort utilities
+__exportStar(require("./domain/cohort/cohort-spaces"), exports);
 // Constants
 __exportStar(require("./constants/majors"), exports);
 // Stores
@@ -39,4 +41,6 @@ __exportStar(require("./stores/useAppStore"), exports);
 __exportStar(require("./firebase"), exports);
 // Feature flags
 __exportStar(require("./feature-flags"), exports);
+// Privacy utilities
+__exportStar(require("./utils/privacy-utils"), exports);
 //# sourceMappingURL=index.js.map

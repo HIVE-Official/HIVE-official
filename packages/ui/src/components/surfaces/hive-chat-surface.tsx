@@ -217,7 +217,7 @@ export const HiveChatSurface = React.forwardRef<HTMLDivElement, HiveChatSurfaceP
                 <Lock className="w-8 h-8 text-orange-400" />
               </motion.div>
               
-              <h3 className="text-xl font-semibold text-white mb-3">Chat Coming Soon</h3>
+              <h3 className="text-xl font-semibold text-[var(--hive-text-primary)] mb-3">Chat Coming Soon</h3>
               <p className="text-gray-400 text-sm max-w-md mx-auto leading-relaxed">
                 Real-time chat will be available in v0.1.1. Stay tuned for live conversations with your community!
               </p>
@@ -250,7 +250,7 @@ export const HiveChatSurface = React.forwardRef<HTMLDivElement, HiveChatSurfaceP
                 <MessageCircle className="w-8 h-8 text-orange-400" />
               </motion.div>
               
-              <h3 className="text-xl font-semibold text-white mb-3">Start Chatting</h3>
+              <h3 className="text-xl font-semibold text-[var(--hive-text-primary)] mb-3">Start Chatting</h3>
               <p className="text-gray-400 text-sm max-w-md mx-auto mb-8 leading-relaxed">
                 Connect with your community in real-time. Share thoughts, ask questions, and build relationships through conversation.
               </p>
@@ -280,7 +280,7 @@ export const HiveChatSurface = React.forwardRef<HTMLDivElement, HiveChatSurfaceP
                     onChange={(e) => setMessageText(e.target.value)}
                     onKeyPress={handleKeyPress}
                     placeholder="Type a message..."
-                    className="w-full bg-black/20 backdrop-blur-sm border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500/30 transition-all duration-200 resize-none"
+                    className="w-full bg-[var(--hive-background-primary)]/20 backdrop-blur-sm border border-white/10 rounded-xl px-4 py-3 text-[var(--hive-text-primary)] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500/30 transition-all duration-200 resize-none"
                     rows={1}
                     maxLength={maxMessageLength}
                   />
@@ -317,13 +317,13 @@ export const HiveChatSurface = React.forwardRef<HTMLDivElement, HiveChatSurfaceP
         {/* Chat Header */}
         <div className="flex items-center justify-between p-4 border-b border-white/10">
           <div className="flex items-center gap-3">
-            <h3 className="text-lg font-semibold text-white">Chat</h3>
+            <h3 className="text-lg font-semibold text-[var(--hive-text-primary)]">Chat</h3>
             <span className="text-sm text-gray-400">{space.memberCount} members</span>
           </div>
           
           <div className="flex items-center gap-2">
             <motion.button
-              className="p-2 text-gray-400 hover:text-white rounded-lg hover:bg-white/5 transition-all duration-200"
+              className="p-2 text-gray-400 hover:text-[var(--hive-text-primary)] rounded-lg hover:bg-[var(--hive-text-primary)]/5 transition-all duration-200"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -332,7 +332,7 @@ export const HiveChatSurface = React.forwardRef<HTMLDivElement, HiveChatSurfaceP
             
             {canModerate && (
               <motion.button
-                className="p-2 text-gray-400 hover:text-white rounded-lg hover:bg-white/5 transition-all duration-200"
+                className="p-2 text-gray-400 hover:text-[var(--hive-text-primary)] rounded-lg hover:bg-[var(--hive-text-primary)]/5 transition-all duration-200"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -373,7 +373,7 @@ export const HiveChatSurface = React.forwardRef<HTMLDivElement, HiveChatSurfaceP
                       <img src={message.authorAvatar} alt="" className="w-full h-full object-cover" />
                     ) : (
                       <div className="w-full h-full bg-gradient-to-br from-orange-500/20 to-red-500/20 flex items-center justify-center">
-                        <span className="text-xs font-medium text-white">
+                        <span className="text-xs font-medium text-[var(--hive-text-primary)]">
                           {message.authorName.charAt(0).toUpperCase()}
                         </span>
                       </div>
@@ -391,8 +391,8 @@ export const HiveChatSurface = React.forwardRef<HTMLDivElement, HiveChatSurfaceP
                     className={cn(
                       "relative group px-4 py-3 rounded-2xl",
                       isOwn 
-                        ? "bg-orange-500/20 text-white" 
-                        : "bg-black/20 backdrop-blur-sm border border-white/5 text-white",
+                        ? "bg-orange-500/20 text-[var(--hive-text-primary)]" 
+                        : "bg-[var(--hive-background-primary)]/20 backdrop-blur-sm border border-white/5 text-[var(--hive-text-primary)]",
                       message.isPinned && "ring-1 ring-yellow-500/30"
                     )}
                     whileHover={{ scale: 1.01 }}
@@ -400,7 +400,7 @@ export const HiveChatSurface = React.forwardRef<HTMLDivElement, HiveChatSurfaceP
                   >
                     {/* Reply Reference */}
                     {message.replyToId && (
-                      <div className="mb-2 p-2 bg-white/5 rounded-lg border-l-2 border-gray-500">
+                      <div className="mb-2 p-2 bg-[var(--hive-text-primary)]/5 rounded-lg border-l-2 border-gray-500">
                         <div className="text-xs text-gray-400">
                           Replying to message
                         </div>
@@ -425,7 +425,7 @@ export const HiveChatSurface = React.forwardRef<HTMLDivElement, HiveChatSurfaceP
                         {message.attachments.map((attachment) => (
                           <div
                             key={attachment.id}
-                            className="flex items-center gap-2 p-2 bg-white/5 rounded-lg"
+                            className="flex items-center gap-2 p-2 bg-[var(--hive-text-primary)]/5 rounded-lg"
                           >
                             <Paperclip className="w-4 h-4 text-gray-400" />
                             <span className="text-sm truncate">{attachment.name}</span>
@@ -442,7 +442,7 @@ export const HiveChatSurface = React.forwardRef<HTMLDivElement, HiveChatSurfaceP
                       {isHovered && (
                         <motion.div
                           className={cn(
-                            "absolute -top-8 flex items-center gap-1 bg-black/80 backdrop-blur-xl border border-white/10 rounded-lg p-1",
+                            "absolute -top-8 flex items-center gap-1 bg-[var(--hive-background-primary)]/80 backdrop-blur-xl border border-white/10 rounded-lg p-1",
                             isOwn ? "right-0" : "left-0"
                           )}
                           initial={{ opacity: 0, scale: 0.9 }}
@@ -451,7 +451,7 @@ export const HiveChatSurface = React.forwardRef<HTMLDivElement, HiveChatSurfaceP
                           transition={{ duration: motionDurations.quick }}
                         >
                           <motion.button
-                            className="p-1.5 text-gray-400 hover:text-white rounded hover:bg-white/10 transition-all duration-200"
+                            className="p-1.5 text-gray-400 hover:text-[var(--hive-text-primary)] rounded hover:bg-[var(--hive-text-primary)]/10 transition-all duration-200"
                             onClick={() => onReplyToMessage?.(message.id)}
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
@@ -472,7 +472,7 @@ export const HiveChatSurface = React.forwardRef<HTMLDivElement, HiveChatSurfaceP
                             <>
                               {isOwn && (
                                 <motion.button
-                                  className="p-1.5 text-gray-400 hover:text-white rounded hover:bg-white/10 transition-all duration-200"
+                                  className="p-1.5 text-gray-400 hover:text-[var(--hive-text-primary)] rounded hover:bg-[var(--hive-text-primary)]/10 transition-all duration-200"
                                   onClick={() => setEditingMessage(message.id)}
                                   whileHover={{ scale: 1.1 }}
                                   whileTap={{ scale: 0.9 }}
@@ -507,7 +507,7 @@ export const HiveChatSurface = React.forwardRef<HTMLDivElement, HiveChatSurfaceP
                       {message.reactions.map((reaction, i) => (
                         <motion.button
                           key={i}
-                          className="flex items-center gap-1 px-2 py-1 bg-white/5 rounded-full text-xs hover:bg-white/10 transition-all duration-200"
+                          className="flex items-center gap-1 px-2 py-1 bg-[var(--hive-text-primary)]/5 rounded-full text-xs hover:bg-[var(--hive-text-primary)]/10 transition-all duration-200"
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
                         >
@@ -554,7 +554,7 @@ export const HiveChatSurface = React.forwardRef<HTMLDivElement, HiveChatSurfaceP
               <div className="w-8 h-8 rounded-full bg-gray-600 flex items-center justify-center">
                 <span className="text-xs">...</span>
               </div>
-              <div className="bg-black/20 rounded-2xl px-4 py-3">
+              <div className="bg-[var(--hive-background-primary)]/20 rounded-2xl px-4 py-3">
                 <div className="flex items-center gap-1">
                   <motion.div
                     className="w-2 h-2 bg-gray-400 rounded-full"
@@ -587,7 +587,7 @@ export const HiveChatSurface = React.forwardRef<HTMLDivElement, HiveChatSurfaceP
             <AnimatePresence>
               {replyToMessage && (
                 <motion.div
-                  className="mb-3 p-3 bg-white/5 border-l-2 border-orange-500 rounded-lg"
+                  className="mb-3 p-3 bg-[var(--hive-text-primary)]/5 border-l-2 border-orange-500 rounded-lg"
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 'auto' }}
                   exit={{ opacity: 0, height: 0 }}
@@ -602,7 +602,7 @@ export const HiveChatSurface = React.forwardRef<HTMLDivElement, HiveChatSurfaceP
                       </div>
                     </div>
                     <motion.button
-                      className="p-1 text-gray-400 hover:text-white"
+                      className="p-1 text-gray-400 hover:text-[var(--hive-text-primary)]"
                       onClick={() => setReplyToMessage(null)}
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.9 }}
@@ -619,7 +619,7 @@ export const HiveChatSurface = React.forwardRef<HTMLDivElement, HiveChatSurfaceP
               {/* Attachment Button */}
               {enableFileSharing && (
                 <motion.button
-                  className="p-3 text-gray-400 hover:text-white rounded-xl hover:bg-white/5 transition-all duration-200"
+                  className="p-3 text-gray-400 hover:text-[var(--hive-text-primary)] rounded-xl hover:bg-[var(--hive-text-primary)]/5 transition-all duration-200"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
@@ -635,7 +635,7 @@ export const HiveChatSurface = React.forwardRef<HTMLDivElement, HiveChatSurfaceP
                   onChange={(e) => setMessageText(e.target.value)}
                   onKeyPress={handleKeyPress}
                   placeholder="Type a message..."
-                  className="w-full bg-black/20 backdrop-blur-sm border border-white/10 rounded-xl px-4 py-3 pr-20 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500/30 transition-all duration-200 resize-none"
+                  className="w-full bg-[var(--hive-background-primary)]/20 backdrop-blur-sm border border-white/10 rounded-xl px-4 py-3 pr-20 text-[var(--hive-text-primary)] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500/30 transition-all duration-200 resize-none"
                   rows={1}
                   maxLength={maxMessageLength}
                 />
@@ -663,7 +663,7 @@ export const HiveChatSurface = React.forwardRef<HTMLDivElement, HiveChatSurfaceP
                     "p-3 rounded-xl border transition-all duration-200",
                     isRecording
                       ? "bg-red-500/20 text-red-400 border-red-500/30"
-                      : "bg-black/20 text-gray-400 border-white/10 hover:text-white hover:border-white/20"
+                      : "bg-[var(--hive-background-primary)]/20 text-gray-400 border-white/10 hover:text-[var(--hive-text-primary)] hover:border-white/20"
                   )}
                   onMouseDown={() => setIsRecording(true)}
                   onMouseUp={() => setIsRecording(false)}

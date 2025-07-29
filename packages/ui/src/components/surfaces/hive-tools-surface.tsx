@@ -274,7 +274,7 @@ export const HiveToolsSurface = React.forwardRef<HTMLDivElement, HiveToolsSurfac
               <Wrench className="w-8 h-8 text-purple-400" />
             </motion.div>
             
-            <h3 className="text-xl font-semibold text-white mb-3">No Tools Yet</h3>
+            <h3 className="text-xl font-semibold text-[var(--hive-text-primary)] mb-3">No Tools Yet</h3>
             <p className="text-gray-400 text-sm max-w-md mx-auto mb-8 leading-relaxed">
               Tools bring functionality to your Space. Add interactive elements like polls, calendars, and collaborative features.
             </p>
@@ -304,7 +304,7 @@ export const HiveToolsSurface = React.forwardRef<HTMLDivElement, HiveToolsSurfac
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-4">
-            <h3 className="text-lg font-semibold text-white">Tools</h3>
+            <h3 className="text-lg font-semibold text-[var(--hive-text-primary)]">Tools</h3>
             <span className="text-sm text-gray-400">{filteredTools.length} active</span>
           </div>
           
@@ -327,7 +327,7 @@ export const HiveToolsSurface = React.forwardRef<HTMLDivElement, HiveToolsSurfac
         {/* Category Filters */}
         <div className="flex items-center gap-2 mb-6 overflow-x-auto pb-2">
           {[
-            { key: 'all', label: 'All Tools', icon: Star, color: 'text-white', count: tools.length },
+            { key: 'all', label: 'All Tools', icon: Star, color: 'text-[var(--hive-text-primary)]', count: tools.length },
             ...Object.entries(toolCategories).map(([key, config]) => ({
               key,
               label: config.label,
@@ -346,7 +346,7 @@ export const HiveToolsSurface = React.forwardRef<HTMLDivElement, HiveToolsSurfac
                   "flex items-center gap-2 px-3 py-1.5 rounded-xl border text-sm font-medium transition-all duration-200 whitespace-nowrap",
                   isActive
                     ? "bg-purple-500/20 text-purple-400 border-purple-500/30"
-                    : "bg-black/20 text-gray-400 border-white/10 hover:border-white/20 hover:text-white"
+                    : "bg-[var(--hive-background-primary)]/20 text-gray-400 border-white/10 hover:border-white/20 hover:text-[var(--hive-text-primary)]"
                 )}
                 onClick={() => setSelectedCategory(filter.key as any)}
                 whileHover={{ scale: 1.02 }}
@@ -358,7 +358,7 @@ export const HiveToolsSurface = React.forwardRef<HTMLDivElement, HiveToolsSurfac
                   "px-1.5 py-0.5 rounded-full text-xs",
                   isActive 
                     ? "bg-purple-500/30 text-purple-300"
-                    : "bg-white/10 text-gray-500"
+                    : "bg-[var(--hive-text-primary)]/10 text-gray-500"
                 )}>
                   {filter.count}
                 </span>
@@ -384,7 +384,7 @@ export const HiveToolsSurface = React.forwardRef<HTMLDivElement, HiveToolsSurfac
               <motion.article
                 key={tool.id}
                 className={cn(
-                  "relative group bg-black/10 backdrop-blur-sm border border-white/5 rounded-xl overflow-hidden transition-all duration-200",
+                  "relative group bg-[var(--hive-background-primary)]/10 backdrop-blur-sm border border-white/5 rounded-xl overflow-hidden transition-all duration-200",
                   isHovered && "border-white/10",
                   tool.isPinned && "ring-1 ring-purple-500/30 bg-purple-500/5",
                   !tool.isVisible && "opacity-50",
@@ -414,7 +414,7 @@ export const HiveToolsSurface = React.forwardRef<HTMLDivElement, HiveToolsSurfac
                       <div className={cn(
                         "flex-shrink-0 rounded-lg flex items-center justify-center",
                         compact ? "w-8 h-8" : "w-10 h-10",
-                        tool.isPinned ? "bg-purple-500/20" : "bg-white/5"
+                        tool.isPinned ? "bg-purple-500/20" : "bg-[var(--hive-text-primary)]/5"
                       )}>
                         <ToolIcon className={cn(
                           compact ? "w-4 h-4" : "w-5 h-5",
@@ -424,7 +424,7 @@ export const HiveToolsSurface = React.forwardRef<HTMLDivElement, HiveToolsSurfac
                       
                       <div className="flex-1 min-w-0">
                         <h4 className={cn(
-                          "font-medium text-white truncate",
+                          "font-medium text-[var(--hive-text-primary)] truncate",
                           compact ? "text-sm" : "text-sm"
                         )}>
                           {tool.name}
@@ -479,7 +479,7 @@ export const HiveToolsSurface = React.forwardRef<HTMLDivElement, HiveToolsSurfac
                               exit={{ opacity: 0, scale: 0.9 }}
                             >
                               <motion.button
-                                className="p-1.5 text-gray-400 hover:text-white rounded-lg hover:bg-white/5 transition-all duration-200"
+                                className="p-1.5 text-gray-400 hover:text-[var(--hive-text-primary)] rounded-lg hover:bg-[var(--hive-text-primary)]/5 transition-all duration-200"
                                 onClick={() => onConfigureTool?.(tool.id)}
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
@@ -542,7 +542,7 @@ export const HiveToolsSurface = React.forwardRef<HTMLDivElement, HiveToolsSurfac
                         "flex-1 py-2 px-3 rounded-lg text-sm font-medium border transition-all duration-200",
                         tool.status === 'active'
                           ? "bg-purple-500/20 text-purple-400 border-purple-500/30 hover:bg-purple-500/30"
-                          : "bg-black/20 text-gray-400 border-white/10 hover:border-white/20 hover:text-white"
+                          : "bg-[var(--hive-background-primary)]/20 text-gray-400 border-white/10 hover:border-white/20 hover:text-[var(--hive-text-primary)]"
                       )}
                       onClick={() => onToggleToolStatus?.(tool.id)}
                       whileHover={{ scale: 1.02 }}
@@ -563,7 +563,7 @@ export const HiveToolsSurface = React.forwardRef<HTMLDivElement, HiveToolsSurfac
                     
                     {showAnalytics && (
                       <motion.button
-                        className="p-2 text-gray-400 hover:text-white rounded-lg hover:bg-white/5 transition-all duration-200"
+                        className="p-2 text-gray-400 hover:text-[var(--hive-text-primary)] rounded-lg hover:bg-[var(--hive-text-primary)]/5 transition-all duration-200"
                         onClick={() => onViewToolAnalytics?.(tool.id)}
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}

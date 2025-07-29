@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "@hive/ui/src/components/framer-motion-proxy";
 import { Wrench, Users, Crown, Star, CheckCircle, Loader2, Search, BookOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { HiveCard, HiveButton, HiveInput } from "@hive/ui";
@@ -56,7 +56,7 @@ export function HiveBuilderStep({ data, updateData }: HiveBuilderStepProps) {
 
     try {
       // Get authentication token - use test-token for development/onboarding
-      let authToken: string = 'test-token';
+      const authToken: string = 'test-token';
       
       // In production with real Firebase auth, we'd use:
       // if (user && typeof user.getIdToken === 'function') {

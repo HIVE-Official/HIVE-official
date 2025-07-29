@@ -5,7 +5,8 @@ import { motion } from '../framer-motion-proxy';
 import { ProfileSystemProps } from './types';
 import { ProfileHeader } from './profile-header';
 import { MySpacesFeed } from './my-spaces-feed';
-import { SmartCalendar } from './smart-calendar';
+import { CalendarCard } from './calendar-card';
+import { adaptSmartCalendarProps } from './calendar-data-adapter';
 import { CampusConnections } from './campus-connections';
 import { HiveLabSection } from './hive-lab-section';
 import { ProfileStats } from './profile-stats';
@@ -49,7 +50,7 @@ export const ProfileSystem: React.FC<ProfileSystemProps> = ({
               transition={{ duration: 0.5 }}
             >
               <div className="text-center">
-                <Loader2 className="h-8 w-8 animate-spin text-hive-gold mx-auto mb-4" />
+                <Loader2 className="h-8 w-8 animate-spin text-[var(--hive-brand-secondary)] mx-auto mb-4" />
                 <p className="text-gray-300">Loading your HIVE profile...</p>
               </div>
             </motion.div>
@@ -65,9 +66,9 @@ export const ProfileSystem: React.FC<ProfileSystemProps> = ({
       <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-4">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-center py-16">
-            <HiveCard className="p-8 text-center">
+            <HiveCard className="p-4 text-center">
               <WifiOff className="h-12 w-12 text-red-400 mx-auto mb-4" />
-              <h2 className="text-xl font-semibold text-white mb-2">Connection Error</h2>
+              <h2 className="text-xl font-semibold text-[var(--hive-text-primary)] mb-2">Connection Error</h2>
               <p className="text-gray-400 mb-4">{errors.apiError}</p>
               <HiveButton onClick={() => window.location.reload()}>
                 Try Again
@@ -117,17 +118,21 @@ export const ProfileSystem: React.FC<ProfileSystemProps> = ({
               />
             </motion.div>
 
-            {/* Smart Calendar */}
+            {/* Calendar Card */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.3 }}
             >
-              <SmartCalendar
-                events={events}
-                isLoading={loadingStates?.events}
-                error={errors?.eventsError}
-                onEventClick={onEventClick}
+              <CalendarCard
+                {...adaptSmartCalendarProps(
+                  events,
+                  loadingStates?.events,
+                  errors?.eventsError,
+                  onEventClick,
+                  undefined,
+                  'mobile'
+                )}
               />
             </motion.div>
 
@@ -239,11 +244,15 @@ export const ProfileSystem: React.FC<ProfileSystemProps> = ({
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.5, delay: 0.3 }}
                 >
-                  <SmartCalendar
-                    events={events}
-                    isLoading={loadingStates?.events}
-                    error={errors?.eventsError}
-                    onEventClick={onEventClick}
+                  <CalendarCard
+                    {...adaptSmartCalendarProps(
+                      events,
+                      loadingStates?.events,
+                      errors?.eventsError,
+                      onEventClick,
+                      undefined,
+                      'desktop'
+                    )}
                   />
                 </motion.div>
 
@@ -303,7 +312,7 @@ export const ProfileSystem: React.FC<ProfileSystemProps> = ({
           </motion.div>
 
           {/* Main Content Grid */}
-          <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
             {/* Left Column - Primary Content */}
             <div className="xl:col-span-2 space-y-8">
               <motion.div
@@ -341,11 +350,15 @@ export const ProfileSystem: React.FC<ProfileSystemProps> = ({
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5, delay: 0.3 }}
               >
-                <SmartCalendar
-                  events={events}
-                  isLoading={loadingStates?.events}
-                  error={errors?.eventsError}
-                  onEventClick={onEventClick}
+                <CalendarCard
+                  {...adaptSmartCalendarProps(
+                    events,
+                    loadingStates?.events,
+                    errors?.eventsError,
+                    onEventClick,
+                    undefined,
+                    'desktop'
+                  )}
                 />
               </motion.div>
 

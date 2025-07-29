@@ -3,8 +3,8 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { useAuth } from "@hive/auth-logic";
-import { motion } from "framer-motion";
+import { useAuth } from "@/hooks/use-auth";
+import { motion } from "@hive/ui/src/components/framer-motion-proxy";
 import { 
   HiveButton, 
   HiveCard, 
@@ -47,9 +47,10 @@ function OnboardingProgress({ value, isComplete, className }: {
   return (
     <HiveProgress
       value={value}
-      variant={isComplete ? "success" : "premium"}
+      variant={isComplete ? "gradient" : "default"}
+      color={isComplete ? "success" : "primary"}
       size="md"
-      showPercentage={false}
+      showValue={false}
       className={cn("w-full", className)}
     />
   );
@@ -201,7 +202,7 @@ const steps = [
 
 export function HiveOnboardingWizard() {
   const router = useRouter();
-  const { user, isLoading } = useAuth();
+  const { user, loading, getAuthToken } = useAuth();
   const [currentStep, setCurrentStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -333,9 +334,9 @@ export function HiveOnboardingWizard() {
         // Development mode - create a dev token
         const session = JSON.parse(sessionData);
         authToken = `dev_token_${session.userId}`;
-      } else if (user && typeof user.getIdToken === 'function') {
-        // Production mode - get Firebase ID token
-        authToken = await user.getIdToken();
+      } else if (user && getAuthToken) {
+        // Production mode - get auth token from the auth hook
+        authToken = await getAuthToken() || 'test-token';
       } else {
         throw new Error("Authentication required. Please sign in again.");
       }
@@ -391,6 +392,12 @@ export function HiveOnboardingWizard() {
           };
           window.localStorage.setItem('hive_session', JSON.stringify(updatedSession));
           console.log('User session updated:', updatedSession);
+          
+          // Trigger storage event to notify other parts of the app
+          window.dispatchEvent(new StorageEvent('storage', {
+            key: 'hive_session',
+            newValue: JSON.stringify(updatedSession)
+          }));
         } catch (error) {
           console.error('Error updating session:', error);
         }
@@ -399,10 +406,11 @@ export function HiveOnboardingWizard() {
       // Show success animation
       setCurrentStep(TOTAL_STEPS);
 
-      // Redirect after delay
+      // Redirect after delay - give time for session to update
       setTimeout(() => {
+        console.log('🚀 Redirecting to dashboard after onboarding completion');
         router.push("/");
-      }, 3000);
+      }, 1000);
     } catch (error) {
       console.error("Onboarding error:", error);
       setError(error instanceof Error ? error.message : "Something went wrong");

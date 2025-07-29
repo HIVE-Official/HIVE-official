@@ -128,7 +128,7 @@ function isOriginAllowed(origin: string | null, environment: string): boolean {
 function handlePreflight(request: NextRequest): NextResponse {
   const origin = request.headers.get('origin');
   const requestMethod = request.headers.get('access-control-request-method');
-  const requestHeaders = request.headers.get('access-control-request-headers');
+  const _requestHeaders = request.headers.get('access-control-request-headers');
 
   // Check if origin is allowed
   if (!isOriginAllowed(origin, currentEnvironment)) {
@@ -231,7 +231,6 @@ async function checkRateLimit(request: NextRequest): Promise<NextResponse | null
     const clientId = request.headers.get('x-forwarded-for') ||
                     request.headers.get('x-real-ip') ||
                     request.headers.get('cf-connecting-ip') ||
-                    request.ip ||
                     'unknown';
 
     const result = await rateLimiter.checkLimit(clientId);

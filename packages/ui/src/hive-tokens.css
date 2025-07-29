@@ -13,7 +13,7 @@
   --hive-color-pewter: #6B6B70;
   --hive-color-smoke: #4A4A4F;
   --hive-color-gold: #FFD700;
-  --hive-color-champagne: #F7E98E;
+  --hive-color-champagne: #FFD700;
   --hive-color-amber: #FFA500;
   --hive-color-bronze: #CD7F32;
   --hive-color-emerald: #10B981;
@@ -35,7 +35,7 @@
   --hive-text-disabled: #6B6B70;
   --hive-text-inverse: #0A0A0B;
   --hive-brand-primary: #FFD700;
-  --hive-brand-secondary: #F7E98E;
+  --hive-brand-secondary: #FFD700;
   --hive-brand-accent: #FFA500;
   --hive-brand-muted: #CD7F32;
   --hive-interactive-hover: rgba(255, 255, 255, 0.08);

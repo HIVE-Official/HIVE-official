@@ -187,6 +187,39 @@ const SPACE_TEMPLATES = {
       tags: ["Academic", "Policy", "Curriculum"],
       memberCount: 20
     }
+  ],
+  
+  cohort: [
+    {
+      name: "Computer Science",
+      description: "Connect with all Computer Science students across graduation years for academic support and networking.",
+      tags: ["Major", "Computer Science", "Academic"],
+      memberCount: 245
+    },
+    {
+      name: "Class of '25",
+      description: "Connect with your graduating class across all majors for events and networking.",
+      tags: ["Graduation Year", "Class", "Networking"],
+      memberCount: 1250
+    },
+    {
+      name: "CS '25",
+      description: "Computer Science students graduating in 2025 - your core academic cohort.",
+      tags: ["Major", "Year", "CS"],
+      memberCount: 35
+    },
+    {
+      name: "Business Administration",
+      description: "Business Administration students connecting for internships, projects, and career networking.",
+      tags: ["Major", "Business", "Professional"],
+      memberCount: 180
+    },
+    {
+      name: "Class of '26",
+      description: "Students graduating in 2026 - connect with your class for academic and social activities.",
+      tags: ["Graduation Year", "Class", "Activities"],
+      memberCount: 1100
+    }
   ]
 };
 
@@ -209,6 +242,12 @@ const SPACE_GENERATORS = {
     services: ["Campus Tours", "Academic Support", "Career Services", "Library Associates", "IT Student Help"],
     committees: ["Sustainability Committee", "Diversity Council", "Athletics Board", "Publications Committee"],
     programs: ["Peer Mentoring", "Study Abroad Ambassadors", "Research Showcase", "Honor Society"]
+  },
+  
+  cohort: {
+    majors: ["Engineering", "Psychology", "Biology", "Chemistry", "English", "Mathematics", "History", "Political Science", "Economics", "Art"],
+    years: ["'24", "'25", "'26", "'27", "'28"],
+    combined: ["Bio '25", "Eng '26", "Psych '24", "Math '27", "Art '25"]
   }
 };
 
@@ -289,6 +328,38 @@ function generateSpaceVariation(spaceType: string, index: number): SpaceTemplate
         memberCount: Math.floor(Math.random() * 80) + 15
       };
       
+    case 'cohort':
+      const cohort = generators as typeof SPACE_GENERATORS.cohort;
+      const cohortCategories = Object.keys(cohort);
+      const cohortCategory = cohortCategories[index % cohortCategories.length];
+      const cohortItems = cohort[cohortCategory as keyof typeof cohort];
+      const cohortName = cohortItems[Math.floor(index / cohortCategories.length) % cohortItems.length];
+      
+      let description: string;
+      let tags: string[];
+      let memberCount: number;
+      
+      if (cohortCategory === 'majors') {
+        description = `Connect with all ${cohortName} students across graduation years for academic support and career networking.`;
+        tags = ["Major", cohortName, "Academic"];
+        memberCount = Math.floor(Math.random() * 200) + 50; // 50-250 members
+      } else if (cohortCategory === 'years') {
+        description = `Students graduating in 20${cohortName.slice(1)} - connect with your class for academic and social activities.`;
+        tags = ["Graduation Year", "Class", cohortName];
+        memberCount = Math.floor(Math.random() * 800) + 400; // 400-1200 members
+      } else {
+        description = `${cohortName} cohort - your specific academic peer group for study sessions and networking.`;
+        tags = ["Major", "Year", "Cohort"];
+        memberCount = Math.floor(Math.random() * 50) + 15; // 15-65 members
+      }
+      
+      return {
+        name: cohortName,
+        description,
+        tags,
+        memberCount
+      };
+      
     default:
       return null;
   }
@@ -299,11 +370,12 @@ function generateSpaceVariation(spaceType: string, index: number): SpaceTemplate
  */
 function calculateTargetDistribution(totalTarget: number = 360) {
   return {
-    campus_living: Math.floor(totalTarget * 0.25), // 25% - ~90 spaces
-    student_organizations: Math.floor(totalTarget * 0.40), // 40% - ~144 spaces  
+    campus_living: Math.floor(totalTarget * 0.20), // 20% - ~72 spaces
+    student_organizations: Math.floor(totalTarget * 0.35), // 35% - ~126 spaces  
     university_organizations: Math.floor(totalTarget * 0.15), // 15% - ~54 spaces
     fraternity_and_sorority: Math.floor(totalTarget * 0.10), // 10% - ~36 spaces
-    hive_exclusive: Math.floor(totalTarget * 0.10) // 10% - ~36 spaces
+    hive_exclusive: Math.floor(totalTarget * 0.10), // 10% - ~36 spaces
+    cohort: Math.floor(totalTarget * 0.10) // 10% - ~36 spaces
   };
 }
 
@@ -317,7 +389,7 @@ export async function POST(request: NextRequest) {
     const targetDistribution = calculateTargetDistribution(targetTotal);
     
     // Analyze current space distribution
-    const spaceTypes = ['campus_living', 'fraternity_and_sorority', 'hive_exclusive', 'student_organizations', 'university_organizations'];
+    const spaceTypes = ['campus_living', 'fraternity_and_sorority', 'hive_exclusive', 'student_organizations', 'university_organizations', 'cohort'];
     const currentDistribution: Record<string, number> = {};
     const spacesToCreate: Record<string, SpaceTemplate[]> = {};
     
@@ -407,9 +479,14 @@ export async function POST(request: NextRequest) {
             createdAt: FieldValue.serverTimestamp(),
             updatedAt: FieldValue.serverTimestamp(),
             type: spaceType,
+            name_lowercase: space.name.toLowerCase(),
+            // UB-specific identification
+            schoolId: 'university-at-buffalo',
+            university: 'University at Buffalo',
+            universityShort: 'UB',
             // Auto-generated metadata
             isAutoGenerated: true,
-            seedingVersion: '1.0',
+            seedingVersion: '2.0-ub',
             seedingDate: FieldValue.serverTimestamp()
           };
           
@@ -485,7 +562,7 @@ export async function DELETE(request: NextRequest) {
     
     console.log('🧹 Starting cleanup of auto-generated spaces...');
     
-    const spaceTypes = ['campus_living', 'fraternity_and_sorority', 'hive_exclusive', 'student_organizations', 'university_organizations'];
+    const spaceTypes = ['campus_living', 'fraternity_and_sorority', 'hive_exclusive', 'student_organizations', 'university_organizations', 'cohort'];
     let totalDeleted = 0;
     const deletionResults: Record<string, any> = {};
     

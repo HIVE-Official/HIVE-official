@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion } from "@hive/ui/src/components/framer-motion-proxy";
 import { Shield, FileText, Eye, Check, ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { HiveCard } from "@hive/ui";

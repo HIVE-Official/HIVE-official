@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../lib/utils';
@@ -92,20 +92,33 @@ const postTypes = {
 
 export interface Post {
   id: string;
-  type: keyof typeof postTypes;
-  title: string;
+  type: string;
   content: string;
   authorId: string;
-  authorName: string;
+  author?: {
+    id: string;
+    fullName: string;
+    handle: string;
+    photoURL?: string;
+  };
+  createdAt: Date | { toDate: () => Date };
+  updatedAt: Date | { toDate: () => Date };
+  reactions?: {
+    heart: number;
+  };
+  isPinned?: boolean;
+  isEdited?: boolean;
+  isDeleted?: boolean;
+  spaceId: string;
+  // Legacy props for backward compatibility
+  title?: string;
+  authorName?: string;
   authorAvatar?: string;
-  createdAt: Date;
-  updatedAt: Date;
-  likes: number;
-  replies: number;
-  views: number;
-  isPinned: boolean;
-  isLocked: boolean;
-  tags: string[];
+  likes?: number;
+  replies?: number;
+  views?: number;
+  isLocked?: boolean;
+  tags?: string[];
   imageUrls?: string[];
   pollOptions?: Array<{ id: string; text: string; votes: number; }>;
   linkPreview?: {
@@ -134,14 +147,57 @@ export interface HivePostsSurfaceProps
   sortBy?: 'recent' | 'popular' | 'trending';
   showFilters?: boolean;
   maxPosts?: number;
+  // New props for real data fetching
+  autoFetch?: boolean;
+  authToken?: string;
 }
+
+// Helper function to get auth token from session storage
+const getAuthToken = (): string | null => {
+  if (typeof window === 'undefined') return null;
+  
+  try {
+    const sessionJson = localStorage.getItem('hive_session');
+    if (sessionJson) {
+      const session = JSON.parse(sessionJson);
+      return process.env.NODE_ENV === 'development' 
+        ? `dev_token_${session.uid}` 
+        : session.token;
+    }
+  } catch (error) {
+    console.error('Error getting session:', error);
+  }
+  return null;
+};
+
+// API function to fetch posts
+const fetchPosts = async (spaceId: string, limit = 20): Promise<Post[]> => {
+  const token = getAuthToken();
+  if (!token) {
+    throw new Error('No authentication token available');
+  }
+
+  const response = await fetch(`/api/spaces/${spaceId}/posts?limit=${limit}`, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch posts: ${response.statusText}`);
+  }
+
+  const data = await response.json();
+  return data.posts || [];
+};
 
 export const HivePostsSurface = React.forwardRef<HTMLDivElement, HivePostsSurfaceProps>(
   ({ 
     className,
     mode,
     space,
-    posts = [],
+    posts: propPosts,
     isBuilder = false,
     canPost = true,
     canModerate = false,
@@ -155,6 +211,8 @@ export const HivePostsSurface = React.forwardRef<HTMLDivElement, HivePostsSurfac
     sortBy = 'recent',
     showFilters = true,
     maxPosts = 10,
+    autoFetch = true,
+    authToken,
     ...props 
   }, ref) => {
     
@@ -162,9 +220,62 @@ export const HivePostsSurface = React.forwardRef<HTMLDivElement, HivePostsSurfac
     const [showCreateMenu, setShowCreateMenu] = useState(false);
     const [currentSort, setCurrentSort] = useState(sortBy);
     const [expandedPosts, setExpandedPosts] = useState<Set<string>>(new Set());
+    const [fetchedPosts, setFetchedPosts] = useState<Post[]>([]);
+    const [isLoading, setIsLoading] = useState(autoFetch);
+    const [error, setError] = useState<string | null>(null);
     
-    // Sort posts
-    const sortedPosts = posts
+    // Fetch posts from API if autoFetch is enabled
+    useEffect(() => {
+      if (!autoFetch || !space?.id) return;
+      
+      const loadPosts = async () => {
+        try {
+          setIsLoading(true);
+          setError(null);
+          const posts = await fetchPosts(space.id, maxPosts);
+          setFetchedPosts(posts);
+        } catch (error) {
+          console.error('Failed to fetch posts:', error);
+          setError(error instanceof Error ? error.message : 'Failed to fetch posts');
+        } finally {
+          setIsLoading(false);
+        }
+      };
+
+      loadPosts();
+    }, [autoFetch, space?.id, maxPosts]);
+    
+    // Use either provided posts or fetched posts
+    const posts = propPosts || fetchedPosts;
+    
+    // Normalize post data and sort posts
+    const normalizedPosts = posts.map(post => ({
+      ...post,
+      // Normalize date fields
+      createdAt: post.createdAt && typeof post.createdAt === 'object' && 'toDate' in post.createdAt 
+        ? post.createdAt.toDate() 
+        : new Date(post.createdAt),
+      updatedAt: post.updatedAt && typeof post.updatedAt === 'object' && 'toDate' in post.updatedAt 
+        ? post.updatedAt.toDate() 
+        : new Date(post.updatedAt),
+      // Use real author data or fallback to legacy fields
+      authorName: post.author?.fullName || post.authorName || 'Unknown User',
+      authorAvatar: post.author?.photoURL || post.authorAvatar,
+      // Use real reaction data or fallback to legacy fields
+      likes: post.reactions?.heart || post.likes || 0,
+      replies: post.replies || 0,
+      views: post.views || 0,
+      // Ensure boolean fields are properly set
+      isPinned: post.isPinned || false,
+      isLocked: post.isLocked || false,
+      tags: post.tags || [],
+      // Map type if needed
+      type: post.type as keyof typeof postTypes || 'discussion',
+      // Create title from content if not provided
+      title: post.title || post.content.slice(0, 100) + (post.content.length > 100 ? '...' : ''),
+    }));
+
+    const sortedPosts = normalizedPosts
       .sort((a, b) => {
         // Pinned posts always first
         if (a.isPinned && !b.isPinned) return -1;
@@ -202,6 +313,86 @@ export const HivePostsSurface = React.forwardRef<HTMLDivElement, HivePostsSurfac
       });
     }, []);
     
+    // Loading state
+    if (isLoading) {
+      return (
+        <div
+          ref={ref}
+          className={cn(hivePostsSurfaceVariants({ mode, className }))}
+          {...props}
+        >
+          <div className="space-y-4">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="bg-[var(--hive-background-primary)]/10 backdrop-blur-sm border border-white/5 rounded-xl p-5 animate-pulse">
+                <div className="flex items-start gap-3 mb-4">
+                  <div className="w-10 h-10 bg-gray-600 rounded-full"></div>
+                  <div className="flex-1">
+                    <div className="h-4 bg-gray-600 rounded mb-2 w-32"></div>
+                    <div className="h-3 bg-gray-700 rounded w-24"></div>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <div className="h-4 bg-gray-600 rounded"></div>
+                  <div className="h-4 bg-gray-600 rounded w-3/4"></div>
+                  <div className="h-4 bg-gray-600 rounded w-1/2"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    // Error state
+    if (error) {
+      return (
+        <div
+          ref={ref}
+          className={cn(hivePostsSurfaceVariants({ mode, className }))}
+          {...props}
+        >
+          <motion.div
+            className="text-center py-12"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: motionDurations.smooth }}
+          >
+            <motion.div
+              className="w-16 h-16 mx-auto mb-6 bg-red-500/20 rounded-2xl flex items-center justify-center"
+              whileHover={{ scale: 1.05, rotate: 5 }}
+              transition={{ duration: motionDurations.quick }}
+            >
+              <MessageSquare className="w-8 h-8 text-red-400" />
+            </motion.div>
+            
+            <h3 className="text-xl font-semibold text-[var(--hive-text-primary)] mb-3">Unable to Load Posts</h3>
+            <p className="text-[var(--hive-text-secondary)] text-sm max-w-md mx-auto mb-8 leading-relaxed">
+              {error}
+            </p>
+            
+            <motion.button
+              className="inline-flex items-center gap-2 px-6 py-3 bg-[var(--hive-status-info)]/20 text-[var(--hive-status-info)] border border-[var(--hive-status-info)]/30 rounded-xl hover:bg-[var(--hive-status-info)]/30 transition-all duration-200 font-medium"
+              onClick={() => {
+                setError(null);
+                setIsLoading(true);
+                // Retry fetching
+                if (autoFetch && space?.id) {
+                  fetchPosts(space.id, maxPosts)
+                    .then(setFetchedPosts)
+                    .catch(e => setError(e.message))
+                    .finally(() => setIsLoading(false));
+                }
+              }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              Try Again
+            </motion.button>
+          </motion.div>
+        </div>
+      );
+    }
+
     // Empty state
     if (posts.length === 0) {
       return (
@@ -289,7 +480,7 @@ export const HivePostsSurface = React.forwardRef<HTMLDivElement, HivePostsSurfac
                 <AnimatePresence>
                   {showCreateMenu && (
                     <motion.div
-                      className="absolute top-full right-0 mt-2 w-64 bg-black/80 backdrop-blur-xl border border-white/10 rounded-xl overflow-hidden z-20"
+                      className="absolute top-full right-0 mt-2 w-64 bg-[var(--hive-background-primary)]/80 backdrop-blur-xl border border-white/10 rounded-xl overflow-hidden z-20"
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
@@ -301,13 +492,13 @@ export const HivePostsSurface = React.forwardRef<HTMLDivElement, HivePostsSurfac
                           return (
                             <motion.button
                               key={type}
-                              className="w-full flex items-center gap-3 p-3 text-left rounded-lg hover:bg-white/5 transition-all duration-200"
+                              className="w-full flex items-center gap-3 p-3 text-left rounded-lg hover:bg-[var(--hive-text-primary)]/5 transition-all duration-200"
                               onClick={() => handleCreatePost(type as keyof typeof postTypes)}
                               whileHover={{ x: 4 }}
                             >
                               <Icon className={cn("w-5 h-5", config.color)} />
                               <div>
-                                <div className="text-sm font-medium text-white">{config.label}</div>
+                                <div className="text-sm font-medium text-[var(--hive-text-primary)]">{config.label}</div>
                                 <div className="text-xs text-gray-400">{config.description}</div>
                               </div>
                             </motion.button>
@@ -334,7 +525,7 @@ export const HivePostsSurface = React.forwardRef<HTMLDivElement, HivePostsSurfac
               <motion.article
                 key={post.id}
                 className={cn(
-                  "relative group bg-black/10 backdrop-blur-sm border border-white/5 rounded-xl overflow-hidden transition-all duration-200",
+                  "relative group bg-[var(--hive-background-primary)]/10 backdrop-blur-sm border border-white/5 rounded-xl overflow-hidden transition-all duration-200",
                   isHovered && "border-white/10",
                   post.isPinned && "ring-1 ring-yellow-500/30 bg-yellow-500/5",
                   mode === 'edit' && "hover:ring-2 hover:ring-blue-500/30"
@@ -366,7 +557,7 @@ export const HivePostsSurface = React.forwardRef<HTMLDivElement, HivePostsSurfac
                           <img src={post.authorAvatar} alt="" className="w-full h-full object-cover" />
                         ) : (
                           <div className="w-full h-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center">
-                            <span className="text-sm font-medium text-white">
+                            <span className="text-sm font-medium text-[var(--hive-text-primary)]">
                               {post.authorName.charAt(0).toUpperCase()}
                             </span>
                           </div>
@@ -375,7 +566,7 @@ export const HivePostsSurface = React.forwardRef<HTMLDivElement, HivePostsSurfac
                       
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
-                          <span className="font-medium text-white text-sm">{post.authorName}</span>
+                          <span className="font-medium text-[var(--hive-text-primary)] text-sm">{post.authorName}</span>
                           <span className="text-xs text-gray-400">•</span>
                           <time className="text-xs text-gray-400">
                             {new Date(post.createdAt).toLocaleDateString()}
@@ -399,7 +590,7 @@ export const HivePostsSurface = React.forwardRef<HTMLDivElement, HivePostsSurfac
                               <span className="text-xs text-gray-400">•</span>
                               <div className="flex items-center gap-1">
                                 {post.tags.slice(0, 2).map((tag, i) => (
-                                  <span key={i} className="text-xs bg-white/5 px-2 py-0.5 rounded text-gray-300">
+                                  <span key={i} className="text-xs bg-[var(--hive-text-primary)]/5 px-2 py-0.5 rounded text-gray-300">
                                     {tag}
                                   </span>
                                 ))}
@@ -443,7 +634,7 @@ export const HivePostsSurface = React.forwardRef<HTMLDivElement, HivePostsSurfac
                       )}
                       
                       <motion.button
-                        className="p-1.5 text-gray-400 hover:text-white rounded-lg hover:bg-white/5 transition-all duration-200"
+                        className="p-1.5 text-gray-400 hover:text-[var(--hive-text-primary)] rounded-lg hover:bg-[var(--hive-text-primary)]/5 transition-all duration-200"
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                       >
@@ -454,7 +645,7 @@ export const HivePostsSurface = React.forwardRef<HTMLDivElement, HivePostsSurfac
                   
                   {/* Content */}
                   <div className="space-y-3">
-                    <h4 className="font-medium text-white text-base leading-snug">
+                    <h4 className="font-medium text-[var(--hive-text-primary)] text-base leading-snug">
                       {post.title}
                     </h4>
                     
@@ -481,12 +672,12 @@ export const HivePostsSurface = React.forwardRef<HTMLDivElement, HivePostsSurfac
                         {post.pollOptions.map((option, i) => (
                           <motion.div
                             key={option.id}
-                            className="relative p-3 bg-white/5 rounded-lg cursor-pointer hover:bg-white/10 transition-all duration-200"
+                            className="relative p-3 bg-[var(--hive-text-primary)]/5 rounded-lg cursor-pointer hover:bg-[var(--hive-text-primary)]/10 transition-all duration-200"
                             whileHover={{ scale: 1.01 }}
                             whileTap={{ scale: 0.99 }}
                           >
                             <div className="flex items-center justify-between">
-                              <span className="text-sm text-white">{option.text}</span>
+                              <span className="text-sm text-[var(--hive-text-primary)]">{option.text}</span>
                               <span className="text-xs text-gray-400">{option.votes} votes</span>
                             </div>
                             <div 
@@ -503,7 +694,7 @@ export const HivePostsSurface = React.forwardRef<HTMLDivElement, HivePostsSurfac
                     {/* Link Preview */}
                     {post.linkPreview && (
                       <motion.div
-                        className="p-3 bg-white/5 rounded-lg border border-white/5"
+                        className="p-3 bg-[var(--hive-text-primary)]/5 rounded-lg border border-white/5"
                         whileHover={{ scale: 1.01 }}
                       >
                         <div className="flex gap-3">
@@ -517,7 +708,7 @@ export const HivePostsSurface = React.forwardRef<HTMLDivElement, HivePostsSurfac
                             </div>
                           )}
                           <div className="flex-1 min-w-0">
-                            <h5 className="text-sm font-medium text-white truncate">
+                            <h5 className="text-sm font-medium text-[var(--hive-text-primary)] truncate">
                               {post.linkPreview.title}
                             </h5>
                             <p className="text-xs text-gray-400 line-clamp-2 mt-1">

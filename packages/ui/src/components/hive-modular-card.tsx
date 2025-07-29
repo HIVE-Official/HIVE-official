@@ -79,7 +79,7 @@ const ModularCard = React.forwardRef<HTMLDivElement, ModularCardProps>(
       <div
         className={cn(
           moduleVariants({ variant, size, rounded, connector, className }),
-          stackable && "hover:translate-y-[-2px] hover:shadow-lg",
+          stackable && "hover:translate-y-[-0.5] hover:shadow-lg",
           connectable && "relative before:absolute before:inset-0 before:border before:border-dashed before:border-[var(--hive-brand-primary)]/20 before:rounded-xl before:opacity-0 hover:before:opacity-100 before:transition-opacity"
         )}
         ref={ref}
@@ -219,20 +219,20 @@ export const HiveModularCard: React.FC<HiveModularCardProps> = ({
         <div className="space-y-4">
           {skeleton?.header && (
             <div className="space-y-2">
-              <div className="h-4 bg-white/10 rounded w-3/4"></div>
-              <div className="h-3 bg-white/10 rounded w-1/2"></div>
+              <div className="h-4 bg-[var(--hive-text-primary)]/10 rounded w-3/4"></div>
+              <div className="h-3 bg-[var(--hive-text-primary)]/10 rounded w-1/2"></div>
             </div>
           )}
           {skeleton?.content && (
             <div className="space-y-2">
-              <div className="h-3 bg-white/10 rounded"></div>
-              <div className="h-3 bg-white/10 rounded w-5/6"></div>
+              <div className="h-3 bg-[var(--hive-text-primary)]/10 rounded"></div>
+              <div className="h-3 bg-[var(--hive-text-primary)]/10 rounded w-5/6"></div>
             </div>
           )}
           {skeleton?.stats && (
             <div className="flex space-x-4">
-              <div className="h-8 bg-white/10 rounded w-16"></div>
-              <div className="h-8 bg-white/10 rounded w-16"></div>
+              <div className="h-8 bg-[var(--hive-text-primary)]/10 rounded w-16"></div>
+              <div className="h-8 bg-[var(--hive-text-primary)]/10 rounded w-16"></div>
             </div>
           )}
         </div>
@@ -246,12 +246,12 @@ export const HiveModularCard: React.FC<HiveModularCardProps> = ({
         <div className="py-8 space-y-4">
           <div className="text-4xl opacity-50">⚠️</div>
           <div className="space-y-2">
-            <h3 className="text-lg font-medium text-white/80">{error.title}</h3>
-            <p className="text-sm text-white/60">{error.description}</p>
+            <h3 className="text-lg font-medium text-[var(--hive-text-primary)]/80">{error.title}</h3>
+            <p className="text-sm text-[var(--hive-text-primary)]/60">{error.description}</p>
           </div>
           {error.action && (
             <button 
-              className="px-4 py-2 bg-white/10 text-white/80 rounded-lg hover:bg-white/20 transition-colors"
+              className="px-4 py-2 bg-[var(--hive-text-primary)]/10 text-[var(--hive-text-primary)]/80 rounded-lg hover:bg-[var(--hive-text-primary)]/20 transition-colors"
               onClick={error.action.onClick}
             >
               {error.action.label}
@@ -283,9 +283,9 @@ export const HiveModularCard: React.FC<HiveModularCardProps> = ({
           <div className="space-y-2" onClick={() => onModuleClick?.('header')}>
             <div className="flex items-start justify-between">
               <div className="space-y-1">
-                <h3 className="text-lg font-semibold text-white">{modules.header.title}</h3>
+                <h3 className="text-lg font-semibold text-[var(--hive-text-primary)]">{modules.header.title}</h3>
                 {modules.header.subtitle && (
-                  <p className="text-sm text-white/60">{modules.header.subtitle}</p>
+                  <p className="text-sm text-[var(--hive-text-primary)]/60">{modules.header.subtitle}</p>
                 )}
               </div>
               {modules.header.badge && (
@@ -301,12 +301,12 @@ export const HiveModularCard: React.FC<HiveModularCardProps> = ({
         {modules.content && (
           <div className="space-y-3" onClick={() => onModuleClick?.('content')}>
             {modules.content.description && (
-              <p className="text-white/80 text-sm leading-relaxed">{modules.content.description}</p>
+              <p className="text-[var(--hive-text-primary)]/80 text-sm leading-relaxed">{modules.content.description}</p>
             )}
             {modules.content.tags && (
               <div className="flex flex-wrap gap-2">
                 {modules.content.tags.map((tag: string, index: number) => (
-                  <span key={index} className="px-2 py-1 bg-white/10 text-white/70 text-xs rounded">
+                  <span key={index} className="px-2 py-1 bg-[var(--hive-text-primary)]/10 text-[var(--hive-text-primary)]/70 text-xs rounded">
                     {tag}
                   </span>
                 ))}
@@ -320,8 +320,8 @@ export const HiveModularCard: React.FC<HiveModularCardProps> = ({
           <div className="flex justify-between items-center py-3 border-t border-white/10" onClick={() => onModuleClick?.('stats')}>
             {modules.stats.items?.map((stat: any, index: number) => (
               <div key={index} className="text-center">
-                <div className="text-lg font-semibold text-white">{stat.value}</div>
-                <div className="text-xs text-white/60">{stat.label}</div>
+                <div className="text-lg font-semibold text-[var(--hive-text-primary)]">{stat.value}</div>
+                <div className="text-xs text-[var(--hive-text-primary)]/60">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -343,7 +343,7 @@ export const HiveModularCard: React.FC<HiveModularCardProps> = ({
                 {modules.actions.secondary.map((action: any, index: number) => (
                   <button 
                     key={index}
-                    className="p-2 text-white/60 hover:text-white/80 hover:bg-white/10 rounded transition-colors"
+                    className="p-2 text-[var(--hive-text-primary)]/60 hover:text-[var(--hive-text-primary)]/80 hover:bg-[var(--hive-text-primary)]/10 rounded transition-colors"
                     onClick={() => onActionClick?.(action.label)}
                   >
                     {action.icon} {action.label}

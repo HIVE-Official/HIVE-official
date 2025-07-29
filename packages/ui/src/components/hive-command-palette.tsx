@@ -301,7 +301,7 @@ const HiveCommandPalette = React.forwardRef<HTMLDivElement, HiveCommandPalettePr
           >
             {/* Backdrop */}
             <motion.div
-              className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+              className="absolute inset-0 bg-[var(--hive-background-primary)]/80 backdrop-blur-sm"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -336,7 +336,7 @@ const HiveCommandPalette = React.forwardRef<HTMLDivElement, HiveCommandPalettePr
                         "px-3 py-1.5 rounded-lg text-sm font-medium transition-colors shrink-0",
                         !selectedCategory 
                           ? "bg-yellow-500/20 text-yellow-400 border border-yellow-500/30" 
-                          : "bg-white/5 text-white/60 hover:bg-white/10"
+                          : "bg-[var(--hive-text-primary)]/5 text-[var(--hive-text-primary)]/60 hover:bg-[var(--hive-text-primary)]/10"
                       )}
                       onClick={() => setSelectedCategory(null)}
                       whileHover={{ scale: 1.02 }}
@@ -352,7 +352,7 @@ const HiveCommandPalette = React.forwardRef<HTMLDivElement, HiveCommandPalettePr
                           "flex items-center space-x-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors shrink-0",
                           selectedCategory === category.id
                             ? `bg-${category.color}/20 text-${category.color} border border-${category.color}/30`
-                            : "bg-white/5 text-white/60 hover:bg-white/10"
+                            : "bg-[var(--hive-text-primary)]/5 text-[var(--hive-text-primary)]/60 hover:bg-[var(--hive-text-primary)]/10"
                         )}
                         onClick={() => handleCategorySelect(category.id)}
                         whileHover={{ scale: 1.02 }}
@@ -381,7 +381,7 @@ const HiveCommandPalette = React.forwardRef<HTMLDivElement, HiveCommandPalettePr
                         <div key={categoryId} className="mb-4 last:mb-0">
                           {/* Category Header */}
                           {category && Object.keys(groupedItems).length > 1 && (
-                            <div className="flex items-center space-x-2 px-3 py-2 text-xs font-medium text-white/60 uppercase tracking-wider">
+                            <div className="flex items-center space-x-2 px-3 py-2 text-xs font-medium text-[var(--hive-text-primary)]/60 uppercase tracking-wider">
                               {category.icon}
                               <span>{category.title}</span>
                             </div>
@@ -409,7 +409,7 @@ const HiveCommandPalette = React.forwardRef<HTMLDivElement, HiveCommandPalettePr
                                 >
                                   <div className={cn(
                                     "text-current shrink-0",
-                                    isSelected ? "text-yellow-400" : "text-white/60"
+                                    isSelected ? "text-yellow-400" : "text-[var(--hive-text-primary)]/60"
                                   )}>
                                     {item.icon}
                                   </div>
@@ -417,12 +417,12 @@ const HiveCommandPalette = React.forwardRef<HTMLDivElement, HiveCommandPalettePr
                                   <div className="flex-1 min-w-0">
                                     <div className={cn(
                                       "font-medium truncate",
-                                      isSelected ? "text-white" : "text-white/80"
+                                      isSelected ? "text-[var(--hive-text-primary)]" : "text-[var(--hive-text-primary)]/80"
                                     )}>
                                       {item.title}
                                     </div>
                                     {item.description && (
-                                      <div className="text-sm text-white/50 truncate">
+                                      <div className="text-sm text-[var(--hive-text-primary)]/50 truncate">
                                         {item.description}
                                       </div>
                                     )}
@@ -431,14 +431,14 @@ const HiveCommandPalette = React.forwardRef<HTMLDivElement, HiveCommandPalettePr
                                 
                                 <div className="flex items-center space-x-2 shrink-0 ml-4">
                                   {item.shortcut && (
-                                    <div className="text-xs font-mono text-white/40 bg-white/5 px-2 py-1 rounded border border-white/10">
+                                    <div className="text-xs font-mono text-[var(--hive-text-primary)]/40 bg-[var(--hive-text-primary)]/5 px-2 py-1 rounded border border-white/10">
                                       {item.shortcut}
                                     </div>
                                   )}
                                   <ArrowRight 
                                     className={cn(
                                       "transition-colors",
-                                      isSelected ? "text-yellow-400" : "text-white/40"
+                                      isSelected ? "text-yellow-400" : "text-[var(--hive-text-primary)]/40"
                                     )} 
                                     size={16} 
                                   />
@@ -452,9 +452,9 @@ const HiveCommandPalette = React.forwardRef<HTMLDivElement, HiveCommandPalettePr
                   </motion.div>
                 ) : (
                   <div className="px-6 py-12 text-center">
-                    <Search className="mx-auto mb-4 text-white/40" size={48} />
-                    <div className="text-white/60 font-medium mb-2">No results found</div>
-                    <div className="text-white/40 text-sm">
+                    <Search className="mx-auto mb-4 text-[var(--hive-text-primary)]/40" size={48} />
+                    <div className="text-[var(--hive-text-primary)]/60 font-medium mb-2">No results found</div>
+                    <div className="text-[var(--hive-text-primary)]/40 text-sm">
                       Try searching for tools, spaces, or actions
                     </div>
                   </div>
@@ -462,17 +462,17 @@ const HiveCommandPalette = React.forwardRef<HTMLDivElement, HiveCommandPalettePr
               </div>
               
               {/* Footer */}
-              <div className="px-6 py-3 bg-black/20 border-t border-white/10">
-                <div className="flex items-center justify-between text-xs text-white/50">
+              <div className="px-6 py-3 bg-[var(--hive-background-primary)]/20 border-t border-white/10">
+                <div className="flex items-center justify-between text-xs text-[var(--hive-text-primary)]/50">
                   <div className="flex items-center space-x-4">
                     <div className="flex items-center space-x-1">
-                      <div className="w-4 h-4 bg-white/10 rounded border border-white/20 flex items-center justify-center">
+                      <div className="w-4 h-4 bg-[var(--hive-text-primary)]/10 rounded border border-white/20 flex items-center justify-center">
                         ↵
                       </div>
                       <span>select</span>
                     </div>
                     <div className="flex items-center space-x-1">
-                      <div className="w-4 h-4 bg-white/10 rounded border border-white/20 flex items-center justify-center">
+                      <div className="w-4 h-4 bg-[var(--hive-text-primary)]/10 rounded border border-white/20 flex items-center justify-center">
                         ↓↑
                       </div>
                       <span>navigate</span>

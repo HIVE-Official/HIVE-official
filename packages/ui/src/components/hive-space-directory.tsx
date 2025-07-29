@@ -5,7 +5,7 @@ import { motion, AnimatePresence, useAnimation } from 'framer-motion';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../lib/utils';
 import { liquidMetal, motionDurations, cascadeTiming } from '../motion/hive-motion-system';
-import { HiveSpaceCard } from './hive-space-card';
+import { HiveSpaceCard } from '../atomic/organisms/hive-space-card';
 import { HiveCommandPalette } from './hive-command-palette';
 import { type Space, type SpaceType } from '@hive/core';
 import { 
@@ -35,7 +35,7 @@ import {
 // Advanced filtering, search, and organization for the HIVE ecosystem
 
 const hiveSpaceDirectoryVariants = cva(
-  "relative w-full min-h-screen bg-black/5 backdrop-blur-sm",
+  "relative w-full min-h-screen bg-[var(--hive-background-primary)]/5 backdrop-blur-sm",
   {
     variants: {
       layout: {
@@ -56,7 +56,7 @@ const spaceTypeFilters = [
     type: 'all' as const, 
     label: 'All Spaces', 
     icon: Target, 
-    color: 'text-white',
+    color: 'text-[var(--hive-text-primary)]',
     count: 0 
   },
   { 
@@ -247,7 +247,7 @@ export const HiveSpaceDirectory = React.forwardRef<HTMLDivElement, HiveSpaceDire
         {...props}
       >
         {/* Header Section */}
-        <div className="sticky top-0 z-30 bg-black/80 backdrop-blur-xl border-b border-white/10">
+        <div className="sticky top-0 z-30 bg-[var(--hive-background-primary)]/80 backdrop-blur-xl border-b border-white/10">
           <div className="max-w-7xl mx-auto px-6 py-6">
             {/* Title and Actions */}
             <div className="flex items-center justify-between mb-6">
@@ -256,7 +256,7 @@ export const HiveSpaceDirectory = React.forwardRef<HTMLDivElement, HiveSpaceDire
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: motionDurations.smooth }}
               >
-                <h1 className="text-3xl font-bold text-white mb-2">Spaces</h1>
+                <h1 className="text-3xl font-bold text-[var(--hive-text-primary)] mb-2">Spaces</h1>
                 <p className="text-gray-400">
                   Discover and join {spaces.length} campus communities
                 </p>
@@ -269,7 +269,7 @@ export const HiveSpaceDirectory = React.forwardRef<HTMLDivElement, HiveSpaceDire
                     "flex items-center gap-2 px-4 py-2 rounded-xl border transition-all duration-200",
                     showSearch 
                       ? "bg-yellow-500/20 text-yellow-400 border-yellow-500/30"
-                      : "bg-black/20 text-gray-400 border-white/10 hover:border-white/20"
+                      : "bg-[var(--hive-background-primary)]/20 text-gray-400 border-white/10 hover:border-white/20"
                   )}
                   onClick={handleSearchToggle}
                   whileHover={{ scale: 1.02 }}
@@ -277,14 +277,14 @@ export const HiveSpaceDirectory = React.forwardRef<HTMLDivElement, HiveSpaceDire
                 >
                   <Search className="w-4 h-4" />
                   <span className="text-sm">Search</span>
-                  <kbd className="px-1.5 py-0.5 text-xs bg-white/10 rounded border border-white/20">
+                  <kbd className="px-1.5 py-0.5 text-xs bg-[var(--hive-text-primary)]/10 rounded border border-white/20">
                     /
                   </kbd>
                 </motion.button>
                 
                 {/* Layout Toggle */}
                 {showLayoutToggle && (
-                  <div className="flex bg-black/20 rounded-xl border border-white/10 p-1">
+                  <div className="flex bg-[var(--hive-background-primary)]/20 rounded-xl border border-white/10 p-1">
                     {[
                       { key: 'grid', icon: Grid },
                       { key: 'list', icon: List }
@@ -295,7 +295,7 @@ export const HiveSpaceDirectory = React.forwardRef<HTMLDivElement, HiveSpaceDire
                           "p-2 rounded-lg transition-all duration-200",
                           viewLayout === key
                             ? "bg-yellow-500/20 text-yellow-400"
-                            : "text-gray-400 hover:text-white"
+                            : "text-gray-400 hover:text-[var(--hive-text-primary)]"
                         )}
                         onClick={() => setViewLayout(key as 'grid' | 'list' | 'masonry')}
                         whileHover={{ scale: 1.05 }}
@@ -340,7 +340,7 @@ export const HiveSpaceDirectory = React.forwardRef<HTMLDivElement, HiveSpaceDire
                       placeholder={searchPlaceholder}
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full pl-12 pr-4 py-3 bg-black/20 backdrop-blur-sm border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500/50 focus:border-yellow-500/30 transition-all duration-200"
+                      className="w-full pl-12 pr-4 py-3 bg-[var(--hive-background-primary)]/20 backdrop-blur-sm border border-white/10 rounded-xl text-[var(--hive-text-primary)] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500/50 focus:border-yellow-500/30 transition-all duration-200"
                     />
                   </div>
                 </motion.div>
@@ -364,7 +364,7 @@ export const HiveSpaceDirectory = React.forwardRef<HTMLDivElement, HiveSpaceDire
                           "flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all duration-200 whitespace-nowrap",
                           isActive
                             ? "bg-yellow-500/20 text-yellow-400 border-yellow-500/30"
-                            : "bg-black/20 text-gray-400 border-white/10 hover:border-white/20 hover:text-white"
+                            : "bg-[var(--hive-background-primary)]/20 text-gray-400 border-white/10 hover:border-white/20 hover:text-[var(--hive-text-primary)]"
                         )}
                         onClick={() => setSelectedType(filter.type)}
                         initial={{ opacity: 0, x: -10 }}
@@ -379,7 +379,7 @@ export const HiveSpaceDirectory = React.forwardRef<HTMLDivElement, HiveSpaceDire
                           "px-2 py-0.5 rounded-full text-xs",
                           isActive 
                             ? "bg-yellow-500/30 text-yellow-300"
-                            : "bg-white/10 text-gray-500"
+                            : "bg-[var(--hive-text-primary)]/10 text-gray-500"
                         )}>
                           {count}
                         </span>
@@ -394,7 +394,7 @@ export const HiveSpaceDirectory = React.forwardRef<HTMLDivElement, HiveSpaceDire
                   <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
-                    className="bg-black/20 text-white border border-white/10 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500/50"
+                    className="bg-[var(--hive-background-primary)]/20 text-[var(--hive-text-primary)] border border-white/10 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500/50"
                   >
                     {sortOptions.map(option => (
                       <option key={option.key} value={option.key}>
@@ -421,7 +421,7 @@ export const HiveSpaceDirectory = React.forwardRef<HTMLDivElement, HiveSpaceDire
               <div className="flex items-center gap-3 mb-6">
                 <div className="flex items-center gap-2">
                   <TrendingUp className="w-5 h-5 text-yellow-400" />
-                  <h2 className="text-xl font-semibold text-white">Trending Spaces</h2>
+                  <h2 className="text-xl font-semibold text-[var(--hive-text-primary)]">Trending Spaces</h2>
                 </div>
                 <div className="h-px bg-gradient-to-r from-yellow-500/30 to-transparent flex-1" />
               </div>
@@ -459,7 +459,7 @@ export const HiveSpaceDirectory = React.forwardRef<HTMLDivElement, HiveSpaceDire
             transition={{ delay: 0.3 }}
           >
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-semibold text-white">
+              <h2 className="text-xl font-semibold text-[var(--hive-text-primary)]">
                 {searchQuery ? `Search Results (${filteredAndSortedSpaces.length})` : 'All Spaces'}
               </h2>
               
@@ -476,7 +476,7 @@ export const HiveSpaceDirectory = React.forwardRef<HTMLDivElement, HiveSpaceDire
                 {Array.from({ length: 8 }).map((_, index) => (
                   <div
                     key={index}
-                    className="h-64 bg-black/20 backdrop-blur-sm border border-white/10 rounded-2xl animate-pulse"
+                    className="h-64 bg-[var(--hive-background-primary)]/20 backdrop-blur-sm border border-white/10 rounded-2xl animate-pulse"
                   />
                 ))}
               </div>
@@ -539,7 +539,7 @@ export const HiveSpaceDirectory = React.forwardRef<HTMLDivElement, HiveSpaceDire
                 <div className="w-16 h-16 mx-auto mb-4 bg-gray-800/50 rounded-full flex items-center justify-center">
                   <Search className="w-8 h-8 text-gray-400" />
                 </div>
-                <h3 className="text-lg font-medium text-white mb-2">No spaces found</h3>
+                <h3 className="text-lg font-medium text-[var(--hive-text-primary)] mb-2">No spaces found</h3>
                 <p className="text-gray-400 mb-6">
                   {searchQuery 
                     ? `No spaces match "${searchQuery}". Try adjusting your search or filters.`

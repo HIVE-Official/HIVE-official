@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { Card, CardContent, CardHeader, CardTitle } from "@hive/ui";
+import { HiveCard as Card, CardContent, CardHeader, CardTitle } from "@hive/ui";
 import { getCurrentAdmin } from "@/lib/auth";
 import { UserManagementDashboard } from "../../components/user-management-dashboard";
 import { BuilderQueueEnhanced } from "../../components/builder-queue-enhanced";

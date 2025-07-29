@@ -129,3 +129,19 @@ lint-output.txt
 
 # Firebase hosting cache
 .firebase/hosting.*/
+
+# Temporary development files
+test-dashboard.html
+debug-session.js
+clear-storage.html
+*.backup
+
+# Migration and temporary scripts
+migrate-*.js
+fix-*.js
+
+# Analysis reports
+*-report.json
+
+# Claude-specific files
+.claude/

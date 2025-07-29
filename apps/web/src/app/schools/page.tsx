@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Search, Users, ArrowRight, MapPin, CheckCircle, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
@@ -13,13 +13,25 @@ interface School {
   name: string;
   domain: string;
   location: string;
-  signupCount: number;
-  activationThreshold: number;
-  isActive: boolean;
+  signupCount?: number;
+  activationThreshold?: number;
+  isActive?: boolean;
   isComingSoon?: boolean;
+  status?: 'active' | 'waitlist' | 'inactive';
 }
 
-const schools: School[] = [
+// Fallback for development only
+const fallbackSchools: School[] = [
+  // Development Test School - Always first for easy access
+  {
+    id: 'test-university',
+    name: 'Test University (Development)',
+    domain: 'test.edu',
+    location: 'Development, NY',
+    signupCount: 999,
+    activationThreshold: 350,
+    isActive: true,
+  },
   // SUNY Schools - Major Campuses
   {
     id: 'ub',
@@ -263,11 +275,58 @@ export default function SchoolsPage() {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState('');
   const [isComingSoonOpen, setIsComingSoonOpen] = useState(false);
+  const [schools, setSchools] = useState<School[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const filteredSchools = schools.filter(school =>
-    school.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    school.location.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Fetch schools from API
+  useEffect(() => {
+    async function fetchSchools() {
+      try {
+        const response = await fetch('/api/schools');
+        if (response.ok) {
+          const schoolsData = await response.json();
+          const formattedSchools = schoolsData
+            .filter((school: any) => school && school.name && school.location)
+            .map((school: any) => {
+              // Handle location field - convert object to string if needed
+              let locationString = school.location;
+              if (typeof school.location === 'object' && school.location !== null) {
+                // Convert {city, state, country} object to string
+                const { city, state, country } = school.location;
+                locationString = [city, state, country].filter(Boolean).join(', ');
+              }
+              
+              return {
+                ...school,
+                location: locationString,
+                isActive: school.status === 'active',
+                isComingSoon: school.status === 'waitlist',
+                signupCount: school.signupCount || 0,
+                activationThreshold: school.activationThreshold || 350
+              };
+            });
+          setSchools(formattedSchools);
+        } else {
+          // Fallback to hardcoded data only in development
+          console.warn('Failed to fetch schools from API, using fallback');
+          setSchools(fallbackSchools);
+        }
+      } catch (error) {
+        console.error('Error fetching schools:', error);
+        setSchools(fallbackSchools);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchSchools();
+  }, []);
+
+  const filteredSchools = schools.filter(school => {
+    if (!school || !school.name || !school.location) return false;
+    return school.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+           school.location.toLowerCase().includes(searchTerm.toLowerCase());
+  });
 
   const handleSchoolSelect = (school: School) => {
     if (school.isActive) {
@@ -347,9 +406,22 @@ export default function SchoolsPage() {
           </div>
         </div>
 
+        {/* Loading State */}
+        {loading && (
+          <div className="text-center py-12">
+            <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-6 h-6 border-2 border-white/20 border-t-white/60 rounded-full animate-spin" />
+            </div>
+            <p className="hive-font-sans text-sm" style={{ color: '#9A9AA1' }}>
+              Loading universities...
+            </p>
+          </div>
+        )}
+
         {/* Schools Grid */}
-        <div className="grid gap-4 hive-animate-liquid-reveal mb-16">
-          {filteredSchools.map((school, index) => (
+        {!loading && (
+          <div className="grid gap-4 hive-animate-liquid-reveal mb-16">
+            {filteredSchools.map((school, index) => (
             <div
               key={school.id}
               className="group relative overflow-hidden rounded-2xl border border-white/5 hover:border-white/10 transition-all duration-500 cursor-pointer hive-interactive"
@@ -417,8 +489,9 @@ export default function SchoolsPage() {
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent" />
               </div>
             </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
         {/* Empty State */}
         {filteredSchools.length === 0 && (

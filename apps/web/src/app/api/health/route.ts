@@ -1,9 +1,6 @@
 import { NextResponse } from "next/server";
-import {
-  currentEnvironment,
-  isFirebaseAdminConfigured,
-  environmentInfo,
-} from "@/lib/firebase-admin";
+import { currentEnvironment, isFirebaseAdminConfigured } from "@/lib/env";
+import { environmentInfo } from "@/lib/firebase-admin";
 
 export async function GET() {
   return NextResponse.json({

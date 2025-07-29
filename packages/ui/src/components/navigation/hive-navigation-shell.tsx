@@ -218,7 +218,7 @@ export function HiveNavigationShell({
           <div className="sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 z-50">
             <a
               href="#main-content"
-              className="inline-block px-4 py-2 text-sm font-medium text-white bg-black rounded-md"
+              className="inline-block px-4 py-2 text-sm font-medium text-[var(--hive-text-primary)] bg-[var(--hive-background-primary)] rounded-md"
             >
               Skip to main content
             </a>
@@ -255,7 +255,7 @@ function MobileSidebarOverlay() {
   
   return (
     <div 
-      className="fixed inset-0 z-30 bg-black/50 backdrop-blur-sm md:hidden"
+      className="fixed inset-0 z-30 bg-[var(--hive-background-primary)]/50 backdrop-blur-sm md:hidden"
       onClick={() => setCollapsed(true)}
     />
   );

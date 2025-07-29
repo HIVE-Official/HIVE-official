@@ -36,16 +36,16 @@ export interface BentoGridProps {
 
 const sizeClasses = {
   sm: 'col-span-1 row-span-1',
-  md: 'col-span-2 row-span-1', 
-  lg: 'col-span-2 row-span-2',
-  xl: 'col-span-3 row-span-2'
+  md: 'col-span-1 md:col-span-2 row-span-1', 
+  lg: 'col-span-1 md:col-span-2 lg:col-span-2 row-span-1 md:row-span-2',
+  xl: 'col-span-1 md:col-span-2 lg:col-span-3 xl:col-span-3 row-span-1 md:row-span-2'
 };
 
 const mobileSizeClasses = {
   sm: 'col-span-1 row-span-1',
   md: 'col-span-1 row-span-1',
-  lg: 'col-span-1 row-span-2', 
-  xl: 'col-span-1 row-span-2'
+  lg: 'col-span-1 row-span-1', // Compressed on mobile
+  xl: 'col-span-1 row-span-1'  // Compressed on mobile
 };
 
 const BentoCardWrapper: React.FC<{
@@ -79,12 +79,13 @@ const BentoCardWrapper: React.FC<{
       onMouseLeave={() => setIsHovered(false)}
     >
       <HiveCard 
+        variant={card.isBuilderOnly ? "gold-featured" : card.comingSoon ? "minimal" : "elevated"}
+        magneticHover={true}
+        magneticIntensity={card.isBuilderOnly ? "strong" : "medium"}
+        interactive={!card.isLocked}
         className={cn(
           'h-full w-full relative overflow-hidden',
-          'backdrop-blur-xl bg-gray-900/40 border border-white/10',
-          'hover:border-hive-gold/30 transition-all duration-300',
-          isEditMode && !card.isLocked && 'hover:border-hive-gold/50 cursor-move',
-          card.comingSoon && 'border-gray-600/50'
+          isEditMode && !card.isLocked && 'cursor-move'
         )}
       >
         {/* Edit Mode Controls */}
@@ -158,8 +159,8 @@ const BentoCardWrapper: React.FC<{
         {card.comingSoon && (
           <div className="absolute inset-0 bg-gray-900/80 backdrop-blur-sm flex items-center justify-center z-10">
             <div className="text-center">
-              <Lock className="h-8 w-8 text-hive-gold mx-auto mb-2" />
-              <p className="text-sm font-medium text-white">Coming in v1</p>
+              <Lock className="h-8 w-8 text-[var(--hive-brand-secondary)] mx-auto mb-2" />
+              <p className="text-sm font-medium text-[var(--hive-text-primary)]">Coming in v1</p>
               <p className="text-xs text-gray-400 mt-1">Social features unlock soon</p>
             </div>
           </div>
@@ -168,8 +169,8 @@ const BentoCardWrapper: React.FC<{
         {/* Builder Only Badge */}
         {card.isBuilderOnly && (
           <div className="absolute top-2 left-2 z-10">
-            <div className="px-2 py-1 bg-hive-gold/20 border border-hive-gold/30 rounded-full">
-              <span className="text-xs font-medium text-hive-gold">Builder</span>
+            <div className="px-2 py-1 bg-[var(--hive-brand-secondary)]/20 border border-hive-gold/30 rounded-full">
+              <span className="text-xs font-medium text-[var(--hive-brand-secondary)]">Builder</span>
             </div>
           </div>
         )}
@@ -220,7 +221,7 @@ export const BentoGrid: React.FC<BentoGridProps> = ({
       {isCustomizable && (
         <div className="mb-6 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <h2 className="text-xl font-semibold text-white">Your Profile</h2>
+            <h2 className="text-xl font-semibold text-[var(--hive-text-primary)]">Your Profile</h2>
             <div className="text-sm text-gray-400">
               Customize your dashboard
             </div>
@@ -244,9 +245,9 @@ export const BentoGrid: React.FC<BentoGridProps> = ({
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="mb-6 p-4 rounded-lg bg-hive-gold/10 border border-hive-gold/20"
+            className="mb-6 p-4 rounded-lg bg-[var(--hive-brand-secondary)]/10 border border-hive-gold/20"
           >
-            <p className="text-sm text-hive-gold">
+            <p className="text-sm text-[var(--hive-brand-secondary)]">
               <strong>Your Profile = Your Rules</strong> • Drag to reorder, click settings to customize, use eye icon to hide cards
             </p>
           </motion.div>
@@ -257,7 +258,7 @@ export const BentoGrid: React.FC<BentoGridProps> = ({
       <div
         ref={containerRef}
         className={cn(
-          'grid gap-6 auto-rows-[200px]',
+          'grid gap-6 auto-rows-[50]',
           isMobile 
             ? 'grid-cols-1' 
             : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
@@ -282,9 +283,9 @@ export const BentoGrid: React.FC<BentoGridProps> = ({
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="mt-8 p-4 rounded-lg bg-gray-800/40 border border-gray-700"
+            className="mt-8 p-4 rounded-lg bg-gray-800/40 border border-[var(--hive-border-default)]"
           >
-            <h3 className="text-sm font-medium text-white mb-3">Hidden Cards</h3>
+            <h3 className="text-sm font-medium text-[var(--hive-text-primary)] mb-3">Hidden Cards</h3>
             <div className="flex flex-wrap gap-2">
               {cards
                 .filter(card => !card.isVisible)

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { collection, doc, query, where, getDocs, getDoc, orderBy, limit } from 'firebase/firestore';
 import { db } from '@hive/core/server';
-import { getCurrentUser } from '@hive/auth-logic';
+import { getCurrentUser } from '@/lib/auth-server';
 
 // Space membership interface for profile
 interface ProfileSpaceMembership {
@@ -58,8 +58,18 @@ interface SpaceActivitySummary {
 // GET - Fetch user's space memberships for profile
 export async function GET(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
+      // Development fallback
+      if (process.env.NODE_ENV === 'development' || request.url.includes('localhost')) {
+        return NextResponse.json({
+          memberships: getMockSpaceMemberships(),
+          activitySummary: getMockActivitySummary(),
+          totalCount: 4,
+          activeCount: 3,
+          timeRange: 'week'
+        });
+      }
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -328,4 +338,169 @@ function generateWeeklyTrend(memberships: ProfileSpaceMembership[], timeRange: s
   }
   
   return weeks;
+}
+
+// Development mock data functions
+function getMockSpaceMemberships(): ProfileSpaceMembership[] {
+  return [
+    {
+      spaceId: 'space-1',
+      spaceName: 'CS Majors',
+      spaceDescription: 'Computer Science students community',
+      spaceType: 'academic',
+      memberCount: 234,
+      role: 'member',
+      status: 'active',
+      joinedAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+      lastActivity: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+      activityLevel: 'high',
+      recentActivity: {
+        posts: 5,
+        interactions: 12,
+        toolUsage: 3,
+        timeSpent: 45
+      },
+      notifications: {
+        unreadCount: 2,
+        hasImportantUpdates: true
+      },
+      quickStats: {
+        myPosts: 8,
+        myTools: 1,
+        myInteractions: 23
+      }
+    },
+    {
+      spaceId: 'space-2',
+      spaceName: 'Study Groups',
+      spaceDescription: 'Collaborative study sessions',
+      spaceType: 'academic',
+      memberCount: 89,
+      role: 'moderator',
+      status: 'active',
+      joinedAt: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString(),
+      lastActivity: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(),
+      activityLevel: 'medium',
+      recentActivity: {
+        posts: 3,
+        interactions: 8,
+        toolUsage: 2,
+        timeSpent: 30
+      },
+      notifications: {
+        unreadCount: 1,
+        hasImportantUpdates: false
+      },
+      quickStats: {
+        myPosts: 12,
+        myTools: 2,
+        myInteractions: 18
+      }
+    },
+    {
+      spaceId: 'space-3',
+      spaceName: 'Campus Events',
+      spaceDescription: 'University activities and events',
+      spaceType: 'community',
+      memberCount: 456,
+      role: 'member',
+      status: 'active',
+      joinedAt: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString(),
+      lastActivity: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
+      activityLevel: 'high',
+      recentActivity: {
+        posts: 1,
+        interactions: 15,
+        toolUsage: 1,
+        timeSpent: 25
+      },
+      notifications: {
+        unreadCount: 3,
+        hasImportantUpdates: true
+      },
+      quickStats: {
+        myPosts: 4,
+        myTools: 0,
+        myInteractions: 31
+      }
+    },
+    {
+      spaceId: 'space-4',
+      spaceName: 'Dorm Floor 3',
+      spaceDescription: 'Third floor residents',
+      spaceType: 'housing',
+      memberCount: 32,
+      role: 'member',
+      status: 'active',
+      joinedAt: new Date(Date.now() - 120 * 24 * 60 * 60 * 1000).toISOString(),
+      lastActivity: new Date(Date.now() - 5 * 60 * 1000).toISOString(),
+      activityLevel: 'medium',
+      recentActivity: {
+        posts: 2,
+        interactions: 6,
+        toolUsage: 0,
+        timeSpent: 15
+      },
+      notifications: {
+        unreadCount: 0,
+        hasImportantUpdates: false
+      },
+      quickStats: {
+        myPosts: 6,
+        myTools: 0,
+        myInteractions: 12
+      }
+    }
+  ];
+}
+
+function getMockActivitySummary(): SpaceActivitySummary {
+  return {
+    totalSpaces: 4,
+    activeSpaces: 3,
+    totalTimeSpent: 115,
+    favoriteSpace: {
+      spaceId: 'space-1',
+      spaceName: 'CS Majors',
+      timeSpent: 45
+    },
+    activityDistribution: [
+      {
+        spaceId: 'space-1',
+        spaceName: 'CS Majors',
+        percentage: 39,
+        timeSpent: 45
+      },
+      {
+        spaceId: 'space-2',
+        spaceName: 'Study Groups',
+        percentage: 26,
+        timeSpent: 30
+      },
+      {
+        spaceId: 'space-3',
+        spaceName: 'Campus Events',
+        percentage: 22,
+        timeSpent: 25
+      },
+      {
+        spaceId: 'space-4',
+        spaceName: 'Dorm Floor 3',
+        percentage: 13,
+        timeSpent: 15
+      }
+    ],
+    weeklyTrend: [
+      {
+        week: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+        activeSpaces: 2,
+        totalTime: 80
+      },
+      {
+        week: new Date().toISOString().split('T')[0],
+        activeSpaces: 3,
+        totalTime: 115
+      }
+    ]
+  };
 }

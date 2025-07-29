@@ -7,7 +7,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { Card, CardContent } from "../ui/card";
-import { Button } from "../ui/button";
+import { Button } from "../../atomic/atoms/button-enhanced";
 import { Loader2, RefreshCw, AlertCircle } from "lucide-react";
 import { FeedComposer } from "./feed-composer";
 import { PostCard } from "./post-card";

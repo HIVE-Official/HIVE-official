@@ -70,7 +70,7 @@ const hiveCourseCardVariants = cva(
         lecture: "",
         seminar: "ring-1 ring-[var(--hive-border-subtle)]",
         lab: "bg-gradient-to-br from-[var(--hive-overlay-glass)] to-transparent",
-        project: "bg-gradient-to-br from-[var(--hive-overlay-gold-subtle)] to-transparent",
+        project: "bg-gradient-to-br from-[var(--hive-overlay-glass)] to-transparent border border-[var(--hive-brand-secondary)]",
         independent: "border-dashed",
       },
     },
@@ -410,7 +410,7 @@ const HiveCourseCard = React.forwardRef<HTMLDivElement, HiveCourseCardProps>(
             {/* Instructor */}
             {showInstructor && (
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-[var(--hive-overlay-gold-subtle)] flex items-center justify-center">
+                <div className="w-8 h-8 rounded-full bg-[var(--hive-background-tertiary)] border border-[var(--hive-brand-secondary)] flex items-center justify-center">
                   <User size={16} className="text-[var(--hive-brand-primary)]" />
                 </div>
                 <div className="flex-1 min-w-0">
@@ -575,7 +575,7 @@ const HiveCourseCard = React.forwardRef<HTMLDivElement, HiveCourseCardProps>(
                   "px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2",
                   primaryAction.variant === 'primary' && "bg-[var(--hive-brand-primary)] text-[var(--hive-background-primary)] hover:bg-[var(--hive-brand-secondary)]",
                   primaryAction.variant === 'secondary' && "bg-[var(--hive-overlay-glass)] text-[var(--hive-text-primary)] hover:bg-[var(--hive-overlay-glass-medium)]",
-                  primaryAction.variant === 'danger' && "bg-[var(--hive-status-error)] text-white hover:bg-[var(--hive-status-error)]/80"
+                  primaryAction.variant === 'danger' && "bg-[var(--hive-status-error)] text-[var(--hive-text-primary)] hover:bg-[var(--hive-status-error)]/80"
                 )}
                 onClick={(e) => {
                   e.stopPropagation();

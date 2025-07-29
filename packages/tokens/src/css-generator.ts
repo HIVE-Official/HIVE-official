@@ -1,7 +1,7 @@
 // CSS Custom Properties Generator for HIVE Design Tokens
 import { colors, semantic, overlay, gradients, shadows, border } from './colors';
 import { typography } from './typography';
-import { spacing } from './spacing';
+import { spacing, layoutSizes } from './spacing';
 import { radius } from './radius';
 import { motion } from './motion';
 import { effects } from './effects';
@@ -82,6 +82,17 @@ export function generateCSSCustomProperties(): string {
   cssVars.push('  /* HIVE Spacing */');
   Object.entries(spacing).forEach(([key, value]) => {
     cssVars.push(`  --hive-spacing-${key}: ${value};`);
+  });
+  
+  // Layout sizes for hybrid approach
+  cssVars.push('');
+  cssVars.push('  /* HIVE Layout Sizes */');
+  Object.entries(layoutSizes.height).forEach(([key, value]) => {
+    cssVars.push(`  --hive-height-${key}: ${value};`);
+  });
+  
+  Object.entries(layoutSizes.width).forEach(([key, value]) => {
+    cssVars.push(`  --hive-width-${key}: ${value};`);
   });
   
   // Radius

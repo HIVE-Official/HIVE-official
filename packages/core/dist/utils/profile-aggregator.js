@@ -264,7 +264,7 @@ function withProfileData(Component) {
                 setProfileData(data);
                 setLoading(false);
             })
-                .catch(err => {
+                .catch((err) => {
                 setError(err.message);
                 setLoading(false);
             });
@@ -285,22 +285,24 @@ function withProfileData(Component) {
 exports.profileUtils = {
     // Calculate engagement score
     calculateEngagementScore: (profileData) => {
-        const dashboard = profileData.dashboard?.dashboard;
-        if (!dashboard)
+        const dashboard = profileData.dashboard;
+        const summaryData = dashboard?.dashboard?.summary;
+        if (!summaryData)
             return 0;
-        const timeWeight = Math.min(dashboard.summary.weeklyActivity / 120, 1) * 30; // Max 30 points for 2 hours
-        const spaceWeight = Math.min(dashboard.summary.activeSpaces / 5, 1) * 25; // Max 25 points for 5 spaces
-        const contentWeight = Math.min(dashboard.summary.contentCreated / 10, 1) * 25; // Max 25 points for 10 content
-        const socialWeight = Math.min(dashboard.summary.socialInteractions / 20, 1) * 20; // Max 20 points for 20 interactions
+        const timeWeight = Math.min((summaryData.weeklyActivity || 0) / 120, 1) * 30; // Max 30 points for 2 hours
+        const spaceWeight = Math.min((summaryData.activeSpaces || 0) / 5, 1) * 25; // Max 25 points for 5 spaces
+        const contentWeight = Math.min((summaryData.contentCreated || 0) / 10, 1) * 25; // Max 25 points for 10 content
+        const socialWeight = Math.min((summaryData.socialInteractions || 0) / 20, 1) * 20; // Max 20 points for 20 interactions
         return Math.round(timeWeight + spaceWeight + contentWeight + socialWeight);
     },
     // Get activity trend
     getActivityTrend: (profileData) => {
-        const activity = profileData.activity?.analytics;
-        if (!activity)
+        const activity = profileData.activity;
+        const analyticsData = activity?.analytics;
+        if (!analyticsData)
             return 'stable';
         // Simple trend calculation - would be more sophisticated in real implementation
-        const recent = activity.totalTimeSpent || 0;
+        const recent = analyticsData.totalTimeSpent || 0;
         const baseline = 60; // 1 hour baseline
         if (recent > baseline * 1.1)
             return 'up';
@@ -322,7 +324,11 @@ exports.profileUtils = {
         const spaces = profileData.spaces?.memberships || [];
         return spaces
             .filter((space) => space.status === 'active')
-            .sort((a, b) => b.recentActivity.timeSpent - a.recentActivity.timeSpent)
+            .sort((a, b) => {
+            const aTime = a.recentActivity?.timeSpent || 0;
+            const bTime = b.recentActivity?.timeSpent || 0;
+            return bTime - aTime;
+        })
             .slice(0, limit);
     }
 };

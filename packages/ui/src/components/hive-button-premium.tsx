@@ -27,8 +27,8 @@ const hivePremiumButtonVariants = cva(
         // Outline - Matte transparency borders
         outline: "bg-[var(--hive-background-primary)]/40 backdrop-blur-sm border border-[var(--hive-border-glass-strong)] text-[var(--hive-text-primary)] hover:bg-[var(--hive-background-primary)]/60 hover:border-[var(--hive-border-primary)] hover:shadow-lg focus-visible:ring-2 focus-visible:ring-[var(--hive-brand-primary)] active:scale-[0.98]",
         
-        // Gold glow - premium HIVE accent
-        "gold-glow": "bg-[var(--hive-background-primary)]/60 backdrop-blur-sm border border-[var(--hive-brand-primary)] text-[var(--hive-brand-primary)] font-semibold shadow-[var(--hive-shadow-goldGlow)] hover:bg-[var(--hive-overlay-gold-subtle)] hover:shadow-[var(--hive-shadow-goldGlowStrong)] focus-visible:ring-2 focus-visible:ring-[var(--hive-brand-primary)] active:scale-[0.98]",
+        // Gold glow - premium HIVE accent - NO GOLD FILLS
+        "gold-glow": "bg-[var(--hive-background-primary)]/60 backdrop-blur-sm border border-[var(--hive-brand-secondary)] text-[var(--hive-brand-secondary)] font-semibold hover:bg-[var(--hive-background-primary)]/80 focus-visible:ring-2 focus-visible:ring-[var(--hive-brand-secondary)] active:scale-[0.98]",
         
         // Success with emerald
         success: "bg-[var(--hive-status-success)]/80 backdrop-blur-sm text-[var(--hive-text-primary)] font-medium border border-[var(--hive-status-success)]/30 hover:bg-[var(--hive-status-success)]/90 hover:border-[var(--hive-status-success)]/50 hover:shadow-[var(--hive-shadow-emeraldGlow)] focus-visible:ring-2 focus-visible:ring-[var(--hive-status-success)] active:scale-[0.98]",
@@ -36,8 +36,8 @@ const hivePremiumButtonVariants = cva(
         // Danger with ruby
         danger: "bg-[var(--hive-status-error)]/80 backdrop-blur-sm text-[var(--hive-text-primary)] font-medium border border-[var(--hive-status-error)]/30 hover:bg-[var(--hive-status-error)]/90 hover:border-[var(--hive-status-error)]/50 hover:shadow-[var(--hive-shadow-rubyGlow)] focus-visible:ring-2 focus-visible:ring-[var(--hive-status-error)] active:scale-[0.98]",
         
-        // Chip gold - elegant outline pill
-        "chip-gold": "bg-[var(--hive-background-primary)]/60 backdrop-blur-sm border border-[var(--hive-brand-primary)]/60 text-[var(--hive-brand-primary)] hover:bg-[var(--hive-overlay-gold-subtle)] hover:border-[var(--hive-brand-primary)] hover:shadow-[var(--hive-shadow-goldGlow)] focus-visible:ring-2 focus-visible:ring-[var(--hive-brand-primary)] active:scale-[0.98] rounded-full",
+        // Chip gold - elegant outline pill - NO GOLD FILLS
+        "chip-gold": "bg-[var(--hive-background-primary)]/60 backdrop-blur-sm border border-[var(--hive-brand-secondary)] text-[var(--hive-brand-secondary)] hover:bg-[var(--hive-background-primary)]/80 hover:border-[var(--hive-brand-secondary)] focus-visible:ring-2 focus-visible:ring-[var(--hive-brand-secondary)] active:scale-[0.98] rounded-full",
         
         "chip-glass": "bg-[var(--hive-overlay-glass)] backdrop-blur-[16px] border border-[var(--hive-border-glass)] text-[var(--hive-text-primary)] hover:bg-[var(--hive-overlay-glass-medium)] hover:border-[var(--hive-border-glass-strong)] hover:shadow-md focus-visible:ring-2 focus-visible:ring-[var(--hive-brand-primary)] active:scale-[0.98] rounded-full",
       },

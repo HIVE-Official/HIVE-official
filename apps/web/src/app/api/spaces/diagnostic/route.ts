@@ -13,7 +13,7 @@ export async function GET() {
     console.log(`📊 Current Firebase project: ${projectId}`);
     
     // Test basic Firebase admin connectivity
-    const spaceTypes = ['campus_living', 'fraternity_and_sorority', 'hive_exclusive', 'student_organizations', 'university_organizations'];
+    const spaceTypes = ['campus_living', 'fraternity_and_sorority', 'hive_exclusive', 'student_organizations', 'university_organizations', 'cohort'];
     const results: any = {};
     
     // First, let's see what collections exist at the top level

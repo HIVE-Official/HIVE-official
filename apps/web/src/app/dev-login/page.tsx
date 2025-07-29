@@ -38,6 +38,29 @@ export default function DevLoginPage() {
 
       if (data.success && data.dev) {
         setMessage('✅ Development authentication successful!');
+        
+        // Create localStorage session for frontend compatibility
+        const devUser = devUsers.find(u => u.email === email);
+        if (devUser) {
+          const sessionData = {
+            userId: `dev-${devUser.handle}`,
+            email: devUser.email,
+            schoolId: 'test-university',
+            verifiedAt: new Date().toISOString(),
+            onboardingCompleted: false,
+            profileData: {
+              fullName: `Test ${devUser.role}`,
+              handle: devUser.handle,
+              major: 'Computer Science',
+              avatarUrl: '',
+              builderOptIn: true
+            }
+          };
+          
+          localStorage.setItem('hive_session', JSON.stringify(sessionData));
+          localStorage.setItem('dev_auth_mode', 'true');
+        }
+        
         // Redirect to dashboard or main app
         setTimeout(() => {
           router.push('/');

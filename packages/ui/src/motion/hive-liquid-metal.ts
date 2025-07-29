@@ -184,7 +184,7 @@ export const liquidFlow: Variants = {
     scale: 0.85,
     y: 20,
     rotateX: -10,
-    filter: "blur(4px)",
+    filter: "blur(1)",
     transition: { duration: 0 }
   },
   
@@ -211,7 +211,7 @@ export const liquidFlow: Variants = {
     scale: 0.9,
     y: -15,
     rotateX: 5,
-    filter: "blur(2px)",
+    filter: "blur(0.5)",
     transition: {
       type: "spring" as const,
       mass: liquidMetalPhysics.mass.light,
@@ -269,7 +269,7 @@ export const rippleCascade = {
   origin: {
     scale: [0, 2.5, 3],
     opacity: [0.8, 0.4, 0],
-    filter: ["blur(0px)", "blur(1px)", "blur(2px)"],
+    filter: ["blur(0px)", "blur(1px)", "blur(0.5)"],
     transition: {
       duration: liquidTiming.duration.dramatic,
       ease: liquidEasing.molten,
@@ -337,7 +337,7 @@ export const milestoneSequences = {
       scale: 0.9, 
       opacity: 0, 
       rotate: -15,
-      filter: "grayscale(1) blur(4px)"
+      filter: "grayscale(1) blur(1)"
     },
     animate: { 
       scale: 1, 
@@ -360,7 +360,7 @@ export const milestoneSequences = {
       scale: 0, 
       rotate: -180, 
       opacity: 0,
-      filter: "brightness(0.5) blur(4px)"
+      filter: "brightness(0.5) blur(1)"
     },
     animate: { 
       scale: [0, 1.2, 1], 

@@ -17,8 +17,8 @@ export const SmartCalendar: React.FC<SmartCalendarProps> = ({
   if (isLoading) {
     return (
       <HiveCard className="p-6">
-        <div className="flex items-center justify-center py-8">
-          <Loader2 className="h-6 w-6 animate-spin text-hive-gold" />
+        <div className="flex items-center justify-center py-4">
+          <Loader2 className="h-6 w-6 animate-spin text-[var(--hive-brand-secondary)]" />
         </div>
       </HiveCard>
     );
@@ -27,7 +27,7 @@ export const SmartCalendar: React.FC<SmartCalendarProps> = ({
   if (error) {
     return (
       <HiveCard className="p-6">
-        <div className="flex items-center justify-center py-8 text-center">
+        <div className="flex items-center justify-center py-4 text-center">
           <div>
             <AlertCircle className="h-8 w-8 text-red-400 mx-auto mb-2" />
             <p className="text-red-400 mb-2">Failed to load events</p>
@@ -71,8 +71,8 @@ export const SmartCalendar: React.FC<SmartCalendarProps> = ({
   return (
     <HiveCard className="p-6">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-semibold text-white flex items-center gap-2">
-          <Calendar className="h-5 w-5 text-hive-gold" />
+        <h2 className="text-xl font-semibold text-[var(--hive-text-primary)] flex items-center gap-2">
+          <Calendar className="h-5 w-5 text-[var(--hive-brand-secondary)]" />
           Smart Calendar
         </h2>
         <HiveButton 
@@ -87,7 +87,7 @@ export const SmartCalendar: React.FC<SmartCalendarProps> = ({
       </div>
 
       {events.length === 0 ? (
-        <div className="text-center py-8">
+        <div className="text-center py-4">
           <Calendar className="h-12 w-12 text-gray-500 mx-auto mb-4" />
           <p className="text-gray-400 mb-4">No upcoming events</p>
           <HiveButton onClick={onAddEvent}>
@@ -104,12 +104,12 @@ export const SmartCalendar: React.FC<SmartCalendarProps> = ({
             >
               <div className="flex items-start justify-between">
                 <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center">
+                  <div className="w-10 h-10 bg-[var(--hive-text-primary)]/10 rounded-lg flex items-center justify-center">
                     {getEventIcon(event.type)}
                   </div>
                   
                   <div className="flex-1">
-                    <h3 className="font-medium text-white mb-1">{event.title}</h3>
+                    <h3 className="font-medium text-[var(--hive-text-primary)] mb-1">{event.title}</h3>
                     
                     <div className="flex items-center gap-2 text-sm text-gray-300 mb-2">
                       <Clock className="h-3 w-3" />

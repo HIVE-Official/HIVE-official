@@ -18,6 +18,7 @@ function VerifyPageContent() {
       try {
         const urlParams = new URLSearchParams(window.location.search);
         const oobCode = urlParams.get('oobCode');
+        const token = urlParams.get('token'); // Development custom token
         const mode = urlParams.get('mode');
         const email = urlParams.get('email');
         const schoolId = urlParams.get('schoolId');
@@ -53,7 +54,7 @@ function VerifyPageContent() {
           body: JSON.stringify({
             email: userEmail,
             schoolId: schoolId,
-            token: oobCode || 'DEV_MODE', // Use oobCode as token, fallback to DEV_MODE
+            token: oobCode || token || 'DEV_MODE', // Use oobCode, custom token, or fallback to DEV_MODE
           }),
         });
 

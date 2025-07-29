@@ -29,7 +29,7 @@ const hiveMenuVariants = cva(
 
 const menuContentVariants = cva(
   // Menu dropdown styles
-  "absolute z-50 min-w-48 bg-black/60 backdrop-blur-2xl border border-white/20 rounded-2xl shadow-2xl overflow-hidden",
+  "absolute z-50 min-w-48 bg-[var(--hive-background-primary)]/60 backdrop-blur-2xl border border-white/20 rounded-2xl shadow-2xl overflow-hidden",
   {
     variants: {
       position: {
@@ -56,7 +56,7 @@ const menuContentVariants = cva(
 const menuItemVariants = {
   rest: {
     x: 0,
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    backgroundColor: 'var(--hive-interactive-hover)',
     transition: {
       duration: motionDurations.quick,
       ease: liquidMetal.easing as any,
@@ -64,7 +64,7 @@ const menuItemVariants = {
   },
   hover: {
     x: 4,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: 'var(--hive-interactive-active)',
     transition: {
       duration: motionDurations.quick,
       ease: liquidMetal.easing as any,
@@ -72,7 +72,7 @@ const menuItemVariants = {
   },
   active: {
     x: 6,
-    backgroundColor: 'rgba(255, 212, 0, 0.15)',
+    backgroundColor: 'color-mix(in_srgb,var(--hive-brand-secondary)_15%,transparent)',
     transition: {
       duration: motionDurations.quick,
       ease: liquidMetal.easing as any,
@@ -239,7 +239,7 @@ const HiveMenu = React.forwardRef<HTMLDivElement, HiveMenuProps>(
               level > 0 && "pl-8",
               item.disabled && "opacity-50 cursor-not-allowed",
               item.selected && "text-yellow-400",
-              !item.disabled && !item.selected && "text-white/80"
+              !item.disabled && !item.selected && "text-[var(--hive-text-primary)]/80"
             )}
             variants={menuItemVariants}
             initial="rest"
@@ -252,7 +252,7 @@ const HiveMenu = React.forwardRef<HTMLDivElement, HiveMenuProps>(
               {item.icon && (
                 <div className={cn(
                   "shrink-0",
-                  item.selected ? "text-yellow-400" : "text-white/60"
+                  item.selected ? "text-yellow-400" : "text-[var(--hive-text-primary)]/60"
                 )}>
                   {item.icon}
                 </div>
@@ -263,7 +263,7 @@ const HiveMenu = React.forwardRef<HTMLDivElement, HiveMenuProps>(
                   {item.label}
                 </div>
                 {item.description && (
-                  <div className="text-xs text-white/50 truncate">
+                  <div className="text-xs text-[var(--hive-text-primary)]/50 truncate">
                     {item.description}
                   </div>
                 )}
@@ -276,7 +276,7 @@ const HiveMenu = React.forwardRef<HTMLDivElement, HiveMenuProps>(
               )}
               
               {item.shortcut && (
-                <span className="text-xs font-mono text-white/40 bg-white/5 px-2 py-0.5 rounded border border-white/10">
+                <span className="text-xs font-mono text-[var(--hive-text-primary)]/40 bg-[var(--hive-text-primary)]/5 px-2 py-0.5 rounded border border-white/10">
                   {item.shortcut}
                 </span>
               )}
@@ -286,7 +286,7 @@ const HiveMenu = React.forwardRef<HTMLDivElement, HiveMenuProps>(
                   animate={{ rotate: isExpanded ? 90 : 0 }}
                   transition={{ duration: motionDurations.quick }}
                 >
-                  <ChevronRight size={14} className="text-white/40" />
+                  <ChevronRight size={14} className="text-[var(--hive-text-primary)]/40" />
                 </motion.div>
               )}
             </div>
@@ -380,9 +380,9 @@ const HiveMenuButton = React.forwardRef<HTMLDivElement, HiveMenuButtonProps>(
   }, ref) => {
     
     const buttonClass = {
-      default: "bg-white/10 hover:bg-white/20 text-white border border-white/20",
-      ghost: "hover:bg-white/10 text-white/80",
-      outline: "border border-white/30 hover:bg-white/5 text-white/80"
+      default: "bg-[var(--hive-text-primary)]/10 hover:bg-[var(--hive-text-primary)]/20 text-[var(--hive-text-primary)] border border-white/20",
+      ghost: "hover:bg-[var(--hive-text-primary)]/10 text-[var(--hive-text-primary)]/80",
+      outline: "border border-white/30 hover:bg-[var(--hive-text-primary)]/5 text-[var(--hive-text-primary)]/80"
     }[buttonVariant];
     
     const trigger = (
@@ -393,7 +393,7 @@ const HiveMenuButton = React.forwardRef<HTMLDivElement, HiveMenuButtonProps>(
         {icon && <span>{icon}</span>}
         <span className="font-medium">{label}</span>
         {showChevron && (
-          <ChevronDown size={16} className="text-white/60" />
+          <ChevronDown size={16} className="text-[var(--hive-text-primary)]/60" />
         )}
       </div>
     );

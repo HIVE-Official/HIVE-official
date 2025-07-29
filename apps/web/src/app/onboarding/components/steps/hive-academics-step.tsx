@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "@hive/ui/src/components/framer-motion-proxy";
 import { GraduationCap, Search, ChevronDown, Check, BookOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { HiveInput, HiveSelect, HiveCard } from "@hive/ui";

@@ -36,26 +36,26 @@ const hiveMultiSelectVariants = cva(
 );
 
 const triggerVariants = cva(
-  "flex flex-wrap items-center gap-2 w-full px-4 py-3 bg-[var(--hive-background-secondary)] backdrop-blur-xl border rounded-xl transition-all cursor-pointer min-h-[50px]",
+  "flex flex-wrap items-center gap-2 w-full px-4 py-3 bg-[var(--hive-background-secondary)] backdrop-blur-xl border rounded-xl transition-all cursor-pointer min-h-[12.5]",
   {
     variants: {
       variant: {
         default: "border-[var(--hive-border-subtle)] hover:border-[var(--hive-border-primary)] focus:border-[var(--hive-border-gold)]",
-        premium: "border-[var(--hive-border-gold)] hover:border-[var(--hive-border-gold-strong)] focus:border-[var(--hive-border-gold-strong)] bg-gradient-to-r from-[var(--hive-overlay-gold-subtle)] to-transparent",
+        premium: "border-[var(--hive-brand-secondary)] hover:border-[var(--hive-brand-secondary)] focus:border-[var(--hive-brand-secondary)] bg-transparent",
         elevated: "border-[var(--hive-border-primary)] hover:border-[var(--hive-border-secondary)] focus:border-[var(--hive-border-gold)] bg-[var(--hive-background-tertiary)]",
         minimal: "border-[var(--hive-border-subtle)] hover:border-[var(--hive-border-primary)] focus:border-[var(--hive-border-gold)] bg-transparent",
       },
       
       size: {
-        sm: "px-3 py-2 text-sm min-h-[40px]",
-        default: "px-4 py-3 min-h-[50px]",
-        lg: "px-5 py-4 text-lg min-h-[60px]",
+        sm: "px-3 py-2 text-sm min-h-10",
+        default: "px-4 py-3 min-h-[12.5]",
+        lg: "px-5 py-4 text-lg min-h-[15]",
         xl: "px-6 py-5 text-xl min-h-[70px]",
       },
       
       state: {
         default: "",
-        open: "border-[var(--hive-border-gold)] bg-[var(--hive-overlay-gold-subtle)]",
+        open: "border-[var(--hive-brand-secondary)] bg-transparent",
         disabled: "opacity-50 cursor-not-allowed",
         error: "border-[var(--hive-status-error)]/50 bg-[var(--hive-status-error)]/5",
       }
@@ -74,7 +74,7 @@ const tagVariants = cva(
     variants: {
       variant: {
         default: "bg-[var(--hive-overlay-glass)] text-[var(--hive-text-primary)] border border-[var(--hive-border-subtle)]",
-        premium: "bg-[var(--hive-overlay-gold-subtle)] text-[var(--hive-brand-primary)] border border-[var(--hive-border-gold)]",
+        premium: "bg-transparent text-[var(--hive-brand-secondary)] border border-[var(--hive-brand-secondary)]",
         elevated: "bg-[var(--hive-background-tertiary)] text-[var(--hive-text-primary)] border border-[var(--hive-border-primary)]",
         minimal: "bg-transparent text-[var(--hive-text-secondary)] border border-[var(--hive-border-subtle)]",
       },
@@ -372,13 +372,13 @@ const HiveMultiSelect = React.forwardRef<HTMLDivElement, HiveMultiSelectProps>(
           whileTap={{ scale: 0.95 }}
         >
           {option.icon && <span className="shrink-0">{option.icon}</span>}
-          <span className="truncate max-w-[120px]">{option.label}</span>
+          <span className="truncate max-w-[30]">{option.label}</span>
           <button
             onClick={(e) => {
               e.stopPropagation();
               onRemove();
             }}
-            className="shrink-0 hover:bg-white/10 rounded-full p-0.5 transition-colors"
+            className="shrink-0 hover:bg-[var(--hive-text-primary)]/10 rounded-full p-0.5 transition-colors"
           >
             <X size={12} />
           </button>
@@ -507,7 +507,7 @@ const HiveMultiSelect = React.forwardRef<HTMLDivElement, HiveMultiSelectProps>(
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[var(--hive-text-muted)]" size={16} />
                   <input
                     ref={searchRef}
-                    className="w-full bg-[var(--hive-background-tertiary)] border border-[var(--hive-border-subtle)] rounded-xl pl-10 pr-4 py-2 text-[var(--hive-text-primary)] placeholder-[var(--hive-text-muted)] focus:outline-none focus:border-[var(--hive-border-gold)]"
+                    className="w-full bg-[var(--hive-background-tertiary)] border border-[var(--hive-border-subtle)] rounded-xl pl-10 pr-4 py-2 text-[var(--hive-text-primary)] placeholder-[var(--hive-text-muted)] focus:outline-none focus:border-[var(--hive-brand-secondary)]"
                     placeholder={searchPlaceholder}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
@@ -569,7 +569,7 @@ const HiveMultiSelect = React.forwardRef<HTMLDivElement, HiveMultiSelectProps>(
                               className={cn(
                                 "w-full px-4 py-3 text-left transition-colors",
                                 option.disabled && "opacity-50 cursor-not-allowed",
-                                selected && "bg-[var(--hive-overlay-gold-subtle)]",
+                                selected && "bg-[var(--hive-background-tertiary)] border-[var(--hive-brand-secondary)]",
                                 isHighlighted && "bg-[var(--hive-overlay-glass)]"
                               )}
                               onClick={() => handleOptionSelect(option)}

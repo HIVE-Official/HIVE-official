@@ -4,7 +4,8 @@ import React, { useState, useMemo } from 'react';
 import { motion } from '../framer-motion-proxy';
 import { BentoGrid, BentoCard, BentoCardSize } from '../bento-grid';
 import { AvatarCard, ProfileCompletionStatus } from './avatar-card';
-import { SmartCalendar } from '../profile/smart-calendar';
+import { CalendarCard } from '../profile/calendar-card';
+import { adaptSmartCalendarProps } from '../profile/calendar-data-adapter';
 import { MySpacesFeed } from '../profile/my-spaces-feed';
 import { HiveLabSection } from '../profile/hive-lab-section';
 import { HiveCard } from '../hive-card';
@@ -83,12 +84,12 @@ const ComingSoonCard: React.FC<{ title: string; description: string; icon: React
   icon: Icon 
 }) => (
   <HiveCard className="h-full flex flex-col items-center justify-center text-center p-6">
-    <div className="rounded-full bg-hive-gold/10 p-4 mb-4">
-      <Icon className="h-8 w-8 text-hive-gold" />
+    <div className="rounded-full bg-[var(--hive-brand-secondary)]/10 p-4 mb-4">
+      <Icon className="h-8 w-8 text-[var(--hive-brand-secondary)]" />
     </div>
-    <h3 className="text-lg font-semibold text-white mb-2">{title}</h3>
+    <h3 className="text-lg font-semibold text-[var(--hive-text-primary)] mb-2">{title}</h3>
     <p className="text-sm text-gray-400 mb-4">{description}</p>
-    <HiveBadge variant="active-tag" className="bg-hive-gold/20 text-hive-gold border-hive-gold/30">
+    <HiveBadge variant="active-tag" className="bg-[var(--hive-brand-secondary)]/20 text-[var(--hive-brand-secondary)] border-hive-gold/30">
       <Lock className="h-3 w-3 mr-1" />
       Coming in v1
     </HiveBadge>
@@ -102,7 +103,7 @@ const PersonalToolsCard: React.FC<{
 }> = ({ tools, onToolClick }) => (
   <HiveCard className="h-full p-6">
     <div className="flex items-center justify-between mb-4">
-      <h3 className="text-lg font-semibold text-white">Your Tools</h3>
+      <h3 className="text-lg font-semibold text-[var(--hive-text-primary)]">Your Tools</h3>
       <HiveBadge variant="course-tag">{tools.length}/9</HiveBadge>
     </div>
     
@@ -148,16 +149,16 @@ const ActivityLogCard: React.FC<{
 }> = ({ activities }) => (
   <HiveCard className="h-full p-6">
     <div className="flex items-center justify-between mb-4">
-      <h3 className="text-lg font-semibold text-white">Recent Activity</h3>
+      <h3 className="text-lg font-semibold text-[var(--hive-text-primary)]">Recent Activity</h3>
       <Activity className="h-5 w-5 text-gray-400" />
     </div>
     
     <div className="space-y-3 max-h-64 overflow-y-auto">
       {activities.slice(0, 5).map((activity) => (
         <div key={activity.id} className="flex items-start gap-3 p-3 rounded-lg bg-gray-800/30">
-          <div className="w-2 h-2 rounded-full bg-hive-gold mt-2 flex-shrink-0" />
+          <div className="w-2 h-2 rounded-full bg-[var(--hive-brand-secondary)] mt-2 flex-shrink-0" />
           <div className="flex-1 min-w-0">
-            <p className="text-sm text-white font-medium truncate">{activity.title}</p>
+            <p className="text-sm text-[var(--hive-text-primary)] font-medium truncate">{activity.title}</p>
             <p className="text-xs text-gray-400 mb-1">{activity.description}</p>
             <p className="text-xs text-gray-500">{activity.timestamp}</p>
           </div>
@@ -199,14 +200,14 @@ export const EnhancedProfileDashboard: React.FC<EnhancedProfileDashboardProps> =
   const [isEditMode, setIsEditMode] = useState(false);
   
   const defaultLayout = {
-    avatar: { size: 'md' as BentoCardSize, isVisible: true, order: 0 },
-    calendar: { size: 'lg' as BentoCardSize, isVisible: true, order: 1 },
-    tools: { size: 'md' as BentoCardSize, isVisible: true, order: 2 },
-    spaces: { size: 'xl' as BentoCardSize, isVisible: true, order: 3 },
-    activity: { size: 'md' as BentoCardSize, isVisible: true, order: 4 },
-    ghostmode: { size: 'md' as BentoCardSize, isVisible: true, order: 5 },
+    avatar: { size: 'lg' as BentoCardSize, isVisible: true, order: 0 }, // Larger for better prominence
+    tools: { size: 'xl' as BentoCardSize, isVisible: true, order: 1 }, // Main feature - make it prominent
+    calendar: { size: 'lg' as BentoCardSize, isVisible: true, order: 2 },
+    spaces: { size: 'lg' as BentoCardSize, isVisible: true, order: 3 }, // Reduced from xl for better balance
+    ghostmode: { size: 'sm' as BentoCardSize, isVisible: true, order: 4 }, // Compact privacy toggle
+    activity: { size: 'md' as BentoCardSize, isVisible: true, order: 5 },
     social: { size: 'md' as BentoCardSize, isVisible: false, order: 6 }, // Hidden in vBETA
-    hivelab: { size: 'lg' as BentoCardSize, isVisible: user.isBuilder || false, order: 7 },
+    hivelab: { size: 'lg' as BentoCardSize, isVisible: user.isBuilder || false, order: 7 }, // Important for builders
     analytics: { size: 'md' as BentoCardSize, isVisible: user.isBuilder || false, order: 8 },
     leadership: { size: 'md' as BentoCardSize, isVisible: user.isBuilder || false, order: 9 },
   };
@@ -252,10 +253,15 @@ export const EnhancedProfileDashboard: React.FC<EnhancedProfileDashboardProps> =
         size: currentLayout.calendar.size,
         isVisible: currentLayout.calendar.isVisible,
         children: (
-          <SmartCalendar
-            events={events}
-            isLoading={isLoading}
-            onEventClick={onEventClick}
+          <CalendarCard
+            {...adaptSmartCalendarProps(
+              events,
+              isLoading,
+              undefined,
+              onEventClick,
+              undefined,
+              'desktop'
+            )}
           />
         ),
         onResize: (newSize) => {

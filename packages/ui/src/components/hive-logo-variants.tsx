@@ -14,14 +14,14 @@ const hiveLogoVariants = cva(
   {
     variants: {
       variant: {
-        primary: "text-white",
+        primary: "text-[var(--hive-text-primary)]",
         gold: "text-[var(--hive-color-gold)]",
-        inverted: "text-black",
+        inverted: "text-[var(--hive-background-primary)]",
         monochrome: "text-current",
-        gradient: "bg-gradient-to-br from-[var(--hive-color-gold)] to-[#FF6B35] bg-clip-text text-transparent",
-        neon: "text-[#00FFFF] drop-shadow-[0_0_10px_#00FFFF]",
+        gradient: "bg-gradient-to-br from-[var(--hive-color-gold)] to-[var(--hive-status-warning)] bg-clip-text text-transparent",
+        neon: "text-[var(--hive-status-info)] drop-shadow-[0_0_10px_var(--hive-status-info)]",
         holographic: "text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 bg-clip-text",
-        glass: "text-white/90 backdrop-blur-xl",
+        glass: "text-[var(--hive-text-primary)]/90 backdrop-blur-xl",
       },
       size: {
         xs: "w-4 h-4",
@@ -239,17 +239,17 @@ export const HiveLogoGlass = ({ size = "lg", className, ...props }: HiveLogoVari
   return (
     <motion.div
       className={cn(
-        "relative backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-4",
+        "relative backdrop-blur-xl bg-[var(--hive-text-primary)]/10 border border-white/20 rounded-2xl p-4",
         hiveLogoVariants({ size, className })
       )}
-      whileHover={{ scale: 1.05, backgroundColor: "rgba(255,255,255,0.15)" }}
+      whileHover={{ scale: 1.05, backgroundColor: "color-mix(in_srgb,var(--hive-border-hover)_75%,transparent)" }}
       {...getMotionProps(props)}
     >
       <svg viewBox="0 0 1500 1500" fill="none" className="w-full h-full">
         <defs>
           <linearGradient id="glassGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="rgba(255,255,255,0.8)" />
-            <stop offset="100%" stopColor="rgba(255,255,255,0.2)" />
+            <stop offset="0%" stopColor="color-mix(in_srgb,var(--hive-text-primary)_80%,transparent)" />
+            <stop offset="100%" stopColor="var(--hive-border-hover)" />
           </linearGradient>
         </defs>
         <path d={HIVE_PATH} fill="url(#glassGradient)" />
@@ -266,16 +266,16 @@ export const HiveLogoNeon = ({ size = "xl", className, ...props }: HiveLogoVaria
       className={cn("relative", hiveLogoVariants({ size, className }))}
       animate={{
         filter: [
-          "drop-shadow(0 0 5px #00FFFF) drop-shadow(0 0 10px #00FFFF)",
-          "drop-shadow(0 0 10px #00FFFF) drop-shadow(0 0 20px #00FFFF) drop-shadow(0 0 30px #00FFFF)",
-          "drop-shadow(0 0 5px #00FFFF) drop-shadow(0 0 10px #00FFFF)"
+          "drop-shadow(0 0 5px var(--hive-status-info)) drop-shadow(0 0 10px var(--hive-status-info))",
+          "drop-shadow(0 0 10px var(--hive-status-info)) drop-shadow(0 0 20px var(--hive-status-info)) drop-shadow(0 0 30px var(--hive-status-info))",
+          "drop-shadow(0 0 5px var(--hive-status-info)) drop-shadow(0 0 10px var(--hive-status-info))"
         ]
       }}
       transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
       {...getMotionProps(props)}
     >
       <svg viewBox="0 0 1500 1500" fill="none" className="w-full h-full">
-        <path d={HIVE_PATH} fill="#00FFFF" />
+        <path d={HIVE_PATH} fill="var(--hive-status-info)" />
         <path 
           d={HIVE_PATH} 
           fill="none" 
@@ -306,11 +306,11 @@ export const HiveLogoHolographic = ({ size = "2xl", className, ...props }: HiveL
         <svg viewBox="0 0 1500 1500" fill="none" className="w-full h-full">
           <defs>
             <linearGradient id="holoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#FF00FF" />
-              <stop offset="25%" stopColor="#00FFFF" />
-              <stop offset="50%" stopColor="#FFFF00" />
-              <stop offset="75%" stopColor="#FF4500" />
-              <stop offset="100%" stopColor="#9400D3" />
+              <stop offset="0%" stopColor="var(--hive-brand-secondary)" />
+              <stop offset="25%" stopColor="var(--hive-status-info)" />
+              <stop offset="50%" stopColor="var(--hive-status-warning)" />
+              <stop offset="75%" stopColor="var(--hive-status-error)" />
+              <stop offset="100%" stopColor="var(--hive-brand-secondary)" />
             </linearGradient>
           </defs>
           <path d={HIVE_PATH} fill="url(#holoGradient)" />

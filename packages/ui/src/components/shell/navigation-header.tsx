@@ -1,11 +1,11 @@
 "use client";
 
 import React from 'react';
-import { Menu, Search, Bell, Command, Zap, Settings } from 'lucide-react';
-import { Button } from '../ui/button';
+import { usePathname } from 'next/navigation';
+import { AlignJustify, Search, Bell, Command, Zap, Settings, Hash } from 'lucide-react';
+import { Button } from '../../atomic/atoms/button-enhanced';
 import { UserMenu } from './user-menu';
 import { cn } from '../../lib/utils';
-import { HivePlatformSection } from './app-shell';
 
 interface NavigationHeaderProps {
   user?: {
@@ -15,7 +15,7 @@ interface NavigationHeaderProps {
     avatar?: string;
     builderStatus?: 'none' | 'pending' | 'active';
   } | null;
-  currentSection?: HivePlatformSection;
+  currentSection?: 'profile' | 'spaces' | 'feed' | 'hivelab' | 'rituals';
   onToggleSidebar: () => void;
   sidebarCollapsed: boolean;
   showGlobalSearch?: boolean;
@@ -39,14 +39,26 @@ export function NavigationHeader({
   onOpenNotifications,
   onOpenCommandPalette,
   unreadNotificationCount = 0,
-  height = 'standard',
+  height = 'compact',
   className 
 }: NavigationHeaderProps) {
-  // Dynamic header heights
+  const pathname = usePathname();
+
+  // Get current section from pathname
+  const getCurrentSection = () => {
+    if (pathname === '/') return 'feed';
+    if (pathname.startsWith('/spaces')) return 'spaces';
+    if (pathname.startsWith('/profile')) return 'profile';
+    if (pathname.startsWith('/build')) return 'hivelab';
+    return currentSection;
+  };
+
+  const activeSection = getCurrentSection();
+  // Dynamic header heights (mobile-optimized)
   const headerHeights = {
-    compact: 'h-12',
-    standard: 'h-16',
-    tall: 'h-20',
+    compact: 'h-10',
+    standard: 'h-12',
+    tall: 'h-16',
   };
 
   // Section-specific contextual info
@@ -58,7 +70,7 @@ export function NavigationHeader({
     rituals: { title: 'Rituals', subtitle: 'Platform experiences' },
   };
 
-  const currentContext = sectionContext[currentSection];
+  const currentContext = sectionContext[activeSection];
 
   return (
     <header 
@@ -71,34 +83,32 @@ export function NavigationHeader({
         className
       )}
       style={{
-        background: 'rgba(10, 10, 11, 0.8)',
-        backdropFilter: 'blur(16px) saturate(180%)',
+        background: 'color-mix(in_srgb,var(--hive-background-primary)_80%,transparent)',
+        backdropFilter: 'blur(4) saturate(180%)',
         borderColor: 'var(--hive-border-primary)',
-        padding: `0 var(--hive-spacing-6)`,
+        padding: `0 var(--hive-spacing-4)`,
       }}
     >
       {/* Left Section */}
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2">
         {/* Sidebar Toggle */}
         <Button
           variant="ghost"
           size="sm"
           onClick={onToggleSidebar}
-          className="h-9 w-9 p-0 text-[var(--hive-text-primary)] hover:bg-[var(--hive-interactive-hover)]"
+          className="h-8 w-8 p-0 text-[var(--hive-text-primary)] hover:bg-[var(--hive-interactive-hover)]"
         >
-          <Menu className="h-4 w-4" />
+          <AlignJustify className="h-4 w-4" />
         </Button>
 
         {/* HIVE Logo & Section Context */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           {/* HIVE Logo */}
           <div className="flex items-center gap-2">
-            <div 
-              className="w-8 h-8 flex items-center justify-center rounded-lg bg-[var(--hive-brand-primary)]"
-            >
-              <div className="w-4 h-4 bg-[var(--hive-background-primary)] rounded-sm" />
+            <div className="w-6 h-6 bg-[var(--hive-brand-secondary)] rounded-md flex items-center justify-center">
+              <Hash className="w-4 h-4 text-[var(--hive-text-inverse)]" />
             </div>
-            <span className="font-semibold text-lg tracking-tight text-[var(--hive-text-primary)]">
+            <span className="font-semibold text-base tracking-tight text-[var(--hive-text-primary)]">
               HIVE
             </span>
           </div>
@@ -107,7 +117,7 @@ export function NavigationHeader({
           <div className="hidden md:flex items-center gap-2 text-[var(--hive-text-muted)]">
             <div className="w-1 h-4 bg-[var(--hive-border-primary)] rounded-full" />
             <div className="flex flex-col">
-              <span className="text-sm font-medium text-[var(--hive-text-primary)]">
+              <span className="text-xs font-medium text-[var(--hive-text-primary)]">
                 {currentContext.title}
               </span>
               {height !== 'compact' && (
@@ -122,21 +132,21 @@ export function NavigationHeader({
 
       {/* Center Section - Global Search */}
       {showGlobalSearch && (
-        <div className="flex-1 max-w-md mx-8">
+        <div className="flex-1 max-w-md mx-4">
           <div className="relative">
             <Search 
-              className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-[var(--hive-text-muted)]" 
+              className="absolute left-2 top-1/2 transform -translate-y-1/2 h-3 w-3 text-[var(--hive-text-muted)]" 
             />
             <input
               type="text"
               placeholder="Search spaces, people, tools..."
               onClick={onOpenCommandPalette}
               readOnly
-              className="w-full h-9 pl-10 pr-16 bg-[var(--hive-background-secondary)]/80 backdrop-blur-sm border border-[var(--hive-border-primary)] rounded-2xl text-sm text-[var(--hive-text-primary)] placeholder-[var(--hive-text-muted)] focus:outline-none focus:border-[var(--hive-brand-primary)]/50 focus:ring-2 focus:ring-[var(--hive-brand-primary)]/30 transition-all duration-200 cursor-pointer hover:border-[var(--hive-border-secondary)]"
+              className="w-full h-8 pl-8 pr-12 bg-[var(--hive-background-secondary)]/80 backdrop-blur-sm border border-[var(--hive-border-primary)] rounded-xl text-xs text-[var(--hive-text-primary)] placeholder-[var(--hive-text-muted)] focus:outline-none focus:border-[var(--hive-brand-primary)]/50 focus:ring-2 focus:ring-[var(--hive-brand-primary)]/30 transition-all duration-200 cursor-pointer hover:border-[var(--hive-border-secondary)]"
             />
             <div className="absolute right-2 top-1/2 transform -translate-y-1/2">
-              <kbd className="inline-flex items-center px-1.5 py-0.5 rounded-lg text-xs bg-[var(--hive-background-primary)]/60 text-[var(--hive-text-muted)] border border-[var(--hive-border-subtle)]">
-                <Command className="h-3 w-3 mr-1" />
+              <kbd className="inline-flex items-center px-1 py-0.5 rounded text-xs bg-[var(--hive-background-primary)]/60 text-[var(--hive-text-muted)] border border-[var(--hive-border-subtle)]">
+                <Command className="h-2 w-2 mr-0.5" />
                 K
               </kbd>
             </div>
@@ -145,7 +155,7 @@ export function NavigationHeader({
       )}
 
       {/* Right Section */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2">
         {/* Builder Access (HiveLAB) */}
         {showBuilderAccess && user?.builderStatus !== 'none' && (
           <Button
@@ -181,7 +191,7 @@ export function NavigationHeader({
         <Button
           variant="ghost"
           size="sm"
-          className="h-9 w-9 p-0 text-[var(--hive-text-primary)] hover:bg-[var(--hive-interactive-hover)]"
+          className="h-8 w-8 p-0 text-[var(--hive-text-primary)] hover:bg-[var(--hive-interactive-hover)]"
         >
           <Settings className="h-4 w-4" />
         </Button>
@@ -192,7 +202,7 @@ export function NavigationHeader({
         ) : (
           <Button
             size="sm"
-            variant="premium"
+            variant="primary"
             className="font-medium"
           >
             Sign In

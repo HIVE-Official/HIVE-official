@@ -26,13 +26,13 @@ import {
 
 const hiveProgressVariants = cva(
   // Base progress styles
-  "relative overflow-hidden rounded-full bg-black/20 backdrop-blur-sm",
+  "relative overflow-hidden rounded-full bg-[var(--hive-background-primary)]/20 backdrop-blur-sm",
   {
     variants: {
       variant: {
-        default: "bg-black/20",
+        default: "bg-[var(--hive-background-primary)]/20",
         premium: "bg-yellow-500/10 border border-yellow-500/20",
-        minimal: "bg-white/10",
+        minimal: "bg-[var(--hive-text-primary)]/10",
         gradient: "bg-gradient-to-r from-black/20 to-black/30",
       },
       
@@ -111,10 +111,10 @@ export const HiveProgressBar = React.forwardRef<HTMLDivElement, HiveProgressBarP
         {(label || showValue || showPercentage) && (
           <div className="flex items-center justify-between text-sm">
             {label && (
-              <span className="font-medium text-white/80">{label}</span>
+              <span className="font-medium text-[var(--hive-text-primary)]/80">{label}</span>
             )}
             
-            <div className="flex items-center space-x-2 text-white/60">
+            <div className="flex items-center space-x-2 text-[var(--hive-text-primary)]/60">
               {showValue && (
                 <span>{value}/{max}</span>
               )}
@@ -188,8 +188,8 @@ export const HiveCircularProgress = React.forwardRef<HTMLDivElement, HiveCircula
     max = 100,
     size = 120,
     strokeWidth = 8,
-    color = '#fbbf24',
-    backgroundColor = 'rgba(255, 255, 255, 0.1)',
+    color = 'var(--hive-brand-secondary)',
+    backgroundColor = 'var(--hive-interactive-active)',
     showValue = false,
     showPercentage = true,
     animated = true,
@@ -250,7 +250,7 @@ export const HiveCircularProgress = React.forwardRef<HTMLDivElement, HiveCircula
             <div className="text-center">
               {showPercentage && (
                 <motion.div 
-                  className="text-lg font-bold text-white"
+                  className="text-lg font-bold text-[var(--hive-text-primary)]"
                   initial={{ opacity: 0, scale: 0.5 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: motionDurations.smooth, delay: 0.3 }}
@@ -259,7 +259,7 @@ export const HiveCircularProgress = React.forwardRef<HTMLDivElement, HiveCircula
                 </motion.div>
               )}
               {showValue && (
-                <div className="text-xs text-white/60">
+                <div className="text-xs text-[var(--hive-text-primary)]/60">
                   {value}/{max}
                 </div>
               )}
@@ -312,7 +312,7 @@ export const HiveStepProgress = React.forwardRef<HTMLDivElement, HiveStepProgres
         case 'current':
           return <div className="w-3 h-3 bg-yellow-400 rounded-full animate-pulse" />;
         default:
-          return <div className="w-6 h-6 rounded-full border-2 border-white/40 flex items-center justify-center text-xs font-medium text-white/60">{index + 1}</div>;
+          return <div className="w-6 h-6 rounded-full border-2 border-white/40 flex items-center justify-center text-xs font-medium text-[var(--hive-text-primary)]/60">{index + 1}</div>;
       }
     };
     
@@ -325,7 +325,7 @@ export const HiveStepProgress = React.forwardRef<HTMLDivElement, HiveStepProgres
         case 'error':
           return 'text-red-400 border-red-400/30 bg-red-400/10';
         default:
-          return 'text-white/60 border-white/20 bg-white/5';
+          return 'text-[var(--hive-text-primary)]/60 border-white/20 bg-[var(--hive-text-primary)]/5';
       }
     };
     
@@ -377,7 +377,7 @@ export const HiveStepProgress = React.forwardRef<HTMLDivElement, HiveStepProgres
                   step.status === 'completed' ? "text-green-400" :
                   step.status === 'current' ? "text-yellow-400" :
                   step.status === 'error' ? "text-red-400" :
-                  "text-white/60"
+                  "text-[var(--hive-text-primary)]/60"
                 )}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -391,7 +391,7 @@ export const HiveStepProgress = React.forwardRef<HTMLDivElement, HiveStepProgres
               
               {step.description && (
                 <motion.div
-                  className="text-xs text-white/40 mt-1"
+                  className="text-xs text-[var(--hive-text-primary)]/40 mt-1"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ 
@@ -442,7 +442,7 @@ export const HiveSpinner = React.forwardRef<HTMLDivElement, HiveSpinnerProps>(
   ({ 
     className,
     size = 'default',
-    color = '#fbbf24',
+    color = 'var(--hive-brand-secondary)',
     speed = 'normal',
     variant = 'spin',
     label,
@@ -519,7 +519,7 @@ export const HiveSpinner = React.forwardRef<HTMLDivElement, HiveSpinnerProps>(
                 <motion.div
                   key={i}
                   className="w-1 rounded-full"
-                  style={{ backgroundColor: color, height: '16px' }}
+                  style={{ backgroundColor: color, height: '4px' }}
                   animate={{ scaleY: [1, 2, 1] }}
                   transition={{
                     duration: speedDuration[speed],
@@ -556,7 +556,7 @@ export const HiveSpinner = React.forwardRef<HTMLDivElement, HiveSpinnerProps>(
         <div className="flex flex-col items-center space-y-2">
           {renderSpinner()}
           {label && (
-            <span className="text-sm text-white/60">{label}</span>
+            <span className="text-sm text-[var(--hive-text-primary)]/60">{label}</span>
           )}
         </div>
       </div>
@@ -611,7 +611,7 @@ export const HiveSkeleton = React.forwardRef<HTMLDivElement, HiveSkeletonProps>(
             <motion.div
               key={i}
               className={cn(
-                "bg-white/10 backdrop-blur-sm",
+                "bg-[var(--hive-text-primary)]/10 backdrop-blur-sm",
                 getVariantClasses(),
                 animated && "animate-pulse"
               )}
@@ -649,7 +649,7 @@ export const HiveSkeleton = React.forwardRef<HTMLDivElement, HiveSkeletonProps>(
       <motion.div
         ref={ref}
         className={cn(
-          "bg-white/10 backdrop-blur-sm overflow-hidden",
+          "bg-[var(--hive-text-primary)]/10 backdrop-blur-sm overflow-hidden",
           getVariantClasses(),
           animated && "animate-pulse",
           className

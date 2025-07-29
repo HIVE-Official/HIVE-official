@@ -36,7 +36,7 @@ const hiveSelectVariants = cva(
 
 const selectTriggerVariants = cva(
   // Select trigger styles
-  "flex items-center justify-between w-full px-4 py-3 bg-black/40 backdrop-blur-xl border rounded-xl transition-all cursor-pointer",
+  "flex items-center justify-between w-full px-4 py-3 bg-[var(--hive-background-primary)]/40 backdrop-blur-xl border rounded-xl transition-all cursor-pointer",
   {
     variants: {
       variant: {
@@ -70,7 +70,7 @@ const selectTriggerVariants = cva(
 const optionVariants = {
   rest: {
     x: 0,
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    backgroundColor: 'var(--hive-interactive-hover)',
     transition: {
       duration: motionDurations.quick,
       ease: liquidMetal.easing as any,
@@ -78,7 +78,7 @@ const optionVariants = {
   },
   hover: {
     x: 4,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: 'var(--hive-interactive-active)',
     transition: {
       duration: motionDurations.quick,
       ease: liquidMetal.easing as any,
@@ -86,7 +86,7 @@ const optionVariants = {
   },
   selected: {
     x: 6,
-    backgroundColor: 'rgba(255, 212, 0, 0.15)',
+    backgroundColor: 'color-mix(in_srgb,var(--hive-brand-secondary)_15%,transparent)',
     transition: {
       duration: motionDurations.quick,
       ease: liquidMetal.easing as any,
@@ -371,16 +371,16 @@ const HiveSelect = React.forwardRef<HTMLDivElement, HiveSelectProps>(
         <div className="flex items-center justify-between w-full">
           <div className="flex items-center space-x-3 flex-1 min-w-0">
             {option.icon && (
-              <div className="text-white/60 shrink-0">
+              <div className="text-[var(--hive-text-primary)]/60 shrink-0">
                 {option.icon}
               </div>
             )}
             <div className="flex-1 min-w-0">
-              <div className="font-medium text-white truncate">
+              <div className="font-medium text-[var(--hive-text-primary)] truncate">
                 {option.label}
               </div>
               {option.description && (
-                <div className="text-xs text-white/50 truncate">
+                <div className="text-xs text-[var(--hive-text-primary)]/50 truncate">
                   {option.description}
                 </div>
               )}
@@ -417,8 +417,8 @@ const HiveSelect = React.forwardRef<HTMLDivElement, HiveSelectProps>(
           <span className={cn(
             "truncate",
             currentValue && (multiple ? Array.isArray(currentValue) && currentValue.length > 0 : currentValue !== '') 
-              ? "text-white" 
-              : "text-white/50"
+              ? "text-[var(--hive-text-primary)]" 
+              : "text-[var(--hive-text-primary)]/50"
           )}>
             {getDisplayValue()}
           </span>
@@ -426,7 +426,7 @@ const HiveSelect = React.forwardRef<HTMLDivElement, HiveSelectProps>(
           <div className="flex items-center space-x-2 shrink-0 ml-2">
             {clearable && currentValue && (multiple ? Array.isArray(currentValue) && currentValue.length > 0 : currentValue !== '') && (
               <motion.button
-                className="text-white/60 hover:text-white/80 p-1"
+                className="text-[var(--hive-text-primary)]/60 hover:text-[var(--hive-text-primary)]/80 p-1"
                 onClick={(e) => {
                   e.stopPropagation();
                   handleClear();
@@ -442,7 +442,7 @@ const HiveSelect = React.forwardRef<HTMLDivElement, HiveSelectProps>(
               animate={{ rotate: isOpen ? 180 : 0 }}
               transition={{ duration: motionDurations.quick }}
             >
-              <ChevronDown size={16} className="text-white/60" />
+              <ChevronDown size={16} className="text-[var(--hive-text-primary)]/60" />
             </motion.div>
           </div>
         </motion.div>
@@ -451,7 +451,7 @@ const HiveSelect = React.forwardRef<HTMLDivElement, HiveSelectProps>(
         <AnimatePresence>
           {isOpen && (
             <motion.div
-              className="absolute top-full left-0 right-0 z-50 mt-2 bg-black/60 backdrop-blur-2xl border border-white/20 rounded-2xl shadow-2xl overflow-hidden"
+              className="absolute top-full left-0 right-0 z-50 mt-2 bg-[var(--hive-background-primary)]/60 backdrop-blur-2xl border border-white/20 rounded-2xl shadow-2xl overflow-hidden"
               variants={dropdownVariants}
               initial="hidden"
               animate="visible"
@@ -461,10 +461,10 @@ const HiveSelect = React.forwardRef<HTMLDivElement, HiveSelectProps>(
               {searchable && (
                 <div className="p-3 border-b border-white/10">
                   <div className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/40" size={16} />
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[var(--hive-text-primary)]/40" size={16} />
                     <input
                       ref={searchRef}
-                      className="w-full bg-black/40 border border-white/20 rounded-xl pl-10 pr-4 py-2 text-white placeholder-white/40 focus:outline-none focus:border-yellow-500/50"
+                      className="w-full bg-[var(--hive-background-primary)]/40 border border-white/20 rounded-xl pl-10 pr-4 py-2 text-[var(--hive-text-primary)] placeholder-white/40 focus:outline-none focus:border-yellow-500/50"
                       placeholder={searchPlaceholder}
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
@@ -476,12 +476,12 @@ const HiveSelect = React.forwardRef<HTMLDivElement, HiveSelectProps>(
               {/* Options List */}
               <div className="max-h-60 overflow-y-auto py-2" style={{ maxHeight }}>
                 {loading ? (
-                  <div className="px-4 py-8 text-center text-white/60">
+                  <div className="px-4 py-8 text-center text-[var(--hive-text-primary)]/60">
                     <div className="animate-spin w-5 h-5 border-2 border-white/20 border-t-yellow-400 rounded-full mx-auto mb-2" />
                     Loading options...
                   </div>
                 ) : filteredOptions.length === 0 ? (
-                  <div className="px-4 py-8 text-center text-white/60">
+                  <div className="px-4 py-8 text-center text-[var(--hive-text-primary)]/60">
                     {searchQuery ? emptySearchMessage : noOptionsMessage}
                   </div>
                 ) : (
@@ -489,12 +489,12 @@ const HiveSelect = React.forwardRef<HTMLDivElement, HiveSelectProps>(
                     {/* Create Option */}
                     {shouldShowCreateOption && (
                       <motion.button
-                        className="w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-white/10 transition-colors"
+                        className="w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-[var(--hive-text-primary)]/10 transition-colors"
                         variants={optionStaggerVariants}
                         onClick={handleCreateOption}
                       >
                         <Plus size={16} className="text-yellow-400" />
-                        <span className="text-white">Create "{searchQuery}"</span>
+                        <span className="text-[var(--hive-text-primary)]">Create "{searchQuery}"</span>
                       </motion.button>
                     )}
                     
@@ -502,7 +502,7 @@ const HiveSelect = React.forwardRef<HTMLDivElement, HiveSelectProps>(
                     {Object.entries(groupedOptions).map(([groupName, groupOptions]) => (
                       <div key={groupName}>
                         {groupName !== 'ungrouped' && (
-                          <div className="px-4 py-2 text-xs font-medium text-white/40 uppercase tracking-wider">
+                          <div className="px-4 py-2 text-xs font-medium text-[var(--hive-text-primary)]/40 uppercase tracking-wider">
                             {groupName}
                           </div>
                         )}
@@ -581,7 +581,7 @@ export const HiveSelectTags: React.FC<{
       ))}
       
       {remainingCount > 0 && (
-        <div className="bg-white/10 text-white/60 px-3 py-1 rounded-full text-sm">
+        <div className="bg-[var(--hive-text-primary)]/10 text-[var(--hive-text-primary)]/60 px-3 py-1 rounded-full text-sm">
           +{remainingCount} more
         </div>
       )}

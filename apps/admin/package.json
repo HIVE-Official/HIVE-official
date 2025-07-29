@@ -14,6 +14,7 @@
     "@hive/auth-logic": "workspace:*",
     "@hive/core": "workspace:*",
     "@hive/hooks": "workspace:*",
+    "@hive/tokens": "workspace:*",
     "@hive/ui": "workspace:*",
     "@hookform/resolvers": "^5.1.1",
     "@tanstack/react-query": "^5.0.0",

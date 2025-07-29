@@ -311,9 +311,9 @@ const performanceVariants = cva(
   {
     variants: {
       variant: {
-        primary: "text-white",
+        primary: "text-[var(--hive-text-primary)]",
         gold: "text-[var(--hive-color-gold)]",
-        inverted: "text-black",
+        inverted: "text-[var(--hive-background-primary)]",
         monochrome: "text-current",
       },
       size: {
@@ -506,7 +506,7 @@ export const HiveLogoHighPerformance = memo(({
       
       {/* Performance metrics overlay (development only) */}
       {enableProfiler && process.env.NODE_ENV === 'development' && (
-        <div className="absolute -top-12 left-0 text-xs text-white/60 bg-black/80 p-2 rounded whitespace-nowrap">
+        <div className="absolute -top-12 left-0 text-xs text-[var(--hive-text-primary)]/60 bg-[var(--hive-background-primary)]/80 p-2 rounded whitespace-nowrap">
           <div>Render: {metrics.renderTime.toFixed(1)}ms</div>
           <div>FPS: {metrics.frameRate.toFixed(0)}</div>
           <div>Memory: {(metrics.memoryUsage / 1024 / 1024).toFixed(1)}MB</div>
@@ -537,49 +537,49 @@ export const HiveLogoPerformanceDashboard: React.FC<{
   
   if (!averageMetrics) {
     return (
-      <div className={cn("p-6 bg-black/20 rounded-xl", className)}>
-        <div className="text-white/60">No performance data available</div>
+      <div className={cn("p-6 bg-[var(--hive-background-primary)]/20 rounded-xl", className)}>
+        <div className="text-[var(--hive-text-primary)]/60">No performance data available</div>
       </div>
     );
   }
   
   return (
-    <div className={cn("p-6 bg-black/20 rounded-xl space-y-6", className)}>
-      <h3 className="text-xl font-bold text-white">Performance Dashboard</h3>
+    <div className={cn("p-6 bg-[var(--hive-background-primary)]/20 rounded-xl space-y-6", className)}>
+      <h3 className="text-xl font-bold text-[var(--hive-text-primary)]">Performance Dashboard</h3>
       
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="p-4 bg-white/5 rounded-lg">
+        <div className="p-4 bg-[var(--hive-text-primary)]/5 rounded-lg">
           <div className="text-2xl font-bold text-[var(--hive-color-gold)]">
             {averageMetrics.renderTime.toFixed(1)}ms
           </div>
-          <div className="text-white/70 text-sm">Avg Render Time</div>
+          <div className="text-[var(--hive-text-primary)]/70 text-sm">Avg Render Time</div>
         </div>
         
-        <div className="p-4 bg-white/5 rounded-lg">
+        <div className="p-4 bg-[var(--hive-text-primary)]/5 rounded-lg">
           <div className="text-2xl font-bold text-[var(--hive-color-gold)]">
             {averageMetrics.frameRate.toFixed(0)}fps
           </div>
-          <div className="text-white/70 text-sm">Frame Rate</div>
+          <div className="text-[var(--hive-text-primary)]/70 text-sm">Frame Rate</div>
         </div>
         
-        <div className="p-4 bg-white/5 rounded-lg">
+        <div className="p-4 bg-[var(--hive-text-primary)]/5 rounded-lg">
           <div className="text-2xl font-bold text-[var(--hive-color-gold)]">
             {(averageMetrics.memoryUsage / 1024 / 1024).toFixed(1)}MB
           </div>
-          <div className="text-white/70 text-sm">Memory Usage</div>
+          <div className="text-[var(--hive-text-primary)]/70 text-sm">Memory Usage</div>
         </div>
         
-        <div className="p-4 bg-white/5 rounded-lg">
+        <div className="p-4 bg-[var(--hive-text-primary)]/5 rounded-lg">
           <div className="text-2xl font-bold text-[var(--hive-color-gold)]">
             {(averageMetrics.cacheHitRate * 100).toFixed(0)}%
           </div>
-          <div className="text-white/70 text-sm">Cache Hit Rate</div>
+          <div className="text-[var(--hive-text-primary)]/70 text-sm">Cache Hit Rate</div>
         </div>
       </div>
       
       {/* Performance recommendations */}
       <div className="space-y-3">
-        <h4 className="text-lg font-semibold text-white">Optimization Recommendations</h4>
+        <h4 className="text-lg font-semibold text-[var(--hive-text-primary)]">Optimization Recommendations</h4>
         
         {averageMetrics.renderTime > 16 && (
           <div className="p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">

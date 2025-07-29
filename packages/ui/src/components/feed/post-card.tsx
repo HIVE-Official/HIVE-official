@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { Card, CardContent } from "../ui/card";
-import { Button } from "../ui/button";
+import { Button } from "../../atomic/atoms/button-enhanced";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Badge } from "../ui/badge";
 import {

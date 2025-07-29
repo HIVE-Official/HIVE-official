@@ -48,9 +48,9 @@ const hiveRichTextEditorVariants = cva(
       },
       
       size: {
-        sm: "min-h-[200px]",
-        default: "min-h-[400px]",
-        lg: "min-h-[600px]",
+        sm: "min-h-50",
+        default: "min-h-100",
+        lg: "min-h-150",
         xl: "min-h-[800px]",
       },
       
@@ -642,7 +642,7 @@ const HiveRichTextEditor = React.forwardRef<HTMLDivElement, HiveRichTextEditorPr
         <AnimatePresence>
           {showLinkDialog && (
             <motion.div
-              className="absolute inset-0 bg-black/50 flex items-center justify-center z-50"
+              className="absolute inset-0 bg-[var(--hive-background-primary)]/50 flex items-center justify-center z-50"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -712,7 +712,7 @@ const HiveRichTextEditor = React.forwardRef<HTMLDivElement, HiveRichTextEditorPr
         <AnimatePresence>
           {showImageDialog && (
             <motion.div
-              className="absolute inset-0 bg-black/50 flex items-center justify-center z-50"
+              className="absolute inset-0 bg-[var(--hive-background-primary)]/50 flex items-center justify-center z-50"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}

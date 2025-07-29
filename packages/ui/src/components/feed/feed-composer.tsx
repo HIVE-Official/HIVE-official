@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { Button } from "../ui/button";
-import { Textarea } from "../ui/textarea";
+import { Button } from "../../atomic/atoms/button-enhanced";
+import { Textarea } from "../../atomic/atoms/textarea-enhanced";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Badge } from "../ui/badge";
@@ -327,7 +327,7 @@ export const FeedComposer: React.FC<FeedComposerProps> = ({
                   onChange={(e) => setContent(e.target.value)}
                   onKeyDown={handleKeyDown}
                   placeholder={`What's happening in this space?`}
-                  className="min-h-[80px] resize-none border-0 p-0 text-base placeholder:text-muted-foreground focus-visible:ring-0"
+                  className="min-h-20 resize-none border-0 p-0 text-base placeholder:text-muted-foreground focus-visible:ring-0"
                   maxLength={CHAR_LIMIT}
                 />
 
@@ -410,7 +410,7 @@ export const FeedComposer: React.FC<FeedComposerProps> = ({
               type="submit"
               disabled={!canSubmit}
               size="sm"
-              className="min-w-[80px]"
+              className="min-w-20"
             >
               {isSubmitting ? (
                 <>

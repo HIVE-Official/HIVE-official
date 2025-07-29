@@ -23,6 +23,7 @@ function LoginPageContent() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [devMagicLink, setDevMagicLink] = useState<string | null>(null);
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   // Redirect if no school context
   if (!schoolId || !schoolName || !schoolDomain) {
@@ -52,8 +53,41 @@ function LoginPageContent() {
 
       const data = await response.json();
 
+      console.log('🔍 Magic Link API Response:', data);
+      console.log('🔍 Response OK:', response.ok);
+      console.log('🔍 data.dev:', data.dev);
+
       if (!response.ok) {
         throw new Error(data.error || 'Failed to send magic link');
+      }
+
+      // In development mode with dev users, redirect directly instead of showing email modal
+      if (data.dev) {
+        console.log('🚀 Development user detected, setting up session and redirecting');
+        console.log('🔍 User data from API:', data.user);
+        
+        // Set up the session data that the onboarding page expects
+        const userSession = {
+          userId: data.user?.userId || 'dev-user-unknown',
+          email: formData.email,
+          schoolId: schoolId,
+          needsOnboarding: true, // Development users need onboarding
+          verifiedAt: new Date().toISOString(),
+          handle: data.user?.handle || 'dev-user',
+          role: data.user?.role || 'student'
+        };
+        
+        window.localStorage.setItem('hive_session', JSON.stringify(userSession));
+        window.localStorage.setItem('dev_auth_mode', 'true');
+        
+        console.log('✅ Session data set:', userSession);
+        
+        setIsRedirecting(true);
+        // Development mode - redirect directly to onboarding or dashboard
+        setTimeout(() => {
+          router.push('/onboarding');
+        }, 1500);
+        return;
       }
 
       // Store dev magic link if available
@@ -63,6 +97,7 @@ function LoginPageContent() {
 
       setSuccess(true);
     } catch (err) {
+      console.error('🚨 Magic link error:', err);
       setError(err instanceof Error ? err.message : 'Something went wrong');
     } finally {
       setIsLoading(false);
@@ -74,11 +109,11 @@ function LoginPageContent() {
     setFormData({ email });
     setError(null);
     
-    // Real-time validation (bypass domain check in development)
-    const isDevelopment = process.env.NODE_ENV === 'development';
+    // Real-time validation (bypass domain check for test.edu domain)
+    const isTestDomain = schoolDomain === 'test.edu';
     if (email && !email.includes('@')) {
       setError('Please enter a valid email address');
-    } else if (email && !isDevelopment && schoolDomain && !email.endsWith(`@${schoolDomain}`)) {
+    } else if (email && !isTestDomain && schoolDomain && !email.endsWith(`@${schoolDomain}`)) {
       setError(`Please use your @${schoolDomain} email address`);
     }
   };
@@ -122,7 +157,7 @@ function LoginPageContent() {
         <div className="w-full max-w-md">
           
           {/* Development Mode Badge */}
-          {process.env.NODE_ENV === 'development' && (
+          {schoolDomain === 'test.edu' && (
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -170,7 +205,7 @@ function LoginPageContent() {
                     type="email"
                     value={formData.email}
                     onChange={handleEmailChange}
-                    placeholder={process.env.NODE_ENV === 'development' ? 'Enter any email address (dev mode)' : `Enter your @${schoolDomain} address`}
+                    placeholder={schoolDomain === 'test.edu' ? 'Enter any email address (dev mode)' : `Enter your @${schoolDomain} address`}
                     required
                     disabled={isLoading}
                     autoComplete="email"
@@ -180,7 +215,7 @@ function LoginPageContent() {
                     floatingLabel={false}
                     className="w-full"
                   />
-                  {!error && process.env.NODE_ENV === 'development' && (
+                  {!error && schoolDomain === 'test.edu' && (
                     <p className="hive-font-sans text-xs text-hive-text-muted">
                       Dev mode: Any email will work for testing
                     </p>
@@ -227,6 +262,36 @@ function LoginPageContent() {
         </div>
       </div>
 
+      {/* Redirect Success Modal */}
+      <HiveModal
+        isOpen={isRedirecting}
+        onClose={() => {}}
+        title="Authentication successful"
+        size="sm"
+        motionPreset="slideUp"
+        hideCloseButton={true}
+      >
+        <motion.div 
+          className="text-center space-y-6"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <div className="w-16 h-16 mx-auto rounded-2xl flex items-center justify-center bg-hive-status-success/20 border border-hive-status-success/30">
+            <Loader2 className="w-8 h-8 text-hive-status-success animate-spin" />
+          </div>
+          
+          <div className="space-y-3">
+            <h3 className="text-lg font-semibold text-hive-text-primary">
+              Welcome to HIVE!
+            </h3>
+            <p className="text-hive-text-secondary">
+              Redirecting you to the platform...
+            </p>
+          </div>
+        </motion.div>
+      </HiveModal>
+
       {/* Success Modal */}
       <HiveModal
         isOpen={success}
@@ -254,7 +319,7 @@ function LoginPageContent() {
             </p>
             
             {/* Development mode - show the magic link */}
-            {devMagicLink && process.env.NODE_ENV === 'development' && (
+            {devMagicLink && schoolDomain === 'test.edu' && (
               <HiveCard className="p-4 bg-hive-brand-primary/10 border-hive-brand-primary/30 text-left">
                 <p className="text-xs text-hive-brand-primary font-medium mb-2">
                   🛠️ Development Mode - Magic Link:
@@ -270,7 +335,7 @@ function LoginPageContent() {
           </div>
 
           <div className="space-y-4 pt-4">
-            {devMagicLink && process.env.NODE_ENV === 'development' && (
+            {devMagicLink && schoolDomain === 'test.edu' && (
               <HiveButton
                 variant="premium"
                 size="xl"

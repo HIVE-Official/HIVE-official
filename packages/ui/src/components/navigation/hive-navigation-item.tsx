@@ -150,7 +150,7 @@ export function HiveNavigationItem({
               <motion.div 
                 className={cn(
                   "ml-2 px-2 py-1 rounded-full text-xs font-medium",
-                  "min-w-[20px] flex items-center justify-center"
+                  "min-w-5 flex items-center justify-center"
                 )}
                 style={{
                   backgroundColor: item.badge.variant === 'error' 

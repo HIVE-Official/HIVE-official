@@ -42,7 +42,7 @@ interface VisibilityResult {
 class PrivacyUtils {
   private static instance: PrivacyUtils;
   private baseUrl: string;
-  private cache: Map<string, any> = new Map();
+  private cache: Map<string, unknown> = new Map();
 
   private constructor() {
     this.baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
@@ -61,7 +61,7 @@ class PrivacyUtils {
       const cacheKey = `privacy_${userId || 'current'}`;
       
       if (this.cache.has(cacheKey)) {
-        return this.cache.get(cacheKey);
+        return this.cache.get(cacheKey) as PrivacySettings;
       }
 
       const response = await fetch(`${this.baseUrl}/api/privacy`, {
@@ -75,7 +75,7 @@ class PrivacyUtils {
         return null;
       }
 
-      const data = await response.json();
+      const data = await response.json() as { settings: PrivacySettings };
       this.cache.set(cacheKey, data.settings);
       
       // Cache for 5 minutes
@@ -120,7 +120,7 @@ class PrivacyUtils {
       const cacheKey = `visibility_${targetUserId}_${context || 'general'}`;
       
       if (this.cache.has(cacheKey)) {
-        return this.cache.get(cacheKey);
+        return this.cache.get(cacheKey) as VisibilityResult;
       }
 
       const response = await fetch(`${this.baseUrl}/api/privacy/visibility`, {
@@ -138,7 +138,7 @@ class PrivacyUtils {
         return null;
       }
 
-      const data = await response.json();
+      const data = await response.json() as { visibility: VisibilityResult };
       this.cache.set(cacheKey, data.visibility);
       
       // Cache for 2 minutes (shorter for visibility checks)
@@ -167,10 +167,10 @@ class PrivacyUtils {
         return {};
       }
 
-      const data = await response.json();
+      const data = await response.json() as { visibilityChecks: Array<{ userId: string; visibility: VisibilityResult }> };
       const results: Record<string, VisibilityResult> = {};
       
-      data.visibilityChecks.forEach((check: any) => {
+      data.visibilityChecks.forEach((check) => {
         results[check.userId] = check.visibility;
         
         // Cache individual results
@@ -214,12 +214,12 @@ class PrivacyUtils {
   }
 
   // Get ghost mode status
-  async getGhostModeStatus(userId?: string): Promise<any> {
+  async getGhostModeStatus(userId?: string): Promise<{ enabled: boolean; level: string; duration?: number } | null> {
     try {
       const cacheKey = `ghost_mode_${userId || 'current'}`;
       
       if (this.cache.has(cacheKey)) {
-        return this.cache.get(cacheKey);
+        return this.cache.get(cacheKey) as { enabled: boolean; level: string; duration?: number };
       }
 
       const url = userId 
@@ -237,7 +237,7 @@ class PrivacyUtils {
         return null;
       }
 
-      const data = await response.json();
+      const data = await response.json() as { enabled: boolean; level: string; duration?: number };
       this.cache.set(cacheKey, data);
       
       // Cache for 1 minute
@@ -253,12 +253,12 @@ class PrivacyUtils {
   }
 
   // Client-side privacy filters
-  filterUserData(userData: any, visibility: VisibilityResult): any {
+  filterUserData(userData: Record<string, unknown>, visibility: VisibilityResult): Record<string, unknown> | null {
     if (!visibility.canSeeProfile) {
       return null;
     }
 
-    const filtered = { ...userData };
+    const filtered = { ...userData } as Record<string, unknown>;
 
     // Filter profile data based on visibility
     if (!visibility.canSeeOnlineStatus) {

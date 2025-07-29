@@ -8,12 +8,12 @@ interface ProfileAggregatorOptions {
     timeRange?: 'week' | 'month' | 'semester' | 'year' | 'all';
 }
 interface AggregatedProfileData {
-    dashboard: any;
-    spaces: any;
-    calendar: any;
-    activity: any;
-    privacy: any;
-    stats: any;
+    dashboard: Record<string, unknown> | null;
+    spaces: Record<string, unknown> | null;
+    calendar: Record<string, unknown> | null;
+    activity: Record<string, unknown> | null;
+    privacy: Record<string, unknown> | null;
+    stats: Record<string, unknown> | null;
     metadata: {
         loadTime: number;
         endpoints: string[];
@@ -28,23 +28,23 @@ declare class ProfileAggregator {
     private constructor();
     static getInstance(): ProfileAggregator;
     aggregateProfileData(options?: ProfileAggregatorOptions): Promise<AggregatedProfileData>;
-    getDashboard(timeRange?: string): Promise<any>;
-    getSpacesWithActivity(timeRange?: string): Promise<any>;
-    getCalendarEvents(startDate?: string, endDate?: string): Promise<any>;
-    getActivityAnalytics(timeRange?: string): Promise<any>;
-    getActivityInsights(timeRange?: string): Promise<any>;
-    getPrivacySettings(): Promise<any>;
-    getDetailedStats(timeRange?: string): Promise<any>;
-    getSpaceRecommendations(type?: string, limit?: number): Promise<any>;
+    getDashboard(timeRange?: string): Promise<Record<string, unknown>>;
+    getSpacesWithActivity(timeRange?: string): Promise<Record<string, unknown>>;
+    getCalendarEvents(startDate?: string, endDate?: string): Promise<Record<string, unknown>>;
+    getActivityAnalytics(timeRange?: string): Promise<Record<string, unknown>>;
+    getActivityInsights(timeRange?: string): Promise<Record<string, unknown>>;
+    getPrivacySettings(): Promise<Record<string, unknown>>;
+    getDetailedStats(timeRange?: string): Promise<Record<string, unknown>>;
+    getSpaceRecommendations(type?: string, limit?: number): Promise<Record<string, unknown>>;
     batchUpdateProfile(updates: {
-        privacy?: any;
-        preferences?: any;
+        privacy?: Record<string, unknown>;
+        preferences?: Record<string, unknown>;
         spaceActions?: Array<{
             spaceId: string;
             action: string;
-            value?: any;
+            value?: unknown;
         }>;
-    }): Promise<any>;
+    }): Promise<Record<string, unknown>[]>;
     private updatePrivacySettings;
     private performSpaceAction;
     private fetchWithCache;
@@ -62,7 +62,7 @@ export declare const profileUtils: {
     calculateEngagementScore: (profileData: AggregatedProfileData) => number;
     getActivityTrend: (profileData: AggregatedProfileData) => "up" | "down" | "stable";
     formatTimeSpent: (minutes: number) => string;
-    getTopSpaces: (profileData: AggregatedProfileData, limit?: number) => any[];
+    getTopSpaces: (profileData: AggregatedProfileData, limit?: number) => Array<Record<string, unknown>>;
 };
 export default ProfileAggregator;
 //# sourceMappingURL=profile-aggregator.d.ts.map

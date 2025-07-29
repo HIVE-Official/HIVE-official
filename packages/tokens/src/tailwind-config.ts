@@ -1,7 +1,7 @@
 // Tailwind CSS Configuration Extension for HIVE Design Tokens
 import { colors, semantic, overlay, shadows } from './colors';
 import { typography } from './typography';
-import { spacing } from './spacing';
+import { spacing, layoutSizes } from './spacing';
 import { radius } from './radius';
 
 // Generate Tailwind color palette from design tokens
@@ -91,6 +91,9 @@ export const hiveTailwindConfig = {
   fontSize: hiveTailwindFontSizes,
   borderRadius: hiveTailwindBorderRadius,
   boxShadow: hiveTailwindBoxShadow,
+  // NEW: Add layout dimensions for hybrid approach
+  height: layoutSizes.height,
+  width: layoutSizes.width,
   fontFamily: {
     sans: typography.fontFamily.sans,
     mono: typography.fontFamily.mono,
@@ -102,6 +105,9 @@ export const hiveTailwindConfig = {
     'hive-glow': 'hive-glow 2s ease-in-out infinite alternate',
     'hive-float': 'hive-float 3s ease-in-out infinite',
     'hive-scale': 'hive-scale 0.3s ease-out',
+  },
+  transitionTimingFunction: {
+    'hive-smooth': 'cubic-bezier(0.23, 1, 0.32, 1)',
   },
   keyframes: {
     'hive-glow': {

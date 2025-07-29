@@ -370,7 +370,7 @@ export async function validateWithSecurity<T>(
     // First, scan for security threats if data is string-based
     let securityLevel: 'safe' | 'suspicious' | 'dangerous' = 'safe';
     const threats: string[] = [];
-    let sanitized: any = {};
+    const sanitized: any = {};
 
     if (typeof data === 'object' && data !== null) {
       // Scan string fields for security threats

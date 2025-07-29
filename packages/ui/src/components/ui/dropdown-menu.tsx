@@ -89,7 +89,7 @@ export const DropdownMenuContent: React.FC<DropdownMenuContentProps> = ({
       <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
       <div
         className={cn(
-          "absolute z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md",
+          "absolute z-50 min-w-[max-h-32] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md",
           align === "start" && "left-0",
           align === "center" && "left-1/2 -translate-x-1/2",
           align === "end" && "right-0",
@@ -234,7 +234,7 @@ export const DropdownMenuSubContent: React.FC<{
   return (
     <div
       className={cn(
-        "z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-lg",
+        "z-50 min-w-[max-h-32] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-lg",
         className
       )}
     >
@@ -242,3 +242,15 @@ export const DropdownMenuSubContent: React.FC<{
     </div>
   );
 };
+
+export const DropdownMenuGroup: React.FC<{ children: React.ReactNode; className?: string }> = ({ 
+  children, 
+  className 
+}) => {
+  return (
+    <div className={cn("", className)}>
+      {children}
+    </div>
+  );
+};
+

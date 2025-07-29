@@ -94,7 +94,7 @@ function MiniCalendarWidget() {
               className={`
                 p-2 text-center cursor-pointer rounded transition-colors relative
                 ${isToday 
-                  ? 'bg-blue-600 text-white' 
+                  ? 'bg-blue-600 text-[var(--hive-text-primary)]' 
                   : hasEvent 
                     ? 'bg-blue-50 text-blue-700 hover:bg-blue-100' 
                     : 'hover:bg-gray-100'

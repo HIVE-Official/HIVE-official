@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion } from "@hive/ui/src/components/framer-motion-proxy";
 import { ArrowRight } from "lucide-react";
 import { HiveButton, HiveLogo } from "@hive/ui";
 import type { HiveOnboardingData } from "../hive-onboarding-wizard";

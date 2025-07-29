@@ -2,6 +2,8 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
+type NavigationMode = 'sidebar' | 'topbar';
+
 interface ShellContextType {
   sidebarCollapsed: boolean;
   setSidebarCollapsed: (collapsed: boolean) => void;
@@ -11,6 +13,8 @@ interface ShellContextType {
   setNotificationCenterOpen: (open: boolean) => void;
   unreadNotificationCount: number;
   setUnreadNotificationCount: (count: number) => void;
+  navigationMode: NavigationMode;
+  setNavigationMode: (mode: NavigationMode) => void;
 }
 
 const ShellContext = createContext<ShellContextType | undefined>(undefined);
@@ -27,17 +31,20 @@ interface ShellProviderProps {
   children: React.ReactNode;
   initialSidebarCollapsed?: boolean;
   initialUnreadCount?: number;
+  initialNavigationMode?: NavigationMode;
 }
 
 export function ShellProvider({ 
   children, 
-  initialSidebarCollapsed = false,
-  initialUnreadCount = 0
+  initialSidebarCollapsed = true,
+  initialUnreadCount = 0,
+  initialNavigationMode = 'sidebar'
 }: ShellProviderProps) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(initialSidebarCollapsed);
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
   const [notificationCenterOpen, setNotificationCenterOpen] = useState(false);
   const [unreadNotificationCount, setUnreadNotificationCount] = useState(initialUnreadCount);
+  const [navigationMode, setNavigationMode] = useState<NavigationMode>(initialNavigationMode);
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -74,6 +81,29 @@ export function ShellProvider({
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [commandPaletteOpen, notificationCenterOpen, sidebarCollapsed]);
 
+  // Load sidebar state from localStorage on mount
+  useEffect(() => {
+    // Check if this is a new default change - clear old state and use new default
+    const defaultChangeFlag = localStorage.getItem('hive-sidebar-default-changed');
+    if (!defaultChangeFlag) {
+      // First time with new default - clear old state and use new default
+      localStorage.removeItem('hive-sidebar-collapsed');
+      localStorage.setItem('hive-sidebar-default-changed', 'true');
+      setSidebarCollapsed(initialSidebarCollapsed);
+      return;
+    }
+
+    const savedSidebarState = localStorage.getItem('hive-sidebar-collapsed');
+    if (savedSidebarState !== null) {
+      setSidebarCollapsed(JSON.parse(savedSidebarState));
+    }
+  }, [initialSidebarCollapsed]);
+
+  // Save sidebar state to localStorage
+  useEffect(() => {
+    localStorage.setItem('hive-sidebar-collapsed', JSON.stringify(sidebarCollapsed));
+  }, [sidebarCollapsed]);
+
   // Responsive sidebar behavior
   useEffect(() => {
     function handleResize() {
@@ -88,6 +118,19 @@ export function ShellProvider({
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Load navigation mode from localStorage
+  useEffect(() => {
+    const savedMode = localStorage.getItem('hive-navigation-mode') as NavigationMode;
+    if (savedMode && (savedMode === 'sidebar' || savedMode === 'topbar')) {
+      setNavigationMode(savedMode);
+    }
+  }, []);
+
+  // Save navigation mode to localStorage
+  useEffect(() => {
+    localStorage.setItem('hive-navigation-mode', navigationMode);
+  }, [navigationMode]);
+
   const value: ShellContextType = {
     sidebarCollapsed,
     setSidebarCollapsed,
@@ -97,6 +140,8 @@ export function ShellProvider({
     setNotificationCenterOpen,
     unreadNotificationCount,
     setUnreadNotificationCount,
+    navigationMode,
+    setNavigationMode,
   };
 
   return (

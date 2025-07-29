@@ -62,7 +62,7 @@ export interface PaginationOptions {
 
 const hiveTableVariants = cva(
   // Base table styles - matte obsidian glass
-  "relative w-full bg-black/20 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden",
+  "relative w-full bg-[var(--hive-background-primary)]/20 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden",
   {
     variants: {
       variant: {
@@ -99,7 +99,7 @@ const rowVariants = {
     }
   },
   hover: {
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    backgroundColor: 'var(--hive-interactive-hover)',
     transition: {
       duration: motionDurations.quick,
       ease: liquidMetal.easing as any,
@@ -110,14 +110,14 @@ const rowVariants = {
 // Header cell animation variants
 const headerVariants = {
   rest: {
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    backgroundColor: 'var(--hive-interactive-hover)',
     transition: {
       duration: motionDurations.quick,
       ease: liquidMetal.easing as any,
     }
   },
   hover: {
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: 'var(--hive-interactive-active)',
     transition: {
       duration: motionDurations.quick,
       ease: liquidMetal.easing as any,
@@ -393,15 +393,15 @@ const HiveTable = <T extends Record<string, any>>({
     <div className={cn(hiveTableVariants({ variant, density, className }))} {...props}>
       {/* Toolbar */}
       {(toolbar || searchable || bulkActions) && (
-        <div className="p-4 border-b border-white/10 bg-black/10">
+        <div className="p-4 border-b border-white/10 bg-[var(--hive-background-primary)]/10">
           <div className="flex items-center justify-between space-x-4">
             <div className="flex items-center space-x-4">
               {/* Search */}
               {searchable && (
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/40" size={16} />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[var(--hive-text-primary)]/40" size={16} />
                   <input
-                    className="bg-black/40 border border-white/20 rounded-xl pl-10 pr-4 py-2 text-white placeholder-white/40 focus:outline-none focus:border-yellow-500/50"
+                    className="bg-[var(--hive-background-primary)]/40 border border-white/20 rounded-xl pl-10 pr-4 py-2 text-[var(--hive-text-primary)] placeholder-white/40 focus:outline-none focus:border-yellow-500/50"
                     placeholder="Search..."
                     value={searchQuery}
                     onChange={(e) => handleSearch(e.target.value)}
@@ -417,7 +417,7 @@ const HiveTable = <T extends Record<string, any>>({
                   exit={{ opacity: 0, scale: 0.9 }}
                   className="flex items-center space-x-2"
                 >
-                  <span className="text-sm text-white/60">
+                  <span className="text-sm text-[var(--hive-text-primary)]/60">
                     {selectedRows.size} selected
                   </span>
                   {bulkActions}
@@ -430,7 +430,7 @@ const HiveTable = <T extends Record<string, any>>({
               
               {/* Refresh Button */}
               <motion.button
-                className="p-2 text-white/60 hover:text-white/80 hover:bg-white/10 rounded-lg transition-colors"
+                className="p-2 text-[var(--hive-text-primary)]/60 hover:text-[var(--hive-text-primary)]/80 hover:bg-[var(--hive-text-primary)]/10 rounded-lg transition-colors"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -439,7 +439,7 @@ const HiveTable = <T extends Record<string, any>>({
               
               {/* Export Button */}
               <motion.button
-                className="p-2 text-white/60 hover:text-white/80 hover:bg-white/10 rounded-lg transition-colors"
+                className="p-2 text-[var(--hive-text-primary)]/60 hover:text-[var(--hive-text-primary)]/80 hover:bg-[var(--hive-text-primary)]/10 rounded-lg transition-colors"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -455,7 +455,7 @@ const HiveTable = <T extends Record<string, any>>({
         <table className="w-full">
           {/* Header */}
           <thead className={cn(
-            "bg-black/20 backdrop-blur-sm",
+            "bg-[var(--hive-background-primary)]/20 backdrop-blur-sm",
             stickyHeader && "sticky top-0 z-10"
           )}>
             <tr>
@@ -469,7 +469,7 @@ const HiveTable = <T extends Record<string, any>>({
                       if (input) input.indeterminate = someSelected;
                     }}
                     onChange={(e) => handleSelectAll(e.target.checked)}
-                    className="rounded border-white/20 bg-black/40 text-yellow-500 focus:ring-yellow-500"
+                    className="rounded border-white/20 bg-[var(--hive-background-primary)]/40 text-yellow-500 focus:ring-yellow-500"
                   />
                 </th>
               )}
@@ -484,7 +484,7 @@ const HiveTable = <T extends Record<string, any>>({
                 <motion.th
                   key={column.id}
                   className={cn(
-                    "p-4 text-left font-semibold text-white border-b border-white/10",
+                    "p-4 text-left font-semibold text-[var(--hive-text-primary)] border-b border-white/10",
                     column.sortable && "cursor-pointer select-none",
                     density === 'compact' && "p-2",
                     density === 'spacious' && "p-6"
@@ -512,7 +512,7 @@ const HiveTable = <T extends Record<string, any>>({
                             "transition-colors",
                             currentSort.column === column.id && currentSort.direction === 'asc'
                               ? "text-yellow-400"
-                              : "text-white/40"
+                              : "text-[var(--hive-text-primary)]/40"
                           )} 
                         />
                         <ChevronDown 
@@ -521,7 +521,7 @@ const HiveTable = <T extends Record<string, any>>({
                             "transition-colors -mt-1",
                             currentSort.column === column.id && currentSort.direction === 'desc'
                               ? "text-yellow-400"
-                              : "text-white/40"
+                              : "text-[var(--hive-text-primary)]/40"
                           )} 
                         />
                       </div>
@@ -532,7 +532,7 @@ const HiveTable = <T extends Record<string, any>>({
               
               {/* Actions Column */}
               {rowActions && (
-                <th className="w-20 p-4 text-center font-semibold text-white border-b border-white/10">
+                <th className="w-20 p-4 text-center font-semibold text-[var(--hive-text-primary)] border-b border-white/10">
                   Actions
                 </th>
               )}
@@ -545,7 +545,7 @@ const HiveTable = <T extends Record<string, any>>({
               {loading ? (
                 <tr>
                   <td colSpan={columns.length + (selectable ? 1 : 0) + (expandable ? 1 : 0) + (rowActions ? 1 : 0)} className="p-8 text-center">
-                    <div className="flex items-center justify-center space-x-2 text-white/60">
+                    <div className="flex items-center justify-center space-x-2 text-[var(--hive-text-primary)]/60">
                       <RefreshCw size={20} className="animate-spin" />
                       <span>Loading...</span>
                     </div>
@@ -555,7 +555,7 @@ const HiveTable = <T extends Record<string, any>>({
                 <tr>
                   <td colSpan={columns.length + (selectable ? 1 : 0) + (expandable ? 1 : 0) + (rowActions ? 1 : 0)} className="p-8 text-center">
                     {empty || (
-                      <div className="text-white/60">
+                      <div className="text-[var(--hive-text-primary)]/60">
                         <div className="text-4xl mb-2">📋</div>
                         <div>No data found</div>
                       </div>
@@ -586,7 +586,7 @@ const HiveTable = <T extends Record<string, any>>({
                             type="checkbox"
                             checked={selectedRows.has(index)}
                             onChange={(e) => handleRowSelect(index, e.target.checked)}
-                            className="rounded border-white/20 bg-black/40 text-yellow-500 focus:ring-yellow-500"
+                            className="rounded border-white/20 bg-[var(--hive-background-primary)]/40 text-yellow-500 focus:ring-yellow-500"
                           />
                         </td>
                       )}
@@ -595,7 +595,7 @@ const HiveTable = <T extends Record<string, any>>({
                       {expandable && (
                         <td className="p-4" onClick={(e) => e.stopPropagation()}>
                           <motion.button
-                            className="text-white/60 hover:text-white/80 transition-colors"
+                            className="text-[var(--hive-text-primary)]/60 hover:text-[var(--hive-text-primary)]/80 transition-colors"
                             onClick={() => handleRowExpand(index)}
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
@@ -615,7 +615,7 @@ const HiveTable = <T extends Record<string, any>>({
                         <td 
                           key={column.id} 
                           className={cn(
-                            "p-4 text-white/80",
+                            "p-4 text-[var(--hive-text-primary)]/80",
                             density === 'compact' && "p-2",
                             density === 'spacious' && "p-6"
                           )}
@@ -641,7 +641,7 @@ const HiveTable = <T extends Record<string, any>>({
                         transition={{ duration: motionDurations.smooth }}
                       >
                         <td colSpan={columns.length + (selectable ? 1 : 0) + (expandable ? 1 : 0) + (rowActions ? 1 : 0)}>
-                          <div className="bg-black/10 p-4 border-l-4 border-yellow-500/30">
+                          <div className="bg-[var(--hive-background-primary)]/10 p-4 border-l-4 border-yellow-500/30">
                             {expandedRowRender(row, index)}
                           </div>
                         </td>
@@ -657,16 +657,16 @@ const HiveTable = <T extends Record<string, any>>({
       
       {/* Pagination */}
       {pagination && totalPages > 1 && (
-        <div className="p-4 border-t border-white/10 bg-black/10">
+        <div className="p-4 border-t border-white/10 bg-[var(--hive-background-primary)]/10">
           <div className="flex items-center justify-between">
-            <div className="text-sm text-white/60">
+            <div className="text-sm text-[var(--hive-text-primary)]/60">
               Showing {startIndex + 1} to {Math.min(endIndex, processedData.length)} of {processedData.length} results
             </div>
             
             <div className="flex items-center space-x-2">
               {/* First Page */}
               <motion.button
-                className="p-2 text-white/60 hover:text-white/80 hover:bg-white/10 rounded-lg transition-colors disabled:opacity-50"
+                className="p-2 text-[var(--hive-text-primary)]/60 hover:text-[var(--hive-text-primary)]/80 hover:bg-[var(--hive-text-primary)]/10 rounded-lg transition-colors disabled:opacity-50"
                 disabled={currentPage === 1}
                 onClick={() => setCurrentPage(1)}
                 whileHover={{ scale: 1.05 }}
@@ -677,7 +677,7 @@ const HiveTable = <T extends Record<string, any>>({
               
               {/* Previous Page */}
               <motion.button
-                className="p-2 text-white/60 hover:text-white/80 hover:bg-white/10 rounded-lg transition-colors disabled:opacity-50"
+                className="p-2 text-[var(--hive-text-primary)]/60 hover:text-[var(--hive-text-primary)]/80 hover:bg-[var(--hive-text-primary)]/10 rounded-lg transition-colors disabled:opacity-50"
                 disabled={currentPage === 1}
                 onClick={() => setCurrentPage(currentPage - 1)}
                 whileHover={{ scale: 1.05 }}
@@ -697,7 +697,7 @@ const HiveTable = <T extends Record<string, any>>({
                         "px-3 py-1 rounded-lg text-sm font-medium transition-colors",
                         currentPage === pageNum
                           ? "bg-yellow-500/20 text-yellow-400 border border-yellow-500/30"
-                          : "text-white/60 hover:text-white/80 hover:bg-white/10"
+                          : "text-[var(--hive-text-primary)]/60 hover:text-[var(--hive-text-primary)]/80 hover:bg-[var(--hive-text-primary)]/10"
                       )}
                       onClick={() => setCurrentPage(pageNum)}
                       whileHover={{ scale: 1.05 }}
@@ -711,7 +711,7 @@ const HiveTable = <T extends Record<string, any>>({
               
               {/* Next Page */}
               <motion.button
-                className="p-2 text-white/60 hover:text-white/80 hover:bg-white/10 rounded-lg transition-colors disabled:opacity-50"
+                className="p-2 text-[var(--hive-text-primary)]/60 hover:text-[var(--hive-text-primary)]/80 hover:bg-[var(--hive-text-primary)]/10 rounded-lg transition-colors disabled:opacity-50"
                 disabled={currentPage === totalPages}
                 onClick={() => setCurrentPage(currentPage + 1)}
                 whileHover={{ scale: 1.05 }}
@@ -722,7 +722,7 @@ const HiveTable = <T extends Record<string, any>>({
               
               {/* Last Page */}
               <motion.button
-                className="p-2 text-white/60 hover:text-white/80 hover:bg-white/10 rounded-lg transition-colors disabled:opacity-50"
+                className="p-2 text-[var(--hive-text-primary)]/60 hover:text-[var(--hive-text-primary)]/80 hover:bg-[var(--hive-text-primary)]/10 rounded-lg transition-colors disabled:opacity-50"
                 disabled={currentPage === totalPages}
                 onClick={() => setCurrentPage(totalPages)}
                 whileHover={{ scale: 1.05 }}
@@ -747,7 +747,7 @@ export const DefaultRowActions: React.FC<{
   <div className="flex items-center space-x-1">
     {onView && (
       <motion.button
-        className="p-1 text-white/60 hover:text-blue-400 hover:bg-blue-400/10 rounded transition-colors"
+        className="p-1 text-[var(--hive-text-primary)]/60 hover:text-blue-400 hover:bg-blue-400/10 rounded transition-colors"
         onClick={onView}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
@@ -757,7 +757,7 @@ export const DefaultRowActions: React.FC<{
     )}
     {onEdit && (
       <motion.button
-        className="p-1 text-white/60 hover:text-yellow-400 hover:bg-yellow-400/10 rounded transition-colors"
+        className="p-1 text-[var(--hive-text-primary)]/60 hover:text-yellow-400 hover:bg-yellow-400/10 rounded transition-colors"
         onClick={onEdit}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
@@ -767,7 +767,7 @@ export const DefaultRowActions: React.FC<{
     )}
     {onDelete && (
       <motion.button
-        className="p-1 text-white/60 hover:text-red-400 hover:bg-red-400/10 rounded transition-colors"
+        className="p-1 text-[var(--hive-text-primary)]/60 hover:text-red-400 hover:bg-red-400/10 rounded transition-colors"
         onClick={onDelete}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}

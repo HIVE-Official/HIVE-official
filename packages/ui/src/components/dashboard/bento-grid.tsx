@@ -158,10 +158,10 @@ export function BentoGrid({
     if (layout.responsive) {
       return {
         gridTemplateColumns: `repeat(${layout.responsive.desktop}, 1fr)`,
-        '@media (max-width: 1024px)': {
+        '@media (max-width: theme(screens.lg))': {
           gridTemplateColumns: `repeat(${layout.responsive.tablet}, 1fr)`
         },
-        '@media (max-width: 768px)': {
+        '@media (max-width: theme(screens.md))': {
           gridTemplateColumns: `repeat(${layout.responsive.mobile}, 1fr)`
         }
       };
@@ -232,7 +232,7 @@ export function BentoGrid({
               whileDrag={{ 
                 scale: 1.05, 
                 zIndex: 50,
-                boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)"
+                boxShadow: "0 5 6 -5px color-mix(in_srgb,var(--hive-background-primary)_10%,transparent), 0 10px 10px -5px color-mix(in_srgb,var(--hive-background-primary)_4%,transparent)"
               }}
               onDragStart={() => setDraggedItem(item.id)}
               onDragEnd={() => setDraggedItem(null)}
@@ -360,7 +360,7 @@ function BentoGridItemComponent({
                     
                     {showSizeMenu && (
                       <motion.div
-                        className="absolute top-8 right-0 bg-white rounded-lg shadow-lg border border-gray-200 p-2 z-50 min-w-[150px]"
+                        className="absolute top-8 right-0 bg-[var(--hive-text-primary)] rounded-lg shadow-lg border border-gray-200 p-2 z-50 min-w-[150px]"
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -10 }}

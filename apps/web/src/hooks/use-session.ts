@@ -43,6 +43,38 @@ export function useSession() {
   useEffect(() => {
     const checkSession = () => {
       try {
+        // DEVELOPMENT MODE: Auto-create dev session if none exists (DISABLED TO SHOW AUTH FLOW)
+        // if (process.env.NODE_ENV === 'development') {
+        //   const sessionJson = window.localStorage.getItem('hive_session');
+        //   
+        //   if (!sessionJson) {
+        //     const devSession: SessionData = {
+        //       userId: 'dev_user_123',
+        //       email: 'dev@hive.com',
+        //       schoolId: 'dev_school',
+        //       needsOnboarding: true,
+        //       onboardingCompleted: false,
+        //       verifiedAt: new Date().toISOString()
+        //     };
+        //     
+        //     window.localStorage.setItem('hive_session', JSON.stringify(devSession));
+        //     window.localStorage.setItem('dev_auth_mode', 'true');
+        //     
+        //     const userData: User = {
+        //       id: devSession.userId,
+        //       email: devSession.email,
+        //       schoolId: devSession.schoolId,
+        //       onboardingCompleted: false
+        //     };
+
+        //     setIsAuthenticated(true);
+        //     setUser(userData);
+        //     setSessionData(devSession);
+        //     setIsLoading(false);
+        //     return;
+        //   }
+        // }
+        
         const sessionJson = window.localStorage.getItem('hive_session');
         
         if (!sessionJson) {
@@ -54,34 +86,52 @@ export function useSession() {
         }
 
         const session: SessionData = JSON.parse(sessionJson);
+        const devAuth = window.localStorage.getItem('dev_auth_mode');
         
-        // Check if session is expired (24 hours)
-        const sessionAge = Date.now() - new Date(session.verifiedAt).getTime();
-        const maxAge = 24 * 60 * 60 * 1000; // 24 hours
-        
-        if (sessionAge > maxAge) {
-          // Session expired, clear it
-          window.localStorage.removeItem('hive_session');
-          window.localStorage.removeItem('dev_auth_mode');
-          setIsAuthenticated(false);
-          setUser(null);
-          setSessionData(null);
-          setIsLoading(false);
-          return;
+        // For dev auth, skip expiration check
+        if (process.env.NODE_ENV === 'development' || devAuth === 'true') {
+          // Skip expiration check in development
+        } else {
+          // Check if session is expired (24 hours)
+          const sessionAge = Date.now() - new Date(session.verifiedAt).getTime();
+          const maxAge = 24 * 60 * 60 * 1000; // 24 hours
+          
+          if (sessionAge > maxAge) {
+            // Session expired, clear it
+            window.localStorage.removeItem('hive_session');
+            window.localStorage.removeItem('dev_auth_mode');
+            setIsAuthenticated(false);
+            setUser(null);
+            setSessionData(null);
+            setIsLoading(false);
+            return;
+          }
         }
 
         // Session is valid, create user object
+        // DEV FIX: If user has profile data, consider onboarding completed
+        const onboardingCompleted = session.onboardingCompleted || 
+          (devAuth === 'true' && !!session.profileData?.fullName);
+          
         const userData: User = {
           id: session.userId,
           email: session.email,
           schoolId: session.schoolId,
-          onboardingCompleted: session.onboardingCompleted || false,
+          onboardingCompleted,
           fullName: session.profileData?.fullName,
           handle: session.profileData?.handle,
           major: session.profileData?.major,
           avatarUrl: session.profileData?.avatarUrl,
           builderOptIn: session.profileData?.builderOptIn,
         };
+        
+        console.log('🔍 useSession creating user data:', {
+          sessionOnboardingCompleted: session.onboardingCompleted,
+          userOnboardingCompleted: userData.onboardingCompleted,
+          hasProfileData: !!session.profileData,
+          fullName: session.profileData?.fullName,
+          devAuth
+        });
 
         setIsAuthenticated(true);
         setUser(userData);

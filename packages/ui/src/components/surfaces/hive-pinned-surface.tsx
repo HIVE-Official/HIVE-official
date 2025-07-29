@@ -175,7 +175,7 @@ export const HivePinnedSurface = React.forwardRef<HTMLDivElement, HivePinnedSurf
               <Pin className="w-8 h-8 text-yellow-400" />
             </motion.div>
             
-            <h3 className="text-xl font-semibold text-white mb-3">Welcome to {space.name}</h3>
+            <h3 className="text-xl font-semibold text-[var(--hive-text-primary)] mb-3">Welcome to {space.name}</h3>
             <p className="text-gray-400 text-sm max-w-md mx-auto mb-8 leading-relaxed">
               {space.description || "This Space is ready for content! Pin important announcements, links, and resources to help members get started."}
             </p>
@@ -213,7 +213,7 @@ export const HivePinnedSurface = React.forwardRef<HTMLDivElement, HivePinnedSurf
               <motion.article
                 key={content.id}
                 className={cn(
-                  "relative group bg-black/10 backdrop-blur-sm border border-white/5 rounded-xl p-4 transition-all duration-200",
+                  "relative group bg-[var(--hive-background-primary)]/10 backdrop-blur-sm border border-white/5 rounded-xl p-4 transition-all duration-200",
                   isHovered && "border-white/10",
                   content.priority === 'high' && "ring-1 ring-yellow-500/20",
                   mode === 'edit' && "hover:ring-2 hover:ring-yellow-500/30"
@@ -240,13 +240,13 @@ export const HivePinnedSurface = React.forwardRef<HTMLDivElement, HivePinnedSurf
                   <div className="flex items-center gap-3 flex-1 min-w-0">
                     <div className={cn(
                       "flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center",
-                      content.priority === 'high' ? "bg-yellow-500/20" : "bg-white/5"
+                      content.priority === 'high' ? "bg-yellow-500/20" : "bg-[var(--hive-text-primary)]/5"
                     )}>
                       <TypeIcon className={cn("w-5 h-5", typeConfig.color)} />
                     </div>
                     
                     <div className="flex-1 min-w-0">
-                      <h4 className="font-medium text-white text-sm truncate">
+                      <h4 className="font-medium text-[var(--hive-text-primary)] text-sm truncate">
                         {content.title}
                       </h4>
                       <div className="flex items-center gap-2 text-xs text-gray-400 mt-1">
@@ -277,7 +277,7 @@ export const HivePinnedSurface = React.forwardRef<HTMLDivElement, HivePinnedSurf
                         transition={{ duration: motionDurations.quick }}
                       >
                         <motion.button
-                          className="p-1.5 text-gray-400 hover:text-white rounded-lg hover:bg-white/5 transition-all duration-200"
+                          className="p-1.5 text-gray-400 hover:text-[var(--hive-text-primary)] rounded-lg hover:bg-[var(--hive-text-primary)]/5 transition-all duration-200"
                           onClick={() => onEditContent?.(content)}
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
@@ -328,7 +328,7 @@ export const HivePinnedSurface = React.forwardRef<HTMLDivElement, HivePinnedSurf
                       href={content.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-2 p-3 bg-white/5 rounded-lg text-sm text-blue-400 hover:bg-white/10 transition-all duration-200 group"
+                      className="flex items-center gap-2 p-3 bg-[var(--hive-text-primary)]/5 rounded-lg text-sm text-blue-400 hover:bg-[var(--hive-text-primary)]/10 transition-all duration-200 group"
                       whileHover={{ scale: 1.01 }}
                       whileTap={{ scale: 0.99 }}
                     >
@@ -353,7 +353,7 @@ export const HivePinnedSurface = React.forwardRef<HTMLDivElement, HivePinnedSurf
           >
             <div className="relative">
               <motion.button
-                className="w-full flex items-center justify-center gap-2 p-4 border-2 border-dashed border-white/10 rounded-xl text-gray-400 hover:border-white/20 hover:text-white transition-all duration-200"
+                className="w-full flex items-center justify-center gap-2 p-4 border-2 border-dashed border-white/10 rounded-xl text-gray-400 hover:border-white/20 hover:text-[var(--hive-text-primary)] transition-all duration-200"
                 onClick={() => setShowAddMenu(!showAddMenu)}
                 whileHover={{ scale: 1.01 }}
                 whileTap={{ scale: 0.99 }}
@@ -366,7 +366,7 @@ export const HivePinnedSurface = React.forwardRef<HTMLDivElement, HivePinnedSurf
               <AnimatePresence>
                 {showAddMenu && (
                   <motion.div
-                    className="absolute top-full left-0 right-0 mt-2 bg-black/80 backdrop-blur-xl border border-white/10 rounded-xl overflow-hidden z-10"
+                    className="absolute top-full left-0 right-0 mt-2 bg-[var(--hive-background-primary)]/80 backdrop-blur-xl border border-white/10 rounded-xl overflow-hidden z-10"
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
@@ -378,13 +378,13 @@ export const HivePinnedSurface = React.forwardRef<HTMLDivElement, HivePinnedSurf
                         return (
                           <motion.button
                             key={type}
-                            className="w-full flex items-center gap-3 p-3 text-left rounded-lg hover:bg-white/5 transition-all duration-200"
+                            className="w-full flex items-center gap-3 p-3 text-left rounded-lg hover:bg-[var(--hive-text-primary)]/5 transition-all duration-200"
                             onClick={() => handleAddContent(type as keyof typeof pinnedContentTypes)}
                             whileHover={{ x: 4 }}
                           >
                             <Icon className={cn("w-5 h-5", config.color)} />
                             <div>
-                              <div className="text-sm font-medium text-white">{config.label}</div>
+                              <div className="text-sm font-medium text-[var(--hive-text-primary)]">{config.label}</div>
                               <div className="text-xs text-gray-400">{config.description}</div>
                             </div>
                           </motion.button>

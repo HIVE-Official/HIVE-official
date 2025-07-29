@@ -4,7 +4,8 @@ import React from 'react';
 import { ProfileSystemProps } from './types';
 import { ProfileHeader } from './profile-header';
 import { MySpacesFeed } from './my-spaces-feed';
-import { SmartCalendar } from './smart-calendar';
+import { CalendarCard } from './calendar-card';
+import { adaptSmartCalendarProps } from './calendar-data-adapter';
 import { CampusConnections } from './campus-connections';
 import { HiveLabSection } from './hive-lab-section';
 import { ProfileStats } from './profile-stats';
@@ -39,12 +40,12 @@ export const ProfileSystem: React.FC<ProfileSystemProps> = ({
   // Loading state
   if (isLoading || !user) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-4">
+      <div className="min-h-screen bg-hive-background-primary p-4">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-center py-16">
             <div className="text-center">
-              <Loader2 className="h-8 w-8 animate-spin text-hive-gold mx-auto mb-4" />
-              <p className="text-gray-300">Loading your HIVE profile...</p>
+              <Loader2 className="h-8 w-8 animate-spin text-[var(--hive-brand-secondary)] mx-auto mb-4" />
+              <p className="text-hive-text-secondary">Loading your HIVE profile...</p>
             </div>
           </div>
         </div>
@@ -55,13 +56,13 @@ export const ProfileSystem: React.FC<ProfileSystemProps> = ({
   // Error state
   if (showErrors && errors?.apiError) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-4">
+      <div className="min-h-screen bg-hive-background-primary p-4">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-center py-16">
-            <HiveCard className="p-8 text-center">
-              <WifiOff className="h-12 w-12 text-red-400 mx-auto mb-4" />
-              <h2 className="text-xl font-semibold text-white mb-2">Connection Error</h2>
-              <p className="text-gray-400 mb-4">{errors.apiError}</p>
+            <HiveCard className="p-4 text-center">
+              <WifiOff className="h-12 w-12 text-hive-ruby mx-auto mb-4" />
+              <h2 className="text-xl font-semibold text-hive-text-primary mb-2">Connection Error</h2>
+              <p className="text-hive-text-secondary mb-4">{errors.apiError}</p>
               <HiveButton onClick={() => window.location.reload()}>
                 Try Again
               </HiveButton>
@@ -75,7 +76,7 @@ export const ProfileSystem: React.FC<ProfileSystemProps> = ({
   // Mobile layout
   if (isMobile) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+      <div className="min-h-screen bg-hive-background-primary">
         <div className="safe-area-inset">
           <div className="space-y-4 p-4">
             <ProfileHeader
@@ -96,11 +97,15 @@ export const ProfileSystem: React.FC<ProfileSystemProps> = ({
               onJoinSpace={onJoinSpace}
             />
 
-            <SmartCalendar
-              events={events}
-              isLoading={loadingStates?.events}
-              error={errors?.eventsError}
-              onEventClick={onEventClick}
+            <CalendarCard
+              {...adaptSmartCalendarProps(
+                events,
+                loadingStates?.events,
+                errors?.eventsError,
+                onEventClick,
+                undefined,
+                'mobile'
+              )}
             />
 
             <CampusConnections
@@ -131,7 +136,7 @@ export const ProfileSystem: React.FC<ProfileSystemProps> = ({
   // Tablet layout
   if (isTablet) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-6">
+      <div className="min-h-screen bg-hive-background-primary p-6">
         <div className="max-w-5xl mx-auto">
           <div className="space-y-6">
             <ProfileHeader
@@ -163,11 +168,15 @@ export const ProfileSystem: React.FC<ProfileSystemProps> = ({
               </div>
 
               <div className="space-y-6">
-                <SmartCalendar
-                  events={events}
-                  isLoading={loadingStates?.events}
-                  error={errors?.eventsError}
-                  onEventClick={onEventClick}
+                <CalendarCard
+                  {...adaptSmartCalendarProps(
+                    events,
+                    loadingStates?.events,
+                    errors?.eventsError,
+                    onEventClick,
+                    undefined,
+                    'desktop'
+                  )}
                 />
 
                 {hiveLab && (
@@ -192,7 +201,7 @@ export const ProfileSystem: React.FC<ProfileSystemProps> = ({
 
   // Desktop layout (default)
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-6">
+    <div className="min-h-screen bg-hive-background-primary p-6">
       <div className="max-w-7xl mx-auto">
         <div className="space-y-8">
           <ProfileHeader
@@ -205,7 +214,7 @@ export const ProfileSystem: React.FC<ProfileSystemProps> = ({
             onPrivacySettings={onPrivacySettings}
           />
 
-          <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
             <div className="xl:col-span-2 space-y-8">
               <MySpacesFeed
                 spaces={spaces}
@@ -224,11 +233,15 @@ export const ProfileSystem: React.FC<ProfileSystemProps> = ({
             </div>
 
             <div className="space-y-8">
-              <SmartCalendar
-                events={events}
-                isLoading={loadingStates?.events}
-                error={errors?.eventsError}
-                onEventClick={onEventClick}
+              <CalendarCard
+                {...adaptSmartCalendarProps(
+                  events,
+                  loadingStates?.events,
+                  errors?.eventsError,
+                  onEventClick,
+                  undefined,
+                  'desktop'
+                )}
               />
 
               {hiveLab && (

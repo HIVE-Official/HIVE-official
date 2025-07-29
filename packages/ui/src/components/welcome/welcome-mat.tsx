@@ -64,7 +64,7 @@ export const WelcomeMat = ({
           transition={{ duration: 0.3, ease: "easeOut" }}
           className={cn(
             "fixed inset-0 z-50 flex items-center justify-center",
-            "bg-black/80 backdrop-blur-sm",
+            "bg-[var(--hive-background-primary)]/80 backdrop-blur-sm",
             className
           )}
           onClick={handleDismiss}
@@ -89,7 +89,7 @@ export const WelcomeMat = ({
               className={cn(
                 "absolute right-4 top-4 rounded-full p-2",
                 "text-zinc-400 transition-colors duration-200",
-                "hover:bg-white/10 hover:text-white",
+                "hover:bg-[var(--hive-text-primary)]/10 hover:text-[var(--hive-text-primary)]",
                 "focus:outline-none focus:ring-2 focus:ring-yellow-500/50"
               )}
               aria-label="Dismiss welcome message"
@@ -109,7 +109,7 @@ export const WelcomeMat = ({
                 >
                   🚀
                 </motion.div>
-                <h1 className="text-2xl font-bold text-white">
+                <h1 className="text-2xl font-bold text-[var(--hive-text-primary)]">
                   You&apos;re in — welcome to HIVE!
                 </h1>
                 {userName && (
@@ -121,13 +121,13 @@ export const WelcomeMat = ({
 
               {/* Tips */}
               <div className="space-y-3">
-                <div className="flex items-start gap-3 rounded-lg bg-white/5 p-3">
+                <div className="flex items-start gap-3 rounded-lg bg-[var(--hive-text-primary)]/5 p-3">
                   <div className="mt-0.5 h-2 w-2 rounded-full bg-yellow-500" />
                   <p className="text-sm text-zinc-300">
                     Scroll the Feed to see what&apos;s buzzing.
                   </p>
                 </div>
-                <div className="flex items-start gap-3 rounded-lg bg-white/5 p-3">
+                <div className="flex items-start gap-3 rounded-lg bg-[var(--hive-text-primary)]/5 p-3">
                   <div className="mt-0.5 h-2 w-2 rounded-full bg-yellow-500" />
                   <p className="text-sm text-zinc-300">
                     Spin up a Space to rally your group.
@@ -143,7 +143,7 @@ export const WelcomeMat = ({
                   className={cn(
                     "flex w-full items-center justify-center gap-2 rounded-lg",
                     "bg-gradient-to-r from-yellow-500 to-yellow-600",
-                    "px-6 py-3 font-semibold text-black",
+                    "px-6 py-3 font-semibold text-[var(--hive-background-primary)]",
                     "transition-all duration-200",
                     "hover:from-yellow-400 hover:to-yellow-500",
                     "hover:shadow-lg hover:shadow-yellow-500/25",
@@ -161,7 +161,7 @@ export const WelcomeMat = ({
                   className={cn(
                     "flex w-full items-center justify-center gap-2",
                     "text-sm text-zinc-400 transition-colors duration-200",
-                    "hover:text-white focus:outline-none focus:text-white"
+                    "hover:text-[var(--hive-text-primary)] focus:outline-none focus:text-[var(--hive-text-primary)]"
                   )}
                 >
                   View your profile

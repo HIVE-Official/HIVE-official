@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion } from "@hive/ui/src/components/framer-motion-proxy";
 import { User, Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { HiveInput } from "@hive/ui";

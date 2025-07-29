@@ -581,7 +581,7 @@ function PhotoStep() {
               />
               <button
                 onClick={() => updateData({ photoUrl: undefined })}
-                className="absolute -top-2 -right-2 w-8 h-8 bg-[var(--hive-status-error)] rounded-full flex items-center justify-center text-white text-sm font-bold hover:bg-[var(--hive-status-error)]/80 transition-colors"
+                className="absolute -top-2 -right-2 w-8 h-8 bg-[var(--hive-status-error)] rounded-full flex items-center justify-center text-[var(--hive-text-primary)] text-sm font-bold hover:bg-[var(--hive-status-error)]/80 transition-colors"
               >
                 ×
               </button>
