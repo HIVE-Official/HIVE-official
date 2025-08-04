@@ -5,9 +5,9 @@ export * from './hive-navigation-variants';
 export * from './hive-navigation-shell';
 export * from './hive-campus-navigation';
 export * from './hive-navigation-routes';
-export * from './enhanced-navigation-bar';
-export * from './mobile-navigation-menu';
-export * from './universal-bottom-nav';
+// export * from './enhanced-navigation-bar'; // Component doesn't exist
+// export * from './mobile-navigation-menu'; // Component doesn't exist  
+// export * from './universal-bottom-nav'; // Component doesn't exist
 
 // Main navigation shell (recommended)
 export { HiveNavigationShell as Navigation } from './hive-navigation-shell';

@@ -2,11 +2,10 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Search, Users, ArrowRight, MapPin, CheckCircle, ArrowLeft } from 'lucide-react';
-import Link from 'next/link';
-import Image from 'next/image';
+import { Search, Users, ArrowRight, MapPin } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { HiveSearchInput, HiveComingSoonModal } from '@hive/ui';
+import { SchoolsPageHeader } from '../../components/temp-stubs';
+
 
 interface School {
   id: string;
@@ -277,6 +276,11 @@ export default function SchoolsPage() {
   const [isComingSoonOpen, setIsComingSoonOpen] = useState(false);
   const [schools, setSchools] = useState<School[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   // Fetch schools from API
   useEffect(() => {
@@ -311,8 +315,8 @@ export default function SchoolsPage() {
           console.warn('Failed to fetch schools from API, using fallback');
           setSchools(fallbackSchools);
         }
-      } catch (error) {
-        console.error('Error fetching schools:', error);
+      } catch (_error) {
+        console.error('Error fetching schools:', _error);
         setSchools(fallbackSchools);
       } finally {
         setLoading(false);
@@ -335,9 +339,21 @@ export default function SchoolsPage() {
         schoolName: school.name,
         domain: school.domain,
       });
-      router.push(`/auth/login?${params.toString()}`);
+      // Use window.location for more reliable navigation in E2E tests
+      window.location.href = `/auth/login?${params.toString()}`;
     }
   };
+
+  if (!isMounted) {
+    return (
+      <div className="relative min-h-screen overflow-hidden hive-font-sans bg-hive-background-primary text-hive-text-primary" 
+           style={{ backgroundColor: '#0A0A0B', color: '#F5F5F7' }}>
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="w-6 h-6 border-2 border-white/20 border-t-white/60 rounded-full animate-spin" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <React.Fragment>
@@ -355,33 +371,7 @@ export default function SchoolsPage() {
       }} />
       
       {/* Header */}
-      <div className="relative z-10 border-b backdrop-blur-xl" style={{ 
-        borderColor: 'rgba(255, 255, 255, 0.1)',
-        background: 'rgba(255, 255, 255, 0.02)'
-      }}>
-        <div className="max-w-6xl mx-auto p-6">
-          <div className="flex items-center justify-between">
-            <Link href="/landing" className="flex items-center hive-gap-md hover:opacity-80 transition-opacity">
-              <div className="w-8 h-8">
-                <Image
-                  src="/assets/hive-logo-white.svg"
-                  alt="HIVE"
-                  width={32}
-                  height={32}
-                  className="w-full h-full"
-                />
-              </div>
-              <span className="hive-font-sans text-xl font-bold tracking-wide">HIVE</span>
-            </Link>
-            <button 
-              className="hive-button-secondary px-6 py-2"
-              onClick={() => setIsComingSoonOpen(true)}
-            >
-              What's Coming
-            </button>
-          </div>
-        </div>
-      </div>
+      <SchoolsPageHeader onComingSoonClick={() => setIsComingSoonOpen(true)} />
 
       {/* Main Content */}
       <div className="relative z-10 max-w-6xl mx-auto p-6 py-12">
@@ -395,14 +385,16 @@ export default function SchoolsPage() {
 
           {/* Search Bar */}
           <div className="max-w-md mx-auto">
-            <HiveSearchInput
-              placeholder="Search universities..."
-              value={searchTerm}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
-              leftIcon={<Search className="w-5 h-5" />}
-              variant="default"
-              size="lg"
-            />
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-white/40" />
+              <input
+                type="text"
+                placeholder="Search universities..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-white/20 focus:bg-white/10 transition-all"
+              />
+            </div>
           </div>
         </div>
 
@@ -421,9 +413,10 @@ export default function SchoolsPage() {
         {/* Schools Grid */}
         {!loading && (
           <div className="grid gap-4 hive-animate-liquid-reveal mb-16">
-            {filteredSchools.map((school, index) => (
+            {filteredSchools.map((school, _index) => (
             <div
               key={school.id}
+              data-testid={`school-${school.id}`}
               className="group relative overflow-hidden rounded-2xl border border-white/5 hover:border-white/10 transition-all duration-500 cursor-pointer hive-interactive"
               onClick={() => handleSchoolSelect(school)}
               style={{
@@ -525,14 +518,23 @@ export default function SchoolsPage() {
       </div>
       </motion.div>
 
-      <HiveComingSoonModal
-        isOpen={isComingSoonOpen}
-        onClose={() => setIsComingSoonOpen(false)}
-        onWaitlistClick={() => {
-          // Already on schools page, just close modal
-          setIsComingSoonOpen(false);
-        }}
-      />
+      {/* Coming Soon Modal */}
+      {isComingSoonOpen && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-black/90 border border-white/10 rounded-2xl p-8 max-w-md w-full">
+            <h2 className="text-2xl font-bold text-white mb-4">What's Coming to HIVE</h2>
+            <p className="text-white/70 mb-6">
+              We're building the future of campus collaboration. Check back soon for new features and campus expansions.
+            </p>
+            <button
+              onClick={() => setIsComingSoonOpen(false)}
+              className="w-full bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-xl transition-all"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </React.Fragment>
   );
 } 

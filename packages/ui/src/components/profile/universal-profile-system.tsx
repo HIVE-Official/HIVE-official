@@ -38,7 +38,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Badge } from '../ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
-import { UniversalBottomNav } from '../navigation/universal-bottom-nav';
+// import { UniversalBottomNav } from '../navigation/universal-bottom-nav'; // Component doesn't exist
 import { cn } from '../../lib/utils';
 
 // Enhanced User Interface
@@ -453,7 +453,7 @@ export function UniversalProfileSystem({
       </div>
 
       {/* Universal Bottom Navigation */}
-      <UniversalBottomNav user={user} />
+      {/* <UniversalBottomNav user={user} /> Component doesn't exist */}
     </div>
   );
 }

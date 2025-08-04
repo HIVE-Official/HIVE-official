@@ -4,14 +4,15 @@ import { z } from "zod";
 import { dbAdmin } from "@/lib/firebase-admin";
 import { getAuth } from "firebase-admin/auth";
 import { getAuthTokenFromRequest } from "@/lib/auth";
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 const GetMembersSchema = z.object({
   limit: z.coerce.number().min(1).max(100).default(50),
   offset: z.coerce.number().min(0).default(0),
   role: z.enum(['owner', 'admin', 'moderator', 'member', 'guest']).optional(),
   search: z.string().optional(),
-  includeOffline: z.coerce.boolean().default(true),
-});
+  includeOffline: z.coerce.boolean().default(true) });
 
 const db = dbAdmin;
 
@@ -26,10 +27,7 @@ export async function GET(
     // Get and validate auth token
     const token = getAuthTokenFromRequest(request);
     if (!token) {
-      return NextResponse.json(
-        { error: "Authentication required" },
-        { status: 401 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Authentication required", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const auth = getAuth();
@@ -49,10 +47,7 @@ export async function GET(
       .get();
 
     if (!requesterMemberDoc.exists) {
-      return NextResponse.json(
-        { error: "Not a member of this space" },
-        { status: 403 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Not a member of this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     // Build query for members
@@ -135,10 +130,10 @@ export async function GET(
       if (search) {
         const searchLower = search.toLowerCase();
         const matchesSearch = 
-          member.name.toLowerCase().includes(searchLower) ||
-          member.username.toLowerCase().includes(searchLower) ||
+          (member.name?.toLowerCase() || '').includes(searchLower) ||
+          (member.username?.toLowerCase() || '').includes(searchLower) ||
           (member.bio && member.bio.toLowerCase().includes(searchLower)) ||
-          member.interests.some(interest => interest.toLowerCase().includes(searchLower));
+          (member.interests || []).some(interest => interest.toLowerCase().includes(searchLower));
         
         if (!matchesSearch) continue;
       }
@@ -194,14 +189,10 @@ export async function GET(
         offset,
         hasMore: membersSnapshot.size === limit,
         nextOffset: membersSnapshot.size === limit ? offset + limit : null,
-      },
-    });
+      } });
   } catch (error) {
-    console.error("Error fetching members:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch members" },
-      { status: 500 }
-    );
+    logger.error('Error fetching members', { error: error, endpoint: '/api/spaces/[spaceId]/members' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to fetch members", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -216,10 +207,10 @@ export async function POST(
     // Get auth header and verify token
     const authHeader = request.headers.get("authorization");
     if (!authHeader?.startsWith("Bearer ")) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
-    const token = authHeader.split("Bearer ")[1];
+    const token = authHeader.substring(7);
     const auth = getAuth();
     const decodedToken = await auth.verifyIdToken(token);
 
@@ -232,37 +223,25 @@ export async function POST(
       .get();
 
     if (!requesterMemberDoc.exists) {
-      return NextResponse.json(
-        { error: "Not a member of this space" },
-        { status: 403 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Not a member of this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     const requesterRole = requesterMemberDoc.data()?.role;
     if (!['owner', 'admin', 'moderator'].includes(requesterRole)) {
-      return NextResponse.json(
-        { error: "Insufficient permissions to invite members" },
-        { status: 403 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Insufficient permissions to invite members", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     const body = await request.json();
     const { userId, role = 'member' } = body;
 
     if (!userId) {
-      return NextResponse.json(
-        { error: "User ID is required" },
-        { status: 400 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("User ID is required", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
     // Check if user exists
-    const userDoc = await db.collection("users").doc(userId).get();
+    const userDoc = await dbAdmin.collection("users").doc(userId).get();
     if (!userDoc.exists) {
-      return NextResponse.json(
-        { error: "User not found" },
-        { status: 404 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("User not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     // Check if user is already a member
@@ -274,10 +253,7 @@ export async function POST(
       .get();
 
     if (existingMemberDoc.exists) {
-      return NextResponse.json(
-        { error: "User is already a member of this space" },
-        { status: 400 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("User is already a member of this space", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
     // Add member to space
@@ -303,13 +279,269 @@ export async function POST(
       member: {
         id: userId,
         ...memberData,
-      },
-    });
+      } });
   } catch (error) {
-    console.error("Error inviting member:", error);
-    return NextResponse.json(
-      { error: "Failed to invite member" },
-      { status: 500 }
-    );
+    logger.error('Error inviting member', { error: error, endpoint: '/api/spaces/[spaceId]/members' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to invite member", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
+  }
+}
+
+// PATCH /api/spaces/[spaceId]/members - Update member role or status
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: Promise<{ spaceId: string }> }
+) {
+  try {
+    const { spaceId } = await params;
+    
+    // Get and validate auth token
+    const token = getAuthTokenFromRequest(request);
+    if (!token) {
+      return NextResponse.json(ApiResponseHelper.error("Authentication required", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
+    }
+
+    const auth = getAuth();
+    const decodedToken = await auth.verifyIdToken(token);
+
+    // Parse request body
+    const body = await request.json();
+    const { userId, role, action, reason } = body;
+
+    if (!userId) {
+      return NextResponse.json(ApiResponseHelper.error("User ID is required", "VALIDATION_ERROR"), { status: HttpStatus.BAD_REQUEST });
+    }
+
+    // Check if requesting user has permission to manage members
+    const requesterMemberDoc = await db
+      .collection("spaces")
+      .doc(spaceId)
+      .collection("members")
+      .doc(decodedToken.uid)
+      .get();
+
+    if (!requesterMemberDoc.exists) {
+      return NextResponse.json(ApiResponseHelper.error("Not a member of this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
+    }
+
+    const requesterRole = requesterMemberDoc.data()?.role;
+    const canManageMembers = ['owner', 'admin'].includes(requesterRole);
+    const canModerateModerators = requesterRole === 'owner';
+
+    if (!canManageMembers) {
+      return NextResponse.json(ApiResponseHelper.error("Insufficient permissions to manage members", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
+    }
+
+    // Get target member info
+    const targetMemberDoc = await db
+      .collection("spaces")
+      .doc(spaceId)
+      .collection("members")
+      .doc(userId)
+      .get();
+
+    if (!targetMemberDoc.exists) {
+      return NextResponse.json(ApiResponseHelper.error("Member not found", "NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
+    }
+
+    const targetRole = targetMemberDoc.data()?.role;
+
+    // Role change validation
+    if (role) {
+      const validRoles = ['member', 'moderator', 'admin'];
+      if (!validRoles.includes(role)) {
+        return NextResponse.json(ApiResponseHelper.error("Invalid role", "VALIDATION_ERROR"), { status: HttpStatus.BAD_REQUEST });
+      }
+
+      // Only owners can promote to admin or manage other admins
+      if ((role === 'admin' || targetRole === 'admin') && requesterRole !== 'owner') {
+        return NextResponse.json(ApiResponseHelper.error("Only space owners can manage admin roles", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
+      }
+
+      // Only owners can demote moderators
+      if (targetRole === 'moderator' && !canModerateModerators) {
+        return NextResponse.json(ApiResponseHelper.error("Only space owners can manage moderator roles", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
+      }
+
+      // Can't change owner role
+      if (targetRole === 'owner' || role === 'owner') {
+        return NextResponse.json(ApiResponseHelper.error("Cannot change owner role", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
+      }
+    }
+
+    // Handle different actions
+    const updates: any = {
+      updatedAt: new Date(),
+      updatedBy: decodedToken.uid
+    };
+
+    if (role) {
+      updates.role = role;
+      updates.roleChangedAt = new Date();
+    }
+
+    if (action === 'suspend') {
+      updates.isSuspended = true;
+      updates.suspendedAt = new Date();
+      updates.suspendedBy = decodedToken.uid;
+      if (reason) updates.suspensionReason = reason;
+    } else if (action === 'unsuspend') {
+      updates.isSuspended = false;
+      updates.unsuspendedAt = new Date();
+      updates.unsuspendedBy = decodedToken.uid;
+    }
+
+    // Update member
+    await db
+      .collection("spaces")
+      .doc(spaceId)
+      .collection("members")
+      .doc(userId)
+      .update(updates);
+
+    // Log the action
+    await db
+      .collection("spaces")
+      .doc(spaceId)
+      .collection("activity")
+      .add({
+        type: 'member_role_changed',
+        performedBy: decodedToken.uid,
+        targetUserId: userId,
+        details: {
+          oldRole: targetRole,
+          newRole: role || targetRole,
+          action: action || 'role_change',
+          reason
+        },
+        timestamp: new Date()
+      });
+
+    logger.info(`Member ${action || 'role changed'}: ${userId} in space ${spaceId} by ${decodedToken.uid}`);
+
+    return NextResponse.json(ApiResponseHelper.success({
+      message: `Member ${action || 'updated'} successfully`,
+      updates
+    }));
+
+  } catch (error: any) {
+    logger.error("Error updating member:", error);
+    return NextResponse.json(ApiResponseHelper.error("Failed to update member", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
+  }
+}
+
+// DELETE /api/spaces/[spaceId]/members - Remove member from space
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ spaceId: string }> }
+) {
+  try {
+    const { spaceId } = await params;
+    
+    // Get and validate auth token
+    const token = getAuthTokenFromRequest(request);
+    if (!token) {
+      return NextResponse.json(ApiResponseHelper.error("Authentication required", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
+    }
+
+    const auth = getAuth();
+    const decodedToken = await auth.verifyIdToken(token);
+
+    // Parse request query
+    const { searchParams } = new URL(request.url);
+    const userId = searchParams.get("userId");
+    const reason = searchParams.get("reason");
+
+    if (!userId) {
+      return NextResponse.json(ApiResponseHelper.error("User ID is required", "VALIDATION_ERROR"), { status: HttpStatus.BAD_REQUEST });
+    }
+
+    // Check if requesting user has permission to remove members
+    const requesterMemberDoc = await db
+      .collection("spaces")
+      .doc(spaceId)
+      .collection("members")
+      .doc(decodedToken.uid)
+      .get();
+
+    if (!requesterMemberDoc.exists) {
+      return NextResponse.json(ApiResponseHelper.error("Not a member of this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
+    }
+
+    const requesterRole = requesterMemberDoc.data()?.role;
+    const canRemoveMembers = ['owner', 'admin', 'moderator'].includes(requesterRole);
+
+    if (!canRemoveMembers) {
+      return NextResponse.json(ApiResponseHelper.error("Insufficient permissions to remove members", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
+    }
+
+    // Get target member info
+    const targetMemberDoc = await db
+      .collection("spaces")
+      .doc(spaceId)
+      .collection("members")
+      .doc(userId)
+      .get();
+
+    if (!targetMemberDoc.exists) {
+      return NextResponse.json(ApiResponseHelper.error("Member not found", "NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
+    }
+
+    const targetRole = targetMemberDoc.data()?.role;
+
+    // Permission validation
+    if (targetRole === 'owner') {
+      return NextResponse.json(ApiResponseHelper.error("Cannot remove space owner", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
+    }
+
+    if (targetRole === 'admin' && requesterRole !== 'owner') {
+      return NextResponse.json(ApiResponseHelper.error("Only space owners can remove admins", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
+    }
+
+    if (targetRole === 'moderator' && !['owner', 'admin'].includes(requesterRole)) {
+      return NextResponse.json(ApiResponseHelper.error("Only admins and owners can remove moderators", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
+    }
+
+    // Remove member
+    await db
+      .collection("spaces")
+      .doc(spaceId)
+      .collection("members")
+      .doc(userId)
+      .delete();
+
+    // Update space member count
+    await db
+      .collection("spaces")
+      .doc(spaceId)
+      .update({
+        memberCount: dbAdmin.FieldValue.increment(-1),
+        updatedAt: new Date()
+      });
+
+    // Log the action
+    await db
+      .collection("spaces")
+      .doc(spaceId)
+      .collection("activity")
+      .add({
+        type: 'member_removed',
+        performedBy: decodedToken.uid,
+        targetUserId: userId,
+        details: {
+          removedRole: targetRole,
+          reason
+        },
+        timestamp: new Date()
+      });
+
+    logger.info(`Member removed: ${userId} from space ${spaceId} by ${decodedToken.uid}`);
+
+    return NextResponse.json(ApiResponseHelper.success({
+      message: "Member removed successfully"
+    }));
+
+  } catch (error: any) {
+    logger.error("Error removing member:", error);
+    return NextResponse.json(ApiResponseHelper.error("Failed to remove member", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

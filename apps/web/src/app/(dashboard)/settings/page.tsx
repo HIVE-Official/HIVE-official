@@ -1,12 +1,14 @@
 "use client";
 
 import { useState } from 'react';
-import { PageContainer, Button, Card } from '@hive/ui';
-import { Settings, User, Bell, Shield, Palette, Globe, Smartphone, LogOut, Download, Trash2 } from 'lucide-react';
+import { Button, Card, NavigationPreferences, useShell } from "@hive/ui";
+import { PageContainer } from "@/components/temp-stubs";
+import { Settings, User, Bell, Shield, Palette, Globe, Smartphone, LogOut, Download, Trash2, Navigation } from 'lucide-react';
 import { useSession } from '../../../hooks/use-session';
 
 export default function SettingsPage() {
   const { user, logout } = useSession();
+  const { navigationPreference, setNavigationPreference, navigationLayout } = useShell();
   const [isSaving, setIsSaving] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -24,7 +26,7 @@ export default function SettingsPage() {
       // Mock API call - in real app would update user profile
       await new Promise(resolve => setTimeout(resolve, 1000));
       alert('Profile updated successfully!');
-    } catch (error) {
+    } catch (_error) {
       alert('Failed to update profile. Please try again.');
     } finally {
       setIsSaving(false);
@@ -56,7 +58,7 @@ export default function SettingsPage() {
       URL.revokeObjectURL(url);
       
       alert('Your data has been downloaded successfully!');
-    } catch (error) {
+    } catch (_error) {
       alert('Failed to download data. Please try again.');
     } finally {
       setIsDownloading(false);
@@ -69,7 +71,7 @@ export default function SettingsPage() {
       await new Promise(resolve => setTimeout(resolve, 1000));
       alert('Account deletion initiated. You will receive an email confirmation.');
       setShowDeleteConfirm(false);
-    } catch (error) {
+    } catch (_error) {
       alert('Failed to delete account. Please try again.');
     }
   };
@@ -91,6 +93,7 @@ export default function SettingsPage() {
             <nav className="space-y-2">
               {[
                 { icon: User, label: "Profile", active: true },
+                { icon: Navigation, label: "Navigation" },
                 { icon: Bell, label: "Notifications" },
                 { icon: Shield, label: "Privacy & Security" },
                 { icon: Palette, label: "Appearance" },
@@ -171,6 +174,37 @@ export default function SettingsPage() {
             </div>
           </Card>
 
+          {/* Navigation Preferences */}
+          <Card className="p-6 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)]">
+            <h3 className="text-lg font-semibold text-white mb-6">Navigation Preferences</h3>
+            <div className="space-y-6">
+              <NavigationPreferences
+                value={navigationPreference}
+                onChange={setNavigationPreference}
+              />
+              
+              {/* Current Status */}
+              <div className="p-4 bg-[rgba(255,255,255,0.03)] rounded-lg border border-[rgba(255,255,255,0.08)]">
+                <h4 className="text-sm font-medium text-white mb-2">Current Layout</h4>
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-[#A1A1AA]">Mode: {navigationLayout.resolvedMode}</span>
+                  <span className="text-[#FFD700] font-medium">
+                    {navigationLayout.resolvedMode === 'bottom-tabs' && 'Bottom Tabs'}
+                    {navigationLayout.resolvedMode === 'topbar' && 'Top Navigation'}
+                    {navigationLayout.resolvedMode === 'sidebar' && 'Sidebar'}
+                    {navigationLayout.resolvedMode === 'drawer' && 'Drawer'}
+                  </span>
+                </div>
+                <div className="mt-2 text-xs text-[#A1A1AA]">
+                  {navigationLayout.canUsePreference 
+                    ? 'User preference active' 
+                    : navigationLayout.reasons.join(', ')
+                  }
+                </div>
+              </div>
+            </div>
+          </Card>
+
           {/* Notification Preferences */}
           <Card className="p-6 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)]">
             <h3 className="text-lg font-semibold text-white mb-6">Notification Preferences</h3>
@@ -213,7 +247,7 @@ export default function SettingsPage() {
               <div className="flex items-start justify-between py-3">
                 <div className="flex-1">
                   <h4 className="text-white text-sm font-medium">Show online status</h4>
-                  <p className="text-[#A1A1AA] text-xs mt-1">Let others see when you're active on HIVE</p>
+                  <p className="text-[#A1A1AA] text-xs mt-1">Let others see when you&apos;re active on HIVE</p>
                 </div>
                 <label className="relative inline-flex items-center cursor-pointer ml-4">
                   <input type="checkbox" className="sr-only peer" />
@@ -282,7 +316,7 @@ export default function SettingsPage() {
               </div>
               
               <div className="pt-4">
-                <p className="text-sm text-white mb-4">Type "DELETE" to confirm:</p>
+                <p className="text-sm text-white mb-4">Type &quot;DELETE&quot; to confirm:</p>
                 <input 
                   type="text" 
                   placeholder="Type DELETE"

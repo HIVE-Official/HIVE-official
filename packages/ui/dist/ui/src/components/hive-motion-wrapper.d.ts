@@ -10,6 +10,11 @@ interface MagneticHoverProps {
     className?: string;
     intensity?: 'subtle' | 'medium' | 'strong';
     disabled?: boolean;
+    initial?: any;
+    animate?: any;
+    exit?: any;
+    transition?: any;
+    layoutId?: string;
 }
 export declare const HiveMagneticHover: React.FC<MagneticHoverProps>;
 interface CascadeProps {

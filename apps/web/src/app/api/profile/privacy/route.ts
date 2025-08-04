@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAuth } from 'firebase-admin/auth';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { FieldValue } from 'firebase-admin/firestore';
 import { z } from 'zod';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
 
 // Privacy settings schema
 const privacySettingsSchema = z.object({
@@ -34,8 +36,7 @@ const privacySettingsSchema = z.object({
     hideActivity: z.boolean().optional(),
     hideOnlineStatus: z.boolean().optional(),
     hideMemberships: z.boolean().optional(),
-  }).optional(),
-});
+  }).optional() });
 
 interface PrivacySettings {
   // Profile visibility
@@ -110,42 +111,20 @@ const DEFAULT_PRIVACY_SETTINGS: PrivacySettings = {
  * Get user privacy settings
  * GET /api/profile/privacy
  */
-export async function GET(request: NextRequest) {
+export const GET = withAuth(async (request: NextRequest, authContext) => {
   try {
-    const authHeader = request.headers.get('authorization');
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return NextResponse.json(
-        { error: 'Authorization header required' },
-        { status: 401 }
-      );
-    }
-
-    const token = authHeader.split('Bearer ')[1];
+    const userId = authContext.userId;
     
-    // Handle development mode tokens
-    if (token.startsWith('dev_token_')) {
+    // For development mode, return defaults
+    if (userId === 'test-user') {
       return NextResponse.json({
         success: true,
         privacy: {
           ...DEFAULT_PRIVACY_SETTINGS,
           developmentMode: true,
-        },
+        }
       });
     }
-    
-    // Verify the token
-    const auth = getAuth();
-    let decodedToken;
-    try {
-      decodedToken = await auth.verifyIdToken(token);
-    } catch (authError) {
-      return NextResponse.json(
-        { error: 'Invalid or expired token' },
-        { status: 401 }
-      );
-    }
-
-    const userId = decodedToken.uid;
 
     // Get privacy settings document
     const privacyDoc = await dbAdmin.collection('privacySettings').doc(userId).get();
@@ -170,61 +149,24 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      privacy: privacySettings,
-    });
+      privacy: privacySettings });
 
   } catch (error) {
-    console.error('Privacy settings fetch error:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch privacy settings' },
-      { status: 500 }
-    );
+    logger.error('Privacy settings fetch error', { error: error, endpoint: '/api/profile/privacy' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to fetch privacy settings", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
-}
+}, { 
+  allowDevelopmentBypass: true, // Privacy settings viewing is safe for development
+  operation: 'get_privacy_settings' 
+});
 
 /**
  * Update user privacy settings
  * PATCH /api/profile/privacy
  */
-export async function PATCH(request: NextRequest) {
+export const PATCH = withAuth(async (request: NextRequest, authContext) => {
   try {
-    const authHeader = request.headers.get('authorization');
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return NextResponse.json(
-        { error: 'Authorization header required' },
-        { status: 401 }
-      );
-    }
-
-    const token = authHeader.split('Bearer ')[1];
-    
-    // Handle development mode tokens
-    if (token.startsWith('dev_token_')) {
-      const body = await request.json();
-      const updateData = privacySettingsSchema.parse(body);
-      
-      console.log('Development mode privacy update:', updateData);
-      
-      return NextResponse.json({
-        success: true,
-        message: 'Privacy settings updated successfully (development mode)',
-        updated: updateData,
-      });
-    }
-    
-    // Verify the token
-    const auth = getAuth();
-    let decodedToken;
-    try {
-      decodedToken = await auth.verifyIdToken(token);
-    } catch (authError) {
-      return NextResponse.json(
-        { error: 'Invalid or expired token' },
-        { status: 401 }
-      );
-    }
-
-    const userId = decodedToken.uid;
+    const userId = authContext.userId;
 
     // Parse and validate the update data
     const body = await request.json();
@@ -257,32 +199,30 @@ export async function PATCH(request: NextRequest) {
     if (updateData.isPublic !== undefined) {
       await dbAdmin.collection('users').doc(userId).update({
         isPublic: updateData.isPublic,
-        updatedAt: FieldValue.serverTimestamp(),
-      });
+        updatedAt: FieldValue.serverTimestamp() });
     }
 
     return NextResponse.json({
       success: true,
       message: 'Privacy settings updated successfully',
-      updated: Object.keys(updateData),
-    });
+      updated: Object.keys(updateData) });
 
   } catch (error) {
-    console.error('Privacy settings update error:', error);
+    logger.error('Privacy settings update error', { error: error, endpoint: '/api/profile/privacy' });
     
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: 'Invalid data', details: error.errors },
-        { status: 400 }
+        { status: HttpStatus.BAD_REQUEST }
       );
     }
     
-    return NextResponse.json(
-      { error: 'Failed to update privacy settings' },
-      { status: 500 }
-    );
+    return NextResponse.json(ApiResponseHelper.error("Failed to update privacy settings", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
-}
+}, { 
+  allowDevelopmentBypass: true, // Privacy settings updates are user-controlled
+  operation: 'update_privacy_settings' 
+});
 
 /**
  * Apply ghost mode settings based on level

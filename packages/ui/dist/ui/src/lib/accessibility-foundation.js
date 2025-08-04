@@ -214,4 +214,13 @@ export function createSkipLink(target, label) {
         children: label,
     };
 }
+/**
+ * Component Testing Utilities
+ */
+export function getTestProps(testId, componentName) {
+    return {
+        'data-testid': testId || componentName?.toLowerCase(),
+        'data-component': componentName,
+    };
+}
 //# sourceMappingURL=accessibility-foundation.js.map

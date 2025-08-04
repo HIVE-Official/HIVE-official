@@ -5,6 +5,8 @@ export * from "./domain/firestore/member";
 export * from "./domain/firestore/post";
 export * from "./domain/firestore/space";
 export * from "./domain/firestore/user";
+export type { HiveProfile, HiveProfileIdentity, HiveAcademicInfo, HivePersonalInfo, HivePrivacySettings, HiveBuilderInfo, HiveActivityStats, HiveTimestamps, HiveVerificationStatus, HiveProfileUpdateData, HiveProfileDashboard, HiveProfileCreateData, HiveProfileResponse, HiveProfileAnalytics, HiveProfileVisibility, HiveOnlineStatus, HiveActivityType } from "./domain/profile/profile";
+export { getProfileCompleteness, DEFAULT_PRIVACY_SETTINGS, DEFAULT_BUILDER_INFO, isValidHandle as isValidProfileHandle, isValidEmail, getDisplayName, getProfileUrl, isProfilePublic, canViewProfile } from "./domain/profile/profile";
 export * from "./domain/auth/emailLink";
 export * from "./domain/analytics/creation";
 export * from "./domain/analytics/onboarding";

@@ -1,7 +1,7 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { forwardRef } from 'react';
-import { cn } from '../../lib/utils';
+import { cn } from '../../lib/utils.js';
 const emailSizes = {
     sm: 'h-10 text-sm',
     md: 'h-12 text-sm',

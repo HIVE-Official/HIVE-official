@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { Card, CardContent, CardHeader } from '@hive/ui';
+import { Card, CardContent, CardHeader } from "@hive/ui";
 
 // Simple skeleton component
 function Skeleton({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
@@ -104,7 +104,7 @@ export function ProfileLoadingSkeleton() {
   );
 }
 
-export function ProfileSectionSkeleton({ title, itemCount = 6 }: { title: string; itemCount?: number }) {
+export function ProfileSectionSkeleton({ title: _title, itemCount = 6 }: { title: string; itemCount?: number }) {
   return (
     <Card className="bg-hive-surface-elevated border-hive-border-subtle">
       <CardHeader>

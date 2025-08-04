@@ -4,7 +4,7 @@ import React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../lib/utils';
 import { ProfileHeader, type ProfileUser } from '../molecules/profile-header';
-import { ProfileStats, type ProfileStats as StatsType } from '../molecules/profile-stats';
+import { ProfileStats, type HiveProfileStats } from '../molecules/profile-stats';
 import { Clock, Users, Zap, Award, Calendar } from 'lucide-react';
 
 const profileCardVariants = cva(
@@ -36,21 +36,24 @@ const profileCardVariants = cva(
   }
 );
 
-export interface ActivityItem {
+export interface HiveActivityItem {
   id: string;
-  type: 'space_joined' | 'tool_created' | 'tool_used' | 'connection_made' | 'achievement_earned';
+  type: 'space' | 'tool' | 'connection' | 'achievement' | 'builder';
+  action: string;
   title: string;
-  description: string;
+  description?: string;
   timestamp: string;
   icon?: React.ReactNode;
+  spaceId?: string;
+  toolId?: string;
 }
 
-export interface ProfileCardProps 
+export interface HiveProfileCardProps 
   extends React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof profileCardVariants> {
   user: ProfileUser;
-  stats: StatsType;
-  recentActivity?: ActivityItem[];
+  stats: HiveProfileStats;
+  recentActivity?: HiveActivityItem[];
   isOwnProfile?: boolean;
   showStats?: boolean;
   showActivity?: boolean;
@@ -64,7 +67,7 @@ export interface ProfileCardProps
   loading?: boolean;
 }
 
-export function ProfileCard({
+export function HiveProfileCard({
   user,
   stats,
   recentActivity = [],
@@ -84,16 +87,16 @@ export function ProfileCard({
   layout = "stacked",
   className,
   ...props
-}: ProfileCardProps) {
+}: HiveProfileCardProps) {
 
-  // Get activity icon
-  const getActivityIcon = (type: ActivityItem['type']) => {
+  // Get activity icon based on HIVE activity types
+  const getActivityIcon = (type: HiveActivityItem['type'], action?: string) => {
     switch (type) {
-      case 'space_joined': return <Users className="h-4 w-4 text-blue-400" />;
-      case 'tool_created': return <Zap className="h-4 w-4 text-hive-gold" />;
-      case 'tool_used': return <Zap className="h-4 w-4 text-green-400" />;
-      case 'connection_made': return <Users className="h-4 w-4 text-purple-400" />;
-      case 'achievement_earned': return <Award className="h-4 w-4 text-yellow-400" />;
+      case 'space': return <Users className="h-4 w-4 text-hive-brand-secondary" />;
+      case 'tool': return <Zap className="h-4 w-4 text-hive-gold" />;
+      case 'connection': return <Users className="h-4 w-4 text-purple-400" />;
+      case 'achievement': return <Award className="h-4 w-4 text-yellow-400" />;
+      case 'builder': return <Zap className="h-4 w-4 text-hive-gold" />;
       default: return <Clock className="h-4 w-4 text-hive-text-secondary" />;
     }
   };
@@ -161,8 +164,8 @@ export function ProfileCard({
           onStatClick={onStatClick}
           interactive={!!onStatClick}
           priority={user.isBuilder 
-            ? ['toolsCreated', 'spacesJoined', 'reputation', 'connectionsCount']
-            : ['spacesJoined', 'connectionsCount', 'weekStreak', 'reputation']
+            ? ['toolsUsed', 'spacesLed', 'reputation', 'connectionsCount']
+            : ['spacesJoined', 'connectionsCount', 'currentStreak', 'reputation']
           }
         />
       )}
@@ -190,7 +193,7 @@ export function ProfileCard({
               >
                 {/* Activity Icon */}
                 <div className="flex-shrink-0 mt-0.5">
-                  {activity.icon || getActivityIcon(activity.type)}
+                  {activity.icon || getActivityIcon(activity.type, activity.action)}
                 </div>
                 
                 {/* Activity Content */}
@@ -198,8 +201,13 @@ export function ProfileCard({
                   <h4 className="text-sm font-medium text-hive-text-primary truncate">
                     {activity.title}
                   </h4>
-                  <p className="text-sm text-hive-text-secondary mt-1">
-                    {activity.description}
+                  {activity.description && (
+                    <p className="text-sm text-hive-text-secondary mt-1">
+                      {activity.description}
+                    </p>
+                  )}
+                  <p className="text-xs text-hive-text-tertiary mt-1">
+                    {activity.action}
                   </p>
                   <div className="flex items-center gap-1 mt-2 text-xs text-hive-text-secondary">
                     <Clock className="h-3 w-3" />
@@ -229,18 +237,23 @@ export function ProfileCard({
   );
 }
 
+// Keep backward compatibility with old name
+export const ProfileCard = HiveProfileCard;
+export type ProfileCardProps = HiveProfileCardProps;
+export type ActivityItem = HiveActivityItem;
+
 // Preset variants for common use cases
-export function StudentProfileCard(props: Omit<ProfileCardProps, 'layout'>) {
-  return <ProfileCard layout="stacked" {...props} />;
+export function StudentProfileCard(props: Omit<HiveProfileCardProps, 'layout'>) {
+  return <HiveProfileCard layout="stacked" {...props} />;
 }
 
-export function BuilderProfileCard(props: Omit<ProfileCardProps, 'layout'>) {
-  return <ProfileCard layout="stacked" {...props} />;
+export function BuilderProfileCard(props: Omit<HiveProfileCardProps, 'layout'>) {  
+  return <HiveProfileCard layout="stacked" {...props} />;
 }
 
-export function CompactProfileCard(props: Omit<ProfileCardProps, 'size' | 'showActivity'>) {
+export function CompactProfileCard(props: Omit<HiveProfileCardProps, 'size' | 'showActivity'>) {
   return (
-    <ProfileCard 
+    <HiveProfileCard 
       size="sm" 
       showActivity={false}
       maxActivities={0}
@@ -249,12 +262,12 @@ export function CompactProfileCard(props: Omit<ProfileCardProps, 'size' | 'showA
   );
 }
 
-export function InteractiveProfileCard(props: Omit<ProfileCardProps, 'variant'>) {
-  return <ProfileCard variant="interactive" {...props} />;
+export function InteractiveProfileCard(props: Omit<HiveProfileCardProps, 'variant'>) {
+  return <HiveProfileCard variant="interactive" {...props} />;
 }
 
-export function MinimalProfileCard(props: Omit<ProfileCardProps, 'variant'>) {
-  return <ProfileCard variant="minimal" {...props} />;
+export function MinimalProfileCard(props: Omit<HiveProfileCardProps, 'variant'>) {
+  return <HiveProfileCard variant="minimal" {...props} />;
 }
 
 // Export variants for external use

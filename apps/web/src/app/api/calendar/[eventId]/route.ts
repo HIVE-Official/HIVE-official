@@ -1,28 +1,34 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { doc, getDoc, updateDoc, deleteDoc } from 'firebase/firestore';
-import { db } from '@hive/core/server';
-import { getCurrentUser } from '@hive/auth-logic';
+// Use admin SDK methods since we're in an API route
+import { dbAdmin } from '@/lib/firebase-admin';
+import { getCurrentUser } from '@/lib/server-auth';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 // GET - Fetch specific personal event
 export async function GET(request: NextRequest, { params }: { params: { eventId: string } }) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const { eventId } = params;
-    const eventDoc = await getDoc(doc(db, 'personalEvents', eventId));
+    const eventDoc = await dbAdmin.collection('personalEvents').doc(eventId).get();
 
-    if (!eventDoc.exists()) {
-      return NextResponse.json({ error: 'Event not found' }, { status: 404 });
+    if (!eventDoc.exists) {
+      return NextResponse.json(ApiResponseHelper.error("Event not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     const eventData = eventDoc.data();
     
+    if (!eventData) {
+      return NextResponse.json(ApiResponseHelper.error("Event data not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
+    }
+    
     // Check if user owns this event
     if (eventData.userId !== user.uid) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     const event = {
@@ -34,8 +40,8 @@ export async function GET(request: NextRequest, { params }: { params: { eventId:
 
     return NextResponse.json({ event });
   } catch (error) {
-    console.error('Error fetching personal event:', error);
-    return NextResponse.json({ error: 'Failed to fetch personal event' }, { status: 500 });
+    logger.error('Error fetching personal event', { error: error, endpoint: '/api/calendar/[eventId]' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to fetch personal event", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -44,7 +50,7 @@ export async function PUT(request: NextRequest, { params }: { params: { eventId:
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const { eventId } = params;
@@ -53,26 +59,30 @@ export async function PUT(request: NextRequest, { params }: { params: { eventId:
 
     // Validate required fields
     if (!title || !startDate || !endDate) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+      return NextResponse.json(ApiResponseHelper.error("Missing required fields", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
     // Validate dates
     const start = new Date(startDate);
     const end = new Date(endDate);
     if (start >= end) {
-      return NextResponse.json({ error: 'End date must be after start date' }, { status: 400 });
+      return NextResponse.json(ApiResponseHelper.error("End date must be after start date", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
-    const eventDoc = await getDoc(doc(db, 'personalEvents', eventId));
-    if (!eventDoc.exists()) {
-      return NextResponse.json({ error: 'Event not found' }, { status: 404 });
+    const eventDoc = await dbAdmin.collection('personalEvents').doc(eventId).get();
+    if (!eventDoc.exists) {
+      return NextResponse.json(ApiResponseHelper.error("Event not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     const eventData = eventDoc.data();
     
+    if (!eventData) {
+      return NextResponse.json(ApiResponseHelper.error("Event data not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
+    }
+    
     // Check if user owns this event
     if (eventData.userId !== user.uid) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     const updateData = {
@@ -86,7 +96,7 @@ export async function PUT(request: NextRequest, { params }: { params: { eventId:
       updatedAt: new Date().toISOString()
     };
 
-    await updateDoc(doc(db, 'personalEvents', eventId), updateData);
+    await dbAdmin.collection('personalEvents').doc(eventId).update(updateData);
 
     const updatedEvent = {
       id: eventId,
@@ -98,8 +108,74 @@ export async function PUT(request: NextRequest, { params }: { params: { eventId:
 
     return NextResponse.json({ event: updatedEvent });
   } catch (error) {
-    console.error('Error updating personal event:', error);
-    return NextResponse.json({ error: 'Failed to update personal event' }, { status: 500 });
+    logger.error('Error updating personal event', { error: error, endpoint: '/api/calendar/[eventId]' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to update personal event", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
+  }
+}
+
+// PATCH - Partially update personal event
+export async function PATCH(request: NextRequest, { params }: { params: { eventId: string } }) {
+  try {
+    const user = await getCurrentUser();
+    if (!user) {
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
+    }
+
+    const { eventId } = params;
+    const body = await request.json();
+
+    const eventDoc = await dbAdmin.collection('personalEvents').doc(eventId).get();
+    if (!eventDoc.exists) {
+      return NextResponse.json(ApiResponseHelper.error("Event not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
+    }
+
+    const eventData = eventDoc.data();
+    
+    if (!eventData) {
+      return NextResponse.json(ApiResponseHelper.error("Event data not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
+    }
+    
+    // Check if user owns this event
+    if (eventData.userId !== user.uid) {
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
+    }
+
+    // Validate dates if provided
+    if (body.startDate && body.endDate) {
+      const start = new Date(body.startDate);
+      const end = new Date(body.endDate);
+      if (start >= end) {
+        return NextResponse.json(ApiResponseHelper.error("End date must be after start date", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
+      }
+    }
+
+    // Build update data with only provided fields
+    const updateData: any = {
+      updatedAt: new Date().toISOString()
+    };
+    
+    if (body.title !== undefined) updateData.title = body.title;
+    if (body.description !== undefined) updateData.description = body.description || '';
+    if (body.startDate !== undefined) updateData.startDate = body.startDate;
+    if (body.endDate !== undefined) updateData.endDate = body.endDate;
+    if (body.location !== undefined) updateData.location = body.location || '';
+    if (body.isAllDay !== undefined) updateData.isAllDay = body.isAllDay;
+    if (body.reminderMinutes !== undefined) updateData.reminderMinutes = body.reminderMinutes;
+
+    await dbAdmin.collection('personalEvents').doc(eventId).update(updateData);
+
+    const updatedEvent = {
+      id: eventId,
+      ...eventData,
+      ...updateData,
+      type: 'personal' as const,
+      canEdit: true
+    };
+
+    return NextResponse.json({ event: updatedEvent });
+  } catch (error) {
+    logger.error('Error partially updating personal event', { error: error, endpoint: '/api/calendar/[eventId]' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to update personal event", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -108,28 +184,32 @@ export async function DELETE(request: NextRequest, { params }: { params: { event
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const { eventId } = params;
-    const eventDoc = await getDoc(doc(db, 'personalEvents', eventId));
+    const eventDoc = await dbAdmin.collection('personalEvents').doc(eventId).get();
 
-    if (!eventDoc.exists()) {
-      return NextResponse.json({ error: 'Event not found' }, { status: 404 });
+    if (!eventDoc.exists) {
+      return NextResponse.json(ApiResponseHelper.error("Event not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     const eventData = eventDoc.data();
     
+    if (!eventData) {
+      return NextResponse.json(ApiResponseHelper.error("Event data not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
+    }
+    
     // Check if user owns this event
     if (eventData.userId !== user.uid) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
-    await deleteDoc(doc(db, 'personalEvents', eventId));
+    await dbAdmin.collection('personalEvents').doc(eventId).delete();
 
     return NextResponse.json({ message: 'Event deleted successfully' });
   } catch (error) {
-    console.error('Error deleting personal event:', error);
-    return NextResponse.json({ error: 'Failed to delete personal event' }, { status: 500 });
+    logger.error('Error deleting personal event', { error: error, endpoint: '/api/calendar/[eventId]' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to delete personal event", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

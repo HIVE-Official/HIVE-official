@@ -4,7 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { createHash, randomBytes, timingSafeEqual } from 'crypto';
+import { createHash, randomBytes } from 'crypto';
 import { logSecurityEvent } from './structured-logger';
 import { currentEnvironment } from './env';
 import { getSecureClientId } from './secure-rate-limiter';
@@ -578,7 +578,7 @@ export async function csrfMiddleware(
 }> {
   const {
     exemptMethods = ['GET', 'HEAD', 'OPTIONS'],
-    requireToken = true
+    requireToken: _requireToken = true
   } = options;
 
   // Skip CSRF protection for safe methods
@@ -617,9 +617,9 @@ export async function csrfMiddleware(
  * Higher-order function to add CSRF protection to handlers
  */
 export function withCSRFProtection(
-  handler: (request: NextRequest, csrfToken?: string) => Promise<NextResponse>,
+  handler: (_request: NextRequest, _csrfToken?: string) => Promise<NextResponse>,
   options: {
-    getSessionId: (request: NextRequest) => Promise<string | null>;
+    getSessionId: (_request: NextRequest) => Promise<string | null>;
     exemptMethods?: string[];
   }
 ) {

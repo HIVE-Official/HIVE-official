@@ -2,12 +2,12 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState } from 'react';
 import { Menu, Search, Bell, User, Command, ChevronDown, X, MoreHorizontal } from 'lucide-react';
-import { cn } from '../../lib/utils';
+import { cn } from '../../lib/utils.js';
 import { semantic } from '@hive/tokens';
-import { Button } from '../../atomic/atoms/button-enhanced';
-import { useNavigation, NavigationContainer, NavigationBrand } from './hive-navigation-system';
-import { HiveLogo, HiveGlyphOnly } from '../hive-logo';
-import { HiveNavigationItem, HiveNavigationSection, HiveNavigationCreateButton } from './hive-navigation-item';
+import { Button } from '../../atomic/atoms/button-enhanced.js';
+import { useNavigation, NavigationContainer, NavigationBrand } from './hive-navigation-system.js';
+import { HiveLogo, HiveGlyphOnly } from '../hive-logo.js';
+import { HiveNavigationItem, HiveNavigationSection, HiveNavigationCreateButton } from './hive-navigation-item.js';
 export function SidebarNavigation() {
     const { config, sections, isCollapsed, setCollapsed, navigate } = useNavigation();
     const sidebarWidth = {

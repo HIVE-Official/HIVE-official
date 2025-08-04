@@ -1,13 +1,13 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useRef } from 'react';
-import { motion, AnimatePresence } from '../framer-motion-proxy';
-import { cn } from '../../lib/utils';
-import { HiveCard } from '../hive-card';
-import { HiveButton } from '../hive-button';
-import { HiveBadge } from '../hive-badge';
-import { HiveProgressBar } from '../hive-progress';
-import { Avatar, AvatarImage, AvatarFallback } from '../ui/avatar';
+import { motion, AnimatePresence } from '../framer-motion-proxy.js';
+import { cn } from '../../lib/utils.js';
+import { HiveCard } from '../hive-card.js';
+import { HiveButton } from '../hive-button.js';
+import { HiveBadge } from '../hive-badge.js';
+import { HiveProgressBar } from '../hive-progress.js';
+import { Avatar, AvatarImage, AvatarFallback } from '../ui/avatar.js';
 import { Camera, Upload, Sparkles, Trophy, Shield, Lock, Plus } from 'lucide-react';
 const badgeVariants = {
     builder: {

@@ -2,11 +2,11 @@ import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
 import { type ActivityItem } from './profile-card';
 import { type ProfileUser } from '../molecules/profile-header';
-import { type ProfileStats as ProfileStatsType } from '../molecules/profile-stats';
+import { type HiveProfileStats as ProfileStatsType } from '../molecules/profile-stats';
 declare const profileSystemVariants: (props?: {
     layout?: "mobile" | "desktop";
-    spacing?: "tight" | "loose" | "normal";
-} & import("class-variance-authority/dist/types").ClassProp) => string;
+    spacing?: "normal" | "loose" | "tight";
+} & import("class-variance-authority/types").ClassProp) => string;
 export interface ProfileSpace {
     id: string;
     name: string;

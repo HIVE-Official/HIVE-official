@@ -6,6 +6,8 @@ export interface FeatureFlags {
     enableAdvancedBuilder: boolean;
     enableCollaborativeEditing: boolean;
     enableRealTimeNotifications: boolean;
+    spaces: 'enabled';
+    tools: 'enabled';
 }
 export declare const DEFAULT_FLAGS: FeatureFlags;
 export declare function getFeatureFlags(userId: string): FeatureFlags;

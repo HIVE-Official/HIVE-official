@@ -1,9 +1,11 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
-import { getAuth } from 'firebase-admin/auth';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { FieldValue } from 'firebase-admin/firestore';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
 
 /**
  * Builder Activation System - "Request to Lead" API
@@ -40,44 +42,22 @@ interface BuilderRequest {
   expiresAt: FieldValue; // Auto-expire requests after 7 days
 }
 
-export async function POST(request: NextRequest) {
+export const POST = withAuth(async (request: NextRequest, authContext) => {
   try {
-    // Verify authentication
-    const authHeader = request.headers.get('Authorization');
-    if (!authHeader?.startsWith('Bearer ')) {
-      return NextResponse.json(
-        { error: 'Authorization header required' },
-        { status: 401 }
-      );
-    }
-
-    const token = authHeader.substring(7);
-    let userId: string;
-    let userEmail: string;
+    const userId = authContext.userId;
     
-    // Handle test tokens in development
-    if (token === 'test-token') {
-      userId = 'test-user';
-      userEmail = 'test@example.com';
-    } else {
-      try {
-        const auth = getAuth();
-        const decodedToken = await auth.verifyIdToken(token);
-        userId = decodedToken.uid;
-        userEmail = decodedToken.email || 'unknown@example.com';
-      } catch (authError) {
-        return NextResponse.json(
-          { error: 'Invalid or expired token' },
-          { status: 401 }
-        );
-      }
+    // For development mode, use mock email
+    let userEmail = 'test@example.com';
+    if (userId !== 'test-user') {
+      // TODO: Get user email from database or token for production
+      userEmail = 'user@example.com';
     }
 
     // Parse and validate request body
     const body = await request.json();
     const { spaceId, motivation, experience, plans, timeCommitment, hasAgreedToTerms } = requestToLeadSchema.parse(body);
 
-    console.log(`🎯 Builder request for space ${spaceId} from user ${userId}`);
+    logger.info('🎯 Builder request for spacefrom user', { spaceId, userId, endpoint: '/api/spaces/request-to-lead' });
 
     // Find the space in nested structure
     const spaceTypes = ['campus_living', 'fraternity_and_sorority', 'hive_exclusive', 'student_organizations', 'university_organizations'];
@@ -100,17 +80,14 @@ export async function POST(request: NextRequest) {
     }
 
     if (!spaceDoc || !spaceDoc.exists) {
-      return NextResponse.json({ error: 'Space not found' }, { status: 404 });
+      return NextResponse.json(ApiResponseHelper.error("Space not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     const spaceData = spaceDoc.data();
 
     // Check if space is eligible for builder requests
     if (spaceData.isPrivate) {
-      return NextResponse.json(
-        { error: 'Private spaces cannot accept builder requests' },
-        { status: 403 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Private spaces cannot accept builder requests", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     // Check if user is already a member with elevated permissions
@@ -126,10 +103,7 @@ export async function POST(request: NextRequest) {
     if (memberDoc.exists) {
       const memberData = memberDoc.data();
       if (memberData?.role === 'builder' || memberData?.role === 'admin') {
-        return NextResponse.json(
-          { error: 'You already have builder rights for this space' },
-          { status: 409 }
-        );
+        return NextResponse.json(ApiResponseHelper.error("You already have builder rights for this space", "UNKNOWN_ERROR"), { status: 409 });
       }
     }
 
@@ -142,10 +116,7 @@ export async function POST(request: NextRequest) {
       .get();
 
     if (!existingRequestQuery.empty) {
-      return NextResponse.json(
-        { error: 'You already have a pending request for this space' },
-        { status: 409 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("You already have a pending request for this space", "UNKNOWN_ERROR"), { status: 409 });
     }
 
     // Get user profile for additional context
@@ -157,7 +128,7 @@ export async function POST(request: NextRequest) {
         userName = userData?.displayName || userData?.handle || userName;
       }
     } catch (error) {
-      console.warn(`Could not fetch user data for ${userId}:`, error);
+      logger.warn('Could not fetch user data for', { userId, data: error, endpoint: '/api/spaces/request-to-lead' });
     }
 
     // Create builder request
@@ -187,7 +158,7 @@ export async function POST(request: NextRequest) {
     await requestRef.set(builderRequest);
 
     // TODO: Send notification to admins (implement when notification system is ready)
-    console.log(`📧 Admin notification needed for builder request ${requestRef.id}`);
+    logger.info('📧 Admin notification needed for builder request', { requestRefId: requestRef.id, endpoint: '/api/spaces/request-to-lead'  });
 
     return NextResponse.json({
       success: true,
@@ -208,7 +179,7 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error: any) {
-    console.error('Request to Lead error:', error);
+    logger.error('Request to Lead error', { error: error, endpoint: '/api/spaces/request-to-lead' });
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -216,41 +187,25 @@ export async function POST(request: NextRequest) {
           error: 'Invalid request data', 
           details: error.errors.map(e => `${e.path.join('.')}: ${e.message}`)
         },
-        { status: 400 }
+        { status: HttpStatus.BAD_REQUEST }
       );
     }
 
-    return NextResponse.json(
-      { error: 'Failed to submit builder request' },
-      { status: 500 }
-    );
+    return NextResponse.json(ApiResponseHelper.error("Failed to submit builder request", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
-}
+}, { 
+  allowDevelopmentBypass: false, // Builder requests are sensitive - require real auth
+  operation: 'request_to_lead_space' 
+});
 
 /**
  * Get builder requests for a user (their submitted requests)
  * GET /api/spaces/request-to-lead?userId=USER_ID
  */
-export async function GET(request: NextRequest) {
+export const GET = withAuth(async (request: NextRequest, authContext) => {
   try {
-    // Verify authentication
-    const authHeader = request.headers.get('Authorization');
-    if (!authHeader?.startsWith('Bearer ')) {
-      return NextResponse.json(
-        { error: 'Authorization header required' },
-        { status: 401 }
-      );
-    }
-
     const url = new URL(request.url);
-    const userId = url.searchParams.get('userId');
-
-    if (!userId) {
-      return NextResponse.json(
-        { error: 'userId parameter required' },
-        { status: 400 }
-      );
-    }
+    const userId = url.searchParams.get('userId') || authContext.userId;
 
     // Get user's builder requests
     const requestsSnapshot = await dbAdmin
@@ -289,10 +244,10 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('Get builder requests error:', error);
-    return NextResponse.json(
-      { error: 'Failed to get builder requests' },
-      { status: 500 }
-    );
+    logger.error('Get builder requests error', { error: error, endpoint: '/api/spaces/request-to-lead' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to get builder requests", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
-}
+}, { 
+  allowDevelopmentBypass: true, // Getting own requests is safe for development
+  operation: 'get_builder_requests' 
+});

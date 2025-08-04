@@ -4,7 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { SecureSessionManager, type SessionData, type SessionValidationResult } from './secure-session-manager';
+import { SecureSessionManager, type SessionData } from './secure-session-manager';
 import { logSecurityEvent } from './structured-logger';
 import { currentEnvironment } from './env';
 
@@ -58,7 +58,6 @@ export async function sessionMiddleware(
   const {
     required = false,
     allowRefresh = true,
-    securityLevel = 'standard',
     requireElevated = false
   } = options;
 
@@ -238,7 +237,7 @@ export async function sessionMiddleware(
  * Higher-order function to wrap API handlers with session management
  */
 export function withSession(
-  handler: (request: NextRequest, context: SessionContext, params?: any) => Promise<NextResponse>,
+  handler: (_request: NextRequest, _context: SessionContext, _params?: any) => Promise<NextResponse>,
   options: SessionMiddlewareOptions = {}
 ) {
   return async (request: NextRequest, params?: any): Promise<NextResponse> => {
@@ -293,31 +292,31 @@ export const SessionMiddlewares = {
   /**
    * Require authentication
    */
-  requireAuth: (handler: (req: NextRequest, ctx: SessionContext) => Promise<NextResponse>) =>
+  requireAuth: (handler: (_req: NextRequest, _ctx: SessionContext) => Promise<NextResponse>) =>
     withSession(handler, { required: true }),
 
   /**
    * Optional authentication
    */
-  optionalAuth: (handler: (req: NextRequest, ctx: SessionContext) => Promise<NextResponse>) =>
+  optionalAuth: (handler: (_req: NextRequest, _ctx: SessionContext) => Promise<NextResponse>) =>
     withSession(handler, { required: false }),
 
   /**
    * Require elevated security
    */
-  requireElevated: (handler: (req: NextRequest, ctx: SessionContext) => Promise<NextResponse>) =>
+  requireElevated: (handler: (_req: NextRequest, _ctx: SessionContext) => Promise<NextResponse>) =>
     withSession(handler, { required: true, requireElevated: true }),
 
   /**
    * Public endpoint with session context
    */
-  public: (handler: (req: NextRequest, ctx: SessionContext) => Promise<NextResponse>) =>
+  public: (handler: (_req: NextRequest, _ctx: SessionContext) => Promise<NextResponse>) =>
     withSession(handler, { required: false, allowRefresh: false }),
 
   /**
    * Admin endpoint
    */
-  admin: (handler: (req: NextRequest, ctx: SessionContext) => Promise<NextResponse>) =>
+  admin: (handler: (_req: NextRequest, _ctx: SessionContext) => Promise<NextResponse>) =>
     withSession(handler, { required: true, requireElevated: true, securityLevel: 'elevated' })
 };
 
@@ -364,8 +363,8 @@ export function hasResourcePermission(
  * Middleware to validate resource ownership
  */
 export function withResourceOwnership(
-  handler: (req: NextRequest, ctx: SessionContext, params: any) => Promise<NextResponse>,
-  getUserIdFromParams: (params: any) => string,
+  handler: (_req: NextRequest, _ctx: SessionContext, _params: any) => Promise<NextResponse>,
+  getUserIdFromParams: (_params: any) => string,
   action: 'read' | 'write' | 'delete' = 'read'
 ) {
   return withSession(async (request, context, params) => {

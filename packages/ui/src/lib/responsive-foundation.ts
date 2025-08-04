@@ -16,6 +16,14 @@ export const breakpoints = {
   '2xl': '1536px',   // Extra large
 } as const;
 
+// Alias for backwards compatibility
+export const responsiveBreakpoints = breakpoints;
+
+// TypeScript types
+export type ResponsiveBreakpoint = keyof typeof breakpoints;
+export type ResponsiveSpacing = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+export type TouchTarget = keyof typeof touchTargets;
+
 // Touch-Optimized Sizing System
 export const touchTargets = {
   minimum: 'min-h-[44px] min-w-[44px]', // iOS/Android minimum

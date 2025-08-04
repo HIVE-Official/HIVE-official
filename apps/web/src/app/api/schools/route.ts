@@ -2,6 +2,8 @@ import { dbAdmin } from "@/lib/firebase-admin";
 import type { School } from "@hive/core";
 import { NextResponse } from "next/server";
 import { currentEnvironment } from "@/lib/env";
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 export async function GET() {
   try {
@@ -31,14 +33,11 @@ export async function GET() {
     
     return NextResponse.json(schools);
   } catch (error) {
-    console.error("Firebase connection failed:", error);
+    logger.error('Firebase connection failed', { error: error, endpoint: '/api/schools' });
     
     // SECURITY: Never return mock data in production
     if (currentEnvironment === 'production') {
-      return NextResponse.json(
-        { error: "Service temporarily unavailable" },
-        { status: 503 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Service temporarily unavailable", "UNKNOWN_ERROR"), { status: 503 });
     }
 
     // Development fallback only

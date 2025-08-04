@@ -6,7 +6,7 @@ import { z } from "zod";
 const envSchema = z.object({
     // Node environment
     NODE_ENV: z
-        .enum(["development", "staging", "production"])
+        .enum(["development", "staging", "production", "test"])
         .default("development"),
     // Firebase Client Config (Public - prefixed with NEXT_PUBLIC_)
     NEXT_PUBLIC_FIREBASE_API_KEY: z

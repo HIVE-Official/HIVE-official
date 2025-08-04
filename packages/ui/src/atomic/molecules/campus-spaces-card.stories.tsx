@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { CampusSpacesCard } from './campus-spaces-card';
 
 const meta: Meta<typeof CampusSpacesCard> = {
-  title: 'HIVE/Profile/CampusSpacesCard',
+  title: 'HIVE/Spaces/Molecules/CampusSpacesCard',
   component: CampusSpacesCard,
   parameters: {
     layout: 'fullscreen',

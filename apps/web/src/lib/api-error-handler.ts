@@ -4,7 +4,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { captureError, trackApiCall, LogLevel } from './error-monitoring';
+import { trackApiCall } from './error-monitoring';
 
 /**
  * Standard API error response
@@ -122,7 +122,7 @@ export async function handleApiError(
  * Wrapper for API route handlers to provide consistent error handling
  */
 export function withErrorHandler<T extends any[]>(
-  handler: (request: NextRequest, ...args: T) => Promise<NextResponse>
+  handler: (_request: NextRequest, ..._args: T) => Promise<NextResponse>
 ) {
   return async (request: NextRequest, ...args: T): Promise<NextResponse> => {
     try {
@@ -137,7 +137,7 @@ export function withErrorHandler<T extends any[]>(
  * Async wrapper for API handlers with error boundary
  */
 export function asyncHandler(
-  handler: (request: NextRequest, context: any) => Promise<NextResponse>
+  handler: (_request: NextRequest, _context: any) => Promise<NextResponse>
 ) {
   return async (request: NextRequest, context: any = {}): Promise<NextResponse> => {
     const startTime = Date.now();

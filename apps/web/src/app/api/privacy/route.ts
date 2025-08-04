@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { doc, getDoc, setDoc, updateDoc, collection, query, where, getDocs } from 'firebase/firestore';
-import { db } from '@hive/core/server';
-import { getCurrentUser } from '@hive/auth-logic';
+// Use admin SDK methods since we're in an API route
+import { dbAdmin } from '@/lib/firebase-admin';
+import { getCurrentUser } from '@/lib/server-auth';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 // Privacy settings interface
 interface PrivacySettings {
@@ -89,12 +91,12 @@ export async function GET(request: NextRequest) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const privacyDoc = await getDoc(doc(db, 'privacySettings', user.uid));
     
-    if (!privacyDoc.exists()) {
+    if (!privacyDoc.exists) {
       // Create default settings if none exist
       const newSettings: PrivacySettings = {
         userId: user.uid,
@@ -110,8 +112,8 @@ export async function GET(request: NextRequest) {
     const settings = privacyDoc.data() as PrivacySettings;
     return NextResponse.json({ settings });
   } catch (error) {
-    console.error('Error fetching privacy settings:', error);
-    return NextResponse.json({ error: 'Failed to fetch privacy settings' }, { status: 500 });
+    logger.error('Error fetching privacy settings', { error: error, endpoint: '/api/privacy' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to fetch privacy settings", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -120,7 +122,7 @@ export async function PUT(request: NextRequest) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const body = await request.json();
@@ -128,12 +130,12 @@ export async function PUT(request: NextRequest) {
 
     // Validate ghost mode level
     if (ghostMode?.level && !['invisible', 'minimal', 'selective', 'normal'].includes(ghostMode.level)) {
-      return NextResponse.json({ error: 'Invalid ghost mode level' }, { status: 400 });
+      return NextResponse.json(ApiResponseHelper.error("Invalid ghost mode level", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
     // Get existing settings
     const privacyDoc = await getDoc(doc(db, 'privacySettings', user.uid));
-    const existingSettings = privacyDoc.exists() ? privacyDoc.data() as PrivacySettings : {
+    const existingSettings = privacyDoc.exists ? privacyDoc.data() as PrivacySettings : {
       userId: user.uid,
       ...defaultPrivacySettings,
       createdAt: new Date().toISOString(),
@@ -161,8 +163,8 @@ export async function PUT(request: NextRequest) {
       message: 'Privacy settings updated successfully'
     });
   } catch (error) {
-    console.error('Error updating privacy settings:', error);
-    return NextResponse.json({ error: 'Failed to update privacy settings' }, { status: 500 });
+    logger.error('Error updating privacy settings', { error: error, endpoint: '/api/privacy' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to update privacy settings", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -183,15 +185,15 @@ async function applyPrivacyChanges(userId: string, settings: PrivacySettings) {
     await updateProfileVisibility(userId, settings.profileVisibility);
 
   } catch (error) {
-    console.error('Error applying privacy changes:', error);
+    logger.error('Error applying privacy changes', { error: error, endpoint: '/api/privacy' });
   }
 }
 
 // Helper function to update space visibility
 async function updateSpaceVisibility(userId: string, settings: PrivacySettings) {
   try {
-    const membershipsQuery = query(
-      collection(db, 'members'),
+    const membershipsQuery = dbAdmin.collection(
+      dbAdmin.collection('members'),
       where('userId', '==', userId),
       where('status', '==', 'active')
     );
@@ -222,7 +224,7 @@ async function updateSpaceVisibility(userId: string, settings: PrivacySettings) 
 
     await Promise.all(updates);
   } catch (error) {
-    console.error('Error updating space visibility:', error);
+    logger.error('Error updating space visibility', { error: error, endpoint: '/api/privacy' });
   }
 }
 
@@ -232,7 +234,7 @@ async function updateProfileVisibility(userId: string, profileVisibility: Privac
     const userDocRef = doc(db, 'users', userId);
     const userDoc = await getDoc(userDocRef);
     
-    if (userDoc.exists()) {
+    if (userDoc.exists) {
       const userData = userDoc.data();
       
       const updatedUserData = {
@@ -251,7 +253,7 @@ async function updateProfileVisibility(userId: string, profileVisibility: Privac
       await updateDoc(userDocRef, updatedUserData);
     }
   } catch (error) {
-    console.error('Error updating profile visibility:', error);
+    logger.error('Error updating profile visibility', { error: error, endpoint: '/api/privacy' });
   }
 }
 
@@ -263,8 +265,8 @@ async function cleanupOldActivityData(userId: string, retentionPeriod: number) {
     const cutoffDateStr = cutoffDate.toISOString().split('T')[0];
 
     // Query old activity events
-    const oldEventsQuery = query(
-      collection(db, 'activityEvents'),
+    const oldEventsQuery = dbAdmin.collection(
+      dbAdmin.collection('activityEvents'),
       where('userId', '==', userId),
       where('date', '<', cutoffDateStr)
     );
@@ -272,19 +274,19 @@ async function cleanupOldActivityData(userId: string, retentionPeriod: number) {
     const oldEventsSnapshot = await getDocs(oldEventsQuery);
     
     // Delete old events in batches
-    const batch = db.batch();
+    const batch = dbAdmin.batch();
     oldEventsSnapshot.docs.forEach(doc => {
       batch.delete(doc.ref);
     });
     
     if (oldEventsSnapshot.docs.length > 0) {
       await batch.commit();
-      console.log(`Deleted ${oldEventsSnapshot.docs.length} old activity events for user ${userId}`);
+      logger.info('Deletedold activity events for user', { oldEventsSnapshot, userId, endpoint: '/api/privacy' });
     }
 
     // Query old activity summaries
-    const oldSummariesQuery = query(
-      collection(db, 'activitySummaries'),
+    const oldSummariesQuery = dbAdmin.collection(
+      dbAdmin.collection('activitySummaries'),
       where('userId', '==', userId),
       where('date', '<', cutoffDateStr)
     );
@@ -292,16 +294,16 @@ async function cleanupOldActivityData(userId: string, retentionPeriod: number) {
     const oldSummariesSnapshot = await getDocs(oldSummariesQuery);
     
     // Delete old summaries in batches
-    const summaryBatch = db.batch();
+    const summaryBatch = dbAdmin.batch();
     oldSummariesSnapshot.docs.forEach(doc => {
       summaryBatch.delete(doc.ref);
     });
     
     if (oldSummariesSnapshot.docs.length > 0) {
       await summaryBatch.commit();
-      console.log(`Deleted ${oldSummariesSnapshot.docs.length} old activity summaries for user ${userId}`);
+      logger.info('Deletedold activity summaries for user', { oldSummariesSnapshot, userId, endpoint: '/api/privacy' });
     }
   } catch (error) {
-    console.error('Error cleaning up old activity data:', error);
+    logger.error('Error cleaning up old activity data', { error: error, endpoint: '/api/privacy' });
   }
 }

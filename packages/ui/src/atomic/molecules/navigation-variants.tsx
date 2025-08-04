@@ -3,7 +3,7 @@
 import React from 'react';
 import { cn } from '../../lib/utils';
 import { Home, User, Compass, Zap } from 'lucide-react';
-import { Button } from '../atoms/button';
+import { ButtonEnhanced as Button } from '../atoms/button-enhanced';
 
 export interface NavigationProps {
   currentPath?: string;

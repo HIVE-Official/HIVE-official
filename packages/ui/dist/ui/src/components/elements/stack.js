@@ -2,7 +2,7 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import React from 'react';
 import { motion } from 'framer-motion';
-import { cn } from '../../lib/utils';
+import { cn } from '../../lib/utils.js';
 export const Stack = ({ config, children, className, style }) => {
     const { direction = 'vertical', spacing = 8, alignment = 'start', wrap = false, style: configStyle } = config;
     // Convert spacing to CSS units (assuming spacing is in spacing tokens)

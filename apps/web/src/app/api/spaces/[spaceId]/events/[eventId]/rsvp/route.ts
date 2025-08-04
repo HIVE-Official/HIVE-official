@@ -3,10 +3,11 @@ import type { NextRequest } from "next/server";
 import { z } from "zod";
 import { dbAdmin } from "@/lib/firebase-admin";
 import { getAuth } from "firebase-admin/auth";
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 const RSVPSchema = z.object({
-  status: z.enum(['going', 'maybe', 'not_going']),
-});
+  status: z.enum(['going', 'maybe', 'not_going']) });
 
 const db = dbAdmin;
 
@@ -21,10 +22,10 @@ export async function POST(
     // Get auth header and verify token
     const authHeader = request.headers.get("authorization");
     if (!authHeader?.startsWith("Bearer ")) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
-    const token = authHeader.split("Bearer ")[1];
+    const token = authHeader.substring(7);
     const auth = getAuth();
     const decodedToken = await auth.verifyIdToken(token);
 
@@ -37,10 +38,7 @@ export async function POST(
       .get();
 
     if (!memberDoc.exists) {
-      return NextResponse.json(
-        { error: "Not a member of this space" },
-        { status: 403 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Not a member of this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     // Check if event exists
@@ -52,20 +50,14 @@ export async function POST(
       .get();
 
     if (!eventDoc.exists) {
-      return NextResponse.json(
-        { error: "Event not found" },
-        { status: 404 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Event not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     const eventData = eventDoc.data()!;
 
     // Check if RSVP deadline has passed
     if (eventData.rsvpDeadline && new Date() > eventData.rsvpDeadline.toDate()) {
-      return NextResponse.json(
-        { error: "RSVP deadline has passed" },
-        { status: 400 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("RSVP deadline has passed", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
     const body = (await request.json()) as unknown;
@@ -83,10 +75,7 @@ export async function POST(
         .get();
 
       if (currentRsvpSnapshot.size >= eventData.maxAttendees) {
-        return NextResponse.json(
-          { error: "Event is at full capacity" },
-          { status: 400 }
-        );
+        return NextResponse.json(ApiResponseHelper.error("Event is at full capacity", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
       }
     }
 
@@ -122,8 +111,7 @@ export async function POST(
     return NextResponse.json({
       success: true,
       rsvp: rsvpData,
-      currentAttendees: updatedRsvpSnapshot.size,
-    });
+      currentAttendees: updatedRsvpSnapshot.size });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -131,15 +119,12 @@ export async function POST(
           error: "Invalid RSVP data",
           details: error.errors,
         },
-        { status: 400 }
+        { status: HttpStatus.BAD_REQUEST }
       );
     }
 
-    console.error("Error creating RSVP:", error);
-    return NextResponse.json(
-      { error: "Failed to RSVP to event" },
-      { status: 500 }
-    );
+    logger.error('Error creating RSVP', { error: error, endpoint: '/api/spaces/[spaceId]/events/[eventId]/rsvp' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to RSVP to event", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -154,10 +139,10 @@ export async function GET(
     // Get auth header and verify token
     const authHeader = request.headers.get("authorization");
     if (!authHeader?.startsWith("Bearer ")) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
-    const token = authHeader.split("Bearer ")[1];
+    const token = authHeader.substring(7);
     const auth = getAuth();
     const decodedToken = await auth.verifyIdToken(token);
 
@@ -174,13 +159,9 @@ export async function GET(
     const rsvpStatus = rsvpDoc.exists ? rsvpDoc.data()?.status : null;
 
     return NextResponse.json({
-      userRSVP: rsvpStatus,
-    });
+      userRSVP: rsvpStatus });
   } catch (error) {
-    console.error("Error fetching RSVP status:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch RSVP status" },
-      { status: 500 }
-    );
+    logger.error('Error fetching RSVP status', { error: error, endpoint: '/api/spaces/[spaceId]/events/[eventId]/rsvp' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to fetch RSVP status", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

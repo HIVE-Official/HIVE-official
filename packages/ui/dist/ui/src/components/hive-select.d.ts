@@ -1,9 +1,9 @@
 import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
 declare const hiveSelectVariants: (props?: {
-    variant?: "default" | "premium" | "minimal";
+    variant?: "default" | "minimal" | "premium";
     size?: "default" | "sm" | "lg";
-} & import("class-variance-authority/dist/types").ClassProp) => string;
+} & import("class-variance-authority/types").ClassProp) => string;
 export interface SelectOption {
     value: string;
     label: string;

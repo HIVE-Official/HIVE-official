@@ -1,4 +1,4 @@
-import { motion } from "@hive/ui/src/components/framer-motion-proxy";
+import { motion } from "framer-motion";
 import { User, Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { HiveInput } from "@hive/ui";
@@ -57,9 +57,9 @@ export function HiveNameStep({ data, updateData, onNext }: HiveNameStepProps) {
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ delay: 0.1, type: "spring", stiffness: 200 }}
-          className="mx-auto w-16 h-16 bg-gradient-to-br from-yellow-500/20 via-yellow-400/10 to-yellow-500/20 backdrop-blur-xl rounded-full flex items-center justify-center border border-yellow-500/30"
+          className="mx-auto w-16 h-16 bg-[var(--hive-overlay-gold-subtle)] backdrop-blur-xl rounded-full flex items-center justify-center border border-[var(--hive-border-gold)]"
         >
-          <User className="w-8 h-8 text-yellow-400" />
+          <User className="w-8 h-8 text-[var(--hive-brand-primary)]" />
         </motion.div>
         
         <motion.div
@@ -89,7 +89,7 @@ export function HiveNameStep({ data, updateData, onNext }: HiveNameStepProps) {
             id="firstName"
             type="text"
             label="First Name"
-            placeholder="Enter your first name"
+            placeholder="First name"
             value={firstName}
             onChange={handleFirstNameChange}
             variant="premium"
@@ -106,7 +106,7 @@ export function HiveNameStep({ data, updateData, onNext }: HiveNameStepProps) {
             id="lastName"
             type="text"
             label="Last Name"
-            placeholder="Enter your last name"
+            placeholder="Last name"
             value={lastName}
             onChange={handleLastNameChange}
             variant="premium"
@@ -145,7 +145,7 @@ export function HiveNameStep({ data, updateData, onNext }: HiveNameStepProps) {
                 className="space-y-2"
               >
                 <div className="text-sm text-[var(--hive-text-secondary)]">
-                  Hi there, <span className="text-yellow-400 font-medium">{firstName}</span>! 👋
+                  Hi there, <span className="text-[var(--hive-brand-primary)] font-medium">{firstName}</span>! 👋
                 </div>
                 {firstName && lastName && (
                   <div className="text-xs text-[var(--hive-text-tertiary)]">
@@ -168,7 +168,7 @@ export function HiveNameStep({ data, updateData, onNext }: HiveNameStepProps) {
           className="bg-[var(--hive-background-secondary)]/20 backdrop-blur-sm border border-[var(--hive-border-subtle)] rounded-xl p-4"
         >
           <h4 className="text-sm font-medium text-[var(--hive-text-secondary)] mb-2 flex items-center">
-            <div className="w-2 h-2 bg-yellow-400 rounded-full mr-2" />
+            <div className="w-2 h-2 bg-[var(--hive-brand-primary)] rounded-full mr-2" />
             Privacy Note
           </h4>
           <p className="text-xs text-[var(--hive-text-tertiary)]">

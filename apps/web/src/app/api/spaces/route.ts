@@ -1,10 +1,12 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import * as admin from "firebase-admin";
-import { getAuth } from "firebase-admin/auth";
 import { z } from "zod";
 import type { Space, SpaceType } from "@hive/core";
 import { dbAdmin } from "@/lib/firebase-admin";
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
 
 const createSpaceSchema = z.object({
   name: z.string().min(1).max(100),
@@ -39,7 +41,7 @@ export async function GET(request: Request) {
     const snapshot = await query.orderBy("name_lowercase").limit(50).get();
 
     if (snapshot.empty) {
-      return NextResponse.json([], { status: 200 });
+      return NextResponse.json(ApiResponseHelper.success([]), { status: HttpStatus.OK });
     }
 
     const spaces = snapshot.docs.map((doc) => ({
@@ -47,42 +49,16 @@ export async function GET(request: Request) {
       ...doc.data(),
     })) as Space[];
 
-    return NextResponse.json(spaces, { status: 200 });
+    return NextResponse.json(ApiResponseHelper.success(spaces), { status: HttpStatus.OK });
   } catch (error) {
-    console.error("Error fetching spaces:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch spaces" },
-      { status: 500 }
-    );
+    logger.error('Error fetching spaces', { error: error, endpoint: '/api/spaces' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to fetch spaces", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
-export async function POST(request: NextRequest) {
+export const POST = withAuth(async (request: NextRequest, authContext) => {
   try {
-    // Verify authentication
-    const authHeader = request.headers.get('Authorization');
-    if (!authHeader?.startsWith('Bearer ')) {
-      return NextResponse.json(
-        { error: 'Authorization header required' },
-        { status: 401 }
-      );
-    }
-
-    const token = authHeader.substring(7);
-    let userId = 'test-user';
-    
-    if (token !== 'test-token') {
-      try {
-        const auth = getAuth();
-        const decodedToken = await auth.verifyIdToken(token);
-        userId = decodedToken.uid;
-      } catch (authError) {
-        return NextResponse.json(
-          { error: 'Invalid or expired token' },
-          { status: 401 }
-        );
-      }
-    }
+    const userId = authContext.userId;
 
     // Parse and validate request body
     const body = await request.json();
@@ -145,7 +121,7 @@ export async function POST(request: NextRequest) {
         .set({ placeholder: true });
     }
 
-    console.log(`✅ Created space ${spaceId} of type ${type} by user ${userId}`);
+    logger.info('✅ Created space by user', {  type, userId, endpoint: '/api/spaces'  });
 
     return NextResponse.json({
       success: true,
@@ -153,28 +129,21 @@ export async function POST(request: NextRequest) {
         id: spaceId,
         ...spaceData
       }
-    }, { status: 201 });
+    }, { status: HttpStatus.CREATED });
 
   } catch (error: any) {
-    console.error('❌ Create space error:', error);
+    logger.error('❌ Create space error', { error: error, endpoint: '/api/spaces' });
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: 'Invalid request data', details: error.errors },
-        { status: 400 }
+        { status: HttpStatus.BAD_REQUEST }
       );
     }
 
-    if (error.code === 'auth/id-token-expired') {
-      return NextResponse.json(
-        { error: 'Token expired' },
-        { status: 401 }
-      );
-    }
-
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json(ApiResponseHelper.error("Internal server error", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
-}
+}, { 
+  allowDevelopmentBypass: false, // Space creation is sensitive - require real auth
+  operation: 'create_space' 
+});

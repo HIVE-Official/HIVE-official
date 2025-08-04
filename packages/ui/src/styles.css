@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 /* === HIVE PRD-ALIGNED DESIGN TOKENS === */
-@import './prd-tokens.css';
+@import './styles/prd-tokens.css';
 
 /* === SAFE AREA UTILITIES === */
 @import './styles/safe-area.css';

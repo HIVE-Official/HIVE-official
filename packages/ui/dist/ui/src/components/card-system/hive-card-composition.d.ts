@@ -10,30 +10,30 @@ import type { HiveCardBaseProps } from './hive-card-system';
 declare const cardHeaderVariants: (props?: {
     size?: "default" | "sm" | "lg" | "xl";
     alignment?: "center" | "end" | "start";
-    spacing?: "none" | "default" | "sm" | "lg";
-} & import("class-variance-authority/dist/types").ClassProp) => string;
+    spacing?: "default" | "sm" | "lg" | "none";
+} & import("class-variance-authority/types").ClassProp) => string;
 declare const cardTitleVariants: (props?: {
     size?: "default" | "sm" | "lg" | "xl";
     truncate?: boolean;
-} & import("class-variance-authority/dist/types").ClassProp) => string;
+} & import("class-variance-authority/types").ClassProp) => string;
 declare const cardDescriptionVariants: (props?: {
     size?: "default" | "sm" | "lg" | "xl";
-    lines?: 1 | 2 | 3 | "none";
-} & import("class-variance-authority/dist/types").ClassProp) => string;
+    lines?: "none" | 1 | 2 | 3;
+} & import("class-variance-authority/types").ClassProp) => string;
 declare const cardContentVariants: (props?: {
     size?: "default" | "sm" | "lg" | "xl";
-    padding?: "none" | "default" | "sm" | "lg";
+    padding?: "default" | "sm" | "lg" | "none";
     scroll?: boolean;
-} & import("class-variance-authority/dist/types").ClassProp) => string;
+} & import("class-variance-authority/types").ClassProp) => string;
 declare const cardFooterVariants: (props?: {
     size?: "default" | "sm" | "lg" | "xl";
     justify?: "center" | "end" | "start" | "between" | "around";
     border?: boolean;
-} & import("class-variance-authority/dist/types").ClassProp) => string;
+} & import("class-variance-authority/types").ClassProp) => string;
 declare const cardActionsVariants: (props?: {
-    layout?: "grid" | "horizontal" | "vertical";
+    layout?: "horizontal" | "vertical" | "grid";
     size?: "default" | "sm" | "lg";
-} & import("class-variance-authority/dist/types").ClassProp) => string;
+} & import("class-variance-authority/types").ClassProp) => string;
 interface HiveCardHeaderProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof cardHeaderVariants> {
     actions?: React.ReactNode;
 }

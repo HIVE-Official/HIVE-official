@@ -289,10 +289,10 @@ export const HiveEventsSurface = React.forwardRef<HTMLDivElement, HiveEventsSurf
       // Normalize date fields
       startDate: event.startDate && typeof event.startDate === 'object' && 'toDate' in event.startDate 
         ? event.startDate.toDate() 
-        : new Date(event.startDate),
+        : event.startDate instanceof Date ? event.startDate : new Date(event.startDate as unknown as string | number),
       endDate: event.endDate && typeof event.endDate === 'object' && 'toDate' in event.endDate 
         ? event.endDate.toDate() 
-        : new Date(event.endDate),
+        : event.endDate instanceof Date ? event.endDate : new Date(event.endDate as unknown as string | number),
       rsvpDeadline: event.rsvpDeadline 
         ? (typeof event.rsvpDeadline === 'object' && 'toDate' in event.rsvpDeadline 
             ? event.rsvpDeadline.toDate() 

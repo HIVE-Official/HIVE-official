@@ -2,6 +2,9 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { getAuth } from 'firebase-admin/auth';
 import { dbAdmin } from '@/lib/firebase-admin';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
 
 /**
  * Admin Dashboard - Platform Overview API
@@ -26,45 +29,16 @@ async function isAdmin(userId: string): Promise<boolean> {
 /**
  * Get platform overview statistics
  */
-export async function GET(request: NextRequest) {
+export const GET = withAuth(async (request: NextRequest, authContext) => {
   try {
-    // Verify authentication
-    const authHeader = request.headers.get('Authorization');
-    if (!authHeader?.startsWith('Bearer ')) {
-      return NextResponse.json(
-        { error: 'Authorization header required' },
-        { status: 401 }
-      );
+    // This is an admin-only endpoint
+    if (!authContext.isAdmin) {
+      return ApiResponse.forbidden('Admin access required');
     }
 
-    const token = authHeader.substring(7);
-    let adminUserId: string;
+    const adminUserId = authContext.userId;
     
-    // Handle test tokens in development
-    if (token === 'test-token') {
-      adminUserId = 'test-user';
-    } else {
-      try {
-        const auth = getAuth();
-        const decodedToken = await auth.verifyIdToken(token);
-        adminUserId = decodedToken.uid;
-      } catch (authError) {
-        return NextResponse.json(
-          { error: 'Invalid or expired token' },
-          { status: 401 }
-        );
-      }
-    }
-
-    // Check if user is admin
-    if (!(await isAdmin(adminUserId))) {
-      return NextResponse.json(
-        { error: 'Admin access required' },
-        { status: 403 }
-      );
-    }
-
-    console.log(`👑 Admin dashboard accessed by ${adminUserId}`);
+    logger.info('👑 Admin dashboard accessed by', { adminUserId, endpoint: '/api/admin/dashboard' });
 
     // Collect platform statistics in parallel
     const [
@@ -98,13 +72,10 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('Admin dashboard error:', error);
-    return NextResponse.json(
-      { error: 'Failed to load admin dashboard' },
-      { status: 500 }
-    );
+    logger.error('Admin dashboard error', { error: error, endpoint: '/api/admin/dashboard' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to load admin dashboard", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
-}
+});
 
 /**
  * Get user statistics
@@ -147,7 +118,7 @@ async function getUsersStatistics() {
       }
     };
   } catch (error) {
-    console.error('Error getting user statistics:', error);
+    logger.error('Error getting user statistics', { error: error, endpoint: '/api/admin/dashboard' });
     return {
       total: 0,
       active: 0,
@@ -207,7 +178,7 @@ async function getSpacesStatistics() {
 
     return spaceStats;
   } catch (error) {
-    console.error('Error getting spaces statistics:', error);
+    logger.error('Error getting spaces statistics', { error: error, endpoint: '/api/admin/dashboard' });
     return {
       total: 0,
       active: 0,
@@ -246,7 +217,7 @@ async function getBuilderRequestsStatistics() {
 
     return stats;
   } catch (error) {
-    console.error('Error getting builder requests statistics:', error);
+    logger.error('Error getting builder requests statistics', { error: error, endpoint: '/api/admin/dashboard' });
     return {
       total: 0,
       pending: 0,
@@ -298,7 +269,7 @@ async function getSystemHealth() {
       lastUpdated: new Date().toISOString()
     };
   } catch (error) {
-    console.error('Error getting system health:', error);
+    logger.error('Error getting system health', { error: error, endpoint: '/api/admin/dashboard' });
     return {
       status: 'error',
       uptime: 0,
@@ -325,7 +296,7 @@ async function getAllSpacesCount() {
         .get();
       totalCount += snapshot.size;
     } catch (error) {
-      console.error(`Error counting spaces for ${spaceType}:`, error);
+      logger.error('Error counting spaces for', { spaceType, error: error, endpoint: '/api/admin/dashboard' });
     }
   }
 

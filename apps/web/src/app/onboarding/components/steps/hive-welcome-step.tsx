@@ -1,4 +1,4 @@
-import { motion } from "@hive/ui/src/components/framer-motion-proxy";
+import { motion } from "@hive/ui";
 import { ArrowRight } from "lucide-react";
 import { HiveButton, HiveLogo } from "@hive/ui";
 import type { HiveOnboardingData } from "../hive-onboarding-wizard";
@@ -16,6 +16,9 @@ export function HiveWelcomeStep({ onNext }: HiveWelcomeStepProps) {
       initial={{ y: 20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       className="text-center space-y-[var(--hive-spacing-8)] py-[var(--hive-spacing-6)]"
+      data-testid="welcome-step"
+      role="main"
+      aria-labelledby="welcome-heading"
     >
       {/* Hero Section with HIVE Logo */}
       <motion.div
@@ -40,9 +43,9 @@ export function HiveWelcomeStep({ onNext }: HiveWelcomeStepProps) {
         transition={{ delay: 0.4 }}
         className="space-y-[var(--hive-spacing-4)]"
       >
-        <h1 className="text-4xl font-bold text-[var(--hive-text-primary)]">
+        <h2 id="welcome-heading" className="text-4xl font-bold text-[var(--hive-text-primary)]">
           Welcome to <span className="text-[var(--hive-brand-primary)]">HIVE</span>
-        </h1>
+        </h2>
         <p className="text-lg text-[var(--hive-text-secondary)] max-w-md mx-auto">
           Your digital campus awaits
         </p>
@@ -72,6 +75,8 @@ export function HiveWelcomeStep({ onNext }: HiveWelcomeStepProps) {
             onClick={onNext}
             rightIcon={<ArrowRight className="w-4 h-4" />}
             className="px-[var(--hive-spacing-8)]"
+            data-testid="get-started"
+            aria-label="Start the onboarding process"
           >
             Get Started
           </HiveButton>

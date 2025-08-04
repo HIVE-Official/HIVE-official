@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { FieldValue } from "firebase-admin/firestore";
 import { getFirestoreAdmin } from "@hive/core/firebase-admin";
 import { validateAuth } from "../../../../../lib/auth-server";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 export async function POST(
   request: NextRequest,
@@ -11,7 +12,7 @@ export async function POST(
     // Validate authentication
     const user = await validateAuth(request);
     if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const { toolId } = params;
@@ -19,10 +20,7 @@ export async function POST(
     const { spaceId, configuration = {}, permissions = {} } = body;
 
     if (!spaceId) {
-      return NextResponse.json(
-        { error: "spaceId is required" },
-        { status: 400 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("spaceId is required", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
     const db = getFirestoreAdmin();
@@ -36,18 +34,12 @@ export async function POST(
       .get();
 
     if (!spaceMemberDoc.exists) {
-      return NextResponse.json(
-        { error: "Access denied to this space" },
-        { status: 403 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Access denied to this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     const memberData = spaceMemberDoc.data();
     if (memberData?.role !== "admin") {
-      return NextResponse.json(
-        { error: "Admin access required to deploy tools" },
-        { status: 403 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Admin access required to deploy tools", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     // Verify tool exists and can be deployed
@@ -57,18 +49,12 @@ export async function POST(
       .get();
 
     if (!toolDoc.exists) {
-      return NextResponse.json(
-        { error: "Tool not found" },
-        { status: 404 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Tool not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     const toolData = toolDoc.data();
     if (toolData?.status !== "published") {
-      return NextResponse.json(
-        { error: "Only published tools can be deployed" },
-        { status: 400 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Only published tools can be deployed", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
     // Check if tool is already deployed to this space
@@ -81,10 +67,7 @@ export async function POST(
       .get();
 
     if (!existingDeploymentQuery.empty) {
-      return NextResponse.json(
-        { error: "Tool is already deployed to this space" },
-        { status: 409 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Tool is already deployed to this space", "UNKNOWN_ERROR"), { status: 409 });
     }
 
     // Check space's tool deployment limits
@@ -158,8 +141,7 @@ export async function POST(
       .update({
         deploymentCount: FieldValue.increment(1),
         lastDeployed: FieldValue.serverTimestamp(),
-        updatedAt: FieldValue.serverTimestamp(),
-      });
+        updatedAt: FieldValue.serverTimestamp() });
 
     // Update space's tool count
     await db
@@ -167,8 +149,7 @@ export async function POST(
       .doc(spaceId)
       .update({
         toolCount: FieldValue.increment(1),
-        updatedAt: FieldValue.serverTimestamp(),
-      });
+        updatedAt: FieldValue.serverTimestamp() });
 
     // Create initial analytics document
     await db
@@ -183,8 +164,7 @@ export async function POST(
         activeUsers: [],
         dailyUsage: {},
         createdAt: FieldValue.serverTimestamp(),
-        updatedAt: FieldValue.serverTimestamp(),
-      });
+        updatedAt: FieldValue.serverTimestamp() });
 
     return NextResponse.json({
       success: true,
@@ -194,14 +174,9 @@ export async function POST(
         deployedAt: new Date().toISOString(),
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-      },
-    });
+      } });
   } catch (error) {
-    console.error("Error deploying tool:", error);
-    return NextResponse.json(
-      { error: "Failed to deploy tool" },
-      { status: 500 }
-    );
+    return NextResponse.json(ApiResponseHelper.error("Failed to deploy tool", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -213,7 +188,7 @@ export async function DELETE(
     // Validate authentication
     const user = await validateAuth(request);
     if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const { toolId } = params;
@@ -221,10 +196,7 @@ export async function DELETE(
     const spaceId = searchParams.get("spaceId");
 
     if (!spaceId) {
-      return NextResponse.json(
-        { error: "spaceId parameter is required" },
-        { status: 400 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("spaceId parameter is required", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
     const db = getFirestoreAdmin();
@@ -238,18 +210,12 @@ export async function DELETE(
       .get();
 
     if (!spaceMemberDoc.exists) {
-      return NextResponse.json(
-        { error: "Access denied to this space" },
-        { status: 403 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Access denied to this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     const memberData = spaceMemberDoc.data();
     if (memberData?.role !== "admin") {
-      return NextResponse.json(
-        { error: "Admin access required to undeploy tools" },
-        { status: 403 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Admin access required to undeploy tools", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     const deploymentId = `${toolId}_${spaceId}`;
@@ -261,10 +227,7 @@ export async function DELETE(
       .get();
 
     if (!deploymentDoc.exists) {
-      return NextResponse.json(
-        { error: "Tool deployment not found" },
-        { status: 404 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Tool deployment not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     // Deactivate deployment (soft delete to preserve analytics)
@@ -275,8 +238,7 @@ export async function DELETE(
         isActive: false,
         undeployedBy: user.uid,
         undeployedAt: FieldValue.serverTimestamp(),
-        updatedAt: FieldValue.serverTimestamp(),
-      });
+        updatedAt: FieldValue.serverTimestamp() });
 
     // Update tool's deployment count
     await db
@@ -284,8 +246,7 @@ export async function DELETE(
       .doc(toolId)
       .update({
         deploymentCount: FieldValue.increment(-1),
-        updatedAt: FieldValue.serverTimestamp(),
-      });
+        updatedAt: FieldValue.serverTimestamp() });
 
     // Update space's tool count
     await db
@@ -293,8 +254,7 @@ export async function DELETE(
       .doc(spaceId)
       .update({
         toolCount: FieldValue.increment(-1),
-        updatedAt: FieldValue.serverTimestamp(),
-      });
+        updatedAt: FieldValue.serverTimestamp() });
 
     // Archive user states (move to archived collection for data preservation)
     const stateDocsQuery = await db
@@ -303,11 +263,11 @@ export async function DELETE(
       .where("spaceId", "==", spaceId)
       .get();
 
-    const batch = db.batch();
+    const batch = dbAdmin.batch();
     stateDocsQuery.docs.forEach(doc => {
       // Copy to archived collection
       batch.set(
-        db.collection("tool_states_archived").doc(doc.id),
+        dbAdmin.collection("tool_states_archived").doc(doc.id),
         {
           ...doc.data(),
           archivedAt: FieldValue.serverTimestamp(),
@@ -324,14 +284,9 @@ export async function DELETE(
     return NextResponse.json({
       success: true,
       undeployedAt: new Date().toISOString(),
-      archivedStates: stateDocsQuery.size,
-    });
+      archivedStates: stateDocsQuery.size });
   } catch (error) {
-    console.error("Error undeploying tool:", error);
-    return NextResponse.json(
-      { error: "Failed to undeploy tool" },
-      { status: 500 }
-    );
+    return NextResponse.json(ApiResponseHelper.error("Failed to undeploy tool", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -343,7 +298,7 @@ export async function GET(
     // Validate authentication
     const user = await validateAuth(request);
     if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const { toolId } = params;
@@ -351,10 +306,7 @@ export async function GET(
     const spaceId = searchParams.get("spaceId");
 
     if (!spaceId) {
-      return NextResponse.json(
-        { error: "spaceId parameter is required" },
-        { status: 400 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("spaceId parameter is required", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
     const db = getFirestoreAdmin();
@@ -368,10 +320,7 @@ export async function GET(
       .get();
 
     if (!spaceMemberDoc.exists) {
-      return NextResponse.json(
-        { error: "Access denied to this space" },
-        { status: 403 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Access denied to this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     const deploymentId = `${toolId}_${spaceId}`;
@@ -383,10 +332,7 @@ export async function GET(
       .get();
 
     if (!deploymentDoc.exists) {
-      return NextResponse.json(
-        { error: "Tool deployment not found" },
-        { status: 404 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Tool deployment not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     const deploymentData = deploymentDoc.data();
@@ -408,13 +354,8 @@ export async function GET(
 
     return NextResponse.json({
       deployment: deploymentData,
-      analytics,
-    });
+      analytics });
   } catch (error) {
-    console.error("Error getting tool deployment:", error);
-    return NextResponse.json(
-      { error: "Failed to get tool deployment" },
-      { status: 500 }
-    );
+    return NextResponse.json(ApiResponseHelper.error("Failed to get tool deployment", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

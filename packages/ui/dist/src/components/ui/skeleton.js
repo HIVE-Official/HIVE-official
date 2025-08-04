@@ -1,7 +1,0 @@
-import { jsx as _jsx } from "react/jsx-runtime";
-import { cn } from "../../lib/utils.js";
-function Skeleton({ className, ...props }) {
-    return (_jsx("div", { className: cn("animate-pulse rounded-md bg-hive-background-muted", className), ...props }));
-}
-export { Skeleton };
-//# sourceMappingURL=skeleton.js.map

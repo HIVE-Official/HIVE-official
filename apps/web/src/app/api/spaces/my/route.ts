@@ -1,42 +1,102 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
-import { getAuth } from 'firebase-admin/auth';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { type Space } from '@hive/core';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
 
 /**
  * Get user's spaces with enhanced widget data
  * Returns spaces with membership info, activity, and widget-specific data
  */
-export async function GET(request: NextRequest) {
+export const GET = withAuth(async (request: NextRequest, authContext) => {
   try {
-    // Verify the requesting user is authenticated
-    const authHeader = request.headers.get('Authorization');
-    if (!authHeader?.startsWith('Bearer ')) {
-      return NextResponse.json(
-        { error: 'Authorization header required' },
-        { status: 401 }
-      );
-    }
+    const userId = authContext.userId;
 
-    const token = authHeader.substring(7);
-    let userId = 'test-user';
+    logger.info('🔍 Fetching spaces for user', { userId, endpoint: '/api/spaces/my' });
     
-    // Handle test tokens in development
-    if (token !== 'test-token') {
-      try {
-        const auth = getAuth();
-        const decodedToken = await auth.verifyIdToken(token);
-        userId = decodedToken.uid;
-      } catch (authError) {
-        return NextResponse.json(
-          { error: 'Invalid or expired token' },
-          { status: 401 }
-        );
-      }
+    // For development mode, return mock spaces data
+    if ((userId === 'test-user' || userId === 'dev_user_123') && process.env.NODE_ENV !== 'production') {
+      const mockSpaces = [
+        {
+          id: 'cs_study_group',
+          name: 'CS Study Group',
+          description: 'Computer Science students helping each other with coursework',
+          color: '#3B82F6',
+          memberCount: 24,
+          unreadCount: 3,
+          lastActivity: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+          membershipStatus: 'active',
+          role: 'member',
+          isPinned: true,
+          isFavorite: true,
+          joinedAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()
+        },
+        {
+          id: 'math_tutoring',
+          name: 'Math Tutoring',
+          description: 'Peer tutoring for calculus and statistics',
+          color: '#10B981',
+          memberCount: 18,
+          unreadCount: 1,
+          lastActivity: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(),
+          membershipStatus: 'active',
+          role: 'member',
+          isPinned: false,
+          isFavorite: true,
+          joinedAt: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000).toISOString()
+        },
+        {
+          id: 'debate_club',
+          name: 'Debate Club',
+          description: 'Weekly debates and discussion sessions',
+          color: '#8B5CF6',
+          memberCount: 32,
+          unreadCount: 0,
+          lastActivity: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+          membershipStatus: 'active',
+          role: 'admin',
+          isPinned: true,
+          isFavorite: false,
+          joinedAt: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString()
+        }
+      ];
+      
+      logger.info('✅ Development mode: Returning mock spaces data', { 
+        spaceCount: mockSpaces.length, 
+        endpoint: '/api/spaces/my' 
+      });
+      
+      return NextResponse.json({
+        success: true,
+        spaces: mockSpaces,
+        activeSpaces: mockSpaces.filter(s => s.membershipStatus === 'active'),
+        pinnedSpaces: mockSpaces.filter(s => s.isPinned),
+        recentActivity: [
+          {
+            spaceId: 'cs_study_group',
+            spaceName: 'CS Study Group',
+            action: 'visited',
+            timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+            duration: 45
+          },
+          {
+            spaceId: 'math_tutoring',
+            spaceName: 'Math Tutoring',
+            action: 'commented',
+            timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString()
+          }
+        ],
+        stats: {
+          totalSpaces: mockSpaces.length,
+          adminSpaces: mockSpaces.filter(s => s.role === 'admin').length,
+          totalNotifications: mockSpaces.reduce((sum, s) => sum + s.unreadCount, 0),
+          weeklyActivity: 12
+        },
+        developmentMode: true
+      });
     }
-
-    console.log(`🔍 Fetching spaces for user: ${userId}`);
 
     // Get user's memberships using collectionGroup
     const membershipsQuery = dbAdmin.collectionGroup('members')
@@ -46,7 +106,7 @@ export async function GET(request: NextRequest) {
     const membershipsSnapshot = await membershipsQuery.get();
     
     if (membershipsSnapshot.empty) {
-      console.log(`📊 No memberships found for user ${userId}`);
+      logger.info('📊 No memberships found for user', { userId, endpoint: '/api/spaces/my' });
       return NextResponse.json({
         success: true,
         activeSpaces: [],
@@ -61,7 +121,7 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    console.log(`📊 Found ${membershipsSnapshot.size} memberships for user ${userId}`);
+    logger.info('📊 Foundmemberships for user', { membershipsSnapshot, userId, endpoint: '/api/spaces/my' });
 
     // Extract space IDs and membership data
     const membershipData = new Map<string, any>();
@@ -116,39 +176,39 @@ export async function GET(request: NextRequest) {
               // Membership-specific data
               membershipRole: membership?.role || 'member',
               lastVisited: membership?.lastVisited || new Date(),
-              notifications: membership?.notifications || Math.floor(Math.random() * 10), // Mock notifications
+              notifications: membership?.notifications || 0,
               pinned: membership?.pinned || false,
               
-              // Mock widget activity data (would come from actual widget APIs)
+              // Production-safe activity data (empty until real integration)
               activity: {
-                newPosts: Math.floor(Math.random() * 5),
-                newEvents: Math.floor(Math.random() * 3),
-                newMembers: Math.floor(Math.random() * 4)
+                newPosts: 0,
+                newEvents: 0,
+                newMembers: 0
               },
               
-              // Widget preview data (would be fetched from respective widget APIs)
+              // Production-safe widget data (empty until real integration)
               widgets: {
                 posts: {
-                  recentCount: Math.floor(Math.random() * 10) + 1,
-                  lastActivity: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000)
+                  recentCount: 0,
+                  lastActivity: null
                 },
                 events: {
-                  upcomingCount: Math.floor(Math.random() * 3),
-                  nextEvent: Math.random() > 0.5 ? new Date(Date.now() + Math.random() * 7 * 24 * 60 * 60 * 1000) : null
+                  upcomingCount: 0,
+                  nextEvent: null
                 },
                 members: {
-                  activeCount: Math.floor(spaceData.metrics?.memberCount * 0.3) || 0,
-                  recentJoins: Math.floor(Math.random() * 3)
+                  activeCount: spaceData.metrics?.memberCount || 0,
+                  recentJoins: 0
                 },
                 tools: {
-                  availableCount: membership?.role !== 'member' ? Math.floor(Math.random() * 3) : 0
+                  availableCount: 0
                 }
               }
             });
           }
         });
       } catch (error) {
-        console.error(`❌ Error fetching spaces for type ${spaceType}:`, error);
+        logger.error('❌ Error fetching spaces for type', { spaceType, error: error, endpoint: '/api/spaces/my' });
         // Continue with other types even if one fails
       }
     }
@@ -177,7 +237,7 @@ export async function GET(request: NextRequest) {
       timestamp: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000)
     }));
 
-    console.log(`✅ Returning ${spaces.length} spaces for user ${userId}`);
+    logger.info('✅ Returningspaces for user', { spaces, userId, endpoint: '/api/spaces/my' });
 
     return NextResponse.json({
       success: true,
@@ -188,13 +248,10 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error: any) {
-    console.error('❌ My spaces API error:', error);
+    logger.error('❌ My spaces API error', { error: error, endpoint: '/api/spaces/my' });
 
     if (error.code === 'auth/id-token-expired') {
-      return NextResponse.json(
-        { error: 'Token expired' },
-        { status: 401 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Token expired", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     return NextResponse.json(
@@ -211,48 +268,26 @@ export async function GET(request: NextRequest) {
           weeklyActivity: 0
         }
       },
-      { status: 500 }
+      { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }
-}
+}, { 
+  allowDevelopmentBypass: true, // User spaces are safe for development
+  operation: 'get_user_spaces' 
+});
 
 /**
  * Update user space preferences (pin/unpin, notifications, etc.)
  */
-export async function PATCH(request: NextRequest) {
+export const PATCH = withAuth(async (request: NextRequest, authContext) => {
   try {
-    const authHeader = request.headers.get('Authorization');
-    if (!authHeader?.startsWith('Bearer ')) {
-      return NextResponse.json(
-        { error: 'Authorization header required' },
-        { status: 401 }
-      );
-    }
-
-    const token = authHeader.substring(7);
-    let userId = 'test-user';
-    
-    if (token !== 'test-token') {
-      try {
-        const auth = getAuth();
-        const decodedToken = await auth.verifyIdToken(token);
-        userId = decodedToken.uid;
-      } catch (authError) {
-        return NextResponse.json(
-          { error: 'Invalid or expired token' },
-          { status: 401 }
-        );
-      }
-    }
+    const userId = authContext.userId;
 
     const body = await request.json();
     const { spaceId, action, value } = body;
 
     if (!spaceId || !action) {
-      return NextResponse.json(
-        { error: 'spaceId and action are required' },
-        { status: 400 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("spaceId and action are required", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
     // Find the space's membership document
@@ -272,10 +307,7 @@ export async function PATCH(request: NextRequest) {
     }
 
     if (!membershipRef) {
-      return NextResponse.json(
-        { error: 'Membership not found' },
-        { status: 404 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Membership not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     // Update membership based on action
@@ -295,15 +327,12 @@ export async function PATCH(request: NextRequest) {
         updates.notifications = value || 0;
         break;
       default:
-        return NextResponse.json(
-          { error: 'Invalid action' },
-          { status: 400 }
-        );
+        return NextResponse.json(ApiResponseHelper.error("Invalid action", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
     await membershipRef.update(updates);
 
-    console.log(`✅ Updated membership for space ${spaceId}, action: ${action}`);
+    logger.info('✅ Updated membership for space, action', { spaceId, action, endpoint: '/api/spaces/my' });
 
     return NextResponse.json({
       success: true,
@@ -311,14 +340,17 @@ export async function PATCH(request: NextRequest) {
     });
 
   } catch (error: any) {
-    console.error('❌ My spaces PATCH error:', error);
+    logger.error('❌ My spaces PATCH error', { error: error, endpoint: '/api/spaces/my' });
 
     return NextResponse.json(
       { 
         success: false,
         error: 'Internal server error'
       },
-      { status: 500 }
+      { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }
-}
+}, { 
+  allowDevelopmentBypass: true, // Space preferences are safe for development
+  operation: 'update_space_preferences' 
+});

@@ -13,6 +13,8 @@ export const breakpoints = {
     xl: '1280px', // Large desktop
     '2xl': '1536px', // Extra large
 };
+// Alias for backwards compatibility
+export const responsiveBreakpoints = breakpoints;
 // Touch-Optimized Sizing System
 export const touchTargets = {
     minimum: 'min-h-[44px] min-w-[44px]', // iOS/Android minimum

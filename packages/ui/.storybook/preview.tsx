@@ -33,11 +33,87 @@ const preview: Preview = {
       },
     },
     backgrounds: {
-      default: 'dark',
+      default: 'hive-dark',
       values: [
-        { name: 'dark', value: '#0A0A0A' },
+        { name: 'hive-dark', value: '#0A0A0B' },
+        { name: 'hive-overlay', value: '#111113' },
+        { name: 'hive-tertiary', value: '#1A1A1C' },
         { name: 'light', value: '#FFFFFF' },
       ],
+    },
+    viewport: {
+      viewports: {
+        // HIVE-specific breakpoints
+        mobile: {
+          name: 'Mobile',
+          styles: { width: '375px', height: '812px' },
+          type: 'mobile',
+        },
+        tablet: {
+          name: 'Tablet',
+          styles: { width: '768px', height: '1024px' },
+          type: 'tablet',
+        },
+        desktop: {
+          name: 'Desktop',
+          styles: { width: '1440px', height: '900px' },
+          type: 'desktop',
+        },
+        widescreen: {
+          name: 'Widescreen',
+          styles: { width: '1920px', height: '1080px' },
+          type: 'desktop',
+        },
+        // Campus-specific device scenarios
+        campusLaptop: {
+          name: 'Campus Laptop',
+          styles: { width: '1366px', height: '768px' },
+          type: 'desktop',
+        },
+        studentPhone: {
+          name: 'Student Phone',
+          styles: { width: '414px', height: '896px' },
+          type: 'mobile',
+        },
+      },
+    },
+    docs: {
+      theme: {
+        base: 'dark',
+        brandTitle: 'HIVE Design System',
+        brandUrl: '/',
+        brandImage: '/hive-logo.svg',
+        brandTarget: '_self',
+        
+        colorPrimary: '#FFD700', // HIVE Gold
+        colorSecondary: '#FFD700',
+        
+        // UI colors
+        appBg: '#0A0A0B',
+        appContentBg: '#111113',
+        appBorderColor: '#2A2A2C',
+        appBorderRadius: 8,
+        
+        // Typography
+        fontBase: '"Geist Sans", system-ui, sans-serif',
+        fontCode: '"JetBrains Mono", monospace',
+        
+        // Text colors
+        textColor: '#E5E5E7',
+        textInverseColor: '#0A0A0B',
+        textMutedColor: '#9CA3AF',
+        
+        // Toolbar colors
+        barTextColor: '#E5E5E7',
+        barSelectedColor: '#FFD700',
+        barBg: '#111113',
+        
+        // Form colors
+        inputBg: '#1A1A1C',
+        inputBorder: '#2A2A2C',
+        inputTextColor: '#E5E5E7',
+        inputBorderRadius: 6,
+      },
     },
     layout: 'centered',
   },

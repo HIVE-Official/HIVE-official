@@ -3,6 +3,8 @@ import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { getAuth } from 'firebase-admin/auth';
 import { getFeedUpdates, markFeedAsViewed, refreshFeedCache } from '@/lib/real-time-feed';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 // Real-time feed update schema
 const FeedUpdateQuerySchema = z.object({
@@ -25,11 +27,8 @@ export async function GET(request: NextRequest) {
 
     // Verify authentication
     const authHeader = request.headers.get('Authorization');
-    if (!authHeader?.startsWith('Bearer ')) {
-      return NextResponse.json(
-        { error: 'Authorization header required' },
-        { status: 401 }
-      );
+    if (!authHeader?.startsWith("Bearer ")) {
+      return NextResponse.json(ApiResponseHelper.error("Authorization header required", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const token = authHeader.substring(7);
@@ -41,14 +40,11 @@ export async function GET(request: NextRequest) {
         const decodedToken = await auth.verifyIdToken(token);
         userId = decodedToken.uid;
       } catch (authError) {
-        return NextResponse.json(
-          { error: 'Invalid or expired token' },
-          { status: 401 }
-        );
+        return NextResponse.json(ApiResponseHelper.error("Invalid or expired token", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
       }
     }
 
-    console.log(`🔄 Feed update request: ${action} for user ${userId}`);
+    logger.info('🔄 Feed update request:for user', { action, userId, endpoint: '/api/feed/updates' });
 
     switch (action) {
       case 'check': {
@@ -74,26 +70,20 @@ export async function GET(request: NextRequest) {
       }
 
       default:
-        return NextResponse.json(
-          { error: 'Invalid action for GET request' },
-          { status: 400 }
-        );
+        return NextResponse.json(ApiResponseHelper.error("Invalid action for GET request", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
   } catch (error: any) {
-    console.error('Feed updates API error:', error);
+    logger.error('Feed updates API error', { error: error, endpoint: '/api/feed/updates' });
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: 'Invalid query parameters', details: error.errors },
-        { status: 400 }
+        { status: HttpStatus.BAD_REQUEST }
       );
     }
 
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json(ApiResponseHelper.error("Internal server error", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -105,11 +95,8 @@ export async function POST(request: NextRequest) {
 
     // Verify authentication
     const authHeader = request.headers.get('Authorization');
-    if (!authHeader?.startsWith('Bearer ')) {
-      return NextResponse.json(
-        { error: 'Authorization header required' },
-        { status: 401 }
-      );
+    if (!authHeader?.startsWith("Bearer ")) {
+      return NextResponse.json(ApiResponseHelper.error("Authorization header required", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const token = authHeader.substring(7);
@@ -121,31 +108,22 @@ export async function POST(request: NextRequest) {
         const decodedToken = await auth.verifyIdToken(token);
         userId = decodedToken.uid;
       } catch (authError) {
-        return NextResponse.json(
-          { error: 'Invalid or expired token' },
-          { status: 401 }
-        );
+        return NextResponse.json(ApiResponseHelper.error("Invalid or expired token", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
       }
     }
 
-    console.log(`🔄 Feed POST request: ${action} for user ${userId}`);
+    logger.info('🔄 Feed POST request:for user', { action, userId, endpoint: '/api/feed/updates' });
 
     switch (action) {
       case 'mark_viewed': {
         if (!itemIds) {
-          return NextResponse.json(
-            { error: 'itemIds parameter required for mark_viewed action' },
-            { status: 400 }
-          );
+          return NextResponse.json(ApiResponseHelper.error("itemIds parameter required for mark_viewed action", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
         }
 
         const itemIdArray = itemIds.split(',').map(id => id.trim()).filter(Boolean);
         
         if (itemIdArray.length === 0) {
-          return NextResponse.json(
-            { error: 'At least one valid itemId required' },
-            { status: 400 }
-          );
+          return NextResponse.json(ApiResponseHelper.error("At least one valid itemId required", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
         }
 
         await markFeedAsViewed(userId, itemIdArray);
@@ -170,25 +148,19 @@ export async function POST(request: NextRequest) {
       }
 
       default:
-        return NextResponse.json(
-          { error: 'Invalid action for POST request' },
-          { status: 400 }
-        );
+        return NextResponse.json(ApiResponseHelper.error("Invalid action for POST request", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
   } catch (error: any) {
-    console.error('Feed updates POST API error:', error);
+    logger.error('Feed updates POST API error', { error: error, endpoint: '/api/feed/updates' });
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: 'Invalid parameters', details: error.errors },
-        { status: 400 }
+        { status: HttpStatus.BAD_REQUEST }
       );
     }
 
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json(ApiResponseHelper.error("Internal server error", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

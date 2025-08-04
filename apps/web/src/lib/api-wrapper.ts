@@ -42,8 +42,8 @@ export interface ApiContext {
  * API handler function type
  */
 export type ApiHandler = (
-  context: ApiContext,
-  params?: any
+  _context: ApiContext,
+  _params?: any
 ) => Promise<NextResponse>;
 
 /**
@@ -221,7 +221,7 @@ export function createApiHandler(
  * Utility function for simple GET endpoints
  */
 export function createGetHandler(
-  handler: (context: ApiContext, params?: any) => Promise<any>,
+  handler: (_context: ApiContext, _params?: any) => Promise<any>,
   config: Omit<ApiConfig, 'methods'> = {}
 ) {
   return createApiHandler(
@@ -237,7 +237,7 @@ export function createGetHandler(
  * Utility function for simple POST endpoints
  */
 export function createPostHandler(
-  handler: (context: ApiContext, params?: any) => Promise<any>,
+  handler: (_context: ApiContext, _params?: any) => Promise<any>,
   config: Omit<ApiConfig, 'methods'> = {}
 ) {
   return createApiHandler(
@@ -254,10 +254,10 @@ export function createPostHandler(
  */
 export function createCrudHandler(
   handlers: {
-    get?: (context: ApiContext, params?: any) => Promise<any>;
-    post?: (context: ApiContext, params?: any) => Promise<any>;
-    put?: (context: ApiContext, params?: any) => Promise<any>;
-    delete?: (context: ApiContext, params?: any) => Promise<any>;
+    get?: (_context: ApiContext, _params?: any) => Promise<any>;
+    post?: (_context: ApiContext, _params?: any) => Promise<any>;
+    put?: (_context: ApiContext, _params?: any) => Promise<any>;
+    delete?: (_context: ApiContext, _params?: any) => Promise<any>;
   },
   config: Omit<ApiConfig, 'methods'> = {}
 ) {

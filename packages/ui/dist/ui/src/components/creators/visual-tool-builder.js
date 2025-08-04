@@ -4,13 +4,13 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useState, useCallback, useRef } from 'react';
 import { Play, Save, Eye, Undo, Redo, Trash2, Move, ZoomIn, ZoomOut, Grid3X3, Layers, MousePointer, Hand } from 'lucide-react';
-import { cn } from '../../lib/utils';
-import { HiveButton } from '../hive-button';
-import { HiveBadge } from '../hive-badge';
-import { HiveMotionWrapper } from '../hive-motion-wrapper';
-import { ElementPicker } from './element-picker';
-import { ElementConfig } from './element-config';
-import { ToolPreview } from './tool-preview';
+import { cn } from '../../lib/utils.js';
+import { HiveButton } from '../hive-button.js';
+import { HiveBadge } from '../hive-badge.js';
+import { HiveMotionWrapper } from '../hive-motion-wrapper.js';
+import { ElementPicker } from './element-picker.js';
+import { ElementConfig } from './element-config.js';
+import { ToolPreview } from './tool-preview.js';
 const Canvas = ({ tool, elements, onElementAdd, onElementUpdate, onElementDelete, onElementSelect, selectedElementId, canvas, onCanvasUpdate }) => {
     const canvasRef = useRef(null);
     const [draggedElement, setDraggedElement] = useState(null);
@@ -58,7 +58,7 @@ const Canvas = ({ tool, elements, onElementAdd, onElementUpdate, onElementDelete
             return null;
         const IconComponent = element.icon;
         const isSelected = selectedElementId === instance.id;
-        return (_jsx(HiveMotionWrapper, { variant: "fade", layoutId: instance.id, children: _jsxs("div", { className: cn("absolute border-2 rounded-lg cursor-move transition-all duration-200", isSelected
+        return (_jsx(HiveMotionWrapper, { layoutId: instance.id, children: _jsxs("div", { className: cn("absolute border-2 rounded-lg cursor-move transition-all duration-200", isSelected
                     ? "border-[var(--hive-color-gold-primary)] shadow-lg shadow-[var(--hive-color-gold-primary)]/20"
                     : "border-transparent hover:border-[var(--hive-border-default)]", "group"), style: {
                     left: instance.position.x,
@@ -79,7 +79,7 @@ const Canvas = ({ tool, elements, onElementAdd, onElementUpdate, onElementDelete
                                             onElementDelete(instance.id);
                                         }, children: _jsx(Trash2, { size: 12, className: "text-white" }) })] }), _jsx("div", { className: "absolute -bottom-2 -right-2 w-4 h-4 bg-[var(--hive-color-gold-primary)] rounded cursor-se-resize" })] }))] }) }, instance.id));
     };
-    return (_jsxs("div", { className: "relative flex-1 overflow-hidden bg-[var(--hive-background-primary)]", children: [_jsxs("div", { className: "absolute top-4 left-4 z-10 flex gap-2", children: [_jsxs("div", { className: "flex gap-1 p-1 bg-[var(--hive-background-secondary)] rounded-lg border border-[var(--hive-border-default)]", children: [_jsx(HiveButton, { variant: "ghost", size: "sm", onClick: () => onCanvasUpdate({ zoom: Math.min(canvas.zoom + 0.1, 2) }), children: _jsx(ZoomIn, { size: 16 }) }), _jsx(HiveButton, { variant: "ghost", size: "sm", onClick: () => onCanvasUpdate({ zoom: Math.max(canvas.zoom - 0.1, 0.5) }), children: _jsx(ZoomOut, { size: 16 }) }), _jsxs("div", { className: "px-2 py-1 text-xs text-[var(--hive-text-secondary)] flex items-center", children: [Math.round(canvas.zoom * 100), "%"] })] }), _jsx("div", { className: "flex gap-1 p-1 bg-[var(--hive-background-secondary)] rounded-lg border border-[var(--hive-border-default)]", children: _jsx(HiveButton, { variant: canvas.showGrid ? "default" : "ghost", size: "sm", onClick: () => onCanvasUpdate({ showGrid: !canvas.showGrid }), children: _jsx(Grid3X3, { size: 16 }) }) })] }), _jsx("div", { ref: canvasRef, className: cn("w-full h-full relative overflow-auto", isDragging && "bg-[var(--hive-color-gold-primary)]/5"), onDrop: handleDrop, onDragOver: handleDragOver, onDragEnter: handleDragEnter, onDragLeave: handleDragLeave, onClick: () => onElementSelect(null), style: {
+    return (_jsxs("div", { className: "relative flex-1 overflow-hidden bg-[var(--hive-background-primary)]", children: [_jsxs("div", { className: "absolute top-4 left-4 z-10 flex gap-2", children: [_jsxs("div", { className: "flex gap-1 p-1 bg-[var(--hive-background-secondary)] rounded-lg border border-[var(--hive-border-default)]", children: [_jsx(HiveButton, { variant: "ghost", size: "sm", onClick: () => onCanvasUpdate({ zoom: Math.min(canvas.zoom + 0.1, 2) }), children: _jsx(ZoomIn, { size: 16 }) }), _jsx(HiveButton, { variant: "ghost", size: "sm", onClick: () => onCanvasUpdate({ zoom: Math.max(canvas.zoom - 0.1, 0.5) }), children: _jsx(ZoomOut, { size: 16 }) }), _jsxs("div", { className: "px-2 py-1 text-xs text-[var(--hive-text-secondary)] flex items-center", children: [Math.round(canvas.zoom * 100), "%"] })] }), _jsx("div", { className: "flex gap-1 p-1 bg-[var(--hive-background-secondary)] rounded-lg border border-[var(--hive-border-default)]", children: _jsx(HiveButton, { variant: canvas.showGrid ? "primary" : "ghost", size: "sm", onClick: () => onCanvasUpdate({ showGrid: !canvas.showGrid }), children: _jsx(Grid3X3, { size: 16 }) }) })] }), _jsx("div", { ref: canvasRef, className: cn("w-full h-full relative overflow-auto", isDragging && "bg-[var(--hive-color-gold-primary)]/5"), onDrop: handleDrop, onDragOver: handleDragOver, onDragEnter: handleDragEnter, onDragLeave: handleDragLeave, onClick: () => onElementSelect(null), style: {
                     backgroundImage: canvas.showGrid
                         ? `radial-gradient(circle, var(--hive-border-default) 1px, transparent 1px)`
                         : undefined,

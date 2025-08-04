@@ -1,9 +1,11 @@
 import type { NextRequest} from 'next/server';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
-import { getAuth } from 'firebase-admin/auth';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { type Space } from '@hive/core';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
 
 const browseSpacesSchema = z.object({
   schoolId: z.string().optional(),
@@ -18,38 +20,14 @@ const browseSpacesSchema = z.object({
  * Browse available spaces at a user's school
  * Returns paginated list of spaces with membership status
  */
-export async function GET(request: NextRequest) {
+export const GET = withAuth(async (request: NextRequest, authContext) => {
   try {
     // Parse query parameters
     const url = new URL(request.url);
     const queryParams = Object.fromEntries(url.searchParams.entries());
     const { schoolId, type, subType, limit, offset, search } = browseSpacesSchema.parse(queryParams);
 
-    // Verify the requesting user is authenticated (allow test tokens for development)
-    const authHeader = request.headers.get('Authorization');
-    if (!authHeader?.startsWith('Bearer ')) {
-      return NextResponse.json(
-        { error: 'Authorization header required' },
-        { status: 401 }
-      );
-    }
-
-    const token = authHeader.substring(7);
-    let userId = 'test-user';
-    
-    // Handle test tokens in development
-    if (token !== 'test-token') {
-      try {
-        const auth = getAuth();
-        const decodedToken = await auth.verifyIdToken(token);
-        userId = decodedToken.uid;
-      } catch (authError) {
-        return NextResponse.json(
-          { error: 'Invalid or expired token' },
-          { status: 401 }
-        );
-      }
-    }
+    const userId = authContext.userId;
 
     // Note: Removed schoolId logic since spaces don't have this field
 
@@ -71,14 +49,14 @@ export async function GET(request: NextRequest) {
     
     for (const spaceType of typesToQuery) {
       try {
-        console.log(`📊 Querying space type: ${spaceType}`);
+        logger.info('📊 Querying space type', { spaceType, endpoint: '/api/spaces/browse' });
         
         const spacesSnapshot = await dbAdmin.collection('spaces')
           .doc(spaceType)
           .collection('spaces')
           .get();
           
-        console.log(`   Found ${spacesSnapshot.size} spaces in ${spaceType}`);
+        logger.info('Foundspaces in', { spacesSnapshot, spaceType, endpoint: '/api/spaces/browse' });
         
         // Add spaces from this type collection
         const spacesFromType = spacesSnapshot.docs.map(doc => {
@@ -102,7 +80,7 @@ export async function GET(request: NextRequest) {
         
         spaces.push(...spacesFromType);
       } catch (error) {
-        console.error(`❌ Error querying spaces for type ${spaceType}:`, error);
+        logger.error('❌ Error querying spaces for type', { spaceType, error: error, endpoint: '/api/spaces/browse' });
         // Continue with other types even if one fails
       }
     }
@@ -136,7 +114,7 @@ export async function GET(request: NextRequest) {
     // Skip membership check for test users (onboarding flow)
     const userSpaceIds = new Set<string>();
     
-    if (token !== 'test-token') {
+    if (userId !== 'test-user' && userId !== 'dev_user_123') {
       try {
         // Use collectionGroup to find all member documents for this user
         const membershipQuery = dbAdmin.collectionGroup('members')
@@ -152,14 +130,14 @@ export async function GET(request: NextRequest) {
           }
         });
         
-        console.log(`📊 Found ${userSpaceIds.size} memberships for user ${userId}`);
+        logger.info('📊 Foundmemberships for user', { userSpaceIds, userId, endpoint: '/api/spaces/browse' });
         
       } catch (error) {
-        console.error(`❌ Error getting memberships:`, error);
+        logger.error('❌ Error getting memberships', { error: error, endpoint: '/api/spaces/browse' });
         // Continue without membership data rather than failing
       }
     } else {
-      console.log(`📊 Skipping membership check for test token (onboarding flow)`);
+      logger.info('📊 Skipping membership check for test token (onboarding flow)', { endpoint: '/api/spaces/browse' });
     }
 
     // Add membership status to each space
@@ -211,25 +189,18 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error: any) {
-    console.error('Browse spaces error:', error);
+    logger.error('Browse spaces error', { error: error, endpoint: '/api/spaces/browse' });
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: 'Invalid query parameters', details: error.errors },
-        { status: 400 }
+        { status: HttpStatus.BAD_REQUEST }
       );
     }
 
-    if (error.code === 'auth/id-token-expired') {
-      return NextResponse.json(
-        { error: 'Token expired' },
-        { status: 401 }
-      );
-    }
-
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json(ApiResponseHelper.error("Internal server error", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
-} 
+}, { 
+  allowDevelopmentBypass: true, // Space browsing is safe for development
+  operation: 'browse_spaces' 
+}); 

@@ -12,13 +12,13 @@ import { type VariantProps } from 'class-variance-authority';
  * All cards inherit from this foundation
  */
 declare const hiveCardBaseVariants: (props?: {
-    variant?: "error" | "default" | "premium" | "minimal" | "warning" | "elevated" | "builder" | "selected" | "interactive" | "active" | "academic" | "social";
+    variant?: "default" | "warning" | "error" | "selected" | "interactive" | "builder" | "active" | "academic" | "social" | "elevated" | "minimal" | "premium";
     size?: "default" | "sm" | "lg" | "xl";
-    shadow?: "dramatic" | "none" | "subtle" | "medium" | "strong" | "glow";
-    border?: "none" | "subtle" | "strong" | "gold" | "default" | "gold-strong";
-    motionType?: "magnetic" | "none" | "subtle" | "medium" | "strong";
-    glass?: "none" | "subtle" | "medium" | "strong";
-} & import("class-variance-authority/dist/types").ClassProp) => string;
+    shadow?: "glow" | "none" | "strong" | "medium" | "subtle" | "dramatic";
+    border?: "default" | "gold" | "none" | "strong" | "subtle" | "gold-strong";
+    motionType?: "none" | "strong" | "medium" | "subtle" | "magnetic";
+    glass?: "none" | "strong" | "medium" | "subtle";
+} & import("class-variance-authority/types").ClassProp) => string;
 /**
  * Unified motion configurations for all cards
  */

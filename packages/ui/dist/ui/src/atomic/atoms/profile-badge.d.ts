@@ -2,11 +2,11 @@ import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
 import { LucideIcon } from 'lucide-react';
 declare const profileBadgeVariants: (props?: {
-    size?: "xs" | "sm" | "lg" | "md";
-    variant?: "achievement" | "default" | "ghost" | "builder" | "academic" | "social" | "leader" | "verified" | "streak";
+    size?: "xs" | "sm" | "md" | "lg";
+    variant?: "default" | "ghost" | "builder" | "leader" | "verified" | "achievement" | "streak" | "academic" | "social";
     interactive?: boolean;
     pulsing?: boolean;
-} & import("class-variance-authority/dist/types").ClassProp) => string;
+} & import("class-variance-authority/types").ClassProp) => string;
 export declare const BADGE_TYPES: {
     readonly builder: {
         readonly icon: React.ForwardRefExoticComponent<Omit<import("lucide-react").LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>>;

@@ -377,11 +377,11 @@ export function PersonalizationFeedOrganism({
   const getGridConfig = () => {
     switch (layout) {
       case "compact":
-        return { base: 1, md: 2 };
+        return 2;
       case "expanded":
-        return { base: 1, md: 2, lg: 3, xl: 4 };
+        return 4;
       default:
-        return { base: 1, md: 2, lg: 3 };
+        return 3;
     }
   };
 

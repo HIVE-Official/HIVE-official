@@ -169,7 +169,7 @@ class HIVERecommendationEngine {
     let score = 0;
     
     // Direct interest matching
-    const userInterests = this.userProfile.interests.map(i => i.toLowerCase());
+    const userInterests = (this.userProfile.interests || []).map(i => i.toLowerCase());
     const spaceKeywords = [
       space.name.toLowerCase(),
       space.description?.toLowerCase() || "",

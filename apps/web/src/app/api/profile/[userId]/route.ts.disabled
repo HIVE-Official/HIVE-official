@@ -1,0 +1,261 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { dbAdmin } from '@/lib/firebase-admin';
+import { getAuth } from 'firebase-admin/auth';
+import { collection, query, where, getDocs, orderBy, limit } from 'firebase-admin/firestore';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
+
+interface PublicProfileParams {
+  params: {
+    userId: string;
+  };
+}
+
+/**
+ * Get public profile for a specific user
+ * GET /api/profile/[userId]
+ */
+export const GET = async (request: NextRequest, { params }: PublicProfileParams) => {
+  try {
+    const { userId } = params;
+    
+    if (!userId) {
+      return NextResponse.json(ApiResponseHelper.error("User ID is required", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
+    }
+
+    // Extract auth token from request
+    const authHeader = request.headers.get('authorization');
+    let requestingUserId: string | null = null;
+    
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      const token = authHeader.substring(7);
+      if (token === 'test-token' || token === 'DEV_MODE') {
+        requestingUserId = 'test-user';
+      }
+    }
+    
+    // Handle development mode
+    if (requestingUserId === 'test-user') {
+      // Return mock development profile
+      if (userId.startsWith('dev_') || userId === requestingUserId) {
+          const mockProfile = {
+            id: userId,
+            fullName: `Dev User ${userId}`,
+            handle: `dev_${userId}`,
+            major: 'Computer Science',
+            avatarUrl: '',
+            bio: 'Development mode user profile',
+            schoolId: 'dev_school',
+            graduationYear: 2025,
+            isBuilder: true,
+            memberSince: new Date().toISOString(),
+            isPublic: true,
+            stats: {
+              totalSpaces: 3,
+              publicSpaces: 2,
+              memberSince: new Date().toISOString(),
+              isBuilder: true,
+            },
+            publicSpaces: [
+              {
+                id: 'dev_space_1',
+                name: 'Development Space',
+                description: 'A space for development',
+                type: 'academic',
+                memberCount: 10,
+                isPublic: true,
+                role: 'member',
+              }
+            ],
+            recentActivity: [
+              {
+                id: 'dev_activity_1',
+                type: 'space_visit',
+                description: 'Visited Development Space',
+                timestamp: new Date().toISOString(),
+              }
+            ],
+          };
+
+          return NextResponse.json({
+            success: true,
+            profile: mockProfile,
+            isOwnProfile: userId === requestingUserId,
+            isPublic: true,
+            developmentMode: true
+          });
+        }
+      } else {
+        try {
+          const auth = getAuth();
+          const decodedToken = await auth.verifyIdToken(token);
+          requestingUserId = decodedToken.uid;
+        } catch (authError) {
+          // Continue without authentication - public profiles should be viewable
+          requestingUserId = null;
+        }
+      }
+    }
+
+    // Get user document from Firestore
+    const userDoc = await dbAdmin.collection('users').doc(userId).get();
+    
+    if (!userDoc.exists) {
+      return NextResponse.json(ApiResponseHelper.error("User not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
+    }
+
+    const userData = userDoc.data();
+    
+    // Check if profile is public or if requesting user has permission to view
+    const isOwnProfile = requestingUserId === userId;
+    const isPublicProfile = userData?.isPublic === true;
+    
+    if (!isOwnProfile && !isPublicProfile) {
+      return NextResponse.json(ApiResponseHelper.error("Profile is private", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
+    }
+
+    // Get basic public profile data
+    const publicProfile = {
+      id: userId,
+      fullName: userData?.fullName || '',
+      handle: userData?.handle || '',
+      major: userData?.major || '',
+      avatarUrl: userData?.avatarUrl || '',
+      bio: userData?.bio || '',
+      schoolId: userData?.schoolId || '',
+      graduationYear: userData?.graduationYear,
+      isBuilder: userData?.isBuilder || false,
+      memberSince: userData?.createdAt,
+      isPublic: userData?.isPublic || false,
+    };
+
+    // If viewing own profile or profile is public, add additional data
+    if (isOwnProfile || isPublicProfile) {
+      // Get recent activity and spaces (limited for privacy)
+      const [spaceMemberships, recentActivity] = await Promise.all([
+        getPublicSpaceMemberships(userId),
+        getPublicActivity(userId)
+      ]);
+
+      const extendedProfile = {
+        ...publicProfile,
+        stats: {
+          totalSpaces: spaceMemberships.length,
+          publicSpaces: spaceMemberships.filter(s => s.isPublic).length,
+          memberSince: userData?.createdAt,
+          isBuilder: userData?.isBuilder || false,
+        },
+        publicSpaces: spaceMemberships.filter(s => s.isPublic).slice(0, 5),
+        recentActivity: isOwnProfile ? recentActivity : recentActivity.slice(0, 3),
+      };
+
+      return NextResponse.json({
+        success: true,
+        profile: extendedProfile,
+        isOwnProfile,
+        isPublic: isPublicProfile
+      });
+    }
+
+    // Return minimal public profile
+    return NextResponse.json({
+      success: true,
+      profile: publicProfile,
+      isOwnProfile: false,
+      isPublic: isPublicProfile
+    });
+
+  } catch (error) {
+    logger.error('Public profile fetch error', { error: error, endpoint: '/api/profile/[userId]' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to fetch profile", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
+  }
+};
+
+// Helper function to get public space memberships
+async function getPublicSpaceMemberships(userId: string) {
+  try {
+    // Get all space memberships for the user using collectionGroup
+    const membershipsSnapshot = await dbAdmin
+      .collectionGroup('members')
+      .where('uid', '==', userId)
+      .get();
+
+    if (membershipsSnapshot.empty) {
+      return [];
+    }
+
+    // Collect space information from nested structure
+    const spacePromises = membershipsSnapshot.docs.map(async (memberDoc) => {
+      const pathParts = memberDoc.ref.path.split('/');
+      if (pathParts.length !== 6) return null;
+      
+      const spaceType = pathParts[1];
+      const spaceId = pathParts[3];
+      
+      // Fetch space document from nested structure
+      const spaceDoc = await dbAdmin
+        .collection('spaces')
+        .doc(spaceType)
+        .collection('spaces')
+        .doc(spaceId)
+        .get();
+        
+      if (!spaceDoc.exists) return null;
+
+      const spaceData = spaceDoc.data();
+      const membershipData = memberDoc.data();
+
+      // Only return public spaces or spaces where user has appropriate permissions
+      if (spaceData?.status !== 'active') return null;
+
+      return {
+        id: spaceId,
+        name: spaceData.name,
+        description: spaceData.description,
+        type: spaceData.type,
+        subType: spaceData.subType,
+        memberCount: spaceData.memberCount || 0,
+        isPublic: spaceData.isPublic || false,
+        joinedAt: membershipData?.joinedAt,
+        role: membershipData?.role || 'member',
+      };
+    });
+
+    const spacesData = await Promise.all(spacePromises);
+    return spacesData.filter(space => space !== null);
+
+  } catch (error) {
+    logger.error('Error fetching public space memberships', { error: error, endpoint: '/api/profile/[userId]' });
+    return [];
+  }
+}
+
+// Helper function to get public activity
+async function getPublicActivity(userId: string) {
+  try {
+    // This would fetch from activity collections if they exist
+    // For now, return empty array as activity tracking might not be fully implemented
+    const recentActivitySnapshot = await dbAdmin
+      .collection('activityEvents')
+      .where('userId', '==', userId)
+      .where('isPublic', '==', true)
+      .orderBy('timestamp', 'desc')
+      .limit(5)
+      .get();
+
+    return recentActivitySnapshot.docs.map(doc => ({
+      id: doc.id,
+      type: doc.data().type,
+      description: doc.data().description,
+      timestamp: doc.data().timestamp,
+      spaceId: doc.data().spaceId,
+      spaceName: doc.data().spaceName,
+    }));
+
+  } catch (error) {
+    // Activity collection might not exist yet, return empty array
+    logger.info('Activity data not available yet', { endpoint: '/api/profile/[userId]' });
+    return [];
+  }
+}

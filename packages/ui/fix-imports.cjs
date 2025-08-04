@@ -14,7 +14,7 @@ function addJsExtensions(dir) {
     } else if (file.name.endsWith('.js')) {
       let content = fs.readFileSync(fullPath, 'utf8');
       
-      // Fix relative imports without extensions
+      // Fix relative imports without extensions (starts with . or ..)
       content = content.replace(/from\s+['"](\.[^'"]*?)['"];/g, (match, importPath) => {
         // Skip if already has .js extension
         if (importPath.endsWith('.js')) return match;
@@ -39,14 +39,14 @@ function addJsExtensions(dir) {
 }
 
 console.log('Fixing import paths...');
-// Fix imports in src directory
-const distSrcPath = path.join(__dirname, 'dist/src');
+// Fix imports in ui/src directory
+const distSrcPath = path.join(__dirname, 'dist/ui/src');
 if (fs.existsSync(distSrcPath)) {
   addJsExtensions(distSrcPath);
 }
 
 // Also fix the main index.js file
-const mainIndexPath = path.join(__dirname, 'dist/index.js');
+const mainIndexPath = path.join(__dirname, 'dist/ui/index.js');
 if (fs.existsSync(mainIndexPath)) {
   let content = fs.readFileSync(mainIndexPath, 'utf8');
   

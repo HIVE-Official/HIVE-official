@@ -2,7 +2,9 @@
 
 import React from 'react';
 import { AlertTriangle, RefreshCw, Home, ArrowLeft } from 'lucide-react';
-import { Button, Card } from '@hive/ui';
+import { Button, Card } from "@hive/ui";
+import { Alert } from "@/components/temp-stubs";
+import { logger } from '../../../../lib/logger';
 
 interface SpaceErrorBoundaryState {
   hasError: boolean;
@@ -30,7 +32,14 @@ class SpaceErrorBoundary extends React.Component<SpaceErrorBoundaryProps, SpaceE
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error('Space Error Boundary caught an error:', error, errorInfo);
+    // Log error with structured logging
+    logger.error('Space Error Boundary caught an error', {
+      error: error.message,
+      stack: error.stack,
+      componentStack: errorInfo.componentStack || undefined,
+      errorBoundary: 'SpaceErrorBoundary',
+      spaceContext: 'space-loading'
+    });
     
     // Call custom error handler if provided
     this.props.onError?.(error, errorInfo);

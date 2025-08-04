@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAuth } from 'firebase-admin/auth';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { FieldValue } from 'firebase-admin/firestore';
 import { z } from 'zod';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
 
 // In-memory store for development mode profile data
 const devProfileStore: Record<string, any> = {};
@@ -12,87 +14,93 @@ const updateProfileSchema = z.object({
   fullName: z.string().min(1).max(100).optional(),
   major: z.string().min(1).max(100).optional(),
   academicYear: z.enum(['freshman', 'sophomore', 'junior', 'senior', 'graduate', 'other']).optional(),
+  graduationYear: z.number().int().min(1900).max(2040).optional(),
   housing: z.string().max(200).optional(),
   pronouns: z.string().max(50).optional(),
+  bio: z.string().max(500).optional(),
   statusMessage: z.string().max(200).optional(),
   avatarUrl: z.string().url().optional().or(z.literal("")),
   profilePhoto: z.string().url().optional().or(z.literal("")),
   isPublic: z.boolean().optional(),
   builderOptIn: z.boolean().optional(),
-});
+  userType: z.enum(['student', 'alumni', 'faculty']).optional() });
 
 /**
  * Get user profile
  * GET /api/profile
  */
-export async function GET(request: NextRequest) {
+export const GET = withAuth(async (request: NextRequest, authContext) => {
   try {
-    const authHeader = request.headers.get('authorization');
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return NextResponse.json(
-        { error: 'Authorization header required' },
-        { status: 401 }
-      );
-    }
+    const userId = authContext.userId;
 
-    const token = authHeader.split('Bearer ')[1];
-    
-    // Handle development mode tokens
-    if (token.startsWith('dev_token_')) {
-      const userId = token.replace('dev_token_', '');
-      
-      // Get stored development profile data or use defaults
+    // For development mode, provide mock data structured like HiveProfile
+    if (userId === 'test-user' || userId === 'dev_user_123') {
       const storedProfile = devProfileStore[userId] || {};
       
       return NextResponse.json({
         success: true,
         user: {
           id: userId,
-          email: `dev_user_${userId}@example.com`,
-          fullName: storedProfile.fullName || 'Development User',
-          handle: storedProfile.handle || `dev_user_${userId}`,
+          email: `dev@hive.com`,
+          fullName: storedProfile.fullName || 'Dev User',
+          handle: storedProfile.handle || 'devuser',
           major: storedProfile.major || 'Computer Science',
-          academicYear: storedProfile.academicYear || 'junior',
+          academicYear: storedProfile.academicYear || 'Senior',
+          graduationYear: storedProfile.graduationYear || 2025,
           housing: storedProfile.housing || 'Smith Hall, Room 305',
           pronouns: storedProfile.pronouns || 'they/them',
-          statusMessage: storedProfile.statusMessage || 'Building epic study tools 🔥',
+          bio: storedProfile.bio || 'Building the future of campus collaboration with HIVE 🚀',
+          statusMessage: storedProfile.statusMessage || 'Building epic study tools',
           profilePhoto: storedProfile.profilePhoto || storedProfile.avatarUrl || '',
           avatarUrl: storedProfile.avatarUrl || '',
           schoolId: 'dev_school',
+          userType: storedProfile.userType || 'student',
           emailVerified: true,
-          builderOptIn: storedProfile.builderOptIn || false,
-          isPublic: storedProfile.isPublic || true,
+          builderOptIn: storedProfile.builderOptIn || true,
+          isBuilder: storedProfile.isBuilder || true,
+          isPublic: storedProfile.isPublic !== false,
           onboardingCompleted: true,
-          joinedSpaces: 5,
-          createdAt: new Date().toISOString(),
+          joinedAt: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).toISOString(),
           lastActive: new Date().toISOString(),
+          lastActiveAt: new Date().toISOString(),
+          createdAt: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).toISOString(),
+          updatedAt: new Date().toISOString(),
+          consentGiven: true,
+          consentGivenAt: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).toISOString(),
           developmentMode: true,
-        },
+          // Additional fields for complete profile
+          spacesJoined: 8,
+          spacesActive: 5, 
+          spacesLed: 3,
+          toolsUsed: 12,
+          toolsCreated: 4,
+          connectionsCount: 156,
+          totalActivity: 342,
+          currentStreak: 7,
+          longestStreak: 21,
+          reputation: 89,
+          achievements: 12,
+          showActivity: storedProfile.showActivity !== false,
+          showSpaces: storedProfile.showSpaces !== false,
+          showConnections: storedProfile.showConnections !== false,
+          allowDirectMessages: storedProfile.allowDirectMessages !== false,
+          showOnlineStatus: storedProfile.showOnlineStatus !== false,
+          ghostMode: {
+            enabled: storedProfile.ghostMode?.enabled || false,
+            level: storedProfile.ghostMode?.level || 'minimal'
+          },
+          builderLevel: 'intermediate',
+          specializations: ['web-development', 'ui-ux', 'productivity-tools'],
+          interests: ['coding', 'design', 'collaboration', 'student-life']
+        }
       });
     }
-    
-    // Verify the token
-    const auth = getAuth();
-    let decodedToken;
-    try {
-      decodedToken = await auth.verifyIdToken(token);
-    } catch (authError) {
-      return NextResponse.json(
-        { error: 'Invalid or expired token' },
-        { status: 401 }
-      );
-    }
-
-    const userId = decodedToken.uid;
 
     // Get user document from Firestore
     const userDoc = await dbAdmin.collection('users').doc(userId).get();
     
     if (!userDoc.exists) {
-      return NextResponse.json(
-        { error: 'User profile not found' },
-        { status: 404 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("User profile not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     const userData = userDoc.data();
@@ -100,16 +108,27 @@ export async function GET(request: NextRequest) {
     // Return sanitized user profile
     const userProfile = {
       id: userId,
-      email: userData?.email || decodedToken.email,
+      email: userData?.email,
       fullName: userData?.fullName || '',
       handle: userData?.handle || '',
       major: userData?.major || '',
+      academicYear: userData?.academicYear || '',
+      graduationYear: userData?.graduationYear,
+      housing: userData?.housing || '',
+      pronouns: userData?.pronouns || '',
+      bio: userData?.bio || '',
+      statusMessage: userData?.statusMessage || '',
       avatarUrl: userData?.avatarUrl || '',
+      profilePhoto: userData?.profilePhoto || userData?.avatarUrl || '',
       schoolId: userData?.schoolId || '',
+      userType: userData?.userType || 'student',
       emailVerified: userData?.emailVerified || false,
       builderOptIn: userData?.builderOptIn || false,
+      isBuilder: userData?.isBuilder || false,
       isPublic: userData?.isPublic || false,
       onboardingCompleted: !!userData?.onboardingCompletedAt,
+      joinedAt: userData?.createdAt || new Date().toISOString(),
+      lastActive: userData?.lastActiveAt || userData?.updatedAt || new Date().toISOString(),
       createdAt: userData?.createdAt,
       updatedAt: userData?.updatedAt,
       consentGiven: userData?.consentGiven || false,
@@ -118,75 +137,47 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      user: userProfile,
+      user: userProfile
     });
 
   } catch (error) {
-    console.error('Profile fetch error:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch profile' },
-      { status: 500 }
-    );
+    logger.error('Profile fetch error', { error: error, endpoint: '/api/profile' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to fetch profile", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
-}
+}, { 
+  allowDevelopmentBypass: true, // Allow for profile viewing but with secure auth
+  operation: 'fetch_user_profile' 
+});
 
 /**
  * Update user profile
  * PATCH /api/profile
  */
-export async function PATCH(request: NextRequest) {
+export const PATCH = withAuth(async (request: NextRequest, authContext) => {
   try {
-    const authHeader = request.headers.get('authorization');
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return NextResponse.json(
-        { error: 'Authorization header required' },
-        { status: 401 }
-      );
-    }
-
-    const token = authHeader.split('Bearer ')[1];
-    
-    // Handle development mode tokens
-    if (token.startsWith('dev_token_')) {
-      const userId = token.replace('dev_token_', '');
-      const body = await request.json();
-      const updateData = updateProfileSchema.parse(body);
-      
-      // Store the updated data in development mode
-      devProfileStore[userId] = {
-        ...devProfileStore[userId],
-        ...updateData,
-      };
-      
-      console.log('Development mode profile update:', updateData);
-      console.log('Stored dev profile data:', devProfileStore[userId]);
-      
-      return NextResponse.json({
-        success: true,
-        message: 'Profile updated successfully (development mode)',
-        updated: updateData,
-      });
-    }
-    
-    // Verify the token
-    const auth = getAuth();
-    let decodedToken;
-    try {
-      decodedToken = await auth.verifyIdToken(token);
-    } catch (authError) {
-      return NextResponse.json(
-        { error: 'Invalid or expired token' },
-        { status: 401 }
-      );
-    }
-
-    const userId = decodedToken.uid;
+    const userId = authContext.userId;
 
     // Parse and validate the update data
     const body = await request.json();
     const updateData = updateProfileSchema.parse(body);
 
-    // Update the user document
+    // For development mode, store in memory
+    if (userId === 'test-user' || userId === 'dev_user_123') {
+      devProfileStore[userId] = {
+        ...devProfileStore[userId],
+        ...updateData,
+      };
+      
+      logger.info('Development mode profile update', { data: updateData, endpoint: '/api/profile' });
+      
+      return NextResponse.json({
+        success: true,
+        message: 'Profile updated successfully (development mode)',
+        updated: updateData
+      });
+    }
+
+    // Update the user document in Firestore
     const userRef = dbAdmin.collection('users').doc(userId);
     const updatePayload = {
       ...updateData,
@@ -198,29 +189,22 @@ export async function PATCH(request: NextRequest) {
     return NextResponse.json({
       success: true,
       message: 'Profile updated successfully',
-      updated: Object.keys(updateData),
+      updated: Object.keys(updateData)
     });
 
   } catch (error) {
-    console.error('Profile update error:', error);
+    logger.error('Profile update error', { error: error, endpoint: '/api/profile' });
     
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: 'Invalid data', details: error.errors },
-        { status: 400 }
-      );
-    }
-    
-    if (error instanceof Error && error.message.includes('auth/id-token-expired')) {
-      return NextResponse.json(
-        { error: 'Token expired' },
-        { status: 401 }
+        { status: HttpStatus.BAD_REQUEST }
       );
     }
 
-    return NextResponse.json(
-      { error: 'Failed to update profile' },
-      { status: 500 }
-    );
+    return NextResponse.json(ApiResponseHelper.error("Failed to update profile", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
-}
+}, { 
+  allowDevelopmentBypass: true, // Allow for profile updates but with secure auth
+  operation: 'update_user_profile' 
+});

@@ -3,11 +3,11 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Shield, EyeOff, Users, Clock, Activity, Search, AlertTriangle, CheckCircle, Info, Database } from 'lucide-react';
-import { HiveCard } from '../hive-card';
-import { HiveButton } from '../hive-button';
-import { Badge } from '../ui/badge';
-import { Switch } from '../../atomic/atoms/switch-enhanced';
-import { cn } from '../../lib/utils';
+import { HiveCard } from '../hive-card.js';
+import { HiveButton } from '../hive-button.js';
+import { Badge } from '../ui/badge.js';
+import { Switch } from '../../atomic/atoms/switch-enhanced.js';
+import { cn } from '../../lib/utils.js';
 export const PrivacyDashboard = ({ settings, onSettingsChange, className }) => {
     const [activeSection, setActiveSection] = useState('overview');
     const [expandedCard, setExpandedCard] = useState(null);

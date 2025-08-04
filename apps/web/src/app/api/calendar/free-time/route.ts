@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { collection, query, where, getDocs, orderBy } from 'firebase/firestore';
-import { db } from '@hive/core/server';
-import { getCurrentUser } from '@hive/auth-logic';
+import { dbAdmin } from '@/lib/firebase-admin';
+import { getCurrentUser } from '@/lib/server-auth';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 // Free time slot interface
 interface FreeTimeSlot {
@@ -17,7 +18,7 @@ export async function GET(request: NextRequest) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const { searchParams } = new URL(request.url);
@@ -75,8 +76,8 @@ export async function GET(request: NextRequest) {
       }
     });
   } catch (error) {
-    console.error('Error finding free time:', error);
-    return NextResponse.json({ error: 'Failed to find free time' }, { status: 500 });
+    logger.error('Error finding free time', { error: error, endpoint: '/api/calendar/free-time' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to find free time", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -88,15 +89,12 @@ async function getEventsForDate(userId: string, dateStr: string): Promise<any[]>
   const events: any[] = [];
 
   // Get personal events
-  const personalEventsQuery = query(
-    collection(db, 'personalEvents'),
-    where('userId', '==', userId),
-    where('startDate', '>=', dayStart),
-    where('startDate', '<=', dayEnd),
-    orderBy('startDate', 'asc')
-  );
-
-  const personalEventsSnapshot = await getDocs(personalEventsQuery);
+  const personalEventsSnapshot = await dbAdmin.collection('personalEvents')
+    .where('userId', '==', userId)
+    .where('startDate', '>=', dayStart)
+    .where('startDate', '<=', dayEnd)
+    .orderBy('startDate', 'asc')
+    .get();
   personalEventsSnapshot.docs.forEach(doc => {
     events.push({
       id: doc.id,
@@ -106,26 +104,20 @@ async function getEventsForDate(userId: string, dateStr: string): Promise<any[]>
   });
 
   // Get space events
-  const membershipsQuery = query(
-    collection(db, 'members'),
-    where('userId', '==', userId),
-    where('status', '==', 'active')
-  );
-
-  const membershipsSnapshot = await getDocs(membershipsQuery);
+  const membershipsSnapshot = await dbAdmin.collection('members')
+    .where('userId', '==', userId)
+    .where('status', '==', 'active')
+    .get();
   const userSpaceIds = membershipsSnapshot.docs.map(doc => doc.data().spaceId);
 
   if (userSpaceIds.length > 0) {
-    const spaceEventsQuery = query(
-      collection(db, 'events'),
-      where('spaceId', 'in', userSpaceIds),
-      where('state', '==', 'published'),
-      where('startDate', '>=', dayStart),
-      where('startDate', '<=', dayEnd),
-      orderBy('startDate', 'asc')
-    );
-
-    const spaceEventsSnapshot = await getDocs(spaceEventsQuery);
+    const spaceEventsSnapshot = await dbAdmin.collection('events')
+      .where('spaceId', 'in', userSpaceIds)
+      .where('state', '==', 'published')
+      .where('startDate', '>=', dayStart)
+      .where('startDate', '<=', dayEnd)
+      .orderBy('startDate', 'asc')
+      .get();
     spaceEventsSnapshot.docs.forEach(doc => {
       events.push({
         id: doc.id,

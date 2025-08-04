@@ -2,8 +2,9 @@
 
 import React from 'react';
 import { AlertTriangle, RefreshCw } from 'lucide-react';
-import { Button } from '@hive/ui';
-import { Card, CardContent } from '@hive/ui';
+import { Button } from "@hive/ui";
+import { Alert } from "@/components/temp-stubs";
+import { Card, CardContent } from "@hive/ui";
 
 interface Props {
   children: React.ReactNode;

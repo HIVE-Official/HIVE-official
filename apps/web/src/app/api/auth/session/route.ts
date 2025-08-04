@@ -2,6 +2,8 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { getAuth } from "firebase-admin/auth";
 import { dbAdmin } from "@/lib/firebase-admin";
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 /**
  * Session validation endpoint - verifies token and returns user session info
@@ -12,21 +14,15 @@ export async function GET(request: NextRequest) {
     // Get the authorization header
     const authHeader = request.headers.get("authorization");
     if (!authHeader?.startsWith("Bearer ")) {
-      return NextResponse.json(
-        { 
-          valid: false,
-          error: "Missing or invalid authorization header" 
-        },
-        { status: 401 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Missing or invalid authorization header", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
-    const idToken = authHeader.split("Bearer ")[1];
+    const idToken = authHeader.substring(7);
     
     // Handle development mode tokens
     if (idToken.startsWith("dev_token_")) {
       const userId = idToken.replace("dev_token_", "");
-      console.log('Development mode session validation for user:', userId);
+      logger.info('Development mode session validation for user', { data: userId, endpoint: '/api/auth/session' });
       
       return NextResponse.json({
         valid: true,
@@ -40,8 +36,7 @@ export async function GET(request: NextRequest) {
           issuedAt: new Date().toISOString(),
           expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // 24 hours
           developmentMode: true,
-        },
-      });
+        } });
     }
 
     const auth = getAuth();
@@ -51,14 +46,14 @@ export async function GET(request: NextRequest) {
     try {
       decodedToken = await auth.verifyIdToken(idToken);
     } catch (error) {
-      console.error("Invalid ID token:", error);
+      logger.error('Invalid ID token', { error: error, endpoint: '/api/auth/session' });
       return NextResponse.json(
         { 
           valid: false,
           error: "Invalid or expired token",
           code: "TOKEN_INVALID"
         },
-        { status: 401 }
+        { status: HttpStatus.UNAUTHORIZED }
       );
     }
 
@@ -87,7 +82,7 @@ export async function GET(request: NextRequest) {
         };
       }
     } catch (firestoreError) {
-      console.error("Error fetching user profile:", firestoreError);
+      logger.error('Error fetching user profile', { error: firestoreError, endpoint: '/api/auth/session' });
       // Continue without profile data
     }
 
@@ -111,18 +106,17 @@ export async function GET(request: NextRequest) {
         algorithm: decodedToken.alg || "RS256",
         type: "JWT",
         firebase: true,
-      },
-    });
+      } });
 
   } catch (error) {
-    console.error("Error validating session:", error);
+    logger.error('Error validating session', { error: error, endpoint: '/api/auth/session' });
     return NextResponse.json(
       { 
         valid: false,
         error: "Failed to validate session",
         code: "VALIDATION_ERROR"
       },
-      { status: 500 }
+      { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }
 }
@@ -137,14 +131,14 @@ export async function POST(request: NextRequest) {
     // This endpoint just validates the current token
     return GET(request);
   } catch (error) {
-    console.error("Error refreshing session:", error);
+    logger.error('Error refreshing session', { error: error, endpoint: '/api/auth/session' });
     return NextResponse.json(
       { 
         valid: false,
         error: "Failed to refresh session",
         code: "REFRESH_ERROR"
       },
-      { status: 500 }
+      { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }
 }

@@ -15,18 +15,18 @@ interface SentryUser {
 
 interface SentryScope {
   setUser(user: SentryUser): void;
-  setTag(key: string, value: string): void;
-  setContext(key: string, context: Record<string, any>): void;
-  setLevel(level: 'fatal' | 'error' | 'warning' | 'info' | 'debug'): void;
-  setExtra(key: string, extra: any): void;
-  setFingerprint(fingerprint: string[]): void;
+  setTag(_key: string, _value: string): void;
+  setContext(_key: string, _context: Record<string, any>): void;
+  setLevel(_level: 'fatal' | 'error' | 'warning' | 'info' | 'debug'): void;
+  setExtra(_key: string, _extra: any): void;
+  setFingerprint(_fingerprint: string[]): void;
 }
 
 interface SentryHub {
-  withScope(callback: (scope: SentryScope) => void): void;
-  captureException(exception: any): string;
-  captureMessage(message: string, level?: 'fatal' | 'error' | 'warning' | 'info' | 'debug'): string;
-  addBreadcrumb(breadcrumb: {
+  withScope(_callback: (_scope: SentryScope) => void): void;
+  captureException(_exception: any): string;
+  captureMessage(_message: string, _level?: 'fatal' | 'error' | 'warning' | 'info' | 'debug'): string;
+  addBreadcrumb(_breadcrumb: {
     message?: string;
     category?: string;
     level?: 'fatal' | 'error' | 'warning' | 'info' | 'debug';
@@ -52,9 +52,8 @@ export async function initializeErrorMonitoring(): Promise<void> {
     if (!sentryDsn) {
       if (currentEnvironment === 'production') {
         console.warn('⚠️ Sentry DSN not configured in production');
-      } else {
-        console.log('🔄 Sentry not configured - using console logging for development');
       }
+      // Silent in development - no need to log missing Sentry config
       isInitialized = true;
       return;
     }
@@ -63,7 +62,7 @@ export async function initializeErrorMonitoring(): Promise<void> {
     let Sentry;
     try {
       Sentry = await import('@sentry/nextjs');
-    } catch (importError) {
+    } catch (_importError) {
       console.warn('⚠️ Sentry not installed - error monitoring disabled');
       isInitialized = true;
       return;
@@ -129,10 +128,15 @@ export async function initializeErrorMonitoring(): Promise<void> {
  * Log levels for structured logging
  */
 export enum LogLevel {
+  // eslint-disable-next-line no-unused-vars
   DEBUG = 'debug',
+  // eslint-disable-next-line no-unused-vars
   INFO = 'info',
+  // eslint-disable-next-line no-unused-vars
   WARN = 'warning',
+  // eslint-disable-next-line no-unused-vars
   ERROR = 'error',
+  // eslint-disable-next-line no-unused-vars
   FATAL = 'fatal'
 }
 

@@ -44,52 +44,53 @@ const profileStatsVariants = cva(
   }
 );
 
-export interface ProfileStats {
+// Updated to align with HiveProfile data model
+export interface HiveProfileStats {
   spacesJoined: number;
+  spacesActive?: number;
   spacesLed?: number;
-  toolsCreated: number;
   toolsUsed?: number;
   connectionsCount: number;
   totalActivity?: number;
-  weekStreak?: number;
-  reputation: number;
+  currentStreak?: number;
+  longestStreak?: number;
+  reputation?: number;
   achievements?: number;
-  gpa?: number;
 }
 
 export interface ProfileStatsProps 
   extends React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof profileStatsVariants> {
-  stats: ProfileStats;
-  priority?: ('spacesJoined' | 'spacesLed' | 'toolsCreated' | 'toolsUsed' | 'connectionsCount' | 'totalActivity' | 'weekStreak' | 'reputation' | 'achievements')[];
+  stats: HiveProfileStats;
+  priority?: ('spacesJoined' | 'spacesActive' | 'spacesLed' | 'toolsUsed' | 'connectionsCount' | 'totalActivity' | 'currentStreak' | 'longestStreak' | 'reputation' | 'achievements')[];
   maxStats?: number;
   showIcons?: boolean;
   showTrends?: boolean;
   interactive?: boolean;
   onStatClick?: (statKey: string, value: number) => void;
-  changes?: Partial<Record<keyof ProfileStats, number>>;
+  changes?: Partial<Record<keyof HiveProfileStats, number>>;
   loading?: boolean;
 }
 
-// Default stat configurations
-const STAT_CONFIGS = {
+// HIVE stat configurations aligned with unified data model
+const HIVE_STAT_CONFIGS = {
   spacesJoined: {
-    label: 'Spaces',
+    label: 'Spaces Joined',
     icon: Users,
     iconColor: 'secondary' as const,
     emphasis: 'normal' as const
+  },
+  spacesActive: {
+    label: 'Active Spaces',
+    icon: Zap,
+    iconColor: 'gold' as const,
+    emphasis: 'secondary' as const
   },
   spacesLed: {
     label: 'Leading',
     icon: Star,
     iconColor: 'gold' as const,
     emphasis: 'gold' as const
-  },
-  toolsCreated: {
-    label: 'Tools Built',
-    icon: Zap,
-    iconColor: 'secondary' as const,
-    emphasis: 'secondary' as const
   },
   toolsUsed: {
     label: 'Tools Used',
@@ -104,16 +105,22 @@ const STAT_CONFIGS = {
     emphasis: 'normal' as const
   },
   totalActivity: {
-    label: 'Activity',
+    label: 'Total Activity',
     icon: TrendingUp,
     iconColor: 'success' as const,
     emphasis: 'normal' as const
   },
-  weekStreak: {
-    label: 'Day Streak',
+  currentStreak: {
+    label: 'Current Streak',
     icon: Calendar,
     iconColor: 'warning' as const,
     emphasis: 'normal' as const
+  },
+  longestStreak: {
+    label: 'Best Streak',
+    icon: Award,
+    iconColor: 'gold' as const,
+    emphasis: 'gold' as const
   },
   reputation: {
     label: 'Reputation',
@@ -131,7 +138,7 @@ const STAT_CONFIGS = {
 
 export function ProfileStats({
   stats,
-  priority = ['spacesJoined', 'toolsCreated', 'connectionsCount', 'reputation'],
+  priority = ['spacesJoined', 'spacesActive', 'connectionsCount', 'currentStreak'],
   maxStats = 4,
   showIcons = true,
   showTrends = false,
@@ -164,7 +171,7 @@ export function ProfileStats({
     return priority
       .slice(0, maxStats)
       .map(key => {
-        const config = STAT_CONFIGS[key];
+        const config = HIVE_STAT_CONFIGS[key];
         const value = stats[key];
         const change = changes?.[key];
         
@@ -261,7 +268,7 @@ export function GridProfileStats(props: Omit<ProfileStatsProps, 'layout'>) {
 export function StudentProfileStats(props: Omit<ProfileStatsProps, 'priority'>) {
   return (
     <ProfileStats 
-      priority={['spacesJoined', 'connectionsCount', 'weekStreak', 'reputation']}
+      priority={['spacesJoined', 'connectionsCount', 'currentStreak', 'reputation']}
       {...props} 
     />
   );
@@ -270,7 +277,16 @@ export function StudentProfileStats(props: Omit<ProfileStatsProps, 'priority'>) 
 export function BuilderProfileStats(props: Omit<ProfileStatsProps, 'priority'>) {
   return (
     <ProfileStats 
-      priority={['toolsCreated', 'spacesLed', 'reputation', 'totalActivity']}
+      priority={['toolsUsed', 'spacesLed', 'reputation', 'totalActivity']}
+      {...props} 
+    />
+  );
+}
+
+export function ActiveUserProfileStats(props: Omit<ProfileStatsProps, 'priority'>) {
+  return (
+    <ProfileStats 
+      priority={['spacesActive', 'currentStreak', 'totalActivity', 'achievements']}
       {...props} 
     />
   );

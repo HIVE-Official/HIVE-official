@@ -1,5 +1,6 @@
 "use client";
 
+import Image from 'next/image';
 import { useState, useRef, useEffect as _useEffect } from "react";
 import { Card, Button, Badge } from "@hive/ui";
 import { 
@@ -70,7 +71,7 @@ export function EnhancedSpaceCard({
   const getProbabilityColor = (probability?: number) => {
     if (!probability) return "text-neutral-400";
     if (probability > 0.8) return "text-green-400";
-    if (probability > 0.6) return "text-yellow-400";
+    if (probability > 0.6) return "text-hive-gold";
     return "text-neutral-400";
   };
 
@@ -89,7 +90,7 @@ export function EnhancedSpaceCard({
   const activityConfig = {
     "very-active": { color: "text-green-400", label: "Very Active", pulse: true },
     "active": { color: "text-blue-400", label: "Active", pulse: false },
-    "moderate": { color: "text-yellow-400", label: "Moderate", pulse: false },
+    "moderate": { color: "text-hive-gold", label: "Moderate", pulse: false },
     "quiet": { color: "text-neutral-400", label: "Quiet", pulse: false }
   };
 
@@ -110,10 +111,12 @@ export function EnhancedSpaceCard({
             {/* Avatar with status */}
             <div className="relative flex-shrink-0">
               <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-white/10 flex items-center justify-center">
-                {space.avatar ? (
-                  <img 
-                    src={space.avatar} 
+                {space.bannerUrl ? (
+                  <Image 
+                    src={space.bannerUrl} 
                     alt={space.name}
+                    width={64}
+                    height={64}
                     className="w-full h-full object-cover rounded-xl"
                     onLoad={() => _setImageLoaded(true)}
                   />
@@ -137,7 +140,7 @@ export function EnhancedSpaceCard({
                   {space.name}
                 </h3>
                 {space.trendingRank && space.trendingRank <= 10 && (
-                  <Badge variant="secondary" className="bg-orange-400/20 text-orange-400 text-xs">
+                  <Badge variant="active-tag" className="bg-orange-400/20 text-orange-400 text-xs">
                     <TrendingUp className="h-3 w-3 mr-1" />
                     #{space.trendingRank}
                   </Badge>
@@ -182,7 +185,7 @@ export function EnhancedSpaceCard({
               <Button
                 size="sm"
                 onClick={() => onJoin?.(space.id)}
-                className="bg-yellow-400 text-neutral-950 hover:bg-yellow-300"
+                className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne"
                 disabled={userMembership?.status === "member"}
               >
                 {userMembership?.status === "member" ? "Joined" : 
@@ -211,7 +214,7 @@ export function EnhancedSpaceCard({
         {/* Discovery context indicator */}
         {discoveryContext?.source === "recommendation" && (
           <div className="absolute top-3 left-3 z-10">
-            <Badge className="bg-yellow-400/20 text-yellow-400 text-xs">
+            <Badge className="bg-hive-gold/20 text-hive-gold text-xs">
               <Sparkles className="h-3 w-3 mr-1" />
               For You
             </Badge>
@@ -234,10 +237,12 @@ export function EnhancedSpaceCard({
             {/* Avatar */}
             <div className="relative">
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-white/10 flex items-center justify-center">
-                {space.avatar ? (
-                  <img 
-                    src={space.avatar} 
+                {space.bannerUrl ? (
+                  <Image 
+                    src={space.bannerUrl} 
                     alt={space.name}
+                    width={48}
+                    height={48}
                     className="w-full h-full object-cover rounded-xl"
                     onLoad={() => _setImageLoaded(true)}
                   />
@@ -371,7 +376,7 @@ export function EnhancedSpaceCard({
                 flex-1 text-xs
                 ${userMembership?.status === "member" 
                   ? "bg-green-400/20 text-green-400 cursor-default" 
-                  : "bg-yellow-400 text-neutral-950 hover:bg-yellow-300"
+                  : "bg-hive-gold text-hive-obsidian hover:bg-hive-champagne"
                 }
               `}
             >

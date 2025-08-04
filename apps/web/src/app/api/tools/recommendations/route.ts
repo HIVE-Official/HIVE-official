@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { collection, query, where, getDocs, orderBy, limit } from 'firebase/firestore';
 import { dbAdmin as adminDb } from '@/lib/firebase-admin';
 import { getCurrentUser } from '@/lib/auth-server';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 interface RecommendationContext {
   userId: string;
@@ -55,7 +56,7 @@ export async function GET(request: NextRequest) {
   try {
     const user = await getCurrentUser(request);
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const { searchParams } = new URL(request.url);
@@ -76,8 +77,8 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(recommendations);
 
   } catch (error) {
-    console.error('Error generating recommendations:', error);
-    return NextResponse.json({ error: 'Failed to generate recommendations' }, { status: 500 });
+    logger.error('Error generating recommendations', { error: error, endpoint: '/api/tools/recommendations' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to generate recommendations", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 

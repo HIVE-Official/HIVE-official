@@ -4,6 +4,8 @@ import { z } from 'zod';
 import { getAuth } from 'firebase-admin/auth';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { FieldValue } from 'firebase-admin/firestore';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 /**
  * Admin User Management API
@@ -52,11 +54,8 @@ export async function GET(request: NextRequest) {
   try {
     // Verify authentication
     const authHeader = request.headers.get('Authorization');
-    if (!authHeader?.startsWith('Bearer ')) {
-      return NextResponse.json(
-        { error: 'Authorization header required' },
-        { status: 401 }
-      );
+    if (!authHeader?.startsWith("Bearer ")) {
+      return NextResponse.json(ApiResponseHelper.error("Authorization header required", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const token = authHeader.substring(7);
@@ -71,19 +70,13 @@ export async function GET(request: NextRequest) {
         const decodedToken = await auth.verifyIdToken(token);
         adminUserId = decodedToken.uid;
       } catch (authError) {
-        return NextResponse.json(
-          { error: 'Invalid or expired token' },
-          { status: 401 }
-        );
+        return NextResponse.json(ApiResponseHelper.error("Invalid or expired token", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
       }
     }
 
     // Check if user is admin
     if (!(await isAdmin(adminUserId))) {
-      return NextResponse.json(
-        { error: 'Admin access required' },
-        { status: 403 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Admin access required", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     // Parse query parameters
@@ -94,21 +87,21 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(url.searchParams.get('limit') || '50');
     const offset = parseInt(url.searchParams.get('offset') || '0');
 
-    console.log(`👑 Admin ${adminUserId} accessing user management`);
+    logger.info('👑 Admin accessing user management', { adminUserId, endpoint: '/api/admin/users' });
 
     // Get users with filtering
     let usersQuery = dbAdmin.collection('users');
     
     // Apply filters
     if (major && major !== 'all') {
-      usersQuery = usersQuery.where('major', '==', major);
+      usersQuery = usersQuery.where('major', '==', major) as any;
     }
     
     if (status !== 'all') {
       if (status === 'suspended') {
-        usersQuery = usersQuery.where('isSuspended', '==', true);
+        usersQuery = usersQuery.where('isSuspended', '==', true) as any;
       } else if (status === 'active') {
-        usersQuery = usersQuery.where('isSuspended', '==', false);
+        usersQuery = usersQuery.where('isSuspended', '==', false) as any;
       }
     }
 
@@ -126,10 +119,10 @@ export async function GET(request: NextRequest) {
     if (search) {
       const searchLower = search.toLowerCase();
       users = users.filter(user => 
-        user.displayName?.toLowerCase().includes(searchLower) ||
-        user.email?.toLowerCase().includes(searchLower) ||
-        user.handle?.toLowerCase().includes(searchLower) ||
-        user.major?.toLowerCase().includes(searchLower)
+        (user as any).displayName?.toLowerCase().includes(searchLower) ||
+        (user as any).email?.toLowerCase().includes(searchLower) ||
+        (user as any).handle?.toLowerCase().includes(searchLower) ||
+        (user as any).major?.toLowerCase().includes(searchLower)
       );
     }
 
@@ -160,7 +153,7 @@ export async function GET(request: NextRequest) {
             isBuilder: memberships.some(m => m.role === 'builder')
           };
         } catch (error) {
-          console.error(`Error getting memberships for user ${user.id}:`, error);
+          logger.error('Error getting memberships for user', { userId: user.id, error: error, endpoint: '/api/admin/users' });
           return {
             ...user,
             memberships: [],
@@ -193,8 +186,8 @@ export async function GET(request: NextRequest) {
       },
       summary: {
         totalUsers: totalCount,
-        activeUsers: usersWithMemberships.filter(u => !u.isSuspended).length,
-        suspendedUsers: usersWithMemberships.filter(u => u.isSuspended).length,
+        activeUsers: usersWithMemberships.filter(u => !u.suspendedAt).length,
+        suspendedUsers: usersWithMemberships.filter(u => u.suspendedAt).length,
         builders: usersWithMemberships.filter(u => u.isBuilder).length,
         averageMemberships: usersWithMemberships.length > 0 ? 
           Math.round(usersWithMemberships.reduce((sum, u) => sum + u.membershipCount, 0) / usersWithMemberships.length) : 0
@@ -202,11 +195,8 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('Admin users GET error:', error);
-    return NextResponse.json(
-      { error: 'Failed to get users' },
-      { status: 500 }
-    );
+    logger.error('Admin users GET error', { error: error, endpoint: '/api/admin/users' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to get users", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -218,11 +208,8 @@ export async function POST(request: NextRequest) {
   try {
     // Verify authentication
     const authHeader = request.headers.get('Authorization');
-    if (!authHeader?.startsWith('Bearer ')) {
-      return NextResponse.json(
-        { error: 'Authorization header required' },
-        { status: 401 }
-      );
+    if (!authHeader?.startsWith("Bearer ")) {
+      return NextResponse.json(ApiResponseHelper.error("Authorization header required", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const token = authHeader.substring(7);
@@ -237,19 +224,13 @@ export async function POST(request: NextRequest) {
         const decodedToken = await auth.verifyIdToken(token);
         adminUserId = decodedToken.uid;
       } catch (authError) {
-        return NextResponse.json(
-          { error: 'Invalid or expired token' },
-          { status: 401 }
-        );
+        return NextResponse.json(ApiResponseHelper.error("Invalid or expired token", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
       }
     }
 
     // Check if user is admin
     if (!(await isAdmin(adminUserId))) {
-      return NextResponse.json(
-        { error: 'Admin access required' },
-        { status: 403 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Admin access required", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     // Parse request body
@@ -261,7 +242,7 @@ export async function POST(request: NextRequest) {
     const userDoc = await userRef.get();
 
     if (!userDoc.exists) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+      return NextResponse.json(ApiResponseHelper.error("User not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     // Prepare update data
@@ -281,7 +262,7 @@ export async function POST(request: NextRequest) {
     // Update user document
     await userRef.update(updateData);
 
-    console.log(`👑 Admin ${adminUserId} updated user ${userId}`);
+    logger.info('👑 Adminupdated user', { adminUserId, userId, endpoint: '/api/admin/users' });
 
     return NextResponse.json({
       success: true,
@@ -292,7 +273,7 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error: any) {
-    console.error('Admin users POST error:', error);
+    logger.error('Admin users POST error', { error: error, endpoint: '/api/admin/users' });
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -300,14 +281,11 @@ export async function POST(request: NextRequest) {
           error: 'Invalid request data', 
           details: error.errors.map(e => `${e.path.join('.')}: ${e.message}`)
         },
-        { status: 400 }
+        { status: HttpStatus.BAD_REQUEST }
       );
     }
 
-    return NextResponse.json(
-      { error: 'Failed to update user' },
-      { status: 500 }
-    );
+    return NextResponse.json(ApiResponseHelper.error("Failed to update user", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -319,11 +297,8 @@ export async function DELETE(request: NextRequest) {
   try {
     // Verify authentication
     const authHeader = request.headers.get('Authorization');
-    if (!authHeader?.startsWith('Bearer ')) {
-      return NextResponse.json(
-        { error: 'Authorization header required' },
-        { status: 401 }
-      );
+    if (!authHeader?.startsWith("Bearer ")) {
+      return NextResponse.json(ApiResponseHelper.error("Authorization header required", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const token = authHeader.substring(7);
@@ -338,19 +313,13 @@ export async function DELETE(request: NextRequest) {
         const decodedToken = await auth.verifyIdToken(token);
         adminUserId = decodedToken.uid;
       } catch (authError) {
-        return NextResponse.json(
-          { error: 'Invalid or expired token' },
-          { status: 401 }
-        );
+        return NextResponse.json(ApiResponseHelper.error("Invalid or expired token", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
       }
     }
 
     // Check if user is admin
     if (!(await isAdmin(adminUserId))) {
-      return NextResponse.json(
-        { error: 'Admin access required' },
-        { status: 403 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Admin access required", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     // Parse request body
@@ -362,7 +331,7 @@ export async function DELETE(request: NextRequest) {
     const userDoc = await userRef.get();
 
     if (!userDoc.exists) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+      return NextResponse.json(ApiResponseHelper.error("User not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     const userData = userDoc.data();
@@ -433,7 +402,7 @@ export async function DELETE(request: NextRequest) {
     // Log admin action
     await logAdminAction(adminUserId, action, userId, reason);
 
-    console.log(`👑 Admin ${adminUserId} performed ${action} on user ${userId}`);
+    logger.info('👑 Admin performedon user', {  action, userId, endpoint: '/api/admin/users'  });
 
     return NextResponse.json({
       success: true,
@@ -447,7 +416,7 @@ export async function DELETE(request: NextRequest) {
     });
 
   } catch (error: any) {
-    console.error('Admin users DELETE error:', error);
+    logger.error('Admin users DELETE error', { error: error, endpoint: '/api/admin/users' });
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -455,14 +424,11 @@ export async function DELETE(request: NextRequest) {
           error: 'Invalid request data', 
           details: error.errors.map(e => `${e.path.join('.')}: ${e.message}`)
         },
-        { status: 400 }
+        { status: HttpStatus.BAD_REQUEST }
       );
     }
 
-    return NextResponse.json(
-      { error: 'Failed to perform user action' },
-      { status: 500 }
-    );
+    return NextResponse.json(ApiResponseHelper.error("Failed to perform user action", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -480,6 +446,6 @@ async function logAdminAction(adminUserId: string, action: string, targetUserId:
       type: 'user_action'
     });
   } catch (error) {
-    console.error('Error logging admin action:', error);
+    logger.error('Error logging admin action', { error: error, endpoint: '/api/admin/users' });
   }
 }

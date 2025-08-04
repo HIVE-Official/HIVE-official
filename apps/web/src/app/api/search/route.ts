@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 interface SearchResult {
   id: string;
@@ -310,10 +312,10 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('Search error:', error);
+    logger.error('Search error', { error: error, endpoint: '/api/search' });
     return NextResponse.json(
       { error: 'Search failed', results: [], totalCount: 0 },
-      { status: 500 }
+      { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }
 }

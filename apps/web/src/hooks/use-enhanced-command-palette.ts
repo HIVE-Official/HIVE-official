@@ -1,17 +1,17 @@
 import { useState, useCallback } from 'react';
-import { SearchableItem, SearchCategory } from '@hive/ui';
+import { SearchableItem } from "@hive/ui";
 
 interface SearchAPI {
-  spaces: (query: string) => Promise<SearchableItem[]>;
-  tools: (query: string) => Promise<SearchableItem[]>;
-  people: (query: string) => Promise<SearchableItem[]>;
-  events: (query: string) => Promise<SearchableItem[]>;
-  posts: (query: string) => Promise<SearchableItem[]>;
+  spaces: (_query: string) => Promise<SearchableItem[]>;
+  tools: (_query: string) => Promise<SearchableItem[]>;
+  people: (_query: string) => Promise<SearchableItem[]>;
+  events: (_query: string) => Promise<SearchableItem[]>;
+  posts: (_query: string) => Promise<SearchableItem[]>;
 }
 
 // Mock search functions - replace with actual API calls
 const createMockSearchAPI = (): SearchAPI => ({
-  spaces: async (query: string): Promise<SearchableItem[]> => {
+  spaces: async (_query: string): Promise<SearchableItem[]> => {
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 200));
     
@@ -52,13 +52,13 @@ const createMockSearchAPI = (): SearchAPI => ({
     ];
 
     return mockSpaces.filter(space =>
-      space.title.toLowerCase().includes(query.toLowerCase()) ||
-      space.description.toLowerCase().includes(query.toLowerCase()) ||
-      space.keywords.some(keyword => keyword.includes(query.toLowerCase()))
+      space.title.toLowerCase().includes(_query.toLowerCase()) ||
+      space.description.toLowerCase().includes(_query.toLowerCase()) ||
+      space.keywords.some(keyword => keyword.includes(_query.toLowerCase()))
     );
   },
 
-  tools: async (query: string): Promise<SearchableItem[]> => {
+  tools: async (_query: string): Promise<SearchableItem[]> => {
     await new Promise(resolve => setTimeout(resolve, 150));
     
     const mockTools = [
@@ -98,13 +98,13 @@ const createMockSearchAPI = (): SearchAPI => ({
     ];
 
     return mockTools.filter(tool =>
-      tool.title.toLowerCase().includes(query.toLowerCase()) ||
-      tool.description.toLowerCase().includes(query.toLowerCase()) ||
-      tool.keywords.some(keyword => keyword.includes(query.toLowerCase()))
+      tool.title.toLowerCase().includes(_query.toLowerCase()) ||
+      tool.description.toLowerCase().includes(_query.toLowerCase()) ||
+      tool.keywords.some(keyword => keyword.includes(_query.toLowerCase()))
     );
   },
 
-  people: async (query: string): Promise<SearchableItem[]> => {
+  people: async (_query: string): Promise<SearchableItem[]> => {
     await new Promise(resolve => setTimeout(resolve, 300));
     
     const mockPeople = [
@@ -141,13 +141,13 @@ const createMockSearchAPI = (): SearchAPI => ({
     ];
 
     return mockPeople.filter(person =>
-      person.title.toLowerCase().includes(query.toLowerCase()) ||
-      person.description.toLowerCase().includes(query.toLowerCase()) ||
-      person.keywords.some(keyword => keyword.includes(query.toLowerCase()))
+      person.title.toLowerCase().includes(_query.toLowerCase()) ||
+      person.description.toLowerCase().includes(_query.toLowerCase()) ||
+      person.keywords.some(keyword => keyword.includes(_query.toLowerCase()))
     );
   },
 
-  events: async (query: string): Promise<SearchableItem[]> => {
+  events: async (_query: string): Promise<SearchableItem[]> => {
     await new Promise(resolve => setTimeout(resolve, 250));
     
     const mockEvents = [
@@ -187,13 +187,13 @@ const createMockSearchAPI = (): SearchAPI => ({
     ];
 
     return mockEvents.filter(event =>
-      event.title.toLowerCase().includes(query.toLowerCase()) ||
-      event.description.toLowerCase().includes(query.toLowerCase()) ||
-      event.keywords.some(keyword => keyword.includes(query.toLowerCase()))
+      event.title.toLowerCase().includes(_query.toLowerCase()) ||
+      event.description.toLowerCase().includes(_query.toLowerCase()) ||
+      event.keywords.some(keyword => keyword.includes(_query.toLowerCase()))
     );
   },
 
-  posts: async (query: string): Promise<SearchableItem[]> => {
+  posts: async (_query: string): Promise<SearchableItem[]> => {
     await new Promise(resolve => setTimeout(resolve, 180));
     
     const mockPosts = [
@@ -233,9 +233,9 @@ const createMockSearchAPI = (): SearchAPI => ({
     ];
 
     return mockPosts.filter(post =>
-      post.title.toLowerCase().includes(query.toLowerCase()) ||
-      post.description.toLowerCase().includes(query.toLowerCase()) ||
-      post.keywords.some(keyword => keyword.includes(query.toLowerCase()))
+      post.title.toLowerCase().includes(_query.toLowerCase()) ||
+      post.description.toLowerCase().includes(_query.toLowerCase()) ||
+      post.keywords.some(keyword => keyword.includes(_query.toLowerCase()))
     );
   }
 });

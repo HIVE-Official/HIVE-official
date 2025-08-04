@@ -4,19 +4,19 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useCallback } from 'react';
 import { Settings, Palette, Layout, Type, Eye, EyeOff, Lock, Unlock, Copy, Trash2, ChevronDown, ChevronRight, Hash } from 'lucide-react';
-import { cn } from '../../lib/utils';
-import { HiveInput } from '../hive-input';
-import { HiveTextarea } from '../hive-textarea';
-import { HiveButton } from '../hive-button';
-import { HiveBadge } from '../hive-badge';
-import { HiveSwitch } from '../hive-switch';
-import { HiveSelect } from '../hive-select';
+import { cn } from '../../lib/utils.js';
+import { HiveInput } from '../hive-input.js';
+import { HiveTextarea } from '../hive-textarea.js';
+import { HiveButton } from '../hive-button.js';
+import { HiveBadge } from '../hive-badge.js';
+import { HiveSwitch } from '../hive-switch.js';
+import { HiveSelect } from '../hive-select.js';
 const PropertyInput = ({ property, value, onChange, propertyKey }) => {
     switch (property.type) {
         case 'string':
             if (property.options) {
                 // Dropdown for predefined options
-                return (_jsx(HiveSelect, { value: value || property.default, onValueChange: onChange, placeholder: "Select option...", children: property.options.map((option) => (_jsx("option", { value: option, children: option }, option))) }));
+                return (_jsx(HiveSelect, { options: property.options.map(opt => ({ value: opt, label: opt })), value: value || property.default, onValueChange: onChange, placeholder: "Select option...", children: property.options.map((option) => (_jsx("option", { value: option, children: option }, option))) }));
             }
             // Text input or textarea for long strings
             if (propertyKey.toLowerCase().includes('description') ||
@@ -63,7 +63,7 @@ export const ElementConfig = ({ element, instance, onChange }) => {
         console.log('Style change:', key, value);
     }, []);
     const IconComponent = element.icon;
-    return (_jsxs("div", { className: "flex flex-col h-full bg-[var(--hive-background-primary)]", children: [_jsxs("div", { className: "p-4 border-b border-[var(--hive-border-default)]", children: [_jsxs("div", { className: "flex items-start gap-3 mb-4", children: [_jsx("div", { className: "w-10 h-10 rounded-lg flex items-center justify-center shrink-0", style: { backgroundColor: `${element.color}15`, color: element.color }, children: _jsx(IconComponent, { size: 20 }) }), _jsxs("div", { className: "flex-1 min-w-0", children: [_jsx("h2", { className: "text-lg font-semibold text-[var(--hive-text-primary)] truncate", children: element.name }), _jsx("p", { className: "text-sm text-[var(--hive-text-secondary)] mt-1", children: element.description }), _jsxs("div", { className: "flex gap-1 mt-2", children: [_jsx(HiveBadge, { variant: "secondary", className: "text-xs", children: element.category }), _jsxs(HiveBadge, { variant: "secondary", className: "text-xs", children: ["v", element.version] })] })] })] }), _jsxs("div", { className: "flex gap-2", children: [_jsxs(HiveButton, { variant: "ghost", size: "sm", onClick: () => { }, className: "flex-1", children: [instance.isVisible ? _jsx(Eye, { size: 16 }) : _jsx(EyeOff, { size: 16 }), instance.isVisible ? 'Visible' : 'Hidden'] }), _jsxs(HiveButton, { variant: "ghost", size: "sm", onClick: () => { }, className: "flex-1", children: [instance.isLocked ? _jsx(Lock, { size: 16 }) : _jsx(Unlock, { size: 16 }), instance.isLocked ? 'Locked' : 'Unlocked'] })] })] }), _jsx("div", { className: "border-b border-[var(--hive-border-default)]", children: _jsx("div", { className: "flex", children: [
+    return (_jsxs("div", { className: "flex flex-col h-full bg-[var(--hive-background-primary)]", children: [_jsxs("div", { className: "p-4 border-b border-[var(--hive-border-default)]", children: [_jsxs("div", { className: "flex items-start gap-3 mb-4", children: [_jsx("div", { className: "w-10 h-10 rounded-lg flex items-center justify-center shrink-0", style: { backgroundColor: `${element.color}15`, color: element.color }, children: _jsx(IconComponent, { size: 20 }) }), _jsxs("div", { className: "flex-1 min-w-0", children: [_jsx("h2", { className: "text-lg font-semibold text-[var(--hive-text-primary)] truncate", children: element.name }), _jsx("p", { className: "text-sm text-[var(--hive-text-secondary)] mt-1", children: element.description }), _jsxs("div", { className: "flex gap-1 mt-2", children: [_jsx(HiveBadge, { variant: "tool-tag", className: "text-xs", children: element.category }), _jsxs(HiveBadge, { variant: "tool-tag", className: "text-xs", children: ["v", element.version] })] })] })] }), _jsxs("div", { className: "flex gap-2", children: [_jsxs(HiveButton, { variant: "ghost", size: "sm", onClick: () => { }, className: "flex-1", children: [instance.isVisible ? _jsx(Eye, { size: 16 }) : _jsx(EyeOff, { size: 16 }), instance.isVisible ? 'Visible' : 'Hidden'] }), _jsxs(HiveButton, { variant: "ghost", size: "sm", onClick: () => { }, className: "flex-1", children: [instance.isLocked ? _jsx(Lock, { size: 16 }) : _jsx(Unlock, { size: 16 }), instance.isLocked ? 'Locked' : 'Unlocked'] })] })] }), _jsx("div", { className: "border-b border-[var(--hive-border-default)]", children: _jsx("div", { className: "flex", children: [
                         { id: 'properties', label: 'Properties', icon: Settings },
                         { id: 'style', label: 'Style', icon: Palette },
                         { id: 'events', label: 'Events', icon: Hash }

@@ -17,6 +17,16 @@ export * from './hive-navigation';
 export * from './user-card';
 export * from './profile-header';
 
+// === HIVE SPACES SYSTEM ===
+export * from './post-board';
+
+// === HIVE TOOLS SYSTEM ===
+export * from './planted-tool-widget';
+
+// === HIVE FEED & RITUALS SYSTEM ===
+export * from './ritual-action-button';
+export * from './milestone-celebration';
+
 // === PLANNED MOLECULES ===
 // These will be implemented as part of the atomic design system completion
 // export * from './stat-card';

@@ -3,7 +3,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useEffect, useMemo, useCallback, memo, createContext, useContext } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { cva } from 'class-variance-authority';
-import { cn } from '../lib/utils';
+import { cn } from '../lib/utils.js';
 const HiveLogoConfigContext = createContext({});
 // Provider component for enterprise configuration
 export const HiveLogoProvider = ({ config, children }) => {

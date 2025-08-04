@@ -241,7 +241,7 @@ export default function ToolAnalyticsPage() {
         {/* Overview Metrics */}
         <div>
           <h2 className="text-2xl font-bold text-white mb-6">Overview</h2>
-          <Grid cols={{ base: 2, md: 4 }} gap={6}>
+          <Grid cols={4} gap="lg">
             <MetricCard
               title="Total Usage"
               value={analytics.overview.totalUsage}
@@ -273,7 +273,7 @@ export default function ToolAnalyticsPage() {
         {/* Usage Charts */}
         <div>
           <h2 className="text-2xl font-bold text-white mb-6">Usage Analytics</h2>
-          <Grid cols={{ base: 1, lg: 2 }} gap={6}>
+          <Grid cols={2} gap="lg">
             <SimpleChart
               data={dailyUsageData}
               title="Daily Usage"
@@ -287,7 +287,7 @@ export default function ToolAnalyticsPage() {
         </div>
 
         {/* Feature Usage & User Feedback */}
-        <Grid cols={{ base: 1, lg: 2 }} gap={8}>
+        <Grid cols={2} gap="xl">
           {/* Feature Usage */}
           <div>
             <h2 className="text-2xl font-bold text-white mb-6">Feature Usage</h2>

@@ -1,45 +1,24 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
-import { getAuth } from 'firebase-admin/auth';
 import { dbAdmin } from '@/lib/firebase-admin';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
 
 /**
  * Get widget data for a specific space
  * Returns data for all widgets: posts, events, members, pinned, tools
  */
-export async function GET(
+export const GET = withAuth(async (
   request: NextRequest,
+  authContext,
   { params }: { params: Promise<{ spaceId: string }> }
-) {
+) => {
   try {
     const { spaceId } = await params;
-    
-    // Verify the requesting user is authenticated
-    const authHeader = request.headers.get('Authorization');
-    if (!authHeader?.startsWith('Bearer ')) {
-      return NextResponse.json(
-        { error: 'Authorization header required' },
-        { status: 401 }
-      );
-    }
+    const userId = authContext.userId;
 
-    const token = authHeader.substring(7);
-    let userId = 'test-user';
-    
-    if (token !== 'test-token') {
-      try {
-        const auth = getAuth();
-        const decodedToken = await auth.verifyIdToken(token);
-        userId = decodedToken.uid;
-      } catch (authError) {
-        return NextResponse.json(
-          { error: 'Invalid or expired token' },
-          { status: 401 }
-        );
-      }
-    }
-
-    console.log(`🔍 Fetching widget data for space: ${spaceId}, user: ${userId}`);
+    logger.info('🔍 Fetching widget data for space:, user', { spaceId, userId, endpoint: '/api/spaces/[spaceId]/widgets' });
 
     // Check if user is a member of this space
     const membershipQuery = dbAdmin.collectionGroup('members')
@@ -61,14 +40,14 @@ export async function GET(
     const isAdmin = userMembership?.role === 'admin' || userMembership?.role === 'owner';
     const isMember = !!userMembership;
 
-    // Mock widget data (in production, these would be separate API calls to widget-specific endpoints)
+    // Production-safe widget data (empty until real integration)
     const widgetData = {
       posts: {
         summary: {
-          totalPosts: Math.floor(Math.random() * 50) + 10,
-          recentPosts: Math.floor(Math.random() * 5) + 1,
-          totalReplies: Math.floor(Math.random() * 200) + 50,
-          activeDiscussions: Math.floor(Math.random() * 8) + 2
+          totalPosts: 0,
+          recentPosts: 0,
+          totalReplies: 0,
+          activeDiscussions: 0
         },
         recent: [
           {
@@ -113,9 +92,9 @@ export async function GET(
       
       events: {
         summary: {
-          upcomingEvents: Math.floor(Math.random() * 5) + 1,
-          thisWeekEvents: Math.floor(Math.random() * 3) + 1,
-          totalRSVPs: Math.floor(Math.random() * 50) + 10
+          upcomingEvents: 0,
+          thisWeekEvents: 0,
+          totalRSVPs: 0
         },
         upcoming: [
           {
@@ -129,7 +108,7 @@ export async function GET(
             organizerName: 'Sarah Chen',
             currentAttendees: 8,
             maxAttendees: 15,
-            userRSVP: Math.random() > 0.5 ? 'going' : null
+            userRSVP: null
           },
           {
             id: 'event-2',
@@ -149,10 +128,10 @@ export async function GET(
       
       members: {
         summary: {
-          totalMembers: Math.floor(Math.random() * 200) + 50,
-          activeMembers: Math.floor(Math.random() * 50) + 20,
-          newThisWeek: Math.floor(Math.random() * 5) + 1,
-          onlineNow: Math.floor(Math.random() * 8) + 2
+          totalMembers: 0,
+          activeMembers: 0,
+          newThisWeek: 0,
+          onlineNow: 0
         },
         recent: [
           {
@@ -212,41 +191,12 @@ export async function GET(
         ]
       },
       
-      tools: isAdmin ? {
-        summary: {
-          availableTools: Math.floor(Math.random() * 3) + 1,
-          recentlyUsed: Math.floor(Math.random() * 2) + 1,
-          totalUsage: Math.floor(Math.random() * 100) + 20
-        },
-        available: [
-          {
-            id: 'tool-1',
-            name: 'Grade Calculator',
-            description: 'Calculate your current GPA and track grade progress',
-            type: 'academic',
-            createdBy: 'Sarah Chen',
-            usageCount: Math.floor(Math.random() * 50) + 10,
-            lastUsed: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000)
-          },
-          {
-            id: 'tool-2',
-            name: 'Study Group Scheduler',
-            description: 'Coordinate study session times with group members',
-            type: 'coordination',
-            createdBy: 'Mike Rodriguez',
-            usageCount: Math.floor(Math.random() * 30) + 5,
-            lastUsed: new Date(Date.now() - 24 * 60 * 60 * 1000)
-          }
-        ]
-      } : null // Tools only available to admins
+      tools: await getDeployedToolsForSpace(spaceId, userId, isMember)
     };
 
-    // Filter tools widget if user is not admin
-    if (!isAdmin) {
-      delete widgetData.tools;
-    }
+    // Tools widget is now handled by getDeployedToolsForSpace with proper permissions
 
-    console.log(`✅ Returning widget data for space ${spaceId}`);
+    logger.info('✅ Returning widget data for space', { spaceId, endpoint: '/api/spaces/[spaceId]/widgets' });
 
     return NextResponse.json({
       success: true,
@@ -263,21 +213,152 @@ export async function GET(
     });
 
   } catch (error: any) {
-    console.error('❌ Widget data API error:', error);
-
-    if (error.code === 'auth/id-token-expired') {
-      return NextResponse.json(
-        { error: 'Token expired' },
-        { status: 401 }
-      );
-    }
+    logger.error('❌ Widget data API error', { error: error, endpoint: '/api/spaces/[spaceId]/widgets' });
 
     return NextResponse.json(
       { 
         success: false,
         error: 'Internal server error'
       },
-      { status: 500 }
+      { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
+  }
+}, { 
+  allowDevelopmentBypass: true, // Widget data viewing is safe for development
+  operation: 'get_space_widgets' 
+});
+
+/**
+ * Fetch deployed tools for a space
+ */
+async function getDeployedToolsForSpace(spaceId: string, userId: string, isMember: boolean) {
+  try {
+    // Only return tools if user is a member
+    if (!isMember) {
+      return null;
+    }
+
+    // Fetch deployed tools for this space
+    const deployedToolsSnapshot = await dbAdmin.collection('deployedTools')
+      .where('deployedTo', '==', 'space')
+      .where('targetId', '==', spaceId)
+      .where('status', '==', 'active')
+      .orderBy('position', 'asc')
+      .get();
+
+    if (deployedToolsSnapshot.empty) {
+      return {
+        summary: {
+          availableTools: 0,
+          recentlyUsed: 0,
+          totalUsage: 0
+        },
+        available: []
+      };
+    }
+
+    const deployedTools = [];
+    let totalUsage = 0;
+    let recentlyUsedCount = 0;
+    const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+
+    // Process each deployed tool
+    for (const deploymentDoc of deployedToolsSnapshot.docs) {
+      const deployment = deploymentDoc.data();
+      
+      // Check if user has permission to access this tool
+      const userRole = await getUserRoleInSpace(spaceId, userId);
+      if (!deployment.permissions.allowedRoles?.includes(userRole)) {
+        continue;
+      }
+
+      // Get tool details
+      const toolDoc = await dbAdmin.collection('tools').doc(deployment.toolId).get();
+      if (!toolDoc.exists) {
+        continue;
+      }
+
+      const toolData = toolDoc.data();
+      const usageCount = deployment.usageCount || 0;
+      totalUsage += usageCount;
+
+      // Check if recently used
+      if (deployment.lastUsed && new Date(deployment.lastUsed) > oneWeekAgo) {
+        recentlyUsedCount++;
+      }
+
+      // Get deployer name
+      let deployerName = 'Unknown';
+      try {
+        const deployerDoc = await dbAdmin.collection('users').doc(deployment.deployedBy).get();
+        if (deployerDoc.exists) {
+          const deployerData = deployerDoc.data();
+          deployerName = deployerData?.displayName || deployerData?.name || 'Unknown';
+        }
+      } catch (error) {
+        logger.error('Error fetching deployer name', { error, deployerId: deployment.deployedBy });
+      }
+
+      deployedTools.push({
+        id: deploymentDoc.id,
+        deploymentId: deploymentDoc.id,
+        toolId: deployment.toolId,
+        name: toolData.name || 'Untitled Tool',
+        description: toolData.description || 'No description provided',
+        type: toolData.type || 'utility',
+        surface: deployment.surface || 'tools',
+        createdBy: deployerName,
+        deployedBy: deployment.deployedBy,
+        deployedAt: deployment.deployedAt,
+        usageCount,
+        lastUsed: deployment.lastUsed ? new Date(deployment.lastUsed) : null,
+        permissions: deployment.permissions,
+        settings: deployment.settings,
+        position: deployment.position || 0,
+        toolData: {
+          elements: toolData.elements || [],
+          currentVersion: toolData.currentVersion || '1.0.0',
+          status: toolData.status || 'active'
+        }
+      });
+    }
+
+    return {
+      summary: {
+        availableTools: deployedTools.length,
+        recentlyUsed: recentlyUsedCount,
+        totalUsage
+      },
+      available: deployedTools
+    };
+
+  } catch (error) {
+    logger.error('Error fetching deployed tools for space', { error, spaceId });
+    return {
+      summary: {
+        availableTools: 0,
+        recentlyUsed: 0,
+        totalUsage: 0
+      },
+      available: []
+    };
+  }
+}
+
+/**
+ * Get user role in a space
+ */
+async function getUserRoleInSpace(spaceId: string, userId: string): Promise<string> {
+  try {
+    const spaceDoc = await dbAdmin.collection('spaces').doc(spaceId).get();
+    if (!spaceDoc.exists) {
+      return 'none';
+    }
+    
+    const spaceData = spaceDoc.data();
+    return spaceData?.members?.[userId]?.role || 'none';
+  } catch (error) {
+    logger.error('Error getting user role in space', { error, spaceId, userId });
+    return 'none';
   }
 }

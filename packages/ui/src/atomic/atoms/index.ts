@@ -67,3 +67,7 @@ export type { TextProps } from './text';
 // export * from './textarea'; // Use textarea-enhanced instead
 export * from './tooltip';
 export * from './typography';
+export * from './navigation-preferences';
+
+// === HIVE SPACES SYSTEM ===
+export * from './space-category-card';

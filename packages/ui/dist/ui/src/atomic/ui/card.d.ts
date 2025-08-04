@@ -1,25 +1,25 @@
 import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
 declare const cardVariants: (props?: {
-    variant?: "default" | "ghost" | "minimal" | "elevated";
+    variant?: "default" | "ghost" | "elevated" | "minimal";
     size?: "default" | "sm" | "lg" | "xl";
-    radius?: "none" | "default" | "sm" | "lg" | "full";
-} & import("class-variance-authority/dist/types").ClassProp) => string;
+    radius?: "default" | "sm" | "lg" | "none" | "full";
+} & import("class-variance-authority/types").ClassProp) => string;
 declare const cardHeaderVariants: (props?: {
-    spacing?: "none" | "default" | "sm" | "lg";
-} & import("class-variance-authority/dist/types").ClassProp) => string;
+    spacing?: "default" | "sm" | "lg" | "none";
+} & import("class-variance-authority/types").ClassProp) => string;
 declare const cardTitleVariants: (props?: {
     size?: "default" | "sm" | "lg" | "xl";
-} & import("class-variance-authority/dist/types").ClassProp) => string;
+} & import("class-variance-authority/types").ClassProp) => string;
 declare const cardDescriptionVariants: (props?: {
     size?: "default" | "sm" | "lg";
-} & import("class-variance-authority/dist/types").ClassProp) => string;
+} & import("class-variance-authority/types").ClassProp) => string;
 declare const cardContentVariants: (props?: {
-    spacing?: "none" | "default" | "sm" | "lg";
-} & import("class-variance-authority/dist/types").ClassProp) => string;
+    spacing?: "default" | "sm" | "lg" | "none";
+} & import("class-variance-authority/types").ClassProp) => string;
 declare const cardFooterVariants: (props?: {
-    spacing?: "none" | "default" | "sm" | "lg";
-} & import("class-variance-authority/dist/types").ClassProp) => string;
+    spacing?: "default" | "sm" | "lg" | "none";
+} & import("class-variance-authority/types").ClassProp) => string;
 interface CardProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof cardVariants> {
 }
 export declare const Card: React.ForwardRefExoticComponent<CardProps & React.RefAttributes<HTMLDivElement>>;

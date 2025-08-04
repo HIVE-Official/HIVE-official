@@ -3,6 +3,18 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from '../../components/framer-motion-proxy';
 import { cn } from '../../lib/utils';
+import { 
+  Calendar, 
+  Clock, 
+  MapPin, 
+  Plus, 
+  AlertTriangle, 
+  Edit, 
+  Trash2, 
+  Check, 
+  X,
+  Loader2
+} from 'lucide-react';
 
 // Import our sophisticated molecules
 import { CampusIdentityHeader } from '../molecules/campus-identity-header';
@@ -15,6 +27,28 @@ import type { CampusIdentityHeaderProps } from '../molecules/campus-identity-hea
 import type { CampusSpacesCardProps } from '../molecules/campus-spaces-card';
 import type { CampusActivityFeedProps } from '../molecules/campus-activity-feed';
 import type { CampusBuilderToolsProps } from '../molecules/campus-builder-tools';
+
+interface CalendarEvent {
+  id: string;
+  title: string;
+  description?: string;
+  startDate: string;
+  endDate: string;
+  type: 'personal' | 'space' | 'class' | 'study' | 'meeting';
+  location?: string;
+  spaceId?: string;
+  spaceName?: string;
+  status: 'confirmed' | 'tentative' | 'cancelled';
+}
+
+interface CalendarConflict {
+  id: string;
+  type: 'overlap' | 'double_booking' | 'travel_time';
+  severity: 'high' | 'medium' | 'low';
+  eventIds: string[];
+  description: string;
+  suggestion: string;
+}
 
 export interface ProfileDashboardProps {
   // Profile data
@@ -30,10 +64,15 @@ export interface ProfileDashboardProps {
   availableTools: CampusBuilderToolsProps['availableTools'];
   createdTools: CampusBuilderToolsProps['createdTools'];
   
+  // Calendar data
+  calendarEvents?: CalendarEvent[];
+  calendarConflicts?: CalendarConflict[];
+  
   // Layout configuration
   layout?: 'desktop' | 'tablet' | 'mobile';
   variant?: 'default' | 'compact' | 'focused';
   showBuilder?: boolean;
+  showCalendar?: boolean;
   
   // Loading states
   isLoading?: {
@@ -41,6 +80,7 @@ export interface ProfileDashboardProps {
     spaces?: boolean;
     activities?: boolean;
     tools?: boolean;
+    calendar?: boolean;
   };
   
   // Interactive callbacks
@@ -55,8 +95,278 @@ export interface ProfileDashboardProps {
   onViewAllSpaces?: () => void;
   onViewAllActivities?: () => void;
   
+  // Space management callbacks
+  onMuteSpace?: (spaceId: string, muted: boolean) => void;
+  onPinSpace?: (spaceId: string, pinned: boolean) => void;
+  onLeaveSpace?: (spaceId: string) => void;
+  onQuickPost?: (spaceId: string, message: string) => void;
+  
+  // Calendar callbacks
+  onCreateEvent?: (event: Partial<CalendarEvent>) => void;
+  onUpdateEvent?: (id: string, updates: Partial<CalendarEvent>) => void;
+  onDeleteEvent?: (id: string) => void;
+  onResolveConflict?: (conflictId: string, resolution: string, eventId?: string) => void;
+  
   className?: string;
 }
+
+// Interactive Calendar Widget Component
+const InteractiveCalendarWidget: React.FC<{
+  events: CalendarEvent[];
+  conflicts: CalendarConflict[];
+  isLoading?: boolean;
+  onCreateEvent?: (event: Partial<CalendarEvent>) => void;
+  onUpdateEvent?: (id: string, updates: Partial<CalendarEvent>) => void;
+  onDeleteEvent?: (id: string) => void;
+  onResolveConflict?: (conflictId: string, resolution: string, eventId?: string) => void;
+}> = ({
+  events,
+  conflicts,
+  isLoading = false,
+  onCreateEvent,
+  onUpdateEvent,
+  onDeleteEvent,
+  onResolveConflict
+}) => {
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [createForm, setCreateForm] = useState({
+    title: '',
+    startDate: '',
+    endDate: '',
+    type: 'personal' as const,
+    location: ''
+  });
+
+  const formatTime = (dateString: string) => {
+    return new Date(dateString).toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true
+    });
+  };
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+
+    if (date.toDateString() === today.toDateString()) {
+      return 'Today';
+    } else if (date.toDateString() === tomorrow.toDateString()) {
+      return 'Tomorrow';
+    } else {
+      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    }
+  };
+
+  const getEventTypeColor = (type: string) => {
+    switch (type) {
+      case 'class': return 'bg-blue-500';
+      case 'study': return 'bg-green-500';
+      case 'meeting': return 'bg-purple-500';
+      case 'personal': return 'bg-orange-500';
+      default: return 'bg-gray-500';
+    }
+  };
+
+  const handleCreateEvent = () => {
+    if (!createForm.title || !createForm.startDate || !createForm.endDate) return;
+
+    onCreateEvent?.({
+      title: createForm.title,
+      startDate: new Date(createForm.startDate).toISOString(),
+      endDate: new Date(createForm.endDate).toISOString(),
+      type: createForm.type,
+      location: createForm.location
+    });
+
+    setCreateForm({
+      title: '',
+      startDate: '',
+      endDate: '',
+      type: 'personal',
+      location: ''
+    });
+    setShowCreateForm(false);
+  };
+
+  const upcomingEvents = events
+    .filter(event => new Date(event.startDate) > new Date())
+    .sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime())
+    .slice(0, 5);
+
+  return (
+    <div className="bg-hive-surface-elevated rounded-xl border border-hive-border-subtle p-6">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-6">
+        <h3 className="font-semibold text-hive-text-primary flex items-center space-x-2">
+          <Calendar className="h-5 w-5" />
+          <span>Calendar</span>
+        </h3>
+        <button
+          onClick={() => setShowCreateForm(!showCreateForm)}
+          className="p-2 text-hive-text-secondary hover:text-hive-text-primary hover:bg-hive-background-tertiary rounded-lg transition-colors"
+        >
+          <Plus className="h-4 w-4" />
+        </button>
+      </div>
+
+      {/* Conflicts Alert */}
+      {conflicts.length > 0 && (
+        <div className="mb-4 p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
+          <div className="flex items-center space-x-2">
+            <AlertTriangle className="h-4 w-4 text-yellow-500" />
+            <span className="text-sm text-yellow-600">
+              {conflicts.length} scheduling conflict{conflicts.length > 1 ? 's' : ''} detected
+            </span>
+          </div>
+          {conflicts.slice(0, 2).map(conflict => (
+            <div key={conflict.id} className="mt-2 text-xs text-yellow-600">
+              <p>{conflict.description}</p>
+              <div className="flex space-x-2 mt-1">
+                <button
+                  onClick={() => onResolveConflict?.(conflict.id, 'reschedule', conflict.eventIds[0])}
+                  className="px-2 py-1 bg-yellow-500/20 rounded text-yellow-700 hover:bg-yellow-500/30"
+                >
+                  Reschedule
+                </button>
+                <button
+                  onClick={() => onResolveConflict?.(conflict.id, 'ignore')}
+                  className="px-2 py-1 bg-gray-500/20 rounded text-gray-600 hover:bg-gray-500/30"
+                >
+                  Ignore
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Create Event Form */}
+      {showCreateForm && (
+        <div className="mb-4 p-4 bg-hive-background-tertiary rounded-lg space-y-3">
+          <input
+            type="text"
+            placeholder="Event title"
+            value={createForm.title}
+            onChange={(e) => setCreateForm(prev => ({ ...prev, title: e.target.value }))}
+            className="w-full px-3 py-2 bg-hive-background-primary border border-hive-border-default rounded-lg text-hive-text-primary text-sm"
+          />
+          <div className="grid grid-cols-2 gap-2">
+            <input
+              type="datetime-local"
+              value={createForm.startDate}
+              onChange={(e) => setCreateForm(prev => ({ ...prev, startDate: e.target.value }))}
+              className="px-3 py-2 bg-hive-background-primary border border-hive-border-default rounded-lg text-hive-text-primary text-sm"
+            />
+            <input
+              type="datetime-local"
+              value={createForm.endDate}
+              onChange={(e) => setCreateForm(prev => ({ ...prev, endDate: e.target.value }))}
+              className="px-3 py-2 bg-hive-background-primary border border-hive-border-default rounded-lg text-hive-text-primary text-sm"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            <select
+              value={createForm.type}
+              onChange={(e) => setCreateForm(prev => ({ ...prev, type: e.target.value as any }))}
+              className="px-3 py-2 bg-hive-background-primary border border-hive-border-default rounded-lg text-hive-text-primary text-sm"
+            >
+              <option value="personal">Personal</option>
+              <option value="class">Class</option>
+              <option value="study">Study</option>
+              <option value="meeting">Meeting</option>
+            </select>
+            <input
+              type="text"
+              placeholder="Location"
+              value={createForm.location}
+              onChange={(e) => setCreateForm(prev => ({ ...prev, location: e.target.value }))}
+              className="px-3 py-2 bg-hive-background-primary border border-hive-border-default rounded-lg text-hive-text-primary text-sm"
+            />
+          </div>
+          <div className="flex space-x-2">
+            <button
+              onClick={handleCreateEvent}
+              className="flex-1 px-3 py-2 bg-hive-gold text-hive-background-primary rounded-lg hover:bg-hive-gold/90 transition-colors text-sm font-medium"
+            >
+              Create Event
+            </button>
+            <button
+              onClick={() => setShowCreateForm(false)}
+              className="px-3 py-2 border border-hive-border-default text-hive-text-secondary rounded-lg hover:bg-hive-interactive-hover transition-colors text-sm"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Events List */}
+      {isLoading ? (
+        <div className="flex justify-center py-8">
+          <Loader2 className="h-6 w-6 animate-spin text-hive-text-secondary" />
+        </div>
+      ) : upcomingEvents.length === 0 ? (
+        <div className="text-center py-8">
+          <Calendar className="h-12 w-12 text-hive-text-secondary mx-auto mb-3" />
+          <p className="text-hive-text-secondary text-sm mb-3">No upcoming events</p>
+          <button
+            onClick={() => setShowCreateForm(true)}
+            className="px-4 py-2 bg-hive-gold text-hive-background-primary rounded-lg hover:bg-hive-gold/90 transition-colors text-sm font-medium"
+          >
+            Add Your First Event
+          </button>
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {upcomingEvents.map((event) => (
+            <div
+              key={event.id}
+              className="flex items-center space-x-3 p-3 bg-hive-background-tertiary rounded-lg hover:bg-hive-interactive-hover transition-colors group"
+            >
+              <div className={`w-3 h-8 ${getEventTypeColor(event.type)} rounded`} />
+              <div className="flex-1 min-w-0">
+                <h4 className="font-medium text-hive-text-primary text-sm truncate">
+                  {event.title}
+                </h4>
+                <div className="flex items-center space-x-2 text-xs text-hive-text-secondary">
+                  <span>{formatDate(event.startDate)}</span>
+                  <span>•</span>
+                  <span>{formatTime(event.startDate)} - {formatTime(event.endDate)}</span>
+                  {event.location && (
+                    <>
+                      <span>•</span>
+                      <span className="flex items-center space-x-1">
+                        <MapPin className="h-3 w-3" />
+                        <span>{event.location}</span>
+                      </span>
+                    </>
+                  )}
+                </div>
+              </div>
+              <div className="opacity-0 group-hover:opacity-100 transition-opacity flex space-x-1">
+                <button
+                  onClick={() => onUpdateEvent?.(event.id, { status: event.status === 'confirmed' ? 'cancelled' : 'confirmed' })}
+                  className="p-1 text-hive-text-secondary hover:text-hive-text-primary transition-colors"
+                >
+                  <Edit className="h-3 w-3" />
+                </button>
+                <button
+                  onClick={() => onDeleteEvent?.(event.id)}
+                  className="p-1 text-hive-text-secondary hover:text-red-400 transition-colors"
+                >
+                  <Trash2 className="h-3 w-3" />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
 
 export const ProfileDashboard: React.FC<ProfileDashboardProps> = ({
   user,
@@ -64,9 +374,12 @@ export const ProfileDashboard: React.FC<ProfileDashboardProps> = ({
   activities,
   availableTools,
   createdTools,
+  calendarEvents = [],
+  calendarConflicts = [],
   layout = 'desktop',
   variant = 'default',
   showBuilder = true,
+  showCalendar = true,
   isLoading = {},
   onAvatarClick,
   onEditProfile,
@@ -78,6 +391,14 @@ export const ProfileDashboard: React.FC<ProfileDashboardProps> = ({
   onJoinSpace,
   onViewAllSpaces,
   onViewAllActivities,
+  onMuteSpace,
+  onPinSpace,
+  onLeaveSpace,
+  onQuickPost,
+  onCreateEvent,
+  onUpdateEvent,
+  onDeleteEvent,
+  onResolveConflict,
   className
 }) => {
   const [loadedSections, setLoadedSections] = useState<Set<string>>(new Set());
@@ -138,8 +459,32 @@ export const ProfileDashboard: React.FC<ProfileDashboardProps> = ({
             onSpaceClick={onSpaceClick}
             onJoinSpace={onJoinSpace}
             onViewAll={onViewAllSpaces}
+            onMuteSpace={onMuteSpace}
+            onPinSpace={onPinSpace}
+            onLeaveSpace={onLeaveSpace}
+            onQuickPost={onQuickPost}
           />
         </motion.div>
+
+        {/* Interactive Calendar Widget */}
+        {showCalendar && (
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.2, ease: [0.23, 1, 0.32, 1] }}
+            onAnimationComplete={() => handleSectionLoad('calendar')}
+          >
+            <InteractiveCalendarWidget
+              events={calendarEvents}
+              conflicts={calendarConflicts}
+              isLoading={isLoading.calendar}
+              onCreateEvent={onCreateEvent}
+              onUpdateEvent={onUpdateEvent}
+              onDeleteEvent={onDeleteEvent}
+              onResolveConflict={onResolveConflict}
+            />
+          </motion.div>
+        )}
 
         {/* Builder Tools - Subtle Sidebar Treatment */}
         {showBuilder && (
@@ -196,6 +541,10 @@ export const ProfileDashboard: React.FC<ProfileDashboardProps> = ({
             onSpaceClick={onSpaceClick}
             onJoinSpace={onJoinSpace}
             onViewAll={onViewAllSpaces}
+            onMuteSpace={onMuteSpace}
+            onPinSpace={onPinSpace}
+            onLeaveSpace={onLeaveSpace}
+            onQuickPost={onQuickPost}
           />
         </motion.div>
 
@@ -288,6 +637,10 @@ export const ProfileDashboard: React.FC<ProfileDashboardProps> = ({
           onSpaceClick={onSpaceClick}
           onJoinSpace={onJoinSpace}
           onViewAll={onViewAllSpaces}
+          onMuteSpace={onMuteSpace}
+          onPinSpace={onPinSpace}
+          onLeaveSpace={onLeaveSpace}
+          onQuickPost={onQuickPost}
         />
       </motion.div>
 

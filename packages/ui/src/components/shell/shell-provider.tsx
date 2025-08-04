@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { NavigationStyle, useNavigationLayout } from '../../hooks/use-navigation-layout';
 
 type NavigationMode = 'sidebar' | 'topbar';
 
@@ -15,6 +16,9 @@ interface ShellContextType {
   setUnreadNotificationCount: (count: number) => void;
   navigationMode: NavigationMode;
   setNavigationMode: (mode: NavigationMode) => void;
+  navigationPreference: NavigationStyle;
+  setNavigationPreference: (preference: NavigationStyle) => void;
+  navigationLayout: ReturnType<typeof useNavigationLayout>;
 }
 
 const ShellContext = createContext<ShellContextType | undefined>(undefined);
@@ -32,19 +36,28 @@ interface ShellProviderProps {
   initialSidebarCollapsed?: boolean;
   initialUnreadCount?: number;
   initialNavigationMode?: NavigationMode;
+  initialNavigationPreference?: NavigationStyle;
 }
 
 export function ShellProvider({ 
   children, 
   initialSidebarCollapsed = true,
   initialUnreadCount = 0,
-  initialNavigationMode = 'sidebar'
+  initialNavigationMode = 'sidebar',
+  initialNavigationPreference = 'auto'
 }: ShellProviderProps) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(initialSidebarCollapsed);
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
   const [notificationCenterOpen, setNotificationCenterOpen] = useState(false);
   const [unreadNotificationCount, setUnreadNotificationCount] = useState(initialUnreadCount);
   const [navigationMode, setNavigationMode] = useState<NavigationMode>(initialNavigationMode);
+  const [navigationPreference, setNavigationPreference] = useState<NavigationStyle>(initialNavigationPreference);
+
+  // Navigation layout hook
+  const navigationLayout = useNavigationLayout({
+    userPreference: navigationPreference,
+    onPreferenceChange: setNavigationPreference
+  });
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -131,6 +144,29 @@ export function ShellProvider({
     localStorage.setItem('hive-navigation-mode', navigationMode);
   }, [navigationMode]);
 
+  // Load navigation preference from localStorage
+  useEffect(() => {
+    const savedPreference = localStorage.getItem('hive-navigation-preference') as NavigationStyle;
+    if (savedPreference && ['tabs', 'sidebar', 'auto'].includes(savedPreference)) {
+      setNavigationPreference(savedPreference);
+    }
+  }, []);
+
+  // Save navigation preference to localStorage
+  useEffect(() => {
+    localStorage.setItem('hive-navigation-preference', navigationPreference);
+  }, [navigationPreference]);
+
+  // Sync resolved navigation mode with legacy navigation mode
+  useEffect(() => {
+    if (navigationLayout.resolvedMode === 'topbar') {
+      setNavigationMode('topbar');
+    } else if (navigationLayout.resolvedMode === 'sidebar') {
+      setNavigationMode('sidebar');
+    }
+    // Note: bottom-tabs and drawer modes don't directly map to legacy modes
+  }, [navigationLayout.resolvedMode]);
+
   const value: ShellContextType = {
     sidebarCollapsed,
     setSidebarCollapsed,
@@ -142,6 +178,9 @@ export function ShellProvider({
     setUnreadNotificationCount,
     navigationMode,
     setNavigationMode,
+    navigationPreference,
+    setNavigationPreference,
+    navigationLayout,
   };
 
   return (

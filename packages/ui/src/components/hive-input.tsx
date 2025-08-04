@@ -17,7 +17,8 @@ const hiveInputVariants = cva(
   // Base styles - matte obsidian glass with accessibility and mobile support
   cn(
     componentBase.input,
-    "relative bg-[var(--hive-background-secondary)]/40 backdrop-blur-xl border rounded-xl transition-all hive-motion-base focus-within:bg-[var(--hive-background-secondary)]/60",
+    "relative backdrop-blur-xl border rounded-xl transition-all hive-motion-base",
+    "bg-[#111113]/40 focus-within:bg-[#111113]/60", // Direct hex values instead of CSS variables
     touchTargets.comfortable
   ),
   {
@@ -35,18 +36,18 @@ const hiveInputVariants = cva(
         // Disabled state - semantic disabled tokens
         disabled: "border-[var(--hive-border-disabled)] bg-[var(--hive-background-disabled)] opacity-60 cursor-not-allowed",
         
-        // Premium variant - semantic brand tokens
-        premium: "border-[var(--hive-brand-primary)]/30 focus-within:border-[var(--hive-brand-primary)]/60 focus-within:ring-2 focus-within:ring-[var(--hive-brand-primary)]/50 focus-within:shadow-lg focus-within:shadow-[var(--hive-shadow-gold-glow)]",
+        // Premium variant - direct color values for testing
+        premium: "border-[#FFD700]/30 focus-within:border-[#FFD700]/60 focus-within:ring-2 focus-within:ring-[#FFD700]/50 focus-within:shadow-lg focus-within:shadow-[0_0_20px_rgba(255,215,0,0.3)]",
         
         // Minimal variant for basic use cases
         minimal: "border-[var(--hive-border-subtle)] focus-within:border-[var(--hive-border-primary)] bg-transparent",
       },
       
       size: {
-        sm: "h-9 text-sm",
-        default: "h-11 text-sm", 
-        lg: "h-13 text-base",
-        xl: "h-16 text-lg",
+        sm: "min-h-[2.25rem] text-sm",
+        default: "min-h-[2.75rem] text-sm", 
+        lg: "min-h-[3.25rem] text-base",
+        xl: "min-h-[4rem] text-lg",
       },
       
       radius: {
@@ -164,7 +165,8 @@ const HiveInput = React.forwardRef<HTMLInputElement, HiveInputProps>(
     const inputRef = useRef<HTMLInputElement>(null);
     
     // Determine if label should float
-    const hasValue = Boolean(internalValue);
+    const currentValue = value !== undefined ? value : internalValue;
+    const hasValue = Boolean(currentValue);
     const shouldFloat = isFocused || hasValue;
     
     // Determine current state variant
@@ -188,7 +190,7 @@ const HiveInput = React.forwardRef<HTMLInputElement, HiveInputProps>(
     const validationProps = getValidationProps(errorText, Boolean(successText));
     
     // Character count logic
-    const currentLength = String(internalValue).length;
+    const currentLength = String(currentValue).length;
     const showCount = showCharacterCount && (isFocused || (maxLength && currentLength > maxLength * 0.8));
     const isOverLimit = maxLength && currentLength > maxLength;
     
@@ -198,6 +200,13 @@ const HiveInput = React.forwardRef<HTMLInputElement, HiveInputProps>(
       setInternalValue(newValue);
       props.onChange?.(e);
     };
+    
+    // Sync internal value with external value prop changes
+    React.useEffect(() => {
+      if (value !== undefined) {
+        setInternalValue(value);
+      }
+    }, [value]);
     
     // Handle password toggle
     const togglePassword = () => {
@@ -214,7 +223,10 @@ const HiveInput = React.forwardRef<HTMLInputElement, HiveInputProps>(
       <div className="w-full">
         {/* Static Label for non-floating */}
         {label && !floatingLabel && (
-          <label className="block text-sm font-medium text-[var(--hive-text-primary)] mb-2">
+          <label 
+            htmlFor={inputId}
+            className="block text-sm font-medium text-[var(--hive-text-primary)] mb-3"
+          >
             {label}
           </label>
         )}
@@ -254,16 +266,21 @@ const HiveInput = React.forwardRef<HTMLInputElement, HiveInputProps>(
             <input
               ref={inputRef}
               type={inputType}
-              value={value}
-              defaultValue={defaultValue}
+              value={value !== undefined ? value : internalValue}
               disabled={disabled || loading}
               maxLength={maxLength}
               required={required}
               className={cn(
                 "w-full h-full bg-transparent text-[var(--hive-text-primary)] placeholder-[var(--hive-text-placeholder)] focus:outline-none relative z-20",
                 leftIcon ? "pl-10" : "pl-3",
-                "pr-12", // Proper space for icons
-                floatingLabel ? "pt-6 pb-2" : "py-3",
+                // Dynamic right padding based on what icons are present
+                (showCount || onClear || type === 'password' || loading || rightIcon) ? "pr-16" : "pr-4",
+                floatingLabel ? "pt-6 pb-2" : (
+                  size === 'sm' ? "py-2" :
+                  size === 'lg' ? "py-4" :
+                  size === 'xl' ? "py-5" :
+                  "py-3"
+                ),
                 size === 'sm' && "text-sm",
                 size === 'default' && "text-sm", 
                 size === 'lg' && "text-base",
@@ -286,13 +303,13 @@ const HiveInput = React.forwardRef<HTMLInputElement, HiveInputProps>(
             />
             
             {/* Right Side Icons */}
-            <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center space-x-2 z-10">
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center space-x-1 z-10">
               {/* Character Count */}
               <AnimatePresence>
                 {showCount && (
                   <motion.span
                     className={cn(
-                      "text-xs font-medium shrink-0",
+                      "text-xs font-medium shrink-0 bg-[var(--hive-background-secondary)]/80 px-1.5 py-0.5 rounded-md backdrop-blur-sm",
                       isOverLimit ? "text-[var(--hive-status-error)]" : "text-[var(--hive-text-secondary)]"
                     )}
                     variants={characterCountVariants}
@@ -307,28 +324,24 @@ const HiveInput = React.forwardRef<HTMLInputElement, HiveInputProps>(
               
               {/* Clear Button */}
               {onClear && hasValue && !loading && (
-                <motion.button
+                <button
                   type="button"
-                  className="text-[var(--hive-text-secondary)] hover:text-[var(--hive-text-primary)] transition-colors shrink-0 w-4 h-4 flex items-center justify-center"
+                  className="text-[var(--hive-text-secondary)] hover:text-[var(--hive-text-primary)] transition-all duration-200 hover:scale-110 active:scale-90 shrink-0 w-4 h-4 flex items-center justify-center"
                   onClick={onClear}
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
                 >
                   ×
-                </motion.button>
+                </button>
               )}
               
               {/* Password Toggle */}
               {type === 'password' && (
-                <motion.button
+                <button
                   type="button"
-                  className="text-[var(--hive-text-secondary)] hover:text-[var(--hive-text-primary)] transition-colors shrink-0"
+                  className="text-[var(--hive-text-secondary)] hover:text-[var(--hive-text-primary)] transition-all duration-200 hover:scale-105 active:scale-95 shrink-0"
                   onClick={togglePassword}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
                 >
                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                </motion.button>
+                </button>
               )}
               
               {/* Loading Spinner */}

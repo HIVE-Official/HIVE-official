@@ -3,7 +3,7 @@ import { type VariantProps } from 'class-variance-authority';
 import { type Space } from '@hive/core';
 declare const hiveMembersSurfaceVariants: (props?: {
     mode?: "view" | "builder" | "edit";
-} & import("class-variance-authority/dist/types").ClassProp) => string;
+} & import("class-variance-authority/types").ClassProp) => string;
 declare const memberRoles: {
     readonly builder: {
         readonly icon: React.ForwardRefExoticComponent<Omit<import("lucide-react").LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>>;
@@ -103,6 +103,7 @@ export interface HiveMembersSurfaceProps extends React.HTMLAttributes<HTMLDivEle
     currentUserId?: string;
     isBuilder?: boolean;
     canModerate?: boolean;
+    leaderMode?: 'moderate' | 'manage' | 'configure' | 'insights' | null;
     onViewProfile?: (memberId: string) => void;
     onMessageMember?: (memberId: string) => void;
     onInviteMember?: () => void;

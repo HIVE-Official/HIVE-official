@@ -4,6 +4,8 @@ import { z } from "zod";
 import { getAuth } from "firebase-admin/auth";
 import { getFirestore, FieldValue } from "firebase-admin/firestore";
 import { type User, UB_MAJORS } from "@hive/core";
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 // Server-side space type that allows FieldValue for timestamps
 interface ServerSpace {
@@ -34,8 +36,7 @@ const updateMembershipsSchema = z.object({
   previousMajor: z.string().optional(),
   newMajor: z.string().optional(),
   previousResidential: z.string().optional(),
-  newResidential: z.string().optional(),
-});
+  newResidential: z.string().optional() });
 
 /**
  * Update space memberships when user changes major or residential info
@@ -52,10 +53,7 @@ export async function POST(request: NextRequest) {
       { status: 410 }
     );
   } catch (error) {
-    console.error("Update memberships error:", error);
-    return NextResponse.json(
-      { error: "Failed to process membership update request" },
-      { status: 500 }
-    );
+    logger.error('Update memberships error', { error: error, endpoint: '/api/spaces/update-memberships' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to process membership update request", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

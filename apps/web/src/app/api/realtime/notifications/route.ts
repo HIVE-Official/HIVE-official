@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { collection, doc, getDoc, setDoc, addDoc, updateDoc, deleteDoc, query, where, getDocs, orderBy, limit as fbLimit, startAfter } from 'firebase/firestore';
-import { db } from '@hive/core/server';
-import { getCurrentUser } from '@hive/auth-logic';
+// Use admin SDK methods since we're in an API route
+import { dbAdmin } from '@/lib/firebase-admin';
+import { getCurrentUser } from '@/lib/server-auth';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 // Live notifications interfaces
 interface LiveNotification {
@@ -98,7 +100,7 @@ export async function POST(request: NextRequest) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const body = await request.json();
@@ -115,9 +117,7 @@ export async function POST(request: NextRequest) {
     } = body;
 
     if (!targetUserId || !type || !title || !content || !sourceId || !sourceType) {
-      return NextResponse.json({ 
-        error: 'Target user ID, type, title, content, source ID, and source type are required' 
-      }, { status: 400 });
+      return NextResponse.json(ApiResponseHelper.error("Target user ID, type, title, content, source ID, and source type are required", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
     // Get target user's notification preferences
@@ -136,7 +136,7 @@ export async function POST(request: NextRequest) {
     let spaceName;
     if (spaceId) {
       const spaceDoc = await getDoc(doc(db, 'spaces', spaceId));
-      spaceName = spaceDoc.exists() ? spaceDoc.data().name : undefined;
+      spaceName = spaceDoc.exists ? spaceDoc.data().name : undefined;
     }
 
     // Generate notification ID
@@ -204,8 +204,8 @@ export async function POST(request: NextRequest) {
       }
     });
   } catch (error) {
-    console.error('Error creating live notification:', error);
-    return NextResponse.json({ error: 'Failed to create notification' }, { status: 500 });
+    logger.error('Error creating live notification', { error: error, endpoint: '/api/realtime/notifications' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to create notification", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -214,7 +214,7 @@ export async function GET(request: NextRequest) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const { searchParams } = new URL(request.url);
@@ -226,29 +226,29 @@ export async function GET(request: NextRequest) {
     const includeExpired = searchParams.get('includeExpired') === 'true';
 
     // Build query
-    let notificationQuery = query(
-      collection(db, 'liveNotifications'),
+    let notificationQuery = dbAdmin.collection(
+      dbAdmin.collection('liveNotifications'),
       where('userId', '==', user.uid),
       where('isActive', '==', true)
     );
 
     // Add status filter
     if (status !== 'all') {
-      notificationQuery = query(notificationQuery, where('status', '==', status));
+      notificationQuery = dbAdmin.collection(notificationQuery, where('status', '==', status));
     }
 
     // Add type filter
     if (type) {
-      notificationQuery = query(notificationQuery, where('type', '==', type));
+      notificationQuery = dbAdmin.collection(notificationQuery, where('type', '==', type));
     }
 
     // Add space filter
     if (spaceId) {
-      notificationQuery = query(notificationQuery, where('spaceId', '==', spaceId));
+      notificationQuery = dbAdmin.collection(notificationQuery, where('spaceId', '==', spaceId));
     }
 
     // Add ordering and limit
-    notificationQuery = query(
+    notificationQuery = dbAdmin.collection(
       notificationQuery,
       orderBy('metadata.timestamp', 'desc'),
       fbLimit(limit)
@@ -257,8 +257,8 @@ export async function GET(request: NextRequest) {
     // Add pagination
     if (before) {
       const beforeDoc = await getDoc(doc(db, 'liveNotifications', before));
-      if (beforeDoc.exists()) {
-        notificationQuery = query(notificationQuery, startAfter(beforeDoc));
+      if (beforeDoc.exists) {
+        notificationQuery = dbAdmin.collection(notificationQuery, startAfter(beforeDoc));
       }
     }
 
@@ -291,8 +291,8 @@ export async function GET(request: NextRequest) {
       lastNotificationId: notifications.length > 0 ? notifications[notifications.length - 1].id : null
     });
   } catch (error) {
-    console.error('Error getting live notifications:', error);
-    return NextResponse.json({ error: 'Failed to get notifications' }, { status: 500 });
+    logger.error('Error getting live notifications', { error: error, endpoint: '/api/realtime/notifications' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to get notifications", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -301,7 +301,7 @@ export async function PUT(request: NextRequest) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const body = await request.json();
@@ -312,15 +312,15 @@ export async function PUT(request: NextRequest) {
     } = body;
 
     if (!action && !markAllAsRead) {
-      return NextResponse.json({ error: 'Action is required' }, { status: 400 });
+      return NextResponse.json(ApiResponseHelper.error("Action is required", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
     let updatedCount = 0;
 
     if (markAllAsRead) {
       // Mark all unread notifications as read
-      const unreadQuery = query(
-        collection(db, 'liveNotifications'),
+      const unreadQuery = dbAdmin.collection(
+        dbAdmin.collection('liveNotifications'),
         where('userId', '==', user.uid),
         where('status', '==', 'unread'),
         where('isActive', '==', true)
@@ -342,7 +342,7 @@ export async function PUT(request: NextRequest) {
     } else {
       // Handle specific notifications
       if (notificationIds.length === 0) {
-        return NextResponse.json({ error: 'Notification IDs are required' }, { status: 400 });
+        return NextResponse.json(ApiResponseHelper.error("Notification IDs are required", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
       }
 
       const updates: any = {};
@@ -368,13 +368,13 @@ export async function PUT(request: NextRequest) {
           updates['delivery.clickedAt'] = timestamp;
           break;
         default:
-          return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
+          return NextResponse.json(ApiResponseHelper.error("Invalid action", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
       }
 
       // Update notifications
       const updatePromises = notificationIds.map(async (notificationId: string) => {
         const notificationDoc = await getDoc(doc(db, 'liveNotifications', notificationId));
-        if (notificationDoc.exists() && notificationDoc.data().userId === user.uid) {
+        if (notificationDoc.exists && notificationDoc.data().userId === user.uid) {
           await updateDoc(doc(db, 'liveNotifications', notificationId), updates);
           updatedCount++;
         }
@@ -393,8 +393,8 @@ export async function PUT(request: NextRequest) {
       timestamp: new Date().toISOString()
     });
   } catch (error) {
-    console.error('Error updating notification status:', error);
-    return NextResponse.json({ error: 'Failed to update notification status' }, { status: 500 });
+    logger.error('Error updating notification status', { error: error, endpoint: '/api/realtime/notifications' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to update notification status", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -403,7 +403,7 @@ export async function DELETE(request: NextRequest) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const { searchParams } = new URL(request.url);
@@ -415,8 +415,8 @@ export async function DELETE(request: NextRequest) {
 
     if (deleteAll) {
       // Delete all notifications for user
-      const allNotificationsQuery = query(
-        collection(db, 'liveNotifications'),
+      const allNotificationsQuery = dbAdmin.collection(
+        dbAdmin.collection('liveNotifications'),
         where('userId', '==', user.uid)
       );
 
@@ -427,8 +427,8 @@ export async function DELETE(request: NextRequest) {
     } else if (olderThan) {
       // Delete notifications older than specified date
       const cutoffDate = new Date(olderThan).toISOString();
-      const oldNotificationsQuery = query(
-        collection(db, 'liveNotifications'),
+      const oldNotificationsQuery = dbAdmin.collection(
+        dbAdmin.collection('liveNotifications'),
         where('userId', '==', user.uid),
         where('metadata.timestamp', '<', cutoffDate)
       );
@@ -440,12 +440,12 @@ export async function DELETE(request: NextRequest) {
     } else if (notificationId) {
       // Delete specific notification
       const notificationDoc = await getDoc(doc(db, 'liveNotifications', notificationId));
-      if (notificationDoc.exists() && notificationDoc.data().userId === user.uid) {
+      if (notificationDoc.exists && notificationDoc.data().userId === user.uid) {
         await deleteDoc(doc(db, 'liveNotifications', notificationId));
         deletedCount = 1;
       }
     } else {
-      return NextResponse.json({ error: 'Notification ID, deleteAll, or olderThan parameter required' }, { status: 400 });
+      return NextResponse.json(ApiResponseHelper.error("Notification ID, deleteAll, or olderThan parameter required", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
     return NextResponse.json({
@@ -454,8 +454,8 @@ export async function DELETE(request: NextRequest) {
       message: `Deleted ${deletedCount} notifications`
     });
   } catch (error) {
-    console.error('Error deleting notifications:', error);
-    return NextResponse.json({ error: 'Failed to delete notifications' }, { status: 500 });
+    logger.error('Error deleting notifications', { error: error, endpoint: '/api/realtime/notifications' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to delete notifications", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -464,14 +464,14 @@ async function getUserNotificationPreferences(userId: string): Promise<Notificat
   try {
     const preferencesDoc = await getDoc(doc(db, 'notificationPreferences', userId));
     
-    if (preferencesDoc.exists()) {
+    if (preferencesDoc.exists) {
       return preferencesDoc.data() as NotificationPreferences;
     }
 
     // Return default preferences
     return getDefaultNotificationPreferences(userId);
   } catch (error) {
-    console.error('Error getting notification preferences:', error);
+    logger.error('Error getting notification preferences', { error: error, endpoint: '/api/realtime/notifications' });
     return getDefaultNotificationPreferences(userId);
   }
 }
@@ -635,8 +635,8 @@ async function shouldBatchNotification(
 async function addToBatch(notification: LiveNotification): Promise<void> {
   try {
     // Find existing batch or create new one
-    const batchQuery = query(
-      collection(db, 'notificationBatches'),
+    const batchQuery = dbAdmin.collection(
+      dbAdmin.collection('notificationBatches'),
       where('userId', '==', notification.userId),
       where('status', '==', 'pending'),
       where('groupingCriteria.sourceType', '==', notification.sourceType),
@@ -675,7 +675,7 @@ async function addToBatch(notification: LiveNotification): Promise<void> {
       await setDoc(doc(db, 'notificationBatches', batchId), batch);
     }
   } catch (error) {
-    console.error('Error adding notification to batch:', error);
+    logger.error('Error adding notification to batch', { error: error, endpoint: '/api/realtime/notifications' });
   }
 }
 
@@ -690,9 +690,9 @@ async function sendNotificationImmediately(notification: LiveNotification): Prom
 
     // Here you would integrate with actual delivery services
     // For example: push notification service, email service, etc.
-    console.log(`Sending notification ${notification.id} via channels:`, notification.delivery.channels);
+    logger.info('Sending notification via channels', { notificationId: notification.id, data: notification.delivery.channels, endpoint: '/api/realtime/notifications'  });
   } catch (error) {
-    console.error('Error sending notification immediately:', error);
+    logger.error('Error sending notification immediately', { error: error, endpoint: '/api/realtime/notifications' });
   }
 }
 
@@ -732,17 +732,17 @@ async function broadcastNotificationToUser(notification: LiveNotification): Prom
       }
     };
 
-    await addDoc(collection(db, 'realtimeMessages'), realtimeMessage);
+    await addDoc(dbAdmin.collection('realtimeMessages'), realtimeMessage);
   } catch (error) {
-    console.error('Error broadcasting notification to user:', error);
+    logger.error('Error broadcasting notification to user', { error: error, endpoint: '/api/realtime/notifications' });
   }
 }
 
 // Helper function to get unread notification count
 async function getUnreadNotificationCount(userId: string): Promise<number> {
   try {
-    const unreadQuery = query(
-      collection(db, 'liveNotifications'),
+    const unreadQuery = dbAdmin.collection(
+      dbAdmin.collection('liveNotifications'),
       where('userId', '==', userId),
       where('status', '==', 'unread'),
       where('isActive', '==', true)
@@ -751,7 +751,7 @@ async function getUnreadNotificationCount(userId: string): Promise<number> {
     const unreadSnapshot = await getDocs(unreadQuery);
     return unreadSnapshot.size;
   } catch (error) {
-    console.error('Error getting unread notification count:', error);
+    logger.error('Error getting unread notification count', { error: error, endpoint: '/api/realtime/notifications' });
     return 0;
   }
 }
@@ -759,8 +759,8 @@ async function getUnreadNotificationCount(userId: string): Promise<number> {
 // Helper function to get total notification count
 async function getTotalNotificationCount(userId: string): Promise<number> {
   try {
-    const totalQuery = query(
-      collection(db, 'liveNotifications'),
+    const totalQuery = dbAdmin.collection(
+      dbAdmin.collection('liveNotifications'),
       where('userId', '==', userId),
       where('isActive', '==', true)
     );
@@ -768,7 +768,7 @@ async function getTotalNotificationCount(userId: string): Promise<number> {
     const totalSnapshot = await getDocs(totalQuery);
     return totalSnapshot.size;
   } catch (error) {
-    console.error('Error getting total notification count:', error);
+    logger.error('Error getting total notification count', { error: error, endpoint: '/api/realtime/notifications' });
     return 0;
   }
 }
@@ -778,8 +778,8 @@ async function getRecentNotificationCount(userId: string, minutes: number): Prom
   try {
     const cutoffTime = new Date(Date.now() - minutes * 60 * 1000).toISOString();
     
-    const recentQuery = query(
-      collection(db, 'liveNotifications'),
+    const recentQuery = dbAdmin.collection(
+      dbAdmin.collection('liveNotifications'),
       where('userId', '==', userId),
       where('metadata.timestamp', '>=', cutoffTime)
     );
@@ -787,7 +787,7 @@ async function getRecentNotificationCount(userId: string, minutes: number): Prom
     const recentSnapshot = await getDocs(recentQuery);
     return recentSnapshot.size;
   } catch (error) {
-    console.error('Error getting recent notification count:', error);
+    logger.error('Error getting recent notification count', { error: error, endpoint: '/api/realtime/notifications' });
     return 0;
   }
 }
@@ -824,9 +824,9 @@ async function broadcastNotificationStatusUpdate(
       }
     };
 
-    await addDoc(collection(db, 'realtimeMessages'), statusMessage);
+    await addDoc(dbAdmin.collection('realtimeMessages'), statusMessage);
   } catch (error) {
-    console.error('Error broadcasting notification status update:', error);
+    logger.error('Error broadcasting notification status update', { error: error, endpoint: '/api/realtime/notifications' });
   }
 }
 
@@ -838,7 +838,7 @@ async function updateNotificationStats(userId: string, type: string, spaceId?: s
 
     const statsDoc = await getDoc(doc(db, 'notificationStats', statsId));
     
-    if (statsDoc.exists()) {
+    if (statsDoc.exists) {
       const currentData = statsDoc.data();
       await updateDoc(doc(db, 'notificationStats', statsId), {
         totalNotifications: (currentData.totalNotifications || 0) + 1,
@@ -857,6 +857,6 @@ async function updateNotificationStats(userId: string, type: string, spaceId?: s
       });
     }
   } catch (error) {
-    console.error('Error updating notification stats:', error);
+    logger.error('Error updating notification stats', { error: error, endpoint: '/api/realtime/notifications' });
   }
 }

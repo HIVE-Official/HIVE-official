@@ -2,8 +2,8 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import React from 'react';
 import { cva } from 'class-variance-authority';
-import { cn } from '../../lib/utils';
-import { ProfileStatistic } from '../atoms/profile-statistic';
+import { cn } from '../../lib/utils.js';
+import { ProfileStatistic } from '../atoms/profile-statistic.js';
 import { Users, Zap, BookOpen, Star, TrendingUp, Award, Calendar } from 'lucide-react';
 const profileStatsVariants = cva("flex transition-all duration-200", {
     variants: {
@@ -39,25 +39,25 @@ const profileStatsVariants = cva("flex transition-all duration-200", {
         spacing: "normal"
     }
 });
-// Default stat configurations
-const STAT_CONFIGS = {
+// HIVE stat configurations aligned with unified data model
+const HIVE_STAT_CONFIGS = {
     spacesJoined: {
-        label: 'Spaces',
+        label: 'Spaces Joined',
         icon: Users,
         iconColor: 'secondary',
         emphasis: 'normal'
+    },
+    spacesActive: {
+        label: 'Active Spaces',
+        icon: Zap,
+        iconColor: 'gold',
+        emphasis: 'secondary'
     },
     spacesLed: {
         label: 'Leading',
         icon: Star,
         iconColor: 'gold',
         emphasis: 'gold'
-    },
-    toolsCreated: {
-        label: 'Tools Built',
-        icon: Zap,
-        iconColor: 'secondary',
-        emphasis: 'secondary'
     },
     toolsUsed: {
         label: 'Tools Used',
@@ -72,16 +72,22 @@ const STAT_CONFIGS = {
         emphasis: 'normal'
     },
     totalActivity: {
-        label: 'Activity',
+        label: 'Total Activity',
         icon: TrendingUp,
         iconColor: 'success',
         emphasis: 'normal'
     },
-    weekStreak: {
-        label: 'Day Streak',
+    currentStreak: {
+        label: 'Current Streak',
         icon: Calendar,
         iconColor: 'warning',
         emphasis: 'normal'
+    },
+    longestStreak: {
+        label: 'Best Streak',
+        icon: Award,
+        iconColor: 'gold',
+        emphasis: 'gold'
     },
     reputation: {
         label: 'Reputation',
@@ -96,7 +102,7 @@ const STAT_CONFIGS = {
         emphasis: 'normal'
     }
 };
-export function ProfileStats({ stats, priority = ['spacesJoined', 'toolsCreated', 'connectionsCount', 'reputation'], maxStats = 4, showIcons = true, showTrends = false, interactive = false, onStatClick, changes, loading = false, layout = "horizontal", columns = "auto", variant = "default", spacing = "normal", className, ...props }) {
+export function ProfileStats({ stats, priority = ['spacesJoined', 'spacesActive', 'connectionsCount', 'currentStreak'], maxStats = 4, showIcons = true, showTrends = false, interactive = false, onStatClick, changes, loading = false, layout = "horizontal", columns = "auto", variant = "default", spacing = "normal", className, ...props }) {
     // Determine grid columns based on layout and number of stats
     const determinedColumns = React.useMemo(() => {
         if (layout !== "grid")
@@ -117,7 +123,7 @@ export function ProfileStats({ stats, priority = ['spacesJoined', 'toolsCreated'
         return priority
             .slice(0, maxStats)
             .map(key => {
-            const config = STAT_CONFIGS[key];
+            const config = HIVE_STAT_CONFIGS[key];
             const value = stats[key];
             const change = changes?.[key];
             if (value === undefined)
@@ -164,10 +170,13 @@ export function GridProfileStats(props) {
     return _jsx(ProfileStats, { layout: "grid", ...props });
 }
 export function StudentProfileStats(props) {
-    return (_jsx(ProfileStats, { priority: ['spacesJoined', 'connectionsCount', 'weekStreak', 'reputation'], ...props }));
+    return (_jsx(ProfileStats, { priority: ['spacesJoined', 'connectionsCount', 'currentStreak', 'reputation'], ...props }));
 }
 export function BuilderProfileStats(props) {
-    return (_jsx(ProfileStats, { priority: ['toolsCreated', 'spacesLed', 'reputation', 'totalActivity'], ...props }));
+    return (_jsx(ProfileStats, { priority: ['toolsUsed', 'spacesLed', 'reputation', 'totalActivity'], ...props }));
+}
+export function ActiveUserProfileStats(props) {
+    return (_jsx(ProfileStats, { priority: ['spacesActive', 'currentStreak', 'totalActivity', 'achievements'], ...props }));
 }
 // Export variants for external use
 export { profileStatsVariants };

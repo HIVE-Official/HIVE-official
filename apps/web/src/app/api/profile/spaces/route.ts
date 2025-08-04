@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { collection, doc, query, where, getDocs, getDoc, orderBy, limit } from 'firebase/firestore';
-import { db } from '@hive/core/server';
+// Use admin SDK methods since we're in an API route
+import { dbAdmin } from '@/lib/firebase-admin';
 import { getCurrentUser } from '@/lib/auth-server';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 // Space membership interface for profile
 interface ProfileSpaceMembership {
@@ -70,7 +72,7 @@ export async function GET(request: NextRequest) {
           timeRange: 'week'
         });
       }
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const { searchParams } = new URL(request.url);
@@ -79,8 +81,8 @@ export async function GET(request: NextRequest) {
     const timeRange = searchParams.get('timeRange') || 'week'; // week, month, all
 
     // Fetch user's memberships
-    const membershipsQuery = query(
-      collection(db, 'members'),
+    const membershipsQuery = dbAdmin.collection(
+      dbAdmin.collection('members'),
       where('userId', '==', user.uid),
       orderBy('lastActivity', 'desc')
     );
@@ -96,7 +98,7 @@ export async function GET(request: NextRequest) {
       memberships.map(async (membership) => {
         try {
           const spaceDoc = await getDoc(doc(db, 'spaces', membership.spaceId));
-          if (!spaceDoc.exists()) {
+          if (!spaceDoc.exists) {
             return null;
           }
 
@@ -133,7 +135,7 @@ export async function GET(request: NextRequest) {
             quickStats
           };
         } catch (error) {
-          console.error(`Error fetching space data for ${membership.spaceId}:`, error);
+          logger.error('Error fetching space data for', { spaceId: membership.spaceId, error: error, endpoint: '/api/profile/spaces' });
           return null;
         }
       })
@@ -155,8 +157,8 @@ export async function GET(request: NextRequest) {
       timeRange
     });
   } catch (error) {
-    console.error('Error fetching space memberships:', error);
-    return NextResponse.json({ error: 'Failed to fetch space memberships' }, { status: 500 });
+    logger.error('Error fetching space memberships', { error: error, endpoint: '/api/profile/spaces' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to fetch space memberships", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -182,8 +184,8 @@ async function getSpaceActivityForUser(userId: string, spaceId: string, timeRang
     const endDateStr = endDate.toISOString().split('T')[0];
 
     // Get activity events for this space
-    const activityQuery = query(
-      collection(db, 'activityEvents'),
+    const activityQuery = dbAdmin.collection(
+      dbAdmin.collection('activityEvents'),
       where('userId', '==', userId),
       where('spaceId', '==', spaceId),
       where('date', '>=', startDateStr),
@@ -203,7 +205,7 @@ async function getSpaceActivityForUser(userId: string, spaceId: string, timeRang
 
     return recentActivity;
   } catch (error) {
-    console.error('Error getting space activity:', error);
+    logger.error('Error getting space activity', { error: error, endpoint: '/api/profile/spaces' });
     return { posts: 0, interactions: 0, toolUsage: 0, timeSpent: 0 };
   }
 }
@@ -232,7 +234,7 @@ async function getSpaceNotifications(userId: string, spaceId: string) {
       hasImportantUpdates: Math.random() > 0.7
     };
   } catch (error) {
-    console.error('Error getting space notifications:', error);
+    logger.error('Error getting space notifications', { error: error, endpoint: '/api/profile/spaces' });
     return { unreadCount: 0, hasImportantUpdates: false };
   }
 }
@@ -241,8 +243,8 @@ async function getSpaceNotifications(userId: string, spaceId: string) {
 async function getSpaceQuickStats(userId: string, spaceId: string) {
   try {
     // Get user's posts in this space
-    const postsQuery = query(
-      collection(db, 'posts'),
+    const postsQuery = dbAdmin.collection(
+      dbAdmin.collection('posts'),
       where('authorId', '==', userId),
       where('spaceId', '==', spaceId)
     );
@@ -250,8 +252,8 @@ async function getSpaceQuickStats(userId: string, spaceId: string) {
     const myPosts = postsSnapshot.docs.length;
 
     // Get user's tools deployed in this space
-    const toolsQuery = query(
-      collection(db, 'deployedTools'),
+    const toolsQuery = dbAdmin.collection(
+      dbAdmin.collection('deployedTools'),
       where('creatorId', '==', userId),
       where('spaceId', '==', spaceId)
     );
@@ -259,8 +261,8 @@ async function getSpaceQuickStats(userId: string, spaceId: string) {
     const myTools = toolsSnapshot.docs.length;
 
     // Get user's interactions in this space (simplified)
-    const interactionsQuery = query(
-      collection(db, 'activityEvents'),
+    const interactionsQuery = dbAdmin.collection(
+      dbAdmin.collection('activityEvents'),
       where('userId', '==', userId),
       where('spaceId', '==', spaceId),
       where('type', '==', 'social_interaction'),
@@ -275,7 +277,7 @@ async function getSpaceQuickStats(userId: string, spaceId: string) {
       myInteractions
     };
   } catch (error) {
-    console.error('Error getting quick stats:', error);
+    logger.error('Error getting quick stats', { error: error, endpoint: '/api/profile/spaces' });
     return { myPosts: 0, myTools: 0, myInteractions: 0 };
   }
 }

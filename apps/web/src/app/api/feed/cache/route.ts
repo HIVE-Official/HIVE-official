@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { collection, doc, getDoc, setDoc, updateDoc, deleteDoc, query, where, getDocs, orderBy, limit as fbLimit } from 'firebase/firestore';
-import { db } from '@hive/core/server';
-import { getCurrentUser } from '@hive/auth-logic';
+// Use admin SDK methods since we're in an API route
+import { dbAdmin } from '@/lib/firebase-admin';
+import { getCurrentUser } from '@/lib/server-auth';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 // Feed caching interfaces
 interface FeedCache {
@@ -54,7 +56,7 @@ export async function POST(request: NextRequest) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const body = await request.json();
@@ -144,8 +146,8 @@ export async function POST(request: NextRequest) {
       }
     });
   } catch (error) {
-    console.error('Error handling feed cache request:', error);
-    return NextResponse.json({ error: 'Failed to process feed request' }, { status: 500 });
+    logger.error('Error handling feed cache request', { error: error, endpoint: '/api/feed/cache' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to process feed request", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -154,7 +156,7 @@ export async function GET(request: NextRequest) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const { searchParams } = new URL(request.url);
@@ -174,18 +176,18 @@ export async function GET(request: NextRequest) {
 
       case 'get': {
         if (!cacheKey) {
-          return NextResponse.json({ error: 'Cache key required' }, { status: 400 });
+          return NextResponse.json(ApiResponseHelper.error("Cache key required", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
         }
         const cache = await getCachedFeed(cacheKey, user.uid);
         return NextResponse.json({ cache });
       }
 
       default:
-        return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
+        return NextResponse.json(ApiResponseHelper.error("Invalid action", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
   } catch (error) {
-    console.error('Error handling cache GET request:', error);
-    return NextResponse.json({ error: 'Failed to get cache info' }, { status: 500 });
+    logger.error('Error handling cache GET request', { error: error, endpoint: '/api/feed/cache' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to get cache info", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -194,7 +196,7 @@ export async function DELETE(request: NextRequest) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const { searchParams } = new URL(request.url);
@@ -216,11 +218,11 @@ export async function DELETE(request: NextRequest) {
         message: success ? 'Cache cleared' : 'Cache not found or not owned by user'
       });
     } else {
-      return NextResponse.json({ error: 'Cache key or clearAll parameter required' }, { status: 400 });
+      return NextResponse.json(ApiResponseHelper.error("Cache key or clearAll parameter required", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
   } catch (error) {
-    console.error('Error clearing cache:', error);
-    return NextResponse.json({ error: 'Failed to clear cache' }, { status: 500 });
+    logger.error('Error clearing cache', { error: error, endpoint: '/api/feed/cache' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to clear cache", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -257,9 +259,9 @@ function generateCacheKey(params: {
 // Helper function to get cached feed
 async function getCachedFeed(cacheKey: string, userId: string): Promise<FeedCache | null> {
   try {
-    const cacheDoc = await getDoc(doc(db, 'feedCaches', cacheKey));
+    const cacheDoc = await dbAdmin.collection('feedCaches').doc(cacheKey).get();
     
-    if (!cacheDoc.exists()) {
+    if (!cacheDoc.exists) {
       return null;
     }
 
@@ -276,13 +278,13 @@ async function getCachedFeed(cacheKey: string, userId: string): Promise<FeedCach
     
     if (now > expiresAt || !cache.isValid) {
       // Remove expired cache
-      await deleteDoc(doc(db, 'feedCaches', cacheKey));
+      await dbAdmin.collection('feedCaches').doc(cacheKey).delete();
       return null;
     }
 
     return cache;
   } catch (error) {
-    console.error('Error getting cached feed:', error);
+    logger.error('Error getting cached feed', { error: error, endpoint: '/api/feed/cache' });
     return null;
   }
 }
@@ -317,21 +319,21 @@ async function cacheFeedContent(params: {
       isValid: true
     };
 
-    await setDoc(doc(db, 'feedCaches', cacheKey), cache);
+    await dbAdmin.collection('feedCaches').doc(cacheKey).set(cache);
   } catch (error) {
-    console.error('Error caching feed content:', error);
+    logger.error('Error caching feed content', { error: error, endpoint: '/api/feed/cache' });
   }
 }
 
 // Helper function to update cache access
 async function updateCacheAccess(cacheId: string): Promise<void> {
   try {
-    await updateDoc(doc(db, 'feedCaches', cacheId), {
+    await dbAdmin.collection('feedCaches').doc(cacheId).update({
       lastAccessed: new Date().toISOString(),
-      accessCount: (await getDoc(doc(db, 'feedCaches', cacheId))).data()?.accessCount || 0 + 1
+      accessCount: (await dbAdmin.collection('feedCaches').doc(cacheId).get()).data()?.accessCount || 0 + 1
     });
   } catch (error) {
-    console.error('Error updating cache access:', error);
+    logger.error('Error updating cache access', { error: error, endpoint: '/api/feed/cache' });
   }
 }
 
@@ -380,12 +382,9 @@ async function generateFeedContent(params: {
 // Helper function to get cache statistics
 async function getCacheStats(userId: string): Promise<CacheStats> {
   try {
-    const userCachesQuery = query(
-      collection(db, 'feedCaches'),
-      where('userId', '==', userId)
-    );
-
-    const userCachesSnapshot = await getDocs(userCachesQuery);
+    const userCachesSnapshot = await dbAdmin.collection('feedCaches')
+      .where('userId', '==', userId)
+      .get();
     const userCaches = userCachesSnapshot.docs.map(doc => doc.data() as FeedCache);
 
     const now = new Date();
@@ -419,7 +418,7 @@ async function getCacheStats(userId: string): Promise<CacheStats> {
       userCacheCount: userCaches.length
     };
   } catch (error) {
-    console.error('Error getting cache stats:', error);
+    logger.error('Error getting cache stats', { error: error, endpoint: '/api/feed/cache' });
     return {
       hitRate: 0,
       averageGenerationTime: 0,
@@ -434,20 +433,17 @@ async function getCacheStats(userId: string): Promise<CacheStats> {
 // Helper function to get user caches
 async function getUserCaches(userId: string): Promise<FeedCache[]> {
   try {
-    const userCachesQuery = query(
-      collection(db, 'feedCaches'),
-      where('userId', '==', userId),
-      orderBy('createdAt', 'desc'),
-      fbLimit(20)
-    );
-
-    const userCachesSnapshot = await getDocs(userCachesQuery);
+    const userCachesSnapshot = await dbAdmin.collection('feedCaches')
+      .where('userId', '==', userId)
+      .orderBy('createdAt', 'desc')
+      .limit(20)
+      .get();
     return userCachesSnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
     })) as FeedCache[];
   } catch (error) {
-    console.error('Error getting user caches:', error);
+    logger.error('Error getting user caches', { error: error, endpoint: '/api/feed/cache' });
     return [];
   }
 }
@@ -455,22 +451,19 @@ async function getUserCaches(userId: string): Promise<FeedCache[]> {
 // Helper function to clear user caches
 async function clearUserCaches(userId: string): Promise<number> {
   try {
-    const userCachesQuery = query(
-      collection(db, 'feedCaches'),
-      where('userId', '==', userId)
-    );
-
-    const userCachesSnapshot = await getDocs(userCachesQuery);
+    const userCachesSnapshot = await dbAdmin.collection('feedCaches')
+      .where('userId', '==', userId)
+      .get();
     let cleared = 0;
 
     for (const cacheDoc of userCachesSnapshot.docs) {
-      await deleteDoc(cacheDoc.ref);
+      await cacheDoc.ref.delete();
       cleared++;
     }
 
     return cleared;
   } catch (error) {
-    console.error('Error clearing user caches:', error);
+    logger.error('Error clearing user caches', { error: error, endpoint: '/api/feed/cache' });
     return 0;
   }
 }
@@ -478,9 +471,9 @@ async function clearUserCaches(userId: string): Promise<number> {
 // Helper function to clear specific cache
 async function clearSpecificCache(cacheKey: string, userId: string): Promise<boolean> {
   try {
-    const cacheDoc = await getDoc(doc(db, 'feedCaches', cacheKey));
+    const cacheDoc = await dbAdmin.collection('feedCaches').doc(cacheKey).get();
     
-    if (!cacheDoc.exists()) {
+    if (!cacheDoc.exists) {
       return false;
     }
 
@@ -491,34 +484,31 @@ async function clearSpecificCache(cacheKey: string, userId: string): Promise<boo
       return false;
     }
 
-    await deleteDoc(doc(db, 'feedCaches', cacheKey));
+    await dbAdmin.collection('feedCaches').doc(cacheKey).delete();
     return true;
   } catch (error) {
-    console.error('Error clearing specific cache:', error);
+    logger.error('Error clearing specific cache', { error: error, endpoint: '/api/feed/cache' });
     return false;
   }
 }
 
 // Background cleanup function (would be called by a scheduled job)
-export async function cleanupExpiredCaches(): Promise<number> {
+async function cleanupExpiredCaches(): Promise<number> {
   try {
     const now = new Date();
-    const expiredCachesQuery = query(
-      collection(db, 'feedCaches'),
-      where('expiresAt', '<', now.toISOString())
-    );
-
-    const expiredCachesSnapshot = await getDocs(expiredCachesQuery);
+    const expiredCachesSnapshot = await dbAdmin.collection('feedCaches')
+      .where('expiresAt', '<', now.toISOString())
+      .get();
     let cleaned = 0;
 
     for (const cacheDoc of expiredCachesSnapshot.docs) {
-      await deleteDoc(cacheDoc.ref);
+      await cacheDoc.ref.delete();
       cleaned++;
     }
 
     return cleaned;
   } catch (error) {
-    console.error('Error cleaning up expired caches:', error);
+    logger.error('Error cleaning up expired caches', { error: error, endpoint: '/api/feed/cache' });
     return 0;
   }
 }

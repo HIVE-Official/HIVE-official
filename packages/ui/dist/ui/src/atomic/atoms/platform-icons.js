@@ -1,7 +1,7 @@
 'use client';
 import { jsx as _jsx } from "react/jsx-runtime";
 import React from 'react';
-import { cn } from '../../lib/utils';
+import { cn } from '../../lib/utils.js';
 import { User, Grid3X3, Wrench, Activity, FlaskConical, Calendar, Eye, GraduationCap, Star, TestTube, Hexagon } from 'lucide-react';
 const iconSizes = {
     xs: 16,

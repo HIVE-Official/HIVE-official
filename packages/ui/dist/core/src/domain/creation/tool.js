@@ -46,6 +46,12 @@ export const ToolConfigSchema = z.object({
     requireAuthentication: z.boolean().default(true),
     showProgressBar: z.boolean().default(false),
     autoSave: z.boolean().default(true),
+    enableRealTimeUpdates: z.boolean().default(false),
+    // Additional UI/UX settings
+    maxResponseLength: z.number().min(1).max(10000).default(1000),
+    customCSS: z.string().default(''),
+    headerText: z.string().default(''),
+    footerText: z.string().default(''),
     // Data handling
     dataSchema: ToolDataSchemaSchema.optional(),
     dataRetentionDays: z.number().min(1).max(365).default(90),

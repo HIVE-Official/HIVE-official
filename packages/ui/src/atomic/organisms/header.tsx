@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { cn } from '../../lib/utils';
-import { Button } from '../atoms/button';
+import { ButtonEnhanced as Button } from '../atoms/button-enhanced';
 import { Avatar } from '../atoms/avatar';
 import { Text } from '../atoms/text';
 import { Link } from '../atoms/link';

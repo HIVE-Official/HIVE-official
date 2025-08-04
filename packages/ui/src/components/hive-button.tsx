@@ -3,7 +3,7 @@
 import React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { Loader2 } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion } from './framer-motion-proxy';
 import { Slot } from '@radix-ui/react-slot';
 import { cn } from '../lib/utils';
 import { getMotionProps } from '../lib/motion-utils';
@@ -21,6 +21,9 @@ const hiveButtonVariants = cva(
   {
     variants: {
       variant: {
+        // Default - Same as primary for backward compatibility
+        default: "bg-[var(--hive-background-primary)] text-[var(--hive-brand-primary)] border border-[var(--hive-brand-primary)] hover:bg-[var(--hive-brand-primary)]/10 hover:shadow-lg hover:shadow-[var(--hive-brand-primary)]/20 active:scale-[0.98]",
+        
         // Primary - Gold outline on black (HIVE signature)
         primary: "bg-[var(--hive-background-primary)] text-[var(--hive-brand-primary)] border border-[var(--hive-brand-primary)] hover:bg-[var(--hive-brand-primary)]/10 hover:shadow-lg hover:shadow-[var(--hive-brand-primary)]/20 active:scale-[0.98]",
         
@@ -67,6 +70,7 @@ const hiveButtonVariants = cva(
       size: {
         xs: "h-6 px-2 text-xs rounded-[var(--hive-radius-lg)]",
         sm: "h-8 px-3 text-sm rounded-[var(--hive-radius-xl)]", 
+        md: "h-9 px-4 text-sm rounded-[var(--hive-radius-xl)]",
         default: "h-9 px-4 text-sm rounded-[var(--hive-radius-xl)]",
         lg: "h-10 px-6 text-base rounded-[var(--hive-radius-xl)]",
         xl: "h-12 px-8 text-lg rounded-[var(--hive-radius-2xl)]",

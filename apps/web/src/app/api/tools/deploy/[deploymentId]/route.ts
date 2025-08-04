@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { doc, getDoc, updateDoc, deleteDoc, addDoc, collection } from 'firebase/firestore';
-import { db } from '@hive/core/server';
-import { getCurrentUser } from '@hive/auth-logic';
+// Use admin SDK methods since we're in an API route
+import { dbAdmin } from '@/lib/firebase-admin';
+import { getCurrentUser } from '@/lib/server-auth';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 // GET - Get specific deployment details
 export async function GET(
@@ -11,26 +13,26 @@ export async function GET(
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const { deploymentId } = await params;
-    const deploymentDoc = await getDoc(doc(db, 'deployedTools', deploymentId));
+    const deploymentDoc = await dbAdmin.collection('deployedTools').doc(deploymentId).get();
 
-    if (!deploymentDoc.exists()) {
-      return NextResponse.json({ error: 'Deployment not found' }, { status: 404 });
+    if (!deploymentDoc.exists) {
+      return NextResponse.json(ApiResponseHelper.error("Deployment not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     const deployment = { id: deploymentDoc.id, ...deploymentDoc.data() };
 
     // Check access permissions
     if (!await canUserManageDeployment(user.uid, deployment)) {
-      return NextResponse.json({ error: 'Access denied' }, { status: 403 });
+      return NextResponse.json(ApiResponseHelper.error("Access denied", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     // Get tool details
-    const toolDoc = await getDoc(doc(db, 'tools', deployment.toolId));
-    const toolData = toolDoc.exists() ? toolDoc.data() : null;
+    const toolDoc = await dbAdmin.collection('tools').doc(deployment.toolId).get();
+    const toolData = toolDoc.exists ? toolDoc.data() : null;
 
     // Get execution context
     const executionContext = generateExecutionContext(deployment, user.uid);
@@ -41,8 +43,8 @@ export async function GET(
       executionContext
     });
   } catch (error) {
-    console.error('Error fetching deployment:', error);
-    return NextResponse.json({ error: 'Failed to fetch deployment' }, { status: 500 });
+    logger.error('Error fetching deployment', { error: error, endpoint: '/api/tools/deploy/[deploymentId]' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to fetch deployment", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -54,21 +56,21 @@ export async function PUT(
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const { deploymentId } = await params;
-    const deploymentDoc = await getDoc(doc(db, 'deployedTools', deploymentId));
+    const deploymentDoc = await dbAdmin.collection('deployedTools').doc(deploymentId).get();
 
-    if (!deploymentDoc.exists()) {
-      return NextResponse.json({ error: 'Deployment not found' }, { status: 404 });
+    if (!deploymentDoc.exists) {
+      return NextResponse.json(ApiResponseHelper.error("Deployment not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     const deployment = deploymentDoc.data();
 
     // Check access permissions
     if (!await canUserManageDeployment(user.uid, deployment)) {
-      return NextResponse.json({ error: 'Access denied' }, { status: 403 });
+      return NextResponse.json(ApiResponseHelper.error("Access denied", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     const body = await request.json();
@@ -106,10 +108,10 @@ export async function PUT(
     }
 
     // Update deployment
-    await updateDoc(doc(db, 'deployedTools', deploymentId), updateData);
+    await dbAdmin.collection('deployedTools').doc(deploymentId).update(updateData);
 
     // Log activity event
-    await addDoc(collection(db, 'activityEvents'), {
+    await dbAdmin.collection('activityEvents').add({
       userId: user.uid,
       type: 'tool_interaction',
       toolId: deployment.toolId,
@@ -124,7 +126,7 @@ export async function PUT(
     });
 
     // Fetch updated deployment
-    const updatedDoc = await getDoc(doc(db, 'deployedTools', deploymentId));
+    const updatedDoc = await dbAdmin.collection('deployedTools').doc(deploymentId).get();
     const updatedDeployment = { id: updatedDoc.id, ...updatedDoc.data() };
 
     return NextResponse.json({
@@ -132,8 +134,8 @@ export async function PUT(
       message: 'Deployment updated successfully'
     });
   } catch (error) {
-    console.error('Error updating deployment:', error);
-    return NextResponse.json({ error: 'Failed to update deployment' }, { status: 500 });
+    logger.error('Error updating deployment', { error: error, endpoint: '/api/tools/deploy/[deploymentId]' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to update deployment", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -145,14 +147,14 @@ export async function DELETE(
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const { deploymentId } = await params;
-    const deploymentDoc = await getDoc(doc(db, 'deployedTools', deploymentId));
+    const deploymentDoc = await dbAdmin.collection('deployedTools').doc(deploymentId).get();
 
-    if (!deploymentDoc.exists()) {
-      return NextResponse.json({ error: 'Deployment not found' }, { status: 404 });
+    if (!deploymentDoc.exists) {
+      return NextResponse.json(ApiResponseHelper.error("Deployment not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     const deployment = deploymentDoc.data();
@@ -161,34 +163,34 @@ export async function DELETE(
     if (deployment.deployedBy !== user.uid) {
       if (deployment.deployedTo === 'space') {
         // Check if user is space admin
-        const spaceDoc = await getDoc(doc(db, 'spaces', deployment.targetId));
-        if (!spaceDoc.exists()) {
-          return NextResponse.json({ error: 'Access denied' }, { status: 403 });
+        const spaceDoc = await dbAdmin.collection('spaces').doc(deployment.targetId).get();
+        if (!spaceDoc.exists) {
+          return NextResponse.json(ApiResponseHelper.error("Access denied", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
         }
         
         const spaceData = spaceDoc.data();
         if (spaceData.ownerId !== user.uid) {
-          return NextResponse.json({ error: 'Access denied' }, { status: 403 });
+          return NextResponse.json(ApiResponseHelper.error("Access denied", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
         }
       } else {
-        return NextResponse.json({ error: 'Access denied' }, { status: 403 });
+        return NextResponse.json(ApiResponseHelper.error("Access denied", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
       }
     }
 
     // Delete deployment
-    await deleteDoc(doc(db, 'deployedTools', deploymentId));
+    await dbAdmin.collection('deployedTools').doc(deploymentId).delete();
 
     // Update tool deployment count
-    const toolDoc = await getDoc(doc(db, 'tools', deployment.toolId));
-    if (toolDoc.exists()) {
+    const toolDoc = await dbAdmin.collection('tools').doc(deployment.toolId).get();
+    if (toolDoc.exists) {
       const toolData = toolDoc.data();
-      await updateDoc(doc(db, 'tools', deployment.toolId), {
+      await dbAdmin.collection('tools').doc(deployment.toolId).update({
         deploymentCount: Math.max(0, (toolData.deploymentCount || 1) - 1)
       });
     }
 
     // Log activity event
-    await addDoc(collection(db, 'activityEvents'), {
+    await dbAdmin.collection('activityEvents').add({
       userId: user.uid,
       type: 'tool_interaction',
       toolId: deployment.toolId,
@@ -208,8 +210,8 @@ export async function DELETE(
       message: 'Deployment removed successfully'
     });
   } catch (error) {
-    console.error('Error removing deployment:', error);
-    return NextResponse.json({ error: 'Failed to remove deployment' }, { status: 500 });
+    logger.error('Error removing deployment', { error: error, endpoint: '/api/tools/deploy/[deploymentId]' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to remove deployment", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -228,8 +230,8 @@ async function canUserManageDeployment(userId: string, deployment: any): Promise
 
     // Space deployment - check space permissions
     if (deployment.deployedTo === 'space') {
-      const spaceDoc = await getDoc(doc(db, 'spaces', deployment.targetId));
-      if (!spaceDoc.exists()) {
+      const spaceDoc = await dbAdmin.collection('spaces').doc(deployment.targetId).get();
+      if (!spaceDoc.exists) {
         return false;
       }
 
@@ -241,13 +243,12 @@ async function canUserManageDeployment(userId: string, deployment: any): Promise
       }
 
       // Check member role
-      const membershipQuery = query(
-        collection(db, 'members'),
-        where('userId', '==', userId),
-        where('spaceId', '==', deployment.targetId),
-        where('status', '==', 'active')
-      );
-      const membershipSnapshot = await getDocs(membershipQuery);
+      const membershipSnapshot = await dbAdmin
+        .collection('members')
+        .where('userId', '==', userId)
+        .where('spaceId', '==', deployment.targetId)
+        .where('status', '==', 'active')
+        .get();
       
       if (!membershipSnapshot.empty) {
         const memberData = membershipSnapshot.docs[0].data();
@@ -257,7 +258,7 @@ async function canUserManageDeployment(userId: string, deployment: any): Promise
 
     return false;
   } catch (error) {
-    console.error('Error checking deployment management permissions:', error);
+    logger.error('Error checking deployment management permissions', { error: error, endpoint: '/api/tools/deploy/[deploymentId]' });
     return false;
   }
 }

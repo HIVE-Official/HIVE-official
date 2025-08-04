@@ -2,6 +2,8 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { getAuth } from "firebase-admin/auth";
 import { dbAdmin } from "@/lib/firebase-admin";
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 interface SpaceData {
   name: string;
@@ -31,10 +33,7 @@ export async function GET(request: NextRequest) {
     // Verify the requesting user is authenticated
     const authHeader = request.headers.get("Authorization");
     if (!authHeader?.startsWith("Bearer ")) {
-      return NextResponse.json(
-        { error: "Authorization header required" },
-        { status: 401 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Authorization header required", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const token = authHeader.substring(7);
@@ -53,8 +52,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({
         success: true,
         spaces: [],
-        totalCount: 0,
-      });
+        totalCount: 0 });
     }
 
     // Collect space information from nested structure
@@ -139,22 +137,18 @@ export async function GET(request: NextRequest) {
           return acc;
         },
         {} as Record<string, number>
-      ),
-    });
+      ) });
   } catch (error) {
-    console.error("Get user spaces error:", error);
+    logger.error('Get user spaces error', { error: error, endpoint: '/api/profile/my-spaces' });
 
     if (
       error instanceof Error &&
       "code" in error &&
       error.code === "auth/id-token-expired"
     ) {
-      return NextResponse.json({ error: "Token expired" }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Token expired", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+    return NextResponse.json(ApiResponseHelper.error("Internal server error", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

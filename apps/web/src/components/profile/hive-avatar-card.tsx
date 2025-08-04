@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { HiveCard } from '@hive/ui';
+import { HiveCard } from "@hive/ui";
+import Image from 'next/image';
 
 interface CampusProfile {
   fullName: string;
@@ -44,9 +45,10 @@ export function HiveAvatarCard({ profile, onEditProfile, className = "" }: HiveA
           {displayPhoto ? (
             // Photo Display
             <div className="relative h-full">
-              <img 
+              <Image 
                 src={displayPhoto} 
                 alt={`${profile.fullName}'s profile`}
+                fill
                 className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
                 loading="lazy"
               />

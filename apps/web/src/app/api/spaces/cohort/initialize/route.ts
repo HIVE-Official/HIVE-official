@@ -1,6 +1,8 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { dbAdmin } from '@/lib/firebase-admin';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 /**
  * Initialize cohort space collection structure in Firebase
@@ -8,7 +10,7 @@ import { dbAdmin } from '@/lib/firebase-admin';
  */
 export async function POST(request: NextRequest) {
   try {
-    console.log('🎓 Initializing cohort space collection structure...');
+    logger.info('🎓 Initializing cohort space collection structure...', { endpoint: '/api/spaces/cohort/initialize' });
     
     // Create the cohort collection document with metadata
     const cohortCollectionRef = dbAdmin.collection('spaces').doc('cohort');
@@ -17,7 +19,7 @@ export async function POST(request: NextRequest) {
     const cohortDoc = await cohortCollectionRef.get();
     
     if (cohortDoc.exists) {
-      console.log('📋 Cohort collection already exists');
+      logger.info('📋 Cohort collection already exists', { endpoint: '/api/spaces/cohort/initialize' });
       
       // Get current count of cohort spaces
       const cohortSpacesSnapshot = await cohortCollectionRef.collection('spaces').get();
@@ -46,7 +48,7 @@ export async function POST(request: NextRequest) {
       version: '1.0'
     });
     
-    console.log('✅ Created cohort collection structure');
+    logger.info('✅ Created cohort collection structure', { endpoint: '/api/spaces/cohort/initialize' });
     
     // Create a sample cohort space to initialize the subcollection
     const sampleSpaceRef = cohortCollectionRef.collection('spaces').doc('sample-cohort');
@@ -77,7 +79,7 @@ export async function POST(request: NextRequest) {
       }
     });
     
-    console.log('✅ Created sample cohort space to initialize subcollection');
+    logger.info('✅ Created sample cohort space to initialize subcollection', { endpoint: '/api/spaces/cohort/initialize' });
     
     return NextResponse.json({
       success: true,
@@ -96,7 +98,7 @@ export async function POST(request: NextRequest) {
     });
     
   } catch (error: any) {
-    console.error('Cohort collection initialization error:', error);
+    logger.error('Cohort collection initialization error', { error: error, endpoint: '/api/spaces/cohort/initialize' });
     
     return NextResponse.json(
       { 
@@ -104,7 +106,7 @@ export async function POST(request: NextRequest) {
         details: error.message,
         structure: 'spaces/cohort/spaces/{spaceId}'
       },
-      { status: 500 }
+      { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }
 }
@@ -144,7 +146,7 @@ export async function GET() {
   } catch (error: any) {
     return NextResponse.json(
       { error: 'Failed to check cohort collection', details: error.message },
-      { status: 500 }
+      { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }
 }

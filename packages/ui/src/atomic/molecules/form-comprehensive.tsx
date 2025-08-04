@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { cn } from '../../lib/utils';
-import { Input } from '../atoms/input';
-import { Select, SelectOption } from '../atoms/select';
+import { InputEnhanced as Input } from '../atoms/input-enhanced';
+import { SelectEnhanced as Select, SelectOptionEnhanced as SelectOption } from '../atoms/select-enhanced';
 import { FormField } from './form-field';
 import { 
   Mail, 
@@ -220,7 +220,7 @@ export const MajorSelectionFieldMolecule: React.FC<MajorSelectionFieldProps> = (
         <Select
           options={ACADEMIC_MAJORS}
           value={major}
-          onChange={(value) => onMajorChange?.(value as string)}
+          onChange={(e) => onMajorChange?.(e.target.value)}
           placeholder="Select your major"
           disabled={disabled}
           searchable
@@ -236,7 +236,7 @@ export const MajorSelectionFieldMolecule: React.FC<MajorSelectionFieldProps> = (
         <Select
           options={ACADEMIC_YEARS}
           value={year}
-          onChange={(value) => onYearChange?.(value as string)}
+          onChange={(e) => onYearChange?.(e.target.value)}
           placeholder="Select your year"
           disabled={disabled}
         />
@@ -373,7 +373,7 @@ export const GreekAffiliationFieldMolecule: React.FC<GreekAffiliationFieldProps>
           <Select
             options={GREEK_POSITIONS}
             value={position}
-            onChange={(value) => onPositionChange?.(value as string)}
+            onChange={(e) => onPositionChange?.(e.target.value)}
             placeholder="Select your position"
             disabled={disabled}
           />
@@ -531,7 +531,7 @@ export const PrivacyLevelFieldMolecule: React.FC<PrivacyLevelFieldProps> = ({
         <Select
           options={PRIVACY_LEVELS}
           value={value}
-          onChange={(val) => onChange?.(val as 'public' | 'friends' | 'ghost')}
+          onChange={(e) => onChange?.(e.target.value as 'public' | 'friends' | 'ghost')}
           disabled={disabled}
         />
         
@@ -624,7 +624,7 @@ export const BuilderVerificationFieldMolecule: React.FC<BuilderVerificationField
         <Select
           options={EXPERIENCE_LEVELS}
           value={experience}
-          onChange={(value) => onExperienceChange?.(value as string)}
+          onChange={(e) => onExperienceChange?.(e.target.value)}
           placeholder="Select your experience level"
           disabled={disabled}
         />
@@ -703,7 +703,7 @@ export const SpaceActivationFieldMolecule: React.FC<SpaceActivationFieldProps> =
         <Select
           options={SPACE_TYPES}
           value={spaceType}
-          onChange={(value) => onSpaceTypeChange?.(value as string)}
+          onChange={(e) => onSpaceTypeChange?.(e.target.value)}
           placeholder="Select space type"
           disabled={disabled}
         />
@@ -824,7 +824,7 @@ export const ToolPublishingFieldMolecule: React.FC<ToolPublishingFieldProps> = (
         <Select
           options={TOOL_CATEGORIES}
           value={toolCategory}
-          onChange={(value) => onToolCategoryChange?.(value as string)}
+          onChange={(e) => onToolCategoryChange?.(e.target.value)}
           placeholder="Select a category"
           disabled={disabled}
         />

@@ -3,11 +3,11 @@ import { type VariantProps } from "class-variance-authority";
 declare const tabsListVariants: (props?: {
     variant?: "default" | "ghost" | "underline" | "pills";
     size?: "default" | "sm" | "lg";
-} & import("class-variance-authority/dist/types").ClassProp) => string;
+} & import("class-variance-authority/types").ClassProp) => string;
 declare const tabsTriggerVariants: (props?: {
     variant?: "default" | "ghost" | "underline" | "pills";
     size?: "default" | "sm" | "lg";
-} & import("class-variance-authority/dist/types").ClassProp) => string;
+} & import("class-variance-authority/types").ClassProp) => string;
 interface TabsProps extends VariantProps<typeof tabsListVariants> {
     defaultValue?: string;
     value?: string;

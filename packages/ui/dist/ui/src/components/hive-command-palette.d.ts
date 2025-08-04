@@ -2,7 +2,7 @@ import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
 declare const hiveCommandPaletteVariants: (props?: {
     variant?: "default" | "premium";
-} & import("class-variance-authority/dist/types").ClassProp) => string;
+} & import("class-variance-authority/types").ClassProp) => string;
 export interface CommandItem {
     id: string;
     title: string;

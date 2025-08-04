@@ -34,8 +34,152 @@ import {
   Filter,
   SortDesc,
   Crown,
-  Sparkles
+  Sparkles,
+  Lock,
+  Loader2
 } from 'lucide-react';
+
+// Post creation will be handled via props/callbacks
+
+// Comment Thread Component for nested replies
+const CommentThread: React.FC<{
+  comment: Comment;
+  onReply: (commentId: string, content: string) => void;
+  level: number;
+}> = ({ comment, onReply, level }) => {
+  const [showReplyInput, setShowReplyInput] = useState(false);
+  const [replyContent, setReplyContent] = useState('');
+  const maxLevel = 3; // Limit nesting depth
+  
+  const handleReply = () => {
+    if (replyContent.trim()) {
+      onReply(comment.id, replyContent.trim());
+      setReplyContent('');
+      setShowReplyInput(false);
+    }
+  };
+  
+  return (
+    <div className={cn(
+      "relative",
+      level > 0 && "ml-8 pl-4 border-l border-white/10"
+    )}>
+      <div className="flex gap-3 mb-3">
+        <div className="flex-shrink-0 w-7 h-7 rounded-full bg-gray-600 overflow-hidden">
+          {comment.author?.photoURL ? (
+            <img src={comment.author.photoURL} alt="" className="w-full h-full object-cover" />
+          ) : (
+            <div className="w-full h-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center">
+              <span className="text-xs font-medium text-[var(--hive-text-primary)]">
+                {comment.author?.fullName?.charAt(0).toUpperCase() || 'U'}
+              </span>
+            </div>
+          )}
+        </div>
+        
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="font-medium text-[var(--hive-text-primary)] text-sm">
+              {comment.author?.fullName || 'Unknown User'}
+            </span>
+            <span className="text-xs text-gray-400">•</span>
+            <time className="text-xs text-gray-400">
+              {new Date(comment.createdAt instanceof Date ? comment.createdAt : comment.createdAt.toDate()).toLocaleDateString()}
+            </time>
+            {comment.isEdited && (
+              <>
+                <span className="text-xs text-gray-400">•</span>
+                <span className="text-xs text-gray-400">edited</span>
+              </>
+            )}
+          </div>
+          
+          <div className="text-sm text-gray-300 mb-2">
+            {comment.content}
+          </div>
+          
+          <div className="flex items-center gap-4 text-xs">
+            <motion.button
+              className="flex items-center gap-1 text-gray-400 hover:text-red-400 transition-colors"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Heart className="w-3 h-3" />
+              <span>{comment.reactions?.heart || 0}</span>
+            </motion.button>
+            
+            {level < maxLevel && (
+              <motion.button
+                className="text-gray-400 hover:text-blue-400 transition-colors"
+                onClick={() => setShowReplyInput(!showReplyInput)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                Reply
+              </motion.button>
+            )}
+          </div>
+          
+          {/* Reply Input */}
+          {showReplyInput && (
+            <motion.div
+              className="mt-3"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+            >
+              <div className="flex gap-2">
+                <textarea
+                  className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-[var(--hive-text-primary)] placeholder-gray-400 resize-none focus:outline-none focus:border-blue-400/50 transition-colors"
+                  placeholder={`Reply to ${comment.author?.fullName || 'user'}...`}
+                  rows={2}
+                  value={replyContent}
+                  onChange={(e) => setReplyContent(e.target.value)}
+                />
+                <div className="flex flex-col gap-1">
+                  <motion.button
+                    className="px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white text-xs rounded-md transition-colors"
+                    onClick={handleReply}
+                    disabled={!replyContent.trim()}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    Reply
+                  </motion.button>
+                  <motion.button
+                    className="px-3 py-1 bg-gray-600 hover:bg-gray-700 text-white text-xs rounded-md transition-colors"
+                    onClick={() => {
+                      setShowReplyInput(false);
+                      setReplyContent('');
+                    }}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    Cancel
+                  </motion.button>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </div>
+      </div>
+      
+      {/* Nested Replies */}
+      {comment.replies && comment.replies.length > 0 && (
+        <div className="space-y-3">
+          {comment.replies.map((reply) => (
+            <CommentThread
+              key={reply.id}
+              comment={reply}
+              onReply={onReply}
+              level={level + 1}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
 
 // HIVE Posts Surface - Community Discussion & Threads
 // Rich posting system with threads, polls, and engagement
@@ -90,6 +234,27 @@ const postTypes = {
   },
 } as const;
 
+export interface Comment {
+  id: string;
+  content: string;
+  authorId: string;
+  author?: {
+    id: string;
+    fullName: string;
+    handle: string;
+    photoURL?: string;
+  };
+  createdAt: Date | { toDate: () => Date };
+  updatedAt: Date | { toDate: () => Date };
+  parentCommentId?: string;
+  replies: Comment[];
+  reactions?: {
+    heart: number;
+  };
+  isEdited?: boolean;
+  isDeleted?: boolean;
+}
+
 export interface Post {
   id: string;
   type: string;
@@ -110,6 +275,8 @@ export interface Post {
   isEdited?: boolean;
   isDeleted?: boolean;
   spaceId: string;
+  comments?: Comment[];
+  replyCount?: number;
   // Legacy props for backward compatibility
   title?: string;
   authorName?: string;
@@ -137,12 +304,16 @@ export interface HivePostsSurfaceProps
   isBuilder?: boolean;
   canPost?: boolean;
   canModerate?: boolean;
+  leaderMode?: 'moderate' | 'manage' | 'configure' | 'insights' | null;
   onCreatePost?: (type: keyof typeof postTypes) => void;
   onLikePost?: (postId: string) => void;
-  onReplyToPost?: (postId: string) => void;
+  onReplyToPost?: (postId: string, parentCommentId?: string) => void;
+  onCreateComment?: (postId: string, content: string, parentCommentId?: string) => Promise<Comment>;
+  onLoadComments?: (postId: string) => Promise<Comment[]>;
   onSharePost?: (postId: string) => void;
   onPinPost?: (postId: string) => void;
   onDeletePost?: (postId: string) => void;
+  onLockPost?: (postId: string) => void;
   onViewPost?: (postId: string) => void;
   sortBy?: 'recent' | 'popular' | 'trending';
   showFilters?: boolean;
@@ -150,6 +321,8 @@ export interface HivePostsSurfaceProps
   // New props for real data fetching
   autoFetch?: boolean;
   authToken?: string;
+  // Integration props
+  usePlatformIntegration?: boolean;
 }
 
 // Helper function to get auth token from session storage
@@ -201,18 +374,23 @@ export const HivePostsSurface = React.forwardRef<HTMLDivElement, HivePostsSurfac
     isBuilder = false,
     canPost = true,
     canModerate = false,
+    leaderMode = null,
     onCreatePost,
     onLikePost,
     onReplyToPost,
+    onCreateComment,
+    onLoadComments,
     onSharePost,
     onPinPost,
     onDeletePost,
+    onLockPost,
     onViewPost,
     sortBy = 'recent',
     showFilters = true,
     maxPosts = 10,
     autoFetch = true,
     authToken,
+    usePlatformIntegration = true,
     ...props 
   }, ref) => {
     
@@ -223,6 +401,10 @@ export const HivePostsSurface = React.forwardRef<HTMLDivElement, HivePostsSurfac
     const [fetchedPosts, setFetchedPosts] = useState<Post[]>([]);
     const [isLoading, setIsLoading] = useState(autoFetch);
     const [error, setError] = useState<string | null>(null);
+    const [expandedComments, setExpandedComments] = useState<Set<string>>(new Set());
+    const [commentText, setCommentText] = useState<Record<string, string>>({});
+    const [replyText, setReplyText] = useState<Record<string, string>>({});
+    const [loadingComments, setLoadingComments] = useState<Set<string>>(new Set());
     
     // Fetch posts from API if autoFetch is enabled
     useEffect(() => {
@@ -254,10 +436,10 @@ export const HivePostsSurface = React.forwardRef<HTMLDivElement, HivePostsSurfac
       // Normalize date fields
       createdAt: post.createdAt && typeof post.createdAt === 'object' && 'toDate' in post.createdAt 
         ? post.createdAt.toDate() 
-        : new Date(post.createdAt),
+        : post.createdAt instanceof Date ? post.createdAt : new Date(post.createdAt as unknown as string | number),
       updatedAt: post.updatedAt && typeof post.updatedAt === 'object' && 'toDate' in post.updatedAt 
         ? post.updatedAt.toDate() 
-        : new Date(post.updatedAt),
+        : post.updatedAt instanceof Date ? post.updatedAt : new Date(post.updatedAt as unknown as string | number),
       // Use real author data or fallback to legacy fields
       authorName: post.author?.fullName || post.authorName || 'Unknown User',
       authorAvatar: post.author?.photoURL || post.authorAvatar,
@@ -603,9 +785,10 @@ export const HivePostsSurface = React.forwardRef<HTMLDivElement, HivePostsSurfac
                     
                     {/* Post Actions */}
                     <div className="flex items-center gap-1">
-                      {canModerate && (
+                      {/* Moderation Actions - Enhanced for Leader Toolbar */}
+                      {(canModerate || leaderMode === 'moderate') && (
                         <AnimatePresence>
-                          {(isHovered || mode === 'edit') && (
+                          {(isHovered || mode === 'edit' || leaderMode === 'moderate') && (
                             <motion.div
                               className="flex items-center gap-1"
                               initial={{ opacity: 0, scale: 0.9 }}
@@ -613,21 +796,59 @@ export const HivePostsSurface = React.forwardRef<HTMLDivElement, HivePostsSurfac
                               exit={{ opacity: 0, scale: 0.9 }}
                             >
                               <motion.button
-                                className="p-1.5 text-gray-400 hover:text-yellow-400 rounded-lg hover:bg-yellow-500/10 transition-all duration-200"
+                                className={cn(
+                                  "p-1.5 rounded-lg transition-all duration-200",
+                                  leaderMode === 'moderate' 
+                                    ? "text-yellow-400 bg-yellow-500/20 border border-yellow-500/30" 
+                                    : "text-gray-400 hover:text-yellow-400 hover:bg-yellow-500/10"
+                                )}
                                 onClick={() => onPinPost?.(post.id)}
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
                               >
                                 <Pin className="w-3.5 h-3.5" />
                               </motion.button>
+                              
+                              {onLockPost && (
+                                <motion.button
+                                  className={cn(
+                                    "p-1.5 rounded-lg transition-all duration-200",
+                                    leaderMode === 'moderate' 
+                                      ? "text-orange-400 bg-orange-500/20 border border-orange-500/30" 
+                                      : "text-gray-400 hover:text-orange-400 hover:bg-orange-500/10"
+                                  )}
+                                  onClick={() => onLockPost(post.id)}
+                                  whileHover={{ scale: 1.05 }}
+                                  whileTap={{ scale: 0.95 }}
+                                >
+                                  <Lock className="w-3.5 h-3.5" />
+                                </motion.button>
+                              )}
+                              
                               <motion.button
-                                className="p-1.5 text-gray-400 hover:text-red-400 rounded-lg hover:bg-red-500/10 transition-all duration-200"
+                                className={cn(
+                                  "p-1.5 rounded-lg transition-all duration-200",
+                                  leaderMode === 'moderate' 
+                                    ? "text-red-400 bg-red-500/20 border border-red-500/30" 
+                                    : "text-gray-400 hover:text-red-400 hover:bg-red-500/10"
+                                )}
                                 onClick={() => onDeletePost?.(post.id)}
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
                               >
                                 <Trash2 className="w-3.5 h-3.5" />
                               </motion.button>
+                              
+                              {/* Leader Mode Indicator */}
+                              {leaderMode === 'moderate' && (
+                                <motion.div
+                                  className="ml-2 px-2 py-1 bg-red-500/20 border border-red-500/30 rounded text-xs text-red-400"
+                                  initial={{ opacity: 0 }}
+                                  animate={{ opacity: 1 }}
+                                >
+                                  Moderate
+                                </motion.div>
+                              )}
                             </motion.div>
                           )}
                         </AnimatePresence>
@@ -738,12 +959,23 @@ export const HivePostsSurface = React.forwardRef<HTMLDivElement, HivePostsSurfac
                       
                       <motion.button
                         className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-blue-400 transition-colors"
-                        onClick={() => onReplyToPost?.(post.id)}
+                        onClick={() => {
+                          if (expandedComments.has(post.id)) {
+                            setExpandedComments(prev => {
+                              const newSet = new Set(prev);
+                              newSet.delete(post.id);
+                              return newSet;
+                            });
+                          } else {
+                            setExpandedComments(prev => new Set([...prev, post.id]));
+                          }
+                        }}
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                       >
                         <Reply className="w-4 h-4" />
-                        <span>{post.replies}</span>
+                        <span>{post.replyCount || post.replies || 0}</span>
+                        <span className="ml-1">{expandedComments.has(post.id) ? 'Hide' : 'Reply'}</span>
                       </motion.button>
                       
                       <motion.button
@@ -772,6 +1004,115 @@ export const HivePostsSurface = React.forwardRef<HTMLDivElement, HivePostsSurfac
                       </motion.button>
                     </div>
                   </div>
+                  
+                  {/* Comments Section */}
+                  {expandedComments.has(post.id) && (
+                    <motion.div
+                      className="mt-4 pt-4 border-t border-white/5"
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                    >
+                      {/* Comment Input */}
+                      <div className="mb-4">
+                        <div className="flex gap-3">
+                          <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gray-600 overflow-hidden">
+                            <div className="w-full h-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center">
+                              <span className="text-xs font-medium text-[var(--hive-text-primary)]">U</span>
+                            </div>
+                          </div>
+                          <div className="flex-1">
+                            <textarea
+                              className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-[var(--hive-text-primary)] placeholder-gray-400 resize-none focus:outline-none focus:border-blue-400/50 transition-colors"
+                              placeholder="Add a comment..."
+                              rows={2}
+                              value={commentText[post.id] || ''}
+                              onChange={(e) => setCommentText(prev => ({ ...prev, [post.id]: e.target.value }))}
+                            />
+                            {commentText[post.id]?.trim() && (
+                              <div className="flex justify-end mt-2">
+                                <motion.button
+                                  className="px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white text-xs rounded-md transition-colors"
+                                  onClick={async () => {
+                                    if (onCreateComment && commentText[post.id]?.trim()) {
+                                      try {
+                                        await onCreateComment(post.id, commentText[post.id].trim());
+                                        setCommentText(prev => ({ ...prev, [post.id]: '' }));
+                                        // Refresh comments if needed
+                                        if (onLoadComments) {
+                                          const comments = await onLoadComments(post.id);
+                                          // Update post with new comments - would need state management
+                                        }
+                                      } catch (error) {
+                                        console.error('Failed to create comment:', error);
+                                      }
+                                    }
+                                  }}
+                                  whileHover={{ scale: 1.02 }}
+                                  whileTap={{ scale: 0.98 }}
+                                >
+                                  <Send className="w-3 h-3 mr-1 inline" />
+                                  Comment
+                                </motion.button>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {/* Comments List */}
+                      {post.comments && post.comments.length > 0 && (
+                        <div className="space-y-3">
+                          {post.comments.map((comment) => (
+                            <CommentThread
+                              key={comment.id}
+                              comment={comment}
+                              onReply={(commentId, content) => {
+                                if (onCreateComment) {
+                                  onCreateComment(post.id, content, commentId);
+                                }
+                              }}
+                              level={0}
+                            />
+                          ))}
+                        </div>
+                      )}
+                      
+                      {/* Load Comments Button */}
+                      {!post.comments && (post.replyCount || post.replies) > 0 && (
+                        <div className="text-center">
+                          <motion.button
+                            className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
+                            onClick={async () => {
+                              if (onLoadComments && !loadingComments.has(post.id)) {
+                                setLoadingComments(prev => new Set([...prev, post.id]));
+                                try {
+                                  const comments = await onLoadComments(post.id);
+                                  // Would need to update the post with comments in parent state
+                                } catch (error) {
+                                  console.error('Failed to load comments:', error);
+                                } finally {
+                                  setLoadingComments(prev => {
+                                    const newSet = new Set(prev);
+                                    newSet.delete(post.id);
+                                    return newSet;
+                                  });
+                                }
+                              }
+                            }}
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                          >
+                            {loadingComments.has(post.id) ? (
+                              <><Loader2 className="w-4 h-4 mr-2 inline animate-spin" />Loading comments...</>
+                            ) : (
+                              <>View {post.replyCount || post.replies} {(post.replyCount || post.replies) === 1 ? 'comment' : 'comments'}</>
+                            )}
+                          </motion.button>
+                        </div>
+                      )}
+                    </motion.div>
+                  )}
                 </div>
               </motion.article>
             );

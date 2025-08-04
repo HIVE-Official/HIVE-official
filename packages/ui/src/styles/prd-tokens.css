@@ -4,17 +4,20 @@
 :root {
   /* === PRD CORE COLORS === */
   /* Background System (Vercel-inspired monochrome) */
-  --hive-bg-primary: #000000;          /* Pure black base */
-  --hive-bg-secondary: #171717;        /* Card backgrounds */
-  --hive-bg-tertiary: #262626;         /* Elevated surfaces */
-  --hive-bg-interactive: #404040;      /* Interactive elements */
-  --hive-bg-overlay: rgba(0, 0, 0, 0.6); /* Modal overlays */
+  --hive-background-primary: #000000;          /* Pure black base */
+  --hive-background-secondary: #171717;        /* Card backgrounds */
+  --hive-background-tertiary: #262626;         /* Elevated surfaces */
+  --hive-background-elevated: #404040;         /* Interactive elements */
+  --hive-background-elevated-strong: #525252;  /* Strong elevation */
+  --hive-background-disabled: #171717;         /* Disabled state */
+  --hive-background-overlay: rgba(0, 0, 0, 0.6); /* Modal overlays */
 
   /* Text Hierarchy (High contrast) */
   --hive-text-primary: #ffffff;        /* Primary content */
   --hive-text-secondary: #d4d4d4;      /* Supporting content */
   --hive-text-tertiary: #a3a3a3;       /* Metadata */
   --hive-text-disabled: #525252;       /* Disabled state */
+  --hive-text-placeholder: #737373;    /* Placeholder text */
   --hive-text-inverse: #000000;        /* Text on light backgrounds */
 
   /* Brand System (Focused) */
@@ -25,6 +28,7 @@
   /* Interactive States */
   --hive-interactive-hover: rgba(255, 255, 255, 0.04);  /* Subtle hover */
   --hive-interactive-focus: #2d7ff9;   /* Focus rings */
+  --hive-interactive-pressed: rgba(255, 255, 255, 0.08); /* Pressed state */
   --hive-interactive-active: rgba(255, 255, 255, 0.08); /* Active state */
   --hive-interactive-disabled: #404040; /* Disabled state */
 
@@ -35,10 +39,12 @@
   --hive-status-info: #0070f3;         /* Info blue */
 
   /* Border System (Subtle) */
-  --hive-border-default: rgba(255, 255, 255, 0.08);  /* Subtle dividers */
-  --hive-border-hover: rgba(255, 255, 255, 0.16);    /* Hover borders */
-  --hive-border-focus: #2d7ff9;        /* Focus borders */
-  --hive-border-strong: #404040;       /* Strong borders */
+  --hive-border-primary: #2d7ff9;      /* Primary borders */
+  --hive-border-secondary: rgba(255, 255, 255, 0.16); /* Secondary borders */
+  --hive-border-subtle: rgba(255, 255, 255, 0.08);    /* Subtle dividers */
+  --hive-border-disabled: #404040;     /* Disabled borders */
+  --hive-border-default: rgba(255, 255, 255, 0.08);   /* Default borders */
+  --hive-border-gold: #ffd700;         /* Gold accent borders */
 
   /* === PRD SPACING SYSTEM === */
   /* 4px base unit system (Apple-like generous values) */
@@ -101,6 +107,12 @@
   --hive-shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.7);
   --hive-shadow-xl: 0 12px 24px rgba(0, 0, 0, 0.8);
   --hive-shadow-2xl: 0 24px 48px rgba(0, 0, 0, 0.9);
+  
+  /* Glow shadows for premium interactions */
+  --hive-shadow-gold-glow: 0 0 20px rgba(255, 215, 0, 0.3);
+  --hive-shadow-gold-glow-strong: 0 0 30px rgba(255, 215, 0, 0.5);
+  --hive-shadow-emerald-glow: 0 0 20px rgba(0, 212, 106, 0.3);
+  --hive-shadow-ruby-glow: 0 0 20px rgba(255, 55, 55, 0.3);
 
   /* === PRD MOTION === */
   /* Animation durations */
@@ -113,6 +125,14 @@
   --hive-ease-out: cubic-bezier(0.0, 0.0, 0.2, 1);
   --hive-ease-in-out: cubic-bezier(0.4, 0.0, 0.2, 1);
   --hive-ease-smooth: cubic-bezier(0.4, 0.0, 0.6, 1);
+
+  /* HIVE Liquid Metal Motion (campus-first animations) */
+  --hive-liquid-subtle: cubic-bezier(0.4, 0, 0.2, 1);
+  --hive-liquid-smooth: cubic-bezier(0.4, 0, 0.1, 1);
+  --hive-liquid-bouncy: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+  /* Motion accessibility */
+  --hive-motion-scale: 1;  /* Can be set to 0 for reduced motion */
 }
 
 /* === LEGACY TOKEN MAPPING === */
@@ -150,6 +170,29 @@
     
     /* Larger touch targets */
     --hive-space-touch: 44px;
+    
+    /* Slightly slower motion for mobile */
+    --hive-duration-fast: 200ms;
+    --hive-duration-base: 250ms;
+  }
+}
+
+/* === ACCESSIBILITY PREFERENCES === */
+/* Respect user's motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --hive-motion-scale: 0;
+    --hive-duration-fast: 0ms;
+    --hive-duration-base: 0ms;
+    --hive-duration-slow: 0ms;
+    --hive-duration-slower: 0ms;
+  }
+  
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 

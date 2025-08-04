@@ -2,7 +2,8 @@
 
 import React, { useState, useRef, useCallback } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { HiveInput, HiveButton, HiveFileUpload, Textarea } from '@hive/ui';
+import Image from 'next/image';
+import { HiveInput, HiveButton, HiveFileUpload, Textarea } from "@hive/ui";
 import { useSession } from '../../hooks/use-session';
 
 interface CampusProfile {
@@ -88,8 +89,8 @@ export function ProfileIdentityModal({ profile, isOpen, onClose }: ProfileIdenti
     updateProfile, 
     uploadPhoto, 
     isUpdating, 
-    error: profileError,
-    clearError 
+    error: _profileError,
+    _clearError 
   } = useSession();
   
   // PWA Camera Support Detection
@@ -97,7 +98,7 @@ export function ProfileIdentityModal({ profile, isOpen, onClose }: ProfileIdenti
     navigator.mediaDevices && 
     navigator.mediaDevices.getUserMedia;
   
-  const isMobile = typeof window !== 'undefined' && 
+  const _isMobile = typeof window !== 'undefined' && 
     /Mobi|Android/i.test(navigator.userAgent);
 
   // Use HIVE photo upload hook
@@ -350,9 +351,11 @@ export function ProfileIdentityModal({ profile, isOpen, onClose }: ProfileIdenti
               <div className="relative">
                 <div className="aspect-square rounded-2xl overflow-hidden bg-gradient-to-br from-hive-brand-primary/20 to-hive-brand-primary/10 border-2 border-dashed border-hive-brand-primary/30">
                   {photoPreview ? (
-                    <img
+                    <Image
                       src={photoPreview}
                       alt="Profile preview"
+                      width={400}
+                      height={400}
                       className="w-full h-full object-cover"
                     />
                   ) : (

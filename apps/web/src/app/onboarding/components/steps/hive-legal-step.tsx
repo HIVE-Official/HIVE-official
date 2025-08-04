@@ -1,4 +1,4 @@
-import { motion } from "@hive/ui/src/components/framer-motion-proxy";
+import { motion } from "@hive/ui";
 import { Shield, FileText, Eye, Check, ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { HiveCard } from "@hive/ui";
@@ -123,13 +123,12 @@ export function HiveLegalStep({ data, updateData }: HiveLegalStepProps) {
               <motion.button
                 onClick={(e) => { e.stopPropagation(); agreement.toggle(); }}
                 className={cn(
-                  "flex-shrink-0 w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all duration-200",
+                  "flex-shrink-0 w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95",
                   agreement.checked
                     ? "bg-[var(--hive-brand-primary)]/20 border-[var(--hive-brand-primary)]/50 text-[var(--hive-brand-primary)]"
                     : "border-[var(--hive-border-primary)] hover:border-[var(--hive-brand-primary)]/30"
                 )}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                // Removed whileHover and whileTap - using CSS hover/active states
               >
                 {agreement.checked && (
                   <motion.div

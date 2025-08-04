@@ -1,12 +1,14 @@
 import { NextResponse } from 'next/server';
 import { dbAdmin } from '@/lib/firebase-admin';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 /**
  * Simple test endpoint to verify Firebase connection without auth
  */
 export async function GET() {
   try {
-    console.log('🔍 Testing Firebase connection...');
+    logger.info('🔍 Testing Firebase connection...', { endpoint: '/api/spaces/test' });
     
     // Test basic Firebase query without auth
     const spacesSnapshot = await dbAdmin
@@ -30,13 +32,13 @@ export async function GET() {
     });
     
   } catch (error) {
-    console.error('❌ Test error:', error);
+    logger.error('❌ Test error', { error: error, endpoint: '/api/spaces/test' });
     
     return NextResponse.json({
       success: false,
       error: 'Test failed',
       message: `${error}`,
       structure: 'spaces/campus_living/spaces'
-    }, { status: 500 });
+    }, { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

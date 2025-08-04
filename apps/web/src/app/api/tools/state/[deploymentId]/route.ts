@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { doc, getDoc, setDoc, updateDoc, deleteDoc, collection, query, where, getDocs } from 'firebase/firestore';
-import { db } from '@hive/core/server';
-import { getCurrentUser } from '@hive/auth-logic';
+// Use admin SDK methods since we're in an API route
+import { dbAdmin } from '@/lib/firebase-admin';
+import { getCurrentUser } from '@/lib/server-auth';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 // Tool state interface
 interface ToolState {
@@ -27,29 +29,29 @@ export async function GET(
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const { deploymentId } = await params;
     
     // Check deployment access
-    const deploymentDoc = await getDoc(doc(db, 'deployedTools', deploymentId));
-    if (!deploymentDoc.exists()) {
-      return NextResponse.json({ error: 'Deployment not found' }, { status: 404 });
+    const deploymentDoc = await dbAdmin.collection('deployedTools').doc(deploymentId).get();
+    if (!deploymentDoc.exists) {
+      return NextResponse.json(ApiResponseHelper.error("Deployment not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     const deployment = deploymentDoc.data();
     
     // Verify user can access this deployment
     if (!await canUserAccessState(user.uid, deployment)) {
-      return NextResponse.json({ error: 'Access denied' }, { status: 403 });
+      return NextResponse.json(ApiResponseHelper.error("Access denied", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     // Get user's state for this deployment
     const stateId = `${deploymentId}_${user.uid}`;
-    const stateDoc = await getDoc(doc(db, 'toolStates', stateId));
+    const stateDoc = await dbAdmin.collection('toolStates').doc(stateId).get();
     
-    if (!stateDoc.exists()) {
+    if (!stateDoc.exists) {
       // Return empty state
       return NextResponse.json({
         state: {},
@@ -78,8 +80,8 @@ export async function GET(
       updatedAt: stateData.updatedAt
     });
   } catch (error) {
-    console.error('Error fetching tool state:', error);
-    return NextResponse.json({ error: 'Failed to fetch tool state' }, { status: 500 });
+    logger.error('Error fetching tool state', { error: error, endpoint: '/api/tools/state/[deploymentId]' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to fetch tool state", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -91,7 +93,7 @@ export async function PUT(
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const { deploymentId } = await params;
@@ -99,16 +101,16 @@ export async function PUT(
     const { state, metadata, merge = true } = body;
 
     // Check deployment access
-    const deploymentDoc = await getDoc(doc(db, 'deployedTools', deploymentId));
-    if (!deploymentDoc.exists()) {
-      return NextResponse.json({ error: 'Deployment not found' }, { status: 404 });
+    const deploymentDoc = await dbAdmin.collection('deployedTools').doc(deploymentId).get();
+    if (!deploymentDoc.exists) {
+      return NextResponse.json(ApiResponseHelper.error("Deployment not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     const deployment = deploymentDoc.data();
     
     // Verify user can access this deployment
     if (!await canUserAccessState(user.uid, deployment)) {
-      return NextResponse.json({ error: 'Access denied' }, { status: 403 });
+      return NextResponse.json(ApiResponseHelper.error("Access denied", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     const stateId = `${deploymentId}_${user.uid}`;
@@ -117,8 +119,8 @@ export async function PUT(
     // Get existing state if merging
     let finalState = state;
     if (merge) {
-      const existingStateDoc = await getDoc(doc(db, 'toolStates', stateId));
-      if (existingStateDoc.exists()) {
+      const existingStateDoc = await dbAdmin.collection('toolStates').doc(stateId).get();
+      if (existingStateDoc.exists) {
         const existingData = existingStateDoc.data();
         finalState = {
           ...existingData.state,
@@ -130,7 +132,7 @@ export async function PUT(
     // Validate state size (max 1MB)
     const stateSize = JSON.stringify(finalState).length;
     if (stateSize > 1024 * 1024) {
-      return NextResponse.json({ error: 'State data too large (max 1MB)' }, { status: 413 });
+      return NextResponse.json(ApiResponseHelper.error("State data too large (max 1MB)", "UNKNOWN_ERROR"), { status: 413 });
     }
 
     // Prepare state document
@@ -150,13 +152,13 @@ export async function PUT(
     };
 
     // Check if state already exists to determine if this is create or update
-    const existingStateDoc = await getDoc(doc(db, 'toolStates', stateId));
-    if (existingStateDoc.exists()) {
+    const existingStateDoc = await dbAdmin.collection('toolStates').doc(stateId).get();
+    if (existingStateDoc.exists) {
       stateDocument.createdAt = existingStateDoc.data().createdAt;
     }
 
     // Save state
-    await setDoc(doc(db, 'toolStates', stateId), stateDocument);
+    await dbAdmin.collection('toolStates').doc(stateId).set(stateDocument);
 
     return NextResponse.json({
       success: true,
@@ -165,8 +167,8 @@ export async function PUT(
       updatedAt: now
     });
   } catch (error) {
-    console.error('Error updating tool state:', error);
-    return NextResponse.json({ error: 'Failed to update tool state' }, { status: 500 });
+    logger.error('Error updating tool state', { error: error, endpoint: '/api/tools/state/[deploymentId]' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to update tool state", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -178,7 +180,7 @@ export async function PATCH(
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const { deploymentId } = await params;
@@ -186,27 +188,27 @@ export async function PATCH(
     const { path, value, operation = 'set' } = body;
 
     if (!path) {
-      return NextResponse.json({ error: 'Path is required for partial updates' }, { status: 400 });
+      return NextResponse.json(ApiResponseHelper.error("Path is required for partial updates", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
     // Check deployment access
-    const deploymentDoc = await getDoc(doc(db, 'deployedTools', deploymentId));
-    if (!deploymentDoc.exists()) {
-      return NextResponse.json({ error: 'Deployment not found' }, { status: 404 });
+    const deploymentDoc = await dbAdmin.collection('deployedTools').doc(deploymentId).get();
+    if (!deploymentDoc.exists) {
+      return NextResponse.json(ApiResponseHelper.error("Deployment not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     const deployment = deploymentDoc.data();
     
     // Verify user can access this deployment
     if (!await canUserAccessState(user.uid, deployment)) {
-      return NextResponse.json({ error: 'Access denied' }, { status: 403 });
+      return NextResponse.json(ApiResponseHelper.error("Access denied", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     const stateId = `${deploymentId}_${user.uid}`;
-    const stateDoc = await getDoc(doc(db, 'toolStates', stateId));
+    const stateDoc = await dbAdmin.collection('toolStates').doc(stateId).get();
     
-    if (!stateDoc.exists()) {
-      return NextResponse.json({ error: 'State not found' }, { status: 404 });
+    if (!stateDoc.exists) {
+      return NextResponse.json(ApiResponseHelper.error("State not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     const currentState = stateDoc.data();
@@ -220,33 +222,35 @@ export async function PATCH(
       case 'delete':
         deleteNestedValue(newState, path);
         break;
-      case 'increment':
+      case 'increment': {
         const currentValue = getNestedValue(newState, path) || 0;
         setNestedValue(newState, path, currentValue + (value || 1));
         break;
-      case 'append':
+      }
+      case 'append': {
         const currentArray = getNestedValue(newState, path) || [];
         if (Array.isArray(currentArray)) {
           currentArray.push(value);
           setNestedValue(newState, path, currentArray);
         } else {
-          return NextResponse.json({ error: 'Path does not point to an array' }, { status: 400 });
+          return NextResponse.json(ApiResponseHelper.error("Path does not point to an array", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
         }
         break;
+      }
       default:
-        return NextResponse.json({ error: 'Unsupported operation' }, { status: 400 });
+        return NextResponse.json(ApiResponseHelper.error("Unsupported operation", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
     // Validate state size
     const stateSize = JSON.stringify(newState).length;
     if (stateSize > 1024 * 1024) {
-      return NextResponse.json({ error: 'State data too large (max 1MB)' }, { status: 413 });
+      return NextResponse.json(ApiResponseHelper.error("State data too large (max 1MB)", "UNKNOWN_ERROR"), { status: 413 });
     }
 
     const now = new Date().toISOString();
 
     // Update state
-    await updateDoc(doc(db, 'toolStates', stateId), {
+    await dbAdmin.collection('toolStates').doc(stateId).update({
       state: newState,
       'metadata.size': stateSize,
       'metadata.lastSaved': now,
@@ -262,8 +266,8 @@ export async function PATCH(
       updatedAt: now
     });
   } catch (error) {
-    console.error('Error patching tool state:', error);
-    return NextResponse.json({ error: 'Failed to patch tool state' }, { status: 500 });
+    logger.error('Error patching tool state', { error: error, endpoint: '/api/tools/state/[deploymentId]' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to patch tool state", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -275,36 +279,36 @@ export async function DELETE(
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const { deploymentId } = await params;
     
     // Check deployment access
-    const deploymentDoc = await getDoc(doc(db, 'deployedTools', deploymentId));
-    if (!deploymentDoc.exists()) {
-      return NextResponse.json({ error: 'Deployment not found' }, { status: 404 });
+    const deploymentDoc = await dbAdmin.collection('deployedTools').doc(deploymentId).get();
+    if (!deploymentDoc.exists) {
+      return NextResponse.json(ApiResponseHelper.error("Deployment not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     const deployment = deploymentDoc.data();
     
     // Verify user can access this deployment
     if (!await canUserAccessState(user.uid, deployment)) {
-      return NextResponse.json({ error: 'Access denied' }, { status: 403 });
+      return NextResponse.json(ApiResponseHelper.error("Access denied", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     const stateId = `${deploymentId}_${user.uid}`;
     
     // Delete user's state
-    await deleteDoc(doc(db, 'toolStates', stateId));
+    await dbAdmin.collection('toolStates').doc(stateId).delete();
 
     return NextResponse.json({
       success: true,
       message: 'Tool state cleared successfully'
     });
   } catch (error) {
-    console.error('Error clearing tool state:', error);
-    return NextResponse.json({ error: 'Failed to clear tool state' }, { status: 500 });
+    logger.error('Error clearing tool state', { error: error, endpoint: '/api/tools/state/[deploymentId]' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to clear tool state", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -318,19 +322,18 @@ async function canUserAccessState(userId: string, deployment: any): Promise<bool
 
     // Space deployments - check membership
     if (deployment.deployedTo === 'space') {
-      const membershipQuery = query(
-        collection(db, 'members'),
-        where('userId', '==', userId),
-        where('spaceId', '==', deployment.targetId),
-        where('status', '==', 'active')
-      );
-      const membershipSnapshot = await getDocs(membershipQuery);
+      const membershipSnapshot = await dbAdmin
+        .collection('members')
+        .where('userId', '==', userId)
+        .where('spaceId', '==', deployment.targetId)
+        .where('status', '==', 'active')
+        .get();
       return !membershipSnapshot.empty;
     }
 
     return false;
   } catch (error) {
-    console.error('Error checking state access:', error);
+    logger.error('Error checking state access', { error: error, endpoint: '/api/tools/state/[deploymentId]' });
     return false;
   }
 }

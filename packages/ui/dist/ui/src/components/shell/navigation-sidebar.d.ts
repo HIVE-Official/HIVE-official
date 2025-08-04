@@ -1,19 +1,19 @@
-interface NavigationSidebarProps {
-    collapsed: boolean;
+import React from 'react';
+export interface NavigationSidebarProps {
+    collapsed?: boolean;
     user?: {
         id: string;
         name: string;
-        handle: string;
+        handle?: string;
         avatar?: string;
-        builderStatus?: 'none' | 'pending' | 'active';
-    } | null;
-    currentPath?: string;
-    width?: 'compact' | 'wide' | 'standard';
-    layoutType?: string;
+        builderStatus?: 'none' | 'active' | 'pending';
+    };
+    currentSection?: 'profile' | 'spaces' | 'feed' | 'hivelab' | 'rituals' | 'calendar' | 'settings';
+    currentPath?: any;
+    onToggleCollapse?: () => void;
+    onSectionChange?: (section: string) => void;
     className?: string;
-    onToggle?: () => void;
-    onToggleNavigationMode?: () => void;
 }
-export declare function NavigationSidebar({ collapsed, user, currentPath, className, onToggle, onToggleNavigationMode }: NavigationSidebarProps): import("react/jsx-runtime").JSX.Element;
-export {};
+export declare const NavigationSidebar: React.FC<NavigationSidebarProps>;
+export default NavigationSidebar;
 //# sourceMappingURL=navigation-sidebar.d.ts.map

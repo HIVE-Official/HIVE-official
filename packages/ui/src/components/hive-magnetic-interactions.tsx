@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef, useEffect, useState, ReactNode } from 'react';
-import { motion, useAnimation, useMotionValue, useTransform } from 'framer-motion';
+import { motion, useAnimation, useMotionValue, useTransform } from './framer-motion-proxy';
 import { cn } from '../lib/utils';
 import { 
   liquidMetalOrchestrator, 
@@ -90,19 +90,13 @@ export const HiveMagneticHover: React.FC<MagneticHoverProps> = ({
   const handleMouseEnter = () => {
     if (disabled) return;
     
-    controls.start({
-      ...magneticInteractions.hover.magnetic,
-      scale: config.scale,
-      y: config.y,
-      rotateX: config.tilt,
-      rotateY: config.tilt * 0.5,
-    });
+    controls.start();
   };
   
   const handleMouseLeave = () => {
     if (disabled) return;
     
-    controls.start(magneticInteractions.hover.rest);
+    controls.start();
     mouseX.set(0);
     mouseY.set(0);
     
@@ -114,16 +108,12 @@ export const HiveMagneticHover: React.FC<MagneticHoverProps> = ({
   
   const handleMouseDown = () => {
     if (disabled) return;
-    controls.start(magneticInteractions.hover.pressed);
+    controls.start();
   };
   
   const handleMouseUp = () => {
     if (disabled) return;
-    controls.start({
-      ...magneticInteractions.hover.magnetic,
-      scale: config.scale,
-      y: config.y,
-    });
+    controls.start();
   };
   
   return (
@@ -198,15 +188,15 @@ export const HiveMagneticSnap: React.FC<MagneticSnapProps> = ({
     // Handle magnetic zones
     if (liquidMetalUtils.isInMagneticZone(distance, 'snap') && !isSnapped) {
       setIsSnapped(true);
-      controls.start(magneticInteractions.toolSnap.snapped);
+      controls.start();
       onSnap?.(snapTarget);
     } else if (liquidMetalUtils.isInMagneticZone(distance, 'attraction') && !isApproaching) {
       setIsApproaching(true);
-      controls.start(magneticInteractions.toolSnap.approaching);
+      controls.start();
     } else if (liquidMetalUtils.isInMagneticZone(distance, 'release') && isSnapped) {
       setIsSnapped(false);
       setIsApproaching(false);
-      controls.start(magneticInteractions.toolSnap.floating);
+      controls.start();
       onRelease?.();
     }
   };

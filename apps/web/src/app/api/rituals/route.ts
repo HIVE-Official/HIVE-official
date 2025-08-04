@@ -1,9 +1,11 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
-import { getAuth } from 'firebase-admin/auth';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { ritualFramework, type Ritual, type RitualType, type ParticipationType } from '@/lib/rituals-framework';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
 
 // Ritual query schema
 const RitualQuerySchema = z.object({
@@ -11,8 +13,7 @@ const RitualQuerySchema = z.object({
   type: z.enum(['onboarding', 'seasonal', 'achievement', 'community', 'creative', 'emergency', 'legacy']).optional(),
   university: z.string().optional(),
   limit: z.coerce.number().min(1).max(50).default(20),
-  offset: z.coerce.number().min(0).default(0),
-});
+  offset: z.coerce.number().min(0).default(0) });
 
 // Create ritual schema
 const CreateRitualSchema = z.object({
@@ -92,8 +93,7 @@ const CreateRitualSchema = z.object({
     isReversible: z.boolean(),
     unlockDelay: z.number().min(0).optional(),
     announceDelay: z.number().min(0).optional(),
-  })),
-});
+  })) });
 
 /**
  * Rituals API
@@ -101,38 +101,190 @@ const CreateRitualSchema = z.object({
  * GET - List rituals with filtering
  * POST - Create new ritual (admin only)
  */
-export async function GET(request: NextRequest) {
+export const GET = withAuth(async (request: NextRequest, authContext) => {
   try {
     const url = new URL(request.url);
     const queryParams = Object.fromEntries(url.searchParams.entries());
     const { status, type, university, limit, offset } = RitualQuerySchema.parse(queryParams);
 
-    // Verify authentication
-    const authHeader = request.headers.get('Authorization');
-    if (!authHeader?.startsWith('Bearer ')) {
-      return NextResponse.json(
-        { error: 'Authorization header required' },
-        { status: 401 }
-      );
-    }
+    const userId = authContext.userId;
 
-    const token = authHeader.substring(7);
-    let userId = 'test-user';
-    
-    if (token !== 'test-token') {
-      try {
-        const auth = getAuth();
-        const decodedToken = await auth.verifyIdToken(token);
-        userId = decodedToken.uid;
-      } catch (authError) {
-        return NextResponse.json(
-          { error: 'Invalid or expired token' },
-          { status: 401 }
-        );
+    logger.info('🎭 Rituals query', { queryParams: JSON.stringify({ status, type, university, limit, offset }), endpoint: '/api/rituals' });
+
+    // For development mode, return mock ritual data
+    if ((userId === 'test-user' || userId === 'dev_user_123') && process.env.NODE_ENV !== 'production') {
+      const mockRituals = [
+        {
+          id: 'focus_ritual_1',
+          name: 'Focus Flow',
+          title: 'Daily Focus Session',
+          description: 'A structured 25-minute focus session to help you maintain concentration and productivity throughout your day.',
+          tagline: 'Stay focused, stay productive',
+          type: 'community' as const,
+          category: 'productivity',
+          tags: ['focus', 'pomodoro', 'productivity', 'habits'],
+          status: 'active' as const,
+          startTime: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(), // Started a week ago
+          endTime: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(), // Ends in 30 days
+          duration: 25, // 25 minutes
+          timezone: 'America/New_York',
+          universities: ['university_buffalo'],
+          isGlobal: false,
+          participationType: 'individual' as const,
+          maxParticipants: 100,
+          requiresInvitation: false,
+          totalParticipants: 42,
+          activeParticipants: 28,
+          completionRate: 0.73,
+          userParticipation: {
+            id: 'user_participation_1',
+            status: 'active',
+            joinedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+            sessionsCompleted: 12,
+            currentStreak: 3,
+            longestStreak: 7,
+            lastSessionAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+            progressPercentage: 85
+          },
+          milestones: [
+            {
+              id: 'milestone_1',
+              name: 'First Focus',
+              description: 'Complete your first focus session',
+              progressThreshold: 1,
+              isReached: true,
+              reachedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString()
+            },
+            {
+              id: 'milestone_2',
+              name: 'Focus Streak',
+              description: 'Complete 5 consecutive days of focus sessions',
+              progressThreshold: 5,
+              isReached: true,
+              reachedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString()
+            },
+            {
+              id: 'milestone_3',
+              name: 'Focus Master',
+              description: 'Complete 20 focus sessions',
+              progressThreshold: 20,
+              isReached: false,
+              progress: 12
+            }
+          ],
+          actions: [
+            {
+              id: 'focus_session',
+              type: 'interact' as const,
+              name: 'Complete Focus Session',
+              description: 'Complete a 25-minute focused work session',
+              isRequired: true,
+              weight: 100,
+              maxOccurrences: 3, // Up to 3 sessions per day
+              timeLimit: 25 * 60 * 1000 // 25 minutes in milliseconds
+            }
+          ],
+          rewards: [
+            {
+              id: 'focus_badge',
+              type: 'badge' as const,
+              name: 'Focus Champion',
+              description: 'Awarded for consistent focus session completion',
+              rarity: 'common' as const,
+              isUnlocked: true
+            },
+            {
+              id: 'productivity_feature',
+              type: 'feature' as const,
+              name: 'Advanced Timer',
+              description: 'Unlock advanced pomodoro timer features',
+              rarity: 'uncommon' as const,
+              isUnlocked: false
+            }
+          ]
+        },
+        {
+          id: 'study_ritual_2',
+          name: 'Study Squad',
+          title: 'Collaborative Study Sessions',
+          description: 'Join your classmates for structured study sessions and knowledge sharing.',
+          tagline: 'Study together, succeed together',
+          type: 'community' as const,
+          category: 'academic',
+          tags: ['study', 'collaboration', 'academic', 'groups'],
+          status: 'scheduled' as const,
+          startTime: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // Starts tomorrow
+          endTime: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(), // Ends in 2 weeks
+          duration: 90, // 90 minutes
+          timezone: 'America/New_York',
+          universities: ['university_buffalo'],
+          isGlobal: false,
+          participationType: 'collaborative' as const,
+          maxParticipants: 50,
+          requiresInvitation: false,
+          totalParticipants: 24,
+          activeParticipants: 0, // Not started yet
+          completionRate: 0,
+          userParticipation: {
+            id: 'user_participation_2',
+            status: 'registered',
+            joinedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+            sessionsCompleted: 0,
+            currentStreak: 0,
+            longestStreak: 0,
+            progressPercentage: 0
+          },
+          milestones: [
+            {
+              id: 'study_milestone_1',
+              name: 'Study Squad Member',
+              description: 'Join your first collaborative study session',
+              progressThreshold: 1,
+              isReached: false,
+              progress: 0
+            }
+          ]
+        }
+      ];
+
+      // Filter based on query parameters
+      let filteredRituals = mockRituals;
+      
+      if (status) {
+        filteredRituals = filteredRituals.filter(ritual => ritual.status === status);
       }
-    }
+      
+      if (type) {
+        filteredRituals = filteredRituals.filter(ritual => ritual.type === type);
+      }
 
-    console.log(`🎭 Rituals query: ${JSON.stringify({ status, type, university, limit, offset })}`);
+      // For current ritual query (used by widget), return active ritual
+      const currentRitual = filteredRituals.find(r => r.userParticipation?.status === 'active') || null;
+
+      logger.info('✅ Development mode: Returning mock rituals data', { 
+        ritualCount: filteredRituals.length,
+        currentRitual: currentRitual?.name,
+        endpoint: '/api/rituals' 
+      });
+
+      return NextResponse.json({
+        success: true,
+        rituals: filteredRituals,
+        currentRitual,
+        pagination: {
+          limit,
+          offset,
+          total: filteredRituals.length,
+          hasMore: false
+        },
+        filters: {
+          status,
+          type,
+          university
+        },
+        developmentMode: true
+      });
+    }
 
     // Build query
     let query = dbAdmin.collection('rituals').orderBy('createdAt', 'desc');
@@ -200,48 +352,25 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error: any) {
-    console.error('Rituals API error:', error);
+    logger.error('Rituals API error', { error: error, endpoint: '/api/rituals' });
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: 'Invalid query parameters', details: error.errors },
-        { status: 400 }
+        { status: HttpStatus.BAD_REQUEST }
       );
     }
 
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json(ApiResponseHelper.error("Internal server error", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
-}
+}, { 
+  allowDevelopmentBypass: true, // Ritual browsing is safe for development
+  operation: 'get_rituals' 
+});
 
-export async function POST(request: NextRequest) {
+export const POST = withAuth(async (request: NextRequest, authContext) => {
   try {
-    // Verify authentication
-    const authHeader = request.headers.get('Authorization');
-    if (!authHeader?.startsWith('Bearer ')) {
-      return NextResponse.json(
-        { error: 'Authorization header required' },
-        { status: 401 }
-      );
-    }
-
-    const token = authHeader.substring(7);
-    let userId = 'test-user';
-    
-    if (token !== 'test-token') {
-      try {
-        const auth = getAuth();
-        const decodedToken = await auth.verifyIdToken(token);
-        userId = decodedToken.uid;
-      } catch (authError) {
-        return NextResponse.json(
-          { error: 'Invalid or expired token' },
-          { status: 401 }
-        );
-      }
-    }
+    const userId = authContext.userId;
 
     // TODO: Verify user has admin permissions
     // For now, allow any authenticated user to create rituals
@@ -249,7 +378,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const ritualData = CreateRitualSchema.parse(body);
 
-    console.log(`🎭 Creating ritual: ${ritualData.name}`);
+    logger.info('🎭 Creating ritual', { ritualDataName: ritualData.name, endpoint: '/api/rituals'  });
 
     // Convert date strings to Date objects
     const processedRitual = {
@@ -286,18 +415,21 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error: any) {
-    console.error('Create ritual error:', error);
+    logger.error('Create ritual error', { error: error, endpoint: '/api/rituals' });
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: 'Invalid ritual data', details: error.errors },
-        { status: 400 }
+        { status: HttpStatus.BAD_REQUEST }
       );
     }
 
     return NextResponse.json(
       { error: 'Internal server error', details: error.message },
-      { status: 500 }
+      { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }
-}
+}, { 
+  allowDevelopmentBypass: false, // Ritual creation is sensitive - require real auth
+  operation: 'create_ritual' 
+});

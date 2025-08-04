@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { collection, doc, query, where, getDocs, getDoc, orderBy, limit } from 'firebase/firestore';
-import { db } from '@hive/core/server';
+// Use admin SDK methods since we're in an API route
+import { dbAdmin } from '@/lib/firebase-admin';
 import { getCurrentUser } from '../../../../lib/auth-server';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
 
 // Profile dashboard data interface
 interface ProfileDashboardData {
@@ -112,77 +115,110 @@ interface ProfileDashboardData {
 }
 
 // GET - Fetch complete profile dashboard data
-export async function GET(request: NextRequest) {
+export const GET = withAuth(async (request: NextRequest, authContext) => {
   try {
-    // Check for development mode
-    const authHeader = request.headers.get('authorization');
-    if (authHeader && authHeader.startsWith('Bearer ')) {
-      const token = authHeader.split('Bearer ')[1];
-      
-      if (token.startsWith('dev_token_')) {
-        const userId = token.replace('dev_token_', '');
-        
-        // Return mock dashboard data
-        const mockDashboard = {
+    const userId = authContext.userId;
+    
+    // For development mode only, return mock dashboard data
+    if ((userId === 'test-user' || userId === 'dev_user_123') && process.env.NODE_ENV !== 'production') {
+      const mockDashboard = {
           user: {
             id: userId,
-            name: 'Development User',
-            handle: `dev_${userId}`,
-            email: `dev_${userId}@example.com`,
+            name: 'Dev User',
+            handle: 'devuser',
+            email: 'dev@hive.com',
             profilePhotoUrl: '',
             major: 'Computer Science',
-            academicYear: '2025',
-            interests: ['coding', 'design', 'startup'],
-            joinedAt: new Date().toISOString(),
+            academicYear: 'Senior',
+            interests: ['coding', 'design', 'collaboration', 'student-life'],
+            joinedAt: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).toISOString(),
             lastActive: new Date().toISOString(),
           },
           summary: {
-            totalSpaces: 5,
-            activeSpaces: 3,
-            favoriteSpaces: 2,
-            totalTimeSpent: 120,
-            weeklyActivity: 45,
-            contentCreated: 8,
-            toolsUsed: 12,
-            socialInteractions: 25,
+            totalSpaces: 8,
+            activeSpaces: 5,
+            favoriteSpaces: 3,
+            totalTimeSpent: 180,
+            weeklyActivity: 65,
+            contentCreated: 12,
+            toolsUsed: 15,
+            socialInteractions: 42,
           },
           recentActivity: {
             spaces: [
               {
-                spaceId: 'dev_space_1',
-                spaceName: 'Development Space',
+                spaceId: 'cs_study_group',
+                spaceName: 'CS Study Group',
                 action: 'visited',
-                timestamp: new Date().toISOString(),
+                timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+                duration: 45,
+              },
+              {
+                spaceId: 'math_tutoring', 
+                spaceName: 'Math Tutoring',
+                action: 'visited',
+                timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(),
                 duration: 30,
+              },
+              {
+                spaceId: 'debate_club',
+                spaceName: 'Debate Club',
+                action: 'visited', 
+                timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+                duration: 60,
               }
             ],
             tools: [
               {
-                toolId: 'dev_tool_1',
-                toolName: 'Code Editor',
+                toolId: 'gpa_calculator',
+                toolName: 'GPA Calculator',
                 action: 'used',
-                timestamp: new Date().toISOString(),
-                spaceId: 'dev_space_1',
+                timestamp: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(),
+                spaceId: 'cs_study_group',
+              },
+              {
+                toolId: 'study_planner',
+                toolName: 'Study Planner',
+                action: 'used',
+                timestamp: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString(),
+                spaceId: 'math_tutoring',
               }
             ],
             social: [
               {
                 type: 'comment',
-                description: 'Commented on a post',
-                timestamp: new Date().toISOString(),
-                spaceId: 'dev_space_1',
+                description: 'Commented on study tips post',
+                timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+                spaceId: 'cs_study_group',
+              },
+              {
+                type: 'reaction',
+                description: 'Liked a practice problem solution',
+                timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(),
+                spaceId: 'math_tutoring',
               }
             ],
           },
           upcomingEvents: [
             {
-              id: 'dev_event_1',
-              title: 'Team Meeting',
+              id: 'study_session_1',
+              title: 'Data Structures Study Session',
+              startDate: new Date(Date.now() + 3 * 60 * 60 * 1000).toISOString(),
+              endDate: new Date(Date.now() + 5 * 60 * 60 * 1000).toISOString(),
+              type: 'space' as const,
+              spaceId: 'cs_study_group',
+              spaceName: 'CS Study Group',
+              isToday: true,
+              isUpcoming: true,
+            },
+            {
+              id: 'debate_practice',
+              title: 'Debate Practice Session',
               startDate: new Date(Date.now() + 86400000).toISOString(),
               endDate: new Date(Date.now() + 90000000).toISOString(),
               type: 'space' as const,
-              spaceId: 'dev_space_1',
-              spaceName: 'Development Space',
+              spaceId: 'debate_club',
+              spaceName: 'Debate Club',
               isToday: false,
               isUpcoming: true,
             }
@@ -190,44 +226,56 @@ export async function GET(request: NextRequest) {
           quickActions: {
             favoriteSpaces: [
               {
-                spaceId: 'dev_space_1',
-                spaceName: 'Development Space',
-                unreadCount: 3,
-                lastActivity: new Date().toISOString(),
+                spaceId: 'cs_study_group',
+                spaceName: 'CS Study Group',
+                unreadCount: 5,
+                lastActivity: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+              },
+              {
+                spaceId: 'math_tutoring',
+                spaceName: 'Math Tutoring',
+                unreadCount: 2,
+                lastActivity: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(),
               }
             ],
             pinnedSpaces: [
               {
-                spaceId: 'dev_space_2',
-                spaceName: 'Pinned Space',
+                spaceId: 'debate_club',
+                spaceName: 'Debate Club',
                 unreadCount: 1,
-                lastActivity: new Date().toISOString(),
+                lastActivity: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
               }
             ],
             recommendations: [
               {
-                spaceId: 'dev_space_3',
-                spaceName: 'Recommended Space',
-                matchScore: 85,
-                matchReasons: ['Similar interests', 'Same major'],
+                spaceId: 'ai_research_club',
+                spaceName: 'AI Research Club',
+                matchScore: 92,
+                matchReasons: ['Computer Science major', 'Machine learning interest'],
+              },
+              {
+                spaceId: 'startup_incubator',
+                spaceName: 'Startup Incubator',
+                matchScore: 78,
+                matchReasons: ['Builder profile', 'Innovation focus'],
               }
             ],
           },
           insights: {
             peakActivityTime: '2 PM',
             mostActiveSpace: {
-              spaceId: 'dev_space_1',
-              spaceName: 'Development Space',
-              timeSpent: 60,
+              spaceId: 'cs_study_group',
+              spaceName: 'CS Study Group',
+              timeSpent: 120,
             },
             weeklyGoal: {
-              target: 120,
-              current: 95,
-              percentage: 79,
+              target: 180,
+              current: 140,
+              percentage: 78,
             },
             streaks: {
-              currentStreak: 5,
-              longestStreak: 12,
+              currentStreak: 7,
+              longestStreak: 21,
               type: 'daily_activity' as const,
             },
           },
@@ -251,15 +299,7 @@ export async function GET(request: NextRequest) {
             generatedAt: new Date().toISOString(),
             includeRecommendations: true,
             developmentMode: true,
-          },
-        });
-      }
-    }
-
-    // Authenticate user
-    const user = await getCurrentUser(request);
-    if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+          } });
     }
 
     const { searchParams } = new URL(request.url);
@@ -276,13 +316,13 @@ export async function GET(request: NextRequest) {
       privacySettings,
       spaceRecommendations
     ] = await Promise.all([
-      fetchUserData(user.uid),
-      fetchSpaceMemberships(user.uid),
-      fetchActivitySummary(user.uid, timeRange),
-      fetchRecentActivity(user.uid, timeRange),
-      fetchUpcomingEvents(user.uid),
-      fetchPrivacySettings(user.uid),
-      includeRecommendations ? fetchSpaceRecommendations(user.uid) : Promise.resolve([])
+      fetchUserData(userId),
+      fetchSpaceMemberships(userId),
+      fetchActivitySummary(userId, timeRange),
+      fetchRecentActivity(userId, timeRange),
+      fetchUpcomingEvents(userId),
+      fetchPrivacySettings(userId),
+      includeRecommendations ? fetchSpaceRecommendations(userId) : Promise.resolve([])
     ]);
 
     // Aggregate data into dashboard format
@@ -305,16 +345,19 @@ export async function GET(request: NextRequest) {
       }
     });
   } catch (error) {
-    console.error('Error fetching profile dashboard:', error);
-    return NextResponse.json({ error: 'Failed to fetch profile dashboard' }, { status: 500 });
+    logger.error('Error fetching profile dashboard', { error: error, endpoint: '/api/profile/dashboard' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to fetch profile dashboard", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
-}
+}, { 
+  allowDevelopmentBypass: true, // Profile dashboard viewing is safe for development  
+  operation: 'get_profile_dashboard' 
+});
 
 // Helper function to fetch user data
 async function fetchUserData(userId: string) {
   try {
     const userDoc = await getDoc(doc(db, 'users', userId));
-    if (!userDoc.exists()) {
+    if (!userDoc.exists) {
       throw new Error('User not found');
     }
 
@@ -332,7 +375,7 @@ async function fetchUserData(userId: string) {
       lastActive: userData.lastActive || new Date().toISOString()
     };
   } catch (error) {
-    console.error('Error fetching user data:', error);
+    logger.error('Error fetching user data', { error: error, endpoint: '/api/profile/dashboard' });
     throw error;
   }
 }
@@ -340,8 +383,8 @@ async function fetchUserData(userId: string) {
 // Helper function to fetch space memberships
 async function fetchSpaceMemberships(userId: string) {
   try {
-    const membershipsQuery = query(
-      collection(db, 'members'),
+    const membershipsQuery = dbAdmin.collection(
+      dbAdmin.collection('members'),
       where('userId', '==', userId),
       orderBy('lastActivity', 'desc')
     );
@@ -352,7 +395,7 @@ async function fetchSpaceMemberships(userId: string) {
       ...doc.data()
     }));
   } catch (error) {
-    console.error('Error fetching space memberships:', error);
+    logger.error('Error fetching space memberships', { error: error, endpoint: '/api/profile/dashboard' });
     return [];
   }
 }
@@ -378,8 +421,8 @@ async function fetchActivitySummary(userId: string, timeRange: string) {
     const startDateStr = startDate.toISOString().split('T')[0];
     const endDateStr = endDate.toISOString().split('T')[0];
 
-    const summariesQuery = query(
-      collection(db, 'activitySummaries'),
+    const summariesQuery = dbAdmin.collection(
+      dbAdmin.collection('activitySummaries'),
       where('userId', '==', userId),
       where('date', '>=', startDateStr),
       where('date', '<=', endDateStr),
@@ -389,7 +432,7 @@ async function fetchActivitySummary(userId: string, timeRange: string) {
     const summariesSnapshot = await getDocs(summariesQuery);
     return summariesSnapshot.docs.map(doc => doc.data());
   } catch (error) {
-    console.error('Error fetching activity summary:', error);
+    logger.error('Error fetching activity summary', { error: error, endpoint: '/api/profile/dashboard' });
     return [];
   }
 }
@@ -404,8 +447,8 @@ async function fetchRecentActivity(userId: string, timeRange: string) {
     const startDateStr = startDate.toISOString().split('T')[0];
     const endDateStr = endDate.toISOString().split('T')[0];
 
-    const activityQuery = query(
-      collection(db, 'activityEvents'),
+    const activityQuery = dbAdmin.collection(
+      dbAdmin.collection('activityEvents'),
       where('userId', '==', userId),
       where('date', '>=', startDateStr),
       where('date', '<=', endDateStr),
@@ -416,7 +459,7 @@ async function fetchRecentActivity(userId: string, timeRange: string) {
     const activitySnapshot = await getDocs(activityQuery);
     return activitySnapshot.docs.map(doc => doc.data());
   } catch (error) {
-    console.error('Error fetching recent activity:', error);
+    logger.error('Error fetching recent activity', { error: error, endpoint: '/api/profile/dashboard' });
     return [];
   }
 }
@@ -432,8 +475,8 @@ async function fetchUpcomingEvents(userId: string) {
     const oneWeekStr = oneWeekFromNow.toISOString();
 
     // Fetch personal events
-    const personalEventsQuery = query(
-      collection(db, 'personalEvents'),
+    const personalEventsQuery = dbAdmin.collection(
+      dbAdmin.collection('personalEvents'),
       where('userId', '==', userId),
       where('startDate', '>=', nowStr),
       where('startDate', '<=', oneWeekStr),
@@ -449,8 +492,8 @@ async function fetchUpcomingEvents(userId: string) {
     }));
 
     // Fetch space events from user's memberships
-    const membershipsQuery = query(
-      collection(db, 'members'),
+    const membershipsQuery = dbAdmin.collection(
+      dbAdmin.collection('members'),
       where('userId', '==', userId),
       where('status', '==', 'active')
     );
@@ -460,8 +503,8 @@ async function fetchUpcomingEvents(userId: string) {
 
     let spaceEvents = [];
     if (userSpaceIds.length > 0) {
-      const spaceEventsQuery = query(
-        collection(db, 'events'),
+      const spaceEventsQuery = dbAdmin.collection(
+        dbAdmin.collection('events'),
         where('spaceId', 'in', userSpaceIds.slice(0, 10)), // Limit for performance
         where('startDate', '>=', nowStr),
         where('startDate', '<=', oneWeekStr),
@@ -482,7 +525,7 @@ async function fetchUpcomingEvents(userId: string) {
       .sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime())
       .slice(0, 15);
   } catch (error) {
-    console.error('Error fetching upcoming events:', error);
+    logger.error('Error fetching upcoming events', { error: error, endpoint: '/api/profile/dashboard' });
     return [];
   }
 }
@@ -491,23 +534,19 @@ async function fetchUpcomingEvents(userId: string) {
 async function fetchPrivacySettings(userId: string) {
   try {
     const privacyDoc = await getDoc(doc(db, 'privacySettings', userId));
-    return privacyDoc.exists() ? privacyDoc.data() : null;
+    return privacyDoc.exists ? privacyDoc.data() : null;
   } catch (error) {
-    console.error('Error fetching privacy settings:', error);
+    logger.error('Error fetching privacy settings', { error: error, endpoint: '/api/profile/dashboard' });
     return null;
   }
 }
 
 // Helper function to fetch space recommendations
 async function fetchSpaceRecommendations(userId: string) {
-  try {
-    // This would call the recommendations API internally
-    // For now, return empty array - would be implemented when recommendations API is integrated
-    return [];
-  } catch (error) {
-    console.error('Error fetching space recommendations:', error);
-    return [];
-  }
+  // This would call the recommendations API internally
+  // For now, return empty array - would be implemented when recommendations API is integrated
+  // TODO: Implement actual recommendations logic
+  return [];
 }
 
 // Helper function to generate summary stats

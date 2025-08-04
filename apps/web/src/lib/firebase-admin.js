@@ -88,7 +88,7 @@ catch (error) {
         }),
     };
     authAdmin = {
-        verifyIdToken: async (token) => {
+        verifyIdToken: async (_token) => {
             console.log(`🔄 Mock Firebase call: verifyIdToken() - development mode`);
             throw new Error(`Firebase Auth not configured for ${currentEnvironment}.`);
         },

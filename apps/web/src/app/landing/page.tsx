@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Link from "next/link";
+// import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { HiveLogo, HiveButton, HiveCard, HiveBadge, HiveModal } from "@hive/ui";
+import { HiveLogo, HiveButton, HiveCard, HiveModal } from "@hive/ui";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function LandingPage() {
@@ -16,6 +16,11 @@ export default function LandingPage() {
   });
   const [isLearnMoreOpen, setIsLearnMoreOpen] = useState(false);
   const [isNavigating, setIsNavigating] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   // Check if user is already authenticated and redirect to dashboard
   useEffect(() => {
@@ -71,6 +76,14 @@ export default function LandingPage() {
     router.push('/schools');
   };
 
+  if (!isMounted) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#0A0A0B', color: '#E5E5E7' }}>
+        <div className="w-6 h-6 border-2 border-white/20 border-t-white/60 rounded-full animate-spin" />
+      </div>
+    );
+  }
+
   return (
     <>
       <AnimatePresence mode="wait">
@@ -116,6 +129,7 @@ export default function LandingPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
                 className="space-y-8"
+                data-testid="landing-hero"
               >
                 <h1 className="hive-font-sans text-5xl md:text-6xl lg:text-7xl font-bold leading-tight tracking-tight">
                   <motion.span
@@ -187,6 +201,7 @@ export default function LandingPage() {
                   size="xl" 
                   className="w-full sm:w-auto"
                   onClick={handleNavigateToSchools}
+                  data-testid="get-started-button"
                 >
                   Get Started
                 </HiveButton>

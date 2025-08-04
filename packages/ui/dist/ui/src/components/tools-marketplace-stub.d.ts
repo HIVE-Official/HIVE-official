@@ -1,8 +1,17 @@
-export declare function ToolMarketplace({ className }: {
+/**
+ * HIVE Tools Marketplace Stub
+ * Temporary components for tools ecosystem
+ */
+import React from 'react';
+export interface ToolMarketplaceProps {
     className?: string;
-}): import("react/jsx-runtime").JSX.Element;
-export declare function LiveToolRuntime({ toolId, className }: {
-    toolId: string;
+    children?: React.ReactNode;
+}
+export declare const ToolMarketplace: React.FC<ToolMarketplaceProps>;
+export interface LiveToolRuntimeProps {
+    toolId?: string;
     className?: string;
-}): import("react/jsx-runtime").JSX.Element;
+    onToolLoad?: (toolId: string) => void;
+}
+export declare const LiveToolRuntime: React.FC<LiveToolRuntimeProps>;
 //# sourceMappingURL=tools-marketplace-stub.d.ts.map

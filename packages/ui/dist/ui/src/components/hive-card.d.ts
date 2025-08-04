@@ -1,11 +1,11 @@
 import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
 declare const hiveCardVariants: (props?: {
-    variant?: "space" | "default" | "minimal" | "elevated" | "gold-accent" | "gold-featured" | "gold-premium" | "builder" | "student" | "tool" | "online" | "building" | "studying" | "clickable" | "selectable" | "selected" | "post" | "announcement" | "featured-post";
+    variant?: "default" | "selected" | "student" | "builder" | "online" | "space" | "elevated" | "announcement" | "minimal" | "post" | "tool" | "gold-accent" | "gold-featured" | "gold-premium" | "building" | "studying" | "clickable" | "selectable" | "featured-post";
     size?: "default" | "sm" | "lg" | "xl" | "compact";
     rounded?: "default" | "sm" | "lg" | "full";
-    shadow?: "none" | "default" | "sm" | "lg" | "xl";
-} & import("class-variance-authority/dist/types").ClassProp) => string;
+    shadow?: "default" | "sm" | "lg" | "xl" | "none";
+} & import("class-variance-authority/types").ClassProp) => string;
 export interface HiveCardProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof hiveCardVariants> {
     asChild?: boolean;
     interactive?: boolean;

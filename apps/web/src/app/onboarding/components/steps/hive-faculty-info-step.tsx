@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { motion } from "@hive/ui/src/components/framer-motion-proxy";
+import { motion } from "@hive/ui";
 import { BookOpen, User, Mail } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { HiveCard, HiveInput } from "@hive/ui";
@@ -82,7 +82,7 @@ export function HiveFacultyInfoStep({ data, updateData }: HiveFacultyInfoStepPro
             <div className="grid grid-cols-1 md:grid-cols-2 gap-[var(--hive-spacing-4)]">
               <HiveInput
                 label="First Name"
-                placeholder="Enter your first name"
+                placeholder="First name"
                 value={firstName}
                 onChange={(e) => handleFirstNameChange(e.target.value)}
                 variant="premium"
@@ -94,7 +94,7 @@ export function HiveFacultyInfoStep({ data, updateData }: HiveFacultyInfoStepPro
               
               <HiveInput
                 label="Last Name"
-                placeholder="Enter your last name"
+                placeholder="Last name"
                 value={lastName}
                 onChange={(e) => handleLastNameChange(e.target.value)}
                 variant="premium"

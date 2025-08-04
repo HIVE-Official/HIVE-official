@@ -5,7 +5,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../lib/utils';
 import { ProfileCard, type ActivityItem } from './profile-card';
 import { ProfileHeader, type ProfileUser } from '../molecules/profile-header';
-import { ProfileStats, type ProfileStats as ProfileStatsType } from '../molecules/profile-stats';
+import { ProfileStats, type HiveProfileStats as ProfileStatsType } from '../molecules/profile-stats';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { 
@@ -212,8 +212,8 @@ export function ProfileSystem({
           layout={isMobile ? "vertical" : "grid"}
           variant="card"
           priority={user.isBuilder 
-            ? ['toolsCreated', 'spacesJoined', 'reputation', 'connectionsCount']
-            : ['spacesJoined', 'connectionsCount', 'weekStreak', 'reputation']
+            ? ['toolsUsed', 'spacesJoined', 'reputation', 'connectionsCount']
+            : ['spacesJoined', 'connectionsCount', 'currentStreak', 'reputation']
           }
           className="mb-6"
         />

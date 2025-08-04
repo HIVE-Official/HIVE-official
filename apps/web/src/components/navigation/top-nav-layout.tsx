@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useState } from 'react';
-import { useAuth } from '@hive/auth-logic';
-import { Button } from '@hive/ui';
+import { useSession } from '@/hooks/use-session';
+import Image from 'next/image';
+import { Button } from "@hive/ui";
 import { 
   Search, 
   Bell, 
@@ -29,13 +30,13 @@ interface TopNavLayoutProps {
 const NAVIGATION_ITEMS = [
   { href: '/', label: 'Feed', icon: Home },
   { href: '/spaces', label: 'Spaces', icon: Users },
-  { href: '/build', label: 'Build', icon: Zap },
+  { href: '/tools', label: 'Build', icon: Zap },
+  { href: '/rituals', label: 'Rituals', icon: Calendar },
   { href: '/events', label: 'Events', icon: Calendar },
-  { href: '/resources', label: 'Resources', icon: BookOpen },
 ];
 
 export function TopNavLayout({ children }: TopNavLayoutProps) {
-  const { user } = useAuth();
+  const { user } = useSession();
   const pathname = usePathname();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -120,9 +121,11 @@ export function TopNavLayout({ children }: TopNavLayoutProps) {
                 >
                   <div className="w-8 h-8 bg-zinc-700 rounded-full flex items-center justify-center">
                     {user?.avatarUrl ? (
-                      <img
+                      <Image
                         src={user.avatarUrl}
                         alt={user.fullName || 'User'}
+                        width={32}
+                        height={32}
                         className="w-8 h-8 rounded-full"
                       />
                     ) : (
@@ -144,7 +147,7 @@ export function TopNavLayout({ children }: TopNavLayoutProps) {
                     </div>
                     <div className="py-1">
                       <Link
-                        href="/profile"
+                        href="/dashboard/profile"
                         className="flex items-center px-4 py-2 text-sm text-zinc-300 hover:bg-zinc-700 hover:text-white"
                       >
                         <User className="w-4 h-4 mr-3" />

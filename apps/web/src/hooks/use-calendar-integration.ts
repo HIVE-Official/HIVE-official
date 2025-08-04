@@ -142,7 +142,7 @@ async function fetchCalendarStats(): Promise<CalendarStats> {
     }
 
     const data = await response.json();
-    return data.stats;
+    return data.stats || getMockCalendarStats();
   } catch (error) {
     console.warn('Calendar stats API not available, using mock data:', error);
     return getMockCalendarStats();

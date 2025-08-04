@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { motion } from "@hive/ui/src/components/framer-motion-proxy";
+import { useState, useEffect, useCallback } from "react";
+import { motion } from "framer-motion";
 import { AtSign, Check, X, Loader2, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { HiveInput } from "@hive/ui";
@@ -33,7 +33,7 @@ export function HiveHandleStep({ data, updateData, onNext }: HiveHandleStepProps
     return suggestions.slice(0, 3);
   };
 
-  const validateHandle = async (handle: string) => {
+  const validateHandle = useCallback(async (handle: string) => {
     if (!handle) {
       setValidationState("idle");
       return;
@@ -99,7 +99,7 @@ export function HiveHandleStep({ data, updateData, onNext }: HiveHandleStepProps
       console.error("Handle validation error:", error);
       setValidationState("invalid");
     }
-  };
+  }, [data.fullName]);
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -109,7 +109,7 @@ export function HiveHandleStep({ data, updateData, onNext }: HiveHandleStepProps
     }, 500);
 
     return () => clearTimeout(timeoutId);
-  }, [data.handle]);
+  }, [data.handle, validateHandle]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -142,12 +142,12 @@ export function HiveHandleStep({ data, updateData, onNext }: HiveHandleStepProps
   const getValidationIcon = () => {
     switch (validationState) {
       case "checking":
-        return <Loader2 className="w-4 h-4 animate-spin text-yellow-400" />;
+        return <Loader2 className="w-4 h-4 animate-spin text-[var(--hive-brand-primary)]" />;
       case "available":
-        return <Check className="w-4 h-4 text-green-400" />;
+        return <Check className="w-4 h-4 text-[var(--hive-status-success)]" />;
       case "taken":
       case "invalid":
-        return <X className="w-4 h-4 text-red-400" />;
+        return <X className="w-4 h-4 text-[var(--hive-status-error)]" />;
       default:
         return null;
     }
@@ -171,12 +171,12 @@ export function HiveHandleStep({ data, updateData, onNext }: HiveHandleStepProps
   const getValidationColor = () => {
     switch (validationState) {
       case "checking":
-        return "text-yellow-400";
+        return "text-[var(--hive-brand-primary)]";
       case "available":
-        return "text-green-400";
+        return "text-[var(--hive-status-success)]";
       case "taken":
       case "invalid":
-        return "text-red-400";
+        return "text-[var(--hive-status-error)]";
       default:
         return "text-[var(--hive-text-tertiary)]";
     }
@@ -254,7 +254,7 @@ export function HiveHandleStep({ data, updateData, onNext }: HiveHandleStepProps
             className="bg-[var(--hive-background-secondary)]/30 backdrop-blur-xl border border-[var(--hive-border-primary)] rounded-xl p-4"
           >
             <h4 className="text-sm font-medium text-[var(--hive-text-secondary)] mb-3 flex items-center">
-              <Zap className="w-4 h-4 mr-2 text-yellow-400" />
+              <Zap className="w-4 h-4 mr-2 text-[var(--hive-brand-primary)]" />
               Try these instead
             </h4>
             <div className="flex flex-wrap gap-2">
@@ -263,12 +263,11 @@ export function HiveHandleStep({ data, updateData, onNext }: HiveHandleStepProps
                   key={suggestion}
                   type="button"
                   onClick={() => selectSuggestion(suggestion)}
-                  className="px-3 py-1.5 bg-[var(--hive-background-secondary)]/20 hover:bg-[var(--hive-background-secondary)]/30 border border-[var(--hive-border-subtle)] rounded-lg text-sm text-[var(--hive-text-primary)] transition-all duration-200 hover:scale-105"
+                  className="px-3 py-1.5 bg-[var(--hive-background-secondary)]/20 hover:bg-[var(--hive-background-secondary)]/30 border border-[var(--hive-border-subtle)] rounded-lg text-sm text-[var(--hive-text-primary)] transition-all duration-200 hover:scale-105 hover:-translate-y-0.5 active:scale-95"
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: index * 0.1 }}
-                  whileHover={{ y: -2 }}
-                  whileTap={{ scale: 0.95 }}
+                  // Removed whileHover and whileTap - using CSS hover/active states
                 >
                   @{suggestion}
                 </motion.button>
@@ -285,12 +284,12 @@ export function HiveHandleStep({ data, updateData, onNext }: HiveHandleStepProps
             className="bg-[var(--hive-background-secondary)]/30 backdrop-blur-xl border border-[var(--hive-status-success)]/30 rounded-xl p-4"
           >
             <h4 className="text-sm font-medium text-[var(--hive-text-secondary)] mb-3 flex items-center">
-              <Check className="w-4 h-4 mr-2 text-green-400" />
+              <Check className="w-4 h-4 mr-2 text-[var(--hive-status-success)]" />
               Looking good!
             </h4>
             <div className="space-y-2 text-sm">
               <div className="text-[var(--hive-text-secondary)]">
-                Your profile: <span className="text-yellow-400 font-medium">@{data.handle}</span>
+                Your profile: <span className="text-[var(--hive-brand-primary)] font-medium">@{data.handle}</span>
               </div>
               <div className="text-xs text-[var(--hive-text-tertiary)]">
                 Others can find you by searching for @{data.handle}

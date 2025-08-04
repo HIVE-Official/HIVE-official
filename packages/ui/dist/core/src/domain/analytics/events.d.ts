@@ -25,26 +25,26 @@ export declare const AnalyticsEventSchema: z.ZodObject<{
 }, "strip", z.ZodTypeAny, {
     type?: string;
     id?: string;
+    userId?: string;
     context?: {
         url?: string;
         userAgent?: string;
         referrer?: string;
         ip?: string;
     };
-    userId?: string;
     sessionId?: string;
     timestamp?: Date;
     properties?: Record<string, any>;
 }, {
     type?: string;
     id?: string;
+    userId?: string;
     context?: {
         url?: string;
         userAgent?: string;
         referrer?: string;
         ip?: string;
     };
-    userId?: string;
     sessionId?: string;
     timestamp?: Date;
     properties?: Record<string, any>;
@@ -72,39 +72,39 @@ export declare const EventContextSchema: z.ZodObject<{
         os: z.ZodOptional<z.ZodString>;
         browser: z.ZodOptional<z.ZodString>;
     }, "strip", z.ZodTypeAny, {
-        type?: "mobile" | "tablet" | "desktop";
+        type?: "mobile" | "desktop" | "tablet";
         os?: string;
         browser?: string;
     }, {
-        type?: "mobile" | "tablet" | "desktop";
+        type?: "mobile" | "desktop" | "tablet";
         os?: string;
         browser?: string;
     }>>;
 }, "strip", z.ZodTypeAny, {
+    url?: string;
     viewport?: {
         height?: number;
         width?: number;
     };
-    url?: string;
     userAgent?: string;
     referrer?: string;
     ip?: string;
     device?: {
-        type?: "mobile" | "tablet" | "desktop";
+        type?: "mobile" | "desktop" | "tablet";
         os?: string;
         browser?: string;
     };
 }, {
+    url?: string;
     viewport?: {
         height?: number;
         width?: number;
     };
-    url?: string;
     userAgent?: string;
     referrer?: string;
     ip?: string;
     device?: {
-        type?: "mobile" | "tablet" | "desktop";
+        type?: "mobile" | "desktop" | "tablet";
         os?: string;
         browser?: string;
     };
@@ -118,15 +118,15 @@ export declare const BaseEventPropertiesSchema: z.ZodObject<{
     term: z.ZodOptional<z.ZodString>;
 }, "strip", z.ZodTypeAny, {
     content?: string;
-    medium?: string;
-    source?: string;
     term?: string;
+    source?: string;
+    medium?: string;
     campaign?: string;
 }, {
     content?: string;
-    medium?: string;
-    source?: string;
     term?: string;
+    source?: string;
+    medium?: string;
     campaign?: string;
 }>;
 export type BaseEventProperties = z.infer<typeof BaseEventPropertiesSchema>;

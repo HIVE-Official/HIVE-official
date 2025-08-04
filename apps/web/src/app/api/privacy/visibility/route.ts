@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { doc, getDoc, collection, query, where, getDocs } from 'firebase/firestore';
-import { db } from '@hive/core/server';
-import { getCurrentUser } from '@hive/auth-logic';
+// Use admin SDK methods since we're in an API route
+import { dbAdmin } from '@/lib/firebase-admin';
+import { getCurrentUser } from '@/lib/server-auth';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 // Visibility check interface
 interface VisibilityCheck {
@@ -20,14 +22,14 @@ export async function POST(request: NextRequest) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const body = await request.json();
     const { targetUserId, context } = body;
 
     if (!targetUserId) {
-      return NextResponse.json({ error: 'Target user ID is required' }, { status: 400 });
+      return NextResponse.json(ApiResponseHelper.error("Target user ID is required", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
     // Check if viewing own profile
@@ -48,11 +50,11 @@ export async function POST(request: NextRequest) {
 
     // Get target user's privacy settings
     const targetPrivacyDoc = await getDoc(doc(db, 'privacySettings', targetUserId));
-    const targetPrivacy = targetPrivacyDoc.exists() ? targetPrivacyDoc.data() : null;
+    const targetPrivacy = targetPrivacyDoc.exists ? targetPrivacyDoc.data() : null;
 
     // Get viewer's privacy settings (for mutual visibility checks)
     const viewerPrivacyDoc = await getDoc(doc(db, 'privacySettings', user.uid));
-    const viewerPrivacy = viewerPrivacyDoc.exists() ? viewerPrivacyDoc.data() : null;
+    const viewerPrivacy = viewerPrivacyDoc.exists ? viewerPrivacyDoc.data() : null;
 
     // Determine relationship and shared spaces
     const relationship = await determineRelationship(user.uid, targetUserId);
@@ -75,8 +77,8 @@ export async function POST(request: NextRequest) {
       }
     });
   } catch (error) {
-    console.error('Error checking visibility:', error);
-    return NextResponse.json({ error: 'Failed to check visibility' }, { status: 500 });
+    logger.error('Error checking visibility', { error: error, endpoint: '/api/privacy/visibility' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to check visibility", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -85,7 +87,7 @@ export async function GET(request: NextRequest) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const { searchParams } = new URL(request.url);
@@ -93,16 +95,16 @@ export async function GET(request: NextRequest) {
     const context = searchParams.get('context') || 'general';
 
     if (userIds.length === 0) {
-      return NextResponse.json({ error: 'User IDs are required' }, { status: 400 });
+      return NextResponse.json(ApiResponseHelper.error("User IDs are required", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
     if (userIds.length > 50) {
-      return NextResponse.json({ error: 'Maximum 50 users per request' }, { status: 400 });
+      return NextResponse.json(ApiResponseHelper.error("Maximum 50 users per request", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
     // Get viewer's privacy settings
     const viewerPrivacyDoc = await getDoc(doc(db, 'privacySettings', user.uid));
-    const viewerPrivacy = viewerPrivacyDoc.exists() ? viewerPrivacyDoc.data() : null;
+    const viewerPrivacy = viewerPrivacyDoc.exists ? viewerPrivacyDoc.data() : null;
 
     // Process each user
     const visibilityChecks = await Promise.all(
@@ -127,7 +129,7 @@ export async function GET(request: NextRequest) {
 
           // Get target user's privacy settings
           const targetPrivacyDoc = await getDoc(doc(db, 'privacySettings', targetUserId));
-          const targetPrivacy = targetPrivacyDoc.exists() ? targetPrivacyDoc.data() : null;
+          const targetPrivacy = targetPrivacyDoc.exists ? targetPrivacyDoc.data() : null;
 
           // Determine relationship and shared spaces
           const relationship = await determineRelationship(user.uid, targetUserId);
@@ -151,7 +153,7 @@ export async function GET(request: NextRequest) {
             }
           };
         } catch (error) {
-          console.error(`Error checking visibility for user ${targetUserId}:`, error);
+          logger.error('Error checking visibility for user', { targetUserId, error: error, endpoint: '/api/privacy/visibility' });
           return {
             userId: targetUserId,
             visibility: {
@@ -171,8 +173,8 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ visibilityChecks });
   } catch (error) {
-    console.error('Error performing batch visibility check:', error);
-    return NextResponse.json({ error: 'Failed to perform batch visibility check' }, { status: 500 });
+    logger.error('Error performing batch visibility check', { error: error, endpoint: '/api/privacy/visibility' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to perform batch visibility check", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -198,13 +200,13 @@ async function determineRelationship(viewerId: string, targetId: string): Promis
 async function getSharedSpaces(viewerId: string, targetId: string): Promise<string[]> {
   try {
     const [viewerMemberships, targetMemberships] = await Promise.all([
-      getDocs(query(
-        collection(db, 'members'),
+      getDocs(dbAdmin.collection(
+        dbAdmin.collection('members'),
         where('userId', '==', viewerId),
         where('status', '==', 'active')
       )),
-      getDocs(query(
-        collection(db, 'members'),
+      getDocs(dbAdmin.collection(
+        dbAdmin.collection('members'),
         where('userId', '==', targetId),
         where('status', '==', 'active')
       ))
@@ -215,7 +217,7 @@ async function getSharedSpaces(viewerId: string, targetId: string): Promise<stri
 
     return [...viewerSpaces].filter(spaceId => targetSpaces.has(spaceId));
   } catch (error) {
-    console.error('Error getting shared spaces:', error);
+    logger.error('Error getting shared spaces', { error: error, endpoint: '/api/privacy/visibility' });
     return [];
   }
 }

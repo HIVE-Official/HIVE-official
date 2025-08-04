@@ -2,9 +2,12 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from 'next/image';
 import { cn } from "@/lib/utils";
-import { useAuth } from "@/hooks/use-auth";
-import { motion } from "@hive/ui/src/components/framer-motion-proxy";
+import { useUnifiedAuth } from "@hive/ui";
+import { useOnboardingBridge } from "@/components/temp-stubs";
+import type { OnboardingData } from "@hive/ui";
+import { motion } from "framer-motion";
 import { 
   HiveButton, 
   HiveCard, 
@@ -48,8 +51,7 @@ function OnboardingProgress({ value, isComplete, className }: {
     <HiveProgress
       value={value}
       variant={isComplete ? "gradient" : "default"}
-      color={isComplete ? "success" : "primary"}
-      size="md"
+      size="lg"
       showValue={false}
       className={cn("w-full", className)}
     />
@@ -68,7 +70,7 @@ function StepIndicator({
 }) {
   return (
     <HiveCard 
-      variant="glass" 
+      variant="elevated" 
       className="hidden lg:block p-[var(--hive-spacing-6)]"
     >
       <h3 className="text-lg font-semibold text-[var(--hive-text-primary)] mb-[var(--hive-spacing-4)]">
@@ -202,15 +204,22 @@ const steps = [
 
 export function HiveOnboardingWizard() {
   const router = useRouter();
-  const { user, loading, getAuthToken } = useAuth();
+  const unifiedAuth = useUnifiedAuth();
+  const onboardingBridge = useOnboardingBridge();
   const [currentStep, setCurrentStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [data, setData] = useState<HiveOnboardingData>({
     fullName: "",
+    userType: undefined,
+    firstName: "",
+    lastName: "",
+    facultyEmail: "",
     major: "",
+    academicLevel: "",
     graduationYear: new Date().getFullYear() + 4, // Default to 4 years from now
     handle: "",
+    profilePhoto: "",
     builderRequestSpaces: [],
     hasConsented: false,
     acceptedTerms: false,
@@ -323,27 +332,14 @@ export function HiveOnboardingWizard() {
     setIsSubmitting(true);
     setError(null);
     try {
-      // Get authentication token from session
-      let authToken: string;
-      
-      // Check if we're in development mode
-      const isDevelopmentMode = window.localStorage.getItem('dev_auth_mode') === 'true';
-      const sessionData = window.localStorage.getItem('hive_session');
-      
-      if (isDevelopmentMode && sessionData) {
-        // Development mode - create a dev token
-        const session = JSON.parse(sessionData);
-        authToken = `dev_token_${session.userId}`;
-      } else if (user && getAuthToken) {
-        // Production mode - get auth token from the auth hook
-        authToken = await getAuthToken() || 'test-token';
-      } else {
+      if (!unifiedAuth.isAuthenticated || !unifiedAuth.user) {
         throw new Error("Authentication required. Please sign in again.");
       }
       
-      const submissionData = {
+      // Prepare onboarding data for the bridge
+      const onboardingData: OnboardingData = {
         fullName: data.fullName,
-        userType: data.userType,
+        userType: data.userType!,
         firstName: data.firstName,
         lastName: data.lastName,
         major: data.userType === 'faculty' ? 'Faculty' : data.major,
@@ -355,53 +351,21 @@ export function HiveOnboardingWizard() {
         consentGiven: data.hasConsented && data.acceptedTerms && data.acceptedPrivacy,
       };
 
-      const response = await fetch("/api/auth/complete-onboarding", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${authToken}`,
-        },
-        body: JSON.stringify(submissionData),
+      // Complete onboarding through the bridge
+      const result = await onboardingBridge.completeOnboarding(onboardingData);
+      
+      if (!result.success) {
+        throw new Error(result.error || 'Onboarding completion failed');
+      }
+
+      console.log('🎉 Onboarding completed successfully:', {
+        user: result.user,
+        builderRequestsCreated: result.builderRequestsCreated
       });
 
-      if (!response.ok) {
-        const errorData = (await response.json()) as { error?: string };
-        throw new Error(errorData.error || "Failed to complete onboarding");
-      }
-
-      const result = await response.json();
-
-      // Update session storage to mark onboarding as complete
-      if (sessionData) {
-        try {
-          const session = JSON.parse(sessionData);
-          const updatedSession = {
-            ...session,
-            onboardingCompleted: true,
-            profileData: {
-              fullName: data.fullName,
-              userType: data.userType,
-              handle: data.handle.toLowerCase(),
-              major: data.major,
-              academicLevel: data.academicLevel,
-              graduationYear: data.graduationYear,
-              avatarUrl: data.profilePhoto || "",
-              builderRequestSpaces: data.builderRequestSpaces || [],
-            },
-            completedAt: new Date().toISOString(),
-          };
-          window.localStorage.setItem('hive_session', JSON.stringify(updatedSession));
-          console.log('User session updated:', updatedSession);
-          
-          // Trigger storage event to notify other parts of the app
-          window.dispatchEvent(new StorageEvent('storage', {
-            key: 'hive_session',
-            newValue: JSON.stringify(updatedSession)
-          }));
-        } catch (error) {
-          console.error('Error updating session:', error);
-        }
-      }
+      // Auto-create spaces after onboarding
+      const spaceResults = await onboardingBridge.createPostOnboardingSpaces(onboardingData);
+      console.log('🏗️ Post-onboarding spaces:', spaceResults);
 
       // Show success animation
       setCurrentStep(TOTAL_STEPS);
@@ -438,7 +402,7 @@ export function HiveOnboardingWizard() {
         <div className="absolute inset-0 bg-gradient-to-br from-[var(--hive-brand-primary)]/5 via-transparent to-[var(--hive-status-success)]/5" />
         
         <HiveCard 
-          variant="glass"
+          variant="elevated"
           className="max-w-md text-center p-[var(--hive-spacing-8)] relative z-10"
         >
           <motion.div
@@ -461,9 +425,9 @@ export function HiveOnboardingWizard() {
               transition={{ delay: 0.5, duration: 0.6 }}
               className="space-y-[var(--hive-spacing-4)]"
             >
-              <h1 className="text-4xl font-bold text-[var(--hive-text-primary)]">
+              <h2 className="text-4xl font-bold text-[var(--hive-text-primary)]">
                 Welcome to HIVE, {data.fullName.split(" ")[0]}!
-              </h1>
+              </h2>
               <p className="text-xl text-[var(--hive-text-secondary)]">
                 Your profile is ready. Taking you to your new digital campus...
               </p>
@@ -527,7 +491,7 @@ export function HiveOnboardingWizard() {
       {/* Main Content */}
       <div className="flex-1 flex items-center justify-center p-[var(--hive-spacing-4)] pt-24 relative z-10">
         <HiveCard 
-          variant="glass"
+          variant="elevated"
           className="w-full max-w-2xl overflow-hidden"
         >
           {/* Header with enhanced progress */}
@@ -591,7 +555,7 @@ export function HiveOnboardingWizard() {
                 className="mt-[var(--hive-spacing-6)]"
               >
                 <HiveCard 
-                  variant="error"
+                  variant="announcement"
                   className="p-[var(--hive-spacing-4)]"
                 >
                   <div className="flex items-center gap-[var(--hive-spacing-2)]">
@@ -613,6 +577,8 @@ export function HiveOnboardingWizard() {
                   onClick={goBack}
                   disabled={!canGoBack()}
                   leftIcon={<ArrowLeft className="w-4 h-4" />}
+                  data-testid="back-button"
+                  aria-label="Go to previous step"
                 >
                   Back
                 </HiveButton>
@@ -624,6 +590,8 @@ export function HiveOnboardingWizard() {
                     onClick={handleSubmit}
                     disabled={!canGoNext() || isSubmitting}
                     rightIcon={isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowRight className="w-4 h-4" />}
+                    data-testid="enter-hive-button"
+                    aria-label="Complete onboarding and enter HIVE"
                   >
                     {isSubmitting ? "Creating your profile..." : "Enter HIVE"}
                   </HiveButton>
@@ -634,6 +602,8 @@ export function HiveOnboardingWizard() {
                     onClick={goNext}
                     disabled={!canGoNext()}
                     rightIcon={<ArrowRight className="w-4 h-4" />}
+                    data-testid="continue-button"
+                    aria-label="Continue to next step"
                   >
                     Continue
                   </HiveButton>
@@ -663,7 +633,7 @@ export function HiveOnboardingWizard() {
             transition={{ delay: 0.3 }}
           >
             <HiveCard 
-              variant="glass"
+              variant="elevated"
               className="p-[var(--hive-spacing-4)]"
             >
               <h3 className="text-lg font-semibold text-[var(--hive-text-primary)] mb-[var(--hive-spacing-4)]">
@@ -674,13 +644,15 @@ export function HiveOnboardingWizard() {
               <div className="relative space-y-3">
                 {/* Profile Photo Card - Clean, no text */}
                 <HiveCard
-                  variant="glass"
+                  variant="minimal"
                   className="w-20 h-24 p-0 overflow-hidden"
                 >
                   {data.profilePhoto ? (
-                    <img
+                    <Image
                       src={data.profilePhoto}
                       alt="Profile"
+                      width={80}
+                      height={96}
                       className="w-full h-full object-cover"
                     />
                   ) : (
@@ -693,7 +665,7 @@ export function HiveOnboardingWizard() {
                 {/* Separate Info Cards - Overlapping slightly */}
                 <div className="relative -ml-2 space-y-2">
                   {/* Name Card */}
-                  <HiveCard variant="subtle" className="p-3 rotate-1">
+                  <HiveCard variant="minimal" className="p-3 rotate-1">
                     <div className="text-xs text-[var(--hive-text-muted)] mb-1">Name</div>
                     <div className="text-[var(--hive-text-primary)] font-semibold text-sm">
                       {data.fullName || "Your name"}
@@ -701,7 +673,7 @@ export function HiveOnboardingWizard() {
                   </HiveCard>
 
                   {/* Handle Card */}
-                  <HiveCard variant="premium" className="p-3 -rotate-1 relative -mt-1">
+                  <HiveCard variant="gold-accent" className="p-3 -rotate-1 relative -mt-1">
                     <div className="text-xs text-[var(--hive-text-muted)] mb-1">Handle</div>
                     <div className="text-[var(--hive-brand-primary)] font-medium text-sm">
                       @{data.handle || "your-handle"}
@@ -709,23 +681,23 @@ export function HiveOnboardingWizard() {
                   </HiveCard>
 
                   {/* Major Card */}
-                  <HiveCard variant="glass" className="p-3 rotate-1 relative -mt-1">
+                  <HiveCard variant="default" className="p-3 rotate-1 relative -mt-1">
                     <div className="text-xs text-[var(--hive-text-muted)] mb-1">Major</div>
                     <div className="text-[var(--hive-text-secondary)] text-sm">
                       {data.major || "Your major"}
                     </div>
                   </HiveCard>
 
-                  {/* Spaces Badge */}
-                  {data.selectedSpaces && data.selectedSpaces.length > 0 && (
+                  {/* Builder Spaces Badge */}
+                  {data.builderRequestSpaces && data.builderRequestSpaces.length > 0 && (
                     <motion.div
                       initial={{ opacity: 0, scale: 0.9 }}
                       animate={{ opacity: 1, scale: 1 }}
                     >
-                      <HiveCard variant="premium" className="p-2 -rotate-1 relative -mt-1">
+                      <HiveCard variant="gold-accent" className="p-2 -rotate-1 relative -mt-1">
                         <div className="inline-flex items-center text-[var(--hive-brand-primary)] text-xs">
                           <Users className="w-3 h-3 mr-1" />
-                          <span>{data.selectedSpaces.length} Space{data.selectedSpaces.length !== 1 ? 's' : ''}</span>
+                          <span>{data.builderRequestSpaces.length} Space{data.builderRequestSpaces.length !== 1 ? 's' : ''}</span>
                         </div>
                       </HiveCard>
                     </motion.div>

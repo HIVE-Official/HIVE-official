@@ -2,6 +2,8 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { UB_MAJORS, createMajorAbbreviation } from '@hive/core';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 /**
  * Seed UB-specific cohort spaces based on actual UB majors and graduation years
@@ -10,7 +12,7 @@ export async function POST(request: NextRequest) {
   try {
     const { dryRun = false, years = ['24', '25', '26', '27', '28'] } = await request.json().catch(() => ({}));
     
-    console.log('🎓 Starting UB cohort space seeding...');
+    logger.info('🎓 Starting UB cohort space seeding...', { endpoint: '/api/spaces/cohort/seed-ub' });
     
     const currentYear = new Date().getFullYear();
     const graduationYears = years.map((y: string) => {
@@ -154,10 +156,10 @@ export async function POST(request: NextRequest) {
       }
     }
     
-    console.log(`📊 Generated ${cohortSpaces.length} UB cohort spaces:`);
-    console.log(`   - ${UB_MAJORS.length} major spaces`);
-    console.log(`   - ${graduationYears.length} class year spaces`);
-    console.log(`   - ${popularMajors.length * graduationYears.length} major+year spaces`);
+    logger.info('📊 Generated UB cohort spaces', { cohortSpacesLength: cohortSpaces.length, endpoint: '/api/spaces/cohort/seed-ub'  });
+    logger.info('- major spaces', { UB_MAJORSLength: UB_MAJORS.length, endpoint: '/api/spaces/cohort/seed-ub'  });
+    logger.info('- class year spaces', { graduationYearsLength: graduationYears.length, endpoint: '/api/spaces/cohort/seed-ub'  });
+    logger.info('- major+year spaces', { count: popularMajors.length * graduationYears.length, endpoint: '/api/spaces/cohort/seed-ub' });
     
     if (dryRun) {
       return NextResponse.json({
@@ -180,7 +182,7 @@ export async function POST(request: NextRequest) {
     }
     
     // Create spaces in Firebase batches
-    console.log('🔥 Creating UB cohort spaces in Firebase...');
+    logger.info('🔥 Creating UB cohort spaces in Firebase...', { endpoint: '/api/spaces/cohort/seed-ub' });
     
     const batchSize = 500; // Firestore batch limit
     const batches = [];
@@ -207,10 +209,10 @@ export async function POST(request: NextRequest) {
     for (const batch of batches) {
       await batch.commit();
       created += batchSize;
-      console.log(`✅ Created batch of spaces (total: ${Math.min(created, cohortSpaces.length)}/${cohortSpaces.length})`);
+      logger.info('✅ Created batch of spaces', { created, total: cohortSpaces.length, endpoint: '/api/spaces/cohort/seed-ub' });
     }
     
-    console.log(`🎉 Successfully created ${cohortSpaces.length} UB cohort spaces`);
+    logger.info('🎉 Successfully created UB cohort spaces', { cohortSpacesLength: cohortSpaces.length, endpoint: '/api/spaces/cohort/seed-ub'  });
     
     return NextResponse.json({
       success: true,
@@ -227,7 +229,7 @@ export async function POST(request: NextRequest) {
     });
     
   } catch (error: any) {
-    console.error('UB cohort seeding error:', error);
+    logger.error('UB cohort seeding error', { error: error, endpoint: '/api/spaces/cohort/seed-ub' });
     
     return NextResponse.json(
       { 
@@ -235,7 +237,7 @@ export async function POST(request: NextRequest) {
         details: error.message,
         university: 'University at Buffalo'
       },
-      { status: 500 }
+      { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }
 }

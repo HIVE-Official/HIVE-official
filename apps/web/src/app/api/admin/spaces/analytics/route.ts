@@ -2,6 +2,8 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { getAuth } from 'firebase-admin/auth';
 import { dbAdmin } from '@/lib/firebase-admin';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 /**
  * Admin Space Analytics API
@@ -142,11 +144,8 @@ export async function GET(request: NextRequest) {
   try {
     // Verify authentication
     const authHeader = request.headers.get('Authorization');
-    if (!authHeader?.startsWith('Bearer ')) {
-      return NextResponse.json(
-        { error: 'Authorization header required' },
-        { status: 401 }
-      );
+    if (!authHeader?.startsWith("Bearer ")) {
+      return NextResponse.json(ApiResponseHelper.error("Authorization header required", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const token = authHeader.substring(7);
@@ -161,22 +160,16 @@ export async function GET(request: NextRequest) {
         const decodedToken = await auth.verifyIdToken(token);
         adminUserId = decodedToken.uid;
       } catch (authError) {
-        return NextResponse.json(
-          { error: 'Invalid or expired token' },
-          { status: 401 }
-        );
+        return NextResponse.json(ApiResponseHelper.error("Invalid or expired token", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
       }
     }
 
     // Check if user is admin
     if (!(await isAdmin(adminUserId))) {
-      return NextResponse.json(
-        { error: 'Admin access required' },
-        { status: 403 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Admin access required", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
-    console.log(`👑 Admin ${adminUserId} requesting space analytics`);
+    logger.info('👑 Admin requesting space analytics', { adminUserId, endpoint: '/api/admin/spaces/analytics' });
 
     // Get all spaces across all types
     const spaceTypes = ['campus_living', 'fraternity_and_sorority', 'hive_exclusive', 'student_organizations', 'university_organizations'];
@@ -219,19 +212,19 @@ export async function GET(request: NextRequest) {
                 joinedAt: memberDoc.data().joinedAt?.toDate?.()?.toISOString()
               }));
 
-              spaceData.actualMemberCount = members.length;
-              spaceData.builderCount = members.filter(m => m.role === 'builder').length;
-              spaceData.adminCount = members.filter(m => m.role === 'admin').length;
-              spaceData.healthScore = calculateHealthScore(spaceData, members);
-              spaceData.members = members;
+              (spaceData as any).actualMemberCount = members.length;
+              (spaceData as any).builderCount = members.filter((m: any) => m.role === 'builder').length;
+              (spaceData as any).adminCount = members.filter((m: any) => m.role === 'admin').length;
+              (spaceData as any).healthScore = calculateHealthScore(spaceData, members);
+              (spaceData as any).members = members;
 
             } catch (memberError) {
-              console.error(`Error fetching members for space ${doc.id}:`, memberError);
-              spaceData.actualMemberCount = spaceData.memberCount || 0;
-              spaceData.builderCount = 0;
-              spaceData.adminCount = 0;
-              spaceData.healthScore = 0;
-              spaceData.members = [];
+              logger.error('Error fetching membersfor space', { spaceId: doc.id, error: memberError, endpoint: '/api/admin/spaces/analytics' });
+              (spaceData as any).actualMemberCount = (spaceData as any).memberCount || 0;
+              (spaceData as any).builderCount = 0;
+              (spaceData as any).adminCount = 0;
+              (spaceData as any).healthScore = 0;
+              (spaceData as any).members = [];
             }
 
             return spaceData;
@@ -241,7 +234,7 @@ export async function GET(request: NextRequest) {
         spacesByType[type] = spaces;
         allSpaces.push(...spaces);
       } catch (error) {
-        console.error(`Error fetching spaces for type ${type}:`, error);
+        logger.error('Error fetching spaces for type', { type, error: error, endpoint: '/api/admin/spaces/analytics' });
         spacesByType[type] = [];
       }
     }
@@ -378,10 +371,7 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('Admin spaces analytics error:', error);
-    return NextResponse.json(
-      { error: 'Failed to get space analytics' },
-      { status: 500 }
-    );
+    logger.error('Admin spaces analytics error', { error: error, endpoint: '/api/admin/spaces/analytics' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to get space analytics", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

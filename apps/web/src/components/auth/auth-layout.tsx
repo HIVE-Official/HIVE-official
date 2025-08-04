@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
-import { HiveLogo } from '@hive/ui';
+import { HiveLogo } from "@hive/ui";
 
 interface AuthLayoutProps {
   children: ReactNode;

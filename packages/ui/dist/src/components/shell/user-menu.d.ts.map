@@ -1,1 +1,0 @@
-{"version":3,"file":"user-menu.d.ts","sourceRoot":"","sources":["../../../../../src/components/shell/user-menu.tsx"],"names":[],"mappings":"AAuBA,UAAU,aAAa;IACrB,IAAI,EAAE;QACJ,EAAE,EAAE,MAAM,CAAC;QACX,IAAI,EAAE,MAAM,CAAC;QACb,MAAM,EAAE,MAAM,CAAC;QACf,MAAM,CAAC,EAAE,MAAM,CAAC;KACjB,CAAC;CACH;AAED,wBAAgB,QAAQ,CAAC,EAAE,IAAI,EAAE,EAAE,aAAa,2CAgG/C"}

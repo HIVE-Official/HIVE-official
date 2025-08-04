@@ -1,13 +1,13 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from "react";
-import { HiveCard } from "./hive-card";
-import { HiveButton } from "./hive-button";
-import { HiveInput } from "./hive-input";
-import { Heading, Muted, Text } from "./Typography";
-import { motion, AnimatePresence } from "./framer-motion-proxy";
-import { गति } from "../lib/motion-utils";
+import { HiveCard } from "./hive-card.js";
+import { HiveButton } from "./hive-button.js";
+import { HiveInput } from "./hive-input.js";
+import { Heading, Muted, Text } from "./Typography.js";
+import { motion, AnimatePresence } from "./framer-motion-proxy.js";
+import { गति } from "../lib/motion-utils.js";
 import { CheckCircle } from "lucide-react";
-import { Stack } from "./elements/stack";
+import { Stack } from "./elements/stack.js";
 export const WaitlistForm = ({ onSubmit }) => {
     const [email, setEmail] = React.useState("");
     const [loading, setLoading] = React.useState(false);

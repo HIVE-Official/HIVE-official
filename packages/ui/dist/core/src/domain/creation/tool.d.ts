@@ -10,13 +10,13 @@ export declare const ToolCollaboratorSchema: z.ZodObject<{
     addedAt: z.ZodDate;
     addedBy: z.ZodString;
 }, "strip", z.ZodTypeAny, {
-    userId?: string;
     permission?: "view" | "edit" | "comment";
+    userId?: string;
     addedAt?: Date;
     addedBy?: string;
 }, {
-    userId?: string;
     permission?: "view" | "edit" | "comment";
+    userId?: string;
     addedAt?: Date;
     addedBy?: string;
 }>;
@@ -27,17 +27,17 @@ export declare const ToolMetadataSchema: z.ZodObject<{
     category: z.ZodOptional<z.ZodString>;
     language: z.ZodDefault<z.ZodString>;
 }, "strip", z.ZodTypeAny, {
-    difficulty?: "beginner" | "intermediate" | "advanced";
-    tags?: string[];
+    language?: string;
     category?: string;
     estimatedTime?: number;
-    language?: string;
+    difficulty?: "beginner" | "intermediate" | "advanced";
+    tags?: string[];
 }, {
-    difficulty?: "beginner" | "intermediate" | "advanced";
-    tags?: string[];
+    language?: string;
     category?: string;
     estimatedTime?: number;
-    language?: string;
+    difficulty?: "beginner" | "intermediate" | "advanced";
+    tags?: string[];
 }>;
 export declare const ToolDataSchemaSchema: z.ZodObject<{
     fields: z.ZodArray<z.ZodObject<{
@@ -50,33 +50,33 @@ export declare const ToolDataSchemaSchema: z.ZodObject<{
             pattern: z.ZodOptional<z.ZodString>;
             enum: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
         }, "strip", z.ZodTypeAny, {
-            min?: number;
             max?: number;
+            min?: number;
             pattern?: string;
             enum?: string[];
         }, {
-            min?: number;
             max?: number;
+            min?: number;
             pattern?: string;
             enum?: string[];
         }>>;
     }, "strip", z.ZodTypeAny, {
-        type?: "string" | "number" | "boolean" | "object" | "date" | "array";
         name?: string;
+        type?: "string" | "number" | "boolean" | "object" | "date" | "array";
         required?: boolean;
         validation?: {
-            min?: number;
             max?: number;
+            min?: number;
             pattern?: string;
             enum?: string[];
         };
     }, {
-        type?: "string" | "number" | "boolean" | "object" | "date" | "array";
         name?: string;
+        type?: "string" | "number" | "boolean" | "object" | "date" | "array";
         required?: boolean;
         validation?: {
-            min?: number;
             max?: number;
+            min?: number;
             pattern?: string;
             enum?: string[];
         };
@@ -85,12 +85,12 @@ export declare const ToolDataSchemaSchema: z.ZodObject<{
     allowAnonymous: z.ZodDefault<z.ZodBoolean>;
 }, "strip", z.ZodTypeAny, {
     fields?: {
-        type?: "string" | "number" | "boolean" | "object" | "date" | "array";
         name?: string;
+        type?: "string" | "number" | "boolean" | "object" | "date" | "array";
         required?: boolean;
         validation?: {
-            min?: number;
             max?: number;
+            min?: number;
             pattern?: string;
             enum?: string[];
         };
@@ -99,12 +99,12 @@ export declare const ToolDataSchemaSchema: z.ZodObject<{
     allowAnonymous?: boolean;
 }, {
     fields?: {
-        type?: "string" | "number" | "boolean" | "object" | "date" | "array";
         name?: string;
+        type?: "string" | "number" | "boolean" | "object" | "date" | "array";
         required?: boolean;
         validation?: {
-            min?: number;
             max?: number;
+            min?: number;
             pattern?: string;
             enum?: string[];
         };
@@ -120,6 +120,11 @@ export declare const ToolConfigSchema: z.ZodObject<{
     requireAuthentication: z.ZodDefault<z.ZodBoolean>;
     showProgressBar: z.ZodDefault<z.ZodBoolean>;
     autoSave: z.ZodDefault<z.ZodBoolean>;
+    enableRealTimeUpdates: z.ZodDefault<z.ZodBoolean>;
+    maxResponseLength: z.ZodDefault<z.ZodNumber>;
+    customCSS: z.ZodDefault<z.ZodString>;
+    headerText: z.ZodDefault<z.ZodString>;
+    footerText: z.ZodDefault<z.ZodString>;
     dataSchema: z.ZodOptional<z.ZodObject<{
         fields: z.ZodArray<z.ZodObject<{
             name: z.ZodString;
@@ -131,33 +136,33 @@ export declare const ToolConfigSchema: z.ZodObject<{
                 pattern: z.ZodOptional<z.ZodString>;
                 enum: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
             }, "strip", z.ZodTypeAny, {
-                min?: number;
                 max?: number;
+                min?: number;
                 pattern?: string;
                 enum?: string[];
             }, {
-                min?: number;
                 max?: number;
+                min?: number;
                 pattern?: string;
                 enum?: string[];
             }>>;
         }, "strip", z.ZodTypeAny, {
-            type?: "string" | "number" | "boolean" | "object" | "date" | "array";
             name?: string;
+            type?: "string" | "number" | "boolean" | "object" | "date" | "array";
             required?: boolean;
             validation?: {
-                min?: number;
                 max?: number;
+                min?: number;
                 pattern?: string;
                 enum?: string[];
             };
         }, {
-            type?: "string" | "number" | "boolean" | "object" | "date" | "array";
             name?: string;
+            type?: "string" | "number" | "boolean" | "object" | "date" | "array";
             required?: boolean;
             validation?: {
-                min?: number;
                 max?: number;
+                min?: number;
                 pattern?: string;
                 enum?: string[];
             };
@@ -166,12 +171,12 @@ export declare const ToolConfigSchema: z.ZodObject<{
         allowAnonymous: z.ZodDefault<z.ZodBoolean>;
     }, "strip", z.ZodTypeAny, {
         fields?: {
-            type?: "string" | "number" | "boolean" | "object" | "date" | "array";
             name?: string;
+            type?: "string" | "number" | "boolean" | "object" | "date" | "array";
             required?: boolean;
             validation?: {
-                min?: number;
                 max?: number;
+                min?: number;
                 pattern?: string;
                 enum?: string[];
             };
@@ -180,12 +185,12 @@ export declare const ToolConfigSchema: z.ZodObject<{
         allowAnonymous?: boolean;
     }, {
         fields?: {
-            type?: "string" | "number" | "boolean" | "object" | "date" | "array";
             name?: string;
+            type?: "string" | "number" | "boolean" | "object" | "date" | "array";
             required?: boolean;
             validation?: {
-                min?: number;
                 max?: number;
+                min?: number;
                 pattern?: string;
                 enum?: string[];
             };
@@ -199,21 +204,26 @@ export declare const ToolConfigSchema: z.ZodObject<{
     trackingEnabled: z.ZodDefault<z.ZodBoolean>;
     allowAnalyticsOptOut: z.ZodDefault<z.ZodBoolean>;
 }, "strip", z.ZodTypeAny, {
-    theme?: "auto" | "light" | "dark";
-    backgroundColor?: string;
     autoSave?: boolean;
+    backgroundColor?: string;
+    theme?: "dark" | "light" | "auto";
     primaryColor?: string;
     allowMultipleSubmissions?: boolean;
     requireAuthentication?: boolean;
     showProgressBar?: boolean;
+    enableRealTimeUpdates?: boolean;
+    maxResponseLength?: number;
+    customCSS?: string;
+    headerText?: string;
+    footerText?: string;
     dataSchema?: {
         fields?: {
-            type?: "string" | "number" | "boolean" | "object" | "date" | "array";
             name?: string;
+            type?: "string" | "number" | "boolean" | "object" | "date" | "array";
             required?: boolean;
             validation?: {
-                min?: number;
                 max?: number;
+                min?: number;
                 pattern?: string;
                 enum?: string[];
             };
@@ -227,21 +237,26 @@ export declare const ToolConfigSchema: z.ZodObject<{
     trackingEnabled?: boolean;
     allowAnalyticsOptOut?: boolean;
 }, {
-    theme?: "auto" | "light" | "dark";
-    backgroundColor?: string;
     autoSave?: boolean;
+    backgroundColor?: string;
+    theme?: "dark" | "light" | "auto";
     primaryColor?: string;
     allowMultipleSubmissions?: boolean;
     requireAuthentication?: boolean;
     showProgressBar?: boolean;
+    enableRealTimeUpdates?: boolean;
+    maxResponseLength?: number;
+    customCSS?: string;
+    headerText?: string;
+    footerText?: string;
     dataSchema?: {
         fields?: {
-            type?: "string" | "number" | "boolean" | "object" | "date" | "array";
             name?: string;
+            type?: "string" | "number" | "boolean" | "object" | "date" | "array";
             required?: boolean;
             validation?: {
-                min?: number;
                 max?: number;
+                min?: number;
                 pattern?: string;
                 enum?: string[];
             };
@@ -288,13 +303,13 @@ export declare const ToolSchema: z.ZodObject<{
         addedAt: z.ZodDate;
         addedBy: z.ZodString;
     }, "strip", z.ZodTypeAny, {
-        userId?: string;
         permission?: "view" | "edit" | "comment";
+        userId?: string;
         addedAt?: Date;
         addedBy?: string;
     }, {
-        userId?: string;
         permission?: "view" | "edit" | "comment";
+        userId?: string;
         addedAt?: Date;
         addedBy?: string;
     }>, "many">>;
@@ -332,47 +347,47 @@ export declare const ToolSchema: z.ZodObject<{
             width: z.ZodOptional<z.ZodNumber>;
             height: z.ZodOptional<z.ZodNumber>;
         }, "strip", z.ZodTypeAny, {
-            x?: number;
-            y?: number;
             height?: number;
             width?: number;
+            x?: number;
+            y?: number;
         }, {
-            x?: number;
-            y?: number;
             height?: number;
             width?: number;
+            x?: number;
+            y?: number;
         }>;
         parentId: z.ZodOptional<z.ZodString>;
         order: z.ZodNumber;
         isVisible: z.ZodDefault<z.ZodBoolean>;
         isLocked: z.ZodDefault<z.ZodBoolean>;
     }, "strip", z.ZodTypeAny, {
-        order?: number;
+        id?: string;
         position?: {
-            x?: number;
-            y?: number;
             height?: number;
             width?: number;
+            x?: number;
+            y?: number;
         };
-        id?: string;
-        elementId?: string;
-        config?: unknown;
-        parentId?: string;
+        order?: number;
         isVisible?: boolean;
+        config?: unknown;
+        elementId?: string;
+        parentId?: string;
         isLocked?: boolean;
     }, {
-        order?: number;
+        id?: string;
         position?: {
-            x?: number;
-            y?: number;
             height?: number;
             width?: number;
+            x?: number;
+            y?: number;
         };
-        id?: string;
-        elementId?: string;
-        config?: unknown;
-        parentId?: string;
+        order?: number;
         isVisible?: boolean;
+        config?: unknown;
+        elementId?: string;
+        parentId?: string;
         isLocked?: boolean;
     }>, "many">;
     config: z.ZodDefault<z.ZodObject<{
@@ -383,6 +398,11 @@ export declare const ToolSchema: z.ZodObject<{
         requireAuthentication: z.ZodDefault<z.ZodBoolean>;
         showProgressBar: z.ZodDefault<z.ZodBoolean>;
         autoSave: z.ZodDefault<z.ZodBoolean>;
+        enableRealTimeUpdates: z.ZodDefault<z.ZodBoolean>;
+        maxResponseLength: z.ZodDefault<z.ZodNumber>;
+        customCSS: z.ZodDefault<z.ZodString>;
+        headerText: z.ZodDefault<z.ZodString>;
+        footerText: z.ZodDefault<z.ZodString>;
         dataSchema: z.ZodOptional<z.ZodObject<{
             fields: z.ZodArray<z.ZodObject<{
                 name: z.ZodString;
@@ -394,33 +414,33 @@ export declare const ToolSchema: z.ZodObject<{
                     pattern: z.ZodOptional<z.ZodString>;
                     enum: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
                 }, "strip", z.ZodTypeAny, {
-                    min?: number;
                     max?: number;
+                    min?: number;
                     pattern?: string;
                     enum?: string[];
                 }, {
-                    min?: number;
                     max?: number;
+                    min?: number;
                     pattern?: string;
                     enum?: string[];
                 }>>;
             }, "strip", z.ZodTypeAny, {
-                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
                 name?: string;
+                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
                 required?: boolean;
                 validation?: {
-                    min?: number;
                     max?: number;
+                    min?: number;
                     pattern?: string;
                     enum?: string[];
                 };
             }, {
-                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
                 name?: string;
+                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
                 required?: boolean;
                 validation?: {
-                    min?: number;
                     max?: number;
+                    min?: number;
                     pattern?: string;
                     enum?: string[];
                 };
@@ -429,12 +449,12 @@ export declare const ToolSchema: z.ZodObject<{
             allowAnonymous: z.ZodDefault<z.ZodBoolean>;
         }, "strip", z.ZodTypeAny, {
             fields?: {
-                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
                 name?: string;
+                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
                 required?: boolean;
                 validation?: {
-                    min?: number;
                     max?: number;
+                    min?: number;
                     pattern?: string;
                     enum?: string[];
                 };
@@ -443,12 +463,12 @@ export declare const ToolSchema: z.ZodObject<{
             allowAnonymous?: boolean;
         }, {
             fields?: {
-                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
                 name?: string;
+                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
                 required?: boolean;
                 validation?: {
-                    min?: number;
                     max?: number;
+                    min?: number;
                     pattern?: string;
                     enum?: string[];
                 };
@@ -462,21 +482,26 @@ export declare const ToolSchema: z.ZodObject<{
         trackingEnabled: z.ZodDefault<z.ZodBoolean>;
         allowAnalyticsOptOut: z.ZodDefault<z.ZodBoolean>;
     }, "strip", z.ZodTypeAny, {
-        theme?: "auto" | "light" | "dark";
-        backgroundColor?: string;
         autoSave?: boolean;
+        backgroundColor?: string;
+        theme?: "dark" | "light" | "auto";
         primaryColor?: string;
         allowMultipleSubmissions?: boolean;
         requireAuthentication?: boolean;
         showProgressBar?: boolean;
+        enableRealTimeUpdates?: boolean;
+        maxResponseLength?: number;
+        customCSS?: string;
+        headerText?: string;
+        footerText?: string;
         dataSchema?: {
             fields?: {
-                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
                 name?: string;
+                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
                 required?: boolean;
                 validation?: {
-                    min?: number;
                     max?: number;
+                    min?: number;
                     pattern?: string;
                     enum?: string[];
                 };
@@ -490,21 +515,26 @@ export declare const ToolSchema: z.ZodObject<{
         trackingEnabled?: boolean;
         allowAnalyticsOptOut?: boolean;
     }, {
-        theme?: "auto" | "light" | "dark";
-        backgroundColor?: string;
         autoSave?: boolean;
+        backgroundColor?: string;
+        theme?: "dark" | "light" | "auto";
         primaryColor?: string;
         allowMultipleSubmissions?: boolean;
         requireAuthentication?: boolean;
         showProgressBar?: boolean;
+        enableRealTimeUpdates?: boolean;
+        maxResponseLength?: number;
+        customCSS?: string;
+        headerText?: string;
+        footerText?: string;
         dataSchema?: {
             fields?: {
-                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
                 name?: string;
+                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
                 required?: boolean;
                 validation?: {
-                    min?: number;
                     max?: number;
+                    min?: number;
                     pattern?: string;
                     enum?: string[];
                 };
@@ -525,17 +555,17 @@ export declare const ToolSchema: z.ZodObject<{
         category: z.ZodOptional<z.ZodString>;
         language: z.ZodDefault<z.ZodString>;
     }, "strip", z.ZodTypeAny, {
-        difficulty?: "beginner" | "intermediate" | "advanced";
-        tags?: string[];
+        language?: string;
         category?: string;
         estimatedTime?: number;
-        language?: string;
+        difficulty?: "beginner" | "intermediate" | "advanced";
+        tags?: string[];
     }, {
-        difficulty?: "beginner" | "intermediate" | "advanced";
-        tags?: string[];
+        language?: string;
         category?: string;
         estimatedTime?: number;
-        language?: string;
+        difficulty?: "beginner" | "intermediate" | "advanced";
+        tags?: string[];
     }>>;
     isPublic: z.ZodDefault<z.ZodBoolean>;
     shareToken: z.ZodOptional<z.ZodString>;
@@ -552,40 +582,38 @@ export declare const ToolSchema: z.ZodObject<{
     publishedAt: z.ZodOptional<z.ZodDate>;
     lastUsedAt: z.ZodOptional<z.ZodDate>;
 }, "strip", z.ZodTypeAny, {
+    name?: string;
     id?: string;
+    status?: "preview" | "draft" | "published";
     metadata?: {
-        difficulty?: "beginner" | "intermediate" | "advanced";
-        tags?: string[];
+        language?: string;
         category?: string;
         estimatedTime?: number;
-        language?: string;
+        difficulty?: "beginner" | "intermediate" | "advanced";
+        tags?: string[];
     };
-    name?: string;
-    updatedAt?: Date;
-    status?: "published" | "preview" | "draft";
     description?: string;
-    collaborators?: {
-        userId?: string;
-        permission?: "view" | "edit" | "comment";
-        addedAt?: Date;
-        addedBy?: string;
-    }[];
     config?: {
-        theme?: "auto" | "light" | "dark";
-        backgroundColor?: string;
         autoSave?: boolean;
+        backgroundColor?: string;
+        theme?: "dark" | "light" | "auto";
         primaryColor?: string;
         allowMultipleSubmissions?: boolean;
         requireAuthentication?: boolean;
         showProgressBar?: boolean;
+        enableRealTimeUpdates?: boolean;
+        maxResponseLength?: number;
+        customCSS?: string;
+        headerText?: string;
+        footerText?: string;
         dataSchema?: {
             fields?: {
-                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
                 name?: string;
+                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
                 required?: boolean;
                 validation?: {
-                    min?: number;
                     max?: number;
+                    min?: number;
                     pattern?: string;
                     enum?: string[];
                 };
@@ -599,7 +627,15 @@ export declare const ToolSchema: z.ZodObject<{
         trackingEnabled?: boolean;
         allowAnalyticsOptOut?: boolean;
     };
+    spaceId?: string;
+    collaborators?: {
+        permission?: "view" | "edit" | "comment";
+        userId?: string;
+        addedAt?: Date;
+        addedBy?: string;
+    }[];
     createdAt?: Date;
+    updatedAt?: Date;
     ownerId?: string;
     currentVersion?: string;
     versions?: {
@@ -611,18 +647,18 @@ export declare const ToolSchema: z.ZodObject<{
         deprecatedAt?: Date;
     }[];
     elements?: {
-        order?: number;
+        id?: string;
         position?: {
-            x?: number;
-            y?: number;
             height?: number;
             width?: number;
+            x?: number;
+            y?: number;
         };
-        id?: string;
-        elementId?: string;
-        config?: unknown;
-        parentId?: string;
+        order?: number;
         isVisible?: boolean;
+        config?: unknown;
+        elementId?: string;
+        parentId?: string;
         isLocked?: boolean;
     }[];
     isPublic?: boolean;
@@ -633,45 +669,42 @@ export declare const ToolSchema: z.ZodObject<{
     useCount?: number;
     rating?: number;
     ratingCount?: number;
-    spaceId?: string;
     isSpaceTool?: boolean;
     publishedAt?: Date;
     lastUsedAt?: Date;
 }, {
+    name?: string;
     id?: string;
+    status?: "preview" | "draft" | "published";
     metadata?: {
-        difficulty?: "beginner" | "intermediate" | "advanced";
-        tags?: string[];
+        language?: string;
         category?: string;
         estimatedTime?: number;
-        language?: string;
+        difficulty?: "beginner" | "intermediate" | "advanced";
+        tags?: string[];
     };
-    name?: string;
-    updatedAt?: Date;
-    status?: "published" | "preview" | "draft";
     description?: string;
-    collaborators?: {
-        userId?: string;
-        permission?: "view" | "edit" | "comment";
-        addedAt?: Date;
-        addedBy?: string;
-    }[];
     config?: {
-        theme?: "auto" | "light" | "dark";
-        backgroundColor?: string;
         autoSave?: boolean;
+        backgroundColor?: string;
+        theme?: "dark" | "light" | "auto";
         primaryColor?: string;
         allowMultipleSubmissions?: boolean;
         requireAuthentication?: boolean;
         showProgressBar?: boolean;
+        enableRealTimeUpdates?: boolean;
+        maxResponseLength?: number;
+        customCSS?: string;
+        headerText?: string;
+        footerText?: string;
         dataSchema?: {
             fields?: {
-                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
                 name?: string;
+                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
                 required?: boolean;
                 validation?: {
-                    min?: number;
                     max?: number;
+                    min?: number;
                     pattern?: string;
                     enum?: string[];
                 };
@@ -685,7 +718,15 @@ export declare const ToolSchema: z.ZodObject<{
         trackingEnabled?: boolean;
         allowAnalyticsOptOut?: boolean;
     };
+    spaceId?: string;
+    collaborators?: {
+        permission?: "view" | "edit" | "comment";
+        userId?: string;
+        addedAt?: Date;
+        addedBy?: string;
+    }[];
     createdAt?: Date;
+    updatedAt?: Date;
     ownerId?: string;
     currentVersion?: string;
     versions?: {
@@ -697,18 +738,18 @@ export declare const ToolSchema: z.ZodObject<{
         deprecatedAt?: Date;
     }[];
     elements?: {
-        order?: number;
+        id?: string;
         position?: {
-            x?: number;
-            y?: number;
             height?: number;
             width?: number;
+            x?: number;
+            y?: number;
         };
-        id?: string;
-        elementId?: string;
-        config?: unknown;
-        parentId?: string;
+        order?: number;
         isVisible?: boolean;
+        config?: unknown;
+        elementId?: string;
+        parentId?: string;
         isLocked?: boolean;
     }[];
     isPublic?: boolean;
@@ -719,7 +760,6 @@ export declare const ToolSchema: z.ZodObject<{
     useCount?: number;
     rating?: number;
     ratingCount?: number;
-    spaceId?: string;
     isSpaceTool?: boolean;
     publishedAt?: Date;
     lastUsedAt?: Date;
@@ -742,6 +782,11 @@ export declare const CreateToolSchema: z.ZodObject<{
         requireAuthentication: z.ZodOptional<z.ZodDefault<z.ZodBoolean>>;
         showProgressBar: z.ZodOptional<z.ZodDefault<z.ZodBoolean>>;
         autoSave: z.ZodOptional<z.ZodDefault<z.ZodBoolean>>;
+        enableRealTimeUpdates: z.ZodOptional<z.ZodDefault<z.ZodBoolean>>;
+        maxResponseLength: z.ZodOptional<z.ZodDefault<z.ZodNumber>>;
+        customCSS: z.ZodOptional<z.ZodDefault<z.ZodString>>;
+        headerText: z.ZodOptional<z.ZodDefault<z.ZodString>>;
+        footerText: z.ZodOptional<z.ZodDefault<z.ZodString>>;
         dataSchema: z.ZodOptional<z.ZodOptional<z.ZodObject<{
             fields: z.ZodArray<z.ZodObject<{
                 name: z.ZodString;
@@ -753,33 +798,33 @@ export declare const CreateToolSchema: z.ZodObject<{
                     pattern: z.ZodOptional<z.ZodString>;
                     enum: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
                 }, "strip", z.ZodTypeAny, {
-                    min?: number;
                     max?: number;
+                    min?: number;
                     pattern?: string;
                     enum?: string[];
                 }, {
-                    min?: number;
                     max?: number;
+                    min?: number;
                     pattern?: string;
                     enum?: string[];
                 }>>;
             }, "strip", z.ZodTypeAny, {
-                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
                 name?: string;
+                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
                 required?: boolean;
                 validation?: {
-                    min?: number;
                     max?: number;
+                    min?: number;
                     pattern?: string;
                     enum?: string[];
                 };
             }, {
-                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
                 name?: string;
+                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
                 required?: boolean;
                 validation?: {
-                    min?: number;
                     max?: number;
+                    min?: number;
                     pattern?: string;
                     enum?: string[];
                 };
@@ -788,12 +833,12 @@ export declare const CreateToolSchema: z.ZodObject<{
             allowAnonymous: z.ZodDefault<z.ZodBoolean>;
         }, "strip", z.ZodTypeAny, {
             fields?: {
-                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
                 name?: string;
+                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
                 required?: boolean;
                 validation?: {
-                    min?: number;
                     max?: number;
+                    min?: number;
                     pattern?: string;
                     enum?: string[];
                 };
@@ -802,12 +847,12 @@ export declare const CreateToolSchema: z.ZodObject<{
             allowAnonymous?: boolean;
         }, {
             fields?: {
-                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
                 name?: string;
+                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
                 required?: boolean;
                 validation?: {
-                    min?: number;
                     max?: number;
+                    min?: number;
                     pattern?: string;
                     enum?: string[];
                 };
@@ -821,21 +866,26 @@ export declare const CreateToolSchema: z.ZodObject<{
         trackingEnabled: z.ZodOptional<z.ZodDefault<z.ZodBoolean>>;
         allowAnalyticsOptOut: z.ZodOptional<z.ZodDefault<z.ZodBoolean>>;
     }, "strip", z.ZodTypeAny, {
-        theme?: "auto" | "light" | "dark";
-        backgroundColor?: string;
         autoSave?: boolean;
+        backgroundColor?: string;
+        theme?: "dark" | "light" | "auto";
         primaryColor?: string;
         allowMultipleSubmissions?: boolean;
         requireAuthentication?: boolean;
         showProgressBar?: boolean;
+        enableRealTimeUpdates?: boolean;
+        maxResponseLength?: number;
+        customCSS?: string;
+        headerText?: string;
+        footerText?: string;
         dataSchema?: {
             fields?: {
-                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
                 name?: string;
+                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
                 required?: boolean;
                 validation?: {
-                    min?: number;
                     max?: number;
+                    min?: number;
                     pattern?: string;
                     enum?: string[];
                 };
@@ -849,21 +899,26 @@ export declare const CreateToolSchema: z.ZodObject<{
         trackingEnabled?: boolean;
         allowAnalyticsOptOut?: boolean;
     }, {
-        theme?: "auto" | "light" | "dark";
-        backgroundColor?: string;
         autoSave?: boolean;
+        backgroundColor?: string;
+        theme?: "dark" | "light" | "auto";
         primaryColor?: string;
         allowMultipleSubmissions?: boolean;
         requireAuthentication?: boolean;
         showProgressBar?: boolean;
+        enableRealTimeUpdates?: boolean;
+        maxResponseLength?: number;
+        customCSS?: string;
+        headerText?: string;
+        footerText?: string;
         dataSchema?: {
             fields?: {
-                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
                 name?: string;
+                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
                 required?: boolean;
                 validation?: {
-                    min?: number;
                     max?: number;
+                    min?: number;
                     pattern?: string;
                     enum?: string[];
                 };
@@ -884,44 +939,49 @@ export declare const CreateToolSchema: z.ZodObject<{
         category: z.ZodOptional<z.ZodOptional<z.ZodString>>;
         language: z.ZodOptional<z.ZodDefault<z.ZodString>>;
     }, "strip", z.ZodTypeAny, {
-        difficulty?: "beginner" | "intermediate" | "advanced";
-        tags?: string[];
+        language?: string;
         category?: string;
         estimatedTime?: number;
-        language?: string;
+        difficulty?: "beginner" | "intermediate" | "advanced";
+        tags?: string[];
     }, {
-        difficulty?: "beginner" | "intermediate" | "advanced";
-        tags?: string[];
+        language?: string;
         category?: string;
         estimatedTime?: number;
-        language?: string;
+        difficulty?: "beginner" | "intermediate" | "advanced";
+        tags?: string[];
     }>>;
 }, "strip", z.ZodTypeAny, {
+    name?: string;
     metadata?: {
-        difficulty?: "beginner" | "intermediate" | "advanced";
-        tags?: string[];
+        language?: string;
         category?: string;
         estimatedTime?: number;
-        language?: string;
+        difficulty?: "beginner" | "intermediate" | "advanced";
+        tags?: string[];
     };
-    name?: string;
     description?: string;
     config?: {
-        theme?: "auto" | "light" | "dark";
-        backgroundColor?: string;
         autoSave?: boolean;
+        backgroundColor?: string;
+        theme?: "dark" | "light" | "auto";
         primaryColor?: string;
         allowMultipleSubmissions?: boolean;
         requireAuthentication?: boolean;
         showProgressBar?: boolean;
+        enableRealTimeUpdates?: boolean;
+        maxResponseLength?: number;
+        customCSS?: string;
+        headerText?: string;
+        footerText?: string;
         dataSchema?: {
             fields?: {
-                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
                 name?: string;
+                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
                 required?: boolean;
                 validation?: {
-                    min?: number;
                     max?: number;
+                    min?: number;
                     pattern?: string;
                     enum?: string[];
                 };
@@ -938,31 +998,36 @@ export declare const CreateToolSchema: z.ZodObject<{
     spaceId?: string;
     isSpaceTool?: boolean;
 }, {
+    name?: string;
     metadata?: {
-        difficulty?: "beginner" | "intermediate" | "advanced";
-        tags?: string[];
+        language?: string;
         category?: string;
         estimatedTime?: number;
-        language?: string;
+        difficulty?: "beginner" | "intermediate" | "advanced";
+        tags?: string[];
     };
-    name?: string;
     description?: string;
     config?: {
-        theme?: "auto" | "light" | "dark";
-        backgroundColor?: string;
         autoSave?: boolean;
+        backgroundColor?: string;
+        theme?: "dark" | "light" | "auto";
         primaryColor?: string;
         allowMultipleSubmissions?: boolean;
         requireAuthentication?: boolean;
         showProgressBar?: boolean;
+        enableRealTimeUpdates?: boolean;
+        maxResponseLength?: number;
+        customCSS?: string;
+        headerText?: string;
+        footerText?: string;
         dataSchema?: {
             fields?: {
-                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
                 name?: string;
+                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
                 required?: boolean;
                 validation?: {
-                    min?: number;
                     max?: number;
+                    min?: number;
                     pattern?: string;
                     enum?: string[];
                 };
@@ -993,47 +1058,47 @@ export declare const UpdateToolSchema: z.ZodObject<{
             width: z.ZodOptional<z.ZodNumber>;
             height: z.ZodOptional<z.ZodNumber>;
         }, "strip", z.ZodTypeAny, {
-            x?: number;
-            y?: number;
             height?: number;
             width?: number;
+            x?: number;
+            y?: number;
         }, {
-            x?: number;
-            y?: number;
             height?: number;
             width?: number;
+            x?: number;
+            y?: number;
         }>;
         parentId: z.ZodOptional<z.ZodString>;
         order: z.ZodNumber;
         isVisible: z.ZodDefault<z.ZodBoolean>;
         isLocked: z.ZodDefault<z.ZodBoolean>;
     }, "strip", z.ZodTypeAny, {
-        order?: number;
+        id?: string;
         position?: {
-            x?: number;
-            y?: number;
             height?: number;
             width?: number;
+            x?: number;
+            y?: number;
         };
-        id?: string;
-        elementId?: string;
-        config?: unknown;
-        parentId?: string;
+        order?: number;
         isVisible?: boolean;
+        config?: unknown;
+        elementId?: string;
+        parentId?: string;
         isLocked?: boolean;
     }, {
-        order?: number;
+        id?: string;
         position?: {
-            x?: number;
-            y?: number;
             height?: number;
             width?: number;
+            x?: number;
+            y?: number;
         };
-        id?: string;
-        elementId?: string;
-        config?: unknown;
-        parentId?: string;
+        order?: number;
         isVisible?: boolean;
+        config?: unknown;
+        elementId?: string;
+        parentId?: string;
         isLocked?: boolean;
     }>, "many">>;
     config: z.ZodOptional<z.ZodObject<{
@@ -1044,6 +1109,11 @@ export declare const UpdateToolSchema: z.ZodObject<{
         requireAuthentication: z.ZodOptional<z.ZodDefault<z.ZodBoolean>>;
         showProgressBar: z.ZodOptional<z.ZodDefault<z.ZodBoolean>>;
         autoSave: z.ZodOptional<z.ZodDefault<z.ZodBoolean>>;
+        enableRealTimeUpdates: z.ZodOptional<z.ZodDefault<z.ZodBoolean>>;
+        maxResponseLength: z.ZodOptional<z.ZodDefault<z.ZodNumber>>;
+        customCSS: z.ZodOptional<z.ZodDefault<z.ZodString>>;
+        headerText: z.ZodOptional<z.ZodDefault<z.ZodString>>;
+        footerText: z.ZodOptional<z.ZodDefault<z.ZodString>>;
         dataSchema: z.ZodOptional<z.ZodOptional<z.ZodObject<{
             fields: z.ZodArray<z.ZodObject<{
                 name: z.ZodString;
@@ -1055,33 +1125,33 @@ export declare const UpdateToolSchema: z.ZodObject<{
                     pattern: z.ZodOptional<z.ZodString>;
                     enum: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
                 }, "strip", z.ZodTypeAny, {
-                    min?: number;
                     max?: number;
+                    min?: number;
                     pattern?: string;
                     enum?: string[];
                 }, {
-                    min?: number;
                     max?: number;
+                    min?: number;
                     pattern?: string;
                     enum?: string[];
                 }>>;
             }, "strip", z.ZodTypeAny, {
-                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
                 name?: string;
+                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
                 required?: boolean;
                 validation?: {
-                    min?: number;
                     max?: number;
+                    min?: number;
                     pattern?: string;
                     enum?: string[];
                 };
             }, {
-                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
                 name?: string;
+                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
                 required?: boolean;
                 validation?: {
-                    min?: number;
                     max?: number;
+                    min?: number;
                     pattern?: string;
                     enum?: string[];
                 };
@@ -1090,12 +1160,12 @@ export declare const UpdateToolSchema: z.ZodObject<{
             allowAnonymous: z.ZodDefault<z.ZodBoolean>;
         }, "strip", z.ZodTypeAny, {
             fields?: {
-                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
                 name?: string;
+                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
                 required?: boolean;
                 validation?: {
-                    min?: number;
                     max?: number;
+                    min?: number;
                     pattern?: string;
                     enum?: string[];
                 };
@@ -1104,12 +1174,12 @@ export declare const UpdateToolSchema: z.ZodObject<{
             allowAnonymous?: boolean;
         }, {
             fields?: {
-                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
                 name?: string;
+                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
                 required?: boolean;
                 validation?: {
-                    min?: number;
                     max?: number;
+                    min?: number;
                     pattern?: string;
                     enum?: string[];
                 };
@@ -1123,21 +1193,26 @@ export declare const UpdateToolSchema: z.ZodObject<{
         trackingEnabled: z.ZodOptional<z.ZodDefault<z.ZodBoolean>>;
         allowAnalyticsOptOut: z.ZodOptional<z.ZodDefault<z.ZodBoolean>>;
     }, "strip", z.ZodTypeAny, {
-        theme?: "auto" | "light" | "dark";
-        backgroundColor?: string;
         autoSave?: boolean;
+        backgroundColor?: string;
+        theme?: "dark" | "light" | "auto";
         primaryColor?: string;
         allowMultipleSubmissions?: boolean;
         requireAuthentication?: boolean;
         showProgressBar?: boolean;
+        enableRealTimeUpdates?: boolean;
+        maxResponseLength?: number;
+        customCSS?: string;
+        headerText?: string;
+        footerText?: string;
         dataSchema?: {
             fields?: {
-                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
                 name?: string;
+                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
                 required?: boolean;
                 validation?: {
-                    min?: number;
                     max?: number;
+                    min?: number;
                     pattern?: string;
                     enum?: string[];
                 };
@@ -1151,21 +1226,26 @@ export declare const UpdateToolSchema: z.ZodObject<{
         trackingEnabled?: boolean;
         allowAnalyticsOptOut?: boolean;
     }, {
-        theme?: "auto" | "light" | "dark";
-        backgroundColor?: string;
         autoSave?: boolean;
+        backgroundColor?: string;
+        theme?: "dark" | "light" | "auto";
         primaryColor?: string;
         allowMultipleSubmissions?: boolean;
         requireAuthentication?: boolean;
         showProgressBar?: boolean;
+        enableRealTimeUpdates?: boolean;
+        maxResponseLength?: number;
+        customCSS?: string;
+        headerText?: string;
+        footerText?: string;
         dataSchema?: {
             fields?: {
-                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
                 name?: string;
+                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
                 required?: boolean;
                 validation?: {
-                    min?: number;
                     max?: number;
+                    min?: number;
                     pattern?: string;
                     enum?: string[];
                 };
@@ -1186,45 +1266,50 @@ export declare const UpdateToolSchema: z.ZodObject<{
         category: z.ZodOptional<z.ZodOptional<z.ZodString>>;
         language: z.ZodOptional<z.ZodDefault<z.ZodString>>;
     }, "strip", z.ZodTypeAny, {
-        difficulty?: "beginner" | "intermediate" | "advanced";
-        tags?: string[];
+        language?: string;
         category?: string;
         estimatedTime?: number;
-        language?: string;
+        difficulty?: "beginner" | "intermediate" | "advanced";
+        tags?: string[];
     }, {
-        difficulty?: "beginner" | "intermediate" | "advanced";
-        tags?: string[];
+        language?: string;
         category?: string;
         estimatedTime?: number;
-        language?: string;
+        difficulty?: "beginner" | "intermediate" | "advanced";
+        tags?: string[];
     }>>;
     changelog: z.ZodOptional<z.ZodString>;
 }, "strip", z.ZodTypeAny, {
+    name?: string;
     metadata?: {
-        difficulty?: "beginner" | "intermediate" | "advanced";
-        tags?: string[];
+        language?: string;
         category?: string;
         estimatedTime?: number;
-        language?: string;
+        difficulty?: "beginner" | "intermediate" | "advanced";
+        tags?: string[];
     };
-    name?: string;
     description?: string;
     config?: {
-        theme?: "auto" | "light" | "dark";
-        backgroundColor?: string;
         autoSave?: boolean;
+        backgroundColor?: string;
+        theme?: "dark" | "light" | "auto";
         primaryColor?: string;
         allowMultipleSubmissions?: boolean;
         requireAuthentication?: boolean;
         showProgressBar?: boolean;
+        enableRealTimeUpdates?: boolean;
+        maxResponseLength?: number;
+        customCSS?: string;
+        headerText?: string;
+        footerText?: string;
         dataSchema?: {
             fields?: {
-                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
                 name?: string;
+                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
                 required?: boolean;
                 validation?: {
-                    min?: number;
                     max?: number;
+                    min?: number;
                     pattern?: string;
                     enum?: string[];
                 };
@@ -1240,46 +1325,51 @@ export declare const UpdateToolSchema: z.ZodObject<{
     };
     changelog?: string;
     elements?: {
-        order?: number;
+        id?: string;
         position?: {
-            x?: number;
-            y?: number;
             height?: number;
             width?: number;
+            x?: number;
+            y?: number;
         };
-        id?: string;
-        elementId?: string;
-        config?: unknown;
-        parentId?: string;
+        order?: number;
         isVisible?: boolean;
+        config?: unknown;
+        elementId?: string;
+        parentId?: string;
         isLocked?: boolean;
     }[];
 }, {
+    name?: string;
     metadata?: {
-        difficulty?: "beginner" | "intermediate" | "advanced";
-        tags?: string[];
+        language?: string;
         category?: string;
         estimatedTime?: number;
-        language?: string;
+        difficulty?: "beginner" | "intermediate" | "advanced";
+        tags?: string[];
     };
-    name?: string;
     description?: string;
     config?: {
-        theme?: "auto" | "light" | "dark";
-        backgroundColor?: string;
         autoSave?: boolean;
+        backgroundColor?: string;
+        theme?: "dark" | "light" | "auto";
         primaryColor?: string;
         allowMultipleSubmissions?: boolean;
         requireAuthentication?: boolean;
         showProgressBar?: boolean;
+        enableRealTimeUpdates?: boolean;
+        maxResponseLength?: number;
+        customCSS?: string;
+        headerText?: string;
+        footerText?: string;
         dataSchema?: {
             fields?: {
-                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
                 name?: string;
+                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
                 required?: boolean;
                 validation?: {
-                    min?: number;
                     max?: number;
+                    min?: number;
                     pattern?: string;
                     enum?: string[];
                 };
@@ -1295,18 +1385,18 @@ export declare const UpdateToolSchema: z.ZodObject<{
     };
     changelog?: string;
     elements?: {
-        order?: number;
+        id?: string;
         position?: {
-            x?: number;
-            y?: number;
             height?: number;
             width?: number;
+            x?: number;
+            y?: number;
         };
-        id?: string;
-        elementId?: string;
-        config?: unknown;
-        parentId?: string;
+        order?: number;
         isVisible?: boolean;
+        config?: unknown;
+        elementId?: string;
+        parentId?: string;
         isLocked?: boolean;
     }[];
 }>;
@@ -1353,7 +1443,7 @@ export declare const ToolDataRecordSchema: z.ZodObject<{
     isValid?: boolean;
     validationErrors?: string[];
     completionTime?: number;
-    deviceType?: "mobile" | "tablet" | "desktop";
+    deviceType?: "mobile" | "desktop" | "tablet";
     referrer?: string;
 }, {
     id?: string;
@@ -1368,7 +1458,7 @@ export declare const ToolDataRecordSchema: z.ZodObject<{
     isValid?: boolean;
     validationErrors?: string[];
     completionTime?: number;
-    deviceType?: "mobile" | "tablet" | "desktop";
+    deviceType?: "mobile" | "desktop" | "tablet";
     referrer?: string;
 }>;
 export type ToolDataRecord = z.infer<typeof ToolDataRecordSchema>;
@@ -1387,7 +1477,7 @@ export declare const ToolUsageEventSchema: z.ZodObject<{
     sessionId?: string;
     timestamp?: Date;
     toolId?: string;
-    eventType?: "view" | "start" | "complete" | "abandon" | "share" | "fork";
+    eventType?: "view" | "start" | "share" | "complete" | "abandon" | "fork";
 }, {
     id?: string;
     metadata?: Record<string, any>;
@@ -1395,7 +1485,7 @@ export declare const ToolUsageEventSchema: z.ZodObject<{
     sessionId?: string;
     timestamp?: Date;
     toolId?: string;
-    eventType?: "view" | "start" | "complete" | "abandon" | "share" | "fork";
+    eventType?: "view" | "start" | "share" | "complete" | "abandon" | "fork";
 }>;
 export type ToolUsageEvent = z.infer<typeof ToolUsageEventSchema>;
 export declare const createToolDefaults: (ownerId: string, data: CreateTool) => Omit<Tool, "id" | "createdAt" | "updatedAt">;

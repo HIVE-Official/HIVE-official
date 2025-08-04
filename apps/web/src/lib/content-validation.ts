@@ -1,4 +1,4 @@
-import { type Post, type PostType } from '@hive/core';
+import { type Post } from '@hive/core';
 
 /**
  * Content validation system for tool-generated content enforcement

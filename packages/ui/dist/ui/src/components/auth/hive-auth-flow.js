@@ -1,8 +1,8 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, createContext, useContext } from 'react';
-import { cn } from '../../lib/utils';
-import { HiveButton } from '../hive-button';
+import { cn } from '../../lib/utils.js';
+import { HiveButton } from '../hive-button.js';
 import { Check, Mail, ArrowLeft, ArrowRight, Loader2, AlertCircle } from 'lucide-react';
 const AuthContext = createContext(null);
 export function useAuth() {

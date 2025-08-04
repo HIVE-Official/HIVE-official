@@ -1,16 +1,23 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import React, { useState } from 'react';
-import { cn } from '../../lib/utils';
-import { Home, Compass, Zap, Calendar, BookOpen, User, Settings, ChevronRight, ChevronDown } from 'lucide-react';
-import { Button } from './button';
+import { cn } from '../../lib/utils.js';
+import { Home, Compass, Zap, Calendar, User, Settings, ChevronRight, ChevronDown } from 'lucide-react';
+import { Button } from './button.js';
 const navigationItems = [
     {
         id: 'feed',
         icon: Home,
         label: 'Feed',
-        href: '/',
-        matchPaths: ['/']
+        href: '/feed',
+        matchPaths: ['/feed']
+    },
+    {
+        id: 'profile',
+        icon: User,
+        label: 'Profile',
+        href: '/profile',
+        matchPaths: ['/profile']
     },
     {
         id: 'spaces',
@@ -29,11 +36,10 @@ const navigationItems = [
         icon: Zap,
         label: 'Tools',
         href: '/tools',
-        matchPaths: ['/tools', '/build'],
+        matchPaths: ['/tools'],
         children: [
-            { id: 'tools-my', icon: User, label: 'My Tools', href: '/tools/my' },
-            { id: 'tools-marketplace', icon: Compass, label: 'Marketplace', href: '/tools/marketplace' },
-            { id: 'tools-build', icon: Zap, label: 'Builder', href: '/tools/build' }
+            { id: 'tools-personal', icon: User, label: 'Personal', href: '/tools/personal' },
+            { id: 'tools-browse', icon: Compass, label: 'Browse', href: '/tools/browse' }
         ]
     },
     {
@@ -44,18 +50,11 @@ const navigationItems = [
         matchPaths: ['/calendar']
     },
     {
-        id: 'resources',
-        icon: BookOpen,
-        label: 'Resources',
-        href: '/resources',
-        matchPaths: ['/resources']
-    },
-    {
-        id: 'profile',
-        icon: User,
-        label: 'Profile',
-        href: '/profile',
-        matchPaths: ['/profile']
+        id: 'events',
+        icon: Calendar,
+        label: 'Events',
+        href: '/events',
+        matchPaths: ['/events']
     }
 ];
 const bottomItems = [

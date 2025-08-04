@@ -1,4 +1,6 @@
 import { useState, useEffect, createContext, useContext } from 'react';
+// import { skipAuthInDev } from '@/lib/env';
+const skipAuthInDev = process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test";
 
 export interface User {
   uid: string;
@@ -15,9 +17,9 @@ interface AuthState {
 }
 
 interface AuthContextType extends AuthState {
-  signIn: (email: string, password: string) => Promise<void>;
+  signIn: (_email: string, _password: string) => Promise<void>;
   signOut: () => Promise<void>;
-  signUp: (email: string, password: string, displayName?: string) => Promise<void>;
+  signUp: (_email: string, _password: string, _displayName?: string) => Promise<void>;
   getAuthToken: () => Promise<string | null>;
 }
 
@@ -53,8 +55,8 @@ export const useAuthProvider = (): AuthContextType => {
     // Initialize auth state
     const initAuth = async () => {
       try {
-        if (process.env.NODE_ENV === 'development') {
-          // In development, use mock user
+        if (skipAuthInDev) {
+          // In development with auth skipped, use mock user
           setAuthState({
             user: DEV_USER,
             loading: false,
@@ -90,8 +92,8 @@ export const useAuthProvider = (): AuthContextType => {
                 error: null,
               });
             }
-          } catch (error) {
-            console.error('Token verification failed:', error);
+          } catch (_error) {
+            console.error('Token verification failed:', _error);
             localStorage.removeItem('auth_token');
             setAuthState({
               user: null,
@@ -106,7 +108,7 @@ export const useAuthProvider = (): AuthContextType => {
             error: null,
           });
         }
-      } catch (error) {
+      } catch (_error) {
         setAuthState({
           user: null,
           loading: false,
@@ -118,15 +120,15 @@ export const useAuthProvider = (): AuthContextType => {
     initAuth();
   }, []);
 
-  const signIn = async (email: string, password: string) => {
+  const signIn = async (_email: string, _password: string) => {
     setAuthState(prev => ({ ...prev, loading: true, error: null }));
 
     try {
-      if (process.env.NODE_ENV === 'development') {
+      if (skipAuthInDev) {
         // Mock sign in for development
         setTimeout(() => {
           setAuthState({
-            user: { ...DEV_USER, email },
+            user: { ...DEV_USER, email: _email },
             loading: false,
             error: null,
           });
@@ -139,7 +141,7 @@ export const useAuthProvider = (): AuthContextType => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email: _email, password: _password }),
       });
 
       if (!response.ok) {
@@ -169,7 +171,7 @@ export const useAuthProvider = (): AuthContextType => {
     setAuthState(prev => ({ ...prev, loading: true }));
 
     try {
-      if (process.env.NODE_ENV === 'development') {
+      if (skipAuthInDev) {
         // Mock sign out for development
         setTimeout(() => {
           setAuthState({
@@ -194,8 +196,8 @@ export const useAuthProvider = (): AuthContextType => {
         loading: false,
         error: null,
       });
-    } catch (error) {
-      console.error('Sign out error:', error);
+    } catch (_error) {
+      console.error('Sign out error:', _error);
       // Even if the API call fails, clear local state
       localStorage.removeItem('auth_token');
       setAuthState({
@@ -206,15 +208,15 @@ export const useAuthProvider = (): AuthContextType => {
     }
   };
 
-  const signUp = async (email: string, password: string, displayName?: string) => {
+  const signUp = async (_email: string, _password: string, _displayName?: string) => {
     setAuthState(prev => ({ ...prev, loading: true, error: null }));
 
     try {
-      if (process.env.NODE_ENV === 'development') {
+      if (skipAuthInDev) {
         // Mock sign up for development
         setTimeout(() => {
           setAuthState({
-            user: { ...DEV_USER, email, displayName },
+            user: { ...DEV_USER, email: _email, displayName: _displayName },
             loading: false,
             error: null,
           });
@@ -227,7 +229,7 @@ export const useAuthProvider = (): AuthContextType => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password, displayName }),
+        body: JSON.stringify({ email: _email, password: _password, displayName: _displayName }),
       });
 
       if (!response.ok) {
@@ -254,7 +256,7 @@ export const useAuthProvider = (): AuthContextType => {
   };
 
   const getAuthToken = async (): Promise<string | null> => {
-    if (process.env.NODE_ENV === 'development') {
+    if (skipAuthInDev) {
       return 'test-token';
     }
 

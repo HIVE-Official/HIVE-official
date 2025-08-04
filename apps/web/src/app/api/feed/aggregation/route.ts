@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { collection, doc, getDoc, query, where, getDocs, orderBy, limit as fbLimit, addDoc, updateDoc } from 'firebase/firestore';
-import { db } from '@hive/core/server';
-import { getCurrentUser } from '@hive/auth-logic';
+// Use admin SDK methods since we're in an API route
+import { dbAdmin } from '@/lib/firebase-admin';
+import { getCurrentUser } from '@/lib/server-auth';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 // Content aggregation interfaces
 interface ContentSource {
@@ -58,7 +60,7 @@ export async function POST(request: NextRequest) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const body = await request.json();
@@ -118,8 +120,8 @@ export async function POST(request: NextRequest) {
       }
     });
   } catch (error) {
-    console.error('Error aggregating content:', error);
-    return NextResponse.json({ error: 'Failed to aggregate content' }, { status: 500 });
+    logger.error('Error aggregating content', { error: error, endpoint: '/api/feed/aggregation' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to aggregate content", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -128,7 +130,7 @@ export async function GET(request: NextRequest) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const { searchParams } = new URL(request.url);
@@ -170,8 +172,8 @@ export async function GET(request: NextRequest) {
       });
     }
   } catch (error) {
-    console.error('Error getting aggregation info:', error);
-    return NextResponse.json({ error: 'Failed to get aggregation info' }, { status: 500 });
+    logger.error('Error getting aggregation info', { error: error, endpoint: '/api/feed/aggregation' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to get aggregation info", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -191,16 +193,13 @@ function getDefaultAggregationConfig(): AggregationConfig {
 // Helper function to get user's accessible spaces
 async function getUserAccessibleSpaces(userId: string): Promise<string[]> {
   try {
-    const membershipsQuery = query(
-      collection(db, 'members'),
-      where('userId', '==', userId),
-      where('status', '==', 'active')
-    );
-
-    const membershipsSnapshot = await getDocs(membershipsQuery);
+    const membershipsSnapshot = await dbAdmin.collection('members')
+      .where('userId', '==', userId)
+      .where('status', '==', 'active')
+      .get();
     return membershipsSnapshot.docs.map(doc => doc.data().spaceId);
   } catch (error) {
-    console.error('Error getting accessible spaces:', error);
+    logger.error('Error getting accessible spaces', { error: error, endpoint: '/api/feed/aggregation' });
     return [];
   }
 }
@@ -284,7 +283,7 @@ async function getActiveContentSources(spaceIds: string[]): Promise<ContentSourc
 
     return sources.filter(source => source.isActive);
   } catch (error) {
-    console.error('Error getting content sources:', error);
+    logger.error('Error getting content sources', { error: error, endpoint: '/api/feed/aggregation' });
     return [];
   }
 }
@@ -321,7 +320,7 @@ async function aggregateFromAllSources(params: {
 
       aggregatedItems.push(...enhancedContent);
     } catch (error) {
-      console.error(`Error aggregating from source ${source.id}:`, error);
+      logger.error('Error aggregating from source', { sourceId: source.id, error: error, endpoint: '/api/feed/aggregation' });
     }
   }
 
@@ -358,7 +357,7 @@ async function aggregateFromSource(
         return [];
     }
   } catch (error) {
-    console.error(`Error in source aggregation for ${source.type}:`, error);
+    logger.error('Error in source aggregation for', { sourceType: source.type, error: error, endpoint: '/api/feed/aggregation'  });
     return [];
   }
 }
@@ -370,20 +369,17 @@ async function aggregateToolInteractions(
   timeWindow: Date
 ): Promise<AggregatedContentItem[]> {
   try {
-    const postsQuery = query(
-      collection(db, 'posts'),
-      where('spaceId', '==', source.spaceId),
-      where('type', '==', 'tool_generated'),
-      where('createdAt', '>=', timeWindow.toISOString()),
-      orderBy('createdAt', 'desc'),
-      fbLimit(config.maxItemsPerSource)
-    );
-
-    const postsSnapshot = await getDocs(postsQuery);
+    const postsSnapshot = await dbAdmin.collection('posts')
+      .where('spaceId', '==', source.spaceId)
+      .where('type', '==', 'tool_generated')
+      .where('createdAt', '>=', timeWindow.toISOString())
+      .orderBy('createdAt', 'desc')
+      .limit(config.maxItemsPerSource)
+      .get();
     const items: AggregatedContentItem[] = [];
 
     for (const postDoc of postsSnapshot.docs) {
-      const post = { id: postDoc.id, ...postDoc.data() };
+      const post = { id: postDoc.id, ...postDoc.data() } as any;
       
       // Calculate quality and relevance scores
       const qualityScore = calculateContentQuality(post, 'tool_generated');
@@ -414,7 +410,7 @@ async function aggregateToolInteractions(
 
     return items;
   } catch (error) {
-    console.error('Error aggregating tool interactions:', error);
+    logger.error('Error aggregating tool interactions', { error: error, endpoint: '/api/feed/aggregation' });
     return [];
   }
 }
@@ -426,20 +422,17 @@ async function aggregateSpaceEvents(
   timeWindow: Date
 ): Promise<AggregatedContentItem[]> {
   try {
-    const eventsQuery = query(
-      collection(db, 'events'),
-      where('spaceId', '==', source.spaceId),
-      where('state', '==', 'published'),
-      where('createdAt', '>=', timeWindow.toISOString()),
-      orderBy('startDate', 'asc'),
-      fbLimit(config.maxItemsPerSource)
-    );
-
-    const eventsSnapshot = await getDocs(eventsQuery);
+    const eventsSnapshot = await dbAdmin.collection('events')
+      .where('spaceId', '==', source.spaceId)
+      .where('state', '==', 'published')
+      .where('createdAt', '>=', timeWindow.toISOString())
+      .orderBy('startDate', 'asc')
+      .limit(config.maxItemsPerSource)
+      .get();
     const items: AggregatedContentItem[] = [];
 
     for (const eventDoc of eventsSnapshot.docs) {
-      const event = { id: eventDoc.id, ...eventDoc.data() };
+      const event = { id: eventDoc.id, ...eventDoc.data() } as any;
       
       const qualityScore = calculateContentQuality(event, 'space_event');
       const relevanceScore = calculateRelevanceScore(event, source);
@@ -469,7 +462,7 @@ async function aggregateSpaceEvents(
 
     return items;
   } catch (error) {
-    console.error('Error aggregating space events:', error);
+    logger.error('Error aggregating space events', { error: error, endpoint: '/api/feed/aggregation' });
     return [];
   }
 }
@@ -481,20 +474,17 @@ async function aggregateUserPosts(
   timeWindow: Date
 ): Promise<AggregatedContentItem[]> {
   try {
-    const postsQuery = query(
-      collection(db, 'posts'),
-      where('spaceId', '==', source.spaceId),
-      where('type', 'in', ['tool_enhanced', 'user_post']),
-      where('createdAt', '>=', timeWindow.toISOString()),
-      orderBy('createdAt', 'desc'),
-      fbLimit(config.maxItemsPerSource)
-    );
-
-    const postsSnapshot = await getDocs(postsQuery);
+    const postsSnapshot = await dbAdmin.collection('posts')
+      .where('spaceId', '==', source.spaceId)
+      .where('type', 'in', ['tool_enhanced', 'user_post'])
+      .where('createdAt', '>=', timeWindow.toISOString())
+      .orderBy('createdAt', 'desc')
+      .limit(config.maxItemsPerSource)
+      .get();
     const items: AggregatedContentItem[] = [];
 
     for (const postDoc of postsSnapshot.docs) {
-      const post = { id: postDoc.id, ...postDoc.data() };
+      const post = { id: postDoc.id, ...postDoc.data() } as any;
       
       const contentType = post.type === 'tool_enhanced' ? 'tool_enhanced' : 'tool_generated';
       const qualityScore = calculateContentQuality(post, contentType);
@@ -525,7 +515,7 @@ async function aggregateUserPosts(
 
     return items;
   } catch (error) {
-    console.error('Error aggregating user posts:', error);
+    logger.error('Error aggregating user posts', { error: error, endpoint: '/api/feed/aggregation' });
     return [];
   }
 }
@@ -537,20 +527,17 @@ async function aggregateBuilderAnnouncements(
   timeWindow: Date
 ): Promise<AggregatedContentItem[]> {
   try {
-    const announcementsQuery = query(
-      collection(db, 'posts'),
-      where('spaceId', '==', source.spaceId),
-      where('type', '==', 'announcement'),
-      where('createdAt', '>=', timeWindow.toISOString()),
-      orderBy('createdAt', 'desc'),
-      fbLimit(config.maxItemsPerSource)
-    );
-
-    const announcementsSnapshot = await getDocs(announcementsQuery);
+    const announcementsSnapshot = await dbAdmin.collection('posts')
+      .where('spaceId', '==', source.spaceId)
+      .where('type', '==', 'announcement')
+      .where('createdAt', '>=', timeWindow.toISOString())
+      .orderBy('createdAt', 'desc')
+      .limit(config.maxItemsPerSource)
+      .get();
     const items: AggregatedContentItem[] = [];
 
     for (const announcementDoc of announcementsSnapshot.docs) {
-      const announcement = { id: announcementDoc.id, ...announcementDoc.data() };
+      const announcement = { id: announcementDoc.id, ...announcementDoc.data() } as any;
       
       const qualityScore = calculateContentQuality(announcement, 'builder_announcement');
       const relevanceScore = calculateRelevanceScore(announcement, source);
@@ -578,7 +565,7 @@ async function aggregateBuilderAnnouncements(
 
     return items;
   } catch (error) {
-    console.error('Error aggregating builder announcements:', error);
+    logger.error('Error aggregating builder announcements', { error: error, endpoint: '/api/feed/aggregation' });
     return [];
   }
 }
@@ -784,14 +771,14 @@ function generateAggregationAnalytics(
 // Helper function to log aggregation metrics
 async function logAggregationMetrics(userId: string, metrics: any): Promise<void> {
   try {
-    await addDoc(collection(db, 'aggregationMetrics'), {
+    await dbAdmin.collection('aggregationMetrics').add({
       userId,
       ...metrics,
       timestamp: new Date().toISOString(),
       date: new Date().toISOString().split('T')[0]
     });
   } catch (error) {
-    console.error('Error logging aggregation metrics:', error);
+    logger.error('Error logging aggregation metrics', { error: error, endpoint: '/api/feed/aggregation' });
   }
 }
 
@@ -813,15 +800,12 @@ async function getAggregationMetrics(userId: string): Promise<any> {
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
     
-    const metricsQuery = query(
-      collection(db, 'aggregationMetrics'),
-      where('userId', '==', userId),
-      where('date', '>=', sevenDaysAgo.toISOString().split('T')[0]),
-      orderBy('timestamp', 'desc'),
-      fbLimit(20)
-    );
-
-    const metricsSnapshot = await getDocs(metricsQuery);
+    const metricsSnapshot = await dbAdmin.collection('aggregationMetrics')
+      .where('userId', '==', userId)
+      .where('date', '>=', sevenDaysAgo.toISOString().split('T')[0])
+      .orderBy('timestamp', 'desc')
+      .limit(20)
+      .get();
     const metrics = metricsSnapshot.docs.map(doc => doc.data());
 
     if (metrics.length === 0) return null;
@@ -834,7 +818,7 @@ async function getAggregationMetrics(userId: string): Promise<any> {
       lastAggregation: metrics[0].timestamp
     };
   } catch (error) {
-    console.error('Error getting aggregation metrics:', error);
+    logger.error('Error getting aggregation metrics', { error: error, endpoint: '/api/feed/aggregation' });
     return null;
   }
 }

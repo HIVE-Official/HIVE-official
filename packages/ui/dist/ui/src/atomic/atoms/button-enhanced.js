@@ -3,7 +3,7 @@ import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-run
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva } from "class-variance-authority";
-import { cn } from "../../lib/utils";
+import { cn } from "../../lib/utils.js";
 // HIVE Button System - Semantic Token Perfection
 // Zero hardcoded values - complete semantic token usage
 const buttonVariants = cva(
@@ -73,11 +73,20 @@ const buttonVariants = cva(
                 "hover:underline",
                 "hover:text-[color-mix(in_srgb,var(--hive-brand-secondary)_80%,transparent)]",
             ],
+            // Accent button
+            accent: [
+                "bg-[var(--hive-accent-primary)]",
+                "text-[var(--hive-text-inverse)]",
+                "hover:bg-[color-mix(in_srgb,var(--hive-accent-primary)_90%,transparent)]",
+                "active:bg-[color-mix(in_srgb,var(--hive-accent-primary)_80%,transparent)]",
+                "shadow-sm hover:shadow-md",
+            ],
         },
         size: {
             xs: "h-8 px-3 text-xs",
             sm: "h-9 px-4 text-sm",
             default: "h-10 px-6 text-sm",
+            md: "h-10 px-6 text-sm", // Alias for default
             lg: "h-11 px-8 text-base",
             xl: "h-12 px-10 text-base",
             icon: "h-10 w-10",
@@ -149,5 +158,5 @@ export const ButtonPresets = {
 };
 // Simple Close Icon (using semantic approach)
 const CloseIcon = () => (_jsx("svg", { width: "16", height: "16", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round", children: _jsx("path", { d: "M18 6L6 18M6 6l12 12" }) }));
-export { Button, ButtonGroup, IconButton, buttonVariants };
+export { Button, Button as ButtonEnhanced, ButtonGroup, IconButton, buttonVariants };
 //# sourceMappingURL=button-enhanced.js.map

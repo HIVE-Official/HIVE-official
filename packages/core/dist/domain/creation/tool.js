@@ -49,6 +49,12 @@ exports.ToolConfigSchema = zod_1.z.object({
     requireAuthentication: zod_1.z.boolean().default(true),
     showProgressBar: zod_1.z.boolean().default(false),
     autoSave: zod_1.z.boolean().default(true),
+    enableRealTimeUpdates: zod_1.z.boolean().default(false),
+    // Additional UI/UX settings
+    maxResponseLength: zod_1.z.number().min(1).max(10000).default(1000),
+    customCSS: zod_1.z.string().default(''),
+    headerText: zod_1.z.string().default(''),
+    footerText: zod_1.z.string().default(''),
     // Data handling
     dataSchema: exports.ToolDataSchemaSchema.optional(),
     dataRetentionDays: zod_1.z.number().min(1).max(365).default(90),

@@ -1,15 +1,15 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { motion } from '../framer-motion-proxy';
-import { ProfileHeader } from './profile-header';
-import { MySpacesFeed } from './my-spaces-feed';
-import { CalendarCard } from './calendar-card';
-import { adaptSmartCalendarProps } from './calendar-data-adapter';
-import { CampusConnections } from './campus-connections';
-import { HiveLabSection } from './hive-lab-section';
-import { ProfileStats } from './profile-stats';
-import { HiveCard } from '../hive-card';
-import { HiveButton } from '../hive-button';
+import { motion } from '../framer-motion-proxy.js';
+import { ProfileHeader } from './profile-header.js';
+import { MySpacesFeed } from './my-spaces-feed.js';
+import { CalendarCard } from './calendar-card.js';
+import { adaptSmartCalendarProps } from './calendar-data-adapter.js';
+import { CampusConnections } from './campus-connections.js';
+import { HiveLabSection } from './hive-lab-section.js';
+import { ProfileStats } from './profile-stats.js';
+import { HiveCard } from '../hive-card.js';
+import { HiveButton } from '../hive-button.js';
 import { Loader2, WifiOff } from 'lucide-react';
 export const ProfileSystem = ({ user, spaces = [], events = [], connections = [], hiveLab, isLoading = false, isMobile = false, isTablet = false, showOnboarding = false, showPrivacyBanner = false, showGraduationBanner = false, showErrors = false, completionStatus, errors, loadingStates, onSpaceClick, onEventClick, onConnectionClick, onEditProfile, onPrivacySettings, onJoinSpace, onCreateTool }) => {
     // Loading state

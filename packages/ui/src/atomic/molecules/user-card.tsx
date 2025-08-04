@@ -3,7 +3,7 @@
 import React from 'react';
 import { cn } from '../../lib/utils';
 import { Avatar } from '../atoms/avatar';
-import { Button } from '../atoms/button';
+import { ButtonEnhanced as Button } from '../atoms/button-enhanced';
 import { 
   User, 
   UserPlus, 

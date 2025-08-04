@@ -3,7 +3,7 @@ import { type VariantProps } from 'class-variance-authority';
 import { type Space } from '@hive/core';
 declare const hivePostsSurfaceVariants: (props?: {
     mode?: "view" | "builder" | "edit";
-} & import("class-variance-authority/dist/types").ClassProp) => string;
+} & import("class-variance-authority/types").ClassProp) => string;
 declare const postTypes: {
     readonly discussion: {
         readonly icon: React.ForwardRefExoticComponent<Omit<import("lucide-react").LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>>;
@@ -36,6 +36,30 @@ declare const postTypes: {
         readonly description: "Share a resource";
     };
 };
+export interface Comment {
+    id: string;
+    content: string;
+    authorId: string;
+    author?: {
+        id: string;
+        fullName: string;
+        handle: string;
+        photoURL?: string;
+    };
+    createdAt: Date | {
+        toDate: () => Date;
+    };
+    updatedAt: Date | {
+        toDate: () => Date;
+    };
+    parentCommentId?: string;
+    replies: Comment[];
+    reactions?: {
+        heart: number;
+    };
+    isEdited?: boolean;
+    isDeleted?: boolean;
+}
 export interface Post {
     id: string;
     type: string;
@@ -60,6 +84,8 @@ export interface Post {
     isEdited?: boolean;
     isDeleted?: boolean;
     spaceId: string;
+    comments?: Comment[];
+    replyCount?: number;
     title?: string;
     authorName?: string;
     authorAvatar?: string;
@@ -87,18 +113,23 @@ export interface HivePostsSurfaceProps extends React.HTMLAttributes<HTMLDivEleme
     isBuilder?: boolean;
     canPost?: boolean;
     canModerate?: boolean;
+    leaderMode?: 'moderate' | 'manage' | 'configure' | 'insights' | null;
     onCreatePost?: (type: keyof typeof postTypes) => void;
     onLikePost?: (postId: string) => void;
-    onReplyToPost?: (postId: string) => void;
+    onReplyToPost?: (postId: string, parentCommentId?: string) => void;
+    onCreateComment?: (postId: string, content: string, parentCommentId?: string) => Promise<Comment>;
+    onLoadComments?: (postId: string) => Promise<Comment[]>;
     onSharePost?: (postId: string) => void;
     onPinPost?: (postId: string) => void;
     onDeletePost?: (postId: string) => void;
+    onLockPost?: (postId: string) => void;
     onViewPost?: (postId: string) => void;
     sortBy?: 'recent' | 'popular' | 'trending';
     showFilters?: boolean;
     maxPosts?: number;
     autoFetch?: boolean;
     authToken?: string;
+    usePlatformIntegration?: boolean;
 }
 export declare const HivePostsSurface: React.ForwardRefExoticComponent<HivePostsSurfaceProps & React.RefAttributes<HTMLDivElement>>;
 export { hivePostsSurfaceVariants, postTypes };

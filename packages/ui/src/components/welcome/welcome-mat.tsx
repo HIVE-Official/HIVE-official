@@ -77,7 +77,7 @@ export const WelcomeMat = ({
             className={cn(
               "relative mx-4 w-full max-w-md",
               "rounded-2xl border border-white/10",
-              "bg-gradient-to-br from-zinc-900/95 to-black/95",
+              "bg-[var(--hive-background-tertiary)]",
               "p-8 shadow-2xl backdrop-blur-xl",
               "ring-1 ring-white/5"
             )}
@@ -88,7 +88,7 @@ export const WelcomeMat = ({
               onClick={handleDismiss}
               className={cn(
                 "absolute right-4 top-4 rounded-full p-2",
-                "text-zinc-400 transition-colors duration-200",
+                "text-[var(--hive-text-tertiary)] transition-colors duration-200",
                 "hover:bg-[var(--hive-text-primary)]/10 hover:text-[var(--hive-text-primary)]",
                 "focus:outline-none focus:ring-2 focus:ring-yellow-500/50"
               )}
@@ -113,7 +113,7 @@ export const WelcomeMat = ({
                   You&apos;re in — welcome to HIVE!
                 </h1>
                 {userName && (
-                  <p className="mt-2 text-zinc-400">
+                  <p className="mt-2 text-[var(--hive-text-secondary)]">
                     Great to have you here, {userName}
                   </p>
                 )}
@@ -123,13 +123,13 @@ export const WelcomeMat = ({
               <div className="space-y-3">
                 <div className="flex items-start gap-3 rounded-lg bg-[var(--hive-text-primary)]/5 p-3">
                   <div className="mt-0.5 h-2 w-2 rounded-full bg-yellow-500" />
-                  <p className="text-sm text-zinc-300">
+                  <p className="text-sm text-[var(--hive-text-secondary)]">
                     Scroll the Feed to see what&apos;s buzzing.
                   </p>
                 </div>
                 <div className="flex items-start gap-3 rounded-lg bg-[var(--hive-text-primary)]/5 p-3">
                   <div className="mt-0.5 h-2 w-2 rounded-full bg-yellow-500" />
-                  <p className="text-sm text-zinc-300">
+                  <p className="text-sm text-[var(--hive-text-secondary)]">
                     Spin up a Space to rally your group.
                   </p>
                 </div>
@@ -160,7 +160,7 @@ export const WelcomeMat = ({
                   onClick={handleViewProfile}
                   className={cn(
                     "flex w-full items-center justify-center gap-2",
-                    "text-sm text-zinc-400 transition-colors duration-200",
+                    "text-sm text-[var(--hive-text-tertiary)] transition-colors duration-200",
                     "hover:text-[var(--hive-text-primary)] focus:outline-none focus:text-[var(--hive-text-primary)]"
                   )}
                 >

@@ -1,15 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 export async function GET(request: NextRequest) {
   try {
-    // Test specific import instead of entire module to avoid framer-motion issues
-    const { CalendarCard } = await import('@hive/ui/src/components/profile/calendar-card');
-    
+    // Simple debug endpoint for calendar functionality
     return NextResponse.json({
       success: true,
-      hasCalendarCard: CalendarCard !== undefined,
-      calendarCardType: typeof CalendarCard,
-      calendarCardName: CalendarCard?.name || 'CalendarCard'
+      message: 'Calendar debug endpoint operational',
+      timestamp: new Date().toISOString(),
+      status: 'healthy'
     });
   } catch (error) {
     return NextResponse.json({

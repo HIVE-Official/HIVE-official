@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { currentEnvironment, isFirebaseAdminConfigured } from "@/lib/env";
 import { environmentInfo } from "@/lib/firebase-admin";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 export async function GET() {
   return NextResponse.json({
@@ -11,6 +12,5 @@ export async function GET() {
     environmentInfo,
     version: process.env.npm_package_version || "1.0.0",
     nodeVersion: process.version,
-    platform: process.platform,
-  });
+    platform: process.platform });
 }

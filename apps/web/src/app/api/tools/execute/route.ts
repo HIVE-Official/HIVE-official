@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { doc, getDoc, updateDoc, addDoc, collection, query, where, getDocs, setDoc } from 'firebase/firestore';
-import { db } from '@hive/core/server';
-import { getCurrentUser } from '@hive/auth-logic';
+// Use admin SDK methods since we're in an API route
+import { dbAdmin } from '@/lib/firebase-admin';
+import { getCurrentUser } from '@/lib/server-auth';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 // Tool execution request interface
 interface ToolExecutionRequest {
@@ -35,38 +37,38 @@ export async function POST(request: NextRequest) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const body = await request.json();
     const { deploymentId, action, elementId, data, context } = body as ToolExecutionRequest;
 
     if (!deploymentId || !action) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+      return NextResponse.json(ApiResponseHelper.error("Missing required fields", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
     // Get deployment details
-    const deploymentDoc = await getDoc(doc(db, 'deployedTools', deploymentId));
-    if (!deploymentDoc.exists()) {
-      return NextResponse.json({ error: 'Deployment not found' }, { status: 404 });
+    const deploymentDoc = await dbAdmin.collection('deployedTools').doc(deploymentId).get();
+    if (!deploymentDoc.exists) {
+      return NextResponse.json(ApiResponseHelper.error("Deployment not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     const deployment = { id: deploymentDoc.id, ...deploymentDoc.data() };
 
     // Check if deployment is active
     if (deployment.status !== 'active') {
-      return NextResponse.json({ error: 'Tool deployment is not active' }, { status: 403 });
+      return NextResponse.json(ApiResponseHelper.error("Tool deployment is not active", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     // Check user permissions
     if (!await canUserExecuteTool(user.uid, deployment)) {
-      return NextResponse.json({ error: 'Insufficient permissions' }, { status: 403 });
+      return NextResponse.json(ApiResponseHelper.error("Insufficient permissions", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     // Get tool details
-    const toolDoc = await getDoc(doc(db, 'tools', deployment.toolId));
-    if (!toolDoc.exists()) {
-      return NextResponse.json({ error: 'Tool not found' }, { status: 404 });
+    const toolDoc = await dbAdmin.collection('tools').doc(deployment.toolId).get();
+    if (!toolDoc.exists) {
+      return NextResponse.json(ApiResponseHelper.error("Tool not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     const tool = toolDoc.data();
@@ -95,7 +97,7 @@ export async function POST(request: NextRequest) {
     });
 
     // Log activity event
-    await addDoc(collection(db, 'activityEvents'), {
+    await addDoc(dbAdmin.collection('activityEvents'), {
       userId: user.uid,
       type: 'tool_interaction',
       toolId: deployment.toolId,
@@ -128,8 +130,8 @@ export async function POST(request: NextRequest) {
       timestamp: new Date().toISOString()
     });
   } catch (error) {
-    console.error('Error executing tool:', error);
-    return NextResponse.json({ error: 'Failed to execute tool' }, { status: 500 });
+    logger.error('Error executing tool', { error: error, endpoint: '/api/tools/execute' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to execute tool", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -148,8 +150,8 @@ async function canUserExecuteTool(userId: string, deployment: any): Promise<bool
 
     // Space deployments - check membership and role
     if (deployment.deployedTo === 'space') {
-      const membershipQuery = query(
-        collection(db, 'members'),
+      const membershipQuery = dbAdmin.collection(
+        dbAdmin.collection('members'),
         where('userId', '==', userId),
         where('spaceId', '==', deployment.targetId),
         where('status', '==', 'active')
@@ -166,7 +168,7 @@ async function canUserExecuteTool(userId: string, deployment: any): Promise<bool
 
     return false;
   } catch (error) {
-    console.error('Error checking tool execution permissions:', error);
+    logger.error('Error checking tool execution permissions', { error: error, endpoint: '/api/tools/execute' });
     return false;
   }
 }
@@ -187,7 +189,7 @@ async function executeToolAction(params: {
     // Get or create tool state
     const stateId = `${deployment.id}_${user.uid}`;
     const stateDoc = await getDoc(doc(db, 'toolStates', stateId));
-    const currentState = stateDoc.exists() ? stateDoc.data()?.state || {} : {};
+    const currentState = stateDoc.exists ? stateDoc.data()?.state || {} : {};
 
     // Find the target element if elementId is provided
     let targetElement = null;
@@ -253,7 +255,7 @@ async function executeToolAction(params: {
 
     return result;
   } catch (error) {
-    console.error('Error in tool execution:', error);
+    logger.error('Error in tool execution', { error: error, endpoint: '/api/tools/execute' });
     return {
       success: false,
       error: 'Tool execution failed'
@@ -453,7 +455,7 @@ async function handleDataSave(tool: any, data: any, currentState: any): Promise<
 async function generateFeedContent(deployment: any, tool: any, userId: string, feedContent: any) {
   try {
     if (deployment.deployedTo === 'space' && deployment.settings.collectAnalytics) {
-      await addDoc(collection(db, 'posts'), {
+      await addDoc(dbAdmin.collection('posts'), {
         authorId: userId,
         spaceId: deployment.targetId,
         type: 'tool_generated',
@@ -471,7 +473,7 @@ async function generateFeedContent(deployment: any, tool: any, userId: string, f
       });
     }
   } catch (error) {
-    console.error('Error generating feed content:', error);
+    logger.error('Error generating feed content', { error: error, endpoint: '/api/tools/execute' });
   }
 }
 
@@ -479,7 +481,7 @@ async function generateFeedContent(deployment: any, tool: any, userId: string, f
 async function processNotifications(deployment: any, notifications: any[]) {
   try {
     for (const notification of notifications) {
-      await addDoc(collection(db, 'notifications'), {
+      await addDoc(dbAdmin.collection('notifications'), {
         type: notification.type,
         message: notification.message,
         recipients: notification.recipients || [],
@@ -491,6 +493,6 @@ async function processNotifications(deployment: any, notifications: any[]) {
       });
     }
   } catch (error) {
-    console.error('Error processing notifications:', error);
+    logger.error('Error processing notifications', { error: error, endpoint: '/api/tools/execute' });
   }
 }

@@ -1,21 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { collection, addDoc, writeBatch, doc } from 'firebase/firestore';
-import { db } from '@hive/core/server';
-import { getCurrentUser } from '@hive/auth-logic';
+// Use admin SDK methods since we're in an API route
+import { dbAdmin } from '@/lib/firebase-admin';
+import { getCurrentUser } from '@/lib/server-auth';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 // Batch activity tracking endpoint
 export async function POST(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const body = await request.json();
     const { events } = body;
 
     if (!Array.isArray(events) || events.length === 0) {
-      return NextResponse.json({ error: 'Invalid events array' }, { status: 400 });
+      return NextResponse.json(ApiResponseHelper.error("Invalid events array", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
     // Validate events and add timestamps
@@ -39,11 +41,11 @@ export async function POST(request: NextRequest) {
     });
 
     // Use batch write for better performance
-    const batch = writeBatch(db);
+    const batch = dbAdmin.batch();
     const eventIds: string[] = [];
 
     validEvents.forEach(event => {
-      const docRef = doc(collection(db, 'activityEvents'));
+      const docRef = dbAdmin.collection('activityEvents').doc();
       batch.set(docRef, event);
       eventIds.push(docRef.id);
     });
@@ -53,7 +55,7 @@ export async function POST(request: NextRequest) {
     // Update daily summaries asynchronously (fire and forget)
     validEvents.forEach(event => {
       updateDailySummary(user.uid, event).catch(error => {
-        console.error('Error updating daily summary:', error);
+        logger.error('Error updating daily summary', { error: error, endpoint: '/api/activity/batch' });
       });
     });
 
@@ -63,8 +65,8 @@ export async function POST(request: NextRequest) {
       count: validEvents.length
     });
   } catch (error) {
-    console.error('Error logging batch activities:', error);
-    return NextResponse.json({ error: 'Failed to log batch activities' }, { status: 500 });
+    logger.error('Error logging batch activities', { error: error, endpoint: '/api/activity/batch' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to log batch activities", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -72,13 +74,15 @@ export async function POST(request: NextRequest) {
 async function updateDailySummary(userId: string, event: any) {
   try {
     const summaryId = `${userId}_${event.date}`;
-    const summaryRef = doc(db, 'activitySummaries', summaryId);
+    const summaryRef = dbAdmin.collection('activitySummaries').doc(summaryId);
     
     // Get existing summary or create new one
     const summaryDoc = await summaryRef.get();
     
-    if (summaryDoc.exists()) {
+    if (summaryDoc.exists) {
       const existingData = summaryDoc.data();
+      
+      if (!existingData) return;
       
       // Update existing summary
       const updatedData = {
@@ -121,6 +125,6 @@ async function updateDailySummary(userId: string, event: any) {
       await summaryRef.set(newSummary);
     }
   } catch (error) {
-    console.error('Error updating daily summary:', error);
+    logger.error('Error updating daily summary', { error: error, endpoint: '/api/activity/batch' });
   }
 }

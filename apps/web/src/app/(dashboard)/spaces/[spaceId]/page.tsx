@@ -2,32 +2,27 @@
 
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Button, Badge, PageContainer, HivePostsSurface, HiveEventsSurface, HiveMembersSurface, HivePinnedSurface, HiveToolsSurface } from "@hive/ui";
-import { Users, AlertTriangle, Loader2 as _Loader2, Hash, Heart as _Heart, MessageSquare, Camera as _Camera, Code, Calendar, ArrowRight as _ArrowRight, Clock, Settings, Grid, List, Maximize2, X, Tabs as _Tabs, Monitor } from "lucide-react";
+import { authenticatedFetch } from '../../../../lib/auth-utils';
+import { Button, Badge, HivePostsSurface, HiveEventsSurface, HiveMembersSurface, HivePinnedSurface, HiveToolsSurface, type Comment } from "@hive/ui";
+import { PageContainer } from "@/components/temp-stubs";
+import { Users, AlertTriangle, Loader2, Hash, Heart as _Heart, MessageSquare, Camera as _Camera, Code, Calendar, ArrowRight as _ArrowRight, Clock, Settings, Grid, List, Maximize2, X, Monitor, Activity } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { type Space } from "@hive/core";
 import { useAuth } from "@hive/auth-logic";
 import { motion, AnimatePresence } from "framer-motion";
+import { cn } from "../../../../lib/utils";
 import { SpaceErrorBoundaryWrapper } from "../components/space-error-boundary";
 import { SpaceLoadingSkeleton } from "../components/space-loading-skeleton";
+import { LeaveSpaceButton } from "../../../../components/spaces/leave-space-button";
+import { PostCreationModal } from "../../../../components/spaces/post-creation-modal";
+import { LeaderToolbar, useLeaderMode, type LeaderMode } from "../../../../components/spaces/leader-toolbar";
+import { getUserSpaceMembership, type SpaceMembership } from "../../../../lib/space-permissions";
 
 async function fetchSpaceById(spaceId: string): Promise<Space> {
-  const headers: Record<string, string> = {};
-  try {
-    const sessionJson = window.localStorage.getItem('hive_session');
-    if (sessionJson) {
-      const session = JSON.parse(sessionJson);
-      headers.Authorization = `Bearer ${process.env.NODE_ENV === 'development' ? 'test-token' : session.token}`;
-    } else {
-      headers.Authorization = `Bearer test-token`;
-    }
-  } catch (error) {
-    console.warn('Could not get auth token, using test token');
-    headers.Authorization = `Bearer test-token`;
-  }
+  
 
-  const response = await fetch(`/api/spaces/${spaceId}`, { headers });
+  const response = await authenticatedFetch(`/api/spaces/${spaceId}`);
   if (response.status === 404) {
     throw new Error("Space not found");
   }
@@ -81,9 +76,9 @@ function ErrorState({ error }: { error: Error }) {
 
 function SpaceStatusBadge({ status }: { status: Space["status"] }) {
   const statusConfig = {
-    dormant: { label: "Preview Mode", variant: "secondary" as const, color: "text-blue-400" },
-    frozen: { label: "View Only", variant: "outline" as const, color: "text-gray-400" },
-    activated: { label: "Active", variant: "default" as const, color: "text-green-400" },
+    dormant: { label: "Preview Mode", variant: "major-tag" as const, color: "text-blue-400" },
+    frozen: { label: "View Only", variant: "course-tag" as const, color: "text-gray-400" },
+    activated: { label: "Active", variant: "active-tag" as const, color: "text-green-400" },
   };
 
   const config = statusConfig[status] || statusConfig.activated;
@@ -157,32 +152,40 @@ export default function SpaceDetailPage({
   const [viewMode, setViewMode] = useState<ViewMode>('desktop');
   const [activeModal, setActiveModal] = useState<WidgetType | null>(null);
   const [currentTab, setCurrentTab] = useState<WidgetType>('posts');
-  const [widgetViews, setWidgetViews] = useState<Record<WidgetType, string>>({});
+  const [widgetViews, setWidgetViews] = useState<Record<WidgetType, string>>({
+    posts: 'grid',
+    events: 'list',
+    members: 'grid',
+    pinned: 'list',
+    tools: 'grid'
+  });
+  const [showPostCreation, setShowPostCreation] = useState(false);
+  const [postCreationType, setPostCreationType] = useState<'discussion' | 'question' | 'poll' | 'announcement' | 'link'>('discussion');
+  
+  // Leader mode management
+  const { currentMode, toggleMode, exitMode, isInMode, isInAnyMode } = useLeaderMode();
+  
+  // Configure mode state
+  const [isEditingDescription, setIsEditingDescription] = useState(false);
+  const [editedDescription, setEditedDescription] = useState('');
+  
+  // Insights mode state
+  const [analyticsData, setAnalyticsData] = useState<any>(null);
+  const [analyticsLoading, setAnalyticsLoading] = useState(false);
+  
+  // Space membership and permissions state
+  const [spaceMembership, setSpaceMembership] = useState<SpaceMembership | null>(null);
+  const [membershipLoading, setMembershipLoading] = useState(true);
   
   const { user } = useAuth();
 
   const handleJoinSpace = async () => {
     try {
-      const headers: Record<string, string> = {
-        'Content-Type': 'application/json'
-      };
-      
-      // Get auth token
-      try {
-        const sessionJson = window.localStorage.getItem('hive_session');
-        if (sessionJson) {
-          const session = JSON.parse(sessionJson);
-          headers.Authorization = `Bearer ${process.env.NODE_ENV === 'development' ? 'test-token' : session.token}`;
-        } else {
-          headers.Authorization = `Bearer test-token`;
-        }
-      } catch (error) {
-        headers.Authorization = `Bearer test-token`;
-      }
-
-      const response = await fetch('/api/spaces/join', {
+      const response = await authenticatedFetch('/api/spaces/join', {
         method: 'POST',
-        headers,
+        headers: {
+          'Content-Type': 'application/json'
+        },
         body: JSON.stringify({ spaceId })
       });
 
@@ -196,13 +199,14 @@ export default function SpaceDetailPage({
       // Refresh to show updated membership state
       window.location.reload();
     } catch (error: any) {
-      console.error('Failed to join space:', error);
       alert(error.message || 'Failed to join space');
     }
   };
 
-  // Check if user is admin (mock for now)
-  const isAdmin = user?.email?.includes('admin') || false;
+  // Real role checking based on space membership
+  const isAdmin = spaceMembership?.role === 'admin' || spaceMembership?.role === 'owner';
+  const isLeader = spaceMembership?.permissions?.canViewAnalytics || false;
+  const leaderRole: 'owner' | 'admin' | 'moderator' = (spaceMembership?.role as 'owner' | 'admin' | 'moderator') || 'member';
   
   // Filter widgets based on permissions
   const availableWidgets = WIDGET_CONFIGS.filter(widget => 
@@ -247,9 +251,157 @@ export default function SpaceDetailPage({
     window.location.href = `/tools/${toolId}/analytics`;
   };
 
+  const handleCreatePost = (type: 'discussion' | 'question' | 'poll' | 'announcement' | 'link') => {
+    setPostCreationType(type);
+    setShowPostCreation(true);
+  };
+
+  const handleCreateComment = async (postId: string, content: string, parentCommentId?: string): Promise<Comment> => {
+    const response = await authenticatedFetch(`/api/spaces/${spaceId}/posts/${postId}/comments`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ content, parentCommentId })
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to create comment');
+    }
+
+    const result = await response.json();
+    return result.data;
+  };
+
+  const handleLoadComments = async (postId: string): Promise<Comment[]> => {
+    const response = await authenticatedFetch(`/api/spaces/${spaceId}/posts/${postId}/comments`);
+    
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to load comments');
+    }
+
+    const result = await response.json();
+    return result.data.comments;
+  };
+
+  // Member Management Handlers
+  const handleChangeRole = async (memberId: string, role: string) => {
+    const response = await authenticatedFetch(`/api/spaces/${spaceId}/members`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ userId: memberId, role })
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to change member role');
+    }
+
+    // Refresh the page to show updated member roles
+    window.location.reload();
+  };
+
+  const handleRemoveMember = async (memberId: string) => {
+    if (!confirm('Are you sure you want to remove this member from the space?')) {
+      return;
+    }
+
+    const response = await authenticatedFetch(`/api/spaces/${spaceId}/members?userId=${memberId}`, {
+      method: 'DELETE'
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to remove member');
+    }
+
+    // Refresh the page to show updated member list
+    window.location.reload();
+  };
+
+  const handleBlockMember = async (memberId: string) => {
+    const reason = prompt('Reason for suspension (optional):');
+    
+    const response = await authenticatedFetch(`/api/spaces/${spaceId}/members`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ userId: memberId, action: 'suspend', reason })
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to suspend member');
+    }
+
+    // Refresh the page to show updated member status
+    window.location.reload();
+  };
+
   React.useEffect(() => {
     params.then(({ spaceId }) => setSpaceId(spaceId));
   }, [params]);
+  
+  // Fetch user's space membership and permissions
+  React.useEffect(() => {
+    let isMounted = true;
+    
+    async function fetchMembership() {
+      if (!spaceId || !user) {
+        setMembershipLoading(false);
+        return;
+      }
+      
+      try {
+        const membership = await getUserSpaceMembership(spaceId);
+        if (isMounted) {
+          setSpaceMembership(membership);
+        }
+      } catch (error) {
+        console.error('Failed to fetch space membership:', error);
+        if (isMounted) {
+          setSpaceMembership(null);
+        }
+      } finally {
+        if (isMounted) {
+          setMembershipLoading(false);
+        }
+      }
+    }
+    
+    fetchMembership();
+    
+    return () => {
+      isMounted = false;
+    };
+  }, [spaceId, user]);
+  
+  // Fetch analytics data when Insights Mode is activated
+  React.useEffect(() => {
+    if (currentMode === 'insights' && spaceId && isLeader && !analyticsData) {
+      const fetchAnalytics = async () => {
+        try {
+          setAnalyticsLoading(true);
+          const response = await authenticatedFetch(`/api/spaces/${spaceId}/analytics`);
+          if (response.ok) {
+            const data = await response.json();
+            setAnalyticsData(data.analytics);
+          }
+        } catch (error) {
+          console.error('Failed to fetch analytics:', error);
+        } finally {
+          setAnalyticsLoading(false);
+        }
+      };
+
+      fetchAnalytics();
+    }
+  }, [currentMode, spaceId, isLeader, analyticsData]);
 
   const {
     data: space,
@@ -316,22 +468,22 @@ export default function SpaceDetailPage({
             <div className="flex flex-wrap items-center gap-4 text-sm text-neutral-400">
               <div className="flex items-center gap-1.5">
                 <Users className="h-4 w-4" />
-                <span>{space.memberCount.toLocaleString()} members</span>
+                <span>{(space.memberCount || 0).toLocaleString()} members</span>
               </div>
 
-              <Badge variant="secondary" className="capitalize text-xs">
+              <Badge variant="major-tag" className="capitalize text-xs">
                 {space.type}
               </Badge>
 
               {space.tags.length > 0 && (
-                <Badge variant="outline" className="capitalize text-xs">
+                <Badge variant="skill-tag" className="capitalize text-xs">
                   {space.tags[0].sub_type}
                 </Badge>
               )}
             </div>
           </div>
 
-          <div className="flex-shrink-0">
+          <div className="flex items-center gap-3 flex-shrink-0">
             {space.status === 'dormant' ? (
               <Button 
                 variant="outline" 
@@ -348,9 +500,19 @@ export default function SpaceDetailPage({
               >
                 View Only
               </Button>
+            ) : isJoined ? (
+              <LeaveSpaceButton
+                spaceId={space.id}
+                spaceName={space.name}
+                spaceType={space.type}
+                onLeave={() => {
+                  setIsJoined(false);
+                  // Optionally redirect or refresh
+                }}
+              />
             ) : (
               <Button 
-                variant="default"
+                variant="primary"
                 className="bg-[#FFD700] text-[#0A0A0A] hover:bg-[#FFE255]"
                 onClick={handleJoinSpace}
               >
@@ -387,7 +549,7 @@ export default function SpaceDetailPage({
             {/* Tab Navigation */}
             <div className="flex overflow-x-auto pb-2 gap-2">
               {availableWidgets.map((widget) => {
-                const Icon = widget.icon;
+                const Icon = widget.icon as React.ComponentType<{ className?: string }>;
                 const isActive = currentTab === widget.id;
                 
                 return (
@@ -447,7 +609,12 @@ export default function SpaceDetailPage({
             {/* Primary Widget - Post Board */}
             <div className="lg:col-span-2 space-y-6">
               <motion.div
-                className="rounded-xl bg-white/[0.02] border border-white/[0.06] p-6 cursor-pointer group hover:border-white/[0.1] transition-all"
+                className={cn(
+                  "rounded-xl p-6 cursor-pointer group transition-all",
+                  currentMode === 'insights' 
+                    ? "bg-purple-500/5 border border-purple-500/30" 
+                    : "bg-white/[0.02] border border-white/[0.06] hover:border-white/[0.1]"
+                )}
                 onClick={() => openModal('posts')}
                 whileHover={{ scale: 1.01 }}
                 layout
@@ -456,18 +623,83 @@ export default function SpaceDetailPage({
                   <div className="flex items-center gap-3">
                     <MessageSquare className="h-5 w-5 text-[#FFD700]" />
                     <h3 className="text-lg font-semibold text-white">Post Board</h3>
+                    {currentMode === 'insights' && (
+                      <motion.div
+                        className="px-2 py-1 bg-purple-500/20 border border-purple-500/30 rounded text-xs text-purple-400"
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                      >
+                        Analytics Active
+                      </motion.div>
+                    )}
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-xs text-neutral-400">Click to expand</span>
-                    <Maximize2 className="h-4 w-4 text-neutral-400 group-hover:text-[#FFD700] transition-colors" />
+                    {currentMode === 'insights' ? (
+                      <Activity className="h-4 w-4 text-purple-400" />
+                    ) : (
+                      <>
+                        <span className="text-xs text-neutral-400">Click to expand</span>
+                        <Maximize2 className="h-4 w-4 text-neutral-400 group-hover:text-[#FFD700] transition-colors" />
+                      </>
+                    )}
                   </div>
                 </div>
+                
+                {/* Insights Mode Overlay for Posts */}
+                {currentMode === 'insights' && (
+                  <motion.div
+                    className="mb-4 p-4 bg-purple-500/10 border border-purple-500/20 rounded-lg"
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                  >
+                    {analyticsLoading ? (
+                      <div className="flex items-center justify-center py-4">
+                        <Loader2 className="h-5 w-5 animate-spin text-purple-400" />
+                        <span className="ml-2 text-sm text-neutral-400">Loading analytics...</span>
+                      </div>
+                    ) : analyticsData ? (
+                      <>
+                        <div className="grid grid-cols-3 gap-4 mb-3">
+                          <div className="text-center">
+                            <div className="text-2xl font-bold text-purple-400">{analyticsData.contentData?.postsThisWeek || 0}</div>
+                            <div className="text-xs text-neutral-400">Posts This Week</div>
+                          </div>
+                          <div className="text-center">
+                            <div className="text-2xl font-bold text-green-400">{analyticsData.contentData?.averageEngagement || 0}%</div>
+                            <div className="text-xs text-neutral-400">Engagement Rate</div>
+                          </div>
+                          <div className="text-center">
+                            <div className="text-2xl font-bold text-blue-400">{analyticsData.contentData?.totalPosts || 0}</div>
+                            <div className="text-xs text-neutral-400">Total Posts</div>
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-between text-xs">
+                          <span className="text-neutral-400">Peak activity: 2-4 PM</span>
+                          <span className={cn(
+                            analyticsData.contentData?.contentGrowthRate >= 0 ? "text-green-400" : "text-red-400"
+                          )}>
+                            {analyticsData.contentData?.contentGrowthRate >= 0 ? "↑" : "↓"} {Math.abs(analyticsData.contentData?.contentGrowthRate || 0)}% vs last week
+                          </span>
+                        </div>
+                      </>
+                    ) : (
+                      <div className="text-center py-4 text-neutral-400 text-sm">
+                        Analytics data unavailable
+                      </div>
+                    )}
+                  </motion.div>
+                )}
                 <HivePostsSurface
                   space={space}
                   mode="view"
                   maxPosts={3}
                   showFilters={false}
                   canPost={isJoined && space.status === 'activated'}
+                  onCreatePost={handleCreatePost}
+                  onCreateComment={handleCreateComment}
+                  onLoadComments={handleLoadComments}
+                  leaderMode={currentMode}
+                  canModerate={isLeader && isInMode('moderate')}
                 />
               </motion.div>
             </div>
@@ -475,13 +707,18 @@ export default function SpaceDetailPage({
             {/* Secondary Widgets */}
             <div className="space-y-6">
               {availableWidgets.filter(w => w.id !== 'posts').map((widget) => {
-                const Icon = widget.icon;
+                const Icon = widget.icon as React.ComponentType<{ className?: string }>;
                 const Component = widget.component;
                 
                 return (
                   <motion.div
                     key={widget.id}
-                    className="rounded-xl bg-white/[0.02] border border-white/[0.06] p-4 cursor-pointer group hover:border-white/[0.1] transition-all"
+                    className={cn(
+                      "rounded-xl p-4 cursor-pointer group transition-all",
+                      currentMode === 'insights' 
+                        ? "bg-purple-500/5 border border-purple-500/30" 
+                        : "bg-white/[0.02] border border-white/[0.06] hover:border-white/[0.1]"
+                    )}
                     onClick={() => openModal(widget.id)}
                     whileHover={{ scale: 1.02 }}
                     layout
@@ -491,34 +728,373 @@ export default function SpaceDetailPage({
                         <Icon className="h-4 w-4 text-[#FFD700]" />
                         <h4 className="text-sm font-semibold text-white">{widget.title}</h4>
                         {widget.adminOnly && (
-                          <Badge variant="outline" className="text-xs border-[#FFD700]/30 text-[#FFD700]">
+                          <Badge variant="prof-favorite" className="text-xs border-[#FFD700]/30 text-[#FFD700]">
                             Admin
                           </Badge>
                         )}
+                        {currentMode === 'insights' && (
+                          <motion.div
+                            className="w-2 h-2 bg-purple-400 rounded-full"
+                            animate={{ scale: [1, 1.2, 1] }}
+                            transition={{ duration: 2, repeat: Infinity }}
+                          />
+                        )}
                       </div>
-                      <Maximize2 className="h-3 w-3 text-neutral-400 group-hover:text-[#FFD700] transition-colors" />
+                      {currentMode === 'insights' ? (
+                        <Activity className="h-3 w-3 text-purple-400" />
+                      ) : (
+                        <Maximize2 className="h-3 w-3 text-neutral-400 group-hover:text-[#FFD700] transition-colors" />
+                      )}
                     </div>
-                    <Component
-                      space={space}
-                      mode="view"
-                      showCompact={true}
-                      maxItems={3}
-                      isBuilder={isAdmin}
-                      canManageTools={isAdmin}
-                      onAddTool={widget.id === 'tools' ? handleAddTool : undefined}
-                      onConfigureTool={widget.id === 'tools' ? handleConfigureTool : undefined}
-                      onViewToolAnalytics={widget.id === 'tools' ? handleViewToolAnalytics : undefined}
-                    />
+                    
+                    {/* Widget-Specific Insights Overlays */}
+                    {currentMode === 'insights' && widget.id === 'members' && (
+                      <motion.div
+                        className="mb-3 p-3 bg-purple-500/10 border border-purple-500/20 rounded-lg"
+                        initial={{ opacity: 0, y: -5 }}
+                        animate={{ opacity: 1, y: 0 }}
+                      >
+                        {analyticsLoading ? (
+                          <div className="flex items-center justify-center py-2">
+                            <Loader2 className="h-4 w-4 animate-spin text-purple-400" />
+                          </div>
+                        ) : analyticsData ? (
+                          <>
+                            <div className="grid grid-cols-2 gap-3 mb-2">
+                              <div className="text-center">
+                                <div className="text-lg font-bold text-green-400">{analyticsData.membershipData?.activeMembers || 0}</div>
+                                <div className="text-xs text-neutral-400">Active Members</div>
+                              </div>
+                              <div className="text-center">
+                                <div className="text-lg font-bold text-blue-400">{analyticsData.membershipData?.newMembers || 0}</div>
+                                <div className="text-xs text-neutral-400">New This Week</div>
+                              </div>
+                            </div>
+                            <div className="text-xs text-neutral-400 text-center">
+                              Retention: <span className="text-green-400">{analyticsData.membershipData?.averageEngagement || 0}%</span>
+                            </div>
+                          </>
+                        ) : (
+                          <div className="text-xs text-neutral-400 text-center">Analytics unavailable</div>
+                        )}
+                      </motion.div>
+                    )}
+                    
+                    {currentMode === 'insights' && widget.id === 'events' && (
+                      <motion.div
+                        className="mb-3 p-3 bg-purple-500/10 border border-purple-500/20 rounded-lg"
+                        initial={{ opacity: 0, y: -5 }}
+                        animate={{ opacity: 1, y: 0 }}
+                      >
+                        {analyticsLoading ? (
+                          <div className="flex items-center justify-center py-2">
+                            <Loader2 className="h-4 w-4 animate-spin text-purple-400" />
+                          </div>
+                        ) : analyticsData ? (
+                          <>
+                            <div className="grid grid-cols-2 gap-3 mb-2">
+                              <div className="text-center">
+                                <div className="text-lg font-bold text-orange-400">{analyticsData.eventData?.upcomingEvents || 0}</div>
+                                <div className="text-xs text-neutral-400">Upcoming</div>
+                              </div>
+                              <div className="text-center">
+                                <div className="text-lg font-bold text-green-400">{analyticsData.eventData?.averageAttendance || 0}%</div>
+                                <div className="text-xs text-neutral-400">Avg Attendance</div>
+                              </div>
+                            </div>
+                            <div className="text-xs text-neutral-400 text-center">
+                              Total events: <span className="text-white">{analyticsData.eventData?.totalEvents || 0}</span>
+                            </div>
+                          </>
+                        ) : (
+                          <div className="text-xs text-neutral-400 text-center">Analytics unavailable</div>
+                        )}
+                      </motion.div>
+                    )}
+                    
+                    {currentMode === 'insights' && widget.id === 'tools' && (
+                      <motion.div
+                        className="mb-3 p-3 bg-purple-500/10 border border-purple-500/20 rounded-lg"
+                        initial={{ opacity: 0, y: -5 }}
+                        animate={{ opacity: 1, y: 0 }}
+                      >
+                        {analyticsLoading ? (
+                          <div className="flex items-center justify-center py-2">
+                            <Loader2 className="h-4 w-4 animate-spin text-purple-400" />
+                          </div>
+                        ) : analyticsData ? (
+                          <>
+                            <div className="grid grid-cols-2 gap-3 mb-2">
+                              <div className="text-center">
+                                <div className="text-lg font-bold text-cyan-400">{analyticsData.toolData?.activeTools || 0}</div>
+                                <div className="text-xs text-neutral-400">Active Tools</div>
+                              </div>
+                              <div className="text-center">
+                                <div className="text-lg font-bold text-yellow-400">{analyticsData.toolData?.toolUsage || 0}</div>
+                                <div className="text-xs text-neutral-400">Weekly Uses</div>
+                              </div>
+                            </div>
+                            <div className="text-xs text-neutral-400 text-center">
+                              Top: <span className="text-white">{analyticsData.toolData?.topTools?.[0]?.name || 'N/A'}</span>
+                            </div>
+                          </>
+                        ) : (
+                          <div className="text-xs text-neutral-400 text-center">Analytics unavailable</div>
+                        )}
+                      </motion.div>
+                    )}
+                    
+                    {currentMode === 'insights' && widget.id === 'pinned' && (
+                      <motion.div
+                        className="mb-3 p-3 bg-purple-500/10 border border-purple-500/20 rounded-lg"
+                        initial={{ opacity: 0, y: -5 }}
+                        animate={{ opacity: 1, y: 0 }}
+                      >
+                        {analyticsLoading ? (
+                          <div className="flex items-center justify-center py-2">
+                            <Loader2 className="h-4 w-4 animate-spin text-purple-400" />
+                          </div>
+                        ) : analyticsData ? (
+                          <>
+                            <div className="grid grid-cols-2 gap-3 mb-2">
+                              <div className="text-center">
+                                <div className="text-lg font-bold text-pink-400">{analyticsData.pinned?.items || 0}</div>
+                                <div className="text-xs text-neutral-400">Pinned Items</div>
+                              </div>
+                              <div className="text-center">
+                                <div className="text-lg font-bold text-indigo-400">{analyticsData.pinned?.totalViews || 0}</div>
+                                <div className="text-xs text-neutral-400">Total Views</div>
+                              </div>
+                            </div>
+                            <div className="text-xs text-neutral-400 text-center">
+                              Most viewed: <span className="text-white">{analyticsData.pinned?.mostViewed || 'N/A'}</span>
+                            </div>
+                          </>
+                        ) : (
+                          <div className="text-xs text-neutral-400 text-center">Analytics unavailable</div>
+                        )}
+                      </motion.div>
+                    )}
+                    {/* Enhanced Member Directory Widget for Leaders */}
+                    {widget.id === 'members' && isLeader && (currentMode === 'manage' || currentMode === 'insights') ? (
+                      <HiveMembersSurface
+                        spaceId={space.id}
+                        isLeader={isLeader}
+                        leaderMode={currentMode}
+                        maxMembers={5}
+                        authenticatedFetch={authenticatedFetch}
+                      />
+                    ) : widget.id === 'events' && isLeader && (currentMode === 'manage' || currentMode === 'insights') ? (
+                      <HiveEventsSurface
+                        space={space}
+                        canCreateEvents={isLeader}
+                        canModerate={isLeader && currentMode === 'moderate'}
+                      />
+                    ) : (
+                      <Component
+                        space={space}
+                        mode="view"
+                        showCompact={true}
+                        maxItems={3}
+                        isBuilder={isAdmin}
+                        canModerate={isLeader}
+                        leaderMode={currentMode}
+                        canManageTools={isAdmin}
+                        onAddTool={widget.id === 'tools' ? handleAddTool : undefined}
+                        onConfigureTool={widget.id === 'tools' ? handleConfigureTool : undefined}
+                        onViewToolAnalytics={widget.id === 'tools' ? handleViewToolAnalytics : undefined}
+                      />
+                    )}
                   </motion.div>
                 );
               })}
               
-              {/* About Widget */}
-              <div className="rounded-xl bg-white/[0.02] border border-white/[0.06] p-4">
-                <h4 className="text-sm font-semibold text-white mb-3">About</h4>
-                <p className="text-xs text-neutral-300 line-clamp-3 leading-relaxed">
-                  {space.description || "No description available."}
-                </p>
+              {/* About Widget - Enhanced for Configure & Insights Mode */}
+              <div className={cn(
+                "rounded-xl p-4 transition-all",
+                currentMode === 'configure' 
+                  ? "border border-green-500/30 bg-green-500/5" 
+                  : currentMode === 'insights'
+                  ? "border border-purple-500/30 bg-purple-500/5"
+                  : "border border-white/[0.06] bg-white/[0.02]"
+              )}>
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <h4 className="text-sm font-semibold text-white">About</h4>
+                    {currentMode === 'insights' && (
+                      <motion.div
+                        className="w-2 h-2 bg-purple-400 rounded-full"
+                        animate={{ scale: [1, 1.2, 1] }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                      />
+                    )}
+                  </div>
+                  {currentMode === 'configure' && isLeader && (
+                    <motion.button
+                      className="px-2 py-1 bg-green-500/20 border border-green-500/30 rounded text-xs text-green-400 hover:bg-green-500/30 transition-all"
+                      onClick={() => {
+                        setIsEditingDescription(!isEditingDescription);
+                        setEditedDescription(space.description || '');
+                      }}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      <Settings className="w-3 h-3 mr-1 inline" />
+                      {isEditingDescription ? 'Cancel' : 'Edit'}
+                    </motion.button>
+                  )}
+                  {currentMode === 'insights' && (
+                    <Activity className="h-3 w-3 text-purple-400" />
+                  )}
+                </div>
+                
+                {/* Insights Mode Overview */}
+                {currentMode === 'insights' && (
+                  <motion.div
+                    className="mb-4 p-3 bg-purple-500/10 border border-purple-500/20 rounded-lg"
+                    initial={{ opacity: 0, y: -5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                  >
+                    {analyticsLoading ? (
+                      <div className="flex items-center justify-center py-4">
+                        <Loader2 className="h-4 w-4 animate-spin text-purple-400" />
+                        <span className="ml-2 text-xs text-neutral-400">Loading health score...</span>
+                      </div>
+                    ) : analyticsData ? (
+                      <>
+                        <div className="text-xs font-medium text-purple-400 mb-2">Space Health Score</div>
+                        <div className="flex items-center gap-2 mb-3">
+                          <div className="flex-1 bg-white/10 rounded-full h-2">
+                            <div 
+                              className="bg-gradient-to-r from-green-400 to-blue-400 h-2 rounded-full transition-all duration-500"
+                              style={{ width: `${(analyticsData.healthMetrics?.overallHealth || 0) * 10}%` }}
+                            ></div>
+                          </div>
+                          <span className="text-sm font-bold text-white">{analyticsData.healthMetrics?.overallHealth || 0}/10</span>
+                        </div>
+                        <div className="grid grid-cols-2 gap-2 text-xs">
+                          <div className="flex justify-between">
+                            <span className="text-neutral-400">Activity</span>
+                            <span className={cn(
+                              analyticsData.healthMetrics?.activity === 'High' ? "text-green-400" :
+                              analyticsData.healthMetrics?.activity === 'Medium' ? "text-yellow-400" : "text-red-400"
+                            )}>
+                              {analyticsData.healthMetrics?.activity || 'N/A'}
+                            </span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-neutral-400">Engagement</span>
+                            <span className={cn(
+                              analyticsData.healthMetrics?.engagement === 'High' ? "text-green-400" :
+                              analyticsData.healthMetrics?.engagement === 'Medium' ? "text-yellow-400" : "text-red-400"
+                            )}>
+                              {analyticsData.healthMetrics?.engagement || 'N/A'}
+                            </span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-neutral-400">Growth</span>
+                            <span className={cn(
+                              analyticsData.healthMetrics?.growth === 'Growing' ? "text-green-400" :
+                              analyticsData.healthMetrics?.growth === 'Steady' ? "text-blue-400" : "text-yellow-400"
+                            )}>
+                              {analyticsData.healthMetrics?.growth || 'N/A'}
+                            </span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-neutral-400">Retention</span>
+                            <span className={cn(
+                              analyticsData.healthMetrics?.retention === 'Excellent' ? "text-green-400" :
+                              analyticsData.healthMetrics?.retention === 'Good' ? "text-blue-400" : "text-yellow-400"
+                            )}>
+                              {analyticsData.healthMetrics?.retention || 'N/A'}
+                            </span>
+                          </div>
+                        </div>
+                        {analyticsData.healthMetrics?.alerts && analyticsData.healthMetrics.alerts.length > 0 && (
+                          <div className="mt-3 pt-2 border-t border-purple-500/20">
+                            <div className="text-xs font-medium text-purple-400 mb-1">Latest Alert</div>
+                            <div className="text-xs text-neutral-300">
+                              {analyticsData.healthMetrics.alerts[0].message}
+                            </div>
+                          </div>
+                        )}
+                      </>
+                    ) : (
+                      <div className="text-center py-4 text-neutral-400 text-xs">
+                        Health metrics unavailable
+                      </div>
+                    )}
+                  </motion.div>
+                )}
+                
+                {/* Editable Description */}
+                {isEditingDescription && currentMode === 'configure' ? (
+                  <div className="space-y-3">
+                    <textarea
+                      className="w-full bg-white/5 border border-green-500/30 rounded-lg px-3 py-2 text-xs text-white placeholder-gray-400 resize-none focus:outline-none focus:border-green-400/50 transition-colors"
+                      placeholder="Describe your space..."
+                      rows={4}
+                      value={editedDescription}
+                      onChange={(e) => setEditedDescription(e.target.value)}
+                    />
+                    <div className="flex justify-end gap-2">
+                      <motion.button
+                        className="px-3 py-1 bg-gray-600 hover:bg-gray-700 text-white text-xs rounded-md transition-colors"
+                        onClick={() => {
+                          setIsEditingDescription(false);
+                          setEditedDescription('');
+                        }}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        Cancel
+                      </motion.button>
+                      <motion.button
+                        className="px-3 py-1 bg-green-500 hover:bg-green-600 text-white text-xs rounded-md transition-colors"
+                        onClick={async () => {
+                          try {
+                            const response = await authenticatedFetch(`/api/spaces/${spaceId}`, {
+                              method: 'PATCH',
+                              headers: {
+                                'Content-Type': 'application/json'
+                              },
+                              body: JSON.stringify({ description: editedDescription })
+                            });
+                            
+                            if (response.ok) {
+                              setIsEditingDescription(false);
+                              window.location.reload(); // Refresh to show updated description
+                            } else {
+                              alert('Failed to update description');
+                            }
+                          } catch (error) {
+                            alert('Failed to update description');
+                          }
+                        }}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        Save
+                      </motion.button>
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-xs text-neutral-300 line-clamp-3 leading-relaxed">
+                    {space.description || "No description available."}
+                  </p>
+                )}
+                
+                {/* Configure Mode Indicator */}
+                {currentMode === 'configure' && !isEditingDescription && (
+                  <motion.div
+                    className="mt-2 px-2 py-1 bg-green-500/20 border border-green-500/30 rounded text-xs text-green-400 text-center"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                  >
+                    Configure Mode - Click Edit to modify
+                  </motion.div>
+                )}
+                
                 <div className="mt-3 pt-3 border-t border-white/[0.06] space-y-2 text-xs">
                   <div className="flex justify-between">
                     <span className="text-neutral-400">Type</span>
@@ -526,7 +1102,7 @@ export default function SpaceDetailPage({
                   </div>
                   <div className="flex justify-between">
                     <span className="text-neutral-400">Members</span>
-                    <span className="text-white">{space.memberCount.toLocaleString()}</span>
+                    <span className="text-white">{(space.memberCount || 0).toLocaleString()}</span>
                   </div>
                 </div>
               </div>
@@ -558,13 +1134,13 @@ export default function SpaceDetailPage({
                     {(() => {
                       const widget = availableWidgets.find(w => w.id === activeModal);
                       if (!widget) return null;
-                      const Icon = widget.icon;
+                      const Icon = widget.icon as React.ComponentType<{ className?: string }>;
                       return (
                         <>
                           <Icon className="h-6 w-6 text-[#FFD700]" />
                           <h2 className="text-xl font-semibold text-white">{widget.title}</h2>
                           {widget.adminOnly && (
-                            <Badge variant="outline" className="border-[#FFD700]/30 text-[#FFD700]">
+                            <Badge variant="prof-favorite" className="border-[#FFD700]/30 text-[#FFD700]">
                               Admin Only
                             </Badge>
                           )}
@@ -585,7 +1161,7 @@ export default function SpaceDetailPage({
                             <Button
                               key={view}
                               size="sm"
-                              variant={widgetViews[activeModal] === view ? 'default' : 'outline'}
+                              variant={widgetViews[activeModal] === view ? 'primary' : 'outline'}
                               className={widgetViews[activeModal] === view 
                                 ? 'bg-[#FFD700]/20 text-[#FFD700] border-[#FFD700]/30'
                                 : 'border-white/[0.2] text-neutral-400 hover:text-white'
@@ -621,18 +1197,43 @@ export default function SpaceDetailPage({
                     
                     const Component = widget.component;
                     return (
-                      <Component
-                        space={space}
-                        mode="view"
-                        viewMode={widgetViews[activeModal] || widget.allowedViews?.[0] || 'default'}
-                        canPost={isJoined && space.status === 'activated'}
-                        canModerate={isAdmin}
-                        isBuilder={isAdmin}
-                        canManageTools={widget.id === 'tools' ? isAdmin : undefined}
-                        onAddTool={widget.id === 'tools' ? handleAddTool : undefined}
-                        onConfigureTool={widget.id === 'tools' ? handleConfigureTool : undefined}
-                        onViewToolAnalytics={widget.id === 'tools' ? handleViewToolAnalytics : undefined}
-                      />
+                      <>
+                        {/* Full Member Directory Tool for Leaders */}
+                        {widget.id === 'members' && isLeader && (currentMode === 'manage' || currentMode === 'insights') ? (
+                          <HiveMembersSurface
+                            spaceId={space.id}
+                            isLeader={isLeader}
+                            leaderMode={currentMode}
+                            maxMembers={50}
+                            authenticatedFetch={authenticatedFetch}
+                          />
+                        ) : widget.id === 'events' && isLeader && (currentMode === 'manage' || currentMode === 'insights') ? (
+                          <HiveEventsSurface
+                            space={space}
+                            canCreateEvents={isLeader}
+                            canModerate={isLeader && currentMode === 'moderate'}
+                          />
+                        ) : (
+                          <Component
+                            space={space}
+                            mode="view"
+                            viewMode={widgetViews[activeModal] || widget.allowedViews?.[0] || 'default'}
+                            canPost={isJoined && space.status === 'activated'}
+                            canModerate={isAdmin}
+                            leaderMode={currentMode}
+                            isBuilder={isAdmin}
+                            canManageTools={widget.id === 'tools' ? isAdmin : undefined}
+                            onAddTool={widget.id === 'tools' ? handleAddTool : undefined}
+                            onConfigureTool={widget.id === 'tools' ? handleConfigureTool : undefined}
+                            onViewToolAnalytics={widget.id === 'tools' ? handleViewToolAnalytics : undefined}
+                            onCreateComment={widget.id === 'posts' ? handleCreateComment : undefined}
+                            onLoadComments={widget.id === 'posts' ? handleLoadComments : undefined}
+                            onChangeRole={widget.id === 'members' ? handleChangeRole : undefined}
+                            onRemoveMember={widget.id === 'members' ? handleRemoveMember : undefined}
+                            onBlockMember={widget.id === 'members' ? handleBlockMember : undefined}
+                          />
+                        )}
+                      </>
                     );
                   })()}
                 </div>
@@ -640,7 +1241,28 @@ export default function SpaceDetailPage({
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* Post Creation Modal */}
+        {showPostCreation && spaceId && (
+          <PostCreationModal
+            isOpen={showPostCreation}
+            onClose={() => setShowPostCreation(false)}
+            spaceId={spaceId}
+            spaceName={space?.name || 'Space'}
+            initialPostType={postCreationType}
+            canCreateAnnouncements={isAdmin}
+          />
+        )}
+
+        {/* Leader Toolbar */}
+        <LeaderToolbar
+          isVisible={isLeader && isJoined}
+          currentMode={currentMode}
+          onModeChange={toggleMode}
+          spaceRole={leaderRole}
+        />
       </PageContainer>
     </SpaceErrorBoundaryWrapper>
   );
 }
+

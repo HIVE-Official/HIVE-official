@@ -2,7 +2,7 @@ import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
 declare const enhancedCommandPaletteVariants: (props?: {
     variant?: "default" | "premium";
-} & import("class-variance-authority/dist/types").ClassProp) => string;
+} & import("class-variance-authority/types").ClassProp) => string;
 export interface SearchableItem {
     id: string;
     title: string;

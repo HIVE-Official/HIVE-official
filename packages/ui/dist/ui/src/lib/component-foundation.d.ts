@@ -13,10 +13,10 @@ export declare const componentBase: {
 };
 export declare const standardSizes: (props?: {
     size?: "default" | "xs" | "sm" | "lg" | "xl";
-} & import("class-variance-authority/dist/types").ClassProp) => string;
+} & import("class-variance-authority/types").ClassProp) => string;
 export declare const standardVariants: (props?: {
-    variant?: "outline" | "primary" | "secondary" | "ghost" | "success" | "destructive" | "warning";
-} & import("class-variance-authority/dist/types").ClassProp) => string;
+    variant?: "primary" | "secondary" | "success" | "warning" | "outline" | "ghost" | "destructive";
+} & import("class-variance-authority/types").ClassProp) => string;
 export interface StandardComponentProps {
     className?: string;
     children?: React.ReactNode;
@@ -102,12 +102,5 @@ export declare function getValidationProps(error?: string, success?: boolean): {
     'aria-invalid'?: undefined;
     'aria-describedby'?: undefined;
     className?: undefined;
-};
-/**
- * Component Testing Utilities
- */
-export declare function getTestProps(testId?: string, componentName?: string): {
-    'data-testid': string;
-    'data-component': string;
 };
 //# sourceMappingURL=component-foundation.d.ts.map

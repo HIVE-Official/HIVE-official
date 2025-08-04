@@ -4,6 +4,8 @@ import { requireAuth } from '@/lib/auth-server';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { generateCohortSpaces, type CohortSpaceConfig } from '@hive/core';
 import { z } from 'zod';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 const createCohortSpacesSchema = z.object({
   major: z.string().min(1),
@@ -69,9 +71,9 @@ export async function POST(request: NextRequest) {
           });
           
           createdSpaces.push(spaceConfig.id);
-          console.log(`✅ Created cohort space: ${spaceConfig.name} (${spaceConfig.id})`);
+          logger.info('✅ Created cohort space:( )', { spaceConfig: spaceConfig.id, endpoint: '/api/spaces/cohort/auto-create' });
         } else {
-          console.log(`📋 Cohort space already exists: ${spaceConfig.name} (${spaceConfig.id})`);
+          logger.info('📋 Cohort space already exists:( )', { spaceConfig: spaceConfig.id, endpoint: '/api/spaces/cohort/auto-create' });
         }
         
         // Auto-join user to the cohort space
@@ -99,13 +101,13 @@ export async function POST(request: NextRequest) {
           });
           
           joinedSpaces.push(spaceConfig.id);
-          console.log(`👥 Auto-joined user ${user.uid} to ${spaceConfig.name}`);
+          logger.info('👥 Auto-joined user to space', { userId: user, spaceName: spaceConfig.name, endpoint: '/api/spaces/cohort/auto-create' });
         } else {
-          console.log(`📌 User ${user.uid} already member of ${spaceConfig.name}`);
+          logger.info('📌 User already member of space', { userId: user, spaceName: spaceConfig.name, endpoint: '/api/spaces/cohort/auto-create' });
         }
         
       } catch (error) {
-        console.error(`❌ Error creating/joining cohort space ${spaceConfig.id}:`, error);
+        logger.error('❌ Error creating/joining cohort space', { spaceConfigId: spaceConfig.id, error: error, endpoint: '/api/spaces/cohort/auto-create'  });
         // Continue with other spaces even if one fails
       }
     }
@@ -123,18 +125,18 @@ export async function POST(request: NextRequest) {
     });
     
   } catch (error: any) {
-    console.error('Cohort space creation error:', error);
+    logger.error('Cohort space creation error', { error: error, endpoint: '/api/spaces/cohort/auto-create' });
     
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: 'Invalid request data', details: error.errors },
-        { status: 400 }
+        { status: HttpStatus.BAD_REQUEST }
       );
     }
     
     return NextResponse.json(
       { error: 'Failed to create cohort spaces', details: error.message },
-      { status: 500 }
+      { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }
 }

@@ -9,6 +9,39 @@ export * from "./domain/firestore/post";
 export * from "./domain/firestore/space";
 export * from "./domain/firestore/user";
 
+// Domain types - Profile
+export type {
+  HiveProfile,
+  HiveProfileIdentity,
+  HiveAcademicInfo,
+  HivePersonalInfo,
+  HivePrivacySettings,
+  HiveBuilderInfo,
+  HiveActivityStats,
+  HiveTimestamps,
+  HiveVerificationStatus,
+  HiveProfileUpdateData,
+  HiveProfileDashboard,
+  HiveProfileCreateData,
+  HiveProfileResponse,
+  HiveProfileAnalytics,
+  HiveProfileVisibility,
+  HiveOnlineStatus,
+  HiveActivityType
+} from "./domain/profile/profile";
+
+export {
+  getProfileCompleteness,
+  DEFAULT_PRIVACY_SETTINGS,
+  DEFAULT_BUILDER_INFO,
+  isValidHandle as isValidProfileHandle,
+  isValidEmail,
+  getDisplayName,
+  getProfileUrl,
+  isProfilePublic,
+  canViewProfile
+} from "./domain/profile/profile";
+
 // Domain types - Auth
 export * from "./domain/auth/emailLink";
 

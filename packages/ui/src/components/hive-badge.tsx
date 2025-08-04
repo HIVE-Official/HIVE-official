@@ -77,6 +77,14 @@ const hiveBadgeVariants = cva(
         "skill-tag": "bg-[var(--hive-text-primary)]/5 text-[var(--hive-text-secondary)] px-2 py-0.5 rounded-xl text-xs",
         "tool-tag": "bg-[var(--hive-text-primary)]/5 text-[var(--hive-text-secondary)] px-2 py-0.5 rounded-xl text-xs",
         "active-tag": "bg-[var(--hive-brand-secondary)]/10 text-[var(--hive-brand-secondary)] px-2 py-0.5 rounded-xl text-xs",
+        
+        // Common utility variants
+        "default": "bg-[var(--hive-text-primary)]/8 text-[var(--hive-text-secondary)] px-2 py-1 rounded-xl text-xs",
+        "secondary": "bg-[var(--hive-brand-secondary)]/10 text-[var(--hive-brand-secondary)] px-2 py-1 rounded-xl text-xs",
+        "outline": "border border-[var(--hive-text-primary)]/20 text-[var(--hive-text-secondary)] px-2 py-1 rounded-xl text-xs bg-transparent",
+        "destructive": "bg-red-100 text-red-800 px-2 py-1 rounded-xl text-xs",
+        "success": "bg-green-100 text-green-800 px-2 py-1 rounded-xl text-xs",
+        "warning": "bg-yellow-100 text-yellow-800 px-2 py-1 rounded-xl text-xs",
       },
       
       size: {
@@ -136,7 +144,7 @@ const HiveBadge = React.forwardRef<HTMLDivElement, HiveBadgeProps>(
     // Enhanced accessibility and interaction handling
     const testingProps = getTestProps(testId, 'HiveBadge');
     
-    const handleKeyDown = (e: React.KeyboardEvent) => {
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
       if (interactive && (e.key === 'Enter' || e.key === ' ')) {
         e.preventDefault();
         onClick?.(e as any);

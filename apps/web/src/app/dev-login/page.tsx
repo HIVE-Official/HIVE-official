@@ -70,7 +70,6 @@ export default function DevLoginPage() {
       }
     } catch (error) {
       setMessage('❌ Authentication failed');
-      console.error('Dev login error:', error);
     } finally {
       setLoading(false);
     }

@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { collection, doc, getDoc, query, where, getDocs, addDoc, updateDoc, orderBy, limit as fbLimit } from 'firebase/firestore';
-import { db } from '@hive/core/server';
-import { getCurrentUser } from '@hive/auth-logic';
+import { dbAdmin } from '@hive/core/server';
+import { getCurrentUser } from '@/lib/server-auth';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 // Content validation interfaces
 interface ContentValidationResult {
@@ -48,14 +50,14 @@ export async function POST(request: NextRequest) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const body = await request.json();
     const { contentItems, spaceId, enforcementLevel = 'moderate' } = body;
 
     if (!contentItems || !Array.isArray(contentItems)) {
-      return NextResponse.json({ error: 'Content items array required' }, { status: 400 });
+      return NextResponse.json(ApiResponseHelper.error("Content items array required", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
     // Get content enforcement policy
@@ -90,8 +92,8 @@ export async function POST(request: NextRequest) {
       }
     });
   } catch (error) {
-    console.error('Error validating content:', error);
-    return NextResponse.json({ error: 'Failed to validate content' }, { status: 500 });
+    logger.error('Error validating content', { error: error, endpoint: '/api/feed/content-validation' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to validate content", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -100,7 +102,7 @@ export async function GET(request: NextRequest) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const { searchParams } = new URL(request.url);
@@ -114,10 +116,10 @@ export async function GET(request: NextRequest) {
     startDate.setDate(startDate.getDate() - days);
 
     // Get validation metrics
-    const analytics = await getContentValidationAnalytics(spaceId, startDate, includeDetails);
+    const analytics = await getContentValidationAnalytics(spaceId || undefined, startDate, includeDetails);
 
     // Get current enforcement policy
-    const policy = await getContentEnforcementPolicy(spaceId);
+    const policy = await getContentEnforcementPolicy(spaceId || undefined);
 
     return NextResponse.json({
       analytics,
@@ -126,10 +128,38 @@ export async function GET(request: NextRequest) {
       generatedAt: new Date().toISOString()
     });
   } catch (error) {
-    console.error('Error fetching validation analytics:', error);
-    return NextResponse.json({ error: 'Failed to fetch analytics' }, { status: 500 });
+    logger.error('Error fetching validation analytics', { error: error, endpoint: '/api/feed/content-validation' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to fetch analytics", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
+
+// Default policies by enforcement level
+const DEFAULT_POLICIES: Record<string, ContentEnforcementPolicy> = {
+  strict: {
+    toolContentMinimum: 95, // 95% tool content required
+    qualityThreshold: 80,   // High quality threshold
+    validationStrict: true,
+    allowedContentTypes: ['tool_generated', 'tool_enhanced'],
+    enforcementLevel: 'strict',
+    spaceSpecificRules: {}
+  },
+  moderate: {
+    toolContentMinimum: 90, // 90% tool content required
+    qualityThreshold: 70,   // Moderate quality threshold
+    validationStrict: false,
+    allowedContentTypes: ['tool_generated', 'tool_enhanced', 'space_event'],
+    enforcementLevel: 'moderate',
+    spaceSpecificRules: {}
+  },
+  lenient: {
+    toolContentMinimum: 80, // 80% tool content required
+    qualityThreshold: 60,   // Lower quality threshold
+    validationStrict: false,
+    allowedContentTypes: ['tool_generated', 'tool_enhanced', 'space_event', 'builder_announcement'],
+    enforcementLevel: 'lenient',
+    spaceSpecificRules: {}
+  }
+};
 
 // Helper function to get content enforcement policy
 async function getContentEnforcementPolicy(spaceId?: string, enforcementLevel: string = 'moderate'): Promise<ContentEnforcementPolicy> {
@@ -137,44 +167,16 @@ async function getContentEnforcementPolicy(spaceId?: string, enforcementLevel: s
     if (spaceId) {
       // Check for space-specific policy
       const policyDoc = await getDoc(doc(db, 'contentPolicies', spaceId));
-      if (policyDoc.exists()) {
+      if (policyDoc.exists) {
         return policyDoc.data() as ContentEnforcementPolicy;
       }
     }
 
-    // Default policies by enforcement level
-    const defaultPolicies: Record<string, ContentEnforcementPolicy> = {
-      strict: {
-        toolContentMinimum: 95, // 95% tool content required
-        qualityThreshold: 80,   // High quality threshold
-        validationStrict: true,
-        allowedContentTypes: ['tool_generated', 'tool_enhanced'],
-        enforcementLevel: 'strict',
-        spaceSpecificRules: {}
-      },
-      moderate: {
-        toolContentMinimum: 90, // 90% tool content required
-        qualityThreshold: 70,   // Moderate quality threshold
-        validationStrict: false,
-        allowedContentTypes: ['tool_generated', 'tool_enhanced', 'space_event'],
-        enforcementLevel: 'moderate',
-        spaceSpecificRules: {}
-      },
-      lenient: {
-        toolContentMinimum: 80, // 80% tool content required
-        qualityThreshold: 60,   // Lower quality threshold
-        validationStrict: false,
-        allowedContentTypes: ['tool_generated', 'tool_enhanced', 'space_event', 'builder_announcement'],
-        enforcementLevel: 'lenient',
-        spaceSpecificRules: {}
-      }
-    };
-
-    return defaultPolicies[enforcementLevel] || defaultPolicies.moderate;
+    return DEFAULT_POLICIES[enforcementLevel] || DEFAULT_POLICIES.moderate;
   } catch (error) {
-    console.error('Error getting enforcement policy:', error);
+    logger.error('Error getting enforcement policy', { error: error, endpoint: '/api/feed/content-validation' });
     // Return safe default
-    return defaultPolicies.moderate;
+    return DEFAULT_POLICIES.moderate;
   }
 }
 
@@ -200,8 +202,8 @@ async function validateContentItem(
 
       // Get tool metadata
       if (contentItem.toolId) {
-        const toolDoc = await getDoc(doc(db, 'tools', contentItem.toolId));
-        if (toolDoc.exists()) {
+        const toolDoc = await dbAdmin.collection('tools').doc(contentItem.toolId).get();
+        if (toolDoc.exists) {
           const tool = toolDoc.data();
           toolMetadata = {
             toolId: contentItem.toolId,
@@ -312,7 +314,7 @@ async function validateContentItem(
       enforcementAction
     };
   } catch (error) {
-    console.error('Error validating content item:', error);
+    logger.error('Error validating content item', { error: error, endpoint: '/api/feed/content-validation' });
     return {
       isValid: false,
       contentType: 'invalid',
@@ -418,7 +420,7 @@ function generateContentAnalytics(validationResults: ContentValidationResult[]):
 // Helper function to log validation metrics
 async function logValidationMetrics(userId: string, spaceId: string | undefined, metrics: any): Promise<void> {
   try {
-    await addDoc(collection(db, 'validationMetrics'), {
+    await addDoc(dbAdmin.collection('validationMetrics'), {
       userId,
       spaceId,
       ...metrics,
@@ -426,7 +428,7 @@ async function logValidationMetrics(userId: string, spaceId: string | undefined,
       date: new Date().toISOString().split('T')[0]
     });
   } catch (error) {
-    console.error('Error logging validation metrics:', error);
+    logger.error('Error logging validation metrics', { error: error, endpoint: '/api/feed/content-validation' });
   }
 }
 
@@ -437,17 +439,17 @@ async function getContentValidationAnalytics(
   includeDetails: boolean
 ): Promise<FeedContentAnalytics> {
   try {
-    let metricsQuery = query(
-      collection(db, 'validationMetrics'),
+    let metricsQuery = dbAdmin.collection(
+      dbAdmin.collection('validationMetrics'),
       where('date', '>=', startDate.toISOString().split('T')[0]),
       orderBy('timestamp', 'desc')
     );
 
     if (spaceId) {
-      metricsQuery = query(metricsQuery, where('spaceId', '==', spaceId));
+      metricsQuery = dbAdmin.collection(metricsQuery, where('spaceId', '==', spaceId));
     }
 
-    const metricsSnapshot = await getDocs(query(metricsQuery, fbLimit(100)));
+    const metricsSnapshot = await getDocs(dbAdmin.collection(metricsQuery, fbLimit(100)));
     const metrics = metricsSnapshot.docs.map(doc => doc.data());
 
     if (metrics.length === 0) {
@@ -500,7 +502,7 @@ async function getContentValidationAnalytics(
       validationFailures: [] // Simplified for aggregated view
     };
   } catch (error) {
-    console.error('Error getting validation analytics:', error);
+    logger.error('Error getting validation analytics', { error: error, endpoint: '/api/feed/content-validation' });
     return {
       totalPosts: 0,
       toolGeneratedCount: 0,

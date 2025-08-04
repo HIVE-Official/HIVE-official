@@ -1,7 +1,7 @@
 "use client";
 
 import { Button, Card } from "@hive/ui";
-import { Users, Star, MapPin, ArrowRight, Heart, Activity, Crown } from "lucide-react";
+import { Users, Star, MapPin, ArrowRight, Heart, Activity, Crown, Shield } from "lucide-react";
 import { type Space } from "@hive/core";
 
 interface UnifiedSpaceCardProps {
@@ -51,16 +51,28 @@ export function UnifiedSpaceCard({
 
       if (!response.ok) {
         const errorData = await response.json();
+        
+        // Handle Greek life restriction with special UI
+        if (response.status === 409 && errorData.error?.includes('Greek life organization')) {
+          const shouldLeave = confirm(
+            `${errorData.error}\n\nWould you like to leave your current Greek life organization to join this one?`
+          );
+          
+          if (shouldLeave) {
+            // For now, show instructions - in future we could implement direct leaving
+            alert('To switch Greek life organizations, please go to your current organization\'s page and leave it first, then return here to join this one.');
+          }
+          return;
+        }
+        
         throw new Error(errorData.error || 'Failed to join space');
       }
 
-      console.log('Successfully joined space:', space.id);
       onAction?.('join');
       
       // Refresh the page to show updated state
       window.location.reload();
     } catch (error: any) {
-      console.error('Failed to join space:', error);
       alert(error.message || 'Failed to join space');
     }
   };
@@ -86,7 +98,7 @@ export function UnifiedSpaceCard({
     
     if (membershipRole === "owner") {
       return (
-        <div className="flex items-center gap-1 px-2 py-1 bg-yellow-500/20 text-yellow-400 rounded-full text-xs">
+        <div className="flex items-center gap-1 px-2 py-1 bg-hive-gold/20 text-hive-gold rounded-full text-xs">
           <Crown className="h-3 w-3" />
           Owner
         </div>
@@ -107,6 +119,21 @@ export function UnifiedSpaceCard({
 
   const getSpaceInitial = () => {
     return space.name.charAt(0).toUpperCase();
+  };
+
+  const isGreekLife = () => {
+    return space.type === 'greek_life';
+  };
+
+  const getGreekLifeBadge = () => {
+    if (!isGreekLife()) return null;
+    
+    return (
+      <div className="flex items-center gap-1 px-2 py-1 bg-purple-500/20 text-purple-400 rounded-full text-xs">
+        <Shield className="h-3 w-3" />
+        1 Organization Limit
+      </div>
+    );
   };
 
 
@@ -134,6 +161,7 @@ export function UnifiedSpaceCard({
               <div className="flex items-center gap-2 mb-1">
                 <h3 className="font-semibold text-white">{space.name}</h3>
                 {getRoleBadge()}
+                {getGreekLifeBadge()}
               </div>
               <p className="text-sm text-[#A1A1AA] line-clamp-1 mb-2">{space.description}</p>
               <div className="flex items-center gap-4 text-xs text-[#71717A]">
@@ -217,8 +245,9 @@ export function UnifiedSpaceCard({
         </div>
         <div className="flex items-center gap-2">
           {getRoleBadge()}
+          {getGreekLifeBadge()}
           <div className="flex items-center gap-1">
-            <Star className="h-4 w-4 text-yellow-400" />
+            <Star className="h-4 w-4 text-hive-gold" />
             <span className="text-xs text-[#A1A1AA]">4.8</span>
           </div>
         </div>

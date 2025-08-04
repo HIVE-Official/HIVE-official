@@ -1,12 +1,12 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState } from 'react';
-import { motion } from '../framer-motion-proxy';
-import { HiveCard } from '../hive-card';
-import { HiveButton } from '../hive-button';
-import { HiveBadge } from '../hive-badge';
+import { motion } from '../framer-motion-proxy.js';
+import { HiveCard } from '../hive-card.js';
+import { HiveButton } from '../hive-button.js';
+import { HiveBadge } from '../hive-badge.js';
 import { TrendingUp, TrendingDown, Users, Zap, Clock, Target, BarChart3, Activity, BookOpen, Award, ChevronRight, Sparkles } from 'lucide-react';
-import { cn } from '../../lib/utils';
+import { cn } from '../../lib/utils.js';
 // Mini chart component for trends
 const MiniChart = ({ data, color, height = 40, trend }) => {
     const max = Math.max(...data);

@@ -1,10 +1,10 @@
 import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
 declare const inputVariants: (props?: {
-    variant?: "error" | "default" | "success" | "warning" | "brand";
-    size?: "default" | "sm" | "lg" | "xl";
-    radius?: "none" | "default" | "sm" | "lg" | "full";
-} & import("class-variance-authority/dist/types").ClassProp) => string;
+    variant?: "default" | "success" | "warning" | "error" | "filled" | "ghost" | "brand";
+    size?: "default" | "sm" | "md" | "lg" | "xl";
+    radius?: "default" | "sm" | "lg" | "none" | "full";
+} & import("class-variance-authority/types").ClassProp) => string;
 export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'>, VariantProps<typeof inputVariants> {
     leftIcon?: React.ReactNode;
     rightIcon?: React.ReactNode;
@@ -46,5 +46,5 @@ export declare const InputPresets: {
     Search: (props: Omit<SearchInputProps, "type">) => import("react/jsx-runtime").JSX.Element;
     Currency: (props: Omit<InputProps, "leftElement">) => import("react/jsx-runtime").JSX.Element;
 };
-export { Input, SearchInput, PasswordInput, NumberInput, InputGroup, inputVariants };
+export { Input, Input as InputEnhanced, SearchInput, PasswordInput, NumberInput, InputGroup, inputVariants };
 //# sourceMappingURL=input-enhanced.d.ts.map

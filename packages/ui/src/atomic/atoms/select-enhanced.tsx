@@ -62,6 +62,7 @@ export interface SelectProps
   required?: boolean;
   allowClear?: boolean;
   onClear?: () => void;
+  searchable?: boolean;
 }
 
 const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
@@ -318,7 +319,10 @@ const ClearIcon = () => (
 
 export { 
   Select, 
+  Select as SelectEnhanced,
   MultiSelect,
   SelectGroup, 
   selectVariants 
 };
+
+export type { SelectOption as SelectOptionEnhanced };

@@ -26,7 +26,6 @@ async function getSchool(schoolId: string): Promise<School | null> {
     }
     return { id: schoolDoc.id, ...schoolDoc.data() } as School;
   } catch (error) {
-    console.error("Failed to fetch school", error);
     return null;
   }
 }

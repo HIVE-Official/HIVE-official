@@ -1,9 +1,11 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
-import { getAuth } from 'firebase-admin/auth';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { type Space } from '@hive/core';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
 
 const recommendationsSchema = z.object({
   limit: z.coerce.number().min(1).max(20).default(10),
@@ -32,38 +34,15 @@ interface SpaceWithScore extends Space {
  * Intelligent Space Recommendation Engine
  * Uses ML-based algorithms to suggest relevant spaces based on user behavior and preferences
  */
-export async function GET(request: NextRequest) {
+export const GET = withAuth(async (request: NextRequest, authContext) => {
   try {
     const url = new URL(request.url);
     const queryParams = Object.fromEntries(url.searchParams.entries());
     const { limit, context, includeJoined } = recommendationsSchema.parse(queryParams);
 
-    // Verify authentication
-    const authHeader = request.headers.get('Authorization');
-    if (!authHeader?.startsWith('Bearer ')) {
-      return NextResponse.json(
-        { error: 'Authorization header required' },
-        { status: 401 }
-      );
-    }
+    const userId = authContext.userId;
 
-    const token = authHeader.substring(7);
-    let userId = 'test-user';
-    
-    if (token !== 'test-token') {
-      try {
-        const auth = getAuth();
-        const decodedToken = await auth.verifyIdToken(token);
-        userId = decodedToken.uid;
-      } catch (authError) {
-        return NextResponse.json(
-          { error: 'Invalid or expired token' },
-          { status: 401 }
-        );
-      }
-    }
-
-    console.log(`🤖 Generating recommendations for user ${userId}`);
+    logger.info('🤖 Generating recommendations for user', { userId, endpoint: '/api/spaces/recommendations' });
 
     // Get user profile and preferences
     const userProfile = await getUserProfile(userId);
@@ -91,21 +70,21 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error: any) {
-    console.error('Space recommendations error:', error);
+    logger.error('Space recommendations error', { error: error, endpoint: '/api/spaces/recommendations' });
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: 'Invalid query parameters', details: error.errors },
-        { status: 400 }
+        { status: HttpStatus.BAD_REQUEST }
       );
     }
 
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json(ApiResponseHelper.error("Internal server error", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
-}
+}, { 
+  allowDevelopmentBypass: true, // Recommendations are safe for development
+  operation: 'get_space_recommendations' 
+});
 
 /**
  * Get comprehensive user profile for recommendations
@@ -156,7 +135,7 @@ async function getUserProfile(userId: string): Promise<UserProfile> {
     };
 
   } catch (error) {
-    console.error('Error getting user profile:', error);
+    logger.error('Error getting user profile', { error: error, endpoint: '/api/spaces/recommendations' });
     return {
       id: userId,
       interests: [],
@@ -251,7 +230,7 @@ async function getAllSpaces(): Promise<any[]> {
 
       allSpaces.push(...spaces);
     } catch (error) {
-      console.error(`Error fetching spaces for type ${spaceType}:`, error);
+      logger.error('Error fetching spaces for type', { spaceType, error: error, endpoint: '/api/spaces/recommendations' });
     }
   }
 
@@ -313,7 +292,8 @@ function calculateRecommendationScore(userProfile: UserProfile, space: any) {
   };
 
   // Interest matching (0-40 points)
-  const interestMatches = userProfile.interests.filter(interest => 
+  const userInterests = userProfile.interests || [];
+  const interestMatches = userInterests.filter(interest => 
     space.name.toLowerCase().includes(interest) ||
     space.description.toLowerCase().includes(interest) ||
     space.tags.some((tag: string) => tag.toLowerCase().includes(interest))
@@ -428,7 +408,8 @@ function getMatchFactors(userProfile: UserProfile, space: any): string[] {
   const factors: string[] = [];
 
   // Interest matches
-  const interestMatches = userProfile.interests.filter(interest => 
+  const userInterests = userProfile.interests || [];
+  const interestMatches = userInterests.filter(interest => 
     space.name.toLowerCase().includes(interest) ||
     space.description.toLowerCase().includes(interest) ||
     space.tags.some((tag: string) => tag.toLowerCase().includes(interest))

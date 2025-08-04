@@ -9,6 +9,8 @@ import { auditAuthEvent } from "@/lib/production-auth";
 import { currentEnvironment } from "@/lib/env";
 import { validateWithSecurity, ApiSchemas } from "@/lib/secure-input-validation";
 import { enforceRateLimit } from "@/lib/secure-rate-limiter";
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 /**
  * PRODUCTION-SAFE magic link verification
@@ -45,7 +47,7 @@ async function validateSchoolDomain(email: string, schoolId: string): Promise<bo
     
     return emailDomain === schoolDomain;
   } catch (error) {
-    console.error('School domain validation failed:', error);
+    logger.error('School domain validation failed', { error: error, endpoint: '/api/auth/verify-magic-link' });
     return false;
   }
 }
@@ -80,16 +82,13 @@ export async function POST(request: NextRequest) {
     });
 
     if (!validationResult.success || validationResult.securityLevel === 'dangerous') {
-      await auditAuthEvent('security_threat', request, {
+      await auditAuthEvent('suspicious', request, {
         operation: 'verify_magic_link',
         threats: validationResult.errors?.map(e => e.code).join(',') || 'unknown',
         securityLevel: validationResult.securityLevel
       });
       
-      return NextResponse.json(
-        { error: "Request validation failed" },
-        { status: 400 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Request validation failed", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
     const { email, schoolId, token } = validationResult.data!;
@@ -97,17 +96,17 @@ export async function POST(request: NextRequest) {
     // SECURITY: Additional environment-based checks
     if (currentEnvironment === 'production') {
       // In production, validate school domain strictly
-      const isValidDomain = await validateSchoolDomain(email, schoolId);
+      if (!schoolId) {
+        return NextResponse.json(ApiResponseHelper.error("School ID is required", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
+      }
+      const isValidDomain = await validateSchoolDomain(email, schoolId!);
       if (!isValidDomain) {
         await auditAuthEvent('failure', request, {
           operation: 'verify_magic_link',
           error: 'invalid_school_domain'
         });
         
-        return NextResponse.json(
-          { error: "Email domain does not match school" },
-          { status: 400 }
-        );
+        return NextResponse.json(ApiResponseHelper.error("Email domain does not match school", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
       }
     }
     
@@ -120,11 +119,11 @@ export async function POST(request: NextRequest) {
     
     try {
       // First try to verify as a Firebase action code (normal magic link)
-      actionCodeInfo = await auth.checkActionCode(token);
+      actionCodeInfo = await (auth as any).checkActionCode(token);
     } catch (firebaseError: any) {
       // If it's development, allow a simple bypass for testing
       if (currentEnvironment === 'development') {
-        console.log('🔧 Development mode: Bypassing Firebase action code verification');
+        logger.info('🔧 Development mode: Bypassing Firebase action code verification', { endpoint: '/api/auth/verify-magic-link' });
         
         isCustomToken = true;
         
@@ -135,7 +134,7 @@ export async function POST(request: NextRequest) {
           }
         };
         
-        console.log('✅ Development token accepted');
+        logger.info('✅ Development token accepted', { endpoint: '/api/auth/verify-magic-link' });
       } else {
         await auditAuthEvent('failure', request, {
           operation: 'verify_magic_link',
@@ -143,10 +142,7 @@ export async function POST(request: NextRequest) {
         });
         
         // Don't expose Firebase error details
-        return NextResponse.json(
-          { error: "Invalid or expired magic link" },
-          { status: 400 }
-        );
+        return NextResponse.json(ApiResponseHelper.error("Invalid or expired magic link", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
       }
     }
     
@@ -157,27 +153,23 @@ export async function POST(request: NextRequest) {
         error: 'email_mismatch'
       });
       
-      return NextResponse.json(
-        { error: "Email mismatch" },
-        { status: 400 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Email mismatch", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
     
     // Apply the action code to complete the sign-in (only for regular magic links)
     if (!isCustomToken) {
-      await auth.applyActionCode(token);
+      await (auth as any).applyActionCode(token);
     }
     
     // Get or create user record
     let userRecord;
     try {
-      userRecord = await auth.getUserByEmail(email);
+      userRecord = await auth.getUserByEmail(email!);
     } catch {
       // Create new user if they don't exist
       userRecord = await auth.createUser({
         email,
-        emailVerified: true,
-      });
+        emailVerified: true });
     }
     
     // Ensure email is verified
@@ -205,8 +197,7 @@ export async function POST(request: NextRequest) {
         fullName: "",
         handle: "",
         major: "",
-        isPublic: false,
-      });
+        isPublic: false });
       
       await auditAuthEvent('success', request, {
         userId: userRecord.uid,
@@ -216,8 +207,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({
         success: true,
         needsOnboarding: true,
-        userId: userRecord.uid,
-      });
+        userId: userRecord.uid });
     } else {
       // Existing user - they can proceed to app
       await auditAuthEvent('success', request, {
@@ -228,8 +218,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({
         success: true,
         needsOnboarding: false,
-        userId: userRecord.uid,
-      });
+        userId: userRecord.uid });
     }
     
   } catch (error) {

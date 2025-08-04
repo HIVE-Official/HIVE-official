@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { collection, doc, getDoc, addDoc, query, where, getDocs, updateDoc, orderBy, limit } from 'firebase/firestore';
-import { db } from '@hive/core/server';
-import { getCurrentUser } from '@hive/auth-logic';
+// Use admin SDK methods since we're in an API route
+import { dbAdmin } from '@/lib/firebase-admin';
+import { getCurrentUser } from '@/lib/server-auth';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 // Feed content generation interface
 interface FeedContentTemplate {
@@ -32,20 +34,20 @@ export async function POST(request: NextRequest) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const body = await request.json();
     const { deploymentId, toolId, action, data, elementId, generateContent = true } = body;
 
     if (!deploymentId || !toolId || !action) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+      return NextResponse.json(ApiResponseHelper.error("Missing required fields", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
     // Get deployment details
-    const deploymentDoc = await getDoc(doc(db, 'deployedTools', deploymentId));
-    if (!deploymentDoc.exists()) {
-      return NextResponse.json({ error: 'Deployment not found' }, { status: 404 });
+    const deploymentDoc = await dbAdmin.collection('deployedTools').doc(deploymentId).get();
+    if (!deploymentDoc.exists) {
+      return NextResponse.json(ApiResponseHelper.error("Deployment not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     const deployment = deploymentDoc.data();
@@ -59,9 +61,9 @@ export async function POST(request: NextRequest) {
     }
 
     // Get tool details
-    const toolDoc = await getDoc(doc(db, 'tools', toolId));
-    if (!toolDoc.exists()) {
-      return NextResponse.json({ error: 'Tool not found' }, { status: 404 });
+    const toolDoc = await dbAdmin.collection('tools').doc(toolId).get();
+    if (!toolDoc.exists) {
+      return NextResponse.json(ApiResponseHelper.error("Tool not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     const tool = toolDoc.data();
@@ -97,8 +99,8 @@ export async function POST(request: NextRequest) {
       spaceId: deployment.targetId
     });
   } catch (error) {
-    console.error('Error generating feed content:', error);
-    return NextResponse.json({ error: 'Failed to generate feed content' }, { status: 500 });
+    logger.error('Error generating feed content', { error: error, endpoint: '/api/tools/feed-integration' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to generate feed content", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -107,7 +109,7 @@ export async function GET(request: NextRequest) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const { searchParams } = new URL(request.url);
@@ -115,32 +117,31 @@ export async function GET(request: NextRequest) {
     const isActive = searchParams.get('isActive');
 
     if (!toolId) {
-      return NextResponse.json({ error: 'Tool ID is required' }, { status: 400 });
+      return NextResponse.json(ApiResponseHelper.error("Tool ID is required", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
     // Check if user can view this tool
-    const toolDoc = await getDoc(doc(db, 'tools', toolId));
-    if (!toolDoc.exists()) {
-      return NextResponse.json({ error: 'Tool not found' }, { status: 404 });
+    const toolDoc = await dbAdmin.collection('tools').doc(toolId).get();
+    if (!toolDoc.exists) {
+      return NextResponse.json(ApiResponseHelper.error("Tool not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     const tool = toolDoc.data();
     if (tool.ownerId !== user.uid && tool.status !== 'published') {
-      return NextResponse.json({ error: 'Access denied' }, { status: 403 });
+      return NextResponse.json(ApiResponseHelper.error("Access denied", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     // Get feed content templates
-    let templatesQuery = query(
-      collection(db, 'feedContentTemplates'),
-      where('toolId', '==', toolId),
-      orderBy('createdAt', 'desc')
-    );
+    let templatesQuery = dbAdmin
+      .collection('feedContentTemplates')
+      .where('toolId', '==', toolId)
+      .orderBy('createdAt', 'desc');
 
     if (isActive !== null) {
-      templatesQuery = query(templatesQuery, where('isActive', '==', isActive === 'true'));
+      templatesQuery = templatesQuery.where('isActive', '==', isActive === 'true');
     }
 
-    const templatesSnapshot = await getDocs(templatesQuery);
+    const templatesSnapshot = await templatesQuery.get();
     const templates = templatesSnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
@@ -151,8 +152,8 @@ export async function GET(request: NextRequest) {
       count: templates.length
     });
   } catch (error) {
-    console.error('Error fetching feed templates:', error);
-    return NextResponse.json({ error: 'Failed to fetch feed templates' }, { status: 500 });
+    logger.error('Error fetching feed templates', { error: error, endpoint: '/api/tools/feed-integration' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to fetch feed templates", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -169,14 +170,12 @@ async function generateFeedContentFromAction(params: {
 
   try {
     // Get feed content templates for this tool
-    const templatesQuery = query(
-      collection(db, 'feedContentTemplates'),
-      where('toolId', '==', tool.id || deployment.toolId),
-      where('triggerEvent', '==', action),
-      where('isActive', '==', true)
-    );
-
-    const templatesSnapshot = await getDocs(templatesQuery);
+    const templatesSnapshot = await dbAdmin
+      .collection('feedContentTemplates')
+      .where('toolId', '==', tool.id || deployment.toolId)
+      .where('triggerEvent', '==', action)
+      .where('isActive', '==', true)
+      .get();
     
     if (templatesSnapshot.empty) {
       // Use default content generation
@@ -193,7 +192,7 @@ async function generateFeedContentFromAction(params: {
 
     return generateContentFromTemplate(template, tool, data, user);
   } catch (error) {
-    console.error('Error generating content from action:', error);
+    logger.error('Error generating content from action', { error: error, endpoint: '/api/tools/feed-integration' });
     return generateDefaultContent(tool, action, data, elementId);
   }
 }
@@ -217,7 +216,7 @@ function generateDefaultContent(tool: any, action: string, data: any, elementId?
         }
       };
     
-    case 'stop_timer':
+    case 'stop_timer': {
       const minutes = Math.round((data.sessionTime || 0) / 1000 / 60);
       return {
         type: 'update',
@@ -231,6 +230,7 @@ function generateDefaultContent(tool: any, action: string, data: any, elementId?
           totalTime: data.totalTime
         }
       };
+    }
     
     case 'submit_poll':
       return {
@@ -371,11 +371,11 @@ async function createFeedPost(deployment: any, tool: any, userId: string, conten
     updatedAt: now
   };
 
-  const postRef = await addDoc(collection(db, 'posts'), post);
+  const postRef = await dbAdmin.collection('posts').add(post);
   
   // Update space activity
   const spaceDoc = await getDoc(doc(db, 'spaces', deployment.targetId));
-  if (spaceDoc.exists()) {
+  if (spaceDoc.exists) {
     const spaceData = spaceDoc.data();
     await updateDoc(doc(db, 'spaces', deployment.targetId), {
       lastActivity: now,

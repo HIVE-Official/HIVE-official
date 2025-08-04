@@ -1,11 +1,11 @@
 import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
 declare const buttonVariants: (props?: {
-    variant?: "link" | "primary" | "secondary" | "ghost" | "success" | "destructive" | "warning" | "info";
-    size?: "default" | "xs" | "sm" | "lg" | "xl" | "icon";
-    radius?: "none" | "default" | "sm" | "lg" | "full";
+    variant?: "primary" | "secondary" | "success" | "warning" | "ghost" | "destructive" | "info" | "link" | "accent";
+    size?: "default" | "xs" | "sm" | "md" | "lg" | "xl" | "icon";
+    radius?: "default" | "sm" | "lg" | "none" | "full";
     loading?: boolean;
-} & import("class-variance-authority/dist/types").ClassProp) => string;
+} & import("class-variance-authority/types").ClassProp) => string;
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {
     asChild?: boolean;
     loading?: boolean;
@@ -32,5 +32,5 @@ export declare const ButtonPresets: {
     TextLink: (props: Omit<ButtonProps, "variant">) => import("react/jsx-runtime").JSX.Element;
     CloseButton: (props: Omit<IconButtonProps, "variant" | "icon">) => import("react/jsx-runtime").JSX.Element;
 };
-export { Button, ButtonGroup, IconButton, buttonVariants };
+export { Button, Button as ButtonEnhanced, ButtonGroup, IconButton, buttonVariants };
 //# sourceMappingURL=button-enhanced.d.ts.map

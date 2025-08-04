@@ -1,26 +1,26 @@
 import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
 declare const spacerVariants: (props?: {
-    size?: "default" | "xs" | "sm" | "lg" | "xl" | "md" | "2xl" | "3xl";
-    direction?: "both" | "horizontal" | "vertical";
-} & import("class-variance-authority/dist/types").ClassProp) => string;
+    size?: "default" | "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl";
+    direction?: "horizontal" | "vertical" | "both";
+} & import("class-variance-authority/types").ClassProp) => string;
 declare const containerVariants: (props?: {
-    size?: "sm" | "lg" | "xl" | "md" | "2xl" | "full";
-    padding?: "none" | "default" | "sm" | "lg" | "xl";
+    size?: "sm" | "md" | "lg" | "xl" | "2xl" | "full";
+    padding?: "default" | "sm" | "lg" | "xl" | "none";
     center?: boolean;
-} & import("class-variance-authority/dist/types").ClassProp) => string;
+} & import("class-variance-authority/types").ClassProp) => string;
 declare const stackVariants: (props?: {
     direction?: "horizontal" | "vertical";
-    spacing?: "none" | "default" | "xs" | "sm" | "lg" | "xl" | "md" | "2xl" | "3xl";
+    spacing?: "default" | "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "none" | "3xl";
     align?: "center" | "end" | "start" | "baseline" | "stretch";
     justify?: "center" | "end" | "start" | "between" | "around" | "evenly";
     wrap?: boolean;
-} & import("class-variance-authority/dist/types").ClassProp) => string;
+} & import("class-variance-authority/types").ClassProp) => string;
 declare const separatorVariants: (props?: {
     orientation?: "horizontal" | "vertical";
-    variant?: "strong" | "default" | "muted" | "brand";
-    size?: "thick" | "thin" | "default";
-} & import("class-variance-authority/dist/types").ClassProp) => string;
+    variant?: "default" | "muted" | "brand" | "strong";
+    size?: "default" | "thin" | "thick";
+} & import("class-variance-authority/types").ClassProp) => string;
 export interface SpacerProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof spacerVariants> {
 }
 export declare const Spacer: React.ForwardRefExoticComponent<SpacerProps & React.RefAttributes<HTMLDivElement>>;

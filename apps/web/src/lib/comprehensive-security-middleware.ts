@@ -4,7 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { validateRequest, ValidationMiddlewareOptions } from './validation-middleware';
+import { validateRequest } from './validation-middleware';
 import { sessionMiddleware, SessionMiddlewareOptions, SessionContext } from './session-middleware';
 import { csrfMiddleware } from './csrf-protection';
 import { enforceRateLimit } from './secure-rate-limiter';
@@ -358,9 +358,9 @@ export function applySecurityHeaders(
  */
 export function withComprehensiveSecurity(
   handler: (
-    request: NextRequest,
-    context: SecurityResult['context'],
-    params?: any
+    _request: NextRequest,
+    _context: SecurityResult['context'],
+    _params?: any
   ) => Promise<NextResponse>,
   config: SecurityConfig
 ) {

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { ArrowLeft, Calendar, Heart } from "lucide-react";
 import Link from "next/link";
-import { Button } from "@hive/ui";
+import { Suspense } from "react";
 
 interface LegalDocument {
   version: string;
@@ -426,21 +426,16 @@ export const metadata: Metadata = {
 
 export default function CommunityGuidelinesPage() {
   return (
-    <div className="min-h-screen bg-black">
+    <Suspense fallback={<div>Loading...</div>}>
+      <div className="min-h-screen bg-black">
       {/* Header */}
       <div className="border-b border-gray-800 bg-gray-950/50">
         <div className="mx-auto max-w-4xl px-4 py-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <Link href="/">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-gray-400 hover:text-white"
-                >
-                  <ArrowLeft className="mr-2 h-4 w-4" />
-                  Back to HIVE
-                </Button>
+              <Link href="/" className="inline-flex items-center gap-2 px-3 py-1 text-sm text-gray-400 hover:text-white transition-colors">
+                <ArrowLeft className="h-4 w-4" />
+                Back to HIVE
               </Link>
               <div className="h-6 w-px bg-gray-700" />
               <div className="flex items-center gap-2 text-gray-400">
@@ -469,6 +464,7 @@ export default function CommunityGuidelinesPage() {
 
         <div className="text-gray-300">{CURRENT_GUIDELINES.content}</div>
       </div>
-    </div>
+      </div>
+    </Suspense>
   );
 }

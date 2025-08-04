@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { motion } from "@hive/ui/src/components/framer-motion-proxy";
+import { motion } from "@hive/ui";
 import { GraduationCap, Users, BookOpen, ArrowRight, Mail, CheckCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { HiveCard, HiveButton, HiveInput } from "@hive/ui";
@@ -250,11 +250,11 @@ export function HiveUserTypeStep({ data, updateData, onNext }: HiveUserTypeStepP
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 + index * 0.1 }}
           >
-            <motion.button
+            <button
               onClick={() => type.available ? handleTypeSelect(type.id) : undefined}
               className={cn(
                 "w-full p-[var(--hive-spacing-6)] rounded-2xl border-2 transition-all duration-300 text-left",
-                "hover:scale-105 active:scale-95",
+                type.available && "hover:scale-105 hover:-translate-y-1 active:scale-[0.98]",
                 type.available
                   ? "cursor-pointer hover:border-[var(--hive-brand-primary)]/50"
                   : "cursor-not-allowed opacity-60",
@@ -262,8 +262,6 @@ export function HiveUserTypeStep({ data, updateData, onNext }: HiveUserTypeStepP
                   ? "bg-[var(--hive-brand-primary)]/20 border-[var(--hive-brand-primary)]/50 shadow-lg shadow-[var(--hive-brand-primary)]/25"
                   : "bg-[var(--hive-background-secondary)]/20 border-[var(--hive-border-primary)]/30"
               )}
-              whileHover={type.available ? { y: -4 } : {}}
-              whileTap={type.available ? { scale: 0.98 } : {}}
               disabled={!type.available}
             >
               <div className="flex items-center space-x-4">
@@ -306,7 +304,7 @@ export function HiveUserTypeStep({ data, updateData, onNext }: HiveUserTypeStepP
                   <ArrowRight className="w-5 h-5 text-[var(--hive-text-muted)] transition-transform duration-300 group-hover:translate-x-1" />
                 )}
               </div>
-            </motion.button>
+            </button>
           </motion.div>
         ))}
       </div>

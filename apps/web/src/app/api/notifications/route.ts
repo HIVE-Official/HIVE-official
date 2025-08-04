@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 interface HiveNotification {
   id: string;
@@ -137,11 +139,8 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('Error fetching notifications:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch notifications' },
-      { status: 500 }
-    );
+    logger.error('Error fetching notifications', { error: error, endpoint: '/api/notifications' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to fetch notifications", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -155,7 +154,7 @@ export async function POST(request: NextRequest) {
         : [body.notificationIds];
 
       // In a real app, this would update the database
-      console.log('Marking notifications as read:', notificationIds);
+      logger.info('Marking notifications as read', { data: notificationIds, endpoint: '/api/notifications' });
 
       return NextResponse.json({
         success: true,
@@ -165,7 +164,7 @@ export async function POST(request: NextRequest) {
 
     if (body.action === 'mark_all_read') {
       // In a real app, this would update all notifications for the user
-      console.log('Marking all notifications as read');
+      logger.info('Marking all notifications as read', { endpoint: '/api/notifications' });
 
       return NextResponse.json({
         success: true,
@@ -179,7 +178,7 @@ export async function POST(request: NextRequest) {
         : [body.notificationIds];
 
       // In a real app, this would delete from database
-      console.log('Deleting notifications:', notificationIds);
+      logger.info('Deleting notifications', { data: notificationIds, endpoint: '/api/notifications' });
 
       return NextResponse.json({
         success: true,
@@ -187,17 +186,11 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    return NextResponse.json(
-      { error: 'Invalid action' },
-      { status: 400 }
-    );
+    return NextResponse.json(ApiResponseHelper.error("Invalid action", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
 
   } catch (error) {
-    console.error('Error handling notification action:', error);
-    return NextResponse.json(
-      { error: 'Failed to process notification action' },
-      { status: 500 }
-    );
+    logger.error('Error handling notification action', { error: error, endpoint: '/api/notifications' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to process notification action", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -207,14 +200,11 @@ export async function PUT(request: NextRequest) {
     const { notificationId, isRead } = body;
 
     if (!notificationId) {
-      return NextResponse.json(
-        { error: 'Notification ID is required' },
-        { status: 400 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Notification ID is required", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
     // In a real app, this would update the notification in the database
-    console.log(`Updating notification ${notificationId} read status to:`, isRead);
+    logger.info('Updating notification read status to', { notificationId, data: isRead, endpoint: '/api/notifications' });
 
     return NextResponse.json({
       success: true,
@@ -222,10 +212,7 @@ export async function PUT(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('Error updating notification:', error);
-    return NextResponse.json(
-      { error: 'Failed to update notification' },
-      { status: 500 }
-    );
+    logger.error('Error updating notification', { error: error, endpoint: '/api/notifications' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to update notification", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

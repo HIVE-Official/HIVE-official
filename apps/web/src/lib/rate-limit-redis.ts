@@ -8,7 +8,7 @@ import { redisService } from './redis-client';
 export interface RateLimitConfig {
   maxRequests: number;
   windowMs: number;
-  keyGenerator?: (identifier: string) => string;
+  keyGenerator?: (_identifier: string) => string;
   skipOnError?: boolean; // Whether to allow requests when Redis is down
 }
 
@@ -321,7 +321,7 @@ export function createRateLimit(configName: keyof typeof RateLimitConfigs): Slid
 /**
  * Legacy compatibility function for existing code
  */
-export function rateLimit(config: { windowMs: number; max: number }): { check: (identifier?: string) => Promise<void> } {
+export function rateLimit(config: { windowMs: number; max: number }): { check: (_identifier?: string) => Promise<void> } {
   const rateLimiter = new SlidingWindowRateLimit({
     maxRequests: config.max,
     windowMs: config.windowMs,

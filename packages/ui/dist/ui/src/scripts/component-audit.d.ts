@@ -72,5 +72,6 @@ declare class HiveComponentAuditor {
     private writeReport;
     private generateRecommendations;
 }
-export { HiveComponentAuditor, ComponentAuditResult, AuditSummary };
+export { HiveComponentAuditor };
+export type { ComponentAuditResult, AuditSummary };
 //# sourceMappingURL=component-audit.d.ts.map

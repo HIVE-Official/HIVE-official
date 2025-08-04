@@ -10,7 +10,25 @@ const config: StorybookConfig = {
     '../src/stories/02-molecules/**/*.stories.@(js|jsx|ts|tsx)', // Re-enabled with comprehensive new stories
     '../src/stories/03-organisms/**/*.stories.@(js|jsx|ts|tsx)',
     '../src/stories/04-templates/**/*.stories.@(js|jsx|ts|tsx)',
+    '../src/stories/05-shell/**/*.stories.@(js|jsx|ts|tsx)', // HIVE Shell System
     '../src/stories/05-pages/**/*.stories.@(js|jsx|ts|tsx)',
+    
+    // SYSTEM-BASED ORGANIZATION
+    '../src/stories/Profile/**/*.stories.@(js|jsx|ts|tsx)', // Profile System
+    '../src/stories/Search/**/*.stories.@(js|jsx|ts|tsx)', // Search System
+    '../src/stories/Admin/**/*.stories.@(js|jsx|ts|tsx)', // Admin System
+    '../src/stories/Settings/**/*.stories.@(js|jsx|ts|tsx)', // Settings System
+    '../src/stories/01-Atomic-Components/**/*.stories.@(js|jsx|ts|tsx)', // Atomic Components
+    '../src/stories/02-Molecular-Components/**/*.stories.@(js|jsx|ts|tsx)', // Molecular Components
+    '../src/stories/03-Navigation-System/**/*.stories.@(js|jsx|ts|tsx)', // Navigation System
+    '../src/stories/04-Spaces-System/**/*.stories.@(js|jsx|ts|tsx)', // Spaces System
+    '../src/stories/05-Profile-System/**/*.stories.@(js|jsx|ts|tsx)', // Profile System (Legacy)
+    '../src/stories/06-feed-rituals/**/*.stories.@(js|jsx|ts|tsx)', // Feed & Rituals
+    '../src/stories/07-Tools-Creation/**/*.stories.@(js|jsx|ts|tsx)', // Tools & Creation
+    '../src/stories/99-System-Integration/**/*.stories.@(js|jsx|ts|tsx)', // System Integration
+    
+    // ATOMIC DESIGN SYSTEM - Co-located stories (NEW)
+    '../src/atomic/**/*.stories.@(js|jsx|ts|tsx)',
     
     // Include all MDX docs
     '../src/**/*.mdx'
@@ -19,6 +37,24 @@ const config: StorybookConfig = {
     '@storybook/addon-links',
     '@storybook/addon-essentials',
     '@storybook/addon-interactions',
+    '@storybook/addon-viewport',
+    '@storybook/addon-docs',
+    '@storybook/addon-controls',
+    '@storybook/addon-backgrounds',
+    '@storybook/addon-measure',
+    '@storybook/addon-outline',
+    {
+      name: '@storybook/addon-storysource',
+      options: {
+        rule: {
+          test: [/\.stories\.tsx?$/],
+          include: [path.resolve(__dirname, '../src')],
+        },
+        loaderOptions: {
+          prettierConfig: { printWidth: 80, singleQuote: false },
+        },
+      },
+    },
   ],
   framework: {
     name: '@storybook/react-vite',
@@ -56,6 +92,11 @@ const config: StorybookConfig = {
           '@hive/validation': path.resolve(__dirname, '../../validation/src'),
           // Completely exclude auth-logic from Storybook
           '@hive/auth-logic': path.resolve(__dirname, 'mocks.tsx'),
+          // Mock Next.js navigation for Storybook
+          'next/navigation': path.resolve(__dirname, 'next-mocks.tsx'),
+          'next/router': path.resolve(__dirname, 'next-mocks.tsx'),
+          // Mock navigation context hook
+          '../../hooks/use-navigation-context': path.resolve(__dirname, 'navigation-context-mock.tsx'),
           // Mock server-side modules for browser compatibility
           'firebase-admin': path.resolve(__dirname, 'mocks.tsx'),
           'firebase-admin/firestore': path.resolve(__dirname, 'mocks.tsx'),

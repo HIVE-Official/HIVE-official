@@ -3,7 +3,7 @@ import { type VariantProps } from 'class-variance-authority';
 import { type Space } from '@hive/core';
 declare const hiveEventsSurfaceVariants: (props?: {
     mode?: "view" | "builder" | "edit";
-} & import("class-variance-authority/dist/types").ClassProp) => string;
+} & import("class-variance-authority/types").ClassProp) => string;
 declare const eventTypes: {
     readonly academic: {
         readonly icon: React.ForwardRefExoticComponent<Omit<import("lucide-react").LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>>;

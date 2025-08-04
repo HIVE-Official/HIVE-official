@@ -1,9 +1,9 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import { Badge } from "../ui/badge";
-import { Progress } from "../hive-progress";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card.js";
+import { Badge } from "../ui/badge.js";
+import { Progress } from "../hive-progress.js";
 import { Activity, Users, TrendingUp, AlertTriangle, CheckCircle, Clock, BarChart3, Eye, MousePointer, Zap, Globe, Code, Award, } from "lucide-react";
 function MetricCard({ title, value, change, trend, icon, description, }) {
     const getTrendColor = () => {

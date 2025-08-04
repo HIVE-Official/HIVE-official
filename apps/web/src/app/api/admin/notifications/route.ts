@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { withAdminAuth } from '@/lib/admin-middleware';
 import { adminNotifications } from '@/lib/admin-notifications';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 /**
  * Admin Notifications API
@@ -23,13 +25,12 @@ export async function GET(request: NextRequest) {
         notifications,
         unreadCount: stats.unread,
         totalCount: stats.total,
-        statistics: stats,
-      });
+        statistics: stats });
     } catch (error) {
-      console.error('Error fetching admin notifications:', error);
+      logger.error('Error fetching admin notifications', { error: error, endpoint: '/api/admin/notifications' });
       return NextResponse.json(
         { success: false, error: 'Failed to fetch notifications' },
-        { status: 500 }
+        { status: HttpStatus.INTERNAL_SERVER_ERROR }
       );
     }
   });
@@ -48,7 +49,7 @@ export async function POST(request: NextRequest) {
           if (!notificationId) {
             return NextResponse.json(
               { success: false, error: 'notificationId is required' },
-              { status: 400 }
+              { status: HttpStatus.BAD_REQUEST }
             );
           }
           result = await adminNotifications.markAsRead(notificationId, admin.id);
@@ -67,19 +68,18 @@ export async function POST(request: NextRequest) {
         default:
           return NextResponse.json(
             { success: false, error: 'Invalid action' },
-            { status: 400 }
+            { status: HttpStatus.BAD_REQUEST }
           );
       }
 
       return NextResponse.json({
         success: true,
-        result,
-      });
+        result });
     } catch (error) {
-      console.error('Error processing notification action:', error);
+      logger.error('Error processing notification action', { error: error, endpoint: '/api/admin/notifications' });
       return NextResponse.json(
         { success: false, error: 'Failed to process notification action' },
-        { status: 500 }
+        { status: HttpStatus.INTERNAL_SERVER_ERROR }
       );
     }
   });

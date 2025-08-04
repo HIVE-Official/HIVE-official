@@ -17,7 +17,7 @@ interface PageContainerProps {
   breadcrumbs?: BreadcrumbItem[];
   actions?: React.ReactNode;
   className?: string;
-  maxWidth?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full';
+  maxWidth?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '4xl' | '7xl' | 'full';
   padding?: 'none' | 'sm' | 'md' | 'lg';
 }
 
@@ -37,6 +37,8 @@ export function PageContainer({
     lg: 'max-w-4xl',
     xl: 'max-w-6xl',
     '2xl': 'max-w-7xl',
+    '4xl': 'max-w-screen-xl',
+    '7xl': 'max-w-screen-2xl',
     full: 'max-w-none'
   };
 
@@ -62,13 +64,13 @@ export function PageContainer({
               <ol className="flex items-center space-x-1 text-sm">
                 {breadcrumbs.map((item, index) => (
                   <li key={index} className="flex items-center">
-                    {index > 0 && <span className="mx-2 text-zinc-400">/</span>}
+                    {index > 0 && <span className="mx-2 text-[var(--hive-text-tertiary)]">/</span>}
                     {item.href ? (
-                      <a href={item.href} className="text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100">
+                      <a href={item.href} className="text-[var(--hive-text-secondary)] hover:text-[var(--hive-text-primary)]">
                         {item.label}
                       </a>
                     ) : (
-                      <span className="text-zinc-900 dark:text-zinc-100">{item.label}</span>
+                      <span className="text-[var(--hive-text-primary)]">{item.label}</span>
                     )}
                   </li>
                 ))}

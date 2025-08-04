@@ -2,8 +2,8 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
-import { cn } from '../lib/utils';
-import { darkLuxury } from '../theme/dark-luxury';
+import { cn } from '../lib/utils.js';
+import { darkLuxury } from '../theme/dark-luxury.js';
 export function PageTransition({ children, className }) {
     const pathname = usePathname();
     const [isTransitioning, setIsTransitioning] = useState(false);

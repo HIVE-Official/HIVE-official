@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { Card, Button } from '@hive/ui';
+import { Card, Button } from "@hive/ui";
+import { Alert } from "@/components/temp-stubs";
 import { 
   ArrowLeft, 
   User, 
@@ -127,7 +128,7 @@ export default function ToolDeployPage() {
     };
 
     loadTool();
-    flags.trackEvent('tools', 'deploy_start', { toolId });
+    flags.trackEvent('tools', 'interact', { action: 'deploy_start', toolId });
   }, [toolId, flags]);
 
   const handleTargetSelect = (target: DeploymentTarget) => {
@@ -169,7 +170,8 @@ export default function ToolDeployPage() {
         throw new Error('Failed to deploy tool');
       }
 
-      flags.trackEvent('tools', 'deploy_success', { 
+      flags.trackEvent('tools', 'complete', { 
+        action: 'deploy_success',
         toolId, 
         targetType: deploymentConfig.targetType,
         targetId: deploymentConfig.targetId 

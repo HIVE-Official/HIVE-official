@@ -4,10 +4,11 @@ import { z } from "zod";
 import { dbAdmin } from "@/lib/firebase-admin";
 import { FieldValue } from "firebase-admin/firestore";
 import { getCohortSpaceId, generateCohortSpaces } from "@hive/core";
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 const autoJoinSchema = z.object({
-  userId: z.string().min(1, "User ID is required"),
-});
+  userId: z.string().min(1, "User ID is required") });
 
 /**
  * Auto-join a user to default/popular spaces after onboarding
@@ -23,7 +24,7 @@ export async function POST(request: NextRequest) {
     const userDoc = await dbAdmin.collection("users").doc(userId).get();
     
     if (!userDoc.exists) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
+      return NextResponse.json(ApiResponseHelper.error("User not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     const userData = userDoc.data();
@@ -101,7 +102,7 @@ export async function POST(request: NextRequest) {
         if (!spaceDoc.exists) {
           // For cohort spaces, create them if they don't exist
           if (type === "cohort" && userMajor && userGraduationYear) {
-            console.log(`Cohort space ${id} not found, creating it...`);
+            logger.info('Cohort space not found, creating it...', { id, endpoint: '/api/spaces/auto-join' });
             
             // Find the matching cohort space config
             const cohortConfig = { major: userMajor, graduationYear: userGraduationYear };
@@ -129,13 +130,13 @@ export async function POST(request: NextRequest) {
                 }
               });
               
-              console.log(`Created cohort space: ${matchingSpace.name} (${id})`);
+              logger.info('Created cohort space:( )', { matchingSpace, id, endpoint: '/api/spaces/auto-join' });
             } else {
-              console.log(`Could not find matching cohort config for ${id}, skipping`);
+              logger.info('Could not find matching cohort config for , skipping', { id, endpoint: '/api/spaces/auto-join' });
               continue;
             }
           } else {
-            console.log(`Space ${type}/${id} not found, skipping`);
+            logger.info('Space/ not found, skipping', { type, id, endpoint: '/api/spaces/auto-join' });
             continue;
           }
         }
@@ -145,7 +146,7 @@ export async function POST(request: NextRequest) {
         const memberDoc = await memberRef.get();
         
         if (memberDoc.exists) {
-          console.log(`User ${userId} already member of ${type}/${id}, skipping`);
+          logger.info('User already member of/ , skipping', {  type, id, endpoint: '/api/spaces/auto-join'  });
           continue;
         }
 
@@ -164,8 +165,7 @@ export async function POST(request: NextRequest) {
         // Increment the space's member count
         batch.update(spaceRef, {
           memberCount: FieldValue.increment(1),
-          updatedAt: FieldValue.serverTimestamp(),
-        });
+          updatedAt: FieldValue.serverTimestamp() });
 
         // Execute the batch
         await batch.commit();
@@ -174,18 +174,16 @@ export async function POST(request: NextRequest) {
           spaceType: type,
           spaceId: id,
           spaceName: spaceDoc.data()?.name || name || id,
-          joined: true,
-        });
+          joined: true });
 
-        console.log(`Successfully auto-joined user ${userId} to ${type}/${id} (${spaceDoc.data()?.name || name})`);
+        logger.info('Successfully auto-joined user to space', { userId, id, spaceName: spaceDoc.data()?.name || name, endpoint: '/api/spaces/auto-join'    });
         
       } catch (spaceError) {
-        console.error(`Failed to auto-join ${type}/${id}:`, spaceError);
+        logger.error('Failed to auto-join space', { type, id, error: spaceError, endpoint: '/api/spaces/auto-join' });
         errors.push({
           spaceType: type,
           spaceId: id,
-          error: spaceError instanceof Error ? spaceError.message : "Unknown error",
-        });
+          error: spaceError instanceof Error ? spaceError.message : "Unknown error" });
       }
     }
 
@@ -203,18 +201,15 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error("Auto-join error:", error);
+    logger.error('Auto-join error', { error: error, endpoint: '/api/spaces/auto-join' });
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: "Invalid request data", details: error.errors },
-        { status: 400 }
+        { status: HttpStatus.BAD_REQUEST }
       );
     }
 
-    return NextResponse.json(
-      { error: "Failed to process auto-join request" },
-      { status: 500 }
-    );
+    return NextResponse.json(ApiResponseHelper.error("Failed to process auto-join request", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

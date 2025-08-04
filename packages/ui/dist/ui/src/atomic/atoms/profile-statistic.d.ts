@@ -2,11 +2,11 @@ import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
 import { LucideIcon } from 'lucide-react';
 declare const profileStatisticVariants: (props?: {
-    size?: "xs" | "sm" | "lg" | "md";
+    size?: "xs" | "sm" | "md" | "lg";
     variant?: "default" | "ghost" | "compact" | "highlight";
     interactive?: boolean;
     trend?: "none" | "up" | "down" | "neutral";
-} & import("class-variance-authority/dist/types").ClassProp) => string;
+} & import("class-variance-authority/types").ClassProp) => string;
 export interface ProfileStatisticProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof profileStatisticVariants> {
     value: string | number;
     label: string;

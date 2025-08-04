@@ -2,6 +2,8 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { requireAuth } from '@/lib/auth-server';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 /**
  * Spaces overview API - provides summary statistics for the main spaces page
@@ -43,7 +45,7 @@ export async function GET(request: NextRequest) {
         
         allSpaces.push(...spacesFromType);
       } catch (error) {
-        console.error(`Error querying ${spaceType}:`, error);
+        logger.error('Error querying', { spaceType, error: error, endpoint: '/api/spaces/overview' });
       }
     }
 
@@ -81,7 +83,7 @@ export async function GET(request: NextRequest) {
         }
       }
     } catch (error) {
-      console.error('Error getting user memberships:', error);
+      logger.error('Error getting user memberships', { error: error, endpoint: '/api/spaces/overview' });
     }
 
     // Sort spaces by member count for trending/popular
@@ -122,10 +124,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(overview);
   } catch (error) {
-    console.error('Spaces overview error:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch spaces overview' },
-      { status: 500 }
-    );
+    logger.error('Spaces overview error', { error: error, endpoint: '/api/spaces/overview' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to fetch spaces overview", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

@@ -6,7 +6,7 @@ export { UserMenu } from './user-menu';
 export { BreadcrumbNavigation, SmartBreadcrumbNavigation, generateBreadcrumbsFromPath } from './breadcrumb-navigation';
 export { CommandPalette } from './command-palette';
 export { NotificationCenter } from './notification-center';
-export { PageContainer as ShellPageContainer } from './page-container';
+export { PageContainer as ShellPageContainer, PageContainer } from './page-container';
 export { ShellProvider, useShell } from './shell-provider';
 export { NotificationProvider, useNotifications } from './notification-service';
 export { ProfileLayout, SpaceLayout, FeedLayout, HiveLabLayout, RitualLayout, SplitLayout, ModalLayout } from './page-layouts';

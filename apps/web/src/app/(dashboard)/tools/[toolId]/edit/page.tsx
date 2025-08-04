@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Button, Card, Grid as _Grid } from "@hive/ui";
-import { Save, Eye, Play, Settings as _Settings, Code2, Palette as _Palette, Layout, Database, Zap, ArrowLeft, MoreHorizontal, Copy as _Copy, Trash2 as _Trash2, Share } from "lucide-react";
+import { Save, Eye, Play, Settings as _Settings, Code2, Palette as _Palette, Layout, Database, Zap, ArrowLeft, MoreHorizontal, Copy as _Copy, Trash2 as _Trash2 } from "lucide-react";
 import { useFeatureFlags } from "@hive/hooks";
 
 interface ToolElement {
@@ -89,7 +89,7 @@ const MOCK_TOOL: ToolConfig = {
 
 const ElementCard = ({ element, onSelect, isSelected }: { 
   element: ToolElement; 
-  onSelect: (id: string) => void;
+  onSelect: (_id: string) => void;
   isSelected: boolean;
 }) => {
   const getIcon = (type: string) => {

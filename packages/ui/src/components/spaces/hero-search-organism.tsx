@@ -287,6 +287,7 @@ export interface QuickActionButtonsProps {
     icon?: React.ComponentType<{ className?: string }>;
     onClick: () => void;
     variant?: "default" | "primary" | "outline";
+    className?: string;
   }>;
   /** Loading state */
   isLoading?: boolean;

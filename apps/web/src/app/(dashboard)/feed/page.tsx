@@ -1,16 +1,10 @@
 "use client";
 
-import { 
-  PageContainer, 
-  Button, 
-  Card,
-  SpaceFeed as _SpaceFeed,
-  Badge
-} from '@hive/ui';
+import { Button, Card, Badge } from "@hive/ui";
+import { PageContainer } from "@/components/temp-stubs";
 import { 
   Activity, 
   Plus, 
-  Filter as _Filter, 
   TrendingUp, 
   Users, 
   Calendar, 
@@ -21,10 +15,11 @@ import {
   Bookmark,
   Bell,
   Settings,
-  Eye as _Eye,
   Globe
 } from 'lucide-react';
 import { useSession } from '../../../hooks/use-session';
+import { ErrorBoundary } from '../../../components/error-boundary';
+import { PostComposer } from '../../../components/social/post-composer';
 import { useState, useEffect } from 'react';
 
 // Mock data interfaces for campus feed
@@ -63,130 +58,98 @@ interface FeedPost {
 }
 
 export default function FeedPage() {
-  const { user: _user } = useSession();
+  const { user } = useSession();
   const [feedFilter, setFeedFilter] = useState<'all' | 'following' | 'spaces' | 'academic'>('all');
   const [feedPosts, setFeedPosts] = useState<FeedPost[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [showComposer, setShowComposer] = useState(false);
 
-  // Mock feed data
+  // Helper functions for data transformation
+  const mapContentTypeToFeedType = (contentType: string): FeedPost['type'] => {
+    switch (contentType) {
+      case 'tool_generated': return 'tool';
+      case 'tool_enhanced': return 'tool';
+      case 'space_event': return 'event';
+      case 'builder_announcement': return 'post';
+      default: return 'post';
+    }
+  };
+
+  const extractTitleFromContent = (content: string): string => {
+    if (!content) return 'Untitled Post';
+    // Extract first line or first 60 characters as title
+    const firstLine = content.split('\n')[0];
+    return firstLine.length > 60 ? firstLine.substring(0, 60) + '...' : firstLine;
+  };
+
+  // Load real feed data from API
   useEffect(() => {
-    const mockPosts: FeedPost[] = [
-      {
-        id: '1',
-        type: 'space_activity',
-        author: {
-          id: 'user-1',
-          name: 'Sarah Chen',
-          handle: 'sarah_cs',
-          role: 'CS Junior'
-        },
-        space: {
-          id: 'space-cs',
-          name: 'CS Study Group',
-          type: 'academic'
-        },
-        title: 'Algorithm Study Session Tomorrow',
-        content: 'Hey everyone! We\'re having an intensive algorithm study session tomorrow at 6 PM in the library. We\'ll be covering dynamic programming and graph algorithms. Bring your laptops and questions! 💻',
-        timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-        engagement: {
-          likes: 24,
-          comments: 8,
-          shares: 3,
-          bookmarks: 12
-        },
-        tags: ['algorithms', 'study-group', 'library'],
-        isLiked: false,
-        isBookmarked: true
-      },
-      {
-        id: '2',
-        type: 'tool',
-        author: {
-          id: 'user-2',
-          name: 'Alex Rodriguez',
-          handle: 'alex_builds',
-          role: 'Builder'
-        },
-        title: 'New Tool: GPA Trend Analyzer',
-        content: 'Just published a tool that helps you visualize your GPA trends across semesters and predict future performance based on current trajectory. Try it out and let me know what you think!',
-        timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(),
-        engagement: {
-          likes: 45,
-          comments: 12,
-          shares: 18,
-          bookmarks: 23
-        },
-        tags: ['gpa', 'analytics', 'tools'],
-        media: {
-          type: 'tool',
-          metadata: { toolId: 'gpa-analyzer', category: 'academic' }
-        },
-        isLiked: true,
-        isBookmarked: false
-      },
-      {
-        id: '3',
-        type: 'event',
-        author: {
-          id: 'user-3',
-          name: 'Campus Events',
-          handle: 'ub_events',
-          role: 'Official'
-        },
-        space: {
-          id: 'space-events',
-          name: 'Campus Events',
-          type: 'official'
-        },
-        title: 'Fall Career Fair - Next Week',
-        content: 'The Fall Career Fair is happening next Tuesday-Thursday at the Student Union. Over 150 companies will be there, including Google, Microsoft, and local Buffalo startups. Register now!',
-        timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(),
-        engagement: {
-          likes: 156,
-          comments: 34,
-          shares: 89,
-          bookmarks: 234
-        },
-        tags: ['career-fair', 'jobs', 'networking'],
-        media: {
-          type: 'event',
-          metadata: { eventId: 'fall-career-fair-2024', location: 'Student Union' }
-        },
-        isLiked: false,
-        isBookmarked: true
-      },
-      {
-        id: '4',
-        type: 'post',
-        author: {
-          id: 'user-4',
-          name: 'Maya Patel',
-          handle: 'maya_premed',
-          role: 'Pre-Med Senior'
-        },
-        space: {
-          id: 'space-premed',
-          name: 'Pre-Med Society',
-          type: 'academic'
-        },
-        title: 'MCAT Study Strategy That Worked',
-        content: 'After scoring 520 on the MCAT, here\'s the study strategy that worked for me: 1) Start with content review 2) Practice questions daily 3) Full-length tests weekly 4) Review mistakes thoroughly. Happy to answer questions!',
-        timestamp: new Date(Date.now() - 8 * 60 * 60 * 1000).toISOString(),
-        engagement: {
-          likes: 89,
-          comments: 23,
-          shares: 45,
-          bookmarks: 67
-        },
-        tags: ['mcat', 'study-tips', 'pre-med'],
-        isLiked: false,
-        isBookmarked: false
+    const loadFeedData = async () => {
+      try {
+        setIsLoading(true);
+        
+        // Fetch from the real feed API
+        const response = await fetch('/api/feed?' + new URLSearchParams({
+          limit: '20',
+          feedType: feedFilter === 'all' ? 'campus' : feedFilter === 'spaces' ? 'personal' : 'personal',
+          refresh: 'false'
+        }));
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch feed');
+        }
+        
+        const data = await response.json();
+        
+        if (data.success && data.posts) {
+          // Transform API posts to FeedPost format
+          const transformedPosts: FeedPost[] = data.posts.map((post: any) => ({
+            id: post.id,
+            type: mapContentTypeToFeedType(post._metadata?.contentType || post.type || 'post'),
+            author: {
+              id: post.authorId || post.author?.id || 'unknown',
+              name: post.authorName || post.author?.name || 'Anonymous',
+              handle: post.authorHandle || post.author?.handle || 'unknown',
+              avatar: post.authorAvatar || post.author?.avatar,
+              role: post.authorRole || post.author?.role
+            },
+            space: post._metadata?.spaceId ? {
+              id: post._metadata.spaceId,
+              name: post._metadata.spaceName || 'Unknown Space', 
+              type: 'space'
+            } : undefined,
+            title: post.title || extractTitleFromContent(post.content),
+            content: post.content || post.body || '',
+            timestamp: post.createdAt || post.timestamp || new Date().toISOString(),
+            engagement: {
+              likes: post.reactions?.heart || post.engagement?.likes || 0,
+              comments: post.reactions?.comments || post.engagement?.comments || 0,
+              shares: post.reactions?.shares || post.engagement?.shares || 0,
+              bookmarks: post.reactions?.bookmarks || post.engagement?.bookmarks || 0
+            },
+            tags: post.tags || [],
+            media: post.media,
+            isLiked: false, // TODO: Implement user-specific like status
+            isBookmarked: false // TODO: Implement user-specific bookmark status
+          }));
+          
+          setFeedPosts(transformedPosts);
+        } else {
+          // Fallback to empty state or error handling
+          console.warn('Feed API returned no posts, showing empty state');
+          setFeedPosts([]);
+        }
+      } catch (error) {
+        console.error('Error loading feed:', error);
+        // On error, show empty state rather than crash
+        setFeedPosts([]);
+      } finally {
+        setIsLoading(false);
       }
-    ];
+    };
     
-    setFeedPosts(mockPosts);
-    setIsLoading(false);
-  }, []);
+    loadFeedData();
+  }, [feedFilter]); // Reload when filter changes
 
   const handleLike = (postId: string) => {
     setFeedPosts(posts => posts.map(post => 
@@ -264,7 +227,8 @@ export default function FeedPage() {
   }
 
   return (
-    <PageContainer
+    <ErrorBoundary>
+      <PageContainer
       title="Campus Feed"
       subtitle="Your personalized campus pulse and coordination center"
       breadcrumbs={[
@@ -275,7 +239,7 @@ export default function FeedPage() {
           {/* Feed Filter */}
           <div className="flex items-center bg-hive-background-overlay rounded-lg p-1">
             <Button
-              variant={feedFilter === 'all' ? 'default' : 'ghost'}
+              variant={feedFilter === 'all' ? 'primary' : 'ghost'}
               size="sm"
               onClick={() => setFeedFilter('all')}
               className="text-xs"
@@ -284,7 +248,7 @@ export default function FeedPage() {
               All
             </Button>
             <Button
-              variant={feedFilter === 'following' ? 'default' : 'ghost'}
+              variant={feedFilter === 'following' ? 'primary' : 'ghost'}
               size="sm"
               onClick={() => setFeedFilter('following')}
               className="text-xs"
@@ -293,7 +257,7 @@ export default function FeedPage() {
               Following
             </Button>
             <Button
-              variant={feedFilter === 'spaces' ? 'default' : 'ghost'}
+              variant={feedFilter === 'spaces' ? 'primary' : 'ghost'}
               size="sm"
               onClick={() => setFeedFilter('spaces')}
               className="text-xs"
@@ -302,7 +266,7 @@ export default function FeedPage() {
               Spaces
             </Button>
             <Button
-              variant={feedFilter === 'academic' ? 'default' : 'ghost'}
+              variant={feedFilter === 'academic' ? 'primary' : 'ghost'}
               size="sm"
               onClick={() => setFeedFilter('academic')}
               className="text-xs"
@@ -327,7 +291,10 @@ export default function FeedPage() {
           </Button>
           
           {/* Create Post */}
-          <Button className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne">
+          <Button 
+            className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne"
+            onClick={() => setShowComposer(true)}
+          >
             <Plus className="h-4 w-4 mr-2" />
             Post
           </Button>
@@ -363,9 +330,56 @@ export default function FeedPage() {
           </Card>
         </div>
 
+        {/* Post Composer */}
+        {showComposer && (
+          <PostComposer
+            user={{
+              id: 'current-user',
+              name: 'Current User',
+              handle: 'currentuser',
+              avatarUrl: undefined
+            }}
+            onPost={async (postData) => {
+              // TODO: Implement API call to create post
+              console.log('Creating post:', postData);
+              setShowComposer(false);
+            }}
+            onCancel={() => setShowComposer(false)}
+            placeholder="Share what's happening on campus..."
+          />
+        )}
+
         {/* Feed Posts */}
         <div className="space-y-6">
-          {feedPosts.map((post) => (
+          {feedPosts.length === 0 && !isLoading ? (
+            <Card className="p-12 text-center bg-hive-background-overlay border-hive-border-default">
+              <div className="max-w-md mx-auto">
+                <div className="w-16 h-16 bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Activity className="h-8 w-8 text-gray-400" />
+                </div>
+                <h3 className="text-lg font-semibold text-white mb-2">No Posts Yet</h3>
+                <p className="text-hive-text-mutedLight mb-6">
+                  Your campus feed will show activity from your spaces, tools, and community. 
+                  Join some spaces to get started!
+                </p>
+                <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                  <Button 
+                    onClick={() => window.location.href = '/spaces/browse'}
+                    className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne"
+                  >
+                    Browse Spaces
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    onClick={() => setShowComposer(true)}
+                  >
+                    Create Post
+                  </Button>
+                </div>
+              </div>
+            </Card>
+          ) : (
+            feedPosts.map((post) => (
             <Card key={post.id} className="p-6 bg-hive-background-overlay border-hive-border-default hover:bg-hive-background-interactive transition-all duration-200">
               {/* Post Header */}
               <div className="flex items-start justify-between mb-4">
@@ -383,7 +397,7 @@ export default function FeedPage() {
                       </h4>
                       <span className="text-hive-text-mutedLight text-sm">@{post.author.handle}</span>
                       {post.author.role && (
-                        <Badge variant="outline" className="text-xs">
+                        <Badge variant="tool-builder" className="text-xs">
                           {post.author.role}
                         </Badge>
                       )}
@@ -415,7 +429,7 @@ export default function FeedPage() {
                 {post.tags && post.tags.length > 0 && (
                   <div className="flex flex-wrap gap-2 mt-3">
                     {post.tags.map((tag) => (
-                      <Badge key={tag} variant="secondary" className="text-xs">
+                      <Badge key={tag} variant="skill-tag" className="text-xs">
                         #{tag}
                       </Badge>
                     ))}
@@ -458,16 +472,27 @@ export default function FeedPage() {
                 </Button>
               </div>
             </Card>
-          ))}
+            ))
+          )}
         </div>
 
         {/* Load More */}
-        <div className="text-center">
-          <Button variant="outline" className="w-full max-w-md">
-            Load More Posts
-          </Button>
-        </div>
+        {feedPosts.length > 0 && (
+          <div className="text-center">
+            <Button 
+              variant="outline" 
+              className="w-full max-w-md"
+              onClick={() => {
+                // TODO: Implement pagination with cursor
+                console.log('Load more posts');
+              }}
+            >
+              Load More Posts
+            </Button>
+          </div>
+        )}
       </div>
     </PageContainer>
+    </ErrorBoundary>
   );
 }

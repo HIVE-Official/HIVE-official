@@ -474,9 +474,9 @@ export class FeatureRevealSystem {
   }
   
   private async checkDependentFeatures(
-    featureId: string,
-    scope: string,
-    targetId: string
+    _featureId: string,
+    _scope: string,
+    _targetId: string
   ): Promise<void> {
     // TODO: Check if unlocking this feature enables other features
   }

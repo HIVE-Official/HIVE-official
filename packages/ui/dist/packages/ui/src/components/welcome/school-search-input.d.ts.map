@@ -1,1 +1,0 @@
-{"version":3,"file":"school-search-input.d.ts","sourceRoot":"","sources":["../../../../../../src/components/welcome/school-search-input.tsx"],"names":[],"mappings":"AAAA,OAAO,KAAK,KAAK,MAAM,OAAO,CAAC;AAiB/B,UAAU,sBAAsB;IAC9B,cAAc,EAAE,CAAC,QAAQ,EAAE,MAAM,KAAK,IAAI,CAAC;IAC3C,SAAS,CAAC,EAAE,MAAM,CAAC;CACpB;AAED,QAAA,MAAM,iBAAiB,iGAsDrB,CAAC;AAIH,OAAO,EAAE,iBAAiB,EAAE,CAAC"}

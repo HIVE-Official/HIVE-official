@@ -3,8 +3,8 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
 import React from 'react';
 import { motion } from 'framer-motion';
 import { cva } from 'class-variance-authority';
-import { cn } from '../lib/utils';
-import { liquidMetal, motionDurations } from '../motion/hive-motion-system';
+import { cn } from '../lib/utils.js';
+import { liquidMetal, motionDurations } from '../motion/hive-motion-system.js';
 import { ChevronRight, Home, ArrowRight } from 'lucide-react';
 // HIVE Breadcrumbs - Magnetic Navigation Trail with Liquid Metal Motion
 // Sophisticated breadcrumb navigation with magnetic hover effects and smooth transitions

@@ -1,8 +1,8 @@
 import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
 declare const headingVariants: (props?: {
-    level?: 1 | 4 | 2 | 3;
-} & import("class-variance-authority/dist/types").ClassProp) => string;
+    level?: 1 | 2 | 3 | 4;
+} & import("class-variance-authority/types").ClassProp) => string;
 export interface HeadingProps extends React.HTMLAttributes<HTMLHeadingElement>, VariantProps<typeof headingVariants> {
 }
 declare const Heading: React.ForwardRefExoticComponent<HeadingProps & React.RefAttributes<HTMLHeadingElement>>;

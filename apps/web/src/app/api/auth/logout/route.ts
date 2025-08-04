@@ -1,6 +1,8 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { getAuth } from "firebase-admin/auth";
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 /**
  * Logout endpoint - revokes user session
@@ -11,22 +13,18 @@ export async function POST(request: NextRequest) {
     // Get the authorization header
     const authHeader = request.headers.get("authorization");
     if (!authHeader?.startsWith("Bearer ")) {
-      return NextResponse.json(
-        { error: "Missing or invalid authorization header" },
-        { status: 401 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Missing or invalid authorization header", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
-    const idToken = authHeader.split("Bearer ")[1];
+    const idToken = authHeader.substring(7);
     
     // Handle development mode tokens
     if (idToken.startsWith("dev_token_")) {
-      console.log('Development mode logout - token invalidated locally');
+      logger.info('Development mode logout - token invalidated locally', { endpoint: '/api/auth/logout' });
       
       return NextResponse.json({
         success: true,
-        message: "Logged out successfully (development mode)",
-      });
+        message: "Logged out successfully (development mode)" });
     }
 
     const auth = getAuth();
@@ -37,11 +35,10 @@ export async function POST(request: NextRequest) {
       decodedToken = await auth.verifyIdToken(idToken);
     } catch (error) {
       // If token is already invalid, consider logout successful
-      console.log("Token already invalid during logout:", error);
+      logger.info('Token already invalid during logout', { data: error, endpoint: '/api/auth/logout' });
       return NextResponse.json({
         success: true,
-        message: "Logged out successfully",
-      });
+        message: "Logged out successfully" });
     }
 
     const userId = decodedToken.uid;
@@ -50,27 +47,25 @@ export async function POST(request: NextRequest) {
     // This will force all sessions to re-authenticate
     try {
       await auth.revokeRefreshTokens(userId);
-      console.log(`Successfully revoked refresh tokens for user: ${userId}`);
+      logger.info('Successfully revoked refresh tokens for user', { userId, endpoint: '/api/auth/logout' });
     } catch (revokeError) {
-      console.error("Error revoking refresh tokens:", revokeError);
+      logger.error('Error revoking refresh tokens', { error: revokeError, endpoint: '/api/auth/logout' });
       // Don't fail the logout if revocation fails
     }
 
     return NextResponse.json({
       success: true,
       message: "Logged out successfully",
-      revokedAt: new Date().toISOString(),
-    });
+      revokedAt: new Date().toISOString() });
 
   } catch (error) {
-    console.error("Error during logout:", error);
+    logger.error('Error during logout', { error: error, endpoint: '/api/auth/logout' });
 
     // Even if logout fails server-side, we should return success
     // since the client can clear their local token
     return NextResponse.json({
       success: true,
       message: "Logged out successfully",
-      note: "Client should clear local authentication state",
-    });
+      note: "Client should clear local authentication state" });
   }
 }

@@ -3,9 +3,9 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useRef } from 'react';
 import { motion, AnimatePresence, useDragControls, Reorder } from 'framer-motion';
 import { GripVertical, Maximize2, Settings, X, Plus } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { Button } from '../hive-button';
-import { Badge } from '../ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card.js';
+import { Button } from '../hive-button.js';
+import { Badge } from '../ui/badge.js';
 // Grid size mappings
 const gridSizeMap = {
     small: { cols: 1, rows: 1, minCols: 1, minRows: 1 },

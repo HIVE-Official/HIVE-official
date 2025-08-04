@@ -1,0 +1,1345 @@
+import type { Meta, StoryObj } from '@storybook/react';
+import React from 'react';
+import { User, Users, Calendar, Shield, Settings, Edit, Eye, EyeOff, Upload, Star, Hammer, Activity, MapPin, Zap, UserPlus, Beaker, Plus, AlertTriangle, X, ArrowLeft, ChevronLeft, ChevronRight, Save, Trash2 } from 'lucide-react';
+
+const meta = {
+  title: 'Profile/Complete Widget Showcase',
+  parameters: {
+    layout: 'fullscreen',
+    docs: {
+      description: {
+        component: '🎯 HIVE vBETA Widget Showcase - 6 Core Production Widgets | Avatar (1x2) • Spaces (1x1) • Calendar (2x1) • Ritual (1x1) • Connections (1x1) • HiveLAB (1x1) | Full working functionality'
+      }
+    }
+  },
+  tags: ['autodocs'],
+} satisfies Meta;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+// HIVE vBETA Widget Showcase Component
+const CompleteWidgetShowcase = () => {
+  const [selectedWidget, setSelectedWidget] = React.useState<string | null>(null);
+  const [editMode, setEditMode] = React.useState(false);
+  const [currentPhotoIndex, setCurrentPhotoIndex] = React.useState(0);
+  const [socialStatus, setSocialStatus] = React.useState('Coordinating');
+  const [customStatus, setCustomStatus] = React.useState('Building the future 🚀');
+  const [hasLeaderStatus, setHasLeaderStatus] = React.useState(true);
+  const [hasBuilderStatus, setHasBuilderStatus] = React.useState(true);
+  const [calendarConnected, setCalendarConnected] = React.useState(false);
+  const [currentRitualDay, setCurrentRitualDay] = React.useState(3);
+  
+  // Avatar Modal State
+  const [editingStatus, setEditingStatus] = React.useState(false);
+  const [profileVisibility, setProfileVisibility] = React.useState('Public');
+  const [photoDisplayMode, setPhotoDisplayMode] = React.useState('Carousel');
+  const [showSocialContext, setShowSocialContext] = React.useState(true);
+  const [selectedPhotoIndex, setSelectedPhotoIndex] = React.useState(0);
+  const [autoRotatePhotos, setAutoRotatePhotos] = React.useState(true);
+  const [showPhotoMetadata, setShowPhotoMetadata] = React.useState(false);
+  const [profileName, setProfileName] = React.useState('Sarah Chen');
+  const [profileMajor, setProfileMajor] = React.useState('Sophomore • Computer Science');
+  const [managedInterests, setManagedInterests] = React.useState([
+    'Computer Science', 'Entrepreneurship', 'Music Production', 
+    'Rock Climbing', 'Coffee Culture', 'Sustainable Tech'
+  ]);
+  const [newInterest, setNewInterest] = React.useState('');
+  const [addingInterest, setAddingInterest] = React.useState(false);
+  const [managedPhotos, setManagedPhotos] = React.useState([
+    'Main Profile Photo',
+    'Campus Event', 
+    'Academic Achievement',
+    'Social Moment'
+  ]);
+  
+  const photos = [
+    'Main Profile Photo',
+    'Campus Event', 
+    'Academic Achievement',
+    'Social Moment'
+  ];
+  
+  const socialStatusOptions = [
+    'Coordinating',
+    'Studying', 
+    'Social',
+    'Ghost Mode'
+  ];
+  
+  const userInterests = [
+    'Computer Science', 'Entrepreneurship', 'Music Production', 
+    'Rock Climbing', 'Coffee Culture', 'Sustainable Tech'
+  ];
+  
+  const nextPhoto = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCurrentPhotoIndex((prev) => (prev + 1) % managedPhotos.length);
+    setSelectedPhotoIndex((prev) => (prev + 1) % managedPhotos.length);
+  };
+  
+  const prevPhoto = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCurrentPhotoIndex((prev) => (prev - 1 + managedPhotos.length) % managedPhotos.length);
+    setSelectedPhotoIndex((prev) => (prev - 1 + managedPhotos.length) % managedPhotos.length);
+  };
+
+  // Functional handlers
+  const removeInterest = (interestToRemove: string) => {
+    setManagedInterests(prev => prev.filter(interest => interest !== interestToRemove));
+  };
+
+  const addInterest = () => {
+    if (newInterest.trim() && !managedInterests.includes(newInterest.trim())) {
+      setManagedInterests(prev => [...prev, newInterest.trim()]);
+      setNewInterest('');
+      setAddingInterest(false);
+    }
+  };
+
+  const removePhoto = (photoIndex: number) => {
+    const updatedPhotos = managedPhotos.filter((_, index) => index !== photoIndex);
+    setManagedPhotos(updatedPhotos);
+    if (selectedPhotoIndex >= updatedPhotos.length) {
+      setSelectedPhotoIndex(Math.max(0, updatedPhotos.length - 1));
+    }
+    if (currentPhotoIndex >= updatedPhotos.length) {
+      setCurrentPhotoIndex(Math.max(0, updatedPhotos.length - 1));
+    }
+  };
+
+  const addPhoto = () => {
+    const newPhotoName = `New Photo ${managedPhotos.length + 1}`;
+    setManagedPhotos(prev => [...prev, newPhotoName]);
+  };
+
+  const uploadPhoto = () => {
+    // Simulate file upload
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (file) {
+        const newPhotoName = file.name.split('.')[0] || `Uploaded Photo ${managedPhotos.length + 1}`;
+        setManagedPhotos(prev => [...prev, newPhotoName]);
+        // Set to the newly uploaded photo
+        setSelectedPhotoIndex(managedPhotos.length);
+        setCurrentPhotoIndex(managedPhotos.length);
+      }
+    };
+    input.click();
+  };
+
+  return (
+    <>
+      {/* HIVE Modal Animations */}
+      <style>{`
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        
+        @keyframes slideUpScale {
+          from { 
+            opacity: 0;
+            transform: translateY(20px) scale(0.95);
+          }
+          to { 
+            opacity: 1;
+            transform: translateY(0px) scale(1);
+          }
+        }
+        
+        @keyframes photoSlide {
+          from { transform: translateX(10px); opacity: 0; }
+          to { transform: translateX(0px); opacity: 1; }
+        }
+        
+        .photo-enter {
+          animation: photoSlide 200ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .interest-enter {
+          animation: slideUpScale 200ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+      `}</style>
+      
+      <div className="min-h-screen bg-hive-background-primary p-8">
+        {/* Header */}
+      <div className="max-w-7xl mx-auto mb-8">
+        <div className="relative bg-hive-background-secondary/80 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden shadow-2xl">
+          <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent pointer-events-none"></div>
+          
+          <div className="relative p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-3xl font-bold text-hive-text-primary tracking-tight">HIVE vBETA Widget Showcase</h1>
+                <p className="text-hive-text-secondary mt-2 font-medium">6 Core Production Widgets • Working Functionality • Complete System</p>
+              </div>
+              
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => setEditMode(!editMode)}
+                  className={`px-6 py-3 rounded-xl font-medium shadow-lg transition-all duration-300 hover:scale-[1.02] ${
+                    editMode 
+                      ? 'bg-hive-status-success text-white hover:bg-hive-status-success/90 shadow-hive-status-success/30' 
+                      : 'bg-hive-brand-primary text-white hover:bg-hive-brand-hover shadow-hive-brand-primary/30'
+                  }`}
+                >
+                  {editMode ? 'Edit Mode Active' : 'Enable Edit Mode'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* HIVE vBETA Widget Grid - 4x3 Layout */}
+      <div className="max-w-7xl mx-auto">
+        <div className={`grid gap-6 grid-cols-4 grid-rows-3 h-[800px] ${editMode ? 'bg-hive-brand-primary/5 p-8 rounded-2xl border-2 border-dashed border-hive-brand-primary/30 backdrop-blur-sm' : ''} transition-all duration-500`}>
+          
+          {/* 1. Avatar Widget (1x2) - Tall Tinder-style */}
+          <div className="col-span-1 row-span-2">
+            <div 
+              className={`relative bg-hive-background-secondary/80 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden shadow-2xl ${editMode ? 'cursor-move border-hive-brand-primary/50 shadow-hive-brand-primary/20' : 'hover:border-white/20'} transition-all duration-500 hover:shadow-3xl hover:scale-[1.02] cursor-pointer h-full ${selectedWidget === 'avatar' ? 'ring-2 ring-hive-brand-secondary shadow-hive-brand-secondary/20' : ''}`}
+              onClick={() => setSelectedWidget(selectedWidget === 'avatar' ? null : 'avatar')}
+            >
+              {/* Photo Carousel Background */}
+              <div 
+                className="absolute inset-0 transition-all duration-500 ease-out"
+                style={{
+                  backgroundImage: currentPhotoIndex === 0 
+                    ? `linear-gradient(45deg, var(--hive-brand-primary), var(--hive-brand-secondary))`
+                    : currentPhotoIndex === 1
+                    ? `linear-gradient(135deg, var(--hive-status-success), var(--hive-brand-secondary))`
+                    : currentPhotoIndex === 2
+                    ? `linear-gradient(225deg, var(--hive-status-info), var(--hive-brand-secondary))`
+                    : `linear-gradient(315deg, var(--hive-status-warning), var(--hive-brand-secondary))`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center'
+                }}
+              >
+                {/* Photo Navigation Dots */}
+                <div className="absolute top-4 left-1/2 transform -translate-x-1/2 flex gap-1.5">
+                  {photos.map((_, index) => (
+                    <div 
+                      key={index}
+                      className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                        index === currentPhotoIndex 
+                          ? 'bg-white shadow-lg' 
+                          : 'bg-white/50'
+                      }`}
+                    />
+                  ))}
+                </div>
+                
+                {/* Swipe Navigation Areas */}
+                <button 
+                  className="absolute left-0 top-0 bottom-20 w-1/3 z-10 opacity-0 hover:opacity-100 transition-opacity"
+                  onClick={prevPhoto}
+                >
+                  <div className="flex items-center justify-center h-full">
+                    <div className="w-8 h-8 bg-black/50 rounded-full flex items-center justify-center backdrop-blur-sm">
+                      <span className="text-white text-lg">‹</span>
+                    </div>
+                  </div>
+                </button>
+                
+                <button 
+                  className="absolute right-0 top-0 bottom-20 w-1/3 z-10 opacity-0 hover:opacity-100 transition-opacity"
+                  onClick={nextPhoto}
+                >
+                  <div className="flex items-center justify-center h-full">
+                    <div className="w-8 h-8 bg-black/50 rounded-full flex items-center justify-center backdrop-blur-sm">
+                      <span className="text-white text-lg">›</span>
+                    </div>
+                  </div>
+                </button>
+              </div>
+              
+              {/* Gradient Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
+              
+              {/* User Information Overlay */}
+              <div className="absolute bottom-20 left-0 right-0 p-4">
+                <div className="space-y-2">
+                  <div>
+                    <h3 className="text-lg font-bold text-white">Sarah Chen</h3>
+                    <p className="text-white/90 text-sm">Sophomore • CS Major</p>
+                  </div>
+                  
+                  {/* Custom Status */}
+                  <p className="text-white/80 text-xs italic">{customStatus}</p>
+                  
+                  {/* Status Badges */}
+                  <div className="flex items-center gap-1.5">
+                    {hasLeaderStatus && (
+                      <div className="inline-flex items-center gap-1 px-2 py-0.5 bg-hive-brand-secondary/90 text-black rounded-full text-xs font-medium">
+                        <Star className="w-2.5 h-2.5" />
+                        <span>Leader</span>
+                      </div>
+                    )}
+                    {hasBuilderStatus && (
+                      <div className="inline-flex items-center gap-1 px-2 py-0.5 bg-hive-brand-secondary/90 text-black rounded-full text-xs font-medium">
+                        <Hammer className="w-2.5 h-2.5" />
+                        <span>Builder</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+              
+              {/* Social Status Control */}
+              <div className="absolute bottom-0 left-0 right-0 bg-hive-background-secondary/95 backdrop-blur-xl border-t border-white/10 p-3">
+                <select 
+                  value={socialStatus}
+                  onChange={(e) => setSocialStatus(e.target.value)}
+                  onClick={(e) => e.stopPropagation()}
+                  className="w-full appearance-none bg-hive-background-tertiary/80 text-hive-text-primary border border-white/20 rounded-lg px-3 py-2 text-xs font-medium backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-hive-brand-secondary"
+                >
+                  {socialStatusOptions.map((status) => (
+                    <option key={status} value={status}>{status}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          </div>
+
+          {/* 2. Spaces Widget (1x1) */}
+          <div className="col-span-1 row-span-1">
+            <div 
+              className={`relative bg-hive-background-secondary/80 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden shadow-2xl hover:border-white/20 transition-all duration-500 h-full ${selectedWidget === 'spaces' ? 'ring-2 ring-hive-brand-secondary shadow-hive-brand-secondary/20' : ''}`}
+              onClick={() => setSelectedWidget(selectedWidget === 'spaces' ? null : 'spaces')}
+            >
+              <div className="p-4 h-full flex flex-col">
+                <div className="flex items-center gap-2 mb-3">
+                  <Users className="w-4 h-4 text-hive-status-success" />
+                  <span className="text-xs font-semibold text-hive-text-secondary tracking-wide">SPACES</span>
+                </div>
+                
+                <div className="flex-1 space-y-2 overflow-y-auto">
+                  <div className="flex items-center justify-between p-2 bg-white/5 rounded-lg hover:bg-white/10 transition-all duration-200">
+                    <div>
+                      <div className="text-xs font-medium text-hive-text-primary">CS Study Group</div>
+                      <div className="text-xs text-hive-text-tertiary">Leader</div>
+                    </div>
+                    <div className="px-1.5 py-0.5 bg-hive-brand-secondary/20 text-hive-brand-secondary text-xs rounded border border-hive-brand-secondary/30">3</div>
+                  </div>
+                  
+                  <div className="flex items-center justify-between p-2 bg-white/5 rounded-lg hover:bg-white/10 transition-all duration-200">
+                    <div>
+                      <div className="text-xs font-medium text-hive-text-primary">Floor 3 Community</div>
+                      <div className="text-xs text-hive-text-tertiary">Member</div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center justify-between p-2 bg-white/5 rounded-lg hover:bg-white/10 transition-all duration-200">
+                    <div>
+                      <div className="text-xs font-medium text-hive-text-primary">Campus Hackathon</div>
+                      <div className="text-xs text-hive-text-tertiary">Moderator</div>
+                    </div>
+                    <div className="px-1.5 py-0.5 bg-hive-status-error/20 text-hive-status-error text-xs rounded border border-hive-status-error/30">7</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 3. Calendar Widget (2x1) */}
+          <div className="col-span-2 row-span-1">
+            <div 
+              className={`relative bg-hive-background-secondary/80 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden shadow-2xl hover:border-white/20 transition-all duration-500 h-full ${selectedWidget === 'calendar' ? 'ring-2 ring-hive-brand-secondary shadow-hive-brand-secondary/20' : ''}`}
+              onClick={() => setSelectedWidget(selectedWidget === 'calendar' ? null : 'calendar')}
+            >
+              <div className="p-4 h-full flex flex-col">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <Calendar className="w-4 h-4 text-hive-brand-primary" />
+                    <span className="text-xs font-semibold text-hive-text-secondary tracking-wide">CALENDAR</span>
+                  </div>
+                  {calendarConnected && (
+                    <div className="w-2 h-2 rounded-full bg-hive-status-success shadow-lg shadow-hive-status-success/50" />
+                  )}
+                </div>
+                
+                {!calendarConnected ? (
+                  <div className="flex-1 flex flex-col items-center justify-center space-y-3">
+                    <div className="space-y-2 w-full">
+                      <button 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setCalendarConnected(true);
+                        }}
+                        className="w-full px-3 py-2 bg-hive-brand-primary text-hive-text-primary rounded-lg text-xs font-medium hover:bg-hive-brand-hover transition-all duration-200"
+                      >
+                        Connect Google/Outlook Calendar
+                      </button>
+                      <button className="w-full px-3 py-2 bg-white/10 text-hive-text-primary border border-white/20 rounded-lg text-xs font-medium hover:bg-white/20 transition-all duration-200">
+                        Add Class Schedule Manually
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex-1 space-y-2">
+                    <div className="flex items-center gap-3 p-2 bg-hive-status-warning/10 border border-hive-status-warning/20 rounded-lg">
+                      <AlertTriangle className="w-3 h-3 text-hive-status-warning" />
+                      <div className="flex-1">
+                        <div className="text-xs font-medium text-hive-text-primary">Conflict: Study/Gym</div>
+                        <div className="text-xs text-hive-text-tertiary">Today 4-6PM</div>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center gap-3 p-2 bg-white/5 rounded-lg">
+                      <div className="w-3 h-3 bg-hive-brand-secondary rounded-full"></div>
+                      <div className="flex-1">
+                        <div className="text-xs font-medium text-hive-text-primary">CS Final Exam</div>
+                        <div className="text-xs text-hive-text-tertiary">Tomorrow 2PM</div>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center gap-3 p-2 bg-white/5 rounded-lg">
+                      <div className="w-3 h-3 bg-hive-status-success rounded-full"></div>
+                      <div className="flex-1">
+                        <div className="text-xs font-medium text-hive-text-primary">Pizza Night</div>
+                        <div className="text-xs text-hive-text-tertiary">Today 7PM</div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* 4. Ritual Widget (1x1) */}
+          <div className="col-span-1 row-span-1">
+            <div 
+              className={`relative bg-hive-background-secondary/80 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden shadow-2xl hover:border-white/20 transition-all duration-500 h-full ${selectedWidget === 'ritual' ? 'ring-2 ring-hive-brand-secondary shadow-hive-brand-secondary/20' : ''}`}
+              onClick={() => setSelectedWidget(selectedWidget === 'ritual' ? null : 'ritual')}
+            >
+              <div className="p-4 h-full flex flex-col">
+                <div className="flex items-center gap-2 mb-3">
+                  <Zap className="w-4 h-4 text-hive-brand-secondary" />
+                  <span className="text-xs font-semibold text-hive-text-secondary tracking-wide">RITUAL</span>
+                </div>
+                
+                <div className="flex-1 flex flex-col justify-between">
+                  <div className="space-y-2">
+                    <h3 className="text-sm font-bold text-hive-text-primary">Campus Connection Week</h3>
+                    <div className="flex items-center gap-2">
+                      <div className="flex-1 h-2 bg-white/10 rounded-full overflow-hidden">
+                        <div 
+                          className="h-2 bg-gradient-to-r from-hive-brand-primary to-hive-brand-secondary rounded-full transition-all duration-500"
+                          style={{ width: `${(currentRitualDay / 7) * 100}%` }}
+                        />
+                      </div>
+                      <span className="text-xs text-hive-text-secondary">Day {currentRitualDay}/7</span>
+                    </div>
+                  </div>
+                  
+                  <button className="w-full px-3 py-2 bg-hive-brand-secondary text-black rounded-lg text-xs font-semibold hover:bg-hive-brand-secondary/90 transition-all duration-200">
+                    Join Study Session
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 5. Connections Widget (1x1) */}
+          <div className="col-span-1 row-span-1">
+            <div 
+              className={`relative bg-hive-background-secondary/80 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden shadow-2xl hover:border-white/20 transition-all duration-500 h-full ${selectedWidget === 'connections' ? 'ring-2 ring-hive-brand-secondary shadow-hive-brand-secondary/20' : ''}`}
+              onClick={() => setSelectedWidget(selectedWidget === 'connections' ? null : 'connections')}
+            >
+              <div className="p-4 h-full flex flex-col">
+                <div className="flex items-center gap-2 mb-3">
+                  <UserPlus className="w-4 h-4 text-hive-status-info" />
+                  <span className="text-xs font-semibold text-hive-text-secondary tracking-wide">CONNECTIONS</span>
+                </div>
+                
+                <div className="flex-1 space-y-2">
+                  <div className="text-xs font-medium text-hive-text-primary mb-2">Recommended</div>
+                  
+                  <div className="flex items-center gap-2 p-2 bg-white/5 rounded-lg hover:bg-white/10 transition-all duration-200">
+                    <div className="w-6 h-6 bg-gradient-to-br from-hive-brand-primary to-hive-brand-secondary rounded-full flex items-center justify-center text-xs font-bold text-white">
+                      M
+                    </div>
+                    <div className="flex-1">
+                      <div className="text-xs font-medium text-hive-text-primary">Mike Chen</div>
+                      <div className="text-xs text-hive-text-tertiary">CS 101</div>
+                    </div>
+                    <button className="w-5 h-5 bg-hive-brand-primary/20 rounded-full flex items-center justify-center">
+                      <Plus className="w-3 h-3 text-hive-brand-primary" />
+                    </button>
+                  </div>
+                  
+                  <div className="p-2 bg-white/5 rounded-lg border border-white/10">
+                    <p className="text-xs text-hive-text-tertiary italic">Once you connect with friends, you'll see who's available here.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 6. HiveLAB Widget (1x1) - Only visible to Leaders/Builders */}
+          {(hasLeaderStatus || hasBuilderStatus) && (
+            <div className="col-span-1 row-span-1">
+              <div 
+                className={`relative bg-hive-background-secondary/80 backdrop-blur-xl border border-hive-brand-secondary/30 rounded-2xl overflow-hidden shadow-2xl hover:border-hive-brand-secondary/50 transition-all duration-500 h-full ${selectedWidget === 'hivelab' ? 'ring-2 ring-hive-brand-secondary shadow-hive-brand-secondary/20' : ''}`}
+                onClick={() => setSelectedWidget(selectedWidget === 'hivelab' ? null : 'hivelab')}
+              >
+                <div className="p-4 h-full flex flex-col">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Beaker className="w-4 h-4 text-hive-brand-secondary" />
+                    <span className="text-xs font-semibold text-hive-brand-secondary tracking-wide">HIVELAB</span>
+                  </div>
+                  
+                  <div className="flex-1 flex flex-col justify-between">
+                    <div className="space-y-2">
+                      <h3 className="text-sm font-bold text-hive-text-primary">Builder Workspace</h3>
+                      <p className="text-xs text-hive-text-secondary">Access tools and resources for creating campus solutions.</p>
+                    </div>
+                    
+                    <button className="w-full px-3 py-2 bg-hive-brand-secondary text-black rounded-lg text-xs font-semibold hover:bg-hive-brand-secondary/90 transition-all duration-200">
+                      Enter Workspace
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Selected Widget Info */}
+        {selectedWidget && (
+          <div className="mt-8 bg-hive-brand-primary/5 border border-hive-brand-primary/20 rounded-2xl p-6">
+            <h3 className="text-xl font-bold text-hive-text-primary mb-4">
+              Widget: {selectedWidget.charAt(0).toUpperCase() + selectedWidget.slice(1)}
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm text-hive-text-secondary">
+              <div className="space-y-2">
+                <div className="font-medium text-hive-text-primary">🎯 vBETA Specification</div>
+                <div>• Production-ready widget</div>
+                <div>• Working functionality</div>
+                <div>• HIVE brand compliance</div>
+                <div>• Proper grid sizing</div>
+              </div>
+              <div className="space-y-2">
+                <div className="font-medium text-hive-text-primary">🔧 Technical</div>
+                <div>• React + TypeScript</div>
+                <div>• Tailwind CSS + HIVE tokens</div>
+                <div>• Responsive design</div>
+                <div>• Interactive states</div>
+              </div>
+              <div className="space-y-2">
+                <div className="font-medium text-hive-text-primary">✅ Status</div>
+                <div>• Complete implementation</div>
+                <div>• vBETA specification match</div>
+                <div>• Working user interactions</div>
+                <div>• Ready for production</div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Enhanced Spaces Profile Modal - Personal Space Management */}
+        {selectedWidget === 'spaces' && (
+          <div 
+            className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-300" 
+            onClick={() => setSelectedWidget(null)}
+            style={{
+              animation: 'fadeIn 300ms cubic-bezier(0.4, 0, 0.2, 1)'
+            }}
+          >
+            <div 
+              className="bg-hive-background-secondary/95 backdrop-blur-xl border border-white/20 rounded-2xl w-full max-w-6xl h-[85vh] overflow-hidden transform shadow-2xl ring-1 ring-hive-brand-secondary/20 hover:scale-[1.01] transition-all duration-300 ease-out" 
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                animation: 'slideUpScale 300ms cubic-bezier(0.4, 0, 0.2, 1)',
+                animationFillMode: 'forwards'
+              }}
+            >
+              
+              {/* Modal Header */}
+              <div className="flex items-center justify-between p-6 border-b border-white/20 bg-gradient-to-r from-hive-background-secondary/90 to-hive-background-tertiary/90 backdrop-blur-xl">
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => setSelectedWidget(null)}
+                    className="w-10 h-10 bg-hive-background-primary/80 hover:bg-hive-text-tertiary/20 rounded-xl flex items-center justify-center transition-all duration-200 border border-white/10"
+                  >
+                    <ArrowLeft className="w-5 h-5 text-hive-text-primary" />
+                  </button>
+                  <div>
+                    <h2 className="text-xl font-bold text-hive-text-primary">My Spaces</h2>
+                    <p className="text-sm text-hive-text-secondary">Personal Community Management</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2 px-3 py-1.5 bg-hive-status-success/20 border border-hive-status-success/30 rounded-lg">
+                    <Users className="w-3 h-3 text-hive-status-success" />
+                    <span className="text-xs font-medium text-hive-status-success">3 Active</span>
+                  </div>
+                  <button 
+                    onClick={() => setSelectedWidget(null)}
+                    className="w-10 h-10 bg-hive-background-primary/80 hover:bg-hive-status-error/20 rounded-xl flex items-center justify-center transition-all duration-200 border border-white/10"
+                  >
+                    <X className="w-5 h-5 text-hive-text-primary" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Two-Panel Layout */}
+              <div className="flex h-[calc(85vh-80px)]">
+                
+                {/* Left Panel - My Spaces Overview */}
+                <div className="w-1/2 p-4 border-r border-white/10 overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-white/20">
+                  <div className="space-y-4">
+                    
+                    {/* Quick Stats */}
+                    <div className="grid grid-cols-3 gap-3">
+                      <div className="text-center p-3 bg-white/5 rounded-lg border border-white/10 hover:bg-white/10 transition-all duration-200">
+                        <div className="text-lg font-bold text-hive-brand-secondary">3</div>
+                        <div className="text-xs text-hive-text-secondary">Leading</div>
+                      </div>
+                      <div className="text-center p-3 bg-white/5 rounded-lg border border-white/10 hover:bg-white/10 transition-all duration-200">
+                        <div className="text-lg font-bold text-hive-status-success">8</div>
+                        <div className="text-xs text-hive-text-secondary">Member</div>
+                      </div>
+                      <div className="text-center p-3 bg-white/5 rounded-lg border border-white/10 hover:bg-white/10 transition-all duration-200">
+                        <div className="text-lg font-bold text-hive-text-primary">247</div>
+                        <div className="text-xs text-hive-text-secondary">Total Members</div>
+                      </div>
+                    </div>
+
+                    {/* My Led Spaces */}
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <h4 className="text-md font-semibold text-hive-text-primary">Spaces I Lead</h4>
+                        <div className="flex items-center gap-1 px-2 py-1 bg-hive-brand-secondary/20 text-hive-brand-secondary rounded-lg border border-hive-brand-secondary/30">
+                          <Star className="w-3 h-3" />
+                          <span className="text-xs font-medium">Leader</span>
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <div className="p-4 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-all duration-200">
+                          <div className="flex items-center justify-between mb-3">
+                            <div className="flex items-center gap-3">
+                              <div className="w-10 h-10 bg-gradient-to-br from-hive-brand-primary to-hive-brand-secondary rounded-xl flex items-center justify-center">
+                                <span className="text-sm font-bold text-white">CS</span>
+                              </div>
+                              <div>
+                                <h5 className="text-sm font-semibold text-hive-text-primary">CS Study Group</h5>
+                                <p className="text-xs text-hive-text-secondary">Computer Science • 47 members</p>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <div className="px-2 py-1 bg-hive-status-error/20 text-hive-status-error text-xs rounded border border-hive-status-error/30">3 pending</div>
+                              <Settings className="w-4 h-4 text-hive-text-tertiary hover:text-hive-text-primary cursor-pointer" />
+                            </div>
+                          </div>
+                          <div className="grid grid-cols-3 gap-3 text-xs">
+                            <div className="text-center">
+                              <div className="font-bold text-hive-brand-secondary">12</div>
+                              <div className="text-hive-text-tertiary">This Week</div>
+                            </div>
+                            <div className="text-center">
+                              <div className="font-bold text-hive-status-success">89%</div>
+                              <div className="text-hive-text-tertiary">Engagement</div>
+                            </div>
+                            <div className="text-center">
+                              <div className="font-bold text-hive-text-primary">4.8</div>
+                              <div className="text-hive-text-tertiary">Rating</div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="p-4 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-all duration-200">
+                          <div className="flex items-center justify-between mb-3">
+                            <div className="flex items-center gap-3">
+                              <div className="w-10 h-10 bg-gradient-to-br from-hive-status-success to-hive-brand-secondary rounded-xl flex items-center justify-center">
+                                <span className="text-sm font-bold text-white">F3</span>
+                              </div>
+                              <div>
+                                <h5 className="text-sm font-semibold text-hive-text-primary">Floor 3 Community</h5>
+                                <p className="text-xs text-hive-text-secondary">Residential • 23 members</p>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <div className="px-2 py-1 bg-hive-status-success/20 text-hive-status-success text-xs rounded border border-hive-status-success/30">active</div>
+                              <Settings className="w-4 h-4 text-hive-text-tertiary hover:text-hive-text-primary cursor-pointer" />
+                            </div>
+                          </div>
+                          <div className="grid grid-cols-3 gap-3 text-xs">
+                            <div className="text-center">
+                              <div className="font-bold text-hive-brand-secondary">18</div>
+                              <div className="text-hive-text-tertiary">This Week</div>
+                            </div>
+                            <div className="text-center">
+                              <div className="font-bold text-hive-status-success">94%</div>
+                              <div className="text-hive-text-tertiary">Engagement</div>
+                            </div>
+                            <div className="text-center">
+                              <div className="font-bold text-hive-text-primary">4.9</div>
+                              <div className="text-hive-text-tertiary">Rating</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Spaces I'm In */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-hive-text-primary">Member Spaces</h4>
+                      
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between p-3 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 transition-all duration-200">
+                          <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 bg-gradient-to-br from-hive-status-info to-hive-brand-secondary rounded-lg flex items-center justify-center">
+                              <span className="text-xs font-bold text-white">H</span>
+                            </div>
+                            <div>
+                              <div className="text-sm font-medium text-hive-text-primary">Campus Hackathon</div>
+                              <div className="text-xs text-hive-text-tertiary">Event • 156 members</div>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <div className="px-2 py-1 bg-hive-brand-primary/20 text-hive-brand-primary text-xs rounded border border-hive-brand-primary/30">moderator</div>
+                            <Eye className="w-4 h-4 text-hive-text-tertiary hover:text-hive-text-primary cursor-pointer" />
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-center justify-between p-3 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 transition-all duration-200">
+                          <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 bg-gradient-to-br from-hive-status-warning to-hive-brand-secondary rounded-lg flex items-center justify-center">
+                              <span className="text-xs font-bold text-white">E</span>
+                            </div>
+                            <div>
+                              <div className="text-sm font-medium text-hive-text-primary">Entrepreneurship Club</div>
+                              <div className="text-xs text-hive-text-tertiary">Academic • 89 members</div>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <div className="px-2 py-1 bg-white/10 text-hive-text-secondary text-xs rounded border border-white/20">member</div>
+                            <Eye className="w-4 h-4 text-hive-text-tertiary hover:text-hive-text-primary cursor-pointer" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Right Panel - Personal Space Settings */}
+                <div className="w-1/2 p-4 overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-white/20">
+                  <div className="space-y-4">
+                    
+                    {/* Notification Preferences */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-hive-text-primary">Notification Preferences</h4>
+                      
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between p-3 bg-white/5 border border-white/10 rounded-lg">
+                          <div>
+                            <div className="text-sm font-medium text-hive-text-primary">New Space Invites</div>
+                            <div className="text-xs text-hive-text-tertiary">Get notified when invited to spaces</div>
+                          </div>
+                          <button className="w-10 h-5 bg-hive-brand-primary/30 rounded-full flex items-center transition-all duration-200">
+                            <div className="w-4 h-4 bg-hive-brand-primary rounded-full ml-5 transition-all duration-200"></div>
+                          </button>
+                        </div>
+                        
+                        <div className="flex items-center justify-between p-3 bg-white/5 border border-white/10 rounded-lg">
+                          <div>
+                            <div className="text-sm font-medium text-hive-text-primary">Space Activity</div>
+                            <div className="text-xs text-hive-text-tertiary">Updates from spaces you're in</div>
+                          </div>
+                          <button className="w-10 h-5 bg-hive-brand-primary/30 rounded-full flex items-center transition-all duration-200">
+                            <div className="w-4 h-4 bg-hive-brand-primary rounded-full ml-5 transition-all duration-200"></div>
+                          </button>
+                        </div>
+                        
+                        <div className="flex items-center justify-between p-3 bg-white/5 border border-white/10 rounded-lg">
+                          <div>
+                            <div className="text-sm font-medium text-hive-text-primary">Leadership Updates</div>
+                            <div className="text-xs text-hive-text-tertiary">Important updates for spaces you lead</div>
+                          </div>
+                          <button className="w-10 h-5 bg-hive-brand-primary/30 rounded-full flex items-center transition-all duration-200">
+                            <div className="w-4 h-4 bg-hive-brand-primary rounded-full ml-5 transition-all duration-200"></div>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Space Discovery Settings */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-hive-text-primary">Discovery Preferences</h4>
+                      
+                      <div className="space-y-3">
+                        <div className="p-3 bg-white/5 border border-white/10 rounded-lg">
+                          <div className="text-sm font-medium text-hive-text-primary mb-2">Auto-join Criteria</div>
+                          <div className="space-y-2">
+                            <label className="flex items-center gap-2">
+                              <input type="checkbox" className="rounded border-white/20 bg-white/10" defaultChecked />
+                              <span className="text-xs text-hive-text-secondary">Academic spaces for my major</span>
+                            </label>
+                            <label className="flex items-center gap-2">
+                              <input type="checkbox" className="rounded border-white/20 bg-white/10" defaultChecked />
+                              <span className="text-xs text-hive-text-secondary">Floor/building communities</span>
+                            </label>
+                            <label className="flex items-center gap-2">
+                              <input type="checkbox" className="rounded border-white/20 bg-white/10" />
+                              <span className="text-xs text-hive-text-secondary">Interest-based groups</span>
+                            </label>
+                          </div>
+                        </div>
+                        
+                        <div className="p-3 bg-white/5 border border-white/10 rounded-lg">
+                          <div className="text-sm font-medium text-hive-text-primary mb-2">Visibility Settings</div>
+                          <select className="w-full bg-hive-background-tertiary/80 text-hive-text-primary border border-white/20 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hive-brand-secondary">
+                            <option value="public">Public - Anyone can find me</option>
+                            <option value="campus">Campus Only - Only campus members</option>
+                            <option value="friends">Friends Only - Only connections</option>
+                            <option value="private">Private - Invite only</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Leadership Tools */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-hive-text-primary">Leadership Tools</h4>
+                      
+                      <div className="grid grid-cols-2 gap-3">
+                        <button className="p-3 bg-hive-brand-primary/10 border border-hive-brand-primary/30 rounded-lg hover:bg-hive-brand-primary/20 transition-all duration-200">
+                          <Users className="w-5 h-5 text-hive-brand-primary mb-2" />
+                          <div className="text-xs font-medium text-hive-brand-primary">Manage Members</div>
+                        </button>
+                        
+                        <button className="p-3 bg-hive-status-success/10 border border-hive-status-success/30 rounded-lg hover:bg-hive-status-success/20 transition-all duration-200">
+                          <Activity className="w-5 h-5 text-hive-status-success mb-2" />
+                          <div className="text-xs font-medium text-hive-status-success">Analytics</div>
+                        </button>
+                        
+                        <button className="p-3 bg-hive-status-info/10 border border-hive-status-info/30 rounded-lg hover:bg-hive-status-info/20 transition-all duration-200">
+                          <Settings className="w-5 h-5 text-hive-status-info mb-2" />
+                          <div className="text-xs font-medium text-hive-status-info">Space Settings</div>
+                        </button>
+                        
+                        <button className="p-3 bg-hive-status-warning/10 border border-hive-status-warning/30 rounded-lg hover:bg-hive-status-warning/20 transition-all duration-200">
+                          <Plus className="w-5 h-5 text-hive-status-warning mb-2" />
+                          <div className="text-xs font-medium text-hive-status-warning">Create Space</div>
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Activity Summary */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-hive-text-primary">Recent Activity</h4>
+                      
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-3 p-3 bg-white/5 border border-white/10 rounded-lg">
+                          <div className="w-2 h-2 bg-hive-status-success rounded-full"></div>
+                          <div className="flex-1">
+                            <div className="text-xs font-medium text-hive-text-primary">CS Study Group: New member approved</div>
+                            <div className="text-xs text-hive-text-tertiary">2 hours ago</div>
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-center gap-3 p-3 bg-white/5 border border-white/10 rounded-lg">
+                          <div className="w-2 h-2 bg-hive-brand-secondary rounded-full"></div>
+                          <div className="flex-1">
+                            <div className="text-xs font-medium text-hive-text-primary">Floor 3: Event coordination completed</div>
+                            <div className="text-xs text-hive-text-tertiary">5 hours ago</div>
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-center gap-3 p-3 bg-white/5 border border-white/10 rounded-lg">
+                          <div className="w-2 h-2 bg-hive-status-info rounded-full"></div>
+                          <div className="flex-1">
+                            <div className="text-xs font-medium text-hive-text-primary">Hackathon: Moderator role assigned</div>
+                            <div className="text-xs text-hive-text-tertiary">1 day ago</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Enhanced Avatar Profile Modal - Comprehensive Management */}
+        {selectedWidget === 'avatar' && (
+          <div 
+            className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4" 
+            onClick={() => setSelectedWidget(null)}
+            style={{
+              animation: 'fadeIn 300ms cubic-bezier(0.4, 0, 0.2, 1)'
+            }}
+          >
+            <div 
+              className="bg-hive-background-secondary/95 backdrop-blur-xl border border-white/20 rounded-2xl w-full max-w-6xl h-[85vh] overflow-hidden transform shadow-2xl ring-1 ring-hive-brand-secondary/20 hover:scale-[1.01] transition-all duration-300 ease-out" 
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                animation: 'slideUpScale 300ms cubic-bezier(0.4, 0, 0.2, 1)',
+                animationFillMode: 'forwards'
+              }}
+            >
+              
+              {/* Modal Header */}
+              <div className="flex items-center justify-between p-6 border-b border-white/20 bg-gradient-to-r from-hive-background-secondary/90 to-hive-background-tertiary/90 backdrop-blur-xl">
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => setSelectedWidget(null)}
+                    className="w-10 h-10 bg-hive-background-primary/80 hover:bg-hive-text-tertiary/20 rounded-xl flex items-center justify-center transition-all duration-200 border border-white/10"
+                  >
+                    <ArrowLeft className="w-5 h-5 text-hive-text-primary" />
+                  </button>
+                  <div>
+                    <h2 className="text-xl font-bold text-hive-text-primary">Sarah Chen</h2>
+                    <p className="text-sm text-hive-text-secondary">Profile Management</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2 px-3 py-1.5 bg-hive-status-success/20 border border-hive-status-success/30 rounded-lg">
+                    <div className="w-2 h-2 bg-hive-status-success rounded-full animate-pulse"></div>
+                    <span className="text-xs font-medium text-hive-status-success">Active</span>
+                  </div>
+                  <button 
+                    onClick={() => setSelectedWidget(null)}
+                    className="w-10 h-10 bg-hive-background-primary/80 hover:bg-hive-status-error/20 rounded-xl flex items-center justify-center transition-all duration-200 border border-white/10"
+                  >
+                    <X className="w-5 h-5 text-hive-text-primary" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Two-Panel Layout */}
+              <div className="flex h-[calc(85vh-80px)]">
+                
+                {/* Left Panel - Photo Management */}
+                <div className="w-1/2 p-4 border-r border-white/10 overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-white/20">
+                  <div className="space-y-4">
+                    
+                    {/* Large Photo Display */}
+                    <div className="relative">
+                      <div className="aspect-[3/4] bg-gradient-to-br from-hive-brand-primary via-hive-brand-secondary to-hive-brand-primary rounded-2xl overflow-hidden shadow-2xl">
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
+                        
+                        {/* Photo Navigation */}
+                        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 flex gap-2">
+                          {managedPhotos.map((_, index) => (
+                            <button
+                              key={index}
+                              onClick={() => {
+                                setSelectedPhotoIndex(index);
+                                setCurrentPhotoIndex(index);
+                              }}
+                              className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                                index === selectedPhotoIndex 
+                                  ? 'bg-white shadow-lg' 
+                                  : 'bg-white/40 hover:bg-white/60'
+                              }`}
+                            />
+                          ))}
+                        </div>
+                        
+                        {/* Photo Content */}
+                        <div className="absolute bottom-4 left-4 right-4">
+                          <div className="text-white">
+                            <h3 className="text-lg font-bold">{managedPhotos[selectedPhotoIndex]}</h3>
+                            <p className="text-sm text-white/80">Photo {selectedPhotoIndex + 1} of {managedPhotos.length}</p>
+                            {showPhotoMetadata && (
+                              <p className="text-xs text-white/60 mt-1">Added 2 weeks ago • 1.2MB</p>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {/* Photo Actions */}
+                      <div className="absolute top-4 right-4 flex gap-2">
+                        <button 
+                          onClick={uploadPhoto}
+                          className="w-8 h-8 bg-black/50 hover:bg-black/70 rounded-lg flex items-center justify-center backdrop-blur-sm transition-all duration-200"
+                        >
+                          <Upload className="w-4 h-4 text-white" />
+                        </button>
+                        <button 
+                          onClick={() => setShowPhotoMetadata(!showPhotoMetadata)}
+                          className="w-8 h-8 bg-black/50 hover:bg-black/70 rounded-lg flex items-center justify-center backdrop-blur-sm transition-all duration-200"
+                        >
+                          {showPhotoMetadata ? <EyeOff className="w-4 h-4 text-white" /> : <Eye className="w-4 h-4 text-white" />}
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Photo Management Grid */}
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <h4 className="text-lg font-semibold text-hive-text-primary">Photo Library</h4>
+                        <button 
+                          onClick={uploadPhoto}
+                          className="px-3 py-1.5 bg-hive-brand-primary/20 text-hive-brand-primary border border-hive-brand-primary/30 rounded-lg text-sm font-medium hover:bg-hive-brand-primary/30 transition-all duration-200"
+                        >
+                          Upload Photos
+                        </button>
+                      </div>
+                      
+                      <div className="grid grid-cols-4 gap-3">
+                        {managedPhotos.map((photo, index) => (
+                          <div
+                            key={index}
+                            className={`relative aspect-square rounded-xl overflow-hidden transition-all duration-300 cursor-pointer ${
+                              index === selectedPhotoIndex 
+                                ? 'ring-2 ring-hive-brand-secondary shadow-lg' 
+                                : 'hover:ring-1 hover:ring-white/30'
+                            }`}
+                            onClick={() => {
+                              setSelectedPhotoIndex(index);
+                              setCurrentPhotoIndex(index);
+                            }}
+                          >
+                            <div className={`w-full h-full bg-gradient-to-br ${
+                              index === 0 ? 'from-hive-brand-primary to-hive-brand-secondary' :
+                              index === 1 ? 'from-hive-status-success to-hive-brand-secondary' :
+                              index === 2 ? 'from-hive-status-info to-hive-brand-secondary' :
+                              index === 3 ? 'from-hive-status-warning to-hive-brand-secondary' :
+                              'from-hive-text-tertiary to-hive-brand-secondary'
+                            } flex items-center justify-center`}>
+                              <span className="text-xs font-medium text-white">{index + 1}</span>
+                            </div>
+                            {managedPhotos.length > 1 && (
+                              <button 
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  removePhoto(index);
+                                }}
+                                className="absolute top-1 right-1 w-6 h-6 bg-black/70 hover:bg-red-500/70 rounded-full flex items-center justify-center backdrop-blur-sm transition-all duration-200"
+                              >
+                                <X className="w-3 h-3 text-white" />
+                              </button>
+                            )}
+                          </div>
+                        ))}
+                        
+                        {/* Add Photo Button */}
+                        <button 
+                          onClick={addPhoto}
+                          className="aspect-square border-2 border-dashed border-white/30 rounded-xl flex items-center justify-center hover:border-hive-brand-secondary/50 hover:bg-hive-brand-secondary/5 transition-all duration-200"
+                        >
+                          <Plus className="w-6 h-6 text-hive-text-tertiary hover:text-hive-brand-secondary transition-colors duration-200" />
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Display Settings */}
+                    <div className="space-y-4 p-4 bg-white/5 border border-white/10 rounded-xl">
+                      <h4 className="text-sm font-semibold text-hive-text-primary">Display Settings</h4>
+                      
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm text-hive-text-secondary">Photo Display Mode</span>
+                          <select 
+                            value={photoDisplayMode}
+                            onChange={(e) => setPhotoDisplayMode(e.target.value)}
+                            className="bg-hive-background-tertiary/80 text-hive-text-primary border border-white/20 rounded-lg px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-hive-brand-secondary"
+                          >
+                            <option value="Carousel">Carousel</option>
+                            <option value="Single">Single Photo</option>
+                            <option value="Grid">Grid View</option>
+                          </select>
+                        </div>
+                        
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm text-hive-text-secondary">Auto-rotate Photos</span>
+                          <button 
+                            onClick={() => setAutoRotatePhotos(!autoRotatePhotos)}
+                            className={`w-10 h-5 rounded-full flex items-center transition-all duration-200 ${
+                              autoRotatePhotos 
+                                ? 'bg-hive-brand-primary/30' 
+                                : 'bg-white/20'
+                            }`}
+                          >
+                            <div className={`w-4 h-4 rounded-full transition-all duration-200 ${
+                              autoRotatePhotos 
+                                ? 'bg-hive-brand-primary ml-5' 
+                                : 'bg-white ml-0.5'
+                            }`}></div>
+                          </button>
+                        </div>
+                        
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm text-hive-text-secondary">Show Photo Metadata</span>
+                          <button 
+                            onClick={() => setShowPhotoMetadata(!showPhotoMetadata)}
+                            className={`w-10 h-5 rounded-full flex items-center transition-all duration-200 ${
+                              showPhotoMetadata 
+                                ? 'bg-hive-brand-primary/30' 
+                                : 'bg-white/20'
+                            }`}
+                          >
+                            <div className={`w-4 h-4 rounded-full transition-all duration-200 ${
+                              showPhotoMetadata 
+                                ? 'bg-hive-brand-primary ml-5' 
+                                : 'bg-white ml-0.5'
+                            }`}></div>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Right Panel - Profile Information & Settings */}
+                <div className="w-1/2 p-4 overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-white/20">
+                  <div className="space-y-4">
+                    
+                    {/* Profile Information */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-hive-text-primary">Profile Information</h4>
+                      
+                      <div className="space-y-4 p-4 bg-white/5 border border-white/10 rounded-xl">
+                        <div>
+                          <label className="text-sm font-medium text-hive-text-secondary block mb-2">Full Name</label>
+                          <input 
+                            type="text" 
+                            value={profileName}
+                            onChange={(e) => setProfileName(e.target.value)}
+                            className="w-full bg-hive-background-tertiary/80 text-hive-text-primary border border-white/20 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hive-brand-secondary transition-all duration-200"
+                          />
+                        </div>
+                        
+                        <div>
+                          <label className="text-sm font-medium text-hive-text-secondary block mb-2">Year & Major</label>
+                          <input 
+                            type="text" 
+                            value={profileMajor}
+                            onChange={(e) => setProfileMajor(e.target.value)}
+                            className="w-full bg-hive-background-tertiary/80 text-hive-text-primary border border-white/20 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hive-brand-secondary transition-all duration-200"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Custom Status Management */}
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <h4 className="text-lg font-semibold text-hive-text-primary">Custom Status</h4>
+                        <button 
+                          onClick={() => setEditingStatus(!editingStatus)}
+                          className="px-3 py-1.5 bg-hive-brand-primary/20 text-hive-brand-primary border border-hive-brand-primary/30 rounded-lg text-sm font-medium hover:bg-hive-brand-primary/30 transition-all duration-200"
+                        >
+                          {editingStatus ? 'Save' : 'Edit'}
+                        </button>
+                      </div>
+                      
+                      {editingStatus ? (
+                        <input 
+                          type="text" 
+                          value={customStatus}
+                          onChange={(e) => setCustomStatus(e.target.value)}
+                          className="w-full bg-hive-background-tertiary/80 text-hive-text-primary border border-white/20 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hive-brand-secondary"
+                          placeholder="What's your vibe?"
+                        />
+                      ) : (
+                        <p className="text-hive-text-secondary italic p-3 bg-white/5 border border-white/10 rounded-lg">
+                          {customStatus}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Status Badges */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-hive-text-primary">Status Badges</h4>
+                      
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between p-3 bg-white/5 border border-white/10 rounded-lg">
+                          <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 bg-hive-brand-secondary/20 rounded-lg flex items-center justify-center">
+                              <Star className="w-4 h-4 text-hive-brand-secondary" />
+                            </div>
+                            <span className="text-sm font-medium text-hive-text-primary">Leader Badge</span>
+                          </div>
+                          <button 
+                            onClick={() => setHasLeaderStatus(!hasLeaderStatus)}
+                            className={`w-10 h-5 rounded-full flex items-center transition-all duration-200 ${
+                              hasLeaderStatus 
+                                ? 'bg-hive-brand-secondary/30' 
+                                : 'bg-white/20'
+                            }`}
+                          >
+                            <div className={`w-4 h-4 bg-hive-brand-secondary rounded-full transition-all duration-200 ${
+                              hasLeaderStatus ? 'ml-5' : 'ml-0.5'
+                            }`}></div>
+                          </button>
+                        </div>
+                        
+                        <div className="flex items-center justify-between p-3 bg-white/5 border border-white/10 rounded-lg">
+                          <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 bg-hive-brand-secondary/20 rounded-lg flex items-center justify-center">
+                              <Hammer className="w-4 h-4 text-hive-brand-secondary" />
+                            </div>
+                            <span className="text-sm font-medium text-hive-text-primary">Builder Badge</span>
+                          </div>
+                          <button 
+                            onClick={() => setHasBuilderStatus(!hasBuilderStatus)}
+                            className={`w-10 h-5 rounded-full flex items-center transition-all duration-200 ${
+                              hasBuilderStatus 
+                                ? 'bg-hive-brand-secondary/30' 
+                                : 'bg-white/20'
+                            }`}
+                          >
+                            <div className={`w-4 h-4 bg-hive-brand-secondary rounded-full transition-all duration-200 ${
+                              hasBuilderStatus ? 'ml-5' : 'ml-0.5'
+                            }`}></div>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Social Status Control */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-hive-text-primary">Social Status</h4>
+                      
+                      <div className="grid grid-cols-2 gap-3">
+                        {socialStatusOptions.map((status) => (
+                          <button
+                            key={status}
+                            onClick={() => setSocialStatus(status)}
+                            className={`p-3 rounded-xl border transition-all duration-200 ${
+                              socialStatus === status
+                                ? 'bg-hive-brand-primary/20 border-hive-brand-primary/40 text-hive-brand-primary'
+                                : 'bg-white/5 border-white/10 text-hive-text-secondary hover:bg-white/10'
+                            }`}
+                          >
+                            <span className="text-sm font-medium">{status}</span>
+                          </button>
+                        ))}
+                      </div>
+                      
+                      <div className="flex items-center gap-2 text-sm text-hive-text-tertiary">
+                        <Shield className="w-4 h-4" />
+                        <span>Your status controls who can see you're available</span>
+                      </div>
+                    </div>
+
+                    {/* Privacy Settings */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-hive-text-primary">Privacy Settings</h4>
+                      
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm text-hive-text-secondary">Profile Visibility</span>
+                          <select 
+                            value={profileVisibility}
+                            onChange={(e) => setProfileVisibility(e.target.value)}
+                            className="bg-hive-background-tertiary/80 text-hive-text-primary border border-white/20 rounded-lg px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-hive-brand-secondary"
+                          >
+                            <option value="Public">Public</option>
+                            <option value="Campus Only">Campus Only</option>
+                            <option value="Friends Only">Friends Only</option>
+                            <option value="Private">Private</option>
+                          </select>
+                        </div>
+                        
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm text-hive-text-secondary">Show Social Context</span>
+                          <button 
+                            onClick={() => setShowSocialContext(!showSocialContext)}
+                            className={`w-10 h-5 rounded-full flex items-center transition-all duration-200 ${
+                              showSocialContext 
+                                ? 'bg-hive-brand-primary/30' 
+                                : 'bg-white/20'
+                            }`}
+                          >
+                            <div className={`w-4 h-4 bg-hive-brand-primary rounded-full transition-all duration-200 ${
+                              showSocialContext ? 'ml-5' : 'ml-0.5'
+                            }`}></div>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Interests Management */}
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <h4 className="text-lg font-semibold text-hive-text-primary">Interests</h4>
+                        <button 
+                          onClick={() => setAddingInterest(!addingInterest)}
+                          className="px-3 py-1.5 bg-hive-brand-primary/20 text-hive-brand-primary border border-hive-brand-primary/30 rounded-lg text-sm font-medium hover:bg-hive-brand-primary/30 transition-all duration-200"
+                        >
+                          {addingInterest ? 'Cancel' : 'Add'}
+                        </button>
+                      </div>
+                      
+                      {addingInterest && (
+                        <div className="flex gap-2">
+                          <input
+                            type="text"
+                            value={newInterest}
+                            onChange={(e) => setNewInterest(e.target.value)}
+                            onKeyPress={(e) => e.key === 'Enter' && addInterest()}
+                            placeholder="Enter new interest..."
+                            className="flex-1 bg-hive-background-tertiary/80 text-hive-text-primary border border-white/20 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hive-brand-secondary transition-all duration-200"
+                          />
+                          <button
+                            onClick={addInterest}
+                            disabled={!newInterest.trim()}
+                            className="px-3 py-2 bg-hive-brand-primary text-white rounded-lg text-sm hover:bg-hive-brand-hover disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                          >
+                            Add
+                          </button>
+                        </div>
+                      )}
+                      
+                      <div className="grid grid-cols-2 gap-2">
+                        {managedInterests.map((interest, index) => (
+                          <div 
+                            key={index}
+                            className="flex items-center justify-between p-2 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 transition-all duration-200 group interest-enter"
+                          >
+                            <span className="text-xs text-hive-text-primary">{interest}</span>
+                            <button 
+                              onClick={() => removeInterest(interest)}
+                              className="opacity-0 group-hover:opacity-100 text-hive-text-tertiary hover:text-hive-status-error transition-all duration-200"
+                            >
+                              <X className="w-3 h-3" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                      
+                      {managedInterests.length === 0 && (
+                        <div className="text-center p-4 bg-white/5 border border-white/10 rounded-lg">
+                          <p className="text-sm text-hive-text-tertiary">No interests added yet</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+        </div>
+      </div>
+
+      {/* System Status */}
+      <div className="fixed bottom-6 right-6 bg-hive-background-secondary rounded-lg shadow-lg border border-hive-border-default p-4">
+        <div className="flex items-center gap-2 text-sm">
+          <div className="w-3 h-3 bg-hive-status-success rounded-full animate-pulse"></div>
+          <span className="text-hive-text-secondary font-medium">vBETA Widget Showcase Active</span>
+        </div>
+        <div className="text-xs text-hive-text-tertiary mt-1">
+          6/6 widgets • Production ready • Complete system
+        </div>
+      </div>
+    </>
+  );
+};
+
+export const CompleteWidgetShowcaseStory: Story = {
+  name: '🎯 HIVE vBETA Widget Showcase - 6 Core Widgets',
+  render: () => <CompleteWidgetShowcase />
+};

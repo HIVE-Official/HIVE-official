@@ -1,5 +1,5 @@
 import { Variants } from 'framer-motion';
-export declare function separateMotionProps<T extends Record<string, any>>(props: T): Omit<T, "layout" | "onDrag" | "onDragStart" | "onDragEnd" | "onAnimationStart" | "onAnimationEnd" | "onCopy" | "onCut" | "onPaste" | "size" | "breakpoint" | "theme" | "logoLayout" | "animated">;
+export declare function separateMotionProps<T extends Record<string, any>>(props: T): Omit<T, "size" | "onCopy" | "onCut" | "onPaste" | "onDrag" | "onDragEnd" | "onDragStart" | "onAnimationStart" | "onAnimationEnd" | "layout" | "animated" | "theme" | "breakpoint" | "logoLayout">;
 export declare function getMotionProps<T extends Record<string, any>>(props: T): any;
 export declare function getLogoMotionProps<T extends Record<string, any>>(props: T): any;
 export declare const hiveMotionCore: {

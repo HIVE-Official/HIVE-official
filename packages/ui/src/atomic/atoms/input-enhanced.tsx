@@ -18,11 +18,14 @@ const inputVariants = cva(
         success: "border-[var(--hive-status-success)] focus:border-[var(--hive-status-success)] focus:ring-[color-mix(in_srgb,var(--hive-status-success)_30%,transparent)]",
         warning: "border-[var(--hive-status-warning)] focus:border-[var(--hive-status-warning)] focus:ring-[color-mix(in_srgb,var(--hive-status-warning)_30%,transparent)]",
         brand: "border-[var(--hive-brand-secondary)] focus:border-[var(--hive-brand-secondary)]",
+        ghost: "border-transparent bg-transparent focus:border-[var(--hive-brand-secondary)] focus:bg-[var(--hive-background-secondary)]",
+        filled: "border-transparent bg-[var(--hive-background-tertiary)] focus:border-[var(--hive-brand-secondary)]",
       },
       
       size: {
         sm: "h-8 px-2 text-xs",
         default: "h-10 px-3 text-sm",
+        md: "h-10 px-3 text-sm", // Alias for default
         lg: "h-12 px-4 text-base",
         xl: "h-14 px-5 text-lg",
       },
@@ -435,6 +438,7 @@ const LinkIcon = () => (
 
 export { 
   Input, 
+  Input as InputEnhanced,
   SearchInput, 
   PasswordInput, 
   NumberInput, 

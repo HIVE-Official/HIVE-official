@@ -574,4 +574,5 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   auditor.auditAllComponents().catch(console.error);
 }
 
-export { HiveComponentAuditor, ComponentAuditResult, AuditSummary };
+export { HiveComponentAuditor };
+export type { ComponentAuditResult, AuditSummary };

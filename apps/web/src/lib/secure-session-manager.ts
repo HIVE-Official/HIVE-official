@@ -3,9 +3,8 @@
  * Implements secure session handling, token rotation, and threat detection
  */
 
-import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
-import { SignJWT, jwtVerify, type JWTPayload } from 'jose';
+import { SignJWT, jwtVerify } from 'jose';
 import { logSecurityEvent } from './structured-logger';
 import { currentEnvironment, env } from './env';
 import { SecurityScanner } from './secure-input-validation';
@@ -380,7 +379,7 @@ export class SecureSessionManager {
    */
   static async rotateSession(
     sessionData: SessionData,
-    request: NextRequest
+    _request: NextRequest
   ): Promise<{
     accessToken: string;
     refreshToken: string;

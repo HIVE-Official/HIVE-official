@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAuth } from 'firebase-admin/auth';
 import { dbAdmin } from '@/lib/firebase-admin';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
 
 interface ProfileCompletionCheck {
   isComplete: boolean;
@@ -35,22 +37,12 @@ const OPTIONAL_FIELDS = [
  * Check profile completion status
  * GET /api/profile/completion
  */
-export async function GET(request: NextRequest) {
+export const GET = withAuth(async (request: NextRequest, authContext) => {
   try {
-    const authHeader = request.headers.get('authorization');
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return NextResponse.json(
-        { error: 'Authorization header required' },
-        { status: 401 }
-      );
-    }
-
-    const token = authHeader.split('Bearer ')[1];
+    const userId = authContext.userId;
     
-    // Handle development mode tokens
-    if (token.startsWith('dev_token_')) {
-      const userId = token.replace('dev_token_', '');
-      
+    // Handle development mode
+    if (userId === 'test-user') {
       const mockCompletion: ProfileCompletionCheck = {
         isComplete: true,
         completionPercentage: 100,
@@ -64,52 +56,33 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({
         success: true,
         completion: mockCompletion,
-        developmentMode: true,
-      });
+        developmentMode: true });
     }
-    
-    // Verify the token
-    const auth = getAuth();
-    let decodedToken;
-    try {
-      decodedToken = await auth.verifyIdToken(token);
-    } catch (authError) {
-      return NextResponse.json(
-        { error: 'Invalid or expired token' },
-        { status: 401 }
-      );
-    }
-
-    const userId = decodedToken.uid;
 
     // Get user document from Firestore
     const userDoc = await dbAdmin.collection('users').doc(userId).get();
     
     if (!userDoc.exists) {
-      return NextResponse.json(
-        { error: 'User profile not found' },
-        { status: 404 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("User profile not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     const userData = userDoc.data();
     
     // Check completion status
-    const completion = checkProfileCompletion(userData, decodedToken.email);
+    const completion = checkProfileCompletion(userData, authContext.user.email);
 
     return NextResponse.json({
       success: true,
-      completion,
-    });
+      completion });
 
   } catch (error) {
-    console.error('Profile completion check error:', error);
-    return NextResponse.json(
-      { error: 'Failed to check profile completion' },
-      { status: 500 }
-    );
+    logger.error('Profile completion check error', { error: error, endpoint: '/api/profile/completion' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to check profile completion", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
-}
+}, { 
+  allowDevelopmentBypass: true, // Profile completion checking is safe for development
+  operation: 'check_profile_completion' 
+});
 
 /**
  * Helper function to check profile completion

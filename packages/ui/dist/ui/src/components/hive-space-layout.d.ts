@@ -55,8 +55,8 @@ declare const surfaceConfig: {
 };
 declare const hiveSpaceLayoutVariants: (props?: {
     mode?: "view" | "builder" | "edit";
-    layout?: "standard" | "compact" | "expanded";
-} & import("class-variance-authority/dist/types").ClassProp) => string;
+    layout?: "expanded" | "compact" | "standard";
+} & import("class-variance-authority/types").ClassProp) => string;
 export interface SpaceSurface {
     type: SurfaceType;
     visible: boolean;

@@ -4,6 +4,31 @@
 // === IMPLEMENTED ORGANISMS ===
 // Only export what actually exists to avoid build errors
 export * from './hive-space-card';
+export * from './header';
+export * from './profile-card';
+export * from './profile-dashboard';
+export * from './profile-system';
+
+// === HIVE SPACES SYSTEM ===
+export * from './space-explore-hub';
+export * from './space-dashboard';
+export * from './space-member-directory';
+export * from './space-category-browser';
+
+// === HIVE TOOLS SYSTEM ===
+export * from './tool-library-modal';
+export * from './tool-configuration-panel';
+
+// === HIVE CONTENT CREATION ===
+export * from './post-creation-modal';
+
+// === HIVE FEED & RITUALS SYSTEM ===
+export * from './rituals-hub';
+export * from './locked-feed-skeleton';
+export * from './ritual-initialize-workflow';
+export * from './ritual-discover-workflow';
+export * from './ritual-connect-workflow';
+export * from './activity-feed';
 
 // === PLANNED ORGANISMS ===
 // These will be implemented as part of the atomic design system completion

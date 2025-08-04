@@ -4,8 +4,8 @@ import * as React from "react";
 import * as SliderPrimitive from "@radix-ui/react-slider";
 import { cva } from 'class-variance-authority';
 import { motion } from 'framer-motion';
-import { cn } from "../lib/utils";
-import { motionDurations } from '../motion/hive-motion-system';
+import { cn } from "../lib/utils.js";
+import { motionDurations } from '../motion/hive-motion-system.js';
 // HIVE Slider variants - Luxury range input with glass morphism and liquid metal motion
 const hiveSliderVariants = cva(
 // Base styles - touch-friendly with proper accessibility

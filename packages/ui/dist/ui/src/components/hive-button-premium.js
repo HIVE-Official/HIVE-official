@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { cva } from 'class-variance-authority';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Loader2 } from 'lucide-react';
-import { cn } from '../lib/utils';
+import { cn } from '../lib/utils.js';
 // HIVE Premium Button System - Matte Black Hardware Feel
 // Every button feels like premium matte black equipment
 const hivePremiumButtonVariants = cva(

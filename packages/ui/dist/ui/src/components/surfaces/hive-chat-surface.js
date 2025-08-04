@@ -3,8 +3,8 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cva } from 'class-variance-authority';
-import { cn } from '../../lib/utils';
-import { motionDurations } from '../../motion/hive-motion-system';
+import { cn } from '../../lib/utils.js';
+import { motionDurations } from '../../motion/hive-motion-system.js';
 import { MessageCircle, Send, Smile, Paperclip, Image as ImageIcon, Mic, Reply, Heart, Trash2, Edit3, Lock, Clock, Check, CheckCheck, AlertCircle, Search, Settings, Crown, XCircle } from 'lucide-react';
 // HIVE Chat Surface - Real-time Communication
 // Modern chat interface with threads, reactions, and rich media

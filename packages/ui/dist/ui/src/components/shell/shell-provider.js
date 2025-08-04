@@ -1,6 +1,7 @@
 "use client";
 import { jsx as _jsx } from "react/jsx-runtime";
 import { createContext, useContext, useState, useEffect } from 'react';
+import { useNavigationLayout } from '../../hooks/use-navigation-layout.js';
 const ShellContext = createContext(undefined);
 export function useShell() {
     const context = useContext(ShellContext);
@@ -9,12 +10,18 @@ export function useShell() {
     }
     return context;
 }
-export function ShellProvider({ children, initialSidebarCollapsed = true, initialUnreadCount = 0, initialNavigationMode = 'sidebar' }) {
+export function ShellProvider({ children, initialSidebarCollapsed = true, initialUnreadCount = 0, initialNavigationMode = 'sidebar', initialNavigationPreference = 'auto' }) {
     const [sidebarCollapsed, setSidebarCollapsed] = useState(initialSidebarCollapsed);
     const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
     const [notificationCenterOpen, setNotificationCenterOpen] = useState(false);
     const [unreadNotificationCount, setUnreadNotificationCount] = useState(initialUnreadCount);
     const [navigationMode, setNavigationMode] = useState(initialNavigationMode);
+    const [navigationPreference, setNavigationPreference] = useState(initialNavigationPreference);
+    // Navigation layout hook
+    const navigationLayout = useNavigationLayout({
+        userPreference: navigationPreference,
+        onPreferenceChange: setNavigationPreference
+    });
     // Keyboard shortcuts
     useEffect(() => {
         function handleKeyDown(event) {
@@ -88,6 +95,27 @@ export function ShellProvider({ children, initialSidebarCollapsed = true, initia
     useEffect(() => {
         localStorage.setItem('hive-navigation-mode', navigationMode);
     }, [navigationMode]);
+    // Load navigation preference from localStorage
+    useEffect(() => {
+        const savedPreference = localStorage.getItem('hive-navigation-preference');
+        if (savedPreference && ['tabs', 'sidebar', 'auto'].includes(savedPreference)) {
+            setNavigationPreference(savedPreference);
+        }
+    }, []);
+    // Save navigation preference to localStorage
+    useEffect(() => {
+        localStorage.setItem('hive-navigation-preference', navigationPreference);
+    }, [navigationPreference]);
+    // Sync resolved navigation mode with legacy navigation mode
+    useEffect(() => {
+        if (navigationLayout.resolvedMode === 'topbar') {
+            setNavigationMode('topbar');
+        }
+        else if (navigationLayout.resolvedMode === 'sidebar') {
+            setNavigationMode('sidebar');
+        }
+        // Note: bottom-tabs and drawer modes don't directly map to legacy modes
+    }, [navigationLayout.resolvedMode]);
     const value = {
         sidebarCollapsed,
         setSidebarCollapsed,
@@ -99,6 +127,9 @@ export function ShellProvider({ children, initialSidebarCollapsed = true, initia
         setUnreadNotificationCount,
         navigationMode,
         setNavigationMode,
+        navigationPreference,
+        setNavigationPreference,
+        navigationLayout,
     };
     return (_jsx(ShellContext.Provider, { value: value, children: children }));
 }

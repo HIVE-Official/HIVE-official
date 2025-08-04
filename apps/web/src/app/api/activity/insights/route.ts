@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { collection, query, where, getDocs, orderBy } from 'firebase/firestore';
-import { db } from '@hive/core/server';
-import { getCurrentUser } from '@hive/auth-logic';
+// Use admin SDK methods since we're in an API route
+import { dbAdmin } from '@/lib/firebase-admin';
+import { getCurrentUser } from '@/lib/server-auth';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 // Advanced insights interface
 interface ActivityInsight {
@@ -35,9 +37,9 @@ interface ToolUsagePattern {
 // GET - Generate advanced activity insights
 export async function GET(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const { searchParams } = new URL(request.url);
@@ -67,30 +69,26 @@ export async function GET(request: NextRequest) {
     const endDateStr = endDate.toISOString().split('T')[0];
 
     // Fetch activity summaries
-    const summariesQuery = query(
-      collection(db, 'activitySummaries'),
-      where('userId', '==', user.uid),
-      where('date', '>=', startDateStr),
-      where('date', '<=', endDateStr),
-      orderBy('date', 'desc')
-    );
+    const summariesQuery = dbAdmin.collection('activitySummaries')
+      .where('userId', '==', user.uid)
+      .where('date', '>=', startDateStr)
+      .where('date', '<=', endDateStr)
+      .orderBy('date', 'desc');
 
-    const summariesSnapshot = await getDocs(summariesQuery);
+    const summariesSnapshot = await summariesQuery.get();
     const summaries = summariesSnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
     }));
 
     // Fetch detailed events for pattern analysis
-    const eventsQuery = query(
-      collection(db, 'activityEvents'),
-      where('userId', '==', user.uid),
-      where('date', '>=', startDateStr),
-      where('date', '<=', endDateStr),
-      orderBy('timestamp', 'desc')
-    );
+    const eventsQuery = dbAdmin.collection('activityEvents')
+      .where('userId', '==', user.uid)
+      .where('date', '>=', startDateStr)
+      .where('date', '<=', endDateStr)
+      .orderBy('timestamp', 'desc');
 
-    const eventsSnapshot = await getDocs(eventsQuery);
+    const eventsSnapshot = await eventsQuery.get();
     const events = eventsSnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
@@ -116,8 +114,8 @@ export async function GET(request: NextRequest) {
       }
     });
   } catch (error) {
-    console.error('Error generating activity insights:', error);
-    return NextResponse.json({ error: 'Failed to generate activity insights' }, { status: 500 });
+    logger.error('Error generating activity insights', { error: error, endpoint: '/api/activity/insights' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to generate activity insights", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -296,7 +294,7 @@ function analyzeSpaceEngagement(summaries: any[], events: any[]): SpaceEngagemen
       engagement,
       preferredTime: timeFormat
     };
-  }).sort((a, b) => b.totalTime - a.totalTime);
+  }).sort((a, b) => b.totalTime - a.totalTime) as any;
 }
 
 // Helper function to analyze tool usage

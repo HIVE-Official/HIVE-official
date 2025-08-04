@@ -5,7 +5,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { Loader2, Mail, ArrowLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
-import { HiveButton, HiveInput, HiveCard, HiveModal, HiveLogo } from '@hive/ui';
+import { HiveButton, HiveInput, HiveCard, HiveModal, HiveLogo } from "@hive/ui";
 
 interface LoginFormData {
   email: string;
@@ -14,9 +14,11 @@ interface LoginFormData {
 function LoginPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const schoolId = searchParams.get('schoolId');
-  const schoolName = searchParams.get('schoolName');
-  const schoolDomain = searchParams.get('domain');
+  
+  // Safely get search params with null checks
+  const schoolId = searchParams?.get('schoolId') || null;
+  const schoolName = searchParams?.get('schoolName') || null;
+  const schoolDomain = searchParams?.get('domain') || null;
 
   const [formData, setFormData] = useState<LoginFormData>({ email: '' });
   const [isLoading, setIsLoading] = useState(false);
@@ -25,16 +27,35 @@ function LoginPageContent() {
   const [devMagicLink, setDevMagicLink] = useState<string | null>(null);
   const [isRedirecting, setIsRedirecting] = useState(false);
 
-  // Redirect if no school context
-  if (!schoolId || !schoolName || !schoolDomain) {
+  // Client-side redirect if no school context
+  if (typeof window !== 'undefined' && (!schoolId || !schoolName || !schoolDomain)) {
     router.push('/schools');
     return null;
+  }
+
+  // Server-side rendering fallback
+  if (!schoolId || !schoolName || !schoolDomain) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <p>Redirecting to school selection...</p>
+        </div>
+      </div>
+    );
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError(null);
+
+    // Validate email before submitting
+    const emailValidationError = validateEmail(formData.email.trim());
+    if (emailValidationError) {
+      setError(emailValidationError);
+      setIsLoading(false);
+      return;
+    }
 
     try {
       // Save email for magic link verification
@@ -53,9 +74,6 @@ function LoginPageContent() {
 
       const data = await response.json();
 
-      console.log('🔍 Magic Link API Response:', data);
-      console.log('🔍 Response OK:', response.ok);
-      console.log('🔍 data.dev:', data.dev);
 
       if (!response.ok) {
         throw new Error(data.error || 'Failed to send magic link');
@@ -63,8 +81,6 @@ function LoginPageContent() {
 
       // In development mode with dev users, redirect directly instead of showing email modal
       if (data.dev) {
-        console.log('🚀 Development user detected, setting up session and redirecting');
-        console.log('🔍 User data from API:', data.user);
         
         // Set up the session data that the onboarding page expects
         const userSession = {
@@ -80,7 +96,6 @@ function LoginPageContent() {
         window.localStorage.setItem('hive_session', JSON.stringify(userSession));
         window.localStorage.setItem('dev_auth_mode', 'true');
         
-        console.log('✅ Session data set:', userSession);
         
         setIsRedirecting(true);
         // Development mode - redirect directly to onboarding or dashboard
@@ -97,36 +112,67 @@ function LoginPageContent() {
 
       setSuccess(true);
     } catch (err) {
-      console.error('🚨 Magic link error:', err);
-      setError(err instanceof Error ? err.message : 'Something went wrong');
+      console.error('Authentication error:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Something went wrong';
+      
+      // Provide more specific error messages
+      if (errorMessage.includes('fetch')) {
+        setError('Network error. Please check your connection and try again.');
+      } else if (errorMessage.includes('Invalid email')) {
+        setError('Please enter a valid email address.');
+      } else if (errorMessage.includes('unauthorized')) {
+        setError('This email is not authorized for this school.');
+      } else {
+        setError(errorMessage);
+      }
     } finally {
       setIsLoading(false);
     }
   };
 
+  const validateEmail = (email: string): string | null => {
+    if (!email) return null;
+    
+    // Basic email format validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return 'Please enter a valid email address';
+    }
+    
+    // Domain validation (bypass for test.edu domain)
+    const isTestDomain = schoolDomain === 'test.edu';
+    if (!isTestDomain && schoolDomain && !email.toLowerCase().endsWith(`@${schoolDomain.toLowerCase()}`)) {
+      return `Please use your @${schoolDomain} email address`;
+    }
+    
+    return null;
+  };
+
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const email = e.target.value;
     setFormData({ email });
+    
+    // Clear previous errors
     setError(null);
     
-    // Real-time validation (bypass domain check for test.edu domain)
-    const isTestDomain = schoolDomain === 'test.edu';
-    if (email && !email.includes('@')) {
-      setError('Please enter a valid email address');
-    } else if (email && !isTestDomain && schoolDomain && !email.endsWith(`@${schoolDomain}`)) {
-      setError(`Please use your @${schoolDomain} email address`);
+    // Validate email if not empty
+    if (email.trim()) {
+      const validationError = validateEmail(email.trim());
+      if (validationError) {
+        setError(validationError);
+      }
     }
   };
 
   return (
-    <div className="min-h-screen bg-hive-background-primary text-hive-text-primary flex flex-col">
+    <div className="min-h-screen bg-[var(--hive-background-primary)] text-[var(--hive-text-primary)] flex flex-col">
       {/* Background Effects */}
-      <div className="absolute inset-0 bg-gradient-to-br from-hive-background-primary via-hive-background-secondary to-hive-background-primary" />
+      <div className="absolute inset-0 bg-gradient-to-br from-[var(--hive-background-primary)] via-[var(--hive-background-secondary)] to-[var(--hive-background-primary)]" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_40%,rgba(255,255,255,0.02)_0%,transparent_50%),radial-gradient(circle_at_70%_60%,rgba(255,215,0,0.03)_0%,transparent_50%)]" />
       
       {/* Header */}
       <motion.div 
-        className="relative z-10 border-b border-hive-border-primary/20 backdrop-blur-sm"
+        className="relative z-10 border-b border-[var(--hive-border-primary)]/20 backdrop-blur-sm"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
@@ -135,7 +181,7 @@ function LoginPageContent() {
           <div className="flex items-center justify-between">
             <Link 
               href="/schools" 
-              className="flex items-center gap-2 text-hive-text-muted hover:text-hive-text-primary transition-colors duration-200 group"
+              className="flex items-center gap-2 text-[var(--hive-text-muted)] hover:text-[var(--hive-text-primary)] transition-colors duration-200 group"
             >
               <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform duration-200" />
               <span className="text-sm font-medium">Back to schools</span>
@@ -164,8 +210,8 @@ function LoginPageContent() {
               transition={{ duration: 0.4, delay: 0.1 }}
               className="mb-8"
             >
-              <HiveCard className="text-center p-4 bg-hive-brand-primary/10 border-hive-brand-primary/30">
-                <p className="hive-font-sans text-sm text-hive-brand-primary font-medium">
+              <HiveCard className="text-center p-4 bg-[var(--hive-overlay-gold-subtle)] border-[var(--hive-border-gold)]">
+                <p className="text-sm text-[var(--hive-brand-primary)] font-medium">
                   🛠️ Development Mode Active
                 </p>
               </HiveCard>
@@ -174,16 +220,16 @@ function LoginPageContent() {
 
           {/* Title Section */}
           <motion.div
-            className="text-center mb-8"
+            className="text-center mb-10"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <h1 className="hive-font-sans text-4xl lg:text-5xl font-bold text-hive-text-primary tracking-tight leading-tight mb-4">
+            <h1 className="text-4xl lg:text-5xl font-bold text-[var(--hive-text-primary)] tracking-tight leading-tight mb-4">
               Sign in to HIVE
             </h1>
-            <p className="hive-font-sans text-xl text-hive-text-secondary leading-relaxed mb-2">
-              Join <span className="text-hive-brand-primary font-semibold">{schoolName}</span> on HIVE
+            <p className="text-lg text-[var(--hive-text-secondary)] leading-relaxed">
+              Join <span className="text-[var(--hive-brand-primary)] font-semibold">{schoolName}</span> on HIVE
             </p>
           </motion.div>
 
@@ -194,12 +240,13 @@ function LoginPageContent() {
             transition={{ duration: 0.6, delay: 0.4 }}
             className="mb-6"
           >
-            <HiveCard className="p-8 bg-hive-background-secondary/40 backdrop-blur-xl border border-hive-border-primary/30">
+            <HiveCard className="p-8 bg-[var(--hive-background-secondary)] border-[var(--hive-border-default)] shadow-[var(--hive-shadow-level2)]">
               <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="space-y-3">
-                  <label htmlFor="email" className="block hive-font-sans text-sm font-medium text-hive-text-primary">
-                    School email address
-                  </label>
+                <div className="space-y-4">
+                  <div>
+                    <label htmlFor="email" className="block text-sm font-medium text-[var(--hive-text-primary)] mb-3">
+                      School email address
+                    </label>
                   <HiveInput
                     id="email"
                     type="email"
@@ -210,13 +257,19 @@ function LoginPageContent() {
                     disabled={isLoading}
                     autoComplete="email"
                     autoFocus
-                    variant={error ? 'error' : 'premium'}
+                    variant={error ? 'error' : 'default'}
                     size="lg"
-                    floatingLabel={false}
                     className="w-full"
+                    data-testid="email-input"
+                    aria-label={`Email address for ${schoolName}`}
+                    aria-required="true"
+                    aria-invalid={!!error}
+                    aria-describedby={error ? "email-error" : undefined}
                   />
+                  </div>
+                  
                   {!error && schoolDomain === 'test.edu' && (
-                    <p className="hive-font-sans text-xs text-hive-text-muted">
+                    <p className="text-xs text-[var(--hive-text-tertiary)]">
                       Dev mode: Any email will work for testing
                     </p>
                   )}
@@ -231,8 +284,8 @@ function LoginPageContent() {
                       transition={{ duration: 0.3 }}
                       className="overflow-hidden"
                     >
-                      <div className="p-4 rounded-xl bg-hive-status-error/10 border border-hive-status-error/30">
-                        <p className="hive-font-sans text-sm text-hive-status-error">{error}</p>
+                      <div id="email-error" className="p-4 rounded-xl bg-[var(--hive-status-error)]/10 border border-[var(--hive-status-error)]/20">
+                        <p className="text-sm text-[var(--hive-status-error)]" role="alert" aria-live="polite">{error}</p>
                       </div>
                     </motion.div>
                   )}
@@ -244,6 +297,8 @@ function LoginPageContent() {
                   variant="premium"
                   size="xl"
                   className="w-full"
+                  data-testid="send-magic-link-button"
+                  aria-label="Send magic link to email"
                 >
                   {isLoading ? (
                     <div className="flex items-center justify-center gap-3">
@@ -277,15 +332,15 @@ function LoginPageContent() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
         >
-          <div className="w-16 h-16 mx-auto rounded-2xl flex items-center justify-center bg-hive-status-success/20 border border-hive-status-success/30">
-            <Loader2 className="w-8 h-8 text-hive-status-success animate-spin" />
+          <div className="w-16 h-16 mx-auto rounded-2xl flex items-center justify-center bg-[var(--hive-status-success)]/20 border border-[var(--hive-status-success)]/30">
+            <Loader2 className="w-8 h-8 text-[var(--hive-status-success)] animate-spin" />
           </div>
           
           <div className="space-y-3">
-            <h3 className="text-lg font-semibold text-hive-text-primary">
+            <h3 className="text-lg font-semibold text-[var(--hive-text-primary)]">
               Welcome to HIVE!
             </h3>
-            <p className="text-hive-text-secondary">
+            <p className="text-[var(--hive-text-secondary)]">
               Redirecting you to the platform...
             </p>
           </div>
@@ -306,27 +361,27 @@ function LoginPageContent() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
         >
-          <div className="w-16 h-16 mx-auto rounded-2xl flex items-center justify-center bg-hive-status-success/20 border border-hive-status-success/30">
-            <Mail className="w-8 h-8 text-hive-status-success" />
+          <div className="w-16 h-16 mx-auto rounded-2xl flex items-center justify-center bg-[var(--hive-status-success)]/20 border border-[var(--hive-status-success)]/30">
+            <Mail className="w-8 h-8 text-[var(--hive-status-success)]" />
           </div>
           
           <div className="space-y-3">
-            <p className="text-hive-text-secondary">
+            <p className="text-[var(--hive-text-secondary)]">
               Magic link sent to
             </p>
-            <p className="text-hive-brand-primary font-semibold break-all">
+            <p className="text-[var(--hive-brand-primary)] font-semibold break-all">
               {formData.email}
             </p>
             
             {/* Development mode - show the magic link */}
             {devMagicLink && schoolDomain === 'test.edu' && (
-              <HiveCard className="p-4 bg-hive-brand-primary/10 border-hive-brand-primary/30 text-left">
-                <p className="text-xs text-hive-brand-primary font-medium mb-2">
+              <HiveCard className="p-4 bg-[var(--hive-brand-primary)]/10 border-[var(--hive-brand-primary)]/30 text-left">
+                <p className="text-xs text-[var(--hive-brand-primary)] font-medium mb-2">
                   🛠️ Development Mode - Magic Link:
                 </p>
                 <a 
                   href={devMagicLink}
-                  className="text-xs text-hive-brand-primary hover:underline break-all"
+                  className="text-xs text-[var(--hive-brand-primary)] hover:underline break-all"
                 >
                   {devMagicLink}
                 </a>
@@ -363,17 +418,21 @@ function LoginPageContent() {
   );
 }
 
-export default function LoginPage() {
+function LoginPageWrapper() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-hive-background-primary flex items-center justify-center">
+      <div className="min-h-screen bg-[var(--hive-background-primary)] flex items-center justify-center">
         <div className="flex items-center gap-3">
-          <Loader2 className="h-6 w-6 text-hive-brand-primary animate-spin" />
-          <span className="text-hive-text-secondary">Loading...</span>
+          <Loader2 className="h-6 w-6 text-[var(--hive-brand-primary)] animate-spin" />
+          <span className="text-[var(--hive-text-secondary)]">Loading...</span>
         </div>
       </div>
     }>
       <LoginPageContent />
     </Suspense>
   );
+}
+
+export default function LoginPage() {
+  return <LoginPageWrapper />;
 }

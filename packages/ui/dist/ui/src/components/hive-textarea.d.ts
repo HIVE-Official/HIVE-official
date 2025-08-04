@@ -1,10 +1,10 @@
 import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
 declare const hiveTextareaVariants: (props?: {
-    variant?: "disabled" | "error" | "default" | "premium" | "minimal" | "success";
+    variant?: "default" | "success" | "error" | "disabled" | "minimal" | "premium";
     size?: "default" | "sm" | "lg" | "xl";
     radius?: "default" | "sm" | "lg" | "xl";
-} & import("class-variance-authority/dist/types").ClassProp) => string;
+} & import("class-variance-authority/types").ClassProp) => string;
 export interface HiveTextareaProps extends Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, 'size'>, VariantProps<typeof hiveTextareaVariants> {
     label?: string;
     helperText?: string;
@@ -21,9 +21,9 @@ export interface HiveTextareaProps extends Omit<React.TextareaHTMLAttributes<HTM
     asChild?: boolean;
 }
 declare const HiveTextarea: React.ForwardRefExoticComponent<HiveTextareaProps & React.RefAttributes<HTMLTextAreaElement>>;
-declare const HiveToolDescriptionTextarea: React.ForwardRefExoticComponent<Omit<HiveTextareaProps, "label" | "placeholder"> & React.RefAttributes<HTMLTextAreaElement>>;
-declare const HiveSpaceDescriptionTextarea: React.ForwardRefExoticComponent<Omit<HiveTextareaProps, "label" | "placeholder"> & React.RefAttributes<HTMLTextAreaElement>>;
-declare const HiveFeedbackTextarea: React.ForwardRefExoticComponent<Omit<HiveTextareaProps, "label" | "placeholder"> & React.RefAttributes<HTMLTextAreaElement>>;
+declare const HiveToolDescriptionTextarea: React.ForwardRefExoticComponent<Omit<HiveTextareaProps, "placeholder" | "label"> & React.RefAttributes<HTMLTextAreaElement>>;
+declare const HiveSpaceDescriptionTextarea: React.ForwardRefExoticComponent<Omit<HiveTextareaProps, "placeholder" | "label"> & React.RefAttributes<HTMLTextAreaElement>>;
+declare const HiveFeedbackTextarea: React.ForwardRefExoticComponent<Omit<HiveTextareaProps, "placeholder" | "label"> & React.RefAttributes<HTMLTextAreaElement>>;
 declare const HiveCodeTextarea: React.ForwardRefExoticComponent<Omit<HiveTextareaProps, "className" | "label"> & React.RefAttributes<HTMLTextAreaElement>>;
 export { HiveTextarea, HiveToolDescriptionTextarea, HiveSpaceDescriptionTextarea, HiveFeedbackTextarea, HiveCodeTextarea, hiveTextareaVariants };
 declare const Textarea: React.ForwardRefExoticComponent<Omit<HiveTextareaProps, "label" | "floatingLabel"> & React.RefAttributes<HTMLTextAreaElement>>;

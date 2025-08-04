@@ -3,11 +3,12 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getAuth } from "firebase-admin/auth";
 import { getFirestore } from "firebase-admin/firestore";
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 // Validation schema
 const lookupUserSchema = z.object({
-  query: z.string().min(1, "Search query is required"),
-});
+  query: z.string().min(1, "Search query is required") });
 
 // User data interface
 interface UserData {
@@ -43,18 +44,12 @@ export async function POST(request: NextRequest) {
     // Verify admin authentication
     const authHeader = request.headers.get("authorization");
     if (!authHeader?.startsWith("Bearer ")) {
-      return NextResponse.json(
-        { error: "Authorization header required" },
-        { status: 401 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Authorization header required", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
-    const token = authHeader.split("Bearer ")[1];
+    const token = authHeader.substring(7);
     if (!token) {
-      return NextResponse.json(
-        { error: "Invalid authorization format" },
-        { status: 401 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Invalid authorization format", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     try {
@@ -71,10 +66,7 @@ export async function POST(request: NextRequest) {
         | undefined;
 
       if (!currentUserData || currentUserData.role !== "admin") {
-        return NextResponse.json(
-          { error: "Admin access required" },
-          { status: 403 }
-        );
+        return NextResponse.json(ApiResponseHelper.error("Admin access required", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
       }
 
       let userData: UserData | null = null;
@@ -182,9 +174,10 @@ export async function POST(request: NextRequest) {
               };
             } catch {
               // User exists in Firestore but not in Auth (orphaned data)
-              console.warn(
-                `User ${doc.id} exists in Firestore but not in Auth`
-              );
+              logger.warn('Orphaned user data found', {
+                userId: doc.id,
+                endpoint: '/api/admin/lookup-user'
+              });
             }
           }
         }
@@ -193,35 +186,25 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({
           found: userData !== null || firestoreData !== null,
           auth: userData,
-          profile: firestoreData,
-        });
+          profile: firestoreData });
       } catch (searchError) {
-        console.error("User lookup error:", searchError);
-        return NextResponse.json(
-          { error: "Error searching for user" },
-          { status: 500 }
-        );
+        logger.error('User lookup error', { error: searchError, endpoint: '/api/admin/lookup-user' });
+        return NextResponse.json(ApiResponseHelper.error("Error searching for user", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
       }
     } catch (authError) {
-      console.error("Failed to verify admin token:", authError);
-      return NextResponse.json(
-        { error: "Invalid admin token" },
-        { status: 401 }
-      );
+      logger.error('Failed to verify admin token', { error: authError, endpoint: '/api/admin/lookup-user' });
+      return NextResponse.json(ApiResponseHelper.error("Invalid admin token", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
   } catch (error) {
-    console.error("Lookup user error:", error);
+    logger.error('Lookup user error', { error: error, endpoint: '/api/admin/lookup-user' });
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: "Invalid request data", details: error.errors },
-        { status: 400 }
+        { status: HttpStatus.BAD_REQUEST }
       );
     }
 
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+    return NextResponse.json(ApiResponseHelper.error("Internal server error", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

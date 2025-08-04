@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { collection, doc, getDoc, setDoc, deleteDoc, query, where, getDocs, addDoc } from 'firebase/firestore';
-import { db } from '@hive/core/server';
-import { getCurrentUser } from '@hive/auth-logic';
+// Use admin SDK methods since we're in an API route
+import { dbAdmin } from '@/lib/firebase-admin';
+import { getCurrentUser } from '@/lib/server-auth';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 // Typing indicator interfaces
 interface TypingIndicator {
@@ -31,20 +33,20 @@ export async function POST(request: NextRequest) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const body = await request.json();
     const { channelId, spaceId } = body;
 
     if (!channelId || !spaceId) {
-      return NextResponse.json({ error: 'Channel ID and space ID are required' }, { status: 400 });
+      return NextResponse.json(ApiResponseHelper.error("Channel ID and space ID are required", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
     // Verify access to channel
     const hasAccess = await verifyChannelAccess(user.uid, channelId, spaceId);
     if (!hasAccess) {
-      return NextResponse.json({ error: 'Access denied to channel' }, { status: 403 });
+      return NextResponse.json(ApiResponseHelper.error("Access denied to channel", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     const now = new Date();
@@ -73,8 +75,8 @@ export async function POST(request: NextRequest) {
       expiresAt: typingIndicator.expiresAt
     });
   } catch (error) {
-    console.error('Error starting typing indicator:', error);
-    return NextResponse.json({ error: 'Failed to start typing indicator' }, { status: 500 });
+    logger.error('Error starting typing indicator', { error: error, endpoint: '/api/realtime/typing' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to start typing indicator", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -83,21 +85,21 @@ export async function PUT(request: NextRequest) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const body = await request.json();
     const { channelId, spaceId } = body;
 
     if (!channelId || !spaceId) {
-      return NextResponse.json({ error: 'Channel ID and space ID are required' }, { status: 400 });
+      return NextResponse.json(ApiResponseHelper.error("Channel ID and space ID are required", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
     const typingId = `typing_${user.uid}_${channelId}`;
     const typingDoc = await getDoc(doc(db, 'typingIndicators', typingId));
 
-    if (!typingDoc.exists()) {
-      return NextResponse.json({ error: 'No active typing indicator found' }, { status: 404 });
+    if (!typingDoc.exists) {
+      return NextResponse.json(ApiResponseHelper.error("No active typing indicator found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     const now = new Date();
@@ -115,8 +117,8 @@ export async function PUT(request: NextRequest) {
       expiresAt: expiresAt.toISOString()
     });
   } catch (error) {
-    console.error('Error updating typing indicator:', error);
-    return NextResponse.json({ error: 'Failed to update typing indicator' }, { status: 500 });
+    logger.error('Error updating typing indicator', { error: error, endpoint: '/api/realtime/typing' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to update typing indicator", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -125,7 +127,7 @@ export async function DELETE(request: NextRequest) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const { searchParams } = new URL(request.url);
@@ -133,14 +135,14 @@ export async function DELETE(request: NextRequest) {
     const spaceId = searchParams.get('spaceId');
 
     if (!channelId || !spaceId) {
-      return NextResponse.json({ error: 'Channel ID and space ID are required' }, { status: 400 });
+      return NextResponse.json(ApiResponseHelper.error("Channel ID and space ID are required", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
     const typingId = `typing_${user.uid}_${channelId}`;
     const typingDoc = await getDoc(doc(db, 'typingIndicators', typingId));
 
-    if (!typingDoc.exists()) {
-      return NextResponse.json({ error: 'No active typing indicator found' }, { status: 404 });
+    if (!typingDoc.exists) {
+      return NextResponse.json(ApiResponseHelper.error("No active typing indicator found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     const typingIndicator = { id: typingDoc.id, ...typingDoc.data() } as TypingIndicator;
@@ -156,8 +158,8 @@ export async function DELETE(request: NextRequest) {
       message: 'Typing indicator stopped'
     });
   } catch (error) {
-    console.error('Error stopping typing indicator:', error);
-    return NextResponse.json({ error: 'Failed to stop typing indicator' }, { status: 500 });
+    logger.error('Error stopping typing indicator', { error: error, endpoint: '/api/realtime/typing' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to stop typing indicator", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -166,7 +168,7 @@ export async function GET(request: NextRequest) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const { searchParams } = new URL(request.url);
@@ -174,19 +176,19 @@ export async function GET(request: NextRequest) {
     const spaceId = searchParams.get('spaceId');
 
     if (!channelId || !spaceId) {
-      return NextResponse.json({ error: 'Channel ID and space ID are required' }, { status: 400 });
+      return NextResponse.json(ApiResponseHelper.error("Channel ID and space ID are required", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
     // Verify access
     const hasAccess = await verifyChannelAccess(user.uid, channelId, spaceId);
     if (!hasAccess) {
-      return NextResponse.json({ error: 'Access denied to channel' }, { status: 403 });
+      return NextResponse.json(ApiResponseHelper.error("Access denied to channel", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     // Get active typing indicators for the channel
     const now = new Date().toISOString();
-    const typingQuery = query(
-      collection(db, 'typingIndicators'),
+    const typingQuery = dbAdmin.collection(
+      dbAdmin.collection('typingIndicators'),
       where('channelId', '==', channelId),
       where('expiresAt', '>', now)
     );
@@ -210,8 +212,8 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(typingStatus);
   } catch (error) {
-    console.error('Error getting typing status:', error);
-    return NextResponse.json({ error: 'Failed to get typing status' }, { status: 500 });
+    logger.error('Error getting typing status', { error: error, endpoint: '/api/realtime/typing' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to get typing status", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -219,8 +221,8 @@ export async function GET(request: NextRequest) {
 async function verifyChannelAccess(userId: string, channelId: string, spaceId: string): Promise<boolean> {
   try {
     // Check space membership
-    const memberQuery = query(
-      collection(db, 'members'),
+    const memberQuery = dbAdmin.collection(
+      dbAdmin.collection('members'),
       where('userId', '==', userId),
       where('spaceId', '==', spaceId),
       where('status', '==', 'active')
@@ -233,7 +235,7 @@ async function verifyChannelAccess(userId: string, channelId: string, spaceId: s
 
     // Check channel access
     const channelDoc = await getDoc(doc(db, 'chatChannels', channelId));
-    if (!channelDoc.exists()) {
+    if (!channelDoc.exists) {
       return false;
     }
 
@@ -246,7 +248,7 @@ async function verifyChannelAccess(userId: string, channelId: string, spaceId: s
 
     return true;
   } catch (error) {
-    console.error('Error verifying channel access:', error);
+    logger.error('Error verifying channel access', { error: error, endpoint: '/api/realtime/typing' });
     return false;
   }
 }
@@ -280,18 +282,18 @@ async function broadcastTypingIndicator(indicator: TypingIndicator, action: 'sta
       }
     };
 
-    await addDoc(collection(db, 'realtimeMessages'), realtimeMessage);
+    await addDoc(dbAdmin.collection('realtimeMessages'), realtimeMessage);
   } catch (error) {
-    console.error('Error broadcasting typing indicator:', error);
+    logger.error('Error broadcasting typing indicator', { error: error, endpoint: '/api/realtime/typing' });
   }
 }
 
 // Background cleanup function for expired typing indicators
-export async function cleanupExpiredTypingIndicators(): Promise<number> {
+async function cleanupExpiredTypingIndicators(): Promise<number> {
   try {
     const now = new Date().toISOString();
-    const expiredQuery = query(
-      collection(db, 'typingIndicators'),
+    const expiredQuery = dbAdmin.collection(
+      dbAdmin.collection('typingIndicators'),
       where('expiresAt', '<', now)
     );
 
@@ -305,7 +307,7 @@ export async function cleanupExpiredTypingIndicators(): Promise<number> {
 
     return cleaned;
   } catch (error) {
-    console.error('Error cleaning up expired typing indicators:', error);
+    logger.error('Error cleaning up expired typing indicators', { error: error, endpoint: '/api/realtime/typing' });
     return 0;
   }
 }

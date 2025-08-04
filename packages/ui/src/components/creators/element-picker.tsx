@@ -96,13 +96,9 @@ const ElementCard: React.FC<ElementCardProps> = ({
   const IconComponent = element.icon;
   
   return (
-    <HiveMotionWrapper
-      variant="scale"
-      whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.98 }}
-    >
+    <HiveMotionWrapper>
       <HiveCard
-        variant={isSelected ? "premium" : "default"}
+        variant={isSelected ? "gold-premium" : "default"}
         className={cn(
           "cursor-pointer transition-all duration-200 hover:shadow-md group",
           viewMode === 'list' ? "flex-row items-center p-3" : "p-4",
@@ -149,7 +145,7 @@ const ElementCard: React.FC<ElementCardProps> = ({
                 {element.tags.slice(0, 2).map((tag) => (
                   <HiveBadge 
                     key={tag} 
-                    variant="secondary" 
+                    variant="skill-tag" 
                     className="text-xs px-1.5 py-0.5"
                   >
                     {tag}
@@ -216,7 +212,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
             {categories.map((category) => (
               <HiveButton
                 key={category.id}
-                variant={selectedCategory === category.id ? "default" : "ghost"}
+                variant={selectedCategory === category.id ? "primary" : "ghost"}
                 size="sm"
                 onClick={() => {
                   onCategoryChange(category.id);
@@ -240,14 +236,14 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
         {categories.map((category) => (
           <HiveButton
             key={category.id}
-            variant={selectedCategory === category.id ? "default" : "outline"}
+            variant={selectedCategory === category.id ? "primary" : "outline"}
             size="sm"
             onClick={() => onCategoryChange(category.id)}
             className="shrink-0 gap-2"
           >
             <category.icon />
             <span>{category.name}</span>
-            <HiveBadge variant="secondary" className="text-xs">
+            <HiveBadge variant="tool-tag" className="text-xs">
               {elementCounts[category.id] || 0}
             </HiveBadge>
           </HiveButton>
@@ -334,7 +330,7 @@ export const ElementPicker: React.FC<ElementPickerProps> = ({
           {/* View Mode Toggle */}
           <div className="flex gap-1 p-1 bg-[var(--hive-background-secondary)] rounded-lg">
             <HiveButton
-              variant={viewMode === 'grid' ? 'default' : 'ghost'}
+              variant={viewMode === 'grid' ? 'primary' : 'ghost'}
               size="sm"
               onClick={() => setViewMode('grid')}
               className="px-2"
@@ -342,7 +338,7 @@ export const ElementPicker: React.FC<ElementPickerProps> = ({
               <Grid3X3 size={16} />
             </HiveButton>
             <HiveButton
-              variant={viewMode === 'list' ? 'default' : 'ghost'}
+              variant={viewMode === 'list' ? 'primary' : 'ghost'}
               size="sm"
               onClick={() => setViewMode('list')}
               className="px-2"

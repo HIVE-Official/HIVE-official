@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { collection, doc, query, where, getDocs, getDoc, orderBy, limit } from 'firebase/firestore';
-import { db } from '@hive/core/server';
-import { getCurrentUser } from '@hive/auth-logic';
+// Use admin SDK methods since we're in an API route
+import { dbAdmin } from '@/lib/firebase-admin';
+import { getCurrentUser } from '@/lib/server-auth';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 // Space recommendation interface
 interface SpaceRecommendation {
@@ -24,7 +26,7 @@ export async function GET(request: NextRequest) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const { searchParams } = new URL(request.url);
@@ -32,8 +34,8 @@ export async function GET(request: NextRequest) {
     const type = searchParams.get('type') || 'all'; // all, similar_interests, trending, new_spaces
 
     // Get user's current memberships
-    const currentMembershipsQuery = query(
-      collection(db, 'members'),
+    const currentMembershipsQuery = dbAdmin.collection(
+      dbAdmin.collection('members'),
       where('userId', '==', user.uid),
       where('status', '==', 'active')
     );
@@ -43,11 +45,11 @@ export async function GET(request: NextRequest) {
 
     // Get user profile for interest matching
     const userDoc = await getDoc(doc(db, 'users', user.uid));
-    const userData = userDoc.exists() ? userDoc.data() : null;
+    const userData = userDoc.exists ? userDoc.data() : null;
 
     // Get all available spaces (excluding current memberships)
-    const allSpacesQuery = query(
-      collection(db, 'spaces'),
+    const allSpacesQuery = dbAdmin.collection(
+      dbAdmin.collection('spaces'),
       where('status', '==', 'active'),
       orderBy('memberCount', 'desc'),
       limit(100) // Limit for performance
@@ -129,8 +131,8 @@ export async function GET(request: NextRequest) {
       recommendationType: type
     });
   } catch (error) {
-    console.error('Error generating space recommendations:', error);
-    return NextResponse.json({ error: 'Failed to generate space recommendations' }, { status: 500 });
+    logger.error('Error generating space recommendations', { error: error, endpoint: '/api/profile/spaces/recommendations' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to generate space recommendations", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -249,8 +251,8 @@ async function generateFriendActivityRecommendations(
 ): Promise<SpaceRecommendation[]> {
   try {
     // Get user's current space memberships to find "friends" (other members)
-    const currentMembershipsQuery = query(
-      collection(db, 'members'),
+    const currentMembershipsQuery = dbAdmin.collection(
+      dbAdmin.collection('members'),
       where('userId', '==', userId),
       where('status', '==', 'active')
     );
@@ -259,8 +261,8 @@ async function generateFriendActivityRecommendations(
     const userSpaceIds = currentMembershipsSnapshot.docs.map(doc => doc.data().spaceId);
 
     // Get other members from user's spaces
-    const friendsQuery = query(
-      collection(db, 'members'),
+    const friendsQuery = dbAdmin.collection(
+      dbAdmin.collection('members'),
       where('spaceId', 'in', userSpaceIds.slice(0, 10)), // Limit for performance
       where('status', '==', 'active')
     );
@@ -275,8 +277,8 @@ async function generateFriendActivityRecommendations(
     }
 
     // Get spaces where friends are active
-    const friendMembershipsQuery = query(
-      collection(db, 'members'),
+    const friendMembershipsQuery = dbAdmin.collection(
+      dbAdmin.collection('members'),
       where('userId', 'in', friendIds.slice(0, 10)), // Limit for performance
       where('status', '==', 'active')
     );
@@ -312,7 +314,7 @@ async function generateFriendActivityRecommendations(
       .sort((a, b) => b.commonMembers - a.commonMembers)
       .slice(0, 5);
   } catch (error) {
-    console.error('Error generating friend activity recommendations:', error);
+    logger.error('Error generating friend activity recommendations', { error: error, endpoint: '/api/profile/spaces/recommendations' });
     return [];
   }
 }

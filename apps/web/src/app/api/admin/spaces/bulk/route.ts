@@ -4,6 +4,8 @@ import { z } from 'zod';
 import { getAuth } from 'firebase-admin/auth';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { FieldValue } from 'firebase-admin/firestore';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 /**
  * Admin Bulk Space Operations API
@@ -82,7 +84,7 @@ async function getSpaceInfo(spaceId: string): Promise<{ spaceDoc: any, spaceType
         };
       }
     } catch (error) {
-      console.error(`Error checking space ${spaceId} in type ${type}:`, error);
+      logger.error('Error checking space in type', { spaceId, type, error: error, endpoint: '/api/admin/spaces/bulk' });
     }
   }
   
@@ -99,11 +101,8 @@ export async function POST(request: NextRequest) {
   try {
     // Verify authentication
     const authHeader = request.headers.get('Authorization');
-    if (!authHeader?.startsWith('Bearer ')) {
-      return NextResponse.json(
-        { error: 'Authorization header required' },
-        { status: 401 }
-      );
+    if (!authHeader?.startsWith("Bearer ")) {
+      return NextResponse.json(ApiResponseHelper.error("Authorization header required", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const token = authHeader.substring(7);
@@ -118,26 +117,20 @@ export async function POST(request: NextRequest) {
         const decodedToken = await auth.verifyIdToken(token);
         adminUserId = decodedToken.uid;
       } catch (authError) {
-        return NextResponse.json(
-          { error: 'Invalid or expired token' },
-          { status: 401 }
-        );
+        return NextResponse.json(ApiResponseHelper.error("Invalid or expired token", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
       }
     }
 
     // Check if user is admin
     if (!(await isAdmin(adminUserId))) {
-      return NextResponse.json(
-        { error: 'Admin access required' },
-        { status: 403 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Admin access required", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     // Parse and validate request body
     const body = await request.json();
     const { action, spaceIds, params } = bulkOperationSchema.parse(body);
 
-    console.log(`👑 Admin ${adminUserId} executing bulk ${action} on ${spaceIds.length} spaces`);
+    logger.info('👑 Admin executing bulk operation on spaces', { adminUserId, action, spaceCount: spaceIds.length, endpoint: '/api/admin/spaces/bulk' });
 
     // Initialize result tracking
     const result: BulkOperationResult = {
@@ -295,7 +288,7 @@ export async function POST(request: NextRequest) {
         await logBulkAction(adminUserId, action, spaceId, spaceType, params?.reason || 'Bulk operation');
 
       } catch (error) {
-        console.error(`Error processing space ${spaceId}:`, error);
+        logger.error('Error processing space', { spaceId, error: error, endpoint: '/api/admin/spaces/bulk' });
         result.errors.push({
           spaceId,
           spaceType: 'unknown',
@@ -329,7 +322,7 @@ export async function POST(request: NextRequest) {
     // Log bulk operation summary
     await logBulkOperationSummary(adminUserId, action, result);
 
-    console.log(`👑 Bulk ${action} completed: ${result.successfulOperations}/${result.totalSpaces} successful in ${result.executionTime}ms`);
+    logger.info('👑 Bulk completed: /successful in ms', { action,  result: result.executionTime, endpoint: '/api/admin/spaces/bulk'  });
 
     return NextResponse.json({
       success: true,
@@ -345,7 +338,7 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error: any) {
-    console.error('Bulk operation error:', error);
+    logger.error('Bulk operation error', { error: error, endpoint: '/api/admin/spaces/bulk' });
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -353,7 +346,7 @@ export async function POST(request: NextRequest) {
           error: 'Invalid request data', 
           details: error.errors.map(e => `${e.path.join('.')}: ${e.message}`)
         },
-        { status: 400 }
+        { status: HttpStatus.BAD_REQUEST }
       );
     }
 
@@ -362,7 +355,7 @@ export async function POST(request: NextRequest) {
         error: 'Bulk operation failed',
         executionTime: Date.now() - startTime
       },
-      { status: 500 }
+      { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }
 }
@@ -390,7 +383,7 @@ async function logBulkAction(
       isBulkOperation: true
     });
   } catch (error) {
-    console.error('Error logging bulk action:', error);
+    logger.error('Error logging bulk action', { error: error, endpoint: '/api/admin/spaces/bulk' });
   }
 }
 
@@ -426,6 +419,6 @@ async function logBulkOperationSummary(
       }))
     });
   } catch (error) {
-    console.error('Error logging bulk operation summary:', error);
+    logger.error('Error logging bulk operation summary', { error: error, endpoint: '/api/admin/spaces/bulk' });
   }
 }

@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 export async function POST(request: NextRequest) {
   try {
@@ -6,17 +8,11 @@ export async function POST(request: NextRequest) {
     
     // Basic validation
     if (!feedback || typeof feedback !== 'string' || feedback.trim().length === 0) {
-      return NextResponse.json(
-        { error: 'Feedback content is required' },
-        { status: 400 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Feedback content is required", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
     
     if (feedback.length > 500) {
-      return NextResponse.json(
-        { error: 'Feedback too long (max 500 characters)' },
-        { status: 400 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Feedback too long (max 500 characters)", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
     
     // Get user info from headers
@@ -33,7 +29,7 @@ export async function POST(request: NextRequest) {
     };
     
     // For now, just log to console. In production, save to database or send to service
-    console.log('📝 HIVE Feedback Received:', JSON.stringify(feedbackData, null, 2));
+    logger.info('📝 HIVE Feedback Received', { data: JSON.stringify(feedbackData, null, 2), endpoint: '/api/feedback' });
     
     // TODO: In production, integrate with:
     // - Database storage
@@ -48,11 +44,8 @@ export async function POST(request: NextRequest) {
     });
     
   } catch (error) {
-    console.error('Feedback submission error:', error);
+    logger.error('Feedback submission error', { error: error, endpoint: '/api/feedback' });
     
-    return NextResponse.json(
-      { error: 'Failed to submit feedback' },
-      { status: 500 }
-    );
+    return NextResponse.json(ApiResponseHelper.error("Failed to submit feedback", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

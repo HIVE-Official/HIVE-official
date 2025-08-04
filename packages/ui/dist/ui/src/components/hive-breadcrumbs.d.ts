@@ -2,8 +2,8 @@ import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
 declare const hiveBreadcrumbsVariants: (props?: {
     variant?: "default" | "minimal" | "prominent";
-    separator?: "dot" | "chevron" | "arrow" | "slash";
-} & import("class-variance-authority/dist/types").ClassProp) => string;
+    separator?: "dot" | "arrow" | "chevron" | "slash";
+} & import("class-variance-authority/types").ClassProp) => string;
 export interface BreadcrumbItem {
     id: string;
     label: string;

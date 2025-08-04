@@ -11,6 +11,11 @@ export const motion = {
   section: (props: any) => <section {...props} />,
   nav: (props: any) => <nav {...props} />,
   a: (props: any) => <a {...props} />,
+  h1: (props: any) => <h1 {...props} />,
+  h2: (props: any) => <h2 {...props} />,
+  h3: (props: any) => <h3 {...props} />,
+  h4: (props: any) => <h4 {...props} />,
+  p: (props: any) => <p {...props} />,
   // Add more elements as needed
 };
 
@@ -28,5 +33,26 @@ export const AnimatePresence: React.FC<{
 // Export individual motion components for convenience
 export const MotionDiv = motion.div;
 export const MotionButton = motion.button;
+
+// Mock framer-motion hooks for components that need them
+export const useAnimation = () => ({
+  start: () => Promise.resolve(),
+  stop: () => {},
+  set: () => {},
+  subscribe: () => () => {},
+  mount: () => () => {},
+});
+
+export const useMotionValue = (initialValue: any) => ({
+  get: () => initialValue,
+  set: (value: any) => {},
+  onChange: (callback: any) => () => {},
+});
+
+export const useTransform = (motionValue: any, input?: any, output?: any) => ({
+  get: () => motionValue?.get?.() || 0,
+  set: (value: any) => {},
+  onChange: (callback: any) => () => {},
+});
 export const MotionSpan = motion.span;
 export const MotionSection = motion.section;

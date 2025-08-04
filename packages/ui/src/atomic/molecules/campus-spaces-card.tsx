@@ -3,6 +3,17 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from '../../components/framer-motion-proxy';
 import { cn } from '../../lib/utils';
+import { 
+  Bell, 
+  BellOff, 
+  MessageSquare, 
+  UserMinus, 
+  MoreHorizontal, 
+  Pin, 
+  PinOff,
+  Send,
+  X
+} from 'lucide-react';
 
 export interface CampusSpace {
   id: string;
@@ -16,6 +27,8 @@ export interface CampusSpace {
   isPrivate?: boolean;
   isFavorite?: boolean;
   isPinned?: boolean;
+  isMuted?: boolean;
+  userRole?: 'member' | 'moderator' | 'leader';
   recentActivity?: {
     type: 'message' | 'event' | 'announcement';
     preview: string;
@@ -31,6 +44,10 @@ export interface CampusSpacesCardProps {
   onSpaceClick?: (spaceId: string) => void;
   onJoinSpace?: () => void;
   onViewAll?: () => void;
+  onMuteSpace?: (spaceId: string, muted: boolean) => void;
+  onPinSpace?: (spaceId: string, pinned: boolean) => void;
+  onLeaveSpace?: (spaceId: string) => void;
+  onQuickPost?: (spaceId: string, message: string) => void;
   className?: string;
 }
 
@@ -64,9 +81,15 @@ export const CampusSpacesCard: React.FC<CampusSpacesCardProps> = ({
   onSpaceClick,
   onJoinSpace,
   onViewAll,
+  onMuteSpace,
+  onPinSpace,
+  onLeaveSpace,
+  onQuickPost,
   className
 }) => {
   const [hoveredSpace, setHoveredSpace] = useState<string | null>(null);
+  const [showQuickPostFor, setShowQuickPostFor] = useState<string | null>(null);
+  const [quickPostMessage, setQuickPostMessage] = useState('');
 
   const formatMemberCount = (count: number): string => {
     if (count >= 1000) return `${(count / 1000).toFixed(1)}k`;
@@ -86,6 +109,20 @@ export const CampusSpacesCard: React.FC<CampusSpacesCardProps> = ({
 
   const displayedSpaces = spaces.slice(0, 6); // Show max 6 spaces
   const hasMoreSpaces = spaces.length > 6;
+
+  // Quick action handlers
+  const handleQuickPost = (spaceId: string) => {
+    if (quickPostMessage.trim() && onQuickPost) {
+      onQuickPost(spaceId, quickPostMessage.trim());
+      setQuickPostMessage('');
+      setShowQuickPostFor(null);
+    }
+  };
+
+  const toggleQuickPost = (spaceId: string) => {
+    setShowQuickPostFor(showQuickPostFor === spaceId ? null : spaceId);
+    setQuickPostMessage('');
+  };
 
   if (isLoading) {
     return (
@@ -207,70 +244,184 @@ export const CampusSpacesCard: React.FC<CampusSpacesCardProps> = ({
                 `bg-gradient-to-br ${spaceTypeColors[space.type]}`
               )} />
 
-              <div className="relative z-10 flex items-center gap-4">
-                {/* Space Icon */}
-                <div className={cn(
-                  'w-12 h-12 rounded-xl flex items-center justify-center border',
-                  'bg-gradient-to-br from-charcoal/60 to-graphite/60 border-steel/20',
-                  'group-hover:border-gold/30 transition-all duration-300',
-                  hoveredSpace === space.id && 'scale-105 shadow-lg'
-                )}>
-                  <span className="text-xl">
-                    {space.icon || spaceTypeIcons[space.type]}
-                  </span>
-                </div>
+              <div className="relative z-10">
+                <div className="flex items-center gap-4">
+                  {/* Space Icon */}
+                  <div className={cn(
+                    'w-12 h-12 rounded-xl flex items-center justify-center border',
+                    'bg-gradient-to-br from-charcoal/60 to-graphite/60 border-steel/20',
+                    'group-hover:border-gold/30 transition-all duration-300',
+                    hoveredSpace === space.id && 'scale-105 shadow-lg'
+                  )}>
+                    <span className="text-xl">
+                      {space.icon || spaceTypeIcons[space.type]}
+                    </span>
+                  </div>
 
-                {/* Space Information */}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-start justify-between mb-1">
-                    <h4 className="text-platinum font-semibold truncate text-base">
-                      {space.name}
-                    </h4>
-                    
-                    {/* Status Indicators */}
-                    <div className="flex items-center gap-2 ml-2">
-                      {space.isPinned && (
-                        <div className="w-2 h-2 rounded-full bg-gold shadow-[0_0_4px_color-mix(in_srgb,var(--hive-brand-secondary)_50%,transparent)]" />
-                      )}
-                      {space.unreadCount && space.unreadCount > 0 && (
-                        <div className="px-2 py-0.5 bg-gold/20 border border-gold/30 rounded-full">
-                          <span className="text-gold text-xs font-medium">
-                            {space.unreadCount > 99 ? '99+' : space.unreadCount}
+                  {/* Space Information */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-start justify-between mb-1">
+                      <h4 className="text-platinum font-semibold truncate text-base">
+                        {space.name}
+                      </h4>
+                      
+                      {/* Status Indicators */}
+                      <div className="flex items-center gap-2 ml-2">
+                        {space.isPinned && (
+                          <div className="w-2 h-2 rounded-full bg-gold shadow-[0_0_4px_color-mix(in_srgb,var(--hive-brand-secondary)_50%,transparent)]" />
+                        )}
+                        {space.isMuted && (
+                          <BellOff className="w-3 h-3 text-steel/60" />
+                        )}
+                        {space.unreadCount && space.unreadCount > 0 && !space.isMuted && (
+                          <div className="px-2 py-0.5 bg-gold/20 border border-gold/30 rounded-full">
+                            <span className="text-gold text-xs font-medium">
+                              {space.unreadCount > 99 ? '99+' : space.unreadCount}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Space Details */}
+                    <div className="flex items-center gap-2 text-sm text-mercury">
+                      <span className="capitalize">{space.type}</span>
+                      <span className="text-steel/60">•</span>
+                      <span>{formatMemberCount(space.memberCount)} members</span>
+                      {space.lastActivity && (
+                        <>
+                          <span className="text-steel/60">•</span>
+                          <span className="text-xs">
+                            {formatLastActivity(space.lastActivity)}
                           </span>
-                        </div>
+                        </>
                       )}
                     </div>
                   </div>
 
-                  {/* Space Details */}
-                  <div className="flex items-center gap-2 text-sm text-mercury">
-                    <span className="capitalize">{space.type}</span>
-                    <span className="text-steel/60">•</span>
-                    <span>{formatMemberCount(space.memberCount)} members</span>
-                    {space.lastActivity && (
-                      <>
-                        <span className="text-steel/60">•</span>
-                        <span className="text-xs">
-                          {formatLastActivity(space.lastActivity)}
-                        </span>
-                      </>
-                    )}
-                  </div>
-
-                  {/* Recent Activity Preview */}
-                  {space.recentActivity && hoveredSpace === space.id && (
+                  {/* Quick Actions - Shown on Hover */}
+                  {showQuickActions && hoveredSpace === space.id && (
                     <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: 'auto' }}
-                      exit={{ opacity: 0, height: 0 }}
-                      className="mt-2 pt-2 border-t border-steel/10"
+                      initial={{ opacity: 0, x: 10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: 10 }}
+                      className="flex items-center gap-1"
                     >
-                      <p className="text-xs text-silver/80 truncate">
-                        {space.recentActivity.preview}
-                      </p>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleQuickPost(space.id);
+                        }}
+                        className="p-1.5 rounded-lg bg-charcoal/60 border border-steel/20 hover:border-gold/30 hover:bg-gold/10 transition-all duration-200 group/btn"
+                        title="Quick Post"
+                      >
+                        <MessageSquare className="w-3 h-3 text-mercury group-hover/btn:text-gold" />
+                      </button>
+                      
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onPinSpace?.(space.id, !space.isPinned);
+                        }}
+                        className="p-1.5 rounded-lg bg-charcoal/60 border border-steel/20 hover:border-gold/30 hover:bg-gold/10 transition-all duration-200 group/btn"
+                        title={space.isPinned ? "Unpin Space" : "Pin Space"}
+                      >
+                        {space.isPinned ? (
+                          <PinOff className="w-3 h-3 text-gold group-hover/btn:text-champagne" />
+                        ) : (
+                          <Pin className="w-3 h-3 text-mercury group-hover/btn:text-gold" />
+                        )}
+                      </button>
+
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onMuteSpace?.(space.id, !space.isMuted);
+                        }}
+                        className="p-1.5 rounded-lg bg-charcoal/60 border border-steel/20 hover:border-gold/30 hover:bg-gold/10 transition-all duration-200 group/btn"
+                        title={space.isMuted ? "Unmute Space" : "Mute Space"}
+                      >
+                        {space.isMuted ? (
+                          <BellOff className="w-3 h-3 text-steel/60 group-hover/btn:text-mercury" />
+                        ) : (
+                          <Bell className="w-3 h-3 text-mercury group-hover/btn:text-gold" />
+                        )}
+                      </button>
+
+                      {space.userRole === 'member' && (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onLeaveSpace?.(space.id);
+                          }}
+                          className="p-1.5 rounded-lg bg-charcoal/60 border border-steel/20 hover:border-red-400/30 hover:bg-red-400/10 transition-all duration-200 group/btn"
+                          title="Leave Space"
+                        >
+                          <UserMinus className="w-3 h-3 text-mercury group-hover/btn:text-red-400" />
+                        </button>
+                      )}
                     </motion.div>
                   )}
                 </div>
+
+                {/* Recent Activity Preview */}
+                {space.recentActivity && hoveredSpace === space.id && !showQuickPostFor && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="mt-3 pt-2 border-t border-steel/10"
+                  >
+                    <p className="text-xs text-silver/80 truncate">
+                      {space.recentActivity.preview}
+                    </p>
+                  </motion.div>
+                )}
+
+                {/* Quick Post Interface */}
+                {showQuickPostFor === space.id && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="mt-3 pt-2 border-t border-steel/10"
+                  >
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={quickPostMessage}
+                        onChange={(e) => setQuickPostMessage(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            handleQuickPost(space.id);
+                          } else if (e.key === 'Escape') {
+                            setShowQuickPostFor(null);
+                            setQuickPostMessage('');
+                          }
+                        }}
+                        placeholder={`Post to ${space.name}...`}
+                        className="flex-1 px-3 py-1.5 bg-charcoal/40 border border-steel/20 rounded-lg text-platinum text-sm placeholder-mercury/60 focus:border-gold/30 focus:outline-none transition-colors"
+                        autoFocus
+                      />
+                      <button
+                        onClick={() => handleQuickPost(space.id)}
+                        disabled={!quickPostMessage.trim()}
+                        className="p-1.5 rounded-lg bg-gold/20 border border-gold/30 text-gold hover:bg-gold/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                      >
+                        <Send className="w-3 h-3" />
+                      </button>
+                      <button
+                        onClick={() => {
+                          setShowQuickPostFor(null);
+                          setQuickPostMessage('');
+                        }}
+                        className="p-1.5 rounded-lg bg-charcoal/60 border border-steel/20 text-mercury hover:text-red-400 hover:border-red-400/30 transition-all duration-200"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    </div>
+                  </motion.div>
+                )}
               </div>
 
               {/* Magnetic hover effect */}

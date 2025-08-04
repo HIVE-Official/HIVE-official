@@ -1,11 +1,11 @@
 import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
 declare const textareaVariants: (props?: {
-    variant?: "error" | "default" | "success" | "warning" | "brand";
+    variant?: "default" | "success" | "warning" | "error" | "brand";
     size?: "default" | "sm" | "lg" | "xl";
-    radius?: "none" | "default" | "sm" | "lg" | "full";
-    resize?: "none" | "both" | "horizontal" | "vertical";
-} & import("class-variance-authority/dist/types").ClassProp) => string;
+    radius?: "default" | "sm" | "lg" | "none" | "full";
+    resize?: "none" | "horizontal" | "vertical" | "both";
+} & import("class-variance-authority/types").ClassProp) => string;
 export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement>, VariantProps<typeof textareaVariants> {
     error?: string;
     success?: string;

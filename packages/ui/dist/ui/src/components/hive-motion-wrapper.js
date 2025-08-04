@@ -2,8 +2,8 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { cn } from '../lib/utils';
-import { darkLuxury, luxuryShadows } from '../theme/dark-luxury';
+import { cn } from '../lib/utils.js';
+import { darkLuxury, luxuryShadows } from '../theme/dark-luxury.js';
 export const HiveRipple = ({ children, className, disabled = false }) => {
     const [ripples, setRipples] = useState([]);
     const createRipple = (event) => {
@@ -32,14 +32,14 @@ export const HiveRipple = ({ children, className, disabled = false }) => {
                         ease: [0.25, 0.46, 0.45, 0.94], // magnetic easing
                     } }, ripple.id))) })] }));
 };
-export const HiveMagneticHover = ({ children, className, intensity = 'medium', disabled = false }) => {
+export const HiveMagneticHover = ({ children, className, intensity = 'medium', disabled = false, initial, animate, exit, transition, layoutId }) => {
     const intensityMap = {
         subtle: { scale: 1.01, y: -1, shadow: luxuryShadows.level2 },
         medium: { scale: 1.02, y: -2, shadow: luxuryShadows.hover },
         strong: { scale: 1.03, y: -4, shadow: luxuryShadows.level4 },
     };
     const config = intensityMap[intensity];
-    return (_jsx(motion.div, { className: cn('cursor-pointer', className), whileHover: disabled ? {} : {
+    return (_jsx(motion.div, { className: cn('cursor-pointer', className), initial: initial, animate: animate, exit: exit, transition: transition, layoutId: layoutId, whileHover: disabled ? {} : {
             scale: config.scale,
             y: config.y,
             transition: {

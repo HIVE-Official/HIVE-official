@@ -40,4 +40,6 @@ export { Text } from './text';
 export type { TextProps } from './text';
 export * from './tooltip';
 export * from './typography';
+export * from './navigation-preferences';
+export * from './space-category-card';
 //# sourceMappingURL=index.d.ts.map

@@ -4,6 +4,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Mobile performance optimizations */
+@import '../styles/mobile-optimizations.css';
+
 /* HIVE Design Tokens CSS Custom Properties */
 :root {
   /* HIVE Color Tokens */
@@ -36,6 +39,7 @@
   --hive-background-disabled: #4A4A4F;
   --hive-text-primary: #E5E5E7;
   --hive-text-secondary: #C1C1C4;
+  --hive-text-tertiary: #9B9B9F;
   --hive-text-muted: #9B9B9F;
   --hive-text-placeholder: #6B6B70;
   --hive-text-disabled: #6B6B70;
@@ -52,6 +56,7 @@
   --hive-status-warning: #F59E0B;
   --hive-status-error: #EF4444;
   --hive-status-info: #3B82F6;
+  --hive-border-default: #2A2A2D;
   --hive-border-primary: #2A2A2D;
   --hive-border-secondary: #1A1A1C;
   --hive-border-subtle: rgba(255, 255, 255, 0.05);
@@ -690,6 +695,23 @@
   }
 }
 
+/* HIVE Motion Base Classes */
+.hive-motion-base {
+  transition: all var(--hive-duration-smooth) var(--hive-easing);
+  transform-origin: center;
+  will-change: transform;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+.hive-motion-quick {
+  transition-duration: var(--hive-duration-quick);
+}
+
+.hive-motion-flowing {
+  transition-duration: var(--hive-duration-flowing);
+}
+
 /* Reduced Motion Support */
 @media (prefers-reduced-motion: reduce) {
   .hive-animate-flow-in,
@@ -705,5 +727,11 @@
   
   .hive-word-cycle {
     animation: none;
+  }
+  
+  .hive-motion-base,
+  .hive-motion-quick,
+  .hive-motion-flowing {
+    transition: none;
   }
 } 

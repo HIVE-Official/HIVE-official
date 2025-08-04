@@ -416,7 +416,7 @@ export declare const motionUtils: {
         stiffness: 400;
         damping: 25;
         velocity: 0;
-        duration: 0.1 | 0.2 | 0.4 | 0.6 | 0.8 | 1.2;
+        duration: 0.2 | 0.4 | 0.1 | 0.6 | 1.2 | 0.8;
         ease: any;
         type: "spring";
     };

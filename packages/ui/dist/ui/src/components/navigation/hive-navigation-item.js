@@ -3,8 +3,8 @@ import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-run
 import { useState } from 'react';
 import { cva } from 'class-variance-authority';
 import { ChevronRight } from 'lucide-react';
-import { motion } from '../framer-motion-proxy';
-import { cn } from '../../lib/utils';
+import { motion } from '../framer-motion-proxy.js';
+import { cn } from '../../lib/utils.js';
 // HIVE Navigation Item variants - Following button design patterns
 const hiveNavigationItemVariants = cva(
 // Base styles - premium navigation item with semantic tokens

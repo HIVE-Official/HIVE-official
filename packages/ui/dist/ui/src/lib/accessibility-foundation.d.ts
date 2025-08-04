@@ -48,8 +48,8 @@ export declare const ariaPatterns: {
     };
 };
 export declare const focusStyles: (props?: {
-    type?: "subtle" | "strong" | "default" | "skipLink";
-} & import("class-variance-authority/dist/types").ClassProp) => string;
+    type?: "default" | "strong" | "subtle" | "skipLink";
+} & import("class-variance-authority/types").ClassProp) => string;
 export declare const screenReader: {
     readonly only: "sr-only";
     readonly focusable: "sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-[var(--hive-background-primary)] focus:text-[var(--hive-text-primary)]";
@@ -101,11 +101,11 @@ export declare const universityA11y: {
  * Get standard accessibility props for interactive elements
  */
 export declare function getInteractiveA11yProps(type: keyof typeof ariaPatterns.interactive, label?: string): {
-    role: "button" | "link" | "menu" | "menuitem" | "menubar" | "tab" | "tablist" | "tabpanel";
+    role: "link" | "button" | "menu" | "menubar" | "menuitem" | "tab" | "tablist" | "tabpanel";
     className: string;
 } | {
     'aria-label': string;
-    role: "button" | "link" | "menu" | "menuitem" | "menubar" | "tab" | "tablist" | "tabpanel";
+    role: "link" | "button" | "menu" | "menubar" | "menuitem" | "tab" | "tablist" | "tabpanel";
     className: string;
 };
 /**
@@ -142,5 +142,12 @@ export declare function createSkipLink(target: string, label: string): {
     href: string;
     className: string;
     children: string;
+};
+/**
+ * Component Testing Utilities
+ */
+export declare function getTestProps(testId?: string, componentName?: string): {
+    'data-testid': string;
+    'data-component': string;
 };
 //# sourceMappingURL=accessibility-foundation.d.ts.map

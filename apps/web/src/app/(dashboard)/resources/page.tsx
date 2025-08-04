@@ -1,6 +1,7 @@
 "use client";
 
-import { PageContainer, Button, Card } from '@hive/ui';
+import { Button, Card } from "@hive/ui";
+import { PageContainer } from "@/components/temp-stubs";
 import { BookOpen, ExternalLink, Video, FileText, Code, Users, Star, Download } from 'lucide-react';
 
 export default function ResourcesPage() {

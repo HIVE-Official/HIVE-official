@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { doc, getDoc, collection, query, where, getDocs, orderBy, limit, startAfter } from 'firebase/firestore';
 import { dbAdmin as adminDb } from '@/lib/firebase-admin';
 import { getCurrentUser } from '@/lib/auth-server';
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 interface AnalyticsQuery {
   toolId: string;
@@ -83,7 +83,7 @@ export async function GET(request: NextRequest, { params }: { params: { toolId: 
   try {
     const user = await getCurrentUser(request);
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const { toolId } = params;
@@ -92,7 +92,7 @@ export async function GET(request: NextRequest, { params }: { params: { toolId: 
     // Get tool details and check ownership
     const toolDoc = await adminDb.collection('tools').doc(toolId).get();
     if (!toolDoc.exists) {
-      return NextResponse.json({ error: 'Tool not found' }, { status: 404 });
+      return NextResponse.json(ApiResponseHelper.error("Tool not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     const toolData = toolDoc.data();
@@ -103,7 +103,7 @@ export async function GET(request: NextRequest, { params }: { params: { toolId: 
     const isAdmin = userData?.roles?.includes('admin');
     
     if (toolData?.ownerId !== user.uid && !isAdmin) {
-      return NextResponse.json({ error: 'Insufficient permissions to view analytics' }, { status: 403 });
+      return NextResponse.json(ApiResponseHelper.error("Insufficient permissions to view analytics", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     const startDate = searchParams.get('startDate') || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
@@ -127,8 +127,7 @@ export async function GET(request: NextRequest, { params }: { params: { toolId: 
     });
 
   } catch (error) {
-    console.error('Error fetching tool analytics:', error);
-    return NextResponse.json({ error: 'Failed to fetch analytics' }, { status: 500 });
+    return NextResponse.json(ApiResponseHelper.error("Failed to fetch analytics", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -321,11 +320,12 @@ function generateTimeSeries(events: any[], granularity: string) {
       case 'hour':
         key = date.toISOString().substring(0, 13) + ':00:00.000Z';
         break;
-      case 'week':
+      case 'week': {
         const weekStart = new Date(date);
         weekStart.setDate(date.getDate() - date.getDay());
         key = weekStart.toISOString().split('T')[0];
         break;
+      }
       case 'month':
         key = date.toISOString().substring(0, 7) + '-01';
         break;

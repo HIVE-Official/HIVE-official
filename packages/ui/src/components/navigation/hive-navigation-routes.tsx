@@ -395,7 +395,7 @@ export const quickActions: NavigationItem[] = [
     id: 'join-space',
     label: 'Join a space',
     icon: Heart,
-    href: '/spaces/browse',
+    href: '/spaces?view=browse',
     shortcut: '⌘ + J', 
     keywords: ['join', 'community', 'space', 'group']
   },

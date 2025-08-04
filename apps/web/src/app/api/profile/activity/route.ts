@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAuth } from 'firebase-admin/auth';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { FieldValue } from 'firebase-admin/firestore';
 import { z } from 'zod';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
 
 // Activity event schema
 const activityEventSchema = z.object({
@@ -22,8 +24,7 @@ const activityEventSchema = z.object({
   contentId: z.string().optional(),
   contentType: z.string().optional(),
   duration: z.number().optional(), // in minutes
-  metadata: z.record(z.any()).optional(),
-});
+  metadata: z.record(z.any()).optional() });
 
 // Activity query schema
 const activityQuerySchema = z.object({
@@ -31,52 +32,28 @@ const activityQuerySchema = z.object({
   type: z.string().optional(),
   spaceId: z.string().optional(),
   limit: z.number().min(1).max(100).default(50),
-  offset: z.number().min(0).default(0),
-});
+  offset: z.number().min(0).default(0) });
 
 /**
  * Log user activity event
  * POST /api/profile/activity
  */
-export async function POST(request: NextRequest) {
+export const POST = withAuth(async (request: NextRequest, authContext) => {
   try {
-    const authHeader = request.headers.get('authorization');
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return NextResponse.json(
-        { error: 'Authorization header required' },
-        { status: 401 }
-      );
-    }
-
-    const token = authHeader.split('Bearer ')[1];
+    const userId = authContext.userId;
     
-    // Handle development mode tokens
-    if (token.startsWith('dev_token_')) {
+    // Handle development mode
+    if (userId === 'test-user') {
       const body = await request.json();
       const activityData = activityEventSchema.parse(body);
       
-      console.log('Development mode activity logged:', activityData);
+      logger.info('Development mode activity logged', { data: activityData, endpoint: '/api/profile/activity' });
       
       return NextResponse.json({
         success: true,
         message: 'Activity logged successfully (development mode)',
-        activity: activityData,
-      });
+        activity: activityData });
     }
-    
-    // Verify the token
-    const auth = getAuth();
-    let decodedToken;
-    try {
-      decodedToken = await auth.verifyIdToken(token);
-    } catch (authError) {
-      return NextResponse.json(
-        { error: 'Invalid or expired token' },
-        { status: 401 }
-      );
-    }
-
-    const userId = decodedToken.uid;
 
     // Parse and validate the activity data
     const body = await request.json();
@@ -89,8 +66,7 @@ export async function POST(request: NextRequest) {
     if (privacySettings?.allowAnalytics === false) {
       return NextResponse.json({
         success: true,
-        message: 'Activity logging disabled by user privacy settings',
-      });
+        message: 'Activity logging disabled by user privacy settings' });
     }
 
     // Create activity event document
@@ -110,50 +86,40 @@ export async function POST(request: NextRequest) {
 
     // Update user's last active timestamp
     await dbAdmin.collection('users').doc(userId).update({
-      lastActiveAt: FieldValue.serverTimestamp(),
-    });
+      lastActiveAt: FieldValue.serverTimestamp() });
 
     return NextResponse.json({
       success: true,
       message: 'Activity logged successfully',
-      activityId: activityRef.id,
-    });
+      activityId: activityRef.id });
 
   } catch (error) {
-    console.error('Activity logging error:', error);
+    logger.error('Activity logging error', { error: error, endpoint: '/api/profile/activity' });
     
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: 'Invalid activity data', details: error.errors },
-        { status: 400 }
+        { status: HttpStatus.BAD_REQUEST }
       );
     }
     
-    return NextResponse.json(
-      { error: 'Failed to log activity' },
-      { status: 500 }
-    );
+    return NextResponse.json(ApiResponseHelper.error("Failed to log activity", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
-}
+}, { 
+  allowDevelopmentBypass: true, // Activity logging is safe for development
+  operation: 'log_user_activity' 
+});
 
 /**
  * Get user activity history
  * GET /api/profile/activity
  */
-export async function GET(request: NextRequest) {
+export const GET = withAuth(async (request: NextRequest, authContext) => {
   try {
-    const authHeader = request.headers.get('authorization');
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return NextResponse.json(
-        { error: 'Authorization header required' },
-        { status: 401 }
-      );
-    }
-
-    const token = authHeader.split('Bearer ')[1];
+    const userId = authContext.userId;
     
-    // Handle development mode tokens
-    if (token.startsWith('dev_token_')) {
+    // Handle development mode
+    if (userId === 'test-user') {
       const mockActivity = [
         {
           id: 'dev_activity_1',
@@ -177,23 +143,8 @@ export async function GET(request: NextRequest) {
         success: true,
         activities: mockActivity,
         totalCount: mockActivity.length,
-        developmentMode: true,
-      });
+        developmentMode: true });
     }
-    
-    // Verify the token
-    const auth = getAuth();
-    let decodedToken;
-    try {
-      decodedToken = await auth.verifyIdToken(token);
-    } catch (authError) {
-      return NextResponse.json(
-        { error: 'Invalid or expired token' },
-        { status: 401 }
-      );
-    }
-
-    const userId = decodedToken.uid;
 
     // Parse query parameters
     const { searchParams } = new URL(request.url);
@@ -202,8 +153,7 @@ export async function GET(request: NextRequest) {
       type: searchParams.get('type') || undefined,
       spaceId: searchParams.get('spaceId') || undefined,
       limit: parseInt(searchParams.get('limit') || '50'),
-      offset: parseInt(searchParams.get('offset') || '0'),
-    });
+      offset: parseInt(searchParams.get('offset') || '0') });
 
     // Calculate date range
     const endDate = new Date();
@@ -272,25 +222,24 @@ export async function GET(request: NextRequest) {
         offset: queryParams.offset,
         hasMore: queryParams.offset + queryParams.limit < totalCount,
       },
-      filters: queryParams,
-    });
+      filters: queryParams });
 
   } catch (error) {
-    console.error('Activity fetch error:', error);
+    logger.error('Activity fetch error', { error: error, endpoint: '/api/profile/activity' });
     
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: 'Invalid query parameters', details: error.errors },
-        { status: 400 }
+        { status: HttpStatus.BAD_REQUEST }
       );
     }
     
-    return NextResponse.json(
-      { error: 'Failed to fetch activity' },
-      { status: 500 }
-    );
+    return NextResponse.json(ApiResponseHelper.error("Failed to fetch activity", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
-}
+}, { 
+  allowDevelopmentBypass: true, // Activity history viewing is safe for development
+  operation: 'get_user_activity' 
+});
 
 /**
  * Update daily activity summary
@@ -314,8 +263,7 @@ async function updateDailyActivitySummary(userId: string, activityData: any) {
         contentCreated: activityData.type === 'content_creation' ? 1 : 0,
         socialInteractions: activityData.type === 'social_interaction' ? 1 : 0,
         createdAt: FieldValue.serverTimestamp(),
-        updatedAt: FieldValue.serverTimestamp(),
-      });
+        updatedAt: FieldValue.serverTimestamp() });
     } else {
       // Update existing summary
       const existingData = summaryDoc.data();
@@ -346,7 +294,7 @@ async function updateDailyActivitySummary(userId: string, activityData: any) {
       await summaryRef.update(updates);
     }
   } catch (error) {
-    console.error('Error updating daily activity summary:', error);
+    logger.error('Error updating daily activity summary', { error: error, endpoint: '/api/profile/activity' });
     // Don't throw - activity logging should still succeed even if summary update fails
   }
 }

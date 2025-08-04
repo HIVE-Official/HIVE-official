@@ -53,6 +53,7 @@ const PropertyInput: React.FC<PropertyInputProps> = ({
         // Dropdown for predefined options
         return (
           <HiveSelect
+            options={property.options.map(opt => ({ value: opt, label: opt }))}
             value={value || property.default}
             onValueChange={onChange}
             placeholder="Select option..."
@@ -233,10 +234,10 @@ export const ElementConfig: React.FC<ElementConfigProps> = ({
               {element.description}
             </p>
             <div className="flex gap-1 mt-2">
-              <HiveBadge variant="secondary" className="text-xs">
+              <HiveBadge variant="tool-tag" className="text-xs">
                 {element.category}
               </HiveBadge>
-              <HiveBadge variant="secondary" className="text-xs">
+              <HiveBadge variant="tool-tag" className="text-xs">
                 v{element.version}
               </HiveBadge>
             </div>

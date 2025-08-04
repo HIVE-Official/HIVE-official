@@ -1,28 +1,25 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '@hive/auth-logic';
-import { Button } from '@hive/ui';
+import { useSession } from '../../hooks/use-session';
+import Image from 'next/image';
+import { Button } from "@hive/ui";
 import { 
   Command, 
   Search, 
   Bell, 
   User, 
-  Settings, 
-  LogOut,
+  Settings,
   Home,
   Users,
   Zap,
   Calendar,
-  BookOpen,
   ArrowRight,
   Hash,
-  Clock,
-  Star,
   Plus,
 } from 'lucide-react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 
 interface CommandNavLayoutProps {
   children: React.ReactNode;
@@ -39,54 +36,78 @@ interface CommandItem {
 }
 
 export function CommandNavLayout({ children }: CommandNavLayoutProps) {
-  const { user } = useAuth();
+  const { user } = useSession();
   const router = useRouter();
+  const pathname = usePathname();
   const [isCommandOpen, setIsCommandOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
 
-  // Mock command items
+  // Navigation command items - UTILITY-FIRST hierarchy
   const commandItems: CommandItem[] = [
-    // Navigation
+    // Navigation - Utility-First Four Pillars
     { 
-      id: 'nav-feed', 
-      title: 'Go to Feed', 
+      id: 'nav-profile', 
+      title: 'Command Center', 
+      subtitle: 'Your personal campus dashboard & home base',
       icon: Home, 
-      action: () => router.push('/'),
+      action: () => router.push('/profile'),
       category: 'navigation',
-      keywords: ['home', 'feed', 'dashboard']
+      keywords: ['home', 'profile', 'dashboard', 'personal', 'command', 'center']
     },
     { 
       id: 'nav-spaces', 
-      title: 'Browse Spaces', 
+      title: 'Communities', 
+      subtitle: 'Campus spaces & coordination groups',
       icon: Users, 
       action: () => router.push('/spaces'),
       category: 'navigation',
-      keywords: ['spaces', 'communities', 'groups']
+      keywords: ['spaces', 'communities', 'groups', 'organizations', 'coordination']
     },
     { 
-      id: 'nav-build', 
-      title: 'Build Tools', 
+      id: 'nav-tools', 
+      title: 'Creation Lab', 
+      subtitle: 'Build & discover campus utilities',
       icon: Zap, 
-      action: () => router.push('/build'),
+      action: () => router.push('/tools'),
       category: 'navigation',
-      keywords: ['build', 'create', 'tools', 'hivelab']
+      keywords: ['tools', 'build', 'create', 'hivelab', 'utilities', 'lab']
+    },
+    { 
+      id: 'nav-feed', 
+      title: 'Campus Pulse', 
+      subtitle: 'Live coordination & activity updates',
+      icon: Bell, 
+      action: () => router.push('/feed'),
+      category: 'navigation',
+      keywords: ['feed', 'pulse', 'activity', 'updates', 'coordination']
+    },
+    { 
+      id: 'nav-rituals', 
+      title: 'Campus Rituals', 
+      subtitle: 'Shared experiences that build campus culture',
+      icon: Calendar, 
+      action: () => router.push('/rituals'),
+      category: 'navigation',
+      keywords: ['rituals', 'experiences', 'culture', 'campus', 'community', 'shared']
     },
     { 
       id: 'nav-events', 
       title: 'Events', 
+      subtitle: 'Campus activities & coordination',
       icon: Calendar, 
       action: () => router.push('/events'),
       category: 'navigation',
-      keywords: ['events', 'calendar', 'meetings']
+      keywords: ['events', 'activities', 'coordination', 'campus']
     },
     { 
-      id: 'nav-resources', 
-      title: 'Resources', 
-      icon: BookOpen, 
-      action: () => router.push('/resources'),
+      id: 'nav-calendar', 
+      title: 'Calendar', 
+      subtitle: 'Personal schedule & planning',
+      icon: Calendar, 
+      action: () => router.push('/calendar'),
       category: 'navigation',
-      keywords: ['resources', 'docs', 'help', 'documentation']
+      keywords: ['calendar', 'schedule', 'planning', 'personal']
     },
     
     // Actions
@@ -95,37 +116,59 @@ export function CommandNavLayout({ children }: CommandNavLayoutProps) {
       title: 'Create New Tool', 
       subtitle: 'Start building with HiveLab',
       icon: Plus, 
-      action: () => router.push('/build'),
+      action: () => router.push('/hivelab'),
       category: 'actions',
-      keywords: ['create', 'new', 'tool', 'build']
+      keywords: ['create', 'new', 'tool', 'build', 'hivelab']
     },
     { 
-      id: 'action-profile', 
-      title: 'View Profile', 
-      icon: User, 
-      action: () => router.push('/profile'),
+      id: 'action-join-space', 
+      title: 'Join a Space', 
+      subtitle: 'Find & join communities',
+      icon: Users, 
+      action: () => router.push('/spaces?view=browse'),
       category: 'actions',
-      keywords: ['profile', 'account', 'user']
+      keywords: ['join', 'space', 'community', 'group']
     },
     { 
       id: 'action-settings', 
       title: 'Settings', 
+      subtitle: 'Account & preferences',
       icon: Settings, 
       action: () => router.push('/settings'),
       category: 'actions',
-      keywords: ['settings', 'preferences', 'config']
+      keywords: ['settings', 'preferences', 'config', 'account']
     },
     
-    // Recent/Popular
+    // Popular Tools
     { 
       id: 'tool-gpa', 
       title: 'GPA Calculator', 
       subtitle: 'Calculate your semester GPA',
       icon: Hash, 
-      action: () => console.log('Open GPA Calculator'),
+      action: () => router.push('/tools/grade-calculator/run'),
       category: 'tools',
-      keywords: ['gpa', 'calculator', 'grades']
+      keywords: ['gpa', 'calculator', 'grades', 'academic']
     },
+    { 
+      id: 'tool-study-timer', 
+      title: 'Study Timer', 
+      subtitle: 'Pomodoro-style focus timer',
+      icon: Hash, 
+      action: () => router.push('/tools/study-timer/run'),
+      category: 'tools',
+      keywords: ['timer', 'study', 'pomodoro', 'focus', 'productivity']
+    },
+    { 
+      id: 'tool-poll-maker', 
+      title: 'Poll Maker', 
+      subtitle: 'Create interactive polls',
+      icon: Hash, 
+      action: () => router.push('/tools/poll-maker/run'),
+      category: 'tools',
+      keywords: ['poll', 'survey', 'voting', 'engagement']
+    },
+    
+    // Popular Spaces
     { 
       id: 'space-cs', 
       title: 'CS Study Group', 
@@ -133,7 +176,25 @@ export function CommandNavLayout({ children }: CommandNavLayoutProps) {
       icon: Users, 
       action: () => router.push('/spaces/cs-study'),
       category: 'spaces',
-      keywords: ['cs', 'computer science', 'study', 'group']
+      keywords: ['cs', 'computer science', 'study', 'group', 'programming']
+    },
+    { 
+      id: 'space-housing', 
+      title: 'Ellicott Complex', 
+      subtitle: '1,892 members',
+      icon: Users, 
+      action: () => router.push('/spaces/ellicott-complex'),
+      category: 'spaces',
+      keywords: ['housing', 'dorm', 'ellicott', 'residential']
+    },
+    { 
+      id: 'space-events', 
+      title: 'Campus Events', 
+      subtitle: 'Official events & announcements',
+      icon: Users, 
+      action: () => router.push('/spaces/campus-events'),
+      category: 'spaces',
+      keywords: ['events', 'campus', 'official', 'announcements']
     },
   ];
 
@@ -218,40 +279,101 @@ export function CommandNavLayout({ children }: CommandNavLayoutProps) {
               <span className="text-white font-bold">HIVE</span>
             </Link>
 
-            {/* Command Trigger */}
-            <Button
-              onClick={() => setIsCommandOpen(true)}
-              className="flex items-center space-x-2 bg-zinc-800 border border-zinc-700 hover:border-[#FFD700] text-zinc-400 hover:text-white transition-colors px-4 py-2"
-            >
-              <Search className="w-4 h-4" />
-              <span className="hidden sm:block">Search or jump to...</span>
-              <kbd className="hidden sm:inline-flex items-center px-2 py-1 border border-zinc-600 rounded text-xs">
-                <Command className="w-3 h-3 mr-1" />
-                K
-              </kbd>
-            </Button>
+            {/* Global Search Bar */}
+            <div className="flex-1 max-w-xl mx-2 sm:mx-4">
+              <Button
+                onClick={() => setIsCommandOpen(true)}
+                className="w-full flex items-center justify-between bg-zinc-800 border border-zinc-700 hover:border-[#FFD700] text-zinc-400 hover:text-white transition-colors px-2 sm:px-4 py-2 h-10"
+              >
+                <div className="flex items-center space-x-1 sm:space-x-2">
+                  <Search className="w-4 h-4 flex-shrink-0" />
+                  <span className="text-xs sm:text-sm truncate">
+                    <span className="hidden sm:inline">Search tools, spaces, people...</span>
+                    <span className="sm:hidden">Search...</span>
+                  </span>
+                </div>
+                <kbd className="hidden sm:inline-flex items-center px-2 py-1 border border-zinc-600 rounded text-xs">
+                  <Command className="w-3 h-3 mr-1" />
+                  K
+                </kbd>
+              </Button>
+            </div>
 
             {/* User Menu */}
-            <div className="flex items-center space-x-3">
-              <Button variant="ghost" size="sm" className="relative text-zinc-400 hover:text-white">
+            <div className="flex items-center space-x-1 sm:space-x-3">
+              <Button variant="ghost" size="sm" className="relative text-zinc-400 hover:text-white p-2">
                 <Bell className="w-4 h-4" />
                 <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full text-xs"></span>
               </Button>
               
-              <Link href="/profile">
-                <div className="w-6 h-6 bg-zinc-700 rounded-full flex items-center justify-center">
+              <Link href="/profile" className="flex-shrink-0">
+                <div className="w-6 h-6 sm:w-8 sm:h-8 bg-zinc-700 rounded-full flex items-center justify-center">
                   {user?.avatarUrl ? (
-                    <img
+                    <Image
                       src={user.avatarUrl}
                       alt={user.fullName || 'User'}
-                      className="w-6 h-6 rounded-full"
+                      width={32}
+                      height={32}
+                      className="w-6 h-6 sm:w-8 sm:h-8 rounded-full"
                     />
                   ) : (
-                    <User className="w-3 h-3" />
+                    <User className="w-3 h-3 sm:w-4 sm:h-4" />
                   )}
                 </div>
               </Link>
             </div>
+          </div>
+        </div>
+      </nav>
+
+      {/* Persistent Navigation Tabs - Four Pillars */}
+      <nav className="bg-zinc-900/50 border-b border-zinc-800 backdrop-blur-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-center space-x-2 sm:space-x-4 md:space-x-8 h-12 overflow-x-auto">
+            <Link 
+              href="/feed" 
+              className={`flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-colors whitespace-nowrap ${
+                pathname === '/feed' || pathname === '/' 
+                  ? 'text-[#FFD700] bg-[#FFD700]/10 border border-[#FFD700]/20' 
+                  : 'text-zinc-400 hover:text-[#FFD700] hover:bg-zinc-800/50'
+              }`}
+            >
+              <Home className="w-4 h-4 flex-shrink-0" />
+              <span className="hidden sm:inline">Feed</span>
+            </Link>
+            <Link 
+              href="/profile" 
+              className={`flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-colors whitespace-nowrap ${
+                pathname === '/profile' || pathname.startsWith('/profile') 
+                  ? 'text-[#FFD700] bg-[#FFD700]/10 border border-[#FFD700]/20' 
+                  : 'text-zinc-400 hover:text-[#FFD700] hover:bg-zinc-800/50'
+              }`}
+            >
+              <User className="w-4 h-4 flex-shrink-0" />
+              <span className="hidden sm:inline">Profile</span>
+            </Link>
+            <Link 
+              href="/spaces" 
+              className={`flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-colors whitespace-nowrap ${
+                pathname === '/spaces' || pathname.startsWith('/spaces') 
+                  ? 'text-[#FFD700] bg-[#FFD700]/10 border border-[#FFD700]/20' 
+                  : 'text-zinc-400 hover:text-[#FFD700] hover:bg-zinc-800/50'
+              }`}
+            >
+              <Users className="w-4 h-4 flex-shrink-0" />
+              <span className="hidden sm:inline">Spaces</span>
+            </Link>
+            <Link 
+              href="/tools" 
+              className={`flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-colors whitespace-nowrap ${
+                pathname === '/tools' || pathname.startsWith('/tools') || pathname === '/hivelab' || pathname.startsWith('/hivelab')
+                  ? 'text-[#FFD700] bg-[#FFD700]/10 border border-[#FFD700]/20' 
+                  : 'text-zinc-400 hover:text-[#FFD700] hover:bg-zinc-800/50'
+              }`}
+            >
+              <Zap className="w-4 h-4 flex-shrink-0" />
+              <span className="hidden sm:inline">Tools</span>
+            </Link>
           </div>
         </div>
       </nav>
@@ -271,7 +393,7 @@ export function CommandNavLayout({ children }: CommandNavLayoutProps) {
                 <Search className="w-5 h-5 text-zinc-400 mr-3" />
                 <input
                   type="text"
-                  placeholder="Search commands, tools, spaces..."
+                  placeholder="Search anything... (tools, spaces, people, commands)"
                   value={searchQuery}
                   onChange={(e) => {
                     setSearchQuery(e.target.value);
@@ -290,7 +412,7 @@ export function CommandNavLayout({ children }: CommandNavLayoutProps) {
                       {getCategoryLabel(category)}
                     </div>
                     <div className="space-y-1">
-                      {items.map((item, index) => {
+                      {items.map((item, _index) => {
                         const globalIndex = filteredItems.indexOf(item);
                         const isSelected = globalIndex === selectedIndex;
                         const Icon = item.icon;

@@ -3,10 +3,10 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Star, Download, Eye, Heart, Edit3, Plus, Search, Crown, Award, Zap, TrendingUp, Users, Palette, Database, Package, BookOpen, Target } from 'lucide-react';
-import { HiveCard } from '../hive-card';
-import { HiveButton } from '../hive-button';
-import { Badge } from '../ui/badge';
-import { cn } from '../../lib/utils';
+import { HiveCard } from '../hive-card.js';
+import { HiveButton } from '../hive-button.js';
+import { Badge } from '../ui/badge.js';
+import { cn } from '../../lib/utils.js';
 export const BuilderPortfolio = ({ tools, achievements, stats, isOwnProfile = false, onToolClick, onEditTool, onCreateTool, onViewAnalytics, className }) => {
     const [view, setView] = useState('grid');
     const [filter, setFilter] = useState('all');

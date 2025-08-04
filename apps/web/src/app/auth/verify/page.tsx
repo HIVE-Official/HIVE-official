@@ -7,7 +7,7 @@ import { AuthLayout } from "../../../components/auth/auth-layout";
 import { AuthStatus } from "../../../components/auth/auth-status";
 
 function VerifyPageContent() {
-  const searchParams = useSearchParams();
+  const _searchParams = useSearchParams();
   const router = useRouter();
   
   const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
@@ -19,7 +19,7 @@ function VerifyPageContent() {
         const urlParams = new URLSearchParams(window.location.search);
         const oobCode = urlParams.get('oobCode');
         const token = urlParams.get('token'); // Development custom token
-        const mode = urlParams.get('mode');
+        const _mode = urlParams.get('mode');
         const email = urlParams.get('email');
         const schoolId = urlParams.get('schoolId');
         
@@ -95,7 +95,6 @@ function VerifyPageContent() {
         }, 1500);
 
       } catch (err: any) {
-        console.error("Magic link verification error:", err);
         setStatus("error");
         setError(err.message || "Failed to verify magic link. The link may have expired or been used already.");
       }

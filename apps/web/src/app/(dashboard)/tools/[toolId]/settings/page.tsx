@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Button, Card, Grid as _Grid } from "@hive/ui";
+import { Button, Card, Grid } from "@hive/ui";
+import { Alert } from "@/components/temp-stubs";
 import { ArrowLeft, Settings as _Settings, Lock, Eye as _Eye, EyeOff as _EyeOff, Users, Globe, Shield as _Shield, Trash2, Copy, Download, Upload as _Upload, AlertTriangle, Save, Share2, Bell } from "lucide-react";
 import { useFeatureFlags } from "@hive/hooks";
 
@@ -85,7 +86,7 @@ const SettingsSection = ({ title, description, children }: {
 
 const ToggleSwitch = ({ enabled, onToggle, label, description }: {
   enabled: boolean;
-  onToggle: (enabled: boolean) => void;
+  onToggle: (_enabled: boolean) => void;
   label: string;
   description?: string;
 }) => (
@@ -397,7 +398,7 @@ export default function ToolSettingsPage() {
           title="Usage Statistics"
           description="Current usage metrics for your tool"
         >
-          <Grid cols={{ base: 1, md: 3 }} gap={4}>
+          <Grid cols={3} gap="md">
             <div className="text-center p-4 bg-[rgba(255,255,255,0.02)] rounded-lg">
               <div className="text-2xl font-bold text-[#FFD700] mb-1">{settings.usage.installCount}</div>
               <div className="text-sm text-[#A1A1AA]">Total Installs</div>

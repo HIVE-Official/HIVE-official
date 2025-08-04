@@ -10,38 +10,38 @@ export declare const FeedAnalyticsEventSchema: z.ZodDiscriminatedUnion<"event", 
         timeSpent: z.ZodNumber;
         deviceType: z.ZodOptional<z.ZodEnum<["mobile", "tablet", "desktop"]>>;
     }, "strip", z.ZodTypeAny, {
-        deviceType?: "mobile" | "tablet" | "desktop";
+        deviceType?: "mobile" | "desktop" | "tablet";
         timeSpent?: number;
         postsVisible?: number;
         scrollDepth?: number;
     }, {
-        deviceType?: "mobile" | "tablet" | "desktop";
+        deviceType?: "mobile" | "desktop" | "tablet";
         timeSpent?: number;
         postsVisible?: number;
         scrollDepth?: number;
     }>;
 }, "strip", z.ZodTypeAny, {
     metadata?: {
-        deviceType?: "mobile" | "tablet" | "desktop";
+        deviceType?: "mobile" | "desktop" | "tablet";
         timeSpent?: number;
         postsVisible?: number;
         scrollDepth?: number;
     };
-    userId?: string;
-    timestamp?: Date;
     event?: "space_feed_viewed";
     spaceId?: string;
+    userId?: string;
+    timestamp?: Date;
 }, {
     metadata?: {
-        deviceType?: "mobile" | "tablet" | "desktop";
+        deviceType?: "mobile" | "desktop" | "tablet";
         timeSpent?: number;
         postsVisible?: number;
         scrollDepth?: number;
     };
-    userId?: string;
-    timestamp?: Date;
     event?: "space_feed_viewed";
     spaceId?: string;
+    userId?: string;
+    timestamp?: Date;
 }>, z.ZodObject<{
     event: z.ZodLiteral<"post_created">;
     spaceId: z.ZodString;
@@ -56,47 +56,47 @@ export declare const FeedAnalyticsEventSchema: z.ZodDiscriminatedUnion<"event", 
         draftTime: z.ZodOptional<z.ZodNumber>;
         composerSource: z.ZodDefault<z.ZodEnum<["inline", "modal"]>>;
     }, "strip", z.ZodTypeAny, {
-        postType?: "image" | "text" | "event" | "poll" | "toolshare";
+        postType?: "text" | "image" | "event" | "poll" | "toolshare";
         contentLength?: number;
         hasMentions?: boolean;
         hasRichFormatting?: boolean;
         draftTime?: number;
-        composerSource?: "modal" | "inline";
+        composerSource?: "inline" | "modal";
     }, {
-        postType?: "image" | "text" | "event" | "poll" | "toolshare";
+        postType?: "text" | "image" | "event" | "poll" | "toolshare";
         contentLength?: number;
         hasMentions?: boolean;
         hasRichFormatting?: boolean;
         draftTime?: number;
-        composerSource?: "modal" | "inline";
+        composerSource?: "inline" | "modal";
     }>;
 }, "strip", z.ZodTypeAny, {
     metadata?: {
-        postType?: "image" | "text" | "event" | "poll" | "toolshare";
+        postType?: "text" | "image" | "event" | "poll" | "toolshare";
         contentLength?: number;
         hasMentions?: boolean;
         hasRichFormatting?: boolean;
         draftTime?: number;
-        composerSource?: "modal" | "inline";
+        composerSource?: "inline" | "modal";
     };
-    userId?: string;
-    timestamp?: Date;
     event?: "post_created";
     spaceId?: string;
+    userId?: string;
+    timestamp?: Date;
     postId?: string;
 }, {
     metadata?: {
-        postType?: "image" | "text" | "event" | "poll" | "toolshare";
+        postType?: "text" | "image" | "event" | "poll" | "toolshare";
         contentLength?: number;
         hasMentions?: boolean;
         hasRichFormatting?: boolean;
         draftTime?: number;
-        composerSource?: "modal" | "inline";
+        composerSource?: "inline" | "modal";
     };
-    userId?: string;
-    timestamp?: Date;
     event?: "post_created";
     spaceId?: string;
+    userId?: string;
+    timestamp?: Date;
     postId?: string;
 }>, z.ZodObject<{
     event: z.ZodLiteral<"post_reacted">;
@@ -131,10 +131,10 @@ export declare const FeedAnalyticsEventSchema: z.ZodDiscriminatedUnion<"event", 
         postAge?: number;
         isOwnPost?: boolean;
     };
-    userId?: string;
-    timestamp?: Date;
     event?: "post_reacted";
     spaceId?: string;
+    userId?: string;
+    timestamp?: Date;
     postId?: string;
 }, {
     metadata?: {
@@ -144,10 +144,10 @@ export declare const FeedAnalyticsEventSchema: z.ZodDiscriminatedUnion<"event", 
         postAge?: number;
         isOwnPost?: boolean;
     };
-    userId?: string;
-    timestamp?: Date;
     event?: "post_reacted";
     spaceId?: string;
+    userId?: string;
+    timestamp?: Date;
     postId?: string;
 }>, z.ZodObject<{
     event: z.ZodLiteral<"post_viewed">;
@@ -163,13 +163,13 @@ export declare const FeedAnalyticsEventSchema: z.ZodDiscriminatedUnion<"event", 
         postAge: z.ZodNumber;
     }, "strip", z.ZodTypeAny, {
         authorId?: string;
-        postType?: "image" | "text" | "event" | "poll" | "toolshare";
+        postType?: "text" | "image" | "event" | "poll" | "toolshare";
         postAge?: number;
         viewDuration?: number;
         scrolledToEnd?: boolean;
     }, {
         authorId?: string;
-        postType?: "image" | "text" | "event" | "poll" | "toolshare";
+        postType?: "text" | "image" | "event" | "poll" | "toolshare";
         postAge?: number;
         viewDuration?: number;
         scrolledToEnd?: boolean;
@@ -177,28 +177,28 @@ export declare const FeedAnalyticsEventSchema: z.ZodDiscriminatedUnion<"event", 
 }, "strip", z.ZodTypeAny, {
     metadata?: {
         authorId?: string;
-        postType?: "image" | "text" | "event" | "poll" | "toolshare";
+        postType?: "text" | "image" | "event" | "poll" | "toolshare";
         postAge?: number;
         viewDuration?: number;
         scrolledToEnd?: boolean;
     };
-    userId?: string;
-    timestamp?: Date;
     event?: "post_viewed";
     spaceId?: string;
+    userId?: string;
+    timestamp?: Date;
     postId?: string;
 }, {
     metadata?: {
         authorId?: string;
-        postType?: "image" | "text" | "event" | "poll" | "toolshare";
+        postType?: "text" | "image" | "event" | "poll" | "toolshare";
         postAge?: number;
         viewDuration?: number;
         scrolledToEnd?: boolean;
     };
-    userId?: string;
-    timestamp?: Date;
     event?: "post_viewed";
     spaceId?: string;
+    userId?: string;
+    timestamp?: Date;
     postId?: string;
 }>, z.ZodObject<{
     event: z.ZodLiteral<"post_edited">;
@@ -229,10 +229,10 @@ export declare const FeedAnalyticsEventSchema: z.ZodDiscriminatedUnion<"event", 
         contentLengthAfter?: number;
         editReason?: "other" | "typo" | "clarification" | "addition";
     };
-    userId?: string;
-    timestamp?: Date;
     event?: "post_edited";
     spaceId?: string;
+    userId?: string;
+    timestamp?: Date;
     postId?: string;
 }, {
     metadata?: {
@@ -241,10 +241,10 @@ export declare const FeedAnalyticsEventSchema: z.ZodDiscriminatedUnion<"event", 
         contentLengthAfter?: number;
         editReason?: "other" | "typo" | "clarification" | "addition";
     };
-    userId?: string;
-    timestamp?: Date;
     event?: "post_edited";
     spaceId?: string;
+    userId?: string;
+    timestamp?: Date;
     postId?: string;
 }>, z.ZodObject<{
     event: z.ZodLiteral<"post_deleted">;
@@ -279,10 +279,10 @@ export declare const FeedAnalyticsEventSchema: z.ZodDiscriminatedUnion<"event", 
         reactionCount?: number;
         deleteReason?: "other" | "inappropriate" | "spam" | "mistake";
     };
-    userId?: string;
-    timestamp?: Date;
     event?: "post_deleted";
     spaceId?: string;
+    userId?: string;
+    timestamp?: Date;
     postId?: string;
 }, {
     metadata?: {
@@ -292,10 +292,10 @@ export declare const FeedAnalyticsEventSchema: z.ZodDiscriminatedUnion<"event", 
         reactionCount?: number;
         deleteReason?: "other" | "inappropriate" | "spam" | "mistake";
     };
-    userId?: string;
-    timestamp?: Date;
     event?: "post_deleted";
     spaceId?: string;
+    userId?: string;
+    timestamp?: Date;
     postId?: string;
 }>, z.ZodObject<{
     event: z.ZodLiteral<"space_joined">;
@@ -321,20 +321,20 @@ export declare const FeedAnalyticsEventSchema: z.ZodDiscriminatedUnion<"event", 
         referrerSpaceId?: string;
         invitedBy?: string;
     };
-    userId?: string;
-    timestamp?: Date;
     event?: "space_joined";
     spaceId?: string;
+    userId?: string;
+    timestamp?: Date;
 }, {
     metadata?: {
         joinMethod?: "search" | "auto" | "invite" | "browse";
         referrerSpaceId?: string;
         invitedBy?: string;
     };
-    userId?: string;
-    timestamp?: Date;
     event?: "space_joined";
     spaceId?: string;
+    userId?: string;
+    timestamp?: Date;
 }>, z.ZodObject<{
     event: z.ZodLiteral<"space_left">;
     spaceId: z.ZodString;
@@ -351,13 +351,13 @@ export declare const FeedAnalyticsEventSchema: z.ZodDiscriminatedUnion<"event", 
         membershipDuration?: number;
         postsCreated?: number;
         reactionsGiven?: number;
-        leaveReason?: "content" | "other" | "inactive" | "privacy";
+        leaveReason?: "content" | "other" | "privacy" | "inactive";
     }, {
         lastActiveAt?: Date;
         membershipDuration?: number;
         postsCreated?: number;
         reactionsGiven?: number;
-        leaveReason?: "content" | "other" | "inactive" | "privacy";
+        leaveReason?: "content" | "other" | "privacy" | "inactive";
     }>;
 }, "strip", z.ZodTypeAny, {
     metadata?: {
@@ -365,24 +365,24 @@ export declare const FeedAnalyticsEventSchema: z.ZodDiscriminatedUnion<"event", 
         membershipDuration?: number;
         postsCreated?: number;
         reactionsGiven?: number;
-        leaveReason?: "content" | "other" | "inactive" | "privacy";
+        leaveReason?: "content" | "other" | "privacy" | "inactive";
     };
-    userId?: string;
-    timestamp?: Date;
     event?: "space_left";
     spaceId?: string;
+    userId?: string;
+    timestamp?: Date;
 }, {
     metadata?: {
         lastActiveAt?: Date;
         membershipDuration?: number;
         postsCreated?: number;
         reactionsGiven?: number;
-        leaveReason?: "content" | "other" | "inactive" | "privacy";
+        leaveReason?: "content" | "other" | "privacy" | "inactive";
     };
-    userId?: string;
-    timestamp?: Date;
     event?: "space_left";
     spaceId?: string;
+    userId?: string;
+    timestamp?: Date;
 }>, z.ZodObject<{
     event: z.ZodLiteral<"builder_action">;
     spaceId: z.ZodString;
@@ -394,38 +394,38 @@ export declare const FeedAnalyticsEventSchema: z.ZodDiscriminatedUnion<"event", 
         targetType: z.ZodEnum<["post", "user"]>;
         reason: z.ZodOptional<z.ZodString>;
     }, "strip", z.ZodTypeAny, {
-        targetId?: string;
         action?: "pin_post" | "unpin_post" | "delete_post" | "mute_user" | "unmute_user";
+        targetId?: string;
         reason?: string;
-        targetType?: "post" | "user";
+        targetType?: "user" | "post";
     }, {
-        targetId?: string;
         action?: "pin_post" | "unpin_post" | "delete_post" | "mute_user" | "unmute_user";
+        targetId?: string;
         reason?: string;
-        targetType?: "post" | "user";
+        targetType?: "user" | "post";
     }>;
 }, "strip", z.ZodTypeAny, {
     metadata?: {
-        targetId?: string;
         action?: "pin_post" | "unpin_post" | "delete_post" | "mute_user" | "unmute_user";
+        targetId?: string;
         reason?: string;
-        targetType?: "post" | "user";
+        targetType?: "user" | "post";
     };
-    userId?: string;
-    timestamp?: Date;
     event?: "builder_action";
     spaceId?: string;
+    userId?: string;
+    timestamp?: Date;
 }, {
     metadata?: {
-        targetId?: string;
         action?: "pin_post" | "unpin_post" | "delete_post" | "mute_user" | "unmute_user";
+        targetId?: string;
         reason?: string;
-        targetType?: "post" | "user";
+        targetType?: "user" | "post";
     };
-    userId?: string;
-    timestamp?: Date;
     event?: "builder_action";
     spaceId?: string;
+    userId?: string;
+    timestamp?: Date;
 }>, z.ZodObject<{
     event: z.ZodLiteral<"space_heartbeat">;
     spaceId: z.ZodString;
@@ -458,10 +458,10 @@ export declare const FeedAnalyticsEventSchema: z.ZodDiscriminatedUnion<"event", 
         scrollPosition?: number;
         lastInteraction?: Date;
     };
-    userId?: string;
-    timestamp?: Date;
     event?: "space_heartbeat";
     spaceId?: string;
+    userId?: string;
+    timestamp?: Date;
 }, {
     metadata?: {
         sessionId?: string;
@@ -470,10 +470,10 @@ export declare const FeedAnalyticsEventSchema: z.ZodDiscriminatedUnion<"event", 
         scrollPosition?: number;
         lastInteraction?: Date;
     };
-    userId?: string;
-    timestamp?: Date;
     event?: "space_heartbeat";
     spaceId?: string;
+    userId?: string;
+    timestamp?: Date;
 }>]>;
 export type FeedAnalyticsEvent = z.infer<typeof FeedAnalyticsEventSchema>;
 export declare const SpaceEngagementMetricsSchema: z.ZodObject<{
@@ -549,6 +549,7 @@ export declare const SpaceEngagementMetricsSchema: z.ZodObject<{
     }>;
 }, "strip", z.ZodTypeAny, {
     date?: string;
+    spaceId?: string;
     metrics?: {
         postsCreated?: number;
         activeMembers?: number;
@@ -569,9 +570,9 @@ export declare const SpaceEngagementMetricsSchema: z.ZodObject<{
             engagementScore?: number;
         }[];
     };
-    spaceId?: string;
 }, {
     date?: string;
+    spaceId?: string;
     metrics?: {
         postsCreated?: number;
         activeMembers?: number;
@@ -592,7 +593,6 @@ export declare const SpaceEngagementMetricsSchema: z.ZodObject<{
             engagementScore?: number;
         }[];
     };
-    spaceId?: string;
 }>;
 export type SpaceEngagementMetrics = z.infer<typeof SpaceEngagementMetricsSchema>;
 export declare const UserFeedBehaviorSchema: z.ZodObject<{
@@ -640,6 +640,7 @@ export declare const UserFeedBehaviorSchema: z.ZodObject<{
     }>;
 }, "strip", z.ZodTypeAny, {
     date?: string;
+    userId?: string;
     metrics?: {
         postsCreated?: number;
         reactionsGiven?: number;
@@ -654,9 +655,9 @@ export declare const UserFeedBehaviorSchema: z.ZodObject<{
         postsViewed?: number;
         scrollDepthAvg?: number;
     };
-    userId?: string;
 }, {
     date?: string;
+    userId?: string;
     metrics?: {
         postsCreated?: number;
         reactionsGiven?: number;
@@ -671,7 +672,6 @@ export declare const UserFeedBehaviorSchema: z.ZodObject<{
         postsViewed?: number;
         scrollDepthAvg?: number;
     };
-    userId?: string;
 }>;
 export type UserFeedBehavior = z.infer<typeof UserFeedBehaviorSchema>;
 export declare const FeedAnalyticsConfigSchema: z.ZodObject<{

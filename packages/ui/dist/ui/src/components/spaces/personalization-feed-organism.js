@@ -1,10 +1,10 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
-import { HiveCard } from "../hive-card";
-import { HiveButton } from "../hive-button";
-import { Grid } from "../Grid";
+import { HiveCard } from "../hive-card.js";
+import { HiveButton } from "../hive-button.js";
+import { Grid } from "../Grid.js";
 import { Heart, Activity, Target, Zap, Plus, ArrowRight, Crown, Star, Users } from "lucide-react";
-import { cn } from "../../lib/utils";
+import { cn } from "../../lib/utils.js";
 function MySpacesSection({ spaces = [], onSpaceClick, onBrowseSpaces, isLoading = false, layout = "default" }) {
     const getRoleBadge = (role) => {
         if (role === "owner") {
@@ -64,11 +64,11 @@ export function PersonalizationFeedOrganism({ mySpaces = [], recommendedSpaces =
     const getGridConfig = () => {
         switch (layout) {
             case "compact":
-                return { base: 1, md: 2 };
+                return 2;
             case "expanded":
-                return { base: 1, md: 2, lg: 3, xl: 4 };
+                return 4;
             default:
-                return { base: 1, md: 2, lg: 3 };
+                return 3;
         }
     };
     const getPadding = () => {

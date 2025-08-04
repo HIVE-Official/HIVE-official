@@ -1,8 +1,8 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { AlertTriangle, RefreshCw, Wifi, WifiOff } from 'lucide-react';
-import { Card, CardContent } from '../ui/card';
-import { Button } from '../hive-button';
+import { Card, CardContent } from '../ui/card.js';
+import { Button } from '../hive-button.js';
 // Simple loading skeleton
 export function DashboardSkeleton({ className = "" }) {
     return (_jsxs("div", { className: `dashboard-skeleton space-y-6 ${className}`, role: "status", children: [_jsx("div", { className: "h-8 bg-gray-200 rounded animate-pulse" }), _jsx("div", { className: "h-32 bg-gray-200 rounded animate-pulse" }), _jsx("div", { className: "h-64 bg-gray-200 rounded animate-pulse" })] }));

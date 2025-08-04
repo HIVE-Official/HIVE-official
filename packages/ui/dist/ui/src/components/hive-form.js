@@ -3,8 +3,8 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cva } from 'class-variance-authority';
-import { cn } from '../lib/utils';
-import { liquidMetal, motionDurations } from '../motion/hive-motion-system';
+import { cn } from '../lib/utils.js';
+import { liquidMetal, motionDurations } from '../motion/hive-motion-system.js';
 import { AlertCircle, Check, Loader, Eye, EyeOff } from 'lucide-react';
 const FormContext = createContext(null);
 // Form field variants

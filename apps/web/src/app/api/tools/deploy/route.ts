@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { dbAdmin as db } from '@/lib/firebase-admin';
 import { getCurrentUser } from '@/lib/auth-server';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 // Tool deployment interface
 interface ToolDeployment {
@@ -52,46 +54,46 @@ export async function POST(request: NextRequest) {
   try {
     const user = await getCurrentUser(request);
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const body = await request.json();
     const { toolId, deployTo, targetId, surface, config, permissions, settings } = body;
 
-    console.log(`🚀 Deploying tool ${toolId} to ${deployTo}:${targetId} by user ${user.uid}`);
+    logger.info('🚀 Deploying tool to :by user', { toolId, targetId, spaceName: user.uid, endpoint: '/api/tools/deploy'   });
 
     // Validate required fields
     if (!toolId || !deployTo || !targetId) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+      return NextResponse.json(ApiResponseHelper.error("Missing required fields", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
     if (!['profile', 'space'].includes(deployTo)) {
-      return NextResponse.json({ error: 'Invalid deployment target' }, { status: 400 });
+      return NextResponse.json(ApiResponseHelper.error("Invalid deployment target", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
     // Get tool details
-    const toolDoc = await db.collection('tools').doc(toolId).get();
+    const toolDoc = await dbAdmin.collection('tools').doc(toolId).get();
     if (!toolDoc.exists) {
-      return NextResponse.json({ error: 'Tool not found' }, { status: 404 });
+      return NextResponse.json(ApiResponseHelper.error("Tool not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     const toolData = toolDoc.data();
 
     // Check tool permissions
     if (toolData.ownerId !== user.uid && toolData.status !== 'published') {
-      return NextResponse.json({ error: 'Tool not available for deployment' }, { status: 403 });
+      return NextResponse.json(ApiResponseHelper.error("Tool not available for deployment", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     // Validate deployment target
     if (deployTo === 'profile' && targetId !== user.uid) {
-      return NextResponse.json({ error: 'Can only deploy to your own profile' }, { status: 403 });
+      return NextResponse.json(ApiResponseHelper.error("Can only deploy to your own profile", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     if (deployTo === 'space') {
       // Check space membership and permissions
-      const spaceDoc = await db.collection('spaces').doc(targetId).get();
+      const spaceDoc = await dbAdmin.collection('spaces').doc(targetId).get();
       if (!spaceDoc.exists) {
-        return NextResponse.json({ error: 'Space not found' }, { status: 404 });
+        return NextResponse.json(ApiResponseHelper.error("Space not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
       }
 
       // Check if user has permission to deploy tools in this space
@@ -99,17 +101,17 @@ export async function POST(request: NextRequest) {
       const userRole = spaceData?.members?.[user.uid]?.role;
 
       if (!userRole || !['builder', 'admin', 'moderator'].includes(userRole)) {
-        return NextResponse.json({ error: 'Insufficient permissions to deploy tools' }, { status: 403 });
+        return NextResponse.json(ApiResponseHelper.error("Insufficient permissions to deploy tools", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
       }
 
       // Validate surface for space deployments
       if (surface && !['pinned', 'posts', 'events', 'tools', 'chat', 'members'].includes(surface)) {
-        return NextResponse.json({ error: 'Invalid surface' }, { status: 400 });
+        return NextResponse.json(ApiResponseHelper.error("Invalid surface", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
       }
     }
 
     // Check for existing deployment
-    const existingSnapshot = await db.collection('deployedTools')
+    const existingSnapshot = await dbAdmin.collection('deployedTools')
       .where('toolId', '==', toolId)
       .where('deployedTo', '==', deployTo)
       .where('targetId', '==', targetId)
@@ -117,19 +119,19 @@ export async function POST(request: NextRequest) {
       .get();
     
     if (!existingSnapshot.empty) {
-      return NextResponse.json({ error: 'Tool already deployed to this target' }, { status: 409 });
+      return NextResponse.json(ApiResponseHelper.error("Tool already deployed to this target", "UNKNOWN_ERROR"), { status: 409 });
     }
 
     // Check space tool limits (20 max per space)
     if (deployTo === 'space') {
-      const spaceToolsSnapshot = await db.collection('deployedTools')
+      const spaceToolsSnapshot = await dbAdmin.collection('deployedTools')
         .where('deployedTo', '==', 'space')
         .where('targetId', '==', targetId)
         .where('status', '==', 'active')
         .get();
       
       if (spaceToolsSnapshot.size >= 20) {
-        return NextResponse.json({ error: 'Space has reached maximum tool limit (20)' }, { status: 409 });
+        return NextResponse.json(ApiResponseHelper.error("Space has reached maximum tool limit (20)", "UNKNOWN_ERROR"), { status: 409 });
       }
     }
 
@@ -168,16 +170,16 @@ export async function POST(request: NextRequest) {
       }
     };
 
-    const deploymentRef = await db.collection('deployedTools').add(deployment);
+    const deploymentRef = await dbAdmin.collection('deployedTools').add(deployment);
 
     // Update tool usage stats
-    await db.collection('tools').doc(toolId).update({
+    await dbAdmin.collection('tools').doc(toolId).update({
       deploymentCount: (toolData.deploymentCount || 0) + 1,
       lastDeployedAt: now
     });
 
     // Log activity event
-    await db.collection('analytics_events').add({
+    await dbAdmin.collection('analytics_events').add({
       eventType: 'tool_deployed',
       userId: user.uid,
       toolId,
@@ -186,7 +188,7 @@ export async function POST(request: NextRequest) {
       metadata: {
         action: 'tool_deployed',
         deploymentId: deploymentRef.id,
-        deployedTo,
+        deployedTo: deployTo,
         surface
       }
     });
@@ -199,10 +201,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ 
       deployment: createdDeployment,
       message: 'Tool deployed successfully'
-    }, { status: 201 });
+    }, { status: HttpStatus.CREATED });
   } catch (error) {
-    console.error('Error deploying tool:', error);
-    return NextResponse.json({ error: 'Failed to deploy tool' }, { status: 500 });
+    logger.error('Error deploying tool', { error: error, endpoint: '/api/tools/deploy' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to deploy tool", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -211,7 +213,7 @@ export async function GET(request: NextRequest) {
   try {
     const user = await getCurrentUser(request);
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const { searchParams } = new URL(request.url);
@@ -220,7 +222,7 @@ export async function GET(request: NextRequest) {
     const surface = searchParams.get('surface');
     const status = searchParams.get('status') || 'active';
 
-    let deploymentsQuery = db.collection('deployedTools');
+    let deploymentsQuery = dbAdmin.collection('deployedTools');
 
     // Filter by deployment target
     if (deployedTo) {
@@ -250,7 +252,7 @@ export async function GET(request: NextRequest) {
     for (const deployment of deployments) {
       if (await canUserAccessDeployment(user.uid, deployment)) {
         // Fetch tool details
-        const toolDoc = await db.collection('tools').doc(deployment.toolId).get();
+        const toolDoc = await dbAdmin.collection('tools').doc(deployment.toolId).get();
         if (toolDoc.exists) {
           const toolData = toolDoc.data();
           accessibleDeployments.push({
@@ -272,15 +274,15 @@ export async function GET(request: NextRequest) {
       count: accessibleDeployments.length
     });
   } catch (error) {
-    console.error('Error fetching deployed tools:', error);
-    return NextResponse.json({ error: 'Failed to fetch deployed tools' }, { status: 500 });
+    logger.error('Error fetching deployed tools', { error: error, endpoint: '/api/tools/deploy' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to fetch deployed tools", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
 // Helper function to get next position for deployment
 async function getNextPosition(deployedTo: string, targetId: string, surface?: string): Promise<number> {
   try {
-    let positionQuery = db.collection('deployedTools')
+    let positionQuery = dbAdmin.collection('deployedTools')
       .where('deployedTo', '==', deployedTo)
       .where('targetId', '==', targetId)
       .where('status', '==', 'active');
@@ -292,7 +294,7 @@ async function getNextPosition(deployedTo: string, targetId: string, surface?: s
     const positionSnapshot = await positionQuery.get();
     return positionSnapshot.size;
   } catch (error) {
-    console.error('Error getting next position:', error);
+    logger.error('Error getting next position', { error: error, endpoint: '/api/tools/deploy' });
     return 0;
   }
 }
@@ -312,7 +314,7 @@ async function canUserAccessDeployment(userId: string, deployment: any): Promise
 
     // Check space membership for space deployments
     if (deployment.deployedTo === 'space') {
-      const spaceDoc = await db.collection('spaces').doc(deployment.targetId).get();
+      const spaceDoc = await dbAdmin.collection('spaces').doc(deployment.targetId).get();
       if (spaceDoc.exists) {
         const spaceData = spaceDoc.data();
         const userRole = spaceData?.members?.[userId]?.role;
@@ -322,7 +324,7 @@ async function canUserAccessDeployment(userId: string, deployment: any): Promise
 
     return false;
   } catch (error) {
-    console.error('Error checking deployment access:', error);
+    logger.error('Error checking deployment access', { error: error, endpoint: '/api/tools/deploy' });
     return false;
   }
 }

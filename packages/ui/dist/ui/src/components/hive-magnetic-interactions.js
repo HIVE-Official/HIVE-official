@@ -1,9 +1,9 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useRef, useEffect, useState } from 'react';
-import { motion, useAnimation, useMotionValue, useTransform } from 'framer-motion';
-import { cn } from '../lib/utils';
-import { liquidMetalOrchestrator, magneticInteractions, liquidFlow, liquidMetalUtils, liquidMetalPerformance } from '../motion/hive-liquid-metal';
+import { motion, useAnimation, useMotionValue, useTransform } from './framer-motion-proxy.js';
+import { cn } from '../lib/utils.js';
+import { liquidMetalOrchestrator, magneticInteractions, liquidFlow, liquidMetalUtils, liquidMetalPerformance } from '../motion/hive-liquid-metal.js';
 export const HiveMagneticHover = ({ children, className, intensity = 'medium', disabled = false, onMagneticEnter, onMagneticLeave, magneticId }) => {
     const ref = useRef(null);
     const controls = useAnimation();
@@ -52,18 +52,12 @@ export const HiveMagneticHover = ({ children, className, intensity = 'medium', d
     const handleMouseEnter = () => {
         if (disabled)
             return;
-        controls.start({
-            ...magneticInteractions.hover.magnetic,
-            scale: config.scale,
-            y: config.y,
-            rotateX: config.tilt,
-            rotateY: config.tilt * 0.5,
-        });
+        controls.start();
     };
     const handleMouseLeave = () => {
         if (disabled)
             return;
-        controls.start(magneticInteractions.hover.rest);
+        controls.start();
         mouseX.set(0);
         mouseY.set(0);
         if (isInMagneticField) {
@@ -74,16 +68,12 @@ export const HiveMagneticHover = ({ children, className, intensity = 'medium', d
     const handleMouseDown = () => {
         if (disabled)
             return;
-        controls.start(magneticInteractions.hover.pressed);
+        controls.start();
     };
     const handleMouseUp = () => {
         if (disabled)
             return;
-        controls.start({
-            ...magneticInteractions.hover.magnetic,
-            scale: config.scale,
-            y: config.y,
-        });
+        controls.start();
     };
     return (_jsx(motion.div, { ref: ref, className: cn('cursor-pointer', className), animate: controls, style: {
             ...liquidMetalPerformance.gpuLayer,
@@ -114,17 +104,17 @@ export const HiveMagneticSnap = ({ children, className, snapTarget, snapId, onSn
         // Handle magnetic zones
         if (liquidMetalUtils.isInMagneticZone(distance, 'snap') && !isSnapped) {
             setIsSnapped(true);
-            controls.start(magneticInteractions.toolSnap.snapped);
+            controls.start();
             onSnap?.(snapTarget);
         }
         else if (liquidMetalUtils.isInMagneticZone(distance, 'attraction') && !isApproaching) {
             setIsApproaching(true);
-            controls.start(magneticInteractions.toolSnap.approaching);
+            controls.start();
         }
         else if (liquidMetalUtils.isInMagneticZone(distance, 'release') && isSnapped) {
             setIsSnapped(false);
             setIsApproaching(false);
-            controls.start(magneticInteractions.toolSnap.floating);
+            controls.start();
             onRelease?.();
         }
     };

@@ -3,8 +3,8 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
 import React, { useState, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cva } from 'class-variance-authority';
-import { cn } from '../../lib/utils';
-import { motionDurations } from '../../motion/hive-motion-system';
+import { cn } from '../../lib/utils.js';
+import { motionDurations } from '../../motion/hive-motion-system.js';
 import { Calendar, Plus, MapPin, Users, Clock, Edit3, Trash2, Share2, ExternalLink, AlertCircle, CheckCircle, XCircle, Grid, List, Crown, Star, Calendar as CalendarIcon, Video, Coffee, GraduationCap, Gamepad2, Music } from 'lucide-react';
 // HIVE Events Surface - Calendar & Event Management
 // Rich event system with RSVP, calendar integration, and discovery
@@ -155,10 +155,10 @@ export const HiveEventsSurface = React.forwardRef(({ className, mode, space, eve
         // Normalize date fields
         startDate: event.startDate && typeof event.startDate === 'object' && 'toDate' in event.startDate
             ? event.startDate.toDate()
-            : new Date(event.startDate),
+            : event.startDate instanceof Date ? event.startDate : new Date(event.startDate),
         endDate: event.endDate && typeof event.endDate === 'object' && 'toDate' in event.endDate
             ? event.endDate.toDate()
-            : new Date(event.endDate),
+            : event.endDate instanceof Date ? event.endDate : new Date(event.endDate),
         rsvpDeadline: event.rsvpDeadline
             ? (typeof event.rsvpDeadline === 'object' && 'toDate' in event.rsvpDeadline
                 ? event.rsvpDeadline.toDate()

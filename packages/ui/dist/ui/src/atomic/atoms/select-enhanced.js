@@ -2,7 +2,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
 import { cva } from "class-variance-authority";
-import { cn } from "../../lib/utils";
+import { cn } from "../../lib/utils.js";
 // HIVE Select System - Semantic Token Perfection
 // Zero hardcoded values - complete semantic token usage
 const selectVariants = cva(
@@ -105,5 +105,5 @@ export const SelectPresets = {
 // Simple icons using semantic approach
 const ChevronDownIcon = () => (_jsx("svg", { width: "16", height: "16", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: _jsx("path", { d: "M6 9l6 6 6-6" }) }));
 const ClearIcon = () => (_jsx("svg", { width: "12", height: "12", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: _jsx("path", { d: "M18 6L6 18M6 6l12 12" }) }));
-export { Select, MultiSelect, SelectGroup, selectVariants };
+export { Select, Select as SelectEnhanced, MultiSelect, SelectGroup, selectVariants };
 //# sourceMappingURL=select-enhanced.js.map

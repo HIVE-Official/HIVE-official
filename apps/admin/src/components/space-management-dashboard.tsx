@@ -268,7 +268,7 @@ export function SpaceManagementDashboard() {
                             {spaceTypes.find(t => t.value === space.type)?.label}
                           </span>
                           <span className="text-sm text-gray-500">
-                            {space.memberCount} members
+                            {(space.memberCount || 0)} members
                           </span>
                           {space.hasBuilders && (
                             <Badge variant="secondary" className="text-xs">
@@ -355,7 +355,7 @@ export function SpaceManagementDashboard() {
                   </div>
                   <div>
                     <span className="text-gray-400">Members: </span>
-                    <span className="text-white">{selectedSpace.memberCount}</span>
+                    <span className="text-white">{(selectedSpace.memberCount || 0)}</span>
                   </div>
                   <div>
                     <span className="text-gray-400">Has Builders: </span>

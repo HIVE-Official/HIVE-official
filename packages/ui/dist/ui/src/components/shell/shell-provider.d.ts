@@ -1,4 +1,5 @@
 import React from 'react';
+import { NavigationStyle, useNavigationLayout } from '../../hooks/use-navigation-layout';
 type NavigationMode = 'sidebar' | 'topbar';
 interface ShellContextType {
     sidebarCollapsed: boolean;
@@ -11,6 +12,9 @@ interface ShellContextType {
     setUnreadNotificationCount: (count: number) => void;
     navigationMode: NavigationMode;
     setNavigationMode: (mode: NavigationMode) => void;
+    navigationPreference: NavigationStyle;
+    setNavigationPreference: (preference: NavigationStyle) => void;
+    navigationLayout: ReturnType<typeof useNavigationLayout>;
 }
 export declare function useShell(): ShellContextType;
 interface ShellProviderProps {
@@ -18,7 +22,8 @@ interface ShellProviderProps {
     initialSidebarCollapsed?: boolean;
     initialUnreadCount?: number;
     initialNavigationMode?: NavigationMode;
+    initialNavigationPreference?: NavigationStyle;
 }
-export declare function ShellProvider({ children, initialSidebarCollapsed, initialUnreadCount, initialNavigationMode }: ShellProviderProps): import("react/jsx-runtime").JSX.Element;
+export declare function ShellProvider({ children, initialSidebarCollapsed, initialUnreadCount, initialNavigationMode, initialNavigationPreference }: ShellProviderProps): import("react/jsx-runtime").JSX.Element;
 export {};
 //# sourceMappingURL=shell-provider.d.ts.map

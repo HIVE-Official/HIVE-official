@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { withAdminAuth } from '@/lib/admin-middleware';
 import { adminActivityLogger } from '@/lib/admin-activity-logger';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 /**
  * Admin Activity Logs API
@@ -32,13 +34,12 @@ export async function GET(request: NextRequest) {
         success: true,
         logs,
         stats,
-        filters,
-      });
+        filters });
     } catch (error) {
-      console.error('Error fetching activity logs:', error);
+      logger.error('Error fetching activity logs', { error: error, endpoint: '/api/admin/activity-logs' });
       return NextResponse.json(
         { success: false, error: 'Failed to fetch activity logs' },
-        { status: 500 }
+        { status: HttpStatus.INTERNAL_SERVER_ERROR }
       );
     }
   });
@@ -54,13 +55,12 @@ export async function DELETE(request: NextRequest) {
 
       return NextResponse.json({
         success: true,
-        deletedCount,
-      });
+        deletedCount });
     } catch (error) {
-      console.error('Error cleaning up activity logs:', error);
+      logger.error('Error cleaning up activity logs', { error: error, endpoint: '/api/admin/activity-logs' });
       return NextResponse.json(
         { success: false, error: 'Failed to cleanup activity logs' },
-        { status: 500 }
+        { status: HttpStatus.INTERNAL_SERVER_ERROR }
       );
     }
   });

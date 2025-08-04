@@ -1,8 +1,10 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
-import { getAuth } from 'firebase-admin/auth';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { FieldValue } from 'firebase-admin/firestore';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
 
 /**
  * Space Builder Status and Activation API
@@ -14,40 +16,14 @@ import { FieldValue } from 'firebase-admin/firestore';
  * Check user's builder status for a space
  * GET /api/spaces/[spaceId]/builder-status
  */
-export async function GET(
+export const GET = withAuth(async (
   request: NextRequest,
+  authContext,
   { params }: { params: Promise<{ spaceId: string }> }
-) {
+) => {
   try {
     const { spaceId } = await params;
-
-    // Verify authentication
-    const authHeader = request.headers.get('Authorization');
-    if (!authHeader?.startsWith('Bearer ')) {
-      return NextResponse.json(
-        { error: 'Authorization header required' },
-        { status: 401 }
-      );
-    }
-
-    const token = authHeader.substring(7);
-    let userId: string;
-    
-    // Handle test tokens in development
-    if (token === 'test-token') {
-      userId = 'test-user';
-    } else {
-      try {
-        const auth = getAuth();
-        const decodedToken = await auth.verifyIdToken(token);
-        userId = decodedToken.uid;
-      } catch (authError) {
-        return NextResponse.json(
-          { error: 'Invalid or expired token' },
-          { status: 401 }
-        );
-      }
-    }
+    const userId = authContext.userId;
 
     // Find the space in nested structure
     const spaceTypes = ['campus_living', 'fraternity_and_sorority', 'hive_exclusive', 'student_organizations', 'university_organizations'];
@@ -70,7 +46,7 @@ export async function GET(
     }
 
     if (!spaceDoc || !spaceDoc.exists) {
-      return NextResponse.json({ error: 'Space not found' }, { status: 404 });
+      return NextResponse.json(ApiResponseHelper.error("Space not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     const spaceData = spaceDoc.data();
@@ -173,52 +149,26 @@ export async function GET(
     });
 
   } catch (error) {
-    console.error('Get builder status error:', error);
-    return NextResponse.json(
-      { error: 'Failed to get builder status' },
-      { status: 500 }
-    );
+    logger.error('Get builder status error', { error: error, endpoint: '/api/spaces/[spaceId]/builder-status' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to get builder status", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
-}
+}, { 
+  allowDevelopmentBypass: true, // Builder status checking is safe for development
+  operation: 'get_builder_status' 
+});
 
 /**
  * Activate space (builder only)
  * POST /api/spaces/[spaceId]/builder-status
  */
-export async function POST(
+export const POST = withAuth(async (
   request: NextRequest,
+  authContext,
   { params }: { params: Promise<{ spaceId: string }> }
-) {
+) => {
   try {
     const { spaceId } = await params;
-
-    // Verify authentication
-    const authHeader = request.headers.get('Authorization');
-    if (!authHeader?.startsWith('Bearer ')) {
-      return NextResponse.json(
-        { error: 'Authorization header required' },
-        { status: 401 }
-      );
-    }
-
-    const token = authHeader.substring(7);
-    let userId: string;
-    
-    // Handle test tokens in development
-    if (token === 'test-token') {
-      userId = 'test-user';
-    } else {
-      try {
-        const auth = getAuth();
-        const decodedToken = await auth.verifyIdToken(token);
-        userId = decodedToken.uid;
-      } catch (authError) {
-        return NextResponse.json(
-          { error: 'Invalid or expired token' },
-          { status: 401 }
-        );
-      }
-    }
+    const userId = authContext.userId;
 
     // Find the space in nested structure
     const spaceTypes = ['campus_living', 'fraternity_and_sorority', 'hive_exclusive', 'student_organizations', 'university_organizations'];
@@ -243,7 +193,7 @@ export async function POST(
     }
 
     if (!spaceDoc || !spaceDoc.exists) {
-      return NextResponse.json({ error: 'Space not found' }, { status: 404 });
+      return NextResponse.json(ApiResponseHelper.error("Space not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     // Check if user is a builder
@@ -257,30 +207,21 @@ export async function POST(
       .get();
 
     if (!memberDoc.exists) {
-      return NextResponse.json(
-        { error: 'You are not a member of this space' },
-        { status: 403 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("You are not a member of this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     const memberData = memberDoc.data();
     const userRole = memberData?.role;
 
     if (userRole !== 'builder' && userRole !== 'admin') {
-      return NextResponse.json(
-        { error: 'Builder rights required to activate space' },
-        { status: 403 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Builder rights required to activate space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     const spaceData = spaceDoc.data();
 
     // Check if space is already active
     if (spaceData.status === 'activated' && spaceData.hasBuilders) {
-      return NextResponse.json(
-        { error: 'Space is already activated' },
-        { status: 409 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Space is already activated", "UNKNOWN_ERROR"), { status: 409 });
     }
 
     // Activate the space
@@ -304,7 +245,7 @@ export async function POST(
 
     await spaceRef.update(activationData);
 
-    console.log(`🎉 Space ${spaceId} activated by builder ${userId}`);
+    logger.info('🎉 Spaceactivated by builder', { spaceId, userId, endpoint: '/api/spaces/[spaceId]/builder-status' });
 
     return NextResponse.json({
       success: true,
@@ -336,10 +277,10 @@ export async function POST(
     });
 
   } catch (error) {
-    console.error('Activate space error:', error);
-    return NextResponse.json(
-      { error: 'Failed to activate space' },
-      { status: 500 }
-    );
+    logger.error('Activate space error', { error: error, endpoint: '/api/spaces/[spaceId]/builder-status' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to activate space", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
-}
+}, { 
+  allowDevelopmentBypass: false, // Space activation is sensitive - require real auth
+  operation: 'activate_space' 
+});

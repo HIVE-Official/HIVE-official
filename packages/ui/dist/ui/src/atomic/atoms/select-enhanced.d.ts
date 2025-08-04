@@ -1,10 +1,10 @@
 import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
 declare const selectVariants: (props?: {
-    variant?: "error" | "default" | "success" | "warning" | "brand";
+    variant?: "default" | "success" | "warning" | "error" | "brand";
     size?: "default" | "sm" | "lg" | "xl";
-    radius?: "none" | "default" | "sm" | "lg" | "full";
-} & import("class-variance-authority/dist/types").ClassProp) => string;
+    radius?: "default" | "sm" | "lg" | "none" | "full";
+} & import("class-variance-authority/types").ClassProp) => string;
 export interface SelectOption {
     value: string;
     label: string;
@@ -21,6 +21,7 @@ export interface SelectProps extends Omit<React.SelectHTMLAttributes<HTMLSelectE
     required?: boolean;
     allowClear?: boolean;
     onClear?: () => void;
+    searchable?: boolean;
 }
 declare const Select: React.ForwardRefExoticComponent<SelectProps & React.RefAttributes<HTMLSelectElement>>;
 export interface MultiSelectProps extends Omit<SelectProps, 'value' | 'onChange'> {
@@ -40,5 +41,6 @@ export declare const SelectPresets: {
     Status: (props: Omit<SelectProps, "options">) => import("react/jsx-runtime").JSX.Element;
     Size: (props: Omit<SelectProps, "options">) => import("react/jsx-runtime").JSX.Element;
 };
-export { Select, MultiSelect, SelectGroup, selectVariants };
+export { Select, Select as SelectEnhanced, MultiSelect, SelectGroup, selectVariants };
+export type { SelectOption as SelectOptionEnhanced };
 //# sourceMappingURL=select-enhanced.d.ts.map

@@ -528,14 +528,14 @@ export const TemplateToolBuilder: React.FC<TemplateBuilderProps> = ({
           {/* View toggle */}
           <div className="flex gap-1 p-1 bg-[var(--hive-background-primary)] rounded-lg border border-[var(--hive-border-default)]">
             <HiveButton
-              variant={viewMode === 'grid' ? 'default' : 'ghost'}
+              variant={viewMode === 'grid' ? 'primary' : 'ghost'}
               size="sm"
               onClick={() => setViewMode('grid')}
             >
               <Grid3X3 size={16} />
             </HiveButton>
             <HiveButton
-              variant={viewMode === 'list' ? 'default' : 'ghost'}
+              variant={viewMode === 'list' ? 'primary' : 'ghost'}
               size="sm"
               onClick={() => setViewMode('list')}
             >

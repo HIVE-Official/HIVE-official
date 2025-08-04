@@ -11,7 +11,7 @@ interface PageContainerProps {
     breadcrumbs?: BreadcrumbItem[];
     actions?: React.ReactNode;
     className?: string;
-    maxWidth?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full';
+    maxWidth?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '4xl' | '7xl' | 'full';
     padding?: 'none' | 'sm' | 'md' | 'lg';
 }
 export declare function PageContainer({ children, title, subtitle, breadcrumbs, actions, className, maxWidth, padding }: PageContainerProps): import("react/jsx-runtime").JSX.Element;

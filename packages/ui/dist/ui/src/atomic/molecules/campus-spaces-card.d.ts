@@ -11,6 +11,8 @@ export interface CampusSpace {
     isPrivate?: boolean;
     isFavorite?: boolean;
     isPinned?: boolean;
+    isMuted?: boolean;
+    userRole?: 'member' | 'moderator' | 'leader';
     recentActivity?: {
         type: 'message' | 'event' | 'announcement';
         preview: string;
@@ -25,6 +27,10 @@ export interface CampusSpacesCardProps {
     onSpaceClick?: (spaceId: string) => void;
     onJoinSpace?: () => void;
     onViewAll?: () => void;
+    onMuteSpace?: (spaceId: string, muted: boolean) => void;
+    onPinSpace?: (spaceId: string, pinned: boolean) => void;
+    onLeaveSpace?: (spaceId: string) => void;
+    onQuickPost?: (spaceId: string, message: string) => void;
     className?: string;
 }
 export declare const CampusSpacesCard: React.FC<CampusSpacesCardProps>;

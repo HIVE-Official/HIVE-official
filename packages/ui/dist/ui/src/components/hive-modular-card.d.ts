@@ -1,11 +1,11 @@
 import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
 declare const moduleVariants: (props?: {
-    variant?: "base" | "gold" | "minimal" | "elevated" | "clickable" | "selectable" | "selected" | "gold-strong";
-    size?: "xs" | "sm" | "lg" | "md";
-    rounded?: "none" | "sm" | "lg" | "md";
-    connector?: "bottom" | "left" | "right" | "top" | "none" | "horizontal" | "vertical";
-} & import("class-variance-authority/dist/types").ClassProp) => string;
+    variant?: "gold" | "base" | "selected" | "elevated" | "minimal" | "clickable" | "selectable" | "gold-strong";
+    size?: "xs" | "sm" | "md" | "lg";
+    rounded?: "sm" | "md" | "lg" | "none";
+    connector?: "none" | "horizontal" | "vertical" | "top" | "right" | "bottom" | "left";
+} & import("class-variance-authority/types").ClassProp) => string;
 export interface ModularCardProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof moduleVariants> {
     stackable?: boolean;
     connectable?: boolean;

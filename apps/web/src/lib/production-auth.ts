@@ -28,8 +28,8 @@ const FORBIDDEN_TOKENS = [
 export class ProductionAuthError extends Error {
   constructor(
     message: string,
-    public readonly code: string,
-    public readonly statusCode: number = 401
+    public readonly _code: string,
+    public readonly _statusCode: number = 401
   ) {
     super(message);
     this.name = 'ProductionAuthError';
@@ -325,6 +325,8 @@ export async function auditAuthEvent(
     userId?: string;
     operation?: string;
     error?: string;
+    threats?: string;
+    securityLevel?: string;
   }
 ): Promise<void> {
   const auditData = {

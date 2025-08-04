@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { doc, getDoc, updateDoc, addDoc, collection, query, where, getDocs, orderBy, limit } from 'firebase/firestore';
 import { dbAdmin as adminDb } from '@/lib/firebase-admin';
 import { getCurrentUser } from '@/lib/auth-server';
 import { z } from 'zod';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 const ReviewActionSchema = z.object({
   requestId: z.string(),
@@ -33,7 +34,7 @@ export async function POST(request: NextRequest) {
   try {
     const user = await getCurrentUser(request);
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     // Check if user is admin/reviewer
@@ -41,7 +42,7 @@ export async function POST(request: NextRequest) {
     const userData = userDoc.data();
     
     if (!userData?.roles?.includes('admin') && !userData?.roles?.includes('tool_reviewer')) {
-      return NextResponse.json({ error: 'Insufficient permissions' }, { status: 403 });
+      return NextResponse.json(ApiResponseHelper.error("Insufficient permissions", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     const body = await request.json();
@@ -50,18 +51,18 @@ export async function POST(request: NextRequest) {
     // Get publish request
     const requestDoc = await adminDb.collection('publishRequests').doc(validatedData.requestId).get();
     if (!requestDoc.exists) {
-      return NextResponse.json({ error: 'Publish request not found' }, { status: 404 });
+      return NextResponse.json(ApiResponseHelper.error("Publish request not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     const requestData = requestDoc.data();
     if (requestData?.status !== 'pending' && requestData?.status !== 'changes_requested') {
-      return NextResponse.json({ error: 'Request has already been reviewed' }, { status: 400 });
+      return NextResponse.json(ApiResponseHelper.error("Request has already been reviewed", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
     // Get tool details
     const toolDoc = await adminDb.collection('tools').doc(requestData?.toolId).get();
     if (!toolDoc.exists) {
-      return NextResponse.json({ error: 'Tool not found' }, { status: 404 });
+      return NextResponse.json(ApiResponseHelper.error("Tool not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     const toolData = toolDoc.data();
@@ -178,16 +179,16 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('Error reviewing tool:', error);
+    logger.error('Error reviewing tool', { error: error, endpoint: '/api/tools/review' });
     
     if (error instanceof z.ZodError) {
       return NextResponse.json({
         error: 'Invalid review data',
         details: error.errors
-      }, { status: 400 });
+      }, { status: HttpStatus.BAD_REQUEST });
     }
 
-    return NextResponse.json({ error: 'Failed to review tool' }, { status: 500 });
+    return NextResponse.json(ApiResponseHelper.error("Failed to review tool", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -196,7 +197,7 @@ export async function GET(request: NextRequest) {
   try {
     const user = await getCurrentUser(request);
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     // Check if user is admin/reviewer
@@ -204,7 +205,7 @@ export async function GET(request: NextRequest) {
     const userData = userDoc.data();
     
     if (!userData?.roles?.includes('admin') && !userData?.roles?.includes('tool_reviewer')) {
-      return NextResponse.json({ error: 'Insufficient permissions' }, { status: 403 });
+      return NextResponse.json(ApiResponseHelper.error("Insufficient permissions", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     const { searchParams } = new URL(request.url);
@@ -255,7 +256,7 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('Error fetching review requests:', error);
-    return NextResponse.json({ error: 'Failed to fetch review requests' }, { status: 500 });
+    logger.error('Error fetching review requests', { error: error, endpoint: '/api/tools/review' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to fetch review requests", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

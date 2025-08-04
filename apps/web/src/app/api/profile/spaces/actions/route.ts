@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { collection, doc, query, where, getDocs, getDoc, updateDoc, addDoc, deleteDoc } from 'firebase/firestore';
-import { db } from '@hive/core/server';
-import { getCurrentUser } from '@hive/auth-logic';
+// Use admin SDK methods since we're in an API route
+import { dbAdmin } from '@/lib/firebase-admin';
+import { getCurrentUser } from '@/lib/server-auth';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 // Space quick actions for profile
 interface SpaceQuickAction {
@@ -16,32 +18,32 @@ export async function POST(request: NextRequest) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const body = await request.json();
     const { type, spaceId, value, metadata } = body;
 
     if (!type || !spaceId) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+      return NextResponse.json(ApiResponseHelper.error("Missing required fields", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
     // Validate action type
     const validActions = ['favorite', 'mute', 'pin', 'archive', 'leave', 'request_builder'];
     if (!validActions.includes(type)) {
-      return NextResponse.json({ error: 'Invalid action type' }, { status: 400 });
+      return NextResponse.json(ApiResponseHelper.error("Invalid action type", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
     // Verify user is a member of the space
-    const membershipQuery = query(
-      collection(db, 'members'),
+    const membershipQuery = dbAdmin.collection(
+      dbAdmin.collection('members'),
       where('userId', '==', user.uid),
       where('spaceId', '==', spaceId)
     );
 
     const membershipSnapshot = await getDocs(membershipQuery);
     if (membershipSnapshot.empty) {
-      return NextResponse.json({ error: 'Not a member of this space' }, { status: 403 });
+      return NextResponse.json(ApiResponseHelper.error("Not a member of this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     const membershipDoc = membershipSnapshot.docs[0];
@@ -65,8 +67,8 @@ export async function POST(request: NextRequest) {
       result
     });
   } catch (error) {
-    console.error('Error performing space action:', error);
-    return NextResponse.json({ error: 'Failed to perform space action' }, { status: 500 });
+    logger.error('Error performing space action', { error: error, endpoint: '/api/profile/spaces/actions' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to perform space action", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -83,7 +85,7 @@ async function performSpaceAction(
   const now = new Date().toISOString();
 
   switch (type) {
-    case 'favorite':
+    case 'favorite': {
       // Toggle favorite status
       const isFavorite = value !== undefined ? value : !membershipData.isFavorite;
       await updateDoc(membershipRef, {
@@ -95,8 +97,9 @@ async function performSpaceAction(
       await updateUserSpacePreferences(userId, spaceId, 'favorite', isFavorite);
       
       return { isFavorite };
+    }
 
-    case 'mute':
+    case 'mute': {
       // Toggle mute status
       const isMuted = value !== undefined ? value : !membershipData.isMuted;
       await updateDoc(membershipRef, {
@@ -108,8 +111,9 @@ async function performSpaceAction(
       
       return { isMuted, muteUntil: isMuted && metadata?.duration ? 
         new Date(Date.now() + metadata.duration * 60000).toISOString() : null };
+    }
 
-    case 'pin':
+    case 'pin': {
       // Toggle pin status
       const isPinned = value !== undefined ? value : !membershipData.isPinned;
       await updateDoc(membershipRef, {
@@ -119,8 +123,9 @@ async function performSpaceAction(
       });
       
       return { isPinned };
+    }
 
-    case 'archive':
+    case 'archive': {
       // Archive/unarchive space membership
       const isArchived = value !== undefined ? value : !membershipData.isArchived;
       await updateDoc(membershipRef, {
@@ -131,8 +136,9 @@ async function performSpaceAction(
       });
       
       return { isArchived };
+    }
 
-    case 'leave':
+    case 'leave': {
       // Leave space
       await updateDoc(membershipRef, {
         status: 'inactive',
@@ -144,8 +150,9 @@ async function performSpaceAction(
       await updateSpaceMemberCount(spaceId, -1);
       
       return { hasLeft: true };
+    }
 
-    case 'request_builder':
+    case 'request_builder': {
       // Request builder status
       const requestData = {
         userId,
@@ -157,7 +164,7 @@ async function performSpaceAction(
         requestedAt: now
       };
       
-      const requestRef = await addDoc(collection(db, 'builderRequests'), requestData);
+      const requestRef = await addDoc(dbAdmin.collection('builderRequests'), requestData);
       
       // Update membership with pending request
       await updateDoc(membershipRef, {
@@ -170,6 +177,7 @@ async function performSpaceAction(
         requestId: requestRef.id,
         requestStatus: 'pending' 
       };
+    }
 
     default:
       throw new Error(`Unknown action type: ${type}`);
@@ -180,7 +188,7 @@ async function performSpaceAction(
 async function updateUserSpacePreferences(userId: string, spaceId: string, preferenceType: string, value: any) {
   try {
     const userDoc = await getDoc(doc(db, 'users', userId));
-    if (!userDoc.exists()) return;
+    if (!userDoc.exists) return;
 
     const userData = userDoc.data();
     const spacePreferences = userData.spacePreferences || {};
@@ -197,7 +205,7 @@ async function updateUserSpacePreferences(userId: string, spaceId: string, prefe
       updatedAt: new Date().toISOString()
     });
   } catch (error) {
-    console.error('Error updating user space preferences:', error);
+    logger.error('Error updating user space preferences', { error: error, endpoint: '/api/profile/spaces/actions' });
   }
 }
 
@@ -205,7 +213,7 @@ async function updateUserSpacePreferences(userId: string, spaceId: string, prefe
 async function updateSpaceMemberCount(spaceId: string, change: number) {
   try {
     const spaceDoc = await getDoc(doc(db, 'spaces', spaceId));
-    if (!spaceDoc.exists()) return;
+    if (!spaceDoc.exists) return;
 
     const spaceData = spaceDoc.data();
     const newMemberCount = Math.max(0, (spaceData.memberCount || 0) + change);
@@ -215,7 +223,7 @@ async function updateSpaceMemberCount(spaceId: string, change: number) {
       updatedAt: new Date().toISOString()
     });
   } catch (error) {
-    console.error('Error updating space member count:', error);
+    logger.error('Error updating space member count', { error: error, endpoint: '/api/profile/spaces/actions' });
   }
 }
 
@@ -224,26 +232,26 @@ export async function GET(request: NextRequest) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const { searchParams } = new URL(request.url);
     const spaceId = searchParams.get('spaceId');
 
     if (!spaceId) {
-      return NextResponse.json({ error: 'Space ID is required' }, { status: 400 });
+      return NextResponse.json(ApiResponseHelper.error("Space ID is required", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
     // Get membership data
-    const membershipQuery = query(
-      collection(db, 'members'),
+    const membershipQuery = dbAdmin.collection(
+      dbAdmin.collection('members'),
       where('userId', '==', user.uid),
       where('spaceId', '==', spaceId)
     );
 
     const membershipSnapshot = await getDocs(membershipQuery);
     if (membershipSnapshot.empty) {
-      return NextResponse.json({ error: 'Not a member of this space' }, { status: 403 });
+      return NextResponse.json(ApiResponseHelper.error("Not a member of this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     const membershipData = membershipSnapshot.docs[0].data();
@@ -252,7 +260,7 @@ export async function GET(request: NextRequest) {
     let builderRequestStatus = null;
     if (membershipData.hasBuilderRequest) {
       const requestDoc = await getDoc(doc(db, 'builderRequests', membershipData.builderRequestId));
-      if (requestDoc.exists()) {
+      if (requestDoc.exists) {
         builderRequestStatus = requestDoc.data().status;
       }
     }
@@ -276,7 +284,7 @@ export async function GET(request: NextRequest) {
       }
     });
   } catch (error) {
-    console.error('Error getting space action status:', error);
-    return NextResponse.json({ error: 'Failed to get space action status' }, { status: 500 });
+    logger.error('Error getting space action status', { error: error, endpoint: '/api/profile/spaces/actions' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to get space action status", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

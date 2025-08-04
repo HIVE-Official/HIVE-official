@@ -5,7 +5,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { currentEnvironment, isDevelopment } from './env';
+import { isDevelopment } from './env';
 import { captureError, LogLevel } from './error-monitoring';
 import { logSecurityEvent } from './structured-logger';
 
@@ -13,9 +13,13 @@ import { logSecurityEvent } from './structured-logger';
  * Classification of error types by security risk
  */
 export enum ErrorSecurityLevel {
+  // eslint-disable-next-line no-unused-vars
   SAFE = 'safe',           // Can be shown to users
+  // eslint-disable-next-line no-unused-vars
   INTERNAL = 'internal',   // Should be logged but not exposed
+  // eslint-disable-next-line no-unused-vars
   SENSITIVE = 'sensitive', // Contains secrets or internal paths
+  // eslint-disable-next-line no-unused-vars
   CRITICAL = 'critical'    // Security-related errors
 }
 
@@ -188,10 +192,10 @@ function sanitizeStackTrace(stack?: string): string | undefined {
   
   // Remove sensitive paths from stack traces
   return stack
-    .replace(/\/home\/[^\/\s]+/g, '/home/[USER]')
-    .replace(/\/Users\/[^\/\s]+/g, '/Users/[USER]')
+    .replace(/\/home\/[^/\s]+/g, '/home/[USER]')
+    .replace(/\/Users\/[^/\s]+/g, '/Users/[USER]')
     .replace(/C:\\Users\\[^\\]+/g, 'C:\\Users\\[USER]')
-    .replace(/node_modules\/[^\/\s]+/g, 'node_modules/[MODULE]')
+    .replace(/node_modules\/[^/\s]+/g, 'node_modules/[MODULE]')
     .replace(/\.env[^\s]*/g, '[ENV_FILE]')
     .replace(/[a-zA-Z0-9]{32,}/g, '[TOKEN_REMOVED]'); // Remove potential tokens
 }
@@ -234,6 +238,29 @@ export async function handleSecureError(
     
     if (isDevelopment && validationResult.details) {
       response.details = validationResult.details;
+    }
+    
+    return NextResponse.json(response, { status: statusCode });
+  }
+  
+  // Handle custom API errors (ValidationError, AuthenticationError, etc.)
+  if (error && typeof error === 'object' && 'statusCode' in error) {
+    const apiError = error as any;
+    errorMessage = apiError.message || 'API Error';
+    errorCode = apiError.code || 'API_ERROR';
+    statusCode = apiError.statusCode || 500;
+    securityLevel = statusCode < 500 ? ErrorSecurityLevel.SAFE : ErrorSecurityLevel.INTERNAL;
+    
+    // Return early for API errors
+    const response: SecureErrorResponse = {
+      error: errorMessage,
+      code: errorCode,
+      timestamp,
+      requestId
+    };
+    
+    if (isDevelopment && apiError.details) {
+      response.details = apiError.details;
     }
     
     return NextResponse.json(response, { status: statusCode });
@@ -348,7 +375,7 @@ export async function handleSecureError(
  * Wrapper for API routes to use secure error handling
  */
 export function withSecureErrorHandler<T extends any[]>(
-  handler: (request: NextRequest, ...args: T) => Promise<NextResponse>
+  handler: (_request: NextRequest, ..._args: T) => Promise<NextResponse>
 ) {
   return async (request: NextRequest, ...args: T): Promise<NextResponse> => {
     try {

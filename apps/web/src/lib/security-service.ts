@@ -6,7 +6,7 @@
 import { NextRequest } from 'next/server';
 import { currentEnvironment, isDevelopment } from './env';
 import { captureError, LogLevel } from './error-monitoring';
-import { logSecurityEvent, securityLogger } from './structured-logger';
+import { logSecurityEvent } from './structured-logger';
 
 /**
  * Security configuration for different environments
@@ -302,12 +302,27 @@ export async function validateAuthToken(
     };
   }
 
-  // For real tokens, you would implement Firebase token validation here
-  // This is a placeholder that should be replaced with actual Firebase auth
-  return {
-    valid: false,
-    reason: 'Token validation not implemented for production tokens'
-  };
+  // For real Firebase tokens, validate with production auth service
+  try {
+    const { validateProductionToken } = await import('./production-auth');
+    const result = await validateProductionToken(token, request, {
+      operation: context?.operation
+    });
+    
+    return {
+      valid: true,
+      userId: result.uid,
+      reason: 'Valid Firebase token'
+    };
+    
+  } catch (error: any) {
+    // Production auth service throws errors for invalid tokens
+    return {
+      valid: false,
+      reason: error.message || 'Token validation failed',
+      securityAlert: error.httpStatus === 403
+    };
+  }
 }
 
 /**

@@ -125,7 +125,6 @@ const Canvas: React.FC<CanvasProps> = ({
     return (
       <HiveMotionWrapper
         key={instance.id}
-        variant="fade"
         layoutId={instance.id}
       >
         <div
@@ -228,7 +227,7 @@ const Canvas: React.FC<CanvasProps> = ({
 
         <div className="flex gap-1 p-1 bg-[var(--hive-background-secondary)] rounded-lg border border-[var(--hive-border-default)]">
           <HiveButton
-            variant={canvas.showGrid ? "default" : "ghost"}
+            variant={canvas.showGrid ? "primary" : "ghost"}
             size="sm"
             onClick={() => onCanvasUpdate({ showGrid: !canvas.showGrid })}
           >

@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { HiveCard, HiveButton } from '@hive/ui';
+import { HiveCard, HiveButton } from "@hive/ui";
 
 // Tool interface based on Profile System requirements
 interface PersonalTool {
@@ -26,13 +26,13 @@ interface ToolUsageStats {
 interface PersonalToolsCardProps {
   className?: string;
   variant?: 'desktop' | 'mobile';
-  onToolClick?: (toolId: string) => void;
+  onToolClick?: (_toolId: string) => void;
   onManageTools?: () => void;
   onAddTools?: () => void;
 }
 
 // Simulated personal tools data - will connect to Tool System APIs
-const mockPersonalTools: PersonalTool[] = [
+const _mockPersonalTools: PersonalTool[] = [
   { id: 'study-timer', name: 'Study Timer', icon: '⏱️', category: 'productivity', isInstalled: true, lastUsed: '2024-01-20T10:30:00Z', usageCount: 45, quickLaunch: true },
   { id: 'task-tracker', name: 'Task Tracker', icon: '✅', category: 'productivity', isInstalled: true, lastUsed: '2024-01-20T09:15:00Z', usageCount: 32, quickLaunch: true },
   { id: 'grade-calc', name: 'Grade Calculator', icon: '📊', category: 'study', isInstalled: true, lastUsed: '2024-01-19T16:45:00Z', usageCount: 28, quickLaunch: true },
@@ -62,7 +62,7 @@ async function fetchPersonalTools(): Promise<PersonalTool[]> {
     } else {
       headers.Authorization = `Bearer dev_token_123`;
     }
-  } catch (error) {
+  } catch (_error) {
     console.warn('Could not get auth token for tools, using dev token');
     headers.Authorization = `Bearer dev_token_123`;
   }
@@ -91,7 +91,7 @@ async function fetchToolUsageStats(): Promise<ToolUsageStats> {
     } else {
       headers.Authorization = `Bearer dev_token_123`;
     }
-  } catch (error) {
+  } catch (_error) {
     console.warn('Could not get auth token for tool stats, using dev token');
     headers.Authorization = `Bearer dev_token_123`;
   }
@@ -118,8 +118,7 @@ export function PersonalToolsCard({
   // Query personal tools
   const { 
     data: tools, 
-    isLoading: toolsLoading, 
-    error: toolsError 
+    isLoading: toolsLoading 
   } = useQuery<PersonalTool[]>({
     queryKey: ["personal-tools"],
     queryFn: fetchPersonalTools,

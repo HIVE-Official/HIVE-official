@@ -13,4 +13,9 @@ export * from './slider';
 export * from './tabs';
 export * from './toast';
 export * from './tooltip';
+export * from './button';
+export * from './input';
+export * from './select';
+export * from './checkbox';
+export * from './radio-group';
 //# sourceMappingURL=index.d.ts.map

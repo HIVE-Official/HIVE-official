@@ -73,13 +73,24 @@ interface MagneticHoverProps {
   className?: string;
   intensity?: 'subtle' | 'medium' | 'strong';
   disabled?: boolean;
+  // Motion props for compatibility
+  initial?: any;
+  animate?: any;
+  exit?: any;
+  transition?: any;
+  layoutId?: string;
 }
 
 export const HiveMagneticHover: React.FC<MagneticHoverProps> = ({ 
   children, 
   className, 
   intensity = 'medium',
-  disabled = false 
+  disabled = false,
+  initial,
+  animate,
+  exit,
+  transition,
+  layoutId
 }) => {
   const intensityMap = {
     subtle: { scale: 1.01, y: -1, shadow: luxuryShadows.level2 },
@@ -92,6 +103,11 @@ export const HiveMagneticHover: React.FC<MagneticHoverProps> = ({
   return (
     <motion.div
       className={cn('cursor-pointer', className)}
+      initial={initial}
+      animate={animate}
+      exit={exit}
+      transition={transition}
+      layoutId={layoutId}
       whileHover={disabled ? {} : {
         scale: config.scale,
         y: config.y,

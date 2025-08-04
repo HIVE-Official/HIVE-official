@@ -6,6 +6,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../lib/utils';
 import { liquidMetal, motionDurations } from '../../motion/hive-motion-system';
 import { type Space } from '@hive/core';
+import { useDeployedTools, type DeployedTool } from '../../hooks/use-deployed-tools';
 import { 
   Wrench,
   Plus,
@@ -194,12 +195,58 @@ export interface HiveToolsSurfaceProps
   maxTools?: number;
 }
 
+// Convert DeployedTool to Tool interface
+function convertDeployedToolToTool(deployedTool: DeployedTool): Tool {
+  // Map tool type to category
+  const typeToCategory: Record<string, keyof typeof toolCategories> = {
+    'communication': 'communication',
+    'productivity': 'productivity',
+    'multimedia': 'multimedia', 
+    'collaboration': 'collaboration',
+    'entertainment': 'entertainment',
+    'utility': 'utilities',
+    'utilities': 'utilities',
+    'academic': 'productivity',
+    'coordination': 'collaboration',
+    'social': 'communication',
+  };
+
+  return {
+    id: deployedTool.deploymentId,
+    name: deployedTool.name,
+    description: deployedTool.description,
+    category: typeToCategory[deployedTool.type] || 'utilities',
+    status: deployedTool.toolData.status === 'active' ? 'active' : 'paused',
+    icon: 'Wrench', // Default icon, could be enhanced based on tool type
+    version: deployedTool.toolData.currentVersion || '1.0.0',
+    addedAt: new Date(deployedTool.deployedAt),
+    addedBy: deployedTool.createdBy,
+    lastUsed: deployedTool.lastUsed,
+    usageCount: deployedTool.usageCount,
+    isVisible: deployedTool.settings.showInDirectory,
+    isPinned: deployedTool.surface === 'pinned',
+    configuration: {},
+    permissions: {
+      canView: deployedTool.permissions.canView,
+      canEdit: deployedTool.permissions.canEdit,
+      canDelete: deployedTool.permissions.canEdit, // Assume edit implies delete
+      canConfigure: deployedTool.permissions.canEdit,
+    },
+    analytics: {
+      views: deployedTool.usageCount,
+      interactions: deployedTool.usageCount,
+      activeUsers: Math.floor(deployedTool.usageCount / 10), // Rough estimate
+      lastActivity: deployedTool.lastUsed || new Date(deployedTool.deployedAt),
+    },
+  };
+}
+
 export const HiveToolsSurface = React.forwardRef<HTMLDivElement, HiveToolsSurfaceProps>(
   ({ 
     className,
     mode,
     space,
-    tools = [],
+    tools: propsTools = [],
     isBuilder = false,
     canManageTools = false,
     onAddTool,
@@ -217,6 +264,14 @@ export const HiveToolsSurface = React.forwardRef<HTMLDivElement, HiveToolsSurfac
     const [hoveredTool, setHoveredTool] = useState<string | null>(null);
     const [selectedCategory, setSelectedCategory] = useState<keyof typeof toolCategories | 'all'>('all');
     const [showToolMenu, setShowToolMenu] = useState(false);
+    
+    // Fetch deployed tools from API
+    const { tools: deployedTools, loading, error } = useDeployedTools(space.id);
+    
+    // Use deployed tools if available, otherwise fallback to props tools
+    const tools = deployedTools.length > 0 
+      ? deployedTools.map(convertDeployedToolToTool)
+      : propsTools;
     
     // Filter and sort tools
     const filteredTools = tools
@@ -251,6 +306,78 @@ export const HiveToolsSurface = React.forwardRef<HTMLDivElement, HiveToolsSurfac
       };
       return iconMap[iconName] || Wrench;
     };
+    
+    // Loading state
+    if (loading) {
+      return (
+        <div
+          ref={ref}
+          className={cn(hiveToolsSurfaceVariants({ mode, className }))}
+          {...props}
+        >
+          <motion.div
+            className="text-center py-12"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: motionDurations.smooth }}
+          >
+            <motion.div
+              className="w-16 h-16 mx-auto mb-6 bg-purple-500/20 rounded-2xl flex items-center justify-center"
+              animate={{ rotate: 360 }}
+              transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+            >
+              <RefreshCw className="w-8 h-8 text-purple-400" />
+            </motion.div>
+            
+            <h3 className="text-xl font-semibold text-[var(--hive-text-primary)] mb-3">Loading Tools</h3>
+            <p className="text-gray-400 text-sm max-w-md mx-auto leading-relaxed">
+              Fetching deployed tools for this space...
+            </p>
+          </motion.div>
+        </div>
+      );
+    }
+
+    // Error state
+    if (error) {
+      return (
+        <div
+          ref={ref}
+          className={cn(hiveToolsSurfaceVariants({ mode, className }))}
+          {...props}
+        >
+          <motion.div
+            className="text-center py-12"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: motionDurations.smooth }}
+          >
+            <motion.div
+              className="w-16 h-16 mx-auto mb-6 bg-red-500/20 rounded-2xl flex items-center justify-center"
+              whileHover={{ scale: 1.05 }}
+              transition={{ duration: motionDurations.quick }}
+            >
+              <AlertCircle className="w-8 h-8 text-red-400" />
+            </motion.div>
+            
+            <h3 className="text-xl font-semibold text-[var(--hive-text-primary)] mb-3">Failed to Load Tools</h3>
+            <p className="text-gray-400 text-sm max-w-md mx-auto leading-relaxed mb-6">
+              {error}
+            </p>
+            
+            <motion.button
+              className="inline-flex items-center gap-2 px-4 py-2 bg-red-500/20 text-red-400 border border-red-500/30 rounded-xl hover:bg-red-500/30 transition-all duration-200 font-medium"
+              onClick={() => window.location.reload()}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <RefreshCw className="w-4 h-4" />
+              Retry
+            </motion.button>
+          </motion.div>
+        </div>
+      );
+    }
     
     // Empty state
     if (tools.length === 0) {

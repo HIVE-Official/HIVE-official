@@ -5,14 +5,15 @@ import { dbAdmin } from "@/lib/firebase-admin";
 import { getAuth } from "firebase-admin/auth";
 import { getAuthTokenFromRequest } from "@/lib/auth";
 import { postCreationRateLimit } from "@/lib/rate-limit";
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 const CreatePostSchema = z.object({
   content: z.string().min(1).max(2000),
   type: z.enum(["text", "image", "link", "tool"]).default("text"),
   imageUrl: z.string().url().optional(),
   linkUrl: z.string().url().optional(),
-  toolId: z.string().optional(),
-});
+  toolId: z.string().optional() });
 
 const db = dbAdmin;
 
@@ -31,10 +32,7 @@ export async function GET(
     // Get and validate auth token
     const token = getAuthTokenFromRequest(request);
     if (!token) {
-      return NextResponse.json(
-        { error: "Authentication required" },
-        { status: 401 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Authentication required", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const auth = getAuth();
@@ -55,10 +53,7 @@ export async function GET(
       .get();
 
     if (!memberDoc.exists) {
-      return NextResponse.json(
-        { error: "Not a member of this space" },
-        { status: 403 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Not a member of this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     // Build query for posts
@@ -117,8 +112,7 @@ export async function GET(
               handle: author.handle,
               photoURL: author.photoURL,
             }
-          : null,
-      });
+          : null });
     }
 
     // Process regular posts
@@ -145,8 +139,7 @@ export async function GET(
               handle: author.handle,
               photoURL: author.photoURL,
             }
-          : null,
-      });
+          : null });
     }
 
     return NextResponse.json({
@@ -155,14 +148,10 @@ export async function GET(
       lastPostId:
         postsSnapshot.docs.length > 0
           ? postsSnapshot.docs[postsSnapshot.docs.length - 1].id
-          : null,
-    });
+          : null });
   } catch (error) {
-    console.error("Error fetching posts:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch posts" },
-      { status: 500 }
-    );
+    logger.error('Error fetching posts', { error: error, endpoint: '/api/spaces/[spaceId]/posts' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to fetch posts", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -177,10 +166,10 @@ export async function POST(
     // Get auth header and verify token
     const authHeader = request.headers.get("authorization");
     if (!authHeader?.startsWith("Bearer ")) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
-    const token = authHeader.split("Bearer ")[1];
+    const token = authHeader.substring(7);
     const auth = getAuth();
     const decodedToken = await auth.verifyIdToken(token);
 
@@ -213,10 +202,7 @@ export async function POST(
       .get();
 
     if (!memberDoc.exists) {
-      return NextResponse.json(
-        { error: "Not a member of this space" },
-        { status: 403 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Not a member of this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     const body = (await request.json()) as unknown;
@@ -229,7 +215,7 @@ export async function POST(
           error:
             "Post contains inappropriate content. Please revise and try again.",
         },
-        { status: 400 }
+        { status: HttpStatus.BAD_REQUEST }
       );
     }
 
@@ -258,7 +244,7 @@ export async function POST(
       .add(postData);
 
     // Get the created post with author info
-    const authorDoc = await db.collection("users").doc(decodedToken.uid).get();
+    const authorDoc = await dbAdmin.collection("users").doc(decodedToken.uid).get();
     const author = authorDoc.data();
 
     const createdPost = {
@@ -272,7 +258,7 @@ export async function POST(
       },
     };
 
-    return NextResponse.json({ post: createdPost }, { status: 201 });
+    return NextResponse.json({ post: createdPost }, { status: HttpStatus.CREATED });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -280,14 +266,11 @@ export async function POST(
           error: "Invalid post data",
           details: error.errors,
         },
-        { status: 400 }
+        { status: HttpStatus.BAD_REQUEST }
       );
     }
 
-    console.error("Error creating post:", error);
-    return NextResponse.json(
-      { error: "Failed to create post" },
-      { status: 500 }
-    );
+    logger.error('Error creating post', { error: error, endpoint: '/api/spaces/[spaceId]/posts' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to create post", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

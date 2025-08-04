@@ -1,0 +1,365 @@
+
+> web@1.0.0 lint /Users/laneyfraass/hive_ui/apps/web
+> npx eslint . --max-warnings 50
+
+
+/Users/laneyfraass/hive_ui/apps/web/src/app/(dashboard)/profile/page.tsx
+  292:17  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/Users/laneyfraass/hive_ui/apps/web/src/app/(dashboard)/spaces/activate/[spaceId]/page.tsx
+  142:6  warning  React Hook useEffect has a missing dependency: 'fetchActivationData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/laneyfraass/hive_ui/apps/web/src/app/(dashboard)/spaces/components/enhanced-space-card.tsx
+  114:19  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  238:19  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/Users/laneyfraass/hive_ui/apps/web/src/app/(dashboard)/spaces/components/smart-discovery-filters.tsx
+  172:6  warning  React Hook useEffect has a missing dependency: 'generateSearchSuggestions'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/laneyfraass/hive_ui/apps/web/src/app/(dashboard)/spaces/page.tsx
+   67:118  warning  'query' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u                                                       no-unused-vars
+  241:9    warning  The 'flags' object makes the dependencies of useEffect Hook (at line 255) change on every render. To fix this, wrap the initialization of 'flags' in its own useMemo() Hook  react-hooks/exhaustive-deps
+  249:9    warning  'showPersonalizationLayer' is assigned a value but never used. Allowed unused vars must match /^_/u                                                                          no-unused-vars
+  257:27   warning  'isLoading' is assigned a value but never used. Allowed unused vars must match /^_/u                                                                                         no-unused-vars
+
+/Users/laneyfraass/hive_ui/apps/web/src/app/(dashboard)/tools/[toolId]/edit/page.tsx
+  92:14  warning  'id' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u  no-unused-vars
+
+/Users/laneyfraass/hive_ui/apps/web/src/app/(dashboard)/tools/[toolId]/preview/page.tsx
+  234:9   warning  'router' is assigned a value but never used. Allowed unused vars must match /^_/u                                       no-unused-vars
+  240:11  warning  'user' is assigned a value but never used. Allowed unused vars must match /^_/u                                         no-unused-vars
+  431:46  warning  'index' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u  no-unused-vars
+
+/Users/laneyfraass/hive_ui/apps/web/src/app/(dashboard)/tools/[toolId]/settings/page.tsx
+  88:14  warning  'enabled' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u  no-unused-vars
+
+/Users/laneyfraass/hive_ui/apps/web/src/app/(dashboard)/tools/page.tsx
+   4:10  warning  'useQuery' is defined but never used. Allowed unused vars must match /^_/u  no-unused-vars
+  13:3   warning  'Palette' is defined but never used. Allowed unused vars must match /^_/u   no-unused-vars
+  14:3   warning  'Users' is defined but never used. Allowed unused vars must match /^_/u     no-unused-vars
+  15:3   warning  'Calendar' is defined but never used. Allowed unused vars must match /^_/u  no-unused-vars
+  16:3   warning  'Map' is defined but never used. Allowed unused vars must match /^_/u       no-unused-vars
+  17:3   warning  'Camera' is defined but never used. Allowed unused vars must match /^_/u    no-unused-vars
+  19:3   warning  'QrCode' is defined but never used. Allowed unused vars must match /^_/u    no-unused-vars
+  20:3   warning  'Award' is defined but never used. Allowed unused vars must match /^_/u     no-unused-vars
+  21:3   warning  'Clock' is defined but never used. Allowed unused vars must match /^_/u     no-unused-vars
+
+/Users/laneyfraass/hive_ui/apps/web/src/app/api/profile/dashboard/route.ts
+  507:19  error  Unreachable code  no-unreachable
+
+/Users/laneyfraass/hive_ui/apps/web/src/app/api/realtime/websocket/route.ts
+  371:7  error  Unexpected lexical declaration in case block  no-case-declarations
+  469:7  error  Unexpected lexical declaration in case block  no-case-declarations
+  476:7  error  Unexpected lexical declaration in case block  no-case-declarations
+  481:7  error  Unexpected lexical declaration in case block  no-case-declarations
+  482:7  error  Unexpected lexical declaration in case block  no-case-declarations
+
+/Users/laneyfraass/hive_ui/apps/web/src/app/api/tools/[toolId]/reviews/route.ts
+  291:19  error  Empty block statement  no-empty
+
+/Users/laneyfraass/hive_ui/apps/web/src/app/api/tools/deploy/[deploymentId]/route.ts
+  244:31  error  'query' is not defined    no-undef
+  246:9   error  'where' is not defined    no-undef
+  247:9   error  'where' is not defined    no-undef
+  248:9   error  'where' is not defined    no-undef
+  250:40  error  'getDocs' is not defined  no-undef
+
+/Users/laneyfraass/hive_ui/apps/web/src/app/api/tools/deploy/route.ts
+  189:9  error  'deployedTo' is not defined  no-undef
+
+/Users/laneyfraass/hive_ui/apps/web/src/app/auth/verify/page.tsx
+  10:9   warning  'searchParams' is assigned a value but never used. Allowed unused vars must match /^_/u  no-unused-vars
+  22:15  warning  'mode' is assigned a value but never used. Allowed unused vars must match /^_/u          no-unused-vars
+
+/Users/laneyfraass/hive_ui/apps/web/src/app/landing/page.tsx
+  4:8   warning  'Link' is defined but never used. Allowed unused vars must match /^_/u       no-unused-vars
+  6:42  warning  'HiveBadge' is defined but never used. Allowed unused vars must match /^_/u  no-unused-vars
+
+/Users/laneyfraass/hive_ui/apps/web/src/app/onboarding/components/hive-onboarding-wizard.tsx
+  681:21  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/Users/laneyfraass/hive_ui/apps/web/src/app/onboarding/components/steps/hive-builder-step.tsx
+  119:6  warning  React Hook useEffect has a missing dependency: 'fetchSpaces'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/laneyfraass/hive_ui/apps/web/src/app/onboarding/components/steps/hive-handle-step.tsx
+  112:6  warning  React Hook useEffect has a missing dependency: 'validateHandle'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/laneyfraass/hive_ui/apps/web/src/app/onboarding/components/steps/hive-photo-step.tsx
+  156:11  error    Unexpected lexical declaration in case block                                                                                                                                                                                                                    no-case-declarations
+  159:11  error    Unexpected lexical declaration in case block                                                                                                                                                                                                                    no-case-declarations
+  178:11  error    Unexpected lexical declaration in case block                                                                                                                                                                                                                    no-case-declarations
+  188:11  error    Unexpected lexical declaration in case block                                                                                                                                                                                                                    no-case-declarations
+  244:15  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  419:17  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  541:23  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/Users/laneyfraass/hive_ui/apps/web/src/app/schools/page.tsx
+    5:45  warning  'CheckCircle' is defined but never used. Allowed unused vars must match /^_/u                                           no-unused-vars
+    5:58  warning  'ArrowLeft' is defined but never used. Allowed unused vars must match /^_/u                                             no-unused-vars
+  424:43  warning  'index' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u  no-unused-vars
+
+/Users/laneyfraass/hive_ui/apps/web/src/components/app-layout.tsx
+  22:28  warning  'isAuthenticated' is assigned a value but never used. Allowed unused vars must match /^_/u  no-unused-vars
+
+/Users/laneyfraass/hive_ui/apps/web/src/components/feedback-toast.tsx
+   6:22  warning  'HiveInput' is defined but never used. Allowed unused vars must match /^_/u            no-unused-vars
+  10:10  warning  'isExpanded' is assigned a value but never used. Allowed unused vars must match /^_/u  no-unused-vars
+
+/Users/laneyfraass/hive_ui/apps/web/src/components/navigation/command-nav-layout.tsx
+   12:3   warning  'LogOut' is defined but never used. Allowed unused vars must match /^_/u                                                                                                                                                                                        no-unused-vars
+   20:3   warning  'Clock' is defined but never used. Allowed unused vars must match /^_/u                                                                                                                                                                                         no-unused-vars
+   21:3   warning  'Star' is defined but never used. Allowed unused vars must match /^_/u                                                                                                                                                                                          no-unused-vars
+  244:21  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  293:41  warning  'index' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u                                                                                                                                          no-unused-vars
+
+/Users/laneyfraass/hive_ui/apps/web/src/components/navigation/top-nav-layout.tsx
+  123:23  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/Users/laneyfraass/hive_ui/apps/web/src/components/onboarding/steps.tsx
+  41:12  warning  'nextStep' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u  no-unused-vars
+  43:24  warning  'updater' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u   no-unused-vars
+  43:34  warning  'prev' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u      no-unused-vars
+
+/Users/laneyfraass/hive_ui/apps/web/src/components/profile/enhanced-privacy-modal.tsx
+  16:3   warning  'AlertTriangle' is defined but never used. Allowed unused vars must match /^_/u                                            no-unused-vars
+  51:12  warning  'settings' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u  no-unused-vars
+
+/Users/laneyfraass/hive_ui/apps/web/src/components/profile/hive-avatar-card.tsx
+  47:15  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/Users/laneyfraass/hive_ui/apps/web/src/components/profile/personal-tools-card.tsx
+    3:20  warning  'useEffect' is defined but never used. Allowed unused vars must match /^_/u                                              no-unused-vars
+   29:18  warning  'toolId' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u  no-unused-vars
+   35:7   warning  'mockPersonalTools' is assigned a value but never used. Allowed unused vars must match /^_/u                             no-unused-vars
+  122:12  warning  'toolsError' is assigned a value but never used. Allowed unused vars must match /^_/u                                    no-unused-vars
+
+/Users/laneyfraass/hive_ui/apps/web/src/components/profile/profile-identity-modal.tsx
+   91:12  warning  'profileError' is assigned a value but never used. Allowed unused vars must match /^_/u                                                                                                                                                                         no-unused-vars
+   92:5   warning  'clearError' is assigned a value but never used. Allowed unused vars must match /^_/u                                                                                                                                                                           no-unused-vars
+  100:9   warning  'isMobile' is assigned a value but never used. Allowed unused vars must match /^_/u                                                                                                                                                                             no-unused-vars
+  353:21  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/Users/laneyfraass/hive_ui/apps/web/src/components/profile/profile-loading-skeleton.tsx
+  107:42  warning  'title' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u  no-unused-vars
+
+/Users/laneyfraass/hive_ui/apps/web/src/hooks/use-auth.ts
+  18:12  warning  'email' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u        no-unused-vars
+  18:27  warning  'password' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u     no-unused-vars
+  20:12  warning  'email' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u        no-unused-vars
+  20:27  warning  'password' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u     no-unused-vars
+  20:45  warning  'displayName' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u  no-unused-vars
+
+/Users/laneyfraass/hive_ui/apps/web/src/hooks/use-calendar-data.ts
+  119:6  warning  React Hook useEffect has a missing dependency: 'refetch'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/laneyfraass/hive_ui/apps/web/src/hooks/use-dashboard-data.ts
+  190:26  warning  'notificationId' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u  no-unused-vars
+  191:25  warning  'spaceId' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u         no-unused-vars
+  191:42  warning  'isFavorite' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u      no-unused-vars
+  192:24  warning  'toolId' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u          no-unused-vars
+  192:40  warning  'isFavorite' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u      no-unused-vars
+
+/Users/laneyfraass/hive_ui/apps/web/src/hooks/use-enhanced-command-palette.ts
+  2:26  warning  'SearchCategory' is defined but never used. Allowed unused vars must match /^_/u                                        no-unused-vars
+  5:12  warning  'query' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u  no-unused-vars
+  6:11  warning  'query' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u  no-unused-vars
+  7:12  warning  'query' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u  no-unused-vars
+  8:12  warning  'query' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u  no-unused-vars
+  9:11  warning  'query' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u  no-unused-vars
+
+/Users/laneyfraass/hive_ui/apps/web/src/hooks/use-enhanced-profile.ts
+  3:31  warning  'useCallback' is defined but never used. Allowed unused vars must match /^_/u  no-unused-vars
+
+/Users/laneyfraass/hive_ui/apps/web/src/lib/admin-middleware.ts
+  9:13  warning  'request' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u  no-unused-vars
+  9:35  warning  'admin' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u    no-unused-vars
+
+/Users/laneyfraass/hive_ui/apps/web/src/lib/admin-notifications.ts
+  1:10  warning  'getAuth' is defined but never used. Allowed unused vars must match /^_/u  no-unused-vars
+
+/Users/laneyfraass/hive_ui/apps/web/src/lib/api-error-handler.ts
+    7:10  warning  'captureError' is defined but never used. Allowed unused vars must match /^_/u                                            no-unused-vars
+    7:38  warning  'LogLevel' is defined but never used. Allowed unused vars must match /^_/u                                                no-unused-vars
+  125:13  warning  'request' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u  no-unused-vars
+  125:38  warning  'args' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u     no-unused-vars
+  140:13  warning  'request' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u  no-unused-vars
+  140:35  warning  'context' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u  no-unused-vars
+
+/Users/laneyfraass/hive_ui/apps/web/src/lib/api-wrapper.ts
+   45:3   warning  'context' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u  no-unused-vars
+   46:3   warning  'params' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u   no-unused-vars
+  224:13  warning  'context' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u  no-unused-vars
+  224:34  warning  'params' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u   no-unused-vars
+  240:13  warning  'context' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u  no-unused-vars
+  240:34  warning  'params' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u   no-unused-vars
+  257:12  warning  'context' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u  no-unused-vars
+  257:33  warning  'params' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u   no-unused-vars
+  258:13  warning  'context' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u  no-unused-vars
+  258:34  warning  'params' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u   no-unused-vars
+  259:12  warning  'context' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u  no-unused-vars
+  259:33  warning  'params' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u   no-unused-vars
+  260:15  warning  'context' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u  no-unused-vars
+  260:36  warning  'params' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u   no-unused-vars
+
+/Users/laneyfraass/hive_ui/apps/web/src/lib/calendar-api.ts
+  33:19  error    Unreachable code                                                                                                     no-unreachable
+  63:43  warning  'id' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u  no-unused-vars
+  84:43  warning  'id' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u  no-unused-vars
+
+/Users/laneyfraass/hive_ui/apps/web/src/lib/comprehensive-security-middleware.ts
+    7:27  warning  'ValidationMiddlewareOptions' is defined but never used. Allowed unused vars must match /^_/u                             no-unused-vars
+  361:5   warning  'request' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u  no-unused-vars
+  362:5   warning  'context' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u  no-unused-vars
+  363:5   warning  'params' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u   no-unused-vars
+
+/Users/laneyfraass/hive_ui/apps/web/src/lib/content-validation.ts
+  1:26  warning  'PostType' is defined but never used. Allowed unused vars must match /^_/u  no-unused-vars
+
+/Users/laneyfraass/hive_ui/apps/web/src/lib/csrf-protection.ts
+    7:35  warning  'timingSafeEqual' is defined but never used. Allowed unused vars must match /^_/u                                           no-unused-vars
+  581:5   warning  'requireToken' is assigned a value but never used. Allowed unused vars must match /^_/u                                     no-unused-vars
+  620:13  warning  'request' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u    no-unused-vars
+  620:35  warning  'csrfToken' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u  no-unused-vars
+  622:20  warning  'request' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u    no-unused-vars
+
+/Users/laneyfraass/hive_ui/apps/web/src/lib/error-monitoring.ts
+   18:10  warning  'key' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u          no-unused-vars
+   18:23  warning  'value' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u        no-unused-vars
+   19:14  warning  'key' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u          no-unused-vars
+   19:27  warning  'context' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u      no-unused-vars
+   20:12  warning  'level' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u        no-unused-vars
+   21:12  warning  'key' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u          no-unused-vars
+   21:25  warning  'extra' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u        no-unused-vars
+   22:18  warning  'fingerprint' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u  no-unused-vars
+   26:13  warning  'callback' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u     no-unused-vars
+   26:24  warning  'scope' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u        no-unused-vars
+   27:20  warning  'exception' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u    no-unused-vars
+   28:18  warning  'message' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u      no-unused-vars
+   28:35  warning  'level' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u        no-unused-vars
+   29:17  warning  'breadcrumb' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u   no-unused-vars
+  132:3   warning  'DEBUG' is defined but never used. Allowed unused vars must match /^_/u                                                       no-unused-vars
+  133:3   warning  'INFO' is defined but never used. Allowed unused vars must match /^_/u                                                        no-unused-vars
+  134:3   warning  'WARN' is defined but never used. Allowed unused vars must match /^_/u                                                        no-unused-vars
+  135:3   warning  'ERROR' is defined but never used. Allowed unused vars must match /^_/u                                                       no-unused-vars
+  136:3   warning  'FATAL' is defined but never used. Allowed unused vars must match /^_/u                                                       no-unused-vars
+
+/Users/laneyfraass/hive_ui/apps/web/src/lib/feature-reveal-system.ts
+  477:5  warning  'featureId' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u  no-unused-vars
+  478:5  warning  'scope' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u      no-unused-vars
+  479:5  warning  'targetId' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u   no-unused-vars
+
+/Users/laneyfraass/hive_ui/apps/web/src/lib/feed-aggregation.ts
+   83:23  warning  'userId' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u        no-unused-vars
+   83:47  warning  'userSpaceIds' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u  no-unused-vars
+  130:37  warning  'limit' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u         no-unused-vars
+  279:47  warning  'limit' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u         no-unused-vars
+
+/Users/laneyfraass/hive_ui/apps/web/src/lib/firebase-admin.js
+  91:31  warning  'token' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u  no-unused-vars
+
+/Users/laneyfraass/hive_ui/apps/web/src/lib/production-auth.ts
+  31:21  warning  'code' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u                 no-unused-vars
+  32:21  warning  'statusCode' is assigned a value but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u  no-unused-vars
+
+/Users/laneyfraass/hive_ui/apps/web/src/lib/rate-limit-redis.ts
+   11:19  warning  'identifier' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u  no-unused-vars
+  324:81  warning  'identifier' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u  no-unused-vars
+
+/Users/laneyfraass/hive_ui/apps/web/src/lib/rate-limit-simple.ts
+  201:64  warning  'reason' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u  no-unused-vars
+
+/Users/laneyfraass/hive_ui/apps/web/src/lib/real-time-feed.ts
+   49:23  warning  'userId' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u   no-unused-vars
+  209:26  warning  'spaceId' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u  no-unused-vars
+
+/Users/laneyfraass/hive_ui/apps/web/src/lib/rituals-framework.ts
+    2:15  warning  'Timestamp' is defined but never used. Allowed unused vars must match /^_/u                                                         no-unused-vars
+  396:5   warning  'metadata' is assigned a value but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u  no-unused-vars
+  464:38  warning  'userId' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u             no-unused-vars
+  464:54  warning  'ritual' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u             no-unused-vars
+  521:49  warning  'ritualId' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u           no-unused-vars
+  521:67  warning  'universities' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u       no-unused-vars
+  538:5   warning  'ritualId' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u           no-unused-vars
+  539:5   warning  'universities' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u       no-unused-vars
+  540:5   warning  'action' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u             no-unused-vars
+  567:36  warning  'ritualId' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u           no-unused-vars
+  567:54  warning  'userId' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u             no-unused-vars
+  577:33  warning  'ritualId' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u           no-unused-vars
+
+/Users/laneyfraass/hive_ui/apps/web/src/lib/secure-error-handler.ts
+    8:10  warning  'currentEnvironment' is defined but never used. Allowed unused vars must match /^_/u                                      no-unused-vars
+   16:3   warning  'SAFE' is defined but never used. Allowed unused vars must match /^_/u                                                    no-unused-vars
+   17:3   warning  'INTERNAL' is defined but never used. Allowed unused vars must match /^_/u                                                no-unused-vars
+   18:3   warning  'SENSITIVE' is defined but never used. Allowed unused vars must match /^_/u                                               no-unused-vars
+   19:3   warning  'CRITICAL' is defined but never used. Allowed unused vars must match /^_/u                                                no-unused-vars
+  191:25  error    Unnecessary escape character: \/                                                                                          no-useless-escape
+  192:26  error    Unnecessary escape character: \/                                                                                          no-useless-escape
+  194:31  error    Unnecessary escape character: \/                                                                                          no-useless-escape
+  351:13  warning  'request' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u  no-unused-vars
+  351:38  warning  'args' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u     no-unused-vars
+
+/Users/laneyfraass/hive_ui/apps/web/src/lib/secure-input-validation.ts
+   32:7   error  Unnecessary escape character: \-                                   no-useless-escape
+   32:9   error  Unnecessary escape character: \-                                   no-useless-escape
+   32:12  error  Unnecessary escape character: \;                                   no-useless-escape
+   60:11  error  Unnecessary escape character: \/                                   no-useless-escape
+   61:7   error  Unnecessary escape character: \/                                   no-useless-escape
+   61:17  error  Unnecessary escape character: \/                                   no-useless-escape
+   62:13  error  Unnecessary escape character: \/                                   no-useless-escape
+  134:26  error  Unnecessary escape character: \.                                   no-useless-escape
+  205:39  error  Unnecessary escape character: \/                                   no-useless-escape
+  205:44  error  Unnecessary escape character: \.                                   no-useless-escape
+  245:43  error  Unnecessary escape character: \(                                   no-useless-escape
+  245:45  error  Unnecessary escape character: \)                                   no-useless-escape
+  245:47  error  Unnecessary escape character: \.                                   no-useless-escape
+  351:16  error  Unexpected control character(s) in regular expression: \x00, \x1f  no-control-regex
+
+/Users/laneyfraass/hive_ui/apps/web/src/lib/secure-session-manager.ts
+    6:10  warning  'cookies' is defined but never used. Allowed unused vars must match /^_/u                                                 no-unused-vars
+    8:35  warning  'JWTPayload' is defined but never used. Allowed unused vars must match /^_/u                                              no-unused-vars
+  383:5   warning  'request' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u  no-unused-vars
+
+/Users/laneyfraass/hive_ui/apps/web/src/lib/security-service.ts
+  9:28  warning  'securityLogger' is defined but never used. Allowed unused vars must match /^_/u  no-unused-vars
+
+/Users/laneyfraass/hive_ui/apps/web/src/lib/session-middleware.ts
+    7:55  warning  'SessionValidationResult' is defined but never used. Allowed unused vars must match /^_/u                                 no-unused-vars
+   61:5   warning  'securityLevel' is assigned a value but never used. Allowed unused vars must match /^_/u                                  no-unused-vars
+  241:13  warning  'request' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u  no-unused-vars
+  241:35  warning  'context' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u  no-unused-vars
+  241:60  warning  'params' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u   no-unused-vars
+  296:27  warning  'req' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u      no-unused-vars
+  296:45  warning  'ctx' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u      no-unused-vars
+  302:28  warning  'req' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u      no-unused-vars
+  302:46  warning  'ctx' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u      no-unused-vars
+  308:31  warning  'req' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u      no-unused-vars
+  308:49  warning  'ctx' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u      no-unused-vars
+  314:22  warning  'req' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u      no-unused-vars
+  314:40  warning  'ctx' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u      no-unused-vars
+  320:21  warning  'req' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u      no-unused-vars
+  320:39  warning  'ctx' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u      no-unused-vars
+  367:13  warning  'req' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u      no-unused-vars
+  367:31  warning  'ctx' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u      no-unused-vars
+  367:52  warning  'params' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u   no-unused-vars
+  368:25  warning  'params' is defined but never used. Allowed unused args must match /^_|^data$|^user$|^error$|^event$|^props$|^filter$/u   no-unused-vars
+
+/Users/laneyfraass/hive_ui/apps/web/src/lib/structured-logger.ts
+  13:3  warning  'DEBUG' is defined but never used. Allowed unused vars must match /^_/u        no-unused-vars
+  14:3  warning  'INFO' is defined but never used. Allowed unused vars must match /^_/u         no-unused-vars
+  15:3  warning  'WARN' is defined but never used. Allowed unused vars must match /^_/u         no-unused-vars
+  16:3  warning  'ERROR' is defined but never used. Allowed unused vars must match /^_/u        no-unused-vars
+  17:3  warning  'FATAL' is defined but never used. Allowed unused vars must match /^_/u        no-unused-vars
+  31:3  warning  'AUTH' is defined but never used. Allowed unused vars must match /^_/u         no-unused-vars
+  32:3  warning  'API' is defined but never used. Allowed unused vars must match /^_/u          no-unused-vars
+  33:3  warning  'DATABASE' is defined but never used. Allowed unused vars must match /^_/u     no-unused-vars
+  34:3  warning  'SECURITY' is defined but never used. Allowed unused vars must match /^_/u     no-unused-vars
+  35:3  warning  'PERFORMANCE' is defined but never used. Allowed unused vars must match /^_/u  no-unused-vars
+  36:3  warning  'USER_ACTION' is defined but never used. Allowed unused vars must match /^_/u  no-unused-vars
+  37:3  warning  'SYSTEM' is defined but never used. Allowed unused vars must match /^_/u       no-unused-vars
+  38:3  warning  'BUSINESS' is defined but never used. Allowed unused vars must match /^_/u     no-unused-vars
+  39:3  warning  'INTEGRATION' is defined but never used. Allowed unused vars must match /^_/u  no-unused-vars
+
+✖ 238 problems (35 errors, 203 warnings)
+
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  web@1.0.0 lint: `npx eslint . --max-warnings 50`
+Exit status 1

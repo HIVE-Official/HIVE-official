@@ -5,10 +5,10 @@ import { requireAdmin, logAdminActivity } from './admin-auth';
  * Middleware to protect admin routes
  */
 export async function withAdminAuth(
-  request: NextRequest,
-  handler: (request: NextRequest, admin: any) => Promise<NextResponse>
+  _request: NextRequest,
+  handler: (_request: NextRequest, _admin: any) => Promise<NextResponse>
 ) {
-  const authResult = await requireAdmin(request);
+  const authResult = await requireAdmin(_request);
   
   if (!authResult.success) {
     return NextResponse.json(
@@ -18,18 +18,18 @@ export async function withAdminAuth(
   }
 
   // Log admin activity
-  const clientIP = request.ip || request.headers.get('x-forwarded-for') || 'unknown';
+  const clientIP = _request.ip || _request.headers.get('x-forwarded-for') || 'unknown';
   await logAdminActivity(
     authResult.admin!.id,
-    `${request.method} ${request.nextUrl.pathname}`,
+    `${_request.method} ${_request.nextUrl.pathname}`,
     {
-      userAgent: request.headers.get('user-agent'),
-      url: request.url,
+      userAgent: _request.headers.get('user-agent'),
+      url: _request.url,
     },
     clientIP
   );
 
-  return handler(request, authResult.admin);
+  return handler(_request, authResult.admin);
 }
 
 /**

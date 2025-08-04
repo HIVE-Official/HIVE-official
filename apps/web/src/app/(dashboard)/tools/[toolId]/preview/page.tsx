@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Button, Card } from "@hive/ui";
-import { ArrowLeft, Play, Edit, Settings, Eye, EyeOff, Maximize2, Minimize2, RefreshCw, Code2 } from "lucide-react";
+import { ArrowLeft, Play, Edit, Settings, Eye, Maximize2, Minimize2, RefreshCw, Code2 } from "lucide-react";
 import { useFeatureFlags } from "@hive/hooks";
 import { useAuth } from "@/hooks/use-auth";
 import { ToolNavigation } from "@/lib/tool-navigation";
@@ -156,7 +156,7 @@ const ToolRenderer = ({ tool, isInteractive = false }: { tool: ToolPreview; isIn
               />
             );
             
-          case 'button':
+          case 'button': {
             const isToggleButton = element.properties.toggle;
             const isToggled = toggleStates[element.id.replace('-', '')];
             
@@ -198,8 +198,9 @@ const ToolRenderer = ({ tool, isInteractive = false }: { tool: ToolPreview; isIn
                 {element.label}
               </button>
             );
+          }
             
-          case 'text':
+          case 'text': {
             const isHeading = element.properties.style === 'heading';
             return (
               <div
@@ -210,6 +211,7 @@ const ToolRenderer = ({ tool, isInteractive = false }: { tool: ToolPreview; isIn
                 {element.label}
               </div>
             );
+          }
             
           default:
             return (
@@ -229,13 +231,13 @@ const ToolRenderer = ({ tool, isInteractive = false }: { tool: ToolPreview; isIn
 
 export default function ToolPreviewPage() {
   const params = useParams();
-  const router = useRouter();
+  const _router = useRouter();
   const [tool] = useState<ToolPreview>(MOCK_TOOL);
   const [previewMode, setPreviewMode] = useState<'static' | 'interactive'>('interactive');
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showCode, setShowCode] = useState(false);
   const flags = useFeatureFlags();
-  const { user } = useAuth();
+  const { user: _user } = useAuth();
 
   useEffect(() => {
     flags.trackEvent('tools', 'view', { page: 'tool-preview', toolId: params.toolId });
@@ -426,7 +428,7 @@ export const ${tool.name.replace(/\s+/g, '')}Tool = {
             <Card className="p-6 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)] flex-1 min-h-0">
               <h3 className="text-lg font-semibold text-white mb-4">Elements</h3>
               <div className="space-y-2 overflow-auto">
-                {tool.elements.map((element, index) => (
+                {tool.elements.map((element, _index) => (
                   <div
                     key={element.id}
                     className="p-3 bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.06)] rounded-lg"

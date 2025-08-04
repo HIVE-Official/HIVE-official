@@ -1,24 +1,24 @@
 import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
 declare const headingVariants: (props?: {
-    level?: 1 | 4 | 2 | 5 | 3 | 6;
-    color?: "error" | "primary" | "secondary" | "success" | "warning" | "info" | "brand" | "tertiary";
-    weight?: "bold" | "light" | "medium" | "normal" | "semibold";
-} & import("class-variance-authority/dist/types").ClassProp) => string;
+    level?: 1 | 2 | 3 | 4 | 5 | 6;
+    color?: "primary" | "secondary" | "success" | "warning" | "error" | "info" | "brand" | "tertiary";
+    weight?: "light" | "bold" | "normal" | "medium" | "semibold";
+} & import("class-variance-authority/types").ClassProp) => string;
 declare const textVariants: (props?: {
-    size?: "base" | "xs" | "sm" | "lg" | "xl";
-    color?: "disabled" | "error" | "primary" | "secondary" | "success" | "warning" | "info" | "brand" | "tertiary" | "inverse";
-    weight?: "bold" | "light" | "medium" | "normal" | "semibold";
+    size?: "xs" | "sm" | "lg" | "xl" | "base";
+    color?: "primary" | "secondary" | "success" | "warning" | "error" | "info" | "disabled" | "brand" | "tertiary" | "inverse";
+    weight?: "light" | "bold" | "normal" | "medium" | "semibold";
     decoration?: "none" | "line-through" | "underline";
-} & import("class-variance-authority/dist/types").ClassProp) => string;
+} & import("class-variance-authority/types").ClassProp) => string;
 declare const captionVariants: (props?: {
-    color?: "disabled" | "error" | "success" | "warning" | "info" | "brand" | "tertiary";
-    weight?: "medium" | "normal" | "semibold";
-} & import("class-variance-authority/dist/types").ClassProp) => string;
+    color?: "success" | "warning" | "error" | "info" | "disabled" | "brand" | "tertiary";
+    weight?: "normal" | "medium" | "semibold";
+} & import("class-variance-authority/types").ClassProp) => string;
 declare const linkVariants: (props?: {
     color?: "primary" | "secondary" | "brand" | "tertiary";
-    decoration?: "hover" | "none" | "always";
-} & import("class-variance-authority/dist/types").ClassProp) => string;
+    decoration?: "none" | "always" | "hover";
+} & import("class-variance-authority/types").ClassProp) => string;
 export interface HeadingProps extends Omit<React.HTMLAttributes<HTMLHeadingElement>, 'color'>, VariantProps<typeof headingVariants> {
     as?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 }

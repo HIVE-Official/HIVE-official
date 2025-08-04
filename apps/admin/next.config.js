@@ -6,16 +6,29 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  // Remove appDir experimental flag (it's stable in Next.js 14)
-  trailingSlash: false,
-  // Remove output: 'standalone' for now to avoid build issues
   transpilePackages: ['@hive/ui', '@hive/core', '@hive/hooks', '@hive/tokens'],
-  // Disable static optimization entirely to avoid Html import issues
   experimental: {
-    forceSwcTransforms: true,
+    optimizePackageImports: ['lucide-react'],
+  },
+  // Security headers
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
+          },
+          {
+            key: 'X-Frame-Options', 
+            value: 'DENY',
+          },
+        ],
+      },
+    ];
   },
   webpack: (config) => {
-    // Ensure proper handling of client-side modules
     config.resolve.fallback = {
       ...config.resolve.fallback,
       fs: false,

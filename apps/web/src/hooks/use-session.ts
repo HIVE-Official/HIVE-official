@@ -43,37 +43,49 @@ export function useSession() {
   useEffect(() => {
     const checkSession = () => {
       try {
-        // DEVELOPMENT MODE: Auto-create dev session if none exists (DISABLED TO SHOW AUTH FLOW)
-        // if (process.env.NODE_ENV === 'development') {
-        //   const sessionJson = window.localStorage.getItem('hive_session');
-        //   
-        //   if (!sessionJson) {
-        //     const devSession: SessionData = {
-        //       userId: 'dev_user_123',
-        //       email: 'dev@hive.com',
-        //       schoolId: 'dev_school',
-        //       needsOnboarding: true,
-        //       onboardingCompleted: false,
-        //       verifiedAt: new Date().toISOString()
-        //     };
-        //     
-        //     window.localStorage.setItem('hive_session', JSON.stringify(devSession));
-        //     window.localStorage.setItem('dev_auth_mode', 'true');
-        //     
-        //     const userData: User = {
-        //       id: devSession.userId,
-        //       email: devSession.email,
-        //       schoolId: devSession.schoolId,
-        //       onboardingCompleted: false
-        //     };
+        // DEVELOPMENT MODE: Auto-create dev session if none exists
+        if (process.env.NODE_ENV === 'development') {
+          const sessionJson = window.localStorage.getItem('hive_session');
+          
+          if (!sessionJson) {
+            const devSession: SessionData = {
+              userId: 'dev_user_123',
+              email: 'dev@hive.com',
+              schoolId: 'dev_school',
+              needsOnboarding: false,
+              onboardingCompleted: true,
+              verifiedAt: new Date().toISOString(),
+              profileData: {
+                fullName: 'Dev User',
+                handle: 'devuser',
+                major: 'Computer Science',
+                avatarUrl: '',
+                builderOptIn: true
+              }
+            };
+            
+            window.localStorage.setItem('hive_session', JSON.stringify(devSession));
+            window.localStorage.setItem('dev_auth_mode', 'true');
+            
+            const userData: User = {
+              id: devSession.userId,
+              email: devSession.email,
+              schoolId: devSession.schoolId,
+              onboardingCompleted: true,
+              fullName: devSession.profileData?.fullName,
+              handle: devSession.profileData?.handle,
+              major: devSession.profileData?.major,
+              avatarUrl: devSession.profileData?.avatarUrl,
+              builderOptIn: devSession.profileData?.builderOptIn,
+            };
 
-        //     setIsAuthenticated(true);
-        //     setUser(userData);
-        //     setSessionData(devSession);
-        //     setIsLoading(false);
-        //     return;
-        //   }
-        // }
+            setIsAuthenticated(true);
+            setUser(userData);
+            setSessionData(devSession);
+            setIsLoading(false);
+            return;
+          }
+        }
         
         const sessionJson = window.localStorage.getItem('hive_session');
         

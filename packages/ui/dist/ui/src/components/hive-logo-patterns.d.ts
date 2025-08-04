@@ -1,10 +1,10 @@
 import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
 declare const patternVariants: (props?: {
-    variant?: "border" | "glow" | "gradient" | "tessellation" | "watermark";
-    density?: "sparse" | "normal" | "dense";
-    size?: "xs" | "sm" | "lg" | "xl" | "md";
-} & import("class-variance-authority/dist/types").ClassProp) => string;
+    variant?: "gradient" | "glow" | "border" | "tessellation" | "watermark";
+    density?: "normal" | "dense" | "sparse";
+    size?: "xs" | "sm" | "md" | "lg" | "xl";
+} & import("class-variance-authority/types").ClassProp) => string;
 export interface HivePatternProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children'>, VariantProps<typeof patternVariants> {
     animated?: boolean;
     children?: React.ReactNode;

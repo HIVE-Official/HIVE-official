@@ -38,12 +38,12 @@ export declare const CreationAnalyticsEventSchema: z.ZodObject<{
         height?: number;
         width?: number;
     };
+    spaceId?: string;
     renderTime?: number;
     sessionId?: string;
     timestamp?: Date;
     elementId?: string;
     elementType?: string;
-    spaceId?: string;
     isSpaceTool?: boolean;
     toolId?: string;
     userAgent?: string;
@@ -52,7 +52,7 @@ export declare const CreationAnalyticsEventSchema: z.ZodObject<{
     eventId?: string;
     userIdHash?: string;
     toolVersion?: string;
-    toolStatus?: "published" | "preview" | "draft";
+    toolStatus?: "preview" | "draft" | "published";
     elementVersion?: number;
     loadTime?: number;
     optedOut?: boolean;
@@ -63,12 +63,12 @@ export declare const CreationAnalyticsEventSchema: z.ZodObject<{
         height?: number;
         width?: number;
     };
+    spaceId?: string;
     renderTime?: number;
     sessionId?: string;
     timestamp?: Date;
     elementId?: string;
     elementType?: string;
-    spaceId?: string;
     isSpaceTool?: boolean;
     toolId?: string;
     userAgent?: string;
@@ -77,7 +77,7 @@ export declare const CreationAnalyticsEventSchema: z.ZodObject<{
     eventId?: string;
     userIdHash?: string;
     toolVersion?: string;
-    toolStatus?: "published" | "preview" | "draft";
+    toolStatus?: "preview" | "draft" | "published";
     elementVersion?: number;
     loadTime?: number;
     optedOut?: boolean;
@@ -142,12 +142,12 @@ export declare const ToolCreatedEventSchema: z.ZodObject<{
         height?: number;
         width?: number;
     };
+    spaceId?: string;
     renderTime?: number;
     sessionId?: string;
     timestamp?: Date;
     elementId?: string;
     elementType?: string;
-    spaceId?: string;
     isSpaceTool?: boolean;
     toolId?: string;
     userAgent?: string;
@@ -156,7 +156,7 @@ export declare const ToolCreatedEventSchema: z.ZodObject<{
     eventId?: string;
     userIdHash?: string;
     toolVersion?: string;
-    toolStatus?: "published" | "preview" | "draft";
+    toolStatus?: "preview" | "draft" | "published";
     elementVersion?: number;
     loadTime?: number;
     optedOut?: boolean;
@@ -172,12 +172,12 @@ export declare const ToolCreatedEventSchema: z.ZodObject<{
         height?: number;
         width?: number;
     };
+    spaceId?: string;
     renderTime?: number;
     sessionId?: string;
     timestamp?: Date;
     elementId?: string;
     elementType?: string;
-    spaceId?: string;
     isSpaceTool?: boolean;
     toolId?: string;
     userAgent?: string;
@@ -186,7 +186,7 @@ export declare const ToolCreatedEventSchema: z.ZodObject<{
     eventId?: string;
     userIdHash?: string;
     toolVersion?: string;
-    toolStatus?: "published" | "preview" | "draft";
+    toolStatus?: "preview" | "draft" | "published";
     elementVersion?: number;
     loadTime?: number;
     optedOut?: boolean;
@@ -258,12 +258,12 @@ export declare const ToolUpdatedEventSchema: z.ZodObject<{
         height?: number;
         width?: number;
     };
+    spaceId?: string;
     renderTime?: number;
     sessionId?: string;
     timestamp?: Date;
     elementId?: string;
     elementType?: string;
-    spaceId?: string;
     isSpaceTool?: boolean;
     toolId?: string;
     userAgent?: string;
@@ -272,7 +272,7 @@ export declare const ToolUpdatedEventSchema: z.ZodObject<{
     eventId?: string;
     userIdHash?: string;
     toolVersion?: string;
-    toolStatus?: "published" | "preview" | "draft";
+    toolStatus?: "preview" | "draft" | "published";
     elementVersion?: number;
     loadTime?: number;
     optedOut?: boolean;
@@ -290,12 +290,12 @@ export declare const ToolUpdatedEventSchema: z.ZodObject<{
         height?: number;
         width?: number;
     };
+    spaceId?: string;
     renderTime?: number;
     sessionId?: string;
     timestamp?: Date;
     elementId?: string;
     elementType?: string;
-    spaceId?: string;
     isSpaceTool?: boolean;
     toolId?: string;
     userAgent?: string;
@@ -304,7 +304,7 @@ export declare const ToolUpdatedEventSchema: z.ZodObject<{
     eventId?: string;
     userIdHash?: string;
     toolVersion?: string;
-    toolStatus?: "published" | "preview" | "draft";
+    toolStatus?: "preview" | "draft" | "published";
     elementVersion?: number;
     loadTime?: number;
     optedOut?: boolean;
@@ -390,12 +390,12 @@ export declare const ElementAddedEventSchema: z.ZodObject<{
         height?: number;
         width?: number;
     };
+    spaceId?: string;
     renderTime?: number;
     sessionId?: string;
     timestamp?: Date;
     elementId?: string;
     elementType?: string;
-    spaceId?: string;
     isSpaceTool?: boolean;
     toolId?: string;
     userAgent?: string;
@@ -404,7 +404,7 @@ export declare const ElementAddedEventSchema: z.ZodObject<{
     eventId?: string;
     userIdHash?: string;
     toolVersion?: string;
-    toolStatus?: "published" | "preview" | "draft";
+    toolStatus?: "preview" | "draft" | "published";
     elementVersion?: number;
     loadTime?: number;
     optedOut?: boolean;
@@ -424,12 +424,12 @@ export declare const ElementAddedEventSchema: z.ZodObject<{
         height?: number;
         width?: number;
     };
+    spaceId?: string;
     renderTime?: number;
     sessionId?: string;
     timestamp?: Date;
     elementId?: string;
     elementType?: string;
-    spaceId?: string;
     isSpaceTool?: boolean;
     toolId?: string;
     userAgent?: string;
@@ -438,7 +438,7 @@ export declare const ElementAddedEventSchema: z.ZodObject<{
     eventId?: string;
     userIdHash?: string;
     toolVersion?: string;
-    toolStatus?: "published" | "preview" | "draft";
+    toolStatus?: "preview" | "draft" | "published";
     elementVersion?: number;
     loadTime?: number;
     optedOut?: boolean;
@@ -506,12 +506,12 @@ export declare const ElementConfiguredEventSchema: z.ZodObject<{
         height?: number;
         width?: number;
     };
+    spaceId?: string;
     renderTime?: number;
     sessionId?: string;
     timestamp?: Date;
     elementId?: string;
     elementType?: string;
-    spaceId?: string;
     isSpaceTool?: boolean;
     toolId?: string;
     userAgent?: string;
@@ -520,7 +520,7 @@ export declare const ElementConfiguredEventSchema: z.ZodObject<{
     eventId?: string;
     userIdHash?: string;
     toolVersion?: string;
-    toolStatus?: "published" | "preview" | "draft";
+    toolStatus?: "preview" | "draft" | "published";
     elementVersion?: number;
     loadTime?: number;
     optedOut?: boolean;
@@ -537,12 +537,12 @@ export declare const ElementConfiguredEventSchema: z.ZodObject<{
         height?: number;
         width?: number;
     };
+    spaceId?: string;
     renderTime?: number;
     sessionId?: string;
     timestamp?: Date;
     elementId?: string;
     elementType?: string;
-    spaceId?: string;
     isSpaceTool?: boolean;
     toolId?: string;
     userAgent?: string;
@@ -551,7 +551,7 @@ export declare const ElementConfiguredEventSchema: z.ZodObject<{
     eventId?: string;
     userIdHash?: string;
     toolVersion?: string;
-    toolStatus?: "published" | "preview" | "draft";
+    toolStatus?: "preview" | "draft" | "published";
     elementVersion?: number;
     loadTime?: number;
     optedOut?: boolean;
@@ -605,9 +605,9 @@ export declare const BuilderSessionEventSchema: z.ZodObject<{
         elementsConfigured?: number;
         undoCount?: number;
         redoCount?: number;
-        modesUsed?: ("code" | "design" | "preview")[];
-        deviceModesUsed?: ("mobile" | "tablet" | "desktop")[];
-        exitReason?: "abandon" | "share" | "save" | "publish";
+        modesUsed?: ("code" | "preview" | "design")[];
+        deviceModesUsed?: ("mobile" | "desktop" | "tablet")[];
+        exitReason?: "share" | "abandon" | "save" | "publish";
     }, {
         sessionDuration?: number;
         elementsAdded?: number;
@@ -615,9 +615,9 @@ export declare const BuilderSessionEventSchema: z.ZodObject<{
         elementsConfigured?: number;
         undoCount?: number;
         redoCount?: number;
-        modesUsed?: ("code" | "design" | "preview")[];
-        deviceModesUsed?: ("mobile" | "tablet" | "desktop")[];
-        exitReason?: "abandon" | "share" | "save" | "publish";
+        modesUsed?: ("code" | "preview" | "design")[];
+        deviceModesUsed?: ("mobile" | "desktop" | "tablet")[];
+        exitReason?: "share" | "abandon" | "save" | "publish";
     }>>;
 }, "strip", z.ZodTypeAny, {
     metadata?: {
@@ -627,20 +627,20 @@ export declare const BuilderSessionEventSchema: z.ZodObject<{
         elementsConfigured?: number;
         undoCount?: number;
         redoCount?: number;
-        modesUsed?: ("code" | "design" | "preview")[];
-        deviceModesUsed?: ("mobile" | "tablet" | "desktop")[];
-        exitReason?: "abandon" | "share" | "save" | "publish";
+        modesUsed?: ("code" | "preview" | "design")[];
+        deviceModesUsed?: ("mobile" | "desktop" | "tablet")[];
+        exitReason?: "share" | "abandon" | "save" | "publish";
     };
     viewport?: {
         height?: number;
         width?: number;
     };
+    spaceId?: string;
     renderTime?: number;
     sessionId?: string;
     timestamp?: Date;
     elementId?: string;
     elementType?: string;
-    spaceId?: string;
     isSpaceTool?: boolean;
     toolId?: string;
     userAgent?: string;
@@ -649,7 +649,7 @@ export declare const BuilderSessionEventSchema: z.ZodObject<{
     eventId?: string;
     userIdHash?: string;
     toolVersion?: string;
-    toolStatus?: "published" | "preview" | "draft";
+    toolStatus?: "preview" | "draft" | "published";
     elementVersion?: number;
     loadTime?: number;
     optedOut?: boolean;
@@ -662,20 +662,20 @@ export declare const BuilderSessionEventSchema: z.ZodObject<{
         elementsConfigured?: number;
         undoCount?: number;
         redoCount?: number;
-        modesUsed?: ("code" | "design" | "preview")[];
-        deviceModesUsed?: ("mobile" | "tablet" | "desktop")[];
-        exitReason?: "abandon" | "share" | "save" | "publish";
+        modesUsed?: ("code" | "preview" | "design")[];
+        deviceModesUsed?: ("mobile" | "desktop" | "tablet")[];
+        exitReason?: "share" | "abandon" | "save" | "publish";
     };
     viewport?: {
         height?: number;
         width?: number;
     };
+    spaceId?: string;
     renderTime?: number;
     sessionId?: string;
     timestamp?: Date;
     elementId?: string;
     elementType?: string;
-    spaceId?: string;
     isSpaceTool?: boolean;
     toolId?: string;
     userAgent?: string;
@@ -684,7 +684,7 @@ export declare const BuilderSessionEventSchema: z.ZodObject<{
     eventId?: string;
     userIdHash?: string;
     toolVersion?: string;
-    toolStatus?: "published" | "preview" | "draft";
+    toolStatus?: "preview" | "draft" | "published";
     elementVersion?: number;
     loadTime?: number;
     optedOut?: boolean;
@@ -727,20 +727,20 @@ export declare const ToolInstanceOpenedEventSchema: z.ZodObject<{
         isFirstTime: z.ZodBoolean;
         deviceType: z.ZodEnum<["desktop", "tablet", "mobile"]>;
     }, "strip", z.ZodTypeAny, {
-        source?: "embed" | "feed" | "direct" | "share_link";
-        deviceType?: "mobile" | "tablet" | "desktop";
+        source?: "feed" | "embed" | "direct" | "share_link";
+        deviceType?: "mobile" | "desktop" | "tablet";
         referrer?: string;
         isFirstTime?: boolean;
     }, {
-        source?: "embed" | "feed" | "direct" | "share_link";
-        deviceType?: "mobile" | "tablet" | "desktop";
+        source?: "feed" | "embed" | "direct" | "share_link";
+        deviceType?: "mobile" | "desktop" | "tablet";
         referrer?: string;
         isFirstTime?: boolean;
     }>>;
 }, "strip", z.ZodTypeAny, {
     metadata?: {
-        source?: "embed" | "feed" | "direct" | "share_link";
-        deviceType?: "mobile" | "tablet" | "desktop";
+        source?: "feed" | "embed" | "direct" | "share_link";
+        deviceType?: "mobile" | "desktop" | "tablet";
         referrer?: string;
         isFirstTime?: boolean;
     };
@@ -748,12 +748,12 @@ export declare const ToolInstanceOpenedEventSchema: z.ZodObject<{
         height?: number;
         width?: number;
     };
+    spaceId?: string;
     renderTime?: number;
     sessionId?: string;
     timestamp?: Date;
     elementId?: string;
     elementType?: string;
-    spaceId?: string;
     isSpaceTool?: boolean;
     toolId?: string;
     userAgent?: string;
@@ -762,15 +762,15 @@ export declare const ToolInstanceOpenedEventSchema: z.ZodObject<{
     eventId?: string;
     userIdHash?: string;
     toolVersion?: string;
-    toolStatus?: "published" | "preview" | "draft";
+    toolStatus?: "preview" | "draft" | "published";
     elementVersion?: number;
     loadTime?: number;
     optedOut?: boolean;
     anonymized?: boolean;
 }, {
     metadata?: {
-        source?: "embed" | "feed" | "direct" | "share_link";
-        deviceType?: "mobile" | "tablet" | "desktop";
+        source?: "feed" | "embed" | "direct" | "share_link";
+        deviceType?: "mobile" | "desktop" | "tablet";
         referrer?: string;
         isFirstTime?: boolean;
     };
@@ -778,12 +778,12 @@ export declare const ToolInstanceOpenedEventSchema: z.ZodObject<{
         height?: number;
         width?: number;
     };
+    spaceId?: string;
     renderTime?: number;
     sessionId?: string;
     timestamp?: Date;
     elementId?: string;
     elementType?: string;
-    spaceId?: string;
     isSpaceTool?: boolean;
     toolId?: string;
     userAgent?: string;
@@ -792,7 +792,7 @@ export declare const ToolInstanceOpenedEventSchema: z.ZodObject<{
     eventId?: string;
     userIdHash?: string;
     toolVersion?: string;
-    toolStatus?: "published" | "preview" | "draft";
+    toolStatus?: "preview" | "draft" | "published";
     elementVersion?: number;
     loadTime?: number;
     optedOut?: boolean;
@@ -864,12 +864,12 @@ export declare const ToolInstanceSubmittedEventSchema: z.ZodObject<{
         height?: number;
         width?: number;
     };
+    spaceId?: string;
     renderTime?: number;
     sessionId?: string;
     timestamp?: Date;
     elementId?: string;
     elementType?: string;
-    spaceId?: string;
     isSpaceTool?: boolean;
     toolId?: string;
     userAgent?: string;
@@ -878,7 +878,7 @@ export declare const ToolInstanceSubmittedEventSchema: z.ZodObject<{
     eventId?: string;
     userIdHash?: string;
     toolVersion?: string;
-    toolStatus?: "published" | "preview" | "draft";
+    toolStatus?: "preview" | "draft" | "published";
     elementVersion?: number;
     loadTime?: number;
     optedOut?: boolean;
@@ -896,12 +896,12 @@ export declare const ToolInstanceSubmittedEventSchema: z.ZodObject<{
         height?: number;
         width?: number;
     };
+    spaceId?: string;
     renderTime?: number;
     sessionId?: string;
     timestamp?: Date;
     elementId?: string;
     elementType?: string;
-    spaceId?: string;
     isSpaceTool?: boolean;
     toolId?: string;
     userAgent?: string;
@@ -910,7 +910,7 @@ export declare const ToolInstanceSubmittedEventSchema: z.ZodObject<{
     eventId?: string;
     userIdHash?: string;
     toolVersion?: string;
-    toolStatus?: "published" | "preview" | "draft";
+    toolStatus?: "preview" | "draft" | "published";
     elementVersion?: number;
     loadTime?: number;
     optedOut?: boolean;
@@ -964,7 +964,7 @@ export declare const ToolElementInteractedEventSchema: z.ZodObject<{
         previousElement: z.ZodOptional<z.ZodString>;
         nextElement: z.ZodOptional<z.ZodString>;
     }, "strip", z.ZodTypeAny, {
-        interactionType?: "hover" | "input" | "select" | "drag" | "click";
+        interactionType?: "input" | "select" | "drag" | "click" | "hover";
         elementPosition?: {
             x?: number;
             y?: number;
@@ -974,7 +974,7 @@ export declare const ToolElementInteractedEventSchema: z.ZodObject<{
         previousElement?: string;
         nextElement?: string;
     }, {
-        interactionType?: "hover" | "input" | "select" | "drag" | "click";
+        interactionType?: "input" | "select" | "drag" | "click" | "hover";
         elementPosition?: {
             x?: number;
             y?: number;
@@ -986,7 +986,7 @@ export declare const ToolElementInteractedEventSchema: z.ZodObject<{
     }>>;
 }, "strip", z.ZodTypeAny, {
     metadata?: {
-        interactionType?: "hover" | "input" | "select" | "drag" | "click";
+        interactionType?: "input" | "select" | "drag" | "click" | "hover";
         elementPosition?: {
             x?: number;
             y?: number;
@@ -1000,12 +1000,12 @@ export declare const ToolElementInteractedEventSchema: z.ZodObject<{
         height?: number;
         width?: number;
     };
+    spaceId?: string;
     renderTime?: number;
     sessionId?: string;
     timestamp?: Date;
     elementId?: string;
     elementType?: string;
-    spaceId?: string;
     isSpaceTool?: boolean;
     toolId?: string;
     userAgent?: string;
@@ -1014,14 +1014,14 @@ export declare const ToolElementInteractedEventSchema: z.ZodObject<{
     eventId?: string;
     userIdHash?: string;
     toolVersion?: string;
-    toolStatus?: "published" | "preview" | "draft";
+    toolStatus?: "preview" | "draft" | "published";
     elementVersion?: number;
     loadTime?: number;
     optedOut?: boolean;
     anonymized?: boolean;
 }, {
     metadata?: {
-        interactionType?: "hover" | "input" | "select" | "drag" | "click";
+        interactionType?: "input" | "select" | "drag" | "click" | "hover";
         elementPosition?: {
             x?: number;
             y?: number;
@@ -1035,12 +1035,12 @@ export declare const ToolElementInteractedEventSchema: z.ZodObject<{
         height?: number;
         width?: number;
     };
+    spaceId?: string;
     renderTime?: number;
     sessionId?: string;
     timestamp?: Date;
     elementId?: string;
     elementType?: string;
-    spaceId?: string;
     isSpaceTool?: boolean;
     toolId?: string;
     userAgent?: string;
@@ -1049,7 +1049,7 @@ export declare const ToolElementInteractedEventSchema: z.ZodObject<{
     eventId?: string;
     userIdHash?: string;
     toolVersion?: string;
-    toolStatus?: "published" | "preview" | "draft";
+    toolStatus?: "preview" | "draft" | "published";
     elementVersion?: number;
     loadTime?: number;
     optedOut?: boolean;
@@ -1113,12 +1113,12 @@ export declare const ShareLinkCreatedEventSchema: z.ZodObject<{
         height?: number;
         width?: number;
     };
+    spaceId?: string;
     renderTime?: number;
     sessionId?: string;
     timestamp?: Date;
     elementId?: string;
     elementType?: string;
-    spaceId?: string;
     isSpaceTool?: boolean;
     toolId?: string;
     userAgent?: string;
@@ -1127,7 +1127,7 @@ export declare const ShareLinkCreatedEventSchema: z.ZodObject<{
     eventId?: string;
     userIdHash?: string;
     toolVersion?: string;
-    toolStatus?: "published" | "preview" | "draft";
+    toolStatus?: "preview" | "draft" | "published";
     elementVersion?: number;
     loadTime?: number;
     optedOut?: boolean;
@@ -1143,12 +1143,12 @@ export declare const ShareLinkCreatedEventSchema: z.ZodObject<{
         height?: number;
         width?: number;
     };
+    spaceId?: string;
     renderTime?: number;
     sessionId?: string;
     timestamp?: Date;
     elementId?: string;
     elementType?: string;
-    spaceId?: string;
     isSpaceTool?: boolean;
     toolId?: string;
     userAgent?: string;
@@ -1157,7 +1157,7 @@ export declare const ShareLinkCreatedEventSchema: z.ZodObject<{
     eventId?: string;
     userIdHash?: string;
     toolVersion?: string;
-    toolStatus?: "published" | "preview" | "draft";
+    toolStatus?: "preview" | "draft" | "published";
     elementVersion?: number;
     loadTime?: number;
     optedOut?: boolean;
@@ -1225,12 +1225,12 @@ export declare const ToolForkedEventSchema: z.ZodObject<{
         height?: number;
         width?: number;
     };
+    spaceId?: string;
     renderTime?: number;
     sessionId?: string;
     timestamp?: Date;
     elementId?: string;
     elementType?: string;
-    spaceId?: string;
     isSpaceTool?: boolean;
     toolId?: string;
     userAgent?: string;
@@ -1239,7 +1239,7 @@ export declare const ToolForkedEventSchema: z.ZodObject<{
     eventId?: string;
     userIdHash?: string;
     toolVersion?: string;
-    toolStatus?: "published" | "preview" | "draft";
+    toolStatus?: "preview" | "draft" | "published";
     elementVersion?: number;
     loadTime?: number;
     optedOut?: boolean;
@@ -1256,12 +1256,12 @@ export declare const ToolForkedEventSchema: z.ZodObject<{
         height?: number;
         width?: number;
     };
+    spaceId?: string;
     renderTime?: number;
     sessionId?: string;
     timestamp?: Date;
     elementId?: string;
     elementType?: string;
-    spaceId?: string;
     isSpaceTool?: boolean;
     toolId?: string;
     userAgent?: string;
@@ -1270,7 +1270,7 @@ export declare const ToolForkedEventSchema: z.ZodObject<{
     eventId?: string;
     userIdHash?: string;
     toolVersion?: string;
-    toolStatus?: "published" | "preview" | "draft";
+    toolStatus?: "preview" | "draft" | "published";
     elementVersion?: number;
     loadTime?: number;
     optedOut?: boolean;
@@ -1347,19 +1347,19 @@ export declare const ToolPerformanceSchema: z.ZodObject<{
         elementsPerTool: z.ZodNumber;
         configComplexityScore: z.ZodNumber;
     }, "strip", z.ZodTypeAny, {
+        completionRate?: number;
         errorRate?: number;
         averageLoadTime?: number;
         averageRenderTime?: number;
-        completionRate?: number;
         abandonmentRate?: number;
         averageSessionDuration?: number;
         elementsPerTool?: number;
         configComplexityScore?: number;
     }, {
+        completionRate?: number;
         errorRate?: number;
         averageLoadTime?: number;
         averageRenderTime?: number;
-        completionRate?: number;
         abandonmentRate?: number;
         averageSessionDuration?: number;
         elementsPerTool?: number;
@@ -1377,10 +1377,10 @@ export declare const ToolPerformanceSchema: z.ZodObject<{
     }>;
 }, "strip", z.ZodTypeAny, {
     metrics?: {
+        completionRate?: number;
         errorRate?: number;
         averageLoadTime?: number;
         averageRenderTime?: number;
-        completionRate?: number;
         abandonmentRate?: number;
         averageSessionDuration?: number;
         elementsPerTool?: number;
@@ -1393,10 +1393,10 @@ export declare const ToolPerformanceSchema: z.ZodObject<{
     };
 }, {
     metrics?: {
+        completionRate?: number;
         errorRate?: number;
         averageLoadTime?: number;
         averageRenderTime?: number;
-        completionRate?: number;
         abandonmentRate?: number;
         averageSessionDuration?: number;
         elementsPerTool?: number;

@@ -1,9 +1,9 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState } from 'react';
-import { NavigationHeader } from './navigation-header';
-import { NavigationSidebar } from './navigation-sidebar';
-import { cn } from '../../lib/utils';
+import { NavigationHeader } from './navigation-header.js';
+import { NavigationSidebar } from './navigation-sidebar.js';
+import { cn } from '../../lib/utils.js';
 export function AppShell({ children, user, currentSection = 'profile', layoutType = 'dashboard', className, showGlobalSearch = true, showNotifications = true, showBuilderAccess = true, onOpenCommandPalette, onOpenNotifications, sidebarWidth = 'standard', headerHeight = 'standard' }) {
     const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
     // Dynamic sidebar widths for different contexts
@@ -22,7 +22,7 @@ export function AppShell({ children, user, currentSection = 'profile', layoutTyp
     const currentHeaderSize = headerSizes[headerHeight];
     return (_jsxs("div", { className: cn("min-h-screen bg-[var(--hive-background-primary)] text-[var(--hive-text-primary)]", "transition-all duration-300 ease-out", className), style: {
             background: 'linear-gradient(135deg, var(--hive-background-primary) 0%, var(--hive-background-secondary) 100%)',
-        }, children: [_jsx(NavigationHeader, { user: user, currentSection: currentSection, onToggleSidebar: () => setSidebarCollapsed(!sidebarCollapsed), sidebarCollapsed: sidebarCollapsed, showGlobalSearch: showGlobalSearch, showNotifications: showNotifications, showBuilderAccess: showBuilderAccess, onOpenCommandPalette: onOpenCommandPalette, onOpenNotifications: onOpenNotifications, height: headerHeight }), _jsxs("div", { className: "flex min-h-screen", children: [_jsx(NavigationSidebar, { collapsed: sidebarCollapsed, user: user, currentPath: currentSection, width: sidebarWidth, layoutType: layoutType }), _jsx("main", { className: cn("flex-1 transition-all duration-300 ease-out", currentHeaderSize.split(' ')[1], // Extract pt-X class
+        }, children: [_jsx(NavigationHeader, { user: user, currentSection: currentSection, onToggleSidebar: () => setSidebarCollapsed(!sidebarCollapsed), sidebarCollapsed: sidebarCollapsed, showGlobalSearch: showGlobalSearch, showNotifications: showNotifications, showBuilderAccess: showBuilderAccess, onOpenCommandPalette: onOpenCommandPalette, onOpenNotifications: onOpenNotifications, height: headerHeight }), _jsxs("div", { className: "flex min-h-screen", children: [_jsx(NavigationSidebar, { collapsed: sidebarCollapsed, user: user, currentPath: currentSection }), _jsx("main", { className: cn("flex-1 transition-all duration-300 ease-out", currentHeaderSize.split(' ')[1], // Extract pt-X class
                         sidebarCollapsed ? currentSidebarSize.collapsed : currentSidebarSize.expanded, 
                         // Layout-specific styling
                         layoutType === 'feed' && "max-w-none", layoutType === 'builder' && "bg-[var(--hive-background-secondary)]/50", layoutType === 'ritual' && "bg-gradient-to-br from-[var(--hive-background-primary)] to-[var(--hive-background-tertiary)]", layoutType === 'full' && "ml-0 pt-0", // Override margins for full-screen

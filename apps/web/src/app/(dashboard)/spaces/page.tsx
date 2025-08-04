@@ -1,618 +1,760 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { Button, Card, Grid as _Grid } from "@hive/ui";
-import { Search, Users, ArrowRight, Plus, TrendingUp, Activity, Globe, Filter, Eye as _Eye, MapPin as _MapPin, Target, Zap, Heart } from "lucide-react";
-import { type Space as _Space } from "@hive/core";
-// Temporarily disabled to fix React context issue
-// import { useFeatureFlags } from "@hive/hooks";
+import { useState, useEffect, useMemo } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useSearchParams, useRouter } from "next/navigation";
+import { authenticatedFetch } from '../../../lib/auth-utils';
+import { Button, Card } from "@hive/ui";
+import { PageContainer } from "@/components/temp-stubs";
+import { Heart, Users, Settings, Star, Clock, Activity, Plus, Crown, Search, Filter as _Filter, Grid, List, TrendingUp, ArrowUpDown, Compass, AlertCircle } from "lucide-react";
+import { type Space, type SpaceType } from "@hive/core";
+import { useDebounce } from "@hive/hooks";
+import { cn } from "@hive/ui";
+import { UnifiedSpaceCard } from "./components/unified-space-card";
+import { CreateSpaceModal } from "../../../components/spaces/create-space-modal";
+import { SpaceLoadingSkeleton } from "./components/space-loading-skeleton";
+import { SmartSpaceDiscovery } from "../../../components/spaces/smart-space-discovery";
+import { ErrorBoundary } from '../../../components/error-boundary';
+import { useSession } from '../../../hooks/use-session';
 
-// Campus Visualization Component
-const CampusVisualization = ({ totalSpaces, categoryBreakdown }: { totalSpaces?: number, categoryBreakdown?: Record<string, number> }) => (
-  <div className="relative w-full h-64 bg-gradient-to-br from-[#0A0A0A]/50 to-[#1A1A1A]/50 border border-[rgba(255,255,255,0.1)] rounded-2xl overflow-hidden group">
-    {/* Interactive Campus Map Background */}
-    <div className="absolute inset-0 opacity-20 group-hover:opacity-30 transition-opacity duration-700">
-      <svg viewBox="0 0 400 200" className="w-full h-full">
-        {/* Campus Buildings */}
-        <rect x="50" y="80" width="30" height="40" className="fill-[#FFD700]/40 group-hover:fill-[#FFD700]/60 transition-colors duration-500" rx="2" />
-        <rect x="100" y="60" width="40" height="60" className="fill-[#FFD700]/30 group-hover:fill-[#FFD700]/50 transition-colors duration-700" rx="2" />
-        <rect x="200" y="90" width="35" height="35" className="fill-[#FFD700]/35 group-hover:fill-[#FFD700]/55 transition-colors duration-600" rx="2" />
-        <rect x="300" y="70" width="45" height="50" className="fill-[#FFD700]/40 group-hover:fill-[#FFD700]/60 transition-colors duration-800" rx="2" />
-        
-        {/* Space Density Dots */}
-        {[...Array(12)].map((_, i) => (
-          <circle 
-            key={i} 
-            cx={60 + (i * 25)} 
-            cy={140 + (Math.sin(i) * 10)} 
-            r="2" 
-            className="fill-white/40 group-hover:fill-[#FFD700]/80 transition-all duration-1000" 
-            style={{ animationDelay: `${i * 100}ms` }}
-          />
-        ))}
-        
-        {/* Connection Lines */}
-        <path d="M80,120 Q150,100 220,110 T340,100" className="stroke-[#FFD700]/20 stroke-2 fill-none group-hover:stroke-[#FFD700]/40 transition-all duration-1000" />
-      </svg>
-    </div>
-    
-    {/* Live Statistics Overlay */}
-    <div className="absolute inset-0 flex items-center justify-center">
-      <div className="text-center space-y-3">
-        <div className="text-4xl font-bold text-white group-hover:text-[#FFD700] transition-colors duration-500">
-          {totalSpaces || '360'}
-        </div>
-        <div className="text-sm text-neutral-400 group-hover:text-white/80 transition-colors">
-          Active Communities
-        </div>
-        <div className="flex gap-4 text-xs text-neutral-400 group-hover:text-white/70 transition-colors">
-          <span>🎓 {categoryBreakdown?.university_organizations || '180'}</span>
-          <span>👥 {categoryBreakdown?.student_organizations || '120'}</span>
-          <span>🏛️ {categoryBreakdown?.greek_life || '23'}</span>
-          <span>🏠 {categoryBreakdown?.campus_living || '37'}</span>
-        </div>
-      </div>
-    </div>
-    
-    {/* Hover Overlay */}
-    <div className="absolute inset-0 bg-gradient-to-t from-[#FFD700]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-  </div>
-);
+// Space category filters - aligned with new HIVE system
+const spaceTypeFilters = [
+  { id: "all", label: "All Spaces", color: "bg-gray-500", emoji: "🌐", subtitle: "Every community" },
+  { id: "student_organizations", label: "Student Spaces", color: "bg-blue-500", emoji: "🎯", subtitle: "Student-led communities" },
+  { id: "university_organizations", label: "University Spaces", color: "bg-emerald-500", emoji: "🎓", subtitle: "Academic programs" },
+  { id: "greek_life", label: "Greek Life", color: "bg-purple-500", emoji: "🏛️", subtitle: "Fraternities & sororities" },
+  { id: "campus_living", label: "Residential Life", color: "bg-orange-500", emoji: "🏠", subtitle: "Dorms & living communities" },
+  { id: "hive_exclusive", label: "HIVE Exclusive", color: "bg-indigo-500", emoji: "💎", subtitle: "Platform specials" },
+];
 
-// Enhanced Search Bar Component
-const EnhancedSearchBar = ({ onSearch, placeholder = "Search spaces, organizations, communities..." }: { onSearch?: (query: string) => void, placeholder?: string }) => {
-  const [query, setQuery] = useState("");
-  const [showFilters, setShowFilters] = useState(false);
-  
-  return (
-    <div className="relative w-full max-w-2xl mx-auto">
-      <div className="relative">
-        <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-neutral-400" />
-        <input
-          type="text"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder={placeholder}
-          className="w-full h-14 pl-12 pr-16 bg-white/5 border border-white/10 rounded-2xl text-white placeholder:text-neutral-400 focus:border-yellow-400/50 focus:bg-white/8 transition-all duration-300 focus:outline-none"
-          onKeyDown={(e) => e.key === 'Enter' && onSearch?.(query)}
-        />
-        <Button
-          size="sm"
-          variant="ghost"
-          className="absolute right-2 top-1/2 transform -translate-y-1/2 h-10 w-10 p-0 hover:bg-[#FFD700]/20"
-          onClick={() => setShowFilters(!showFilters)}
-        >
-          <Filter className="h-4 w-4 text-neutral-400 hover:text-yellow-400 transition-colors" />
-        </Button>
-      </div>
-      
-      {/* Quick Filter Tags */}
-      {showFilters && (
-        <div className="absolute top-full left-0 right-0 mt-2 p-4 bg-[rgba(0,0,0,0.8)] border border-[rgba(255,255,255,0.1)] rounded-xl backdrop-blur-lg z-10">
-          <div className="flex flex-wrap gap-2">
-            {['Student Orgs', 'Greek Life', 'Academic', 'Sports', 'Arts', 'Tech'].map((tag) => (
-              <Button key={tag} size="sm" variant="outline" className="border-white/20 text-neutral-400 hover:text-yellow-400 hover:border-yellow-400/30">
-                {tag}
-              </Button>
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
-
-// Custom SVG Pattern Components
-const NetworkPattern = ({ className }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 32 32" fill="none">
-    <circle cx="8" cy="8" r="1.5" className="fill-white/60 group-hover:fill-[#FFD700] transition-colors duration-300" />
-    <circle cx="24" cy="10" r="1.5" className="fill-white/80 group-hover:fill-[#FFD700] transition-colors duration-300 delay-75" />
-    <circle cx="16" cy="20" r="1.5" className="fill-white/60 group-hover:fill-[#FFD700] transition-colors duration-300 delay-150" />
-    <circle cx="20" cy="6" r="1" className="fill-white/40 group-hover:fill-[#FFD700]/80 transition-colors duration-300 delay-100" />
-    <line x1="8" y1="8" x2="20" y2="6" className="stroke-white/20 stroke-[0.5] group-hover:stroke-[#FFD700]/60 transition-all duration-300" />
-    <line x1="20" y1="6" x2="24" y2="10" className="stroke-white/20 stroke-[0.5] group-hover:stroke-[#FFD700]/60 transition-all duration-300 delay-75" />
-    <line x1="24" y1="10" x2="16" y2="20" className="stroke-white/20 stroke-[0.5] group-hover:stroke-[#FFD700]/60 transition-all duration-300 delay-150" />
-    <line x1="8" y1="8" x2="16" y2="20" className="stroke-white/15 stroke-[0.5] group-hover:stroke-[#FFD700]/40 transition-all duration-300 delay-100" />
-  </svg>
-);
-
-const HierarchyPattern = ({ className }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 32 32" fill="none">
-    <rect x="14" y="4" width="4" height="3" rx="1" className="fill-white/80 group-hover:fill-[#FFD700] transition-colors duration-300" />
-    <rect x="8" y="12" width="4" height="3" rx="1" className="fill-white/60 group-hover:fill-[#FFD700] transition-colors duration-300 delay-75" />
-    <rect x="20" y="12" width="4" height="3" rx="1" className="fill-white/60 group-hover:fill-[#FFD700] transition-colors duration-300 delay-75" />
-    <rect x="4" y="20" width="4" height="3" rx="1" className="fill-white/40 group-hover:fill-[#FFD700]/80 transition-colors duration-300 delay-150" />
-    <rect x="12" y="20" width="4" height="3" rx="1" className="fill-white/40 group-hover:fill-[#FFD700]/80 transition-colors duration-300 delay-150" />
-    <rect x="24" y="20" width="4" height="3" rx="1" className="fill-white/40 group-hover:fill-[#FFD700]/80 transition-colors duration-300 delay-150" />
-    <line x1="16" y1="7" x2="10" y2="12" className="stroke-white/20 stroke-[0.5] group-hover:stroke-[#FFD700]/60 transition-all duration-300" />
-    <line x1="16" y1="7" x2="22" y2="12" className="stroke-white/20 stroke-[0.5] group-hover:stroke-[#FFD700]/60 transition-all duration-300" />
-    <line x1="10" y1="15" x2="6" y2="20" className="stroke-white/15 stroke-[0.5] group-hover:stroke-[#FFD700]/40 transition-all duration-300 delay-75" />
-    <line x1="10" y1="15" x2="14" y2="20" className="stroke-white/15 stroke-[0.5] group-hover:stroke-[#FFD700]/40 transition-all duration-300 delay-75" />
-    <line x1="22" y1="15" x2="26" y2="20" className="stroke-white/15 stroke-[0.5] group-hover:stroke-[#FFD700]/40 transition-all duration-300 delay-75" />
-  </svg>
-);
-
-const ClusterPattern = ({ className }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 32 32" fill="none">
-    <circle cx="16" cy="16" r="2" className="fill-white/80 group-hover:fill-[#FFD700] transition-colors duration-300" />
-    <circle cx="16" cy="8" r="1.5" className="fill-white/60 group-hover:fill-[#FFD700]/80 transition-colors duration-300 delay-75" />
-    <circle cx="24" cy="16" r="1.5" className="fill-white/60 group-hover:fill-[#FFD700]/80 transition-colors duration-300 delay-75" />
-    <circle cx="16" cy="24" r="1.5" className="fill-white/60 group-hover:fill-[#FFD700]/80 transition-colors duration-300 delay-75" />
-    <circle cx="8" cy="16" r="1.5" className="fill-white/60 group-hover:fill-[#FFD700]/80 transition-colors duration-300 delay-75" />
-    <circle cx="22" cy="10" r="1" className="fill-white/40 group-hover:fill-[#FFD700]/60 transition-colors duration-300 delay-150" />
-    <circle cx="10" cy="10" r="1" className="fill-white/40 group-hover:fill-[#FFD700]/60 transition-colors duration-300 delay-150" />
-    <circle cx="22" cy="22" r="1" className="fill-white/40 group-hover:fill-[#FFD700]/60 transition-colors duration-300 delay-150" />
-    <circle cx="10" cy="22" r="1" className="fill-white/40 group-hover:fill-[#FFD700]/60 transition-colors duration-300 delay-150" />
-    <circle cx="16" cy="16" r="8" className="stroke-white/10 stroke-[0.5] fill-none group-hover:stroke-[#FFD700]/30 transition-all duration-300" />
-  </svg>
-);
-
-const GridPattern = ({ className }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 32 32" fill="none">
-    <rect x="6" y="6" width="6" height="6" rx="1" className="fill-white/20 stroke-white/30 stroke-[0.5] group-hover:fill-[#FFD700]/20 group-hover:stroke-[#FFD700]/60 transition-all duration-300" />
-    <rect x="20" y="6" width="6" height="6" rx="1" className="fill-white/20 stroke-white/30 stroke-[0.5] group-hover:fill-[#FFD700]/20 group-hover:stroke-[#FFD700]/60 transition-all duration-300 delay-75" />
-    <rect x="6" y="20" width="6" height="6" rx="1" className="fill-white/20 stroke-white/30 stroke-[0.5] group-hover:fill-[#FFD700]/20 group-hover:stroke-[#FFD700]/60 transition-all duration-300 delay-75" />
-    <rect x="20" y="20" width="6" height="6" rx="1" className="fill-white/20 stroke-white/30 stroke-[0.5] group-hover:fill-[#FFD700]/20 group-hover:stroke-[#FFD700]/60 transition-all duration-300 delay-150" />
-    <line x1="12" y1="9" x2="20" y2="9" className="stroke-white/15 stroke-[0.5] group-hover:stroke-[#FFD700]/40 transition-all duration-300" />
-    <line x1="9" y1="12" x2="9" y2="20" className="stroke-white/15 stroke-[0.5] group-hover:stroke-[#FFD700]/40 transition-all duration-300 delay-50" />
-    <line x1="23" y1="12" x2="23" y2="20" className="stroke-white/15 stroke-[0.5] group-hover:stroke-[#FFD700]/40 transition-all duration-300 delay-100" />
-    <line x1="12" y1="23" x2="20" y2="23" className="stroke-white/15 stroke-[0.5] group-hover:stroke-[#FFD700]/40 transition-all duration-300 delay-150" />
-    <circle cx="16" cy="16" r="1" className="fill-white/40 group-hover:fill-[#FFD700] transition-colors duration-300 delay-200" />
-  </svg>
-);
-
-// Space categories with Firebase mapping - HIVE brand aligned
-const SPACE_CATEGORIES = {
-  student: {
-    id: 'student_organizations',
-    title: 'Student Spaces',
-    subtitle: 'Student-led communities & clubs',
-    icon: NetworkPattern,
-    count: 120
-  },
-  university: {
-    id: 'university_organizations',
-    title: 'University Spaces',
-    subtitle: 'Academic programs & official groups',
-    icon: HierarchyPattern,
-    count: 180
-  },
-  greek: {
-    id: 'greek_life',
-    title: 'Greek Life',
-    subtitle: 'Fraternities & sororities',
-    icon: ClusterPattern,
-    count: 23
-  },
-  residential: {
-    id: 'campus_living',
-    title: 'Residential Life', 
-    subtitle: 'Dorms & living communities',
-    icon: GridPattern,
-    count: 37
-  }
-} as const;
-
-// Enhanced overview fetch with A/B testing support
-async function fetchSpacesOverview(): Promise<{
-  totalSpaces: number;
-  categoryBreakdown: Record<string, number>;
-  mySpaces?: any[];
-  recentActivity?: any[];
+async function fetchMySpaces(): Promise<{
+  joined: Space[];
+  favorited: Space[];
+  owned: Space[];
+  recent: Space[];
 }> {
-  const headers: HeadersInit = {};
-  try {
-    const sessionJson = window.localStorage.getItem('hive_session');
-    if (sessionJson) {
-      const session = JSON.parse(sessionJson);
-      headers.Authorization = `Bearer ${process.env.NODE_ENV === 'development' ? 'test-token' : session.token}`;
-    } else {
-      headers.Authorization = `Bearer test-token`;
-    }
-  } catch (error) {
-    console.warn('Could not get auth token, using test token');
-    headers.Authorization = `Bearer test-token`;
-  }
-
-  const response = await fetch('/api/spaces/overview', { headers });
-  
+  const response = await authenticatedFetch('/api/profile/my-spaces');
   if (!response.ok) {
-    throw new Error(`Failed to fetch spaces overview: ${response.status}`);
+    throw new Error(`Failed to fetch my spaces: ${response.status}`);
   }
   
   const data = await response.json();
+  
+  if (data.success && data.spaces) {
+    return {
+      joined: data.spaces,
+      favorited: [], // Would come from user preferences
+      owned: data.spaces.filter((space: any) => space.membership?.role === 'admin' || space.membership?.role === 'owner'),
+      recent: data.spaces.slice(0, 3) // Most recent 3
+    };
+  }
+  
   return {
-    totalSpaces: data.totalSpaces,
-    categoryBreakdown: data.categoryBreakdown,
-    mySpaces: data.mySpaces || [],
-    recentActivity: data.recentActivity || []
+    joined: [],
+    favorited: [],
+    owned: [],
+    recent: []
   };
 }
 
-// Unified Spaces Hub per @hive.md: Discovery, Your Spaces, Categories
-export default function SpacesDiscoveryPage() {
-  const [activeTab, setActiveTab] = useState<'discover' | 'your' | 'categories'>('discover');
-  const [isClient, setIsClient] = useState(false);
-  // Temporarily using default flags while fixing React context issue
-  const flags = {
-    spaceDiscovery: 'grid' as const,
-    trackEvent: (feature: string, action: string, metadata?: any) => {
-      console.log('Feature flag event:', { feature, action, metadata });
-    }
-  };
-  
-  // A/B test variant for personalization layer
-  const showPersonalizationLayer = flags.spaceDiscovery === 'feed' || flags.spaceDiscovery === 'recommendations';
-  
-  useEffect(() => {
-    setIsClient(true);
-    // Track page view with variant
-    flags.trackEvent('spaceDiscovery', 'view', { page: 'spaces-overview' });
-  }, [flags]);
+async function fetchBrowseSpaces(filter: SpaceType | "all", searchTerm: string): Promise<Space[]> {
+  const params = new URLSearchParams();
+  if (filter !== "all") params.set("type", filter);
+  if (searchTerm) params.set("search", searchTerm);
 
-  const { data: overview, isLoading, error } = useQuery({
-    queryKey: ["spaces-overview"],
-    queryFn: fetchSpacesOverview,
-    staleTime: 300000, // 5 minutes - less frequent updates for discovery page
-    enabled: isClient
+  const response = await authenticatedFetch(`/api/spaces/browse?${params.toString()}`);
+  if (!response.ok) throw new Error("Failed to fetch spaces");
+  const data = await response.json();
+  return data.spaces || [];
+}
+
+// Unified Spaces Hub - Consolidates My/Browse/Trending into single interface
+export default function UnifiedSpacesPage() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const queryClient = useQueryClient();
+  const { user } = useSession();
+  
+  // Tab management - My Spaces vs Browse
+  const [activeView, setActiveView] = useState<"my" | "browse">("my");
+  const [mySpacesTab, setMySpacesTab] = useState<"joined" | "favorited" | "owned" | "recent">("joined");
+  
+  // Browse functionality
+  const [filter, setFilter] = useState<SpaceType | "all">("all");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [sortBy, setSortBy] = useState<"popular" | "trending" | "recent" | "alphabetical">("popular");
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showSmartDiscovery, setShowSmartDiscovery] = useState(false);
+  const debouncedSearchTerm = useDebounce(searchTerm, 300);
+
+  // Handle URL parameters for deep linking
+  useEffect(() => {
+    const view = searchParams.get('view');
+    const category = searchParams.get('category');
+    const sort = searchParams.get('sort');
+    
+    if (view === 'browse') {
+      setActiveView('browse');
+    }
+    
+    if (category && category !== 'all') {
+      setFilter(category as SpaceType);
+    }
+    
+    if (sort === 'trending') {
+      setSortBy('trending');
+    }
+  }, [searchParams]);
+
+  // Fetch my spaces with retry and better error handling
+  const { data: mySpacesData, isLoading: mySpacesLoading, error: mySpacesError, refetch: refetchMySpaces } = useQuery({
+    queryKey: ["my-spaces"],
+    queryFn: fetchMySpaces,
+    enabled: activeView === "my",
+    staleTime: 300000, // 5 minutes
+    retry: (failureCount, error) => {
+      // Don't retry on authentication errors
+      if (error?.message.includes('401') || error?.message.includes('unauthorized')) {
+        return false;
+      }
+      return failureCount < 3;
+    },
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
   });
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0A0A0A] via-[#0F0F0F] to-[#1A1A1A] relative overflow-hidden">
-      {/* Header Section */}
-      <div className="relative pb-8">
-        {/* Background Ambient Effects */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#FFD700]/5 rounded-full blur-3xl animate-pulse" />
-          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#FFD700]/3 rounded-full blur-3xl animate-pulse delay-1000" />
-        </div>
-        
-        <div className="relative z-10 pt-8 pb-8">
-          <div className="max-w-7xl mx-auto px-6">
-            {/* Header */}
-            <div className="flex items-center justify-between mb-8">
-              <div>
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="w-10 h-10 bg-gradient-to-br from-[#FFD700] to-[#FFE255] rounded-xl flex items-center justify-center">
-                    <Users className="h-5 w-5 text-[#0A0A0A]" />
-                  </div>
-                  <h1 className="text-3xl font-bold text-white">Spaces</h1>
-                </div>
-                <p className="text-neutral-400">
-                  Communities & groups - discover and join campus communities
-                </p>
-              </div>
-              
-              {/* Enhanced Search Bar */}
-              <div className="w-96">
-                <EnhancedSearchBar 
-                  placeholder="Search spaces..."
-                  onSearch={(query) => {
-                    flags.trackEvent('spaceDiscovery', 'interact', { action: 'search', query });
-                    setActiveTab('discover');
-                  }}
-                />
-              </div>
-            </div>
-            
-            {/* Three-Section Navigation per @hive.md */}
-            <div className="flex items-center bg-[rgba(255,255,255,0.05)] rounded-lg p-1 mb-8">
-              <button
-                onClick={() => setActiveTab('discover')}
-                className={`px-6 py-3 text-sm rounded-md transition-colors flex items-center gap-2 ${
-                  activeTab === 'discover'
-                    ? 'bg-[#FFD700] text-[#0A0A0A] font-medium'
-                    : 'text-neutral-400 hover:text-white'
-                }`}
-              >
-                <Globe className="h-4 w-4" />
-                Discover
-              </button>
-              <button
-                onClick={() => setActiveTab('your')}
-                className={`px-6 py-3 text-sm rounded-md transition-colors flex items-center gap-2 ${
-                  activeTab === 'your'
-                    ? 'bg-[#FFD700] text-[#0A0A0A] font-medium'
-                    : 'text-neutral-400 hover:text-white'
-                }`}
-              >
-                <Heart className="h-4 w-4" />
-                Your Spaces
-              </button>
-              <button
-                onClick={() => setActiveTab('categories')}
-                className={`px-6 py-3 text-sm rounded-md transition-colors flex items-center gap-2 ${
-                  activeTab === 'categories'
-                    ? 'bg-[#FFD700] text-[#0A0A0A] font-medium'
-                    : 'text-neutral-400 hover:text-white'
-                }`}
-              >
-                <Filter className="h-4 w-4" />
-                Categories
-              </button>
-            </div>
-            
-            {/* Campus Visualization - Only show on Discover tab */}
-            {activeTab === 'discover' && (
-              <div className="mb-8">
-                <CampusVisualization 
-                  totalSpaces={overview?.totalSpaces} 
-                  categoryBreakdown={overview?.categoryBreakdown}
-                />
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
+  // Fetch browse spaces with retry and better error handling
+  const { data: browseSpaces = [], isLoading: browseLoading, error: browseError, refetch: refetchBrowseSpaces } = useQuery({
+    queryKey: ["spaces", filter, debouncedSearchTerm],
+    queryFn: () => fetchBrowseSpaces(filter, debouncedSearchTerm),
+    enabled: activeView === "browse",
+    staleTime: 180000, // 3 minutes - browse data changes more frequently
+    retry: (failureCount, error) => {
+      if (error?.message.includes('401') || error?.message.includes('unauthorized')) {
+        return false;
+      }
+      return failureCount < 3;
+    },
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+  });
+
+  // Filter and sort browse spaces
+  const filteredBrowseSpaces = useMemo(() => {
+    if (!browseSpaces) return [];
+    
+    const sortedSpaces = [...browseSpaces];
+    
+    switch (sortBy) {
+      case "popular":
+        sortedSpaces.sort((a, b) => (b.memberCount || 0) - (a.memberCount || 0));
+        break;
+      case "trending":
+        sortedSpaces.sort((a, b) => {
+          const aTrending = (a.memberCount || 0) * Math.random() * 2;
+          const bTrending = (b.memberCount || 0) * Math.random() * 2;
+          return bTrending - aTrending;
+        });
+        break;
+      case "recent":
+        sortedSpaces.sort((a, b) => {
+          const aTime = a.createdAt?.toDate?.() || new Date(0);
+          const bTime = b.createdAt?.toDate?.() || new Date(0);
+          return bTime.getTime() - aTime.getTime();
+        });
+        break;
+      case "alphabetical":
+        sortedSpaces.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+    }
+    
+    return sortedSpaces;
+  }, [browseSpaces, sortBy]);
+
+  const mySpaceTabs = [
+    { id: "joined", label: "Joined", icon: Users, count: mySpacesData?.joined.length || 0 },
+    { id: "favorited", label: "Favorited", icon: Heart, count: mySpacesData?.favorited.length || 0 },
+    { id: "owned", label: "Owned", icon: Crown, count: mySpacesData?.owned.length || 0 },
+    { id: "recent", label: "Recent", icon: Clock, count: mySpacesData?.recent.length || 0 },
+  ];
+
+  const currentMySpaces = mySpacesData?.[mySpacesTab] || [];
+
+  const [createError, setCreateError] = useState<string | null>(null);
+  const [isCreatingSpace, setIsCreatingSpace] = useState(false);
+
+  const handleSpaceCreated = async (spaceData: any) => {
+    setIsCreatingSpace(true);
+    setCreateError(null);
+    
+    try {
+      const response = await authenticatedFetch('/api/spaces', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: spaceData.name,
+          description: spaceData.description,
+          type: spaceData.type === 'academic' ? 'student_organizations' :
+                spaceData.type === 'residential' ? 'campus_living' :
+                spaceData.type === 'professional' ? 'student_organizations' :
+                spaceData.type === 'recreational' ? 'student_organizations' :
+                spaceData.type === 'project' ? 'student_organizations' : 'student_organizations',
+          isPrivate: spaceData.visibility === 'private' || spaceData.visibility === 'invite_only',
+          tags: spaceData.customizations?.tags || []
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `Failed to create space (${response.status})`);
+      }
+
+      const result = await response.json();
+      const newSpace = result.data;
+
+      // Close modal first
+      setShowCreateModal(false);
       
-      {/* Main Content Container */}
-      <div className="relative z-10 max-w-7xl mx-auto px-6">
-        {/* Error State */}
-        {error && (
-          <Card className="p-8 text-center border-red-500/20 bg-red-500/5 mb-8">
-            <h3 className="text-lg font-semibold text-white mb-2">Unable to Load Spaces</h3>
-            <p className="text-neutral-400 mb-4">Please try again or browse manually.</p>
+      // Invalidate caches
+      queryClient.invalidateQueries({ queryKey: ["spaces"] });
+      queryClient.invalidateQueries({ queryKey: ["my-spaces"] });
+      
+      // Show success feedback
+      if (newSpace?.id) {
+        // Small delay to let user see success state
+        setTimeout(() => {
+          router.push(`/spaces/${newSpace.id}`);
+        }, 500);
+      }
+    } catch (error) {
+      console.error('Failed to create space:', error);
+      setCreateError(error instanceof Error ? error.message : 'Failed to create space. Please try again.');
+    } finally {
+      setIsCreatingSpace(false);
+    }
+  };
+
+  const [joiningSpaces, setJoiningSpaces] = useState<Set<string>>(new Set());
+  const [joinErrors, setJoinErrors] = useState<Record<string, string>>({});
+
+  const handleJoinSpace = async (spaceId: string) => {
+    if (joiningSpaces.has(spaceId)) return; // Prevent double-joining
+    
+    setJoiningSpaces(prev => new Set(prev).add(spaceId));
+    setJoinErrors(prev => {
+      const { [spaceId]: _, ...rest } = prev;
+      return rest;
+    });
+    
+    try {
+      const response = await authenticatedFetch('/api/spaces/join', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ spaceId }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `Failed to join space (${response.status})`);
+      }
+
+      // Invalidate caches to update space lists
+      queryClient.invalidateQueries({ queryKey: ["spaces"] });
+      queryClient.invalidateQueries({ queryKey: ["my-spaces"] });
+      
+      // Show success feedback - could add toast here
+      console.log('Successfully joined space:', spaceId);
+      
+    } catch (error) {
+      console.error('Failed to join space:', error);
+      setJoinErrors(prev => ({
+        ...prev,
+        [spaceId]: error instanceof Error ? error.message : 'Failed to join space'
+      }));
+    } finally {
+      setJoiningSpaces(prev => {
+        const updated = new Set(prev);
+        updated.delete(spaceId);
+        return updated;
+      });
+    }
+  };
+
+  const handleViewSpace = (spaceId: string) => {
+    router.push(`/spaces/${spaceId}`);
+  };
+
+  // Mock user profile for smart discovery
+  const mockUserProfile = {
+    id: 'current-user',
+    interests: ['computer-science', 'algorithms', 'web-development'],
+    major: 'Computer Science',
+    year: 'Junior'
+  };
+
+  const isLoading = activeView === "my" ? mySpacesLoading : browseLoading;
+  const error = activeView === "my" ? mySpacesError : browseError;
+
+  return (
+    <ErrorBoundary>
+      <PageContainer
+        title="HIVE Spaces"
+        subtitle="Your campus communities - discover, join, and create meaningful connections"
+        breadcrumbs={[
+          { label: "Dashboard", href: "/" },
+          { label: "Spaces" }
+        ]}
+        actions={
+          <div className="flex items-center space-x-3">
+            {activeView === "browse" && (
+              <Button 
+                variant="outline"
+                onClick={() => setShowSmartDiscovery(!showSmartDiscovery)}
+                className="border-[#FFD700]/30 text-[#FFD700] hover:bg-[#FFD700]/10"
+              >
+                <Compass className="h-4 w-4 mr-2" />
+                {showSmartDiscovery ? 'Classic Browse' : 'Smart Discovery'}
+              </Button>
+            )}
             <Button 
-              onClick={() => window.location.href = "/spaces/browse"}
-              className="bg-[#FFD700] text-[#0A0A0A]"
+              className="bg-[#FFD700] text-[#0A0A0A] hover:bg-[#FFE255]"
+              onClick={() => setShowCreateModal(true)}
             >
-              Browse Spaces
+              <Plus className="h-4 w-4 mr-2" />
+              Create Space
             </Button>
-          </Card>
-        )}
+          </div>
+        }
+        maxWidth="xl"
+      >
+        {/* Unified Navigation Tabs */}
+        <div className="flex border-b border-white/10 mb-8">
+          <button
+            onClick={() => setActiveView("my")}
+            className={cn(
+              "flex items-center gap-2 px-6 py-3 text-sm font-medium border-b-2 transition-colors",
+              activeView === "my"
+                ? "border-hive-gold text-hive-gold"
+                : "border-transparent text-neutral-400 hover:text-white"
+            )}
+          >
+            <Users className="h-4 w-4" />
+            My Spaces
+            {mySpacesData && (
+              <span className={cn(
+                "px-2 py-0.5 text-xs rounded-full",
+                activeView === "my"
+                  ? "bg-hive-gold text-hive-obsidian"
+                  : "bg-white/10 text-neutral-400"
+              )}>
+                {mySpacesData.joined.length}
+              </span>
+            )}
+          </button>
+          <button
+            onClick={() => setActiveView("browse")}
+            className={cn(
+              "flex items-center gap-2 px-6 py-3 text-sm font-medium border-b-2 transition-colors",
+              activeView === "browse"
+                ? "border-hive-gold text-hive-gold"
+                : "border-transparent text-neutral-400 hover:text-white"
+            )}
+          >
+            <Compass className="h-4 w-4" />
+            Browse & Discover
+          </button>
+        </div>
 
-        {/* Tab Content */}
-        {activeTab === 'discover' && !error && (
+        {/* My Spaces View */}
+        {activeView === "my" && (
           <>
-            {/* AI Recommendations */}
-            <Card className="p-8 mb-8 bg-gradient-to-br from-[#FFD700]/5 to-[#FFD700]/10 border-[#FFD700]/20 relative overflow-hidden">
-              <div className="relative z-10">
-                <div className="text-center mb-8">
-                  <div className="flex items-center justify-center gap-3 mb-4">
-                    <Target className="h-6 w-6 text-[#FFD700]" />
-                    <h2 className="text-2xl font-bold text-white">AI Recommendations</h2>
-                  </div>
-                  <p className="text-neutral-400 max-w-2xl mx-auto">
-                    Spaces recommended based on your interests and activity
-                  </p>
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {['AI/ML Research Group', 'Campus Sustainability', 'Student Government'].map((name, i) => (
-                    <Card key={i} className="p-6 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.1)] hover:bg-[rgba(255,255,255,0.04)] transition-all cursor-pointer group">
-                      <div className="flex items-center gap-3 mb-4">
-                        <div className="w-10 h-10 bg-[rgba(255,255,255,0.1)] rounded-lg flex items-center justify-center text-white font-semibold">
-                          {name.charAt(0)}
-                        </div>
-                        <div className="flex-1">
-                          <h3 className="text-white font-medium">{name}</h3>
-                          <p className="text-xs text-[#A1A1AA]">Recommended for you</p>
-                        </div>
-                        <Plus className="h-4 w-4 text-[#FFD700] group-hover:scale-110 transition-transform" />
-                      </div>
-                    </Card>
-                  ))}
-                </div>
-              </div>
-            </Card>
+            {/* Quick Stats */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+              <Card className="p-4 text-center bg-gradient-to-br from-blue-500/10 to-blue-600/10 border-blue-500/20">
+                <Users className="h-8 w-8 mx-auto mb-2 text-blue-400" />
+                <div className="text-2xl font-bold text-white">{mySpacesData?.joined.length || 0}</div>
+                <div className="text-sm text-neutral-400">Joined</div>
+              </Card>
 
-            {/* Campus Ecosystem */}
-            <div className="mb-8">
-              <div className="text-center mb-8">
-                <h2 className="text-2xl font-bold text-white mb-3">Browse by Category</h2>
-                <p className="text-[#A1A1AA] max-w-2xl mx-auto">
-                  Discover communities across student organizations, academic programs, Greek life, and residential communities.
-                </p>
-              </div>
+              <Card className="p-4 text-center bg-gradient-to-br from-red-500/10 to-red-600/10 border-red-500/20">
+                <Heart className="h-8 w-8 mx-auto mb-2 text-red-400" />
+                <div className="text-2xl font-bold text-white">{mySpacesData?.favorited.length || 0}</div>
+                <div className="text-sm text-neutral-400">Favorited</div>
+              </Card>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {Object.values(SPACE_CATEGORIES).map((category) => {
-                  const IconComponent = category.icon;
-                  const categoryCount = overview?.categoryBreakdown?.[category.id];
-                  
-                  return (
-                    <Card 
-                      key={category.id}
-                      className="p-6 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)] hover:bg-[rgba(255,255,255,0.04)] transition-all cursor-pointer group relative overflow-hidden"
-                      onClick={() => {
-                        flags.trackEvent('spaceDiscovery', 'interact', { action: 'category_browse', category: category.id });
-                        setActiveTab('categories');
-                      }}
-                    >
-                      <div className="relative z-10">
-                        <div className="flex items-center justify-between mb-6">
-                          <div className="w-12 h-12 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-xl flex items-center justify-center group-hover:bg-[#FFD700]/20 group-hover:border-[#FFD700]/30 transition-all">
-                            <IconComponent className="h-7 w-7" />
-                          </div>
-                          <ArrowRight className="h-5 w-5 text-[#A1A1AA] group-hover:translate-x-1 group-hover:text-[#FFD700] transition-all" />
-                        </div>
-                        
-                        <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-[#FFD700] transition-colors">{category.title}</h3>
-                        <p className="text-sm text-[#A1A1AA] mb-4 group-hover:text-white/80 transition-colors">{category.subtitle}</p>
-                        
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center text-sm text-[#A1A1AA] group-hover:text-white/90 transition-colors">
-                            <Users className="h-4 w-4 mr-2" />
-                            {categoryCount !== undefined ? `${categoryCount} spaces` : 'Loading...'}
-                          </div>
-                          <TrendingUp className="h-4 w-4 text-[#A1A1AA] group-hover:text-[#FFD700] transition-colors" />
-                        </div>
-                      </div>
-                    </Card>
-                  );
-                })}
-              </div>
+              <Card className="p-4 text-center bg-gradient-to-br from-hive-gold/10 to-hive-gold/10 border-hive-gold/20">
+                <Crown className="h-8 w-8 mx-auto mb-2 text-hive-gold" />
+                <div className="text-2xl font-bold text-white">{mySpacesData?.owned.length || 0}</div>
+                <div className="text-sm text-neutral-400">Owned</div>
+              </Card>
+
+              <Card className="p-4 text-center bg-gradient-to-br from-green-500/10 to-green-600/10 border-green-500/20">
+                <Activity className="h-8 w-8 mx-auto mb-2 text-green-400" />
+                <div className="text-2xl font-bold text-white">
+                  {(mySpacesData?.joined.length || 0) + (mySpacesData?.owned.length || 0)}
+                </div>
+                <div className="text-sm text-neutral-400">Total Active</div>
+              </Card>
+            </div>
+
+            {/* My Spaces Tab Navigation */}
+            <div className="flex border-b border-white/10 mb-8">
+              {mySpaceTabs.map((tab) => {
+                const Icon = tab.icon;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => setMySpacesTab(tab.id as any)}
+                    className={cn(
+                      "flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-colors",
+                      mySpacesTab === tab.id
+                        ? "border-hive-gold text-hive-gold"
+                        : "border-transparent text-neutral-400 hover:text-white"
+                    )}
+                  >
+                    <Icon className="h-4 w-4" />
+                    {tab.label}
+                    {tab.count > 0 && (
+                      <span className={cn(
+                        "px-2 py-0.5 text-xs rounded-full",
+                        mySpacesTab === tab.id
+                          ? "bg-hive-gold text-hive-obsidian"
+                          : "bg-white/10 text-neutral-400"
+                      )}>
+                        {tab.count}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
             </div>
           </>
         )}
 
-        {activeTab === 'your' && (
-          <div className="mb-8">
-            <div className="text-center py-12">
-              <Heart className="h-12 w-12 text-[#FFD700] mx-auto mb-4" />
-              <h2 className="text-2xl font-bold text-white mb-3">Your Spaces</h2>
-              <p className="text-[#A1A1AA] mb-6 max-w-md mx-auto">
-                Active communities you've joined and spaces you're a member of
-              </p>
-              <Button 
-                className="bg-[#FFD700] text-[#0A0A0A] hover:bg-[#FFE255]"
-                onClick={() => setActiveTab('discover')}
-              >
-                Discover New Spaces
-              </Button>
-            </div>
-          </div>
-        )}
-
-        {activeTab === 'categories' && (
-          <div className="mb-8">
-            <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold text-white mb-3">Browse by Type</h2>
-              <p className="text-[#A1A1AA] max-w-2xl mx-auto">
-                Explore spaces organized by their type and purpose on campus
-              </p>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {Object.values(SPACE_CATEGORIES).map((category) => {
-                const IconComponent = category.icon;
-                const categoryCount = overview?.categoryBreakdown?.[category.id];
-                
-                return (
-                  <Card key={category.id} className="p-8 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)]">
-                    <div className="flex items-center gap-4 mb-6">
-                      <div className="w-16 h-16 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-2xl flex items-center justify-center">
-                        <IconComponent className="h-10 w-10" />
-                      </div>
-                      <div>
-                        <h3 className="text-xl font-semibold text-white mb-1">{category.title}</h3>
-                        <p className="text-neutral-400">{category.subtitle}</p>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center text-neutral-400">
-                        <Users className="h-4 w-4 mr-2" />
-                        {categoryCount !== undefined ? `${categoryCount} spaces` : 'Loading...'}
-                      </div>
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        className="border-[#FFD700]/30 text-[#FFD700] hover:bg-[#FFD700]/10"
-                      >
-                        Browse All
-                      </Button>
-                    </div>
-                  </Card>
-                );
-              })}
-            </div>
-          </div>
-        )}
-
-        {/* New Space Experience Preview */}
-        <Card className="p-8 mb-8 bg-gradient-to-br from-[#FFD700]/10 to-[#FFD700]/5 border-[#FFD700]/20 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-[#FFD700]/5 via-transparent to-[#FFD700]/10 -translate-x-full animate-pulse" />
-          
-          <div className="relative z-10">
-            <div className="text-center mb-8">
-              <div className="flex items-center justify-center gap-3 mb-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-[#FFD700] to-[#FFE255] rounded-2xl flex items-center justify-center">
-                  <Zap className="h-6 w-6 text-[#0A0A0A]" />
-                </div>
-                <h3 className="text-2xl font-bold text-white">Rich Space Experience</h3>
+        {/* Browse View */}
+        {activeView === "browse" && !showSmartDiscovery && (
+          <>
+            {/* Search and Controls */}
+            <div className="flex flex-col lg:flex-row gap-4 mb-8">
+              <div className="flex-1 relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-neutral-400" />
+                <input
+                  type="text"
+                  placeholder="Search spaces, descriptions, or keywords..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full pl-10 pr-4 py-3 bg-white/[0.02] border border-white/[0.06] rounded-lg text-white placeholder:text-neutral-400 focus:border-hive-gold focus:outline-none"
+                />
               </div>
-              <p className="text-[#A1A1AA] max-w-2xl mx-auto mb-6">
-                Each space now features an interactive widget dashboard with post boards, events, member activity, and tools - all accessible through expandable modals.
-              </p>
+
+              <div className="flex items-center bg-white/[0.02] border border-white/[0.06] rounded-lg p-1">
+                <ArrowUpDown className="h-4 w-4 text-neutral-400 mx-2" />
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value as any)}
+                  className="bg-transparent text-white text-sm focus:outline-none border-none"
+                >
+                  <option value="popular" className="bg-neutral-950">Popular</option>
+                  <option value="trending" className="bg-neutral-950">Trending</option>
+                  <option value="recent" className="bg-neutral-950">Recent</option>
+                  <option value="alphabetical" className="bg-neutral-950">A-Z</option>
+                </select>
+              </div>
+
+              <div className="flex items-center bg-white/[0.02] border border-white/[0.06] rounded-lg p-1">
+                <Button
+                  variant={viewMode === "grid" ? "primary" : "ghost"}
+                  size="sm"
+                  onClick={() => setViewMode("grid")}
+                  className={viewMode === "grid" ? "bg-hive-gold text-hive-obsidian" : "text-white"}
+                >
+                  <Grid className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant={viewMode === "list" ? "primary" : "ghost"}
+                  size="sm"
+                  onClick={() => setViewMode("list")}
+                  className={viewMode === "list" ? "bg-hive-gold text-hive-obsidian" : "text-white"}
+                >
+                  <List className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
-            
-            {/* Widget Preview Cards */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-              {[
-                { icon: MessageSquare, title: 'Post Board', desc: 'Threaded discussions' },
-                { icon: Calendar, title: 'Events', desc: 'Calendar & RSVP' },
-                { icon: Users, title: 'Members', desc: 'Community roster' },
-                { icon: Target, title: 'Tools', desc: 'Student utilities' }
-              ].map((widget, i) => {
-                const Icon = widget.icon;
-                return (
-                  <div key={i} className="p-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-xl text-center group hover:bg-[rgba(255,255,255,0.08)] transition-all">
-                    <Icon className="h-6 w-6 text-[#FFD700] mx-auto mb-2 group-hover:scale-110 transition-transform" />
-                    <h4 className="text-sm font-semibold text-white mb-1">{widget.title}</h4>
-                    <p className="text-xs text-[#A1A1AA]">{widget.desc}</p>
+
+            {/* Category Filter Cards */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4 mb-8">
+              {spaceTypeFilters.map((filterOption) => (
+                <Button
+                  key={filterOption.id}
+                  variant="ghost"
+                  onClick={() => setFilter(filterOption.id as SpaceType | "all")}
+                  className={cn(
+                    "h-auto p-4 flex flex-col items-center text-center transition-all",
+                    filter === filterOption.id
+                      ? "bg-hive-gold/10 border border-hive-gold/30 text-hive-gold"
+                      : "border border-white/10 text-white hover:bg-white/[0.05]"
+                  )}
+                >
+                  <span className="text-2xl mb-2">{filterOption.emoji}</span>
+                  <span className="font-medium text-sm">{filterOption.label}</span>
+                  <span className="text-xs text-neutral-400 mt-1">{filterOption.subtitle}</span>
+                </Button>
+              ))}
+            </div>
+          </>
+        )}
+
+        {/* Smart Discovery Mode */}
+        {activeView === "browse" && showSmartDiscovery && (
+          <SmartSpaceDiscovery
+            currentUserId={mockUserProfile.id}
+            userInterests={mockUserProfile.interests}
+            userMajor={mockUserProfile.major}
+            userYear={mockUserProfile.year}
+            onJoinSpace={handleJoinSpace}
+            onViewSpace={handleViewSpace}
+          />
+        )}
+
+        {/* Loading State */}
+        {isLoading && (
+          <SpaceLoadingSkeleton variant="grid" count={6} />
+        )}
+
+        {/* Error State */}
+        {error && (
+          <Card className="p-8 text-center border-red-500/20 bg-red-500/5">
+            <AlertCircle className="h-12 w-12 text-red-400 mx-auto mb-4" />
+            <h3 className="text-lg font-semibold text-white mb-2">Unable to load spaces</h3>
+            <p className="text-neutral-400 mb-4">
+              {error?.message?.includes('401') || error?.message?.includes('unauthorized') 
+                ? 'Please sign in again to view your spaces.'
+                : 'There was an error loading the spaces. Please check your connection and try again.'
+              }
+            </p>
+            <div className="flex gap-3 justify-center">
+              <Button 
+                onClick={() => {
+                  if (activeView === "my") {
+                    refetchMySpaces();
+                  } else {
+                    refetchBrowseSpaces();
+                  }
+                }} 
+                variant="outline"
+                className="border-white/20 text-white hover:bg-white/5"
+              >
+                Try Again
+              </Button>
+              {(error?.message?.includes('401') || error?.message?.includes('unauthorized')) && (
+                <Button 
+                  onClick={() => router.push('/auth/login')}
+                  className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne"
+                >
+                  Sign In
+                </Button>
+              )}
+            </div>
+          </Card>
+        )}
+
+        {/* Results */}
+        {!isLoading && !error && !showSmartDiscovery && (
+          <>
+            {/* Widget Experience Hint */}
+            {((activeView === "my" && currentMySpaces.length > 0) || (activeView === "browse" && filteredBrowseSpaces.length > 0)) && (
+              <Card className="p-4 mb-6 bg-gradient-to-r from-hive-gold/[0.05] to-transparent border-hive-gold/20">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 bg-hive-gold/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <Star className="h-4 w-4 text-hive-gold" />
                   </div>
-                );
-              })}
-            </div>
+                  <div>
+                    <p className="text-sm font-medium text-white">Enhanced Space Experience</p>
+                    <p className="text-xs text-neutral-400">Each space features interactive widgets: post boards, events, members, and tools</p>
+                  </div>
+                </div>
+              </Card>
+            )}
+
+            {/* Browse Results Header */}
+            {activeView === "browse" && (
+              <div className="flex items-center justify-between mb-6">
+                <p className="text-neutral-400">
+                  {filteredBrowseSpaces.length} space{filteredBrowseSpaces.length !== 1 ? 's' : ''} found
+                  {filter !== 'all' && (
+                    <span className="ml-2 text-hive-gold text-sm">
+                      in {spaceTypeFilters.find(f => f.id === filter)?.label || filter}
+                    </span>
+                  )}
+                </p>
+                <div className="flex items-center gap-2">
+                  {sortBy === 'trending' && <TrendingUp className="h-4 w-4 text-hive-gold" />}
+                  <span className="text-sm text-neutral-400">
+                    Sorted by {sortBy === 'popular' ? 'popularity' : sortBy}
+                  </span>
+                </div>
+              </div>
+            )}
             
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Button 
-                className="bg-[#FFD700] text-[#0A0A0A] hover:bg-[#FFE255] font-medium"
-                onClick={() => {
-                  flags.trackEvent('spaceDiscovery', 'interact', { action: 'cta_browse' });
-                  window.location.href = '/spaces/browse';
-                }}
-              >
-                <Search className="h-4 w-4 mr-2" />
-                Explore All Spaces
-              </Button>
-              <Button 
-                variant="outline" 
-                className="border-[#FFD700]/30 text-[#FFD700] hover:bg-[#FFD700]/10"
-                onClick={() => {
-                  flags.trackEvent('spaceDiscovery', 'interact', { action: 'cta_my_spaces' });
-                  window.location.href = '/spaces/my';
-                }}
-              >
-                <Heart className="h-4 w-4 mr-2" />
-                My Spaces
-              </Button>
-            </div>
-          </div>
-        </Card>
-        
-        {/* Quick Actions */}
-        <Card className="p-6 text-center bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)] mb-8">
-          <h3 className="text-lg font-semibold text-white mb-3">Quick Actions</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <Button 
-              variant="outline"
-              className="border-[rgba(255,255,255,0.2)] text-white hover:bg-[rgba(255,255,255,0.1)] h-12"
-              onClick={() => {
-                flags.trackEvent('spaceDiscovery', 'interact', { action: 'browse_trending' });
-                window.location.href = '/spaces/browse?sort=trending';
-              }}
-            >
-              <TrendingUp className="h-4 w-4 mr-2" />
-              Trending Spaces
-            </Button>
-            <Button 
-              variant="outline"
-              className="border-[rgba(255,255,255,0.2)] text-white hover:bg-[rgba(255,255,255,0.1)] h-12"
-              onClick={() => {
-                flags.trackEvent('spaceDiscovery', 'interact', { action: 'browse_new' });
-                window.location.href = '/spaces/browse?sort=newest';
-              }}
-            >
-              <Zap className="h-4 w-4 mr-2" />
-              Newest Spaces
-            </Button>
-            <Button 
-              variant="outline"
-              className="border-[rgba(255,255,255,0.2)] text-white hover:bg-[rgba(255,255,255,0.1)] h-12"
-              onClick={() => {
-                flags.trackEvent('spaceDiscovery', 'interact', { action: 'browse_active' });
-                window.location.href = '/spaces/browse?filter=active';
-              }}
-            >
-              <Activity className="h-4 w-4 mr-2" />
-              Most Active
-            </Button>
-          </div>
-        </Card>
+            {/* Spaces Grid/List */}
+            {activeView === "my" && currentMySpaces.length > 0 && (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {currentMySpaces.map((space) => (
+                  <UnifiedSpaceCard 
+                    key={space.id} 
+                    space={space} 
+                    variant="grid"
+                    showMembership={true}
+                    membershipRole={mySpacesTab === "owned" ? "owner" : "member"}
+                  />
+                ))}
+              </div>
+            )}
+
+            {activeView === "browse" && filteredBrowseSpaces.length > 0 && (
+              viewMode === "grid" ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+                  {filteredBrowseSpaces.map((space) => (
+                    <UnifiedSpaceCard key={space.id} space={space} variant="grid" />
+                  ))}
+                </div>
+              ) : (
+                <div className="space-y-3 sm:space-y-4">
+                  {filteredBrowseSpaces.map((space) => (
+                    <UnifiedSpaceCard key={space.id} space={space} variant="list" />
+                  ))}
+                </div>
+              )
+            )}
+
+            {/* Empty States */}
+            {activeView === "my" && currentMySpaces.length === 0 && (
+              <MySpacesEmptyState activeTab={mySpacesTab} />
+            )}
+
+            {activeView === "browse" && filteredBrowseSpaces.length === 0 && (
+              <BrowseEmptyState searchTerm={searchTerm} filter={filter} setSearchTerm={setSearchTerm} setFilter={setFilter} />
+            )}
+          </>
+        )}
+
+        {/* Create Space Modal */}
+        <CreateSpaceModal
+          isOpen={showCreateModal}
+          onClose={() => {
+            setShowCreateModal(false);
+            setCreateError(null);
+          }}
+          onCreateSpace={handleSpaceCreated}
+          isLoading={isCreatingSpace}
+          error={createError}
+        />
+      </PageContainer>
+    </ErrorBoundary>
+  );
+}
+
+// Empty State Components
+function MySpacesEmptyState({ activeTab }: { activeTab: string }) {
+  const getEmptyContent = () => {
+    switch (activeTab) {
+      case "joined":
+        return {
+          icon: Users,
+          title: "No spaces joined yet",
+          description: "Start by browsing and joining spaces that interest you.",
+          action: "Browse Spaces",
+        };
+      case "favorited":
+        return {
+          icon: Heart,
+          title: "No favorite spaces",
+          description: "Heart spaces you love to keep them easily accessible.",
+          action: "Browse Spaces",
+        };
+      case "owned":
+        return {
+          icon: Crown,
+          title: "No spaces owned",
+          description: "Space creation is coming in v1. For now, browse and join existing communities.",
+          action: "Browse Spaces",
+        };
+      case "recent":
+        return {
+          icon: Clock,
+          title: "No recent activity",
+          description: "Your recent space activity will appear here.",
+          action: "Browse Spaces",
+        };
+      default:
+        return {
+          icon: Users,
+          title: "No spaces found",
+          description: "Get started by joining or creating spaces.",
+          action: "Browse Spaces",
+        };
+    }
+  };
+
+  const { icon: Icon, title, description, action } = getEmptyContent();
+
+  return (
+    <Card className="p-12 text-center">
+      <Icon className="h-16 w-16 text-neutral-400 mx-auto mb-4" />
+      <h3 className="text-xl font-semibold text-white mb-2">{title}</h3>
+      <p className="text-neutral-400 mb-6">{description}</p>
+      <Button 
+        onClick={() => {
+          // Switch to browse tab
+          window.location.href = "/spaces?view=browse";
+        }}
+        className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne"
+      >
+        {action}
+      </Button>
+    </Card>
+  );
+}
+
+function BrowseEmptyState({ 
+  searchTerm, 
+  filter, 
+  setSearchTerm, 
+  setFilter 
+}: { 
+  searchTerm: string; 
+  filter: SpaceType | "all"; 
+  setSearchTerm: (term: string) => void; 
+  setFilter: (filter: SpaceType | "all") => void; 
+}) {
+  return (
+    <Card className="p-12 text-center">
+      <Compass className="h-16 w-16 text-neutral-400 mx-auto mb-4" />
+      <h3 className="text-xl font-semibold text-white mb-2">No spaces found</h3>
+      <p className="text-neutral-400 mb-6">
+        {searchTerm 
+          ? `No spaces match "${searchTerm}". Try different keywords or browse all spaces.`
+          : "No spaces available for this filter. Try selecting a different category."
+        }
+      </p>
+      <div className="flex flex-col sm:flex-row gap-3 justify-center">
+        <Button 
+          onClick={() => setSearchTerm("")}
+          variant="outline"
+          className="border-white/20 text-white"
+        >
+          Clear Search
+        </Button>
+        <Button 
+          onClick={() => setFilter("all")}
+          className="bg-hive-gold text-hive-obsidian"
+        >
+          Browse All Spaces
+        </Button>
       </div>
-    </div>
+    </Card>
   );
 }

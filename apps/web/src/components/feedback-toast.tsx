@@ -1,17 +1,22 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageCircle, X, Send, Loader2, Hexagon } from "lucide-react";
-import { HiveButton, HiveInput } from "@hive/ui";
+import { HiveButton } from "@hive/ui";
 
 export function FeedbackToast() {
   const [isOpen, setIsOpen] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [_isExpanded, setIsExpanded] = useState(false);
   const [feedback, setFeedback] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isDismissed, setIsDismissed] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const handleSubmit = async () => {
     if (!feedback.trim()) return;
@@ -45,8 +50,8 @@ export function FeedbackToast() {
         setIsSubmitted(false);
       }, 2000);
       
-    } catch (error) {
-      console.error('Failed to submit feedback:', error);
+    } catch (_error) {
+      console.error('Failed to submit feedback:', _error);
       // TODO: Show error state to user
     } finally {
       setIsSubmitting(false);
@@ -59,7 +64,7 @@ export function FeedbackToast() {
     setIsExpanded(false);
   };
 
-  if (isDismissed) return null;
+  if (isDismissed || !isMounted) return null;
 
   return (
     <div className="fixed bottom-4 right-4 z-50">

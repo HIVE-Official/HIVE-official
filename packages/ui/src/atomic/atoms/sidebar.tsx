@@ -36,8 +36,15 @@ const navigationItems: NavigationItem[] = [
     id: 'feed',
     icon: Home, 
     label: 'Feed', 
-    href: '/', 
-    matchPaths: ['/']
+    href: '/feed', 
+    matchPaths: ['/feed']
+  },
+  { 
+    id: 'profile',
+    icon: User, 
+    label: 'Profile', 
+    href: '/profile', 
+    matchPaths: ['/profile']
   },
   { 
     id: 'spaces',
@@ -56,11 +63,10 @@ const navigationItems: NavigationItem[] = [
     icon: Zap, 
     label: 'Tools', 
     href: '/tools', 
-    matchPaths: ['/tools', '/build'],
+    matchPaths: ['/tools'],
     children: [
-      { id: 'tools-my', icon: User, label: 'My Tools', href: '/tools/my' },
-      { id: 'tools-marketplace', icon: Compass, label: 'Marketplace', href: '/tools/marketplace' },
-      { id: 'tools-build', icon: Zap, label: 'Builder', href: '/tools/build' }
+      { id: 'tools-personal', icon: User, label: 'Personal', href: '/tools/personal' },
+      { id: 'tools-browse', icon: Compass, label: 'Browse', href: '/tools/browse' }
     ]
   },
   { 
@@ -71,18 +77,11 @@ const navigationItems: NavigationItem[] = [
     matchPaths: ['/calendar']
   },
   { 
-    id: 'resources',
-    icon: BookOpen, 
-    label: 'Resources', 
-    href: '/resources', 
-    matchPaths: ['/resources']
-  },
-  { 
-    id: 'profile',
-    icon: User, 
-    label: 'Profile', 
-    href: '/profile', 
-    matchPaths: ['/profile']
+    id: 'events',
+    icon: Calendar, 
+    label: 'Events', 
+    href: '/events', 
+    matchPaths: ['/events']
   }
 ];
 

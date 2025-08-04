@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { motion, AnimatePresence } from "@hive/ui/src/components/framer-motion-proxy";
+import { motion, AnimatePresence } from "framer-motion";
 import { GraduationCap, Search, ChevronDown, Check, BookOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { HiveInput, HiveSelect, HiveCard } from "@hive/ui";
@@ -115,13 +115,12 @@ export function HiveAcademicsStep({
                   setShowValidationError(false);
                 }}
                 className={cn(
-                  "relative p-4 rounded-xl border transition-all duration-200 text-center",
+                  "relative p-4 rounded-xl border transition-all duration-200 text-center hover:scale-[1.02] active:scale-[0.98]",
                   academicLevel === level.value
                     ? "bg-[var(--hive-brand-primary)]/20 border-[var(--hive-brand-primary)] text-[var(--hive-brand-primary)]"
                     : "bg-[var(--hive-background-secondary)]/40 border-[var(--hive-border-primary)]/30 text-[var(--hive-text-secondary)] hover:border-[var(--hive-brand-primary)]/50"
                 )}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+                // Removed whileHover and whileTap - using CSS hover/active states
               >
                 <div className="text-lg mb-1">{level.icon}</div>
                 <div className="text-sm font-medium">{level.label}</div>
@@ -145,9 +144,9 @@ export function HiveAcademicsStep({
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
-                className="text-red-500 text-sm flex items-center gap-2"
+                className="text-[var(--hive-status-error)] text-sm flex items-center gap-2"
               >
-                <span className="text-red-500">⚠️</span>
+                <span className="text-[var(--hive-status-error)]">⚠️</span>
                 Please select your academic level to continue
               </motion.div>
             )}

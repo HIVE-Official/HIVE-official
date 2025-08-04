@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { doc, getDoc, addDoc, collection, query, where, getDocs, orderBy, limit, updateDoc, deleteDoc } from 'firebase/firestore';
 import { dbAdmin as adminDb } from '@/lib/firebase-admin';
 import { getCurrentUser } from '@/lib/auth-server';
 import { z } from 'zod';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 const ReviewSchema = z.object({
   rating: z.number().min(1).max(5),
@@ -38,7 +39,7 @@ export async function POST(request: NextRequest, { params }: { params: { toolId:
   try {
     const user = await getCurrentUser(request);
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const { toolId } = params;
@@ -48,12 +49,12 @@ export async function POST(request: NextRequest, { params }: { params: { toolId:
     // Check if tool exists and is published
     const toolDoc = await adminDb.collection('tools').doc(toolId).get();
     if (!toolDoc.exists) {
-      return NextResponse.json({ error: 'Tool not found' }, { status: 404 });
+      return NextResponse.json(ApiResponseHelper.error("Tool not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     const toolData = toolDoc.data();
     if (toolData?.status !== 'published') {
-      return NextResponse.json({ error: 'Cannot review unpublished tool' }, { status: 400 });
+      return NextResponse.json(ApiResponseHelper.error("Cannot review unpublished tool", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
     // Check if user has already reviewed this tool
@@ -64,7 +65,7 @@ export async function POST(request: NextRequest, { params }: { params: { toolId:
       .get();
 
     if (!existingReviewSnapshot.empty) {
-      return NextResponse.json({ error: 'You have already reviewed this tool' }, { status: 409 });
+      return NextResponse.json(ApiResponseHelper.error("You have already reviewed this tool", "UNKNOWN_ERROR"), { status: 409 });
     }
 
     // Check if user has actually used the tool (optional verification)
@@ -139,19 +140,18 @@ export async function POST(request: NextRequest, { params }: { params: { toolId:
     return NextResponse.json({
       reviewId: reviewRef.id,
       message: 'Review created successfully'
-    }, { status: 201 });
+    }, { status: HttpStatus.CREATED });
 
   } catch (error) {
-    console.error('Error creating review:', error);
     
     if (error instanceof z.ZodError) {
       return NextResponse.json({
         error: 'Invalid review data',
         details: error.errors
-      }, { status: 400 });
+      }, { status: HttpStatus.BAD_REQUEST });
     }
 
-    return NextResponse.json({ error: 'Failed to create review' }, { status: 500 });
+    return NextResponse.json(ApiResponseHelper.error("Failed to create review", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -168,7 +168,7 @@ export async function GET(request: NextRequest, { params }: { params: { toolId: 
     // Check if tool exists
     const toolDoc = await adminDb.collection('tools').doc(toolId).get();
     if (!toolDoc.exists) {
-      return NextResponse.json({ error: 'Tool not found' }, { status: 404 });
+      return NextResponse.json(ApiResponseHelper.error("Tool not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     let reviewsQuery = adminDb
@@ -239,8 +239,7 @@ export async function GET(request: NextRequest, { params }: { params: { toolId: 
     });
 
   } catch (error) {
-    console.error('Error fetching reviews:', error);
-    return NextResponse.json({ error: 'Failed to fetch reviews' }, { status: 500 });
+    return NextResponse.json(ApiResponseHelper.error("Failed to fetch reviews", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -291,7 +290,8 @@ async function updateToolRatingStats(toolId: string) {
     }
 
   } catch (error) {
-    console.error('Error updating rating stats:', error);
+    // Error updating marketplace stats - this is non-critical, so we silently continue
+    logger.error('Failed to update marketplace stats', { error: error, endpoint: '/api/tools/[toolId]/reviews' });
   }
 }
 

@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { collection, doc, getDoc, query, where, getDocs, orderBy, limit as fbLimit, startAfter } from 'firebase/firestore';
-import { db } from '@hive/core/server';
-import { getCurrentUser } from '@hive/auth-logic';
+// Use admin SDK methods since we're in an API route
+import { dbAdmin } from '@/lib/firebase-admin';
+import { getCurrentUser } from '@/lib/server-auth';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 // Space-aware filtering interfaces
 interface SpaceVisibilityRules {
@@ -58,7 +60,7 @@ export async function POST(request: NextRequest) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const body = await request.json();
@@ -88,7 +90,7 @@ export async function POST(request: NextRequest) {
 
     // Get space visibility rules for accessible spaces
     const spaceIds = targetSpaces.length > 0 
-      ? targetSpaces.filter(id => userSpaceContexts.some(ctx => ctx.spaceId === id))
+      ? targetSpaces.filter((id: string) => userSpaceContexts.some(ctx => ctx.spaceId === id))
       : userSpaceContexts.map(ctx => ctx.spaceId);
 
     const visibilityRules = await getSpaceVisibilityRules(spaceIds);
@@ -121,8 +123,8 @@ export async function POST(request: NextRequest) {
       }
     });
   } catch (error) {
-    console.error('Error applying space-aware filtering:', error);
-    return NextResponse.json({ error: 'Failed to apply space filtering' }, { status: 500 });
+    logger.error('Error applying space-aware filtering', { error: error, endpoint: '/api/feed/space-filtering' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to apply space filtering", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -131,7 +133,7 @@ export async function GET(request: NextRequest) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const { searchParams } = new URL(request.url);
@@ -155,21 +157,19 @@ export async function GET(request: NextRequest) {
       });
     }
   } catch (error) {
-    console.error('Error getting space access info:', error);
-    return NextResponse.json({ error: 'Failed to get space access info' }, { status: 500 });
+    logger.error('Error getting space access info', { error: error, endpoint: '/api/feed/space-filtering' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to get space access info", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
 // Helper function to get user's space contexts
 async function getUserSpaceContexts(userId: string): Promise<UserSpaceContext[]> {
   try {
-    const membershipsQuery = query(
-      collection(db, 'members'),
-      where('userId', '==', userId),
-      where('status', 'in', ['active', 'inactive'])
-    );
-
-    const membershipsSnapshot = await getDocs(membershipsQuery);
+    const membershipsSnapshot = await dbAdmin
+      .collection('members')
+      .where('userId', '==', userId)
+      .where('status', 'in', ['active', 'inactive'])
+      .get();
     const contexts: UserSpaceContext[] = [];
 
     for (const memberDoc of membershipsSnapshot.docs) {
@@ -195,7 +195,7 @@ async function getUserSpaceContexts(userId: string): Promise<UserSpaceContext[]>
 
     return contexts;
   } catch (error) {
-    console.error('Error getting user space contexts:', error);
+    logger.error('Error getting user space contexts', { error: error, endpoint: '/api/feed/space-filtering' });
     return [];
   }
 }
@@ -206,16 +206,19 @@ async function getSpaceVisibilityRules(spaceIds: string[]): Promise<Map<string, 
 
   try {
     for (const spaceId of spaceIds) {
-      const spaceDoc = await getDoc(doc(db, 'spaces', spaceId));
-      if (!spaceDoc.exists()) continue;
+      const spaceDoc = await dbAdmin.collection('spaces').doc(spaceId).get();
+      if (!spaceDoc.exists) continue;
 
       const spaceData = spaceDoc.data();
+    if (!spaceData) {
+      return { spaceId, accessible: false, reason: 'Space data not found' };
+    }
       
       // Get or create visibility rules
-      const visibilityRulesDoc = await getDoc(doc(db, 'spaceVisibilityRules', spaceId));
+      const visibilityRulesDoc = await dbAdmin.collection('spaceVisibilityRules').doc(spaceId).get();
       let visibilityRules: SpaceVisibilityRules;
 
-      if (visibilityRulesDoc.exists()) {
+      if (visibilityRulesDoc.exists) {
         visibilityRules = visibilityRulesDoc.data() as SpaceVisibilityRules;
       } else {
         // Create default rules based on space type
@@ -227,7 +230,7 @@ async function getSpaceVisibilityRules(spaceIds: string[]): Promise<Map<string, 
 
     return rulesMap;
   } catch (error) {
-    console.error('Error getting space visibility rules:', error);
+    logger.error('Error getting space visibility rules', { error: error, endpoint: '/api/feed/space-filtering' });
     return rulesMap;
   }
 }
@@ -364,22 +367,20 @@ async function getSpaceContent(
   cutoffTime: Date
 ): Promise<any[]> {
   try {
-    const postsQuery = query(
-      collection(db, 'posts'),
-      where('spaceId', '==', spaceId),
-      where('status', '==', 'published'),
-      where('createdAt', '>=', cutoffTime.toISOString()),
-      orderBy('createdAt', 'desc'),
-      fbLimit(limit)
-    );
-
-    const postsSnapshot = await getDocs(postsQuery);
+    const postsSnapshot = await dbAdmin
+      .collection('posts')
+      .where('spaceId', '==', spaceId)
+      .where('status', '==', 'published')
+      .where('createdAt', '>=', cutoffTime.toISOString())
+      .orderBy('createdAt', 'desc')
+      .limit(limit)
+      .get();
     return postsSnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
     }));
   } catch (error) {
-    console.error('Error getting space content:', error);
+    logger.error('Error getting space content', { error: error, endpoint: '/api/feed/space-filtering' });
     return [];
   }
 }
@@ -493,15 +494,13 @@ async function calculateUserEngagementInSpace(userId: string, spaceId: string): 
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
-    const activityQuery = query(
-      collection(db, 'activityEvents'),
-      where('userId', '==', userId),
-      where('spaceId', '==', spaceId),
-      where('date', '>=', thirtyDaysAgo.toISOString().split('T')[0]),
-      fbLimit(100)
-    );
-
-    const activitySnapshot = await getDocs(activityQuery);
+    const activitySnapshot = await dbAdmin
+      .collection('activityEvents')
+      .where('userId', '==', userId)
+      .where('spaceId', '==', spaceId)
+      .where('date', '>=', thirtyDaysAgo.toISOString().split('T')[0])
+      .limit(100)
+      .get();
     const activities = activitySnapshot.docs.map(doc => doc.data());
 
     let engagement = 20; // Base engagement
@@ -521,7 +520,7 @@ async function calculateUserEngagementInSpace(userId: string, spaceId: string): 
 
     return Math.min(100, engagement);
   } catch (error) {
-    console.error('Error calculating engagement:', error);
+    logger.error('Error calculating engagement', { error: error, endpoint: '/api/feed/space-filtering' });
     return 20;
   }
 }
@@ -548,21 +547,22 @@ function generateAccessReason(context: UserSpaceContext, rules: SpaceVisibilityR
 // Helper function to get space access info
 async function getSpaceAccessInfo(userId: string, spaceId: string, includePreview: boolean): Promise<any> {
   try {
-    const spaceDoc = await getDoc(doc(db, 'spaces', spaceId));
-    if (!spaceDoc.exists()) {
+    const spaceDoc = await dbAdmin.collection('spaces').doc(spaceId).get();
+    if (!spaceDoc.exists) {
       return { spaceId, accessible: false, reason: 'Space not found' };
     }
 
     const spaceData = spaceDoc.data();
+    if (!spaceData) {
+      return { spaceId, accessible: false, reason: 'Space data not found' };
+    }
     
     // Check membership
-    const memberQuery = query(
-      collection(db, 'members'),
-      where('userId', '==', userId),
-      where('spaceId', '==', spaceId)
-    );
-
-    const memberSnapshot = await getDocs(memberQuery);
+    const memberSnapshot = await dbAdmin
+      .collection('members')
+      .where('userId', '==', userId)
+      .where('spaceId', '==', spaceId)
+      .get();
     
     if (memberSnapshot.empty) {
       return {
@@ -592,7 +592,7 @@ async function getSpaceAccessInfo(userId: string, spaceId: string, includePrevie
       lastActivity: memberData.lastActivity
     };
   } catch (error) {
-    console.error('Error getting space access info:', error);
+    logger.error('Error getting space access info', { error: error, endpoint: '/api/feed/space-filtering' });
     return { spaceId, accessible: false, reason: 'Error checking access' };
   }
 }

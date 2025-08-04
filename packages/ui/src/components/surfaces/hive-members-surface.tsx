@@ -176,6 +176,7 @@ export interface HiveMembersSurfaceProps
   currentUserId?: string;
   isBuilder?: boolean;
   canModerate?: boolean;
+  leaderMode?: 'moderate' | 'manage' | 'configure' | 'insights' | null;
   onViewProfile?: (memberId: string) => void;
   onMessageMember?: (memberId: string) => void;
   onInviteMember?: () => void;
@@ -243,6 +244,7 @@ export const HiveMembersSurface = React.forwardRef<HTMLDivElement, HiveMembersSu
     currentUserId,
     isBuilder = false,
     canModerate = false,
+    leaderMode = null,
     onViewProfile,
     onMessageMember,
     onInviteMember,
@@ -299,10 +301,10 @@ export const HiveMembersSurface = React.forwardRef<HTMLDivElement, HiveMembersSu
       // Normalize date fields
       joinedAt: member.joinedAt && typeof member.joinedAt === 'object' && 'toDate' in member.joinedAt 
         ? member.joinedAt.toDate() 
-        : new Date(member.joinedAt),
+        : member.joinedAt instanceof Date ? member.joinedAt : new Date(member.joinedAt as unknown as string | number),
       lastActive: member.lastActive && typeof member.lastActive === 'object' && 'toDate' in member.lastActive 
         ? member.lastActive.toDate() 
-        : new Date(member.lastActive),
+        : member.lastActive instanceof Date ? member.lastActive : new Date(member.lastActive as unknown as string | number),
       // Ensure required fields have defaults
       isVerified: member.isVerified || false,
       badges: member.badges || [],
@@ -318,9 +320,13 @@ export const HiveMembersSurface = React.forwardRef<HTMLDivElement, HiveMembersSu
         canViewProfile: true,
         canInviteOthers: false,
       },
-      // Map role to match our role system
-      role: (member.role === 'owner' || member.role === 'admin') ? 'builder' : 
-            (member.role in memberRoles ? member.role : 'member') as keyof typeof memberRoles,
+      // Map role to match our role system - handle any string input
+      role: (() => {
+        const rawRole = member.role as string;
+        if (rawRole === 'owner' || rawRole === 'admin') return 'builder';
+        if (rawRole in memberRoles) return rawRole as keyof typeof memberRoles;
+        return 'member' as keyof typeof memberRoles;
+      })(),
     }));
 
     const filteredMembers = normalizedMembers
@@ -756,9 +762,9 @@ export const HiveMembersSurface = React.forwardRef<HTMLDivElement, HiveMembersSu
                     )}
                     
                     {/* Interests (List View) */}
-                    {currentViewMode === 'list' && member.interests.length > 0 && (
+                    {currentViewMode === 'list' && (member.interests?.length || 0) > 0 && (
                       <div className="flex items-center gap-1 mt-2 flex-wrap">
-                        {member.interests.slice(0, 3).map((interest, i) => (
+                        {(member.interests || []).slice(0, 3).map((interest, i) => (
                           <span
                             key={i}
                             className="px-2 py-0.5 bg-[var(--hive-text-primary)]/5 rounded text-xs text-gray-300"
@@ -766,9 +772,9 @@ export const HiveMembersSurface = React.forwardRef<HTMLDivElement, HiveMembersSu
                             {interest}
                           </span>
                         ))}
-                        {member.interests.length > 3 && (
+                        {(member.interests?.length || 0) > 3 && (
                           <span className="text-xs text-gray-400">
-                            +{member.interests.length - 3} more
+                            +{(member.interests?.length || 0) - 3} more
                           </span>
                         )}
                       </div>
@@ -794,61 +800,182 @@ export const HiveMembersSurface = React.forwardRef<HTMLDivElement, HiveMembersSu
                       </motion.button>
                     )}
                     
-                    {canModerate && !isCurrentUser && (
+                    {/* Enhanced Member Management - Leader Toolbar Integration */}
+                    {(canModerate || leaderMode === 'manage') && !isCurrentUser && (
                       <div className="relative">
-                        <motion.button
-                          className="p-2 text-gray-400 hover:text-[var(--hive-text-primary)] rounded-lg hover:bg-[var(--hive-text-primary)]/5 transition-all duration-200"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setShowMemberMenu(showMemberMenu === member.id ? null : member.id);
-                          }}
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                        >
-                          <MoreHorizontal className="w-4 h-4" />
-                        </motion.button>
-                        
-                        {/* Member Actions Menu */}
-                        <AnimatePresence>
-                          {showMemberMenu === member.id && (
+                        {/* Manage Mode - Always Visible Role Controls */}
+                        {leaderMode === 'manage' ? (
+                          <div className="flex items-center gap-2">
+                            {/* Role Dropdown */}
+                            <div className="relative">
+                              <motion.button
+                                className="flex items-center gap-2 px-3 py-1.5 bg-blue-500/20 border border-blue-500/30 rounded-lg text-xs text-blue-400 hover:bg-blue-500/30 transition-all"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setShowMemberMenu(showMemberMenu === member.id ? null : member.id);
+                                }}
+                                whileHover={{ scale: 1.02 }}
+                                whileTap={{ scale: 0.98 }}
+                              >
+                                <RoleIcon className="w-3 h-3" />
+                                <span className="capitalize">{member.role}</span>
+                                <Settings className="w-3 h-3" />
+                              </motion.button>
+                              
+                              {/* Role Change Menu */}
+                              <AnimatePresence>
+                                {showMemberMenu === member.id && (
+                                  <motion.div
+                                    className="absolute top-full right-0 mt-2 w-56 bg-[#0A0A0A] border border-blue-500/30 rounded-xl overflow-hidden z-20 shadow-xl"
+                                    initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                                    exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                                    transition={{ duration: 0.2 }}
+                                  >
+                                    <div className="p-3">
+                                      <div className="text-xs text-blue-400 font-medium mb-2 border-b border-blue-500/20 pb-2">
+                                        Manage {member.name}
+                                      </div>
+                                      
+                                      {/* Role Options */}
+                                      <div className="space-y-1 mb-3">
+                                        {Object.entries(memberRoles).filter(([role]) => role !== 'owner').map(([role, config]) => {
+                                          const RoleOptionIcon = config.icon;
+                                          const isCurrentRole = member.role === role;
+                                          
+                                          return (
+                                            <motion.button
+                                              key={role}
+                                              className={cn(
+                                                "w-full flex items-center gap-3 p-2 text-left rounded-lg transition-all duration-200 text-sm",
+                                                isCurrentRole 
+                                                  ? "bg-blue-500/20 text-blue-400 border border-blue-500/30" 
+                                                  : "hover:bg-blue-500/10 text-white hover:text-blue-400"
+                                              )}
+                                              onClick={() => {
+                                                if (!isCurrentRole) {
+                                                  onChangeRole?.(member.id, role as keyof typeof memberRoles);
+                                                }
+                                                setShowMemberMenu(null);
+                                              }}
+                                              disabled={isCurrentRole}
+                                              whileHover={!isCurrentRole ? { x: 4 } : {}}
+                                            >
+                                              <RoleOptionIcon className={cn(
+                                                "w-4 h-4",
+                                                isCurrentRole ? "text-blue-400" : config.color
+                                              )} />
+                                              <div className="flex-1">
+                                                <div className="capitalize font-medium">{role}</div>
+                                                <div className="text-xs opacity-70">{config.description}</div>
+                                              </div>
+                                              {isCurrentRole && (
+                                                <UserCheck className="w-3 h-3 text-blue-400" />
+                                              )}
+                                            </motion.button>
+                                          );
+                                        })}
+                                      </div>
+                                      
+                                      {/* Danger Actions */}
+                                      <div className="border-t border-red-500/20 pt-2 space-y-1">
+                                        <motion.button
+                                          className="w-full flex items-center gap-3 p-2 text-left rounded-lg hover:bg-red-500/10 transition-all duration-200 text-sm text-red-400"
+                                          onClick={() => {
+                                            onRemoveMember?.(member.id);
+                                            setShowMemberMenu(null);
+                                          }}
+                                          whileHover={{ x: 4 }}
+                                        >
+                                          <UserMinus className="w-4 h-4" />
+                                          Remove Member
+                                        </motion.button>
+                                        
+                                        <motion.button
+                                          className="w-full flex items-center gap-3 p-2 text-left rounded-lg hover:bg-red-500/10 transition-all duration-200 text-sm text-red-400"
+                                          onClick={() => {
+                                            onBlockMember?.(member.id);
+                                            setShowMemberMenu(null);
+                                          }}
+                                          whileHover={{ x: 4 }}
+                                        >
+                                          <UserX className="w-4 h-4" />
+                                          Suspend Member
+                                        </motion.button>
+                                      </div>
+                                    </div>
+                                  </motion.div>
+                                )}
+                              </AnimatePresence>
+                            </div>
+                            
+                            {/* Manage Mode Indicator */}
                             <motion.div
-                              className="absolute top-full right-0 mt-2 w-48 bg-[var(--hive-background-primary)]/80 backdrop-blur-xl border border-white/10 rounded-xl overflow-hidden z-20"
-                              initial={{ opacity: 0, y: -10 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              exit={{ opacity: 0, y: -10 }}
-                              transition={{ duration: motionDurations.quick }}
+                              className="px-2 py-1 bg-blue-500/20 border border-blue-500/30 rounded text-xs text-blue-400"
+                              initial={{ opacity: 0, scale: 0.8 }}
+                              animate={{ opacity: 1, scale: 1 }}
                             >
-                              <div className="p-2">
-                                <motion.button
-                                  className="w-full flex items-center gap-3 p-2 text-left rounded-lg hover:bg-[var(--hive-text-primary)]/5 transition-all duration-200 text-sm text-[var(--hive-text-primary)]"
-                                  onClick={() => onChangeRole?.(member.id, 'moderator')}
-                                  whileHover={{ x: 4 }}
-                                >
-                                  <Shield className="w-4 h-4 text-blue-400" />
-                                  Make Moderator
-                                </motion.button>
-                                
-                                <motion.button
-                                  className="w-full flex items-center gap-3 p-2 text-left rounded-lg hover:bg-red-500/10 transition-all duration-200 text-sm text-red-400"
-                                  onClick={() => onRemoveMember?.(member.id)}
-                                  whileHover={{ x: 4 }}
-                                >
-                                  <UserMinus className="w-4 h-4" />
-                                  Remove Member
-                                </motion.button>
-                                
-                                <motion.button
-                                  className="w-full flex items-center gap-3 p-2 text-left rounded-lg hover:bg-red-500/10 transition-all duration-200 text-sm text-red-400"
-                                  onClick={() => onBlockMember?.(member.id)}
-                                  whileHover={{ x: 4 }}
-                                >
-                                  <UserX className="w-4 h-4" />
-                                  Block Member
-                                </motion.button>
-                              </div>
+                              Manage
                             </motion.div>
-                          )}
-                        </AnimatePresence>
+                          </div>
+                        ) : (
+                          /* Standard Menu Button */
+                          <>
+                            <motion.button
+                              className="p-2 text-gray-400 hover:text-[var(--hive-text-primary)] rounded-lg hover:bg-[var(--hive-text-primary)]/5 transition-all duration-200"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setShowMemberMenu(showMemberMenu === member.id ? null : member.id);
+                              }}
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.95 }}
+                            >
+                              <MoreHorizontal className="w-4 h-4" />
+                            </motion.button>
+                            
+                            {/* Standard Actions Menu */}
+                            <AnimatePresence>
+                              {showMemberMenu === member.id && (
+                                <motion.div
+                                  className="absolute top-full right-0 mt-2 w-48 bg-[var(--hive-background-primary)]/80 backdrop-blur-xl border border-white/10 rounded-xl overflow-hidden z-20"
+                                  initial={{ opacity: 0, y: -10 }}
+                                  animate={{ opacity: 1, y: 0 }}
+                                  exit={{ opacity: 0, y: -10 }}
+                                  transition={{ duration: motionDurations.quick }}
+                                >
+                                  <div className="p-2">
+                                    <motion.button
+                                      className="w-full flex items-center gap-3 p-2 text-left rounded-lg hover:bg-[var(--hive-text-primary)]/5 transition-all duration-200 text-sm text-[var(--hive-text-primary)]"
+                                      onClick={() => onChangeRole?.(member.id, 'moderator')}
+                                      whileHover={{ x: 4 }}
+                                    >
+                                      <Shield className="w-4 h-4 text-blue-400" />
+                                      Make Moderator
+                                    </motion.button>
+                                    
+                                    <motion.button
+                                      className="w-full flex items-center gap-3 p-2 text-left rounded-lg hover:bg-red-500/10 transition-all duration-200 text-sm text-red-400"
+                                      onClick={() => onRemoveMember?.(member.id)}
+                                      whileHover={{ x: 4 }}
+                                    >
+                                      <UserMinus className="w-4 h-4" />
+                                      Remove Member
+                                    </motion.button>
+                                    
+                                    <motion.button
+                                      className="w-full flex items-center gap-3 p-2 text-left rounded-lg hover:bg-red-500/10 transition-all duration-200 text-sm text-red-400"
+                                      onClick={() => onBlockMember?.(member.id)}
+                                      whileHover={{ x: 4 }}
+                                    >
+                                      <UserX className="w-4 h-4" />
+                                      Block Member
+                                    </motion.button>
+                                  </div>
+                                </motion.div>
+                              )}
+                            </AnimatePresence>
+                          </>
+                        )}
                       </div>
                     )}
                   </div>

@@ -1,8 +1,10 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
-import { getAuth } from 'firebase-admin/auth';
 import { dbAdmin } from '@/lib/firebase-admin';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
 
 const socialProofSchema = z.object({
   spaceIds: z.string().optional(), // Comma-separated space IDs
@@ -54,38 +56,15 @@ interface SocialProofData {
  * Social Proof API - Provides social context for space discovery
  * Shows friends, similar users, and peer activity to drive engagement
  */
-export async function GET(request: NextRequest) {
+export const GET = withAuth(async (request: NextRequest, authContext) => {
   try {
     const url = new URL(request.url);
     const queryParams = Object.fromEntries(url.searchParams.entries());
     const { spaceIds, includeActivity, includeMutualFriends, includeSimilarUsers } = socialProofSchema.parse(queryParams);
 
-    // Verify authentication
-    const authHeader = request.headers.get('Authorization');
-    if (!authHeader?.startsWith('Bearer ')) {
-      return NextResponse.json(
-        { error: 'Authorization header required' },
-        { status: 401 }
-      );
-    }
+    const userId = authContext.userId;
 
-    const token = authHeader.substring(7);
-    let userId = 'test-user';
-    
-    if (token !== 'test-token') {
-      try {
-        const auth = getAuth();
-        const decodedToken = await auth.verifyIdToken(token);
-        userId = decodedToken.uid;
-      } catch (authError) {
-        return NextResponse.json(
-          { error: 'Invalid or expired token' },
-          { status: 401 }
-        );
-      }
-    }
-
-    console.log(`👥 Getting social proof for user ${userId}`);
+    logger.info('👥 Getting social proof for user', { userId, endpoint: '/api/spaces/social-proof' });
 
     // Parse space IDs
     const targetSpaceIds = spaceIds ? spaceIds.split(',').filter(Boolean) : [];
@@ -131,21 +110,21 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error: any) {
-    console.error('Social proof error:', error);
+    logger.error('Social proof error', { error: error, endpoint: '/api/spaces/social-proof' });
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: 'Invalid query parameters', details: error.errors },
-        { status: 400 }
+        { status: HttpStatus.BAD_REQUEST }
       );
     }
 
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json(ApiResponseHelper.error("Internal server error", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
-}
+}, { 
+  allowDevelopmentBypass: true, // Social proof is safe for development
+  operation: 'get_social_proof' 
+});
 
 /**
  * Get user's social profile including friends and preferences
@@ -195,7 +174,7 @@ async function getUserSocialProfile(userId: string) {
     };
 
   } catch (error) {
-    console.error('Error getting user social profile:', error);
+    logger.error('Error getting user social profile', { error: error, endpoint: '/api/spaces/social-proof' });
     return {
       id: userId,
       displayName: 'Anonymous',
@@ -228,7 +207,7 @@ async function getUserSpaces(userId: string): Promise<string[]> {
 
     return spaceIds;
   } catch (error) {
-    console.error('Error getting user spaces:', error);
+    logger.error('Error getting user spaces', { error: error, endpoint: '/api/spaces/social-proof' });
     return [];
   }
 }
@@ -356,7 +335,7 @@ async function getSpaceMembers(spaceType: string, spaceId: string) {
 
     return members;
   } catch (error) {
-    console.error('Error getting space members:', error);
+    logger.error('Error getting space members', { error: error, endpoint: '/api/spaces/social-proof' });
     return [];
   }
 }
@@ -430,9 +409,11 @@ function calculateUserSimilarity(user1: any, user2: any): number {
   factors++;
 
   // Common interests
-  const commonInterests = findCommonInterests(user1.interests, user2.interests);
-  if (user1.interests.length > 0 && user2.interests.length > 0) {
-    const interestSimilarity = commonInterests.length / Math.max(user1.interests.length, user2.interests.length);
+  const user1Interests = user1.interests || [];
+  const user2Interests = user2.interests || [];
+  const commonInterests = findCommonInterests(user1Interests, user2Interests);
+  if (user1Interests.length > 0 && user2Interests.length > 0) {
+    const interestSimilarity = commonInterests.length / Math.max(user1Interests.length, user2Interests.length);
     score += interestSimilarity * 0.5;
   }
   factors++;
@@ -496,7 +477,7 @@ async function getRecentSpaceActivity(spaceType: string, spaceId: string) {
 
     return recentJoins.filter(Boolean).slice(0, 5);
   } catch (error) {
-    console.error('Error getting recent activity:', error);
+    logger.error('Error getting recent activity', { error: error, endpoint: '/api/spaces/social-proof' });
     return [];
   }
 }

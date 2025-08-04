@@ -11,21 +11,32 @@ export declare const breakpoints: {
     readonly xl: "1280px";
     readonly '2xl': "1536px";
 };
+export declare const responsiveBreakpoints: {
+    readonly mobile: "320px";
+    readonly sm: "640px";
+    readonly md: "768px";
+    readonly lg: "1024px";
+    readonly xl: "1280px";
+    readonly '2xl': "1536px";
+};
+export type ResponsiveBreakpoint = keyof typeof breakpoints;
+export type ResponsiveSpacing = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+export type TouchTarget = keyof typeof touchTargets;
 export declare const touchTargets: {
     readonly minimum: "min-h-[44px] min-w-[44px]";
     readonly comfortable: "min-h-[48px] min-w-[48px]";
     readonly spacious: "min-h-[56px] min-w-[56px]";
 };
 export declare const responsiveSpace: (props?: {
-    size?: "xs" | "sm" | "lg" | "xl" | "md";
-    gap?: "xs" | "sm" | "lg" | "xl" | "md";
-} & import("class-variance-authority/dist/types").ClassProp) => string;
+    size?: "xs" | "sm" | "md" | "lg" | "xl";
+    gap?: "xs" | "sm" | "md" | "lg" | "xl";
+} & import("class-variance-authority/types").ClassProp) => string;
 export declare const responsiveText: (props?: {
-    size?: "base" | "xs" | "sm" | "lg" | "xl" | "2xl" | "3xl";
-} & import("class-variance-authority/dist/types").ClassProp) => string;
+    size?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
+} & import("class-variance-authority/types").ClassProp) => string;
 export declare const responsiveContainer: (props?: {
-    size?: "content" | "feed" | "app" | "full";
-} & import("class-variance-authority/dist/types").ClassProp) => string;
+    size?: "full" | "content" | "feed" | "app";
+} & import("class-variance-authority/types").ClassProp) => string;
 export declare const mobileNavigation: {
     readonly bottomTabs: "fixed bottom-0 left-0 right-0 bg-[var(--hive-background-primary)]/95 backdrop-blur-sm border-t border-[var(--hive-border-primary)] h-16 sm:hidden";
     readonly drawer: "fixed inset-y-0 left-0 z-50 w-64 bg-[var(--hive-background-primary)] transform transition-transform sm:translate-x-0 sm:static sm:w-auto";
@@ -38,8 +49,8 @@ export declare const touchInteractions: {
     readonly scrollContainer: "overflow-auto -webkit-overflow-scrolling-touch";
 };
 export declare const socialGrid: (props?: {
-    type?: "feed" | "cards" | "profile" | "dashboard";
-} & import("class-variance-authority/dist/types").ClassProp) => string;
+    type?: "feed" | "profile" | "cards" | "dashboard";
+} & import("class-variance-authority/types").ClassProp) => string;
 export declare const visibility: {
     readonly mobileOnly: "block sm:hidden";
     readonly desktopOnly: "hidden sm:block";

@@ -2,6 +2,8 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { dbAdmin as adminDb } from "@/lib/firebase-admin";
 import { getCurrentUser } from "@/lib/auth-server";
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 // GET /api/tools/browse - Browse and discover tools
 export async function GET(request: NextRequest) {
@@ -22,10 +24,10 @@ export async function GET(request: NextRequest) {
       try {
         currentUser = await getCurrentUser(request);
         if (!currentUser) {
-          return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+          return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
         }
       } catch (error) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
       }
     }
 
@@ -100,14 +102,14 @@ export async function GET(request: NextRequest) {
             createdByName = userData?.displayName || userData?.name || `${userData?.firstName || ''} ${userData?.lastName || ''}`.trim() || "Anonymous";
           }
         } catch (error) {
-          console.warn(`Failed to get user info for ${toolData.ownerId}:`, error);
+          logger.warn('Failed to get user info for', { toolDataOwnerId: toolData.ownerId, data: error, endpoint: '/api/tools/browse'  });
         }
 
         // Apply search filter (done post-query for flexibility)
         if (search) {
           const searchLower = search.toLowerCase();
           const matchesSearch = 
-            toolData.name.toLowerCase().includes(searchLower) ||
+            (toolData.name?.toLowerCase() || '').includes(searchLower) ||
             toolData.description.toLowerCase().includes(searchLower) ||
             (toolData.tags || []).some((tag: string) => tag.toLowerCase().includes(searchLower));
           
@@ -174,7 +176,7 @@ export async function GET(request: NextRequest) {
         const countSnapshot = await countQuery.count().get();
         total = countSnapshot.data().count;
       } catch (error) {
-        console.warn("Failed to get total count:", error);
+        logger.warn('Failed to get total count', { data: error, endpoint: '/api/tools/browse' });
         // Fallback to current batch size
         total = filteredTools.length;
       }
@@ -188,13 +190,9 @@ export async function GET(request: NextRequest) {
         offset,
         hasMore: filteredTools.length === limit,
         returned: filteredTools.length
-      },
-    });
+      } });
   } catch (error) {
-    console.error("Error browsing tools:", error);
-    return NextResponse.json(
-      { error: "Failed to browse tools" },
-      { status: 500 }
-    );
+    logger.error('Error browsing tools', { error: error, endpoint: '/api/tools/browse' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to browse tools", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

@@ -2,6 +2,7 @@
 
 import { useState, useEffect as _useEffect } from "react";
 import { Card, Button, Badge } from "@hive/ui";
+import { Alert } from "@/components/temp-stubs";
 import { 
   Search, 
   Heart as _Heart, 
@@ -17,7 +18,8 @@ import {
   Shield,
   Target,
   Clock as _Clock,
-  Zap as _Zap
+  Zap as _Zap,
+  Calendar
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { type Space } from "@hive/core";
@@ -89,7 +91,7 @@ export function EmptySearchResults({
         {onCreateSpaceRequest && (
           <Button
             onClick={onCreateSpaceRequest}
-            className="w-full bg-yellow-400 text-neutral-950 hover:bg-yellow-300"
+            className="w-full bg-hive-gold text-hive-obsidian hover:bg-hive-champagne"
           >
             <Plus className="h-4 w-4 mr-2" />
             Request new space
@@ -120,7 +122,7 @@ export function EmptySearchResults({
                     <div className="text-xs text-neutral-400">{space.memberCount} members</div>
                   </div>
                 </div>
-                <Button size="sm" className="bg-yellow-400 text-neutral-950">
+                <Button size="sm" className="bg-hive-gold text-hive-obsidian">
                   Join
                 </Button>
               </div>
@@ -211,7 +213,7 @@ export function SpaceOverloadHandler({
           <div className="flex flex-wrap gap-2">
             <Button
               onClick={onOptimizeSpaces}
-              className="bg-orange-400 text-neutral-950 hover:bg-orange-300"
+              className="bg-orange-400 text-hive-obsidian hover:bg-orange-300"
             >
               <Target className="h-4 w-4 mr-2" />
               Optimize my spaces
@@ -557,7 +559,7 @@ export function NetworkIssueHandler({ onRetry }: { onRetry: () => void }) {
       <div className="space-y-3">
         <Button 
           onClick={onRetry}
-          className="bg-yellow-400 text-neutral-950 hover:bg-yellow-300"
+          className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne"
         >
           <RefreshCw className="h-4 w-4 mr-2" />
           Try again

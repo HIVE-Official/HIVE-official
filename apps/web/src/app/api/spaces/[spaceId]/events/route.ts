@@ -4,13 +4,14 @@ import { z } from "zod";
 import { dbAdmin } from "@/lib/firebase-admin";
 import { getAuth } from "firebase-admin/auth";
 import { getAuthTokenFromRequest } from "@/lib/auth";
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 const GetEventsSchema = z.object({
   limit: z.coerce.number().min(1).max(50).default(20),
   offset: z.coerce.number().min(0).default(0),
   type: z.enum(['academic', 'social', 'recreational', 'cultural', 'meeting', 'virtual']).optional(),
-  upcoming: z.coerce.boolean().default(true),
-});
+  upcoming: z.coerce.boolean().default(true) });
 
 const CreateEventSchema = z.object({
   title: z.string().min(1).max(200),
@@ -30,8 +31,7 @@ const CreateEventSchema = z.object({
   isPrivate: z.boolean().default(false),
   requiredRSVP: z.boolean().default(false),
   cost: z.number().nonnegative().optional(),
-  currency: z.string().length(3).optional(),
-});
+  currency: z.string().length(3).optional() });
 
 const db = dbAdmin;
 
@@ -46,10 +46,7 @@ export async function GET(
     // Get and validate auth token
     const token = getAuthTokenFromRequest(request);
     if (!token) {
-      return NextResponse.json(
-        { error: "Authentication required" },
-        { status: 401 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Authentication required", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const auth = getAuth();
@@ -69,10 +66,7 @@ export async function GET(
       .get();
 
     if (!memberDoc.exists) {
-      return NextResponse.json(
-        { error: "Not a member of this space" },
-        { status: 403 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Not a member of this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     // Build query for events
@@ -148,8 +142,7 @@ export async function GET(
             }
           : null,
         currentAttendees: rsvpSnapshot.size,
-        userRSVP: userRsvpStatus,
-      });
+        userRSVP: userRsvpStatus });
     }
 
     return NextResponse.json({
@@ -159,14 +152,10 @@ export async function GET(
         limit,
         offset,
         nextOffset: eventsSnapshot.size === limit ? offset + limit : null,
-      },
-    });
+      } });
   } catch (error) {
-    console.error("Error fetching events:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch events" },
-      { status: 500 }
-    );
+    logger.error('Error fetching events', { error: error, endpoint: '/api/spaces/[spaceId]/events' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to fetch events", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -181,10 +170,10 @@ export async function POST(
     // Get auth header and verify token
     const authHeader = request.headers.get("authorization");
     if (!authHeader?.startsWith("Bearer ")) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
-    const token = authHeader.split("Bearer ")[1];
+    const token = authHeader.substring(7);
     const auth = getAuth();
     const decodedToken = await auth.verifyIdToken(token);
 
@@ -197,10 +186,7 @@ export async function POST(
       .get();
 
     if (!memberDoc.exists) {
-      return NextResponse.json(
-        { error: "Not a member of this space" },
-        { status: 403 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Not a member of this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     const body = (await request.json()) as unknown;
@@ -211,10 +197,7 @@ export async function POST(
     const endDate = new Date(validatedData.endDate);
     
     if (endDate <= startDate) {
-      return NextResponse.json(
-        { error: "End date must be after start date" },
-        { status: 400 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("End date must be after start date", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
     // Create event document
@@ -236,7 +219,7 @@ export async function POST(
       .add(eventData);
 
     // Get the created event with organizer info
-    const organizerDoc = await db.collection("users").doc(decodedToken.uid).get();
+    const organizerDoc = await dbAdmin.collection("users").doc(decodedToken.uid).get();
     const organizer = organizerDoc.data();
 
     const createdEvent = {
@@ -252,7 +235,7 @@ export async function POST(
       userRSVP: null,
     };
 
-    return NextResponse.json({ event: createdEvent }, { status: 201 });
+    return NextResponse.json({ event: createdEvent }, { status: HttpStatus.CREATED });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -260,14 +243,11 @@ export async function POST(
           error: "Invalid event data",
           details: error.errors,
         },
-        { status: 400 }
+        { status: HttpStatus.BAD_REQUEST }
       );
     }
 
-    console.error("Error creating event:", error);
-    return NextResponse.json(
-      { error: "Failed to create event" },
-      { status: 500 }
-    );
+    logger.error('Error creating event', { error: error, endpoint: '/api/spaces/[spaceId]/events' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to create event", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

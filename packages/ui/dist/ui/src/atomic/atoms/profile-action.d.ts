@@ -2,12 +2,12 @@ import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
 import { LucideIcon } from 'lucide-react';
 declare const profileActionVariants: (props?: {
-    size?: "xs" | "sm" | "lg" | "md";
-    variant?: "outline" | "primary" | "secondary" | "ghost" | "success" | "destructive";
-    shape?: "pill" | "rounded" | "square";
-    width?: "auto" | "icon" | "full";
+    size?: "xs" | "sm" | "md" | "lg";
+    variant?: "primary" | "secondary" | "success" | "outline" | "ghost" | "destructive";
+    shape?: "rounded" | "square" | "pill";
+    width?: "icon" | "full" | "auto";
     interactive?: boolean;
-} & import("class-variance-authority/dist/types").ClassProp) => string;
+} & import("class-variance-authority/types").ClassProp) => string;
 export declare const ACTION_TYPES: {
     readonly edit: {
         readonly icon: React.ForwardRefExoticComponent<Omit<import("lucide-react").LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>>;

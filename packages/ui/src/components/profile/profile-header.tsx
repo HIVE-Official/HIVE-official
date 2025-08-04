@@ -129,10 +129,10 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
           </div>
 
           {/* Interests */}
-          {user.interests.length > 0 && (
+          {(user.interests?.length || 0) > 0 && (
             <div className="mt-4">
               <div className="flex flex-wrap gap-2">
-                {user.interests.map((interest) => (
+                {(user.interests || []).map((interest) => (
                   <HiveBadge key={interest} variant="skill-tag" className="text-xs">
                     {interest}
                   </HiveBadge>

@@ -1,9 +1,9 @@
 "use client";
 
 import React from 'react';
-import { EnhancedAppShell } from '@hive/ui';
 import { useSession } from '../hooks/use-session';
-// import { darkLuxury, luxuryRadius, luxurySpacing } from '@hive/ui/src/theme/dark-luxury';
+import { SidebarLayout } from './navigation/sidebar-layout';
+import { ErrorBoundary } from './error-boundary';
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -12,14 +12,13 @@ interface AppLayoutProps {
 
 /**
  * Main application layout wrapper that provides the HIVE product shell
- * for authenticated pages. This includes navigation, user menu, command palette,
- * and notification center.
+ * for authenticated pages. This includes sidebar navigation, user menu, 
+ * search functionality, and notification center.
  * 
- * Automatically integrates with the existing useAuth hook to provide
- * user context to the shell.
+ * Uses the SidebarLayout for tech-sleek navigation experience.
  */
 export function AppLayout({ children, hideShell = false }: AppLayoutProps) {
-  const { user, isLoading, isAuthenticated } = useSession();
+  const { isLoading } = useSession();
 
   // Pages that should not show the shell (auth, onboarding, etc.)
   if (hideShell) {
@@ -58,19 +57,10 @@ export function AppLayout({ children, hideShell = false }: AppLayoutProps) {
     );
   }
 
-  // Default to enhanced app shell
-  const shellUser = user ? {
-    id: user.id,
-    name: user.fullName || user.email?.split('@')[0] || 'User',
-    handle: user.handle || user.email?.split('@')[0] || 'user',
-    avatar: user.avatarUrl,
-    builderStatus: (user.builderOptIn ? 'active' : 'none') as 'none' | 'pending' | 'active',
-    role: 'student' as 'student' | 'faculty' | 'admin' // Default to student, could be enhanced with real role data
-  } : null;
-
+  // Use SidebarLayout for tech-sleek navigation experience with error boundary
   return (
-    <EnhancedAppShell user={shellUser}>
-      {children}
-    </EnhancedAppShell>
+    <ErrorBoundary>
+      <SidebarLayout>{children}</SidebarLayout>
+    </ErrorBoundary>
   );
 }

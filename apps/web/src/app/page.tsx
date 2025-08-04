@@ -5,18 +5,59 @@ import { useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
 
 /**
- * Root page that handles authentication routing and serves as authenticated dashboard
- * This implements the Flow 1 routing logic and serves as the main dashboard when authenticated
+ * Root page - Clean authentication router (no longer tries to be dashboard)
+ * Handles routing logic: unauthenticated → schools, authenticated → profile (command center)
  */
 export default function RootPage() {
   const router = useRouter();
-  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
-  const [shouldShowDashboard, setShouldShowDashboard] = useState(false);
+  const [_isCheckingAuth, setIsCheckingAuth] = useState(true);
+  
+  // Force dev mode for testing - check both server and client
+  const isDev = process.env.NODE_ENV === "development";
 
   useEffect(() => {
-    // Check if user has a session and handle routing
+    // FORCE DEV MODE - immediate redirect (only on client side to avoid hydration mismatch)
+    if (typeof window !== 'undefined' && isDev) {
+      router.replace('/profile');
+      return;
+    }
+    
     const checkAuthAndRedirect = () => {
       try {
+        // Check if we're in the browser
+        if (typeof window === 'undefined') {
+          setIsCheckingAuth(false);
+          return;
+        }
+
+        // DEVELOPMENT MODE: Immediately redirect to profile
+        if (isDev) {
+          console.log('🛠️ Dev mode: Immediately redirecting to profile');
+          
+          // Create dev session
+          const devSession = {
+            userId: 'dev_user_123',
+            email: 'dev@hive.com',
+            schoolId: 'dev_school',
+            needsOnboarding: false,
+            onboardingCompleted: true,
+            verifiedAt: new Date().toISOString(),
+            profileData: {
+              fullName: 'Dev User',
+              handle: 'devuser',
+              major: 'Computer Science',
+              avatarUrl: '',
+              builderOptIn: true
+            }
+          };
+          
+          window.localStorage.setItem('hive_session', JSON.stringify(devSession));
+          window.localStorage.setItem('dev_auth_mode', 'true');
+          
+          router.replace('/profile');
+          return;
+        }
+
         const sessionData = window.localStorage.getItem('hive_session');
         
         if (!sessionData) {
@@ -39,18 +80,17 @@ export default function RootPage() {
           return;
         }
 
-        // Valid session exists - check onboarding status with dev auth logic
+        // Valid session exists - check onboarding status
+        if (isDev) {
+          // In dev mode, redirect to profile (command center)
+          console.log('🛠️ Dev mode: Redirecting to profile');
+          router.replace('/profile');
+          return;
+        }
+
         const devAuth = window.localStorage.getItem('dev_auth_mode');
         const onboardingCompleted = session.onboardingCompleted || 
           (devAuth === 'true' && !!session.profileData?.fullName);
-          
-        console.log('🔍 Root page auth check:', {
-          sessionOnboardingCompleted: session.onboardingCompleted,
-          sessionNeedsOnboarding: session.needsOnboarding,
-          devAuth,
-          hasProfileData: !!session.profileData?.fullName,
-          finalOnboardingCompleted: onboardingCompleted
-        });
           
         if (!onboardingCompleted) {
           // User needs to complete onboarding
@@ -59,9 +99,9 @@ export default function RootPage() {
           return;
         }
 
-        // User is authenticated and onboarded - show dashboard
-        setIsCheckingAuth(false);
-        setShouldShowDashboard(true);
+        // User is authenticated and onboarded - redirect to profile (command center)
+        console.log('✅ Authenticated user, redirecting to profile');
+        router.replace('/profile');
         
       } catch (error) {
         console.error('Error checking auth status:', error);
@@ -76,46 +116,22 @@ export default function RootPage() {
     const timeoutId = setTimeout(checkAuthAndRedirect, 100);
     
     return () => clearTimeout(timeoutId);
-  }, [router]);
+  }, [router, isDev]);
 
-  // Show loading while checking auth
-  if (isCheckingAuth) {
-    return (
-      <div className="min-h-screen bg-hive-background-primary text-hive-text-primary flex items-center justify-center">
-        <div className="text-center space-y-4">
-          <Loader2 className="h-12 w-12 text-hive-brand-primary animate-spin mx-auto" />
-          <div className="space-y-2">
-            <h2 className="text-xl font-semibold">Welcome to HIVE</h2>
-            <p className="text-hive-text-secondary">Checking your authentication status...</p>
-            {process.env.NODE_ENV === 'development' && (
-              <p className="text-xs text-hive-text-muted mt-4">
-                🛠️ Dev Mode: Testing Flow 1 routing logic
-              </p>
-            )}
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // If authenticated, import and show the dashboard
-  if (shouldShowDashboard) {
-    // Dynamic import to avoid circular dependency
-    const DashboardPage = require('./(dashboard)/page').default;
-    const DashboardLayout = require('./(dashboard)/layout').default;
-    
-    return (
-      <DashboardLayout>
-        <DashboardPage />
-      </DashboardLayout>
-    );
-  }
-
-  // Fallback - should not reach here due to redirects above
+  // Show loading while checking auth - no dashboard content here
   return (
-    <div className="min-h-screen bg-hive-background-primary text-hive-text-primary flex items-center justify-center">
-      <div className="text-center">
-        <p className="text-hive-text-secondary">Redirecting...</p>
+    <div className="min-h-screen bg-void-900 text-white flex items-center justify-center">
+      <div className="text-center space-y-4">
+        <Loader2 className="h-12 w-12 text-gold-500 animate-spin mx-auto" />
+        <div className="space-y-2">
+          <h2 className="text-xl font-semibold">Welcome to HIVE</h2>
+          <p className="text-neutral-400">Checking your authentication...</p>
+          {process.env.NODE_ENV === 'development' && (
+            <p className="text-xs text-neutral-500 mt-4">
+              🛠️ Dev Mode: Clean auth routing
+            </p>
+          )}
+        </div>
       </div>
     </div>
   );

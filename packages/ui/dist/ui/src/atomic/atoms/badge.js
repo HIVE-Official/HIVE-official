@@ -1,6 +1,6 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { cn } from '../../lib/utils';
+import { cn } from '../../lib/utils.js';
 const badgeVariants = {
     primary: 'bg-blue-600 text-[var(--hive-text-primary)] border-blue-600',
     secondary: 'bg-gray-800 text-gray-300 border-[var(--hive-border-default)]',

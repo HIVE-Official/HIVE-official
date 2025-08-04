@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { collection, doc, getDoc, setDoc, addDoc, updateDoc, deleteDoc, query, where, getDocs, orderBy, limit as fbLimit } from 'firebase/firestore';
-import { db } from '@hive/core/server';
-import { getCurrentUser } from '@hive/auth-logic';
+// Use admin SDK methods since we're in an API route
+import { dbAdmin } from '@/lib/firebase-admin';
+import { getCurrentUser } from '@/lib/server-auth';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 // Presence indicator interfaces
 interface UserPresence {
@@ -100,7 +102,7 @@ export async function POST(request: NextRequest) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const body = await request.json();
@@ -114,7 +116,7 @@ export async function POST(request: NextRequest) {
     } = body;
 
     if (!status && !activity) {
-      return NextResponse.json({ error: 'Status or activity update is required' }, { status: 400 });
+      return NextResponse.json(ApiResponseHelper.error("Status or activity update is required", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
     // Get current presence
@@ -207,8 +209,8 @@ export async function POST(request: NextRequest) {
       }
     });
   } catch (error) {
-    console.error('Error updating user presence:', error);
-    return NextResponse.json({ error: 'Failed to update presence' }, { status: 500 });
+    logger.error('Error updating user presence', { error: error, endpoint: '/api/realtime/presence' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to update presence", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -217,7 +219,7 @@ export async function GET(request: NextRequest) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const { searchParams } = new URL(request.url);
@@ -231,7 +233,7 @@ export async function GET(request: NextRequest) {
       const userPresence = await getUserPresence(userId);
       
       if (!userPresence) {
-        return NextResponse.json({ error: 'User presence not found' }, { status: 404 });
+        return NextResponse.json(ApiResponseHelper.error("User presence not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
       }
 
       // Check if requesting user has permission to see this presence
@@ -248,7 +250,7 @@ export async function GET(request: NextRequest) {
       const spacePresence = await getSpacePresence(spaceId, user.uid, includeOffline);
       
       if (!spacePresence) {
-        return NextResponse.json({ error: 'Space not found or access denied' }, { status: 404 });
+        return NextResponse.json(ApiResponseHelper.error("Space not found or access denied", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
       }
 
       return NextResponse.json({ spacePresence });
@@ -276,8 +278,8 @@ export async function GET(request: NextRequest) {
       });
     }
   } catch (error) {
-    console.error('Error getting presence information:', error);
-    return NextResponse.json({ error: 'Failed to get presence information' }, { status: 500 });
+    logger.error('Error getting presence information', { error: error, endpoint: '/api/realtime/presence' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to get presence information", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -286,14 +288,14 @@ export async function PUT(request: NextRequest) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const body = await request.json();
     const { settings } = body;
 
     if (!settings) {
-      return NextResponse.json({ error: 'Settings are required' }, { status: 400 });
+      return NextResponse.json(ApiResponseHelper.error("Settings are required", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
     // Get current presence
@@ -316,8 +318,8 @@ export async function PUT(request: NextRequest) {
       settings: updatedSettings
     });
   } catch (error) {
-    console.error('Error updating presence settings:', error);
-    return NextResponse.json({ error: 'Failed to update presence settings' }, { status: 500 });
+    logger.error('Error updating presence settings', { error: error, endpoint: '/api/realtime/presence' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to update presence settings", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -326,7 +328,7 @@ export async function DELETE(request: NextRequest) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const { searchParams } = new URL(request.url);
@@ -367,8 +369,8 @@ export async function DELETE(request: NextRequest) {
     } else if (cleanupOld && olderThan) {
       // Clean up old presence events
       const cutoffDate = new Date(olderThan).toISOString();
-      const oldEventsQuery = query(
-        collection(db, 'presenceEvents'),
+      const oldEventsQuery = dbAdmin.collection(
+        dbAdmin.collection('presenceEvents'),
         where('userId', '==', user.uid),
         where('timestamp', '<', cutoffDate)
       );
@@ -405,8 +407,8 @@ export async function DELETE(request: NextRequest) {
       });
     }
   } catch (error) {
-    console.error('Error updating presence:', error);
-    return NextResponse.json({ error: 'Failed to update presence' }, { status: 500 });
+    logger.error('Error updating presence', { error: error, endpoint: '/api/realtime/presence' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to update presence", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -415,13 +417,13 @@ async function getUserPresence(userId: string): Promise<UserPresence | null> {
   try {
     const presenceDoc = await getDoc(doc(db, 'userPresence', userId));
     
-    if (presenceDoc.exists()) {
+    if (presenceDoc.exists) {
       return { id: presenceDoc.id, ...presenceDoc.data() } as UserPresence;
     }
     
     return null;
   } catch (error) {
-    console.error('Error getting user presence:', error);
+    logger.error('Error getting user presence', { error: error, endpoint: '/api/realtime/presence' });
     return null;
   }
 }
@@ -449,7 +451,7 @@ async function getSpacePresence(spaceId: string, requestingUserId: string, inclu
 
     // Get space info
     const spaceDoc = await getDoc(doc(db, 'spaces', spaceId));
-    const spaceName = spaceDoc.exists() ? spaceDoc.data().name : 'Unknown Space';
+    const spaceName = spaceDoc.exists ? spaceDoc.data().name : 'Unknown Space';
 
     // Build active users list
     const activeUsers = memberPresences
@@ -491,7 +493,7 @@ async function getSpacePresence(spaceId: string, requestingUserId: string, inclu
 
     return spacePresence;
   } catch (error) {
-    console.error('Error getting space presence:', error);
+    logger.error('Error getting space presence', { error: error, endpoint: '/api/realtime/presence' });
     return null;
   }
 }
@@ -499,8 +501,8 @@ async function getSpacePresence(spaceId: string, requestingUserId: string, inclu
 // Helper function to get user spaces
 async function getUserSpaces(userId: string): Promise<string[]> {
   try {
-    const memberQuery = query(
-      collection(db, 'members'),
+    const memberQuery = dbAdmin.collection(
+      dbAdmin.collection('members'),
       where('userId', '==', userId),
       where('status', '==', 'active')
     );
@@ -508,7 +510,7 @@ async function getUserSpaces(userId: string): Promise<string[]> {
     const memberSnapshot = await getDocs(memberQuery);
     return memberSnapshot.docs.map(doc => doc.data().spaceId);
   } catch (error) {
-    console.error('Error getting user spaces:', error);
+    logger.error('Error getting user spaces', { error: error, endpoint: '/api/realtime/presence' });
     return [];
   }
 }
@@ -516,8 +518,8 @@ async function getUserSpaces(userId: string): Promise<string[]> {
 // Helper function to get space members
 async function getSpaceMembers(spaceId: string): Promise<string[]> {
   try {
-    const memberQuery = query(
-      collection(db, 'members'),
+    const memberQuery = dbAdmin.collection(
+      dbAdmin.collection('members'),
       where('spaceId', '==', spaceId),
       where('status', '==', 'active')
     );
@@ -525,7 +527,7 @@ async function getSpaceMembers(spaceId: string): Promise<string[]> {
     const memberSnapshot = await getDocs(memberQuery);
     return memberSnapshot.docs.map(doc => doc.data().userId);
   } catch (error) {
-    console.error('Error getting space members:', error);
+    logger.error('Error getting space members', { error: error, endpoint: '/api/realtime/presence' });
     return [];
   }
 }
@@ -533,8 +535,8 @@ async function getSpaceMembers(spaceId: string): Promise<string[]> {
 // Helper function to verify space access
 async function verifySpaceAccess(userId: string, spaceId: string): Promise<boolean> {
   try {
-    const memberQuery = query(
-      collection(db, 'members'),
+    const memberQuery = dbAdmin.collection(
+      dbAdmin.collection('members'),
       where('userId', '==', userId),
       where('spaceId', '==', spaceId),
       where('status', '==', 'active')
@@ -543,7 +545,7 @@ async function verifySpaceAccess(userId: string, spaceId: string): Promise<boole
     const memberSnapshot = await getDocs(memberQuery);
     return !memberSnapshot.empty;
   } catch (error) {
-    console.error('Error verifying space access:', error);
+    logger.error('Error verifying space access', { error: error, endpoint: '/api/realtime/presence' });
     return false;
   }
 }
@@ -633,10 +635,10 @@ async function broadcastPresenceUpdate(presenceEvent: PresenceEvent): Promise<vo
         }
       };
 
-      await addDoc(collection(db, 'realtimeMessages'), realtimeMessage);
+      await addDoc(dbAdmin.collection('realtimeMessages'), realtimeMessage);
     }
   } catch (error) {
-    console.error('Error broadcasting presence update:', error);
+    logger.error('Error broadcasting presence update', { error: error, endpoint: '/api/realtime/presence' });
   }
 }
 
@@ -656,7 +658,7 @@ async function updateSpacePresence(spaceId: string, presenceEvent: PresenceEvent
       recentEvents: []
     };
 
-    if (spacePresenceDoc.exists()) {
+    if (spacePresenceDoc.exists) {
       currentStats = { ...currentStats, ...spacePresenceDoc.data() };
     }
 
@@ -677,7 +679,7 @@ async function updateSpacePresence(spaceId: string, presenceEvent: PresenceEvent
       lastUpdate: new Date().toISOString()
     });
   } catch (error) {
-    console.error('Error updating space presence:', error);
+    logger.error('Error updating space presence', { error: error, endpoint: '/api/realtime/presence' });
   }
 }
 
@@ -686,7 +688,7 @@ async function getRecentSpaceActivity(spaceId: string, limit = 10): Promise<any[
   try {
     const statsDoc = await getDoc(doc(db, 'spacePresenceStats', `space_presence_${spaceId}`));
     
-    if (statsDoc.exists()) {
+    if (statsDoc.exists) {
       const data = statsDoc.data();
       return (data.recentEvents || []).slice(0, limit).map((event: any) => ({
         userId: event.userId,
@@ -699,17 +701,17 @@ async function getRecentSpaceActivity(spaceId: string, limit = 10): Promise<any[
     
     return [];
   } catch (error) {
-    console.error('Error getting recent space activity:', error);
+    logger.error('Error getting recent space activity', { error: error, endpoint: '/api/realtime/presence' });
     return [];
   }
 }
 
 // Background cleanup function for stale presence data
-export async function cleanupStalePresence(): Promise<number> {
+async function cleanupStalePresence(): Promise<number> {
   try {
     const staleThreshold = new Date(Date.now() - 24 * 60 * 60 * 1000); // 24 hours
-    const stalePresenceQuery = query(
-      collection(db, 'userPresence'),
+    const stalePresenceQuery = dbAdmin.collection(
+      dbAdmin.collection('userPresence'),
       where('metadata.lastActivityUpdate', '<', staleThreshold.toISOString())
     );
 
@@ -728,7 +730,7 @@ export async function cleanupStalePresence(): Promise<number> {
 
     return cleaned;
   } catch (error) {
-    console.error('Error cleaning up stale presence:', error);
+    logger.error('Error cleaning up stale presence', { error: error, endpoint: '/api/realtime/presence' });
     return 0;
   }
 }

@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
 
 // Personal tool interface matching the component expectations
 interface PersonalTool {
@@ -12,164 +14,143 @@ interface PersonalTool {
   quickLaunch: boolean;
 }
 
-// Mock personal tools data - will be replaced with actual Tool System integration
-const mockPersonalTools: PersonalTool[] = [
-  { 
-    id: 'study-timer', 
-    name: 'Study Timer', 
-    icon: '⏱️', 
-    category: 'productivity', 
-    isInstalled: true, 
-    lastUsed: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), // 2 hours ago
-    usageCount: 45, 
-    quickLaunch: true 
-  },
-  { 
-    id: 'task-tracker', 
-    name: 'Task Tracker', 
-    icon: '✅', 
-    category: 'productivity', 
-    isInstalled: true, 
-    lastUsed: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString(), // 3 hours ago
-    usageCount: 32, 
-    quickLaunch: true 
-  },
-  { 
-    id: 'grade-calc', 
-    name: 'Grade Calculator', 
-    icon: '📊', 
-    category: 'study', 
-    isInstalled: true, 
-    lastUsed: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(), // 1 day ago
-    usageCount: 28, 
-    quickLaunch: true 
-  },
-  { 
-    id: 'schedule-sync', 
-    name: 'Schedule Sync', 
-    icon: '📅', 
-    category: 'organization', 
-    isInstalled: true, 
-    lastUsed: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(), // 1 day ago
-    usageCount: 18, 
-    quickLaunch: true 
-  },
-  { 
-    id: 'note-keeper', 
-    name: 'Note Keeper', 
-    icon: '📝', 
-    category: 'study', 
-    isInstalled: true, 
-    lastUsed: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(), // 2 days ago
-    usageCount: 55, 
-    quickLaunch: true 
-  },
-  { 
-    id: 'campus-map', 
-    name: 'Campus Navigator', 
-    icon: '🗺️', 
-    category: 'other', 
-    isInstalled: true, 
-    lastUsed: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(), // 3 days ago
-    usageCount: 12, 
-    quickLaunch: false 
-  },
-];
+// Fetch user's actual personal tools from database
+async function fetchPersonalTools(userId: string): Promise<PersonalTool[]> {
+  try {
+    const { dbAdmin } = await import('@/lib/firebase-admin');
+    
+    // Get user's installed tools
+    const userToolsSnapshot = await dbAdmin
+      .collection('user_tools')
+      .where('userId', '==', userId)
+      .where('isInstalled', '==', true)
+      .get();
+    
+    const tools: PersonalTool[] = userToolsSnapshot.docs.map(doc => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        name: data.name || data.toolName || 'Unknown Tool',
+        icon: data.icon || '🛠️',
+        category: data.category || 'other',
+        isInstalled: true,
+        lastUsed: data.lastUsed,
+        usageCount: data.usageCount || 0,
+        quickLaunch: data.quickLaunch || false,
+      };
+    });
+    
+    return tools;
+  } catch (error) {
+    console.error('Failed to fetch personal tools:', error);
+    return [];
+  }
+}
 
 /**
  * Get personal tools for the authenticated user
  * GET /api/tools/personal
  */
-export async function GET(request: NextRequest) {
+export const GET = withAuth(async (request: NextRequest, authContext) => {
   try {
-    const authHeader = request.headers.get('authorization');
+    const tools = await fetchPersonalTools(authContext.userId);
     
-    // Development mode or missing auth - return mock data
-    if (!authHeader || authHeader === 'Bearer test-token' || authHeader.startsWith('Bearer dev_token_')) {
-      // Simulate API delay for realistic loading experience
-      await new Promise(resolve => setTimeout(resolve, 600));
-      
-      return NextResponse.json({
-        success: true,
-        tools: mockPersonalTools,
-        totalCount: mockPersonalTools.length,
-        installedCount: mockPersonalTools.filter(t => t.isInstalled).length,
-        developmentMode: true,
-        message: 'Personal tools retrieved successfully (development mode)'
-      });
-    }
-
-    // TODO: Implement actual authentication and Tool System integration
-    // This would connect to the actual Tool System APIs when implemented
-    
-    // For now, return mock data for all requests
     return NextResponse.json({
       success: true,
-      tools: mockPersonalTools,
-      totalCount: mockPersonalTools.length,
-      installedCount: mockPersonalTools.filter(t => t.isInstalled).length,
+      tools,
+      totalCount: tools.length,
+      installedCount: tools.filter(t => t.isInstalled).length,
+      userId: authContext.userId,
       message: 'Personal tools retrieved successfully'
     });
 
   } catch (error) {
-    console.error('Personal tools fetch error:', error);
     return NextResponse.json(
       { 
         error: 'Failed to fetch personal tools',
         details: error instanceof Error ? error.message : 'Unknown error'
       }, 
-      { status: 500 }
+      { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }
-}
+}, { 
+  allowDevelopmentBypass: true, // Personal tools is non-sensitive for now
+  operation: 'fetch_personal_tools' 
+});
 
 /**
  * Install or uninstall a tool
  * POST /api/tools/personal
  */
-export async function POST(request: NextRequest) {
+export const POST = withAuth(async (request: NextRequest, authContext) => {
   try {
-    const authHeader = request.headers.get('authorization');
-    
-    if (!authHeader || (!authHeader.startsWith('Bearer test-token') && !authHeader.startsWith('Bearer dev_token_'))) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
-    }
-
     const body = await request.json();
     const { toolId, action } = body;
 
     if (!toolId || !action || !['install', 'uninstall'].includes(action)) {
-      return NextResponse.json(
-        { error: 'Invalid request. Must specify toolId and action (install/uninstall)' },
-        { status: 400 }
-      );
+      return ApiResponse.error("Invalid request. Must specify toolId and action (install/uninstall)", "INVALID_INPUT", 400);
     }
 
-    // Simulate processing delay
-    await new Promise(resolve => setTimeout(resolve, 300));
-
-    // TODO: Implement actual tool installation/uninstallation logic
-    // This would connect to the Tool System when implemented
+    // Implement actual tool installation/uninstallation in database
+    try {
+      const { dbAdmin } = await import('@/lib/firebase-admin');
+      
+      if (action === 'install') {
+        // Get tool details from marketplace or create basic entry
+        const toolRef = dbAdmin.collection('user_tools').doc();
+        await toolRef.set({
+          userId: authContext.userId,
+          toolId,
+          isInstalled: true,
+          installedAt: new Date().toISOString(),
+          lastUsed: null,
+          usageCount: 0,
+          quickLaunch: false,
+          settings: {}
+        });
+      } else if (action === 'uninstall') {
+        // Remove tool from user's collection
+        const userToolsSnapshot = await dbAdmin
+          .collection('user_tools')
+          .where('userId', '==', authContext.userId)
+          .where('toolId', '==', toolId)
+          .get();
+        
+        const batch = dbAdmin.batch();
+        userToolsSnapshot.docs.forEach(doc => {
+          batch.delete(doc.ref);
+        });
+        await batch.commit();
+      }
+    } catch (error) {
+      console.error('Failed to process tool installation:', error);
+      return NextResponse.json(
+        { 
+          error: 'Database operation failed',
+          details: error instanceof Error ? error.message : 'Unknown error'
+        }, 
+        { status: HttpStatus.INTERNAL_SERVER_ERROR }
+      );
+    }
 
     return NextResponse.json({
       success: true,
       toolId,
       action,
-      message: `Tool ${action}ed successfully (development mode)`,
-      developmentMode: true
+      userId: authContext.userId,
+      message: `Tool ${action}ed successfully`
     });
 
   } catch (error) {
-    console.error('Tool installation error:', error);
     return NextResponse.json(
       { 
         error: 'Failed to process tool installation',
         details: error instanceof Error ? error.message : 'Unknown error'
       }, 
-      { status: 500 }
+      { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }
-}
+}, { 
+  allowDevelopmentBypass: true, // Tool installation is non-sensitive for now
+  operation: 'modify_personal_tools' 
+});

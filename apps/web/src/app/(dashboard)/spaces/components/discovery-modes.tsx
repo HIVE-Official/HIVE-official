@@ -33,8 +33,8 @@ const discoveryModes: DiscoveryMode[] = [
     title: "Quick Start",
     subtitle: "For new students",
     icon: Zap,
-    color: "text-yellow-400",
-    gradient: "from-yellow-400/10 to-yellow-400/5",
+    color: "text-hive-gold",
+    gradient: "from-hive-gold/10 to-hive-gold/5",
     description: "Answer 3 quick questions and get personalized space recommendations",
     actionText: "Get Started"
   },
@@ -87,7 +87,7 @@ export function DiscoveryModes({ onModeSelect, userProfile }: DiscoveryModesProp
     // Recommend mode based on user profile
     if (userProfile?.isFirstTime) {
       setRecommendedMode("quick");
-    } else if (userProfile?.friendsCount > 5) {
+    } else if ((userProfile?.friendsCount ?? 0) > 5) {
       setRecommendedMode("social");
     } else if (userProfile?.hasJoinedSpaces) {
       setRecommendedMode("search");
@@ -133,14 +133,14 @@ export function DiscoveryModes({ onModeSelect, userProfile }: DiscoveryModesProp
                   relative p-6 cursor-pointer transition-all duration-300 
                   bg-gradient-to-br ${mode.gradient}
                   border-2 hover:scale-[1.02] hover:shadow-lg
-                  ${isSelected ? 'border-yellow-400 shadow-lg' : 'border-white/10'}
+                  ${isSelected ? 'border-hive-gold shadow-lg' : 'border-white/10'}
                   ${isRecommended ? 'ring-2 ring-yellow-400/30' : ''}
                 `}
                 onClick={() => handleModeSelect(mode.id)}
               >
                 {/* Recommended Badge */}
                 {isRecommended && !isSelected && (
-                  <div className="absolute -top-2 -right-2 bg-yellow-400 text-neutral-950 px-2 py-1 rounded-full text-xs font-semibold">
+                  <div className="absolute -top-2 -right-2 bg-hive-gold text-hive-obsidian px-2 py-1 rounded-full text-xs font-semibold">
                     Recommended
                   </div>
                 )}
@@ -151,9 +151,9 @@ export function DiscoveryModes({ onModeSelect, userProfile }: DiscoveryModesProp
                     <motion.div
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
-                      className="absolute top-4 right-4 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center"
+                      className="absolute top-4 right-4 w-6 h-6 bg-hive-gold rounded-full flex items-center justify-center"
                     >
-                      <ArrowRight className="h-3 w-3 text-neutral-950" />
+                      <ArrowRight className="h-3 w-3 text-hive-obsidian" />
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -316,7 +316,7 @@ export function QuickStartSurvey({ onComplete, onSkip }: QuickStartSurveyProps) 
         </div>
         <div className="w-full bg-white/10 rounded-full h-2">
           <div 
-            className="bg-yellow-400 h-2 rounded-full transition-all duration-300"
+            className="bg-hive-gold h-2 rounded-full transition-all duration-300"
             style={{ width: `${((currentStep + 1) / questions.length) * 100}%` }}
           />
         </div>
@@ -348,7 +348,7 @@ export function QuickStartSurvey({ onComplete, onSkip }: QuickStartSurveyProps) 
                   p-4 rounded-xl text-left transition-all
                   flex items-center gap-3
                   ${isSelected 
-                    ? 'bg-yellow-400/20 border-yellow-400 text-yellow-400' 
+                    ? 'bg-hive-gold/20 border-hive-gold text-hive-gold' 
                     : 'bg-white/5 border-white/10 text-white hover:bg-white/10'
                   }
                   border-2
@@ -374,7 +374,7 @@ export function QuickStartSurvey({ onComplete, onSkip }: QuickStartSurveyProps) 
           <Button
             onClick={handleNext}
             disabled={!canProceed()}
-            className="bg-yellow-400 text-neutral-950 hover:bg-yellow-300"
+            className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne"
           >
             {currentStep === questions.length - 1 ? "Get My Recommendations" : "Next"}
           </Button>

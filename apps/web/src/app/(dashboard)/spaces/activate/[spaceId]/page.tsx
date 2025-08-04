@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Button, Card, Grid } from "@hive/ui";
 import { 
@@ -81,7 +81,7 @@ const FeatureCard = ({
     <Card
       className={`p-4 cursor-pointer transition-all border ${
         isSelected 
-          ? 'bg-yellow-400/10 border-yellow-400/30' 
+          ? 'bg-hive-gold/10 border-hive-gold/30' 
           : 'bg-white/[0.02] border-white/[0.06] hover:bg-white/[0.04]'
       } ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
       onClick={() => !disabled && onToggle(feature.id)}
@@ -90,13 +90,13 @@ const FeatureCard = ({
         <div className="flex items-center gap-3">
           <div className={`p-2 rounded-lg ${
             isSelected 
-              ? 'bg-yellow-400/20 text-yellow-400' 
+              ? 'bg-hive-gold/20 text-hive-gold' 
               : 'bg-white/[0.05] text-neutral-400'
           }`}>
             {icon}
           </div>
           <div>
-            <h3 className={`font-semibold text-sm ${isSelected ? 'text-yellow-400' : 'text-white'}`}>
+            <h3 className={`font-semibold text-sm ${isSelected ? 'text-hive-gold' : 'text-white'}`}>
               {feature.name}
             </h3>
             {isRecommended && (
@@ -110,7 +110,7 @@ const FeatureCard = ({
           <span className={`text-xs px-2 py-1 rounded-full border ${PLAN_COLORS[feature.requiredPlan]}`}>
             {feature.requiredPlan}
           </span>
-          {isSelected && <CheckCircle className="h-4 w-4 text-yellow-400" />}
+          {isSelected && <CheckCircle className="h-4 w-4 text-hive-gold" />}
         </div>
       </div>
       
@@ -137,11 +137,7 @@ export default function SpaceActivationPage() {
   const [error, setError] = useState<string | null>(null);
   const flags = useFeatureFlags();
 
-  useEffect(() => {
-    fetchActivationData();
-  }, [spaceId]);
-
-  const fetchActivationData = async () => {
+  const fetchActivationData = useCallback(async () => {
     try {
       const response = await fetch(`/api/spaces/activate?spaceId=${spaceId}`);
       if (!response.ok) throw new Error('Failed to fetch activation data');
@@ -153,11 +149,14 @@ export default function SpaceActivationPage() {
       flags.trackEvent('spaces', 'view', { page: 'activation', spaceId });
     } catch (err) {
       setError('Failed to load space activation data');
-      console.error('Activation data fetch error:', err);
     } finally {
       setLoading(false);
     }
-  };
+  }, [spaceId, flags]);
+
+  useEffect(() => {
+    fetchActivationData();
+  }, [fetchActivationData]);
 
   const handleFeatureToggle = (featureId: string) => {
     if (selectedFeatures.includes(featureId)) {
@@ -212,7 +211,6 @@ export default function SpaceActivationPage() {
       
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Activation failed');
-      console.error('Activation error:', err);
     } finally {
       setIsActivating(false);
     }
@@ -222,7 +220,7 @@ export default function SpaceActivationPage() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-800 flex items-center justify-center">
         <div className="text-center">
-          <div className="w-8 h-8 bg-yellow-400 rounded-lg animate-pulse mx-auto mb-4" />
+          <div className="w-8 h-8 bg-hive-gold rounded-lg animate-pulse mx-auto mb-4" />
           <p className="text-white">Loading space activation...</p>
         </div>
       </div>
@@ -235,7 +233,7 @@ export default function SpaceActivationPage() {
         <Card className="p-8 text-center border-red-500/20 bg-red-500/5">
           <h2 className="text-lg font-semibold text-white mb-2">Activation Error</h2>
           <p className="text-neutral-400 mb-4">{error}</p>
-          <Button onClick={() => router.back()} className="bg-yellow-400 text-neutral-950">
+          <Button onClick={() => router.back()} className="bg-hive-gold text-hive-obsidian">
             Go Back
           </Button>
         </Card>
@@ -327,7 +325,7 @@ export default function SpaceActivationPage() {
           </div>
           <div className="w-full bg-white/[0.05] rounded-full h-2">
             <div 
-              className="bg-yellow-400 h-2 rounded-full transition-all duration-500"
+              className="bg-hive-gold h-2 rounded-full transition-all duration-500"
               style={{ width: selectedFeatures.length > 0 ? '50%' : '10%' }}
             />
           </div>
@@ -340,7 +338,7 @@ export default function SpaceActivationPage() {
               <h3 className="text-lg font-semibold text-white mb-4">
                 {categoryLabels[category as keyof typeof categoryLabels]}
               </h3>
-              <Grid cols={{ base: 1, md: 2 }} gap={4}>
+              <Grid cols={2} gap="md">
                 {features.map((feature) => (
                   <FeatureCard
                     key={feature.id}
@@ -358,7 +356,7 @@ export default function SpaceActivationPage() {
 
         {/* Activation Summary */}
         {selectedFeatures.length > 0 && (
-          <Card className="mt-8 p-6 bg-gradient-to-r from-yellow-400/[0.05] to-yellow-400/[0.02] border-yellow-400/10">
+          <Card className="mt-8 p-6 bg-gradient-to-r from-hive-gold/[0.05] to-hive-gold/[0.02] border-hive-gold/10">
             <h3 className="text-lg font-semibold text-white mb-4">Activation Summary</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
@@ -368,7 +366,7 @@ export default function SpaceActivationPage() {
                     const feature = activationData.availableFeatures.find(f => f.id === featureId);
                     return feature ? (
                       <div key={featureId} className="flex items-center gap-2 text-sm">
-                        <CheckCircle className="h-4 w-4 text-yellow-400" />
+                        <CheckCircle className="h-4 w-4 text-hive-gold" />
                         <span className="text-white">{feature.name}</span>
                       </div>
                     ) : null;
@@ -401,7 +399,7 @@ export default function SpaceActivationPage() {
           <Button
             onClick={handleActivateSpace}
             disabled={selectedFeatures.length === 0 || isActivating}
-            className="bg-yellow-400 text-neutral-950 hover:bg-yellow-300 min-w-[140px]"
+            className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne min-w-[140px]"
           >
             {isActivating ? (
               <>

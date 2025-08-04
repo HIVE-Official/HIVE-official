@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { collection, doc, query, where, getDocs, addDoc, updateDoc, orderBy, limit, Timestamp } from 'firebase/firestore';
-import { db } from '@hive/core/server';
-import { getCurrentUser } from '@hive/auth-logic';
+// Use admin SDK methods since we're in an API route
+import { dbAdmin } from '@/lib/firebase-admin';
+import { getCurrentUser } from '@/lib/server-auth';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 // Activity tracking types
 interface ActivityEvent {
@@ -36,7 +38,7 @@ export async function POST(request: NextRequest) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const body = await request.json();
@@ -44,7 +46,7 @@ export async function POST(request: NextRequest) {
 
     // Validate required fields
     if (!type || !['space_visit', 'tool_interaction', 'content_creation', 'social_interaction', 'session_start', 'session_end'].includes(type)) {
-      return NextResponse.json({ error: 'Invalid activity type' }, { status: 400 });
+      return NextResponse.json(ApiResponseHelper.error("Invalid activity type", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
     const now = new Date();
@@ -61,7 +63,7 @@ export async function POST(request: NextRequest) {
     };
 
     // Log the activity event
-    const docRef = await addDoc(collection(db, 'activityEvents'), activityEvent);
+    const docRef = await dbAdmin.collection('activityEvents').add(activityEvent);
 
     // Update daily summary asynchronously
     updateDailySummary(user.uid, activityEvent);
@@ -72,8 +74,8 @@ export async function POST(request: NextRequest) {
       timestamp: activityEvent.timestamp 
     });
   } catch (error) {
-    console.error('Error logging activity:', error);
-    return NextResponse.json({ error: 'Failed to log activity' }, { status: 500 });
+    logger.error('Error logging activity', { error: error, endpoint: '/api/activity' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to log activity", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -82,7 +84,7 @@ export async function GET(request: NextRequest) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const { searchParams } = new URL(request.url);
@@ -109,16 +111,14 @@ export async function GET(request: NextRequest) {
     const endDateStr = endDate.toISOString().split('T')[0];
 
     // Fetch daily summaries
-    const summariesQuery = query(
-      collection(db, 'activitySummaries'),
-      where('userId', '==', user.uid),
-      where('date', '>=', startDateStr),
-      where('date', '<=', endDateStr),
-      orderBy('date', 'desc')
-    );
+    const summariesQuery = dbAdmin.collection('activitySummaries')
+      .where('userId', '==', user.uid)
+      .where('date', '>=', startDateStr)
+      .where('date', '<=', endDateStr)
+      .orderBy('date', 'desc');
 
-    const summariesSnapshot = await getDocs(summariesQuery);
-    const summaries = summariesSnapshot.docs.map(doc => ({
+    const summariesSnapshot = await summariesQuery.get();
+    const summaries = summariesSnapshot.docs.map((doc: any) => ({
       id: doc.id,
       ...doc.data()
     })) as ActivitySummary[];
@@ -126,19 +126,17 @@ export async function GET(request: NextRequest) {
     // Generate analytics
     const analytics = generateAnalytics(summaries, timeRange);
 
-    let detailEvents = [];
+    let detailEvents: any[] = [];
     if (includeDetails) {
       // Fetch recent activity events for details
-      const eventsQuery = query(
-        collection(db, 'activityEvents'),
-        where('userId', '==', user.uid),
-        where('date', '>=', startDateStr),
-        where('date', '<=', endDateStr),
-        orderBy('timestamp', 'desc'),
-        limit(100)
-      );
+      const eventsQuery = dbAdmin.collection('activityEvents')
+        .where('userId', '==', user.uid)
+        .where('date', '>=', startDateStr)
+        .where('date', '<=', endDateStr)
+        .orderBy('timestamp', 'desc')
+        .limit(100);
 
-      const eventsSnapshot = await getDocs(eventsQuery);
+      const eventsSnapshot = await eventsQuery.get();
       detailEvents = eventsSnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
@@ -156,8 +154,8 @@ export async function GET(request: NextRequest) {
       }
     });
   } catch (error) {
-    console.error('Error fetching activity analytics:', error);
-    return NextResponse.json({ error: 'Failed to fetch activity analytics' }, { status: 500 });
+    logger.error('Error fetching activity analytics', { error: error, endpoint: '/api/activity' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to fetch activity analytics", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -165,12 +163,12 @@ export async function GET(request: NextRequest) {
 async function updateDailySummary(userId: string, event: ActivityEvent) {
   try {
     const summaryId = `${userId}_${event.date}`;
-    const summaryRef = doc(db, 'activitySummaries', summaryId);
+    const summaryRef = dbAdmin.collection('activitySummaries').doc(summaryId);
     
     // Get existing summary or create new one
     const summaryDoc = await summaryRef.get();
     
-    if (summaryDoc.exists()) {
+    if (summaryDoc.exists) {
       const existingData = summaryDoc.data() as ActivitySummary;
       
       // Update existing summary
@@ -194,7 +192,7 @@ async function updateDailySummary(userId: string, event: ActivityEvent) {
         updatedAt: new Date().toISOString()
       };
 
-      await updateDoc(summaryRef, updatedData);
+      await summaryRef.update(updatedData);
     } else {
       // Create new summary
       const newSummary: ActivitySummary = {
@@ -214,7 +212,7 @@ async function updateDailySummary(userId: string, event: ActivityEvent) {
       await summaryRef.set(newSummary);
     }
   } catch (error) {
-    console.error('Error updating daily summary:', error);
+    logger.error('Error updating daily summary', { error: error, endpoint: '/api/activity' });
   }
 }
 

@@ -19,6 +19,7 @@
     "build-storybook": "turbo run build-storybook"
   },
   "devDependencies": {
+    "@vitest/coverage-v8": "^3.2.4",
     "eslint-plugin-import": "^2.29.1",
     "turbo": "^2.5.4"
   },
@@ -33,6 +34,7 @@
       "react-dom": "^18.0.0",
       "@types/react": "^18.0.0",
       "@types/react-dom": "^18.0.0",
+      "framer-motion": "^11.11.17",
       "esbuild@<=0.24.2": ">=0.25.0",
       "form-data@>=4.0.0 <4.0.4": ">=4.0.4",
       "form-data@<2.5.4": ">=2.5.4",
@@ -40,7 +42,9 @@
     }
   },
   "dependencies": {
+    "glob": "^11.0.3",
     "lucide-react": "^0.411.0",
-    "recharts": "^3.1.0"
+    "recharts": "^3.1.0",
+    "vitest": "^3.2.4"
   }
 }

@@ -2,8 +2,8 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { motion } from 'framer-motion';
 import { cva } from 'class-variance-authority';
-import { cn } from '../lib/utils';
-import { getMotionProps } from '../lib/motion-utils';
+import { cn } from '../lib/utils.js';
+import { getMotionProps } from '../lib/motion-utils.js';
 // Extended HIVE Logo Variants System
 // Comprehensive collection of logo variations for different contexts and effects
 const hiveLogoVariants = cva("inline-flex items-center justify-center transition-all duration-200", {

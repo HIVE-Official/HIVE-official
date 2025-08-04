@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { FieldValue } from 'firebase-admin/firestore';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 /**
  * Migrate existing spaces to include UB identification
@@ -12,7 +14,7 @@ export async function POST(request: NextRequest) {
   try {
     const { dryRun = false } = await request.json().catch(() => ({}));
     
-    console.log('🏫 Starting UB identification migration for existing spaces...');
+    logger.info('🏫 Starting UB identification migration for existing spaces...', { endpoint: '/api/spaces/migrate-ub' });
     
     const spaceTypes = ['campus_living', 'fraternity_and_sorority', 'hive_exclusive', 'student_organizations', 'university_organizations', 'cohort'];
     let totalUpdated = 0;
@@ -37,7 +39,7 @@ export async function POST(request: NextRequest) {
           continue;
         }
         
-        console.log(`📊 Found ${spacesWithoutUB.length} spaces in ${spaceType} without UB identification`);
+        logger.info('📊 Foundspaces in without UB identification', { spacesWithoutUB, spaceType, endpoint: '/api/spaces/migrate-ub' });
         
         if (dryRun) {
           migrationResults[spaceType] = {
@@ -79,9 +81,9 @@ export async function POST(request: NextRequest) {
           message: `Updated ${spacesWithoutUB.length} spaces with UB identification`
         };
         
-        console.log(`✅ Updated ${spacesWithoutUB.length} spaces in ${spaceType} with UB identification`);
+        logger.info('✅ Updatedspaces in with UB identification', { spacesWithoutUB, spaceType, endpoint: '/api/spaces/migrate-ub' });
       } catch (error) {
-        console.error(`❌ Error migrating ${spaceType}:`, error);
+        logger.error('❌ Error migrating', { spaceType, error: error, endpoint: '/api/spaces/migrate-ub' });
         migrationResults[spaceType] = {
           error: `Failed to migrate: ${error}`,
           updated: 0
@@ -113,14 +115,14 @@ export async function POST(request: NextRequest) {
     });
     
   } catch (error) {
-    console.error('❌ Migration error:', error);
+    logger.error('❌ Migration error', { error: error, endpoint: '/api/spaces/migrate-ub' });
     return NextResponse.json(
       { 
         success: false,
         error: 'Migration failed',
         message: `${error}` 
       },
-      { status: 500 }
+      { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }
 }

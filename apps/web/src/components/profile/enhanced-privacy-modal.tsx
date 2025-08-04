@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { HiveButton, HiveCard, HiveBadge } from '@hive/ui';
+import { HiveButton, HiveCard, HiveBadge } from "@hive/ui";
 import { 
   Shield, 
   Eye, 
@@ -13,7 +13,6 @@ import {
   X,
   Settings,
   Clock,
-  AlertTriangle,
   Info,
   CheckCircle
 } from 'lucide-react';
@@ -48,7 +47,7 @@ interface EnhancedPrivacyModalProps {
   isOpen: boolean;
   onClose: () => void;
   currentSettings?: Partial<PrivacySettings>;
-  onSave: (settings: PrivacySettings) => Promise<void>;
+  onSave: (_settings: PrivacySettings) => Promise<void>;
   isLoading?: boolean;
 }
 

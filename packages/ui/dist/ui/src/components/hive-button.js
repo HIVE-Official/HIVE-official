@@ -3,18 +3,20 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from 'react';
 import { cva } from 'class-variance-authority';
 import { Loader2 } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion } from './framer-motion-proxy.js';
 import { Slot } from '@radix-ui/react-slot';
-import { cn } from '../lib/utils';
-import { getMotionProps } from '../lib/motion-utils';
-import { HiveMagneticHover } from './hive-magnetic-interactions';
-import { magneticInteractions, liquidMetalPerformance, liquidMetalUtils } from '../motion/hive-liquid-metal';
+import { cn } from '../lib/utils.js';
+import { getMotionProps } from '../lib/motion-utils.js';
+import { HiveMagneticHover } from './hive-magnetic-interactions.js';
+import { magneticInteractions, liquidMetalPerformance, liquidMetalUtils } from '../motion/hive-liquid-metal.js';
 // HIVE Button variants - Luxury design system aligned
 const hiveButtonVariants = cva(
 // Base styles - premium appearance with semantic tokens and liquid motion
 "inline-flex items-center justify-center whitespace-nowrap font-medium transition-all duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--hive-brand-primary)]/30 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--hive-background-primary)] disabled:pointer-events-none disabled:opacity-50 select-none backdrop-blur-sm", {
     variants: {
         variant: {
+            // Default - Same as primary for backward compatibility
+            default: "bg-[var(--hive-background-primary)] text-[var(--hive-brand-primary)] border border-[var(--hive-brand-primary)] hover:bg-[var(--hive-brand-primary)]/10 hover:shadow-lg hover:shadow-[var(--hive-brand-primary)]/20 active:scale-[0.98]",
             // Primary - Gold outline on black (HIVE signature)
             primary: "bg-[var(--hive-background-primary)] text-[var(--hive-brand-primary)] border border-[var(--hive-brand-primary)] hover:bg-[var(--hive-brand-primary)]/10 hover:shadow-lg hover:shadow-[var(--hive-brand-primary)]/20 active:scale-[0.98]",
             // Secondary - Glass morphism with semantic tokens
@@ -45,6 +47,7 @@ const hiveButtonVariants = cva(
         size: {
             xs: "h-6 px-2 text-xs rounded-[var(--hive-radius-lg)]",
             sm: "h-8 px-3 text-sm rounded-[var(--hive-radius-xl)]",
+            md: "h-9 px-4 text-sm rounded-[var(--hive-radius-xl)]",
             default: "h-9 px-4 text-sm rounded-[var(--hive-radius-xl)]",
             lg: "h-10 px-6 text-base rounded-[var(--hive-radius-xl)]",
             xl: "h-12 px-8 text-lg rounded-[var(--hive-radius-2xl)]",

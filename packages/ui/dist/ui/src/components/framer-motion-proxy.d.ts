@@ -6,6 +6,11 @@ export declare const motion: {
     section: (props: any) => import("react/jsx-runtime").JSX.Element;
     nav: (props: any) => import("react/jsx-runtime").JSX.Element;
     a: (props: any) => import("react/jsx-runtime").JSX.Element;
+    h1: (props: any) => import("react/jsx-runtime").JSX.Element;
+    h2: (props: any) => import("react/jsx-runtime").JSX.Element;
+    h3: (props: any) => import("react/jsx-runtime").JSX.Element;
+    h4: (props: any) => import("react/jsx-runtime").JSX.Element;
+    p: (props: any) => import("react/jsx-runtime").JSX.Element;
 };
 export declare const AnimatePresence: React.FC<{
     children: React.ReactNode;
@@ -16,6 +21,23 @@ export declare const AnimatePresence: React.FC<{
 }>;
 export declare const MotionDiv: (props: any) => import("react/jsx-runtime").JSX.Element;
 export declare const MotionButton: (props: any) => import("react/jsx-runtime").JSX.Element;
+export declare const useAnimation: () => {
+    start: () => Promise<void>;
+    stop: () => void;
+    set: () => void;
+    subscribe: () => () => void;
+    mount: () => () => void;
+};
+export declare const useMotionValue: (initialValue: any) => {
+    get: () => any;
+    set: (value: any) => void;
+    onChange: (callback: any) => () => void;
+};
+export declare const useTransform: (motionValue: any, input?: any, output?: any) => {
+    get: () => any;
+    set: (value: any) => void;
+    onChange: (callback: any) => () => void;
+};
 export declare const MotionSpan: (props: any) => import("react/jsx-runtime").JSX.Element;
 export declare const MotionSection: (props: any) => import("react/jsx-runtime").JSX.Element;
 //# sourceMappingURL=framer-motion-proxy.d.ts.map

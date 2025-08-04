@@ -198,7 +198,7 @@ function isAbusiveClient(clientId: string): boolean {
 /**
  * Create a blocked result
  */
-function createBlockedResult(limit: number, resetTime: number, reason: string): RateLimitResult {
+function createBlockedResult(limit: number, resetTime: number, _reason: string): RateLimitResult {
   const now = Date.now();
   const retryAfter = Math.ceil((resetTime - now) / 1000);
   

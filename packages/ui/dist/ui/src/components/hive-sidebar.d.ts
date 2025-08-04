@@ -1,10 +1,10 @@
 import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
 declare const hiveSidebarVariants: (props?: {
-    variant?: "default" | "premium" | "minimal";
+    variant?: "default" | "minimal" | "premium";
     size?: "default" | "sm" | "lg" | "xl";
-    position?: "left" | "right";
-} & import("class-variance-authority/dist/types").ClassProp) => string;
+    position?: "right" | "left";
+} & import("class-variance-authority/types").ClassProp) => string;
 export interface SidebarSection {
     id: 'spaces' | 'profile' | 'hivelab' | 'feed';
     title: string;

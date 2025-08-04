@@ -1,5 +1,4 @@
 import { dbAdmin } from '@/lib/firebase-admin';
-import { type Timestamp } from 'firebase-admin/firestore';
 
 /**
  * HIVE Rituals Framework - Platform-Wide Experiences
@@ -393,7 +392,7 @@ export class RitualFramework {
     ritualId: string, 
     userId: string, 
     actionId: string, 
-    metadata: Record<string, any> = {}
+    _metadata: Record<string, any> = {}
   ): Promise<void> {
     const participation = await this.getUserParticipation(ritualId, userId);
     if (!participation) throw new Error('User not participating in ritual');
@@ -461,7 +460,7 @@ export class RitualFramework {
   /**
    * Check if user meets ritual prerequisites
    */
-  private async checkUserEligibility(userId: string, ritual: Ritual): Promise<boolean> {
+  private async checkUserEligibility(_userId: string, _ritual: Ritual): Promise<boolean> {
     // TODO: Implement eligibility checking based on:
     // - Space memberships
     // - Account age
@@ -518,7 +517,7 @@ export class RitualFramework {
   /**
    * Initialize participation tracking when ritual starts
    */
-  private async initializeParticipationTracking(ritualId: string, universities: string[]): Promise<void> {
+  private async initializeParticipationTracking(_ritualId: string, _universities: string[]): Promise<void> {
     // TODO: Calculate eligible participants per university
     // Update campus states with realistic totalEligible numbers
   }
@@ -535,9 +534,9 @@ export class RitualFramework {
    * Update campus participation counters
    */
   private async updateCampusParticipation(
-    ritualId: string, 
-    universities: string[], 
-    action: 'joined' | 'completed'
+    _ritualId: string, 
+    _universities: string[], 
+    _action: 'joined' | 'completed'
   ): Promise<void> {
     // TODO: Update campus state counters
   }
@@ -564,7 +563,7 @@ export class RitualFramework {
   /**
    * Award rewards to user for ritual completion
    */
-  private async awardRitualRewards(ritualId: string, userId: string): Promise<void> {
+  private async awardRitualRewards(_ritualId: string, _userId: string): Promise<void> {
     // TODO: Implement reward system
     // - Award badges
     // - Unlock features
@@ -574,7 +573,7 @@ export class RitualFramework {
   /**
    * Check and trigger milestone achievements
    */
-  private async checkMilestones(ritualId: string): Promise<void> {
+  private async checkMilestones(_ritualId: string): Promise<void> {
     // TODO: Check if any milestones have been reached
     // - Calculate participation thresholds
     // - Trigger celebrations

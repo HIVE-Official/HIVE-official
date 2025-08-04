@@ -47,6 +47,7 @@ export interface QuickActionButtonsProps {
         }>;
         onClick: () => void;
         variant?: "default" | "primary" | "outline";
+        className?: string;
     }>;
     /** Loading state */
     isLoading?: boolean;

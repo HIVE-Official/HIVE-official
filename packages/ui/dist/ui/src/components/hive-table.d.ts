@@ -30,9 +30,9 @@ export interface PaginationOptions {
     total: number;
 }
 declare const hiveTableVariants: (props?: {
-    variant?: "default" | "premium" | "minimal";
+    variant?: "default" | "minimal" | "premium";
     density?: "default" | "compact" | "spacious";
-} & import("class-variance-authority/dist/types").ClassProp) => string;
+} & import("class-variance-authority/types").ClassProp) => string;
 export interface HiveTableProps<T = any> extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onSelect'>, VariantProps<typeof hiveTableVariants> {
     data: T[];
     columns: TableColumn<T>[];

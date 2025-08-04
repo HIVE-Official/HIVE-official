@@ -2,7 +2,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
 import { cva } from "class-variance-authority";
-import { cn } from "../../lib/utils";
+import { cn } from "../../lib/utils.js";
 // HIVE Input System - Semantic Token Perfection
 // Zero hardcoded values - complete semantic token usage
 const inputVariants = cva(
@@ -15,10 +15,13 @@ const inputVariants = cva(
             success: "border-[var(--hive-status-success)] focus:border-[var(--hive-status-success)] focus:ring-[color-mix(in_srgb,var(--hive-status-success)_30%,transparent)]",
             warning: "border-[var(--hive-status-warning)] focus:border-[var(--hive-status-warning)] focus:ring-[color-mix(in_srgb,var(--hive-status-warning)_30%,transparent)]",
             brand: "border-[var(--hive-brand-secondary)] focus:border-[var(--hive-brand-secondary)]",
+            ghost: "border-transparent bg-transparent focus:border-[var(--hive-brand-secondary)] focus:bg-[var(--hive-background-secondary)]",
+            filled: "border-transparent bg-[var(--hive-background-tertiary)] focus:border-[var(--hive-brand-secondary)]",
         },
         size: {
             sm: "h-8 px-2 text-xs",
             default: "h-10 px-3 text-sm",
+            md: "h-10 px-3 text-sm", // Alias for default
             lg: "h-12 px-4 text-base",
             xl: "h-14 px-5 text-lg",
         },
@@ -98,5 +101,5 @@ const ChevronDownIcon = () => (_jsx("svg", { width: "12", height: "12", viewBox:
 const EmailIcon = () => (_jsxs("svg", { width: "16", height: "16", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: [_jsx("path", { d: "M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" }), _jsx("polyline", { points: "22,6 12,13 2,6" })] }));
 const PhoneIcon = () => (_jsx("svg", { width: "16", height: "16", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: _jsx("path", { d: "M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" }) }));
 const LinkIcon = () => (_jsxs("svg", { width: "16", height: "16", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: [_jsx("path", { d: "M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" }), _jsx("path", { d: "M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" })] }));
-export { Input, SearchInput, PasswordInput, NumberInput, InputGroup, inputVariants };
+export { Input, Input as InputEnhanced, SearchInput, PasswordInput, NumberInput, InputGroup, inputVariants };
 //# sourceMappingURL=input-enhanced.js.map

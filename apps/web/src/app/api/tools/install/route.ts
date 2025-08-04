@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { doc, getDoc, addDoc, collection, query, where, getDocs, updateDoc } from 'firebase/firestore';
 import { dbAdmin as adminDb } from '@/lib/firebase-admin';
 import { getCurrentUser } from '@/lib/auth-server';
 import { z } from 'zod';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 const InstallRequestSchema = z.object({
   toolId: z.string(),
@@ -49,7 +50,7 @@ export async function POST(request: NextRequest) {
   try {
     const user = await getCurrentUser(request);
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const body = await request.json();
@@ -62,7 +63,7 @@ export async function POST(request: NextRequest) {
       .get();
 
     if (marketplaceSnapshot.empty) {
-      return NextResponse.json({ error: 'Tool not found in marketplace' }, { status: 404 });
+      return NextResponse.json(ApiResponseHelper.error("Tool not found in marketplace", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     const marketplaceTool = marketplaceSnapshot.docs[0].data();
@@ -70,26 +71,26 @@ export async function POST(request: NextRequest) {
     // Get full tool details
     const toolDoc = await adminDb.collection('tools').doc(validatedData.toolId).get();
     if (!toolDoc.exists) {
-      return NextResponse.json({ error: 'Tool not found' }, { status: 404 });
+      return NextResponse.json(ApiResponseHelper.error("Tool not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     const toolData = toolDoc.data();
     
     // Check if tool is published and available
     if (toolData?.status !== 'published') {
-      return NextResponse.json({ error: 'Tool is not available for installation' }, { status: 400 });
+      return NextResponse.json(ApiResponseHelper.error("Tool is not available for installation", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
     // Validate installation target
     if (validatedData.installTo === 'profile' && validatedData.targetId !== user.uid) {
-      return NextResponse.json({ error: 'Can only install to your own profile' }, { status: 403 });
+      return NextResponse.json(ApiResponseHelper.error("Can only install to your own profile", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     if (validatedData.installTo === 'space') {
       // Check space membership and permissions
       const spaceDoc = await adminDb.collection('spaces').doc(validatedData.targetId).get();
       if (!spaceDoc.exists) {
-        return NextResponse.json({ error: 'Space not found' }, { status: 404 });
+        return NextResponse.json(ApiResponseHelper.error("Space not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
       }
 
       const membershipSnapshot = await adminDb
@@ -100,12 +101,12 @@ export async function POST(request: NextRequest) {
         .get();
 
       if (membershipSnapshot.empty) {
-        return NextResponse.json({ error: 'Not a member of this space' }, { status: 403 });
+        return NextResponse.json(ApiResponseHelper.error("Not a member of this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
       }
 
       const memberData = membershipSnapshot.docs[0].data();
       if (!['builder', 'admin', 'moderator'].includes(memberData.role)) {
-        return NextResponse.json({ error: 'Insufficient permissions to install tools' }, { status: 403 });
+        return NextResponse.json(ApiResponseHelper.error("Insufficient permissions to install tools", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
       }
     }
 
@@ -119,13 +120,13 @@ export async function POST(request: NextRequest) {
       .get();
 
     if (!existingInstallSnapshot.empty) {
-      return NextResponse.json({ error: 'Tool already installed to this target' }, { status: 409 });
+      return NextResponse.json(ApiResponseHelper.error("Tool already installed to this target", "UNKNOWN_ERROR"), { status: 409 });
     }
 
     // Check pricing and payment (if applicable)
     if (marketplaceTool.pricing?.type === 'paid') {
       // TODO: Implement payment verification
-      return NextResponse.json({ error: 'Paid tools not yet supported' }, { status: 501 });
+      return NextResponse.json(ApiResponseHelper.error("Paid tools not yet supported", "UNKNOWN_ERROR"), { status: 501 });
     }
 
     // Check installation limits
@@ -138,7 +139,7 @@ export async function POST(request: NextRequest) {
         .get();
 
       if (spaceInstallsSnapshot.size >= 50) {
-        return NextResponse.json({ error: 'Space has reached maximum tool limit (50)' }, { status: 409 });
+        return NextResponse.json(ApiResponseHelper.error("Space has reached maximum tool limit (50)", "UNKNOWN_ERROR"), { status: 409 });
       }
     }
 
@@ -245,19 +246,19 @@ export async function POST(request: NextRequest) {
         id: installRef.id,
         ...installation
       }
-    }, { status: 201 });
+    }, { status: HttpStatus.CREATED });
 
   } catch (error) {
-    console.error('Error installing tool:', error);
+    logger.error('Error installing tool', { error: error, endpoint: '/api/tools/install' });
     
     if (error instanceof z.ZodError) {
       return NextResponse.json({
         error: 'Invalid installation data',
         details: error.errors
-      }, { status: 400 });
+      }, { status: HttpStatus.BAD_REQUEST });
     }
 
-    return NextResponse.json({ error: 'Failed to install tool' }, { status: 500 });
+    return NextResponse.json(ApiResponseHelper.error("Failed to install tool", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -266,7 +267,7 @@ export async function GET(request: NextRequest) {
   try {
     const user = await getCurrentUser(request);
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const { searchParams } = new URL(request.url);
@@ -328,7 +329,7 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('Error fetching installations:', error);
-    return NextResponse.json({ error: 'Failed to fetch installations' }, { status: 500 });
+    logger.error('Error fetching installations', { error: error, endpoint: '/api/tools/install' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to fetch installations", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

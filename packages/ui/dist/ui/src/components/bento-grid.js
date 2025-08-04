@@ -1,10 +1,10 @@
 'use client';
 import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-runtime";
 import React, { useState, useCallback, useRef } from 'react';
-import { motion, AnimatePresence } from './framer-motion-proxy';
-import { cn } from '../lib/utils';
-import { HiveCard } from './hive-card';
-import { HiveButton } from './hive-button';
+import { motion, AnimatePresence } from './framer-motion-proxy.js';
+import { cn } from '../lib/utils.js';
+import { HiveCard } from './hive-card.js';
+import { HiveButton } from './hive-button.js';
 import { GripVertical, Eye, EyeOff, Maximize2, Minimize2, Settings, Lock } from 'lucide-react';
 const sizeClasses = {
     sm: 'col-span-1 row-span-1',

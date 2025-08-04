@@ -120,6 +120,11 @@ export declare const ToolConfigSchema: z.ZodObject<{
     requireAuthentication: z.ZodDefault<z.ZodBoolean>;
     showProgressBar: z.ZodDefault<z.ZodBoolean>;
     autoSave: z.ZodDefault<z.ZodBoolean>;
+    enableRealTimeUpdates: z.ZodDefault<z.ZodBoolean>;
+    maxResponseLength: z.ZodDefault<z.ZodNumber>;
+    customCSS: z.ZodDefault<z.ZodString>;
+    headerText: z.ZodDefault<z.ZodString>;
+    footerText: z.ZodDefault<z.ZodString>;
     dataSchema: z.ZodOptional<z.ZodObject<{
         fields: z.ZodArray<z.ZodObject<{
             name: z.ZodString;
@@ -206,6 +211,11 @@ export declare const ToolConfigSchema: z.ZodObject<{
     requireAuthentication: boolean;
     showProgressBar: boolean;
     autoSave: boolean;
+    enableRealTimeUpdates: boolean;
+    maxResponseLength: number;
+    customCSS: string;
+    headerText: string;
+    footerText: string;
     dataRetentionDays: number;
     notifyOnSubmission: boolean;
     trackingEnabled: boolean;
@@ -234,6 +244,11 @@ export declare const ToolConfigSchema: z.ZodObject<{
     requireAuthentication?: boolean | undefined;
     showProgressBar?: boolean | undefined;
     autoSave?: boolean | undefined;
+    enableRealTimeUpdates?: boolean | undefined;
+    maxResponseLength?: number | undefined;
+    customCSS?: string | undefined;
+    headerText?: string | undefined;
+    footerText?: string | undefined;
     dataSchema?: {
         fields: {
             type: "string" | "number" | "boolean" | "object" | "date" | "array";
@@ -383,6 +398,11 @@ export declare const ToolSchema: z.ZodObject<{
         requireAuthentication: z.ZodDefault<z.ZodBoolean>;
         showProgressBar: z.ZodDefault<z.ZodBoolean>;
         autoSave: z.ZodDefault<z.ZodBoolean>;
+        enableRealTimeUpdates: z.ZodDefault<z.ZodBoolean>;
+        maxResponseLength: z.ZodDefault<z.ZodNumber>;
+        customCSS: z.ZodDefault<z.ZodString>;
+        headerText: z.ZodDefault<z.ZodString>;
+        footerText: z.ZodDefault<z.ZodString>;
         dataSchema: z.ZodOptional<z.ZodObject<{
             fields: z.ZodArray<z.ZodObject<{
                 name: z.ZodString;
@@ -469,6 +489,11 @@ export declare const ToolSchema: z.ZodObject<{
         requireAuthentication: boolean;
         showProgressBar: boolean;
         autoSave: boolean;
+        enableRealTimeUpdates: boolean;
+        maxResponseLength: number;
+        customCSS: string;
+        headerText: string;
+        footerText: string;
         dataRetentionDays: number;
         notifyOnSubmission: boolean;
         trackingEnabled: boolean;
@@ -497,6 +522,11 @@ export declare const ToolSchema: z.ZodObject<{
         requireAuthentication?: boolean | undefined;
         showProgressBar?: boolean | undefined;
         autoSave?: boolean | undefined;
+        enableRealTimeUpdates?: boolean | undefined;
+        maxResponseLength?: number | undefined;
+        customCSS?: string | undefined;
+        headerText?: string | undefined;
+        footerText?: string | undefined;
         dataSchema?: {
             fields: {
                 type: "string" | "number" | "boolean" | "object" | "date" | "array";
@@ -569,6 +599,11 @@ export declare const ToolSchema: z.ZodObject<{
         requireAuthentication: boolean;
         showProgressBar: boolean;
         autoSave: boolean;
+        enableRealTimeUpdates: boolean;
+        maxResponseLength: number;
+        customCSS: string;
+        headerText: string;
+        footerText: string;
         dataRetentionDays: number;
         notifyOnSubmission: boolean;
         trackingEnabled: boolean;
@@ -675,6 +710,11 @@ export declare const ToolSchema: z.ZodObject<{
         requireAuthentication?: boolean | undefined;
         showProgressBar?: boolean | undefined;
         autoSave?: boolean | undefined;
+        enableRealTimeUpdates?: boolean | undefined;
+        maxResponseLength?: number | undefined;
+        customCSS?: string | undefined;
+        headerText?: string | undefined;
+        footerText?: string | undefined;
         dataSchema?: {
             fields: {
                 type: "string" | "number" | "boolean" | "object" | "date" | "array";
@@ -742,6 +782,11 @@ export declare const CreateToolSchema: z.ZodObject<{
         requireAuthentication: z.ZodOptional<z.ZodDefault<z.ZodBoolean>>;
         showProgressBar: z.ZodOptional<z.ZodDefault<z.ZodBoolean>>;
         autoSave: z.ZodOptional<z.ZodDefault<z.ZodBoolean>>;
+        enableRealTimeUpdates: z.ZodOptional<z.ZodDefault<z.ZodBoolean>>;
+        maxResponseLength: z.ZodOptional<z.ZodDefault<z.ZodNumber>>;
+        customCSS: z.ZodOptional<z.ZodDefault<z.ZodString>>;
+        headerText: z.ZodOptional<z.ZodDefault<z.ZodString>>;
+        footerText: z.ZodOptional<z.ZodDefault<z.ZodString>>;
         dataSchema: z.ZodOptional<z.ZodOptional<z.ZodObject<{
             fields: z.ZodArray<z.ZodObject<{
                 name: z.ZodString;
@@ -828,6 +873,11 @@ export declare const CreateToolSchema: z.ZodObject<{
         requireAuthentication?: boolean | undefined;
         showProgressBar?: boolean | undefined;
         autoSave?: boolean | undefined;
+        enableRealTimeUpdates?: boolean | undefined;
+        maxResponseLength?: number | undefined;
+        customCSS?: string | undefined;
+        headerText?: string | undefined;
+        footerText?: string | undefined;
         dataSchema?: {
             fields: {
                 type: "string" | "number" | "boolean" | "object" | "date" | "array";
@@ -856,6 +906,11 @@ export declare const CreateToolSchema: z.ZodObject<{
         requireAuthentication?: boolean | undefined;
         showProgressBar?: boolean | undefined;
         autoSave?: boolean | undefined;
+        enableRealTimeUpdates?: boolean | undefined;
+        maxResponseLength?: number | undefined;
+        customCSS?: string | undefined;
+        headerText?: string | undefined;
+        footerText?: string | undefined;
         dataSchema?: {
             fields: {
                 type: "string" | "number" | "boolean" | "object" | "date" | "array";
@@ -915,6 +970,11 @@ export declare const CreateToolSchema: z.ZodObject<{
         requireAuthentication?: boolean | undefined;
         showProgressBar?: boolean | undefined;
         autoSave?: boolean | undefined;
+        enableRealTimeUpdates?: boolean | undefined;
+        maxResponseLength?: number | undefined;
+        customCSS?: string | undefined;
+        headerText?: string | undefined;
+        footerText?: string | undefined;
         dataSchema?: {
             fields: {
                 type: "string" | "number" | "boolean" | "object" | "date" | "array";
@@ -955,6 +1015,11 @@ export declare const CreateToolSchema: z.ZodObject<{
         requireAuthentication?: boolean | undefined;
         showProgressBar?: boolean | undefined;
         autoSave?: boolean | undefined;
+        enableRealTimeUpdates?: boolean | undefined;
+        maxResponseLength?: number | undefined;
+        customCSS?: string | undefined;
+        headerText?: string | undefined;
+        footerText?: string | undefined;
         dataSchema?: {
             fields: {
                 type: "string" | "number" | "boolean" | "object" | "date" | "array";
@@ -1044,6 +1109,11 @@ export declare const UpdateToolSchema: z.ZodObject<{
         requireAuthentication: z.ZodOptional<z.ZodDefault<z.ZodBoolean>>;
         showProgressBar: z.ZodOptional<z.ZodDefault<z.ZodBoolean>>;
         autoSave: z.ZodOptional<z.ZodDefault<z.ZodBoolean>>;
+        enableRealTimeUpdates: z.ZodOptional<z.ZodDefault<z.ZodBoolean>>;
+        maxResponseLength: z.ZodOptional<z.ZodDefault<z.ZodNumber>>;
+        customCSS: z.ZodOptional<z.ZodDefault<z.ZodString>>;
+        headerText: z.ZodOptional<z.ZodDefault<z.ZodString>>;
+        footerText: z.ZodOptional<z.ZodDefault<z.ZodString>>;
         dataSchema: z.ZodOptional<z.ZodOptional<z.ZodObject<{
             fields: z.ZodArray<z.ZodObject<{
                 name: z.ZodString;
@@ -1130,6 +1200,11 @@ export declare const UpdateToolSchema: z.ZodObject<{
         requireAuthentication?: boolean | undefined;
         showProgressBar?: boolean | undefined;
         autoSave?: boolean | undefined;
+        enableRealTimeUpdates?: boolean | undefined;
+        maxResponseLength?: number | undefined;
+        customCSS?: string | undefined;
+        headerText?: string | undefined;
+        footerText?: string | undefined;
         dataSchema?: {
             fields: {
                 type: "string" | "number" | "boolean" | "object" | "date" | "array";
@@ -1158,6 +1233,11 @@ export declare const UpdateToolSchema: z.ZodObject<{
         requireAuthentication?: boolean | undefined;
         showProgressBar?: boolean | undefined;
         autoSave?: boolean | undefined;
+        enableRealTimeUpdates?: boolean | undefined;
+        maxResponseLength?: number | undefined;
+        customCSS?: string | undefined;
+        headerText?: string | undefined;
+        footerText?: string | undefined;
         dataSchema?: {
             fields: {
                 type: "string" | "number" | "boolean" | "object" | "date" | "array";
@@ -1215,6 +1295,11 @@ export declare const UpdateToolSchema: z.ZodObject<{
         requireAuthentication?: boolean | undefined;
         showProgressBar?: boolean | undefined;
         autoSave?: boolean | undefined;
+        enableRealTimeUpdates?: boolean | undefined;
+        maxResponseLength?: number | undefined;
+        customCSS?: string | undefined;
+        headerText?: string | undefined;
+        footerText?: string | undefined;
         dataSchema?: {
             fields: {
                 type: "string" | "number" | "boolean" | "object" | "date" | "array";
@@ -1270,6 +1355,11 @@ export declare const UpdateToolSchema: z.ZodObject<{
         requireAuthentication?: boolean | undefined;
         showProgressBar?: boolean | undefined;
         autoSave?: boolean | undefined;
+        enableRealTimeUpdates?: boolean | undefined;
+        maxResponseLength?: number | undefined;
+        customCSS?: string | undefined;
+        headerText?: string | undefined;
+        footerText?: string | undefined;
         dataSchema?: {
             fields: {
                 type: "string" | "number" | "boolean" | "object" | "date" | "array";

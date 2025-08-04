@@ -106,8 +106,6 @@ export function AppShell({
           collapsed={sidebarCollapsed}
           user={user}
           currentPath={currentSection}
-          width={sidebarWidth}
-          layoutType={layoutType}
         />
         
         {/* Main Content Area */}

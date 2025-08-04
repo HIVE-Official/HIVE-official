@@ -306,7 +306,6 @@ export const ToolPreview: React.FC<ToolPreviewProps> = ({
 
   return (
     <HiveMotionWrapper
-      variant="fade"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -338,7 +337,7 @@ export const ToolPreview: React.FC<ToolPreviewProps> = ({
                     return (
                       <HiveButton
                         key={key}
-                        variant={currentMode === key ? 'default' : 'ghost'}
+                        variant={currentMode === key ? 'primary' : 'ghost'}
                         size="sm"
                         onClick={() => {
                           setCurrentMode(key as keyof typeof DEVICE_VIEWPORTS);
@@ -454,7 +453,7 @@ export const ToolPreview: React.FC<ToolPreviewProps> = ({
 
               {/* Device info */}
               <div className="absolute -bottom-8 left-0 right-0 text-center">
-                <HiveBadge variant="secondary" className="text-xs">
+                <HiveBadge variant="tool-tag" className="text-xs">
                   {actualWidth} × {actualHeight}px
                   {isRotated && " (rotated)"}
                 </HiveBadge>

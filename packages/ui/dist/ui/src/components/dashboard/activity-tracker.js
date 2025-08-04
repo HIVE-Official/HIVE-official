@@ -3,11 +3,11 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Activity, TrendingUp, TrendingDown, Clock, Users, Zap, Target, BarChart3, Download, RefreshCw } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { Button } from '../hive-button';
-import { Badge } from '../ui/badge';
-import { Progress } from '../hive-progress';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card.js';
+import { Button } from '../hive-button.js';
+import { Badge } from '../ui/badge.js';
+import { Progress } from '../hive-progress.js';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs.js';
 // Animation variants
 const containerVariants = {
     hidden: { opacity: 0 },

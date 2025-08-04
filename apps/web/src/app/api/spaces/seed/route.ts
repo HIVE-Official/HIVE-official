@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { FieldValue } from 'firebase-admin/firestore';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 /**
  * Space Data Seeding API for University Pre-population
@@ -287,7 +289,7 @@ function generateSpaceVariation(spaceType: string, index: number): SpaceTemplate
   const generators = SPACE_GENERATORS[spaceType as keyof typeof SPACE_GENERATORS];
   
   switch (spaceType) {
-    case 'campus_living':
+    case 'campus_living': {
       const housing = generators as typeof SPACE_GENERATORS.campus_living;
       const prefix = housing.prefixes[index % housing.prefixes.length];
       const base = housing.bases[Math.floor(index / housing.prefixes.length) % housing.bases.length];
@@ -299,8 +301,9 @@ function generateSpaceVariation(spaceType: string, index: number): SpaceTemplate
         tags: ["Housing", "Community", suffix],
         memberCount: Math.floor(Math.random() * 100) + 20
       };
+    }
       
-    case 'student_organizations':
+    case 'student_organizations': {
       const orgs = generators as typeof SPACE_GENERATORS.student_organizations;
       const categories = Object.keys(orgs);
       const category = categories[index % categories.length];
@@ -313,8 +316,9 @@ function generateSpaceVariation(spaceType: string, index: number): SpaceTemplate
         tags: [category, "Student", "Organization"],
         memberCount: Math.floor(Math.random() * 150) + 25
       };
+    }
       
-    case 'university_organizations':
+    case 'university_organizations': {
       const uni = generators as typeof SPACE_GENERATORS.university_organizations;
       const uniCategories = Object.keys(uni);
       const uniCategory = uniCategories[index % uniCategories.length];
@@ -327,8 +331,9 @@ function generateSpaceVariation(spaceType: string, index: number): SpaceTemplate
         tags: ["University", uniCategory, "Official"],
         memberCount: Math.floor(Math.random() * 80) + 15
       };
+    }
       
-    case 'cohort':
+    case 'cohort': {
       const cohort = generators as typeof SPACE_GENERATORS.cohort;
       const cohortCategories = Object.keys(cohort);
       const cohortCategory = cohortCategories[index % cohortCategories.length];
@@ -359,6 +364,7 @@ function generateSpaceVariation(spaceType: string, index: number): SpaceTemplate
         tags,
         memberCount
       };
+    }
       
     default:
       return null;
@@ -381,9 +387,21 @@ function calculateTargetDistribution(totalTarget: number = 360) {
 
 export async function POST(request: NextRequest) {
   try {
+    // PRODUCTION SAFETY: Only allow seeding in development/staging environments
+    if (process.env.NODE_ENV === 'production' && !process.env.ALLOW_DATA_SEEDING) {
+      return NextResponse.json(
+        { 
+          success: false,
+          error: 'Data seeding is not allowed in production',
+          message: 'This endpoint is restricted to development and staging environments for security reasons.' 
+        },
+        { status: HttpStatus.FORBIDDEN }
+      );
+    }
+
     const { dryRun = false, targetTotal = 360 } = await request.json().catch(() => ({}));
     
-    console.log(`🌱 Starting space seeding analysis (target: ${targetTotal} spaces)...`);
+    logger.info('🌱 Starting space seeding analysis (target: spaces)...', { targetTotal, endpoint: '/api/spaces/seed' });
     
     // Calculate target distribution
     const targetDistribution = calculateTargetDistribution(targetTotal);
@@ -415,13 +433,13 @@ export async function POST(request: NextRequest) {
           spacesToCreate[spaceType] = additional;
         } else {
           spacesToCreate[spaceType] = [];
-          console.log(`⚡ ${spaceType}: ${currentCount} (already above target of ${targetCount})`);
+          logger.info('⚡ :(already above target of )', {  currentCount, targetCount, endpoint: '/api/spaces/seed'  });
         }
         
         const additional = spacesToCreate[spaceType];
-        console.log(`📊 ${spaceType}: ${currentCount} → ${targetCount} (${additional.length} to create)`);
+        logger.info('📊 : →( to create)', { spaceType, targetCount, spaceName: additional.length, endpoint: '/api/spaces/seed'   });
       } catch (error) {
-        console.error(`❌ Error analyzing ${spaceType}:`, error);
+        logger.error('❌ Error analyzing', { spaceType, error: error, endpoint: '/api/spaces/seed' });
         currentDistribution[spaceType] = 0;
         spacesToCreate[spaceType] = [];
       }
@@ -430,7 +448,7 @@ export async function POST(request: NextRequest) {
     const totalToCreate = Object.values(spacesToCreate).reduce((sum, spaces) => sum + spaces.length, 0);
     const finalTotal = totalCurrent + totalToCreate;
     
-    console.log(`📈 Summary: ${totalCurrent} current → ${finalTotal} final (${totalToCreate} to create)`);
+    logger.info('📈 Summary: current →final ( to create)', {  finalTotal, totalToCreate, endpoint: '/api/spaces/seed'  });
     
     if (dryRun) {
       return NextResponse.json({
@@ -502,9 +520,9 @@ export async function POST(request: NextRequest) {
           sample: spaces.slice(0, 2) // Show first 2 spaces as sample
         };
         
-        console.log(`✅ Created ${spaces.length} ${spaceType} spaces`);
+        logger.info('✅ Createdspaces', { spaces, spaceType, endpoint: '/api/spaces/seed' });
       } catch (error) {
-        console.error(`❌ Error creating ${spaceType} spaces:`, error);
+        logger.error('❌ Error creating spaces', { spaceType, error: error, endpoint: '/api/spaces/seed' });
         results[spaceType] = {
           error: `Failed to create spaces: ${error}`,
           attempted: spaces.length
@@ -526,14 +544,14 @@ export async function POST(request: NextRequest) {
     });
     
   } catch (error) {
-    console.error('❌ Space seeding error:', error);
+    logger.error('❌ Space seeding error', { error: error, endpoint: '/api/spaces/seed' });
     return NextResponse.json(
       { 
         success: false,
         error: 'Space seeding failed',
         message: `${error}` 
       },
-      { status: 500 }
+      { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }
 }
@@ -552,15 +570,25 @@ export async function GET() {
  */
 export async function DELETE(request: NextRequest) {
   try {
+    // PRODUCTION SAFETY: Only allow cleanup in development/staging environments
+    if (process.env.NODE_ENV === 'production' && !process.env.ALLOW_DATA_SEEDING) {
+      return NextResponse.json(
+        { 
+          success: false,
+          error: 'Data cleanup is not allowed in production',
+          message: 'This endpoint is restricted to development and staging environments for security reasons.' 
+        },
+        { status: HttpStatus.FORBIDDEN }
+      );
+    }
+
     const { cleanup = false } = await request.json().catch(() => ({}));
     
     if (!cleanup) {
-      return NextResponse.json({
-        error: 'Please confirm cleanup by sending { cleanup: true }'
-      }, { status: 400 });
+      return NextResponse.json(ApiResponseHelper.error("Please confirm cleanup by sending { cleanup: true }", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
     
-    console.log('🧹 Starting cleanup of auto-generated spaces...');
+    logger.info('🧹 Starting cleanup of auto-generated spaces...', { endpoint: '/api/spaces/seed' });
     
     const spaceTypes = ['campus_living', 'fraternity_and_sorority', 'hive_exclusive', 'student_organizations', 'university_organizations', 'cohort'];
     let totalDeleted = 0;
@@ -598,9 +626,9 @@ export async function DELETE(request: NextRequest) {
           message: `Deleted ${autoGeneratedSpaces.size} auto-generated spaces`
         };
         
-        console.log(`✅ Deleted ${autoGeneratedSpaces.size} auto-generated spaces from ${spaceType}`);
+        logger.info('✅ Deletedauto-generated spaces from', { autoGeneratedSpaces, spaceType, endpoint: '/api/spaces/seed' });
       } catch (error) {
-        console.error(`❌ Error cleaning up ${spaceType}:`, error);
+        logger.error('❌ Error cleaning up', { spaceType, error: error, endpoint: '/api/spaces/seed' });
         deletionResults[spaceType] = {
           error: `Failed to clean up: ${error}`,
           deleted: 0
@@ -616,14 +644,14 @@ export async function DELETE(request: NextRequest) {
     });
     
   } catch (error) {
-    console.error('❌ Cleanup error:', error);
+    logger.error('❌ Cleanup error', { error: error, endpoint: '/api/spaces/seed' });
     return NextResponse.json(
       { 
         success: false,
         error: 'Cleanup failed',
         message: `${error}` 
       },
-      { status: 500 }
+      { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }
 }

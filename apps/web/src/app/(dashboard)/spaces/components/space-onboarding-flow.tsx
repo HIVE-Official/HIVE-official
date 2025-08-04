@@ -86,7 +86,7 @@ function WelcomeStep({ space, userProfile, onNext }: {
         initial={{ scale: 0 }}
         animate={{ scale: showAnimation ? 1 : 0 }}
         transition={{ type: "spring", delay: 0.2 }}
-        className="w-20 h-20 mx-auto bg-gradient-to-br from-yellow-400 to-orange-400 rounded-full flex items-center justify-center"
+        className="w-20 h-20 mx-auto bg-gradient-to-br from-hive-gold to-orange-400 rounded-full flex items-center justify-center"
       >
         <Sparkles className="h-10 w-10 text-white" />
       </motion.div>
@@ -96,7 +96,7 @@ function WelcomeStep({ space, userProfile, onNext }: {
           Welcome to {space.name}!
         </h2>
         <p className="text-neutral-300 max-w-md mx-auto">
-          {space.welcomeMessage || 
+          {space.description || 
            "You're about to join an amazing community. Let's get you set up for the best experience."}
         </p>
       </div>
@@ -139,7 +139,7 @@ function WelcomeStep({ space, userProfile, onNext }: {
 
       <Button
         onClick={onNext}
-        className="bg-yellow-400 text-neutral-950 hover:bg-yellow-300 w-full"
+        className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne w-full"
       >
         Let's get started
         <ArrowRight className="h-4 w-4 ml-2" />
@@ -205,7 +205,7 @@ function ExpectationsStep({ space, onNext }: {
               <div>
                 <h3 className="font-medium text-white mb-2">Community Guidelines</h3>
                 <ul className="space-y-1 text-sm text-neutral-400">
-                  {space.expectations.rules.slice(0, 3).map((rule, index) => (
+                  {space.expectations.rules.slice(0, 3).map((rule: string, index: number) => (
                     <li key={index} className="flex items-start gap-2">
                       <CheckCircle className="h-3 w-3 text-green-400 mt-0.5 flex-shrink-0" />
                       {rule}
@@ -236,11 +236,16 @@ function NotificationStep({ onNext, onUpdatePreferences }: {
   onNext: () => void;
   onUpdatePreferences: (_prefs: Partial<OnboardingPreferences>) => void;
 }) {
-  const [notifications, setNotifications] = useState({
+  const [notifications, setNotifications] = useState<{
+    posts: boolean;
+    events: boolean;
+    mentions: boolean;
+    digest: "daily" | "weekly" | "off";
+  }>({
     posts: true,
     events: true,
     mentions: true,
-    digest: "weekly" as const
+    digest: "weekly"
   });
 
   const handleToggle = (key: keyof typeof notifications) => {
@@ -284,7 +289,7 @@ function NotificationStep({ onNext, onUpdatePreferences }: {
                 className={`
                   w-12 h-6 rounded-full transition-colors relative
                   ${notifications[item.key as keyof typeof notifications] 
-                    ? "bg-yellow-400" 
+                    ? "bg-hive-gold" 
                     : "bg-neutral-600"
                   }
                 `}
@@ -320,7 +325,7 @@ function NotificationStep({ onNext, onUpdatePreferences }: {
                 className={`
                   p-2 rounded-lg text-sm transition-colors
                   ${notifications.digest === option.value
-                    ? "bg-yellow-400 text-neutral-950"
+                    ? "bg-hive-gold text-hive-obsidian"
                     : "bg-white/10 text-neutral-300 hover:bg-white/20"
                   }
                 `}
@@ -334,7 +339,7 @@ function NotificationStep({ onNext, onUpdatePreferences }: {
 
       <Button
         onClick={onNext}
-        className="w-full bg-yellow-400 text-neutral-950 hover:bg-yellow-300"
+        className="w-full bg-hive-gold text-hive-obsidian hover:bg-hive-champagne"
       >
         Continue
       </Button>
@@ -444,7 +449,7 @@ export function SpaceOnboardingFlow({
         {/* Progress Bar */}
         <div className="w-full bg-white/10 rounded-full h-2">
           <div 
-            className="bg-yellow-400 h-2 rounded-full transition-all duration-500"
+            className="bg-hive-gold h-2 rounded-full transition-all duration-500"
             style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
           />
         </div>
@@ -455,7 +460,7 @@ export function SpaceOnboardingFlow({
             <div 
               key={step.id}
               className={`text-xs ${
-                index <= currentStep ? "text-yellow-400" : "text-neutral-400"
+                index <= currentStep ? "text-hive-gold" : "text-neutral-400"
               }`}
             >
               {step.title}
@@ -572,7 +577,7 @@ export function PostJoinActivation({ space, onComplete }: PostJoinActivationProp
             <Card key={index} className={`
               p-4 transition-all
               ${isCompleted ? "bg-green-500/10 border-green-500/20" : 
-                isCurrent ? "bg-yellow-400/10 border-yellow-400/20" : 
+                isCurrent ? "bg-hive-gold/10 border-hive-gold/20" : 
                 "bg-white/5 border-white/10"}
             `}>
               <div className="flex items-center justify-between">
@@ -580,12 +585,12 @@ export function PostJoinActivation({ space, onComplete }: PostJoinActivationProp
                   <div className={`
                     w-8 h-8 rounded-lg flex items-center justify-center
                     ${isCompleted ? "bg-green-500/20" : 
-                      isCurrent ? "bg-yellow-400/20" : "bg-white/10"}
+                      isCurrent ? "bg-hive-gold/20" : "bg-white/10"}
                   `}>
                     {isCompleted ? (
                       <CheckCircle className="h-4 w-4 text-green-400" />
                     ) : (
-                      <Icon className={`h-4 w-4 ${isCurrent ? "text-yellow-400" : task.color}`} />
+                      <Icon className={`h-4 w-4 ${isCurrent ? "text-hive-gold" : task.color}`} />
                     )}
                   </div>
                   <div>
@@ -604,7 +609,7 @@ export function PostJoinActivation({ space, onComplete }: PostJoinActivationProp
                     onClick={() => handleTaskComplete(index)}
                     className={`
                       ${isCurrent 
-                        ? "bg-yellow-400 text-neutral-950 hover:bg-yellow-300" 
+                        ? "bg-hive-gold text-hive-obsidian hover:bg-hive-champagne" 
                         : "bg-white/10 text-white hover:bg-white/20"
                       }
                     `}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Card, Button, Badge } from "@hive/ui";
 import { 
   Search, 
@@ -132,7 +132,7 @@ export function SmartDiscoveryFilters({
   const debouncedSearch = useDebounce(searchQuery, 300);
 
   // Smart search suggestions based on user profile and behavior
-  const generateSearchSuggestions = (query: string) => {
+  const generateSearchSuggestions = useCallback((query: string) => {
     const suggestions: string[] = [];
     
     // Profile-based suggestions
@@ -157,7 +157,7 @@ export function SmartDiscoveryFilters({
     });
     
     return suggestions.slice(0, 5);
-  };
+  }, [userProfile?.interests]);
 
   useEffect(() => {
     if (debouncedSearch) {
@@ -169,7 +169,7 @@ export function SmartDiscoveryFilters({
       setShowSuggestions(false);
       onSearchChange("");
     }
-  }, [debouncedSearch, onSearchChange, userProfile]);
+  }, [debouncedSearch, onSearchChange, generateSearchSuggestions]);
 
   useEffect(() => {
     onFiltersChange(activeFilters);
@@ -231,7 +231,7 @@ export function SmartDiscoveryFilters({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onFocus={() => setShowSuggestions(searchSuggestions.length > 0)}
-            className="w-full pl-10 pr-4 py-3 bg-white/[0.02] border border-white/[0.06] rounded-xl text-white placeholder:text-neutral-400 focus:border-yellow-400 focus:outline-none transition-colors"
+            className="w-full pl-10 pr-4 py-3 bg-white/[0.02] border border-white/[0.06] rounded-xl text-white placeholder:text-neutral-400 focus:border-hive-gold focus:outline-none transition-colors"
           />
           {searchQuery && (
             <button
@@ -280,11 +280,11 @@ export function SmartDiscoveryFilters({
         {/* Smart Recommendations Button */}
         <Button
           size="sm"
-          variant={activeFilters.sort === "recommended" ? "default" : "outline"}
+          variant={activeFilters.sort === "recommended" ? "primary" : "outline"}
           onClick={() => handleFilterChange("sort", "recommended")}
           className={`flex-shrink-0 ${
             activeFilters.sort === "recommended" 
-              ? "bg-yellow-400 text-neutral-950" 
+              ? "bg-hive-gold text-hive-obsidian" 
               : "border-white/20 text-neutral-300"
           }`}
         >
@@ -324,7 +324,7 @@ export function SmartDiscoveryFilters({
           <Sliders className="h-3 w-3 mr-1" />
           Filters
           {getActiveFilterCount() > 0 && (
-            <Badge className="ml-1 bg-yellow-400 text-neutral-950 text-xs min-w-[1.2rem] h-5">
+            <Badge className="ml-1 bg-hive-gold text-hive-obsidian text-xs min-w-[1.2rem] h-5">
               {getActiveFilterCount()}
             </Badge>
           )}
@@ -416,7 +416,7 @@ export function SmartDiscoveryFilters({
                                 p-2 rounded-lg text-left transition-all text-sm
                                 flex items-center gap-2
                                 ${isSelected 
-                                  ? "bg-yellow-400/20 border-yellow-400 text-yellow-400" 
+                                  ? "bg-hive-gold/20 border-hive-gold text-hive-gold" 
                                   : "bg-white/5 border-white/10 text-neutral-300 hover:bg-white/10"
                                 }
                                 border
@@ -449,7 +449,7 @@ export function SmartDiscoveryFilters({
                                 w-full p-2 rounded-lg text-left transition-all text-sm
                                 flex items-center gap-2
                                 ${isSelected 
-                                  ? "bg-yellow-400/20 border-yellow-400 text-yellow-400" 
+                                  ? "bg-hive-gold/20 border-hive-gold text-hive-gold" 
                                   : "bg-white/5 border-white/10 text-neutral-300 hover:bg-white/10"
                                 }
                                 border

@@ -1,233 +1,600 @@
 "use client";
 
-import { PageContainer, Button, Card } from '@hive/ui';
-import { Calendar, Plus, MapPin, Clock, Users, ExternalLink, Filter } from 'lucide-react';
+import { useState, useEffect, useMemo } from "react";
+import { Button, Card, Badge } from "@hive/ui";
+import { PageContainer } from "@/components/temp-stubs";
+import { 
+  Calendar, 
+  Plus, 
+  Search,
+  MapPin,
+  Users,
+  Clock,
+  Zap,
+  Star,
+  Heart,
+  MessageCircle,
+  Share2
+} from "lucide-react";
+import { useSession } from "../../../hooks/use-session";
+import { ErrorBoundary } from "../../../components/error-boundary";
+import { CreateEventModal } from "../../../components/events/create-event-modal";
+import { EventDetailsModal } from "../../../components/events/event-details-modal";
+
+// Event interfaces
+interface EventData {
+  id: string;
+  title: string;
+  description: string;
+  type: 'academic' | 'social' | 'professional' | 'recreational' | 'official';
+  organizer: {
+    id: string;
+    name: string;
+    handle: string;
+    avatar?: string;
+    verified?: boolean;
+  };
+  space?: {
+    id: string;
+    name: string;
+    type: string;
+  };
+  datetime: {
+    start: string;
+    end: string;
+    timezone: string;
+  };
+  location: {
+    type: 'physical' | 'virtual' | 'hybrid';
+    name: string;
+    address?: string;
+    virtualLink?: string;
+  };
+  capacity: {
+    max: number;
+    current: number;
+    waitlist: number;
+  };
+  tools: string[]; // Tool IDs that will be available during event
+  tags: string[];
+  visibility: 'public' | 'space_only' | 'invited_only';
+  rsvpStatus?: 'going' | 'interested' | 'not_going' | null;
+  isBookmarked: boolean;
+  engagement: {
+    going: number;
+    interested: number;
+    comments: number;
+    shares: number;
+  };
+  requirements?: string[];
+  createdAt: string;
+  updatedAt: string;
+}
 
 export default function EventsPage() {
-  return (
-    <PageContainer
-      title="Events"
-      subtitle="Discover and create events in your community"
-      breadcrumbs={[
-        { label: "Events", icon: Calendar }
-      ]}
-      actions={
-        <Button className="bg-[#FFD700] text-[#0A0A0A] hover:bg-[#FFE255]">
-          <Plus className="h-4 w-4 mr-2" />
-          Create Event
-        </Button>
-      }
-      maxWidth="xl"
-    >
-      {/* Filter Bar */}
-      <div className="flex flex-col sm:flex-row gap-4 mb-8">
-        <div className="flex-1">
-          <div className="relative">
-            <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-[#A1A1AA]" />
-            <select className="w-full pl-10 pr-4 py-2 bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.12)] rounded-lg text-white text-sm">
-              <option>All Events</option>
-              <option>Study Groups</option>
-              <option>Workshops</option>
-              <option>Social</option>
-              <option>Career</option>
-            </select>
-          </div>
-        </div>
-        <div className="flex space-x-2">
-          <Button variant="outline" size="sm" className="border-[rgba(255,255,255,0.2)] text-white">
-            Today
-          </Button>
-          <Button variant="outline" size="sm" className="border-[rgba(255,255,255,0.2)] text-white">
-            This Week
-          </Button>
-          <Button variant="outline" size="sm" className="border-[rgba(255,255,255,0.2)] text-white">
-            This Month
-          </Button>
-        </div>
-      </div>
+  const { user } = useSession();
+  const [events, setEvents] = useState<EventData[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [filter, setFilter] = useState<'all' | 'today' | 'week' | 'month' | 'my_events'>('all');
+  const [eventType, setEventType] = useState<EventData['type'] | 'all'>('all');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showEventDetails, setShowEventDetails] = useState<string | null>(null);
 
-      {/* Featured Event */}
-      <Card className="p-8 bg-gradient-to-r from-[rgba(255,215,0,0.1)] to-[rgba(255,215,0,0.05)] border-[rgba(255,215,0,0.2)] mb-8">
-        <div className="flex flex-col lg:flex-row gap-6">
-          <div className="flex-1">
-            <div className="flex items-center space-x-2 mb-4">
-              <span className="px-2 py-1 bg-[#FFD700] text-[#0A0A0A] text-xs font-medium rounded">Featured</span>
-              <span className="px-2 py-1 bg-[rgba(255,255,255,0.1)] text-white text-xs rounded">Workshop</span>
-            </div>
-            <h2 className="text-2xl font-bold text-white mb-4">
-              Building Your First HIVE Tool Workshop
-            </h2>
-            <p className="text-[#A1A1AA] mb-6">
-              Join us for a hands-on workshop where you'll learn to build your first tool using HiveLab. 
-              Perfect for beginners, no coding experience required!
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
-              <div className="flex items-center space-x-2 text-[#A1A1AA]">
-                <Calendar className="h-4 w-4" />
-                <span>Tomorrow, Feb 15</span>
-              </div>
-              <div className="flex items-center space-x-2 text-[#A1A1AA]">
-                <Clock className="h-4 w-4" />
-                <span>2:00 PM - 4:00 PM</span>
-              </div>
-              <div className="flex items-center space-x-2 text-[#A1A1AA]">
-                <MapPin className="h-4 w-4" />
-                <span>Engineering Building</span>
-              </div>
-            </div>
+  // Fetch real event data
+  useEffect(() => {
+    const fetchEvents = async () => {
+      setIsLoading(true);
+      try {
+        // Fetch events from multiple space endpoints
+        const spacesResponse = await fetch('/api/spaces/my');
+        if (!spacesResponse.ok) throw new Error('Failed to fetch user spaces');
+        
+        const spacesData = await spacesResponse.json();
+        const userSpaces = spacesData.spaces || [];
+        
+        // Fetch events from all user spaces
+        const eventPromises = userSpaces.map(async (space: any) => {
+          try {
+            const eventsResponse = await fetch(`/api/spaces/${space.id}/events`);
+            if (eventsResponse.ok) {
+              const eventsData = await eventsResponse.json();
+              return eventsData.events?.map((event: any) => ({
+                ...event,
+                space: { id: space.id, name: space.name, type: space.type || 'general' }
+              })) || [];
+            }
+          } catch (error) {
+            console.error(`Failed to fetch events for space ${space.id}:`, error);
+          }
+          return [];
+        });
+        
+        const allEventArrays = await Promise.all(eventPromises);
+        const allEvents = allEventArrays.flat();
+        
+        // If no real events, show empty state instead of mock data
+        setEvents(allEvents);
+      } catch (error) {
+        console.error('Error fetching events:', error);
+        setEvents([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchEvents();
+  }, []);
+
+  // No mock events needed - using real API data
+
+  // Filter and search events
+  const filteredEvents = useMemo(() => {
+    let filtered = events;
+
+    // Filter by time
+    const now = new Date();
+    switch (filter) {
+      case 'today':
+        filtered = filtered.filter(event => {
+          const eventDate = new Date(event.datetime.start);
+          return eventDate.toDateString() === now.toDateString();
+        });
+        break;
+      case 'week': {
+        const nextWeek = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+        filtered = filtered.filter(event => {
+          const eventDate = new Date(event.datetime.start);
+          return eventDate >= now && eventDate <= nextWeek;
+        });
+        break;
+      }
+      case 'month': {
+        const nextMonth = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+        filtered = filtered.filter(event => {
+          const eventDate = new Date(event.datetime.start);
+          return eventDate >= now && eventDate <= nextMonth;
+        });
+        break;
+      }
+      case 'my_events':
+        filtered = filtered.filter(event => 
+          event.rsvpStatus === 'going' || event.organizer.id === user?.id
+        );
+        break;
+    }
+
+    // Filter by type
+    if (eventType !== 'all') {
+      filtered = filtered.filter(event => event.type === eventType);
+    }
+
+    // Filter by search
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter(event =>
+        event.title.toLowerCase().includes(query) ||
+        event.description.toLowerCase().includes(query) ||
+        event.tags.some(tag => tag.toLowerCase().includes(query)) ||
+        event.organizer.name.toLowerCase().includes(query)
+      );
+    }
+
+    return filtered.sort((a, b) => 
+      new Date(a.datetime.start).getTime() - new Date(b.datetime.start).getTime()
+    );
+  }, [events, filter, eventType, searchQuery, user?.id]);
+
+  const formatEventTime = (startTime: string, endTime: string) => {
+    const start = new Date(startTime);
+    const end = new Date(endTime);
+    const now = new Date();
+    
+    const isToday = start.toDateString() === now.toDateString();
+    const isTomorrow = start.toDateString() === new Date(now.getTime() + 24 * 60 * 60 * 1000).toDateString();
+    
+    let dayText = '';
+    if (isToday) dayText = 'Today';
+    else if (isTomorrow) dayText = 'Tomorrow';
+    else dayText = start.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+    
+    const timeText = `${start.toLocaleTimeString('en-US', { 
+      hour: 'numeric', 
+      minute: '2-digit',
+      hour12: true 
+    })} - ${end.toLocaleTimeString('en-US', { 
+      hour: 'numeric', 
+      minute: '2-digit',
+      hour12: true 
+    })}`;
+    
+    return `${dayText} • ${timeText}`;
+  };
+
+  const getEventTypeColor = (type: EventData['type']) => {
+    switch (type) {
+      case 'academic': return 'bg-blue-500';
+      case 'social': return 'bg-pink-500';
+      case 'professional': return 'bg-green-500';
+      case 'recreational': return 'bg-orange-500';
+      case 'official': return 'bg-purple-500';
+      default: return 'bg-gray-500';
+    }
+  };
+
+  const getEventTypeIcon = (type: EventData['type']) => {
+    switch (type) {
+      case 'academic': return '📚';
+      case 'social': return '🎉';
+      case 'professional': return '💼';
+      case 'recreational': return '🎮';
+      case 'official': return '🏛️';
+      default: return '📅';
+    }
+  };
+
+  const handleRSVP = (eventId: string, status: 'going' | 'interested' | 'not_going') => {
+    setEvents(prevEvents =>
+      prevEvents.map(event => {
+        if (event.id === eventId) {
+          const prevStatus = event.rsvpStatus;
+          const newEngagement = { ...event.engagement };
+          
+          // Update engagement counts
+          if (prevStatus === 'going') newEngagement.going--;
+          if (prevStatus === 'interested') newEngagement.interested--;
+          
+          if (status === 'going') newEngagement.going++;
+          if (status === 'interested') newEngagement.interested++;
+          
+          return {
+            ...event,
+            rsvpStatus: status,
+            engagement: newEngagement
+          };
+        }
+        return event;
+      })
+    );
+  };
+
+  const handleBookmark = (eventId: string) => {
+    setEvents(prevEvents =>
+      prevEvents.map(event =>
+        event.id === eventId
+          ? { ...event, isBookmarked: !event.isBookmarked }
+          : event
+      )
+    );
+  };
+
+  if (isLoading) {
+    return (
+      <PageContainer title="Loading Events..." maxWidth="4xl">
+        <div className="flex items-center justify-center h-64">
+          <div className="text-center">
+            <div className="w-8 h-8 bg-hive-gold rounded-lg animate-pulse mx-auto mb-4" />
+            <p className="text-white">Loading campus events...</p>
           </div>
-          <div className="flex flex-col justify-between">
-            <div className="text-center mb-4">
-              <div className="text-2xl font-bold text-white">47</div>
-              <div className="text-sm text-[#A1A1AA]">attending</div>
+        </div>
+      </PageContainer>
+    );
+  }
+
+  return (
+    <ErrorBoundary>
+      <PageContainer
+        title="Campus Events"
+        subtitle="Discover, coordinate, and participate in campus activities"
+        breadcrumbs={[
+          { label: "Events", icon: Calendar }
+        ]}
+        actions={
+          <div className="flex items-center space-x-3">
+            {/* Search */}
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-zinc-400" />
+              <input
+                type="text"
+                placeholder="Search events..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10 pr-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-400 focus:border-hive-gold focus:outline-none w-64"
+              />
             </div>
-            <Button className="bg-[#FFD700] text-[#0A0A0A] hover:bg-[#FFE255]">
-              Register Now
+            
+            {/* Filters */}
+            <div className="flex items-center bg-zinc-800 rounded-lg p-1">
+              <Button
+                variant={filter === 'all' ? 'primary' : 'ghost'}
+                size="sm"
+                onClick={() => setFilter('all')}
+                className="text-xs"
+              >
+                All
+              </Button>
+              <Button
+                variant={filter === 'today' ? 'primary' : 'ghost'}
+                size="sm"
+                onClick={() => setFilter('today')}
+                className="text-xs"
+              >
+                Today
+              </Button>
+              <Button
+                variant={filter === 'week' ? 'primary' : 'ghost'}
+                size="sm"
+                onClick={() => setFilter('week')}
+                className="text-xs"
+              >
+                This Week
+              </Button>
+              <Button
+                variant={filter === 'my_events' ? 'primary' : 'ghost'}
+                size="sm"
+                onClick={() => setFilter('my_events')}
+                className="text-xs"
+              >
+                My Events
+              </Button>
+            </div>
+            
+            {/* Create Event */}
+            <Button 
+              onClick={() => setShowCreateModal(true)}
+              className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne"
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              Create Event
             </Button>
           </div>
+        }
+        maxWidth="4xl"
+      >
+        {/* Event Type Filter */}
+        <div className="flex flex-wrap gap-2 mb-6">
+          <Button
+            variant={eventType === 'all' ? 'primary' : 'outline'}
+            size="sm"
+            onClick={() => setEventType('all')}
+          >
+            All Types
+          </Button>
+          {(['academic', 'social', 'professional', 'recreational', 'official'] as const).map((type) => (
+            <Button
+              key={type}
+              variant={eventType === type ? 'primary' : 'outline'}
+              size="sm"
+              onClick={() => setEventType(type)}
+              className="capitalize"
+            >
+              {getEventTypeIcon(type)} {type}
+            </Button>
+          ))}
         </div>
-      </Card>
 
-      {/* Upcoming Events */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-        <div>
-          <h2 className="text-xl font-semibold text-white mb-6 flex items-center">
-            <Clock className="h-5 w-5 mr-2" />
-            This Week
-          </h2>
-          <div className="space-y-4">
-            {[
-              {
-                title: "CS Study Group: Data Structures",
-                time: "Today, 7:00 PM",
-                location: "Library Room 301",
-                attendees: 12,
-                type: "Study Group"
-              },
-              {
-                title: "Startup Pitch Night",
-                time: "Friday, 6:00 PM",
-                location: "Student Union",
-                attendees: 89,
-                type: "Career"
-              },
-              {
-                title: "React Workshop",
-                time: "Saturday, 2:00 PM",
-                location: "Virtual",
-                attendees: 34,
-                type: "Workshop"
-              }
-            ].map((event, i) => (
-              <Card key={i} className="p-6 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)] hover:bg-[rgba(255,255,255,0.04)] transition-colors cursor-pointer">
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center space-x-2 mb-2">
-                      <span className="px-2 py-1 bg-[rgba(255,255,255,0.1)] text-white text-xs rounded">
-                        {event.type}
-                      </span>
-                    </div>
-                    <h3 className="text-white font-medium mb-2">{event.title}</h3>
-                    <div className="space-y-1 text-sm text-[#A1A1AA]">
-                      <div className="flex items-center space-x-2">
-                        <Clock className="h-3 w-3" />
-                        <span>{event.time}</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <MapPin className="h-3 w-3" />
-                        <span>{event.location}</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Users className="h-3 w-3" />
-                        <span>{event.attendees} attending</span>
-                      </div>
+        {/* Events Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {filteredEvents.map((event) => (
+            <Card 
+              key={event.id} 
+              className="p-6 bg-hive-background-overlay border-hive-border-default hover:bg-hive-background-interactive transition-all duration-200 cursor-pointer"
+              onClick={() => setShowEventDetails(event.id)}
+            >
+              {/* Event Header */}
+              <div className="flex items-start justify-between mb-4">
+                <div className="flex items-start space-x-3">
+                  <div className={`w-12 h-12 ${getEventTypeColor(event.type)} rounded-xl flex items-center justify-center text-xl flex-shrink-0`}>
+                    {getEventTypeIcon(event.type)}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold text-white text-lg leading-tight mb-1">
+                      {event.title}
+                    </h3>
+                    <div className="flex items-center space-x-2 text-sm text-zinc-400">
+                      <span>{event.organizer.name}</span>
+                      {event.organizer.verified && (
+                        <Star className="h-3 w-3 text-hive-gold fill-current" />
+                      )}
+                      {event.space && (
+                        <>
+                          <span>•</span>
+                          <span className="text-hive-gold">{event.space.name}</span>
+                        </>
+                      )}
                     </div>
                   </div>
-                  <ExternalLink className="h-4 w-4 text-[#A1A1AA] flex-shrink-0 ml-4" />
                 </div>
-              </Card>
-            ))}
-          </div>
-        </div>
+                
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleBookmark(event.id);
+                  }}
+                  className={event.isBookmarked ? 'text-hive-gold' : 'text-zinc-400'}
+                >
+                  <Heart className={`h-4 w-4 ${event.isBookmarked ? 'fill-current' : ''}`} />
+                </Button>
+              </div>
 
-        <div>
-          <h2 className="text-xl font-semibold text-white mb-6 flex items-center">
-            <Calendar className="h-5 w-5 mr-2" />
-            Later This Month
-          </h2>
-          <div className="space-y-4">
-            {[
-              {
-                title: "AI/ML Workshop Series",
-                time: "Feb 20, 3:00 PM",
-                location: "Tech Hub",
-                attendees: 156,
-                type: "Workshop"
-              },
-              {
-                title: "HIVE Community Meetup",
-                time: "Feb 25, 5:00 PM",
-                location: "Student Center",
-                attendees: 78,
-                type: "Social"
-              },
-              {
-                title: "Final Project Showcase",
-                time: "Feb 28, 1:00 PM",
-                location: "Auditorium",
-                attendees: 203,
-                type: "Showcase"
-              }
-            ].map((event, i) => (
-              <Card key={i} className="p-6 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)] hover:bg-[rgba(255,255,255,0.04)] transition-colors cursor-pointer">
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center space-x-2 mb-2">
-                      <span className="px-2 py-1 bg-[rgba(255,255,255,0.1)] text-white text-xs rounded">
-                        {event.type}
-                      </span>
-                    </div>
-                    <h3 className="text-white font-medium mb-2">{event.title}</h3>
-                    <div className="space-y-1 text-sm text-[#A1A1AA]">
-                      <div className="flex items-center space-x-2">
-                        <Clock className="h-3 w-3" />
-                        <span>{event.time}</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <MapPin className="h-3 w-3" />
-                        <span>{event.location}</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Users className="h-3 w-3" />
-                        <span>{event.attendees} attending</span>
-                      </div>
-                    </div>
+              {/* Event Details */}
+              <div className="space-y-3 mb-4">
+                <p className="text-zinc-300 text-sm leading-relaxed line-clamp-2">
+                  {event.description}
+                </p>
+                
+                <div className="flex items-center space-x-4 text-sm text-zinc-400">
+                  <div className="flex items-center space-x-1">
+                    <Clock className="h-4 w-4" />
+                    <span>{formatEventTime(event.datetime.start, event.datetime.end)}</span>
                   </div>
-                  <ExternalLink className="h-4 w-4 text-[#A1A1AA] flex-shrink-0 ml-4" />
+                  <div className="flex items-center space-x-1">
+                    <MapPin className="h-4 w-4" />
+                    <span className="truncate">{event.location.name}</span>
+                  </div>
                 </div>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </div>
+                
+                <div className="flex items-center space-x-4 text-sm text-zinc-400">
+                  <div className="flex items-center space-x-1">
+                    <Users className="h-4 w-4" />
+                    <span>{event.capacity.current}/{event.capacity.max} attending</span>
+                  </div>
+                  {event.tools.length > 0 && (
+                    <div className="flex items-center space-x-1">
+                      <Zap className="h-4 w-4" />
+                      <span>{event.tools.length} tools available</span>
+                    </div>
+                  )}
+                </div>
+              </div>
 
-      {/* Create Event CTA */}
-      <Card className="p-8 bg-gradient-to-r from-[rgba(255,215,0,0.1)] to-[rgba(255,215,0,0.05)] border-[rgba(255,215,0,0.2)] text-center">
-        <h2 className="text-2xl font-bold text-white mb-4">Have an event to share?</h2>
-        <p className="text-[#A1A1AA] mb-6 max-w-md mx-auto">
-          Create and promote your event to the HIVE community. From study groups to workshops, 
-          bring people together.
-        </p>
-        <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <Button className="bg-[#FFD700] text-[#0A0A0A] hover:bg-[#FFE255]">
-            <Plus className="h-4 w-4 mr-2" />
-            Create Event
-          </Button>
-          <Button variant="outline" className="border-[rgba(255,255,255,0.2)] text-white hover:bg-[rgba(255,255,255,0.1)]">
-            Event Guidelines
-          </Button>
+              {/* Tags */}
+              {event.tags.length > 0 && (
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {event.tags.slice(0, 3).map((tag) => (
+                    <Badge key={tag} variant="skill-tag" className="text-xs">
+                      #{tag}
+                    </Badge>
+                  ))}
+                  {event.tags.length > 3 && (
+                    <Badge variant="skill-tag" className="text-xs">
+                      +{event.tags.length - 3} more
+                    </Badge>
+                  )}
+                </div>
+              )}
+
+              {/* RSVP Actions */}
+              <div className="flex items-center justify-between pt-4 border-t border-zinc-800">
+                <div className="flex items-center space-x-4">
+                  <Button
+                    variant={event.rsvpStatus === 'going' ? 'primary' : 'ghost'}
+                    size="sm"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleRSVP(event.id, event.rsvpStatus === 'going' ? 'not_going' : 'going');
+                    }}
+                    className="text-xs"
+                  >
+                    <Users className="h-3 w-3 mr-1" />
+                    Going ({event.engagement.going})
+                  </Button>
+                  <Button
+                    variant={event.rsvpStatus === 'interested' ? 'primary' : 'ghost'}
+                    size="sm"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleRSVP(event.id, event.rsvpStatus === 'interested' ? 'not_going' : 'interested');
+                    }}
+                    className="text-xs"
+                  >
+                    <Star className="h-3 w-3 mr-1" />
+                    Interested ({event.engagement.interested})
+                  </Button>
+                </div>
+                
+                <div className="flex items-center space-x-2">
+                  <Button variant="ghost" size="sm" className="text-xs text-zinc-400">
+                    <MessageCircle className="h-3 w-3 mr-1" />
+                    {event.engagement.comments}
+                  </Button>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="text-xs text-zinc-400"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      navigator.clipboard.writeText(`${window.location.origin}/events/${event.id}`);
+                    }}
+                  >
+                    <Share2 className="h-3 w-3" />
+                  </Button>
+                </div>
+              </div>
+            </Card>
+          ))}
         </div>
-      </Card>
-    </PageContainer>
+
+        {filteredEvents.length === 0 && (
+          <div className="text-center py-12">
+            <Calendar className="h-16 w-16 text-zinc-600 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-white mb-2">No events found</h3>
+            <p className="text-zinc-400 mb-6">
+              {searchQuery || eventType !== 'all' || filter !== 'all' 
+                ? 'Try adjusting your filters or search terms'
+                : 'Be the first to create an event for your campus community!'
+              }
+            </p>
+            <Button 
+              onClick={() => setShowCreateModal(true)}
+              className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne"
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              Create Event
+            </Button>
+          </div>
+        )}
+
+        {/* Create Event Modal */}
+        <CreateEventModal
+          isOpen={showCreateModal}
+          onClose={() => setShowCreateModal(false)}
+          onCreateEvent={(eventData) => {
+            // Generate new event with mock data
+            const newEvent: EventData = {
+              id: `event-${Date.now()}`,
+              title: eventData.title,
+              description: eventData.description,
+              type: eventData.type,
+              organizer: {
+                id: user?.id || 'current-user',
+                name: user?.fullName || 'You',
+                handle: user?.handle || 'you',
+                verified: false
+              },
+              datetime: {
+                start: eventData.datetime.start,
+                end: eventData.datetime.end,
+                timezone: eventData.datetime.timezone
+              },
+              location: eventData.location,
+              capacity: {
+                max: eventData.capacity,
+                current: 0,
+                waitlist: 0
+              },
+              tools: eventData.tools,
+              tags: eventData.tags,
+              visibility: eventData.visibility,
+              rsvpStatus: null,
+              isBookmarked: false,
+              engagement: {
+                going: 0,
+                interested: 0,
+                comments: 0,
+                shares: 0
+              },
+              requirements: eventData.requirements,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString()
+            };
+            
+            setEvents(prev => [newEvent, ...prev]);
+          }}
+        />
+
+        {/* Event Details Modal */}
+        <EventDetailsModal
+          isOpen={!!showEventDetails}
+          onClose={() => setShowEventDetails(null)}
+          event={events.find(e => e.id === showEventDetails) || null}
+          currentUserId={user?.id}
+          onRSVP={handleRSVP}
+          onBookmark={handleBookmark}
+        />
+      </PageContainer>
+    </ErrorBoundary>
   );
 }

@@ -46,7 +46,7 @@ export class RealTimeFeedManager {
   private refreshInterval = 15 * 60 * 1000; // 15 minutes in milliseconds
   private refreshTimer?: NodeJS.Timeout;
   
-  constructor(private userId: string) {}
+  constructor(private _userId: string) {}
 
   /**
    * Initialize real-time feed for user
@@ -62,7 +62,7 @@ export class RealTimeFeedManager {
     
     // Create new state
     const newState: UserFeedState = {
-      userId: this.userId,
+      userId: this._userId,
       lastUpdateTime: new Date(),
       lastViewTime: new Date(),
       feedVersion: this.generateFeedVersion(),
@@ -92,7 +92,7 @@ export class RealTimeFeedManager {
     
     // Get new content since last update
     const newItems = await getLatestAggregatedContent(
-      this.userId,
+      this._userId,
       userSpaceIds,
       state.lastUpdateTime,
       50 // Reasonable limit for updates
@@ -105,7 +105,7 @@ export class RealTimeFeedManager {
     // Create update payload
     const update: FeedUpdate = {
       updateId: this.generateUpdateId(),
-      userId: this.userId,
+      userId: this._userId,
       type: 'new_content',
       items: newItems,
       timestamp: new Date(),
@@ -151,12 +151,12 @@ export class RealTimeFeedManager {
     
     // Get fresh content from all sources
     const { createFeedAggregator } = await import('@/lib/feed-aggregation');
-    const aggregator = createFeedAggregator(this.userId, userSpaceIds);
+    const aggregator = createFeedAggregator(this._userId, userSpaceIds);
     const allItems = await aggregator.aggregateContent(100);
 
     const update: FeedUpdate = {
       updateId: this.generateUpdateId(),
-      userId: this.userId,
+      userId: this._userId,
       type: 'cache_refresh',
       items: allItems,
       timestamp: new Date(),
@@ -189,7 +189,7 @@ export class RealTimeFeedManager {
 
     const update: FeedUpdate = {
       updateId: this.generateUpdateId(),
-      userId: this.userId,
+      userId: this._userId,
       type: 'space_join',
       items: spaceContent,
       timestamp: new Date(),
@@ -206,7 +206,7 @@ export class RealTimeFeedManager {
   /**
    * Handle user leaving a space
    */
-  async handleSpaceLeave(spaceId: string): Promise<void> {
+  async handleSpaceLeave(_spaceId: string): Promise<void> {
     // Force refresh to remove content from that space
     await this.forceRefresh();
   }
@@ -224,7 +224,7 @@ export class RealTimeFeedManager {
         await this.checkForUpdates();
         this.scheduleNextRefresh(state); // Schedule next refresh
       } catch (error) {
-        console.error(`Failed to refresh feed for user ${this.userId}:`, error);
+        console.error(`Failed to refresh feed for user ${this._userId}:`, error);
         // Retry with exponential backoff
         setTimeout(() => this.scheduleNextRefresh(state), Math.min(interval * 2, 300000));
       }
@@ -236,13 +236,13 @@ export class RealTimeFeedManager {
    */
   private async getUserFeedState(): Promise<UserFeedState | null> {
     try {
-      const doc = await dbAdmin.collection('user_feed_states').doc(this.userId).get();
+      const doc = await dbAdmin.collection('user_feed_states').doc(this._userId).get();
       
       if (!doc.exists) return null;
       
       const data = doc.data()!;
       return {
-        userId: data.userId,
+        userId: data._userId,
         lastUpdateTime: data.lastUpdateTime?.toDate() || new Date(),
         lastViewTime: data.lastViewTime?.toDate() || new Date(),
         feedVersion: data.feedVersion,
@@ -264,8 +264,8 @@ export class RealTimeFeedManager {
    */
   private async saveUserFeedState(state: UserFeedState): Promise<void> {
     try {
-      await dbAdmin.collection('user_feed_states').doc(this.userId).set({
-        userId: state.userId,
+      await dbAdmin.collection('user_feed_states').doc(this._userId).set({
+        userId: state._userId,
         lastUpdateTime: state.lastUpdateTime,
         lastViewTime: state.lastViewTime,
         feedVersion: state.feedVersion,
@@ -284,7 +284,7 @@ export class RealTimeFeedManager {
   private async getUserSpaceIds(): Promise<string[]> {
     try {
       const snapshot = await dbAdmin.collectionGroup('members')
-        .where('userId', '==', this.userId)
+        .where('userId', '==', this._userId)
         .limit(100)
         .get();
       
@@ -307,7 +307,7 @@ export class RealTimeFeedManager {
   private async getSpaceContent(spaceId: string, limit: number): Promise<AggregatedFeedItem[]> {
     try {
       const { createFeedAggregator } = await import('@/lib/feed-aggregation');
-      const aggregator = createFeedAggregator(this.userId, [spaceId]);
+      const aggregator = createFeedAggregator(this._userId, [spaceId]);
       return await aggregator.aggregateContent(limit);
     } catch (error) {
       console.error(`Error getting space content for ${spaceId}:`, error);
@@ -325,7 +325,7 @@ export class RealTimeFeedManager {
       itemIds.forEach(itemId => {
         const ref = dbAdmin.collection('feed_analytics').doc();
         batch.set(ref, {
-          userId: this.userId,
+          userId: this._userId,
           itemId,
           action: 'view',
           timestamp: new Date()

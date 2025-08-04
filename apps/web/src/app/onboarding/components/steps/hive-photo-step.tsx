@@ -1,8 +1,10 @@
 import { useState, useRef, useCallback } from "react";
-import { motion, AnimatePresence } from "@hive/ui/src/components/framer-motion-proxy";
+import { motion, AnimatePresence } from "@hive/ui";
+import Image from 'next/image';
 import { Camera, Upload, X, CheckCircle, User, Crop, RotateCcw } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { HiveButton, HiveCard, HiveFileUpload } from "@hive/ui";
+import { getDefaultAvatarOptions } from "@/lib/avatar-generator";
 import type { HiveOnboardingData } from "../hive-onboarding-wizard";
 
 interface HivePhotoStepProps {
@@ -152,7 +154,7 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
         case 'nw': // Top-left - maintain aspect ratio
         case 'ne': // Top-right - maintain aspect ratio  
         case 'sw': // Bottom-left - maintain aspect ratio
-        case 'se': // Bottom-right - maintain aspect ratio
+        case 'se': { // Bottom-right - maintain aspect ratio
           const newWidth = handle.includes('w') 
             ? Math.max(50, Math.min(startSize.width - deltaX, imgWidth - startPos.x))
             : Math.max(50, Math.min(startSize.width + deltaX, imgWidth - startPos.x));
@@ -173,8 +175,9 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
             newPos.y = startPos.y + (startSize.height - newSize.height);
           }
           break;
+        }
         case 'n': // Top - resize height, adjust width to maintain ratio
-        case 's': // Bottom - resize height, adjust width to maintain ratio
+        case 's': { // Bottom - resize height, adjust width to maintain ratio
           const heightChange = handle === 'n' ? -deltaY : deltaY;
           newSize.height = Math.max(60, Math.min(startSize.height + heightChange, imgHeight - startPos.y));
           newSize.width = newSize.height * aspectRatio;
@@ -183,8 +186,9 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
             newPos.y = startPos.y + (startSize.height - newSize.height);
           }
           break;
+        }
         case 'w': // Left - resize width, adjust height to maintain ratio
-        case 'e': // Right - resize width, adjust height to maintain ratio
+        case 'e': { // Right - resize width, adjust height to maintain ratio
           const widthChange = handle === 'w' ? -deltaX : deltaX;
           newSize.width = Math.max(50, Math.min(startSize.width + widthChange, imgWidth - startPos.x));
           newSize.height = newSize.width / aspectRatio;
@@ -193,6 +197,7 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
             newPos.x = startPos.x + (startSize.width - newSize.width);
           }
           break;
+        }
       }
 
       // Ensure crop area stays within image bounds
@@ -214,12 +219,8 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
     document.addEventListener('mouseup', handleMouseUp);
   }, [cropPosition, cropSize]);
 
-  const avatarOptions = [
-    "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
-    "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face",
-    "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
-    "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
-  ];
+  // Generate default avatar options based on user data
+  const avatarOptions = getDefaultAvatarOptions(data.handle || data.name || 'user');
 
   // Show cropper modal
   if (showCropper && originalImage) {
@@ -241,6 +242,7 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
             </h3>
             
             <div className="relative mb-6 max-h-96 overflow-hidden bg-[var(--hive-background-secondary)]/20 rounded-xl">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 ref={cropImageRef}
                 src={originalImage}
@@ -416,9 +418,11 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
                 variant="glass"
                 className="w-40 h-48 p-0 overflow-hidden border-2 border-[var(--hive-brand-primary)]/30 shadow-xl"
               >
-                <img
+                <Image
                   src={data.profilePhoto}
                   alt="Profile"
+                  width={160}
+                  height={192}
                   className="w-full h-full object-cover"
                 />
               </HiveCard>
@@ -435,9 +439,7 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
               {/* Remove Button */}
               <motion.button
                 onClick={removePhoto}
-                className="absolute -top-2 -left-2 w-8 h-8 bg-[var(--hive-status-error)]/90 backdrop-blur-sm border border-[var(--hive-status-error)] rounded-full flex items-center justify-center text-white hover:bg-[var(--hive-status-error)] transition-colors opacity-0 group-hover:opacity-100"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
+                className="absolute -top-2 -left-2 w-8 h-8 bg-[var(--hive-status-error)]/90 backdrop-blur-sm border border-[var(--hive-status-error)] rounded-full flex items-center justify-center text-white hover:bg-[var(--hive-status-error)] transition-all duration-200 opacity-0 group-hover:opacity-100 hover:scale-110 active:scale-90"
               >
                 <X className="w-4 h-4" />
               </motion.button>
@@ -463,8 +465,7 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
             >
               <div className="flex flex-col items-center space-y-[var(--hive-spacing-4)] text-center">
                 <motion.div
-                  className="w-20 h-20 rounded-full bg-[var(--hive-brand-primary)]/10 flex items-center justify-center group-hover:bg-[var(--hive-brand-primary)]/20 transition-colors"
-                  whileHover={{ scale: 1.05 }}
+                  className="w-20 h-20 rounded-full bg-[var(--hive-brand-primary)]/10 flex items-center justify-center group-hover:bg-[var(--hive-brand-primary)]/20 transition-all duration-200 hover:scale-105"
                 >
                   {isUploading ? (
                     <motion.div
@@ -530,17 +531,18 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
                     initial={{ scale: 0, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ delay: 0.4 + index * 0.1 }}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                    // Removed whileHover and whileTap - using CSS hover/active states
                   >
                     <HiveCard
                       variant="glass"
-                      className="relative h-32 overflow-hidden border-2 border-[var(--hive-border-primary)]/20 hover:border-[var(--hive-brand-primary)]/50 transition-all duration-200 group cursor-pointer"
+                      className="relative h-32 overflow-hidden border-2 border-[var(--hive-border-primary)]/20 hover:border-[var(--hive-brand-primary)]/50 transition-all duration-200 group cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
                       onClick={() => selectAvatar(avatar)}
                     >
-                      <img
+                      <Image
                         src={avatar}
                         alt={`Avatar option ${index + 1}`}
+                        width={128}
+                        height={128}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
                       />
                       

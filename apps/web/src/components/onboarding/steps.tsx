@@ -24,7 +24,7 @@ import {
 } from "@hive/ui";
 import { Loader2 } from "lucide-react";
 import { debounce } from "lodash";
-import { AuthUser } from "@hive/auth-logic";
+import { User } from "@/hooks/use-session";
 import { type OnboardingStepName } from "@hive/core";
 
 // A utility to generate a handle from a name
@@ -37,10 +37,10 @@ const generateHandle = (name: string) => {
 };
 
 interface StepProps {
-  user: AuthUser;
-  onNext: (nextStep?: number) => void;
+  user: User;
+  onNext: (_nextStep?: number) => void;
   onPrev?: () => void;
-  setCompletedSteps?: (updater: (prev: OnboardingStepName[]) => OnboardingStepName[]) => void;
+  setCompletedSteps?: (_updater: (_prev: OnboardingStepName[]) => OnboardingStepName[]) => void;
 }
 
 export const DisplayNameStep: React.FC<StepProps> = ({

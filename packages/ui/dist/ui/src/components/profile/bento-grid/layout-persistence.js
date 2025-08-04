@@ -3,9 +3,9 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Cloud, CloudOff, AlertCircle, Check, RefreshCw } from 'lucide-react';
-import { HiveButton } from '../../hive-button';
-import { HiveCard } from '../../hive-card';
-import { cn } from '../../../lib/utils';
+import { HiveButton } from '../../hive-button.js';
+import { HiveCard } from '../../hive-card.js';
+import { cn } from '../../../lib/utils.js';
 export const LayoutPersistence = ({ currentLayout, deviceType, onLayoutLoad, onLayoutSave, onLayoutConflict }) => {
     const [persistenceState, setPersistenceState] = useState({
         layouts: {},

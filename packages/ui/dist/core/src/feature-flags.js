@@ -6,6 +6,8 @@ export const DEFAULT_FLAGS = {
     enableAdvancedBuilder: false,
     enableCollaborativeEditing: false,
     enableRealTimeNotifications: false,
+    spaces: 'enabled',
+    tools: 'enabled',
 };
 // User-based variant assignment for A/B testing
 export function getFeatureFlags(userId) {
@@ -23,6 +25,9 @@ export function getFeatureFlags(userId) {
         enableAdvancedBuilder: hash % 10 < 3, // 30% of users
         enableCollaborativeEditing: hash % 10 < 2, // 20% of users  
         enableRealTimeNotifications: hash % 10 < 5, // 50% of users
+        // Analytics categories - always enabled
+        spaces: 'enabled',
+        tools: 'enabled',
     };
 }
 // Simple hash function for consistent user assignment

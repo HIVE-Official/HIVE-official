@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import type { CalendarCardData, CalendarCardState } from '@hive/ui';
 import { fetchCalendarEvents, transformApiEvent } from '../lib/calendar-api';
 
@@ -49,7 +49,7 @@ export const useCalendarData = (options: UseCalendarDataOptions = {}): UseCalend
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | undefined>();
 
-  const refetch = async () => {
+  const refetch = useCallback(async () => {
     if (!fetchEvents) {
       // No data source - show empty state
       setData(undefined);
@@ -112,11 +112,11 @@ export const useCalendarData = (options: UseCalendarDataOptions = {}): UseCalend
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [fetchEvents]);
 
   useEffect(() => {
     refetch();
-  }, [autoFetch]);
+  }, [refetch, autoFetch]);
 
   return {
     data,

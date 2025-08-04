@@ -1,505 +1,749 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import React from 'react';
-import { Star, CheckCircle, Crown, Heart, Zap, Users } from 'lucide-react';
-import { ProfileBadge } from '../../atomic/atoms/profile-badge';
-
-/**
- * # Profile Badge Atom - Social Media + Utility
- * 
- * Profile badges are essential social proof elements in HIVE's social media platform.
- * They combine utility (academic achievements, skill levels) with social recognition
- * (community status, peer endorsements) to create engaging campus connections.
- * 
- * ## Social Media Features
- * - Visual status indicators for social proof
- * - Achievement showcases for peer recognition  
- * - Community role displays for group dynamics
- * - Interactive engagement elements
- * 
- * ## Utility Features
- * - Academic progress tracking
- * - Skill level indicators
- * - Course completion status
- * - Tool proficiency levels
- */
+import { 
+  ProfileBadge, 
+  BuilderBadge, 
+  VerifiedBadge, 
+  LeaderBadge, 
+  GhostBadge, 
+  StreakBadge, 
+  AchievementBadge,
+  BADGE_TYPES 
+} from '../../atomic/atoms/profile-badge';
+import { 
+  Crown, 
+  Shield, 
+  Star, 
+  Award, 
+  Zap, 
+  Users, 
+  BookOpen, 
+  Trophy, 
+  Heart, 
+  Flame,
+  Clock,
+  Target,
+  Coffee,
+  Calendar
+} from 'lucide-react';
+import { useState } from 'react';
 
 const meta: Meta<typeof ProfileBadge> = {
   title: '01-Atoms/Profile Badge',
   component: ProfileBadge,
   parameters: {
+    layout: 'centered',
     docs: {
       description: {
-        component: `
-# Profile Badge - Social Media + Utility Component
-
-Profile badges are the cornerstone of HIVE's social proof system, combining academic utility with social media engagement to create meaningful campus connections.
-
-## Social Media Platform Features
-- **Status Recognition**: Visual indicators of community standing
-- **Achievement Showcasing**: Peer-visible accomplishments and milestones
-- **Social Proof**: Community endorsements and skill validations
-- **Interactive Engagement**: Clickable badges that reveal more information
-
-## Utility Platform Features  
-- **Academic Progress**: Course completion and grade achievements
-- **Skill Tracking**: Proficiency levels in tools and subjects
-- **Goal Monitoring**: Progress toward academic and personal objectives
-- **Resource Access**: Badges that unlock premium features or content
-
-## Campus Social Context
-Profile badges bridge the gap between academic achievement and social recognition, making studying and campus involvement inherently social and shareable.
-        `
-      }
+        component: 'HIVE profile badge component for displaying achievements, status, and recognition with various themes and interactions.',
+      },
     },
-    layout: 'centered'
   },
+  tags: ['autodocs'],
   argTypes: {
-    type: {
-      control: { type: 'select' },
-      options: ['builder', 'verified', 'leader', 'ghost', 'achievement', 'streak', 'academic', 'social'],
-      description: 'Predefined badge type with icon and styling'
+    size: {
+      control: 'select',
+      options: ['xs', 'sm', 'md', 'lg'],
+      description: 'Badge size',
     },
     variant: {
-      control: { type: 'select' },
+      control: 'select',
       options: ['builder', 'verified', 'leader', 'ghost', 'achievement', 'streak', 'academic', 'social', 'default'],
-      description: 'Badge visual variant'
+      description: 'Badge visual variant',
     },
-    size: {
-      control: { type: 'select' },
-      options: ['xs', 'sm', 'md', 'lg'],
-      description: 'Badge size for different contexts'
-    },
-    label: {
-      control: 'text',
-      description: 'Badge text content'
-    },
-    value: {
-      control: 'text',
-      description: 'Optional value for counts or metrics'
+    type: {
+      control: 'select',
+      options: ['builder', 'verified', 'leader', 'ghost', 'achievement', 'streak', 'academic', 'social'],
+      description: 'Predefined badge type',
     },
     interactive: {
       control: 'boolean',
-      description: 'Enable hover interactions'
+      description: 'Enable hover effects',
+    },
+    pulsing: {
+      control: 'boolean',
+      description: 'Pulsing animation',
     },
     showIcon: {
       control: 'boolean',
-      description: 'Show badge icon'
+      description: 'Show badge icon',
     },
     showValue: {
       control: 'boolean',
-      description: 'Show badge value'
-    }
+      description: 'Show badge value',
+    },
   },
-  decorators: [
-    (Story) => (
-      <div className="p-6 bg-[var(--hive-background-primary)] min-h-[200px] flex items-center justify-center">
-        <Story />
-      </div>
-    )
-  ]
 };
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// 1. DEFAULT STORY - Social media context
+// Basic examples
 export const Default: Story = {
   args: {
-    type: 'achievement',
-    label: 'Top Contributor',
-    interactive: true
-  }
+    label: 'Student',
+    icon: BookOpen,
+  },
 };
 
-// 2. PLAYGROUND STORY - Interactive social/utility blend
-export const Playground: Story = {
+export const Builder: Story = {
+  args: {
+    type: 'builder',
+  },
+};
+
+export const Verified: Story = {
+  args: {
+    type: 'verified',
+  },
+};
+
+export const WithValue: Story = {
+  args: {
+    type: 'streak',
+    value: 15,
+    showValue: true,
+  },
+};
+
+export const Interactive: Story = {
+  args: {
+    type: 'achievement',
+    interactive: true,
+    value: 8,
+    showValue: true,
+  },
+};
+
+export const Pulsing: Story = {
   args: {
     type: 'leader',
-    size: 'md',
-    label: 'Study Group Leader',
-    value: 25,
-    interactive: true,
-    showValue: true
-  }
+    pulsing: true,
+  },
 };
 
-// 3. ALL VARIANTS STORY - Social media + utility types
+// All predefined types
+export const AllBadgeTypes: Story = {
+  render: () => (
+    <div className="flex flex-wrap gap-3 p-4">
+      {Object.entries(BADGE_TYPES).map(([key, config]) => (
+        <ProfileBadge
+          key={key}
+          type={key as any}
+          interactive
+        />
+      ))}
+    </div>
+  ),
+};
+
+// All sizes
+export const AllSizes: Story = {
+  render: () => (
+    <div className="flex flex-wrap items-center gap-4 p-4">
+      <ProfileBadge size="xs" type="builder" />
+      <ProfileBadge size="sm" type="verified" />
+      <ProfileBadge size="md" type="leader" />
+      <ProfileBadge size="lg" type="achievement" />
+    </div>
+  ),
+};
+
+// All variants
 export const AllVariants: Story = {
   render: () => (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-4">
-      <div className="text-center space-y-3">
-        <h3 className="text-sm font-medium text-[var(--hive-text-secondary)]">Achievement Badges</h3>
-        <div className="space-y-2">
-          <ProfileBadge 
-            type="achievement" 
-            label="Dean's List" 
-          />
-          <ProfileBadge 
-            type="academic" 
-            label="Course Complete" 
-            value={12}
-            showValue
-          />
-        </div>
-      </div>
-      
-      <div className="text-center space-y-3">
-        <h3 className="text-sm font-medium text-[var(--hive-text-secondary)]">Social Status</h3>
-        <div className="space-y-2">
-          <ProfileBadge 
-            type="leader" 
-            label="Campus Leader" 
-          />
-          <ProfileBadge 
-            type="social" 
-            label="Group Organizer"
-            value={8}
-            showValue
-          />
-        </div>
-      </div>
-      
-      <div className="text-center space-y-3">
-        <h3 className="text-sm font-medium text-[var(--hive-text-secondary)]">Skills & Builder</h3>
-        <div className="space-y-2">
-          <ProfileBadge 
-            type="streak" 
-            label="Study Streak" 
-            value={15}
-            showValue
-          />
-          <ProfileBadge 
-            type="builder"
-            label="HIVE Builder"
-          />
-        </div>
-      </div>
+    <div className="flex flex-wrap gap-3 p-4">
+      <ProfileBadge variant="builder" label="Builder" icon={Crown} />
+      <ProfileBadge variant="verified" label="Verified" icon={Shield} />
+      <ProfileBadge variant="leader" label="Leader" icon={Star} />
+      <ProfileBadge variant="ghost" label="Ghost" icon={Users} />
+      <ProfileBadge variant="achievement" label="Achiever" icon={Award} />
+      <ProfileBadge variant="streak" label="Streak" icon={Zap} />
+      <ProfileBadge variant="academic" label="Scholar" icon={BookOpen} />
+      <ProfileBadge variant="social" label="Social" icon={Users} />
+      <ProfileBadge variant="default" label="Default" icon={Target} />
     </div>
-  )
+  ),
 };
 
-// 4. SOCIAL PROOF STORY - Community engagement focus
-export const SocialProof: Story = {
+// Campus profile badge scenarios
+export const CampusProfileBadgeScenarios: Story = {
   render: () => (
-    <div className="space-y-6 p-4">
-      <div className="text-center">
-        <h2 className="text-lg font-semibold text-[var(--hive-text-primary)] mb-2">
-          Social Proof & Community Recognition
-        </h2>
-        <p className="text-sm text-[var(--hive-text-secondary)]">
-          How badges create social connections and peer validation
-        </p>
-      </div>
-      
-      <div className="grid md:grid-cols-2 gap-6">
-        <div className="bg-[var(--hive-background-secondary)] p-4 rounded-lg">
-          <h3 className="font-semibold mb-3">Peer Recognition</h3>
-          <div className="space-y-2">
-            <ProfileBadge 
-              type="social"
-              label="Most Helpful"
-              value={47}
-              showValue
-              interactive
-            />
-            <ProfileBadge 
-              type="social"
-              label="Group Favorite"
-              value={23}
-              showValue
-              interactive
-            />
-            <ProfileBadge 
-              type="achievement"
-              label="Top Contributor"
-              interactive
-            />
-          </div>
-        </div>
-        
-        <div className="bg-[var(--hive-background-secondary)] p-4 rounded-lg">
-          <h3 className="font-semibold mb-3">Academic Excellence</h3>
-          <div className="space-y-2">
-            <ProfileBadge 
-              type="academic"
-              label="Honor Roll"
-            />
-            <ProfileBadge 
-              type="verified"
-              label="Perfect Attendance"
-              value={30}
-              showValue
-            />
-            <ProfileBadge 
-              type="streak"
-              label="Study Streak"
-              value={15}
-              showValue
-            />
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-};
-
-// 5. CAMPUS UTILITY STORY - Academic & tool usage
-export const CampusUtility: Story = {
-  render: () => (
-    <div className="space-y-6 p-4">
-      <div className="text-center">
-        <h2 className="text-lg font-semibold text-[var(--hive-text-primary)] mb-2">
-          Academic & Campus Utility
-        </h2>
-        <p className="text-sm text-[var(--hive-text-secondary)]">
-          Functional badges that provide utility and track progress
-        </p>
-      </div>
-      
-      <div className="grid gap-6">
-        <div className="bg-[var(--hive-background-secondary)] p-4 rounded-lg">
-          <h3 className="font-semibold mb-3">Course Progress</h3>
-          <div className="flex flex-wrap gap-2">
-            <ProfileBadge 
-              type="academic"
-              label="CS 101 Complete"
-            />
-            <ProfileBadge 
-              type="achievement"
-              label="Math 201 - A+"
-            />
-            <ProfileBadge 
-              type="verified"
-              label="In Progress"
-              value={3}
-              showValue
-            />
-          </div>
-        </div>
-        
-        <div className="bg-[var(--hive-background-secondary)] p-4 rounded-lg">
-          <h3 className="font-semibold mb-3">Tool Proficiency</h3>
-          <div className="flex flex-wrap gap-2">
-            <ProfileBadge 
-              type="streak"
-              label="Python Expert"
-            />
-            <ProfileBadge 
-              type="academic"
-              label="Design Pro"
-            />
-            <ProfileBadge 
-              type="builder"
-              label="HIVE Pro"
-            />
-          </div>
-        </div>
-        
-        <div className="bg-[var(--hive-background-secondary)] p-4 rounded-lg">
-          <h3 className="font-semibold mb-3">Campus Engagement</h3>
-          <div className="flex flex-wrap gap-2">
-            <ProfileBadge 
-              type="leader"
-              label="Club President"
-            />
-            <ProfileBadge 
-              type="achievement"
-              label="Volunteer"
-              value={50}
-              showValue
-            />
-            <ProfileBadge 
-              type="social"
-              label="Event Host"
-              value={12}
-              showValue
-            />
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-};
-
-// 6. INTERACTIVE SOCIAL STORY - Social media interactions
-export const InteractiveSocial: Story = {
-  render: () => (
-    <div className="space-y-6 p-4">
-      <div className="text-center">
-        <h2 className="text-lg font-semibold text-[var(--hive-text-primary)] mb-2">
-          Interactive Social Elements
-        </h2>
-        <p className="text-sm text-[var(--hive-text-secondary)]">
-          Clickable badges that reveal stories and enable connections
-        </p>
-      </div>
-      
-      <div className="bg-[var(--hive-background-secondary)] p-6 rounded-lg">
-        <h3 className="font-semibold mb-4">Student Profile Preview</h3>
-        <div className="space-y-4">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full"></div>
+    <div className="space-y-8 p-6 bg-hive-background-primary max-w-6xl">
+      <div>
+        <h3 className="text-lg font-semibold text-hive-text-primary mb-6">Student Profile Showcase</h3>
+        <div className="border border-hive-border-subtle rounded-lg p-6 bg-hive-background-secondary">
+          <div className="flex items-center space-x-4 mb-6">
+            <div className="w-20 h-20 bg-hive-gold rounded-full flex items-center justify-center">
+              <span className="text-2xl font-bold text-hive-background-primary">AR</span>
+            </div>
             <div>
-              <h4 className="font-medium">Sarah Chen</h4>
-              <p className="text-sm text-[var(--hive-text-secondary)]">Computer Science • Junior</p>
+              <h4 className="text-2xl font-semibold text-hive-text-primary">Alex Rodriguez</h4>
+              <p className="text-hive-text-secondary mb-2">Computer Science Junior • Class of 2025</p>
+              <div className="flex flex-wrap gap-2">
+                <VerifiedBadge />
+                <BuilderBadge />
+                <LeaderBadge />
+                <ProfileBadge
+                  variant="academic"
+                  label="Dean's List"
+                  icon={Trophy}
+                  interactive
+                />
+                <StreakBadge value={47} />
+              </div>
             </div>
           </div>
           
-          <div className="flex flex-wrap gap-2">
-            <ProfileBadge 
-              type="leader"
-              label="Study Group Leader"
-              value={5}
-              showValue
-              interactive
-            />
-            <ProfileBadge 
-              type="social"
-              label="Most Helpful"
-              value={89}
-              showValue
-              interactive
-            />
-            <ProfileBadge 
-              type="streak"
-              label="React Expert"
-              interactive
-            />
-            <ProfileBadge 
-              type="builder"
-              label="HIVE Pro"
-              interactive
-            />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+              <h5 className="font-semibold text-hive-text-primary mb-3">Academic Achievements</h5>
+              <div className="flex flex-wrap gap-2">
+                <ProfileBadge
+                  variant="academic"
+                  label="3.9 GPA"
+                  icon={BookOpen}
+                  size="sm"
+                />
+                <ProfileBadge
+                  variant="achievement"
+                  label="Honor Roll"
+                  icon={Award}
+                  size="sm"
+                />
+                <ProfileBadge
+                  variant="academic"
+                  label="Top 5%"
+                  icon={Star}
+                  size="sm"
+                />
+                <ProfileBadge
+                  variant="streak"
+                  label="Perfect Attendance"
+                  icon={Calendar}
+                  size="sm"
+                />
+              </div>
+            </div>
+            
+            <div>
+              <h5 className="font-semibold text-hive-text-primary mb-3">Community Recognition</h5>
+              <div className="flex flex-wrap gap-2">
+                <ProfileBadge
+                  variant="social"
+                  label="Most Helpful"
+                  icon={Heart}
+                  size="sm"
+                />
+                <ProfileBadge
+                  variant="leader"
+                  label="Group Leader"
+                  icon={Users}
+                  size="sm"
+                />
+                <ProfileBadge
+                  variant="achievement"
+                  label="Mentor"
+                  icon={Target}
+                  size="sm"
+                />
+                <ProfileBadge
+                  variant="social"
+                  label="Active Member"
+                  icon={Zap}
+                  size="sm"
+                />
+              </div>
+            </div>
+            
+            <div>
+              <h5 className="font-semibold text-hive-text-primary mb-3">Tool Building</h5>
+              <div className="flex flex-wrap gap-2">
+                <ProfileBadge
+                  variant="builder"
+                  label="8 Tools Published"
+                  icon={Crown}
+                  size="sm"
+                  value={8}
+                  showValue
+                />
+                <ProfileBadge
+                  variant="achievement"
+                  label="Top Creator"
+                  icon={Trophy}
+                  size="sm"
+                />
+                <ProfileBadge
+                  variant="streak"
+                  label="Daily Builder"
+                  icon={Flame}
+                  size="sm"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h3 className="text-lg font-semibold text-hive-text-primary mb-6">Study Group Leadership Board</h3>
+        <div className="border border-hive-border-subtle rounded-lg p-6 bg-hive-background-secondary">
+          <div className="space-y-4">
+            {[
+              { 
+                name: 'Sarah Chen', 
+                role: 'CS 101 Lead', 
+                badges: [
+                  { type: 'leader' as const },
+                  { type: 'verified' as const },
+                  { variant: 'academic' as const, label: '4.0 GPA', icon: Star },
+                  { type: 'streak', value: 23 }
+                ]
+              },
+              { 
+                name: 'Marcus Johnson', 
+                role: 'Math Tutor', 
+                badges: [
+                  { type: 'achievement' as const },
+                  { type: 'verified' as const },
+                  { variant: 'social' as const, label: 'Helper', icon: Heart },
+                  { variant: 'streak' as const, label: 'Daily', icon: Clock }
+                ]
+              },
+              { 
+                name: 'Emma Davis', 
+                role: 'Physics Group', 
+                badges: [
+                  { type: 'leader' as const },
+                  { type: 'builder' as const },
+                  { variant: 'achievement' as const, label: 'Innovator', icon: Zap },
+                  { type: 'streak', value: 15 }
+                ]
+              },
+              { 
+                name: 'David Park', 
+                role: 'Chemistry Lab', 
+                badges: [
+                  { type: 'verified' as const },
+                  { variant: 'academic' as const, label: 'Scholar', icon: BookOpen },
+                  { variant: 'social' as const, label: 'Mentor', icon: Users }
+                ]
+              }
+            ].map((student, index) => (
+              <div key={index} className="flex items-center justify-between p-4 bg-hive-background-tertiary rounded-lg">
+                <div className="flex items-center space-x-4">
+                  <div className="w-12 h-12 bg-hive-emerald rounded-full flex items-center justify-center">
+                    <span className="font-bold text-white">{student.name.split(' ').map(n => n[0]).join('')}</span>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-hive-text-primary">{student.name}</h4>
+                    <p className="text-sm text-hive-text-secondary">{student.role}</p>
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-1">
+                  {student.badges.map((badge, badgeIndex) => (
+                    <ProfileBadge
+                      key={badgeIndex}
+                      size="xs"
+                      interactive
+                      {...badge}
+                      showValue={badge.value !== undefined}
+                    />
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h3 className="text-lg font-semibold text-hive-text-primary mb-6">Tool Creator Showcase</h3>
+        <div className="border border-hive-border-subtle rounded-lg p-6 bg-hive-background-secondary">
+          <div className="mb-4">
+            <h4 className="text-xl font-semibold text-hive-text-primary mb-2">Featured Tools & Creators</h4>
+            <p className="text-hive-text-secondary">Top-performing tools and their creators' achievements</p>
           </div>
           
-          <p className="text-xs text-[var(--hive-text-secondary)]">
-            💡 Click badges to see achievements and connect with Sarah
-          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {[
+              {
+                tool: 'GPA Calculator Pro',
+                creator: 'Alex Rodriguez',
+                users: '2.8k',
+                rating: 4.9,
+                badges: [
+                  { type: 'builder' as const },
+                  { type: 'verified' as const },
+                  { variant: 'achievement' as const, label: 'Top Tool', icon: Trophy },
+                  { variant: 'social' as const, label: '2.8k users', icon: Users, value: 2800, showValue: true }
+                ]
+              },
+              {
+                tool: 'Study Schedule Optimizer',
+                creator: 'Sarah Chen',
+                users: '1.5k',
+                rating: 4.7,
+                badges: [
+                  { type: 'builder' as const },
+                  { type: 'leader' as const },
+                  { variant: 'streak' as const, label: '30 day streak', icon: Flame },
+                  { variant: 'achievement' as const, label: 'Featured Tool', icon: Star }
+                ]
+              },
+              {
+                tool: 'Campus Event Tracker',
+                creator: 'Emma Davis',
+                users: '987',
+                rating: 4.8,
+                badges: [
+                  { type: 'builder' as const },
+                  { type: 'verified' as const },
+                  { variant: 'social' as const, label: 'Community Fav', icon: Heart },
+                  { variant: 'achievement' as const, label: 'Rising Star', icon: Zap }
+                ]
+              },
+              {
+                tool: 'Grade Predictor',
+                creator: 'Marcus Johnson',
+                users: '756',
+                rating: 4.6,
+                badges: [
+                  { type: 'achievement' as const },
+                  { type: 'verified' as const },
+                  { variant: 'academic' as const, label: 'Math Expert', icon: BookOpen },
+                  { variant: 'builder' as const, label: 'New Creator', icon: Crown }
+                ]
+              }
+            ].map((item, index) => (
+              <div key={index} className="p-4 bg-hive-background-tertiary rounded-lg">
+                <div className="mb-3">
+                  <h5 className="font-semibold text-hive-text-primary">{item.tool}</h5>
+                  <p className="text-sm text-hive-text-secondary">by {item.creator}</p>
+                  <div className="flex items-center space-x-4 mt-1 text-xs text-hive-text-mutedLight">
+                    <span>{item.users} users</span>
+                    <span>★ {item.rating}</span>
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-1">
+                  {item.badges.map((badge, badgeIndex) => (
+                    <ProfileBadge
+                      key={badgeIndex}
+                      size="xs"
+                      interactive
+                      {...badge}
+                    />
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h3 className="text-lg font-semibold text-hive-text-primary mb-6">Achievement Gallery</h3>
+        <div className="border border-hive-border-subtle rounded-lg p-6 bg-hive-background-secondary">
+          <div className="mb-4">
+            <h4 className="text-xl font-semibold text-hive-text-primary mb-2">Unlockable Campus Achievements</h4>
+            <p className="text-hive-text-secondary">Special recognition badges for outstanding contributions</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+              <h5 className="font-semibold text-hive-text-primary mb-4">Academic Excellence</h5>
+              <div className="space-y-3">
+                <div className="flex items-center space-x-3 p-3 bg-hive-background-tertiary rounded-lg">
+                  <ProfileBadge
+                    variant="academic"
+                    size="md"
+                    label="Summa Cum Laude"
+                    icon={Trophy}
+                    interactive
+                  />
+                  <div>
+                    <p className="text-sm font-medium text-hive-text-primary">Summa Cum Laude</p>
+                    <p className="text-xs text-hive-text-secondary">4.0 GPA for 4 consecutive semesters</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center space-x-3 p-3 bg-hive-background-tertiary rounded-lg opacity-60">
+                  <ProfileBadge
+                    variant="academic"
+                    size="md"
+                    label="Perfect Score"
+                    icon={Star}
+                  />
+                  <div>
+                    <p className="text-sm font-medium text-hive-text-primary">Perfect Score</p>
+                    <p className="text-xs text-hive-text-secondary">100% on final exam • Locked</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center space-x-3 p-3 bg-hive-background-tertiary rounded-lg">
+                  <ProfileBadge
+                    variant="streak"
+                    size="md"
+                    label="Never Miss"
+                    icon={Calendar}
+                    interactive
+                  />
+                  <div>
+                    <p className="text-sm font-medium text-hive-text-primary">Never Miss</p>
+                    <p className="text-xs text-hive-text-secondary">Perfect attendance all semester</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div>
+              <h5 className="font-semibold text-hive-text-primary mb-4">Community Impact</h5>
+              <div className="space-y-3">
+                <div className="flex items-center space-x-3 p-3 bg-hive-background-tertiary rounded-lg">
+                  <ProfileBadge
+                    variant="social"
+                    size="md"
+                    label="Super Helper"
+                    icon={Heart}
+                    pulsing
+                    interactive
+                  />
+                  <div>
+                    <p className="text-sm font-medium text-hive-text-primary">Super Helper</p>
+                    <p className="text-xs text-hive-text-secondary">Helped 100+ students this semester</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center space-x-3 p-3 bg-hive-background-tertiary rounded-lg">
+                  <ProfileBadge
+                    variant="leader"
+                    size="md"
+                    label="Group Founder"
+                    icon={Crown}
+                    interactive
+                  />
+                  <div>
+                    <p className="text-sm font-medium text-hive-text-primary">Group Founder</p>
+                    <p className="text-xs text-hive-text-secondary">Created and led 5+ study groups</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center space-x-3 p-3 bg-hive-background-tertiary rounded-lg opacity-60">
+                  <ProfileBadge
+                    variant="social"
+                    size="md"
+                    label="Campus Legend"
+                    icon={Users}
+                  />
+                  <div>
+                    <p className="text-sm font-medium text-hive-text-primary">Campus Legend</p>
+                    <p className="text-xs text-hive-text-secondary">Known by 500+ students • Locked</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div>
+              <h5 className="font-semibold text-hive-text-primary mb-4">Builder Recognition</h5>
+              <div className="space-y-3">
+                <div className="flex items-center space-x-3 p-3 bg-hive-background-tertiary rounded-lg">
+                  <ProfileBadge
+                    variant="builder"
+                    size="md"
+                    label="Tool Master"
+                    icon={Crown}
+                    interactive
+                  />
+                  <div>
+                    <p className="text-sm font-medium text-hive-text-primary">Tool Master</p>
+                    <p className="text-xs text-hive-text-secondary">10+ tools with 4.5+ star rating</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center space-x-3 p-3 bg-hive-background-tertiary rounded-lg">
+                  <ProfileBadge
+                    variant="achievement"
+                    size="md"
+                    label="Viral Creator"
+                    icon={Zap}
+                    interactive
+                  />
+                  <div>
+                    <p className="text-sm font-medium text-hive-text-primary">Viral Creator</p>
+                    <p className="text-xs text-hive-text-secondary">Tool used by 1000+ students</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center space-x-3 p-3 bg-hive-background-tertiary rounded-lg">
+                  <ProfileBadge
+                    variant="streak"
+                    size="md"
+                    label="Daily Builder"
+                    icon={Coffee}
+                    pulsing
+                    interactive
+                  />
+                  <div>
+                    <p className="text-sm font-medium text-hive-text-primary">Daily Builder</p>
+                    <p className="text-xs text-hive-text-secondary">30 day building streak</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  )
+  ),
 };
 
-// 7. RESPONSIVE STORY - Mobile social media usage
-export const Responsive: Story = {
-  render: () => (
-    <div className="space-y-6 p-4">
-      <div className="text-center">
-        <h2 className="text-lg font-semibold text-[var(--hive-text-primary)] mb-2">
-          Mobile-First Social Media Design
-        </h2>
-        <p className="text-sm text-[var(--hive-text-secondary)]">
-          Touch-optimized badges for 80% mobile campus usage
-        </p>
-      </div>
-      
-      <div className="space-y-4">
-        {/* Mobile View */}
-        <div className="md:hidden">
-          <div className="bg-[var(--hive-background-secondary)] p-4 rounded-lg">
-            <h3 className="font-medium mb-3">Mobile (Touch-Optimized)</h3>
-            <div className="space-y-3">
-              <ProfileBadge 
-                size="lg"
-                type="leader"
-                label="Campus Leader"
-                interactive
+// Interactive badge examples
+export const InteractiveBadgeExamples: Story = {
+  render: () => {
+    const [selectedBadges, setSelectedBadges] = useState<string[]>([]);
+    const [streakCount, setStreakCount] = useState(15);
+    const [achievementCount, setAchievementCount] = useState(8);
+
+    const toggleBadge = (badgeId: string) => {
+      setSelectedBadges(prev => 
+        prev.includes(badgeId) 
+          ? prev.filter(id => id !== badgeId)
+          : [...prev, badgeId]
+      );
+    };
+
+    const incrementStreak = () => setStreakCount(prev => prev + 1);
+    const incrementAchievements = () => setAchievementCount(prev => prev + 1);
+
+    return (
+      <div className="space-y-8 p-6 max-w-4xl">
+        <div>
+          <h3 className="text-lg font-semibold text-hive-text-primary mb-4">Interactive Badge Collection</h3>
+          <div className="border border-hive-border-subtle rounded-lg p-6 bg-hive-background-secondary">
+            <p className="text-sm text-hive-text-secondary mb-4">Click badges to toggle selection:</p>
+            <div className="flex flex-wrap gap-3 mb-4">
+              {Object.entries(BADGE_TYPES).map(([key, config]) => (
+                <ProfileBadge
+                  key={key}
+                  type={key as any}
+                  interactive
+                  variant={selectedBadges.includes(key) ? config.variant : 'default'}
+                  onClick={() => toggleBadge(key)}
+                />
+              ))}
+            </div>
+            <p className="text-sm text-hive-text-secondary">
+              Selected: {selectedBadges.length} badge{selectedBadges.length !== 1 ? 's' : ''}
+              {selectedBadges.length > 0 && ` (${selectedBadges.join(', ')})`}
+            </p>
+          </div>
+        </div>
+
+        <div>
+          <h3 className="text-lg font-semibold text-hive-text-primary mb-4">Dynamic Value Badges</h3>
+          <div className="border border-hive-border-subtle rounded-lg p-6 bg-hive-background-secondary">
+            <div className="flex flex-wrap gap-4 items-center mb-4">
+              <StreakBadge 
+                value={streakCount} 
+                size="md" 
+                interactive 
+                onClick={incrementStreak}
               />
-              <ProfileBadge 
-                size="lg"
-                type="achievement"
-                label="Top Student"
-                value={12}
+              <AchievementBadge 
+                value={achievementCount} 
+                size="md" 
+                interactive 
+                onClick={incrementAchievements}
+              />
+              <ProfileBadge
+                variant="social"
+                label={`${selectedBadges.length} Active`}
+                icon={Users}
+                size="md"
+                value={selectedBadges.length}
                 showValue
                 interactive
               />
             </div>
+            <div className="space-x-2">
+              <button 
+                onClick={incrementStreak}
+                className="px-3 py-1.5 text-sm bg-hive-gold text-hive-background-primary rounded hover:bg-hive-gold/90 transition-colors"
+              >
+                +1 Streak Day
+              </button>
+              <button 
+                onClick={incrementAchievements}
+                className="px-3 py-1.5 text-sm bg-hive-emerald text-white rounded hover:bg-hive-emerald/90 transition-colors"
+              >
+                +1 Achievement
+              </button>
+              <button 
+                onClick={() => {
+                  setStreakCount(15);
+                  setAchievementCount(8);
+                  setSelectedBadges([]);
+                }}
+                className="px-3 py-1.5 text-sm border border-hive-border-default text-hive-text-primary rounded hover:bg-hive-interactive-hover transition-colors"
+              >
+                Reset
+              </button>
+            </div>
           </div>
         </div>
-        
-        {/* Desktop View */}
-        <div className="hidden md:block">
-          <div className="bg-[var(--hive-background-secondary)] p-4 rounded-lg">
-            <h3 className="font-medium mb-3">Desktop (Compact Layout)</h3>
-            <div className="flex flex-wrap gap-2">
-              <ProfileBadge 
-                size="sm"
-                type="leader"
-                label="Campus Leader"
-                interactive
-              />
-              <ProfileBadge 
-                size="sm"
-                type="achievement"
-                label="Top Student"
-                value={12}
-                showValue
-                interactive
-              />
-              <ProfileBadge 
-                size="sm"
-                type="streak"
-                label="Expert"
-                interactive
-              />
+
+        <div>
+          <h3 className="text-lg font-semibold text-hive-text-primary mb-4">Preset Badge Components</h3>
+          <div className="border border-hive-border-subtle rounded-lg p-6 bg-hive-background-secondary">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              <div className="text-center p-3 bg-hive-background-tertiary rounded-lg">
+                <BuilderBadge size="md" interactive />
+                <p className="text-xs text-hive-text-secondary mt-2">BuilderBadge</p>
+              </div>
+              
+              <div className="text-center p-3 bg-hive-background-tertiary rounded-lg">
+                <VerifiedBadge size="md" interactive />
+                <p className="text-xs text-hive-text-secondary mt-2">VerifiedBadge</p>
+              </div>
+              
+              <div className="text-center p-3 bg-hive-background-tertiary rounded-lg">
+                <LeaderBadge size="md" interactive />
+                <p className="text-xs text-hive-text-secondary mt-2">LeaderBadge</p>
+              </div>
+              
+              <div className="text-center p-3 bg-hive-background-tertiary rounded-lg">
+                <GhostBadge size="md" interactive />
+                <p className="text-xs text-hive-text-secondary mt-2">GhostBadge</p>
+              </div>
+              
+              <div className="text-center p-3 bg-hive-background-tertiary rounded-lg">
+                <StreakBadge value={25} size="md" interactive />
+                <p className="text-xs text-hive-text-secondary mt-2">StreakBadge</p>
+              </div>
+              
+              <div className="text-center p-3 bg-hive-background-tertiary rounded-lg">
+                <AchievementBadge value={12} size="md" interactive />
+                <p className="text-xs text-hive-text-secondary mt-2">AchievementBadge</p>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  )
+    );
+  },
 };
 
-// 8. ACCESSIBILITY STORY - Screen reader social proof
-export const Accessibility: Story = {
-  render: () => (
-    <div className="space-y-6 p-4">
-      <div className="text-center">
-        <h2 className="text-lg font-semibold text-[var(--hive-text-primary)] mb-2">
-          Accessible Social Recognition
-        </h2>
-        <p className="text-sm text-[var(--hive-text-secondary)]">
-          Screen reader friendly social proof and achievement communication
-        </p>
-      </div>
-      
-      <div className="bg-[var(--hive-background-secondary)] p-4 rounded-lg">
-        <h3 className="font-medium mb-3">Semantic Social Elements</h3>
-        <div className="space-y-3">
-          <div 
-            role="button"
-            tabIndex={0}
-            aria-label="Study Group Leader badge - leads 5 active study groups with 89% success rate"
-          >
-            <ProfileBadge 
-              type="leader"
-              label="Study Group Leader"
-              value={5}
-              showValue
-              interactive
-            />
-          </div>
-          
-          <div 
-            role="button"
-            tabIndex={0}
-            aria-label="Most Helpful Student badge - received 47 peer endorsements this semester"
-          >
-            <ProfileBadge 
-              type="social"
-              label="Most Helpful"
-              value={47}
-              showValue
-              interactive
-            />
-          </div>
-          
-          <p className="text-xs text-[var(--hive-text-secondary)]">
-            Use Tab to navigate, Enter to activate badge details
-          </p>
-        </div>
-      </div>
-    </div>
-  )
+// Simple interactive
+export const SimpleInteractive: Story = {
+  args: {
+    label: 'Interactive Badge - Use controls to customize →',
+    icon: Crown,
+    type: 'builder',
+    size: 'md',
+    variant: 'builder',
+    interactive: false,
+    pulsing: false,
+    showIcon: true,
+    showValue: false,
+    value: 10,
+  },
 };

@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { cn } from '../../lib/utils';
-import { Input } from '../atoms/input';
-import { Button } from '../atoms/button';
+import { InputEnhanced as Input } from '../atoms/input-enhanced';
+import { ButtonEnhanced as Button } from '../atoms/button-enhanced';
 import { Spinner } from '../atoms/spinner';
 import { Search, X } from 'lucide-react';
 
@@ -66,7 +66,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         value={internalValue}
         onChange={handleChange}
         variant={variant}
-        inputSize={size}
+        size={size}
         leftIcon={
           loading ? (
             <Spinner size="sm" color="secondary" />

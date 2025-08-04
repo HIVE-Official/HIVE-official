@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { getAuth } from "firebase-admin/auth";
 import { getFirestore } from "firebase-admin/firestore";
 import { z } from "zod";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 import {
   ToolSchema,
   canUserViewTool,
@@ -21,28 +22,27 @@ export async function POST(
   try {
     const authHeader = request.headers.get("authorization");
     if (!authHeader?.startsWith("Bearer ")) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
-    const token = authHeader.split("Bearer ")[1];
+    const token = authHeader.substring(7);
     const decodedToken = await getAuth().verifyIdToken(token);
     const userId = decodedToken.uid;
 
     const { toolId } = await params;
-    const toolDoc = await db.collection("tools").doc(toolId).get();
+    const toolDoc = await dbAdmin.collection("tools").doc(toolId).get();
 
     if (!toolDoc.exists) {
-      return NextResponse.json({ error: "Tool not found" }, { status: 404 });
+      return NextResponse.json(ApiResponseHelper.error("Tool not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     const originalTool = ToolSchema.parse({
       id: toolDoc.id,
-      ...toolDoc.data(),
-    });
+      ...toolDoc.data() });
 
     // Check if user can view this tool
     if (!canUserViewTool(originalTool, userId)) {
-      return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      return NextResponse.json(ApiResponseHelper.error("Access denied", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     const body = await request.json();
@@ -56,11 +56,10 @@ export async function POST(
       await toolDoc.ref.update({
         shareToken,
         isPublic: validatedShareData.permission === "view",
-        updatedAt: new Date(),
-      });
+        updatedAt: new Date() });
 
       // Track analytics event
-      await db.collection("analytics_events").add({
+      await dbAdmin.collection("analytics_events").add({
         eventType: "tool_shared",
         userId: userId,
         toolId: toolId,
@@ -70,37 +69,29 @@ export async function POST(
           shareType: "link",
           permission: validatedShareData.permission,
           hasExpiration: !!validatedShareData.expiresAt,
-        },
-      });
+        } });
 
       return NextResponse.json({
         shareUrl: `${process.env.NEXT_PUBLIC_APP_URL}/tools/shared/${shareToken}`,
         shareToken,
         permission: validatedShareData.permission,
-        expiresAt: validatedShareData.expiresAt,
-      });
+        expiresAt: validatedShareData.expiresAt });
     } else if (action === "fork") {
       // Fork the tool - create a copy owned by the current user
       const { spaceId, name } = shareData;
 
       // Validate space access if forking to a space
       if (spaceId) {
-        const spaceDoc = await db.collection("spaces").doc(spaceId).get();
+        const spaceDoc = await dbAdmin.collection("spaces").doc(spaceId).get();
         if (!spaceDoc.exists) {
-          return NextResponse.json(
-            { error: "Space not found" },
-            { status: 404 }
-          );
+          return NextResponse.json(ApiResponseHelper.error("Space not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
         }
 
         const spaceData = spaceDoc.data();
         const userRole = spaceData?.members?.[userId]?.role;
 
         if (!["builder", "admin"].includes(userRole)) {
-          return NextResponse.json(
-            { error: "Insufficient permissions to create tools in this space" },
-            { status: 403 }
-          );
+          return NextResponse.json(ApiResponseHelper.error("Insufficient permissions to create tools in this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
         }
       }
 
@@ -132,7 +123,7 @@ export async function POST(
       };
 
       // Save forked tool
-      const forkedToolRef = await db.collection("tools").add(forkedTool);
+      const forkedToolRef = await dbAdmin.collection("tools").add(forkedTool);
 
       // Create initial version for fork
       const initialVersion = {
@@ -150,12 +141,11 @@ export async function POST(
 
       // Update original tool's fork count
       await toolDoc.ref.update({
-        forkCount: (originalTool.forkCount || 0) + 1,
-      });
+        forkCount: (originalTool.forkCount || 0) + 1 });
 
       // Track analytics events
       await Promise.all([
-        db.collection("analytics_events").add({
+        dbAdmin.collection("analytics_events").add({
           eventType: "tool_forked",
           userId: userId,
           toolId: forkedToolRef.id,
@@ -167,7 +157,7 @@ export async function POST(
             elementsCount: originalTool.elements.length,
           },
         }),
-        db.collection("analytics_events").add({
+        dbAdmin.collection("analytics_events").add({
           eventType: "tool_fork_source",
           userId: originalTool.ownerId,
           toolId: toolId,
@@ -186,15 +176,14 @@ export async function POST(
         ...forkedTool,
       };
 
-      return NextResponse.json(result, { status: 201 });
+      return NextResponse.json(result, { status: HttpStatus.CREATED });
     } else {
       return NextResponse.json(
         { error: 'Invalid action. Must be "create_share_link" or "fork"' },
-        { status: 400 }
+        { status: HttpStatus.BAD_REQUEST }
       );
     }
   } catch (error) {
-    console.error("Error sharing tool:", error);
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -202,14 +191,11 @@ export async function POST(
           error: "Invalid share data",
           details: error.errors,
         },
-        { status: 400 }
+        { status: HttpStatus.BAD_REQUEST }
       );
     }
 
-    return NextResponse.json(
-      { error: "Failed to share tool" },
-      { status: 500 }
-    );
+    return NextResponse.json(ApiResponseHelper.error("Failed to share tool", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -221,25 +207,25 @@ export async function GET(
   try {
     const authHeader = request.headers.get("authorization");
     if (!authHeader?.startsWith("Bearer ")) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
-    const token = authHeader.split("Bearer ")[1];
+    const token = authHeader.substring(7);
     const decodedToken = await getAuth().verifyIdToken(token);
     const userId = decodedToken.uid;
 
     const { toolId } = await params;
-    const toolDoc = await db.collection("tools").doc(toolId).get();
+    const toolDoc = await dbAdmin.collection("tools").doc(toolId).get();
 
     if (!toolDoc.exists) {
-      return NextResponse.json({ error: "Tool not found" }, { status: 404 });
+      return NextResponse.json(ApiResponseHelper.error("Tool not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     const tool = ToolSchema.parse({ id: toolDoc.id, ...toolDoc.data() });
 
     // Only owner can see sharing details
     if (tool.ownerId !== userId) {
-      return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      return NextResponse.json(ApiResponseHelper.error("Access denied", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     // Get fork information
@@ -267,13 +253,8 @@ export async function GET(
       forkCount: tool.forkCount || 0,
       forks,
       viewCount: tool.viewCount || 0,
-      useCount: tool.useCount || 0,
-    });
+      useCount: tool.useCount || 0 });
   } catch (error) {
-    console.error("Error fetching sharing info:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch sharing information" },
-      { status: 500 }
-    );
+    return NextResponse.json(ApiResponseHelper.error("Failed to fetch sharing information", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

@@ -1,16 +1,18 @@
 import { NextResponse } from 'next/server';
 import { dbAdmin } from '@/lib/firebase-admin';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 /**
  * Diagnostic endpoint to test Firebase connectivity
  */
 export async function GET() {
   try {
-    console.log('🔍 Diagnostic: Testing Firebase connectivity...');
+    logger.info('🔍 Diagnostic: Testing Firebase connectivity...', { endpoint: '/api/spaces/diagnostic' });
     
     // Check current Firebase project configuration
     const projectId = process.env.FIREBASE_PROJECT_ID || process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
-    console.log(`📊 Current Firebase project: ${projectId}`);
+    logger.info('Current Firebase project', { projectId, endpoint: '/api/spaces/diagnostic' });
     
     // Test basic Firebase admin connectivity
     const spaceTypes = ['campus_living', 'fraternity_and_sorority', 'hive_exclusive', 'student_organizations', 'university_organizations', 'cohort'];
@@ -19,15 +21,15 @@ export async function GET() {
     // First, let's see what collections exist at the top level
     const topLevelCollections = await dbAdmin.listCollections();
     const topLevelCollectionNames = topLevelCollections.map(col => col.id);
-    console.log(`📋 Top-level collections found: ${topLevelCollectionNames.join(', ')}`);
+    logger.info('Top-level collections found', { data: topLevelCollectionNames.join(', '), endpoint: '/api/spaces/diagnostic' });
     
     // Check if spaces collection exists
     const spacesCollection = await dbAdmin.collection('spaces').get();
-    console.log(`📊 spaces collection exists: ${!spacesCollection.empty}, size: ${spacesCollection.size}`);
+    logger.info('Spaces collection check', { exists: !spacesCollection.empty, size: spacesCollection.size, endpoint: '/api/spaces/diagnostic' });
     
     for (const spaceType of spaceTypes) {
       try {
-        console.log(`📊 Testing space type: ${spaceType}`);
+        logger.info('Testing space type', { spaceType, endpoint: '/api/spaces/diagnostic' });
         
         // Test if the space type collection exists
         const spaceTypeDoc = await dbAdmin.collection('spaces').doc(spaceType).get();
@@ -56,7 +58,7 @@ export async function GET() {
         };
         
       } catch (error) {
-        console.error(`❌ Error testing ${spaceType}:`, error);
+        logger.error('Error testing space type', { spaceType, error: error instanceof Error ? error.message : String(error), endpoint: '/api/spaces/diagnostic' });
         results[spaceType] = { 
           status: 'error', 
           message: `Error: ${error}` 
@@ -76,13 +78,13 @@ export async function GET() {
     });
     
   } catch (error) {
-    console.error('❌ Diagnostic error:', error);
+    logger.error('Diagnostic error', { error: error instanceof Error ? error.message : String(error), endpoint: '/api/spaces/diagnostic' });
     
     return NextResponse.json({
       success: false,
       error: 'Diagnostic failed',
       message: `${error}`,
       timestamp: new Date().toISOString()
-    }, { status: 500 });
+    }, { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

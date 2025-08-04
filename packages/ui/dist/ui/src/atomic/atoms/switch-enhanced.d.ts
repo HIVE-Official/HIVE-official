@@ -2,12 +2,12 @@ import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
 declare const switchVariants: (props?: {
     size?: "default" | "sm" | "lg" | "xl";
-    variant?: "error" | "default" | "success" | "warning" | "info";
-} & import("class-variance-authority/dist/types").ClassProp) => string;
+    variant?: "default" | "success" | "warning" | "error" | "info";
+} & import("class-variance-authority/types").ClassProp) => string;
 declare const switchLabelVariants: (props?: {
-    color?: "error" | "primary" | "secondary" | "success" | "warning" | "info" | "tertiary";
-    weight?: "medium" | "normal" | "semibold";
-} & import("class-variance-authority/dist/types").ClassProp) => string;
+    color?: "primary" | "secondary" | "success" | "warning" | "error" | "info" | "tertiary";
+    weight?: "normal" | "medium" | "semibold";
+} & import("class-variance-authority/types").ClassProp) => string;
 export interface SwitchProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'type'>, VariantProps<typeof switchVariants> {
     label?: string;
     description?: string;

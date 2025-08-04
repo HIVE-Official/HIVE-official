@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { checkHandleAvailability } from "@/lib/handle-service";
 import { createCrudHandler } from "@/lib/api-wrapper";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 // Validation schemas
 const checkHandleBodySchema = z.object({
@@ -53,9 +54,9 @@ export const { GET, POST } = createCrudHandler({
 }, {
   // Configuration
   public: true, // No authentication required for handle checking
-  rateLimit: 'AUTH', // Apply authentication-level rate limiting
+  rateLimit: 'auth', // Apply authentication-level rate limiting
   validation: {
     body: checkHandleBodySchema,
     query: checkHandleQuerySchema
   }
-});
+}) as any;

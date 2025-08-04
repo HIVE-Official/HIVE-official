@@ -29,7 +29,7 @@ const SECURITY_PATTERNS = {
   // SQL injection patterns
   SQL_INJECTION: [
     /(\b(SELECT|INSERT|UPDATE|DELETE|DROP|CREATE|ALTER|EXEC|UNION)\b)/i,
-    /(\-\-|\;|\|\||\/\*|\*\/)/,
+    /(--|;|\|\||\/\*|\*\/)/,
     /(\b(OR|AND)\s+\d+\s*=\s*\d+)/i,
     /(CONCAT\s*\(|CHAR\s*\()/i
   ],
@@ -57,9 +57,9 @@ const SECURITY_PATTERNS = {
   
   // Path traversal patterns
   PATH_TRAVERSAL: [
-    /\.\.[\/\\]/,
-    /[\/\\]\.\.[\/\\]/,
-    /%2e%2e[\/\\]/i,
+    /\\.\\.[/\\\\]/,
+    /[/\\\\]\\.\\.[/\\\\]/,
+    /%2e%2e[/\\\\]/i,
     /%252e%252e/i
   ],
   
@@ -131,7 +131,7 @@ export const SecureSchemas = {
   name: z.string()
     .min(1, 'Name is required')
     .max(100, 'Name too long')
-    .regex(/^[a-zA-Z\s\-'\.]+$/, 'Name contains invalid characters')
+    .regex(/^[a-zA-Z\s\-'.]+$/, 'Name contains invalid characters')
     .refine((name) => {
       // Check for suspicious patterns
       const suspicious = [
@@ -202,7 +202,7 @@ export const SecureSchemas = {
     }, 'Invalid file path')
     .refine((path) => {
       // Only allow safe characters
-      const safePattern = /^[a-zA-Z0-9\/_\-\.]+$/;
+      const safePattern = /^[a-zA-Z0-9/_\-.]+$/;
       return safePattern.test(path);
     }, 'File path contains invalid characters'),
 
@@ -242,7 +242,7 @@ export const SecureSchemas = {
     .regex(/^\+?[1-9]\d{1,14}$/, 'Invalid phone number format')
     .refine((phone) => {
       // Remove common formatting and validate length
-      const cleaned = phone.replace(/[\s\-\(\)\.]/g, '');
+      const cleaned = phone.replace(/[\s\-().]/g, '');
       return cleaned.length >= 10 && cleaned.length <= 15;
     }, 'Phone number length invalid'),
 
@@ -347,8 +347,8 @@ export class SecurityScanner {
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#x27;')
-      // Remove control characters
-      .replace(/[\x00-\x1F\x7F]/g, '')
+      // Remove control characters using string method
+      .replace(/[\p{C}]/gu, '')
       // Trim whitespace
       .trim();
   }

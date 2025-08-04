@@ -3,14 +3,15 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getAuth } from "firebase-admin/auth";
 import { getFirestore } from "firebase-admin/firestore";
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 // Validation schema
 const grantRoleSchema = z.object({
   userId: z.string().min(1, "User ID is required"),
   role: z.enum(["admin", "moderator", "builder"], {
     errorMap: () => ({ message: "Role must be admin, moderator, or builder" }),
-  }),
-});
+  }) });
 
 export async function POST(request: NextRequest) {
   try {
@@ -23,18 +24,12 @@ export async function POST(request: NextRequest) {
     // Verify admin authentication
     const authHeader = request.headers.get("authorization");
     if (!authHeader?.startsWith("Bearer ")) {
-      return NextResponse.json(
-        { error: "Authorization header required" },
-        { status: 401 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Authorization header required", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
-    const token = authHeader.split("Bearer ")[1];
+    const token = authHeader.substring(7);
     if (!token) {
-      return NextResponse.json(
-        { error: "Invalid authorization format" },
-        { status: 401 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Invalid authorization format", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const decodedToken = await getAuth().verifyIdToken(token);
@@ -50,24 +45,20 @@ export async function POST(request: NextRequest) {
       | undefined;
 
     if (!currentUserData || currentUserData.role !== "admin") {
-      return NextResponse.json(
-        { error: "Admin access required" },
-        { status: 403 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Admin access required", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     // Verify target user exists
     const targetUserDoc = await db.collection("users").doc(userId).get();
     if (!targetUserDoc.exists) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
+      return NextResponse.json(ApiResponseHelper.error("User not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     // Update user role
     await db.collection("users").doc(userId).update({
       role,
       updatedAt: new Date(),
-      updatedBy: decodedToken.uid,
-    });
+      updatedBy: decodedToken.uid });
 
     // Set custom claims for Firebase Auth
     await getAuth().setCustomUserClaims(userId, { role });
@@ -79,26 +70,21 @@ export async function POST(request: NextRequest) {
       targetUser: userId,
       newRole: role,
       timestamp: new Date(),
-      ip: request.headers.get("x-forwarded-for") || "unknown",
-    });
+      ip: request.headers.get("x-forwarded-for") || "unknown" });
 
     return NextResponse.json({
       success: true,
-      message: `Role ${role} granted to user ${userId}`,
-    });
+      message: `Role ${role} granted to user ${userId}` });
   } catch (error) {
-    console.error("Error granting role:", error);
+    logger.error('Error granting role', { error: error, endpoint: '/api/admin/grant-role' });
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: "Invalid request data", details: error.errors },
-        { status: 400 }
+        { status: HttpStatus.BAD_REQUEST }
       );
     }
 
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+    return NextResponse.json(ApiResponseHelper.error("Internal server error", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

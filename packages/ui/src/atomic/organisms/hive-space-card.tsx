@@ -434,7 +434,7 @@ export const HiveSpaceCard: React.FC<HiveSpaceCardProps> = ({
         <div className="flex items-center justify-between mt-auto">
           <div className="flex items-center gap-2 text-sm text-[var(--hive-text-muted)]">
             <Users className="w-4 h-4" />
-            <span className="font-medium">{space.memberCount.toLocaleString()}</span>
+            <span className="font-medium">{(space.memberCount || 0).toLocaleString()}</span>
             
             {space.type === 'university' && (space as UniversitySpace).enrollment.capacity && (
               <span className="text-[var(--hive-text-placeholder)]">

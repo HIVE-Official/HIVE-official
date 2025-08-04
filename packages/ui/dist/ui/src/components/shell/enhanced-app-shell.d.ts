@@ -11,9 +11,7 @@ interface EnhancedAppShellProps {
     children: React.ReactNode;
     user?: User | null;
     className?: string;
-    initialSidebarCollapsed?: boolean;
-    notifications?: any[];
 }
-export declare function EnhancedAppShell({ children, user, className, initialSidebarCollapsed, notifications }: EnhancedAppShellProps): import("react/jsx-runtime").JSX.Element;
+export declare function EnhancedAppShell({ children, user, className }: EnhancedAppShellProps): import("react/jsx-runtime").JSX.Element;
 export {};
 //# sourceMappingURL=enhanced-app-shell.d.ts.map

@@ -2,9 +2,9 @@ import * as React from "react";
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 import { type VariantProps } from 'class-variance-authority';
 declare const hiveTooltipVariants: (props?: {
-    variant?: "error" | "gold" | "solid" | "default" | "minimal" | "success" | "warning" | "glass" | "info";
+    variant?: "default" | "success" | "warning" | "error" | "gold" | "solid" | "info" | "glass" | "minimal";
     size?: "default" | "sm" | "lg" | "xl";
-} & import("class-variance-authority/dist/types").ClassProp) => string;
+} & import("class-variance-authority/types").ClassProp) => string;
 declare const HiveTooltipProvider: React.FC<TooltipPrimitive.TooltipProviderProps>;
 declare const HiveTooltip: React.FC<TooltipPrimitive.TooltipProps>;
 declare const HiveTooltipTrigger: React.ForwardRefExoticComponent<TooltipPrimitive.TooltipTriggerProps & React.RefAttributes<HTMLButtonElement>>;
@@ -22,7 +22,7 @@ interface HiveMotionTooltipProps extends Omit<HiveTooltipContentProps, 'content'
     delayDuration?: number;
 }
 declare const HiveMotionTooltip: React.ForwardRefExoticComponent<HiveMotionTooltipProps & React.RefAttributes<HTMLElement>>;
-declare const HiveHelpTooltip: React.ForwardRefExoticComponent<Omit<HiveMotionTooltipProps, "size" | "variant"> & React.RefAttributes<HTMLElement>>;
+declare const HiveHelpTooltip: React.ForwardRefExoticComponent<Omit<HiveMotionTooltipProps, "variant" | "size"> & React.RefAttributes<HTMLElement>>;
 declare const HiveErrorTooltip: React.ForwardRefExoticComponent<Omit<HiveMotionTooltipProps, "variant"> & React.RefAttributes<HTMLElement>>;
 declare const HiveSuccessTooltip: React.ForwardRefExoticComponent<Omit<HiveMotionTooltipProps, "variant"> & React.RefAttributes<HTMLElement>>;
 declare const HiveGoldTooltip: React.ForwardRefExoticComponent<Omit<HiveMotionTooltipProps, "variant"> & React.RefAttributes<HTMLElement>>;

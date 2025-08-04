@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { collection, query, where, getDocs, orderBy } from 'firebase/firestore';
-import { db } from '@hive/core/server';
-import { getCurrentUser } from '@hive/auth-logic';
+// Use admin SDK methods since we're in an API route
+import { dbAdmin } from '@/lib/firebase-admin';
+import { getCurrentUser } from '@/lib/server-auth';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 // Conflict detection for scheduling
 interface ConflictEvent {
@@ -19,21 +21,21 @@ export async function POST(request: NextRequest) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const body = await request.json();
     const { startDate, endDate, excludeEventId } = body;
 
     if (!startDate || !endDate) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+      return NextResponse.json(ApiResponseHelper.error("Missing required fields", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
     const proposedStart = new Date(startDate);
     const proposedEnd = new Date(endDate);
 
     if (proposedStart >= proposedEnd) {
-      return NextResponse.json({ error: 'End date must be after start date' }, { status: 400 });
+      return NextResponse.json(ApiResponseHelper.error("End date must be after start date", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
     // Add buffer time for conflict detection (15 minutes before/after)
@@ -44,13 +46,10 @@ export async function POST(request: NextRequest) {
     const conflicts: ConflictEvent[] = [];
 
     // Check personal events
-    const personalEventsQuery = query(
-      collection(db, 'personalEvents'),
-      where('userId', '==', user.uid),
-      orderBy('startDate', 'asc')
-    );
-
-    const personalEventsSnapshot = await getDocs(personalEventsQuery);
+    const personalEventsSnapshot = await dbAdmin.collection('personalEvents')
+      .where('userId', '==', user.uid)
+      .orderBy('startDate', 'asc')
+      .get();
     personalEventsSnapshot.docs.forEach(doc => {
       const eventData = doc.data();
       
@@ -81,24 +80,18 @@ export async function POST(request: NextRequest) {
     });
 
     // Check space events from user's memberships
-    const membershipsQuery = query(
-      collection(db, 'members'),
-      where('userId', '==', user.uid),
-      where('status', '==', 'active')
-    );
-
-    const membershipsSnapshot = await getDocs(membershipsQuery);
+    const membershipsSnapshot = await dbAdmin.collection('members')
+      .where('userId', '==', user.uid)
+      .where('status', '==', 'active')
+      .get();
     const userSpaceIds = membershipsSnapshot.docs.map(doc => doc.data().spaceId);
 
     if (userSpaceIds.length > 0) {
-      const spaceEventsQuery = query(
-        collection(db, 'events'),
-        where('spaceId', 'in', userSpaceIds),
-        where('state', '==', 'published'),
-        orderBy('startDate', 'asc')
-      );
-
-      const spaceEventsSnapshot = await getDocs(spaceEventsQuery);
+      const spaceEventsSnapshot = await dbAdmin.collection('events')
+        .where('spaceId', 'in', userSpaceIds)
+        .where('state', '==', 'published')
+        .orderBy('startDate', 'asc')
+        .get();
       spaceEventsSnapshot.docs.forEach(doc => {
         const eventData = doc.data();
         const eventStart = new Date(eventData.startDate);
@@ -143,8 +136,8 @@ export async function POST(request: NextRequest) {
       }
     });
   } catch (error) {
-    console.error('Error checking conflicts:', error);
-    return NextResponse.json({ error: 'Failed to check conflicts' }, { status: 500 });
+    logger.error('Error checking conflicts', { error: error, endpoint: '/api/calendar/conflicts' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to check conflicts", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 

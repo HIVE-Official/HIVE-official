@@ -2,7 +2,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from 'react';
 import { cva } from 'class-variance-authority';
-import { cn } from '../../lib/utils';
+import { cn } from '../../lib/utils.js';
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 const profileStatisticVariants = cva("flex flex-col items-center justify-center text-center transition-all duration-200", {
     variants: {

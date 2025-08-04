@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 interface SpaceActivationRequest {
   spaceId: string;
@@ -170,19 +172,13 @@ export async function POST(request: NextRequest) {
     const { spaceId, features, settings = {} } = body;
 
     if (!spaceId || !features) {
-      return NextResponse.json(
-        { error: 'Space ID and features are required' },
-        { status: 400 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Space ID and features are required", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
     // Get space info (in real app, this would be from database)
     const space = MOCK_SPACES[spaceId as keyof typeof MOCK_SPACES];
     if (!space) {
-      return NextResponse.json(
-        { error: 'Space not found' },
-        { status: 404 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Space not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     // Validate feature dependencies
@@ -193,7 +189,7 @@ export async function POST(request: NextRequest) {
           error: 'Feature dependency validation failed',
           details: dependencyCheck.errors 
         },
-        { status: 400 }
+        { status: HttpStatus.BAD_REQUEST }
       );
     }
 
@@ -206,7 +202,7 @@ export async function POST(request: NextRequest) {
           details: planCheck.errors,
           upgradeRequired: true
         },
-        { status: 403 }
+        { status: HttpStatus.FORBIDDEN }
       );
     }
 
@@ -234,11 +230,8 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('Space activation error:', error);
-    return NextResponse.json(
-      { error: 'Failed to activate space' },
-      { status: 500 }
-    );
+    logger.error('Space activation error', { error: error, endpoint: '/api/spaces/activate' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to activate space", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -251,10 +244,7 @@ export async function GET(request: NextRequest) {
       // Get specific space activation status
       const space = MOCK_SPACES[spaceId as keyof typeof MOCK_SPACES];
       if (!space) {
-        return NextResponse.json(
-          { error: 'Space not found' },
-          { status: 404 }
-        );
+        return NextResponse.json(ApiResponseHelper.error("Space not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
       }
 
       return NextResponse.json({
@@ -293,11 +283,8 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('Get activation info error:', error);
-    return NextResponse.json(
-      { error: 'Failed to get activation information' },
-      { status: 500 }
-    );
+    logger.error('Get activation info error', { error: error, endpoint: '/api/spaces/activate' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to get activation information", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -307,27 +294,18 @@ export async function PUT(request: NextRequest) {
     const { spaceId, action, featureId, settings } = body;
 
     if (!spaceId || !action) {
-      return NextResponse.json(
-        { error: 'Space ID and action are required' },
-        { status: 400 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Space ID and action are required", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
     const space = MOCK_SPACES[spaceId as keyof typeof MOCK_SPACES];
     if (!space) {
-      return NextResponse.json(
-        { error: 'Space not found' },
-        { status: 404 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Space not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     switch (action) {
       case 'enable_feature':
         if (!featureId || space.features.includes(featureId)) {
-          return NextResponse.json(
-            { error: 'Feature already enabled or invalid feature ID' },
-            { status: 400 }
-          );
+          return NextResponse.json(ApiResponseHelper.error("Feature already enabled or invalid feature ID", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
         }
         
         space.features.push(featureId);
@@ -339,10 +317,7 @@ export async function PUT(request: NextRequest) {
 
       case 'disable_feature':
         if (!featureId || !space.features.includes(featureId)) {
-          return NextResponse.json(
-            { error: 'Feature not enabled or invalid feature ID' },
-            { status: 400 }
-          );
+          return NextResponse.json(ApiResponseHelper.error("Feature not enabled or invalid feature ID", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
         }
         
         space.features = space.features.filter(id => id !== featureId);
@@ -354,10 +329,7 @@ export async function PUT(request: NextRequest) {
 
       case 'update_settings':
         if (!settings) {
-          return NextResponse.json(
-            { error: 'Settings are required' },
-            { status: 400 }
-          );
+          return NextResponse.json(ApiResponseHelper.error("Settings are required", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
         }
         
         space.settings = { ...space.settings, ...settings };
@@ -368,17 +340,11 @@ export async function PUT(request: NextRequest) {
         });
 
       default:
-        return NextResponse.json(
-          { error: 'Invalid action' },
-          { status: 400 }
-        );
+        return NextResponse.json(ApiResponseHelper.error("Invalid action", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
   } catch (error) {
-    console.error('Update space error:', error);
-    return NextResponse.json(
-      { error: 'Failed to update space' },
-      { status: 500 }
-    );
+    logger.error('Update space error', { error: error, endpoint: '/api/spaces/activate' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to update space", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

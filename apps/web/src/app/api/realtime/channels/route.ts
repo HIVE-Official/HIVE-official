@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { collection, doc, getDoc, setDoc, addDoc, updateDoc, deleteDoc, query, where, getDocs, orderBy, limit as fbLimit } from 'firebase/firestore';
-import { db } from '@hive/core/server';
-import { getCurrentUser } from '@hive/auth-logic';
+// Use admin SDK methods since we're in an API route
+import { dbAdmin } from '@/lib/firebase-admin';
+import { getCurrentUser } from '@/lib/server-auth';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 // Chat channel interfaces
 interface ChatChannel {
@@ -58,7 +60,7 @@ export async function POST(request: NextRequest) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const body = await request.json();
@@ -74,19 +76,19 @@ export async function POST(request: NextRequest) {
     } = body;
 
     if (!spaceId || !name) {
-      return NextResponse.json({ error: 'Space ID and channel name are required' }, { status: 400 });
+      return NextResponse.json(ApiResponseHelper.error("Space ID and channel name are required", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
     // Verify user has permission to create channels in this space
     const canCreate = await verifyChannelCreatePermission(user.uid, spaceId);
     if (!canCreate) {
-      return NextResponse.json({ error: 'Not authorized to create channels in this space' }, { status: 403 });
+      return NextResponse.json(ApiResponseHelper.error("Not authorized to create channels in this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     // Validate channel name is unique in space
     const existingChannel = await checkChannelNameExists(spaceId, name);
     if (existingChannel) {
-      return NextResponse.json({ error: 'Channel name already exists in this space' }, { status: 409 });
+      return NextResponse.json(ApiResponseHelper.error("Channel name already exists in this space", "UNKNOWN_ERROR"), { status: 409 });
     }
 
     // Generate channel ID
@@ -145,8 +147,8 @@ export async function POST(request: NextRequest) {
       }
     });
   } catch (error) {
-    console.error('Error creating chat channel:', error);
-    return NextResponse.json({ error: 'Failed to create channel' }, { status: 500 });
+    logger.error('Error creating chat channel', { error: error, endpoint: '/api/realtime/channels' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to create channel", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -155,7 +157,7 @@ export async function GET(request: NextRequest) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const { searchParams } = new URL(request.url);
@@ -164,18 +166,18 @@ export async function GET(request: NextRequest) {
     const includeUnreadCounts = searchParams.get('includeUnreadCounts') === 'true';
 
     if (!spaceId) {
-      return NextResponse.json({ error: 'Space ID required' }, { status: 400 });
+      return NextResponse.json(ApiResponseHelper.error("Space ID required", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
     // Verify user has access to space
     const hasAccess = await verifySpaceAccess(user.uid, spaceId);
     if (!hasAccess) {
-      return NextResponse.json({ error: 'Access denied to space' }, { status: 403 });
+      return NextResponse.json(ApiResponseHelper.error("Access denied to space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     // Get user's channel memberships
-    const membershipQuery = query(
-      collection(db, 'channelMemberships'),
+    const membershipQuery = dbAdmin.collection(
+      dbAdmin.collection('channelMemberships'),
       where('userId', '==', user.uid),
       where('spaceId', '==', spaceId),
       where('isActive', '==', true)
@@ -196,7 +198,7 @@ export async function GET(request: NextRequest) {
     
     for (const channelId of channelIds) {
       const channelDoc = await getDoc(doc(db, 'chatChannels', channelId));
-      if (channelDoc.exists()) {
+      if (channelDoc.exists) {
         const channelData = { id: channelDoc.id, ...channelDoc.data() } as ChatChannel;
         
         // Filter by archived status
@@ -225,8 +227,8 @@ export async function GET(request: NextRequest) {
       totalCount: channels.length
     });
   } catch (error) {
-    console.error('Error getting chat channels:', error);
-    return NextResponse.json({ error: 'Failed to get channels' }, { status: 500 });
+    logger.error('Error getting chat channels', { error: error, endpoint: '/api/realtime/channels' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to get channels", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -235,7 +237,7 @@ export async function PUT(request: NextRequest) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const body = await request.json();
@@ -249,13 +251,13 @@ export async function PUT(request: NextRequest) {
     } = body;
 
     if (!channelId) {
-      return NextResponse.json({ error: 'Channel ID required' }, { status: 400 });
+      return NextResponse.json(ApiResponseHelper.error("Channel ID required", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
     // Get channel
     const channelDoc = await getDoc(doc(db, 'chatChannels', channelId));
-    if (!channelDoc.exists()) {
-      return NextResponse.json({ error: 'Channel not found' }, { status: 404 });
+    if (!channelDoc.exists) {
+      return NextResponse.json(ApiResponseHelper.error("Channel not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     const channel = { id: channelDoc.id, ...channelDoc.data() } as ChatChannel;
@@ -263,7 +265,7 @@ export async function PUT(request: NextRequest) {
     // Verify user has permission to modify channel
     const canModify = await verifyChannelModifyPermission(user.uid, channel);
     if (!canModify) {
-      return NextResponse.json({ error: 'Not authorized to modify this channel' }, { status: 403 });
+      return NextResponse.json(ApiResponseHelper.error("Not authorized to modify this channel", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     const updates: any = {
@@ -308,7 +310,7 @@ export async function PUT(request: NextRequest) {
         break;
 
       default:
-        return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
+        return NextResponse.json(ApiResponseHelper.error("Invalid action", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
     // Apply updates
@@ -332,8 +334,8 @@ export async function PUT(request: NextRequest) {
       updatedAt: updates.updatedAt
     });
   } catch (error) {
-    console.error('Error updating chat channel:', error);
-    return NextResponse.json({ error: 'Failed to update channel' }, { status: 500 });
+    logger.error('Error updating chat channel', { error: error, endpoint: '/api/realtime/channels' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to update channel", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -342,20 +344,20 @@ export async function DELETE(request: NextRequest) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const { searchParams } = new URL(request.url);
     const channelId = searchParams.get('channelId');
 
     if (!channelId) {
-      return NextResponse.json({ error: 'Channel ID required' }, { status: 400 });
+      return NextResponse.json(ApiResponseHelper.error("Channel ID required", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
     // Get channel
     const channelDoc = await getDoc(doc(db, 'chatChannels', channelId));
-    if (!channelDoc.exists()) {
-      return NextResponse.json({ error: 'Channel not found' }, { status: 404 });
+    if (!channelDoc.exists) {
+      return NextResponse.json(ApiResponseHelper.error("Channel not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     const channel = { id: channelDoc.id, ...channelDoc.data() } as ChatChannel;
@@ -363,7 +365,7 @@ export async function DELETE(request: NextRequest) {
     // Verify user has permission to delete channel
     const canDelete = await verifyChannelDeletePermission(user.uid, channel);
     if (!canDelete) {
-      return NextResponse.json({ error: 'Not authorized to delete this channel' }, { status: 403 });
+      return NextResponse.json(ApiResponseHelper.error("Not authorized to delete this channel", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     // Archive channel instead of hard delete (for data retention)
@@ -393,8 +395,8 @@ export async function DELETE(request: NextRequest) {
       message: 'Channel deleted successfully'
     });
   } catch (error) {
-    console.error('Error deleting chat channel:', error);
-    return NextResponse.json({ error: 'Failed to delete channel' }, { status: 500 });
+    logger.error('Error deleting chat channel', { error: error, endpoint: '/api/realtime/channels' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to delete channel", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -413,8 +415,8 @@ function getDefaultChannelSettings() {
 // Helper function to verify channel creation permission
 async function verifyChannelCreatePermission(userId: string, spaceId: string): Promise<boolean> {
   try {
-    const memberQuery = query(
-      collection(db, 'members'),
+    const memberQuery = dbAdmin.collection(
+      dbAdmin.collection('members'),
       where('userId', '==', userId),
       where('spaceId', '==', spaceId),
       where('status', '==', 'active')
@@ -428,7 +430,7 @@ async function verifyChannelCreatePermission(userId: string, spaceId: string): P
     const memberData = memberSnapshot.docs[0].data();
     return ['builder', 'moderator', 'admin'].includes(memberData.role || 'member');
   } catch (error) {
-    console.error('Error verifying channel create permission:', error);
+    logger.error('Error verifying channel create permission', { error: error, endpoint: '/api/realtime/channels' });
     return false;
   }
 }
@@ -436,8 +438,8 @@ async function verifyChannelCreatePermission(userId: string, spaceId: string): P
 // Helper function to check if channel name exists in space
 async function checkChannelNameExists(spaceId: string, name: string): Promise<boolean> {
   try {
-    const channelQuery = query(
-      collection(db, 'chatChannels'),
+    const channelQuery = dbAdmin.collection(
+      dbAdmin.collection('chatChannels'),
       where('spaceId', '==', spaceId),
       where('name', '==', name),
       where('isActive', '==', true)
@@ -446,7 +448,7 @@ async function checkChannelNameExists(spaceId: string, name: string): Promise<bo
     const channelSnapshot = await getDocs(channelQuery);
     return !channelSnapshot.empty;
   } catch (error) {
-    console.error('Error checking channel name exists:', error);
+    logger.error('Error checking channel name exists', { error: error, endpoint: '/api/realtime/channels' });
     return false;
   }
 }
@@ -454,8 +456,8 @@ async function checkChannelNameExists(spaceId: string, name: string): Promise<bo
 // Helper function to get space members
 async function getSpaceMembers(spaceId: string): Promise<string[]> {
   try {
-    const memberQuery = query(
-      collection(db, 'members'),
+    const memberQuery = dbAdmin.collection(
+      dbAdmin.collection('members'),
       where('spaceId', '==', spaceId),
       where('status', '==', 'active')
     );
@@ -463,7 +465,7 @@ async function getSpaceMembers(spaceId: string): Promise<string[]> {
     const memberSnapshot = await getDocs(memberQuery);
     return memberSnapshot.docs.map(doc => doc.data().userId);
   } catch (error) {
-    console.error('Error getting space members:', error);
+    logger.error('Error getting space members', { error: error, endpoint: '/api/realtime/channels' });
     return [];
   }
 }
@@ -495,15 +497,15 @@ async function createChannelMemberships(
 
     await Promise.all(membershipPromises);
   } catch (error) {
-    console.error('Error creating channel memberships:', error);
+    logger.error('Error creating channel memberships', { error: error, endpoint: '/api/realtime/channels' });
   }
 }
 
 // Helper function to verify space access
 async function verifySpaceAccess(userId: string, spaceId: string): Promise<boolean> {
   try {
-    const memberQuery = query(
-      collection(db, 'members'),
+    const memberQuery = dbAdmin.collection(
+      dbAdmin.collection('members'),
       where('userId', '==', userId),
       where('spaceId', '==', spaceId),
       where('status', '==', 'active')
@@ -512,7 +514,7 @@ async function verifySpaceAccess(userId: string, spaceId: string): Promise<boole
     const memberSnapshot = await getDocs(memberQuery);
     return !memberSnapshot.empty;
   } catch (error) {
-    console.error('Error verifying space access:', error);
+    logger.error('Error verifying space access', { error: error, endpoint: '/api/realtime/channels' });
     return false;
   }
 }
@@ -522,7 +524,7 @@ async function getUnreadCount(userId: string, channelId: string): Promise<number
   try {
     // Get user's last read message
     const membershipDoc = await getDoc(doc(db, 'channelMemberships', `${channelId}_${userId}`));
-    if (!membershipDoc.exists()) {
+    if (!membershipDoc.exists) {
       return 0;
     }
 
@@ -530,8 +532,8 @@ async function getUnreadCount(userId: string, channelId: string): Promise<number
     const lastReadTimestamp = membership.lastReadTimestamp || membership.joinedAt;
 
     // Count messages after last read timestamp
-    const unreadQuery = query(
-      collection(db, 'chatMessages'),
+    const unreadQuery = dbAdmin.collection(
+      dbAdmin.collection('chatMessages'),
       where('channelId', '==', channelId),
       where('metadata.timestamp', '>', lastReadTimestamp),
       where('metadata.isDeleted', '==', false)
@@ -540,7 +542,7 @@ async function getUnreadCount(userId: string, channelId: string): Promise<number
     const unreadSnapshot = await getDocs(unreadQuery);
     return unreadSnapshot.size;
   } catch (error) {
-    console.error('Error getting unread count:', error);
+    logger.error('Error getting unread count', { error: error, endpoint: '/api/realtime/channels' });
     return 0;
   }
 }
@@ -554,8 +556,8 @@ async function verifyChannelModifyPermission(userId: string, channel: ChatChanne
     }
 
     // Space moderators/admins can modify
-    const memberQuery = query(
-      collection(db, 'members'),
+    const memberQuery = dbAdmin.collection(
+      dbAdmin.collection('members'),
       where('userId', '==', userId),
       where('spaceId', '==', channel.spaceId),
       where('status', '==', 'active')
@@ -569,7 +571,7 @@ async function verifyChannelModifyPermission(userId: string, channel: ChatChanne
     const memberData = memberSnapshot.docs[0].data();
     return ['moderator', 'admin'].includes(memberData.role || 'member');
   } catch (error) {
-    console.error('Error verifying channel modify permission:', error);
+    logger.error('Error verifying channel modify permission', { error: error, endpoint: '/api/realtime/channels' });
     return false;
   }
 }
@@ -582,8 +584,8 @@ async function verifyChannelDeletePermission(userId: string, channel: ChatChanne
       return true;
     }
 
-    const memberQuery = query(
-      collection(db, 'members'),
+    const memberQuery = dbAdmin.collection(
+      dbAdmin.collection('members'),
       where('userId', '==', userId),
       where('spaceId', '==', channel.spaceId),
       where('status', '==', 'active')
@@ -597,7 +599,7 @@ async function verifyChannelDeletePermission(userId: string, channel: ChatChanne
     const memberData = memberSnapshot.docs[0].data();
     return memberData.role === 'admin';
   } catch (error) {
-    console.error('Error verifying channel delete permission:', error);
+    logger.error('Error verifying channel delete permission', { error: error, endpoint: '/api/realtime/channels' });
     return false;
   }
 }
@@ -614,15 +616,15 @@ async function deactivateChannelMemberships(channelId: string, userIds: string[]
 
     await Promise.all(deactivatePromises);
   } catch (error) {
-    console.error('Error deactivating channel memberships:', error);
+    logger.error('Error deactivating channel memberships', { error: error, endpoint: '/api/realtime/channels' });
   }
 }
 
 // Helper function to deactivate all channel memberships
 async function deactivateAllChannelMemberships(channelId: string): Promise<void> {
   try {
-    const membershipQuery = query(
-      collection(db, 'channelMemberships'),
+    const membershipQuery = dbAdmin.collection(
+      dbAdmin.collection('channelMemberships'),
       where('channelId', '==', channelId),
       where('isActive', '==', true)
     );
@@ -637,7 +639,7 @@ async function deactivateAllChannelMemberships(channelId: string): Promise<void>
 
     await Promise.all(deactivatePromises);
   } catch (error) {
-    console.error('Error deactivating all channel memberships:', error);
+    logger.error('Error deactivating all channel memberships', { error: error, endpoint: '/api/realtime/channels' });
   }
 }
 
@@ -678,7 +680,7 @@ async function sendChannelSystemMessage(
 
     await setDoc(doc(db, 'chatMessages', systemMessage.id), systemMessage);
   } catch (error) {
-    console.error('Error sending system message:', error);
+    logger.error('Error sending system message', { error: error, endpoint: '/api/realtime/channels' });
   }
 }
 
@@ -735,8 +737,8 @@ async function broadcastChannelUpdate(
       }
     };
 
-    await addDoc(collection(db, 'realtimeMessages'), updateMessage);
+    await addDoc(dbAdmin.collection('realtimeMessages'), updateMessage);
   } catch (error) {
-    console.error('Error broadcasting channel update:', error);
+    logger.error('Error broadcasting channel update', { error: error, endpoint: '/api/realtime/channels' });
   }
 }

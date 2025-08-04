@@ -4,6 +4,8 @@ import { z } from 'zod';
 import { getAuth } from 'firebase-admin/auth';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { FieldValue } from 'firebase-admin/firestore';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 /**
  * Admin Builder Request Management API
@@ -40,11 +42,8 @@ export async function POST(request: NextRequest) {
   try {
     // Verify authentication
     const authHeader = request.headers.get('Authorization');
-    if (!authHeader?.startsWith('Bearer ')) {
-      return NextResponse.json(
-        { error: 'Authorization header required' },
-        { status: 401 }
-      );
+    if (!authHeader?.startsWith("Bearer ")) {
+      return NextResponse.json(ApiResponseHelper.error("Authorization header required", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const token = authHeader.substring(7);
@@ -59,33 +58,27 @@ export async function POST(request: NextRequest) {
         const decodedToken = await auth.verifyIdToken(token);
         adminUserId = decodedToken.uid;
       } catch (authError) {
-        return NextResponse.json(
-          { error: 'Invalid or expired token' },
-          { status: 401 }
-        );
+        return NextResponse.json(ApiResponseHelper.error("Invalid or expired token", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
       }
     }
 
     // Check if user is admin
     if (!(await isAdmin(adminUserId))) {
-      return NextResponse.json(
-        { error: 'Admin access required' },
-        { status: 403 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Admin access required", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     // Parse and validate request body
     const body = await request.json();
     const { requestId, action, notes } = reviewRequestSchema.parse(body);
 
-    console.log(`👨‍💼 Admin ${adminUserId} reviewing builder request ${requestId}: ${action}`);
+    logger.info('👨‍💼 Admin reviewing builder request', {  requestId, action, endpoint: '/api/admin/builder-requests'  });
 
     // Get the builder request
     const requestRef = dbAdmin.collection('builderRequests').doc(requestId);
     const requestDoc = await requestRef.get();
 
     if (!requestDoc.exists) {
-      return NextResponse.json({ error: 'Builder request not found' }, { status: 404 });
+      return NextResponse.json(ApiResponseHelper.error("Builder request not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     const requestData = requestDoc.data();
@@ -148,10 +141,10 @@ export async function POST(request: NextRequest) {
           updatedAt: FieldValue.serverTimestamp()
         });
 
-        console.log(`✅ Granted builder rights to ${requestData.userId} for space ${requestData.spaceId}`);
+        logger.info('✅ Granted builder rights for space', {  requestData: requestData.spaceId, endpoint: '/api/admin/builder-requests'  });
 
       } catch (error) {
-        console.error('Error granting builder rights:', error);
+        logger.error('Error granting builder rights', { error: error, endpoint: '/api/admin/builder-requests' });
         // Revert request status if granting rights failed
         await requestRef.update({
           status: 'pending',
@@ -160,15 +153,12 @@ export async function POST(request: NextRequest) {
           reviewNotes: `Failed to grant builder rights: ${error}`
         });
 
-        return NextResponse.json(
-          { error: 'Failed to grant builder rights. Request status reverted.' },
-          { status: 500 }
-        );
+        return NextResponse.json(ApiResponseHelper.error("Failed to grant builder rights. Request status reverted.", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
       }
     }
 
     // TODO: Send notification to the user about approval/rejection
-    console.log(`📧 User notification needed for ${requestData.userId}: request ${action}d`);
+    logger.info('📧 User notification needed for: request d', { requestData, action, endpoint: '/api/admin/builder-requests' });
 
     return NextResponse.json({
       success: true,
@@ -197,7 +187,7 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error: any) {
-    console.error('Review builder request error:', error);
+    logger.error('Review builder request error', { error: error, endpoint: '/api/admin/builder-requests' });
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -205,14 +195,11 @@ export async function POST(request: NextRequest) {
           error: 'Invalid request data', 
           details: error.errors.map(e => `${e.path.join('.')}: ${e.message}`)
         },
-        { status: 400 }
+        { status: HttpStatus.BAD_REQUEST }
       );
     }
 
-    return NextResponse.json(
-      { error: 'Failed to review builder request' },
-      { status: 500 }
-    );
+    return NextResponse.json(ApiResponseHelper.error("Failed to review builder request", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -224,11 +211,8 @@ export async function GET(request: NextRequest) {
   try {
     // Verify authentication
     const authHeader = request.headers.get('Authorization');
-    if (!authHeader?.startsWith('Bearer ')) {
-      return NextResponse.json(
-        { error: 'Authorization header required' },
-        { status: 401 }
-      );
+    if (!authHeader?.startsWith("Bearer ")) {
+      return NextResponse.json(ApiResponseHelper.error("Authorization header required", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const token = authHeader.substring(7);
@@ -243,19 +227,13 @@ export async function GET(request: NextRequest) {
         const decodedToken = await auth.verifyIdToken(token);
         adminUserId = decodedToken.uid;
       } catch (authError) {
-        return NextResponse.json(
-          { error: 'Invalid or expired token' },
-          { status: 401 }
-        );
+        return NextResponse.json(ApiResponseHelper.error("Invalid or expired token", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
       }
     }
 
     // Check if user is admin
     if (!(await isAdmin(adminUserId))) {
-      return NextResponse.json(
-        { error: 'Admin access required' },
-        { status: 403 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Admin access required", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     const url = new URL(request.url);
@@ -311,10 +289,7 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('Get builder requests error:', error);
-    return NextResponse.json(
-      { error: 'Failed to get builder requests' },
-      { status: 500 }
-    );
+    logger.error('Get builder requests error', { error: error, endpoint: '/api/admin/builder-requests' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to get builder requests", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

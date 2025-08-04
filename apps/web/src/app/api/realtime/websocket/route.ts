@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { collection, doc, getDoc, setDoc, updateDoc, deleteDoc, query, where, getDocs, addDoc, onSnapshot } from 'firebase/firestore';
-import { db } from '@hive/core/server';
-import { getCurrentUser } from '@hive/auth-logic';
+// Use admin SDK methods since we're in an API route
+import { dbAdmin } from '@/lib/firebase-admin';
+import { getCurrentUser } from '@/lib/server-auth';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 // WebSocket connection interfaces
 interface WebSocketConnection {
@@ -75,7 +77,7 @@ export async function POST(request: NextRequest) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const body = await request.json();
@@ -142,8 +144,8 @@ export async function POST(request: NextRequest) {
       }
     });
   } catch (error) {
-    console.error('Error establishing WebSocket connection:', error);
-    return NextResponse.json({ error: 'Failed to establish connection' }, { status: 500 });
+    logger.error('Error establishing WebSocket connection', { error: error, endpoint: '/api/realtime/websocket' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to establish connection", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -152,7 +154,7 @@ export async function GET(request: NextRequest) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const { searchParams } = new URL(request.url);
@@ -162,8 +164,8 @@ export async function GET(request: NextRequest) {
     if (connectionId) {
       // Get specific connection
       const connectionDoc = await getDoc(doc(db, 'realtimeConnections', connectionId));
-      if (!connectionDoc.exists() || connectionDoc.data().userId !== user.uid) {
-        return NextResponse.json({ error: 'Connection not found' }, { status: 404 });
+      if (!connectionDoc.exists || connectionDoc.data().userId !== user.uid) {
+        return NextResponse.json(ApiResponseHelper.error("Connection not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
       }
 
       const connection = { id: connectionDoc.id, ...connectionDoc.data() };
@@ -180,8 +182,8 @@ export async function GET(request: NextRequest) {
       });
     } else {
       // Get all user connections
-      const connectionsQuery = query(
-        collection(db, 'realtimeConnections'),
+      const connectionsQuery = dbAdmin.collection(
+        dbAdmin.collection('realtimeConnections'),
         where('userId', '==', user.uid),
         where('status', '==', 'connected')
       );
@@ -202,8 +204,8 @@ export async function GET(request: NextRequest) {
       });
     }
   } catch (error) {
-    console.error('Error getting connection info:', error);
-    return NextResponse.json({ error: 'Failed to get connection info' }, { status: 500 });
+    logger.error('Error getting connection info', { error: error, endpoint: '/api/realtime/websocket' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to get connection info", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -212,20 +214,20 @@ export async function PUT(request: NextRequest) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const body = await request.json();
     const { connectionId, settings, channels, action = 'update' } = body;
 
     if (!connectionId) {
-      return NextResponse.json({ error: 'Connection ID required' }, { status: 400 });
+      return NextResponse.json(ApiResponseHelper.error("Connection ID required", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
     // Verify connection ownership
     const connectionDoc = await getDoc(doc(db, 'realtimeConnections', connectionId));
-    if (!connectionDoc.exists() || connectionDoc.data().userId !== user.uid) {
-      return NextResponse.json({ error: 'Connection not found or not owned' }, { status: 404 });
+    if (!connectionDoc.exists || connectionDoc.data().userId !== user.uid) {
+      return NextResponse.json(ApiResponseHelper.error("Connection not found or not owned", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     const updates: any = {
@@ -260,8 +262,8 @@ export async function PUT(request: NextRequest) {
       updatedAt: new Date().toISOString()
     });
   } catch (error) {
-    console.error('Error updating connection:', error);
-    return NextResponse.json({ error: 'Failed to update connection' }, { status: 500 });
+    logger.error('Error updating connection', { error: error, endpoint: '/api/realtime/websocket' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to update connection", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -270,7 +272,7 @@ export async function DELETE(request: NextRequest) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const { searchParams } = new URL(request.url);
@@ -279,8 +281,8 @@ export async function DELETE(request: NextRequest) {
 
     if (closeAll) {
       // Close all connections for user
-      const connectionsQuery = query(
-        collection(db, 'realtimeConnections'),
+      const connectionsQuery = dbAdmin.collection(
+        dbAdmin.collection('realtimeConnections'),
         where('userId', '==', user.uid)
       );
 
@@ -305,12 +307,12 @@ export async function DELETE(request: NextRequest) {
       const success = await closeConnection(connectionId, user.uid);
       
       if (!success) {
-        return NextResponse.json({ error: 'Connection not found or not owned' }, { status: 404 });
+        return NextResponse.json(ApiResponseHelper.error("Connection not found or not owned", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
       }
 
       // Check if user has other active connections
-      const remainingConnectionsQuery = query(
-        collection(db, 'realtimeConnections'),
+      const remainingConnectionsQuery = dbAdmin.collection(
+        dbAdmin.collection('realtimeConnections'),
         where('userId', '==', user.uid),
         where('status', '==', 'connected')
       );
@@ -327,11 +329,11 @@ export async function DELETE(request: NextRequest) {
         message: 'Connection closed'
       });
     } else {
-      return NextResponse.json({ error: 'Connection ID required' }, { status: 400 });
+      return NextResponse.json(ApiResponseHelper.error("Connection ID required", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
   } catch (error) {
-    console.error('Error closing connection:', error);
-    return NextResponse.json({ error: 'Failed to close connection' }, { status: 500 });
+    logger.error('Error closing connection', { error: error, endpoint: '/api/realtime/websocket' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to close connection", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -365,7 +367,7 @@ async function getDefaultChannels(userId: string, connectionType: string, spaceI
       }
       break;
 
-    case 'notifications':
+    case 'notifications': {
       channels.push('system:announcements');
       // Add space notification channels for user's spaces
       const userSpaces = await getUserSpaces(userId);
@@ -373,6 +375,7 @@ async function getDefaultChannels(userId: string, connectionType: string, spaceI
         channels.push(`space:${space}:notifications`);
       });
       break;
+    }
 
     case 'tool_updates':
       if (spaceId) {
@@ -398,8 +401,8 @@ async function getDefaultChannels(userId: string, connectionType: string, spaceI
 // Helper function to get user's spaces
 async function getUserSpaces(userId: string): Promise<string[]> {
   try {
-    const membershipsQuery = query(
-      collection(db, 'members'),
+    const membershipsQuery = dbAdmin.collection(
+      dbAdmin.collection('members'),
       where('userId', '==', userId),
       where('status', '==', 'active')
     );
@@ -407,7 +410,7 @@ async function getUserSpaces(userId: string): Promise<string[]> {
     const membershipsSnapshot = await getDocs(membershipsQuery);
     return membershipsSnapshot.docs.map(doc => doc.data().spaceId);
   } catch (error) {
-    console.error('Error getting user spaces:', error);
+    logger.error('Error getting user spaces', { error: error, endpoint: '/api/realtime/websocket' });
     return [];
   }
 }
@@ -438,7 +441,7 @@ async function subscribeToChannels(connectionId: string, userId: string, channel
 
     // Update connection with new channels
     const connectionDoc = await getDoc(doc(db, 'realtimeConnections', connectionId));
-    if (connectionDoc.exists()) {
+    if (connectionDoc.exists) {
       const currentChannels = connectionDoc.data().channels || [];
       const updatedChannels = [...new Set([...currentChannels, ...channels])];
       
@@ -447,7 +450,7 @@ async function subscribeToChannels(connectionId: string, userId: string, channel
       });
     }
   } catch (error) {
-    console.error('Error subscribing to channels:', error);
+    logger.error('Error subscribing to channels', { error: error, endpoint: '/api/realtime/websocket' });
   }
 }
 
@@ -464,10 +467,10 @@ async function getChannelPermissions(userId: string, channel: string): Promise<C
         canModerate: id === userId
       };
 
-    case 'space':
+    case 'space': {
       // Check space membership and role
-      const membershipQuery = query(
-        collection(db, 'members'),
+      const membershipQuery = dbAdmin.collection(
+        dbAdmin.collection('members'),
         where('userId', '==', userId),
         where('spaceId', '==', id),
         where('status', '==', 'active')
@@ -486,6 +489,7 @@ async function getChannelPermissions(userId: string, channel: string): Promise<C
         canWrite: ['builder', 'admin', 'moderator'].includes(role) || subtype !== 'announcements',
         canModerate: ['admin', 'moderator'].includes(role)
       };
+    }
 
     case 'system':
       return {
@@ -509,7 +513,7 @@ async function unsubscribeFromChannels(connectionId: string, userId: string, cha
 
     // Update connection channels
     const connectionDoc = await getDoc(doc(db, 'realtimeConnections', connectionId));
-    if (connectionDoc.exists()) {
+    if (connectionDoc.exists) {
       const currentChannels = connectionDoc.data().channels || [];
       const updatedChannels = currentChannels.filter((ch: string) => !channels.includes(ch));
       
@@ -518,7 +522,7 @@ async function unsubscribeFromChannels(connectionId: string, userId: string, cha
       });
     }
   } catch (error) {
-    console.error('Error unsubscribing from channels:', error);
+    logger.error('Error unsubscribing from channels', { error: error, endpoint: '/api/realtime/websocket' });
   }
 }
 
@@ -526,8 +530,8 @@ async function unsubscribeFromChannels(connectionId: string, userId: string, cha
 async function replaceChannelSubscriptions(connectionId: string, userId: string, channels: string[]): Promise<void> {
   try {
     // Get current subscriptions
-    const currentSubscriptionsQuery = query(
-      collection(db, 'channelSubscriptions'),
+    const currentSubscriptionsQuery = dbAdmin.collection(
+      dbAdmin.collection('channelSubscriptions'),
       where('connectionId', '==', connectionId)
     );
 
@@ -541,15 +545,15 @@ async function replaceChannelSubscriptions(connectionId: string, userId: string,
     // Add new subscriptions
     await subscribeToChannels(connectionId, userId, channels);
   } catch (error) {
-    console.error('Error replacing channel subscriptions:', error);
+    logger.error('Error replacing channel subscriptions', { error: error, endpoint: '/api/realtime/websocket' });
   }
 }
 
 // Helper function to get user channel subscriptions
 async function getUserChannelSubscriptions(userId: string): Promise<any[]> {
   try {
-    const subscriptionsQuery = query(
-      collection(db, 'channelSubscriptions'),
+    const subscriptionsQuery = dbAdmin.collection(
+      dbAdmin.collection('channelSubscriptions'),
       where('userId', '==', userId)
     );
 
@@ -559,7 +563,7 @@ async function getUserChannelSubscriptions(userId: string): Promise<any[]> {
       ...doc.data()
     }));
   } catch (error) {
-    console.error('Error getting channel subscriptions:', error);
+    logger.error('Error getting channel subscriptions', { error: error, endpoint: '/api/realtime/websocket' });
     return [];
   }
 }
@@ -583,7 +587,7 @@ async function updateUserPresence(userId: string, status: 'online' | 'offline' |
       await broadcastPresenceUpdate(spaceId, userId, status);
     }
   } catch (error) {
-    console.error('Error updating user presence:', error);
+    logger.error('Error updating user presence', { error: error, endpoint: '/api/realtime/websocket' });
   }
 }
 
@@ -614,9 +618,9 @@ async function broadcastPresenceUpdate(spaceId: string, userId: string, status: 
       }
     };
 
-    await addDoc(collection(db, 'realtimeMessages'), presenceMessage);
+    await addDoc(dbAdmin.collection('realtimeMessages'), presenceMessage);
   } catch (error) {
-    console.error('Error broadcasting presence update:', error);
+    logger.error('Error broadcasting presence update', { error: error, endpoint: '/api/realtime/websocket' });
   }
 }
 
@@ -625,7 +629,7 @@ async function closeConnection(connectionId: string, userId: string): Promise<bo
   try {
     const connectionDoc = await getDoc(doc(db, 'realtimeConnections', connectionId));
     
-    if (!connectionDoc.exists() || connectionDoc.data().userId !== userId) {
+    if (!connectionDoc.exists || connectionDoc.data().userId !== userId) {
       return false;
     }
 
@@ -636,8 +640,8 @@ async function closeConnection(connectionId: string, userId: string): Promise<bo
     });
 
     // Remove channel subscriptions
-    const subscriptionsQuery = query(
-      collection(db, 'channelSubscriptions'),
+    const subscriptionsQuery = dbAdmin.collection(
+      dbAdmin.collection('channelSubscriptions'),
       where('connectionId', '==', connectionId)
     );
 
@@ -648,7 +652,7 @@ async function closeConnection(connectionId: string, userId: string): Promise<bo
 
     return true;
   } catch (error) {
-    console.error('Error closing connection:', error);
+    logger.error('Error closing connection', { error: error, endpoint: '/api/realtime/websocket' });
     return false;
   }
 }
@@ -657,5 +661,5 @@ async function closeConnection(connectionId: string, userId: string): Promise<bo
 function startConnectionMonitoring(connectionId: string): void {
   // In a real implementation, this would set up monitoring
   // For now, we'll just log that monitoring started
-  console.log(`Started monitoring connection: ${connectionId}`);
+  logger.info('Started monitoring connection', { connectionId, endpoint: '/api/realtime/websocket' });
 }

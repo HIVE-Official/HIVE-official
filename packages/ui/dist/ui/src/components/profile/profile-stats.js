@@ -1,7 +1,7 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { HiveCard } from '../hive-card';
-import { HiveButton } from '../hive-button';
+import { HiveCard } from '../hive-card.js';
+import { HiveButton } from '../hive-button.js';
 import { TrendingUp, Users, Wrench, Zap, Activity, Loader2 } from 'lucide-react';
 export const ProfileStats = ({ stats, isLoading = false }) => {
     if (isLoading) {

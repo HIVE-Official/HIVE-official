@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "@hive/ui/src/components/framer-motion-proxy";
+import { useState, useEffect, useCallback } from "react";
+import { motion, AnimatePresence } from "@hive/ui";
 import { Wrench, Users, Crown, Star, CheckCircle, Loader2, Search, BookOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { HiveCard, HiveButton, HiveInput } from "@hive/ui";
-import { useAuth } from "@hive/auth-logic";
+import { useSession } from "@/hooks/use-session";
 import type { HiveOnboardingData } from "../hive-onboarding-wizard";
 
 interface HiveBuilderStepProps {
@@ -29,7 +29,7 @@ interface Space {
 }
 
 export function HiveBuilderStep({ data, updateData }: HiveBuilderStepProps) {
-  const { user } = useAuth();
+  const { user } = useSession();
   const [spaces, setSpaces] = useState<Space[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -38,7 +38,7 @@ export function HiveBuilderStep({ data, updateData }: HiveBuilderStepProps) {
   const [searchCache, setSearchCache] = useState<Record<string, Space[]>>({});
 
   // Fetch spaces only when user searches to limit reads - require minimum 2 characters
-  const fetchSpaces = async (searchQuery: string) => {
+  const fetchSpaces = useCallback(async (searchQuery: string) => {
     if (!searchQuery || searchQuery.length < 2) {
       setSpaces([]);
       return;
@@ -107,7 +107,7 @@ export function HiveBuilderStep({ data, updateData }: HiveBuilderStepProps) {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [searchCache]);
 
   // Debounced search effect to reduce Firebase reads
   useEffect(() => {
@@ -116,7 +116,7 @@ export function HiveBuilderStep({ data, updateData }: HiveBuilderStepProps) {
     }, 500); // 500ms debounce for good balance
 
     return () => clearTimeout(timeoutId);
-  }, [searchTerm]);
+  }, [searchTerm, fetchSpaces]);
 
   // Set initial loading state to false since we don't load anything initially
   useEffect(() => {

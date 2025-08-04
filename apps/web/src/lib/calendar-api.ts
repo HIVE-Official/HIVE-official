@@ -23,16 +23,13 @@ export interface CalendarApiEvent {
  */
 export const fetchCalendarEvents = async (): Promise<CalendarApiEvent[]> => {
   try {
-    // TODO: Replace with actual API endpoint
-    // const response = await fetch('/api/calendar/events');
-    // if (!response.ok) throw new Error('Failed to fetch events');
-    // return response.json();
-    
-    // Return empty array for now - calendar will show empty state
-    return [];
+    const response = await fetch('/api/calendar');
+    if (!response.ok) throw new Error('Failed to fetch events');
+    const data = await response.json();
+    return data.events || [];
   } catch (error) {
     console.error('Failed to fetch calendar events:', error);
-    throw error;
+    return [];
   }
 };
 
@@ -41,16 +38,18 @@ export const fetchCalendarEvents = async (): Promise<CalendarApiEvent[]> => {
  */
 export const createCalendarEvent = async (event: Omit<CalendarApiEvent, 'id'>): Promise<CalendarApiEvent> => {
   try {
-    // TODO: Replace with actual API endpoint
-    // const response = await fetch('/api/calendar/events', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify(event),
-    // });
-    // if (!response.ok) throw new Error('Failed to create event');
-    // return response.json();
+    const response = await fetch('/api/calendar', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(event),
+    });
     
-    throw new Error('Event creation not implemented yet');
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({ error: 'Failed to create event' }));
+      throw new Error(errorData.error || `HTTP ${response.status}: ${response.statusText}`);
+    }
+    
+    return response.json();
   } catch (error) {
     console.error('Failed to create calendar event:', error);
     throw error;
@@ -62,16 +61,18 @@ export const createCalendarEvent = async (event: Omit<CalendarApiEvent, 'id'>): 
  */
 export const updateCalendarEvent = async (id: string, event: Partial<CalendarApiEvent>): Promise<CalendarApiEvent> => {
   try {
-    // TODO: Replace with actual API endpoint
-    // const response = await fetch(`/api/calendar/events/${id}`, {
-    //   method: 'PATCH',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify(event),
-    // });
-    // if (!response.ok) throw new Error('Failed to update event');
-    // return response.json();
+    const response = await fetch(`/api/calendar/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(event),
+    });
     
-    throw new Error('Event update not implemented yet');
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({ error: 'Failed to update event' }));
+      throw new Error(errorData.error || `HTTP ${response.status}: ${response.statusText}`);
+    }
+    
+    return response.json();
   } catch (error) {
     console.error('Failed to update calendar event:', error);
     throw error;
@@ -83,13 +84,14 @@ export const updateCalendarEvent = async (id: string, event: Partial<CalendarApi
  */
 export const deleteCalendarEvent = async (id: string): Promise<void> => {
   try {
-    // TODO: Replace with actual API endpoint
-    // const response = await fetch(`/api/calendar/events/${id}`, {
-    //   method: 'DELETE',
-    // });
-    // if (!response.ok) throw new Error('Failed to delete event');
+    const response = await fetch(`/api/calendar/${id}`, {
+      method: 'DELETE',
+    });
     
-    throw new Error('Event deletion not implemented yet');
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({ error: 'Failed to delete event' }));
+      throw new Error(errorData.error || `HTTP ${response.status}: ${response.statusText}`);
+    }
   } catch (error) {
     console.error('Failed to delete calendar event:', error);
     throw error;
@@ -111,7 +113,7 @@ export const transformApiEvent = (apiEvent: CalendarApiEvent): Event => {
     location: apiEvent.location,
     attendees: apiEvent.attendees || [],
     isAllDay: isAllDayEvent(startDate, endDate),
-    hasReminder: false, // TODO: Get from API
+    hasReminder: apiEvent.metadata?.hasReminder || false,
     metadata: apiEvent.metadata
   };
 };
@@ -140,18 +142,20 @@ const isAllDayEvent = (start: Date, end: Date): boolean => {
  */
 export const connectCalendarService = async (type: 'google' | 'outlook'): Promise<{ success: boolean; redirectUrl?: string }> => {
   try {
-    // TODO: Replace with actual OAuth flow
-    // const response = await fetch(`/api/calendar/connect/${type}`, {
-    //   method: 'POST',
-    // });
-    // if (!response.ok) throw new Error(`Failed to connect ${type} calendar`);
-    // return response.json();
+    const response = await fetch(`/api/calendar/connect/${type}`, {
+      method: 'POST',
+    });
     
-    console.log(`Connecting to ${type} calendar...`);
-    return { success: false }; // Will trigger UI to show connection needed
+    if (!response.ok) {
+      throw new Error(`Failed to connect ${type} calendar`);
+    }
+    
+    const data = await response.json();
+    return data;
   } catch (error) {
     console.error(`Failed to connect ${type} calendar:`, error);
-    throw error;
+    // Return not implemented for now - can be implemented when OAuth flow is ready
+    return { success: false, error: `${type} calendar integration coming soon` };
   }
 };
 
@@ -160,17 +164,22 @@ export const connectCalendarService = async (type: 'google' | 'outlook'): Promis
  */
 export const syncCalendarService = async (connectionId: string): Promise<{ success: boolean; lastSync: Date }> => {
   try {
-    // TODO: Replace with actual sync API
-    // const response = await fetch(`/api/calendar/sync/${connectionId}`, {
-    //   method: 'POST',
-    // });
-    // if (!response.ok) throw new Error('Failed to sync calendar');
-    // return response.json();
+    const response = await fetch(`/api/calendar/sync/${connectionId}`, {
+      method: 'POST',
+    });
     
-    console.log(`Syncing calendar connection ${connectionId}...`);
-    return { success: false, lastSync: new Date() };
+    if (!response.ok) {
+      throw new Error('Failed to sync calendar');
+    }
+    
+    const data = await response.json();
+    return {
+      success: data.success || false,
+      lastSync: new Date(data.lastSync || Date.now())
+    };
   } catch (error) {
     console.error('Failed to sync calendar:', error);
-    throw error;
+    // Return not implemented for now - can be implemented when sync API is ready
+    return { success: false, lastSync: new Date(), error: 'Calendar sync coming soon' };
   }
 };

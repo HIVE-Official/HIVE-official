@@ -3,10 +3,10 @@ import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-run
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Lock, Plus, ArrowRight, Star, Users, Calendar, BookOpen, DollarSign, Target, Sparkles, Crown, ExternalLink } from 'lucide-react';
-import { BaseWidget } from '../bento-grid/base-widget';
-import { HiveButton } from '../../hive-button';
-import { HiveBadge } from '../../hive-badge';
-import { cn } from '../../../lib/utils';
+import { BaseWidget } from '../bento-grid/base-widget.js';
+import { HiveButton } from '../../hive-button.js';
+import { HiveBadge } from '../../hive-badge.js';
+import { cn } from '../../../lib/utils.js';
 const PREVIEW_TOOLS = [
     {
         id: 'expense-tracker',

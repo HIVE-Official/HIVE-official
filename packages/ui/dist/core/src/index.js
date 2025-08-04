@@ -7,6 +7,7 @@ export * from "./domain/firestore/member";
 export * from "./domain/firestore/post";
 export * from "./domain/firestore/space";
 export * from "./domain/firestore/user";
+export { getProfileCompleteness, DEFAULT_PRIVACY_SETTINGS, DEFAULT_BUILDER_INFO, isValidHandle as isValidProfileHandle, isValidEmail, getDisplayName, getProfileUrl, isProfilePublic, canViewProfile } from "./domain/profile/profile";
 // Domain types - Auth
 export * from "./domain/auth/emailLink";
 // Domain types - Analytics

@@ -7,17 +7,12 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 // UI Components
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@hive/ui";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@hive/ui";
+import { Alert, AlertDescription } from "@/components/temp-stubs";
 import { Input } from "@hive/ui";
 import { Label } from "@hive/ui";
 import { Button } from "@hive/ui";
-import { Alert, AlertDescription } from "@hive/ui";
+
 
 // Icons
 import { Loader2, ArrowLeft, CheckCircle } from "lucide-react";

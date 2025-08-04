@@ -3,7 +3,8 @@
 import React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../lib/utils';
-import { Camera, Crown, Shield, Eye, EyeOff } from 'lucide-react';
+import { Camera, Crown, Shield, Eye, EyeOff, Upload } from 'lucide-react';
+import Image from 'next/image';
 
 const profileAvatarVariants = cva(
   "relative flex-shrink-0 bg-hive-surface-elevated border-hive-border-subtle overflow-hidden",
@@ -113,6 +114,7 @@ export interface ProfileAvatarProps
   showBadges?: boolean;
   editable?: boolean;
   onEdit?: () => void;
+  onUpload?: (file: File) => void;
   loading?: boolean;
 }
 
@@ -128,6 +130,7 @@ export function ProfileAvatar({
   showBadges = true,
   editable = false,
   onEdit,
+  onUpload,
   loading = false,
   size = "md",
   shape = "circle",
@@ -136,6 +139,7 @@ export function ProfileAvatar({
   className,
   ...props
 }: ProfileAvatarProps) {
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
   
   // Auto-determine border based on user status
   const determinedBorder = React.useMemo(() => {
@@ -187,6 +191,44 @@ export function ProfileAvatar({
     return sizes[size];
   }, [size]);
 
+  // Handle file upload
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file && onUpload) {
+      onUpload(file);
+    }
+    // Reset input value so same file can be selected again
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  // Handle upload trigger
+  const triggerUpload = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    fileInputRef.current?.click();
+  };
+
+  // Handle click
+  const handleClick = () => {
+    if (onEdit) {
+      onEdit();
+    }
+  };
+
+  // Get avatar size for Next.js Image
+  const getAvatarSize = () => {
+    const sizeMap = {
+      xs: 32,
+      sm: 48,
+      md: 64,
+      lg: 80,
+      xl: 96,
+      xxl: 128
+    };
+    return sizeMap[size];
+  };
+
   return (
     <div
       className={cn(
@@ -195,21 +237,23 @@ export function ProfileAvatar({
         editable && "hover:brightness-110 hover:scale-105",
         className
       )}
-      onClick={editable ? onEdit : undefined}
+      onClick={editable ? handleClick : undefined}
       {...props}
     >
       {/* Avatar Image or Initials */}
       {loading ? (
         <div className="w-full h-full bg-hive-surface-elevated animate-pulse" />
       ) : src ? (
-        <img
+        <Image
           src={src}
           alt={alt || `${name}'s profile`}
+          width={getAvatarSize()}
+          height={getAvatarSize()}
           className="w-full h-full object-cover"
-          onError={(e) => {
-            // Fallback to initials if image fails
-            const target = e.target as HTMLImageElement;
-            target.style.display = 'none';
+          loading="lazy"
+          onError={() => {
+            // Image loading error will be handled by Next.js
+            console.warn(`Failed to load avatar image: ${src}`);
           }}
         />
       ) : (
@@ -262,9 +306,38 @@ export function ProfileAvatar({
 
       {/* Edit Overlay */}
       {editable && (
-        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-          <Camera className={cn("text-white", iconSize)} />
-        </div>
+        <>
+          <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+            <div className="flex flex-col items-center space-y-1 text-white">
+              <Camera className={cn("text-white", iconSize)} />
+              <span className="text-xs font-medium hidden sm:block">
+                {onUpload ? 'Upload' : 'Edit'}
+              </span>
+            </div>
+          </div>
+          
+          {onUpload && (
+            <>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                className="hidden"
+                aria-label="Upload profile photo"
+              />
+              
+              {/* Upload Button (for touch devices) */}
+              <button
+                onClick={triggerUpload}
+                className="absolute -bottom-2 -right-2 w-6 h-6 bg-[var(--hive-brand-primary)] rounded-full border-2 border-[var(--hive-background-primary)] flex items-center justify-center hover:scale-110 transition-transform sm:hidden"
+                aria-label="Upload profile photo"
+              >
+                <Upload className="w-3 h-3 text-[var(--hive-background-primary)]" />
+              </button>
+            </>
+          )}
+        </>
       )}
 
       {/* Ghost Mode Overlay */}

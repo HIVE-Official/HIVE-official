@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { collection, doc, getDoc, query, where, getDocs, orderBy, limit as fbLimit, startAfter, addDoc } from 'firebase/firestore';
-import { db } from '@hive/core/server';
-import { getCurrentUser } from '@hive/auth-logic';
+// Use admin SDK methods since we're in an API route
+import { dbAdmin } from '@/lib/firebase-admin';
+import { getCurrentUser } from '@/lib/server-auth';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 // Enhanced feed algorithm interfaces
 interface RelevanceFactors {
@@ -65,7 +67,7 @@ export async function POST(request: NextRequest) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const body = await request.json();
@@ -136,8 +138,8 @@ export async function POST(request: NextRequest) {
       }
     });
   } catch (error) {
-    console.error('Error in enhanced feed algorithm:', error);
-    return NextResponse.json({ error: 'Failed to generate feed' }, { status: 500 });
+    logger.error('Error in enhanced feed algorithm', { error: error, endpoint: '/api/feed/algorithm' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to generate feed", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -146,7 +148,7 @@ export async function GET(request: NextRequest) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const { searchParams } = new URL(request.url);
@@ -166,17 +168,17 @@ export async function GET(request: NextRequest) {
       algorithmVersion: '2.0'
     });
   } catch (error) {
-    console.error('Error fetching algorithm config:', error);
-    return NextResponse.json({ error: 'Failed to fetch algorithm config' }, { status: 500 });
+    logger.error('Error fetching algorithm config', { error: error, endpoint: '/api/feed/algorithm' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to fetch algorithm config", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
 // Helper function to get user's algorithm configuration
 async function getUserAlgorithmConfig(userId: string): Promise<FeedAlgorithmConfig> {
   try {
-    const configDoc = await getDoc(doc(db, 'userFeedConfigs', userId));
+    const configDoc = await dbAdmin.collection('userFeedConfigs').doc(userId).get();
     
-    if (configDoc.exists()) {
+    if (configDoc.exists) {
       return configDoc.data() as FeedAlgorithmConfig;
     }
 
@@ -196,7 +198,7 @@ async function getUserAlgorithmConfig(userId: string): Promise<FeedAlgorithmConf
     };
 
     // Save default config
-    await setDoc(doc(db, 'userFeedConfigs', userId), {
+    await dbAdmin.collection('userFeedConfigs').doc(userId).set({
       ...defaultConfig,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
@@ -204,7 +206,7 @@ async function getUserAlgorithmConfig(userId: string): Promise<FeedAlgorithmConf
 
     return defaultConfig;
   } catch (error) {
-    console.error('Error getting algorithm config:', error);
+    logger.error('Error getting algorithm config', { error: error, endpoint: '/api/feed/algorithm' });
     throw error;
   }
 }
@@ -212,21 +214,18 @@ async function getUserAlgorithmConfig(userId: string): Promise<FeedAlgorithmConf
 // Helper function to get user's space memberships with engagement
 async function getUserSpaceMemberships(userId: string): Promise<any[]> {
   try {
-    const membershipsQuery = query(
-      collection(db, 'members'),
-      where('userId', '==', userId),
-      where('status', '==', 'active')
-    );
-
-    const membershipsSnapshot = await getDocs(membershipsQuery);
+    const membershipsSnapshot = await dbAdmin.collection('members')
+      .where('userId', '==', userId)
+      .where('status', '==', 'active')
+      .get();
     const memberships = [];
 
     for (const memberDoc of membershipsSnapshot.docs) {
       const memberData = memberDoc.data();
       
       // Get space details
-      const spaceDoc = await getDoc(doc(db, 'spaces', memberData.spaceId));
-      const spaceData = spaceDoc.exists() ? spaceDoc.data() : {};
+      const spaceDoc = await dbAdmin.collection('spaces').doc(memberData.spaceId).get();
+      const spaceData = spaceDoc.exists ? spaceDoc.data() || {} : {};
 
       // Calculate engagement score
       const engagementScore = await calculateSpaceEngagementScore(userId, memberData.spaceId);
@@ -242,7 +241,7 @@ async function getUserSpaceMemberships(userId: string): Promise<any[]> {
 
     return memberships.sort((a, b) => b.engagementScore - a.engagementScore);
   } catch (error) {
-    console.error('Error getting user memberships:', error);
+    logger.error('Error getting user memberships', { error: error, endpoint: '/api/feed/algorithm' });
     return [];
   }
 }
@@ -254,14 +253,11 @@ async function calculateSpaceEngagementScore(userId: string, spaceId: string): P
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
     
-    const activityQuery = query(
-      collection(db, 'activityEvents'),
-      where('userId', '==', userId),
-      where('spaceId', '==', spaceId),
-      where('date', '>=', thirtyDaysAgo.toISOString().split('T')[0])
-    );
-
-    const activitySnapshot = await getDocs(activityQuery);
+    const activitySnapshot = await dbAdmin.collection('activityEvents')
+      .where('userId', '==', userId)
+      .where('spaceId', '==', spaceId)
+      .where('date', '>=', thirtyDaysAgo.toISOString().split('T')[0])
+      .get();
     const activities = activitySnapshot.docs.map(doc => doc.data());
 
     let score = 20; // Base score
@@ -288,7 +284,7 @@ async function calculateSpaceEngagementScore(userId: string, spaceId: string): P
 
     return Math.min(100, score);
   } catch (error) {
-    console.error('Error calculating engagement score:', error);
+    logger.error('Error calculating engagement score', { error: error, endpoint: '/api/feed/algorithm' });
     return 20; // Default base score
   }
 }
@@ -365,7 +361,7 @@ async function getEnhancedFeedContent(params: {
 
     return feedItems;
   } catch (error) {
-    console.error('Error getting enhanced feed content:', error);
+    logger.error('Error getting enhanced feed content', { error: error, endpoint: '/api/feed/algorithm' });
     return [];
   }
 }
@@ -373,22 +369,19 @@ async function getEnhancedFeedContent(params: {
 // Helper function to get space posts with quality filtering
 async function getSpacePostsWithQuality(spaceId: string, limit: number, cutoffTime: Date): Promise<any[]> {
   try {
-    const postsQuery = query(
-      collection(db, 'posts'),
-      where('spaceId', '==', spaceId),
-      where('status', '==', 'published'),
-      where('createdAt', '>=', cutoffTime.toISOString()),
-      orderBy('createdAt', 'desc'),
-      fbLimit(limit)
-    );
-
-    const postsSnapshot = await getDocs(postsQuery);
+    const postsSnapshot = await dbAdmin.collection('posts')
+      .where('spaceId', '==', spaceId)
+      .where('status', '==', 'published')
+      .where('createdAt', '>=', cutoffTime.toISOString())
+      .orderBy('createdAt', 'desc')
+      .limit(limit)
+      .get();
     return postsSnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
     }));
   } catch (error) {
-    console.error('Error getting space posts:', error);
+    logger.error('Error getting space posts', { error: error, endpoint: '/api/feed/algorithm' });
     return [];
   }
 }
@@ -482,10 +475,12 @@ function calculateContentQuality(post: any): number {
 
 async function getToolInteractionValue(toolId: string): Promise<number> {
   try {
-    const toolDoc = await getDoc(doc(db, 'tools', toolId));
-    if (!toolDoc.exists()) return 50;
+    const toolDoc = await dbAdmin.collection('tools').doc(toolId).get();
+    if (!toolDoc.exists) return 50;
 
     const tool = toolDoc.data();
+    if (!tool) return 50;
+    
     let value = 50;
 
     // More complex tools have higher value
@@ -505,13 +500,10 @@ async function getToolInteractionValue(toolId: string): Promise<number> {
 async function getCreatorInfluence(authorId: string, spaceId: string): Promise<number> {
   try {
     // Get author's role and activity in space
-    const memberQuery = query(
-      collection(db, 'members'),
-      where('userId', '==', authorId),
-      where('spaceId', '==', spaceId)
-    );
-
-    const memberSnapshot = await getDocs(memberQuery);
+    const memberSnapshot = await dbAdmin.collection('members')
+      .where('userId', '==', authorId)
+      .where('spaceId', '==', spaceId)
+      .get();
     if (memberSnapshot.empty) return 30;
 
     const memberData = memberSnapshot.docs[0].data();
@@ -641,14 +633,14 @@ function generateQualityMetrics(items: EnhancedFeedItem[]): any {
 // Helper function to log algorithm metrics
 async function logAlgorithmMetrics(userId: string, metrics: any): Promise<void> {
   try {
-    await addDoc(collection(db, 'algorithmMetrics'), {
+    await dbAdmin.collection('algorithmMetrics').add({
       userId,
       ...metrics,
       timestamp: new Date().toISOString(),
       date: new Date().toISOString().split('T')[0]
     });
   } catch (error) {
-    console.error('Error logging algorithm metrics:', error);
+    logger.error('Error logging algorithm metrics', { error: error, endpoint: '/api/feed/algorithm' });
   }
 }
 
@@ -658,15 +650,12 @@ async function getAlgorithmMetrics(userId: string): Promise<any> {
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
     
-    const metricsQuery = query(
-      collection(db, 'algorithmMetrics'),
-      where('userId', '==', userId),
-      where('date', '>=', sevenDaysAgo.toISOString().split('T')[0]),
-      orderBy('timestamp', 'desc'),
-      fbLimit(50)
-    );
-
-    const metricsSnapshot = await getDocs(metricsQuery);
+    const metricsSnapshot = await dbAdmin.collection('algorithmMetrics')
+      .where('userId', '==', userId)
+      .where('date', '>=', sevenDaysAgo.toISOString().split('T')[0])
+      .orderBy('timestamp', 'desc')
+      .limit(50)
+      .get();
     const metrics = metricsSnapshot.docs.map(doc => doc.data());
 
     if (metrics.length === 0) return null;
@@ -686,7 +675,7 @@ async function getAlgorithmMetrics(userId: string): Promise<any> {
       lastUpdated: metrics[0].timestamp
     };
   } catch (error) {
-    console.error('Error getting algorithm metrics:', error);
+    logger.error('Error getting algorithm metrics', { error: error, endpoint: '/api/feed/algorithm' });
     return null;
   }
 }

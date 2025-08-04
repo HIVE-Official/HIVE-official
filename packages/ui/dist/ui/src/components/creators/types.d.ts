@@ -277,7 +277,7 @@ export interface DeploymentSettings {
 }
 export interface ElementPickerProps {
     elements: Element[];
-    selectedCategory?: ElementCategory;
+    selectedCategory?: ElementCategory | 'all';
     onElementSelect: (element: Element) => void;
     searchQuery?: string;
 }

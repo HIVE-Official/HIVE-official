@@ -80,7 +80,7 @@ export interface BuilderAnnouncement {
 export class FeedAggregationEngine {
   private batchSize = 5; // Firebase limitation for concurrent queries
   
-  constructor(private userId: string, private userSpaceIds: string[]) {}
+  constructor(private _userId: string, private _userSpaceIds: string[]) {}
 
   /**
    * Aggregate content from all sources for user's feed
@@ -127,11 +127,11 @@ export class FeedAggregationEngine {
   /**
    * Aggregate posts from user's spaces
    */
-  private async aggregateSpacePosts(limit: number): Promise<AggregatedFeedItem[]> {
+  private async aggregateSpacePosts(_limit: number): Promise<AggregatedFeedItem[]> {
     const items: AggregatedFeedItem[] = [];
     
     // Process spaces in batches due to Firebase limitations
-    const spaceChunks = this.chunkArray(this.userSpaceIds, this.batchSize);
+    const spaceChunks = this.chunkArray(this._userSpaceIds, this.batchSize);
     
     for (const spaceChunk of spaceChunks) {
       const chunkPromises = spaceChunk.map(spaceId => this.getSpacePosts(spaceId, 10));
@@ -174,7 +174,7 @@ export class FeedAggregationEngine {
     try {
       // Query tool interactions from user's spaces that have shareable content
       const interactionsQuery = dbAdmin.collectionGroup('tool_interactions')
-        .where('spaceId', 'in', this.userSpaceIds.slice(0, 10)) // Firebase 'in' limit
+        .where('spaceId', 'in', this._userSpaceIds.slice(0, 10)) // Firebase 'in' limit
         .where('shareableContent', '!=', null)
         .orderBy('shareableContent')
         .orderBy('createdAt', 'desc')
@@ -276,12 +276,12 @@ export class FeedAggregationEngine {
   /**
    * Aggregate builder announcements from user's spaces
    */
-  private async aggregateBuilderAnnouncements(limit: number): Promise<AggregatedFeedItem[]> {
+  private async aggregateBuilderAnnouncements(_limit: number): Promise<AggregatedFeedItem[]> {
     const items: AggregatedFeedItem[] = [];
     
     try {
       // Process spaces in batches
-      const spaceChunks = this.chunkArray(this.userSpaceIds, this.batchSize);
+      const spaceChunks = this.chunkArray(this._userSpaceIds, this.batchSize);
       
       for (const spaceChunk of spaceChunks) {
         const chunkPromises = spaceChunk.map(spaceId => 

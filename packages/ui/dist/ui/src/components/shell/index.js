@@ -1,15 +1,15 @@
 // Core Shell Components
-export { AppShell } from './app-shell';
-export { EnhancedAppShell } from './enhanced-app-shell';
-export { NavigationHeader } from './navigation-header';
-export { NavigationSidebar } from './navigation-sidebar';
-export { UserMenu } from './user-menu';
-export { BreadcrumbNavigation, SmartBreadcrumbNavigation, generateBreadcrumbsFromPath } from './breadcrumb-navigation';
-export { CommandPalette } from './command-palette';
-export { NotificationCenter } from './notification-center';
-export { PageContainer as ShellPageContainer } from './page-container';
-export { ShellProvider, useShell } from './shell-provider';
-export { NotificationProvider, useNotifications } from './notification-service';
+export { AppShell } from './app-shell.js';
+export { EnhancedAppShell } from './enhanced-app-shell.js';
+export { NavigationHeader } from './navigation-header.js';
+export { NavigationSidebar } from './navigation-sidebar.js';
+export { UserMenu } from './user-menu.js';
+export { BreadcrumbNavigation, SmartBreadcrumbNavigation, generateBreadcrumbsFromPath } from './breadcrumb-navigation.js';
+export { CommandPalette } from './command-palette.js';
+export { NotificationCenter } from './notification-center.js';
+export { PageContainer as ShellPageContainer, PageContainer } from './page-container.js';
+export { ShellProvider, useShell } from './shell-provider.js';
+export { NotificationProvider, useNotifications } from './notification-service.js';
 // HIVE Platform Page Layouts
-export { ProfileLayout, SpaceLayout, FeedLayout, HiveLabLayout, RitualLayout, SplitLayout, ModalLayout } from './page-layouts';
+export { ProfileLayout, SpaceLayout, FeedLayout, HiveLabLayout, RitualLayout, SplitLayout, ModalLayout } from './page-layouts.js';
 //# sourceMappingURL=index.js.map

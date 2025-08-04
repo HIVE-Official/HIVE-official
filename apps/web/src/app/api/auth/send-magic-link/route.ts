@@ -11,6 +11,8 @@ import { currentEnvironment } from "@/lib/env";
 import { validateWithSecurity, ApiSchemas } from "@/lib/secure-input-validation";
 import { enforceRateLimit } from "@/lib/secure-rate-limiter";
 import { isDevUser, validateDevSchool, createDevSession } from "@/lib/dev-auth-helper";
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 /**
  * PRODUCTION-SAFE magic link sending
@@ -60,7 +62,7 @@ async function validateSchool(schoolId: string): Promise<SchoolData | null> {
       active: data.active !== false
     };
   } catch (error) {
-    console.error('School validation failed:', error);
+    logger.error('School validation failed', { error: error, endpoint: '/api/auth/send-magic-link' });
     return null;
   }
 }
@@ -95,16 +97,13 @@ export async function POST(request: NextRequest) {
     });
 
     if (!validationResult.success || validationResult.securityLevel === 'dangerous') {
-      await auditAuthEvent('security_threat', request, {
+      await auditAuthEvent('suspicious', request, {
         operation: 'send_magic_link',
         threats: validationResult.errors?.map(e => e.code).join(',') || 'unknown',
         securityLevel: validationResult.securityLevel
       });
       
-      return NextResponse.json(
-        { error: "Request validation failed" },
-        { status: 400 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Request validation failed", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
     const { email, schoolId } = validationResult.data!;
@@ -114,11 +113,11 @@ export async function POST(request: NextRequest) {
     const isDevelopmentUser = isDevUser(email) && validateDevSchool(schoolId);
     const isLocalEnvironment = currentEnvironment === 'development' || !process.env.VERCEL;
     
-    console.log(`🔍 Auth Debug - Environment: ${currentEnvironment}, Email: ${email}, SchoolId: ${schoolId}`);
-    console.log(`🔍 Auth Debug - isDevelopmentUser: ${isDevelopmentUser}, isLocalEnvironment: ${isLocalEnvironment}`);
+    logger.info('🔍 Auth Debug - Environment: , Email:, SchoolId', {  email, schoolId, endpoint: '/api/auth/send-magic-link'  });
+    logger.info('🔍 Auth Debug - isDevelopmentUser:, isLocalEnvironment', { isDevelopmentUser, isLocalEnvironment, endpoint: '/api/auth/send-magic-link' });
     
     if (isDevelopmentUser && isLocalEnvironment) {
-      console.log('🔧 Development user detected, bypassing school validation');
+      logger.info('🔧 Development user detected, bypassing school validation', { endpoint: '/api/auth/send-magic-link' });
       
       // Create development session directly
       const devSession = await createDevSession(email, request);
@@ -145,7 +144,7 @@ export async function POST(request: NextRequest) {
       } else {
         return NextResponse.json(
           { error: devSession.error || "Development authentication failed" },
-          { status: 400 }
+          { status: HttpStatus.BAD_REQUEST }
         );
       }
     }
@@ -172,10 +171,7 @@ export async function POST(request: NextRequest) {
         error: 'invalid_school'
       });
       
-      return NextResponse.json(
-        { error: "School not found or inactive" },
-        { status: 404 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("School not found or inactive", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
     
     // SECURITY: Validate email domain matches school domain
@@ -187,7 +183,7 @@ export async function POST(request: NextRequest) {
       
       return NextResponse.json(
         { error: `Email must be from ${schoolData.domain} domain` },
-        { status: 400 }
+        { status: HttpStatus.BAD_REQUEST }
       );
     }
     
@@ -211,7 +207,7 @@ export async function POST(request: NextRequest) {
         });
         
         // Don't block but log for monitoring
-        console.warn(`Non-educational domain attempted: ${emailDomain}`);
+        logger.warn('Non-educational domain attempted', { emailDomain, endpoint: '/api/auth/send-magic-link' });
       }
     }
     
@@ -224,32 +220,29 @@ export async function POST(request: NextRequest) {
     try {
       magicLink = await auth.generateSignInWithEmailLink(email, actionCodeSettings);
     } catch (firebaseError: any) {
-      console.error('Firebase magic link generation failed:', firebaseError);
+      logger.error('Firebase magic link generation failed', { error: firebaseError, endpoint: '/api/auth/send-magic-link' });
       
       // For development: if Dynamic Links is not configured, create a simple fallback
       if (currentEnvironment === 'development' && 
           firebaseError.message?.includes('DYNAMIC_LINK_NOT_ACTIVATED')) {
         
-        console.log('🔧 Development mode: Using fallback magic link since Dynamic Links not configured');
+        logger.info('🔧 Development mode: Using fallback magic link since Dynamic Links not configured', { endpoint: '/api/auth/send-magic-link' });
         
         // Create a simple development magic link using custom token
         try {
           const customToken = await auth.createCustomToken(email.replace('@', '_at_').replace('.', '_dot_'));
           magicLink = `${process.env.NEXT_PUBLIC_APP_URL}/auth/verify?token=${customToken}&schoolId=${schoolId}&email=${encodeURIComponent(email)}`;
           
-          console.log('✅ Development magic link created successfully');
+          logger.info('✅ Development magic link created successfully', { endpoint: '/api/auth/send-magic-link' });
         } catch (tokenError) {
-          console.error('Failed to create development token:', tokenError);
+          logger.error('Failed to create development token', { error: tokenError, endpoint: '/api/auth/send-magic-link' });
           
           await auditAuthEvent('failure', request, {
             operation: 'send_magic_link',
             error: 'firebase_generation_failed'
           });
           
-          return NextResponse.json(
-            { error: "Unable to generate magic link" },
-            { status: 500 }
-          );
+          return NextResponse.json(ApiResponseHelper.error("Unable to generate magic link", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
         }
       } else {
         await auditAuthEvent('failure', request, {
@@ -258,10 +251,7 @@ export async function POST(request: NextRequest) {
         });
         
         // Don't expose Firebase error details
-        return NextResponse.json(
-          { error: "Unable to generate magic link" },
-          { status: 500 }
-        );
+        return NextResponse.json(ApiResponseHelper.error("Unable to generate magic link", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
       }
     }
     
@@ -270,20 +260,16 @@ export async function POST(request: NextRequest) {
       await sendMagicLinkEmail({
         to: email,
         magicLink,
-        schoolName: schoolData.name,
-      });
+        schoolName: schoolData.name });
     } catch (emailError) {
       await auditAuthEvent('failure', request, {
         operation: 'send_magic_link',
         error: 'email_sending_failed'
       });
       
-      console.error('Email sending failed:', emailError);
+      logger.error('Email sending failed', { error: emailError, endpoint: '/api/auth/send-magic-link' });
       
-      return NextResponse.json(
-        { error: "Unable to send email" },
-        { status: 500 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Unable to send email", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
     }
     
     // Log successful operation
@@ -293,8 +279,7 @@ export async function POST(request: NextRequest) {
     
     return NextResponse.json({
       success: true,
-      message: "Magic link sent to your email address",
-    });
+      message: "Magic link sent to your email address" });
     
   } catch (error) {
     await auditAuthEvent('failure', request, {

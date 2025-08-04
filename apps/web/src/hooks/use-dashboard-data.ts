@@ -187,9 +187,9 @@ export interface DashboardState {
 export function useDashboardData(): DashboardState & {
   refreshData: () => Promise<void>;
   toggleLiveMode: () => void;
-  markNotificationRead: (notificationId: string) => void;
-  updateSpaceFavorite: (spaceId: string, isFavorite: boolean) => void;
-  updateToolFavorite: (toolId: string, isFavorite: boolean) => void;
+  markNotificationRead: (_notificationId: string) => void;
+  updateSpaceFavorite: (_spaceId: string, _isFavorite: boolean) => void;
+  updateToolFavorite: (_toolId: string, _isFavorite: boolean) => void;
 } {
   const { user, isAuthenticated } = useSession();
   const [state, setState] = useState<DashboardState>({
@@ -538,7 +538,7 @@ export function useDashboardData(): DashboardState & {
   }, []);
 
   // Mark notification as read
-  const markNotificationRead = useCallback((notificationId: string) => {
+  const markNotificationRead = useCallback((_notificationId: string) => {
     setState(prev => {
       if (!prev.data) return prev;
       
@@ -547,7 +547,7 @@ export function useDashboardData(): DashboardState & {
         data: {
           ...prev.data,
           notifications: prev.data.notifications.map(n =>
-            n.id === notificationId ? { ...n, isRead: true } : n
+            n.id === _notificationId ? { ...n, isRead: true } : n
           )
         }
       };
@@ -555,12 +555,12 @@ export function useDashboardData(): DashboardState & {
   }, []);
 
   // Update space favorite status
-  const updateSpaceFavorite = useCallback((spaceId: string, isFavorite: boolean) => {
+  const updateSpaceFavorite = useCallback((_spaceId: string, _isFavorite: boolean) => {
     setState(prev => {
       if (!prev.data) return prev;
       
       const updateSpaceInArray = (spaces: DashboardSpace[]) =>
-        spaces.map(s => s.id === spaceId ? { ...s, isFavorite } : s);
+        spaces.map(s => s.id === _spaceId ? { ...s, isFavorite: _isFavorite } : s);
       
       return {
         ...prev,
@@ -569,7 +569,7 @@ export function useDashboardData(): DashboardState & {
           spaces: {
             ...prev.data.spaces,
             active: updateSpaceInArray(prev.data.spaces.active),
-            favorites: prev.data.spaces.favorites.filter(s => s.id !== spaceId || isFavorite),
+            favorites: prev.data.spaces.favorites.filter(s => s.id !== _spaceId || _isFavorite),
             recent: updateSpaceInArray(prev.data.spaces.recent),
             created: updateSpaceInArray(prev.data.spaces.created)
           }
@@ -579,12 +579,12 @@ export function useDashboardData(): DashboardState & {
   }, []);
 
   // Update tool favorite status
-  const updateToolFavorite = useCallback((toolId: string, isFavorite: boolean) => {
+  const updateToolFavorite = useCallback((_toolId: string, _isFavorite: boolean) => {
     setState(prev => {
       if (!prev.data) return prev;
       
       const updateToolInArray = (tools: DashboardTool[]) =>
-        tools.map(t => t.id === toolId ? { ...t, isFavorite } : t);
+        tools.map(t => t.id === _toolId ? { ...t, isFavorite: _isFavorite } : t);
       
       return {
         ...prev,
@@ -593,7 +593,7 @@ export function useDashboardData(): DashboardState & {
           tools: {
             ...prev.data.tools,
             owned: updateToolInArray(prev.data.tools.owned),
-            favorites: prev.data.tools.favorites.filter(t => t.id !== toolId || isFavorite),
+            favorites: prev.data.tools.favorites.filter(t => t.id !== _toolId || _isFavorite),
             recent: updateToolInArray(prev.data.tools.recent),
             recommended: updateToolInArray(prev.data.tools.recommended)
           }
