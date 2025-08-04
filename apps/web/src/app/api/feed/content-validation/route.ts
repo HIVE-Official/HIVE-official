@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { collection, doc, getDoc, query, where, getDocs, addDoc, updateDoc, orderBy, limit as fbLimit } from 'firebase/firestore';
-import { dbAdmin } from '@hive/core/server';
+import { collection, doc, getDoc, query, where, getDocs, addDoc, updateDoc, orderBy, limit as fbLimit } from 'firebase-admin/firestore';
+import { dbAdmin } from '@/lib/firebase-admin';
 import { getCurrentUser } from '@/lib/server-auth';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
@@ -166,7 +166,7 @@ async function getContentEnforcementPolicy(spaceId?: string, enforcementLevel: s
   try {
     if (spaceId) {
       // Check for space-specific policy
-      const policyDoc = await getDoc(doc(db, 'contentPolicies', spaceId));
+      const policyDoc = await getDoc(doc(dbAdmin, 'contentPolicies', spaceId));
       if (policyDoc.exists) {
         return policyDoc.data() as ContentEnforcementPolicy;
       }
@@ -202,8 +202,8 @@ async function validateContentItem(
 
       // Get tool metadata
       if (contentItem.toolId) {
-        const toolDoc = await dbAdmin.collection('tools').doc(contentItem.toolId).get();
-        if (toolDoc.exists) {
+        const toolDoc = await getDoc(doc(dbAdmin, 'tools', contentItem.toolId));
+        if (toolDoc.exists()) {
           const tool = toolDoc.data();
           toolMetadata = {
             toolId: contentItem.toolId,
@@ -420,7 +420,7 @@ function generateContentAnalytics(validationResults: ContentValidationResult[]):
 // Helper function to log validation metrics
 async function logValidationMetrics(userId: string, spaceId: string | undefined, metrics: any): Promise<void> {
   try {
-    await addDoc(dbAdmin.collection('validationMetrics'), {
+    await addDoc(collection(dbAdmin, 'validationMetrics'), {
       userId,
       spaceId,
       ...metrics,
@@ -439,17 +439,17 @@ async function getContentValidationAnalytics(
   includeDetails: boolean
 ): Promise<FeedContentAnalytics> {
   try {
-    let metricsQuery = dbAdmin.collection(
-      dbAdmin.collection('validationMetrics'),
+    let metricsQuery = query(
+      collection(dbAdmin, 'validationMetrics'),
       where('date', '>=', startDate.toISOString().split('T')[0]),
       orderBy('timestamp', 'desc')
     );
 
     if (spaceId) {
-      metricsQuery = dbAdmin.collection(metricsQuery, where('spaceId', '==', spaceId));
+      metricsQuery = query(metricsQuery, where('spaceId', '==', spaceId));
     }
 
-    const metricsSnapshot = await getDocs(dbAdmin.collection(metricsQuery, fbLimit(100)));
+    const metricsSnapshot = await getDocs(query(metricsQuery, fbLimit(100)));
     const metrics = metricsSnapshot.docs.map(doc => doc.data());
 
     if (metrics.length === 0) {

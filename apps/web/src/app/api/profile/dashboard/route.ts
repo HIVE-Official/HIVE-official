@@ -5,6 +5,7 @@ import { getCurrentUser } from '../../../../lib/auth-server';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
+import { doc, getDoc, collection, query, where, orderBy, getDocs, limit } from 'firebase-admin/firestore';
 
 // Profile dashboard data interface
 interface ProfileDashboardData {
@@ -356,7 +357,7 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
 // Helper function to fetch user data
 async function fetchUserData(userId: string) {
   try {
-    const userDoc = await getDoc(doc(db, 'users', userId));
+    const userDoc = await getDoc(doc(dbAdmin, 'users', userId));
     if (!userDoc.exists) {
       throw new Error('User not found');
     }
@@ -533,7 +534,7 @@ async function fetchUpcomingEvents(userId: string) {
 // Helper function to fetch privacy settings
 async function fetchPrivacySettings(userId: string) {
   try {
-    const privacyDoc = await getDoc(doc(db, 'privacySettings', userId));
+    const privacyDoc = await getDoc(doc(dbAdmin, 'privacySettings', userId));
     return privacyDoc.exists ? privacyDoc.data() : null;
   } catch (error) {
     logger.error('Error fetching privacy settings', { error: error, endpoint: '/api/profile/dashboard' });

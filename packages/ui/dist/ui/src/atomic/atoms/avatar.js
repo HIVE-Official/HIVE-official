@@ -83,4 +83,14 @@ export const Avatar = ({ src, alt, size = 'md', status, initials, placeholder, i
     };
     return (_jsxs("div", { className: cn(baseClasses, className), ...props, children: [renderContent(), status && (_jsx("div", { className: cn('absolute -bottom-0.5 -right-0.5', 'rounded-full', 'border-2 border-[var(--hive-background-primary)]', statusSizes[size], statusColors[status]) }))] }));
 };
+// Compound component for Avatar Image
+export const AvatarImage = ({ src, alt }) => {
+    if (!src)
+        return null;
+    return _jsx("img", { src: src, alt: alt, className: "w-full h-full object-cover" });
+};
+// Compound component for Avatar Fallback
+export const AvatarFallback = ({ children }) => {
+    return _jsx("div", { className: "flex items-center justify-center w-full h-full", children: children });
+};
 //# sourceMappingURL=avatar.js.map

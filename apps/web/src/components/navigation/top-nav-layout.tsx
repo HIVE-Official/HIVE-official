@@ -51,8 +51,14 @@ export function TopNavLayout({ children }: TopNavLayoutProps) {
             <div className="flex items-center">
               {/* Logo */}
               <Link href="/" className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-[#FFD700] rounded-lg flex items-center justify-center">
-                  <span className="text-[#0A0A0A] font-bold text-sm">H</span>
+                <div className="w-8 h-8 flex items-center justify-center">
+                  <Image
+                    src="/assets/hive-logo-white.svg"
+                    alt="HIVE Logo"
+                    width={32}
+                    height={32}
+                    className="w-8 h-8"
+                  />
                 </div>
                 <span className="text-white font-bold text-xl">HIVE</span>
               </Link>

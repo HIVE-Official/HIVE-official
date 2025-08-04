@@ -4,6 +4,7 @@ import { dbAdmin } from '@/lib/firebase-admin';
 import { getCurrentUser } from '@/lib/server-auth';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { getFirestore, collection, query, where, getDocs, doc, getDoc, updateDoc } from 'firebase-admin/firestore';
 
 // Ghost Mode quick toggle and status
 export async function GET(request: NextRequest) {
@@ -23,7 +24,7 @@ export async function GET(request: NextRequest) {
       targetUserId = checkUserId;
     }
 
-    const privacyDoc = await getDoc(doc(db, 'privacySettings', targetUserId));
+    const privacyDoc = await getDoc(doc(dbAdmin, 'privacySettings', targetUserId));
     
     if (!privacyDoc.exists) {
       return NextResponse.json({ 
@@ -73,7 +74,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(ApiResponseHelper.error("Invalid ghost mode level", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
-    const privacyDoc = await getDoc(doc(db, 'privacySettings', user.uid));
+    const privacyDoc = await getDoc(doc(dbAdmin, 'privacySettings', user.uid));
     
     if (!privacyDoc.exists) {
       return NextResponse.json(ApiResponseHelper.error("Privacy settings not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
@@ -136,7 +137,7 @@ export async function POST(request: NextRequest) {
       updatedAt: new Date().toISOString()
     };
 
-    await updateDoc(doc(db, 'privacySettings', user.uid), updatedSettings);
+    await updateDoc(doc(dbAdmin, 'privacySettings', user.uid), updatedSettings);
 
     // Apply changes immediately
     await applyGhostModeChanges(user.uid, updatedGhostMode);
@@ -168,14 +169,14 @@ async function checkUserVisibility(targetUserId: string, viewerUserId: string, g
   }
 
   // Check if users are in the same spaces
-  const targetMembershipsQuery = dbAdmin.collection(
-    dbAdmin.collection('members'),
+  const targetMembershipsQuery = query(
+    collection(dbAdmin, 'members'),
     where('userId', '==', targetUserId),
     where('status', '==', 'active')
   );
 
-  const viewerMembershipsQuery = dbAdmin.collection(
-    dbAdmin.collection('members'),
+  const viewerMembershipsQuery = query(
+    collection(dbAdmin, 'members'),
     where('userId', '==', viewerUserId),
     where('status', '==', 'active')
   );
@@ -214,8 +215,8 @@ async function checkUserVisibility(targetUserId: string, viewerUserId: string, g
 async function applyGhostModeChanges(userId: string, ghostMode: any) {
   try {
     // Update user's visibility in spaces
-    const membershipsQuery = dbAdmin.collection(
-      dbAdmin.collection('members'),
+    const membershipsQuery = query(
+      collection(dbAdmin, 'members'),
       where('userId', '==', userId),
       where('status', '==', 'active')
     );
@@ -246,7 +247,7 @@ async function applyGhostModeChanges(userId: string, ghostMode: any) {
     await Promise.all(updates);
 
     // Update user's online status
-    const userDocRef = doc(db, 'users', userId);
+    const userDocRef = doc(dbAdmin, 'users', userId);
     const userDoc = await getDoc(userDocRef);
     
     if (userDoc.exists) {

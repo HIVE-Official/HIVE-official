@@ -659,7 +659,7 @@ describe('useCalendarIntegration', () => {
   describe('Server-Side Rendering', () => {
     it('handles SSR environment gracefully', async () => {
       const originalWindow = global.window;
-      // @ts-ignore
+      // @ts-expect-error - Temporarily removing window for SSR testing
       delete global.window;
 
       const { result } = renderHook(() => useCalendarIntegration(), {

@@ -360,7 +360,7 @@ export default function ProfileSettingsPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <Label className="text-white">Show Online Status</Label>
-                    <p className="text-sm text-hive-text-mutedLight">Display when you're online</p>
+                    <p className="text-sm text-hive-text-mutedLight">Display when you&apos;re online</p>
                   </div>
                   <Switch
                     checked={privacySettings.showOnlineStatus}
@@ -371,7 +371,7 @@ export default function ProfileSettingsPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <Label className="text-white">Show Spaces</Label>
-                    <p className="text-sm text-hive-text-mutedLight">Display the spaces you're in</p>
+                    <p className="text-sm text-hive-text-mutedLight">Display the spaces you&apos;re in</p>
                   </div>
                   <Switch
                     checked={privacySettings.showSpaces}

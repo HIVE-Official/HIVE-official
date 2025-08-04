@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import * as admin from "firebase-admin";
+import { collection, query, where, orderBy, limit, getDocs, doc, setDoc, FieldValue } from "firebase-admin/firestore";
 import { z } from "zod";
 import type { Space, SpaceType } from "@hive/core";
 import { dbAdmin } from "@/lib/firebase-admin";
@@ -23,22 +23,52 @@ export async function GET(request: Request) {
     const filterType = searchParams.get("type") as SpaceType | "all" | null;
     const searchTerm = searchParams.get("q")?.toLowerCase() || null;
 
-    let query: admin.firestore.Query = dbAdmin.collection("spaces");
+    let spacesQuery = query(collection(dbAdmin, "spaces"));
 
     if (filterType && filterType !== "all") {
-      query = query.where("type", "==", filterType);
+      spacesQuery = query(collection(dbAdmin, "spaces"), where("type", "==", filterType));
     }
 
     // Note: Firestore doesn't support full-text search on its own.
     // This search implementation is a basic "starts-with" search on the name.
     // For a real-world application, a dedicated search service like Algolia or Typesense would be required.
     if (searchTerm) {
-      query = query
-        .where("name_lowercase", ">=", searchTerm)
-        .where("name_lowercase", "<=", searchTerm + "\uf8ff");
+      if (filterType && filterType !== "all") {
+        spacesQuery = query(
+          collection(dbAdmin, "spaces"), 
+          where("type", "==", filterType),
+          where("name_lowercase", ">=", searchTerm),
+          where("name_lowercase", "<=", searchTerm + "\uf8ff"),
+          orderBy("name_lowercase"),
+          limit(50)
+        );
+      } else {
+        spacesQuery = query(
+          collection(dbAdmin, "spaces"),
+          where("name_lowercase", ">=", searchTerm),
+          where("name_lowercase", "<=", searchTerm + "\uf8ff"),
+          orderBy("name_lowercase"),
+          limit(50)
+        );
+      }
+    } else {
+      if (filterType && filterType !== "all") {
+        spacesQuery = query(
+          collection(dbAdmin, "spaces"), 
+          where("type", "==", filterType),
+          orderBy("name_lowercase"),
+          limit(50)
+        );
+      } else {
+        spacesQuery = query(
+          collection(dbAdmin, "spaces"),
+          orderBy("name_lowercase"),
+          limit(50)
+        );
+      }
     }
 
-    const snapshot = await query.orderBy("name_lowercase").limit(50).get();
+    const snapshot = await getDocs(spacesQuery);
 
     if (snapshot.empty) {
       return NextResponse.json(ApiResponseHelper.success([]), { status: HttpStatus.OK });
@@ -65,8 +95,8 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
     const { name, description, type, subType, isPrivate, tags } = createSpaceSchema.parse(body);
 
     // Generate space ID and create space document
-    const spaceId = dbAdmin.collection('spaces').doc(type).collection('spaces').doc().id;
-    const now = admin.firestore.Timestamp.now();
+    const spaceId = doc(collection(dbAdmin, 'spaces', type, 'spaces')).id;
+    const now = FieldValue.serverTimestamp();
     
     const spaceData = {
       name,
@@ -89,36 +119,20 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
     };
 
     // Create space in nested structure
-    await dbAdmin.collection('spaces')
-      .doc(type)
-      .collection('spaces')
-      .doc(spaceId)
-      .set(spaceData);
+    await setDoc(doc(dbAdmin, 'spaces', type, 'spaces', spaceId), spaceData);
 
     // Add creator as owner
-    await dbAdmin.collection('spaces')
-      .doc(type)
-      .collection('spaces')
-      .doc(spaceId)
-      .collection('members')
-      .doc(userId)
-      .set({
-        userId,
-        role: 'owner',
-        joinedAt: now,
-        isActive: true
-      });
+    await setDoc(doc(dbAdmin, 'spaces', type, 'spaces', spaceId, 'members', userId), {
+      userId,
+      role: 'owner',
+      joinedAt: now,
+      isActive: true
+    });
 
     // Initialize empty collections for space widgets
     const collections = ['posts', 'events', 'pinned'];
-    for (const collection of collections) {
-      await dbAdmin.collection('spaces')
-        .doc(type)
-        .collection('spaces')
-        .doc(spaceId)
-        .collection(collection)
-        .doc('_placeholder')
-        .set({ placeholder: true });
+    for (const coll of collections) {
+      await setDoc(doc(dbAdmin, 'spaces', type, 'spaces', spaceId, coll, '_placeholder'), { placeholder: true });
     }
 
     logger.info('✅ Created space by user', {  type, userId, endpoint: '/api/spaces'  });

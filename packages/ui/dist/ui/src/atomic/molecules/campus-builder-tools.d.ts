@@ -34,11 +34,13 @@ export interface CampusBuilderToolsProps {
     isLoading?: boolean;
     variant?: 'default' | 'compact' | 'subtle';
     showBecomeBuilder?: boolean;
+    isLocked?: boolean;
     onToolClick?: (toolId: string) => void;
     onCreateTool?: (toolType: BuilderTool['type']) => void;
     onViewTool?: (toolId: string) => void;
     onBecomeBuilder?: () => void;
     onViewAllCreated?: () => void;
+    onJoinWaitlist?: () => void;
     className?: string;
 }
 export declare const CampusBuilderTools: React.FC<CampusBuilderToolsProps>;

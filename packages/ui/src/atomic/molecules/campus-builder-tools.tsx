@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from '../../components/framer-motion-proxy';
 import { cn } from '../../lib/utils';
+import { Lock, Star, Zap, Clock, Users } from 'lucide-react';
 
 export interface BuilderTool {
   id: string;
@@ -41,11 +42,13 @@ export interface CampusBuilderToolsProps {
   isLoading?: boolean;
   variant?: 'default' | 'compact' | 'subtle';
   showBecomeBuilder?: boolean;
+  isLocked?: boolean; // Lock for vBETA, unlock in v1
   onToolClick?: (toolId: string) => void;
   onCreateTool?: (toolType: BuilderTool['type']) => void;
   onViewTool?: (toolId: string) => void;
   onBecomeBuilder?: () => void;
   onViewAllCreated?: () => void;
+  onJoinWaitlist?: () => void;
   className?: string;
 }
 
@@ -95,11 +98,13 @@ export const CampusBuilderTools: React.FC<CampusBuilderToolsProps> = ({
   isLoading = false,
   variant = 'default',
   showBecomeBuilder = true,
+  isLocked = true, // Default to locked for vBETA
   onToolClick,
   onCreateTool,
   onViewTool,
   onBecomeBuilder,
   onViewAllCreated,
+  onJoinWaitlist,
   className
 }) => {
   const [hoveredTool, setHoveredTool] = useState<string | null>(null);
@@ -144,6 +149,171 @@ export const CampusBuilderTools: React.FC<CampusBuilderToolsProps> = ({
               </div>
             </div>
           ))}
+        </div>
+      </motion.div>
+    );
+  }
+
+  // Locked state for vBETA - Coming in v1 with proper teasing
+  if (isLocked) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{
+          duration: 0.6,
+          ease: [0.23, 1, 0.32, 1]
+        }}
+        className={cn(
+          'relative overflow-hidden rounded-2xl',
+          'bg-gradient-to-br from-charcoal/60 via-charcoal/50 to-graphite/60',
+          'backdrop-blur-xl border border-steel/8',
+          'shadow-[inset_0_1px_0_0_color-mix(in_srgb,var(--hive-interactive-hover)_30%,transparent)]',
+          'hover:border-gold/10 hover:shadow-[inset_0_1px_0_0_color-mix(in_srgb,var(--hive-interactive-hover)_50%,transparent)]',
+          'transition-all duration-500 ease-hive-smooth',
+          'p-6',
+          className
+        )}
+      >
+        {/* Ambient Background Pattern */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute inset-0 bg-gradient-to-br from-gold/20 via-transparent to-purple-500/10" />
+          <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-radial from-gold/30 to-transparent rounded-full blur-2xl" />
+          <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-radial from-purple-500/20 to-transparent rounded-full blur-xl" />
+        </div>
+
+        <div className="relative z-10">
+          {/* Header with Lock */}
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-charcoal/40 to-graphite/40 border border-steel/15 flex items-center justify-center">
+                <Lock className="h-5 w-5 text-steel/60" />
+              </div>
+              <div>
+                <h3 className="text-platinum/70 font-semibold text-lg tracking-tight">Personal Tools</h3>
+                <p className="text-steel/70 text-xs">Coming in HIVE v1</p>
+              </div>
+            </div>
+            
+            <div className="px-3 py-1.5 bg-gradient-to-r from-purple-500/10 to-gold/10 border border-purple-500/20 rounded-full">
+              <span className="text-purple-300/80 text-xs font-medium tracking-wide">v1 Preview</span>
+            </div>
+          </div>
+
+          {/* Feature Preview */}
+          <div className="space-y-4 mb-6">
+            <div className="text-center">
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ delay: 0.2 }}
+                className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-gold/10 to-purple-500/10 border border-gold/20 flex items-center justify-center relative"
+              >
+                <motion.div
+                  animate={{ 
+                    rotate: [0, 360],
+                    scale: [1, 1.1, 1] 
+                  }}
+                  transition={{ 
+                    rotate: { duration: 10, ease: "linear", repeat: Infinity },
+                    scale: { duration: 2, ease: "easeInOut", repeat: Infinity }
+                  }}
+                  className="text-3xl"
+                >
+                  🛠️
+                </motion.div>
+                
+                {/* Subtle glow effect */}
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-gold/5 to-purple-500/5 blur-xl animate-pulse" />
+              </motion.div>
+              
+              <h4 className="text-platinum/80 font-semibold mb-2 text-lg">Your Personal Toolkit</h4>
+              <p className="text-mercury/60 text-sm leading-relaxed max-w-xs mx-auto">
+                Create, customize, and share tools that enhance your campus experience
+              </p>
+            </div>
+
+            {/* Feature Teasers */}
+            <div className="grid grid-cols-1 gap-3 mt-6">
+              {[
+                {
+                  icon: <Zap className="h-4 w-4" />,
+                  title: "Custom Automations",
+                  description: "Build workflows that save you hours every week",
+                  color: "from-purple-500/10 to-purple-600/5 border-purple-500/20"
+                },
+                {
+                  icon: <Users className="h-4 w-4" />,
+                  title: "Community Tools",
+                  description: "Share your creations with friends and classmates",
+                  color: "from-blue-500/10 to-blue-600/5 border-blue-500/20"
+                },
+                {
+                  icon: <Star className="h-4 w-4" />,
+                  title: "Smart Templates",
+                  description: "Start with proven templates, customize to your needs",
+                  color: "from-gold/10 to-gold/5 border-gold/20"
+                }
+              ].map((feature, index) => (
+                <motion.div
+                  key={feature.title}
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.4 + index * 0.1 }}
+                  className={cn(
+                    "p-4 rounded-xl bg-gradient-to-r border backdrop-blur-sm",
+                    feature.color
+                  )}
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="p-2 rounded-lg bg-white/5 text-white/80 mt-0.5">
+                      {feature.icon}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h5 className="font-medium text-white/90 text-sm mb-1">
+                        {feature.title}
+                      </h5>
+                      <p className="text-white/60 text-xs leading-relaxed">
+                        {feature.description}
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+
+          {/* Call to Action */}
+          <div className="text-center pt-4 border-t border-steel/10">
+            <motion.button
+              whileHover={{ 
+                scale: 1.02,
+                boxShadow: "0 8px 32px color-mix(in_srgb,var(--hive-brand-secondary)_20%,transparent)"
+              }}
+              whileTap={{ scale: 0.98 }}
+              onClick={onJoinWaitlist}
+              className={cn(
+                'w-full px-6 py-3 rounded-xl',
+                'bg-gradient-to-r from-gold/15 to-purple-500/15',
+                'border border-gold/30 hover:border-gold/50',
+                'text-gold hover:text-champagne transition-all duration-300',
+                'font-medium text-sm group flex items-center justify-center gap-2'
+              )}
+            >
+              <Clock className="h-4 w-4 group-hover:rotate-12 transition-transform duration-300" />
+              <span>Get Early Access to v1</span>
+              <motion.span
+                animate={{ x: [0, 4, 0] }}
+                transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+              >
+                →
+              </motion.span>
+            </motion.button>
+            
+            <p className="text-steel/60 text-xs mt-3">
+              Be among the first to build custom tools for your campus
+            </p>
+          </div>
         </div>
       </motion.div>
     );

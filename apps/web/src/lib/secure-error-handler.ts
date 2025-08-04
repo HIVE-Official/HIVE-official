@@ -13,13 +13,13 @@ import { logSecurityEvent } from './structured-logger';
  * Classification of error types by security risk
  */
 export enum ErrorSecurityLevel {
-  // eslint-disable-next-line no-unused-vars
+   
   SAFE = 'safe',           // Can be shown to users
-  // eslint-disable-next-line no-unused-vars
+   
   INTERNAL = 'internal',   // Should be logged but not exposed
-  // eslint-disable-next-line no-unused-vars
+   
   SENSITIVE = 'sensitive', // Contains secrets or internal paths
-  // eslint-disable-next-line no-unused-vars
+   
   CRITICAL = 'critical'    // Security-related errors
 }
 

@@ -9,16 +9,12 @@ import type { TestingLibraryMatchers } from '@testing-library/jest-dom/matchers'
 
 declare global {
   namespace Vi {
-    interface JestAssertion<T = unknown> extends jest.Matchers<void, T>, TestingLibraryMatchers<T, void> {}
+    interface JestAssertion<T = unknown> extends TestingLibraryMatchers<T, void> {}
   }
 }
 
 // Extend Vitest's expect interface
 declare module 'vitest' {
-  interface Assertion<T = unknown> extends TestingLibraryMatchers<T, void> {
-    // Additional Vitest-specific extensions can go here
-  }
-  interface AsymmetricMatchersContaining extends TestingLibraryMatchers<unknown, void> {
-    // Additional asymmetric matcher extensions can go here
-  }
+  interface Assertion<T = unknown> extends TestingLibraryMatchers<T, void> {}
+  interface AsymmetricMatchersContaining extends TestingLibraryMatchers<unknown, void> {}
 }

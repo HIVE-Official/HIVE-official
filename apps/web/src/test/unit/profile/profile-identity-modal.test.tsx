@@ -417,7 +417,7 @@ describe('ProfileIdentityModal', () => {
       const nonBuilderProfile = { ...mockProfile, isBuilder: false };
       renderModal({ ...mockProps, profile: nonBuilderProfile });
 
-      expect(screen.queryByText('Builder Status')).not.to.exist;
+      expect(screen.queryByText('Builder Status')).not.toBeInTheDocument();
     });
   });
 

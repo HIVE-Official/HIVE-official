@@ -2,6 +2,7 @@
 // TODO: Fix @hive/ui export resolution and remove these stubs
 
 import React from 'react';
+import Image from 'next/image';
 
 export function PageContainer({ 
   children, 
@@ -46,7 +47,18 @@ export function LandingPageHeader() {
   return (
     <div className="bg-black border-b border-white/10 p-4">
       <div className="max-w-6xl mx-auto flex items-center justify-between">
-        <div className="text-xl font-bold text-white">HIVE</div>
+        <div className="flex items-center space-x-2">
+          <div className="w-8 h-8 flex items-center justify-center">
+            <Image
+              src="/assets/hive-logo-white.svg"
+              alt="HIVE Logo"
+              width={32}
+              height={32}
+              className="w-8 h-8"
+            />
+          </div>
+          <div className="text-xl font-bold text-white">HIVE</div>
+        </div>
       </div>
     </div>
   );

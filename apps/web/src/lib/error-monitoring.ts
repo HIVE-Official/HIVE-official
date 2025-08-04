@@ -128,15 +128,15 @@ export async function initializeErrorMonitoring(): Promise<void> {
  * Log levels for structured logging
  */
 export enum LogLevel {
-  // eslint-disable-next-line no-unused-vars
+   
   DEBUG = 'debug',
-  // eslint-disable-next-line no-unused-vars
+   
   INFO = 'info',
-  // eslint-disable-next-line no-unused-vars
+   
   WARN = 'warning',
-  // eslint-disable-next-line no-unused-vars
+   
   ERROR = 'error',
-  // eslint-disable-next-line no-unused-vars
+   
   FATAL = 'fatal'
 }
 

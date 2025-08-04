@@ -13,4 +13,11 @@ export interface AvatarProps extends React.HTMLAttributes<HTMLDivElement> {
     showBadge?: boolean;
 }
 export declare const Avatar: React.FC<AvatarProps>;
+export declare const AvatarImage: React.FC<{
+    src?: string;
+    alt?: string;
+}>;
+export declare const AvatarFallback: React.FC<{
+    children: React.ReactNode;
+}>;
 //# sourceMappingURL=avatar.d.ts.map

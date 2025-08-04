@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation';
 import { Button, Card, 
   Badge,
   Tabs,
@@ -30,7 +30,7 @@ import {
   Plus
 } from 'lucide-react';
 import { ErrorBoundary } from '../../../../components/error-boundary';
-import { useSession } from '../../../../hooks/use-session';
+// import { useSession } from '../../../../hooks/use-session';
 
 interface Integration {
   id: string;
@@ -167,8 +167,9 @@ const INTEGRATION_HEALTH: IntegrationHealth = {
 };
 
 export default function ProfileIntegrationsPage() {
-  const _router = useRouter();
-  const { user: _user } = useSession();
+  // Future navigation and user functionality placeholders
+  // const router = useRouter();
+  // const { user } = useSession();
   
   const [integrations, setIntegrations] = useState<Integration[]>(INTEGRATIONS);
   const [health, setHealth] = useState<IntegrationHealth>(INTEGRATION_HEALTH);
@@ -278,7 +279,8 @@ export default function ProfileIntegrationsPage() {
     }
   };
 
-  const _connectedIntegrations = integrations.filter(i => i.status === 'connected');
+  // Future functionality - show connected integrations count
+  // const connectedIntegrations = integrations.filter(i => i.status === 'connected');
   const errorIntegrations = integrations.filter(i => i.status === 'error');
 
   return (

@@ -371,10 +371,10 @@ export declare const ToolSchema: z.ZodObject<{
         };
         order?: number;
         isVisible?: boolean;
+        isLocked?: boolean;
         config?: unknown;
         elementId?: string;
         parentId?: string;
-        isLocked?: boolean;
     }, {
         id?: string;
         position?: {
@@ -385,10 +385,10 @@ export declare const ToolSchema: z.ZodObject<{
         };
         order?: number;
         isVisible?: boolean;
+        isLocked?: boolean;
         config?: unknown;
         elementId?: string;
         parentId?: string;
-        isLocked?: boolean;
     }>, "many">;
     config: z.ZodDefault<z.ZodObject<{
         theme: z.ZodDefault<z.ZodEnum<["light", "dark", "auto"]>>;
@@ -656,10 +656,10 @@ export declare const ToolSchema: z.ZodObject<{
         };
         order?: number;
         isVisible?: boolean;
+        isLocked?: boolean;
         config?: unknown;
         elementId?: string;
         parentId?: string;
-        isLocked?: boolean;
     }[];
     isPublic?: boolean;
     shareToken?: string;
@@ -747,10 +747,10 @@ export declare const ToolSchema: z.ZodObject<{
         };
         order?: number;
         isVisible?: boolean;
+        isLocked?: boolean;
         config?: unknown;
         elementId?: string;
         parentId?: string;
-        isLocked?: boolean;
     }[];
     isPublic?: boolean;
     shareToken?: string;
@@ -1082,10 +1082,10 @@ export declare const UpdateToolSchema: z.ZodObject<{
         };
         order?: number;
         isVisible?: boolean;
+        isLocked?: boolean;
         config?: unknown;
         elementId?: string;
         parentId?: string;
-        isLocked?: boolean;
     }, {
         id?: string;
         position?: {
@@ -1096,10 +1096,10 @@ export declare const UpdateToolSchema: z.ZodObject<{
         };
         order?: number;
         isVisible?: boolean;
+        isLocked?: boolean;
         config?: unknown;
         elementId?: string;
         parentId?: string;
-        isLocked?: boolean;
     }>, "many">>;
     config: z.ZodOptional<z.ZodObject<{
         theme: z.ZodOptional<z.ZodDefault<z.ZodEnum<["light", "dark", "auto"]>>>;
@@ -1334,10 +1334,10 @@ export declare const UpdateToolSchema: z.ZodObject<{
         };
         order?: number;
         isVisible?: boolean;
+        isLocked?: boolean;
         config?: unknown;
         elementId?: string;
         parentId?: string;
-        isLocked?: boolean;
     }[];
 }, {
     name?: string;
@@ -1394,10 +1394,10 @@ export declare const UpdateToolSchema: z.ZodObject<{
         };
         order?: number;
         isVisible?: boolean;
+        isLocked?: boolean;
         config?: unknown;
         elementId?: string;
         parentId?: string;
-        isLocked?: boolean;
     }[];
 }>;
 export type UpdateTool = z.infer<typeof UpdateToolSchema>;

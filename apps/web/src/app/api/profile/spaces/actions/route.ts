@@ -4,6 +4,7 @@ import { dbAdmin } from '@/lib/firebase-admin';
 import { getCurrentUser } from '@/lib/server-auth';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { doc, getDoc, collection, query, where, getDocs, updateDoc, addDoc } from 'firebase-admin/firestore';
 
 // Space quick actions for profile
 interface SpaceQuickAction {
@@ -187,7 +188,7 @@ async function performSpaceAction(
 // Helper function to update user space preferences
 async function updateUserSpacePreferences(userId: string, spaceId: string, preferenceType: string, value: any) {
   try {
-    const userDoc = await getDoc(doc(db, 'users', userId));
+    const userDoc = await getDoc(doc(dbAdmin, 'users', userId));
     if (!userDoc.exists) return;
 
     const userData = userDoc.data();
@@ -200,7 +201,7 @@ async function updateUserSpacePreferences(userId: string, spaceId: string, prefe
     spacePreferences[spaceId][preferenceType] = value;
     spacePreferences[spaceId].updatedAt = new Date().toISOString();
 
-    await updateDoc(doc(db, 'users', userId), {
+    await updateDoc(doc(dbAdmin, 'users', userId), {
       spacePreferences,
       updatedAt: new Date().toISOString()
     });
@@ -212,13 +213,13 @@ async function updateUserSpacePreferences(userId: string, spaceId: string, prefe
 // Helper function to update space member count
 async function updateSpaceMemberCount(spaceId: string, change: number) {
   try {
-    const spaceDoc = await getDoc(doc(db, 'spaces', spaceId));
+    const spaceDoc = await getDoc(doc(dbAdmin, 'spaces', spaceId));
     if (!spaceDoc.exists) return;
 
     const spaceData = spaceDoc.data();
     const newMemberCount = Math.max(0, (spaceData.memberCount || 0) + change);
 
-    await updateDoc(doc(db, 'spaces', spaceId), {
+    await updateDoc(doc(dbAdmin, 'spaces', spaceId), {
       memberCount: newMemberCount,
       updatedAt: new Date().toISOString()
     });
@@ -259,7 +260,7 @@ export async function GET(request: NextRequest) {
     // Get builder request status if exists
     let builderRequestStatus = null;
     if (membershipData.hasBuilderRequest) {
-      const requestDoc = await getDoc(doc(db, 'builderRequests', membershipData.builderRequestId));
+      const requestDoc = await getDoc(doc(dbAdmin, 'builderRequests', membershipData.builderRequestId));
       if (requestDoc.exists) {
         builderRequestStatus = requestDoc.data().status;
       }

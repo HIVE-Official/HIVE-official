@@ -4,6 +4,7 @@ import { dbAdmin } from '@/lib/firebase-admin';
 import { getCurrentUser } from '@/lib/server-auth';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { doc, getDoc, setDoc, updateDoc, collection, query, where, getDocs } from 'firebase-admin/firestore';
 
 // Privacy settings interface
 interface PrivacySettings {
@@ -94,7 +95,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
-    const privacyDoc = await getDoc(doc(db, 'privacySettings', user.uid));
+    const privacyDoc = await getDoc(doc(dbAdmin, 'privacySettings', user.uid));
     
     if (!privacyDoc.exists) {
       // Create default settings if none exist
@@ -105,7 +106,7 @@ export async function GET(request: NextRequest) {
         updatedAt: new Date().toISOString()
       };
       
-      await setDoc(doc(db, 'privacySettings', user.uid), newSettings);
+      await setDoc(doc(dbAdmin, 'privacySettings', user.uid), newSettings);
       return NextResponse.json({ settings: newSettings });
     }
 
@@ -134,7 +135,7 @@ export async function PUT(request: NextRequest) {
     }
 
     // Get existing settings
-    const privacyDoc = await getDoc(doc(db, 'privacySettings', user.uid));
+    const privacyDoc = await getDoc(doc(dbAdmin, 'privacySettings', user.uid));
     const existingSettings = privacyDoc.exists ? privacyDoc.data() as PrivacySettings : {
       userId: user.uid,
       ...defaultPrivacySettings,
@@ -153,7 +154,7 @@ export async function PUT(request: NextRequest) {
       updatedAt: new Date().toISOString()
     };
 
-    await setDoc(doc(db, 'privacySettings', user.uid), updatedSettings);
+    await setDoc(doc(dbAdmin, 'privacySettings', user.uid), updatedSettings);
 
     // Apply privacy changes immediately
     await applyPrivacyChanges(user.uid, updatedSettings);
@@ -231,7 +232,7 @@ async function updateSpaceVisibility(userId: string, settings: PrivacySettings) 
 // Helper function to update profile visibility
 async function updateProfileVisibility(userId: string, profileVisibility: PrivacySettings['profileVisibility']) {
   try {
-    const userDocRef = doc(db, 'users', userId);
+    const userDocRef = doc(dbAdmin, 'users', userId);
     const userDoc = await getDoc(userDocRef);
     
     if (userDoc.exists) {

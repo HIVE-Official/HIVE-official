@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation';
 import { Button, Card, 
   Badge,
   Select,
@@ -35,7 +35,7 @@ import {
   Heart
 } from 'lucide-react';
 import { ErrorBoundary } from '../../../../components/error-boundary';
-import { useSession } from '../../../../hooks/use-session';
+// import { useSession } from '../../../../hooks/use-session';
 
 interface AnalyticsData {
   period: 'week' | 'month' | 'semester' | 'year';
@@ -153,8 +153,9 @@ const SKILL_PROGRESS: SkillProgress[] = [
 ];
 
 export default function ProfileAnalyticsPage() {
-  const _router = useRouter();
-  const { user: _user } = useSession();
+  // Future navigation and user functionality placeholders
+  // const router = useRouter();
+  // const { user } = useSession();
   
   const [analytics, setAnalytics] = useState<AnalyticsData>(MOCK_ANALYTICS);
   const [timePeriod, setTimePeriod] = useState<'week' | 'month' | 'semester' | 'year'>('month');

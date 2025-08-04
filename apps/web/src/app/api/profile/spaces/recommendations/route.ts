@@ -4,6 +4,7 @@ import { dbAdmin } from '@/lib/firebase-admin';
 import { getCurrentUser } from '@/lib/server-auth';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { doc, getDoc, collection, query, where, orderBy, getDocs, limit } from 'firebase-admin/firestore';
 
 // Space recommendation interface
 interface SpaceRecommendation {
@@ -44,7 +45,7 @@ export async function GET(request: NextRequest) {
     const currentSpaceIds = currentMembershipsSnapshot.docs.map(doc => doc.data().spaceId);
 
     // Get user profile for interest matching
-    const userDoc = await getDoc(doc(db, 'users', user.uid));
+    const userDoc = await getDoc(doc(dbAdmin, 'users', user.uid));
     const userData = userDoc.exists ? userDoc.data() : null;
 
     // Get all available spaces (excluding current memberships)

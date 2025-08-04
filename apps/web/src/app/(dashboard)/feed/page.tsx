@@ -58,7 +58,7 @@ interface FeedPost {
 }
 
 export default function FeedPage() {
-  const { user } = useSession();
+  const { user: _user } = useSession();
   const [feedFilter, setFeedFilter] = useState<'all' | 'following' | 'spaces' | 'academic'>('all');
   const [feedPosts, setFeedPosts] = useState<FeedPost[]>([]);
   const [isLoading, setIsLoading] = useState(true);

@@ -281,7 +281,7 @@ export default function ProfilePrivacyPage() {
                     <span className="text-white font-medium">Show Spaces</span>
                   </div>
                   <p className="text-sm text-hive-text-mutedLight mt-1">
-                    Display the spaces you're a member of
+                    Display the spaces you&apos;re a member of
                   </p>
                 </div>
                 <Switch
@@ -297,7 +297,7 @@ export default function ProfilePrivacyPage() {
                     <span className="text-white font-medium">Online Status</span>
                   </div>
                   <p className="text-sm text-hive-text-mutedLight mt-1">
-                    Show when you're currently online and active
+                    Show when you&apos;re currently online and active
                   </p>
                 </div>
                 <Switch

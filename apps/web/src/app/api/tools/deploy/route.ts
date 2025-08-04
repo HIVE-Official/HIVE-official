@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { dbAdmin as db } from '@/lib/firebase-admin';
+import { collection, doc, getDoc, getDocs, addDoc, updateDoc, query, where } from 'firebase-admin/firestore';
+import { dbAdmin } from '@/lib/firebase-admin';
 import { getCurrentUser } from '@/lib/auth-server';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
@@ -72,7 +73,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Get tool details
-    const toolDoc = await dbAdmin.collection('tools').doc(toolId).get();
+    const toolDoc = await getDoc(doc(dbAdmin, 'tools', toolId));
     if (!toolDoc.exists) {
       return NextResponse.json(ApiResponseHelper.error("Tool not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
@@ -91,7 +92,7 @@ export async function POST(request: NextRequest) {
 
     if (deployTo === 'space') {
       // Check space membership and permissions
-      const spaceDoc = await dbAdmin.collection('spaces').doc(targetId).get();
+      const spaceDoc = await getDoc(doc(dbAdmin, 'spaces', targetId));
       if (!spaceDoc.exists) {
         return NextResponse.json(ApiResponseHelper.error("Space not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
       }
@@ -111,12 +112,13 @@ export async function POST(request: NextRequest) {
     }
 
     // Check for existing deployment
-    const existingSnapshot = await dbAdmin.collection('deployedTools')
-      .where('toolId', '==', toolId)
-      .where('deployedTo', '==', deployTo)
-      .where('targetId', '==', targetId)
-      .where('status', 'in', ['active', 'paused'])
-      .get();
+    const existingSnapshot = await getDocs(query(
+      collection(dbAdmin, 'deployedTools'),
+      where('toolId', '==', toolId),
+      where('deployedTo', '==', deployTo),
+      where('targetId', '==', targetId),
+      where('status', 'in', ['active', 'paused'])
+    ));
     
     if (!existingSnapshot.empty) {
       return NextResponse.json(ApiResponseHelper.error("Tool already deployed to this target", "UNKNOWN_ERROR"), { status: 409 });
@@ -124,11 +126,12 @@ export async function POST(request: NextRequest) {
 
     // Check space tool limits (20 max per space)
     if (deployTo === 'space') {
-      const spaceToolsSnapshot = await dbAdmin.collection('deployedTools')
-        .where('deployedTo', '==', 'space')
-        .where('targetId', '==', targetId)
-        .where('status', '==', 'active')
-        .get();
+      const spaceToolsSnapshot = await getDocs(query(
+        collection(dbAdmin, 'deployedTools'),
+        where('deployedTo', '==', 'space'),
+        where('targetId', '==', targetId),
+        where('status', '==', 'active')
+      ));
       
       if (spaceToolsSnapshot.size >= 20) {
         return NextResponse.json(ApiResponseHelper.error("Space has reached maximum tool limit (20)", "UNKNOWN_ERROR"), { status: 409 });
@@ -170,16 +173,16 @@ export async function POST(request: NextRequest) {
       }
     };
 
-    const deploymentRef = await dbAdmin.collection('deployedTools').add(deployment);
+    const deploymentRef = await addDoc(collection(dbAdmin, 'deployedTools'), deployment);
 
     // Update tool usage stats
-    await dbAdmin.collection('tools').doc(toolId).update({
+    await updateDoc(doc(dbAdmin, 'tools', toolId), {
       deploymentCount: (toolData.deploymentCount || 0) + 1,
       lastDeployedAt: now
     });
 
     // Log activity event
-    await dbAdmin.collection('analytics_events').add({
+    await addDoc(collection(dbAdmin, 'analytics_events'), {
       eventType: 'tool_deployed',
       userId: user.uid,
       toolId,
@@ -222,26 +225,18 @@ export async function GET(request: NextRequest) {
     const surface = searchParams.get('surface');
     const status = searchParams.get('status') || 'active';
 
-    let deploymentsQuery = dbAdmin.collection('deployedTools');
+    // Build query with filters
+    const filters = [];
+    if (deployedTo) filters.push(where('deployedTo', '==', deployedTo));
+    if (targetId) filters.push(where('targetId', '==', targetId));
+    if (surface) filters.push(where('surface', '==', surface));
+    if (status) filters.push(where('status', '==', status));
 
-    // Filter by deployment target
-    if (deployedTo) {
-      deploymentsQuery = deploymentsQuery.where('deployedTo', '==', deployedTo);
-    }
+    const deploymentsQuery = filters.length > 0 
+      ? query(collection(dbAdmin, 'deployedTools'), ...filters)
+      : collection(dbAdmin, 'deployedTools');
 
-    if (targetId) {
-      deploymentsQuery = deploymentsQuery.where('targetId', '==', targetId);
-    }
-
-    if (surface) {
-      deploymentsQuery = deploymentsQuery.where('surface', '==', surface);
-    }
-
-    if (status) {
-      deploymentsQuery = deploymentsQuery.where('status', '==', status);
-    }
-
-    const deploymentsSnapshot = await deploymentsQuery.get();
+    const deploymentsSnapshot = await getDocs(deploymentsQuery);
     const deployments = deploymentsSnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
@@ -252,7 +247,7 @@ export async function GET(request: NextRequest) {
     for (const deployment of deployments) {
       if (await canUserAccessDeployment(user.uid, deployment)) {
         // Fetch tool details
-        const toolDoc = await dbAdmin.collection('tools').doc(deployment.toolId).get();
+        const toolDoc = await getDoc(doc(dbAdmin, 'tools', deployment.toolId));
         if (toolDoc.exists) {
           const toolData = toolDoc.data();
           accessibleDeployments.push({
@@ -282,16 +277,18 @@ export async function GET(request: NextRequest) {
 // Helper function to get next position for deployment
 async function getNextPosition(deployedTo: string, targetId: string, surface?: string): Promise<number> {
   try {
-    let positionQuery = dbAdmin.collection('deployedTools')
-      .where('deployedTo', '==', deployedTo)
-      .where('targetId', '==', targetId)
-      .where('status', '==', 'active');
+    const filters = [
+      where('deployedTo', '==', deployedTo),
+      where('targetId', '==', targetId),
+      where('status', '==', 'active')
+    ];
 
     if (surface) {
-      positionQuery = positionQuery.where('surface', '==', surface);
+      filters.push(where('surface', '==', surface));
     }
 
-    const positionSnapshot = await positionQuery.get();
+    const positionQuery = query(collection(dbAdmin, 'deployedTools'), ...filters);
+    const positionSnapshot = await getDocs(positionQuery);
     return positionSnapshot.size;
   } catch (error) {
     logger.error('Error getting next position', { error: error, endpoint: '/api/tools/deploy' });
@@ -314,7 +311,7 @@ async function canUserAccessDeployment(userId: string, deployment: any): Promise
 
     // Check space membership for space deployments
     if (deployment.deployedTo === 'space') {
-      const spaceDoc = await dbAdmin.collection('spaces').doc(deployment.targetId).get();
+      const spaceDoc = await getDoc(doc(dbAdmin, 'spaces', deployment.targetId));
       if (spaceDoc.exists) {
         const spaceData = spaceDoc.data();
         const userRole = spaceData?.members?.[userId]?.role;

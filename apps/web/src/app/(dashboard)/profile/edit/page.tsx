@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { useHiveProfile } from '../../../../hooks/use-hive-profile';
 import { ErrorBoundary } from '../../../../components/error-boundary';
 import { 
@@ -16,7 +17,7 @@ import {
 
 export default function ProfileEditPage() {
   const router = useRouter();
-  const { profile, updateProfile, uploadAvatar, isLoading, isUpdating, error } = useHiveProfile();
+  const { profile, updateProfile, uploadAvatar, isLoading, isUpdating } = useHiveProfile();
   const [isFormDirty, setIsFormDirty] = useState(false);
   
   // Form state - using proper HIVE design system components
@@ -152,9 +153,11 @@ export default function ProfileEditPage() {
                 <div className="text-center">
                   <div className="relative inline-block mb-4">
                     {profile.identity.avatarUrl ? (
-                      <img
+                      <Image
                         src={profile.identity.avatarUrl}
                         alt={profile.identity.fullName}
+                        width={96}
+                        height={96}
                         className="w-24 h-24 rounded-full object-cover"
                       />
                     ) : (

@@ -164,3 +164,14 @@ export const Avatar: React.FC<AvatarProps> = ({
     </div>
   );
 };
+
+// Compound component for Avatar Image
+export const AvatarImage: React.FC<{ src?: string; alt?: string }> = ({ src, alt }) => {
+  if (!src) return null;
+  return <img src={src} alt={alt} className="w-full h-full object-cover" />;
+};
+
+// Compound component for Avatar Fallback
+export const AvatarFallback: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  return <div className="flex items-center justify-center w-full h-full">{children}</div>;
+};

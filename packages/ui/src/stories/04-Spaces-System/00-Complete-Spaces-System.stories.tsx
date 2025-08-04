@@ -259,7 +259,6 @@ const CompleteSpacesSystem = ({
       userIsMember: false,
       userIsLeader: false,
       notifications: 0,
-      isActive: true,
       officialAnnouncements: [
         { title: 'Move-in Day Information', date: '2024-08-15', source: 'Housing Office' },
         { title: 'Floor Meeting Schedule', date: '2024-08-20', source: 'Resident Advisor' },
@@ -294,7 +293,6 @@ const CompleteSpacesSystem = ({
       userIsMember: false,
       userIsLeader: false,
       notifications: 0,
-      isActive: true,
       officialAnnouncements: [
         { title: 'Rush Week Schedule', date: '2024-08-30', source: 'Greek Life Office' },
         { title: 'Philanthropy Event Planning', date: '2024-09-05', source: 'Greek Life Office' },

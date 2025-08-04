@@ -57,7 +57,8 @@ interface CalendarIntegration {
 
 export default function CalendarPage() {
   const { user } = useSession();
-  const { data: calendarHookData, state: calendarState } = useCalendarData();
+  const { data: _calendarHookData, state: _calendarState } = useCalendarData();
+  // Calendar hook data integration pending - currently using mock data
   
   const [currentDate, setCurrentDate] = useState(new Date());
   const [viewMode, setViewMode] = useState<'month' | 'week' | 'day'>('month');

@@ -199,7 +199,8 @@ export default function ProfileCustomizePage() {
   const { user } = useSession();
   
   const [cards, setCards] = useState<CardConfig[]>(DEFAULT_CARDS);
-  const [_selectedCard, _setSelectedCard] = useState<string | null>(null);
+  // Future card selection functionality
+  const [selectedCard, setSelectedCard] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
   const [hasChanges, setHasChanges] = useState(false);
   const [isGridVisible, setIsGridVisible] = useState(true);
@@ -221,7 +222,8 @@ export default function ProfileCustomizePage() {
     setHasChanges(true);
   }, []);
 
-  const _handleCardMove = useCallback((cardId: string, newPosition: { x: number; y: number }) => {
+  // Future drag-and-drop functionality
+  const handleCardMove = useCallback((cardId: string, newPosition: { x: number; y: number }) => {
     setCards(prev => prev.map(card => 
       card.id === cardId 
         ? { ...card, position: newPosition }
@@ -451,7 +453,7 @@ export default function ProfileCustomizePage() {
                       className={`
                         p-4 rounded-lg bg-hive-background-overlay border-hive-border-default
                         hover:bg-hive-background-interactive transition-colors cursor-pointer
-                        ${_selectedCard === card.id ? 'ring-2 ring-hive-gold' : ''}
+                        ${selectedCard === card.id ? 'ring-2 ring-hive-gold' : ''}
                         ${card.size === '2x1' && viewMode === 'desktop' ? 'col-span-2' : ''}
                         ${card.size === '1x2' && viewMode === 'desktop' ? 'row-span-2' : ''}
                         ${card.size === '2x2' && viewMode === 'desktop' ? 'col-span-2 row-span-2' : ''}

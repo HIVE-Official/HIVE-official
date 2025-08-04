@@ -56,6 +56,7 @@ export interface ProfileDashboardProps {
     onPinSpace?: (spaceId: string, pinned: boolean) => void;
     onLeaveSpace?: (spaceId: string) => void;
     onQuickPost?: (spaceId: string, message: string) => void;
+    onJoinToolsWaitlist?: () => void;
     onCreateEvent?: (event: Partial<CalendarEvent>) => void;
     onUpdateEvent?: (id: string, updates: Partial<CalendarEvent>) => void;
     onDeleteEvent?: (id: string) => void;

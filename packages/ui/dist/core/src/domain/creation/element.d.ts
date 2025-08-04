@@ -5503,10 +5503,10 @@ export declare const ElementInstanceSchema: z.ZodObject<{
     };
     order?: number;
     isVisible?: boolean;
+    isLocked?: boolean;
     config?: unknown;
     elementId?: string;
     parentId?: string;
-    isLocked?: boolean;
 }, {
     id?: string;
     position?: {
@@ -5517,10 +5517,10 @@ export declare const ElementInstanceSchema: z.ZodObject<{
     };
     order?: number;
     isVisible?: boolean;
+    isLocked?: boolean;
     config?: unknown;
     elementId?: string;
     parentId?: string;
-    isLocked?: boolean;
 }>;
 export type ElementInstance = z.infer<typeof ElementInstanceSchema>;
 export declare const parseElementId: (elementId: ElementId) => {

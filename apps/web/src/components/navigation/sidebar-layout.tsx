@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useSession } from '@/hooks/use-session';
 import { usePathname, useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { 
   Home, 
   Users, 
@@ -185,8 +186,14 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
           <div className="flex items-center justify-between p-4 border-b border-hive-border-default">
             {isExpanded && (
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-hive-brand-secondary rounded-lg flex items-center justify-center">
-                  <Hexagon size={20} className="text-hive-text-primary" />
+                <div className="w-8 h-8 flex items-center justify-center">
+                  <Image
+                    src="/assets/hive-logo-white.svg"
+                    alt="HIVE Logo"
+                    width={32}
+                    height={32}
+                    className="w-8 h-8"
+                  />
                 </div>
                 <span className="text-lg font-bold text-hive-text-primary">HIVE</span>
               </div>

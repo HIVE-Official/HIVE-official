@@ -3,6 +3,7 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
 import { useState } from 'react';
 import { motion, AnimatePresence } from '../../components/framer-motion-proxy.js';
 import { cn } from '../../lib/utils.js';
+import { Lock, Star, Zap, Clock, Users } from 'lucide-react';
 const toolTypeConfig = {
     template: {
         icon: '📋',
@@ -40,7 +41,8 @@ const difficultyConfig = {
     intermediate: { icon: '🟡', label: 'Intermediate' },
     advanced: { icon: '🔴', label: 'Advanced' }
 };
-export const CampusBuilderTools = ({ availableTools, createdTools, isBuilder = false, isLoading = false, variant = 'default', showBecomeBuilder = true, onToolClick, onCreateTool, onViewTool, onBecomeBuilder, onViewAllCreated, className }) => {
+export const CampusBuilderTools = ({ availableTools, createdTools, isBuilder = false, isLoading = false, variant = 'default', showBecomeBuilder = true, isLocked = true, // Default to locked for vBETA
+onToolClick, onCreateTool, onViewTool, onBecomeBuilder, onViewAllCreated, onJoinWaitlist, className }) => {
     const [hoveredTool, setHoveredTool] = useState(null);
     const [activeTab, setActiveTab] = useState('available');
     const formatLastUsed = (timestamp) => {
@@ -59,6 +61,41 @@ export const CampusBuilderTools = ({ availableTools, createdTools, isBuilder = f
     const displayedCreatedTools = createdTools.slice(0, 3);
     if (isLoading) {
         return (_jsx(motion.div, { initial: { opacity: 0, y: 20 }, animate: { opacity: 1, y: 0 }, className: cn('relative overflow-hidden rounded-2xl', 'bg-gradient-to-br from-charcoal/90 via-charcoal/80 to-graphite/90', 'backdrop-blur-xl border border-steel/10', 'shadow-[inset_0_1px_0_0_var(--hive-interactive-hover)]', 'p-6', className), children: _jsxs("div", { className: "space-y-4", children: [_jsx("div", { className: "h-6 bg-steel/20 rounded animate-pulse" }), [...Array(3)].map((_, i) => (_jsxs("div", { className: "flex items-center gap-3", children: [_jsx("div", { className: "w-10 h-10 bg-steel/20 rounded-xl animate-pulse" }), _jsxs("div", { className: "flex-1 space-y-2", children: [_jsx("div", { className: "h-4 bg-steel/20 rounded animate-pulse" }), _jsx("div", { className: "h-3 bg-steel/20 rounded animate-pulse w-2/3" })] })] }, i)))] }) }));
+    }
+    // Locked state for vBETA - Coming in v1 with proper teasing
+    if (isLocked) {
+        return (_jsxs(motion.div, { initial: { opacity: 0, y: 20 }, animate: { opacity: 1, y: 0 }, transition: {
+                duration: 0.6,
+                ease: [0.23, 1, 0.32, 1]
+            }, className: cn('relative overflow-hidden rounded-2xl', 'bg-gradient-to-br from-charcoal/60 via-charcoal/50 to-graphite/60', 'backdrop-blur-xl border border-steel/8', 'shadow-[inset_0_1px_0_0_color-mix(in_srgb,var(--hive-interactive-hover)_30%,transparent)]', 'hover:border-gold/10 hover:shadow-[inset_0_1px_0_0_color-mix(in_srgb,var(--hive-interactive-hover)_50%,transparent)]', 'transition-all duration-500 ease-hive-smooth', 'p-6', className), children: [_jsxs("div", { className: "absolute inset-0 opacity-5", children: [_jsx("div", { className: "absolute inset-0 bg-gradient-to-br from-gold/20 via-transparent to-purple-500/10" }), _jsx("div", { className: "absolute top-0 right-0 w-32 h-32 bg-gradient-radial from-gold/30 to-transparent rounded-full blur-2xl" }), _jsx("div", { className: "absolute bottom-0 left-0 w-24 h-24 bg-gradient-radial from-purple-500/20 to-transparent rounded-full blur-xl" })] }), _jsxs("div", { className: "relative z-10", children: [_jsxs("div", { className: "flex items-center justify-between mb-6", children: [_jsxs("div", { className: "flex items-center gap-3", children: [_jsx("div", { className: "w-10 h-10 rounded-xl bg-gradient-to-br from-charcoal/40 to-graphite/40 border border-steel/15 flex items-center justify-center", children: _jsx(Lock, { className: "h-5 w-5 text-steel/60" }) }), _jsxs("div", { children: [_jsx("h3", { className: "text-platinum/70 font-semibold text-lg tracking-tight", children: "Personal Tools" }), _jsx("p", { className: "text-steel/70 text-xs", children: "Coming in HIVE v1" })] })] }), _jsx("div", { className: "px-3 py-1.5 bg-gradient-to-r from-purple-500/10 to-gold/10 border border-purple-500/20 rounded-full", children: _jsx("span", { className: "text-purple-300/80 text-xs font-medium tracking-wide", children: "v1 Preview" }) })] }), _jsxs("div", { className: "space-y-4 mb-6", children: [_jsxs("div", { className: "text-center", children: [_jsxs(motion.div, { initial: { scale: 0.9, opacity: 0 }, animate: { scale: 1, opacity: 1 }, transition: { delay: 0.2 }, className: "w-20 h-20 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-gold/10 to-purple-500/10 border border-gold/20 flex items-center justify-center relative", children: [_jsx(motion.div, { animate: {
+                                                        rotate: [0, 360],
+                                                        scale: [1, 1.1, 1]
+                                                    }, transition: {
+                                                        rotate: { duration: 10, ease: "linear", repeat: Infinity },
+                                                        scale: { duration: 2, ease: "easeInOut", repeat: Infinity }
+                                                    }, className: "text-3xl", children: "\uD83D\uDEE0\uFE0F" }), _jsx("div", { className: "absolute inset-0 rounded-2xl bg-gradient-to-br from-gold/5 to-purple-500/5 blur-xl animate-pulse" })] }), _jsx("h4", { className: "text-platinum/80 font-semibold mb-2 text-lg", children: "Your Personal Toolkit" }), _jsx("p", { className: "text-mercury/60 text-sm leading-relaxed max-w-xs mx-auto", children: "Create, customize, and share tools that enhance your campus experience" })] }), _jsx("div", { className: "grid grid-cols-1 gap-3 mt-6", children: [
+                                        {
+                                            icon: _jsx(Zap, { className: "h-4 w-4" }),
+                                            title: "Custom Automations",
+                                            description: "Build workflows that save you hours every week",
+                                            color: "from-purple-500/10 to-purple-600/5 border-purple-500/20"
+                                        },
+                                        {
+                                            icon: _jsx(Users, { className: "h-4 w-4" }),
+                                            title: "Community Tools",
+                                            description: "Share your creations with friends and classmates",
+                                            color: "from-blue-500/10 to-blue-600/5 border-blue-500/20"
+                                        },
+                                        {
+                                            icon: _jsx(Star, { className: "h-4 w-4" }),
+                                            title: "Smart Templates",
+                                            description: "Start with proven templates, customize to your needs",
+                                            color: "from-gold/10 to-gold/5 border-gold/20"
+                                        }
+                                    ].map((feature, index) => (_jsx(motion.div, { initial: { opacity: 0, x: -10 }, animate: { opacity: 1, x: 0 }, transition: { delay: 0.4 + index * 0.1 }, className: cn("p-4 rounded-xl bg-gradient-to-r border backdrop-blur-sm", feature.color), children: _jsxs("div", { className: "flex items-start gap-3", children: [_jsx("div", { className: "p-2 rounded-lg bg-white/5 text-white/80 mt-0.5", children: feature.icon }), _jsxs("div", { className: "flex-1 min-w-0", children: [_jsx("h5", { className: "font-medium text-white/90 text-sm mb-1", children: feature.title }), _jsx("p", { className: "text-white/60 text-xs leading-relaxed", children: feature.description })] })] }) }, feature.title))) })] }), _jsxs("div", { className: "text-center pt-4 border-t border-steel/10", children: [_jsxs(motion.button, { whileHover: {
+                                        scale: 1.02,
+                                        boxShadow: "0 8px 32px color-mix(in_srgb,var(--hive-brand-secondary)_20%,transparent)"
+                                    }, whileTap: { scale: 0.98 }, onClick: onJoinWaitlist, className: cn('w-full px-6 py-3 rounded-xl', 'bg-gradient-to-r from-gold/15 to-purple-500/15', 'border border-gold/30 hover:border-gold/50', 'text-gold hover:text-champagne transition-all duration-300', 'font-medium text-sm group flex items-center justify-center gap-2'), children: [_jsx(Clock, { className: "h-4 w-4 group-hover:rotate-12 transition-transform duration-300" }), _jsx("span", { children: "Get Early Access to v1" }), _jsx(motion.span, { animate: { x: [0, 4, 0] }, transition: { duration: 1.5, repeat: Infinity, ease: "easeInOut" }, children: "\u2192" })] }), _jsx("p", { className: "text-steel/60 text-xs mt-3", children: "Be among the first to build custom tools for your campus" })] })] })] }));
     }
     // Non-builder view - Subtle invitation to become a builder
     if (!isBuilder && showBecomeBuilder) {

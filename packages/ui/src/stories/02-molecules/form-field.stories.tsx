@@ -5,11 +5,11 @@ import {
   EmailFormField, 
   PasswordFormField 
 } from '../../atomic/molecules/form-field';
-import { InputEnhanced } from '../../atomic/atoms/input-enhanced';
-import { TextareaEnhanced } from '../../atomic/atoms/textarea-enhanced';
-import { SelectEnhanced } from '../../atomic/atoms/select-enhanced';
-import { CheckboxEnhanced } from '../../atomic/atoms/checkbox-enhanced';
-import { SwitchEnhanced } from '../../atomic/atoms/switch-enhanced';
+import { Input } from '../../atomic/atoms/input-enhanced';
+import { Textarea } from '../../atomic/atoms/textarea-enhanced';
+import { Select } from '../../atomic/atoms/select-enhanced';
+import { Checkbox } from '../../atomic/atoms/checkbox-enhanced';
+import { Switch } from '../../atomic/atoms/switch-enhanced';
 import { useState } from 'react';
 
 const meta: Meta<typeof FormField> = {
@@ -53,7 +53,7 @@ export const Default: Story = {
     label: 'Full Name',
     description: 'Enter your first and last name',
     required: false,
-    children: <InputEnhanced placeholder="John Doe" />,
+    children: <Input placeholder="John Doe" />,
   },
 };
 
@@ -62,7 +62,7 @@ export const Required: Story = {
     label: 'Email Address',
     description: 'We\'ll use this to send you important updates',
     required: true,
-    children: <InputEnhanced type="email" placeholder="you@university.edu" />,
+    children: <Input type="email" placeholder="you@university.edu" />,
   },
 };
 
@@ -72,14 +72,14 @@ export const WithError: Story = {
     description: 'Must be at least 8 characters long',
     error: 'Password must contain at least one uppercase letter and one number',
     required: true,
-    children: <InputEnhanced type="password" placeholder="Enter password" />,
+    children: <Input type="password" placeholder="Enter password" />,
   },
 };
 
 export const WithoutLabel: Story = {
   args: {
     description: 'Optional: Add any additional information about yourself',
-    children: <TextareaEnhanced placeholder="Tell us about yourself..." />,
+    children: <Textarea placeholder="Tell us about yourself..." />,
   },
 };
 
@@ -94,7 +94,7 @@ export const FormFieldTypes: Story = {
           description="Enter your full legal name as it appears on official documents"
           required
         >
-          <InputEnhanced placeholder="Alex Rodriguez" />
+          <Input placeholder="Alex Rodriguez" />
         </FormField>
       </div>
       
@@ -105,7 +105,7 @@ export const FormFieldTypes: Story = {
           description="Use your .edu email address for verification"
           required
         >
-          <InputEnhanced type="email" placeholder="alex.rodriguez@university.edu" />
+          <Input type="email" placeholder="alex.rodriguez@university.edu" />
         </FormField>
       </div>
       
@@ -115,7 +115,7 @@ export const FormFieldTypes: Story = {
           label="Academic Bio"
           description="Tell the community about your academic interests and goals (optional)"
         >
-          <TextareaEnhanced 
+          <Textarea 
             placeholder="I'm a Computer Science major passionate about AI and machine learning..."
             rows={4}
           />
@@ -129,14 +129,14 @@ export const FormFieldTypes: Story = {
           description="Select your expected graduation year"
           required
         >
-          <SelectEnhanced>
+          <Select>
             <option value="">Select year...</option>
             <option value="2024">2024</option>
             <option value="2025">2025</option>
             <option value="2026">2026</option>
             <option value="2027">2027</option>
             <option value="2028">2028</option>
-          </SelectEnhanced>
+          </Select>
         </FormField>
       </div>
       
@@ -147,9 +147,9 @@ export const FormFieldTypes: Story = {
           description="Control who can see your profile and activity"
         >
           <div className="space-y-3">
-            <CheckboxEnhanced label="Allow other students to find me by name" defaultChecked />
-            <CheckboxEnhanced label="Show my activity in the campus feed" defaultChecked />
-            <CheckboxEnhanced label="Enable direct messages from other students" />
+            <Checkbox label="Allow other students to find me by name" defaultChecked />
+            <Checkbox label="Show my activity in the campus feed" defaultChecked />
+            <Checkbox label="Enable direct messages from other students" />
           </div>
         </FormField>
       </div>
@@ -161,9 +161,9 @@ export const FormFieldTypes: Story = {
           description="Choose how you want to receive notifications"
         >
           <div className="space-y-4">
-            <SwitchEnhanced label="Email notifications" />
-            <SwitchEnhanced label="Push notifications" defaultChecked />
-            <SwitchEnhanced label="SMS notifications" />
+            <Switch label="Email notifications" />
+            <Switch label="Push notifications" defaultChecked />
+            <Switch label="SMS notifications" />
           </div>
         </FormField>
       </div>
@@ -250,7 +250,7 @@ export const CampusFormScenarios: Story = {
               description="Your primary field of study"
               required
             >
-              <SelectEnhanced>
+              <Select>
                 <option value="">Select your major...</option>
                 <option value="computer-science">Computer Science</option>
                 <option value="mathematics">Mathematics</option>
@@ -261,7 +261,7 @@ export const CampusFormScenarios: Story = {
                 <option value="business">Business</option>
                 <option value="psychology">Psychology</option>
                 <option value="other">Other</option>
-              </SelectEnhanced>
+              </Select>
             </FormField>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -270,14 +270,14 @@ export const CampusFormScenarios: Story = {
                 description="Expected graduation year"
                 required
               >
-                <SelectEnhanced>
+                <Select>
                   <option value="">Select year...</option>
                   <option value="2024">2024</option>
                   <option value="2025">2025</option>
                   <option value="2026">2026</option>
                   <option value="2027">2027</option>
                   <option value="2028">2028</option>
-                </SelectEnhanced>
+                </Select>
               </FormField>
               
               <TextFormField
@@ -307,7 +307,7 @@ export const CampusFormScenarios: Story = {
               description="Describe what this space is for and who should join"
               required
             >
-              <TextareaEnhanced 
+              <Textarea 
                 placeholder="Weekly study sessions for Computer Science 101. We review lectures, work on assignments together, and prepare for exams. All skill levels welcome!"
                 rows={4}
               />
@@ -319,7 +319,7 @@ export const CampusFormScenarios: Story = {
                 description="Primary academic subject"
                 required
               >
-                <SelectEnhanced>
+                <Select>
                   <option value="">Select subject...</option>
                   <option value="computer-science">Computer Science</option>
                   <option value="mathematics">Mathematics</option>
@@ -329,21 +329,21 @@ export const CampusFormScenarios: Story = {
                   <option value="engineering">Engineering</option>
                   <option value="business">Business</option>
                   <option value="other">Other</option>
-                </SelectEnhanced>
+                </Select>
               </FormField>
               
               <FormField
                 label="Meeting Schedule"
                 description="When does your group typically meet?"
               >
-                <SelectEnhanced>
+                <Select>
                   <option value="">Select schedule...</option>
                   <option value="weekly">Weekly</option>
                   <option value="bi-weekly">Bi-weekly</option>
                   <option value="monthly">Monthly</option>
                   <option value="as-needed">As needed</option>
                   <option value="before-exams">Before exams</option>
-                </SelectEnhanced>
+                </Select>
               </FormField>
             </div>
             
@@ -352,18 +352,18 @@ export const CampusFormScenarios: Story = {
               description="Configure privacy and membership settings"
             >
               <div className="space-y-4">
-                <CheckboxEnhanced 
+                <Checkbox 
                   label="Allow anyone to join (public space)" 
                   defaultChecked 
                 />
-                <CheckboxEnhanced 
+                <Checkbox 
                   label="Require approval for new members" 
                 />
-                <CheckboxEnhanced 
+                <Checkbox 
                   label="Allow members to invite others" 
                   defaultChecked 
                 />
-                <CheckboxEnhanced 
+                <Checkbox 
                   label="Enable file sharing in this space" 
                   defaultChecked 
                 />
@@ -389,7 +389,7 @@ export const CampusFormScenarios: Story = {
               description="Describe what your tool does and how it helps students"
               required
             >
-              <TextareaEnhanced 
+              <Textarea 
                 placeholder="A comprehensive GPA calculator that helps students track their academic progress across semesters and plan their course load to achieve target GPAs."
                 rows={4}
               />
@@ -401,7 +401,7 @@ export const CampusFormScenarios: Story = {
                 description="What type of tool is this?"
                 required
               >
-                <SelectEnhanced>
+                <Select>
                   <option value="">Select category...</option>
                   <option value="academic">Academic Planning</option>
                   <option value="productivity">Productivity</option>
@@ -411,7 +411,7 @@ export const CampusFormScenarios: Story = {
                   <option value="health">Health & Wellness</option>
                   <option value="finance">Finance</option>
                   <option value="other">Other</option>
-                </SelectEnhanced>
+                </Select>
               </FormField>
               
               <TextFormField
@@ -426,7 +426,7 @@ export const CampusFormScenarios: Story = {
               label="Tool Features"
               description="What makes your tool special? List key features."
             >
-              <TextareaEnhanced 
+              <Textarea 
                 placeholder="• Calculate semester and cumulative GPA&#10;• Import transcripts automatically&#10;• Plan future courses and see projected GPA&#10;• Set GPA goals and track progress&#10;• Export reports for advising meetings"
                 rows={4}
               />
@@ -437,19 +437,19 @@ export const CampusFormScenarios: Story = {
               description="How would you like to share your tool?"
             >
               <div className="space-y-4">
-                <CheckboxEnhanced 
+                <Checkbox 
                   label="Make tool publicly available to all students" 
                   defaultChecked 
                 />
-                <CheckboxEnhanced 
+                <Checkbox 
                   label="Allow other students to suggest improvements" 
                   defaultChecked 
                 />
-                <CheckboxEnhanced 
+                <Checkbox 
                   label="Include my name as the creator" 
                   defaultChecked 
                 />
-                <CheckboxEnhanced 
+                <Checkbox 
                   label="Send me analytics about tool usage" 
                 />
               </div>
@@ -604,7 +604,7 @@ export const InteractiveFormFieldExamples: Story = {
               label="Academic Bio"
               description="Tell us about your academic interests and goals"
             >
-              <TextareaEnhanced
+              <Textarea
                 placeholder="I'm a Computer Science major interested in AI and machine learning..."
                 rows={4}
                 value={formData.bio}
@@ -619,7 +619,7 @@ export const InteractiveFormFieldExamples: Story = {
                 error={errors.major}
                 required
               >
-                <SelectEnhanced
+                <Select
                   value={formData.major}
                   onChange={(e) => handleChange('major', e.target.value)}
                 >
@@ -632,14 +632,14 @@ export const InteractiveFormFieldExamples: Story = {
                   <option value="engineering">Engineering</option>
                   <option value="business">Business</option>
                   <option value="other">Other</option>
-                </SelectEnhanced>
+                </Select>
               </FormField>
               
               <FormField
                 label="Graduation Year"
                 description="Expected graduation year"
               >
-                <SelectEnhanced
+                <Select
                   value={formData.year}
                   onChange={(e) => handleChange('year', e.target.value)}
                 >
@@ -649,7 +649,7 @@ export const InteractiveFormFieldExamples: Story = {
                   <option value="2026">2026</option>
                   <option value="2027">2027</option>
                   <option value="2028">2028</option>
-                </SelectEnhanced>
+                </Select>
               </FormField>
             </div>
             
@@ -658,12 +658,12 @@ export const InteractiveFormFieldExamples: Story = {
               description="Configure your profile visibility and notifications"
             >
               <div className="space-y-4">
-                <SwitchEnhanced
+                <Switch
                   label="Enable email notifications"
                   checked={formData.notifications}
                   onCheckedChange={(checked) => handleChange('notifications', checked)}
                 />
-                <SwitchEnhanced
+                <Switch
                   label="Make profile publicly visible"
                   checked={formData.publicProfile}
                   onCheckedChange={(checked) => handleChange('publicProfile', checked)}
@@ -692,6 +692,6 @@ export const SimpleInteractive: Story = {
     label: 'Student Name',
     description: 'Enter your full name as it appears on your student ID',
     required: true,
-    children: <InputEnhanced placeholder="Alex Rodriguez" />,
+    children: <Input placeholder="Alex Rodriguez" />,
   },
 };

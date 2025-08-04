@@ -18,8 +18,6 @@ export default function HiveProfilePage() {
     isLoading,
     error,
     completeness,
-    uploadAvatar,
-    toggleGhostMode,
     clearError,
     createEvent,
     updateEvent,
@@ -83,7 +81,7 @@ export default function HiveProfilePage() {
       isPinned: space.role === 'leader',
       isFavorite: space.type === 'favorite',
       isMuted: false, // Default to not muted
-      userRole: space.role as 'member' | 'moderator' | 'leader',
+      userRole: (space.role || 'member') as 'member' | 'moderator' | 'leader',
       recentActivity: {
         type: 'message' as const,
         preview: 'Recent activity in this space',
@@ -165,21 +163,8 @@ export default function HiveProfilePage() {
     router.push(`/spaces/${spaceId}`);
   };
 
-  const handleEventClick = (eventId: string) => {
-    router.push(`/calendar?event=${eventId}`);
-  };
-
-  const handleConnectionClick = (connectionId: string) => {
-    console.log('Connection clicked:', connectionId);
-    // Handle connection actions
-  };
-
   const handleEditProfile = () => {
     router.push('/profile/edit');
-  };
-
-  const handlePrivacySettings = () => {
-    router.push('/settings/privacy');
   };
 
   const handleJoinSpace = () => {
@@ -251,8 +236,15 @@ export default function HiveProfilePage() {
     }
   };
 
+  const handleJoinToolsWaitlist = () => {
+    // TODO: Implement waitlist signup
+    console.log('User wants to join tools waitlist for v1');
+    // For now, could show a modal or redirect to waitlist page
+    router.push('/waitlist/tools');
+  };
+
   // Calendar event handlers
-  const handleCreateEvent = async (eventData: any) => {
+  const handleCreateEvent = async (eventData: Record<string, unknown>) => {
     try {
       const newEvent = await createEvent(eventData);
       if (newEvent) {
@@ -266,7 +258,7 @@ export default function HiveProfilePage() {
     }
   };
 
-  const handleUpdateEvent = async (id: string, updates: any) => {
+  const handleUpdateEvent = async (id: string, updates: Record<string, unknown>) => {
     try {
       await updateEvent(id, updates);
       // Refresh calendar data
@@ -282,7 +274,7 @@ export default function HiveProfilePage() {
   const handleDeleteEvent = async (id: string) => {
     try {
       await deleteEvent(id);
-      setCalendarEvents(prev => prev.filter((event: any) => event.id !== id));
+      setCalendarEvents(prev => prev.filter((event: Record<string, unknown>) => (event.id as string) !== id));
       // Check for updated conflicts
       const conflicts = await detectConflicts();
       setCalendarConflicts(conflicts);
@@ -377,6 +369,7 @@ export default function HiveProfilePage() {
           onPinSpace={handlePinSpace}
           onLeaveSpace={handleLeaveSpace}
           onQuickPost={handleQuickPost}
+          onJoinToolsWaitlist={handleJoinToolsWaitlist}
           onCreateEvent={handleCreateEvent}
           onUpdateEvent={handleUpdateEvent}
           onDeleteEvent={handleDeleteEvent}

@@ -1,6 +1,7 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
+import { collection, collectionGroup, doc, getDoc, getDocs, query, where, orderBy, limit } from 'firebase-admin/firestore';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { type Post } from '@hive/core';
 import { logger } from "@/lib/logger";
@@ -197,11 +198,13 @@ async function getUserMembershipData(
   
   try {
     // Use collectionGroup query for efficient membership lookup
-    const membershipQuery = dbAdmin.collectionGroup('members')
-      .where('userId', '==', userId)
-      .limit(100); // Reasonable limit for space memberships
+    const membershipQuery = query(
+      collectionGroup(dbAdmin, 'members'),
+      where('userId', '==', userId),
+      limit(100) // Reasonable limit for space memberships
+    );
       
-    const membershipsSnapshot = await membershipQuery.get();
+    const membershipsSnapshot = await getDocs(membershipQuery);
     
     const memberships: UserMembershipData[] = [];
     

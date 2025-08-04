@@ -67,13 +67,13 @@ export default function SpaceAnalyticsPage({ params }: SpaceAnalyticsPageProps) 
   const [analytics, setAnalytics] = useState<SpaceAnalytics | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [isLeader, setIsLeader] = useState(false);
+  const [_isLeader, _setIsLeader] = useState(false);
 
   useEffect(() => {
     if (spaceId) {
       loadAnalytics();
     }
-  }, [spaceId]);
+  }, [spaceId, loadAnalytics]);
 
   const loadAnalytics = async () => {
     try {
@@ -86,7 +86,7 @@ export default function SpaceAnalyticsPage({ params }: SpaceAnalyticsPageProps) 
       if (!response.ok) {
         if (response.status === 403) {
           setError('You do not have permission to view analytics for this space.');
-          setIsLeader(false);
+          _setIsLeader(false);
           return;
         }
         throw new Error(data.message || 'Failed to load analytics');
@@ -94,7 +94,7 @@ export default function SpaceAnalyticsPage({ params }: SpaceAnalyticsPageProps) 
 
       if (data.success && data.analytics) {
         setAnalytics(data.analytics);
-        setIsLeader(true);
+        _setIsLeader(true);
       } else {
         setError('Analytics data not available');
       }
@@ -110,7 +110,7 @@ export default function SpaceAnalyticsPage({ params }: SpaceAnalyticsPageProps) 
     await loadAnalytics();
   };
 
-  const handleExportData = () => {
+  const _handleExportData = () => {
     if (!analytics) return;
     
     // Create CSV export of analytics data
@@ -138,7 +138,7 @@ export default function SpaceAnalyticsPage({ params }: SpaceAnalyticsPageProps) 
     window.URL.revokeObjectURL(url);
   };
 
-  const handleUpdateSettings = () => {
+  const _handleUpdateSettings = () => {
     router.push(`/spaces/${spaceId}/settings`);
   };
 

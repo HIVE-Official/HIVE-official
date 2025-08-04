@@ -4,6 +4,7 @@ import { dbAdmin } from '@/lib/firebase-admin';
 import { getCurrentUser } from '@/lib/server-auth';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { doc, getDoc, collection, query, where, getDocs } from 'firebase-admin/firestore';
 
 // Visibility check interface
 interface VisibilityCheck {
@@ -49,11 +50,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Get target user's privacy settings
-    const targetPrivacyDoc = await getDoc(doc(db, 'privacySettings', targetUserId));
+    const targetPrivacyDoc = await getDoc(doc(dbAdmin, 'privacySettings', targetUserId));
     const targetPrivacy = targetPrivacyDoc.exists ? targetPrivacyDoc.data() : null;
 
     // Get viewer's privacy settings (for mutual visibility checks)
-    const viewerPrivacyDoc = await getDoc(doc(db, 'privacySettings', user.uid));
+    const viewerPrivacyDoc = await getDoc(doc(dbAdmin, 'privacySettings', user.uid));
     const viewerPrivacy = viewerPrivacyDoc.exists ? viewerPrivacyDoc.data() : null;
 
     // Determine relationship and shared spaces
@@ -103,7 +104,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Get viewer's privacy settings
-    const viewerPrivacyDoc = await getDoc(doc(db, 'privacySettings', user.uid));
+    const viewerPrivacyDoc = await getDoc(doc(dbAdmin, 'privacySettings', user.uid));
     const viewerPrivacy = viewerPrivacyDoc.exists ? viewerPrivacyDoc.data() : null;
 
     // Process each user
@@ -128,7 +129,7 @@ export async function GET(request: NextRequest) {
           }
 
           // Get target user's privacy settings
-          const targetPrivacyDoc = await getDoc(doc(db, 'privacySettings', targetUserId));
+          const targetPrivacyDoc = await getDoc(doc(dbAdmin, 'privacySettings', targetUserId));
           const targetPrivacy = targetPrivacyDoc.exists ? targetPrivacyDoc.data() : null;
 
           // Determine relationship and shared spaces

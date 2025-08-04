@@ -10,15 +10,15 @@ import { captureError } from './error-monitoring';
  * Log levels in order of severity
  */
 export enum LogLevel {
-  // eslint-disable-next-line no-unused-vars
+   
   DEBUG = 'debug',
-  // eslint-disable-next-line no-unused-vars
+   
   INFO = 'info',
-  // eslint-disable-next-line no-unused-vars
+   
   WARN = 'warn',
-  // eslint-disable-next-line no-unused-vars
+   
   ERROR = 'error',
-  // eslint-disable-next-line no-unused-vars
+   
   FATAL = 'fatal'
 }
 
@@ -27,23 +27,23 @@ export enum LogLevel {
  * Log categories for better organization
  */
 export enum LogCategory {
-  // eslint-disable-next-line no-unused-vars
+   
   AUTH = 'auth',
-  // eslint-disable-next-line no-unused-vars
+   
   API = 'api',
-  // eslint-disable-next-line no-unused-vars
+   
   DATABASE = 'database',
-  // eslint-disable-next-line no-unused-vars
+   
   SECURITY = 'security',
-  // eslint-disable-next-line no-unused-vars
+   
   PERFORMANCE = 'performance',
-  // eslint-disable-next-line no-unused-vars
+   
   USER_ACTION = 'user_action',
-  // eslint-disable-next-line no-unused-vars
+   
   SYSTEM = 'system',
-  // eslint-disable-next-line no-unused-vars
+   
   BUSINESS = 'business',
-  // eslint-disable-next-line no-unused-vars
+   
   INTEGRATION = 'integration'
 }
 

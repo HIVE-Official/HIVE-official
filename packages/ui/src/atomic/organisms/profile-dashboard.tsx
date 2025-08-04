@@ -100,6 +100,7 @@ export interface ProfileDashboardProps {
   onPinSpace?: (spaceId: string, pinned: boolean) => void;
   onLeaveSpace?: (spaceId: string) => void;
   onQuickPost?: (spaceId: string, message: string) => void;
+  onJoinToolsWaitlist?: () => void;
   
   // Calendar callbacks
   onCreateEvent?: (event: Partial<CalendarEvent>) => void;
@@ -395,6 +396,7 @@ export const ProfileDashboard: React.FC<ProfileDashboardProps> = ({
   onPinSpace,
   onLeaveSpace,
   onQuickPost,
+  onJoinToolsWaitlist,
   onCreateEvent,
   onUpdateEvent,
   onDeleteEvent,
@@ -499,9 +501,11 @@ export const ProfileDashboard: React.FC<ProfileDashboardProps> = ({
               createdTools={createdTools}
               isBuilder={user.isBuilder}
               isLoading={isLoading.tools}
+              isLocked={true}
               onToolClick={onToolClick}
               onCreateTool={onCreateTool}
               onBecomeBuilder={onBecomeBuilder}
+              onJoinWaitlist={onJoinToolsWaitlist}
             />
           </motion.div>
         )}
@@ -561,9 +565,11 @@ export const ProfileDashboard: React.FC<ProfileDashboardProps> = ({
               isBuilder={user.isBuilder}
               isLoading={isLoading.tools}
               variant="compact"
+              isLocked={true}
               onToolClick={onToolClick}
               onCreateTool={onCreateTool}
               onBecomeBuilder={onBecomeBuilder}
+              onJoinWaitlist={onJoinToolsWaitlist}
             />
           </motion.div>
         )}
@@ -657,9 +663,11 @@ export const ProfileDashboard: React.FC<ProfileDashboardProps> = ({
             isBuilder={user.isBuilder}
             isLoading={isLoading.tools}
             variant="subtle"
+            isLocked={true}
             onToolClick={onToolClick}
             onCreateTool={onCreateTool}
             onBecomeBuilder={onBecomeBuilder}
+            onJoinWaitlist={onJoinToolsWaitlist}
           />
         </motion.div>
       )}

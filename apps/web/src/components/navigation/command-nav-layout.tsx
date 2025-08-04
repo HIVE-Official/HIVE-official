@@ -273,8 +273,14 @@ export function CommandNavLayout({ children }: CommandNavLayoutProps) {
           <div className="flex justify-between items-center h-12">
             {/* Logo */}
             <Link href="/" className="flex items-center space-x-2">
-              <div className="w-6 h-6 bg-[#FFD700] rounded-md flex items-center justify-center">
-                <span className="text-[#0A0A0A] font-bold text-xs">H</span>
+              <div className="w-6 h-6 flex items-center justify-center">
+                <Image
+                  src="/assets/hive-logo-white.svg"
+                  alt="HIVE Logo"
+                  width={24}
+                  height={24}
+                  className="w-6 h-6"
+                />
               </div>
               <span className="text-white font-bold">HIVE</span>
             </Link>
