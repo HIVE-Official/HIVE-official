@@ -4,70 +4,48 @@ import path from 'path';
 
 const config: StorybookConfig = {
   stories: [
-    // 🏗️ FOUNDATION FIRST - Core design system and tokens
+    // 🎯 SYSTEM OVERVIEW - Platform overview and navigation
+    '../src/stories/00-System-Overview/**/*.stories.@(js|jsx|ts|tsx)',
+    
+    // 🏗️ FOUNDATION - Core design system and tokens
     '../src/stories/00-Foundation/**/*.stories.@(js|jsx|ts|tsx)',
+    '../src/stories/00-foundation/**/*.stories.@(js|jsx|ts|tsx)',
     '../src/atomic/foundations/**/*.stories.@(js|jsx|ts|tsx)',
     
-    // 🧱 ATOMIC BUILDING BLOCKS - Core UI components
+    // 🧱 ATOMS - Core UI building blocks
     '../src/stories/01-Atoms/**/*.stories.@(js|jsx|ts|tsx)',
     '../src/atomic/atoms/**/*.stories.@(js|jsx|ts|tsx)',
     
     // 🔗 MOLECULES - Combined atomic elements
-    '../src/stories/02-Molecules/**/*.stories.@(js|jsx|ts|tsx)',
+    '../src/stories/03-Molecules/**/*.stories.@(js|jsx|ts|tsx)',
     '../src/atomic/molecules/**/*.stories.@(js|jsx|ts|tsx)',
     
     // 🏛️ ORGANISMS - Complex component systems
-    '../src/stories/03-Organisms/**/*.stories.@(js|jsx|ts|tsx)',
+    '../src/stories/04-Organisms/**/*.stories.@(js|jsx|ts|tsx)',
     '../src/atomic/organisms/**/*.stories.@(js|jsx|ts|tsx)',
     
-    // 📱 FEATURE SLICE: Authentication & Onboarding
+    // 🔄 COMPLETE SYSTEMS - Cross-system integrations
+    '../src/stories/07-Complete-Feed-Rituals-System/**/*.stories.@(js|jsx|ts|tsx)',
+    '../src/stories/08-Complete-HiveLAB-System/**/*.stories.@(js|jsx|ts|tsx)',
+    
+    // 📱 FEATURE SLICES - Core platform features
     '../src/stories/10-Auth-Onboarding/**/*.stories.@(js|jsx|ts|tsx)',
-    '../src/components/auth/**/*.stories.@(js|jsx|ts|tsx)',
-    '../src/components/onboarding/**/*.stories.@(js|jsx|ts|tsx)',
-    
-    // 🧭 FEATURE SLICE: Navigation & Layout
-    '../src/stories/11-Navigation-Layout/**/*.stories.@(js|jsx|ts|tsx)',
-    '../src/navigation/**/*.stories.@(js|jsx|ts|tsx)',
-    '../src/components/navigation/**/*.stories.@(js|jsx|ts|tsx)',
-    
-    // 👤 FEATURE SLICE: Profile System
+    '../src/stories/10-Campus-Systems/**/*.stories.@(js|jsx|ts|tsx)',
+    '../src/stories/11-Advanced-Navigation/**/*.stories.@(js|jsx|ts|tsx)',
     '../src/stories/12-Profile-System/**/*.stories.@(js|jsx|ts|tsx)',
-    '../src/components/profile/**/*.stories.@(js|jsx|ts|tsx)',
-    
-    // 🏠 FEATURE SLICE: Spaces & Communities
     '../src/stories/13-Spaces-Communities/**/*.stories.@(js|jsx|ts|tsx)',
-    '../src/components/spaces/**/*.stories.@(js|jsx|ts|tsx)',
-    
-    // 📰 FEATURE SLICE: Feed & Social
-    '../src/stories/14-Feed-Social/**/*.stories.@(js|jsx|ts|tsx)',
-    '../src/components/social/**/*.stories.@(js|jsx|ts|tsx)',
-    
-    // 🔧 FEATURE SLICE: Tools & Creation
     '../src/stories/15-Tools-Creation/**/*.stories.@(js|jsx|ts|tsx)',
+    
+    // 🌐 PLATFORM EXPERIENCES
+    '../src/stories/20-Platform-Integration/**/*.stories.@(js|jsx|ts|tsx)',
+    '../src/stories/20-Platform-Experiences/**/*.stories.@(js|jsx|ts|tsx)',
+    
+    // 🔬 DEVELOPMENT & DOCUMENTATION
+    '../src/stories/30-Development/**/*.stories.@(js|jsx|ts|tsx)',
+    
+    // 🧪 INDIVIDUAL COMPONENT STORIES
     '../src/components/tools/**/*.stories.@(js|jsx|ts|tsx)',
-    '../src/components/creators/**/*.stories.@(js|jsx|ts|tsx)',
-    '../src/components/hivelab/**/*.stories.@(js|jsx|ts|tsx)',
-    
-    // ⚡ FEATURE SLICE: Rituals & Coordination
-    '../src/stories/16-Rituals-Coordination/**/*.stories.@(js|jsx|ts|tsx)',
-    '../src/components/rituals/**/*.stories.@(js|jsx|ts|tsx)',
-    
-    // 🎓 FEATURE SLICE: Campus Integration
-    '../src/stories/17-Campus-Integration/**/*.stories.@(js|jsx|ts|tsx)',
-    '../src/components/campus/**/*.stories.@(js|jsx|ts|tsx)',
-    '../src/components/mobile/**/*.stories.@(js|jsx|ts|tsx)',
-    
-    // 🔐 FEATURE SLICE: Admin & Moderation
-    '../src/stories/18-Admin-Moderation/**/*.stories.@(js|jsx|ts|tsx)',
-    '../src/components/admin/**/*.stories.@(js|jsx|ts|tsx)',
-    
-    // 🏗️ PLATFORM SYSTEMS - Cross-cutting concerns
-    '../src/stories/90-Platform-Systems/**/*.stories.@(js|jsx|ts|tsx)',
-    '../src/components/shell/**/*.stories.@(js|jsx|ts|tsx)',
-    '../src/components/dashboard/**/*.stories.@(js|jsx|ts|tsx)',
-    
-    // 🔬 DEVELOPMENT & QUALITY
-    '../src/stories/99-Development/**/*.stories.@(js|jsx|ts|tsx)',
+    '../src/components/**/*.stories.@(js|jsx|ts|tsx)',
     
     // Include all MDX documentation
     '../src/**/*.mdx'
@@ -229,7 +207,14 @@ const config: StorybookConfig = {
             warn(warning);
           },
         },
-        chunkSizeWarningLimit: 1000, // Increase chunk size limit
+        chunkSizeWarningLimit: 2000, // Increase chunk size limit for large stories
+        target: 'esnext', // Use modern JavaScript for better parsing
+      },
+      esbuild: {
+        target: 'esnext',
+        logOverride: { 'this-is-undefined-in-esm': 'silent' },
+        // Increase memory limits for large files
+        platform: 'browser'
       },
     });
   },
