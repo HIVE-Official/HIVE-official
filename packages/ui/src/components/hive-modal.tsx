@@ -99,8 +99,11 @@ const modalVariants = {
 export interface HiveModalProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onDrag' | 'onDragEnd' | 'onDragStart'>,
     VariantProps<typeof hiveModalVariants> {
-  isOpen: boolean;
-  onClose: () => void;
+  // Support both patterns for compatibility
+  isOpen?: boolean;
+  open?: boolean;
+  onClose?: () => void;
+  onOpenChange?: (open: boolean) => void;
   title?: string;
   description?: string;
   showCloseButton?: boolean;
@@ -115,7 +118,9 @@ const HiveModal = React.forwardRef<HTMLDivElement, HiveModalProps>(
     variant,
     size,
     isOpen,
+    open,
     onClose,
+    onOpenChange,
     title,
     description,
     showCloseButton = true,
@@ -125,23 +130,27 @@ const HiveModal = React.forwardRef<HTMLDivElement, HiveModalProps>(
     ...props 
   }, ref) => {
     
+    // Support both prop patterns
+    const modalIsOpen = open ?? isOpen ?? false;
+    const handleClose = onOpenChange ? () => onOpenChange(false) : onClose ?? (() => {});
+    
     // Handle escape key
     useEffect(() => {
       if (!closeOnEscape) return;
       
       const handleEscape = (e: KeyboardEvent) => {
-        if (e.key === 'Escape' && isOpen) {
-          onClose();
+        if (e.key === 'Escape' && modalIsOpen) {
+          handleClose();
         }
       };
       
       document.addEventListener('keydown', handleEscape);
       return () => document.removeEventListener('keydown', handleEscape);
-    }, [isOpen, onClose, closeOnEscape]);
+    }, [modalIsOpen, handleClose, closeOnEscape]);
     
     // Prevent body scroll when modal is open
     useEffect(() => {
-      if (isOpen) {
+      if (modalIsOpen) {
         document.body.style.overflow = 'hidden';
       } else {
         document.body.style.overflow = 'unset';
@@ -150,17 +159,17 @@ const HiveModal = React.forwardRef<HTMLDivElement, HiveModalProps>(
       return () => {
         document.body.style.overflow = 'unset';
       };
-    }, [isOpen]);
+    }, [modalIsOpen]);
     
     const handleBackdropClick = (e: React.MouseEvent) => {
       if (e.target === e.currentTarget && closeOnBackdropClick) {
-        onClose();
+        handleClose();
       }
     };
     
     return (
       <AnimatePresence mode="wait">
-        {isOpen && (
+        {modalIsOpen && (
           <motion.div
             className="fixed inset-0 z-50 flex items-center justify-center"
             initial="hidden"
@@ -200,7 +209,7 @@ const HiveModal = React.forwardRef<HTMLDivElement, HiveModalProps>(
                   {showCloseButton && (
                     <motion.button
                       className="text-[var(--hive-text-primary)]/60 hover:text-[var(--hive-text-primary)]/80 transition-colors p-2 -mt-2 -mr-2"
-                      onClick={onClose}
+                      onClick={handleClose}
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.9 }}
                     >

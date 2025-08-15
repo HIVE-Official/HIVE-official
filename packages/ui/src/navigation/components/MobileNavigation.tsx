@@ -8,9 +8,10 @@
 
 import React, { memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { NavigationItem, NavigationUser } from '../core/types';
+import { NavigationItem } from '../core/types';
 import { NAVIGATION_THEME, NAVIGATION_SIZING, NAVIGATION_MOTION, NAVIGATION_A11Y } from '../core/data';
 import { cn } from '../../lib/utils';
+import { useHapticFeedback, useTouchRipple } from '../../hooks/use-mobile-interactions';
 
 // ============================================================================
 // COMPONENT INTERFACES
@@ -18,7 +19,6 @@ import { cn } from '../../lib/utils';
 
 interface MobileNavigationProps {
   items: ReadonlyArray<NavigationItem>;
-  user: NavigationUser;
   onNavigate: (href: string) => void;
   className?: string;
   testId?: string;
@@ -36,9 +36,12 @@ interface MobileNavItemProps {
 
 const MobileNavItem = memo<MobileNavItemProps>(({ item, onNavigate, isActive }) => {
   const Icon = item.icon;
+  const { triggerHaptic } = useHapticFeedback();
+  const { ripples, rippleHandlers } = useTouchRipple();
   
   const handleClick = () => {
     if (!item.isDisabled) {
+      triggerHaptic('selection');
       onNavigate(item.href);
     }
   };
@@ -56,6 +59,7 @@ const MobileNavItem = memo<MobileNavItemProps>(({ item, onNavigate, isActive }) 
       onClick={handleClick}
       onKeyDown={handleKeyDown}
       disabled={item.isDisabled}
+      {...rippleHandlers}
       className={cn(
         // Base styles
         'relative flex flex-col items-center justify-center',
@@ -143,6 +147,18 @@ const MobileNavItem = memo<MobileNavItemProps>(({ item, onNavigate, isActive }) 
       >
         {item.label}
       </span>
+
+      {/* Touch ripple effects */}
+      {ripples.map((ripple) => (
+        <div
+          key={ripple.id}
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: `radial-gradient(circle at ${ripple.x}px ${ripple.y}px, rgba(255,255,255,0.2) 0%, transparent 50%)`,
+            animation: 'mobile-ripple 0.6s ease-out forwards'
+          }}
+        />
+      ))}
     </motion.button>
   );
 });
@@ -155,7 +171,6 @@ MobileNavItem.displayName = 'MobileNavItem';
 
 export const MobileNavigation = memo<MobileNavigationProps>(({
   items,
-  user,
   onNavigate,
   className,
   testId = 'mobile-navigation'

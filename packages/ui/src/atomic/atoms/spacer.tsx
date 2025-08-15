@@ -160,8 +160,8 @@ export const Spacer = React.forwardRef<HTMLDivElement, SpacerProps>(({
     
     // Debug visualization
     debug && [
-      'bg-hive-ruby/20',
-      'border border-dashed border-hive-ruby',
+      'bg-[color-mix(in_srgb,var(--hive-status-error)_20%,transparent)]',
+      'border border-dashed border-[var(--hive-status-error)]',
       'relative'
     ].filter(Boolean).join(' ')
   ].filter(Boolean).join(' ');
@@ -181,7 +181,7 @@ export const Spacer = React.forwardRef<HTMLDivElement, SpacerProps>(({
     >
       {debug && (
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-xs font-mono text-hive-ruby bg-[var(--hive-text-primary)] px-1 rounded">
+          <span className="text-xs font-mono text-[var(--hive-status-error)] bg-[var(--hive-background-primary)] px-1 rounded">
             {size} {direction}
           </span>
         </div>

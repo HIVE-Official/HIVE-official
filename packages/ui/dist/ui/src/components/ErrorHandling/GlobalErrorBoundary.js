@@ -1,8 +1,8 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { Component } from 'react';
-import { HiveErrorHandler } from './ErrorBoundary.js';
-import { LoadingOrchestrator } from '../Loading/LoadingOrchestrator.js';
+import { HiveErrorHandler } from './ErrorBoundary';
+import { LoadingOrchestrator } from '../Loading/LoadingOrchestrator';
 class GlobalErrorTracker {
     constructor() {
         this.analytics = {

@@ -135,8 +135,8 @@ test.describe('Onboarding Error Scenarios', () => {
     await page.waitForTimeout(1000)
     
     expect(abandonmentEvent).toBeTruthy()
-    expect(abandonmentEvent.type).toBe('onboarding_abandoned')
-    expect(abandonmentEvent.stepName).toBe('academics')
+    expect(abandonmentEvent!.type).toBe('onboarding_abandoned')
+    expect(abandonmentEvent!.stepName).toBe('academics')
   })
   
   test('form validation edge cases', async ({ page }) => {

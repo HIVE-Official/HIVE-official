@@ -15,69 +15,151 @@ vi.mock('next/navigation', () => ({
   useParams: vi.fn(() => ({})),
 }));
 
-// Mock ToolMarketplace component
+// Mock UI components
 vi.mock('@hive/ui', () => ({
-  ToolMarketplace: ({ tools, onToolInstall, onToolPreview, onToolAction }: any) => (
-    <div data-testid="tool-marketplace">
-      <div data-testid="marketplace-tools-count">{tools.length}</div>
-      {tools.map((tool: any) => (
-        <div key={tool.id} data-testid={`tool-${tool.id}`}>
-          <span>{tool.name}</span>
-          <button 
-            onClick={() => onToolInstall(tool.id)}
-            data-testid={`install-${tool.id}`}
-          >
-            Install
-          </button>
-          <button 
-            onClick={() => onToolPreview(tool.id)}
-            data-testid={`preview-${tool.id}`}
-          >
-            Preview
-          </button>
-          <button 
-            onClick={() => onToolAction(tool.id, 'edit')}
-            data-testid={`edit-${tool.id}`}
-          >
-            Edit
-          </button>
-          <button 
-            onClick={() => onToolAction(tool.id, 'share')}
-            data-testid={`share-${tool.id}`}
-          >
-            Share
-          </button>
+  CompleteHIVEToolsSystem: ({ 
+    activeTab, 
+    onTabChange, 
+    onToolInstall, 
+    onToolPreview, 
+    onToolAction, 
+    onCreateTool, 
+    marketplaceTools 
+  }: any) => (
+    <div data-testid="complete-hive-tools-system">
+      <div>
+        <h1>Tools</h1>
+        <p>Solutions & building</p>
+        <div>
+          <button onClick={() => onCreateTool('template')}>Use Template</button>
+          <button onClick={() => onCreateTool('wizard')}>Quick Builder</button>
+          <button onClick={() => onCreateTool('visual')}>Create Tool</button>
         </div>
-      ))}
+      </div>
+      
+      <div>
+        <button 
+          onClick={() => onTabChange('marketplace')}
+          className={activeTab === 'marketplace' ? 'bg-[#FFD700]' : ''}
+        >
+          Marketplace
+        </button>
+        <button 
+          onClick={() => onTabChange('personal')}
+          className={activeTab === 'personal' ? 'bg-[#FFD700]' : ''}
+        >
+          Personal Tools
+        </button>
+        <button 
+          onClick={() => onTabChange('hivelab')}
+          className={activeTab === 'hivelab' ? 'bg-[#FFD700]' : ''}
+        >
+          HiveLab
+        </button>
+      </div>
+
+      {activeTab === 'marketplace' && (
+        <div data-testid="tool-marketplace">
+          <div data-testid="marketplace-tools-count">{marketplaceTools?.length || 0}</div>
+          {marketplaceTools?.map((tool: any) => (
+            <div key={tool.id} data-testid={`tool-${tool.id}`}>
+              <span>{tool.name}</span>
+              <button 
+                onClick={() => onToolInstall(tool.id)}
+                data-testid={`install-${tool.id}`}
+              >
+                Install
+              </button>
+              <button 
+                onClick={() => onToolPreview(tool.id)}
+                data-testid={`preview-${tool.id}`}
+              >
+                Preview
+              </button>
+              <button 
+                onClick={() => onToolAction(tool.id, 'edit')}
+                data-testid={`edit-${tool.id}`}
+              >
+                Edit
+              </button>
+              <button 
+                onClick={() => onToolAction(tool.id, 'share')}
+                data-testid={`share-${tool.id}`}
+              >
+                Share
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {activeTab === 'personal' && (
+        <div>
+          <p>Your installed tools and personal productivity suite</p>
+        </div>
+      )}
+
+      {activeTab === 'hivelab' && (
+        <div>
+          <p>Build and deploy custom campus tools with visual creation interface</p>
+          <button onClick={() => onCreateTool('visual')}>Start Building</button>
+          <button onClick={() => onCreateTool('template')}>Use Template</button>
+        </div>
+      )}
     </div>
   ),
-}));
-
-// Mock feature flags
-vi.mock('@hive/hooks', () => ({
-  useFeatureFlags: vi.fn(() => ({
-    trackEvent: vi.fn(),
-  })),
-}));
-
-// Mock auth hook
-vi.mock('@/hooks/use-auth', () => ({
-  useAuth: vi.fn(() => ({
+  useUnifiedAuth: vi.fn(() => ({
     user: { uid: 'test-user', email: 'test@test.edu' },
     getAuthToken: vi.fn().mockResolvedValue('test-token'),
   })),
 }));
 
+// Import the mock directly from @hive/hooks
+import { useFeatureFlags } from '@hive/hooks';
+
+// Mock feature flags hook to get reference to the mock
+const mockUseFeatureFlags = vi.mocked(useFeatureFlags);
+const mockTrackEvent = vi.fn();
+
+// Set up the mock return value
+mockUseFeatureFlags.mockReturnValue({
+  // Core feature flags
+  spaces: "enabled" as const,
+  tools: "enabled" as const,
+  analytics: "enabled" as const,
+  realtime: "enabled" as const,
+  ai: "disabled" as const,
+  gamification: "disabled" as const,
+  
+  // UI Variants
+  toolBuilderVariant: "visual" as const,
+  navigationVariant: "sidebar" as const,
+  dashboardLayout: "cards" as const,
+  spaceDiscovery: "grid" as const,
+  
+  // Feature Toggles
+  enableAdvancedBuilder: true,
+  enableCollaborativeEditing: false,
+  enableRealTimeNotifications: true,
+  
+  trackEvent: mockTrackEvent,
+});
+
+// Mock auth hook - add to existing @hive/ui mock
+
 // Mock tool navigation
+const mockToolNavigation = {
+  toPreview: vi.fn(),
+  editTool: vi.fn(),
+  duplicateTool: vi.fn(),
+  shareTool: vi.fn().mockResolvedValue(true),
+  toDeploy: vi.fn(),
+  toBuild: vi.fn(),
+};
+
 vi.mock('@/lib/tool-navigation', () => ({
-  ToolNavigation: {
-    toPreview: vi.fn(),
-    editTool: vi.fn(),
-    duplicateTool: vi.fn(),
-    shareTool: vi.fn().mockResolvedValue(true),
-    toDeploy: vi.fn(),
-    toBuild: vi.fn(),
-  },
+  ToolNavigation: mockToolNavigation,
+  default: mockToolNavigation,
 }));
 
 // Mock fetch for API calls
@@ -94,6 +176,7 @@ describe('ToolsPage', () => {
       },
     });
     vi.clearAllMocks();
+    mockTrackEvent.mockClear();
   });
 
   afterEach(() => {
@@ -235,7 +318,6 @@ describe('ToolsPage', () => {
 
   describe('Tool Actions', () => {
     it('handles tool preview action', () => {
-      const mockToolNavigation = import('@/lib/tool-navigation').ToolNavigation;
       renderToolsPage();
 
       const previewButton = screen.getByTestId('preview-poll-maker');
@@ -245,7 +327,6 @@ describe('ToolsPage', () => {
     });
 
     it('handles tool edit action', () => {
-      const mockToolNavigation = import('@/lib/tool-navigation').ToolNavigation;
       renderToolsPage();
 
       const editButton = screen.getByTestId('edit-poll-maker');
@@ -255,7 +336,6 @@ describe('ToolsPage', () => {
     });
 
     it('handles tool share action', async () => {
-      const mockToolNavigation = import('@/lib/tool-navigation').ToolNavigation;
       window.alert = vi.fn();
       
       renderToolsPage();
@@ -272,7 +352,6 @@ describe('ToolsPage', () => {
 
   describe('Tool Creation', () => {
     it('handles create tool with different modes', () => {
-      const mockToolNavigation = import('@/lib/tool-navigation').ToolNavigation;
       renderToolsPage();
 
       // Test main create button
@@ -317,7 +396,6 @@ describe('ToolsPage', () => {
 
   describe('Event Tracking', () => {
     it('tracks page view event on mount', () => {
-      const mockTrackEvent = import('@hive/hooks').useFeatureFlags().trackEvent;
       renderToolsPage();
 
       expect(mockTrackEvent).toHaveBeenCalledWith('tools', 'view', { 
@@ -337,7 +415,6 @@ describe('ToolsPage', () => {
         writable: true,
       });
 
-      const mockTrackEvent = import('@hive/hooks').useFeatureFlags().trackEvent;
       renderToolsPage();
 
       const installButton = screen.getByTestId('install-poll-maker');
@@ -351,7 +428,6 @@ describe('ToolsPage', () => {
     });
 
     it('tracks tool action events', () => {
-      const mockTrackEvent = import('@hive/hooks').useFeatureFlags().trackEvent;
       renderToolsPage();
 
       const previewButton = screen.getByTestId('preview-poll-maker');
@@ -371,7 +447,6 @@ describe('ToolsPage', () => {
     });
 
     it('tracks create tool events', () => {
-      const mockTrackEvent = import('@hive/hooks').useFeatureFlags().trackEvent;
       renderToolsPage();
 
       fireEvent.click(screen.getByText('Create Tool'));
@@ -399,8 +474,8 @@ describe('ToolsPage', () => {
     });
 
     it('handles authentication errors', async () => {
-      const mockAuth = import('@/hooks/use-auth').useAuth;
-      mockAuth.mockReturnValueOnce({
+      const { useUnifiedAuth } = await import('@hive/ui');
+      (useUnifiedAuth as any).mockReturnValueOnce({
         user: null,
         getAuthToken: vi.fn().mockRejectedValue(new Error('Not authenticated')),
       });

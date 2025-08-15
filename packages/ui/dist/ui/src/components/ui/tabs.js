@@ -1,7 +1,7 @@
 "use client";
 import { jsx as _jsx } from "react/jsx-runtime";
 import { createContext, useContext, useState } from "react";
-import { cn } from "../../lib/utils.js";
+import { cn } from "../../lib/utils";
 const TabsContext = createContext(undefined);
 const useTabsContext = () => {
     const context = useContext(TabsContext);

@@ -1,7 +1,7 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { HiveCard, HiveButton, HiveBadge } from '../index.js';
+import { HiveCard, HiveButton, HiveBadge } from '../index';
 import { Users, Search, Download, Mail, UserCheck, UserX, AlertCircle, CheckCircle, MessageSquare, MoreVertical, Eye } from 'lucide-react';
 const RSVPStatusBadge = ({ status }) => {
     const config = {

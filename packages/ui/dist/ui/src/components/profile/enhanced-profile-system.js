@@ -2,11 +2,11 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useState, useCallback } from 'react';
 import { Edit3, Save, X } from 'lucide-react';
-import { GridLayoutEngine, LayoutPersistence } from './bento-grid/index.js';
-import { PriorityCoordinationWidget } from './widgets/priority-coordination-widget.js';
-import { PrivacyControlWidget } from './widgets/privacy-control-widget.js';
-import { PersonalToolsPreviewWidget } from './widgets/personal-tools-preview-widget.js';
-import { HiveButton } from '../hive-button.js';
+import { GridLayoutEngine, LayoutPersistence } from './bento-grid';
+import { PriorityCoordinationWidget } from './widgets/priority-coordination-widget';
+import { PrivacyControlWidget } from './widgets/privacy-control-widget';
+import { PersonalToolsPreviewWidget } from './widgets/personal-tools-preview-widget';
+import { HiveButton } from '../hive-button';
 export const EnhancedProfileSystem = ({ user, spaces = [], events = [], connections = [], hiveLab, completionStatus, isLoading = false, isMobile = false, isTablet = false, onEditProfile, onPrivacySettings, onSpaceClick, onEventClick, onConnectionClick, onJoinSpace, onCreateTool }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [widgets, setWidgets] = useState([]);

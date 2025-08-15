@@ -1,4 +1,5 @@
 // HIVE Element System - Composable building blocks for tools
+import { renderElement } from '@/components/tools/element-renderers';
 
 export interface ElementProps {
   id: string;
@@ -140,10 +141,7 @@ export const CORE_ELEMENTS: ElementDefinition[] = [
       showSuggestions: true,
       debounceMs: 300
     },
-    render: (props) => {
-      // This would be implemented in the UI layer
-      return null as any;
-    }
+    render: (props) => renderElement('search-input', props)
   },
   
   {
@@ -162,7 +160,7 @@ export const CORE_ELEMENTS: ElementDefinition[] = [
       allowMultiple: true,
       showCounts: false
     },
-    render: (props) => null as any
+    render: (props) => renderElement('filter-selector', props)
   },
 
   {
@@ -181,7 +179,7 @@ export const CORE_ELEMENTS: ElementDefinition[] = [
       showPagination: true,
       cardStyle: 'standard'
     },
-    render: (props) => null as any
+    render: (props) => renderElement('result-list', props)
   },
 
   {
@@ -202,7 +200,7 @@ export const CORE_ELEMENTS: ElementDefinition[] = [
       minDate: '',
       maxDate: ''
     },
-    render: (props) => null as any
+    render: (props) => renderElement('date-picker', props)
   },
 
   {
@@ -221,7 +219,7 @@ export const CORE_ELEMENTS: ElementDefinition[] = [
       filterBySpace: false,
       showAvatars: true
     },
-    render: (props) => null as any
+    render: (props) => renderElement('user-selector', props)
   },
 
   {
@@ -240,7 +238,7 @@ export const CORE_ELEMENTS: ElementDefinition[] = [
       sortBy: 'frequency',
       showCounts: true
     },
-    render: (props) => null as any
+    render: (props) => renderElement('chart-display', props)
   },
 
   {
@@ -259,7 +257,7 @@ export const CORE_ELEMENTS: ElementDefinition[] = [
       allowMarkers: true,
       showControls: true
     },
-    render: (props) => null as any
+    render: (props) => renderElement('chart-display', props)
   },
 
   {
@@ -278,7 +276,7 @@ export const CORE_ELEMENTS: ElementDefinition[] = [
       showLegend: true,
       animate: true
     },
-    render: (props) => null as any
+    render: (props) => renderElement('chart-display', props)
   },
 
   {
@@ -297,7 +295,7 @@ export const CORE_ELEMENTS: ElementDefinition[] = [
       validateOnChange: true,
       showProgress: false
     },
-    render: (props) => null as any
+    render: (props) => renderElement('form-builder', props)
   },
 
   {
@@ -316,7 +314,7 @@ export const CORE_ELEMENTS: ElementDefinition[] = [
       groupByType: true,
       autoMarkRead: false
     },
-    render: (props) => null as any
+    render: (props) => renderElement('result-list', props)
   }
 ];
 

@@ -5,11 +5,11 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
  * Properties panel for editing element configurations
  */
 import { useState, useCallback } from 'react';
-import { Button } from '../ui/button.js';
-import { Input } from '../ui/input.js';
-import { Label } from '../ui/label.js';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select.js';
-import { Checkbox } from '../ui/checkbox.js';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { Label } from '../ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import { Checkbox } from '../ui/checkbox';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Settings, Palette, Layout, Plus, Trash2, ChevronDown, HelpCircle, Code, ToggleLeft, ToggleRight } from 'lucide-react';
 // Color picker component

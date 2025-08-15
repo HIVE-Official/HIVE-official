@@ -27,31 +27,31 @@ export interface SliderProps extends Omit<React.InputHTMLAttributes<HTMLInputEle
 const sliderColors = {
   primary: {
     track: 'bg-[var(--hive-brand-secondary)]',
-    thumb: 'bg-[var(--hive-brand-secondary)] border-hive-gold shadow-hive-gold/20'
+    thumb: 'bg-[var(--hive-brand-secondary)] border-[var(--hive-brand-secondary)] shadow-[color-mix(in_srgb,var(--hive-brand-secondary)_20%,transparent)]'
   },
   success: {
-    track: 'bg-hive-emerald',
-    thumb: 'bg-hive-emerald border-hive-emerald shadow-hive-emerald/20'
+    track: 'bg-[var(--hive-status-success)]',
+    thumb: 'bg-[var(--hive-status-success)] border-[var(--hive-status-success)] shadow-[color-mix(in_srgb,var(--hive-status-success)_20%,transparent)]'
   },
   warning: {
-    track: 'bg-[var(--hive-brand-secondary)]',
-    thumb: 'bg-[var(--hive-brand-secondary)] border-hive-gold shadow-hive-gold/20'
+    track: 'bg-[var(--hive-status-warning)]',
+    thumb: 'bg-[var(--hive-status-warning)] border-[var(--hive-status-warning)] shadow-[color-mix(in_srgb,var(--hive-status-warning)_20%,transparent)]'
   },
   error: {
-    track: 'bg-hive-ruby',
-    thumb: 'bg-hive-ruby border-hive-ruby shadow-hive-ruby/20'
+    track: 'bg-[var(--hive-status-error)]',
+    thumb: 'bg-[var(--hive-status-error)] border-[var(--hive-status-error)] shadow-[color-mix(in_srgb,var(--hive-status-error)_20%,transparent)]'
   },
   gold: {
     track: 'bg-[var(--hive-brand-secondary)]',
-    thumb: 'bg-[var(--hive-brand-secondary)] border-hive-gold shadow-hive-gold/20'
+    thumb: 'bg-[var(--hive-brand-secondary)] border-[var(--hive-brand-secondary)] shadow-[color-mix(in_srgb,var(--hive-brand-secondary)_20%,transparent)]'
   },
   emerald: {
-    track: 'bg-hive-emerald',
-    thumb: 'bg-hive-emerald border-hive-emerald shadow-hive-emerald/20'
+    track: 'bg-[var(--hive-status-success)]',
+    thumb: 'bg-[var(--hive-status-success)] border-[var(--hive-status-success)] shadow-[color-mix(in_srgb,var(--hive-status-success)_20%,transparent)]'
   },
   sapphire: {
-    track: 'bg-hive-sapphire',
-    thumb: 'bg-hive-sapphire border-hive-sapphire shadow-hive-sapphire/20'
+    track: 'bg-[var(--hive-status-info)]',
+    thumb: 'bg-[var(--hive-status-info)] border-[var(--hive-status-info)] shadow-[color-mix(in_srgb,var(--hive-status-info)_20%,transparent)]'
   }
 };
 
@@ -127,7 +127,7 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(({
 
   const trackClasses = [
     'relative rounded-full',
-    'bg-hive-background-tertiary',
+    'bg-[var(--hive-background-tertiary)]',
     sliderSizes[size].track,
     vertical ? 'w-full' : 'h-full'
   ].filter(Boolean).join(' ');
@@ -141,14 +141,14 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(({
 
   const thumbClasses = [
     'absolute rounded-full',
-    'border-2 border-white',
+    'border-2 border-[var(--hive-background-primary)]',
     'transition-all duration-200 ease-out',
     'cursor-pointer',
     'shadow-lg',
     sliderSizes[size].thumb,
     sliderColors[color].thumb,
     'hover:scale-110',
-    'focus:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2',
+    'focus:scale-110 focus:outline-none focus:ring-2 focus:ring-[color-mix(in_srgb,var(--hive-brand-secondary)_30%,transparent)] focus:ring-offset-2',
     disabled && 'cursor-not-allowed opacity-50'
   ].filter(Boolean).join(' ');
 
@@ -250,7 +250,7 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(({
 
     return (
       <div className={cn(
-        'flex justify-between text-xs text-hive-text-secondary mt-2',
+        'flex justify-between text-xs text-[var(--hive-text-secondary)] mt-2',
         vertical && 'flex-col h-full absolute left-8 top-0'
       )}>
         {Object.entries(marks).map(([markValue, markLabel]) => {
@@ -278,11 +278,11 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(({
     <div ref={ref} className={cn('space-y-2', className)} {...props}>
       {label && (
         <div className="flex items-center justify-between">
-          <label className="text-sm font-medium text-hive-text-primary">
+          <label className="text-sm font-medium text-[var(--hive-text-primary)]">
             {label}
           </label>
           {showValue && (
-            <span className="text-sm text-hive-text-secondary">
+            <span className="text-sm text-[var(--hive-text-secondary)]">
               {Array.isArray(currentValue) 
                 ? `${formatDisplayValue(currentValue[0])} - ${formatDisplayValue(currentValue[1])}`
                 : formatDisplayValue(currentValue as number)

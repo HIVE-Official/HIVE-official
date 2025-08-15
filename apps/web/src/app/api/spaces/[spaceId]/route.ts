@@ -3,7 +3,8 @@ import type { NextRequest } from "next/server";
 import { z } from "zod";
 import { type Space } from "@hive/core";
 import { dbAdmin } from "@/lib/firebase-admin";
-import { logger } from "@/lib/logger";
+import { findSpaceOptimized } from "@/lib/space-query-optimizer";
+import { logger } from "@/lib/structured-logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 import { withAuth } from '@/lib/api-auth-middleware';
 
@@ -37,28 +38,14 @@ export const GET = withAuth(async (
       return NextResponse.json(ApiResponseHelper.error("Space ID is required", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
-    // Find the space in the nested structure: spaces/[spacetype]/spaces/spaceID - aligned with new HIVE categories
-    const spaceTypes = ['student_organizations', 'university_organizations', 'greek_life', 'campus_living', 'hive_exclusive', 'cohort'];
-    let doc: any = null;
-    let spaceType: string | null = null;
+    // Get space from flat collection structure
+    const spaceDoc = await dbAdmin.collection('spaces').doc(spaceId).get();
 
-    // Search through all space types to find the space
-    for (const type of spaceTypes) {
-      const potentialSpaceRef = dbAdmin.collection("spaces").doc(type).collection("spaces").doc(spaceId);
-      const potentialDoc = await potentialSpaceRef.get();
-      
-      if (potentialDoc.exists) {
-        doc = potentialDoc;
-        spaceType = type;
-        break;
-      }
-    }
-
-    if (!doc || !doc.exists) {
+    if (!spaceDoc.exists) {
       return NextResponse.json(ApiResponseHelper.error("Space not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
-    const space = { id: doc.id, ...doc.data() } as Space;
+    const space = { id: spaceDoc.id, ...spaceDoc.data() } as Space;
 
     return NextResponse.json(ApiResponseHelper.success(space), { status: HttpStatus.OK });
   } catch (error) {
@@ -98,35 +85,29 @@ export const PATCH = withAuth(async (
       return NextResponse.json(ApiResponseHelper.error("No updates provided", "VALIDATION_ERROR"), { status: HttpStatus.BAD_REQUEST });
     }
 
-    // Find the space in the nested structure
-    const spaceTypes = ['student_organizations', 'university_organizations', 'greek_life', 'campus_living', 'hive_exclusive', 'cohort'];
-    let spaceRef: any = null;
-    let spaceType: string | null = null;
+    // Get space from flat collection structure
+    const spaceRef = dbAdmin.collection('spaces').doc(spaceId);
+    const spaceDoc = await spaceRef.get();
 
-    // Search through all space types to find the space
-    for (const type of spaceTypes) {
-      const potentialSpaceRef = dbAdmin.collection("spaces").doc(type).collection("spaces").doc(spaceId);
-      const potentialDoc = await potentialSpaceRef.get();
-      
-      if (potentialDoc.exists) {
-        spaceRef = potentialSpaceRef;
-        spaceType = type;
-        break;
-      }
-    }
-
-    if (!spaceRef) {
+    if (!spaceDoc.exists) {
       return NextResponse.json(ApiResponseHelper.error("Space not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
-    // Check if requesting user has permission to update space
-    const memberDoc = await spaceRef.collection("members").doc(authContext.uid).get();
+    // Check if requesting user has permission to update space using flat spaceMembers collection
+    const memberQuery = dbAdmin.collection('spaceMembers')
+      .where('spaceId', '==', spaceId)
+      .where('userId', '==', authContext.userId)
+      .where('isActive', '==', true)
+      .limit(1);
+    
+    const memberSnapshot = await memberQuery.get();
 
-    if (!memberDoc.exists) {
+    if (memberSnapshot.empty) {
       return NextResponse.json(ApiResponseHelper.error("Not a member of this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
-    const memberRole = memberDoc.data()?.role;
+    const memberData = memberSnapshot.docs[0].data();
+    const memberRole = memberData.role;
     const canUpdateSpace = ['owner', 'admin'].includes(memberRole);
 
     if (!canUpdateSpace) {
@@ -137,7 +118,7 @@ export const PATCH = withAuth(async (
     const updateData: any = {
       ...updates,
       updatedAt: new Date(),
-      updatedBy: authContext.uid
+      updatedBy: authContext.userId
     };
 
     // Update space document
@@ -146,7 +127,7 @@ export const PATCH = withAuth(async (
     // Log the action
     await spaceRef.collection("activity").add({
       type: 'space_updated',
-      performedBy: authContext.uid,
+      performedBy: authContext.userId,
       details: {
         updates: Object.keys(updates),
         description: updates.description ? 'Updated space description' : undefined,
@@ -155,7 +136,7 @@ export const PATCH = withAuth(async (
       timestamp: new Date()
     });
 
-    logger.info(`Space updated: ${spaceId} by ${authContext.uid}`, { updates: Object.keys(updates) });
+    logger.info(`Space updated: ${spaceId} by ${authContext.userId}`, { updates: Object.keys(updates) });
 
     return NextResponse.json(ApiResponseHelper.success({
       message: "Space updated successfully",

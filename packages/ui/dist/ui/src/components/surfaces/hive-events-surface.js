@@ -3,8 +3,8 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
 import React, { useState, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cva } from 'class-variance-authority';
-import { cn } from '../../lib/utils.js';
-import { motionDurations } from '../../motion/hive-motion-system.js';
+import { cn } from '../../lib/utils';
+import { motionDurations } from '../../motion/hive-motion-system';
 import { Calendar, Plus, MapPin, Users, Clock, Edit3, Trash2, Share2, ExternalLink, AlertCircle, CheckCircle, XCircle, Grid, List, Crown, Star, Calendar as CalendarIcon, Video, Coffee, GraduationCap, Gamepad2, Music } from 'lucide-react';
 // HIVE Events Surface - Calendar & Event Management
 // Rich event system with RSVP, calendar integration, and discovery

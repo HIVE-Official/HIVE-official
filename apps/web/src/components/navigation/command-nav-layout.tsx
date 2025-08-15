@@ -266,7 +266,7 @@ export function CommandNavLayout({ children }: CommandNavLayoutProps) {
   };
 
   return (
-    <div className="min-h-screen bg-[#0A0A0A]">
+    <div className="min-h-screen bg-hive-background-primary">
       {/* Minimal Top Bar */}
       <nav className="bg-zinc-900 border-b border-zinc-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -289,7 +289,7 @@ export function CommandNavLayout({ children }: CommandNavLayoutProps) {
             <div className="flex-1 max-w-xl mx-2 sm:mx-4">
               <Button
                 onClick={() => setIsCommandOpen(true)}
-                className="w-full flex items-center justify-between bg-zinc-800 border border-zinc-700 hover:border-[#FFD700] text-zinc-400 hover:text-white transition-colors px-2 sm:px-4 py-2 h-10"
+                className="w-full flex items-center justify-between bg-hive-background-secondary border border-hive-border-secondary hover:border-hive-brand-primary text-hive-text-secondary hover:text-hive-text-primary transition-colors px-2 sm:px-4 py-2 h-10"
               >
                 <div className="flex items-center space-x-1 sm:space-x-2">
                   <Search className="w-4 h-4 flex-shrink-0" />
@@ -340,8 +340,8 @@ export function CommandNavLayout({ children }: CommandNavLayoutProps) {
               href="/feed" 
               className={`flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-colors whitespace-nowrap ${
                 pathname === '/feed' || pathname === '/' 
-                  ? 'text-[#FFD700] bg-[#FFD700]/10 border border-[#FFD700]/20' 
-                  : 'text-zinc-400 hover:text-[#FFD700] hover:bg-zinc-800/50'
+                  ? 'text-hive-brand-primary bg-hive-brand-primary/10 border border-hive-brand-primary/20' 
+                  : 'text-hive-text-secondary hover:text-hive-brand-primary hover:bg-hive-background-elevated/50'
               }`}
             >
               <Home className="w-4 h-4 flex-shrink-0" />
@@ -351,8 +351,8 @@ export function CommandNavLayout({ children }: CommandNavLayoutProps) {
               href="/profile" 
               className={`flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-colors whitespace-nowrap ${
                 pathname === '/profile' || pathname.startsWith('/profile') 
-                  ? 'text-[#FFD700] bg-[#FFD700]/10 border border-[#FFD700]/20' 
-                  : 'text-zinc-400 hover:text-[#FFD700] hover:bg-zinc-800/50'
+                  ? 'text-hive-brand-primary bg-hive-brand-primary/10 border border-hive-brand-primary/20' 
+                  : 'text-hive-text-secondary hover:text-hive-brand-primary hover:bg-hive-background-elevated/50'
               }`}
             >
               <User className="w-4 h-4 flex-shrink-0" />
@@ -362,8 +362,8 @@ export function CommandNavLayout({ children }: CommandNavLayoutProps) {
               href="/spaces" 
               className={`flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-colors whitespace-nowrap ${
                 pathname === '/spaces' || pathname.startsWith('/spaces') 
-                  ? 'text-[#FFD700] bg-[#FFD700]/10 border border-[#FFD700]/20' 
-                  : 'text-zinc-400 hover:text-[#FFD700] hover:bg-zinc-800/50'
+                  ? 'text-hive-brand-primary bg-hive-brand-primary/10 border border-hive-brand-primary/20' 
+                  : 'text-hive-text-secondary hover:text-hive-brand-primary hover:bg-hive-background-elevated/50'
               }`}
             >
               <Users className="w-4 h-4 flex-shrink-0" />
@@ -373,8 +373,8 @@ export function CommandNavLayout({ children }: CommandNavLayoutProps) {
               href="/tools" 
               className={`flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-colors whitespace-nowrap ${
                 pathname === '/tools' || pathname.startsWith('/tools') || pathname === '/hivelab' || pathname.startsWith('/hivelab')
-                  ? 'text-[#FFD700] bg-[#FFD700]/10 border border-[#FFD700]/20' 
-                  : 'text-zinc-400 hover:text-[#FFD700] hover:bg-zinc-800/50'
+                  ? 'text-hive-brand-primary bg-hive-brand-primary/10 border border-hive-brand-primary/20' 
+                  : 'text-hive-text-secondary hover:text-hive-brand-primary hover:bg-hive-background-elevated/50'
               }`}
             >
               <Zap className="w-4 h-4 flex-shrink-0" />
@@ -434,7 +434,7 @@ export function CommandNavLayout({ children }: CommandNavLayoutProps) {
                             }}
                             className={`w-full flex items-center px-3 py-2 rounded-md text-left transition-colors ${
                               isSelected 
-                                ? 'bg-[#FFD700] text-[#0A0A0A]' 
+                                ? 'bg-hive-brand-primary text-hive-background-primary' 
                                 : 'text-zinc-300 hover:bg-zinc-800 hover:text-white'
                             }`}
                           >
@@ -443,7 +443,7 @@ export function CommandNavLayout({ children }: CommandNavLayoutProps) {
                               <div className="font-medium truncate">{item.title}</div>
                               {item.subtitle && (
                                 <div className={`text-xs truncate ${
-                                  isSelected ? 'text-[#0A0A0A]/70' : 'text-zinc-500'
+                                  isSelected ? 'text-hive-background-primary/70' : 'text-hive-text-tertiary'
                                 }`}>
                                   {item.subtitle}
                                 </div>
@@ -492,7 +492,7 @@ export function CommandNavLayout({ children }: CommandNavLayoutProps) {
       <div className="fixed bottom-6 right-6 z-40">
         <Button
           onClick={() => setIsCommandOpen(true)}
-          className="bg-zinc-800 border border-zinc-700 hover:border-[#FFD700] text-zinc-400 hover:text-white shadow-lg"
+          className="bg-hive-background-secondary border border-hive-border-secondary hover:border-hive-brand-primary text-hive-text-secondary hover:text-hive-text-primary shadow-lg"
         >
           <Command className="w-4 h-4 mr-2" />
           <span className="hidden sm:inline">Quick Actions</span>

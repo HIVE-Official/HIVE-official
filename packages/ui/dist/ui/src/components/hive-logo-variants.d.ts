@@ -1,7 +1,7 @@
 import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
 declare const hiveLogoVariants: (props?: {
-    variant?: "primary" | "gold" | "gradient" | "glass" | "inverted" | "monochrome" | "neon" | "holographic";
+    variant?: "primary" | "gold" | "gradient" | "glass" | "neon" | "monochrome" | "inverted" | "holographic";
     size?: "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl";
     effect?: "pulse" | "glow" | "none" | "ping" | "spin" | "bounce";
 } & import("class-variance-authority/types").ClassProp) => string;

@@ -3,6 +3,9 @@ import { createMocks } from 'node-mocks-http';
 import { GET } from '../../../app/api/feed/route';
 import { GET as GetAlgorithm } from '../../../app/api/feed/algorithm/route';
 import { POST as PostContentValidation } from '../../../app/api/feed/content-validation/route';
+import { aggregateFeed } from '@/lib/feed-aggregation';
+import { validateContent, moderateContent } from '@/lib/content-validation';
+import { rateLimit } from '@/lib/rate-limit';
 
 // Mock Firebase Admin
 vi.mock('@/lib/firebase-admin', () => ({
@@ -198,7 +201,7 @@ describe('/api/feed Integration Tests', () => {
     });
 
     it('handles empty feed gracefully', async () => {
-      const mockAggregateFeeds = vi.mocked(require('@/lib/feed-aggregation').aggregateFeed);
+      const mockAggregateFeeds = vi.mocked(aggregateFeed);
       mockAggregateFeeds.mockResolvedValueOnce([]);
 
       const { req } = createMocks({
@@ -229,7 +232,7 @@ describe('/api/feed Integration Tests', () => {
     });
 
     it('handles database errors gracefully', async () => {
-      const mockAggregateFeeds = vi.mocked(require('@/lib/feed-aggregation').aggregateFeed);
+      const mockAggregateFeeds = vi.mocked(aggregateFeed);
       mockAggregateFeeds.mockRejectedValueOnce(new Error('Database connection failed'));
 
       const { req } = createMocks({
@@ -322,7 +325,7 @@ describe('/api/feed Integration Tests', () => {
     });
 
     it('detects inappropriate content', async () => {
-      const mockValidateContent = vi.mocked(require('@/lib/content-validation').validateContent);
+      const mockValidateContent = vi.mocked(validateContent);
       mockValidateContent.mockResolvedValueOnce({
         isValid: false,
         confidence: 0.95,
@@ -351,7 +354,7 @@ describe('/api/feed Integration Tests', () => {
     });
 
     it('handles content moderation workflow', async () => {
-      const mockModerateContent = vi.mocked(require('@/lib/content-validation').moderateContent);
+      const mockModerateContent = vi.mocked(moderateContent);
       mockModerateContent.mockResolvedValueOnce({
         action: 'require_review',
         reason: 'Content flagged for manual review',
@@ -403,7 +406,7 @@ describe('/api/feed Integration Tests', () => {
 
   describe('Rate Limiting', () => {
     it('enforces rate limits on feed requests', async () => {
-      const mockRateLimit = vi.mocked(require('@/lib/rate-limit').rateLimit);
+      const mockRateLimit = vi.mocked(rateLimit);
       mockRateLimit.mockRejectedValueOnce(new Error('Rate limit exceeded'));
 
       const { req } = createMocks({

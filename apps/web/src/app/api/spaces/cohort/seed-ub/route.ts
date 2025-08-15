@@ -2,8 +2,8 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { UB_MAJORS, createMajorAbbreviation } from '@hive/core';
-import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { logger } from "@/lib/structured-logger";
+import { ApiResponseHelper as _ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 /**
  * Seed UB-specific cohort spaces based on actual UB majors and graduation years
@@ -209,7 +209,7 @@ export async function POST(request: NextRequest) {
     for (const batch of batches) {
       await batch.commit();
       created += batchSize;
-      logger.info('✅ Created batch of spaces', { created, total: cohortSpaces.length, endpoint: '/api/spaces/cohort/seed-ub' });
+      logger.info('✅ Created batch of spaces', { count: created, total: cohortSpaces.length, endpoint: '/api/spaces/cohort/seed-ub' });
     }
     
     logger.info('🎉 Successfully created UB cohort spaces', { cohortSpacesLength: cohortSpaces.length, endpoint: '/api/spaces/cohort/seed-ub'  });

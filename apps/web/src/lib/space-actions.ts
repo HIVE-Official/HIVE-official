@@ -7,27 +7,38 @@ export interface SpaceActionResult {
 }
 
 /**
+ * Get auth token from session (utility for space actions)
+ * WARNING: This is a temporary utility - should use useUnifiedAuth in components
+ */
+async function getAuthTokenFromSession(): Promise<string> {
+  // This is a temporary utility function for non-component contexts
+  // Components should use useUnifiedAuth().getAuthToken() instead
+  try {
+    const sessionJson = window.localStorage.getItem('hive_session');
+    if (sessionJson) {
+      const session = JSON.parse(sessionJson);
+      if (!session.token) {
+        throw new Error('No valid authentication token found');
+      }
+      return session.token;
+    }
+    throw new Error('No session found');
+  } catch (error) {
+    throw new Error('Authentication required');
+  }
+}
+
+/**
  * Join a space
  */
 export async function joinSpace(spaceId: string): Promise<SpaceActionResult> {
   try {
-    const headers: Record<string, string> = {
-      'Content-Type': 'application/json'
-    };
+    const authToken = await getAuthTokenFromSession();
     
-    // Get auth token
-    try {
-      const sessionJson = window.localStorage.getItem('hive_session');
-      if (sessionJson) {
-        const session = JSON.parse(sessionJson);
-        headers.Authorization = `Bearer ${process.env.NODE_ENV === 'development' ? 'test-token' : session.token}`;
-      } else {
-        headers.Authorization = `Bearer test-token`;
-      }
-    } catch (error) {
-      console.warn('Could not get auth token, using test token');
-      headers.Authorization = `Bearer test-token`;
-    }
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${authToken}`
+    };
 
     const response = await fetch('/api/spaces/join', {
       method: 'POST',
@@ -63,23 +74,12 @@ export async function joinSpace(spaceId: string): Promise<SpaceActionResult> {
  */
 export async function leaveSpace(spaceId: string): Promise<SpaceActionResult> {
   try {
-    const headers: Record<string, string> = {
-      'Content-Type': 'application/json'
-    };
+    const authToken = await getAuthTokenFromSession();
     
-    // Get auth token
-    try {
-      const sessionJson = window.localStorage.getItem('hive_session');
-      if (sessionJson) {
-        const session = JSON.parse(sessionJson);
-        headers.Authorization = `Bearer ${process.env.NODE_ENV === 'development' ? 'test-token' : session.token}`;
-      } else {
-        headers.Authorization = `Bearer test-token`;
-      }
-    } catch (error) {
-      console.warn('Could not get auth token, using test token');
-      headers.Authorization = `Bearer test-token`;
-    }
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${authToken}`
+    };
 
     const response = await fetch('/api/spaces/leave', {
       method: 'POST',
@@ -119,19 +119,8 @@ export async function toggleSpacePin(spaceId: string, currentlyPinned: boolean):
       'Content-Type': 'application/json'
     };
     
-    // Get auth token
-    try {
-      const sessionJson = window.localStorage.getItem('hive_session');
-      if (sessionJson) {
-        const session = JSON.parse(sessionJson);
-        headers.Authorization = `Bearer ${process.env.NODE_ENV === 'development' ? 'test-token' : session.token}`;
-      } else {
-        headers.Authorization = `Bearer test-token`;
-      }
-    } catch (error) {
-      console.warn('Could not get auth token, using test token');
-      headers.Authorization = `Bearer test-token`;
-    }
+    const authToken = await getAuthTokenFromSession();
+    headers.Authorization = `Bearer ${authToken}`;
 
     const response = await fetch('/api/spaces/my', {
       method: 'PATCH',
@@ -174,19 +163,8 @@ export async function markSpaceVisited(spaceId: string): Promise<SpaceActionResu
       'Content-Type': 'application/json'
     };
     
-    // Get auth token
-    try {
-      const sessionJson = window.localStorage.getItem('hive_session');
-      if (sessionJson) {
-        const session = JSON.parse(sessionJson);
-        headers.Authorization = `Bearer ${process.env.NODE_ENV === 'development' ? 'test-token' : session.token}`;
-      } else {
-        headers.Authorization = `Bearer test-token`;
-      }
-    } catch (error) {
-      console.warn('Could not get auth token, using test token');
-      headers.Authorization = `Bearer test-token`;
-    }
+    const authToken = await getAuthTokenFromSession();
+    headers.Authorization = `Bearer ${authToken}`;
 
     const response = await fetch('/api/spaces/my', {
       method: 'PATCH',

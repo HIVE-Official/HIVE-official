@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from 'react';
+import { getSecureAuthHeaders, handleAuthError } from '../lib/secure-auth-utils';
 import { 
   HiveProfile, 
   HiveProfileUpdateData,
@@ -64,6 +65,62 @@ interface HiveProfileActions {
   resolveConflict: (conflictId: string, resolution: string, eventId?: string, newTime?: string) => Promise<boolean>;
 }
 
+// API response interfaces
+interface ApiProfileData {
+  id: string;
+  fullName?: string;
+  handle?: string;
+  email?: string;
+  avatarUrl?: string;
+  profilePhoto?: string;
+  major?: string;
+  academicYear?: string;
+  graduationYear?: string;
+  schoolId?: string;
+  housing?: string;
+  pronouns?: string;
+  bio?: string;
+  statusMessage?: string;
+  interests?: string[];
+  isPublic?: boolean;
+  showActivity?: boolean;
+  showSpaces?: boolean;
+  showConnections?: boolean;
+  allowDirectMessages?: boolean;
+  showOnlineStatus?: boolean;
+  ghostMode?: {
+    enabled?: boolean;
+    level?: string;
+  };
+  isBuilder?: boolean;
+  builderOptIn?: boolean;
+  builderLevel?: string;
+  specializations?: string[];
+  toolsCreated?: number;
+  spacesJoined?: number;
+  spacesActive?: number;
+  spacesLed?: number;
+  toolsUsed?: number;
+  connectionsCount?: number;
+  totalActivity?: number;
+  currentStreak?: number;
+  longestStreak?: number;
+  reputation?: number;
+  achievements?: number;
+  createdAt?: string;
+  joinedAt?: string;
+  updatedAt?: string;
+  lastActive?: string;
+  lastActiveAt?: string;
+  lastSeenAt?: string;
+  emailVerified?: boolean;
+  profileVerified?: boolean;
+  accountStatus?: string;
+  userType?: string;
+  onboardingCompleted?: boolean;
+  [key: string]: unknown;
+}
+
 export interface UseHiveProfileReturn extends HiveProfileState, HiveProfileActions {}
 
 /**
@@ -83,34 +140,26 @@ export function useHiveProfile(): UseHiveProfileReturn {
     completeness: 0
   });
 
-  // API Helper Functions
+  // API Helper Functions - SECURITY HARDENED
   const getAuthHeaders = useCallback(() => {
-    const headers: Record<string, string> = {
-      'Content-Type': 'application/json',
-    };
-
-    if (process.env.NODE_ENV === 'development') {
-      headers['Authorization'] = `Bearer dev_token_${user?.id || '123'}`;
-    } else {
-      const token = localStorage.getItem('auth_token');
-      if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
-      }
+    try {
+      return getSecureAuthHeaders();
+    } catch (error) {
+      handleAuthError(error as Error);
+      throw error;
     }
-
-    return headers;
-  }, [user?.id]);
+  }, []);
 
   const handleApiResponse = useCallback(async (response: Response) => {
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({ message: 'Unknown error' }));
+      const errorData = await response.json().catch(() => ({ message: 'Unknown error' })) as { message: string };
       throw new Error(errorData.message || `HTTP ${response.status}: ${response.statusText}`);
     }
     return response.json();
   }, []);
 
   // Transform API data to HiveProfile format
-  const transformApiProfile = useCallback((apiData: any): HiveProfile => {
+  const transformApiProfile = useCallback((apiData: ApiProfileData): HiveProfile => {
     const now = new Date().toISOString();
     
     return {
@@ -123,8 +172,8 @@ export function useHiveProfile(): UseHiveProfileReturn {
       },
       academic: {
         major: apiData.major,
-        academicYear: apiData.academicYear,
-        graduationYear: apiData.graduationYear,
+        academicYear: apiData.academicYear as 'freshman' | 'sophomore' | 'junior' | 'senior' | 'graduate' | 'alumni' | 'faculty' | undefined,
+        graduationYear: typeof apiData.graduationYear === 'string' ? parseInt(apiData.graduationYear, 10) : apiData.graduationYear,
         schoolId: apiData.schoolId,
         housing: apiData.housing,
         pronouns: apiData.pronouns
@@ -145,14 +194,14 @@ export function useHiveProfile(): UseHiveProfileReturn {
         showOnlineStatus: apiData.showOnlineStatus ?? true,
         ghostMode: {
           enabled: apiData.ghostMode?.enabled ?? false,
-          level: apiData.ghostMode?.level ?? 'minimal'
+          level: (apiData.ghostMode?.level ?? 'minimal') as 'minimal' | 'moderate' | 'maximum'
         }
       },
       builder: {
         ...DEFAULT_BUILDER_INFO,
         isBuilder: apiData.isBuilder ?? false,
         builderOptIn: apiData.builderOptIn ?? false,
-        builderLevel: apiData.builderLevel ?? 'beginner',
+        builderLevel: (apiData.builderLevel ?? 'beginner') as 'beginner' | 'intermediate' | 'advanced' | 'expert',
         specializations: apiData.specializations || [],
         toolsCreated: apiData.toolsCreated ?? 0
       },
@@ -177,8 +226,8 @@ export function useHiveProfile(): UseHiveProfileReturn {
       verification: {
         emailVerified: apiData.emailVerified ?? false,
         profileVerified: apiData.profileVerified ?? false,
-        accountStatus: apiData.accountStatus ?? 'active',
-        userType: apiData.userType ?? 'student',
+        accountStatus: (apiData.accountStatus ?? 'active') as 'active' | 'suspended' | 'deactivated',
+        userType: (apiData.userType ?? 'student') as 'alumni' | 'faculty' | 'student' | 'staff',
         onboardingCompleted: apiData.onboardingCompleted ?? false
       }
     };
@@ -228,7 +277,7 @@ export function useHiveProfile(): UseHiveProfileReturn {
       setState(prev => ({ ...prev, isUpdating: true, error: null }));
 
       // Transform HiveProfile update format to API format
-      const apiUpdateData: any = {};
+      const apiUpdateData: Record<string, unknown> = {};
       
       if (updateData.identity) {
         Object.assign(apiUpdateData, updateData.identity);
@@ -290,11 +339,12 @@ export function useHiveProfile(): UseHiveProfileReturn {
 
       const headers = getAuthHeaders();
       // Remove Content-Type for FormData
-      delete (headers as any)['Content-Type'];
+      const { 'Content-Type': _, ...headersWithoutContentType } = headers;
+      const finalHeaders = headersWithoutContentType;
 
       const response = await fetch('/api/profile/upload-photo', {
         method: 'POST',
-        headers,
+        headers: finalHeaders,
         body: formData
       });
 
@@ -348,23 +398,23 @@ export function useHiveProfile(): UseHiveProfileReturn {
       if (data.success && data.dashboard) {
         const dashboard: HiveProfileDashboard = {
           profile: state.profile!, // Will be set by loadProfile
-          recentSpaces: data.dashboard.quickActions?.favoriteSpaces?.map((space: any) => ({
-            id: space.spaceId,
-            name: space.spaceName,
+          recentSpaces: data.dashboard.quickActions?.favoriteSpaces?.map((space: { id: string; name: string; color: string; memberCount: number; [key: string]: unknown }) => ({
+            id: space.id,
+            name: space.name,
             type: 'favorite',
             lastActivity: space.lastActivity,
-            memberCount: 0, // Would need to fetch from spaces API
+            memberCount: space.memberCount || 0,
             role: 'member'
           })) || [],
           recentTools: [], // Would need to fetch from tools API
-          recentActivity: data.dashboard.recentActivity?.spaces?.map((activity: any, index: number) => ({
+          recentActivity: data.dashboard.recentActivity?.spaces?.map((activity: { spaceId: string; action: string; timestamp: string; [key: string]: unknown }, index: number) => ({
             id: `activity-${index}`,
             type: 'space' as const,
             action: activity.action,
             title: activity.spaceName,
             timestamp: activity.timestamp
           })) || [],
-          upcomingEvents: data.dashboard.upcomingEvents?.map((event: any) => ({
+          upcomingEvents: data.dashboard.upcomingEvents?.map((event: { id: string; title: string; date: string; type: string; [key: string]: unknown }) => ({
             id: event.id,
             title: event.title,
             startDate: event.startDate,
@@ -379,7 +429,7 @@ export function useHiveProfile(): UseHiveProfileReturn {
       console.error('Failed to load dashboard:', error);
       // Don't set error state for dashboard failure - it's secondary data
     }
-  }, [isAuthenticated, user, getAuthHeaders, handleApiResponse, state.profile]);
+  }, [isAuthenticated, user, getAuthHeaders, handleApiResponse]);
 
   // Clear Error
   const clearError = useCallback(() => {

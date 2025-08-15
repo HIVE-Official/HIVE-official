@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 // Use admin SDK methods since we're in an API route
 import { dbAdmin } from '@/lib/firebase-admin';
 import { getCurrentUser } from '@/lib/server-auth';
-import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { logger } from "@/lib/structured-logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
 
 // Tool state interface
 interface ToolState {
@@ -27,7 +27,7 @@ export async function GET(
   { params }: { params: Promise<{ deploymentId: string }> }
 ) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
@@ -41,6 +41,9 @@ export async function GET(
     }
 
     const deployment = deploymentDoc.data();
+    if (!deployment) {
+      return NextResponse.json(ApiResponseHelper.error("Deployment data not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
+    }
     
     // Verify user can access this deployment
     if (!await canUserAccessState(user.uid, deployment)) {
@@ -91,7 +94,7 @@ export async function PUT(
   { params }: { params: Promise<{ deploymentId: string }> }
 ) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
@@ -107,6 +110,9 @@ export async function PUT(
     }
 
     const deployment = deploymentDoc.data();
+    if (!deployment) {
+      return NextResponse.json(ApiResponseHelper.error("Deployment data not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
+    }
     
     // Verify user can access this deployment
     if (!await canUserAccessState(user.uid, deployment)) {
@@ -122,10 +128,12 @@ export async function PUT(
       const existingStateDoc = await dbAdmin.collection('toolStates').doc(stateId).get();
       if (existingStateDoc.exists) {
         const existingData = existingStateDoc.data();
-        finalState = {
-          ...existingData.state,
-          ...state
-        };
+        if (existingData) {
+          finalState = {
+            ...existingData.state,
+            ...state
+          };
+        }
       }
     }
 
@@ -138,7 +146,7 @@ export async function PUT(
     // Prepare state document
     const stateDocument: ToolState = {
       deploymentId,
-      toolId: deployment.toolId,
+      toolId: deployment.toolId || '',
       userId: user.uid,
       state: finalState,
       metadata: {
@@ -154,7 +162,10 @@ export async function PUT(
     // Check if state already exists to determine if this is create or update
     const existingStateDoc = await dbAdmin.collection('toolStates').doc(stateId).get();
     if (existingStateDoc.exists) {
-      stateDocument.createdAt = existingStateDoc.data().createdAt;
+      const existingData = existingStateDoc.data();
+      if (existingData) {
+        stateDocument.createdAt = existingData.createdAt;
+      }
     }
 
     // Save state
@@ -178,7 +189,7 @@ export async function PATCH(
   { params }: { params: Promise<{ deploymentId: string }> }
 ) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
@@ -198,6 +209,9 @@ export async function PATCH(
     }
 
     const deployment = deploymentDoc.data();
+    if (!deployment) {
+      return NextResponse.json(ApiResponseHelper.error("Deployment data not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
+    }
     
     // Verify user can access this deployment
     if (!await canUserAccessState(user.uid, deployment)) {
@@ -212,6 +226,9 @@ export async function PATCH(
     }
 
     const currentState = stateDoc.data();
+    if (!currentState) {
+      return NextResponse.json(ApiResponseHelper.error("State data not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
+    }
     const newState = { ...currentState.state };
 
     // Apply operation based on type
@@ -277,7 +294,7 @@ export async function DELETE(
   { params }: { params: Promise<{ deploymentId: string }> }
 ) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
@@ -291,6 +308,9 @@ export async function DELETE(
     }
 
     const deployment = deploymentDoc.data();
+    if (!deployment) {
+      return NextResponse.json(ApiResponseHelper.error("Deployment data not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
+    }
     
     // Verify user can access this deployment
     if (!await canUserAccessState(user.uid, deployment)) {

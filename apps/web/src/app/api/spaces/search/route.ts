@@ -5,6 +5,7 @@ import { getAuth } from 'firebase-admin/auth';
 import { getAuthTokenFromRequest } from '@/lib/auth';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import * as admin from 'firebase-admin';
 
 const SearchSpacesSchema = z.object({
   query: z.string().min(1).max(100),
@@ -34,7 +35,7 @@ export async function POST(request: NextRequest) {
     const { query, limit, offset, type, verified, minMembers, maxMembers, sortBy } = searchParams;
 
     // Start with base query
-    let spacesQuery = dbAdmin.collection('spaces');
+    let spacesQuery: admin.firestore.Query<admin.firestore.DocumentData> = dbAdmin.collection('spaces');
 
     // Apply filters
     if (type) {

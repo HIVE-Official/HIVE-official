@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import {
-  HiveModal,
   Button,
   Card,
   Switch,
@@ -17,7 +16,7 @@ import {
   SelectTrigger,
   SelectValue
 } from '@hive/ui';
-import { HiveModalContent, HiveModalHeader, HiveModalTitle, HiveModalFooter } from '@/components/temp-stubs';
+import { HiveModal, HiveModalContent, HiveModalHeader, HiveModalTitle, HiveModalFooter } from '@/components/temp-stubs';
 import { 
   Layout, 
   Palette, 

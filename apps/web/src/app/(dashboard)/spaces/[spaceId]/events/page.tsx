@@ -5,15 +5,18 @@ import { ErrorBoundary } from "../../../../../components/error-boundary";
 import { CreateEventModal } from "../../../../../components/events/create-event-modal";
 import { EventDetailsModal } from "../../../../../components/events/event-details-modal";
 import { SpaceEventCalendar } from "../../../../../components/spaces/space-event-calendar";
-import { useRouter } from "next/navigation";
+
+// Use the SpaceEvent interface from the calendar component
+import type { SpaceEvent } from "../../../../../components/spaces/space-event-calendar";
 
 interface SpaceEventsPageProps {
-  params: {
+  params: Promise<{
     spaceId: string;
-  };
+  }>;
 }
 
-interface SpaceEvent {
+// Remove duplicate interface - using imported one instead
+/* interface SpaceEvent {
   id: string;
   title: string;
   description: string;
@@ -58,10 +61,10 @@ interface SpaceEvent {
   status: 'upcoming' | 'ongoing' | 'completed' | 'cancelled';
   isRecurring: boolean;
   recurringPattern?: string;
-}
+} */
 
 export default function SpaceEventsPage({ params }: SpaceEventsPageProps) {
-  const _router = useRouter();
+  const [spaceId, setSpaceId] = useState<string>('');
   const [showCreateEvent, setShowCreateEvent] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<SpaceEvent | null>(null);
   const [spaceName, setSpaceName] = useState('');
@@ -69,6 +72,16 @@ export default function SpaceEventsPage({ params }: SpaceEventsPageProps) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    // Resolve params Promise
+    const resolveParams = async () => {
+      const resolvedParams = await params;
+      setSpaceId(resolvedParams.spaceId);
+    };
+    resolveParams();
+  }, [params]);
+
+  useEffect(() => {
+    if (!spaceId) return;
     const fetchData = async () => {
       await new Promise(resolve => setTimeout(resolve, 500));
       
@@ -78,19 +91,10 @@ export default function SpaceEventsPage({ params }: SpaceEventsPageProps) {
     };
 
     fetchData();
-  }, [params.spaceId]);
+  }, [spaceId]);
 
-  const handleCreateEvent = (_eventData: any) => {
-    // Event creation logic handled by SpaceEventCalendar component
-  };
 
-  const handleRSVP = (_eventId: string, _status: 'going' | 'interested' | 'not_going') => {
-    // RSVP logic handled by SpaceEventCalendar component
-  };
 
-  const handleBookmark = (_eventId: string) => {
-    // Bookmark logic handled by SpaceEventCalendar component
-  };
 
   if (isLoading) {
     return (
@@ -106,29 +110,29 @@ export default function SpaceEventsPage({ params }: SpaceEventsPageProps) {
   return (
     <ErrorBoundary>
       <SpaceEventCalendar
-        spaceId={params.spaceId}
+        spaceId={spaceId}
         spaceName={spaceName}
         userRole={userRole}
         onCreateEvent={() => setShowCreateEvent(true)}
-        onEventClick={(event: any) => setSelectedEvent(event)}
+        onEventClick={(event: SpaceEvent) => setSelectedEvent(event)}
       />
 
       {/* Create Event Modal */}
       <CreateEventModal
         isOpen={showCreateEvent}
         onClose={() => setShowCreateEvent(false)}
-        onCreateEvent={handleCreateEvent}
-        defaultSpaceId={params.spaceId}
+        onCreateEvent={() => {/* Event creation handled by SpaceEventCalendar */}}
+        defaultSpaceId={spaceId}
       />
 
       {/* Event Details Modal */}
       <EventDetailsModal
         isOpen={!!selectedEvent}
         onClose={() => setSelectedEvent(null)}
-        event={selectedEvent}
+        event={selectedEvent as any}
         currentUserId="current-user"
-        onRSVP={handleRSVP}
-        onBookmark={handleBookmark}
+        onRSVP={() => {/* RSVP handled by SpaceEventCalendar */}}
+        onBookmark={() => {/* Bookmark handled by SpaceEventCalendar */}}
       />
     </ErrorBoundary>
   );

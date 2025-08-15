@@ -4,7 +4,17 @@ import { dbAdmin } from '@/lib/firebase-admin';
 import { getAuth } from 'firebase-admin/auth';
 import { getAuthTokenFromRequest } from '@/lib/auth';
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
+import * as admin from 'firebase-admin';
+
+// Helper function to safely convert Firestore timestamp to Date
+function toDateSafe(timestamp: any): Date | null {
+  if (!timestamp) return null;
+  if (typeof timestamp === 'string') return new Date(timestamp);
+  if (timestamp && typeof timestamp.toDate === 'function') return timestamp.toDate();
+  if (timestamp instanceof Date) return timestamp;
+  return null;
+}
 
 const SearchUsersSchema = z.object({
   query: z.string().min(1).max(100),
@@ -34,7 +44,7 @@ export async function POST(request: NextRequest) {
     const searchParams = SearchUsersSchema.parse(body);
     const { query, limit, offset, userType, major, graduationYear, spaceId, sortBy, includePrivateProfiles } = searchParams;
 
-    let usersToSearch = [];
+    let usersToSearch: Array<{ id: string; privacy?: any; fullName?: string; handle?: string; bio?: string; academic?: any; isVerified?: boolean; lastLoginAt?: string; [key: string]: any }> = [];
 
     // If searching within a specific space, get space members first
     if (spaceId) {
@@ -60,7 +70,7 @@ export async function POST(request: NextRequest) {
           const batchResults = await Promise.all(batches);
           for (const snapshot of batchResults) {
             for (const doc of snapshot.docs) {
-              usersToSearch.push({ id: doc.id, ...doc.data() });
+              usersToSearch.push({ id: doc.id, ...doc.data() } as { id: string; privacy?: any; fullName?: string; handle?: string; bio?: string; academic?: any; isVerified?: boolean; lastLoginAt?: string; [key: string]: any });
             }
           }
         }
@@ -69,7 +79,7 @@ export async function POST(request: NextRequest) {
       }
     } else {
       // Search all users with basic filters
-      let usersQuery = dbAdmin.collection('users');
+      let usersQuery: admin.firestore.Query<admin.firestore.DocumentData> = dbAdmin.collection('users');
       
       if (userType) {
         usersQuery = usersQuery.where('userType', '==', userType);
@@ -84,7 +94,7 @@ export async function POST(request: NextRequest) {
       }
 
       const usersSnapshot = await usersQuery.get();
-      usersToSearch = usersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      usersToSearch = usersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as { id: string; privacy?: any; fullName?: string; handle?: string; bio?: string; academic?: any; isVerified?: boolean; lastLoginAt?: string; [key: string]: any }));
     }
 
     const users = [];
@@ -123,8 +133,9 @@ export async function POST(request: NextRequest) {
       if (userData.isVerified) relevanceScore += 20;
       
       // Boost active users (approximated by recent login)
-      const daysSinceLogin = userData.lastLoginAt 
-        ? (Date.now() - userData.lastLoginAt.toDate().getTime()) / (1000 * 60 * 60 * 24)
+      const lastLoginDate = toDateSafe(userData.lastLoginAt);
+      const daysSinceLogin = lastLoginDate 
+        ? (Date.now() - lastLoginDate.getTime()) / (1000 * 60 * 60 * 24)
         : 999;
       if (daysSinceLogin < 7) relevanceScore += 15;
       else if (daysSinceLogin < 30) relevanceScore += 5;
@@ -193,8 +204,8 @@ export async function POST(request: NextRequest) {
         isVerified: userData.isVerified || false,
         connectionStatus,
         mutualSpacesCount,
-        createdAt: userData.createdAt?.toDate?.()?.toISOString() || new Date().toISOString(),
-        lastActive: userData.lastLoginAt?.toDate?.()?.toISOString() || null,
+        createdAt: toDateSafe(userData.createdAt)?.toISOString() || new Date().toISOString(),
+        lastActive: toDateSafe(userData.lastLoginAt)?.toISOString() || null,
         relevanceScore,
         // Add highlights for matched text (respect privacy)
         highlights: {
@@ -218,7 +229,7 @@ export async function POST(request: NextRequest) {
           return bTime - aTime;
         }
         case 'alphabetical':
-          return a.fullName.localeCompare(b.fullName);
+          return (a.fullName || '').localeCompare(b.fullName || '');
         case 'relevance':
         default:
           // Secondary sort by mutual spaces, then relevance

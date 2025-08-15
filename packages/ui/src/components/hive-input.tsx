@@ -18,7 +18,7 @@ const hiveInputVariants = cva(
   cn(
     componentBase.input,
     "relative backdrop-blur-xl border rounded-xl transition-all hive-motion-base",
-    "bg-[#111113]/40 focus-within:bg-[#111113]/60", // Direct hex values instead of CSS variables
+    "bg-transparent focus-within:bg-transparent",
     touchTargets.comfortable
   ),
   {
@@ -271,7 +271,7 @@ const HiveInput = React.forwardRef<HTMLInputElement, HiveInputProps>(
               maxLength={maxLength}
               required={required}
               className={cn(
-                "w-full h-full bg-transparent text-[var(--hive-text-primary)] placeholder-[var(--hive-text-placeholder)] focus:outline-none relative z-20",
+                "w-full h-full !bg-transparent !bg-none border-none text-[var(--hive-text-primary)] placeholder-[var(--hive-text-placeholder)] focus:outline-none absolute inset-0 z-20",
                 leftIcon ? "pl-10" : "pl-3",
                 // Dynamic right padding based on what icons are present
                 (showCount || onClear || type === 'password' || loading || rightIcon) ? "pr-16" : "pr-4",

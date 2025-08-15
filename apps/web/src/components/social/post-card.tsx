@@ -5,9 +5,9 @@ import Image from 'next/image';
 import {
   Card,
   Button,
-  Avatar,
-  AvatarImage,
-  AvatarFallback,
+  ShadcnAvatar as Avatar,
+  ShadcnAvatarImage as AvatarImage,
+  ShadcnAvatarFallback as AvatarFallback,
   Badge,
   Textarea,
   Progress,
@@ -548,7 +548,7 @@ export function PostCard({
           {/* Hashtags */}
           {post.tags?.length > 0 && (
             <div className="flex flex-wrap gap-2">
-              {post.tags.map(tag => (
+              {post.tags?.map(tag => (
                 <button
                   key={tag}
                   className="text-hive-gold hover:text-hive-champagne text-sm"
@@ -571,7 +571,7 @@ export function PostCard({
             <button
               onClick={handleLike}
               disabled={isActing === 'like'}
-              className={`flex items-center space-x-2 ${
+              className={`flex items-center space-x-2 p-2 rounded-lg min-h-[44px] ${
                 post.engagement.hasLiked 
                   ? 'text-red-400' 
                   : 'text-hive-text-mutedLight hover:text-red-400'
@@ -583,7 +583,7 @@ export function PostCard({
             
             <button
               onClick={() => setIsCommenting(!isCommenting)}
-              className="flex items-center space-x-2 text-hive-text-mutedLight hover:text-blue-400 transition-colors"
+              className="flex items-center space-x-2 p-2 rounded-lg min-h-[44px] text-hive-text-mutedLight hover:text-blue-400 transition-colors"
             >
               <MessageCircle className="h-5 w-5" />
               <span className="text-sm">{post.engagement.comments}</span>
@@ -592,7 +592,7 @@ export function PostCard({
             <button
               onClick={handleShare}
               disabled={isActing === 'share'}
-              className="flex items-center space-x-2 text-hive-text-mutedLight hover:text-green-400 transition-colors"
+              className="flex items-center space-x-2 p-2 rounded-lg min-h-[44px] text-hive-text-mutedLight hover:text-green-400 transition-colors"
             >
               <Share2 className="h-5 w-5" />
               <span className="text-sm">{post.engagement.shares}</span>

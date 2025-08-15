@@ -3,7 +3,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { getCurrentUser } from '@/lib/server-auth';
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
+import * as admin from 'firebase-admin';
 
 // Space-aware filtering interfaces
 interface SpaceVisibilityRules {
@@ -58,7 +59,7 @@ interface FilteredFeedResult {
 // POST - Get space-filtered feed content
 export async function POST(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
@@ -131,7 +132,7 @@ export async function POST(request: NextRequest) {
 // GET - Get user's space access information
 export async function GET(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
@@ -210,9 +211,9 @@ async function getSpaceVisibilityRules(spaceIds: string[]): Promise<Map<string, 
       if (!spaceDoc.exists) continue;
 
       const spaceData = spaceDoc.data();
-    if (!spaceData) {
-      return { spaceId, accessible: false, reason: 'Space data not found' };
-    }
+      if (!spaceData) {
+        continue;
+      }
       
       // Get or create visibility rules
       const visibilityRulesDoc = await dbAdmin.collection('spaceVisibilityRules').doc(spaceId).get();
@@ -367,14 +368,15 @@ async function getSpaceContent(
   cutoffTime: Date
 ): Promise<any[]> {
   try {
-    const postsSnapshot = await dbAdmin
+    const postsQuery: admin.firestore.Query<admin.firestore.DocumentData> = dbAdmin
       .collection('posts')
       .where('spaceId', '==', spaceId)
       .where('status', '==', 'published')
       .where('createdAt', '>=', cutoffTime.toISOString())
       .orderBy('createdAt', 'desc')
-      .limit(limit)
-      .get();
+      .limit(limit);
+    
+    const postsSnapshot = await postsQuery.get();
     return postsSnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
@@ -494,13 +496,14 @@ async function calculateUserEngagementInSpace(userId: string, spaceId: string): 
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
-    const activitySnapshot = await dbAdmin
+    const activityQuery: admin.firestore.Query<admin.firestore.DocumentData> = dbAdmin
       .collection('activityEvents')
       .where('userId', '==', userId)
       .where('spaceId', '==', spaceId)
       .where('date', '>=', thirtyDaysAgo.toISOString().split('T')[0])
-      .limit(100)
-      .get();
+      .limit(100);
+    
+    const activitySnapshot = await activityQuery.get();
     const activities = activitySnapshot.docs.map(doc => doc.data());
 
     let engagement = 20; // Base engagement
@@ -558,11 +561,12 @@ async function getSpaceAccessInfo(userId: string, spaceId: string, includePrevie
     }
     
     // Check membership
-    const memberSnapshot = await dbAdmin
+    const memberQuery: admin.firestore.Query<admin.firestore.DocumentData> = dbAdmin
       .collection('members')
       .where('userId', '==', userId)
-      .where('spaceId', '==', spaceId)
-      .get();
+      .where('spaceId', '==', spaceId);
+    
+    const memberSnapshot = await memberQuery.get();
     
     if (memberSnapshot.empty) {
       return {

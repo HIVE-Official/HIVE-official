@@ -12,7 +12,7 @@ import React, { memo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Bell, Hash, Command, ChevronDown } from 'lucide-react';
 import { NavigationItem, NavigationUser } from '../core/types';
-import { NAVIGATION_THEME, NAVIGATION_SIZING, NAVIGATION_MOTION, NAVIGATION_A11Y } from '../core/data';
+import { NAVIGATION_SIZING, NAVIGATION_MOTION, NAVIGATION_A11Y } from '../core/data';
 import { cn } from '../../lib/utils';
 
 // ============================================================================

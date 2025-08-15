@@ -1,6 +1,6 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { cn } from '../../lib/utils.js';
+import { cn } from '../../lib/utils';
 import { Home, Users, MessageSquare, Zap, Calendar, Settings, User, ChevronLeft, ChevronRight } from 'lucide-react';
 const navigationItems = [
     {

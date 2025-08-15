@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { dbAdmin as adminDb } from '@/lib/firebase-admin';
 import { getCurrentUser } from '@/lib/auth-server';
 import { z } from 'zod';
-import { logger } from "@/lib/logger";
+import { logger } from "@/lib/structured-logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 const ReviewSchema = z.object({
@@ -35,14 +35,14 @@ interface ToolReview {
 }
 
 // POST - Create new review
-export async function POST(request: NextRequest, { params }: { params: { toolId: string } }) {
+export async function POST(request: NextRequest, { params }: { params: Promise<{ toolId: string }> }) {
   try {
     const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
-    const { toolId } = params;
+    const { toolId } = await params;
     const body = await request.json();
     const validatedData = ReviewSchema.parse(body);
 
@@ -156,9 +156,9 @@ export async function POST(request: NextRequest, { params }: { params: { toolId:
 }
 
 // GET - Get tool reviews
-export async function GET(request: NextRequest, { params }: { params: { toolId: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ toolId: string }> }) {
   try {
-    const { toolId } = params;
+    const { toolId } = await params;
     const { searchParams } = new URL(request.url);
     
     const limitParam = parseInt(searchParams.get('limit') || '20');
@@ -204,9 +204,10 @@ export async function GET(request: NextRequest, { params }: { params: { toolId: 
     const reviews = [];
 
     for (const doc of reviewsSnapshot.docs) {
-      const reviewData = { id: doc.id, ...doc.data() };
+      const reviewData = { id: doc.id, ...doc.data() } as { id: string; userId?: string; [key: string]: any };
       
       // Get reviewer details
+      if (!reviewData.userId) continue;
       const userDoc = await adminDb.collection('users').doc(reviewData.userId).get();
       const userData = userDoc.exists ? userDoc.data() : null;
 

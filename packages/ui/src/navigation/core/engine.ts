@@ -143,7 +143,7 @@ export const calculateNavigationLayout = (state: NavigationState): NavigationLay
         }
       };
       
-    case 'desktop-sidebar':
+    case 'desktop-sidebar': {
       const sidebarWidth = sidebarCollapsed ? 64 : 256;
       return {
         mode,
@@ -157,6 +157,7 @@ export const calculateNavigationLayout = (state: NavigationState): NavigationLay
           right: 0
         }
       };
+    }
       
     default:
       // Fallback to mobile layout

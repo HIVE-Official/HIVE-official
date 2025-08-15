@@ -8,8 +8,8 @@
  */
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { calculateNavigationLayout, createResizeHandler, createNavigationStateMemo, safeCalculateNavigationState, debugNavigationState } from '../core/engine.js';
-import { getNavigationItemsWithActiveState } from '../core/data.js';
+import { calculateNavigationLayout, createResizeHandler, createNavigationStateMemo, safeCalculateNavigationState, debugNavigationState } from '../core/engine';
+import { getNavigationItemsWithActiveState } from '../core/data';
 /**
  * Primary navigation state hook
  * Manages all aspects of HIVE's adaptive navigation system

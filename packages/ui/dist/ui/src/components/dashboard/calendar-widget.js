@@ -3,9 +3,9 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, ChevronLeft, ChevronRight, Clock, MapPin, Users, Plus, Eye, Bell, BookOpen } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card.js';
-import { Button } from '../hive-button.js';
-import { Badge } from '../ui/badge.js';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Button } from '../hive-button';
+import { Badge } from '../ui/badge';
 // Animation variants
 const containerVariants = {
     hidden: { opacity: 0 },

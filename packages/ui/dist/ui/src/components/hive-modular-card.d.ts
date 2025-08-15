@@ -1,7 +1,7 @@
 import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
 declare const moduleVariants: (props?: {
-    variant?: "gold" | "base" | "selected" | "elevated" | "minimal" | "clickable" | "selectable" | "gold-strong";
+    variant?: "gold" | "base" | "selected" | "minimal" | "elevated" | "clickable" | "selectable" | "gold-strong";
     size?: "xs" | "sm" | "md" | "lg";
     rounded?: "sm" | "md" | "lg" | "none";
     connector?: "none" | "horizontal" | "vertical" | "top" | "right" | "bottom" | "left";

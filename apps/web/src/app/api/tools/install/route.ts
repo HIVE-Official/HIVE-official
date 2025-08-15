@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { dbAdmin as adminDb } from '@/lib/firebase-admin';
 import { getCurrentUser } from '@/lib/auth-server';
 import { z } from 'zod';
-import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { logger } from "@/lib/structured-logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
 
 const InstallRequestSchema = z.object({
   toolId: z.string(),
@@ -75,9 +75,12 @@ export async function POST(request: NextRequest) {
     }
 
     const toolData = toolDoc.data();
+    if (!toolData) {
+      return NextResponse.json(ApiResponseHelper.error("Tool data not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
+    }
     
     // Check if tool is published and available
-    if (toolData?.status !== 'published') {
+    if (toolData.status !== 'published') {
       return NextResponse.json(ApiResponseHelper.error("Tool is not available for installation", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
@@ -179,10 +182,12 @@ export async function POST(request: NextRequest) {
     });
 
     // Update tool stats
-    await adminDb.collection('tools').doc(validatedData.toolId).update({
-      installCount: (toolData.installCount || 0) + 1,
-      lastInstalledAt: now.toISOString()
-    });
+    if (toolData) {
+      await adminDb.collection('tools').doc(validatedData.toolId).update({
+        installCount: (toolData.installCount || 0) + 1,
+        lastInstalledAt: now.toISOString()
+      });
+    }
 
     // Create deployment record for compatibility
     const deployment = {
@@ -295,11 +300,12 @@ export async function GET(request: NextRequest) {
     const installations = [];
 
     for (const doc of installsSnapshot.docs) {
-      const installData = { id: doc.id, ...doc.data() };
+      const installData = { id: doc.id, ...doc.data() } as { id: string; toolId?: string; [key: string]: any };
       
       // Get tool details
+      if (!installData.toolId) continue;
       const toolDoc = await adminDb.collection('tools').doc(installData.toolId).get();
-      const toolData = toolDoc.exists ? toolDoc.data() : null;
+      const toolData = toolDoc.exists ? { id: toolDoc.id, ...toolDoc.data() } as { id: string; toolId?: string; name?: string; [key: string]: any } : null;
 
       // Get marketplace details
       const marketplaceSnapshot = await adminDb

@@ -100,8 +100,7 @@ export const generateContrastReport = (): {
  */
 export const validateColorCombination = (
   foreground: string,
-  background: string,
-  _context: string = ''
+  background: string
 ): {
   isValid: boolean;
   ratio: number;

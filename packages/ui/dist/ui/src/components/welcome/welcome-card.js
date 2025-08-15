@@ -1,9 +1,9 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from 'react';
-import { motion } from '../framer-motion-proxy.js';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, } from '../ui/card.js';
-import { cn } from '../../lib/utils.js';
-import { SchoolSearchInput } from './school-search-input.js';
+import { motion } from '../framer-motion-proxy';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, } from '../ui/card';
+import { cn } from '../../lib/utils';
+import { SchoolSearchInput } from './school-search-input';
 // A placeholder for the HIVE logomark.
 // The final implementation will use an <Image> component with the actual asset.
 const HiveLogoPlaceholder = () => (_jsx("div", { className: "bg-accent-gold w-8 h-8 md:w-10 md:h-10", "aria-label": "HIVE logomark", role: "img" }));

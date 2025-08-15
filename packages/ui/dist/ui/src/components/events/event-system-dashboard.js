@@ -7,11 +7,11 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
  * Provides access to all 5 event tools with seamless integration.
  */
 import { useState, useEffect, useCallback } from 'react';
-import { HiveCard, HiveButton, HiveBadge } from '../index.js';
+import { HiveCard, HiveButton, HiveBadge } from '../index';
 import { Calendar, Users, QrCode, BarChart3, MessageSquare, Plus, Clock } from 'lucide-react';
-import { cn } from '../../lib/utils.js';
-import { EventCreatorToolV2 } from './event-creator-tool-v2.js';
-import { ToolRuntimeEngine } from '../tools/tool-runtime-engine.js';
+import { cn } from '../../lib/utils';
+import { EventCreatorToolV2 } from './event-creator-tool-v2';
+import { ToolRuntimeEngine } from '../tools/tool-runtime-engine';
 export function EventSystemDashboard({ spaceId, userId, userRole, className }) {
     const [currentView, setCurrentView] = useState('dashboard');
     const [selectedTool, setSelectedTool] = useState(null);

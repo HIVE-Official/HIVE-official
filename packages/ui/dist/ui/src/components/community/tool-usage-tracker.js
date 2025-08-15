@@ -5,9 +5,9 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
  * Analytics and usage tracking for community tools
  */
 import { useState, useMemo } from 'react';
-import { HiveCard } from '../hive-card.js';
-import { Button } from '../ui/button.js';
-import { Badge } from '../ui/badge.js';
+import { HiveCard } from '../hive-card';
+import { Button } from '../ui/button';
+import { Badge } from '../ui/badge';
 import { BarChart3, Users, Clock, Download, Star, Activity, AlertCircle, Award, Zap, Target, ArrowUp, ArrowDown, Minus } from 'lucide-react';
 export const ToolUsageTracker = ({ tool, usageData, dateRange, onDateRangeChange, onExportData, userRole }) => {
     const [activeTab, setActiveTab] = useState('overview');

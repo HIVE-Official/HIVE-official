@@ -41,9 +41,10 @@ export const CampusIdentityHeader: React.FC<CampusIdentityHeaderProps> = ({
     isOnline = false,
     isBuilder = false,
     completionPercentage = 0
-  } = user;
+  } = user || {};
 
-  const getInitials = (name: string) => {
+  const getInitials = (name?: string) => {
+    if (!name) return 'U';
     return name
       .split(' ')
       .map(n => n[0])
@@ -52,7 +53,8 @@ export const CampusIdentityHeader: React.FC<CampusIdentityHeaderProps> = ({
       .slice(0, 2);
   };
 
-  const formatHandle = (handle: string) => {
+  const formatHandle = (handle?: string) => {
+    if (!handle) return '@user';
     return handle.startsWith('@') ? handle : `@${handle}`;
   };
 
@@ -131,7 +133,7 @@ export const CampusIdentityHeader: React.FC<CampusIdentityHeaderProps> = ({
             {avatar ? (
               <img
                 src={avatar}
-                alt={`${name}'s avatar`}
+                alt={`${name || 'User'}'s avatar`}
                 className="w-full h-full object-cover"
               />
             ) : (
@@ -176,7 +178,7 @@ export const CampusIdentityHeader: React.FC<CampusIdentityHeaderProps> = ({
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-3 mb-1">
               <h2 className="text-platinum font-bold text-xl md:text-2xl truncate tracking-tight">
-                {name}
+                {name || 'Unknown User'}
               </h2>
               
               {/* Builder Badge - Sophisticated Subtle Treatment */}
@@ -213,9 +215,9 @@ export const CampusIdentityHeader: React.FC<CampusIdentityHeaderProps> = ({
           <div className="flex items-center gap-2 text-sm">
             <div className="flex items-center gap-2">
               <div className="w-1.5 h-1.5 rounded-full bg-gold/60" />
-              <span className="text-platinum font-medium">{major}</span>
+              <span className="text-platinum font-medium">{major || 'Undeclared'}</span>
               <span className="text-steel/60">•</span>
-              <span className="text-mercury font-medium">Class of '{year.slice(-2)}</span>
+              <span className="text-mercury font-medium">Class of '{year ? year.slice(-2) : 'TBD'}</span>
             </div>
           </div>
 

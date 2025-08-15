@@ -9,13 +9,14 @@ import { SpaceResourceManager } from "../../../../../components/spaces/space-res
 import { useRouter } from "next/navigation";
 
 interface SpaceResourcesPageProps {
-  params: {
+  params: Promise<{
     spaceId: string;
-  };
+  }>;
 }
 
 export default function SpaceResourcesPage({ params }: SpaceResourcesPageProps) {
   const router = useRouter();
+  const [spaceId, setSpaceId] = useState<string>('');
   const [spaceData, setSpaceData] = useState<{
     name: string;
     userRole: 'admin' | 'moderator' | 'member';
@@ -23,6 +24,16 @@ export default function SpaceResourcesPage({ params }: SpaceResourcesPageProps) 
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    // Resolve params Promise
+    const resolveParams = async () => {
+      const resolvedParams = await params;
+      setSpaceId(resolvedParams.spaceId);
+    };
+    resolveParams();
+  }, [params]);
+
+  useEffect(() => {
+    if (!spaceId) return;
     const fetchSpaceData = async () => {
       try {
         // Simulate API call to get space info and user permissions
@@ -40,14 +51,14 @@ export default function SpaceResourcesPage({ params }: SpaceResourcesPageProps) 
     };
 
     fetchSpaceData();
-  }, [params.spaceId]);
+  }, [spaceId]);
 
   const handleCreateEvent = (resourceId: string) => {
     // Navigate to event creation with resource pre-selected
-    router.push(`/spaces/${params.spaceId}/events?resource=${resourceId}`);
+    router.push(`/spaces/${spaceId}/events?resource=${resourceId}`);
   };
 
-  const handleBookResource = (_resourceId: string) => {
+  const handleBookResource = () => {
     // Handle resource booking logic
   };
 
@@ -69,7 +80,7 @@ export default function SpaceResourcesPage({ params }: SpaceResourcesPageProps) 
       <PageContainer title="Space Not Found" maxWidth="7xl">
         <div className="text-center py-12">
           <h3 className="text-xl font-semibold text-white mb-2">Space Not Found</h3>
-          <p className="text-zinc-400 mb-6">The space you're looking for doesn't exist or you don't have access to it.</p>
+          <p className="text-zinc-400 mb-6">The space you&apos;re looking for doesn&apos;t exist or you don&apos;t have access to it.</p>
           <button
             onClick={() => router.push('/spaces')}
             className="text-hive-gold hover:text-hive-champagne"
@@ -94,7 +105,7 @@ export default function SpaceResourcesPage({ params }: SpaceResourcesPageProps) 
           },
           { 
             label: spaceData.name, 
-            href: `/spaces/${params.spaceId}`
+            href: `/spaces/${spaceId}`
           },
           { 
             label: "Resources", 
@@ -104,7 +115,7 @@ export default function SpaceResourcesPage({ params }: SpaceResourcesPageProps) 
         maxWidth="7xl"
       >
         <SpaceResourceManager
-          spaceId={params.spaceId}
+          spaceId={spaceId}
           spaceName={spaceData.name}
           userRole={spaceData.userRole}
           onCreateEvent={handleCreateEvent}

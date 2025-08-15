@@ -858,10 +858,10 @@ export declare const ButtonConfigSchema: z.ZodObject<{
         }[];
     }>, "many">>;
 }, "strip", z.ZodTypeAny, {
+    disabled: boolean;
     variant: "primary" | "secondary" | "outline" | "ghost";
     text: string;
     size: "sm" | "lg" | "md";
-    disabled: boolean;
     style?: {
         backgroundColor?: string | undefined;
         textColor?: string | undefined;
@@ -898,6 +898,7 @@ export declare const ButtonConfigSchema: z.ZodObject<{
     } | undefined;
 }, {
     text: string;
+    disabled?: boolean | undefined;
     variant?: "primary" | "secondary" | "outline" | "ghost" | undefined;
     style?: {
         backgroundColor?: string | undefined;
@@ -929,7 +930,6 @@ export declare const ButtonConfigSchema: z.ZodObject<{
         }[];
     }[] | undefined;
     size?: "sm" | "lg" | "md" | undefined;
-    disabled?: boolean | undefined;
     onClick?: {
         type: "custom" | "navigate" | "submit" | "reset";
         target?: string | undefined;
@@ -943,8 +943,8 @@ export declare const ChoiceSelectConfigSchema: z.ZodObject<{
         label: z.ZodString;
         disabled: z.ZodDefault<z.ZodBoolean>;
     }, "strip", z.ZodTypeAny, {
-        value: string;
         disabled: boolean;
+        value: string;
         label: string;
     }, {
         value: string;
@@ -1059,8 +1059,8 @@ export declare const ChoiceSelectConfigSchema: z.ZodObject<{
     }>, "many">>;
 }, "strip", z.ZodTypeAny, {
     options: {
-        value: string;
         disabled: boolean;
+        value: string;
         label: string;
     }[];
     label: string;
@@ -2068,13 +2068,13 @@ export declare const PingTriggerConfigSchema: z.ZodObject<{
         event: z.ZodOptional<z.ZodString>;
         data: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnknown>>;
     }, "strip", z.ZodTypeAny, {
-        type: "element" | "external" | "analytics";
+        type: "analytics" | "element" | "external";
         data?: Record<string, unknown> | undefined;
         url?: string | undefined;
         elementId?: string | undefined;
         event?: string | undefined;
     }, {
-        type: "element" | "external" | "analytics";
+        type: "analytics" | "element" | "external";
         data?: Record<string, unknown> | undefined;
         url?: string | undefined;
         elementId?: string | undefined;
@@ -2185,7 +2185,7 @@ export declare const PingTriggerConfigSchema: z.ZodObject<{
     }>, "many">>;
 }, "strip", z.ZodTypeAny, {
     target: {
-        type: "element" | "external" | "analytics";
+        type: "analytics" | "element" | "external";
         data?: Record<string, unknown> | undefined;
         url?: string | undefined;
         elementId?: string | undefined;
@@ -2225,7 +2225,7 @@ export declare const PingTriggerConfigSchema: z.ZodObject<{
     }[] | undefined;
 }, {
     target: {
-        type: "element" | "external" | "analytics";
+        type: "analytics" | "element" | "external";
         data?: Record<string, unknown> | undefined;
         url?: string | undefined;
         elementId?: string | undefined;
@@ -3284,10 +3284,10 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             }[];
         }>, "many">>;
     }, "strip", z.ZodTypeAny, {
+        disabled: boolean;
         variant: "primary" | "secondary" | "outline" | "ghost";
         text: string;
         size: "sm" | "lg" | "md";
-        disabled: boolean;
         style?: {
             backgroundColor?: string | undefined;
             textColor?: string | undefined;
@@ -3324,6 +3324,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         } | undefined;
     }, {
         text: string;
+        disabled?: boolean | undefined;
         variant?: "primary" | "secondary" | "outline" | "ghost" | undefined;
         style?: {
             backgroundColor?: string | undefined;
@@ -3355,7 +3356,6 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             }[];
         }[] | undefined;
         size?: "sm" | "lg" | "md" | undefined;
-        disabled?: boolean | undefined;
         onClick?: {
             type: "custom" | "navigate" | "submit" | "reset";
             target?: string | undefined;
@@ -3365,10 +3365,10 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
 }, "strip", z.ZodTypeAny, {
     type: "button";
     config: {
+        disabled: boolean;
         variant: "primary" | "secondary" | "outline" | "ghost";
         text: string;
         size: "sm" | "lg" | "md";
-        disabled: boolean;
         style?: {
             backgroundColor?: string | undefined;
             textColor?: string | undefined;
@@ -3408,6 +3408,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
     type: "button";
     config: {
         text: string;
+        disabled?: boolean | undefined;
         variant?: "primary" | "secondary" | "outline" | "ghost" | undefined;
         style?: {
             backgroundColor?: string | undefined;
@@ -3439,7 +3440,6 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             }[];
         }[] | undefined;
         size?: "sm" | "lg" | "md" | undefined;
-        disabled?: boolean | undefined;
         onClick?: {
             type: "custom" | "navigate" | "submit" | "reset";
             target?: string | undefined;
@@ -3455,8 +3455,8 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             label: z.ZodString;
             disabled: z.ZodDefault<z.ZodBoolean>;
         }, "strip", z.ZodTypeAny, {
-            value: string;
             disabled: boolean;
+            value: string;
             label: string;
         }, {
             value: string;
@@ -3571,8 +3571,8 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }>, "many">>;
     }, "strip", z.ZodTypeAny, {
         options: {
-            value: string;
             disabled: boolean;
+            value: string;
             label: string;
         }[];
         label: string;
@@ -3652,8 +3652,8 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
     type: "choiceSelect";
     config: {
         options: {
-            value: string;
             disabled: boolean;
+            value: string;
             label: string;
         }[];
         label: string;
@@ -5066,13 +5066,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             event: z.ZodOptional<z.ZodString>;
             data: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnknown>>;
         }, "strip", z.ZodTypeAny, {
-            type: "element" | "external" | "analytics";
+            type: "analytics" | "element" | "external";
             data?: Record<string, unknown> | undefined;
             url?: string | undefined;
             elementId?: string | undefined;
             event?: string | undefined;
         }, {
-            type: "element" | "external" | "analytics";
+            type: "analytics" | "element" | "external";
             data?: Record<string, unknown> | undefined;
             url?: string | undefined;
             elementId?: string | undefined;
@@ -5183,7 +5183,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }>, "many">>;
     }, "strip", z.ZodTypeAny, {
         target: {
-            type: "element" | "external" | "analytics";
+            type: "analytics" | "element" | "external";
             data?: Record<string, unknown> | undefined;
             url?: string | undefined;
             elementId?: string | undefined;
@@ -5223,7 +5223,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }[] | undefined;
     }, {
         target: {
-            type: "element" | "external" | "analytics";
+            type: "analytics" | "element" | "external";
             data?: Record<string, unknown> | undefined;
             url?: string | undefined;
             elementId?: string | undefined;
@@ -5266,7 +5266,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
     type: "pingTrigger";
     config: {
         target: {
-            type: "element" | "external" | "analytics";
+            type: "analytics" | "element" | "external";
             data?: Record<string, unknown> | undefined;
             url?: string | undefined;
             elementId?: string | undefined;
@@ -5309,7 +5309,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
     type: "pingTrigger";
     config: {
         target: {
-            type: "element" | "external" | "analytics";
+            type: "analytics" | "element" | "external";
             data?: Record<string, unknown> | undefined;
             url?: string | undefined;
             elementId?: string | undefined;

@@ -2,7 +2,7 @@ import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
 import { type NavigationItem } from './hive-navigation-system';
 declare const hiveNavigationItemVariants: (props?: {
-    variant?: "default" | "ghost" | "disabled" | "active" | "minimal" | "premium";
+    variant?: "default" | "ghost" | "disabled" | "minimal" | "active" | "premium";
     size?: "default" | "sm" | "lg";
     level?: 0 | 1 | 2 | 3;
     collapsed?: boolean;

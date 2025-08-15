@@ -1,9 +1,9 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { cn } from '../../lib/utils.js';
+import { cn } from '../../lib/utils';
 export const Skeleton = ({ variant = 'rectangular', width, height, lines = 1, animate = true, className, style, ...props }) => {
     const baseClasses = [
-        'bg-hive-background-tertiary',
+        'bg-[var(--hive-background-tertiary)]',
         animate && 'animate-pulse',
         // Variants
         variant === 'circular' && 'rounded-full',
@@ -34,7 +34,7 @@ export const SkeletonAvatar = ({ size = 'md', className }) => {
     const sizeMap = {
         sm: 32,
         md: 40,
-        lg: 12
+        lg: 48
     };
     return (_jsx(Skeleton, { variant: "circular", width: sizeMap[size], height: sizeMap[size], className: className }));
 };

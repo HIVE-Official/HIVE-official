@@ -73,12 +73,16 @@ export const GET = withAuth(async (
       .limit(5)
       .get();
 
-    const builderRequests = builderRequestsSnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data(),
-      submittedAt: doc.data().submittedAt?.toDate?.()?.toISOString(),
-      reviewedAt: doc.data().reviewedAt?.toDate?.()?.toISOString()
-    }));
+    const builderRequests = builderRequestsSnapshot.docs.map(doc => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        ...data,
+        status: data.status || 'pending',
+        submittedAt: data.submittedAt?.toDate?.()?.toISOString(),
+        reviewedAt: data.reviewedAt?.toDate?.()?.toISOString()
+      };
+    });
 
     const pendingRequest = builderRequests.find(r => r.status === 'pending');
     const approvedRequest = builderRequests.find(r => r.status === 'approved');

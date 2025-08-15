@@ -2,7 +2,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from 'react';
 import { cva } from 'class-variance-authority';
-import { cn } from '../lib/utils.js';
+import { cn } from '../lib/utils';
 // HIVE Logo Component - Hexagon-bee glyph + wordmark based on brand guidelines
 // Following darkLuxury color system and design specifications
 const hiveLogoVariants = cva("flex items-center font-bold transition-all duration-200", {

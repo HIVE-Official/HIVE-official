@@ -1,14 +1,14 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from 'react';
 import { cva } from 'class-variance-authority';
-import { motion } from './framer-motion-proxy.js';
-import { cn } from '../lib/utils.js';
-import { getMotionProps } from '../lib/motion-utils.js';
-import { HiveMagneticHover } from './hive-magnetic-interactions.js';
-import { liquidFlow, liquidMetalPerformance, liquidMetalUtils } from '../motion/hive-liquid-metal.js';
-import { getInteractiveA11yProps, getTestProps } from '../lib/accessibility-foundation.js';
-import { responsiveSpace, touchTargets } from '../lib/responsive-foundation.js';
-import { componentBase } from '../lib/component-foundation.js';
+import { motion } from './framer-motion-proxy';
+import { cn } from '../lib/utils';
+import { getMotionProps } from '../lib/motion-utils';
+import { HiveMagneticHover } from './hive-magnetic-interactions';
+import { liquidFlow, liquidMetalPerformance, liquidMetalUtils } from '../motion/hive-liquid-metal';
+import { getInteractiveA11yProps, getTestProps } from '../lib/accessibility-foundation';
+import { responsiveSpace, touchTargets } from '../lib/responsive-foundation';
+import { componentBase } from '../lib/component-foundation';
 // HIVE Card variants - Premium black/white/gold aesthetics with standardized foundation
 const hiveCardVariants = cva(
 // Base styles - sophisticated card design with accessibility and mobile support

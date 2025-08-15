@@ -80,6 +80,7 @@ export async function GET(
       if (!toolDoc.exists) continue;
       
       const toolData = toolDoc.data();
+      if (!toolData) continue;
       
       // Apply category filter
       if (category && toolData.category !== category) continue;

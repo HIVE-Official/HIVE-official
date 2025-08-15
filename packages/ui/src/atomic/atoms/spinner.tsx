@@ -18,9 +18,9 @@ const spinnerSizes = {
 };
 
 const spinnerColors = {
-  primary: 'border-hive-text-primary',
-  secondary: 'border-hive-text-secondary', 
-  gold: 'border-hive-gold',
+  primary: 'border-[var(--hive-text-primary)]',
+  secondary: 'border-[var(--hive-text-secondary)]', 
+  gold: 'border-[var(--hive-brand-secondary)]',
   white: 'border-white'
 };
 
@@ -44,7 +44,7 @@ export const Spinner: React.FC<SpinnerProps> = ({
         <div className={cn(
           'rounded-full animate-pulse',
           'bg-current opacity-75',
-          spinnerColors[color].replace('border-', 'text-'),
+          spinnerColors[color].replace('border-[var(--hive-', 'text-[var(--hive-'),
           'h-full w-full'
         )} />
       </div>
@@ -66,7 +66,7 @@ export const Spinner: React.FC<SpinnerProps> = ({
             className={cn(
               'rounded-full animate-bounce',
               'bg-current',
-              spinnerColors[color].replace('border-', 'text-'),
+              spinnerColors[color].replace('border-[var(--hive-', 'text-[var(--hive-'),
               size === 'xs' && 'h-1 w-1',
               size === 'sm' && 'h-1.5 w-1.5',
               size === 'md' && 'h-2 w-2',
@@ -89,7 +89,7 @@ export const Spinner: React.FC<SpinnerProps> = ({
         'inline-block animate-spin rounded-full',
         'border-2 border-transparent border-t-current',
         spinnerSizes[size],
-        spinnerColors[color].replace('border-', 'text-'),
+        spinnerColors[color].replace('border-[var(--hive-', 'text-[var(--hive-'),
         className
       )} 
       {...props}

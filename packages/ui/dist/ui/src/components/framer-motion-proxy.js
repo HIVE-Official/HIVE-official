@@ -14,6 +14,7 @@ export const motion = {
     h3: (props) => _jsx("h3", { ...props }),
     h4: (props) => _jsx("h4", { ...props }),
     p: (props) => _jsx("p", { ...props }),
+    header: (props) => _jsx("header", { ...props }),
     // Add more elements as needed
 };
 // Simple AnimatePresence fallback that just renders children

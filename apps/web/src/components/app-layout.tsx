@@ -28,28 +28,10 @@ export function AppLayout({ children, hideShell = false }: AppLayoutProps) {
   // Show loading state while auth is initializing
   if (isLoading) {
     return (
-      <div 
-        className="min-h-screen flex items-center justify-center"
-        style={{ backgroundColor: '#0a0a0a' }}
-      >
-        <div 
-          className="flex items-center"
-          style={{ 
-            gap: '16px',
-            color: '#e5e5e5',
-          }}
-        >
-          <div 
-            className="w-6 h-6 animate-pulse"
-            style={{
-              backgroundColor: '#fbbf24',
-              borderRadius: '8px',
-            }}
-          />
-          <span 
-            className="font-medium"
-            style={{ color: '#e5e5e5' }}
-          >
+      <div className="min-h-screen flex items-center justify-center bg-hive-background-primary">
+        <div className="flex items-center gap-4 text-hive-text-secondary">
+          <div className="w-6 h-6 animate-pulse bg-hive-brand-primary rounded-lg" />
+          <span className="font-medium text-hive-text-secondary">
             Loading HIVE...
           </span>
         </div>

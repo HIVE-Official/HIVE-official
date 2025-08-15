@@ -1,7 +1,7 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useEffect, useRef } from 'react';
-import { cn } from '../../lib/utils.js';
+import { cn } from '../../lib/utils';
 // Custom hook for advanced viewport detection
 function useAdvancedViewport() {
     const [viewport, setViewport] = useState({

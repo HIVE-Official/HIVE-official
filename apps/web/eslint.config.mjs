@@ -4,6 +4,8 @@ import { fileURLToPath } from "node:url";
 import js from "@eslint/js";
 import { FlatCompat } from "@eslint/eslintrc";
 import { fixupConfigRules } from "@eslint/compat";
+import tseslint from "@typescript-eslint/eslint-plugin";
+import parser from "@typescript-eslint/parser";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -30,6 +32,14 @@ export default [
   {
     files: ["**/*.{js,jsx,ts,tsx}"],
     languageOptions: {
+      parser: parser,
+      parserOptions: {
+        ecmaVersion: "latest",
+        sourceType: "module",
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
       globals: {
         React: "readonly",
         JSX: "readonly",
@@ -45,13 +55,17 @@ export default [
         exports: "readonly",
       },
     },
+    plugins: {
+      "@typescript-eslint": tseslint,
+    },
     rules: {
       // Next.js specific rules
       "@next/next/no-img-element": "warn",
       "react-hooks/exhaustive-deps": "warn",
 
-      // Very lenient unused variables rule
-      "no-unused-vars": [
+      // Disable base rule and use TypeScript version
+      "no-unused-vars": "off",
+      "@typescript-eslint/no-unused-vars": [
         "warn",
         {
           argsIgnorePattern:

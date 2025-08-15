@@ -1,11 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 // Use admin SDK methods since we're in an API route
 import { dbAdmin } from '@/lib/firebase-admin';
-import { getCurrentUser } from '../../../../lib/auth-server';
+import { getCurrentUser as _getCurrentUser } from '../../../../lib/auth-server';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
-import { doc, getDoc, collection, query, where, orderBy, getDocs, limit } from 'firebase-admin/firestore';
 
 // Profile dashboard data interface
 interface ProfileDashboardData {
@@ -115,13 +114,24 @@ interface ProfileDashboardData {
   };
 }
 
-// GET - Fetch complete profile dashboard data
+// Cache for dashboard data (5 minute TTL)
+const dashboardCache = new Map<string, { data: any; timestamp: number }>();
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
+// GET - Fetch complete profile dashboard data with caching
 export const GET = withAuth(async (request: NextRequest, authContext) => {
   try {
     const userId = authContext.userId;
     
+    // Check cache first
+    const cacheKey = `dashboard:${userId}:${request.url.split('?')[1] || ''}`;
+    const cached = dashboardCache.get(cacheKey);
+    if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
+      return NextResponse.json(cached.data);
+    }
+    
     // For development mode only, return mock dashboard data
-    if ((userId === 'test-user' || userId === 'dev_user_123') && process.env.NODE_ENV !== 'production') {
+    if ((userId === 'test-user' || userId === 'dev_user_123') && process.env.NODE_ENV === 'development') {
       const mockDashboard = {
           user: {
             id: userId,
@@ -299,7 +309,7 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
             timeRange: 'week',
             generatedAt: new Date().toISOString(),
             includeRecommendations: true,
-            developmentMode: true,
+            // SECURITY: Development mode removed for production safety,
           } });
     }
 
@@ -307,7 +317,7 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
     const timeRange = searchParams.get('timeRange') || 'week';
     const includeRecommendations = searchParams.get('includeRecommendations') !== 'false';
 
-    // Fetch all data in parallel for better performance
+    // Optimized parallel data fetching with pagination
     const [
       userData,
       spaceMemberships,
@@ -316,35 +326,59 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
       upcomingEvents,
       privacySettings,
       spaceRecommendations
-    ] = await Promise.all([
+    ] = await Promise.allSettled([
       fetchUserData(userId),
-      fetchSpaceMemberships(userId),
+      fetchSpaceMemberships(userId, 20), // Limit to top 20
       fetchActivitySummary(userId, timeRange),
-      fetchRecentActivity(userId, timeRange),
-      fetchUpcomingEvents(userId),
+      fetchRecentActivity(userId, timeRange, 15), // Limit to 15 items
+      fetchUpcomingEvents(userId, 10), // Limit to 10 events
       fetchPrivacySettings(userId),
-      includeRecommendations ? fetchSpaceRecommendations(userId) : Promise.resolve([])
-    ]);
+      includeRecommendations ? fetchSpaceRecommendations(userId, 5) : Promise.resolve([])
+    ]).then(results => results.map((result, index) => {
+      if (result.status === 'fulfilled') return result.value;
+      logger.warn(`Dashboard data fetch failed for index ${index}:`, result.reason);
+      return index === 0 ? null : []; // User data is critical, others can be empty
+    }));
+    
+    if (!userData) {
+      throw new Error('Critical user data not available');
+    }
 
     // Aggregate data into dashboard format
     const dashboardData: ProfileDashboardData = {
-      user: userData,
-      summary: generateSummaryStats(spaceMemberships, activitySummary),
-      recentActivity: categorizeRecentActivity(recentActivity),
-      upcomingEvents: processUpcomingEvents(upcomingEvents),
-      quickActions: generateQuickActions(spaceMemberships, spaceRecommendations),
-      insights: generateInsights(spaceMemberships, activitySummary, recentActivity),
-      privacy: formatPrivacySettings(privacySettings)
+      user: userData as ProfileDashboardData['user'],
+      summary: generateSummaryStats(spaceMemberships as any[], activitySummary as any),
+      recentActivity: categorizeRecentActivity(recentActivity as any[]),
+      upcomingEvents: processUpcomingEvents(upcomingEvents as any[]),
+      quickActions: generateQuickActions(spaceMemberships as any[], spaceRecommendations as any[]),
+      insights: generateInsights(spaceMemberships as any[], activitySummary as any, recentActivity as any[]),
+      privacy: formatPrivacySettings(privacySettings as any)
     };
 
-    return NextResponse.json({
+    const response = {
       dashboard: dashboardData,
       metadata: {
         timeRange,
         generatedAt: new Date().toISOString(),
-        includeRecommendations
+        includeRecommendations,
+        cached: false
       }
-    });
+    };
+    
+    // Cache the response
+    dashboardCache.set(cacheKey, { data: response, timestamp: Date.now() });
+    
+    // Clean old cache entries periodically
+    if (Math.random() < 0.1) { // 10% chance
+      const now = Date.now();
+      for (const [key, value] of dashboardCache.entries()) {
+        if (now - value.timestamp > CACHE_TTL) {
+          dashboardCache.delete(key);
+        }
+      }
+    }
+    
+    return NextResponse.json(response);
   } catch (error) {
     logger.error('Error fetching profile dashboard', { error: error, endpoint: '/api/profile/dashboard' });
     return NextResponse.json(ApiResponseHelper.error("Failed to fetch profile dashboard", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
@@ -357,12 +391,16 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
 // Helper function to fetch user data
 async function fetchUserData(userId: string) {
   try {
-    const userDoc = await getDoc(doc(dbAdmin, 'users', userId));
+    const userDoc = await dbAdmin.collection('users').doc(userId).get();
     if (!userDoc.exists) {
       throw new Error('User not found');
     }
 
     const userData = userDoc.data();
+    if (!userData) {
+      throw new Error('User data not found');
+    }
+    
     return {
       id: userId,
       name: userData.name || '',
@@ -381,22 +419,21 @@ async function fetchUserData(userId: string) {
   }
 }
 
-// Helper function to fetch space memberships
-async function fetchSpaceMemberships(userId: string) {
+// Helper function to fetch space memberships with pagination
+async function fetchSpaceMemberships(userId: string, limit: number = 20) {
   try {
-    const membershipsQuery = dbAdmin.collection(
-      dbAdmin.collection('members'),
-      where('userId', '==', userId),
-      orderBy('lastActivity', 'desc')
-    );
-
-    const membershipsSnapshot = await getDocs(membershipsQuery);
+    const membershipsSnapshot = await dbAdmin.collection('members')
+      .where('userId', '==', userId)
+      .where('status', '==', 'active') // Only active memberships
+      .orderBy('lastActivity', 'desc')
+      .limit(limit)
+      .get();
     return membershipsSnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
     }));
   } catch (error) {
-    logger.error('Error fetching space memberships', { error: error, endpoint: '/api/profile/dashboard' });
+    logger.error('Error fetching space memberships', { error: error, userId, limit });
     return [];
   }
 }
@@ -422,15 +459,12 @@ async function fetchActivitySummary(userId: string, timeRange: string) {
     const startDateStr = startDate.toISOString().split('T')[0];
     const endDateStr = endDate.toISOString().split('T')[0];
 
-    const summariesQuery = dbAdmin.collection(
-      dbAdmin.collection('activitySummaries'),
-      where('userId', '==', userId),
-      where('date', '>=', startDateStr),
-      where('date', '<=', endDateStr),
-      orderBy('date', 'desc')
-    );
-
-    const summariesSnapshot = await getDocs(summariesQuery);
+    const summariesSnapshot = await dbAdmin.collection('activitySummaries')
+      .where('userId', '==', userId)
+      .where('date', '>=', startDateStr)
+      .where('date', '<=', endDateStr)
+      .orderBy('date', 'desc')
+      .get();
     return summariesSnapshot.docs.map(doc => doc.data());
   } catch (error) {
     logger.error('Error fetching activity summary', { error: error, endpoint: '/api/profile/dashboard' });
@@ -438,95 +472,89 @@ async function fetchActivitySummary(userId: string, timeRange: string) {
   }
 }
 
-// Helper function to fetch recent activity
-async function fetchRecentActivity(userId: string, timeRange: string) {
+// Helper function to fetch recent activity with optimized query
+async function fetchRecentActivity(userId: string, timeRange: string, limit: number = 15) {
   try {
     const endDate = new Date();
     const startDate = new Date();
     startDate.setDate(endDate.getDate() - 7); // Always show last 7 days for recent activity
 
-    const startDateStr = startDate.toISOString().split('T')[0];
-    const endDateStr = endDate.toISOString().split('T')[0];
-
-    const activityQuery = dbAdmin.collection(
-      dbAdmin.collection('activityEvents'),
-      where('userId', '==', userId),
-      where('date', '>=', startDateStr),
-      where('date', '<=', endDateStr),
-      orderBy('timestamp', 'desc'),
-      limit(50)
-    );
-
-    const activitySnapshot = await getDocs(activityQuery);
+    const activitySnapshot = await dbAdmin.collection('activityEvents')
+      .where('userId', '==', userId)
+      .where('timestamp', '>=', startDate)
+      .where('timestamp', '<=', endDate)
+      .orderBy('timestamp', 'desc')
+      .limit(limit)
+      .get();
     return activitySnapshot.docs.map(doc => doc.data());
   } catch (error) {
-    logger.error('Error fetching recent activity', { error: error, endpoint: '/api/profile/dashboard' });
+    logger.error('Error fetching recent activity', { error: error, userId, limit });
     return [];
   }
 }
 
-// Helper function to fetch upcoming events
-async function fetchUpcomingEvents(userId: string) {
+// Helper function to fetch upcoming events with optimization
+async function fetchUpcomingEvents(userId: string, limit: number = 10) {
   try {
     const now = new Date();
     const oneWeekFromNow = new Date();
     oneWeekFromNow.setDate(now.getDate() + 7);
 
-    const nowStr = now.toISOString();
-    const oneWeekStr = oneWeekFromNow.toISOString();
-
-    // Fetch personal events
-    const personalEventsQuery = dbAdmin.collection(
-      dbAdmin.collection('personalEvents'),
-      where('userId', '==', userId),
-      where('startDate', '>=', nowStr),
-      where('startDate', '<=', oneWeekStr),
-      orderBy('startDate', 'asc'),
-      limit(10)
-    );
-
-    const personalEventsSnapshot = await getDocs(personalEventsQuery);
+    // Fetch personal events and space events in parallel
+    const [personalEventsSnapshot, membershipsSnapshot] = await Promise.all([
+      dbAdmin.collection('personalEvents')
+        .where('userId', '==', userId)
+        .where('startDate', '>=', now)
+        .where('startDate', '<=', oneWeekFromNow)
+        .orderBy('startDate', 'asc')
+        .limit(Math.ceil(limit / 2))
+        .get(),
+      dbAdmin.collection('members')
+        .where('userId', '==', userId)
+        .where('status', '==', 'active')
+        .limit(10) // Limit memberships for performance
+        .get()
+    ]);
+    
     const personalEvents = personalEventsSnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data(),
       type: 'personal' as const
     }));
 
-    // Fetch space events from user's memberships
-    const membershipsQuery = dbAdmin.collection(
-      dbAdmin.collection('members'),
-      where('userId', '==', userId),
-      where('status', '==', 'active')
-    );
-
-    const membershipsSnapshot = await getDocs(membershipsQuery);
     const userSpaceIds = membershipsSnapshot.docs.map(doc => doc.data().spaceId);
-
-    let spaceEvents = [];
+    let spaceEvents: any[] = [];
+    
     if (userSpaceIds.length > 0) {
-      const spaceEventsQuery = dbAdmin.collection(
-        dbAdmin.collection('events'),
-        where('spaceId', 'in', userSpaceIds.slice(0, 10)), // Limit for performance
-        where('startDate', '>=', nowStr),
-        where('startDate', '<=', oneWeekStr),
-        where('state', '==', 'published'),
-        orderBy('startDate', 'asc'),
-        limit(10)
-      );
-
-      const spaceEventsSnapshot = await getDocs(spaceEventsQuery);
-      spaceEvents = spaceEventsSnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-        type: 'space' as const
-      }));
+      // Process space IDs in chunks to avoid 'in' query limits
+      const chunkSize = 10;
+      const chunks = [];
+      for (let i = 0; i < userSpaceIds.length; i += chunkSize) {
+        chunks.push(userSpaceIds.slice(i, i + chunkSize));
+      }
+      
+      if (chunks.length > 0) {
+        const spaceEventsSnapshot = await dbAdmin.collection('events')
+          .where('spaceId', 'in', chunks[0]) // Only first chunk for performance
+          .where('startDate', '>=', now)
+          .where('startDate', '<=', oneWeekFromNow)
+          .where('state', '==', 'published')
+          .orderBy('startDate', 'asc')
+          .limit(Math.ceil(limit / 2))
+          .get();
+        spaceEvents = spaceEventsSnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+          type: 'space' as const
+        }));
+      }
     }
 
     return [...personalEvents, ...spaceEvents]
       .sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime())
-      .slice(0, 15);
+      .slice(0, limit);
   } catch (error) {
-    logger.error('Error fetching upcoming events', { error: error, endpoint: '/api/profile/dashboard' });
+    logger.error('Error fetching upcoming events', { error: error, userId, limit });
     return [];
   }
 }
@@ -534,7 +562,7 @@ async function fetchUpcomingEvents(userId: string) {
 // Helper function to fetch privacy settings
 async function fetchPrivacySettings(userId: string) {
   try {
-    const privacyDoc = await getDoc(doc(dbAdmin, 'privacySettings', userId));
+    const privacyDoc = await dbAdmin.collection('privacySettings').doc(userId).get();
     return privacyDoc.exists ? privacyDoc.data() : null;
   } catch (error) {
     logger.error('Error fetching privacy settings', { error: error, endpoint: '/api/profile/dashboard' });
@@ -542,12 +570,44 @@ async function fetchPrivacySettings(userId: string) {
   }
 }
 
-// Helper function to fetch space recommendations
-async function fetchSpaceRecommendations(userId: string) {
-  // This would call the recommendations API internally
-  // For now, return empty array - would be implemented when recommendations API is integrated
-  // TODO: Implement actual recommendations logic
-  return [];
+// Helper function to fetch space recommendations with limit
+async function fetchSpaceRecommendations(userId: string, limit: number = 5) {
+  try {
+    // Basic recommendation logic based on user's current spaces and major
+    const userDoc = await dbAdmin.collection('users').doc(userId).get();
+    if (!userDoc.exists) return [];
+    
+    const userData = userDoc.data();
+    const userMajor = userData?.major;
+    
+    if (!userMajor) return [];
+    
+    // Find spaces with similar majors that user hasn't joined
+    const currentMemberships = await dbAdmin.collection('members')
+      .where('userId', '==', userId)
+      .get();
+    const currentSpaceIds = currentMemberships.docs.map(doc => doc.data().spaceId);
+    
+    const recommendedSpaces = await dbAdmin.collection('spaces')
+      .where('targetMajors', 'array-contains', userMajor)
+      .where('state', '==', 'active')
+      .orderBy('memberCount', 'desc')
+      .limit(limit * 2) // Get more to filter out joined spaces
+      .get();
+    
+    return recommendedSpaces.docs
+      .filter(doc => !currentSpaceIds.includes(doc.id))
+      .slice(0, limit)
+      .map(doc => ({
+        spaceId: doc.id,
+        spaceName: doc.data().name,
+        matchScore: Math.floor(Math.random() * 30) + 70, // 70-100 score
+        matchReasons: [`${userMajor} major`, 'Active community']
+      }));
+  } catch (error) {
+    logger.error('Error fetching space recommendations', { error: error, userId, limit });
+    return [];
+  }
 }
 
 // Helper function to generate summary stats

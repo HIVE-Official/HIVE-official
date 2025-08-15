@@ -1,7 +1,7 @@
 'use client';
 import { jsx as _jsx } from "react/jsx-runtime";
 import React from 'react';
-import { cn } from '../../lib/utils.js';
+import { cn } from '../../lib/utils';
 // Max width variants based on Tailwind responsive breakpoints
 const maxWidthVariants = {
     xs: 'max-w-xs', // 320px
@@ -40,19 +40,19 @@ const gutterPadding = {
 const containerVariants = {
     default: '',
     card: [
-        'bg-hive-background-secondary',
-        'border border-hive-border-default',
+        'bg-[var(--hive-background-secondary)]',
+        'border border-[var(--hive-border-primary)]',
         'rounded-xl',
         'shadow-sm'
     ].join(' '),
     panel: [
-        'bg-hive-background-primary',
-        'border border-hive-border-default',
+        'bg-[var(--hive-background-primary)]',
+        'border border-[var(--hive-border-primary)]',
         'rounded-lg'
     ].join(' '),
     section: [
-        'bg-hive-background-tertiary',
-        'border-y border-hive-border-subtle'
+        'bg-[var(--hive-background-tertiary)]',
+        'border-y border-[var(--hive-border-tertiary)]'
     ].join(' ')
 };
 export const Container = React.forwardRef(({ maxWidth = '7xl', padding = 'md', center = true, fluid = false, breakout = false, variant = 'default', gutter = false, className, children, ...props }, ref) => {

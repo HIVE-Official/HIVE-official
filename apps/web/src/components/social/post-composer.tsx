@@ -53,7 +53,7 @@ interface Attachment {
   url: string;
   name: string;
   size?: number;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 interface Poll {
@@ -496,7 +496,7 @@ export function PostComposer({
                   className={postType === type ? 'bg-hive-gold/20 border-hive-gold' : ''}
                   title={`Create ${type} post`}
                 >
-                  {type === 'text' && <FileText className="h-4 w-4" />}
+                  {type === 'text' && <span className="h-4 w-4 flex items-center justify-center text-xs">📄</span>}
                   {type === 'image' && <Image className="h-4 w-4" alt="" />}
                   {type === 'link' && <Link className="h-4 w-4" />}
                   {type === 'poll' && <Poll className="h-4 w-4" />}
@@ -560,7 +560,7 @@ export function PostComposer({
                     key={vis}
                     variant="outline"
                     size="sm"
-                    onClick={() => setVisibility(vis as any)}
+                    onClick={() => setVisibility(vis as 'public' | 'space' | 'private')}
                     className={visibility === vis ? 'bg-hive-gold/20 border-hive-gold' : ''}
                     disabled={vis === 'space' && !spaceId}
                   >
@@ -578,7 +578,3 @@ export function PostComposer({
   );
 }
 
-// Helper component for file rendering
-function FileText({ className }: { className?: string }) {
-  return <span className={className}>📄</span>;
-}

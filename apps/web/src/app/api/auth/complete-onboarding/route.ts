@@ -67,43 +67,8 @@ export async function POST(request: NextRequest) {
 
     const idToken = authHeader.substring(7);
     
-    // Check for development mode token
-    if (idToken.startsWith("dev_token_")) {
-      let body: unknown;
-      try {
-        body = await request.json();
-      } catch (jsonError) {
-        return NextResponse.json(ApiResponseHelper.error("Invalid JSON in request body", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
-      }
-
-      let onboardingData;
-      try {
-        onboardingData = completeOnboardingSchema.parse(body);
-      } catch (validationError) {
-        if (validationError instanceof z.ZodError) {
-          return NextResponse.json(
-            { error: "Invalid request data", details: validationError.errors },
-            { status: HttpStatus.BAD_REQUEST }
-          );
-        }
-        throw validationError;
-      }
-      
-      logger.info('Development mode onboarding completion', { data: onboardingData, endpoint: '/api/auth/complete-onboarding' });
-      
-      // In development mode, just return success
-      return NextResponse.json({
-        success: true,
-        message: "Onboarding completed successfully (development mode)",
-        user: {
-          id: idToken.replace("dev_token_", ""),
-          fullName: onboardingData.fullName,
-          userType: onboardingData.userType,
-          handle: onboardingData.handle.toLowerCase(),
-          major: onboardingData.major,
-          builderRequestSpaces: onboardingData.builderRequestSpaces,
-        } });
-    }
+    // SECURITY: Development token bypass removed for production safety
+    // All tokens must be validated through Firebase Auth
     
     const auth = getAuth();
 

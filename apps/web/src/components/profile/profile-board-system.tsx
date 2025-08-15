@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { 
   Calendar, 
   Users, 
@@ -15,26 +15,13 @@ import {
   Award,
   Camera,
   ChevronRight,
-  ChevronLeft,
-  ChevronDown,
-  Upload,
-  User,
   Plus,
   X,
   Check,
-  AlertTriangle,
-  Maximize2,
-  RotateCcw,
-  Save,
-  Eye,
-  EyeOff,
-  Shield,
-  Lock,
-  Globe,
-  School,
-  Trash2
+  AlertTriangle
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 // Enhanced HIVE animations
 const hiveAnimationStyles = `
@@ -80,6 +67,67 @@ if (typeof document !== 'undefined' && !document.getElementById('hive-profile-an
   document.head.appendChild(styleSheet);
 }
 
+// Define proper types for API responses
+interface RitualData {
+  id: string;
+  name: string;
+  type: string;
+  tagline?: string;
+  description?: string;
+  completedToday?: number;
+  userParticipation?: {
+    sessionsCompleted: number;
+    currentStreak: number;
+    longestStreak: number;
+    progressPercentage: number;
+    lastSessionAt?: string;
+  };
+  milestones?: {
+    id: string;
+    name: string;
+    description: string;
+    isReached: boolean;
+    progress?: number;
+    progressThreshold?: number;
+    reachedAt?: string;
+  }[];
+}
+
+interface ConnectionData {
+  id: string;
+  fullName: string;
+  name: string;
+  handle: string;
+  avatarUrl?: string;
+  bio?: string;
+  major?: string;
+  academicYear?: string;
+  isOnline?: boolean;
+  mutualSpaces?: number;
+  connectionType: 'classmate' | 'friend' | 'mutual_friend' | 'colleague';
+  commonInterests?: string[];
+}
+
+interface SpaceData {
+  id: string;
+  name: string;
+  description?: string;
+  color?: string;
+  memberCount?: number;
+  unreadCount?: number;
+  role?: 'admin' | 'member' | 'moderator';
+}
+
+interface CalendarEvent {
+  id: string;
+  title: string;
+  description?: string;
+  startDate: string;
+  endDate: string;
+  location?: string;
+  type?: 'class' | 'study' | 'meeting' | 'exam' | 'social' | 'other';
+}
+
 interface ProfileBoardSystemProps {
   user: {
     id: string;
@@ -92,7 +140,7 @@ interface ProfileBoardSystemProps {
     major?: string;
     year?: string;
     joinedAt?: string;
-    status?: 'online' | 'offline' | 'busy' | 'away';
+    status?: 'online' | 'offline' | 'busy' | 'away' | 'studying';
   };
   stats?: {
     connections?: number;
@@ -115,50 +163,47 @@ export function ProfileBoardSystem({
   className = ''
 }: ProfileBoardSystemProps) {
   const router = useRouter();
-  const [widgetLayout, setWidgetLayout] = useState([
-    { id: 'avatar', x: 0, y: 0, w: 1, h: 2 },
-    { id: 'calendar', x: 1, y: 0, w: 2, h: 1 },
-    { id: 'ritual', x: 3, y: 0, w: 1, h: 1 },
-    { id: 'spaces', x: 1, y: 1, w: 1, h: 1 },
-    { id: 'connections', x: 2, y: 1, w: 1, h: 1 },
-    { id: 'hivelab', x: 3, y: 1, w: 1, h: 1 }
-  ]);
 
   // Expand & Focus state management
   const [expandedWidget, setExpandedWidget] = useState<string | null>(null);
   const [configPanelWidget, setConfigPanelWidget] = useState<string | null>(null);
   
   // Widget data state
-  const [currentRitual, setCurrentRitual] = useState<any>(null);
-  const [connections, setConnections] = useState<any[]>([]);
-  const [mySpaces, setMySpaces] = useState<any[]>([]);
+  const [currentRitual, setCurrentRitual] = useState<RitualData | null>(null);
+  const [connections, setConnections] = useState<ConnectionData[]>([]);
+  const [mySpaces, setMySpaces] = useState<SpaceData[]>([]);
+  const [todayEvents, setTodayEvents] = useState<CalendarEvent[]>([]);
   
   // Loading states for all widgets
   const [isLoadingRitual, setIsLoadingRitual] = useState(true);
   const [isLoadingConnections, setIsLoadingConnections] = useState(true);
   const [isLoadingSpaces, setIsLoadingSpaces] = useState(true);
+  const [isLoadingEvents, setIsLoadingEvents] = useState(true);
   const [isLoadingProfile, setIsLoadingProfile] = useState(true);
 
   // Load all widget data with proper loading states
-  useEffect(() => {
-    const loadData = async () => {
+  const loadData = useCallback(async () => {
       // Set initial loading states
       setIsLoadingProfile(true);
       
       // Load current ritual
       try {
         setIsLoadingRitual(true);
+        const token = localStorage.getItem('hive_session_token');
+        if (!token) throw new Error('Authentication required');
+        
         const response = await fetch('/api/rituals', {
           headers: {
-            'Authorization': `Bearer dev_token_${user.id}`
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
           }
         });
         
         if (response.ok) {
-          const data = await response.json();
+          const data = await response.json() as { currentRitual?: RitualData };
           setCurrentRitual(data.currentRitual || null);
         }
-      } catch (error) {
+      } catch {
         console.log('Rituals API not available, showing default state');
       } finally {
         setIsLoadingRitual(false);
@@ -167,17 +212,21 @@ export function ProfileBoardSystem({
       // Load connections
       try {
         setIsLoadingConnections(true);
+        const token = localStorage.getItem('hive_session_token');
+        if (!token) throw new Error('Authentication required');
+        
         const response = await fetch('/api/profile/connections', {
           headers: {
-            'Authorization': `Bearer dev_token_${user.id}`
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
           }
         });
         
         if (response.ok) {
-          const data = await response.json();
+          const data = await response.json() as { connections?: ConnectionData[] };
           setConnections(data.connections || []);
         }
-      } catch (error) {
+      } catch {
         console.log('Connections API not available, showing empty state');
       } finally {
         setIsLoadingConnections(false);
@@ -186,28 +235,73 @@ export function ProfileBoardSystem({
       // Load spaces
       try {
         setIsLoadingSpaces(true);
+        const token = localStorage.getItem('hive_session_token');
+        if (!token) throw new Error('Authentication required');
+        
         const response = await fetch('/api/spaces/my', {
           headers: {
-            'Authorization': `Bearer dev_token_${user.id}`
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
           }
         });
         
         if (response.ok) {
-          const data = await response.json();
+          const data = await response.json() as { spaces?: SpaceData[] };
           setMySpaces(data.spaces || []);
         }
-      } catch (error) {
+      } catch {
         console.log('Spaces API not available, showing empty state');
       } finally {
         setIsLoadingSpaces(false);
       }
 
+      // Load calendar events
+      try {
+        setIsLoadingEvents(true);
+        const token = localStorage.getItem('hive_session_token');
+        if (!token) throw new Error('Authentication required');
+        
+        const response = await fetch('/api/calendar', {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        if (response.ok) {
+          const data = await response.json() as { events?: CalendarEvent[] };
+          const events = data.events || [];
+          
+          // Filter and validate events for today
+          const validEvents = events.filter((event: CalendarEvent) => {
+            return event.startDate && event.endDate && event.title;
+          });
+
+          const todayEvents = validEvents.filter((event: CalendarEvent) => {
+            const eventDate = new Date(event.startDate);
+            const today = new Date();
+            return eventDate.toDateString() === today.toDateString();
+          });
+
+          const sortedEvents = todayEvents
+            .sort((a: CalendarEvent, b: CalendarEvent) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime())
+            .slice(0, 5);
+
+          setTodayEvents(sortedEvents);
+        }
+      } catch {
+        console.log('Calendar API not available, showing empty state');
+      } finally {
+        setIsLoadingEvents(false);
+      }
+
       // Overall profile loading complete
       setIsLoadingProfile(false);
-    };
+    }, [user.id]);
 
+  useEffect(() => {
     loadData();
-  }, [user.id]);
+  }, [loadData]);
 
   const handleWidgetExpand = (widgetId: string) => {
     if (!editMode) {
@@ -369,7 +463,7 @@ export function ProfileBoardSystem({
   );
 
   // Data validation and error handling for Avatar Widget
-  const validateUserData = (userData: any) => {
+  const validateUserData = (userData: ProfileBoardSystemProps['user']) => {
     const errors: string[] = [];
     
     // Required field validation
@@ -442,7 +536,7 @@ export function ProfileBoardSystem({
     React.useEffect(() => {
       setHasError(false);
       setErrorMessage('');
-    }, [user]);
+    }, []);
 
     if (hasError) {
       return (
@@ -472,25 +566,13 @@ export function ProfileBoardSystem({
   };
 
   // Campus Identity Widget (1x2) - Student profile showcase
-  const AvatarWidget = ({ editMode, onConfigure }: any) => {
+  const AvatarWidget = ({ editMode, onConfigure }: { editMode: boolean; onConfigure?: (widgetId: string) => void; }) => {
     const [imageError, setImageError] = React.useState(false);
-    const [imageLoading, setImageLoading] = React.useState(false);
     
     // Always call hooks at the top level
-    const validation = React.useMemo(() => validateUserData(user), [user]);
+    const validation = React.useMemo(() => validateUserData(user), []);
     
     // Safe user data with fallbacks
-    const safeUser = React.useMemo(() => ({
-      id: user?.id || 'unknown',
-      name: user?.name?.trim() || 'Unknown User',
-      handle: user?.handle?.trim() || 'unknown_user',
-      avatar: user?.avatar && !imageError ? user.avatar : null,
-      bio: user?.bio?.trim() || null,
-      major: user?.major?.trim() || null,
-      year: user?.year?.trim() || null,
-      school: user?.school?.trim() || 'University at Buffalo',
-      status: user?.status || 'offline'
-    }), [user, imageError]);
     
     // Loading state
     if (isLoadingProfile) {
@@ -547,10 +629,12 @@ export function ProfileBoardSystem({
           <div className="relative h-3/5 overflow-hidden">
             {user.avatar ? (
               <>
-                <img 
+                <Image 
                   src={user.avatar} 
                   alt={user.name}
-                  className="w-full h-full object-cover"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
               </>
@@ -619,60 +703,6 @@ export function ProfileBoardSystem({
     );
   };
 
-  // Calendar event data validation function
-  const validateCalendarEvent = (event: any) => {
-    const errors: string[] = [];
-    
-    // Required field validation
-    if (!event?.id) errors.push('Event ID is required');
-    if (!event?.title || typeof event.title !== 'string' || event.title.trim().length === 0) {
-      errors.push('Event title is required and must be a valid string');
-    }
-    if (!event?.startDate) {
-      errors.push('Event start date is required');
-    }
-    if (!event?.endDate) {
-      errors.push('Event end date is required');
-    }
-    
-    // Length validation
-    if (event?.title && event.title.length > 200) {
-      errors.push('Event title must be less than 200 characters');
-    }
-    if (event?.description && event.description.length > 1000) {
-      errors.push('Event description must be less than 1000 characters');
-    }
-    if (event?.location && event.location.length > 300) {
-      errors.push('Event location must be less than 300 characters');
-    }
-    
-    // Date validation
-    if (event?.startDate && event?.endDate) {
-      const startDate = new Date(event.startDate);
-      const endDate = new Date(event.endDate);
-      
-      if (isNaN(startDate.getTime())) {
-        errors.push('Invalid start date format');
-      }
-      if (isNaN(endDate.getTime())) {
-        errors.push('Invalid end date format');
-      }
-      if (startDate.getTime() >= endDate.getTime()) {
-        errors.push('End date must be after start date');
-      }
-    }
-    
-    // Type validation
-    const validTypes = ['class', 'study', 'meeting', 'exam', 'social', 'other'];
-    if (event?.type && !validTypes.includes(event.type)) {
-      errors.push('Invalid event type');
-    }
-    
-    return {
-      isValid: errors.length === 0,
-      errors
-    };
-  };
   
   // Calendar Widget Error Boundary Component
   const CalendarWidgetErrorBoundary = ({ children }: { children: React.ReactNode }) => {
@@ -763,89 +793,10 @@ export function ProfileBoardSystem({
   };
 
   // Calendar Widget (2x1) - Real calendar integration
-  const CalendarWidget = ({ editMode, onConfigure }: any) => {
-    const [todayEvents, setTodayEvents] = useState<any[]>([]);
-    const [isLoadingEvents, setIsLoadingEvents] = useState(true);
+  const CalendarWidget = ({ editMode }: { editMode: boolean; onConfigure?: (widgetId: string) => void; }) => {
     const [calendarError, setCalendarError] = useState<string | null>(null);
     const [validationErrors, setValidationErrors] = useState<string[]>([]);
 
-    useEffect(() => {
-      const loadTodayEvents = async () => {
-        try {
-          setCalendarError(null);
-          setValidationErrors([]);
-          
-          if (!user?.id) {
-            throw new Error('User ID is required for calendar data');
-          }
-          
-          const response = await fetch('/api/calendar', {
-            headers: {
-              'Authorization': `Bearer dev_token_${user.id}`
-            }
-          });
-          
-          if (!response.ok) {
-            throw new Error(`Calendar API error: ${response.status} ${response.statusText}`);
-          }
-          
-          const data = await response.json();
-          
-          if (!data || typeof data !== 'object') {
-            throw new Error('Invalid calendar data format received');
-          }
-          
-          const events = data.events || [];
-          
-          if (!Array.isArray(events)) {
-            throw new Error('Calendar events must be an array');
-          }
-          
-          // Validate each event and collect errors
-          const allValidationErrors: string[] = [];
-          const validEvents: any[] = [];
-          
-          events.forEach((event, index) => {
-            const validation = validateCalendarEvent(event);
-            if (!validation.isValid) {
-              allValidationErrors.push(...validation.errors.map(error => `Event ${index + 1}: ${error}`));
-            } else {
-              validEvents.push(event);
-            }
-          });
-          
-          if (allValidationErrors.length > 0) {
-            setValidationErrors(allValidationErrors);
-          }
-          
-          // Filter for today's events
-          const today = new Date().toDateString();
-          const todayEvents = validEvents.filter((event: any) => {
-            try {
-              return new Date(event.startDate).toDateString() === today;
-            } catch {
-              return false; // Skip events with invalid dates
-            }
-          });
-          
-          // Sort by start time and limit to 2 events
-          const sortedEvents = todayEvents
-            .sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime())
-            .slice(0, 2);
-          
-          setTodayEvents(sortedEvents);
-          
-        } catch (error) {
-          console.error('Calendar loading error:', error);
-          setCalendarError(error instanceof Error ? error.message : 'Failed to load calendar data');
-          setTodayEvents([]); // Set empty array as fallback
-        } finally {
-          setIsLoadingEvents(false);
-        }
-      };
-
-      loadTodayEvents();
-    }, [user?.id]);
 
     // Loading state check after hooks
     if (isLoadingEvents) {
@@ -853,14 +804,14 @@ export function ProfileBoardSystem({
     }
 
     // Safe event rendering with fallbacks
-    const getSafeEventTitle = (event: any) => {
+    const getSafeEventTitle = (event: CalendarEvent) => {
       if (!event?.title || typeof event.title !== 'string') {
         return 'Untitled Event';
       }
       return event.title.trim() || 'Untitled Event';
     };
     
-    const getSafeEventTime = (event: any) => {
+    const getSafeEventTime = (event: CalendarEvent) => {
       try {
         const startTime = new Date(event.startDate).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
         const endTime = new Date(event.endDate).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
@@ -870,7 +821,7 @@ export function ProfileBoardSystem({
       }
     };
     
-    const getSafeEventType = (event: any) => {
+    const getSafeEventType = (event: CalendarEvent) => {
       const validTypes = ['class', 'study', 'meeting', 'exam', 'social', 'other'];
       return validTypes.includes(event?.type) ? event.type : 'other';
     };
@@ -955,7 +906,7 @@ export function ProfileBoardSystem({
               </button>
             </div>
           ) : todayEvents.length > 0 ? (
-            todayEvents.map((event, index) => {
+            todayEvents.map((event: CalendarEvent, index: number) => {
               const eventType = getSafeEventType(event);
               return (
                 <div key={event.id || `event-${index}`} className="flex items-center gap-hive-3 p-hive-3 bg-hive-background-primary rounded-hive-lg border border-hive-border-default hover:border-hive-border-focus transition-colors duration-200">
@@ -1009,17 +960,20 @@ export function ProfileBoardSystem({
   };
 
   // Ritual Widget (1x1) - Real ritual tracking
-  const RitualWidget = ({ editMode, onConfigure }: any) => {
+  const RitualWidget = ({ editMode }: { editMode: boolean; onConfigure?: (widgetId: string) => void; }) => {
     if (isLoadingRitual) {
       return <RitualWidgetSkeleton />;
     }
 
     const handleStartSession = async () => {
       try {
+        const token = localStorage.getItem('hive_session_token');
+        if (!token) throw new Error('Authentication required');
+        
         const response = await fetch('/api/rituals/start', {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer dev_token_${user.id}`,
+            'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
@@ -1031,7 +985,7 @@ export function ProfileBoardSystem({
           // Reload ritual data - no navigation needed
           loadData();
         }
-      } catch (error) {
+      } catch {
         console.log('Failed to start ritual session');
       }
     };
@@ -1114,7 +1068,7 @@ export function ProfileBoardSystem({
   };
 
   // My Spaces Widget (1x1) - Real spaces integration
-  const MySpacesWidget = ({ editMode, onConfigure }: any) => {
+  const MySpacesWidget = ({ editMode }: { editMode: boolean; onConfigure?: (widgetId: string) => void; }) => {
     if (isLoadingSpaces) {
       return <SpacesWidgetSkeleton />;
     }
@@ -1190,7 +1144,7 @@ export function ProfileBoardSystem({
   };
 
   // Connections Widget (1x1) - Real connections integration
-  const ConnectionsWidget = ({ editMode, onConfigure }: any) => {
+  const ConnectionsWidget = ({ editMode }: { editMode: boolean; onConfigure?: (widgetId: string) => void; }) => {
     if (isLoadingConnections) {
       return <ConnectionsWidgetSkeleton />;
     }
@@ -1232,10 +1186,12 @@ export function ProfileBoardSystem({
                   title={connection.fullName || connection.name}
                 >
                   {connection.avatarUrl ? (
-                    <img
+                    <Image
                       src={connection.avatarUrl}
                       alt={connection.fullName || connection.name}
-                      className="w-full h-full rounded-full object-cover"
+                      width={24}
+                      height={24}
+                      className="rounded-full object-cover"
                     />
                   ) : (
                     (connection.fullName || connection.name || 'U').charAt(0).toUpperCase()
@@ -1264,7 +1220,7 @@ export function ProfileBoardSystem({
   };
 
   // HiveLAB Widget (1x1)
-  const HiveLABWidget = ({ editMode, onConfigure }: any) => (
+  const HiveLABWidget = ({ editMode }: { editMode: boolean; onConfigure?: (widgetId: string) => void; }) => (
     <div 
       className={`h-full bg-hive-background-elevated rounded-xl border border-hive-border-default p-4 relative cursor-pointer hover:bg-hive-interactive-hover transition-colors ${
         editMode ? 'ring-2 ring-hive-brand-secondary/50' : ''
@@ -1430,7 +1386,7 @@ export function ProfileBoardSystem({
                 <div className="text-center">
                   <div className="w-32 h-32 mx-auto mb-6">
                     {user.avatar ? (
-                      <img src={user.avatar} alt={user.name} className="w-full h-full rounded-full object-cover" />
+                      <Image src={user.avatar} alt={user.name} width={128} height={128} className="rounded-full object-cover" />
                     ) : (
                       <div className="w-full h-full bg-hive-brand-secondary rounded-full flex items-center justify-center">
                         <span className="text-white text-4xl font-bold">{user.name?.charAt(0).toUpperCase()}</span>
@@ -1443,7 +1399,7 @@ export function ProfileBoardSystem({
                   <div className="flex justify-center gap-3">
                     <button 
                       onClick={() => {
-                        closeFocusView();
+                        closeExpandedView();
                       }}
                       className="px-6 py-3 bg-hive-brand-secondary text-hive-text-primary rounded-lg font-medium hover:bg-hive-brand-hover transition-colors"
                     >
@@ -1459,7 +1415,7 @@ export function ProfileBoardSystem({
                     <h3 className="text-heading-md font-semibold text-hive-text-primary mb-4">Upcoming Events</h3>
                     <div className="space-y-4">
                       {todayEvents.length > 0 ? (
-                        todayEvents.map((event, index) => (
+                        todayEvents.map((event: CalendarEvent, index: number) => (
                           <div key={event.id || index} className="flex items-start gap-4 p-4 bg-hive-background-elevated rounded-lg border border-hive-border-default">
                             <div className={`w-4 h-4 rounded-full flex-shrink-0 mt-2 ${
                               event.type === 'class' ? 'bg-hive-status-info' :
@@ -1501,7 +1457,7 @@ export function ProfileBoardSystem({
                     <button 
                       onClick={() => {
                         // Create new event functionality would go here
-                        closeFocusView();
+                        closeExpandedView();
                       }}
                       className="px-4 py-2 border border-hive-border-default text-hive-text-secondary rounded-lg hover:text-hive-text-primary hover:border-hive-border-focus transition-colors"
                     >
@@ -1509,7 +1465,7 @@ export function ProfileBoardSystem({
                     </button>
                     <button 
                       onClick={() => {
-                        closeFocusView();
+                        closeExpandedView();
                       }}
                       className="px-6 py-3 bg-hive-brand-secondary text-hive-text-primary rounded-lg font-medium hover:bg-hive-brand-hover transition-colors"
                     >
@@ -1584,7 +1540,7 @@ export function ProfileBoardSystem({
                         <div className="mb-6">
                           <h4 className="text-heading-sm font-semibold text-hive-text-primary mb-3">Milestones</h4>
                           <div className="space-y-3">
-                            {currentRitual.milestones.map((milestone: any) => (
+                            {currentRitual.milestones.map((milestone: NonNullable<RitualData['milestones']>[0]) => (
                               <div key={milestone.id} className="flex items-center gap-3 p-3 bg-hive-background-elevated rounded-lg">
                                 <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
                                   milestone.isReached 
@@ -1653,7 +1609,7 @@ export function ProfileBoardSystem({
                         <button 
                           onClick={() => {
                             // Start session functionality
-                            closeFocusView();
+                            closeExpandedView();
                           }}
                           className="px-4 py-2 border border-hive-border-default text-hive-text-secondary rounded-lg hover:text-hive-text-primary hover:border-hive-border-focus transition-colors"
                         >
@@ -1661,7 +1617,7 @@ export function ProfileBoardSystem({
                         </button>
                         <button 
                           onClick={() => {
-                            closeFocusView();
+                            closeExpandedView();
                           }}
                           className="px-6 py-3 bg-hive-brand-secondary text-hive-text-primary rounded-lg font-medium hover:bg-hive-brand-hover transition-colors"
                         >
@@ -1681,7 +1637,7 @@ export function ProfileBoardSystem({
                       <div className="flex justify-center gap-3">
                         <button 
                           onClick={() => {
-                            closeFocusView();
+                            closeExpandedView();
                           }}
                           className="px-4 py-2 border border-hive-border-default text-hive-text-secondary rounded-lg hover:text-hive-text-primary hover:border-hive-border-focus transition-colors"
                         >
@@ -1689,7 +1645,7 @@ export function ProfileBoardSystem({
                         </button>
                         <button 
                           onClick={() => {
-                            closeFocusView();
+                            closeExpandedView();
                           }}
                           className="px-6 py-3 bg-hive-brand-secondary text-hive-text-primary rounded-lg font-medium hover:bg-hive-brand-hover transition-colors"
                         >
@@ -1707,7 +1663,7 @@ export function ProfileBoardSystem({
                     <h3 className="text-heading-md font-semibold text-hive-text-primary mb-4">My Spaces</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {mySpaces.length > 0 ? (
-                        mySpaces.map((space, index) => (
+                        mySpaces.map((space: SpaceData, index: number) => (
                           <div key={space.id || index} className="p-4 bg-hive-background-elevated rounded-lg border border-hive-border-default">
                             <div className="flex items-start gap-3 mb-3">
                               <div className={`w-10 h-10 rounded-lg flex items-center justify-center text-body-md font-bold text-white`}
@@ -1735,7 +1691,7 @@ export function ProfileBoardSystem({
                             <div className="flex gap-2">
                               <button
                                 onClick={() => {
-                                  closeFocusView();
+                                  closeExpandedView();
                                 }}
                                 className="flex-1 px-3 py-2 text-body-xs text-hive-text-secondary border border-hive-border-default rounded-lg hover:text-hive-text-primary hover:border-hive-border-focus transition-colors"
                               >
@@ -1744,7 +1700,7 @@ export function ProfileBoardSystem({
                               {space.role === 'admin' && (
                                 <button
                                   onClick={() => {
-                                    closeFocusView();
+                                    closeExpandedView();
                                   }}
                                   className="px-3 py-2 text-body-xs text-hive-brand-secondary border border-hive-brand-secondary rounded-lg hover:bg-hive-brand-secondary hover:text-white transition-colors"
                                 >
@@ -1767,7 +1723,7 @@ export function ProfileBoardSystem({
                   <div className="flex justify-center gap-3">
                     <button 
                       onClick={() => {
-                        closeFocusView();
+                        closeExpandedView();
                       }}
                       className="px-4 py-2 border border-hive-border-default text-hive-text-secondary rounded-lg hover:text-hive-text-primary hover:border-hive-border-focus transition-colors"
                     >
@@ -1775,7 +1731,7 @@ export function ProfileBoardSystem({
                     </button>
                     <button 
                       onClick={() => {
-                        closeFocusView();
+                        closeExpandedView();
                       }}
                       className="px-6 py-3 bg-hive-brand-secondary text-hive-text-primary rounded-lg font-medium hover:bg-hive-brand-hover transition-colors"
                     >
@@ -1791,15 +1747,17 @@ export function ProfileBoardSystem({
                     <h3 className="text-heading-md font-semibold text-hive-text-primary mb-4">Campus Connections</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {connections.length > 0 ? (
-                        connections.map((connection, index) => (
+                        connections.map((connection: ConnectionData, index: number) => (
                           <div key={connection.id || index} className="p-4 bg-hive-background-elevated rounded-lg border border-hive-border-default">
                             <div className="flex items-start gap-3 mb-3">
                               <div className="relative">
                                 {connection.avatarUrl ? (
-                                  <img
+                                  <Image
                                     src={connection.avatarUrl}
                                     alt={connection.fullName || connection.name}
-                                    className="w-12 h-12 rounded-full object-cover"
+                                    width={48}
+                                    height={48}
+                                    className="rounded-full object-cover"
                                   />
                                 ) : (
                                   <div className="w-12 h-12 bg-hive-brand-secondary rounded-full flex items-center justify-center">
@@ -1844,7 +1802,7 @@ export function ProfileBoardSystem({
                             <div className="flex gap-2">
                               <button
                                 onClick={() => {
-                                  closeFocusView();
+                                  closeExpandedView();
                                 }}
                                 className="flex-1 px-3 py-2 text-body-xs text-hive-text-secondary border border-hive-border-default rounded-lg hover:text-hive-text-primary hover:border-hive-border-focus transition-colors"
                               >
@@ -1853,7 +1811,7 @@ export function ProfileBoardSystem({
                               <button
                                 onClick={() => {
                                   // Message functionality would go here
-                                  closeFocusView();
+                                  closeExpandedView();
                                 }}
                                 className="px-3 py-2 text-body-xs text-hive-brand-secondary border border-hive-brand-secondary rounded-lg hover:bg-hive-brand-secondary hover:text-white transition-colors"
                               >
@@ -1875,7 +1833,7 @@ export function ProfileBoardSystem({
                   <div className="flex justify-center gap-3">
                     <button 
                       onClick={() => {
-                        closeFocusView();
+                        closeExpandedView();
                       }}
                       className="px-4 py-2 border border-hive-border-default text-hive-text-secondary rounded-lg hover:text-hive-text-primary hover:border-hive-border-focus transition-colors"
                     >
@@ -1883,7 +1841,7 @@ export function ProfileBoardSystem({
                     </button>
                     <button 
                       onClick={() => {
-                        closeFocusView();
+                        closeExpandedView();
                       }}
                       className="px-6 py-3 bg-hive-brand-secondary text-hive-text-primary rounded-lg font-medium hover:bg-hive-brand-hover transition-colors"
                     >
@@ -1898,7 +1856,7 @@ export function ProfileBoardSystem({
                   <p className="text-body-md text-hive-text-secondary mb-4">Detailed tools overview coming soon...</p>
                   <button 
                     onClick={() => {
-                      closeFocusView();
+                      closeExpandedView();
                     }}
                     className="px-6 py-3 bg-hive-brand-secondary text-hive-text-primary rounded-lg font-medium hover:bg-hive-brand-hover transition-colors"
                   >

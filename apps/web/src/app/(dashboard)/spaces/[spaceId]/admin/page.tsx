@@ -9,13 +9,14 @@ import { SpaceAdminDashboard } from "../../../../../components/spaces/space-admi
 import { useRouter } from "next/navigation";
 
 interface SpaceAdminPageProps {
-  params: {
+  params: Promise<{
     spaceId: string;
-  };
+  }>;
 }
 
 export default function SpaceAdminPage({ params }: SpaceAdminPageProps) {
   const router = useRouter();
+  const [spaceId, setSpaceId] = useState<string>('');
   const [spaceData, setSpaceData] = useState<{
     name: string;
     userRole: 'admin' | 'moderator' | 'member';
@@ -23,6 +24,17 @@ export default function SpaceAdminPage({ params }: SpaceAdminPageProps) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    // Resolve params Promise
+    const resolveParams = async () => {
+      const resolvedParams = await params;
+      setSpaceId(resolvedParams.spaceId);
+    };
+    resolveParams();
+  }, [params]);
+
+  useEffect(() => {
+    if (!spaceId) return;
+    
     // Mock space data fetch
     const fetchSpaceData = async () => {
       try {
@@ -41,7 +53,7 @@ export default function SpaceAdminPage({ params }: SpaceAdminPageProps) {
     };
 
     fetchSpaceData();
-  }, [params.spaceId]);
+  }, [spaceId]);
 
   if (isLoading) {
     return (
@@ -61,7 +73,7 @@ export default function SpaceAdminPage({ params }: SpaceAdminPageProps) {
       <PageContainer title="Space Not Found" maxWidth="7xl">
         <div className="text-center py-12">
           <h3 className="text-xl font-semibold text-white mb-2">Space Not Found</h3>
-          <p className="text-zinc-400 mb-6">The space you're looking for doesn't exist or you don't have access to it.</p>
+          <p className="text-zinc-400 mb-6">The space you&apos;re looking for doesn&apos;t exist or you don&apos;t have access to it.</p>
           <button
             onClick={() => router.push('/spaces')}
             className="text-hive-gold hover:text-hive-champagne"
@@ -86,7 +98,7 @@ export default function SpaceAdminPage({ params }: SpaceAdminPageProps) {
           },
           { 
             label: spaceData.name, 
-            href: `/spaces/${params.spaceId}`
+            href: `/spaces/${spaceId}`
           },
           { 
             label: "Administration", 
@@ -96,7 +108,7 @@ export default function SpaceAdminPage({ params }: SpaceAdminPageProps) {
         maxWidth="7xl"
       >
         <SpaceAdminDashboard
-          spaceId={params.spaceId}
+          spaceId={spaceId}
           spaceName={spaceData.name}
           userRole={spaceData.userRole}
         />

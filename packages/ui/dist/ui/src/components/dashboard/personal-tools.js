@@ -3,12 +3,12 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Calculator, Calendar, Clock, FileText, Link, TrendingUp, Target, Plus, Settings, BarChart3, CheckSquare, Timer, Brain } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card.js';
-import { Button } from '../hive-button.js';
-import { Badge } from '../ui/badge.js';
-import { Progress } from '../hive-progress.js';
-import { Input } from '../hive-input.js';
-import { Tabs, TabsList, TabsTrigger } from '../ui/tabs.js';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Button } from '../hive-button';
+import { Badge } from '../ui/badge';
+import { Progress } from '../hive-progress';
+import { Input } from '../hive-input';
+import { Tabs, TabsList, TabsTrigger } from '../ui/tabs';
 // Animation variants
 const containerVariants = {
     hidden: { opacity: 0 },

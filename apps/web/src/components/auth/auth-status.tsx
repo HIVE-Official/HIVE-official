@@ -50,21 +50,21 @@ export function AuthStatus({ type, title, message, action }: AuthStatusProps) {
   const Icon = config.icon;
 
   return (
-    <div className="hive-glass-strong p-8 rounded-xl text-center border border-[var(--hive-border-glass)]">
-      <div className={`mx-auto w-20 h-20 backdrop-blur-xl rounded-full flex items-center justify-center border mb-6 ${config.bgColor} ${config.borderColor}`}>
+    <div className="backdrop-blur-xl bg-[var(--hive-background-secondary)]/80 border border-[var(--hive-border-glass)] p-[var(--hive-spacing-8)] rounded-xl text-center">
+      <div className={`mx-auto w-20 h-20 backdrop-blur-xl rounded-full flex items-center justify-center border mb-[var(--hive-spacing-6)] ${config.bgColor} ${config.borderColor}`}>
         <Icon className={`w-10 h-10 ${config.iconColor} ${config.iconClassName}`} />
       </div>
       
-      <div className="space-y-4 text-center">
-        <h2 className="text-2xl font-bold text-[var(--hive-text-primary)] hive-font-sans">
+      <div className="space-y-[var(--hive-spacing-4)] text-center">
+        <h2 className="text-2xl font-bold text-[var(--hive-text-primary)]">
           {title}
         </h2>
-        <p className="text-[var(--hive-text-secondary)] hive-font-sans">
+        <p className="text-[var(--hive-text-secondary)]">
           {message}
         </p>
         
         {action && (
-          <div className="mt-6">
+          <div className="mt-[var(--hive-spacing-6)]">
             {action}
           </div>
         )}

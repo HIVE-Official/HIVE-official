@@ -4,6 +4,8 @@ import { dbAdmin } from '@/lib/firebase-admin';
 import { getCurrentUser } from '@/lib/server-auth';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { sseRealtimeService } from '@/lib/sse-realtime-service';
+import { realtimeService } from '@/lib/firebase-realtime';
 
 // Typing indicator interfaces
 interface TypingIndicator {
@@ -31,7 +33,7 @@ interface TypingStatus {
 // POST - Start typing indicator
 export async function POST(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
@@ -63,10 +65,13 @@ export async function POST(request: NextRequest) {
       lastUpdate: now.toISOString()
     };
 
-    // Store typing indicator
-    await setDoc(doc(db, 'typingIndicators', typingIndicator.id), typingIndicator);
+    // Store typing indicator in Firestore for persistence
+    await dbAdmin.collection('typingIndicators').doc(typingIndicator.id).set(typingIndicator);
 
-    // Broadcast typing indicator to channel
+    // Send typing indicator to Firebase Realtime Database
+    await realtimeService.setTypingIndicator(spaceId, user.uid, true);
+
+    // Broadcast typing indicator to channel via WebSocket system
     await broadcastTypingIndicator(typingIndicator, 'start');
 
     return NextResponse.json({
@@ -83,7 +88,7 @@ export async function POST(request: NextRequest) {
 // PUT - Update typing indicator (extend timeout)
 export async function PUT(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
@@ -96,7 +101,7 @@ export async function PUT(request: NextRequest) {
     }
 
     const typingId = `typing_${user.uid}_${channelId}`;
-    const typingDoc = await getDoc(doc(db, 'typingIndicators', typingId));
+    const typingDoc = await dbAdmin.collection('typingIndicators').doc(typingId).get();
 
     if (!typingDoc.exists) {
       return NextResponse.json(ApiResponseHelper.error("No active typing indicator found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
@@ -106,7 +111,7 @@ export async function PUT(request: NextRequest) {
     const expiresAt = new Date(now.getTime() + 30000); // Extend by 30 seconds
 
     // Update typing indicator
-    await setDoc(doc(db, 'typingIndicators', typingId), {
+    await dbAdmin.collection('typingIndicators').doc(typingId).set({
       ...typingDoc.data(),
       expiresAt: expiresAt.toISOString(),
       lastUpdate: now.toISOString()
@@ -125,7 +130,7 @@ export async function PUT(request: NextRequest) {
 // DELETE - Stop typing indicator
 export async function DELETE(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
@@ -139,7 +144,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     const typingId = `typing_${user.uid}_${channelId}`;
-    const typingDoc = await getDoc(doc(db, 'typingIndicators', typingId));
+    const typingDoc = await dbAdmin.collection('typingIndicators').doc(typingId).get();
 
     if (!typingDoc.exists) {
       return NextResponse.json(ApiResponseHelper.error("No active typing indicator found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
@@ -147,10 +152,13 @@ export async function DELETE(request: NextRequest) {
 
     const typingIndicator = { id: typingDoc.id, ...typingDoc.data() } as TypingIndicator;
 
-    // Remove typing indicator
-    await deleteDoc(doc(db, 'typingIndicators', typingId));
+    // Remove typing indicator from Firestore
+    await dbAdmin.collection('typingIndicators').doc(typingId).delete();
 
-    // Broadcast typing stop to channel
+    // Remove typing indicator from Firebase Realtime Database
+    await realtimeService.setTypingIndicator(spaceId, user.uid, false);
+
+    // Broadcast typing stop to channel via WebSocket system
     await broadcastTypingIndicator(typingIndicator, 'stop');
 
     return NextResponse.json({
@@ -166,7 +174,7 @@ export async function DELETE(request: NextRequest) {
 // GET - Get current typing status for a channel
 export async function GET(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
@@ -187,13 +195,11 @@ export async function GET(request: NextRequest) {
 
     // Get active typing indicators for the channel
     const now = new Date().toISOString();
-    const typingQuery = dbAdmin.collection(
-      dbAdmin.collection('typingIndicators'),
-      where('channelId', '==', channelId),
-      where('expiresAt', '>', now)
-    );
+    const typingQuery = dbAdmin.collection('typingIndicators')
+      .where('channelId', '==', channelId)
+      .where('expiresAt', '>', now);
 
-    const typingSnapshot = await getDocs(typingQuery);
+    const typingSnapshot = await typingQuery.get();
     const typingUsers = typingSnapshot.docs
       .map(doc => doc.data() as TypingIndicator)
       .filter(indicator => indicator.userId !== user.uid) // Exclude current user
@@ -221,28 +227,29 @@ export async function GET(request: NextRequest) {
 async function verifyChannelAccess(userId: string, channelId: string, spaceId: string): Promise<boolean> {
   try {
     // Check space membership
-    const memberQuery = dbAdmin.collection(
-      dbAdmin.collection('members'),
-      where('userId', '==', userId),
-      where('spaceId', '==', spaceId),
-      where('status', '==', 'active')
-    );
+    const memberQuery = dbAdmin.collection('members')
+      .where('userId', '==', userId)
+      .where('spaceId', '==', spaceId)
+      .where('status', '==', 'active');
 
-    const memberSnapshot = await getDocs(memberQuery);
+    const memberSnapshot = await memberQuery.get();
     if (memberSnapshot.empty) {
       return false;
     }
 
     // Check channel access
-    const channelDoc = await getDoc(doc(db, 'chatChannels', channelId));
+    const channelDoc = await dbAdmin.collection('chatChannels').doc(channelId).get();
     if (!channelDoc.exists) {
       return false;
     }
 
     const channel = channelDoc.data();
+    if (!channel) {
+      return false;
+    }
     
     // Check if user is in channel participants (for private channels)
-    if (channel.type === 'private' && !channel.participants.includes(userId)) {
+    if (channel.type === 'private' && channel.participants && !channel.participants.includes(userId)) {
       return false;
     }
 
@@ -282,7 +289,7 @@ async function broadcastTypingIndicator(indicator: TypingIndicator, action: 'sta
       }
     };
 
-    await addDoc(dbAdmin.collection('realtimeMessages'), realtimeMessage);
+    await dbAdmin.collection('realtimeMessages').add(realtimeMessage);
   } catch (error) {
     logger.error('Error broadcasting typing indicator', { error: error, endpoint: '/api/realtime/typing' });
   }
@@ -292,16 +299,14 @@ async function broadcastTypingIndicator(indicator: TypingIndicator, action: 'sta
 async function cleanupExpiredTypingIndicators(): Promise<number> {
   try {
     const now = new Date().toISOString();
-    const expiredQuery = dbAdmin.collection(
-      dbAdmin.collection('typingIndicators'),
-      where('expiresAt', '<', now)
-    );
+    const expiredQuery = dbAdmin.collection('typingIndicators')
+      .where('expiresAt', '<', now);
 
-    const expiredSnapshot = await getDocs(expiredQuery);
+    const expiredSnapshot = await expiredQuery.get();
     let cleaned = 0;
 
     for (const doc of expiredSnapshot.docs) {
-      await deleteDoc(doc.ref);
+      await doc.ref.delete();
       cleaned++;
     }
 

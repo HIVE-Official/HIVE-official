@@ -25,10 +25,10 @@ const separatorSizes = {
 };
 
 const separatorVariants = {
-  solid: 'bg-hive-border-default',
-  dashed: 'border-dashed border-t border-hive-border-default bg-transparent',
-  dotted: 'border-dotted border-t border-hive-border-default bg-transparent',
-  gradient: 'bg-gradient-to-r from-transparent via-hive-border-default to-transparent'
+  solid: 'bg-[var(--hive-border-primary)]',
+  dashed: 'border-dashed border-t border-[var(--hive-border-primary)] bg-transparent',
+  dotted: 'border-dotted border-t border-[var(--hive-border-primary)] bg-transparent',
+  gradient: 'bg-gradient-to-r from-transparent via-[var(--hive-border-primary)] to-transparent'
 };
 
 const separatorSpacing = {

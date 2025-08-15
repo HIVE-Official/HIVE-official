@@ -1,9 +1,9 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { Component } from 'react';
-import { cn } from '../../lib/utils.js';
-import { Text } from '../../atomic/atoms/text.js';
-import { Button } from '../../atomic/atoms/button.js';
+import { cn } from '../../lib/utils';
+import { Text } from '../../atomic/atoms/text';
+import { Button } from '../../atomic/atoms/button';
 // Campus-aware error handler with empathetic messaging
 class HiveErrorHandler {
     static handleError(error, errorInfo, context) {

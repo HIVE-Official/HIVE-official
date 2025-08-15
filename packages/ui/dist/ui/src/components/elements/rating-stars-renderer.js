@@ -6,9 +6,9 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
  * Uses standard style system for consistent output
  */
 import { useState } from 'react';
-import { Label } from '../ui/label.js';
+import { Label } from '../ui/label';
 import { Star } from 'lucide-react';
-import { useStandardElementStyles, useStandardElementBehavior } from '../../hooks/use-standard-element-styles.js';
+import { useStandardElementStyles, useStandardElementBehavior } from '../../hooks/use-standard-element-styles';
 export const RatingStarsRenderer = ({ element, config, value = 0, onChange, onStateChange, readOnly = false, runtimeContext }) => {
     const [hoverRating, setHoverRating] = useState(0);
     // Use standard style system (flexible input, consistent output)

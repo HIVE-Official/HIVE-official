@@ -25,19 +25,19 @@ export function AuthLayout({
   backText = "Back to schools"
 }: AuthLayoutProps) {
   return (
-    <div className="relative min-h-screen overflow-hidden bg-hive-background-primary text-hive-text-primary">
+    <div className="relative min-h-screen overflow-hidden bg-[var(--hive-background-primary)] text-[var(--hive-text-primary)]">
       {/* Background with subtle gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-hive-background-primary via-hive-background-secondary to-hive-background-primary" />
+      <div className="absolute inset-0 bg-gradient-to-br from-[var(--hive-background-primary)] via-[var(--hive-background-secondary)] to-[var(--hive-background-primary)]" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_40%,rgba(255,255,255,0.02)_0%,transparent_50%),radial-gradient(circle_at_70%_60%,rgba(255,215,0,0.03)_0%,transparent_50%)]" />
       
       {/* Header */}
-      <div className="relative z-10 border-b border-hive-border-primary/30 hive-glass">
-        <div className="max-w-6xl mx-auto p-6">
+      <div className="relative z-10 border-b border-[var(--hive-border-primary)]/20 backdrop-blur-sm">
+        <div className="max-w-6xl mx-auto p-[var(--hive-spacing-6)]">
           <div className="flex items-center justify-between">
             {showBackButton ? (
-              <Link href={backHref} className="flex items-center space-x-2 hover:opacity-80 transition-all duration-200 text-hive-text-muted hover:text-hive-text-primary">
+              <Link href={backHref} className="flex items-center gap-[var(--hive-spacing-2)] hover:opacity-80 transition-all duration-200 text-[var(--hive-text-muted)] hover:text-[var(--hive-text-primary)]">
                 <ArrowLeft className="w-4 h-4" />
-                <span className="text-sm">{backText}</span>
+                <span className="text-sm font-medium">{backText}</span>
               </Link>
             ) : (
               <div className="w-24"></div>
@@ -53,27 +53,27 @@ export function AuthLayout({
       </div>
 
       {/* Main Content */}
-      <div className="relative z-10 max-w-md mx-auto p-6 py-16">
+      <div className="relative z-10 max-w-md mx-auto p-[var(--hive-spacing-6)] py-16">
         <div className="text-center mb-12">
           {process.env.NODE_ENV === 'development' && (
-            <div className="mb-4 p-3 rounded-lg bg-hive-brand-primary/10 border border-hive-brand-primary/30">
-              <p className="text-sm text-hive-brand-primary font-medium">
+            <div className="mb-[var(--hive-spacing-4)] p-[var(--hive-spacing-3)] rounded-lg bg-[var(--hive-brand-primary)]/10 border border-[var(--hive-brand-primary)]/30">
+              <p className="text-sm text-[var(--hive-brand-primary)] font-medium">
                 🛠️ Development Mode Active
               </p>
             </div>
           )}
           
-          <h1 className="hive-font-sans text-4xl md:text-5xl font-bold mb-4 text-hive-text-primary leading-tight">
+          <h1 className="text-4xl md:text-5xl font-bold mb-[var(--hive-spacing-4)] text-[var(--hive-text-primary)] leading-tight">
             {title}
           </h1>
           
           {subtitle && (
-            <p className="hive-font-sans text-xl mb-4 text-hive-text-secondary leading-relaxed">
+            <p className="text-xl mb-[var(--hive-spacing-4)] text-[var(--hive-text-secondary)] leading-relaxed">
               {subtitle}
             </p>
           )}
           
-          <p className="hive-font-sans text-sm text-hive-text-muted leading-relaxed">
+          <p className="text-sm text-[var(--hive-text-muted)] leading-relaxed">
             Your campus. Built by students who got tired of GroupMe chaos.
           </p>
         </div>

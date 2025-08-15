@@ -161,6 +161,7 @@ test.describe('Tool Builder - Happy Path', () => {
     
     // Verify JSON contains our element
     const jsonContent = await page.locator('[data-testid="json-content"]').textContent()
+    if (!jsonContent) throw new Error('JSON content not found')
     expect(jsonContent).toContain('textBlock')
     
     // Switch back to design mode
@@ -244,6 +245,7 @@ test.describe('Tool Builder - Happy Path', () => {
     
     // Verify tool is accessible via public URL
     const toolUrl = await page.locator('[data-testid="public-url"]').textContent()
+    if (!toolUrl) throw new Error('Tool URL not found')
     await page.goto(toolUrl)
     await expect(page.locator('[data-testid="published-tool"]')).toBeVisible()
   })
@@ -260,6 +262,7 @@ test.describe('Tool Builder - Happy Path', () => {
     
     // Copy share link
     const shareLink = await page.locator('[data-testid="share-link"]').textContent()
+    if (!shareLink) throw new Error('Share link not found')
     expect(shareLink).toContain('/tools/shared/')
     
     // Test share link in new tab
@@ -276,6 +279,7 @@ test.describe('Tool Builder - Happy Path', () => {
     await page.click('[data-testid="share-button"]')
     await page.click('[data-testid="create-share-link"]')
     const shareLink = await page.locator('[data-testid="share-link"]').textContent()
+    if (!shareLink) throw new Error('Share link not found')
     
     // Login as different user and fork
     await page.goto('/auth/logout')

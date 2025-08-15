@@ -1,9 +1,9 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { HiveCard, HiveButton, HiveBadge } from '../index.js';
+import { HiveCard, HiveButton, HiveBadge } from '../index';
 import { QrCode, Scan, UserCheck, Users, Clock, Search, CheckCircle, AlertCircle, Camera, Download, RefreshCw, Monitor, Smartphone, EyeOff } from 'lucide-react';
-import { cn } from '../../lib/utils.js';
+import { cn } from '../../lib/utils';
 const CheckinMethodBadge = ({ method }) => {
     const config = {
         qr: { label: 'QR Scan', className: 'bg-green-100 text-green-800 border-green-200' },

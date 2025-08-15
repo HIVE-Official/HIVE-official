@@ -8,7 +8,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 // Uses only semantic tokens - zero hardcoded values
 
 const headingVariants = cva(
-  "font-display font-semibold tracking-tight text-[var(--hive-text-primary)]",
+  "font-sans font-semibold tracking-tight text-[var(--hive-text-primary)]",
   {
     variants: {
       level: {
@@ -46,7 +46,7 @@ const headingVariants = cva(
 );
 
 const textVariants = cva(
-  "text-[var(--hive-text-primary)]",
+  "font-sans text-[var(--hive-text-primary)]",
   {
     variants: {
       size: {
@@ -91,7 +91,7 @@ const textVariants = cva(
 );
 
 const captionVariants = cva(
-  "text-xs text-[var(--hive-text-tertiary)] leading-relaxed",
+  "font-sans text-xs text-[var(--hive-text-tertiary)] leading-relaxed",
   {
     variants: {
       color: {
@@ -117,7 +117,7 @@ const captionVariants = cva(
 );
 
 const linkVariants = cva(
-  "text-[var(--hive-brand-secondary)] underline-offset-4 hover:underline transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color-mix(in_srgb,var(--hive-brand-secondary)_30%,transparent)] rounded-sm",
+  "font-sans text-[var(--hive-brand-secondary)] underline-offset-4 hover:underline transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color-mix(in_srgb,var(--hive-brand-secondary)_30%,transparent)] rounded-sm",
   {
     variants: {
       color: {

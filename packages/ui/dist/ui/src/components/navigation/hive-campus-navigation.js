@@ -1,12 +1,12 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React, { useState } from 'react';
-import { cn } from '../../lib/utils.js';
-import { motion } from '../framer-motion-proxy.js';
+import { cn } from '../../lib/utils';
+import { motion } from '../framer-motion-proxy';
 import { User, Search, Bell, ChevronDown, MapPin, Building, Coffee, Beaker } from 'lucide-react';
-import { Button } from '../../atomic/atoms/button-enhanced.js';
-import { useNavigation, NavigationContainer, NavigationBrand } from './hive-navigation-system.js';
-import { HiveLogo } from '../hive-logo.js';
+import { Button } from '../../atomic/atoms/button-enhanced';
+import { useNavigation, NavigationContainer, NavigationBrand } from './hive-navigation-system';
+import { HiveLogo } from '../hive-logo';
 // ============================================================================
 // CAMPUS BAR - TOP NAVIGATION
 // ============================================================================

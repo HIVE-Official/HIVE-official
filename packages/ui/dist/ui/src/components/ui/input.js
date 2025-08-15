@@ -4,7 +4,7 @@ import { jsx as _jsx } from "react/jsx-runtime";
  * Maps standard input props to HIVE enhanced input
  */
 import React from 'react';
-import { Input as HiveInput } from '../../atomic/atoms/input-enhanced.js';
+import { Input as HiveInput } from '../../atomic/atoms/input-enhanced';
 // Map standard sizes to HIVE sizes  
 const mapSize = (size) => {
     switch (size) {

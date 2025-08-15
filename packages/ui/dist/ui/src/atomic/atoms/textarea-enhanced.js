@@ -2,7 +2,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
 import { cva } from "class-variance-authority";
-import { cn } from "../../lib/utils.js";
+import { cn } from "../../lib/utils";
 // HIVE Textarea System - Semantic Token Perfection
 // Zero hardcoded values - complete semantic token usage
 const textareaVariants = cva(
@@ -14,7 +14,7 @@ const textareaVariants = cva(
             error: "border-[var(--hive-status-error)] focus:border-[var(--hive-status-error)] focus:ring-[color-mix(in_srgb,var(--hive-status-error)_30%,transparent)]",
             success: "border-[var(--hive-status-success)] focus:border-[var(--hive-status-success)] focus:ring-[color-mix(in_srgb,var(--hive-status-success)_30%,transparent)]",
             warning: "border-[var(--hive-status-warning)] focus:border-[var(--hive-status-warning)] focus:ring-[color-mix(in_srgb,var(--hive-status-warning)_30%,transparent)]",
-            brand: "border-[var(--hive-brand-secondary)] focus:border-[var(--hive-brand-secondary)]",
+            brand: "bg-transparent border-2 border-[var(--hive-brand-secondary)] focus:border-[var(--hive-brand-secondary)] focus:ring-[color-mix(in_srgb,var(--hive-brand-secondary)_30%,transparent)]",
         },
         size: {
             sm: "min-h-20 px-2 py-1.5 text-xs",
@@ -43,19 +43,37 @@ const textareaVariants = cva(
         resize: "vertical",
     },
 });
-const Textarea = React.forwardRef(({ className, variant, size, radius, resize, error, success, helperText, label, required, showCharCount, maxLength, autoResize, value, onChange, id, ...props }, ref) => {
+const Textarea = React.forwardRef(({ className, variant, size, radius, resize, error, success, helperText, label, required, showCharCount, maxLength, autoResize = true, // Default to true for modern UX
+minRows = 1, maxRows = 10, value, onChange, id, ...props }, ref) => {
     const textareaId = id || React.useId();
     const [charCount, setCharCount] = React.useState(0);
     const textareaRef = React.useRef(null);
     // Determine variant based on state
     const computedVariant = error ? "error" : success ? "success" : variant;
-    // Handle auto-resize
+    // Calculate line height based on size
+    const getLineHeight = () => {
+        switch (size) {
+            case 'sm': return 20;
+            case 'lg': return 28;
+            case 'xl': return 32;
+            default: return 24;
+        }
+    };
+    // Handle auto-resize with min/max constraints
     const handleAutoResize = React.useCallback(() => {
         if (autoResize && textareaRef.current) {
+            const lineHeight = getLineHeight();
+            const minHeight = lineHeight * minRows + 16; // Add padding
+            const maxHeight = lineHeight * maxRows + 16;
+            // Reset height to get accurate scrollHeight
             textareaRef.current.style.height = 'auto';
-            textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+            // Calculate new height
+            const scrollHeight = textareaRef.current.scrollHeight;
+            const newHeight = Math.min(Math.max(scrollHeight, minHeight), maxHeight);
+            textareaRef.current.style.height = `${newHeight}px`;
+            textareaRef.current.style.overflowY = scrollHeight > maxHeight ? 'auto' : 'hidden';
         }
-    }, [autoResize]);
+    }, [autoResize, minRows, maxRows, size]);
     // Handle value changes
     const handleChange = (e) => {
         const newValue = e.target.value;
@@ -83,7 +101,7 @@ const Textarea = React.forwardRef(({ className, variant, size, radius, resize, e
         }
         handleAutoResize();
     }, [value, handleAutoResize]);
-    const textareaElement = (_jsxs("div", { className: "relative", children: [_jsx("textarea", { id: textareaId, className: cn(textareaVariants({ variant: computedVariant, size, radius, resize }), autoResize && "overflow-hidden", className), ref: setRefs, value: value, onChange: handleChange, maxLength: maxLength, ...props }), showCharCount && (_jsxs("div", { className: "absolute bottom-2 right-3 text-xs text-[var(--hive-text-tertiary)]", children: [charCount, maxLength && ` / ${maxLength}`] }))] }));
+    const textareaElement = (_jsxs("div", { className: "relative", children: [_jsx("textarea", { id: textareaId, className: cn(textareaVariants({ variant: computedVariant, size, radius, resize: autoResize ? "none" : resize }), autoResize && "overflow-hidden transition-all duration-150 ease-out", className), ref: setRefs, value: value, onChange: handleChange, maxLength: maxLength, ...props }), showCharCount && (_jsxs("div", { className: "absolute bottom-2 right-3 text-xs text-[var(--hive-text-tertiary)]", children: [charCount, maxLength && ` / ${maxLength}`] }))] }));
     if (label || error || success || helperText || showCharCount) {
         return (_jsxs("div", { className: "space-y-2", children: [label && (_jsxs("label", { htmlFor: textareaId, className: "text-sm font-medium text-[var(--hive-text-primary)]", children: [label, required && (_jsx("span", { className: "ml-1 text-[var(--hive-status-error)]", children: "*" }))] })), textareaElement, (error || success || helperText) && (_jsx("p", { className: cn("text-xs", error && "text-[var(--hive-status-error)]", success && "text-[var(--hive-status-success)]", !error && !success && "text-[var(--hive-text-tertiary)]"), children: error || success || helperText }))] }));
     }
@@ -106,7 +124,7 @@ TextareaGroup.displayName = "TextareaGroup";
 // Textarea presets for common patterns
 export const TextareaPresets = {
     // Comment/Message Input
-    Comment: (props) => (_jsx(Textarea, { placeholder: "Write your comment...", size: "default", autoResize: true, showCharCount: true, maxLength: 500, ...props })),
+    Comment: (props) => (_jsx(Textarea, { placeholder: "Write your comment...", size: "default", autoResize: true, minRows: 1, maxRows: 6, showCharCount: true, maxLength: 500, ...props })),
     // Description Input
     Description: (props) => (_jsx(Textarea, { placeholder: "Enter description...", size: "lg", showCharCount: true, maxLength: 1000, ...props })),
     // Notes Input

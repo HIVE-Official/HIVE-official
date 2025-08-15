@@ -9,7 +9,6 @@ const config: StorybookConfig = {
     
     // 🏗️ FOUNDATION - Core design system and tokens
     '../src/stories/00-Foundation/**/*.stories.@(js|jsx|ts|tsx)',
-    '../src/stories/00-foundation/**/*.stories.@(js|jsx|ts|tsx)',
     '../src/atomic/foundations/**/*.stories.@(js|jsx|ts|tsx)',
     
     // 🧱 ATOMS - Core UI building blocks

@@ -1,7 +1,7 @@
 import type { Config } from "tailwindcss";
 import { extendTailwindConfig } from "../../packages/tokens/src/tailwind-config";
 
-const config = {
+const config: Config = {
   darkMode: ["class"],
   content: [
     './src/**/*.{js,ts,jsx,tsx,mdx}',
@@ -10,6 +10,7 @@ const config = {
     // Include UI package components
     '../../packages/ui/src/**/*.{js,ts,jsx,tsx,mdx}',
   ],
+  blocklist: [],
   prefix: "",
   theme: {
     container: {
@@ -56,8 +57,8 @@ const config = {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
         },
-        // Override deprecated color names with modern equivalents to suppress warnings
-        blueGray: {
+        // Use modern color names (v3 compatible)
+        slate: {
           50: '#f8fafc',
           100: '#f1f5f9',
           200: '#e2e8f0',
@@ -69,7 +70,7 @@ const config = {
           800: '#1e293b',
           900: '#0f172a',
         },
-        coolGray: {
+        gray: {
           50: '#f9fafb',
           100: '#f3f4f6',
           200: '#e5e7eb',
@@ -81,7 +82,7 @@ const config = {
           800: '#1f2937',
           900: '#111827',
         },
-        lightBlue: {
+        sky: {
           50: '#f0f9ff',
           100: '#e0f2fe',
           200: '#bae6fd',
@@ -93,7 +94,7 @@ const config = {
           800: '#075985',
           900: '#0c4a6e',
         },
-        trueGray: {
+        neutral: {
           50: '#fafafa',
           100: '#f4f4f5',
           200: '#e4e4e7',
@@ -105,7 +106,7 @@ const config = {
           800: '#27272a',
           900: '#18181b',
         },
-        warmGray: {
+        stone: {
           50: '#fafaf9',
           100: '#f5f5f4',
           200: '#e7e5e4',
@@ -138,5 +139,23 @@ const config = {
   plugins: [require("tailwindcss-animate")],
 };
 
-// Extend with HIVE design tokens
-export default extendTailwindConfig(config as Config) satisfies Config;
+// Apply HIVE design tokens manually to avoid build issues
+config.theme!.extend = {
+  ...config.theme!.extend,
+  colors: {
+    ...config.theme!.extend!.colors,
+    'hive-brand-primary': '#FFD700',
+    'hive-brand-secondary': '#1a1a1a',
+    'hive-background': '#000000',
+    'hive-background-overlay': '#111111',
+    'hive-surface': '#1a1a1a',
+    'hive-text-primary': '#ffffff',
+    'hive-text-secondary': '#cccccc',
+    'hive-text-mutedLight': '#888888',
+    'hive-border-default': '#333333',
+    'hive-gold': '#FFD700',
+    'hive-obsidian': '#0c0c0c'
+  }
+};
+
+export default config;

@@ -98,7 +98,7 @@ interface NotificationBatch {
 // POST - Create and send a live notification
 export async function POST(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
@@ -135,8 +135,8 @@ export async function POST(request: NextRequest) {
     // Get space name if spaceId provided
     let spaceName;
     if (spaceId) {
-      const spaceDoc = await getDoc(doc(db, 'spaces', spaceId));
-      spaceName = spaceDoc.exists ? spaceDoc.data().name : undefined;
+      const spaceDoc = await dbAdmin.collection('spaces').doc(spaceId).get();
+      spaceName = spaceDoc.exists ? spaceDoc.data()?.name : undefined;
     }
 
     // Generate notification ID
@@ -144,7 +144,7 @@ export async function POST(request: NextRequest) {
 
     // Determine delivery channels based on preferences
     const allowedChannels = getEnabledChannels(type, userPreferences);
-    const finalChannels = deliveryChannels.filter(channel => allowedChannels.includes(channel));
+    const finalChannels = deliveryChannels.filter((channel: string) => allowedChannels.includes(channel));
 
     const notification: LiveNotification = {
       id: notificationId,
@@ -176,7 +176,7 @@ export async function POST(request: NextRequest) {
     };
 
     // Store notification in Firestore
-    await setDoc(doc(db, 'liveNotifications', notificationId), notification);
+    await dbAdmin.collection('liveNotifications').doc(notificationId).set(notification);
 
     // Check if notification should be batched or sent immediately
     const shouldBatch = await shouldBatchNotification(notification, userPreferences);
@@ -212,7 +212,7 @@ export async function POST(request: NextRequest) {
 // GET - Get user's live notifications
 export async function GET(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
@@ -226,43 +226,39 @@ export async function GET(request: NextRequest) {
     const includeExpired = searchParams.get('includeExpired') === 'true';
 
     // Build query
-    let notificationQuery = dbAdmin.collection(
-      dbAdmin.collection('liveNotifications'),
-      where('userId', '==', user.uid),
-      where('isActive', '==', true)
-    );
+    let notificationQuery = dbAdmin.collection('liveNotifications')
+      .where('userId', '==', user.uid)
+      .where('isActive', '==', true);
 
     // Add status filter
     if (status !== 'all') {
-      notificationQuery = dbAdmin.collection(notificationQuery, where('status', '==', status));
+      notificationQuery = notificationQuery.where('status', '==', status);
     }
 
     // Add type filter
     if (type) {
-      notificationQuery = dbAdmin.collection(notificationQuery, where('type', '==', type));
+      notificationQuery = notificationQuery.where('type', '==', type);
     }
 
     // Add space filter
     if (spaceId) {
-      notificationQuery = dbAdmin.collection(notificationQuery, where('spaceId', '==', spaceId));
+      notificationQuery = notificationQuery.where('spaceId', '==', spaceId);
     }
 
     // Add ordering and limit
-    notificationQuery = dbAdmin.collection(
-      notificationQuery,
-      orderBy('metadata.timestamp', 'desc'),
-      fbLimit(limit)
-    );
+    notificationQuery = notificationQuery
+      .orderBy('metadata.timestamp', 'desc')
+      .limit(limit);
 
     // Add pagination
     if (before) {
-      const beforeDoc = await getDoc(doc(db, 'liveNotifications', before));
+      const beforeDoc = await dbAdmin.collection('liveNotifications').doc(before).get();
       if (beforeDoc.exists) {
-        notificationQuery = dbAdmin.collection(notificationQuery, startAfter(beforeDoc));
+        notificationQuery = notificationQuery.startAfter(beforeDoc);
       }
     }
 
-    const notificationsSnapshot = await getDocs(notificationQuery);
+    const notificationsSnapshot = await notificationQuery.get();
     let notifications = notificationsSnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
@@ -299,7 +295,7 @@ export async function GET(request: NextRequest) {
 // PUT - Update notification status (mark as read, archive, etc.)
 export async function PUT(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
@@ -319,16 +315,14 @@ export async function PUT(request: NextRequest) {
 
     if (markAllAsRead) {
       // Mark all unread notifications as read
-      const unreadQuery = dbAdmin.collection(
-        dbAdmin.collection('liveNotifications'),
-        where('userId', '==', user.uid),
-        where('status', '==', 'unread'),
-        where('isActive', '==', true)
-      );
+      const unreadQuery = dbAdmin.collection('liveNotifications')
+        .where('userId', '==', user.uid)
+        .where('status', '==', 'unread')
+        .where('isActive', '==', true);
 
-      const unreadSnapshot = await getDocs(unreadQuery);
+      const unreadSnapshot = await unreadQuery.get();
       const updatePromises = unreadSnapshot.docs.map(doc =>
-        updateDoc(doc.ref, {
+        doc.ref.update({
           status: 'read',
           readAt: new Date().toISOString()
         })
@@ -373,9 +367,9 @@ export async function PUT(request: NextRequest) {
 
       // Update notifications
       const updatePromises = notificationIds.map(async (notificationId: string) => {
-        const notificationDoc = await getDoc(doc(db, 'liveNotifications', notificationId));
-        if (notificationDoc.exists && notificationDoc.data().userId === user.uid) {
-          await updateDoc(doc(db, 'liveNotifications', notificationId), updates);
+        const notificationDoc = await dbAdmin.collection('liveNotifications').doc(notificationId).get();
+        if (notificationDoc.exists && notificationDoc.data()?.userId === user.uid) {
+          await dbAdmin.collection('liveNotifications').doc(notificationId).update(updates);
           updatedCount++;
         }
       });
@@ -401,7 +395,7 @@ export async function PUT(request: NextRequest) {
 // DELETE - Delete notifications
 export async function DELETE(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
@@ -415,33 +409,29 @@ export async function DELETE(request: NextRequest) {
 
     if (deleteAll) {
       // Delete all notifications for user
-      const allNotificationsQuery = dbAdmin.collection(
-        dbAdmin.collection('liveNotifications'),
-        where('userId', '==', user.uid)
-      );
+      const allNotificationsQuery = dbAdmin.collection('liveNotifications')
+        .where('userId', '==', user.uid);
 
-      const allNotificationsSnapshot = await getDocs(allNotificationsQuery);
-      const deletePromises = allNotificationsSnapshot.docs.map(doc => deleteDoc(doc.ref));
+      const allNotificationsSnapshot = await allNotificationsQuery.get();
+      const deletePromises = allNotificationsSnapshot.docs.map(doc => doc.ref.delete());
       await Promise.all(deletePromises);
       deletedCount = allNotificationsSnapshot.size;
     } else if (olderThan) {
       // Delete notifications older than specified date
       const cutoffDate = new Date(olderThan).toISOString();
-      const oldNotificationsQuery = dbAdmin.collection(
-        dbAdmin.collection('liveNotifications'),
-        where('userId', '==', user.uid),
-        where('metadata.timestamp', '<', cutoffDate)
-      );
+      const oldNotificationsQuery = dbAdmin.collection('liveNotifications')
+        .where('userId', '==', user.uid)
+        .where('metadata.timestamp', '<', cutoffDate);
 
-      const oldNotificationsSnapshot = await getDocs(oldNotificationsQuery);
-      const deletePromises = oldNotificationsSnapshot.docs.map(doc => deleteDoc(doc.ref));
+      const oldNotificationsSnapshot = await oldNotificationsQuery.get();
+      const deletePromises = oldNotificationsSnapshot.docs.map(doc => doc.ref.delete());
       await Promise.all(deletePromises);
       deletedCount = oldNotificationsSnapshot.size;
     } else if (notificationId) {
       // Delete specific notification
-      const notificationDoc = await getDoc(doc(db, 'liveNotifications', notificationId));
-      if (notificationDoc.exists && notificationDoc.data().userId === user.uid) {
-        await deleteDoc(doc(db, 'liveNotifications', notificationId));
+      const notificationDoc = await dbAdmin.collection('liveNotifications').doc(notificationId).get();
+      if (notificationDoc.exists && notificationDoc.data()?.userId === user.uid) {
+        await dbAdmin.collection('liveNotifications').doc(notificationId).delete();
         deletedCount = 1;
       }
     } else {
@@ -462,7 +452,7 @@ export async function DELETE(request: NextRequest) {
 // Helper function to get user notification preferences
 async function getUserNotificationPreferences(userId: string): Promise<NotificationPreferences> {
   try {
-    const preferencesDoc = await getDoc(doc(db, 'notificationPreferences', userId));
+    const preferencesDoc = await dbAdmin.collection('notificationPreferences').doc(userId).get();
     
     if (preferencesDoc.exists) {
       return preferencesDoc.data() as NotificationPreferences;
@@ -635,22 +625,20 @@ async function shouldBatchNotification(
 async function addToBatch(notification: LiveNotification): Promise<void> {
   try {
     // Find existing batch or create new one
-    const batchQuery = dbAdmin.collection(
-      dbAdmin.collection('notificationBatches'),
-      where('userId', '==', notification.userId),
-      where('status', '==', 'pending'),
-      where('groupingCriteria.sourceType', '==', notification.sourceType),
-      where('groupingCriteria.spaceId', '==', notification.spaceId || null)
-    );
+    const batchQuery = dbAdmin.collection('notificationBatches')
+      .where('userId', '==', notification.userId)
+      .where('status', '==', 'pending')
+      .where('groupingCriteria.sourceType', '==', notification.sourceType)
+      .where('groupingCriteria.spaceId', '==', notification.spaceId || null);
 
-    const batchSnapshot = await getDocs(batchQuery);
+    const batchSnapshot = await batchQuery.get();
     
     if (!batchSnapshot.empty) {
       // Add to existing batch
       const batchDoc = batchSnapshot.docs[0];
       const batchData = batchDoc.data();
       
-      await updateDoc(batchDoc.ref, {
+      await batchDoc.ref.update({
         notifications: [...batchData.notifications, notification],
         updatedAt: new Date().toISOString()
       });
@@ -672,7 +660,7 @@ async function addToBatch(notification: LiveNotification): Promise<void> {
         createdAt: new Date().toISOString()
       };
 
-      await setDoc(doc(db, 'notificationBatches', batchId), batch);
+      await dbAdmin.collection('notificationBatches').doc(batchId).set(batch);
     }
   } catch (error) {
     logger.error('Error adding notification to batch', { error: error, endpoint: '/api/realtime/notifications' });
@@ -683,7 +671,7 @@ async function addToBatch(notification: LiveNotification): Promise<void> {
 async function sendNotificationImmediately(notification: LiveNotification): Promise<void> {
   try {
     // Update delivery status
-    await updateDoc(doc(db, 'liveNotifications', notification.id), {
+    await dbAdmin.collection('liveNotifications').doc(notification.id).update({
       'delivery.sent': true,
       'delivery.sentAt': new Date().toISOString()
     });
@@ -732,7 +720,7 @@ async function broadcastNotificationToUser(notification: LiveNotification): Prom
       }
     };
 
-    await addDoc(dbAdmin.collection('realtimeMessages'), realtimeMessage);
+    await dbAdmin.collection('realtimeMessages').add(realtimeMessage);
   } catch (error) {
     logger.error('Error broadcasting notification to user', { error: error, endpoint: '/api/realtime/notifications' });
   }
@@ -741,14 +729,12 @@ async function broadcastNotificationToUser(notification: LiveNotification): Prom
 // Helper function to get unread notification count
 async function getUnreadNotificationCount(userId: string): Promise<number> {
   try {
-    const unreadQuery = dbAdmin.collection(
-      dbAdmin.collection('liveNotifications'),
-      where('userId', '==', userId),
-      where('status', '==', 'unread'),
-      where('isActive', '==', true)
-    );
+    const unreadQuery = dbAdmin.collection('liveNotifications')
+      .where('userId', '==', userId)
+      .where('status', '==', 'unread')
+      .where('isActive', '==', true);
 
-    const unreadSnapshot = await getDocs(unreadQuery);
+    const unreadSnapshot = await unreadQuery.get();
     return unreadSnapshot.size;
   } catch (error) {
     logger.error('Error getting unread notification count', { error: error, endpoint: '/api/realtime/notifications' });
@@ -759,13 +745,11 @@ async function getUnreadNotificationCount(userId: string): Promise<number> {
 // Helper function to get total notification count
 async function getTotalNotificationCount(userId: string): Promise<number> {
   try {
-    const totalQuery = dbAdmin.collection(
-      dbAdmin.collection('liveNotifications'),
-      where('userId', '==', userId),
-      where('isActive', '==', true)
-    );
+    const totalQuery = dbAdmin.collection('liveNotifications')
+      .where('userId', '==', userId)
+      .where('isActive', '==', true);
 
-    const totalSnapshot = await getDocs(totalQuery);
+    const totalSnapshot = await totalQuery.get();
     return totalSnapshot.size;
   } catch (error) {
     logger.error('Error getting total notification count', { error: error, endpoint: '/api/realtime/notifications' });
@@ -778,13 +762,11 @@ async function getRecentNotificationCount(userId: string, minutes: number): Prom
   try {
     const cutoffTime = new Date(Date.now() - minutes * 60 * 1000).toISOString();
     
-    const recentQuery = dbAdmin.collection(
-      dbAdmin.collection('liveNotifications'),
-      where('userId', '==', userId),
-      where('metadata.timestamp', '>=', cutoffTime)
-    );
+    const recentQuery = dbAdmin.collection('liveNotifications')
+      .where('userId', '==', userId)
+      .where('metadata.timestamp', '>=', cutoffTime);
 
-    const recentSnapshot = await getDocs(recentQuery);
+    const recentSnapshot = await recentQuery.get();
     return recentSnapshot.size;
   } catch (error) {
     logger.error('Error getting recent notification count', { error: error, endpoint: '/api/realtime/notifications' });
@@ -824,7 +806,7 @@ async function broadcastNotificationStatusUpdate(
       }
     };
 
-    await addDoc(dbAdmin.collection('realtimeMessages'), statusMessage);
+    await dbAdmin.collection('realtimeMessages').add(statusMessage);
   } catch (error) {
     logger.error('Error broadcasting notification status update', { error: error, endpoint: '/api/realtime/notifications' });
   }
@@ -836,17 +818,19 @@ async function updateNotificationStats(userId: string, type: string, spaceId?: s
     const today = new Date().toISOString().split('T')[0];
     const statsId = `${userId}_${today}`;
 
-    const statsDoc = await getDoc(doc(db, 'notificationStats', statsId));
+    const statsDoc = await dbAdmin.collection('notificationStats').doc(statsId).get();
     
     if (statsDoc.exists) {
       const currentData = statsDoc.data();
-      await updateDoc(doc(db, 'notificationStats', statsId), {
-        totalNotifications: (currentData.totalNotifications || 0) + 1,
-        [`typeBreakdown.${type}`]: (currentData.typeBreakdown?.[type] || 0) + 1,
-        lastUpdate: new Date().toISOString()
-      });
+      if (currentData) {
+        await dbAdmin.collection('notificationStats').doc(statsId).update({
+          totalNotifications: (currentData.totalNotifications || 0) + 1,
+          [`typeBreakdown.${type}`]: (currentData.typeBreakdown?.[type] || 0) + 1,
+          lastUpdate: new Date().toISOString()
+        });
+      }
     } else {
-      await setDoc(doc(db, 'notificationStats', statsId), {
+      await dbAdmin.collection('notificationStats').doc(statsId).set({
         userId,
         date: today,
         totalNotifications: 1,

@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
       { type: "student_organizations", id: "tutoring-exchange" },
     ];
 
-    // Add cohort spaces based on user profile
+    // Add HIVE Exclusive cohort spaces based on user profile
     const cohortSpaces: Array<{ type: string; id: string; name?: string }> = [];
     
     if (userMajor && userGraduationYear) {
@@ -59,10 +59,10 @@ export async function POST(request: NextRequest) {
       
       const generatedSpaces = generateCohortSpaces(cohortConfig);
       
-      // Add all cohort spaces to auto-join list
+      // Add all cohort spaces to auto-join list as HIVE Exclusive
       cohortSpaces.push(
         ...generatedSpaces.map(space => ({
-          type: "cohort",
+          type: "hive_exclusive",
           id: space.id,
           name: space.name
         }))
@@ -71,7 +71,7 @@ export async function POST(request: NextRequest) {
       // Only major available - join major-specific space
       const majorSpaceId = getCohortSpaceId(userMajor, null);
       cohortSpaces.push({
-        type: "cohort",
+        type: "hive_exclusive",
         id: majorSpaceId,
         name: `UB ${userMajor}`
       });
@@ -80,7 +80,7 @@ export async function POST(request: NextRequest) {
       const yearSpaceId = getCohortSpaceId(null, userGraduationYear);
       const shortYear = `'${userGraduationYear.toString().slice(-2)}`;
       cohortSpaces.push({
-        type: "cohort",
+        type: "hive_exclusive",
         id: yearSpaceId,
         name: `UB Class of ${shortYear}`
       });
@@ -93,15 +93,16 @@ export async function POST(request: NextRequest) {
     const errors = [];
 
     // Attempt to join each space
-    for (const { type, id, name } of allSpacesToJoin) {
+    for (const spaceToJoin of allSpacesToJoin) {
+      const { type, id, name } = spaceToJoin as { type: string; id: string; name?: string };
       try {
         // Check if space exists
         const spaceRef = dbAdmin.collection("spaces").doc(type).collection("spaces").doc(id);
         const spaceDoc = await spaceRef.get();
         
         if (!spaceDoc.exists) {
-          // For cohort spaces, create them if they don't exist
-          if (type === "cohort" && userMajor && userGraduationYear) {
+          // For HIVE Exclusive cohort spaces, create them if they don't exist
+          if (type === "hive_exclusive" && userMajor && userGraduationYear) {
             logger.info('Cohort space not found, creating it...', { id, endpoint: '/api/spaces/auto-join' });
             
             // Find the matching cohort space config

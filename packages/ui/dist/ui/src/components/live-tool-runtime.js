@@ -5,23 +5,23 @@ import { jsxs as _jsxs, jsx as _jsx, Fragment as _Fragment } from "react/jsx-run
  * The core system for executing HIVE tools in real-time
  */
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { HiveCard } from './hive-card.js';
-import { Button } from './ui/button.js';
-import { Alert, AlertDescription } from './ui/alert.js';
+import { HiveCard } from './hive-card';
+import { Button } from './ui/button';
+import { Alert, AlertDescription } from './ui/alert';
 import { Loader2, AlertCircle, CheckCircle } from 'lucide-react';
-import { useRealtimeTool } from '../hooks/use-realtime-tool.js';
-import { apiClient } from '../lib/api-client.js';
+import { useRealtimeTool } from '../hooks/use-realtime-tool';
+import { apiClient } from '../lib/api-client';
 // Import element renderers
-import { TextBlockRenderer } from './elements/text-block-renderer.js';
-import { ButtonRenderer } from './elements/button-renderer.js';
-import { TextInputRenderer } from './elements/text-input-renderer.js';
-import { ImageBlockRenderer } from './elements/image-block-renderer.js';
-import { DividerRenderer } from './elements/divider-renderer.js';
-import { StackRenderer } from './elements/stack-renderer.js';
-import { ChoiceSelectRenderer } from './elements/choice-select-renderer.js';
-import { RatingStarsRenderer } from './elements/rating-stars-renderer.js';
-import { CountdownTimerRenderer } from './elements/countdown-timer-renderer.js';
-import { ProgressBarRenderer } from './elements/progress-bar-renderer.js';
+import { TextBlockRenderer } from './elements/text-block-renderer';
+import { ButtonRenderer } from './elements/button-renderer';
+import { TextInputRenderer } from './elements/text-input-renderer';
+import { ImageBlockRenderer } from './elements/image-block-renderer';
+import { DividerRenderer } from './elements/divider-renderer';
+import { StackRenderer } from './elements/stack-renderer';
+import { ChoiceSelectRenderer } from './elements/choice-select-renderer';
+import { RatingStarsRenderer } from './elements/rating-stars-renderer';
+import { CountdownTimerRenderer } from './elements/countdown-timer-renderer';
+import { ProgressBarRenderer } from './elements/progress-bar-renderer';
 export const LiveToolRuntime = ({ tool, toolId, deploymentId, spaceId, className, onToolLoad, onDataSubmit, onError, readOnly = false, showDebugInfo = false, enableRealtime = true, collectUsageData = true }) => {
     const [loading, setLoading] = useState(false);
     const [sessionStartTime] = useState(new Date());

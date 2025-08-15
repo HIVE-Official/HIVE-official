@@ -10,8 +10,8 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from 'react';
 import { motion } from 'framer-motion';
 import { cva } from 'class-variance-authority';
-import { cn } from '../lib/utils.js';
-import { HiveStructuredCard } from './card-system/hive-card-composition.js';
+import { cn } from '../lib/utils';
+import { HiveStructuredCard } from './card-system/hive-card-composition';
 import { BookOpen, Users, Clock, MapPin, Calendar, Award, CheckCircle, AlertCircle, XCircle, Plus, Minus, ExternalLink, Heart, Share2, Bookmark, User } from 'lucide-react';
 // ============================================================================
 // COURSE CARD SYSTEM

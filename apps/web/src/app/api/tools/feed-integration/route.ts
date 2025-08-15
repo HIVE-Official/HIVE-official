@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { getCurrentUser } from '@/lib/server-auth';
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
 
 // Feed content generation interface
 interface FeedContentTemplate {
@@ -32,7 +32,7 @@ interface FeedContentTemplate {
 // POST - Generate feed content from tool interaction
 export async function POST(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
@@ -51,9 +51,12 @@ export async function POST(request: NextRequest) {
     }
 
     const deployment = deploymentDoc.data();
+    if (!deployment) {
+      return NextResponse.json(ApiResponseHelper.error("Deployment data not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
+    }
 
     // Only generate content for space deployments with analytics enabled
-    if (deployment.deployedTo !== 'space' || !deployment.settings.collectAnalytics) {
+    if (deployment.deployedTo !== 'space' || !deployment.settings?.collectAnalytics) {
       return NextResponse.json({ 
         generated: false, 
         reason: 'Content generation disabled for this deployment' 
@@ -67,6 +70,9 @@ export async function POST(request: NextRequest) {
     }
 
     const tool = toolDoc.data();
+    if (!tool) {
+      return NextResponse.json(ApiResponseHelper.error("Tool data not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
+    }
 
     if (!generateContent) {
       return NextResponse.json({ generated: false, reason: 'Content generation disabled' });
@@ -107,7 +113,7 @@ export async function POST(request: NextRequest) {
 // GET - Get feed content templates for a tool
 export async function GET(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
@@ -127,6 +133,9 @@ export async function GET(request: NextRequest) {
     }
 
     const tool = toolDoc.data();
+    if (!tool) {
+      return NextResponse.json(ApiResponseHelper.error("Tool data not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
+    }
     if (tool.ownerId !== user.uid && tool.status !== 'published') {
       return NextResponse.json(ApiResponseHelper.error("Access denied", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
@@ -374,10 +383,11 @@ async function createFeedPost(deployment: any, tool: any, userId: string, conten
   const postRef = await dbAdmin.collection('posts').add(post);
   
   // Update space activity
-  const spaceDoc = await getDoc(doc(db, 'spaces', deployment.targetId));
+  const spaceDoc = await dbAdmin.collection('spaces').doc(deployment.targetId).get();
   if (spaceDoc.exists) {
     const spaceData = spaceDoc.data();
-    await updateDoc(doc(db, 'spaces', deployment.targetId), {
+    if (!spaceData) return postRef.id;
+    await dbAdmin.collection('spaces').doc(deployment.targetId).update({
       lastActivity: now,
       postCount: (spaceData.postCount || 0) + 1,
       'activity.toolGenerated': (spaceData.activity?.toolGenerated || 0) + 1

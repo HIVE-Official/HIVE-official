@@ -8,11 +8,11 @@ import { useState, useCallback, useMemo } from 'react';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { createToolDefaults } from '@hive/core';
-import { Button } from '../ui/button.js';
-import { LiveToolRuntime } from '../live-tool-runtime.js';
-import { ElementConfigPanel } from './element-config-panel.js';
-import { SpaceToolDeployment } from '../community/space-tool-deployment.js';
-import { apiClient } from '../../lib/api-client.js';
+import { Button } from '../ui/button';
+import { LiveToolRuntime } from '../live-tool-runtime';
+import { ElementConfigPanel } from './element-config-panel';
+import { SpaceToolDeployment } from '../community/space-tool-deployment';
+import { apiClient } from '../../lib/api-client';
 import { Type, Image, Minus, Layout, MousePointer, ChevronDown, List, Star, Timer, BarChart3, Settings, Eye, Save, Play, Trash2, Zap } from 'lucide-react';
 // Element library with all available elements
 const ELEMENT_LIBRARY = [

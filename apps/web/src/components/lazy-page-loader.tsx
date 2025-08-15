@@ -1,13 +1,6 @@
 'use client';
 
-import React, { lazy } from 'react';
-import { 
-  SuspenseBoundary, 
-  ProfileSuspenseBoundary,
-  SpacesSuspenseBoundary,
-  ToolsSuspenseBoundary,
-  FeedSuspenseBoundary
-} from '@hive/ui';
+import React, { lazy, Suspense } from 'react';
 
 // Lazy load page components for better performance
 const LazyProfilePage = lazy(() => import('../app/(dashboard)/profile/page'));
@@ -19,182 +12,97 @@ const LazyFeedPage = lazy(() => import('../app/(dashboard)/feed/page'));
 const LazyCalendarPage = lazy(() => import('../app/(dashboard)/calendar/page'));
 const LazySettingsPage = lazy(() => import('../app/(dashboard)/settings/page'));
 
-// Lazy page components with intelligent Suspense boundaries
+// Loading fallback component
+const LoadingFallback = ({ pageName }: { pageName: string }) => (
+  <div className="min-h-screen flex items-center justify-center">
+    <div className="text-center space-y-4">
+      <div className="w-8 h-8 border-2 border-hive-gold border-t-transparent rounded-full animate-spin mx-auto"></div>
+      <p className="text-hive-text-secondary">Loading {pageName}...</p>
+    </div>
+  </div>
+);
+
+// Lazy page components with React Suspense
 export const LazyProfilePageWithSuspense = ({ userId, userName }: { userId?: string; userName?: string }) => (
-  <ProfileSuspenseBoundary userId={userId} userName={userName}>
+  <Suspense fallback={<LoadingFallback pageName="Profile" />}>
     <LazyProfilePage />
-  </ProfileSuspenseBoundary>
+  </Suspense>
 );
 
 export const LazySpacesPageWithSuspense = () => (
-  <SpacesSuspenseBoundary>
+  <Suspense fallback={<LoadingFallback pageName="Spaces" />}>
     <LazySpacesPage />
-  </SpacesSuspenseBoundary>
+  </Suspense>
 );
 
 export const LazySpaceDetailsPageWithSuspense = ({ spaceId }: { spaceId: string }) => (
-  <SpacesSuspenseBoundary spaceId={spaceId}>
-    <LazySpaceDetailsPage />
-  </SpacesSuspenseBoundary>
+  <Suspense fallback={<LoadingFallback pageName="Space Details" />}>
+    <LazySpaceDetailsPage params={Promise.resolve({ spaceId })} />
+  </Suspense>
 );
 
 export const LazyToolsPageWithSuspense = () => (
-  <ToolsSuspenseBoundary>
+  <Suspense fallback={<LoadingFallback pageName="Tools" />}>
     <LazyToolsPage />
-  </ToolsSuspenseBoundary>
+  </Suspense>
 );
 
 export const LazyToolDetailsPageWithSuspense = ({ toolId }: { toolId: string }) => (
-  <ToolsSuspenseBoundary toolId={toolId}>
+  <Suspense fallback={<LoadingFallback pageName="Tool" />}>
     <LazyToolDetailsPage />
-  </ToolsSuspenseBoundary>
+  </Suspense>
 );
 
 export const LazyFeedPageWithSuspense = () => (
-  <FeedSuspenseBoundary>
+  <Suspense fallback={<LoadingFallback pageName="Feed" />}>
     <LazyFeedPage />
-  </FeedSuspenseBoundary>
+  </Suspense>
 );
 
 export const LazyCalendarPageWithSuspense = () => (
-  <SuspenseBoundary
-    context={{ pageType: 'calendar', feature: 'calendar-view' }}
-    loadingStrategy="detailed"
-    loadingResources={[
-      {
-        id: 'calendar-data',
-        name: 'Loading your calendar',
-        priority: 'critical',
-        estimatedTime: 600,
-      },
-      {
-        id: 'events',
-        name: 'Loading events',
-        priority: 'high',
-        estimatedTime: 400,
-        dependencies: ['calendar-data'],
-      },
-      {
-        id: 'reminders',
-        name: 'Loading reminders',
-        priority: 'medium',
-        estimatedTime: 300,
-        dependencies: ['events'],
-        skipOnSlowNetwork: true,
-      }
-    ]}
-  >
+  <Suspense fallback={<LoadingFallback pageName="Calendar" />}>
     <LazyCalendarPage />
-  </SuspenseBoundary>
+  </Suspense>
 );
 
 export const LazySettingsPageWithSuspense = () => (
-  <SuspenseBoundary
-    context={{ pageType: 'settings', feature: 'user-settings' }}
-    loadingStrategy="minimal"
-    loadingResources={[
-      {
-        id: 'user-preferences',
-        name: 'Loading your preferences',
-        priority: 'critical',
-        estimatedTime: 300,
-      },
-      {
-        id: 'campus-settings',
-        name: 'Loading campus settings',
-        priority: 'medium',
-        estimatedTime: 200,
-        dependencies: ['user-preferences'],
-      }
-    ]}
-  >
+  <Suspense fallback={<LoadingFallback pageName="Settings" />}>
     <LazySettingsPage />
-  </SuspenseBoundary>
+  </Suspense>
 );
 
-// Generic lazy loader with custom Suspense boundary
-export function LazyPageLoader<T extends Record<string, any>>({
-  pageImport,
-  boundaryType = 'default',
-  context,
-  ...props
-}: {
-  pageImport: () => Promise<{ default: React.ComponentType<T> }>;
-  boundaryType?: 'default' | 'profile' | 'spaces' | 'tools' | 'feed';
+// Generic lazy loader with context
+interface LazyPageLoaderProps {
+  pageType: 'profile' | 'spaces' | 'space-details' | 'tools' | 'tool-details' | 'feed' | 'calendar' | 'settings';
   context?: {
-    pageType?: 'profile' | 'spaces' | 'tools' | 'feed';
-    feature?: string;
     userId?: string;
     userName?: string;
     spaceId?: string;
     toolId?: string;
   };
-} & T) {
-  const LazyComponent = lazy(pageImport);
-  
-  const getBoundary = () => {
-    switch (boundaryType) {
-      case 'profile':
-        return (
-          <ProfileSuspenseBoundary userId={context?.userId} userName={context?.userName}>
-            <LazyComponent {...props} />
-          </ProfileSuspenseBoundary>
-        );
-      case 'spaces':
-        return (
-          <SpacesSuspenseBoundary spaceId={context?.spaceId}>
-            <LazyComponent {...props} />
-          </SpacesSuspenseBoundary>
-        );
-      case 'tools':
-        return (
-          <ToolsSuspenseBoundary toolId={context?.toolId}>
-            <LazyComponent {...props} />
-          </ToolsSuspenseBoundary>
-        );
-      case 'feed':
-        return (
-          <FeedSuspenseBoundary>
-            <LazyComponent {...props} />
-          </FeedSuspenseBoundary>
-        );
-      default:
-        return (
-          <SuspenseBoundary context={context}>
-            <LazyComponent {...props} />
-          </SuspenseBoundary>
-        );
-    }
-  };
-  
-  return getBoundary();
 }
 
-// HOC for adding Suspense boundaries to existing components
-export function withSuspenseBoundary<P extends Record<string, any>>(
-  Component: React.ComponentType<P>,
-  boundaryProps?: {
-    loadingStrategy?: 'minimal' | 'detailed' | 'branded' | 'progressive';
-    context?: {
-      pageType?: 'profile' | 'spaces' | 'tools' | 'feed';
-      feature?: string;
-    };
-    timeout?: number;
+export function LazyPageLoader({ pageType, context }: LazyPageLoaderProps) {
+  switch (pageType) {
+    case 'profile':
+      return <LazyProfilePageWithSuspense userId={context?.userId} userName={context?.userName} />;
+    case 'spaces':
+      return <LazySpacesPageWithSuspense />;
+    case 'space-details':
+      return <LazySpaceDetailsPageWithSuspense spaceId={context?.spaceId || ''} />;
+    case 'tools':
+      return <LazyToolsPageWithSuspense />;
+    case 'tool-details':
+      return <LazyToolDetailsPageWithSuspense toolId={context?.toolId || ''} />;
+    case 'feed':
+      return <LazyFeedPageWithSuspense />;
+    case 'calendar':
+      return <LazyCalendarPageWithSuspense />;
+    case 'settings':
+      return <LazySettingsPageWithSuspense />;
+    default:
+      return <LazyProfilePageWithSuspense />;
   }
-) {
-  const WrappedComponent = (props: P) => (
-    <SuspenseBoundary
-      loadingStrategy={boundaryProps?.loadingStrategy || 'detailed'}
-      context={boundaryProps?.context}
-      timeout={boundaryProps?.timeout}
-    >
-      <Component {...props} />
-    </SuspenseBoundary>
-  );
-  
-  WrappedComponent.displayName = `withSuspenseBoundary(${Component.displayName || Component.name})`;
-  
-  return WrappedComponent;
 }
 
 export default LazyPageLoader;

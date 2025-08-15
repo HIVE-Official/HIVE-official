@@ -1,7 +1,7 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from 'react';
-import { cn } from '../../lib/utils.js';
+import { cn } from '../../lib/utils';
 const aspectRatios = {
     square: 'aspect-square',
     video: 'aspect-video',
@@ -44,13 +44,13 @@ export const Image = React.forwardRef(({ src, alt, fallback, aspectRatio, fit = 
     };
     const containerClasses = [
         'relative overflow-hidden',
-        'bg-hive-background-tertiary',
+        'bg-[var(--hive-background-tertiary)]',
         // Aspect ratio
         typeof aspectRatio === 'string' ? aspectRatios[aspectRatio] : '',
         // Rounded corners
         roundedVariants[rounded],
         // Border
-        bordered && 'border border-hive-border-default',
+        bordered && 'border border-[var(--hive-border-primary)]',
         // Custom aspect ratio
         typeof aspectRatio === 'number' && 'relative'
     ].filter(Boolean).join(' ');
@@ -75,9 +75,9 @@ export const Image = React.forwardRef(({ src, alt, fallback, aspectRatio, fit = 
     }, [style, aspectRatio]);
     // Show fallback if error and fallback provided
     if (hasError && fallback) {
-        return (_jsx("div", { className: cn(containerClasses, className), style: customStyle, children: typeof fallback === 'string' ? (_jsx("div", { className: "flex items-center justify-center h-full text-hive-text-secondary text-sm", children: fallback })) : (fallback) }));
+        return (_jsx("div", { className: cn(containerClasses, className), style: customStyle, children: typeof fallback === 'string' ? (_jsx("div", { className: "flex items-center justify-center h-full text-[var(--hive-text-secondary)] text-sm", children: fallback })) : (fallback) }));
     }
-    return (_jsxs("div", { className: cn(containerClasses, className), style: customStyle, children: [isLoading && placeholder === 'skeleton' && (_jsx("div", { className: "absolute inset-0 bg-gradient-to-r from-hive-background-tertiary via-hive-background-secondary to-hive-background-tertiary animate-pulse" })), isLoading && placeholder === 'blur' && (_jsx("div", { className: "absolute inset-0 bg-hive-background-tertiary blur-sm" })), !hasError && (_jsx("img", { ref: ref, src: imageSrc, alt: alt, loading: priority ? 'eager' : loading, sizes: sizes, className: imageClasses, onLoad: handleLoad, onError: handleError, ...props })), hasError && !fallback && (_jsx("div", { className: "absolute inset-0 flex items-center justify-center bg-hive-background-tertiary", children: _jsxs("div", { className: "text-center text-hive-text-secondary", children: [_jsx("div", { className: "w-8 h-8 mx-auto mb-2 bg-hive-steel rounded opacity-50" }), _jsx("p", { className: "text-xs", children: "Failed to load image" })] }) }))] }));
+    return (_jsxs("div", { className: cn(containerClasses, className), style: customStyle, children: [isLoading && placeholder === 'skeleton' && (_jsx("div", { className: "absolute inset-0 bg-gradient-to-r from-[var(--hive-background-tertiary)] via-[var(--hive-background-secondary)] to-[var(--hive-background-tertiary)] animate-pulse" })), isLoading && placeholder === 'blur' && (_jsx("div", { className: "absolute inset-0 bg-[var(--hive-background-tertiary)] blur-sm" })), !hasError && (_jsx("img", { ref: ref, src: imageSrc, alt: alt, loading: priority ? 'eager' : loading, sizes: sizes, className: imageClasses, onLoad: handleLoad, onError: handleError, ...props })), hasError && !fallback && (_jsx("div", { className: "absolute inset-0 flex items-center justify-center bg-[var(--hive-background-tertiary)]", children: _jsxs("div", { className: "text-center text-[var(--hive-text-secondary)]", children: [_jsx("div", { className: "w-8 h-8 mx-auto mb-2 bg-[var(--hive-text-muted)] rounded opacity-50" }), _jsx("p", { className: "text-xs", children: "Failed to load image" })] }) }))] }));
 });
 Image.displayName = 'Image';
 // Convenient preset components

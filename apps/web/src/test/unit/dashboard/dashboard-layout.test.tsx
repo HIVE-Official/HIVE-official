@@ -1,3 +1,4 @@
+import React from 'react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { useRouter } from 'next/navigation';
@@ -11,8 +12,8 @@ vi.mock('next/navigation', () => ({
 
 // Mock the AuthGuard component to always render children (authenticated state)
 vi.mock('../../../components/auth-guard', () => ({
-  AuthGuard: ({ children }: { children: React.ReactNode; requireAuth?: boolean }) => (
-    <div data-testid="auth-guard">
+  AuthGuard: ({ children, requireAuth }: { children: React.ReactNode; requireAuth?: boolean }) => (
+    <div data-testid="auth-guard" data-require-auth={requireAuth}>
       {children}
     </div>
   ),

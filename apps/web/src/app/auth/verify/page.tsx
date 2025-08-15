@@ -1,14 +1,19 @@
 "use client";
 
 import { useEffect, useState, Suspense } from "react";
+
+// Force dynamic rendering to avoid SSG issues with auth
+export const dynamic = 'force-dynamic';
 import { useSearchParams, useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
+import { useUnifiedAuth, HiveButton } from "@hive/ui";
 import { AuthLayout } from "../../../components/auth/auth-layout";
 import { AuthStatus } from "../../../components/auth/auth-status";
 
 function VerifyPageContent() {
-  const _searchParams = useSearchParams();
+  const searchParams = useSearchParams();
   const router = useRouter();
+  const unifiedAuth = useUnifiedAuth();
   
   const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
   const [error, setError] = useState<string | null>(null);
@@ -16,93 +21,104 @@ function VerifyPageContent() {
   useEffect(() => {
     const handleMagicLink = async () => {
       try {
-        const urlParams = new URLSearchParams(window.location.search);
-        const oobCode = urlParams.get('oobCode');
-        const token = urlParams.get('token'); // Development custom token
-        const _mode = urlParams.get('mode');
-        const email = urlParams.get('email');
-        const schoolId = urlParams.get('schoolId');
-        
-        // Get email from URL or local storage
-        let userEmail = email || window.localStorage.getItem("emailForSignIn");
-        
-        if (!userEmail) {
-          userEmail = window.prompt("Please provide your email for confirmation:");
-        }
-
-        if (!userEmail) {
-          setStatus("error");
-          setError("Email is required to complete sign in");
-          return;
-        }
-
-        if (!schoolId) {
-          setStatus("error");
-          setError("School information is missing");
-          return;
-        }
-
-        // Clear email from local storage
-        window.localStorage.removeItem("emailForSignIn");
-
-        // Call our backend API to verify the magic link
-        const response = await fetch('/api/auth/verify-magic-link', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            email: userEmail,
-            schoolId: schoolId,
-            token: oobCode || token || 'DEV_MODE', // Use oobCode, custom token, or fallback to DEV_MODE
-          }),
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.error || 'Failed to verify magic link');
-        }
-
-        setStatus("success");
-
-        // Store user session info for the frontend
-        if (data.userId) {
-          // For development mode, we can store some basic info
-          const userSession = {
-            userId: data.userId,
-            email: userEmail,
-            schoolId: schoolId,
-            needsOnboarding: data.needsOnboarding,
-            verifiedAt: new Date().toISOString(),
-          };
+        // Check if UnifiedAuth has Firebase integration and can handle email link
+        if (unifiedAuth && typeof unifiedAuth.verifyMagicLink === 'function') {
+          const urlParams = new URLSearchParams(window.location.search);
+          const oobCode = urlParams.get('oobCode');
+          const token = urlParams.get('token');
+          const email = urlParams.get('email');
+          const schoolId = urlParams.get('schoolId');
           
-          window.localStorage.setItem('hive_session', JSON.stringify(userSession));
+          // Get email from URL or fallback to stored email
+          const userEmail = email || (typeof window !== 'undefined' ? window.localStorage.getItem("emailForSignIn") : null);
           
-          // Set development mode flag if needed
-          if (oobCode === 'DEV_MODE') {
-            window.localStorage.setItem('dev_auth_mode', 'true');
+          if (!userEmail) {
+            setStatus("error");
+            setError("Email is required to complete sign in. Please use the magic link from your email or try signing in again.");
+            return;
           }
-        }
 
-        // Redirect based on onboarding status
-        setTimeout(() => {
-          if (data.needsOnboarding) {
-            router.push("/onboarding");
-          } else {
-            router.push("/");
+          if (!schoolId) {
+            setStatus("error");
+            setError("School information is missing. Please try signing in again from the school selection page.");
+            return;
           }
-        }, 1500);
+
+          // Validate that we have a token or code
+          const verificationToken = oobCode || token;
+          if (!verificationToken && process.env.NODE_ENV === 'production') {
+            setStatus("error");
+            setError("Invalid or missing verification token. Please use the magic link from your email.");
+            return;
+          }
+
+          // Use UnifiedAuth to handle the verification
+          await unifiedAuth.verifyMagicLink(
+            verificationToken || 'DEV_MODE',
+            userEmail,
+            schoolId
+          );
+
+          setStatus("success");
+
+          // Clear any stored error state
+          unifiedAuth.clearError();
+
+          // Redirect based on onboarding status with retry logic
+          setTimeout(() => {
+            try {
+              if (unifiedAuth.requiresOnboarding()) {
+                router.push("/onboarding");
+              } else {
+                router.push("/");
+              }
+            } catch (navigationError) {
+              console.error('Navigation error:', navigationError);
+              // Fallback navigation
+              window.location.href = unifiedAuth.requiresOnboarding() ? "/onboarding" : "/";
+            }
+          }, 1500);
+
+        } else {
+          // Fallback to manual verification if UnifiedAuth doesn't support it
+          setStatus("error");
+          setError("Authentication system not properly initialized. Please refresh the page and try again.");
+          
+          // Provide retry mechanism
+          setTimeout(() => {
+            if (unifiedAuth && !unifiedAuth.isLoading) {
+              unifiedAuth.retryInitialization();
+            }
+          }, 2000);
+        }
 
       } catch (err: any) {
+        console.error('Magic link verification error:', err);
         setStatus("error");
-        setError(err.message || "Failed to verify magic link. The link may have expired or been used already.");
+        
+        // Enhanced error messages
+        let errorMessage = "Failed to verify magic link.";
+        if (err.message?.includes('expired')) {
+          errorMessage = "The magic link has expired. Please request a new one.";
+        } else if (err.message?.includes('used')) {
+          errorMessage = "This magic link has already been used. Please request a new one.";
+        } else if (err.message?.includes('invalid')) {
+          errorMessage = "Invalid magic link. Please check the link from your email.";
+        } else if (err.message?.includes('network')) {
+          errorMessage = "Network error. Please check your connection and try again.";
+        } else if (err.message) {
+          errorMessage = err.message;
+        }
+        
+        setError(errorMessage);
       }
     };
 
-    // Run magic link verification
-    handleMagicLink();
-  }, [router]);
+    // Only run if auth is initialized and we haven't already processed
+    if (!unifiedAuth.isLoading && status === "loading") {
+      handleMagicLink();
+    }
+  }, [router, unifiedAuth, unifiedAuth.isLoading, status]);
 
   return (
     <AuthLayout title="Verifying Access">
@@ -128,12 +144,14 @@ function VerifyPageContent() {
           title="Verification Failed"
           message={error || "Unable to verify your magic link. The link may have expired or been used already."}
           action={
-            <button
-              className="w-full hive-button-secondary px-6 py-3"
+            <HiveButton
+              variant="secondary"
+              size="xl"
+              className="w-full"
               onClick={() => router.push("/schools")}
             >
               Try again
-            </button>
+            </HiveButton>
           }
         />
       )}

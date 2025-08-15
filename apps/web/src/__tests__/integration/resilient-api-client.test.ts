@@ -93,7 +93,7 @@ describe('ResilientHiveApiClient', () => {
         json: () => Promise.resolve(errorResponse)
       });
 
-      mockApiWrapper.mockImplementation(async (fn) => {
+      mockApiWrapper.mockImplementation(async (fn: () => Promise<any>) => {
         return await fn();
       });
 
@@ -103,7 +103,7 @@ describe('ResilientHiveApiClient', () => {
     it('should handle network errors', async () => {
       mockFetch.mockRejectedValue(new Error('Network error'));
 
-      mockApiWrapper.mockImplementation(async (fn) => {
+      mockApiWrapper.mockImplementation(async (fn: () => Promise<any>) => {
         return await fn();
       });
 
@@ -365,7 +365,7 @@ describe('ResilientHiveApiClient', () => {
       mockFetch.mockRejectedValue(new Error('Network error'));
       
       // Mock API wrapper to use fallback
-      mockApiWrapper.mockImplementation(async (fn, options) => {
+      mockApiWrapper.mockImplementation(async (fn: () => Promise<any>, options: any) => {
         try {
           return await fn();
         } catch (error) {
@@ -395,7 +395,7 @@ describe('ResilientHiveApiClient', () => {
       mockFetch.mockRejectedValue(new Error('Network error'));
       
       // Mock API wrapper to use fallback function
-      mockApiWrapper.mockImplementation(async (fn, options) => {
+      mockApiWrapper.mockImplementation(async (fn: () => Promise<any>, options: any) => {
         try {
           return await fn();
         } catch (error) {
@@ -466,7 +466,7 @@ describe('ResilientHiveApiClient', () => {
     it('should handle health check failure', async () => {
       mockFetch.mockRejectedValue(new Error('Health check failed'));
       
-      mockApiWrapper.mockImplementation(async (fn) => {
+      mockApiWrapper.mockImplementation(async (fn: () => Promise<any>) => {
         return await fn();
       });
 
@@ -515,7 +515,7 @@ describe('ResilientHiveApiClient', () => {
                 });
 
       // Mock API wrapper to simulate retry
-      mockApiWrapper.mockImplementation(async (fn) => {
+      mockApiWrapper.mockImplementation(async (fn: () => Promise<any>) => {
         try {
           return await fn();
         } catch (error) {

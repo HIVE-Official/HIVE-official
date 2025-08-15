@@ -10,7 +10,7 @@ import React, { memo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Hash } from 'lucide-react';
 import { NavigationItem, NavigationUser } from '../core/types';
-import { NAVIGATION_THEME, NAVIGATION_SIZING, NAVIGATION_MOTION, NAVIGATION_A11Y } from '../core/data';
+import { NAVIGATION_SIZING, NAVIGATION_MOTION, NAVIGATION_A11Y } from '../core/data';
 import { cn } from '../../lib/utils';
 
 // ============================================================================
@@ -34,7 +34,6 @@ interface DrawerItemProps {
 }
 
 interface DrawerHeaderProps {
-  user: NavigationUser;
   onClose: () => void;
 }
 
@@ -42,7 +41,7 @@ interface DrawerHeaderProps {
 // DRAWER HEADER
 // ============================================================================
 
-const DrawerHeader = memo<DrawerHeaderProps>(({ user, onClose }) => {
+const DrawerHeader = memo<DrawerHeaderProps>(({ onClose }) => {
   return (
     <div className="flex items-center justify-between p-6 border-b border-[var(--hive-border-subtle)]">
       {/* HIVE branding */}
@@ -319,7 +318,7 @@ export const TabletDrawer = memo<TabletDrawerProps>(({
             tabIndex={-1}
           >
             {/* Header */}
-            <DrawerHeader user={user} onClose={onClose} />
+            <DrawerHeader onClose={onClose} />
             
             {/* User profile */}
             <UserProfileSection user={user} />

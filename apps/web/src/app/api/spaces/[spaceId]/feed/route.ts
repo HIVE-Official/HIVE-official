@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { dbAdmin } from "@/lib/firebase-admin";
 import { type Post } from "@hive/core";
-import { logger } from "@/lib/logger";
+import { logger } from "@/lib/structured-logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 import { withAuth } from '@/lib/api-auth-middleware';
 import { z } from 'zod';
@@ -61,7 +61,7 @@ export const GET = withAuth(async (
       .collection('spaces')
       .doc(spaceId)
       .collection('members')
-      .doc(authContext.user.uid)
+      .doc(authContext.userId)
       .get();
 
     if (!memberDoc.exists) {

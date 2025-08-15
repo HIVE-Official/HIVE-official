@@ -1,7 +1,7 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { motion } from '../../components/framer-motion-proxy.js';
-import { cn } from '../../lib/utils.js';
+import { motion } from '../../components/framer-motion-proxy';
+import { cn } from '../../lib/utils';
 import { ArrowRight, GraduationCap, Home, Users, Star } from 'lucide-react';
 // Default category configurations
 export const SPACE_CATEGORIES = {
@@ -10,8 +10,8 @@ export const SPACE_CATEGORIES = {
         title: 'University Spaces',
         description: 'Official academic spaces for courses, departments, and university programs',
         icon: _jsx(GraduationCap, { className: "w-6 h-6" }),
-        gradient: 'from-blue-500/20 via-blue-600/15 to-indigo-500/20',
-        accentColor: 'text-blue-400',
+        gradient: 'from-[var(--hive-brand-primary)]/20 via-[var(--hive-brand-secondary)]/15 to-[var(--hive-brand-primary)]/20',
+        accentColor: 'text-[var(--hive-brand-primary)]',
         examples: ['CS 101', 'Computer Science Dept', 'Engineering College']
     },
     residential: {
@@ -19,8 +19,8 @@ export const SPACE_CATEGORIES = {
         title: 'Residential Life',
         description: 'Connect with your dorm, floor, building, and residential community',
         icon: _jsx(Home, { className: "w-6 h-6" }),
-        gradient: 'from-emerald-500/20 via-emerald-600/15 to-teal-500/20',
-        accentColor: 'text-emerald-400',
+        gradient: 'from-[var(--hive-status-success)]/20 via-[var(--hive-status-success)]/15 to-[var(--hive-status-success)]/20',
+        accentColor: 'text-[var(--hive-status-success)]',
         examples: ['Ellicott Complex', 'Governors Floor 3', 'South Campus']
     },
     greek: {
@@ -28,8 +28,8 @@ export const SPACE_CATEGORIES = {
         title: 'Greek Life',
         description: 'Fraternities, sororities, and Greek organizations on campus',
         icon: _jsx(Users, { className: "w-6 h-6" }),
-        gradient: 'from-purple-500/20 via-purple-600/15 to-violet-500/20',
-        accentColor: 'text-purple-400',
+        gradient: 'from-[var(--hive-brand-secondary)]/20 via-[var(--hive-brand-secondary)]/15 to-[var(--hive-brand-secondary)]/20',
+        accentColor: 'text-[var(--hive-brand-secondary)]',
         examples: ['Alpha Phi Alpha', 'Panhellenic Council', 'IFC']
     },
     student: {
@@ -37,8 +37,8 @@ export const SPACE_CATEGORIES = {
         title: 'Student Groups',
         description: 'Student-created spaces for clubs, organizations, and special interests',
         icon: _jsx(Star, { className: "w-6 h-6" }),
-        gradient: 'from-rose-500/20 via-rose-600/15 to-pink-500/20',
-        accentColor: 'text-rose-400',
+        gradient: 'from-[var(--hive-brand-gold)]/20 via-[var(--hive-brand-gold)]/15 to-[var(--hive-brand-gold)]/20',
+        accentColor: 'text-[var(--hive-brand-gold)]',
         examples: ['Study Groups', 'Intramural Teams', 'Student Clubs']
     }
 };

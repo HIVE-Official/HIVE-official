@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Button, Card, Grid } from "@hive/ui";
-import { ArrowLeft, TrendingUp, Users, Eye as _Eye, Download, Calendar as _Calendar, BarChart3 as _BarChart3, PieChart as _PieChart, Activity, Star, Share, MessageSquare } from "lucide-react";
+import { ArrowLeft, TrendingUp, Users, /* Eye as _Eye, */ Download, /* Calendar as _Calendar, BarChart3 as _BarChart3, PieChart as _PieChart, */ Activity, Star, Share, MessageSquare } from "lucide-react";
 import { useFeatureFlags } from "@hive/hooks";
 
 interface AnalyticsData {
@@ -113,7 +113,7 @@ const MetricCard = ({ title, value, change, icon: Icon, format = 'number' }: {
   );
 };
 
-const SimpleChart = ({ data, title, type: _type = 'bar' }: {
+const SimpleChart = ({ data, title, type: _type = 'bar' }: { // TODO: type parameter for future chart variations
   data: Array<{ label: string; value: number }>;
   title: string;
   type?: 'bar' | 'line';

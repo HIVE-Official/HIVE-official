@@ -4,8 +4,8 @@ import { z } from "zod";
 import { CreateToolSchema, ToolSchema, createToolDefaults } from "@hive/core";
 import { dbAdmin as adminDb } from "@/lib/firebase-admin";
 import { getCurrentUser } from "../../../lib/auth-server";
-import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { logger } from "@/lib/structured-logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
 
 // Rate limiting: 10 tool creations per hour per user
 // // const createToolLimiter = rateLimit({
@@ -76,6 +76,7 @@ const EnhancedCreateToolSchema = CreateToolSchema.extend({
   templateId: z.string().optional(),
   type: z.enum(['template', 'visual', 'code', 'wizard']).default('visual'),
   config: z.any().optional(), // Allow any config for flexibility
+  elements: z.array(z.any()).optional(), // Add elements support
 });
 
 // POST /api/tools - Create new tool (supports templates)
@@ -299,7 +300,7 @@ export async function PUT(request: NextRequest) {
     await adminDb.collection("tools").doc(toolId).update(updatedTool);
 
     // Create new version if elements changed
-    if (validatedData.elements && JSON.stringify(validatedData.elements) !== JSON.stringify(existingTool.elements)) {
+    if (validatedData.elements && JSON.stringify(validatedData.elements) !== JSON.stringify(existingTool?.elements)) {
       const versionNumber = `1.${Date.now()}`;
       const newVersion = {
         version: versionNumber,

@@ -45,9 +45,9 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
  * providing students with building blocks for comprehensive event management.
  */
 import { useState, useEffect } from 'react';
-import { HiveCard, HiveButton, HiveInput, HiveTextarea, HiveBadge } from '../index.js';
+import { HiveCard, HiveButton, HiveInput, HiveTextarea, HiveBadge } from '../index';
 import { Calendar, MapPin, Users, Clock, QrCode, Star, CheckSquare, AlertCircle, TrendingUp } from 'lucide-react';
-import { cn } from '../../lib/utils.js';
+import { cn } from '../../lib/utils';
 // Mobile-responsive utilities
 const useMobileDetection = () => {
     const [isMobile, setIsMobile] = useState(false);

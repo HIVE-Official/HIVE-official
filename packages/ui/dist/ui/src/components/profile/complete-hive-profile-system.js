@@ -1,16 +1,16 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState } from 'react';
-import { motion } from '../framer-motion-proxy.js';
+import { motion } from '../framer-motion-proxy';
 import { User, Settings, Edit3, Zap, Eye, EyeOff, Upload, ChevronRight, Loader2, AlertCircle } from 'lucide-react';
-import { HiveCard } from '../hive-card.js';
-import { HiveButton } from '../hive-button.js';
-import { ProfileHeader } from './profile-header.js';
-import { ProfileStats } from './profile-stats.js';
-import { MySpacesFeed } from './my-spaces-feed.js';
-import { CalendarCard } from './calendar-card.js';
-import { CampusConnections } from './campus-connections.js';
-import { HiveLabSection } from './hive-lab-section.js';
+import { HiveCard } from '../hive-card';
+import { HiveButton } from '../hive-button';
+import { ProfileHeader } from './profile-header';
+import { ProfileStats } from './profile-stats';
+import { MySpacesFeed } from './my-spaces-feed';
+import { CalendarCard } from './calendar-card';
+import { CampusConnections } from './campus-connections';
+import { HiveLabSection } from './hive-lab-section';
 export const CompleteHIVEProfileSystem = ({ user, stats, editMode = false, onEditModeToggle, onWidgetConfigure, completeness, onUploadAvatar, onToggleGhostMode, loading = false, error = null }) => {
     const [activeWidget, setActiveWidget] = useState(null);
     // Loading state with skeleton

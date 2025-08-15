@@ -26,7 +26,7 @@ export default function SettingsPage() {
       // Mock API call - in real app would update user profile
       await new Promise(resolve => setTimeout(resolve, 1000));
       alert('Profile updated successfully!');
-    } catch (_error) {
+    } catch {
       alert('Failed to update profile. Please try again.');
     } finally {
       setIsSaving(false);
@@ -58,7 +58,7 @@ export default function SettingsPage() {
       URL.revokeObjectURL(url);
       
       alert('Your data has been downloaded successfully!');
-    } catch (_error) {
+    } catch {
       alert('Failed to download data. Please try again.');
     } finally {
       setIsDownloading(false);
@@ -71,7 +71,7 @@ export default function SettingsPage() {
       await new Promise(resolve => setTimeout(resolve, 1000));
       alert('Account deletion initiated. You will receive an email confirmation.');
       setShowDeleteConfirm(false);
-    } catch (_error) {
+    } catch {
       alert('Failed to delete account. Please try again.');
     }
   };

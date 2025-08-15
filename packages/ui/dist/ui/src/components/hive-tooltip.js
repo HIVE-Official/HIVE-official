@@ -3,8 +3,8 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 import { cva } from 'class-variance-authority';
-import { cn } from "../lib/utils.js";
-import { liquidMetal, motionDurations } from '../motion/hive-motion-system.js';
+import { cn } from "../lib/utils";
+import { liquidMetal, motionDurations } from '../motion/hive-motion-system';
 // HIVE Tooltip variants - Luxury glass morphism with semantic tokens
 const hiveTooltipVariants = cva(
 // Base styles - matte obsidian glass with heavy radius and backdrop blur

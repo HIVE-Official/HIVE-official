@@ -1,11 +1,11 @@
 'use client';
 import { jsx as _jsx } from "react/jsx-runtime";
 import * as React from "react";
-import { cn } from "../../lib/utils.js";
+import { cn } from "../../lib/utils";
 import { cva } from "class-variance-authority";
 // HIVE Typography System - Semantic Token Perfection
 // Uses only semantic tokens - zero hardcoded values
-const headingVariants = cva("font-display font-semibold tracking-tight text-[var(--hive-text-primary)]", {
+const headingVariants = cva("font-sans font-semibold tracking-tight text-[var(--hive-text-primary)]", {
     variants: {
         level: {
             1: "text-6xl leading-tight", // Hero headings
@@ -39,7 +39,7 @@ const headingVariants = cva("font-display font-semibold tracking-tight text-[var
         weight: "semibold",
     },
 });
-const textVariants = cva("text-[var(--hive-text-primary)]", {
+const textVariants = cva("font-sans text-[var(--hive-text-primary)]", {
     variants: {
         size: {
             xs: "text-xs leading-relaxed",
@@ -80,7 +80,7 @@ const textVariants = cva("text-[var(--hive-text-primary)]", {
         decoration: "none",
     },
 });
-const captionVariants = cva("text-xs text-[var(--hive-text-tertiary)] leading-relaxed", {
+const captionVariants = cva("font-sans text-xs text-[var(--hive-text-tertiary)] leading-relaxed", {
     variants: {
         color: {
             tertiary: "text-[var(--hive-text-tertiary)]",
@@ -102,7 +102,7 @@ const captionVariants = cva("text-xs text-[var(--hive-text-tertiary)] leading-re
         weight: "normal",
     },
 });
-const linkVariants = cva("text-[var(--hive-brand-secondary)] underline-offset-4 hover:underline transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color-mix(in_srgb,var(--hive-brand-secondary)_30%,transparent)] rounded-sm", {
+const linkVariants = cva("font-sans text-[var(--hive-brand-secondary)] underline-offset-4 hover:underline transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color-mix(in_srgb,var(--hive-brand-secondary)_30%,transparent)] rounded-sm", {
     variants: {
         color: {
             brand: "text-[var(--hive-brand-secondary)] hover:text-[color-mix(in_srgb,var(--hive-brand-secondary)_80%,transparent)]",

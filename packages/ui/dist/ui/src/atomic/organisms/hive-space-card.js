@@ -2,7 +2,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { cn } from '../../lib/utils.js';
+import { cn } from '../../lib/utils';
 import { Users, Sparkles, ChevronRight } from 'lucide-react';
 export const HiveSpaceCard = ({ space, currentUser, mutualConnections = [], onJoin, onView, showSocialProof = true, variant = 'default', className }) => {
     const [isHovered, setIsHovered] = useState(false);

@@ -6,6 +6,7 @@ import { getAuth } from "firebase-admin/auth";
 import { getAuthTokenFromRequest } from "@/lib/auth";
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import * as admin from 'firebase-admin';
 
 const GetMembersSchema = z.object({
   limit: z.coerce.number().min(1).max(100).default(50),
@@ -38,23 +39,24 @@ export async function GET(
       Object.fromEntries(searchParams.entries())
     );
 
-    // Check if requesting user is member of the space
-    const requesterMemberDoc = await db
-      .collection("spaces")
-      .doc(spaceId)
-      .collection("members")
-      .doc(decodedToken.uid)
-      .get();
+    // Check if requesting user is member of the space using flat spaceMembers collection
+    const requesterMemberQuery = db.collection('spaceMembers')
+      .where('spaceId', '==', spaceId)
+      .where('userId', '==', decodedToken.uid)
+      .where('isActive', '==', true)
+      .limit(1);
+    
+    const requesterMemberSnapshot = await requesterMemberQuery.get();
 
-    if (!requesterMemberDoc.exists) {
+    if (requesterMemberSnapshot.empty) {
       return NextResponse.json(ApiResponseHelper.error("Not a member of this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
-    // Build query for members
-    let query = db
-      .collection("spaces")
-      .doc(spaceId)
-      .collection("members");
+    // Build query for members using flat spaceMembers collection
+    let query: admin.firestore.Query<admin.firestore.DocumentData> = db
+      .collection('spaceMembers')
+      .where('spaceId', '==', spaceId)
+      .where('isActive', '==', true);
 
     // Filter by role
     if (role) {
@@ -72,11 +74,12 @@ export async function GET(
     // Process members
     for (const doc of membersSnapshot.docs) {
       const memberData = doc.data();
+      const userId = memberData.userId;
 
       // Get user profile info
       const userDoc = await db
         .collection("users")
-        .doc(doc.id)
+        .doc(userId)
         .get();
       
       const userData = userDoc.exists ? userDoc.data() : null;
@@ -84,17 +87,18 @@ export async function GET(
       // Skip if no user data found
       if (!userData) continue;
 
-      // Calculate member stats (simplified for demo)
-      // In production, these would be cached or calculated differently
-      const postsSnapshot = await db
-        .collection("spaces")
-        .doc(spaceId)
-        .collection("posts")
-        .where("authorId", "==", doc.id)
-        .get();
+      // Calculate member stats using activity events
+      const activityQuery = db
+        .collection("activityEvents")
+        .where("userId", "==", userId)
+        .where("spaceId", "==", spaceId)
+        .where("type", "in", ["post_created", "comment_created"]);
+      
+      const activitySnapshot = await activityQuery.get();
+      const postCount = activitySnapshot.docs.filter(doc => doc.data().type === "post_created").length;
 
       const member = {
-        id: doc.id,
+        id: userId,
         name: userData.fullName || userData.displayName || 'Unknown User',
         username: userData.handle || userData.email?.split('@')[0] || 'unknown',
         avatar: userData.photoURL,
@@ -106,10 +110,10 @@ export async function GET(
         isVerified: userData.isVerified || false,
         badges: userData.badges || [],
         stats: {
-          postsCount: postsSnapshot.size,
+          postsCount: postCount,
           likesReceived: 0, // Would need to aggregate from post reactions
           eventsAttended: 0, // Would need to aggregate from event RSVPs
-          contributionScore: postsSnapshot.size * 10, // Simplified scoring
+          contributionScore: postCount * 10, // Simplified scoring
         },
         interests: userData.interests || [],
         major: userData.major,
@@ -133,7 +137,7 @@ export async function GET(
           (member.name?.toLowerCase() || '').includes(searchLower) ||
           (member.username?.toLowerCase() || '').includes(searchLower) ||
           (member.bio && member.bio.toLowerCase().includes(searchLower)) ||
-          (member.interests || []).some(interest => interest.toLowerCase().includes(searchLower));
+          (member.interests || []).some((interest: string) => interest.toLowerCase().includes(searchLower));
         
         if (!matchesSearch) continue;
       }
@@ -514,7 +518,7 @@ export async function DELETE(
       .collection("spaces")
       .doc(spaceId)
       .update({
-        memberCount: dbAdmin.FieldValue.increment(-1),
+        memberCount: admin.firestore.FieldValue.increment(-1),
         updatedAt: new Date()
       });
 

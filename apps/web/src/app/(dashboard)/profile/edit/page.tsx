@@ -57,6 +57,12 @@ export default function ProfileEditPage() {
 
   const handleSave = async () => {
     try {
+      // Validate academicYear to ensure it matches the expected type
+      const validAcademicYears = ['freshman', 'sophomore', 'junior', 'senior', 'graduate', 'alumni', 'faculty'];
+      const academicYear = validAcademicYears.includes(formData.academicYear) 
+        ? formData.academicYear as 'freshman' | 'sophomore' | 'junior' | 'senior' | 'graduate' | 'alumni' | 'faculty'
+        : undefined;
+
       const updateData = {
         identity: {
           fullName: formData.fullName,
@@ -69,13 +75,13 @@ export default function ProfileEditPage() {
         academic: {
           pronouns: formData.pronouns,
           major: formData.major,
-          academicYear: formData.academicYear,
-          graduationYear: formData.graduationYear,
+          academicYear: academicYear,
+          graduationYear: formData.graduationYear ? parseInt(formData.graduationYear, 10) : undefined,
           housing: formData.housing
         }
       };
 
-      const success = await updateProfile(updateData as any);
+      const success = await updateProfile(updateData);
       if (success) {
         setIsFormDirty(false);
         router.push('/profile');

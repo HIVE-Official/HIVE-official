@@ -1,7 +1,7 @@
 "use client";
 
 import Image from 'next/image';
-import { useState, useRef, useEffect as _useEffect } from "react";
+import { useState, useRef } from "react";
 import { Card, Button, Badge } from "@hive/ui";
 import { 
   Users, 

@@ -3,8 +3,8 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cva } from 'class-variance-authority';
-import { cn } from '../lib/utils.js';
-import { liquidMetal, motionDurations } from '../motion/hive-motion-system.js';
+import { cn } from '../lib/utils';
+import { liquidMetal, motionDurations } from '../motion/hive-motion-system';
 import { X } from 'lucide-react';
 // HIVE Modal System - Matte Obsidian Glass with Liquid Metal Motion
 // Premium modal components that feel like sophisticated hardware interfaces
@@ -85,22 +85,25 @@ const modalVariants = {
         }
     }
 };
-const HiveModal = React.forwardRef(({ className, variant, size, isOpen, onClose, title, description, showCloseButton = true, closeOnBackdropClick = true, closeOnEscape = true, children, ...props }, ref) => {
+const HiveModal = React.forwardRef(({ className, variant, size, isOpen, open, onClose, onOpenChange, title, description, showCloseButton = true, closeOnBackdropClick = true, closeOnEscape = true, children, ...props }, ref) => {
+    // Support both prop patterns
+    const modalIsOpen = open ?? isOpen ?? false;
+    const handleClose = onOpenChange ? () => onOpenChange(false) : onClose ?? (() => { });
     // Handle escape key
     useEffect(() => {
         if (!closeOnEscape)
             return;
         const handleEscape = (e) => {
-            if (e.key === 'Escape' && isOpen) {
-                onClose();
+            if (e.key === 'Escape' && modalIsOpen) {
+                handleClose();
             }
         };
         document.addEventListener('keydown', handleEscape);
         return () => document.removeEventListener('keydown', handleEscape);
-    }, [isOpen, onClose, closeOnEscape]);
+    }, [modalIsOpen, handleClose, closeOnEscape]);
     // Prevent body scroll when modal is open
     useEffect(() => {
-        if (isOpen) {
+        if (modalIsOpen) {
             document.body.style.overflow = 'hidden';
         }
         else {
@@ -109,13 +112,13 @@ const HiveModal = React.forwardRef(({ className, variant, size, isOpen, onClose,
         return () => {
             document.body.style.overflow = 'unset';
         };
-    }, [isOpen]);
+    }, [modalIsOpen]);
     const handleBackdropClick = (e) => {
         if (e.target === e.currentTarget && closeOnBackdropClick) {
-            onClose();
+            handleClose();
         }
     };
-    return (_jsx(AnimatePresence, { mode: "wait", children: isOpen && (_jsxs(motion.div, { className: "fixed inset-0 z-50 flex items-center justify-center", initial: "hidden", animate: "visible", exit: "hidden", children: [_jsx(motion.div, { className: "absolute inset-0 bg-[var(--hive-background-primary)]/80 backdrop-blur-sm", variants: backdropVariants, onClick: handleBackdropClick }), _jsxs(motion.div, { ref: ref, className: cn(hiveModalVariants({ variant, size, className })), variants: modalVariants, ...props, children: [(title || description || showCloseButton) && (_jsxs("div", { className: "flex items-start justify-between p-8 pb-4", children: [_jsxs("div", { className: "space-y-2", children: [title && (_jsx("h2", { className: "text-2xl font-bold text-[var(--hive-text-primary)]", children: title })), description && (_jsx("p", { className: "text-gray-400 text-sm leading-relaxed", children: description }))] }), showCloseButton && (_jsx(motion.button, { className: "text-[var(--hive-text-primary)]/60 hover:text-[var(--hive-text-primary)]/80 transition-colors p-2 -mt-2 -mr-2", onClick: onClose, whileHover: { scale: 1.1 }, whileTap: { scale: 0.9 }, children: _jsx(X, { size: 20 }) }))] })), _jsx("div", { className: cn("px-8", (title || description || showCloseButton) ? "pb-8" : "py-8"), children: children })] })] })) }));
+    return (_jsx(AnimatePresence, { mode: "wait", children: modalIsOpen && (_jsxs(motion.div, { className: "fixed inset-0 z-50 flex items-center justify-center", initial: "hidden", animate: "visible", exit: "hidden", children: [_jsx(motion.div, { className: "absolute inset-0 bg-[var(--hive-background-primary)]/80 backdrop-blur-sm", variants: backdropVariants, onClick: handleBackdropClick }), _jsxs(motion.div, { ref: ref, className: cn(hiveModalVariants({ variant, size, className })), variants: modalVariants, ...props, children: [(title || description || showCloseButton) && (_jsxs("div", { className: "flex items-start justify-between p-8 pb-4", children: [_jsxs("div", { className: "space-y-2", children: [title && (_jsx("h2", { className: "text-2xl font-bold text-[var(--hive-text-primary)]", children: title })), description && (_jsx("p", { className: "text-gray-400 text-sm leading-relaxed", children: description }))] }), showCloseButton && (_jsx(motion.button, { className: "text-[var(--hive-text-primary)]/60 hover:text-[var(--hive-text-primary)]/80 transition-colors p-2 -mt-2 -mr-2", onClick: handleClose, whileHover: { scale: 1.1 }, whileTap: { scale: 0.9 }, children: _jsx(X, { size: 20 }) }))] })), _jsx("div", { className: cn("px-8", (title || description || showCloseButton) ? "pb-8" : "py-8"), children: children })] })] })) }));
 });
 HiveModal.displayName = "HiveModal";
 const HiveConfirmModal = React.forwardRef(({ confirmText = "Confirm", cancelText = "Cancel", onConfirm, onCancel, confirmVariant = 'default', loading = false, onClose, ...props }, ref) => {

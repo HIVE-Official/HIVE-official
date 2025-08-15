@@ -40,7 +40,7 @@ export const NavBar: React.FC<NavBarProps> = ({
     <nav className={cn(
       'flex items-center justify-between h-14 px-6',
       'bg-[var(--hive-background-primary)]',
-      'border-b border-[var(--hive-border-default)]',
+      'border-b border-[var(--hive-border-primary)]',
       'backdrop-blur-xl',
       className
     )}>
@@ -69,7 +69,7 @@ export const NavBar: React.FC<NavBarProps> = ({
       {showSearch && (
         <div className="flex-1 max-w-md mx-8">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-[var(--hive-text-tertiary)]" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-[var(--hive-text-muted)]" />
             <input
               type="text"
               placeholder="Search spaces, people, tools..."
@@ -78,10 +78,10 @@ export const NavBar: React.FC<NavBarProps> = ({
               className={cn(
                 'w-full h-10 pl-10 pr-12',
                 'bg-[var(--hive-background-secondary)]',
-                'border border-[var(--hive-border-default)]',
+                'border border-[var(--hive-border-primary)]',
                 'rounded-2xl',
                 'text-sm text-[var(--hive-text-primary)]',
-                'placeholder-[var(--hive-text-tertiary)]',
+                'placeholder-[var(--hive-text-muted)]',
                 'cursor-pointer',
                 'transition-all duration-200',
                 'hover:border-[var(--hive-brand-secondary)]',
@@ -89,7 +89,7 @@ export const NavBar: React.FC<NavBarProps> = ({
               )}
             />
             <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-              <kbd className="inline-flex items-center px-1.5 py-0.5 rounded text-xs bg-[var(--hive-background-tertiary)] text-[var(--hive-text-tertiary)] border border-[var(--hive-border-default)]">
+              <kbd className="inline-flex items-center px-1.5 py-0.5 rounded text-xs bg-[var(--hive-background-tertiary)] text-[var(--hive-text-muted)] border border-[var(--hive-border-primary)]">
                 <Command className="h-2.5 w-2.5 mr-1" />
                 K
               </kbd>
@@ -133,7 +133,7 @@ export const NavBar: React.FC<NavBarProps> = ({
         {user ? (
           <div 
             onClick={onUserClick} 
-            className="cursor-pointer w-8 h-8 bg-[var(--hive-background-tertiary)] border border-[var(--hive-border-default)] rounded-xl flex items-center justify-center text-sm font-medium text-[var(--hive-text-primary)] hover:border-[var(--hive-brand-secondary)] transition-colors"
+            className="cursor-pointer w-8 h-8 bg-[var(--hive-background-tertiary)] border border-[var(--hive-border-primary)] rounded-xl flex items-center justify-center text-sm font-medium text-[var(--hive-text-primary)] hover:border-[var(--hive-brand-secondary)] transition-colors"
           >
             {initials}
           </div>

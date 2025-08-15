@@ -9,6 +9,9 @@ export { HiveLabSection } from './hive-lab-section';
 export { ProfileStats } from './profile-stats';
 export { adaptSmartCalendarProps } from './calendar-data-adapter';
 
+// Enhanced Profile Dashboard with Expand-Focus
+export { EnhancedProfileDashboard } from './enhanced-profile-dashboard';
+
 // Enhanced Profile System (Bento Grid) - temporarily disabled due to import errors
 // export { EnhancedProfileSystem } from './enhanced-profile-system';
 // export type { EnhancedProfileUser, ProfileCompletionStatus } from './enhanced-profile-system';
@@ -24,6 +27,8 @@ export * from './bento-grid';
 export { PriorityCoordinationWidget } from './widgets/priority-coordination-widget';
 export { PrivacyControlWidget } from './widgets/privacy-control-widget';
 export { PersonalToolsPreviewWidget } from './widgets/personal-tools-preview-widget';
+export { ProfileSettingsWidget } from './widgets/profile-settings-widget';
+export { ProfileAnalyticsWidget } from './widgets/profile-analytics-widget';
 
 // Enhanced Profile Features - temporarily disabled due to import errors
 // export { AnalyticsDashboard, generateSampleAnalyticsData } from './analytics-dashboard';

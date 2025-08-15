@@ -3,8 +3,8 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React, { useState, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cva } from 'class-variance-authority';
-import { cn } from '../lib/utils.js';
-import { liquidMetal, motionDurations } from '../motion/hive-motion-system.js';
+import { cn } from '../lib/utils';
+import { liquidMetal, motionDurations } from '../motion/hive-motion-system';
 import { ChevronUp, ChevronDown, Search, Download, RefreshCw, Eye, Edit, Trash2, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
 const hiveTableVariants = cva(
 // Base table styles - matte obsidian glass

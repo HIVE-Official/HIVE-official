@@ -1,3 +1,4 @@
+import React from 'react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -9,6 +10,69 @@ import { mockLocalStorage } from '../../setup';
 vi.mock('next/navigation', () => ({
   useRouter: vi.fn(),
   useSearchParams: vi.fn(),
+}));
+
+// Mock Next.js Link
+vi.mock('next/link', () => ({
+  default: ({ children, href, ...props }: any) => (
+    <a href={href} {...props}>{children}</a>
+  ),
+}));
+
+// Mock framer-motion
+vi.mock('framer-motion', () => ({
+  motion: {
+    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+  },
+  AnimatePresence: ({ children }: any) => children,
+}));
+
+// Mock HIVE UI components
+vi.mock('@hive/ui', () => ({
+  HiveButton: ({ children, onClick, disabled, type, className, ...props }: any) => (
+    <button 
+      onClick={onClick} 
+      disabled={disabled}
+      type={type}
+      className={className}
+      {...props}
+    >
+      {children}
+    </button>
+  ),
+  HiveInput: ({ value, onChange, placeholder, disabled, className, ...props }: any) => (
+    <input
+      value={value}
+      onChange={onChange}
+      placeholder={placeholder}
+      disabled={disabled}
+      className={className}
+      {...props}
+    />
+  ),
+  HiveCard: ({ children, className, ...props }: any) => (
+    <div className={className} {...props}>{children}</div>
+  ),
+  HiveModal: ({ isOpen, children, title, onClose, hideCloseButton, motionPreset, size, ...props }: any) => 
+    isOpen ? (
+      <div data-testid="modal" data-motion-preset={motionPreset} data-size={size}>
+        <div>{title}</div>
+        {!hideCloseButton && <button onClick={onClose}>Close</button>}
+        {children}
+      </div>
+    ) : null,
+  HiveLogo: ({ size, variant, showWordmark }: any) => (
+    <div data-testid="hive-logo" data-size={size} data-variant={variant}>
+      HIVE {showWordmark && 'Logo'}
+    </div>
+  ),
+}));
+
+// Mock lucide-react icons
+vi.mock('lucide-react', () => ({
+  Loader2: ({ className }: any) => <div className={className} data-testid="loader2" />,
+  Mail: ({ className }: any) => <div className={className} data-testid="mail" />,
+  ArrowLeft: ({ className }: any) => <div className={className} data-testid="arrow-left" />,
 }));
 
 // Mock fetch
@@ -222,8 +286,8 @@ describe('LoginPage', () => {
         ok: true,
         json: async () => ({
           success: true,
-          dev: true,
-          user: { userId: 'dev-user-1', handle: 'testuser', role: 'student' },
+          devMode: true,
+          magicLink: 'http://localhost:3000/auth/verify?token=dev-token',
         }),
       } as Response);
 
@@ -241,18 +305,11 @@ describe('LoginPage', () => {
       
       await user.click(submitButton);
 
+      // Should store email and show success modal
       await waitFor(() => {
-        expect(mockLocalStorage.setItem).toHaveBeenCalledWith(
-          'hive_session',
-          expect.stringContaining('"userId":"dev-user-1"')
-        );
-        expect(mockLocalStorage.setItem).toHaveBeenCalledWith('dev_auth_mode', 'true');
+        expect(mockLocalStorage.setItem).toHaveBeenCalledWith('emailForSignIn', 'test@test.edu');
+        expect(screen.getByText('Check your inbox')).toBeInTheDocument();
       });
-
-      // Should redirect to onboarding after delay
-      await waitFor(() => {
-        expect(mockPush).toHaveBeenCalledWith('/onboarding');
-      }, { timeout: 2000 });
     });
 
     it('shows success modal for non-dev users', async () => {

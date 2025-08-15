@@ -4,7 +4,7 @@ import { jsx as _jsx } from "react/jsx-runtime";
  * Uses standard HTML radio inputs with HIVE styling
  */
 import React from 'react';
-import { cn } from '../../lib/utils.js';
+import { cn } from '../../lib/utils';
 export const RadioGroup = React.forwardRef(({ className, value, onValueChange, name, disabled, children, ...props }, ref) => {
     const handleChange = (newValue) => {
         if (onValueChange) {

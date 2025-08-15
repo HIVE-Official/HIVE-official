@@ -19,9 +19,9 @@ const labelSizes = {
 };
 
 const labelVariants = {
-  default: 'block font-medium text-hive-text-primary',
-  inline: 'inline-flex items-center font-medium text-hive-text-primary',
-  floating: 'absolute font-medium text-hive-text-secondary transition-all duration-200 ease-out'
+  default: 'block font-medium text-[var(--hive-text-primary)]',
+  inline: 'inline-flex items-center font-medium text-[var(--hive-text-primary)]',
+  floating: 'absolute font-medium text-[var(--hive-text-secondary)] transition-all duration-200 ease-out'
 };
 
 export const Label = React.forwardRef<HTMLLabelElement, LabelProps>(({
@@ -45,7 +45,7 @@ export const Label = React.forwardRef<HTMLLabelElement, LabelProps>(({
     variant === 'floating' && [
       'left-3 top-2.5',
       'pointer-events-none',
-      'peer-placeholder-shown:top-2.5 peer-placeholder-shown:text-hive-text-mutedLight',
+      'peer-placeholder-shown:top-2.5 peer-placeholder-shown:text-[var(--hive-text-muted)]',
       'peer-focus:-top-2 peer-focus:left-2 peer-focus:text-xs peer-focus:text-[var(--hive-brand-secondary)]',
       'peer-not-placeholder-shown:-top-2 peer-not-placeholder-shown:left-2 peer-not-placeholder-shown:text-xs'
     ].join(' ')
@@ -61,7 +61,7 @@ export const Label = React.forwardRef<HTMLLabelElement, LabelProps>(({
       {children}
       {required && (
         <span 
-          className="text-hive-ruby ml-1" 
+          className="text-[var(--hive-status-error)] ml-1" 
           aria-label="required"
           title="This field is required"
         >

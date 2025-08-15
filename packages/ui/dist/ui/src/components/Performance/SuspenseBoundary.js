@@ -1,8 +1,8 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React, { Suspense } from 'react';
-import { HiveErrorBoundary } from '../ErrorHandling/ErrorBoundary.js';
-import { LoadingOrchestrator } from '../Loading/LoadingOrchestrator.js';
+import { HiveErrorBoundary } from '../ErrorHandling/ErrorBoundary';
+import { LoadingOrchestrator } from '../Loading/LoadingOrchestrator';
 // Default loading resources for different strategies
 const DEFAULT_LOADING_RESOURCES = {
     minimal: [

@@ -1,9 +1,9 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React, { Suspense, lazy, useEffect, useState, useRef, useCallback } from 'react';
-import { cn } from '../../lib/utils.js';
-import { LoadingOrchestrator } from '../Loading/LoadingOrchestrator.js';
-import { useAdvancedViewport } from '../Layout/ResponsiveLayout.js';
+import { cn } from '../../lib/utils';
+import { LoadingOrchestrator } from '../Loading/LoadingOrchestrator';
+import { useAdvancedViewport } from '../Layout/ResponsiveLayout';
 // Custom hook for navigation analytics and pattern recognition
 function useNavigationAnalytics(routes) {
     const [analytics, setAnalytics] = useState({

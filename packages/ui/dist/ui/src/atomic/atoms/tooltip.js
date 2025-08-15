@@ -3,21 +3,21 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from 'react';
 const tooltipVariants = {
     default: [
-        'bg-hive-background-primary',
-        'border border-hive-border-default',
-        'text-hive-text-primary',
+        'bg-[var(--hive-background-secondary)]',
+        'border border-[var(--hive-border-primary)]',
+        'text-[var(--hive-text-primary)]',
         'shadow-lg'
     ].join(' '),
     dark: [
         'bg-[var(--hive-background-primary)]',
-        'border border-[var(--hive-border-default)]',
-        'text-hive-pearl',
+        'border border-[var(--hive-border-secondary)]',
+        'text-[var(--hive-text-primary)]',
         'shadow-xl'
     ].join(' '),
     light: [
-        'bg-hive-pearl',
-        'border border-hive-border-subtle',
-        'text-[var(--hive-background-primary)]',
+        'bg-[var(--hive-background-tertiary)]',
+        'border border-[var(--hive-border-tertiary)]',
+        'text-[var(--hive-text-secondary)]',
         'shadow-md'
     ].join(' ')
 };
@@ -40,10 +40,10 @@ const arrowClasses = {
 };
 const arrowColors = {
     default: {
-        top: 'border-t-hive-background-primary',
-        bottom: 'border-b-hive-background-primary',
-        left: 'border-l-hive-background-primary',
-        right: 'border-r-hive-background-primary'
+        top: 'border-t-[var(--hive-background-secondary)]',
+        bottom: 'border-b-[var(--hive-background-secondary)]',
+        left: 'border-l-[var(--hive-background-secondary)]',
+        right: 'border-r-[var(--hive-background-secondary)]'
     },
     dark: {
         top: 'border-t-[var(--hive-background-primary)]',
@@ -52,10 +52,10 @@ const arrowColors = {
         right: 'border-r-[var(--hive-background-primary)]'
     },
     light: {
-        top: 'border-t-hive-pearl',
-        bottom: 'border-b-hive-pearl',
-        left: 'border-l-hive-pearl',
-        right: 'border-r-hive-pearl'
+        top: 'border-t-[var(--hive-background-tertiary)]',
+        bottom: 'border-b-[var(--hive-background-tertiary)]',
+        left: 'border-l-[var(--hive-background-tertiary)]',
+        right: 'border-r-[var(--hive-background-tertiary)]'
     }
 };
 export const Tooltip = ({ content, placement = 'top', trigger = 'hover', delay = 200, arrow = true, variant = 'default', size = 'md', disabled = false, children }) => {

@@ -26,7 +26,7 @@ const checkProfanity = (text: string): boolean => {
 // GET /api/spaces/[spaceId]/posts - Get posts for a space
 export async function GET(
   request: NextRequest,
-  { params }: { params: { spaceId: string } }
+  { params }: { params: Promise<{ spaceId: string }> }
 ) {
   try {
     // Get and validate auth token

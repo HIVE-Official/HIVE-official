@@ -8,8 +8,13 @@ import { cn } from "../../lib/utils";
 // Zero hardcoded values - complete semantic token usage
 
 const radioVariants = cva(
-  // Base styles using semantic tokens only
-  "peer aspect-square shrink-0 rounded-full border-2 border-[var(--hive-border-default)] bg-[var(--hive-background-secondary)] transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color-mix(in_srgb,var(--hive-brand-secondary)_30%,transparent)] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:border-[var(--hive-brand-secondary)]",
+  // Hidden native input
+  "peer sr-only"
+);
+
+const radioIndicatorVariants = cva(
+  // Custom radio button styling
+  "relative flex items-center justify-center aspect-square shrink-0 rounded-full border-2 bg-[var(--hive-background-secondary)] transition-all duration-200 cursor-pointer peer-focus-visible:ring-2 peer-focus-visible:ring-[color-mix(in_srgb,var(--hive-brand-secondary)_30%,transparent)] peer-focus-visible:ring-offset-2 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 hover:border-[var(--hive-brand-secondary)] peer-checked:border-[var(--hive-brand-secondary)] peer-checked:bg-[color-mix(in_srgb,var(--hive-brand-secondary)_10%,transparent)]",
   {
     variants: {
       size: {
@@ -20,11 +25,11 @@ const radioVariants = cva(
       },
       
       variant: {
-        default: "border-[var(--hive-border-default)] data-[state=checked]:border-[var(--hive-brand-secondary)]",
-        success: "border-[var(--hive-status-success)] data-[state=checked]:border-[var(--hive-status-success)]",
-        error: "border-[var(--hive-status-error)] data-[state=checked]:border-[var(--hive-status-error)]",
-        warning: "border-[var(--hive-status-warning)] data-[state=checked]:border-[var(--hive-status-warning)]",
-        info: "border-[var(--hive-status-info)] data-[state=checked]:border-[var(--hive-status-info)]",
+        default: "border-[var(--hive-border-default)] peer-checked:border-[var(--hive-brand-secondary)]",
+        success: "border-[var(--hive-status-success)] peer-checked:border-[var(--hive-status-success)]",
+        error: "border-[var(--hive-status-error)] peer-checked:border-[var(--hive-status-error)]",
+        warning: "border-[var(--hive-status-warning)] peer-checked:border-[var(--hive-status-warning)]",
+        info: "border-[var(--hive-status-info)] peer-checked:border-[var(--hive-status-info)]",
       }
     },
     defaultVariants: {
@@ -90,22 +95,31 @@ const Radio = React.forwardRef<HTMLInputElement, RadioProps>(
         <input
           type="radio"
           id={radioId}
-          className={cn(
-            radioVariants({ size, variant }),
-            className
-          )}
+          className={cn(radioVariants(), className)}
           ref={ref}
           checked={checked}
-          data-state={checked ? "checked" : "unchecked"}
           {...props}
         />
         
-        {/* Radio Indicator */}
-        {checked && (
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <RadioIndicator size={size} variant={variant} />
-          </div>
-        )}
+        {/* Custom Radio Visual */}
+        <div className={cn(radioIndicatorVariants({ size, variant }))}>
+          {/* Radio Inner Circle - shows when checked */}
+          <div className={cn(
+            "rounded-full transition-all duration-200",
+            checked ? "opacity-100 scale-100" : "opacity-0 scale-0",
+            // Size based on parent
+            size === "sm" && "h-1.5 w-1.5",
+            size === "default" && "h-2 w-2", 
+            size === "lg" && "h-2.5 w-2.5",
+            size === "xl" && "h-3 w-3",
+            // Color based on variant
+            variant === "default" && "bg-[var(--hive-brand-secondary)]",
+            variant === "success" && "bg-[var(--hive-status-success)]",
+            variant === "error" && "bg-[var(--hive-status-error)]",
+            variant === "warning" && "bg-[var(--hive-status-warning)]",
+            variant === "info" && "bg-[var(--hive-status-info)]"
+          )} />
+        </div>
       </div>
     );
     
@@ -278,14 +292,19 @@ export interface RadioCardProps extends RadioProps {
 
 const RadioCard = React.forwardRef<HTMLInputElement, RadioCardProps>(
   ({ icon, badge, label, description, value, className, ...props }, ref) => {
+    const radioId = React.useId();
+    
     return (
-      <label className={cn(
+      <label 
+        htmlFor={radioId}
+        className={cn(
         "relative flex cursor-pointer rounded-lg border-2 border-[var(--hive-border-default)] bg-[var(--hive-background-secondary)] p-4 transition-all duration-200 hover:border-[var(--hive-border-hover)] hover:bg-[var(--hive-interactive-hover)] has-[:checked]:border-[var(--hive-brand-secondary)] has-[:checked]:bg-[color-mix(in_srgb,var(--hive-brand-secondary)_10%,transparent)]",
         className
       )}>
         <div className="flex items-start space-x-3 w-full">
           <Radio 
             ref={ref} 
+            id={radioId}
             className="mt-0.5" 
             value={value}
             {...props} 
@@ -370,42 +389,10 @@ export const RadioPresets = {
   ),
 };
 
-// Radio Indicator Component
-interface RadioIndicatorProps {
-  size?: VariantProps<typeof radioVariants>["size"];
-  variant?: VariantProps<typeof radioVariants>["variant"];
-}
-
-const RadioIndicator: React.FC<RadioIndicatorProps> = ({ size = "default", variant = "default" }) => {
-  const indicatorSize = {
-    sm: "h-2 w-2",
-    default: "h-2.5 w-2.5",
-    lg: "h-3 w-3",
-    xl: "h-3.5 w-3.5",
-  };
-  
-  const indicatorColor = {
-    default: "bg-[var(--hive-brand-secondary)]",
-    success: "bg-[var(--hive-status-success)]",
-    error: "bg-[var(--hive-status-error)]",
-    warning: "bg-[var(--hive-status-warning)]",
-    info: "bg-[var(--hive-status-info)]",
-  };
-  
-  return (
-    <div 
-      className={cn(
-        "rounded-full",
-        indicatorSize[size || "default"],
-        indicatorColor[variant || "default"]
-      )}
-    />
-  );
-};
-
 export { 
   Radio, 
   RadioGroup,
   RadioCard, 
-  radioVariants 
+  radioVariants,
+  radioIndicatorVariants 
 };

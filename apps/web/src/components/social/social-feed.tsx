@@ -500,7 +500,7 @@ export function SocialFeed({
               </div>
             ) : (
               <div className="text-center py-8">
-                <p className="text-hive-text-secondary">You've reached the end!</p>
+                <p className="text-hive-text-secondary">You&apos;ve reached the end!</p>
                 <Button
                   variant="outline"
                   size="sm"

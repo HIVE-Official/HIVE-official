@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { ErrorBoundary } from '../../../../../components/error-boundary';
 import { PageContainer } from "@/components/temp-stubs";
@@ -8,9 +8,9 @@ import { PageContainer } from "@/components/temp-stubs";
 import { BarChart3, ArrowLeft } from 'lucide-react';
 
 interface SpaceAnalyticsPageProps {
-  params: {
+  params: Promise<{
     spaceId: string;
-  };
+  }>;
 }
 
 interface SpaceAnalytics {
@@ -62,39 +62,39 @@ interface SpaceAnalytics {
 
 export default function SpaceAnalyticsPage({ params }: SpaceAnalyticsPageProps) {
   const router = useRouter();
-  const spaceId = params.spaceId;
-  
+  const [spaceId, setSpaceId] = useState<string>('');
   const [analytics, setAnalytics] = useState<SpaceAnalytics | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [_isLeader, _setIsLeader] = useState(false);
 
   useEffect(() => {
-    if (spaceId) {
-      loadAnalytics();
-    }
-  }, [spaceId, loadAnalytics]);
+    // Resolve params Promise
+    const resolveParams = async () => {
+      const resolvedParams = await params;
+      setSpaceId(resolvedParams.spaceId);
+    };
+    resolveParams();
+  }, [params]);
+  const [error, setError] = useState<string | null>(null);
+  // TODO: For leader-specific analytics features
 
-  const loadAnalytics = async () => {
+  const loadAnalytics = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
 
       const response = await fetch(`/api/spaces/${spaceId}/analytics?timeRange=30d`);
-      const data = await response.json();
+      const data = await response.json() as { success?: boolean; analytics?: SpaceAnalytics; message?: string };
 
       if (!response.ok) {
         if (response.status === 403) {
           setError('You do not have permission to view analytics for this space.');
-          _setIsLeader(false);
           return;
         }
         throw new Error(data.message || 'Failed to load analytics');
       }
 
       if (data.success && data.analytics) {
-        setAnalytics(data.analytics);
-        _setIsLeader(true);
+        setAnalytics(data.analytics!);
       } else {
         setError('Analytics data not available');
       }
@@ -104,43 +104,51 @@ export default function SpaceAnalyticsPage({ params }: SpaceAnalyticsPageProps) 
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [spaceId]);
+
+  useEffect(() => {
+    if (spaceId) {
+      loadAnalytics();
+    }
+  }, [spaceId, loadAnalytics]);
 
   const handleRefresh = async () => {
     await loadAnalytics();
   };
 
-  const _handleExportData = () => {
-    if (!analytics) return;
-    
-    // Create CSV export of analytics data
-    const csvData = [
-      ['Metric', 'Value'],
-      ['Total Members', analytics.membershipData.totalMembers],
-      ['Active Members', analytics.membershipData.activeMembers],
-      ['New Members (30d)', analytics.membershipData.newMembers],
-      ['Total Posts', analytics.contentData.totalPosts],
-      ['Posts This Week', analytics.contentData.postsThisWeek],
-      ['Total Events', analytics.eventData.totalEvents],
-      ['Upcoming Events', analytics.eventData.upcomingEvents],
-      ['Overall Health Score', analytics.healthMetrics.overallHealth],
-    ];
-    
-    const csvContent = csvData.map(row => row.join(',')).join('\n');
-    const blob = new Blob([csvContent], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${analytics.spaceName}-analytics-${new Date().toISOString().split('T')[0]}.csv`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    window.URL.revokeObjectURL(url);
-  };
+  // TODO: For future export functionality
+  // const handleExportData = () => {
+  //   if (!analytics) return;
+  //   
+  //   // Create CSV export of analytics data
+  //   const csvData = [
+  //     ['Metric', 'Value'],
+  //     ['Total Members', analytics.membershipData.totalMembers],
+  //     ['Active Members', analytics.membershipData.activeMembers],
+  //     ['New Members (30d)', analytics.membershipData.newMembers],
+  //     ['Total Posts', analytics.contentData.totalPosts],
+  //     ['Posts This Week', analytics.contentData.postsThisWeek],
+  //     ['Total Events', analytics.eventData.totalEvents],
+  //     ['Upcoming Events', analytics.eventData.upcomingEvents],
+  //     ['Overall Health Score', analytics.healthMetrics.overallHealth],
+  //   ];
+  //   
+  //   const csvContent = csvData.map(row => row.join(',').join('\n');
+  //   const blob = new Blob([csvContent], { type: 'text/csv' });
+  //   const url = window.URL.createObjectURL(blob);
+  //   const a = document.createElement('a');
+  //   a.href = url;
+  //   a.download = `${analytics.spaceName}-analytics-${new Date().toISOString().split('T')[0]}.csv`;
+  //   document.body.appendChild(a);
+  //   a.click();
+  //   document.body.removeChild(a);
+  //   window.URL.revokeObjectURL(url);
+  // };
 
-  const _handleUpdateSettings = () => {
-    router.push(`/spaces/${spaceId}/settings`);
-  };
+  // TODO: For future settings integration
+  // const handleUpdateSettings = () => {
+  //   router.push(`/spaces/${spaceId}/settings`);
+  // };
 
   if (isLoading) {
     return (

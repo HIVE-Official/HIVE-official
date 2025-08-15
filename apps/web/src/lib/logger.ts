@@ -47,7 +47,10 @@ interface LogContext {
   fileData?: any;
   notificationData?: any;
   privacyData?: any;
+  postId?: string;
   profileData?: any;
+  normalizedHandle?: string;
+  ghostMode?: boolean;
   activityData?: any;
   completionData?: any;
   avatarData?: any;
@@ -55,12 +58,25 @@ interface LogContext {
   memberData?: any;
   postData?: any;
   widgetData?: any;
+  coordinationType?: string;
   activationData?: any;
   joinData?: any;
   leaveData?: any;
   migrationData?: any;
   seedData?: any;
   socialProofData?: any;
+  reportId?: string;
+  ruleId?: string;
+  workflowId?: string;
+  reason?: string;
+  workflowName?: string;
+  updatedFields?: any;
+  deletedAt?: string;
+  reporterId?: string;
+  totalSpaces?: number;
+  search?: string;
+  membershipCount?: number;
+  previousRole?: string;
   testData?: any;
   updateData?: any;
   deploymentData?: any;
@@ -148,6 +164,27 @@ interface LogContext {
   // Additional error boundary and system properties
   errorBoundary?: string;
   spaceContext?: string;
+  // Additional properties for profile analytics
+  includeInsights?: boolean;
+  analyticsKeys?: string[];
+  connectionRequest?: any;
+  updatedRequest?: any;
+  connection?: any;
+  // Firebase real-time service properties
+  messageId?: string;
+  channel?: string;
+  channels?: string | string[];
+  userIds?: string | string[];
+  // Feature flag service properties
+  flagId?: string;
+  flagCount?: number;
+  enabled?: boolean;
+  category?: string;
+  // Additional missing properties from API routes
+  clientIP?: string;
+  limit?: number;
+  detected?: string;
+  userAgent?: string;
 }
 
 interface LogEntry {

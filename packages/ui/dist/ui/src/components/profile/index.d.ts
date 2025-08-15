@@ -7,9 +7,12 @@ export { CampusConnections } from './campus-connections';
 export { HiveLabSection } from './hive-lab-section';
 export { ProfileStats } from './profile-stats';
 export { adaptSmartCalendarProps } from './calendar-data-adapter';
+export { EnhancedProfileDashboard } from './enhanced-profile-dashboard';
 export * from './bento-grid';
 export { PriorityCoordinationWidget } from './widgets/priority-coordination-widget';
 export { PrivacyControlWidget } from './widgets/privacy-control-widget';
 export { PersonalToolsPreviewWidget } from './widgets/personal-tools-preview-widget';
+export { ProfileSettingsWidget } from './widgets/profile-settings-widget';
+export { ProfileAnalyticsWidget } from './widgets/profile-analytics-widget';
 export type * from './types';
 //# sourceMappingURL=index.d.ts.map

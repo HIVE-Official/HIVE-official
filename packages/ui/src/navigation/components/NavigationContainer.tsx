@@ -35,7 +35,6 @@ interface NavigationContainerProps {
 interface NavigationLayoutProps {
   children: React.ReactNode;
   navigationState: ReturnType<typeof useNavigationState>['state'];
-  navigationLayout: ReturnType<typeof useNavigationState>['layout'];
 }
 
 // ============================================================================
@@ -44,8 +43,7 @@ interface NavigationLayoutProps {
 
 const NavigationLayout = memo<NavigationLayoutProps>(({ 
   children, 
-  navigationState, 
-  navigationLayout 
+  navigationState
 }) => {
   const { mode } = navigationState;
   
@@ -111,7 +109,7 @@ export const NavigationContainer = memo<NavigationContainerProps>(({
     enableDebug: process.env.NODE_ENV === 'development'
   });
   
-  const { state, layout, items, actions } = navigationState;
+  const { state, items, actions } = navigationState;
   
   // Local state for tablet drawer
   const [tabletDrawerOpen, setTabletDrawerOpen] = useState(false);
@@ -151,7 +149,6 @@ export const NavigationContainer = memo<NavigationContainerProps>(({
         return (
           <MobileNavigation
             items={items}
-            user={user}
             onNavigate={handleNavigate}
             testId="mobile-navigation"
           />
@@ -215,7 +212,6 @@ export const NavigationContainer = memo<NavigationContainerProps>(({
         return (
           <MobileNavigation
             items={items}
-            user={user}
             onNavigate={handleNavigate}
             testId="fallback-navigation"
           />
@@ -230,7 +226,6 @@ export const NavigationContainer = memo<NavigationContainerProps>(({
   return (
     <NavigationLayout
       navigationState={state}
-      navigationLayout={layout}
     >
       <div 
         className={cn('relative', className)}
@@ -288,7 +283,6 @@ export const withNavigation = <P extends object>(
     return (
       <NavigationLayout
         navigationState={navigationState.state}
-        navigationLayout={navigationState.layout}
       >
         <NavigationContainer
           user={user}

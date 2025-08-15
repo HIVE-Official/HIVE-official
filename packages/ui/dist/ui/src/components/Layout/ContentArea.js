@@ -1,8 +1,8 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useRef, useEffect, useState, useCallback, useMemo } from 'react';
-import { cn } from '../../lib/utils.js';
-import { useAdvancedViewport } from './ResponsiveLayout.js';
+import { cn } from '../../lib/utils';
+import { useAdvancedViewport } from './ResponsiveLayout';
 // Custom hook for intelligent scroll management
 function useSmartScroll(containerRef, options) {
     const [scrollPosition, setScrollPosition] = useState(0);

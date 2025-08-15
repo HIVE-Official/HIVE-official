@@ -5,14 +5,14 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
  * Deploy HiveLab tools to specific spaces with permissions and configuration
  */
 import { useState, useCallback, useMemo, useEffect } from 'react';
-import { HiveCard } from '../hive-card.js';
-import { Button } from '../ui/button.js';
-import { Input } from '../ui/input.js';
-import { Label } from '../ui/label.js';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select.js';
-import { Checkbox } from '../ui/checkbox.js';
-import { LiveToolRuntime } from '../live-tool-runtime.js';
-import { apiClient, apiUtils } from '../../lib/api-client.js';
+import { HiveCard } from '../hive-card';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { Label } from '../ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import { Checkbox } from '../ui/checkbox';
+import { LiveToolRuntime } from '../live-tool-runtime';
+import { apiClient, apiUtils } from '../../lib/api-client';
 import { Users, Lock, Globe, Eye, Settings, Play, Share2, AlertCircle, CheckCircle, Clock, Zap, ArrowLeft } from 'lucide-react';
 export const SpaceToolDeployment = ({ tool, availableSpaces: propAvailableSpaces, onDeploy, onCancel, isDeploying = false }) => {
     const [selectedSpaceId, setSelectedSpaceId] = useState('');

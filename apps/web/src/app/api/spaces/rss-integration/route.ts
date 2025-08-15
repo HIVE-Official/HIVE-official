@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { getAuth } from 'firebase-admin/auth';
 import { getAuthTokenFromRequest } from '@/lib/auth';
-import { logger } from "@/lib/logger";
+import { logger } from "@/lib/structured-logger";
 import { ApiResponseHelper, HttpStatus } from "@/lib/api-response-types";
 import { withAuth } from '@/lib/api-auth-middleware';
 
@@ -80,7 +80,7 @@ async function parseRSSFeed(url: string): Promise<any[]> {
 }
 
 function extractXMLTag(xml: string, tag: string): string | undefined {
-  const regex = new RegExp(`<${tag}[^>]*>(.*?)<\/${tag}>`, 'is');
+  const regex = new RegExp(`<${tag}[^>]*>(.*?)</${tag}>`, 'is');
   const match = xml.match(regex);
   return match ? match[1] : undefined;
 }
@@ -179,8 +179,9 @@ export const GET = withAuth(async (
 ) => {
   try {
     // Check if user is admin
-    const userDoc = await dbAdmin.collection('users').doc(authContext.user.uid).get();
-    if (!userDoc.exists || !userDoc.data()?.isAdmin) {
+    const userDoc = await dbAdmin.collection('users').doc(authContext.userId).get();
+    const userData = userDoc.data();
+    if (!userDoc.exists || !userData?.isAdmin) {
       return NextResponse.json(ApiResponseHelper.error("Admin access required", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
@@ -209,7 +210,7 @@ export const GET = withAuth(async (
       logs,
       summary: {
         totalFeeds: feeds.length,
-        activeFeeds: feeds.filter(f => f.isActive).length,
+        activeFeeds: feeds.filter((f: any) => f.isActive).length,
         lastSync: logs[0]?.timestamp || null,
       }
     }, { status: HttpStatus.OK });
@@ -230,8 +231,9 @@ export const POST = withAuth(async (
 ) => {
   try {
     // Check if user is admin
-    const userDoc = await dbAdmin.collection('users').doc(authContext.user.uid).get();
-    if (!userDoc.exists || !userDoc.data()?.isAdmin) {
+    const userDoc = await dbAdmin.collection('users').doc(authContext.userId).get();
+    const userData = userDoc.data();
+    if (!userDoc.exists || !userData?.isAdmin) {
       return NextResponse.json(ApiResponseHelper.error("Admin access required", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
@@ -251,7 +253,7 @@ export const POST = withAuth(async (
     // Create RSS feed configuration
     const feedData = {
       ...validatedData,
-      createdBy: authContext.user.uid,
+      createdBy: authContext.userId,
       createdAt: new Date(),
       lastSyncAt: null,
       lastSyncStatus: 'pending',
@@ -292,8 +294,9 @@ export const PUT = withAuth(async (
 ) => {
   try {
     // Check if user is admin
-    const userDoc = await dbAdmin.collection('users').doc(authContext.user.uid).get();
-    if (!userDoc.exists || !userDoc.data()?.isAdmin) {
+    const userDoc = await dbAdmin.collection('users').doc(authContext.userId).get();
+    const userData = userDoc.data();
+    if (!userDoc.exists || !userData?.isAdmin) {
       return NextResponse.json(ApiResponseHelper.error("Admin access required", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
@@ -364,7 +367,7 @@ export const PUT = withAuth(async (
                 eventsUpdated++;
               } else if (feed.autoCreate) {
                 // Create new event
-                const eventData = convertRSSItemToEvent(item, spaceId, authContext.user.uid);
+                const eventData = convertRSSItemToEvent(item, spaceId, authContext.userId);
                 
                 await dbAdmin
                   .collection('spaces')
@@ -402,7 +405,7 @@ export const PUT = withAuth(async (
           eventsCreated,
           eventsUpdated,
           spacesMatched: Object.keys(spaceMatches).filter(spaceId => spaceMatches[spaceId].length > 0).length,
-          syncTriggeredBy: authContext.user.uid,
+          syncTriggeredBy: authContext.userId,
         });
 
         syncResults.push({
@@ -430,7 +433,7 @@ export const PUT = withAuth(async (
           timestamp: new Date(),
           status: 'error',
           error: feedError instanceof Error ? feedError.message : 'Unknown error',
-          syncTriggeredBy: authContext.user.uid,
+          syncTriggeredBy: authContext.userId,
         });
 
         syncResults.push({

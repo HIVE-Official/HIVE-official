@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getCurrentUser } from '../../../../../lib/auth-server';
+import { getCurrentUser as _getCurrentUser } from '../../../../../lib/auth-server';
 import { logger } from "@/lib/logger";
 import { withAuth } from '@/lib/api-auth-middleware';
 
@@ -196,7 +196,7 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
     const conflicts = detectConflicts(events, newEvent);
 
     // Generate optimal time suggestions if requested
-    let suggestions = [];
+    let suggestions: any[] = [];
     if (suggestTimes) {
       const duration = newEvent?.duration || 60; // Default 60 minutes
       suggestions = suggestOptimalTimes(events, duration);

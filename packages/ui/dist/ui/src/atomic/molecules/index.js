@@ -1,27 +1,27 @@
 // HIVE Molecular Components - Combinations of Atoms
 // Built using atomic components with HIVE design tokens
 // === IMPLEMENTED MOLECULES ===
-export * from './form-field.js';
-export * from './search-bar.js';
-export * from './card.js';
+export * from './form-field';
+export * from './search-bar';
+export * from './card';
 // ButtonGroup and InputGroup are now part of enhanced atoms
-export * from './campus-identity-header.js';
-export * from './campus-spaces-card.js';
-export * from './campus-activity-feed.js';
-export * from './campus-builder-tools.js';
-export * from './email-input.js';
-export * from './avatar-card.js';
-export * from './navigation-variants.js';
-export * from './hive-navigation.js';
-export * from './user-card.js';
-export * from './profile-header.js';
+export * from './campus-identity-header';
+export * from './campus-spaces-card';
+export * from './campus-activity-feed';
+export * from './campus-builder-tools';
+export * from './email-input';
+export * from './avatar-card';
+export * from './navigation-variants';
+export * from './hive-navigation';
+export * from './user-card';
+export * from './profile-header';
 // === HIVE SPACES SYSTEM ===
-export * from './post-board.js';
+export * from './post-board';
 // === HIVE TOOLS SYSTEM ===
-export * from './planted-tool-widget.js';
+export * from './planted-tool-widget';
 // === HIVE FEED & RITUALS SYSTEM ===
-export * from './ritual-action-button.js';
-export * from './milestone-celebration.js';
+export * from './ritual-action-button';
+export * from './milestone-celebration';
 // === PLANNED MOLECULES ===
 // These will be implemented as part of the atomic design system completion
 // export * from './stat-card';

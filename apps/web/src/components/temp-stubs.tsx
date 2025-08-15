@@ -38,8 +38,8 @@ export function Alert({ children, className = "" }: { children: React.ReactNode;
   );
 }
 
-export function AlertDescription({ children }: { children: React.ReactNode }) {
-  return <div className="text-sm">{children}</div>;
+export function AlertDescription({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+  return <div className={`text-sm ${className}`}>{children}</div>;
 }
 
 // Header components stubs
@@ -77,20 +77,62 @@ export function DashboardPageHeader() {
 }
 
 // Modal component stubs
+export function HiveModal({ 
+  children, 
+  open, 
+  isOpen, 
+  onOpenChange, 
+  onClose, 
+  size,
+  title,
+  showCloseButton 
+}: { 
+  children: React.ReactNode; 
+  open?: boolean; 
+  isOpen?: boolean;
+  onOpenChange?: () => void; 
+  onClose?: () => void;
+  size?: string;
+  title?: string;
+  showCloseButton?: boolean;
+}) {
+  const modalIsOpen = open ?? isOpen ?? false;
+  const handleClose = onOpenChange || onClose || (() => {});
+  
+  if (!modalIsOpen) return null;
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={handleClose}>
+      <div className="bg-white rounded-lg shadow-lg max-w-md w-full mx-4" onClick={(e) => e.stopPropagation()}>
+        {title && (
+          <div className="p-4 border-b border-gray-200 flex items-center justify-between">
+            <h2 className="text-lg font-semibold">{title}</h2>
+            {showCloseButton && (
+              <button onClick={handleClose} className="text-gray-500 hover:text-gray-700">
+                ×
+              </button>
+            )}
+          </div>
+        )}
+        {children}
+      </div>
+    </div>
+  );
+}
+
 export function HiveModalContent({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return <div className={`p-6 ${className}`}>{children}</div>;
 }
 
-export function HiveModalHeader({ children }: { children: React.ReactNode }) {
-  return <div className="mb-4">{children}</div>;
+export function HiveModalHeader({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+  return <div className={`mb-4 ${className}`}>{children}</div>;
 }
 
-export function HiveModalTitle({ children }: { children: React.ReactNode }) {
-  return <h2 className="text-lg font-semibold">{children}</h2>;
+export function HiveModalTitle({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+  return <h2 className={`text-lg font-semibold ${className}`}>{children}</h2>;
 }
 
-export function HiveModalFooter({ children }: { children: React.ReactNode }) {
-  return <div className="mt-6 flex gap-3">{children}</div>;
+export function HiveModalFooter({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+  return <div className={`mt-6 flex gap-3 ${className}`}>{children}</div>;
 }
 
 // Hook stubs

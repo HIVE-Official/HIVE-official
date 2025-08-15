@@ -3,8 +3,8 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cva } from 'class-variance-authority';
-import { cn } from '../../lib/utils.js';
-import { motionDurations } from '../../motion/hive-motion-system.js';
+import { cn } from '../../lib/utils';
+import { motionDurations } from '../../motion/hive-motion-system';
 import { Users, Search, MoreHorizontal, UserPlus, UserMinus, Crown, Shield, Star, MessageCircle, Settings, Eye, Calendar, Heart, Grid, List, UserCheck, UserX, Globe, Github, Twitter, Instagram, Linkedin } from 'lucide-react';
 // HIVE Members Surface - Community Member Management
 // Member directory with profiles, roles, and social features

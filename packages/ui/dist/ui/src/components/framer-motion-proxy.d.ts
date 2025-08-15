@@ -11,6 +11,7 @@ export declare const motion: {
     h3: (props: any) => import("react/jsx-runtime").JSX.Element;
     h4: (props: any) => import("react/jsx-runtime").JSX.Element;
     p: (props: any) => import("react/jsx-runtime").JSX.Element;
+    header: (props: any) => import("react/jsx-runtime").JSX.Element;
 };
 export declare const AnimatePresence: React.FC<{
     children: React.ReactNode;

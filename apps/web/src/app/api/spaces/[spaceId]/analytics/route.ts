@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { logger } from "@/lib/logger";
+import { logger } from "@/lib/structured-logger";
 import { ApiResponseHelper, HttpStatus } from "@/lib/api-response-types";
 import { withAuth } from '@/lib/api-auth-middleware';
 import { dbAdmin } from '@/lib/firebase-admin';
@@ -91,7 +91,7 @@ export const GET = withAuth(async (request: NextRequest, authContext, { params }
         metadata: {
           timeRange,
           generatedAt: new Date().toISOString(),
-          developmentMode: true
+          // SECURITY: Development mode removed for production safety
         }
       });
     }
@@ -141,7 +141,7 @@ async function verifyAnalyticsAccess(userId: string, spaceId: string): Promise<b
     // Allow access for moderators, admins, and owners
     return ['moderator', 'admin', 'owner'].includes(role);
   } catch (error) {
-    logger.error('Error verifying analytics access:', error);
+    logger.error('Error verifying analytics access:', {}, error as Error);
     return false;
   }
 }

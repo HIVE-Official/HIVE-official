@@ -5,7 +5,8 @@ import { useRouter } from "next/navigation";
 import Image from 'next/image';
 import { cn } from "@/lib/utils";
 import { useUnifiedAuth } from "@hive/ui";
-import { useOnboardingBridge } from "@/components/temp-stubs";
+// TEMPORARY: Using local implementation due to export resolution issue
+import { useOnboardingBridge } from "@/lib/onboarding-bridge-temp";
 import type { OnboardingData } from "@hive/ui";
 import { motion } from "framer-motion";
 import { 
@@ -50,7 +51,8 @@ function OnboardingProgress({ value, isComplete, className }: {
   return (
     <HiveProgress
       value={value}
-      variant={isComplete ? "gradient" : "default"}
+      variant="bar"
+      status={isComplete ? "success" : "default"}
       size="lg"
       showValue={false}
       className={cn("w-full", className)}
@@ -377,7 +379,44 @@ export function HiveOnboardingWizard() {
       }, 1000);
     } catch (error) {
       console.error("Onboarding error:", error);
-      setError(error instanceof Error ? error.message : "Something went wrong");
+      
+      // Enhanced error handling with user-friendly messages
+      let userFriendlyError = "Something went wrong during setup.";
+      
+      if (error instanceof Error) {
+        const errorMessage = error.message;
+        
+        if (errorMessage.includes('handle') && errorMessage.includes('taken')) {
+          userFriendlyError = "This handle is already taken. Please choose a different one.";
+        } else if (errorMessage.includes('handle') && errorMessage.includes('invalid')) {
+          userFriendlyError = "Invalid handle format. Please use only letters, numbers, periods, hyphens, and underscores.";
+        } else if (errorMessage.includes('network') || errorMessage.includes('fetch')) {
+          userFriendlyError = "Network error. Please check your connection and try again.";
+        } else if (errorMessage.includes('consent') || errorMessage.includes('terms')) {
+          userFriendlyError = "Please accept the terms and privacy policy to continue.";
+        } else if (errorMessage.includes('authentication') || errorMessage.includes('token')) {
+          userFriendlyError = "Session expired. Please sign in again.";
+          // Redirect to login after showing error
+          setTimeout(() => {
+            router.push('/schools');
+          }, 3000);
+        } else if (errorMessage.includes('email') && errorMessage.includes('duplicate')) {
+          userFriendlyError = "An account with this email already exists.";
+        } else if (errorMessage.includes('server') || errorMessage.includes('500')) {
+          userFriendlyError = "Server error. Please try again in a few moments.";
+        } else if (errorMessage.includes('required')) {
+          userFriendlyError = "Please fill in all required fields.";
+        } else {
+          userFriendlyError = errorMessage;
+        }
+      }
+      
+      setError(userFriendlyError);
+      
+      // Auto-clear error after 8 seconds
+      setTimeout(() => {
+        setError(null);
+      }, 8000);
     } finally {
       setIsSubmitting(false);
     }

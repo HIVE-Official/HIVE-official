@@ -1,62 +1,62 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from 'react';
-import { cn } from '../../lib/utils.js';
+import { cn } from '../../lib/utils';
 import { X } from 'lucide-react';
 const tagColors = {
     default: {
-        filled: 'bg-gray-800 text-gray-300 border-[var(--hive-border-default)]',
-        outline: 'bg-transparent text-gray-300 border-[var(--hive-border-default)]',
-        ghost: 'bg-gray-700 text-gray-300 border-transparent',
-        gradient: 'bg-gradient-to-r from-gray-800 to-gray-700 text-gray-300 border-transparent'
+        filled: 'bg-[var(--hive-background-secondary)] text-[var(--hive-text-primary)] border-[var(--hive-border-default)]',
+        outline: 'bg-transparent text-[var(--hive-text-primary)] border-[var(--hive-border-default)]',
+        ghost: 'bg-[var(--hive-background-tertiary)] text-[var(--hive-text-primary)] border-transparent',
+        gradient: 'bg-gradient-to-r from-[var(--hive-background-secondary)] to-[var(--hive-background-tertiary)] text-[var(--hive-text-primary)] border-transparent'
     },
     primary: {
-        filled: 'bg-blue-600 text-[var(--hive-text-primary)] border-blue-600',
-        outline: 'bg-transparent text-blue-400 border-blue-500',
-        ghost: 'bg-blue-500/10 text-blue-400 border-transparent',
-        gradient: 'bg-gradient-to-r from-blue-600 to-blue-500 text-[var(--hive-text-primary)] border-transparent'
+        filled: 'bg-[var(--hive-brand-secondary)] text-[var(--hive-background-primary)] border-[var(--hive-brand-secondary)]',
+        outline: 'bg-transparent text-[var(--hive-brand-secondary)] border-[var(--hive-brand-secondary)]',
+        ghost: 'bg-[color-mix(in_srgb,var(--hive-brand-secondary)_10%,transparent)] text-[var(--hive-brand-secondary)] border-transparent',
+        gradient: 'bg-gradient-to-r from-[var(--hive-brand-secondary)] to-[color-mix(in_srgb,var(--hive-brand-secondary)_80%,var(--hive-brand-primary))] text-[var(--hive-background-primary)] border-transparent'
     },
     success: {
-        filled: 'bg-green-500 text-[var(--hive-text-primary)] border-green-500',
-        outline: 'bg-transparent text-green-400 border-green-500',
-        ghost: 'bg-green-500/10 text-green-400 border-transparent',
-        gradient: 'bg-gradient-to-r from-green-500 to-green-400 text-[var(--hive-text-primary)] border-transparent'
+        filled: 'bg-[var(--hive-status-success)] text-[var(--hive-background-primary)] border-[var(--hive-status-success)]',
+        outline: 'bg-transparent text-[var(--hive-status-success)] border-[var(--hive-status-success)]',
+        ghost: 'bg-[color-mix(in_srgb,var(--hive-status-success)_10%,transparent)] text-[var(--hive-status-success)] border-transparent',
+        gradient: 'bg-gradient-to-r from-[var(--hive-status-success)] to-[color-mix(in_srgb,var(--hive-status-success)_80%,transparent)] text-[var(--hive-background-primary)] border-transparent'
     },
     warning: {
-        filled: 'bg-yellow-500 text-[var(--hive-background-primary)] border-yellow-500',
-        outline: 'bg-transparent text-yellow-400 border-yellow-500',
-        ghost: 'bg-yellow-500/10 text-yellow-400 border-transparent',
-        gradient: 'bg-gradient-to-r from-yellow-500 to-orange-400 text-[var(--hive-background-primary)] border-transparent'
+        filled: 'bg-[var(--hive-status-warning)] text-[var(--hive-background-primary)] border-[var(--hive-status-warning)]',
+        outline: 'bg-transparent text-[var(--hive-status-warning)] border-[var(--hive-status-warning)]',
+        ghost: 'bg-[color-mix(in_srgb,var(--hive-status-warning)_10%,transparent)] text-[var(--hive-status-warning)] border-transparent',
+        gradient: 'bg-gradient-to-r from-[var(--hive-status-warning)] to-[color-mix(in_srgb,var(--hive-status-warning)_80%,transparent)] text-[var(--hive-background-primary)] border-transparent'
     },
     error: {
-        filled: 'bg-red-500 text-[var(--hive-text-primary)] border-red-500',
-        outline: 'bg-transparent text-red-400 border-red-500',
-        ghost: 'bg-red-500/10 text-red-400 border-transparent',
-        gradient: 'bg-gradient-to-r from-red-500 to-red-400 text-[var(--hive-text-primary)] border-transparent'
+        filled: 'bg-[var(--hive-status-error)] text-[var(--hive-background-primary)] border-[var(--hive-status-error)]',
+        outline: 'bg-transparent text-[var(--hive-status-error)] border-[var(--hive-status-error)]',
+        ghost: 'bg-[color-mix(in_srgb,var(--hive-status-error)_10%,transparent)] text-[var(--hive-status-error)] border-transparent',
+        gradient: 'bg-gradient-to-r from-[var(--hive-status-error)] to-[color-mix(in_srgb,var(--hive-status-error)_80%,transparent)] text-[var(--hive-background-primary)] border-transparent'
     },
     gold: {
-        filled: 'bg-yellow-500 text-[var(--hive-background-primary)] border-yellow-500',
-        outline: 'bg-transparent text-yellow-400 border-yellow-500',
-        ghost: 'bg-yellow-500/10 text-yellow-400 border-transparent',
-        gradient: 'bg-gradient-to-r from-yellow-500 to-yellow-300 text-[var(--hive-background-primary)] border-transparent'
+        filled: 'bg-[var(--hive-brand-secondary)] text-[var(--hive-background-primary)] border-[var(--hive-brand-secondary)]',
+        outline: 'bg-transparent text-[var(--hive-brand-secondary)] border-[var(--hive-brand-secondary)]',
+        ghost: 'bg-[color-mix(in_srgb,var(--hive-brand-secondary)_10%,transparent)] text-[var(--hive-brand-secondary)] border-transparent',
+        gradient: 'bg-gradient-to-r from-[var(--hive-brand-secondary)] to-[color-mix(in_srgb,var(--hive-brand-secondary)_60%,var(--hive-brand-primary))] text-[var(--hive-background-primary)] border-transparent'
     },
     ruby: {
-        filled: 'bg-red-500 text-[var(--hive-text-primary)] border-red-500',
-        outline: 'bg-transparent text-red-400 border-red-500',
-        ghost: 'bg-red-500/10 text-red-400 border-transparent',
-        gradient: 'bg-gradient-to-r from-red-500 to-pink-400 text-[var(--hive-text-primary)] border-transparent'
+        filled: 'bg-[var(--hive-status-error)] text-[var(--hive-background-primary)] border-[var(--hive-status-error)]',
+        outline: 'bg-transparent text-[var(--hive-status-error)] border-[var(--hive-status-error)]',
+        ghost: 'bg-[color-mix(in_srgb,var(--hive-status-error)_10%,transparent)] text-[var(--hive-status-error)] border-transparent',
+        gradient: 'bg-gradient-to-r from-[var(--hive-status-error)] to-[color-mix(in_srgb,var(--hive-status-error)_70%,var(--hive-status-warning))] text-[var(--hive-background-primary)] border-transparent'
     },
     emerald: {
-        filled: 'bg-green-500 text-[var(--hive-text-primary)] border-green-500',
-        outline: 'bg-transparent text-green-400 border-green-500',
-        ghost: 'bg-green-500/10 text-green-400 border-transparent',
-        gradient: 'bg-gradient-to-r from-green-500 to-teal-400 text-[var(--hive-text-primary)] border-transparent'
+        filled: 'bg-[var(--hive-status-success)] text-[var(--hive-background-primary)] border-[var(--hive-status-success)]',
+        outline: 'bg-transparent text-[var(--hive-status-success)] border-[var(--hive-status-success)]',
+        ghost: 'bg-[color-mix(in_srgb,var(--hive-status-success)_10%,transparent)] text-[var(--hive-status-success)] border-transparent',
+        gradient: 'bg-gradient-to-r from-[var(--hive-status-success)] to-[color-mix(in_srgb,var(--hive-status-success)_70%,var(--hive-status-info))] text-[var(--hive-background-primary)] border-transparent'
     },
     sapphire: {
-        filled: 'bg-blue-500 text-[var(--hive-text-primary)] border-blue-500',
-        outline: 'bg-transparent text-blue-400 border-blue-500',
-        ghost: 'bg-blue-500/10 text-blue-400 border-transparent',
-        gradient: 'bg-gradient-to-r from-blue-500 to-blue-400 text-[var(--hive-text-primary)] border-transparent'
+        filled: 'bg-[var(--hive-status-info)] text-[var(--hive-background-primary)] border-[var(--hive-status-info)]',
+        outline: 'bg-transparent text-[var(--hive-status-info)] border-[var(--hive-status-info)]',
+        ghost: 'bg-[color-mix(in_srgb,var(--hive-status-info)_10%,transparent)] text-[var(--hive-status-info)] border-transparent',
+        gradient: 'bg-gradient-to-r from-[var(--hive-status-info)] to-[color-mix(in_srgb,var(--hive-status-info)_80%,transparent)] text-[var(--hive-background-primary)] border-transparent'
     }
 };
 const tagSizes = {
@@ -111,7 +111,7 @@ export const Tag = React.forwardRef(({ variant = 'default', size = 'md', color =
         interactive && !disabled && [
             'focus:outline-none',
             'focus:ring-2',
-            'focus:ring-blue-400/20',
+            'focus:ring-[color-mix(in_srgb,var(--hive-brand-secondary)_30%,transparent)]',
             'focus:ring-offset-2'
         ].join(' ')
     ].filter(Boolean).join(' ');
@@ -122,7 +122,7 @@ export const Tag = React.forwardRef(({ variant = 'default', size = 'md', color =
                 e.preventDefault();
                 onClick?.(e);
             }
-        } : undefined, ...props, children: [leftIcon && (_jsx("span", { className: cn('flex-shrink-0', iconSize), children: leftIcon })), _jsx("span", { className: "truncate", children: children }), rightIcon && !removable && (_jsx("span", { className: cn('flex-shrink-0', iconSize), children: rightIcon })), removable && (_jsx("button", { type: "button", onClick: handleRemove, disabled: disabled, className: cn('flex-shrink-0 rounded-full', 'transition-all duration-200 ease-out', 'hover:bg-[var(--hive-background-primary)]/10 dark:hover:bg-[var(--hive-text-primary)]/10', 'focus:outline-none focus:bg-[var(--hive-background-primary)]/10 dark:focus:bg-[var(--hive-text-primary)]/10', 'active:scale-90', removeButtonSize, disabled && 'cursor-not-allowed opacity-50'), "aria-label": "Remove tag", children: _jsx(X, { className: "w-full h-full" }) }))] }));
+        } : undefined, ...props, children: [leftIcon && (_jsx("span", { className: cn('flex-shrink-0', iconSize), children: leftIcon })), _jsx("span", { className: "truncate", children: children }), rightIcon && !removable && (_jsx("span", { className: cn('flex-shrink-0', iconSize), children: rightIcon })), removable && (_jsx("button", { type: "button", onClick: handleRemove, disabled: disabled, className: cn('flex-shrink-0 rounded-full', 'transition-all duration-200 ease-out', 'hover:bg-[color-mix(in_srgb,var(--hive-text-primary)_10%,transparent)]', 'focus:outline-none focus:bg-[color-mix(in_srgb,var(--hive-text-primary)_10%,transparent)]', 'active:scale-90', removeButtonSize, disabled && 'cursor-not-allowed opacity-50'), "aria-label": "Remove tag", children: _jsx(X, { className: "w-full h-full" }) }))] }));
 });
 Tag.displayName = 'Tag';
 // Convenient preset components

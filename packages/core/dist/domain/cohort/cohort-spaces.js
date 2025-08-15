@@ -25,10 +25,10 @@ function generateCohortSpaces(config) {
             id: `ub-major-${major.toLowerCase().replace(/[^a-z0-9]/g, '-')}`,
             name: `UB ${major}`,
             description: `Connect with University at Buffalo ${major} students across all graduation years for academic support and career networking`,
-            type: 'cohort',
+            type: 'hive_exclusive',
             tags: [
                 {
-                    type: 'cohort',
+                    type: 'hive_exclusive',
                     sub_type: 'major'
                 }
             ],
@@ -44,10 +44,10 @@ function generateCohortSpaces(config) {
             id: `ub-class-${graduationYear}`,
             name: `UB Class of ${shortYear}`,
             description: `University at Buffalo students graduating in ${graduationYear}. Connect with your class across all majors for networking and lifelong friendships`,
-            type: 'cohort',
+            type: 'hive_exclusive',
             tags: [
                 {
-                    type: 'cohort',
+                    type: 'hive_exclusive',
                     sub_type: 'graduation_year'
                 }
             ],
@@ -63,10 +63,10 @@ function generateCohortSpaces(config) {
             id: `ub-cohort-${major.toLowerCase().replace(/[^a-z0-9]/g, '-')}-${graduationYear}`,
             name: `UB ${majorAbbrev} ${shortYear}`,
             description: `University at Buffalo ${major} students graduating in ${graduationYear}. Your core academic cohort for study groups and career networking`,
-            type: 'cohort',
+            type: 'hive_exclusive',
             tags: [
                 {
-                    type: 'cohort',
+                    type: 'hive_exclusive',
                     sub_type: 'major_year'
                 }
             ],

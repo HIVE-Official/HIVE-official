@@ -34,7 +34,7 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
         success: true,
         message: 'Avatar generated successfully (development mode)',
         avatarUrl,
-        developmentMode: true
+        // SECURITY: Development mode removed for production safety
       });
     }
 

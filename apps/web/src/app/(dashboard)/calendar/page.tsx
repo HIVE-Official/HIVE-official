@@ -1,7 +1,11 @@
 "use client";
 
+// Force dynamic rendering to avoid SSG issues with auth context
+export const dynamic = 'force-dynamic';
+
 import { useState, useEffect, useMemo } from "react";
-import { Button, Card, Badge, HiveModal } from "@hive/ui";
+import { Button, Card, Badge } from "@hive/ui";
+import { HiveModal } from "@/components/temp-stubs";
 import { PageContainer } from "@/components/temp-stubs";
 import { 
   Calendar, 
@@ -19,7 +23,7 @@ import {
   Settings
 } from "lucide-react";
 import { useSession } from "../../../hooks/use-session";
-import { useCalendarData } from "../../../hooks/use-calendar-data";
+// import { useCalendarData } from "../../../hooks/use-calendar-data";
 import { ErrorBoundary } from "../../../components/error-boundary";
 import { EventDetailsModal } from "../../../components/events/event-details-modal";
 import { CreateEventModal } from "../../../components/events/create-event-modal";
@@ -57,7 +61,8 @@ interface CalendarIntegration {
 
 export default function CalendarPage() {
   const { user } = useSession();
-  const { data: _calendarHookData, state: _calendarState } = useCalendarData();
+  // Calendar hook data integration pending - currently using mock data
+  // const { data: calendarHookData, state: calendarState } = useCalendarData();
   // Calendar hook data integration pending - currently using mock data
   
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -78,7 +83,17 @@ export default function CalendarPage() {
       try {
         const response = await fetch('/api/calendar', {
           headers: {
-            'Authorization': `Bearer ${localStorage.getItem('hive_session') ? JSON.parse(localStorage.getItem('hive_session') || '{}').userId : 'anonymous'}`,
+            'Authorization': `Bearer ${(() => {
+              try {
+                const session = localStorage.getItem('hive_session');
+                if (!session) return 'anonymous';
+                const parsed = JSON.parse(session) as { userId?: string };
+                return parsed.userId || 'anonymous';
+              } catch (error) {
+                console.error('Failed to parse session for calendar auth:', error);
+                return 'anonymous';
+              }
+            })()}`,
           },
         });
         
@@ -86,25 +101,31 @@ export default function CalendarPage() {
           throw new Error(`Failed to fetch calendar events: ${response.status}`);
         }
         
-        const data = await response.json();
+        const data = await response.json() as { events?: unknown[] };
         const fetchedEvents = data.events || [];
         
         // Transform API events to match UI format
-        const transformedEvents: CalendarEvent[] = fetchedEvents.map((event: any) => ({
-          id: event.id,
-          title: event.title,
-          description: event.description || '',
-          startTime: event.startDate,
-          endTime: event.endDate,
-          location: event.location || '',
-          type: event.type === 'personal' ? 'event' : event.type || 'event',
-          color: event.type === 'personal' ? '#3B82F6' : 
-                event.type === 'space' ? '#10B981' : '#F59E0B',
-          source: event.type === 'personal' ? 'hive' : event.source || 'hive',
-          rsvpStatus: event.canEdit ? 'going' : 'maybe',
-          space: event.spaceName ? { id: event.spaceId || '', name: event.spaceName } : undefined,
-          tools: event.tools || []
-        }));
+        const transformedEvents: CalendarEvent[] = fetchedEvents.map((event: unknown) => {
+          const eventData = event as Record<string, unknown>;
+          return {
+            id: String(eventData.id || ''),
+            title: String(eventData.title || ''),
+            description: String(eventData.description || ''),
+            startTime: String(eventData.startDate || ''),
+            endTime: String(eventData.endDate || ''),
+            location: String(eventData.location || ''),
+            type: eventData.type === 'personal' ? 'event' : (eventData.type as CalendarEvent['type']) || 'event',
+            color: eventData.type === 'personal' ? '#3B82F6' : 
+                  eventData.type === 'space' ? '#10B981' : '#F59E0B',
+            source: eventData.type === 'personal' ? 'hive' : (eventData.source as CalendarEvent['source']) || 'hive',
+            rsvpStatus: eventData.canEdit ? 'going' : 'interested',
+            space: eventData.spaceName ? { 
+              id: String(eventData.spaceId || ''), 
+              name: String(eventData.spaceName) 
+            } : undefined,
+            tools: Array.isArray(eventData.tools) ? eventData.tools.map(String) : []
+          };
+        });
 
         // Set calendar integrations (placeholder for now - can be fetched from user preferences)
         const defaultIntegrations: CalendarIntegration[] = [
@@ -184,18 +205,33 @@ export default function CalendarPage() {
     const event = events.find(e => e.id === selectedEvent);
     if (!event) return null;
 
+    // Map CalendarEvent types to EventData types
+    const getEventDataType = (calendarType: CalendarEvent['type']): 'academic' | 'social' | 'professional' | 'recreational' | 'official' => {
+      switch (calendarType) {
+        case 'class': return 'academic';
+        case 'assignment': return 'academic';
+        case 'event': return 'social';
+        case 'meeting': return 'professional';
+        case 'personal': return 'recreational';
+        default: return 'social';
+      }
+    };
+
     return {
       id: event.id,
       title: event.title,
       description: event.description || '',
-      type: event.type as any,
+      type: getEventDataType(event.type),
       organizer: {
         id: user?.id || 'organizer-unknown',
         name: user?.fullName || 'Event Organizer',
         handle: user?.handle || 'organizer',
         verified: false
       },
-      space: event.space,
+      space: event.space ? {
+        ...event.space,
+        type: 'general' // Default type for space
+      } : undefined,
       datetime: {
         start: event.startTime,
         end: event.endTime,
@@ -214,7 +250,7 @@ export default function CalendarPage() {
       tools: event.tools || [],
       tags: [],
       visibility: 'public' as const,
-      rsvpStatus: event.rsvpStatus as any,
+      rsvpStatus: (event.rsvpStatus as 'going' | 'interested' | 'not_going') || 'interested',
       isBookmarked: false,
       engagement: {
         going: 12,
@@ -327,7 +363,7 @@ export default function CalendarPage() {
                   key={mode}
                   variant={viewMode === mode ? 'primary' : 'ghost'}
                   size="sm"
-                  onClick={() => setViewMode(mode as any)}
+                  onClick={() => setViewMode(mode as 'month' | 'week' | 'day')}
                   className="text-xs capitalize"
                 >
                   {mode}
@@ -398,7 +434,7 @@ export default function CalendarPage() {
             <Filter className="h-4 w-4 text-zinc-400" />
             <select
               value={eventTypeFilter}
-              onChange={(e) => setEventTypeFilter(e.target.value as any)}
+              onChange={(e) => setEventTypeFilter(e.target.value as CalendarEvent['type'] | 'all')}
               className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-1 text-white text-sm focus:border-hive-gold focus:outline-none"
             >
               <option value="all">All Events</option>
@@ -539,7 +575,10 @@ export default function CalendarPage() {
               startTime: eventData.datetime.start,
               endTime: eventData.datetime.end,
               location: eventData.location.name,
-              type: eventData.type as any,
+              type: eventData.type === 'academic' ? 'class' :
+                     eventData.type === 'social' ? 'event' :
+                     eventData.type === 'professional' ? 'meeting' :
+                     eventData.type === 'recreational' ? 'event' : 'personal',
               color: eventData.type === 'academic' ? '#3B82F6' : 
                      eventData.type === 'social' ? '#EC4899' :
                      eventData.type === 'professional' ? '#10B981' :
@@ -635,7 +674,7 @@ export default function CalendarPage() {
         <EventDetailsModal
           isOpen={!!selectedEvent}
           onClose={() => setSelectedEvent(null)}
-          event={selectedEventData as any}
+          event={selectedEventData}
           currentUserId={user?.id}
           onRSVP={(eventId, status) => {
             setEvents(prevEvents =>

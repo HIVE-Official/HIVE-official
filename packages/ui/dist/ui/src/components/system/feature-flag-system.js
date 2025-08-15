@@ -4,8 +4,8 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
  * Centralized feature management for easy activation/deactivation
  */
 import React, { useState, useCallback, createContext, useContext } from 'react';
-import { Button } from '../ui/button.js';
-import { HiveBadge as Badge } from '../index.js';
+import { Button } from '../ui/button';
+import { HiveBadge as Badge } from '../index';
 import { Settings, Eye, EyeOff, Users, MessageSquare, Zap, Search, RefreshCw, CheckCircle, Activity, BarChart3, Palette, Download, Upload, Link } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 const FeatureFlagContext = createContext(null);

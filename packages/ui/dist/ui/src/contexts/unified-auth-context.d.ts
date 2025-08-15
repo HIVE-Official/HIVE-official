@@ -6,6 +6,7 @@
 import React from 'react';
 export interface HiveUser {
     id: string;
+    uid: string;
     email: string;
     fullName?: string;
     handle?: string;
@@ -73,11 +74,21 @@ export interface UnifiedAuthContextType extends UnifiedAuthState {
     requiresOnboarding: () => boolean;
     hasValidSession: () => boolean;
     canAccessFeature: (feature: string) => boolean;
+    clearError: () => void;
+    retryInitialization: () => Promise<void>;
 }
 declare const UnifiedAuthContext: React.Context<UnifiedAuthContextType>;
 export declare const useUnifiedAuth: () => UnifiedAuthContextType;
+export interface FirebaseAuthIntegration {
+    listenToAuthChanges: (callback: (user: any) => void) => () => void;
+    handleEmailLinkSignIn: (email?: string) => Promise<void>;
+    getFirebaseToken: () => Promise<string | null>;
+    signOut: () => Promise<void>;
+    isEmailLinkSignIn: () => boolean;
+}
 export declare const UnifiedAuthProvider: React.FC<{
     children: React.ReactNode;
+    firebaseIntegration?: FirebaseAuthIntegration;
 }>;
 export { UnifiedAuthContext };
 //# sourceMappingURL=unified-auth-context.d.ts.map

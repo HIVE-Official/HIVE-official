@@ -1,9 +1,9 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import React, { useState } from 'react';
-import { cn } from '../../lib/utils.js';
+import { cn } from '../../lib/utils';
 import { Home, Compass, Zap, Calendar, User, Settings, ChevronRight, ChevronDown } from 'lucide-react';
-import { Button } from './button.js';
+import { Button } from './button';
 const navigationItems = [
     {
         id: 'feed',

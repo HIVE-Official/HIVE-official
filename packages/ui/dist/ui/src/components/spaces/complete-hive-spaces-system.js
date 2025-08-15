@@ -1,12 +1,12 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState } from 'react';
-import { motion } from '../framer-motion-proxy.js';
+import { motion } from '../framer-motion-proxy';
 import { Search, Filter, Grid, List, Users, TrendingUp, Star, ArrowRight, Loader2, AlertCircle, ChevronDown } from 'lucide-react';
-import { HiveCard } from '../hive-card.js';
-import { HiveButton } from '../hive-button.js';
-import { HiveInput } from '../hive-input.js';
-import { CategoryGridOrganism, SPACE_CATEGORIES } from './category-grid-organism.js';
+import { HiveCard } from '../hive-card';
+import { HiveButton } from '../hive-button';
+import { HiveInput } from '../hive-input';
+import { CategoryGridOrganism, SPACE_CATEGORIES } from './category-grid-organism';
 export const CompleteHIVESpacesSystem = ({ viewMode = 'explore', userRole = 'student', categoryType, showDebugLabels = false, onNavigate, spacesData, loading = false, error = null }) => {
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedFilter, setSelectedFilter] = useState('all');

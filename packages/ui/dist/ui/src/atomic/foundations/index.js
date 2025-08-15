@@ -1,9 +1,9 @@
 // HIVE Atomic Design Foundations
 // Design principles, patterns, and guidelines for PRD-aligned implementation
 // Explicitly export to avoid naming conflicts
-export { designPrinciples, qualityGates } from './design-principles.js';
-export * from './prd-alignment.js';
-export { designSystemGovernance } from './governance.js';
+export { designPrinciples, qualityGates } from './design-principles';
+export * from './prd-alignment';
+export { designSystemGovernance } from './governance';
 // Foundation documentation and standards
 export const foundations = {
     principles: "Core design philosophy and implementation standards",

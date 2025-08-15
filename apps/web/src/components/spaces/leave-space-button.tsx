@@ -2,9 +2,9 @@
 
 import { useState } from 'react';
 import { Button } from "@hive/ui";
-import { Alert } from "@/components/temp-stubs";
-import { LogOut, AlertTriangle, Loader2 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { LogOut } from "lucide-react";
+import { useModalHelpers } from '../ui/modal-system';
+import { useUnifiedAuth } from '@hive/ui';
 
 interface LeaveSpaceButtonProps {
   spaceId: string;
@@ -23,36 +23,46 @@ export function LeaveSpaceButton({
   onLeave,
   className
 }: LeaveSpaceButtonProps) {
-  const [showConfirmation, setShowConfirmation] = useState(false);
   const [isLeaving, setIsLeaving] = useState(false);
+  const { confirm } = useModalHelpers();
+  const { user } = useUnifiedAuth();
 
   const isGreekLife = spaceType === 'greek_life';
   const isImportantRole = userRole === 'owner' || userRole === 'admin';
 
   const handleLeaveClick = () => {
-    setShowConfirmation(true);
+    const variant = isGreekLife || isImportantRole ? 'warning' : 'default';
+    
+    let message = `Are you sure you want to leave "${spaceName}"?`;
+    
+    if (isGreekLife) {
+      message += '\n\nAs this is a Greek Life organization, you may need special permission to rejoin.';
+    }
+    
+    if (isImportantRole) {
+      message += `\n\nYou are currently ${userRole === 'owner' ? 'the owner' : 'an admin'} of this space. Consider transferring your role before leaving.`;
+    }
+
+    confirm({
+      title: 'Leave Space',
+      message,
+      confirmText: 'Leave Space',
+      cancelText: 'Stay',
+      variant,
+      onConfirm: handleConfirmLeave
+    });
   };
 
   const handleConfirmLeave = async () => {
+    if (!user) return;
+    
     setIsLeaving(true);
     
     try {
       const headers: Record<string, string> = {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${user.id === 'dev_user_123' ? 'test-token' : 'user-token'}`
       };
-      
-      // Get auth token
-      try {
-        const sessionJson = window.localStorage.getItem('hive_session');
-        if (sessionJson) {
-          const session = JSON.parse(sessionJson);
-          headers.Authorization = `Bearer ${process.env.NODE_ENV === 'development' ? 'test-token' : session.token}`;
-        } else {
-          headers.Authorization = `Bearer test-token`;
-        }
-      } catch (error) {
-        headers.Authorization = `Bearer test-token`;
-      }
 
       const response = await fetch('/api/spaces/leave', {
         method: 'POST',
@@ -71,9 +81,10 @@ export function LeaveSpaceButton({
       // Redirect to spaces page
       window.location.href = '/spaces';
     } catch (error: any) {
+      // Use alert for now, could use toast notification system later
       alert(error.message || 'Failed to leave space');
+    } finally {
       setIsLeaving(false);
-      setShowConfirmation(false);
     }
   };
 
@@ -102,79 +113,6 @@ export function LeaveSpaceButton({
         Leave Space
       </Button>
 
-      {/* Confirmation Modal */}
-      <AnimatePresence>
-        {showConfirmation && (
-          <motion.div
-            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => !isLeaving && setShowConfirmation(false)}
-          >
-            <motion.div
-              className="bg-[#0A0A0A] border border-white/[0.1] rounded-2xl w-full max-w-md p-6"
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex items-start gap-4 mb-6">
-                <div className="w-12 h-12 bg-red-500/20 rounded-full flex items-center justify-center flex-shrink-0">
-                  <AlertTriangle className="h-6 w-6 text-red-400" />
-                </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-white mb-2">
-                    Leave {spaceName}?
-                  </h3>
-                  <p className="text-sm text-neutral-400 leading-relaxed">
-                    {getWarningMessage()}
-                  </p>
-                </div>
-              </div>
-
-              {isGreekLife && (
-                <div className="p-3 bg-purple-500/10 border border-purple-500/20 rounded-lg mb-6">
-                  <div className="flex items-center gap-2 text-purple-400 text-sm">
-                    <AlertTriangle className="h-4 w-4" />
-                    <span className="font-medium">Greek Life Policy</span>
-                  </div>
-                  <p className="text-xs text-purple-300 mt-1">
-                    You can only be a member of one Greek life organization at a time.
-                  </p>
-                </div>
-              )}
-
-              <div className="flex gap-3">
-                <Button
-                  variant="outline"
-                  onClick={() => setShowConfirmation(false)}
-                  disabled={isLeaving}
-                  className="flex-1 border-white/[0.2] text-white hover:bg-white/[0.1]"
-                >
-                  Cancel
-                </Button>
-                
-                <Button
-                  variant="primary"
-                  onClick={handleConfirmLeave}
-                  disabled={isLeaving}
-                  className="flex-1 bg-red-500 text-white hover:bg-red-600"
-                >
-                  {isLeaving ? (
-                    <div className="flex items-center gap-2">
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      <span>Leaving...</span>
-                    </div>
-                  ) : (
-                    'Leave Space'
-                  )}
-                </Button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </>
   );
 }

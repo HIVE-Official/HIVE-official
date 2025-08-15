@@ -24,7 +24,8 @@ export * from './select';
 export * from './checkbox';
 export * from './radio-group';
 
-// REMOVED (now use atomic enhanced versions):
-// - textarea.tsx → Use Textarea from atomic/atoms/textarea-enhanced.tsx
-// - switch.tsx → Use Switch from atomic/atoms/switch-enhanced.tsx
-// - separator.tsx → Use Separator from atomic/atoms/spacing-enhanced.tsx
+// BRIDGE COMPONENTS - Temporary bridges to atomic enhanced versions
+export * from './switch';
+export * from './separator';
+export * from './textarea';
+export * from './progress';

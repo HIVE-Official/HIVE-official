@@ -8,15 +8,19 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
  */
 import { memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { NAVIGATION_THEME, NAVIGATION_SIZING, NAVIGATION_MOTION, NAVIGATION_A11Y } from '../core/data.js';
-import { cn } from '../../lib/utils.js';
+import { NAVIGATION_THEME, NAVIGATION_SIZING, NAVIGATION_MOTION, NAVIGATION_A11Y } from '../core/data';
+import { cn } from '../../lib/utils';
+import { useHapticFeedback, useTouchRipple } from '../../hooks/use-mobile-interactions';
 // ============================================================================
 // MOBILE NAVIGATION ITEM
 // ============================================================================
 const MobileNavItem = memo(({ item, onNavigate, isActive }) => {
     const Icon = item.icon;
+    const { triggerHaptic } = useHapticFeedback();
+    const { ripples, rippleHandlers } = useTouchRipple();
     const handleClick = () => {
         if (!item.isDisabled) {
+            triggerHaptic('selection');
             onNavigate(item.href);
         }
     };
@@ -26,7 +30,7 @@ const MobileNavItem = memo(({ item, onNavigate, isActive }) => {
             onNavigate(item.href);
         }
     };
-    return (_jsxs(motion.button, { type: "button", onClick: handleClick, onKeyDown: handleKeyDown, disabled: item.isDisabled, className: cn(
+    return (_jsxs(motion.button, { type: "button", onClick: handleClick, onKeyDown: handleKeyDown, disabled: item.isDisabled, ...rippleHandlers, className: cn(
         // Base styles
         'relative flex flex-col items-center justify-center', 'w-full h-full min-h-[44px]', // 44px minimum for touch targets
         'transition-all duration-200 ease-out', 'focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2', 'focus-visible:ring-[var(--hive-brand-secondary)] focus-visible:ring-offset-[var(--hive-background-primary)]', 
@@ -39,13 +43,16 @@ const MobileNavItem = memo(({ item, onNavigate, isActive }) => {
                             ? 'text-[var(--hive-brand-secondary)]'
                             : 'text-[var(--hive-text-secondary)]'), "aria-hidden": "true" }), item.badge && (_jsx(motion.div, { className: cn('absolute -top-1 -right-1 min-w-[16px] h-4 px-1', 'flex items-center justify-center', 'text-xs font-medium rounded-full', 'bg-[var(--hive-error)] text-[var(--hive-text-inverse)]', 'border-2 border-[var(--hive-background-primary)]'), initial: { scale: 0 }, animate: { scale: 1 }, transition: { delay: 0.1, type: 'spring', stiffness: 500, damping: 30 }, children: item.badge.count && item.badge.count > 99 ? '99+' : item.badge.count }))] }), _jsx("span", { className: cn('text-xs font-medium mt-1 transition-colors duration-200', 'max-w-full truncate', isActive
                     ? 'text-[var(--hive-brand-secondary)]'
-                    : 'text-[var(--hive-text-tertiary)]'), children: item.label })] }));
+                    : 'text-[var(--hive-text-tertiary)]'), children: item.label }), ripples.map((ripple) => (_jsx("div", { className: "absolute inset-0 pointer-events-none", style: {
+                    background: `radial-gradient(circle at ${ripple.x}px ${ripple.y}px, rgba(255,255,255,0.2) 0%, transparent 50%)`,
+                    animation: 'mobile-ripple 0.6s ease-out forwards'
+                } }, ripple.id)))] }));
 });
 MobileNavItem.displayName = 'MobileNavItem';
 // ============================================================================
 // MAIN MOBILE NAVIGATION
 // ============================================================================
-export const MobileNavigation = memo(({ items, user, onNavigate, className, testId = 'mobile-navigation' }) => {
+export const MobileNavigation = memo(({ items, onNavigate, className, testId = 'mobile-navigation' }) => {
     return (_jsxs(motion.nav, { className: cn(
         // Positioning
         'fixed bottom-0 left-0 right-0 z-50', 

@@ -437,7 +437,7 @@ export async function POST(request: NextRequest) {
         }
         
         const additional = spacesToCreate[spaceType];
-        logger.info('📊 : →( to create)', { spaceType, targetCount, spaceName: additional.length, endpoint: '/api/spaces/seed'   });
+        logger.info('📊 : →( to create)', { spaceType, targetCount, count: additional.length, endpoint: '/api/spaces/seed'   });
       } catch (error) {
         logger.error('❌ Error analyzing', { spaceType, error: error, endpoint: '/api/spaces/seed' });
         currentDistribution[spaceType] = 0;

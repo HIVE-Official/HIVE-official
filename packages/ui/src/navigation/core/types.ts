@@ -57,7 +57,7 @@ export interface NavigationItem {
   readonly label: string;
   readonly description: string;
   readonly href: string;
-  readonly icon: React.ComponentType<any>;
+  readonly icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   readonly badge?: NavigationBadge;
   readonly isActive?: boolean;
   readonly isDisabled?: boolean;
@@ -72,7 +72,7 @@ export interface NavigationSubItem {
   readonly parentSection: NavigationSection;
   readonly label: string;
   readonly href: string;
-  readonly icon?: React.ComponentType<any>;
+  readonly icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   readonly badge?: NavigationBadge;
   readonly isActive?: boolean;
   readonly isDisabled?: boolean;

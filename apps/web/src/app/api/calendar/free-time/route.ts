@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { getCurrentUser } from '@/lib/server-auth';
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
 
 // Free time slot interface
 interface FreeTimeSlot {
@@ -16,7 +16,7 @@ interface FreeTimeSlot {
 // GET - Find free time slots
 export async function GET(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
@@ -239,7 +239,7 @@ function groupSlotsByDate(slots: FreeTimeSlot[]): Record<string, FreeTimeSlot[]>
 }
 
 // Helper function to generate suggestions
-function generateSuggestions(slots: FreeTimeSlot[], minDuration: number): string[] {
+function generateSuggestions(slots: FreeTimeSlot[], _minDuration: number): string[] {
   const suggestions: string[] = [];
   
   const totalFreeTime = slots.reduce((sum, slot) => sum + slot.duration, 0);

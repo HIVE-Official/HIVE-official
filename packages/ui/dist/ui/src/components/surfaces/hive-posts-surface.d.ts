@@ -35,7 +35,67 @@ declare const postTypes: {
         readonly color: "text-[var(--hive-brand-accent)]";
         readonly description: "Share a resource";
     };
+    readonly study_session: {
+        readonly icon: React.ForwardRefExoticComponent<Omit<import("lucide-react").LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>>;
+        readonly label: "Study Session";
+        readonly color: "text-blue-400";
+        readonly description: "Organize study groups";
+        readonly coordinationType: "study_session";
+    };
+    readonly food_run: {
+        readonly icon: React.ForwardRefExoticComponent<Omit<import("lucide-react").LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>>;
+        readonly label: "Food Run";
+        readonly color: "text-orange-400";
+        readonly description: "Coordinate food orders";
+        readonly coordinationType: "food_run";
+    };
+    readonly activity: {
+        readonly icon: React.ForwardRefExoticComponent<Omit<import("lucide-react").LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>>;
+        readonly label: "Activity";
+        readonly color: "text-green-400";
+        readonly description: "Plan group activities";
+        readonly coordinationType: "activity";
+    };
+    readonly ride_share: {
+        readonly icon: React.ForwardRefExoticComponent<Omit<import("lucide-react").LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>>;
+        readonly label: "Ride Share";
+        readonly color: "text-purple-400";
+        readonly description: "Share transportation";
+        readonly coordinationType: "ride_share";
+    };
+    readonly meetup: {
+        readonly icon: React.ForwardRefExoticComponent<Omit<import("lucide-react").LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>>;
+        readonly label: "Meetup";
+        readonly color: "text-pink-400";
+        readonly description: "Quick meetups";
+        readonly coordinationType: "meetup";
+    };
 };
+export interface CoordinationResponse {
+    id: string;
+    userId: string;
+    user?: {
+        id: string;
+        fullName: string;
+        handle: string;
+        photoURL?: string;
+    };
+    responseType: 'interested' | 'going' | 'maybe' | 'cant_make_it';
+    message?: string;
+    createdAt: Date | {
+        toDate: () => Date;
+    };
+    extraData?: {
+        studyTopic?: string;
+        bringNotes?: boolean;
+        foodOrder?: string;
+        contribution?: number;
+        canDrive?: boolean;
+        seatsAvailable?: number;
+        skillLevel?: string;
+        equipment?: string[];
+    };
+}
 export interface Comment {
     id: string;
     content: string;
@@ -86,6 +146,39 @@ export interface Post {
     spaceId: string;
     comments?: Comment[];
     replyCount?: number;
+    coordinationData?: {
+        coordinationType: 'study_session' | 'food_run' | 'activity' | 'ride_share' | 'meetup';
+        responses: CoordinationResponse[];
+        maxParticipants?: number;
+        currentParticipants?: number;
+        location?: string;
+        datetime?: Date | {
+            toDate: () => Date;
+        };
+        status: 'planning' | 'confirmed' | 'in_progress' | 'completed' | 'cancelled';
+        requirements?: string[];
+        details?: {
+            subject?: string;
+            duration?: number;
+            studyMaterials?: string[];
+            restaurant?: string;
+            minOrder?: number;
+            deadline?: Date | {
+                toDate: () => Date;
+            };
+            activityType?: string;
+            skillLevel?: 'beginner' | 'intermediate' | 'advanced';
+            equipment?: string[];
+            destination?: string;
+            departureTime?: Date | {
+                toDate: () => Date;
+            };
+            returnTime?: Date | {
+                toDate: () => Date;
+            };
+            costPerPerson?: number;
+        };
+    };
     title?: string;
     authorName?: string;
     authorAvatar?: string;
@@ -124,12 +217,23 @@ export interface HivePostsSurfaceProps extends React.HTMLAttributes<HTMLDivEleme
     onDeletePost?: (postId: string) => void;
     onLockPost?: (postId: string) => void;
     onViewPost?: (postId: string) => void;
+    onCoordinationResponse?: (postId: string, response: Omit<CoordinationResponse, 'id' | 'createdAt'>) => Promise<void>;
+    onUpdateCoordinationStatus?: (postId: string, status: 'planning' | 'confirmed' | 'in_progress' | 'completed' | 'cancelled') => Promise<void>;
     sortBy?: 'recent' | 'popular' | 'trending';
     showFilters?: boolean;
     maxPosts?: number;
     autoFetch?: boolean;
     authToken?: string;
     usePlatformIntegration?: boolean;
+    showLiveActivity?: boolean;
+    liveActivityCount?: number;
+    onActivityUpdate?: (activity: {
+        type: string;
+        user: string;
+        action: string;
+        timestamp: Date;
+    }) => void;
+    currentUserId?: string;
 }
 export declare const HivePostsSurface: React.ForwardRefExoticComponent<HivePostsSurfaceProps & React.RefAttributes<HTMLDivElement>>;
 export { hivePostsSurfaceVariants, postTypes };

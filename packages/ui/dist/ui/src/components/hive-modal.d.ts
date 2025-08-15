@@ -5,8 +5,10 @@ declare const hiveModalVariants: (props?: {
     variant?: "default" | "success" | "destructive" | "premium";
 } & import("class-variance-authority/types").ClassProp) => string;
 export interface HiveModalProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onDrag' | 'onDragEnd' | 'onDragStart'>, VariantProps<typeof hiveModalVariants> {
-    isOpen: boolean;
-    onClose: () => void;
+    isOpen?: boolean;
+    open?: boolean;
+    onClose?: () => void;
+    onOpenChange?: (open: boolean) => void;
     title?: string;
     description?: string;
     showCloseButton?: boolean;

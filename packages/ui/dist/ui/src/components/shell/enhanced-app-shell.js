@@ -1,12 +1,12 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from 'react';
-import { NavigationContainer } from '../../navigation/index.js';
-import { EnhancedHiveCommandPalette, comprehensiveSearchCategories, defaultSearchItems } from '../enhanced-hive-command-palette.js';
-import { NotificationCenter } from './notification-center.js';
-import { NotificationProvider, useNotifications } from './notification-service.js';
-import { PageTransition } from '../page-transition.js';
-import { cn } from '../../lib/utils.js';
+import { NavigationContainer } from '../../navigation';
+import { EnhancedHiveCommandPalette, comprehensiveSearchCategories, defaultSearchItems } from '../enhanced-hive-command-palette';
+import { NotificationCenter } from './notification-center';
+import { NotificationProvider, useNotifications } from './notification-service';
+import { PageTransition } from '../page-transition';
+import { cn } from '../../lib/utils';
 function AppShellContent({ children, user, className }) {
     const { notifications, unreadCount } = useNotifications();
     const [commandPaletteOpen, setCommandPaletteOpen] = React.useState(false);

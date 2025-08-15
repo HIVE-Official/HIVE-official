@@ -15,9 +15,9 @@ export declare function generateCohortSpaces(config: CohortSpaceConfig): {
     id: string;
     name: string;
     description: string;
-    type: "cohort";
+    type: "hive_exclusive";
     tags: {
-        type: "cohort";
+        type: "hive_exclusive";
         sub_type: string;
     }[];
     cohortData: {

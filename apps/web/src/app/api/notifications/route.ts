@@ -1,141 +1,75 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { dbAdmin } from '@/lib/firebase-admin';
+import { getCurrentUser } from '@/lib/auth-server';
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
+import { type HiveNotification } from "@/lib/notifications-service";
 
-interface HiveNotification {
-  id: string;
-  title: string;
-  message: string;
-  type: 'info' | 'success' | 'warning' | 'error' | 'system';
-  category: 'space' | 'tool' | 'social' | 'system' | 'update';
-  isRead: boolean;
-  timestamp: string;
-  actionUrl?: string;
-  actionText?: string;
-  metadata?: {
-    spaceId?: string;
-    toolId?: string;
-    userId?: string;
-    [key: string]: any;
-  };
-}
+// Real notification fetching from Firebase
+async function getUserNotifications(
+  userId: string,
+  limit: number,
+  unreadOnly: boolean,
+  category?: string
+): Promise<{ notifications: HiveNotification[], unreadCount: number }> {
+  try {
+    let query = dbAdmin.collection('notifications')
+      .where('userId', '==', userId)
+      .orderBy('timestamp', 'desc');
 
-// Mock notifications data
-const MOCK_NOTIFICATIONS: HiveNotification[] = [
-  {
-    id: 'notif-1',
-    title: 'New member joined CS Majors',
-    message: 'Sarah Chen just joined the Computer Science Majors space',
-    type: 'info',
-    category: 'space',
-    isRead: false,
-    timestamp: new Date(Date.now() - 5 * 60 * 1000).toISOString(), // 5 minutes ago
-    actionUrl: '/spaces/cs-majors',
-    actionText: 'View Space',
-    metadata: { spaceId: 'cs-majors', userId: 'sarah-chen' }
-  },
-  {
-    id: 'notif-2',
-    title: 'Tool Update Available',
-    message: 'Poll Maker v2.1 is now available with new features',
-    type: 'info',
-    category: 'tool',
-    isRead: false,
-    timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), // 2 hours ago
-    actionUrl: '/tools/poll-maker',
-    actionText: 'Update Tool',
-    metadata: { toolId: 'poll-maker' }
-  },
-  {
-    id: 'notif-3',
-    title: 'Event Reminder',
-    message: 'Spring Career Fair starts in 1 hour',
-    type: 'warning',
-    category: 'system',
-    isRead: false,
-    timestamp: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString(), // 3 hours ago
-    actionUrl: '/events/career-fair-2024',
-    actionText: 'View Event'
-  },
-  {
-    id: 'notif-4',
-    title: 'Weekly Usage Report',
-    message: 'Your tools were used 127 times this week!',
-    type: 'success',
-    category: 'system',
-    isRead: true,
-    timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(), // 1 day ago
-    actionUrl: '/tools/analytics',
-    actionText: 'View Analytics'
-  },
-  {
-    id: 'notif-5',
-    title: 'Space Invitation',
-    message: 'Alex invited you to join Engineering Club',
-    type: 'info',
-    category: 'social',
-    isRead: true,
-    timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(), // 2 days ago
-    actionUrl: '/spaces/engineering-club?invite=abc123',
-    actionText: 'Accept Invitation',
-    metadata: { spaceId: 'engineering-club', userId: 'alex-kim' }
-  },
-  {
-    id: 'notif-6',
-    title: 'System Update',
-    message: 'HIVE platform update deployed with performance improvements',
-    type: 'system',
-    category: 'update',
-    isRead: true,
-    timestamp: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(), // 3 days ago
-    actionUrl: '/changelog',
-    actionText: 'View Changelog'
-  },
-  {
-    id: 'notif-7',
-    title: 'Tool Published Successfully',
-    message: 'Your Study Timer tool is now live in the marketplace',
-    type: 'success',
-    category: 'tool',
-    isRead: true,
-    timestamp: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(), // 5 days ago
-    actionUrl: '/tools/study-timer',
-    actionText: 'View Tool',
-    metadata: { toolId: 'study-timer' }
+    if (category && category !== 'all') {
+      query = query.where('category', '==', category);
+    }
+
+    if (unreadOnly) {
+      query = query.where('isRead', '==', false);
+    }
+
+    const snapshot = await query.limit(limit).get();
+    const notifications = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    })) as HiveNotification[];
+
+    // Get unread count separately
+    const unreadSnapshot = await dbAdmin.collection('notifications')
+      .where('userId', '==', userId)
+      .where('isRead', '==', false)
+      .count()
+      .get();
+    
+    const unreadCount = unreadSnapshot.data().count;
+
+    return { notifications, unreadCount };
+  } catch (error) {
+    logger.error('Error fetching user notifications', { error, userId });
+    return { notifications: [], unreadCount: 0 };
   }
-];
+}
 
 export async function GET(request: NextRequest) {
   try {
+    const user = await getCurrentUser(request);
+    if (!user) {
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
+    }
+
     const { searchParams } = new URL(request.url);
     const limit = parseInt(searchParams.get('limit') || '10');
     const unreadOnly = searchParams.get('unread') === 'true';
-    const category = searchParams.get('category');
+    const category = searchParams.get('category') || undefined;
 
-    let notifications = [...MOCK_NOTIFICATIONS];
-
-    // Filter by category
-    if (category && category !== 'all') {
-      notifications = notifications.filter(n => n.category === category);
-    }
-
-    // Filter by read status
-    if (unreadOnly) {
-      notifications = notifications.filter(n => !n.isRead);
-    }
-
-    // Sort by timestamp (newest first)
-    notifications.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
-
-    // Apply limit
-    notifications = notifications.slice(0, limit);
-
-    const unreadCount = MOCK_NOTIFICATIONS.filter(n => !n.isRead).length;
+    const { notifications, unreadCount } = await getUserNotifications(
+      user.uid,
+      limit,
+      unreadOnly,
+      category
+    );
 
     return NextResponse.json({
       notifications,
       unreadCount,
-      hasMore: MOCK_NOTIFICATIONS.length > limit
+      hasMore: notifications.length === limit
     });
 
   } catch (error) {
@@ -146,6 +80,11 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    const user = await getCurrentUser(request);
+    if (!user) {
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
+    }
+
     const body = await request.json();
     
     if (body.action === 'mark_read') {
@@ -153,8 +92,18 @@ export async function POST(request: NextRequest) {
         ? body.notificationIds 
         : [body.notificationIds];
 
-      // In a real app, this would update the database
-      logger.info('Marking notifications as read', { data: notificationIds, endpoint: '/api/notifications' });
+      // Update notifications in Firebase
+      const batch = dbAdmin.batch();
+      for (const notificationId of notificationIds) {
+        const notificationRef = dbAdmin.collection('notifications').doc(notificationId);
+        batch.update(notificationRef, { 
+          isRead: true, 
+          readAt: new Date().toISOString() 
+        });
+      }
+      await batch.commit();
+
+      logger.info('Marked notifications as read', { notificationId: notificationIds.join(','), userId: user.uid });
 
       return NextResponse.json({
         success: true,
@@ -163,12 +112,27 @@ export async function POST(request: NextRequest) {
     }
 
     if (body.action === 'mark_all_read') {
-      // In a real app, this would update all notifications for the user
-      logger.info('Marking all notifications as read', { endpoint: '/api/notifications' });
+      // Update all unread notifications for user
+      const unreadNotifications = await dbAdmin.collection('notifications')
+        .where('userId', '==', user.uid)
+        .where('isRead', '==', false)
+        .get();
+
+      const batch = dbAdmin.batch();
+      unreadNotifications.docs.forEach(doc => {
+        batch.update(doc.ref, { 
+          isRead: true, 
+          readAt: new Date().toISOString() 
+        });
+      });
+      await batch.commit();
+
+      logger.info('Marked all notifications as read', { userId: user.uid, count: unreadNotifications.size });
 
       return NextResponse.json({
         success: true,
-        message: 'All notifications marked as read'
+        message: 'All notifications marked as read',
+        updatedCount: unreadNotifications.size
       });
     }
 
@@ -177,8 +141,15 @@ export async function POST(request: NextRequest) {
         ? body.notificationIds 
         : [body.notificationIds];
 
-      // In a real app, this would delete from database
-      logger.info('Deleting notifications', { data: notificationIds, endpoint: '/api/notifications' });
+      // Delete notifications from Firebase
+      const batch = dbAdmin.batch();
+      for (const notificationId of notificationIds) {
+        const notificationRef = dbAdmin.collection('notifications').doc(notificationId);
+        batch.delete(notificationRef);
+      }
+      await batch.commit();
+
+      logger.info('Deleted notifications', { notificationId: notificationIds.join(','), userId: user.uid });
 
       return NextResponse.json({
         success: true,
@@ -196,6 +167,11 @@ export async function POST(request: NextRequest) {
 
 export async function PUT(request: NextRequest) {
   try {
+    const user = await getCurrentUser(request);
+    if (!user) {
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
+    }
+
     const body = await request.json();
     const { notificationId, isRead } = body;
 
@@ -203,8 +179,28 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json(ApiResponseHelper.error("Notification ID is required", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
-    // In a real app, this would update the notification in the database
-    logger.info('Updating notification read status to', { notificationId, data: isRead, endpoint: '/api/notifications' });
+    // Verify notification belongs to user and update
+    const notificationRef = dbAdmin.collection('notifications').doc(notificationId);
+    const notificationDoc = await notificationRef.get();
+    
+    if (!notificationDoc.exists) {
+      return NextResponse.json(ApiResponseHelper.error("Notification not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
+    }
+
+    const notificationData = notificationDoc.data();
+    if (notificationData?.userId !== user.uid) {
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized access to notification", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
+    }
+
+    // Update notification
+    const updates: any = { isRead };
+    if (isRead && !notificationData?.readAt) {
+      updates.readAt = new Date().toISOString();
+    }
+    
+    await notificationRef.update(updates);
+
+    logger.info('Updated notification read status', { notificationId, userId: user.uid });
 
     return NextResponse.json({
       success: true,
@@ -216,3 +212,4 @@ export async function PUT(request: NextRequest) {
     return NextResponse.json(ApiResponseHelper.error("Failed to update notification", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
+

@@ -3,10 +3,10 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Edit3 } from 'lucide-react';
-import { BaseWidget } from './base-widget.js';
-import { HiveButton } from '../../hive-button.js';
-import { HiveCard } from '../../hive-card.js';
-import { cn } from '../../../lib/utils.js';
+import { BaseWidget } from './base-widget';
+import { HiveButton } from '../../hive-button';
+import { HiveCard } from '../../hive-card';
+import { cn } from '../../../lib/utils';
 export const GridLayoutEngine = ({ widgets, isEditing, isMobile = false, isTablet = false, onLayoutChange, onWidgetSettings, onAddWidget, onRemoveWidget }) => {
     const [dragState, setDragState] = useState({
         draggedWidget: null,

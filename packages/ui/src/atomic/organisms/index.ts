@@ -30,6 +30,16 @@ export * from './ritual-discover-workflow';
 export * from './ritual-connect-workflow';
 export * from './activity-feed';
 
+// === HIVE PROFILE SYSTEM ===
+export * from './profile-avatar-widget';
+export * from './profile-calendar-widget';
+export * from './profile-tools-widget';
+export * from './profile-spaces-widget';
+export * from './profile-activity-widget';
+export * from './profile-ghost-mode-widget';
+export * from './profile-hivelab-widget';
+export * from './profile-stats-widget';
+
 // === PLANNED ORGANISMS ===
 // These will be implemented as part of the atomic design system completion
 // export * from './sidebar';

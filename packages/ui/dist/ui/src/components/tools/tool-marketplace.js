@@ -6,9 +6,9 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
  * Replaces the mock marketplace with actual tool discovery, installation, and management.
  */
 import { useState, useEffect, useCallback } from 'react';
-import { HiveCard, HiveButton, HiveInput, HiveBadge } from '../index.js';
+import { HiveCard, HiveButton, HiveInput, HiveBadge } from '../index';
 import { Search, Star, Download, Users, TrendingUp, Eye } from 'lucide-react';
-import { cn } from '../../lib/utils.js';
+import { cn } from '../../lib/utils';
 export function ToolMarketplace({ spaceId, userId, onInstallTool, onViewTool, className }) {
     const [tools, setTools] = useState([]);
     const [filteredTools, setFilteredTools] = useState([]);

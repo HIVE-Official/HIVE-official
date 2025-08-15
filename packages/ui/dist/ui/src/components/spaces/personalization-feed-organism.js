@@ -1,10 +1,10 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
-import { HiveCard } from "../hive-card.js";
-import { HiveButton } from "../hive-button.js";
-import { Grid } from "../Grid.js";
+import { HiveCard } from "../hive-card";
+import { HiveButton } from "../hive-button";
+import { Grid } from "../Grid";
 import { Heart, Activity, Target, Zap, Plus, ArrowRight, Crown, Star, Users } from "lucide-react";
-import { cn } from "../../lib/utils.js";
+import { cn } from "../../lib/utils";
 function MySpacesSection({ spaces = [], onSpaceClick, onBrowseSpaces, isLoading = false, layout = "default" }) {
     const getRoleBadge = (role) => {
         if (role === "owner") {

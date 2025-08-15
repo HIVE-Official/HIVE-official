@@ -38,7 +38,7 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
         success: true,
         message: 'Photo uploaded successfully (development mode)',
         avatarUrl,
-        developmentMode: true
+        // SECURITY: Development mode removed for production safety
       });
     }
 

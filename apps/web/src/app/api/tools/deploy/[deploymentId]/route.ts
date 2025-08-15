@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 // Use admin SDK methods since we're in an API route
 import { dbAdmin } from '@/lib/firebase-admin';
 import { getCurrentUser } from '@/lib/server-auth';
-import { logger } from "@/lib/logger";
+import { logger } from "@/lib/structured-logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 // GET - Get specific deployment details
@@ -11,7 +11,7 @@ export async function GET(
   { params }: { params: Promise<{ deploymentId: string }> }
 ) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
@@ -23,7 +23,7 @@ export async function GET(
       return NextResponse.json(ApiResponseHelper.error("Deployment not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
-    const deployment = { id: deploymentDoc.id, ...deploymentDoc.data() };
+    const deployment = { id: deploymentDoc.id, ...deploymentDoc.data() } as { id: string; toolId?: string; [key: string]: any };
 
     // Check access permissions
     if (!await canUserManageDeployment(user.uid, deployment)) {
@@ -31,6 +31,9 @@ export async function GET(
     }
 
     // Get tool details
+    if (!deployment.toolId) {
+      return NextResponse.json(ApiResponseHelper.error("Invalid deployment: missing toolId", "INVALID_DATA"), { status: HttpStatus.BAD_REQUEST });
+    }
     const toolDoc = await dbAdmin.collection('tools').doc(deployment.toolId).get();
     const toolData = toolDoc.exists ? toolDoc.data() : null;
 
@@ -54,7 +57,7 @@ export async function PUT(
   { params }: { params: Promise<{ deploymentId: string }> }
 ) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
@@ -67,6 +70,9 @@ export async function PUT(
     }
 
     const deployment = deploymentDoc.data();
+    if (!deployment) {
+      return NextResponse.json(ApiResponseHelper.error("Invalid deployment data", "INVALID_DATA"), { status: HttpStatus.BAD_REQUEST });
+    }
 
     // Check access permissions
     if (!await canUserManageDeployment(user.uid, deployment)) {
@@ -145,7 +151,7 @@ export async function DELETE(
   { params }: { params: Promise<{ deploymentId: string }> }
 ) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
@@ -158,6 +164,9 @@ export async function DELETE(
     }
 
     const deployment = deploymentDoc.data();
+    if (!deployment) {
+      return NextResponse.json(ApiResponseHelper.error("Invalid deployment data", "INVALID_DATA"), { status: HttpStatus.BAD_REQUEST });
+    }
 
     // Check access permissions - only deployer or space admin can remove
     if (deployment.deployedBy !== user.uid) {
@@ -169,7 +178,7 @@ export async function DELETE(
         }
         
         const spaceData = spaceDoc.data();
-        if (spaceData.ownerId !== user.uid) {
+        if (!spaceData || spaceData.ownerId !== user.uid) {
           return NextResponse.json(ApiResponseHelper.error("Access denied", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
         }
       } else {
@@ -184,9 +193,11 @@ export async function DELETE(
     const toolDoc = await dbAdmin.collection('tools').doc(deployment.toolId).get();
     if (toolDoc.exists) {
       const toolData = toolDoc.data();
-      await dbAdmin.collection('tools').doc(deployment.toolId).update({
-        deploymentCount: Math.max(0, (toolData.deploymentCount || 1) - 1)
-      });
+      if (toolData) {
+        await dbAdmin.collection('tools').doc(deployment.toolId).update({
+          deploymentCount: Math.max(0, (toolData.deploymentCount || 1) - 1)
+        });
+      }
     }
 
     // Log activity event
@@ -236,6 +247,9 @@ async function canUserManageDeployment(userId: string, deployment: any): Promise
       }
 
       const spaceData = spaceDoc.data();
+      if (!spaceData) {
+        return false;
+      }
       
       // Space owner can manage all deployments
       if (spaceData.ownerId === userId) {

@@ -1,4 +1,4 @@
 // Spaces Components Export
-export { CompleteHIVESpacesSystem } from './complete-hive-spaces-system.js';
-export { SpaceAnalyticsDashboard } from './space-analytics-dashboard.js';
+export { CompleteHIVESpacesSystem } from './complete-hive-spaces-system';
+export { SpaceAnalyticsDashboard } from './space-analytics-dashboard';
 //# sourceMappingURL=index.js.map

@@ -6,9 +6,9 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
  * Uses standard style system for consistent output
  */
 import { useState, useEffect } from 'react';
-import { Label } from '../ui/label.js';
+import { Label } from '../ui/label';
 import { Clock } from 'lucide-react';
-import { useStandardElementStyles } from '../../hooks/use-standard-element-styles.js';
+import { useStandardElementStyles } from '../../hooks/use-standard-element-styles';
 export const CountdownTimerRenderer = ({ element, config, onStateChange, runtimeContext }) => {
     // Use standard style system (flexible input, consistent output)
     const { classes, styles } = useStandardElementStyles(config.style);

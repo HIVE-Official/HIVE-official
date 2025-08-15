@@ -1,7 +1,7 @@
 "use client";
 import { jsx as _jsx } from "react/jsx-runtime";
 import { createContext, useContext, useState, useEffect } from 'react';
-import { useNavigationLayout } from '../../hooks/use-navigation-layout.js';
+import { useNavigationLayout } from '../../hooks/use-navigation-layout';
 const ShellContext = createContext(undefined);
 export function useShell() {
     const context = useContext(ShellContext);

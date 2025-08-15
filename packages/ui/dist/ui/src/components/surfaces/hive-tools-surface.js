@@ -3,9 +3,9 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cva } from 'class-variance-authority';
-import { cn } from '../../lib/utils.js';
-import { motionDurations } from '../../motion/hive-motion-system.js';
-import { useDeployedTools } from '../../hooks/use-deployed-tools.js';
+import { cn } from '../../lib/utils';
+import { motionDurations } from '../../motion/hive-motion-system';
+import { useDeployedTools } from '../../hooks/use-deployed-tools';
 import { Wrench, Plus, Settings, Trash2, Eye, Play, Pause, Crown, Star, Clock, Users, Activity, TrendingUp, CheckCircle, AlertCircle, XCircle, RefreshCw, MessageSquare, Calendar, FileText, Image as ImageIcon, Video, Music, Calculator, Map, Camera, Mic, Gamepad2, Bookmark, Link as LinkIcon, Database, Code, Palette, Globe } from 'lucide-react';
 // HIVE Tools Surface - Interactive Tool Management
 // Dynamic tool ecosystem with placement, configuration, and analytics

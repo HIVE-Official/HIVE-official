@@ -3,8 +3,8 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from 'react';
 import { motion } from 'framer-motion';
 import { cva } from 'class-variance-authority';
-import { cn } from '../lib/utils.js';
-import { liquidMetal, motionDurations } from '../motion/hive-motion-system.js';
+import { cn } from '../lib/utils';
+import { liquidMetal, motionDurations } from '../motion/hive-motion-system';
 import { CheckCircle, AlertCircle } from 'lucide-react';
 // HIVE Progress System - Advanced Loading States with Liquid Metal Motion
 // Sophisticated progress indicators with magnetic interactions and smooth animations
@@ -206,10 +206,10 @@ export const HiveSkeleton = React.forwardRef(({ className, width, height, varian
             } })) }));
 });
 HiveSkeleton.displayName = "HiveSkeleton";
-export const HiveProgress = React.forwardRef(({ variant = 'bar', value = 0, max = 100, size = 'md', status = 'default', showLabel = false, showPercentage = true, animated = true, label, steps, currentStep, className, ...props }, ref) => {
+export const HiveProgress = React.forwardRef(({ variant = 'bar', value = 0, max = 100, size = 'md', status = 'default', showLabel = false, showValue = false, showPercentage = true, animated = true, label, steps, currentStep, className, ...props }, ref) => {
     switch (variant) {
         case 'circular':
-            return (_jsx(HiveCircularProgress, { ref: ref, value: value, max: max, size: size === 'xs' ? 40 : size === 'sm' ? 60 : size === 'md' ? 80 : size === 'lg' ? 120 : 160, showPercentage: showPercentage, animated: animated, className: className, ...props }));
+            return (_jsx(HiveCircularProgress, { ref: ref, value: value, max: max, size: size === 'xs' ? 40 : size === 'sm' ? 60 : size === 'md' ? 80 : size === 'lg' ? 120 : 160, showValue: showValue, showPercentage: showPercentage, animated: animated, className: className, ...props }));
         case 'step':
             if (!steps) {
                 console.warn('HiveProgress: steps prop is required for step variant');
@@ -221,7 +221,7 @@ export const HiveProgress = React.forwardRef(({ variant = 'bar', value = 0, max 
         case 'skeleton':
             return (_jsx(HiveSkeleton, { ref: ref, variant: "rectangular", animated: animated, className: className, ...props }));
         default: // bar
-            return (_jsx(HiveProgressBar, { ref: ref, value: value, max: max, size: size === 'md' ? 'default' : size, variant: "default", fillVariant: status === 'error' ? 'danger' : status, showValue: false, showPercentage: showPercentage, animated: animated, label: label, className: className, ...props }));
+            return (_jsx(HiveProgressBar, { ref: ref, value: value, max: max, size: size === 'md' ? 'default' : size, variant: "default", fillVariant: status === 'error' ? 'danger' : status, showValue: showValue, showPercentage: showPercentage, animated: animated, label: label, className: className, ...props }));
     }
 });
 HiveProgress.displayName = "HiveProgress";

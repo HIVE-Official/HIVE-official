@@ -1,10 +1,10 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useState } from 'react';
-import { cn } from '../../lib/utils.js';
-import { Text } from '../../atomic/atoms/text.js';
-import { Button } from '../../atomic/atoms/button.js';
-import { useAdvancedViewport } from '../Layout/ResponsiveLayout.js';
+import { cn } from '../../lib/utils';
+import { Text } from '../../atomic/atoms/text';
+import { Button } from '../../atomic/atoms/button';
+import { useAdvancedViewport } from '../Layout/ResponsiveLayout';
 // Intelligent feature prioritization based on user context
 function prioritizeFeatures(context, failedFeatures) {
     const allFeatures = ['core', 'social', 'creation', 'analytics', 'advanced', 'experimental'];

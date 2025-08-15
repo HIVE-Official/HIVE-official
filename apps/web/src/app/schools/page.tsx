@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation';
 import { Search, Users, ArrowRight, MapPin } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { SchoolsPageHeader } from '../../components/temp-stubs';
@@ -271,7 +271,7 @@ const fallbackSchools: School[] = [
 ];
 
 export default function SchoolsPage() {
-  const router = useRouter();
+  // const router = useRouter();
   const [searchTerm, setSearchTerm] = useState('');
   const [isComingSoonOpen, setIsComingSoonOpen] = useState(false);
   const [schools, setSchools] = useState<School[]>([]);
@@ -413,7 +413,7 @@ export default function SchoolsPage() {
         {/* Schools Grid */}
         {!loading && (
           <div className="grid gap-4 hive-animate-liquid-reveal mb-16">
-            {filteredSchools.map((school, _index) => (
+            {filteredSchools.map((school) => (
             <div
               key={school.id}
               data-testid={`school-${school.id}`}
@@ -505,10 +505,10 @@ export default function SchoolsPage() {
         <div className="text-center">
           <div className="hive-glass-strong p-8 rounded-xl max-w-2xl mx-auto" style={{ border: '1px solid rgba(255, 191, 0, 0.3)' }}>
             <h3 className="hive-font-sans text-xl md:text-2xl font-bold mb-4 tracking-tight" style={{ color: '#F5F5F7' }}>
-              Don't see your university?
+              Don&apos;t see your university?
             </h3>
             <p className="hive-font-sans text-base mb-6 leading-relaxed" style={{ color: '#9A9AA1' }}>
-              We're expanding to more campuses every month. Join our general waitlist to be notified when HIVE arrives at your school.
+              We&apos;re expanding to more campuses every month. Join our general waitlist to be notified when HIVE arrives at your school.
             </p>
             <button className="hive-button-primary px-8 py-3">
               Join General Waitlist
@@ -522,9 +522,9 @@ export default function SchoolsPage() {
       {isComingSoonOpen && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-black/90 border border-white/10 rounded-2xl p-8 max-w-md w-full">
-            <h2 className="text-2xl font-bold text-white mb-4">What's Coming to HIVE</h2>
+            <h2 className="text-2xl font-bold text-white mb-4">What&apos;s Coming to HIVE</h2>
             <p className="text-white/70 mb-6">
-              We're building the future of campus collaboration. Check back soon for new features and campus expansions.
+              We&apos;re building the future of campus collaboration. Check back soon for new features and campus expansions.
             </p>
             <button
               onClick={() => setIsComingSoonOpen(false)}

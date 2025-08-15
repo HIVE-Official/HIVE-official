@@ -8,7 +8,7 @@
  * - Layout mode calculation
  * - Performance optimization
  */
-import { BREAKPOINTS } from './types.js';
+import { BREAKPOINTS } from './types';
 // ============================================================================
 // RESPONSIVE ENGINE
 // ============================================================================
@@ -119,7 +119,7 @@ export const calculateNavigationLayout = (state) => {
                     right: 0
                 }
             };
-        case 'desktop-sidebar':
+        case 'desktop-sidebar': {
             const sidebarWidth = sidebarCollapsed ? 64 : 256;
             return {
                 mode,
@@ -133,6 +133,7 @@ export const calculateNavigationLayout = (state) => {
                     right: 0
                 }
             };
+        }
         default:
             // Fallback to mobile layout
             return {

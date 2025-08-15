@@ -16,20 +16,20 @@ const profileStatisticVariants = cva(
         lg: "p-6 gap-3"
       },
       variant: {
-        default: "bg-hive-surface-elevated border border-hive-border-subtle rounded-xl",
+        default: "bg-[var(--hive-background-secondary)] border border-[var(--hive-border-primary)] rounded-xl",
         ghost: "bg-transparent",
-        highlight: "bg-gradient-to-br from-hive-gold/10 to-hive-brand-secondary/10 border border-hive-gold/20 rounded-xl",
-        compact: "bg-hive-surface-elevated/50 rounded-lg border border-hive-border-subtle/50"
+        highlight: "bg-gradient-to-br from-[var(--hive-brand-gold)]/10 to-[var(--hive-brand-secondary)]/10 border border-[var(--hive-brand-gold)]/20 rounded-xl",
+        compact: "bg-[var(--hive-background-secondary)]/50 rounded-lg border border-[var(--hive-border-primary)]/50"
       },
       interactive: {
-        true: "cursor-pointer hover:bg-hive-background-interactive hover:scale-105 hover:border-hive-gold/30",
+        true: "cursor-pointer hover:bg-[var(--hive-background-interactive)] hover:scale-105 hover:border-[var(--hive-brand-gold)]/30",
         false: ""
       },
       trend: {
         none: "",
-        up: "hover:shadow-green-400/10",
-        down: "hover:shadow-red-400/10", 
-        neutral: "hover:shadow-gray-400/10"
+        up: "hover:shadow-[var(--hive-status-success)]/10",
+        down: "hover:shadow-[var(--hive-status-error)]/10", 
+        neutral: "hover:shadow-[var(--hive-text-muted)]/10"
       }
     },
     defaultVariants: {
@@ -52,15 +52,15 @@ const valueVariants = cva(
         lg: "text-3xl"
       },
       trend: {
-        none: "text-hive-text-primary",
-        up: "text-green-400",
-        down: "text-red-400",
-        neutral: "text-hive-text-primary"
+        none: "text-[var(--hive-text-primary)]",
+        up: "text-[var(--hive-status-success)]",
+        down: "text-[var(--hive-status-error)]",
+        neutral: "text-[var(--hive-text-primary)]"
       },
       emphasis: {
         normal: "",
-        gold: "text-hive-gold",
-        secondary: "text-hive-brand-secondary"
+        gold: "text-[var(--hive-brand-gold)]",
+        secondary: "text-[var(--hive-brand-secondary)]"
       }
     },
     defaultVariants: {
@@ -99,12 +99,12 @@ const iconVariants = cva(
         lg: "h-8 w-8"
       },
       color: {
-        default: "text-hive-text-secondary",
-        gold: "text-hive-gold",
-        secondary: "text-hive-brand-secondary",
-        success: "text-green-400",
-        warning: "text-yellow-400",
-        error: "text-red-400"
+        default: "text-[var(--hive-text-secondary)]",
+        gold: "text-[var(--hive-brand-gold)]",
+        secondary: "text-[var(--hive-brand-secondary)]",
+        success: "text-[var(--hive-status-success)]",
+        warning: "text-[var(--hive-status-warning)]",
+        error: "text-[var(--hive-status-error)]"
       }
     },
     defaultVariants: {
@@ -184,13 +184,13 @@ export function ProfileStatistic({
     return (
       <div className={cn(profileStatisticVariants({ size, variant, interactive: false }), className)}>
         <div className="space-y-2 w-full">
-          <div className={cn("bg-hive-surface-elevated animate-pulse rounded", {
+          <div className={cn("bg-[var(--hive-background-secondary)] animate-pulse rounded", {
             "h-6": size === "xs",
             "h-7": size === "sm", 
             "h-8": size === "md",
             "h-10": size === "lg"
           })} />
-          <div className={cn("bg-hive-surface-elevated animate-pulse rounded", {
+          <div className={cn("bg-[var(--hive-background-secondary)] animate-pulse rounded", {
             "h-3": size === "xs",
             "h-4": size === "sm",
             "h-5": size === "md", 
@@ -231,15 +231,15 @@ export function ProfileStatistic({
         {showTrend && TrendIcon && change !== undefined && (
           <div className="flex items-center gap-1">
             <TrendIcon className={cn("h-4 w-4", {
-              "text-green-400": determinedTrend === "up",
-              "text-red-400": determinedTrend === "down",
-              "text-gray-400": determinedTrend === "neutral"
+              "text-[var(--hive-status-success)]": determinedTrend === "up",
+              "text-[var(--hive-status-error)]": determinedTrend === "down",
+              "text-[var(--hive-text-muted)]": determinedTrend === "neutral"
             })} />
             {changeLabel && (
               <span className={cn("text-xs font-medium", {
-                "text-green-400": determinedTrend === "up",
-                "text-red-400": determinedTrend === "down", 
-                "text-gray-400": determinedTrend === "neutral"
+                "text-[var(--hive-status-success)]": determinedTrend === "up",
+                "text-[var(--hive-status-error)]": determinedTrend === "down", 
+                "text-[var(--hive-text-muted)]": determinedTrend === "neutral"
               })}>
                 {changeLabel}
               </span>
@@ -249,16 +249,16 @@ export function ProfileStatistic({
       </div>
 
       {/* Label */}
-      <span className={cn(labelVariants({ size }), "text-hive-text-secondary")}>
+      <span className={cn(labelVariants({ size }), "text-[var(--hive-text-secondary)]")}>
         {label}
       </span>
 
       {/* Change Value (if no changeLabel) */}
       {showTrend && change !== undefined && !changeLabel && (
         <span className={cn("text-xs font-medium", {
-          "text-green-400": determinedTrend === "up",
-          "text-red-400": determinedTrend === "down",
-          "text-gray-400": determinedTrend === "neutral"
+          "text-[var(--hive-status-success)]": determinedTrend === "up",
+          "text-[var(--hive-status-error)]": determinedTrend === "down",
+          "text-[var(--hive-text-muted)]": determinedTrend === "neutral"
         })}>
           {change > 0 ? `+${change}` : change}
         </span>

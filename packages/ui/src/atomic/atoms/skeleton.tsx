@@ -22,7 +22,7 @@ export const Skeleton: React.FC<SkeletonProps> = ({
   ...props
 }) => {
   const baseClasses = [
-    'bg-hive-background-tertiary',
+    'bg-[var(--hive-background-tertiary)]',
     animate && 'animate-pulse',
     
     // Variants
@@ -85,7 +85,7 @@ export const SkeletonAvatar: React.FC<{ size?: 'sm' | 'md' | 'lg'; className?: s
   const sizeMap = {
     sm: 32,
     md: 40, 
-    lg: 12
+    lg: 48
   };
   
   return (

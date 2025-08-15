@@ -23,8 +23,14 @@ describe('Performance Integration Tests', () => {
       json: () => Promise.resolve({ data: 'mock response' })
     });
 
-    platformIntegration = new PlatformIntegration();
-    apiClient = new ResilientHiveApiClient('/api', 'test-token');
+    platformIntegration = new PlatformIntegration({
+      enableRealtime: false,
+      enableCrossSliceNotifications: false,
+      enableUnifiedSearch: true,
+      enableActivityStreaming: false,
+      cacheStrategy: 'memory'
+    });
+    apiClient = new ResilientHiveApiClient('/api');
     searchEngine = new HivePlatformSearchEngine();
   });
 
@@ -104,7 +110,7 @@ describe('Performance Integration Tests', () => {
       }));
 
       vi.spyOn(platformIntegration as any, 'fetchFromMultipleSources').mockResolvedValue(largeDataset);
-      vi.spyOn(platformIntegration as any, 'applyIntelligentRanking').mockImplementation((data) => {
+      vi.spyOn(platformIntegration as any, 'applyIntelligentRanking').mockImplementation((data: any) => {
         // Simulate ranking algorithm
         return data.sort((a: any, b: any) => b.relevanceScore - a.relevanceScore);
       });
@@ -207,7 +213,19 @@ describe('Performance Integration Tests', () => {
       
       await searchEngine.search({
         query: 'test query',
-        limit: 20
+        filters: {
+          slices: ['spaces', 'tools', 'feed'],
+          types: []
+        },
+        options: {
+          limit: 20,
+          offset: 0,
+          sortBy: 'relevance',
+          sortOrder: 'desc',
+          includePreview: false,
+          highlightMatches: false,
+          personalizeResults: false
+        }
       });
       
       const duration = performance.now() - startTime;
@@ -234,7 +252,19 @@ describe('Performance Integration Tests', () => {
       
       const result = await searchEngine.search({
         query: 'test',
-        limit: 50
+        filters: {
+          slices: ['spaces', 'tools', 'feed'],
+          types: []
+        },
+        options: {
+          limit: 50,
+          offset: 0,
+          sortBy: 'relevance',
+          sortOrder: 'desc',
+          includePreview: false,
+          highlightMatches: false,
+          personalizeResults: false
+        }
       });
       
       const duration = performance.now() - startTime;
@@ -254,12 +284,42 @@ describe('Performance Integration Tests', () => {
 
       // First search
       const startTime1 = performance.now();
-      await searchEngine.search({ query: 'test query', types: ['spaces'], limit: 20 });
+      await searchEngine.search({ 
+        query: 'test query', 
+        filters: {
+          slices: ['spaces'],
+          types: ['space']
+        },
+        options: {
+          limit: 20,
+          offset: 0,
+          sortBy: 'relevance',
+          sortOrder: 'desc',
+          includePreview: false,
+          highlightMatches: false,
+          personalizeResults: false
+        }
+      });
       const duration1 = performance.now() - startTime1;
 
       // Second identical search - should be cached
       const startTime2 = performance.now();
-      await searchEngine.search({ query: 'test query', types: ['spaces'], limit: 20 });
+      await searchEngine.search({ 
+        query: 'test query', 
+        filters: {
+          slices: ['spaces'],
+          types: ['space']
+        },
+        options: {
+          limit: 20,
+          offset: 0,
+          sortBy: 'relevance',
+          sortOrder: 'desc',
+          includePreview: false,
+          highlightMatches: false,
+          personalizeResults: false
+        }
+      });
       const duration2 = performance.now() - startTime2;
 
       // Second search should be much faster due to caching
@@ -330,7 +390,22 @@ describe('Performance Integration Tests', () => {
       const mixedOperations = [
         ...Array.from({ length: 10 }, () => platformIntegration.getUnifiedFeedData('test-user-id')),
         ...Array.from({ length: 10 }, () => apiClient.getSpaces()),
-        ...Array.from({ length: 10 }, () => searchEngine.search({ query: 'test', types: ['spaces'], limit: 10 })),
+        ...Array.from({ length: 10 }, () => searchEngine.search({ 
+          query: 'test', 
+          filters: {
+            slices: ['spaces'],
+            types: ['space']
+          },
+          options: {
+            limit: 10,
+            offset: 0,
+            sortBy: 'relevance',
+            sortOrder: 'desc',
+            includePreview: false,
+            highlightMatches: false,
+            personalizeResults: false
+          }
+        })),
       ];
 
       const results = await Promise.all(mixedOperations);

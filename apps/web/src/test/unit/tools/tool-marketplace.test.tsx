@@ -219,13 +219,13 @@ describe('ToolMarketplace Component', () => {
         id: 'minimal-tool',
         name: 'Minimal Tool',
         description: 'A minimal tool',
-        category: 'other' as const,
+        category: 'productivity' as const,
         type: 'individual' as const,
         downloads: 0,
         rating: 0,
         ratingCount: 0,
         creator: 'Unknown',
-        creatorType: 'student' as const,
+        creatorType: 'organization' as const,
         tags: [],
         version: '1.0.0',
         lastUpdated: new Date(),
@@ -256,11 +256,12 @@ describe('ToolMarketplace Component', () => {
         ...mockTools[0],
         id: 'grade-calc',
         name: 'Grade Calculator',
-        category: 'academic' as const,
+        category: 'social' as const,
+        creatorType: 'hive_team' as const,
       };
 
       renderToolMarketplace([academicTool]);
-      expect(screen.getByText('Category: academic')).toBeInTheDocument();
+      expect(screen.getByText('Category: social')).toBeInTheDocument();
     });
   });
 
@@ -277,7 +278,8 @@ describe('ToolMarketplace Component', () => {
         ...mockTools[0],
         id: 'student-tool',
         creator: 'Jane Student',
-        creatorType: 'student' as const,
+        creatorType: 'hive_team' as const,
+        category: 'social' as const,
       };
 
       renderToolMarketplace([studentTool]);

@@ -1,16 +1,16 @@
 // HIVE Atomic Design System
 // Complete UI/UX foundation for the entire app
 // === ATOMS ===
-export * from './atoms/index.js';
+export * from './atoms';
 // === MOLECULES === 
-export * from './molecules/index.js';
+export * from './molecules';
 // === ORGANISMS ===
-export * from './organisms/index.js';
+export * from './organisms';
 // === TEMPLATES ===
-export * from './templates/index.js';
+export * from './templates';
 // === PAGES ===
-export * from './pages/index.js';
+export * from './pages';
 // === FOUNDATIONS ===
 // Design tokens are handled by @hive/tokens package
-export * from './foundations/index.js';
+export * from './foundations';
 //# sourceMappingURL=index.js.map

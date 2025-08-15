@@ -1,7 +1,7 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from 'react';
-import { cn } from '../../lib/utils.js';
+import { cn } from '../../lib/utils';
 import { Check, Minus } from 'lucide-react';
 const checkboxSizes = {
     sm: {
@@ -37,35 +37,35 @@ export const Checkbox = React.forwardRef(({ label, description, error, size = 'm
         checkboxSizes[size].box,
         // States
         !disabled && !error && [
-            'border-hive-border-default',
-            'hover:border-hive-gold',
-            'focus-within:border-hive-gold focus-within:ring-2 focus-within:ring-hive-gold/20'
+            'border-[var(--hive-border-default)]',
+            'hover:border-[var(--hive-brand-gold)]',
+            'focus-within:border-[var(--hive-brand-gold)] focus-within:ring-2 focus-within:ring-[var(--hive-brand-gold)]/20'
         ].filter(Boolean).join(' '),
         disabled && [
             'border-[var(--hive-border-default)]',
-            'bg-hive-smoke',
+            'bg-[var(--hive-background-disabled)]',
             'cursor-not-allowed'
         ].join(' '),
         error && [
-            'border-hive-ruby',
-            'focus-within:border-hive-ruby focus-within:ring-2 focus-within:ring-hive-ruby/20'
+            'border-[var(--hive-status-error)]',
+            'focus-within:border-[var(--hive-status-error)] focus-within:ring-2 focus-within:ring-[var(--hive-status-error)]/20'
         ].join(' '),
         // Checked state
         showCheck && !disabled && [
-            'bg-[var(--hive-brand-secondary)] border-hive-gold',
-            error && 'bg-hive-ruby border-hive-ruby'
+            'bg-[var(--hive-brand-secondary)] border-[var(--hive-brand-gold)]',
+            error && 'bg-[var(--hive-status-error)] border-[var(--hive-status-error)]'
         ].filter(Boolean).join(' ')
     ].filter(Boolean).join(' ');
     const containerClasses = [
         'flex items-start gap-3',
         variant === 'card' && [
-            'p-4 rounded-xl border border-hive-border-default',
-            'hover:bg-hive-background-interactive',
+            'p-4 rounded-xl border border-[var(--hive-border-default)]',
+            'hover:bg-[var(--hive-background-secondary)]',
             !disabled && 'cursor-pointer',
             disabled && 'opacity-50'
         ].filter(Boolean).join(' ')
     ].filter(Boolean).join(' ');
-    return (_jsxs("label", { className: cn(containerClasses, className), children: [_jsxs("div", { className: boxClasses, children: [_jsx("input", { ref: inputRef, type: "checkbox", checked: isChecked, disabled: disabled, className: "sr-only", ...props }), showCheck && (_jsx("div", { className: cn('flex items-center justify-center', 'text-[var(--hive-background-primary)]', checkboxSizes[size].icon, disabled && 'text-[var(--hive-text-disabled)]'), children: indeterminate ? (_jsx(Minus, { className: "h-full w-full" })) : (_jsx(Check, { className: "h-full w-full" })) }))] }), (label || description) && (_jsxs("div", { className: "flex-1 min-w-0", children: [label && (_jsx("div", { className: cn('font-medium text-hive-text-primary', checkboxSizes[size].text, disabled && 'text-[var(--hive-text-disabled)]'), children: label })), description && (_jsx("div", { className: cn('text-hive-text-secondary mt-1', size === 'sm' && 'text-xs', size === 'md' && 'text-sm', size === 'lg' && 'text-base', disabled && 'text-[var(--hive-text-disabled)]'), children: description })), error && (_jsx("div", { className: cn('text-hive-ruby mt-1', size === 'sm' && 'text-xs', size === 'md' && 'text-sm', size === 'lg' && 'text-base'), children: error }))] }))] }));
+    return (_jsxs("label", { className: cn(containerClasses, className), children: [_jsxs("div", { className: boxClasses, children: [_jsx("input", { ref: inputRef, type: "checkbox", checked: isChecked, disabled: disabled, className: "sr-only", ...props }), showCheck && (_jsx("div", { className: cn('flex items-center justify-center', 'text-[var(--hive-background-primary)]', checkboxSizes[size].icon, disabled && 'text-[var(--hive-text-disabled)]'), children: indeterminate ? (_jsx(Minus, { className: "h-full w-full" })) : (_jsx(Check, { className: "h-full w-full" })) }))] }), (label || description) && (_jsxs("div", { className: "flex-1 min-w-0", children: [label && (_jsx("div", { className: cn('font-medium text-[var(--hive-text-primary)]', checkboxSizes[size].text, disabled && 'text-[var(--hive-text-disabled)]'), children: label })), description && (_jsx("div", { className: cn('text-[var(--hive-text-secondary)] mt-1', size === 'sm' && 'text-xs', size === 'md' && 'text-sm', size === 'lg' && 'text-base', disabled && 'text-[var(--hive-text-disabled)]'), children: description })), error && (_jsx("div", { className: cn('text-[var(--hive-status-error)] mt-1', size === 'sm' && 'text-xs', size === 'md' && 'text-sm', size === 'lg' && 'text-base'), children: error }))] }))] }));
 });
 Checkbox.displayName = 'Checkbox';
 //# sourceMappingURL=checkbox.js.map

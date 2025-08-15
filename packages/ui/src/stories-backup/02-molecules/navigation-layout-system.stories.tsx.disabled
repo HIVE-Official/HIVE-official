@@ -1,0 +1,381 @@
+import type { Meta, StoryObj } from '@storybook/react';
+import { useState, useEffect } from 'react';
+import { NavigationStyle, useNavigationLayout } from '../../hooks/use-navigation-layout';
+import { NavigationPreferences } from '../../atomic/atoms/navigation-preferences';
+import { EnhancedNavigationBar } from '../../../src/components/navigation/enhanced-navigation-bar';
+import { NavigationSidebar } from '../../../src/components/shell/navigation-sidebar';
+import { UniversalBottomNav } from '../../../src/components/navigation/universal-bottom-nav';
+
+const meta: Meta = {
+  title: '02-Molecules/Navigation Layout System',
+  parameters: {
+    layout: 'fullscreen',
+    docs: {
+      description: {
+        component: `
+# Navigation Layout System
+
+The complete HIVE navigation system that adapts to user preferences and screen sizes according to the HIVE Shell Application specification.
+
+## Responsive Behavior
+
+- **Mobile (<768px)**: Bottom tabs (enforced)
+- **Tablet (768-1199px)**: Collapsible drawer  
+- **Desktop (1200-1440px)**: User preference (tabs or sidebar)
+- **Wide (>1440px)**: Sidebar recommended
+
+## User Preferences
+
+- **Tab Bar**: Clean & Simple - horizontal navigation
+- **Sidebar**: Always Visible - persistent side navigation
+- **Auto**: Adapts to screen size automatically
+
+## Navigation Sections
+
+Following the HIVE specification:
+1. **Profile** - My campus command center
+2. **Feed** - What's happening around me  
+3. **Spaces** - My communities
+4. **HiveLAB** - Build solutions
+        `
+      }
+    }
+  }
+};
+
+export default meta;
+type Story = StoryObj;
+
+// Mock user data
+const mockUser = {
+  id: '1',
+  name: 'Alex Chen',
+  handle: 'alexchen',
+  avatar: undefined,
+  builderStatus: 'active' as const,
+  role: 'student' as const
+};
+
+// Navigation Layout Demo Component
+const NavigationLayoutDemo = ({ 
+  initialPreference = 'auto',
+  forceScreenWidth 
+}: {
+  initialPreference?: NavigationStyle;
+  forceScreenWidth?: number;
+}) => {
+  const [preference, setPreference] = useState<NavigationStyle>(initialPreference);
+  const [simulatedWidth, setSimulatedWidth] = useState(forceScreenWidth || 1200);
+  
+  // Mock the navigation layout hook behavior
+  const getMockLayout = () => {
+    const width = forceScreenWidth || simulatedWidth;
+    
+    let resolvedMode: 'topbar' | 'sidebar' | 'bottom-tabs' | 'drawer' = 'sidebar';
+    
+    if (width < 768) {
+      resolvedMode = 'bottom-tabs';
+    } else if (width < 1200) {
+      resolvedMode = 'drawer';
+    } else if (width < 1441) {
+      resolvedMode = preference === 'sidebar' ? 'sidebar' : 'topbar';
+    } else {
+      resolvedMode = preference === 'tabs' ? 'topbar' : 'sidebar';
+    }
+    
+    return {
+      resolvedMode,
+      userPreference: preference,
+      screenWidth: width,
+      updatePreference: setPreference,
+      isMobile: width < 768,
+      isTablet: width >= 768 && width < 1200,
+      isDesktop: width >= 1200 && width < 1441,
+      isWideScreen: width >= 1441,
+      shouldShowBottomTabs: resolvedMode === 'bottom-tabs',
+      shouldShowSidebar: resolvedMode === 'sidebar',
+      shouldShowTopbar: resolvedMode === 'topbar',
+      shouldShowDrawer: resolvedMode === 'drawer',
+    };
+  };
+  
+  const layout = getMockLayout();
+  
+  return (
+    <div className="h-screen bg-[var(--hive-background-primary)]">
+      {/* Controls */}
+      {!forceScreenWidth && (
+        <div className="absolute top-4 right-4 z-50 p-4 bg-[var(--hive-bg-secondary)] rounded-lg border border-[var(--hive-border-default)] shadow-lg max-w-sm">
+          <div className="space-y-4">
+            <div>
+              <label className="text-sm font-medium text-[var(--hive-text-primary)] mb-2 block">
+                Screen Width Simulation
+              </label>
+              <select
+                value={simulatedWidth}
+                onChange={(e) => setSimulatedWidth(Number(e.target.value))}
+                className="w-full p-2 bg-[var(--hive-bg-tertiary)] border border-[var(--hive-border-default)] rounded text-[var(--hive-text-primary)] text-sm"
+              >
+                <option value={375}>Mobile (375px)</option>
+                <option value={768}>Tablet (768px)</option>
+                <option value={1024}>Tablet Large (1024px)</option>
+                <option value={1200}>Desktop (1200px)</option>
+                <option value={1440}>Desktop Large (1440px)</option>
+                <option value={1920}>Wide Screen (1920px)</option>
+              </select>
+            </div>
+            
+            <NavigationPreferences
+              value={preference}
+              onChange={setPreference}
+            />
+            
+            <div className="p-3 bg-[var(--hive-bg-tertiary)] rounded border">
+              <div className="text-xs text-[var(--hive-text-secondary)] space-y-1">
+                <div>Screen: {layout.screenWidth}px</div>
+                <div className="font-medium text-[var(--hive-brand-secondary)]">
+                  Layout: {layout.resolvedMode}
+                </div>
+                <div>
+                  {layout.isMobile && 'Mobile: Bottom tabs enforced'}
+                  {layout.isTablet && 'Tablet: Collapsible drawer'}
+                  {layout.isDesktop && 'Desktop: User preference applied'}
+                  {layout.isWideScreen && 'Wide: Sidebar recommended'}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Render appropriate navigation */}
+      {layout.shouldShowBottomTabs && (
+        <div className="relative h-full">
+          <div className="h-full pb-20 p-4 overflow-auto">
+            <div className="text-center py-20">
+              <h2 className="text-2xl font-bold text-[var(--hive-text-primary)] mb-4">
+                Mobile Layout
+              </h2>
+              <p className="text-[var(--hive-text-secondary)]">
+                Bottom tabs navigation for optimal mobile experience
+              </p>
+            </div>
+          </div>
+          <UniversalBottomNav user={mockUser} />
+        </div>
+      )}
+      
+      {layout.shouldShowTopbar && (
+        <div className="relative h-full">
+          <EnhancedNavigationBar user={mockUser} />
+          <div className="pt-16 p-4 h-full overflow-auto">
+            <div className="text-center py-20">
+              <h2 className="text-2xl font-bold text-[var(--hive-text-primary)] mb-4">
+                Top Bar Layout
+              </h2>
+              <p className="text-[var(--hive-text-secondary)]">
+                Clean horizontal navigation with maximum content space
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {layout.shouldShowSidebar && (
+        <div className="flex h-full">
+          <NavigationSidebar 
+            collapsed={false}
+            user={mockUser}
+            onToggle={() => {}}
+          />
+          <div className="flex-1 p-4 overflow-auto">
+            <div className="text-center py-20">
+              <h2 className="text-2xl font-bold text-[var(--hive-text-primary)] mb-4">
+                Sidebar Layout
+              </h2>
+              <p className="text-[var(--hive-text-secondary)]">
+                Persistent navigation with quick access to all sections
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {layout.shouldShowDrawer && (
+        <div className="relative h-full">
+          <div className="p-4 h-full overflow-auto">
+            <div className="text-center py-20">
+              <h2 className="text-2xl font-bold text-[var(--hive-text-primary)] mb-4">
+                Drawer Layout
+              </h2>
+              <p className="text-[var(--hive-text-secondary)]">
+                Collapsible drawer navigation for tablet devices
+              </p>
+              <p className="text-xs text-[var(--hive-text-tertiary)] mt-2">
+                (Drawer implementation would show/hide on tap)
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export const InteractiveDemo: Story = {
+  render: () => <NavigationLayoutDemo />
+};
+
+export const MobileLayout: Story = {
+  render: () => <NavigationLayoutDemo forceScreenWidth={375} />
+};
+
+export const TabletLayout: Story = {
+  render: () => <NavigationLayoutDemo forceScreenWidth={1024} />
+};
+
+export const DesktopTabsLayout: Story = {
+  render: () => <NavigationLayoutDemo initialPreference="tabs" forceScreenWidth={1200} />
+};
+
+export const DesktopSidebarLayout: Story = {
+  render: () => <NavigationLayoutDemo initialPreference="sidebar" forceScreenWidth={1200} />
+};
+
+export const WideScreenLayout: Story = {
+  render: () => <NavigationLayoutDemo forceScreenWidth={1920} />
+};
+
+// Responsive behavior demonstration
+export const ResponsiveBehavior: Story = {
+  render: () => {
+    const [currentWidth, setCurrentWidth] = useState(1200);
+    const breakpoints = [375, 768, 1024, 1200, 1440, 1920];
+    const labels = ['Mobile', 'Tablet', 'Tablet+', 'Desktop', 'Desktop+', 'Wide'];
+    
+    useEffect(() => {
+      const interval = setInterval(() => {
+        setCurrentWidth(prev => {
+          const currentIndex = breakpoints.indexOf(prev);
+          const nextIndex = (currentIndex + 1) % breakpoints.length;
+          return breakpoints[nextIndex];
+        });
+      }, 3000);
+      
+      return () => clearInterval(interval);
+    }, []);
+    
+    return (
+      <div className="h-screen bg-[var(--hive-background-primary)] relative">
+        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-50 p-4 bg-[var(--hive-bg-secondary)] rounded-lg border border-[var(--hive-border-default)] shadow-lg">
+          <div className="text-center">
+            <div className="text-sm text-[var(--hive-text-secondary)]">Auto-cycling through</div>
+            <div className="font-bold text-[var(--hive-brand-secondary)]">
+              {labels[breakpoints.indexOf(currentWidth)]} ({currentWidth}px)
+            </div>
+          </div>
+        </div>
+        <NavigationLayoutDemo forceScreenWidth={currentWidth} />
+      </div>
+    );
+  }
+};
+
+// Navigation sections showcase
+export const NavigationSections: Story = {
+  render: () => {
+    const sections = [
+      {
+        id: 'profile',
+        name: 'Profile',
+        description: 'My campus command center',
+        color: 'bg-blue-500/20 text-blue-400'
+      },
+      {
+        id: 'feed', 
+        name: 'Feed',
+        description: 'What\'s happening around me',
+        color: 'bg-green-500/20 text-green-400'
+      },
+      {
+        id: 'spaces',
+        name: 'Spaces', 
+        description: 'My communities',
+        color: 'bg-purple-500/20 text-purple-400'
+      },
+      {
+        id: 'hivelab',
+        name: 'HiveLAB',
+        description: 'Build solutions',
+        color: 'bg-yellow-500/20 text-yellow-400'
+      }
+    ];
+    
+    return (
+      <div className="p-8 bg-[var(--hive-background-primary)] min-h-screen">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-12">
+            <h1 className="text-3xl font-bold text-[var(--hive-text-primary)] mb-4">
+              HIVE Navigation Sections
+            </h1>
+            <p className="text-[var(--hive-text-secondary)] max-w-2xl mx-auto">
+              Four core navigation pillars that provide students with quick access to their 
+              campus command center, activity feed, communities, and building tools.
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-2 gap-8">
+            {sections.map((section) => (
+              <div key={section.id} className="p-6 bg-[var(--hive-bg-secondary)] rounded-xl border border-[var(--hive-border-default)]">
+                <div className="flex items-center space-x-4 mb-4">
+                  <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${section.color}`}>
+                    <div className="w-6 h-6 bg-current rounded" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-[var(--hive-text-primary)]">
+                      {section.name}
+                    </h3>
+                    <p className="text-sm text-[var(--hive-text-secondary)]">
+                      {section.description}
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="space-y-2 text-sm text-[var(--hive-text-tertiary)]">
+                  {section.id === 'profile' && (
+                    <>
+                      <div>• Personal dashboard and settings</div>
+                      <div>• Campus identity and activity</div>
+                      <div>• Account management</div>
+                    </>
+                  )}
+                  {section.id === 'feed' && (
+                    <>
+                      <div>• Campus activity stream</div>
+                      <div>• Coordination and updates</div>
+                      <div>• Community pulse</div>
+                    </>
+                  )}
+                  {section.id === 'spaces' && (
+                    <>
+                      <div>• Discover and join communities</div>
+                      <div>• Academic and social groups</div>
+                      <div>• Collaborative spaces</div>
+                    </>
+                  )}
+                  {section.id === 'hivelab' && (
+                    <>
+                      <div>• Tool building interface</div>
+                      <div>• Solution marketplace</div>
+                      <div>• Creator resources</div>
+                    </>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+};

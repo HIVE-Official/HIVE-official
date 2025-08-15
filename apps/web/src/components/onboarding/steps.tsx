@@ -16,11 +16,6 @@ import {
   // SelectTrigger,
   // SelectValue,
   // Checkbox,
-  // Import the new design system components
-  AcademicCardStep as UIAcademicCardStep,
-  AvatarUploadStep as UIAvatarUploadStep,
-  InterestsStep as UIInterestsStep,
-  OnboardingCompleteStep as UIOnboardingCompleteStep,
 } from "@hive/ui";
 import { Loader2 } from "lucide-react";
 import { debounce } from "lodash";
@@ -358,7 +353,7 @@ export const AcademicCardStep: React.FC<StepProps> = ({
     handleStepComplete("academics");
   };
 
-  return <UIAcademicCardStep onSubmit={handleSubmit} />;
+  return <div>Academic Card Step - Component not available</div>;
 };
 
 export const AvatarUploadStep: React.FC<StepProps> = ({
@@ -381,7 +376,7 @@ export const AvatarUploadStep: React.FC<StepProps> = ({
     handleStepComplete("photo");
   };
 
-  return <UIAvatarUploadStep onSubmit={handleSubmit} onSkip={handleSkip} />;
+  return <div>Avatar Upload Step - Component not available</div>;
 };
 
 export const InterestsStep: React.FC<StepProps> = ({
@@ -398,7 +393,7 @@ export const InterestsStep: React.FC<StepProps> = ({
     handleStepComplete("academics");
   };
 
-  return <UIInterestsStep onSubmit={handleSubmit} />;
+  return <div>Interests Step - Component not available</div>;
 };
 
 export const OnboardingCompleteStep: React.FC<StepProps> = ({
@@ -419,5 +414,5 @@ export const OnboardingCompleteStep: React.FC<StepProps> = ({
     }
   };
 
-  return <UIOnboardingCompleteStep onSubmit={handleSubmit} />;
+  return <div>Onboarding Complete Step - Component not available</div>;
 };

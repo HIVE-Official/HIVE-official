@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { ritualFramework } from '@/lib/rituals-framework';
-import { logger } from "@/lib/logger";
+import { logger } from "@/lib/structured-logger";
 import { ApiResponseHelper, HttpStatus } from "@/lib/api-response-types";
 import { withAuth } from '@/lib/api-auth-middleware';
 
@@ -63,7 +63,7 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
     }
 
     const ritual = { id: ritualDoc.id, ...ritualDoc.data() };
-    if (ritual.status !== 'active') {
+    if ((ritual as any).status !== 'active') {
       return NextResponse.json(
         ApiResponseHelper.error("Ritual is not currently active", "RITUAL_NOT_ACTIVE"),
         { status: HttpStatus.BAD_REQUEST }
@@ -103,7 +103,16 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
 
     const participation = participationSnapshot.empty 
       ? null 
-      : { id: participationSnapshot.docs[0].id, ...participationSnapshot.docs[0].data() };
+      : { 
+          id: participationSnapshot.docs[0].id, 
+          ...participationSnapshot.docs[0].data() 
+        } as { 
+          id: string; 
+          joinedAt?: any; 
+          lastActiveAt?: any; 
+          completedAt?: any; 
+          [key: string]: any; 
+        };
 
     logger.info('✅ Successfully joined ritual', { 
       userId, 
@@ -142,6 +151,6 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
     );
   }
 }, { 
-  allowDevelopmentBypass: true, // Joining rituals is safe for development
+  allowDevelopmentBypass: false, // Joining rituals requires authentication
   operation: 'join_ritual' 
 });

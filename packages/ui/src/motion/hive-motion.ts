@@ -228,7 +228,7 @@ export const hiveGPULayers = {
 } as const;
 
 // Reduced motion preferences
-export const respectsReducedMotion = (styles: any) => ({
+export const respectsReducedMotion = (styles: Record<string, unknown>) => ({
   ...styles,
   '@media (prefers-reduced-motion: reduce)': {
     animation: 'none',

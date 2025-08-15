@@ -9,8 +9,8 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from 'react';
 import { motion } from 'framer-motion';
 import { cva } from 'class-variance-authority';
-import { cn } from '../../lib/utils.js';
-import { liquidMetal, motionDurations } from '../../motion/hive-motion-system.js';
+import { cn } from '../../lib/utils';
+import { liquidMetal, motionDurations } from '../../motion/hive-motion-system';
 // ============================================================================
 // UNIFIED CARD SYSTEM ARCHITECTURE
 // ============================================================================

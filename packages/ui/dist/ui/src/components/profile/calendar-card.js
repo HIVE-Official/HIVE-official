@@ -3,10 +3,10 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar, Clock, MapPin, Users, Plus, BookOpen, Coffee, Award, Briefcase, User, ExternalLink, AlertTriangle, RefreshCw, Settings, ChevronRight, Bell, Navigation } from 'lucide-react';
-import { HiveCard } from '../hive-card.js';
-import { HiveButton } from '../hive-button.js';
-import { HiveBadge } from '../hive-badge.js';
-import { cn } from '../../lib/utils.js';
+import { HiveCard } from '../hive-card';
+import { HiveButton } from '../hive-button';
+import { HiveBadge } from '../hive-badge';
+import { cn } from '../../lib/utils';
 export const CalendarCard = ({ data, state = 'loading', variant = 'desktop', onViewCalendar, onConnectCalendar, onAddEvent, onResolveConflict, onSyncCalendar, onEventClick, className }) => {
     const [showConflictDetails, setShowConflictDetails] = useState(false);
     // Time-aware display logic

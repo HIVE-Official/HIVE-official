@@ -1,6 +1,6 @@
 'use client';
 import { jsx as _jsx } from "react/jsx-runtime";
-import { cn } from '../../lib/utils.js';
+import { cn } from '../../lib/utils';
 const textVariants = {
     variant: {
         // Display Scale
@@ -22,15 +22,15 @@ const textVariants = {
         'body-2xs': 'text-body-2xs font-sans font-normal leading-none'
     },
     color: {
-        primary: 'text-hive-text-primary',
-        secondary: 'text-hive-text-secondary',
-        muted: 'text-hive-text-muted',
-        mutedLight: 'text-hive-text-mutedLight',
-        mutedDark: 'text-hive-text-mutedDark',
-        subtle: 'text-hive-text-subtle',
+        primary: 'text-[var(--hive-text-primary)]',
+        secondary: 'text-[var(--hive-text-secondary)]',
+        muted: 'text-[var(--hive-text-muted)]',
+        mutedLight: 'text-[var(--hive-text-tertiary)]',
+        mutedDark: 'text-[var(--hive-text-quaternary)]',
+        subtle: 'text-[var(--hive-text-tertiary)]',
         gold: 'text-[var(--hive-brand-secondary)]',
-        ruby: 'text-hive-ruby',
-        emerald: 'text-hive-emerald'
+        ruby: 'text-[var(--hive-status-error)]',
+        emerald: 'text-[var(--hive-status-success)]'
     },
     weight: {
         light: 'font-light',

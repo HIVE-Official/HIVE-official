@@ -1,7 +1,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from 'react';
 import { cva } from 'class-variance-authority';
-import { cn } from '../lib/utils.js';
+import { cn } from '../lib/utils';
 // Modular Card System - Building block approach
 const moduleVariants = cva("relative transition-all duration-200 ease-out", {
     variants: {

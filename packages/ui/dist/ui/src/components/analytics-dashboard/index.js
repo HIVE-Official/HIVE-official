@@ -1,2 +1,2 @@
-export { AnalyticsDashboard } from './analytics-dashboard.js';
+export { AnalyticsDashboard } from './analytics-dashboard';
 //# sourceMappingURL=index.js.map

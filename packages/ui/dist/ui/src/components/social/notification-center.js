@@ -4,9 +4,9 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
  * Real-time notifications with categorization and interactions
  */
 import { useState, useCallback, useMemo } from 'react';
-import { Button } from '../ui/button.js';
-import { Avatar } from '../index.js';
-import { HiveBadge as Badge } from '../index.js';
+import { Button } from '../ui/button';
+import { Avatar } from '../index';
+import { HiveBadge as Badge } from '../index';
 import { Bell, X, Check, Users, Heart, MessageCircle, Zap, Calendar, Settings, Archive, Filter, Trash2, MoreHorizontal } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 const NotificationItem = ({ notification, onMarkAsRead, onArchive, onDelete, onClick }) => {

@@ -4,7 +4,6 @@ import { dbAdmin } from '@/lib/firebase-admin';
 import { getCurrentUser } from '@/lib/server-auth';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
-import { doc, getDoc, collection, query, where, orderBy, getDocs, limit } from 'firebase-admin/firestore';
 
 // Space recommendation interface
 interface SpaceRecommendation {
@@ -25,7 +24,7 @@ interface SpaceRecommendation {
 // GET - Get space recommendations for user
 export async function GET(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
@@ -35,28 +34,24 @@ export async function GET(request: NextRequest) {
     const type = searchParams.get('type') || 'all'; // all, similar_interests, trending, new_spaces
 
     // Get user's current memberships
-    const currentMembershipsQuery = dbAdmin.collection(
-      dbAdmin.collection('members'),
-      where('userId', '==', user.uid),
-      where('status', '==', 'active')
-    );
+    const currentMembershipsQuery = dbAdmin.collection('members')
+      .where('userId', '==', user.uid)
+      .where('status', '==', 'active');
 
-    const currentMembershipsSnapshot = await getDocs(currentMembershipsQuery);
+    const currentMembershipsSnapshot = await currentMembershipsQuery.get();
     const currentSpaceIds = currentMembershipsSnapshot.docs.map(doc => doc.data().spaceId);
 
     // Get user profile for interest matching
-    const userDoc = await getDoc(doc(dbAdmin, 'users', user.uid));
+    const userDoc = await dbAdmin.collection('users').doc(user.uid).get();
     const userData = userDoc.exists ? userDoc.data() : null;
 
     // Get all available spaces (excluding current memberships)
-    const allSpacesQuery = dbAdmin.collection(
-      dbAdmin.collection('spaces'),
-      where('status', '==', 'active'),
-      orderBy('memberCount', 'desc'),
-      limit(100) // Limit for performance
-    );
+    const allSpacesQuery = dbAdmin.collection('spaces')
+      .where('status', '==', 'active')
+      .orderBy('memberCount', 'desc')
+      .limit(100); // Limit for performance
 
-    const allSpacesSnapshot = await getDocs(allSpacesQuery);
+    const allSpacesSnapshot = await allSpacesQuery.get();
     const availableSpaces = allSpacesSnapshot.docs
       .filter(doc => !currentSpaceIds.includes(doc.id))
       .map(doc => ({
@@ -155,9 +150,9 @@ async function generateInterestBasedRecommendations(
       const spaceKeywords = (space.name + ' ' + space.description).toLowerCase().split(/\s+/);
       
       // Calculate interest match score
-      const tagMatches = spaceTags.filter(tag => userInterests.includes(tag)).length;
-      const keywordMatches = spaceKeywords.filter(keyword => 
-        userInterests.some(interest => interest.includes(keyword) || keyword.includes(interest))
+      const tagMatches = spaceTags.filter((tag: string) => userInterests.includes(tag)).length;
+      const keywordMatches = spaceKeywords.filter((keyword: string) => 
+        userInterests.some((interest: string) => interest.includes(keyword) || keyword.includes(interest))
       ).length;
       
       const matchScore = (tagMatches * 2) + keywordMatches;
@@ -252,23 +247,19 @@ async function generateFriendActivityRecommendations(
 ): Promise<SpaceRecommendation[]> {
   try {
     // Get user's current space memberships to find "friends" (other members)
-    const currentMembershipsQuery = dbAdmin.collection(
-      dbAdmin.collection('members'),
-      where('userId', '==', userId),
-      where('status', '==', 'active')
-    );
+    const currentMembershipsQuery = dbAdmin.collection('members')
+      .where('userId', '==', userId)
+      .where('status', '==', 'active');
 
-    const currentMembershipsSnapshot = await getDocs(currentMembershipsQuery);
+    const currentMembershipsSnapshot = await currentMembershipsQuery.get();
     const userSpaceIds = currentMembershipsSnapshot.docs.map(doc => doc.data().spaceId);
 
     // Get other members from user's spaces
-    const friendsQuery = dbAdmin.collection(
-      dbAdmin.collection('members'),
-      where('spaceId', 'in', userSpaceIds.slice(0, 10)), // Limit for performance
-      where('status', '==', 'active')
-    );
+    const friendsQuery = dbAdmin.collection('members')
+      .where('spaceId', 'in', userSpaceIds.slice(0, 10)) // Limit for performance
+      .where('status', '==', 'active');
 
-    const friendsSnapshot = await getDocs(friendsQuery);
+    const friendsSnapshot = await friendsQuery.get();
     const friendIds = [...new Set(friendsSnapshot.docs
       .map(doc => doc.data().userId)
       .filter(id => id !== userId))];
@@ -278,13 +269,11 @@ async function generateFriendActivityRecommendations(
     }
 
     // Get spaces where friends are active
-    const friendMembershipsQuery = dbAdmin.collection(
-      dbAdmin.collection('members'),
-      where('userId', 'in', friendIds.slice(0, 10)), // Limit for performance
-      where('status', '==', 'active')
-    );
+    const friendMembershipsQuery = dbAdmin.collection('members')
+      .where('userId', 'in', friendIds.slice(0, 10)) // Limit for performance
+      .where('status', '==', 'active');
 
-    const friendMembershipsSnapshot = await getDocs(friendMembershipsQuery);
+    const friendMembershipsSnapshot = await friendMembershipsQuery.get();
     const friendSpaceIds = friendMembershipsSnapshot.docs.map(doc => doc.data().spaceId);
 
     // Count common members per space

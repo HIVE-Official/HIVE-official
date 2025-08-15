@@ -1,4 +1,3 @@
-export { useAuth } from './use-auth';
 export { useAnalytics } from './use-analytics';
 export { useCreationAnalytics } from './use-creation-analytics';
 export { useOnboardingAnalytics } from './use-onboarding-analytics';

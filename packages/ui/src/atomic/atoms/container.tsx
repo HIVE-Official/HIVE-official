@@ -55,19 +55,19 @@ const gutterPadding = {
 const containerVariants = {
   default: '',
   card: [
-    'bg-hive-background-secondary',
-    'border border-hive-border-default',
+    'bg-[var(--hive-background-secondary)]',
+    'border border-[var(--hive-border-primary)]',
     'rounded-xl',
     'shadow-sm'
   ].join(' '),
   panel: [
-    'bg-hive-background-primary',
-    'border border-hive-border-default',
+    'bg-[var(--hive-background-primary)]',
+    'border border-[var(--hive-border-primary)]',
     'rounded-lg'
   ].join(' '),
   section: [
-    'bg-hive-background-tertiary',
-    'border-y border-hive-border-subtle'
+    'bg-[var(--hive-background-tertiary)]',
+    'border-y border-[var(--hive-border-tertiary)]'
   ].join(' ')
 };
 

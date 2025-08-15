@@ -4,13 +4,13 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useCallback } from 'react';
 import { Settings, Palette, Layout, Type, Eye, EyeOff, Lock, Unlock, Copy, Trash2, ChevronDown, ChevronRight, Hash } from 'lucide-react';
-import { cn } from '../../lib/utils.js';
-import { HiveInput } from '../hive-input.js';
-import { HiveTextarea } from '../hive-textarea.js';
-import { HiveButton } from '../hive-button.js';
-import { HiveBadge } from '../hive-badge.js';
-import { HiveSwitch } from '../hive-switch.js';
-import { HiveSelect } from '../hive-select.js';
+import { cn } from '../../lib/utils';
+import { HiveInput } from '../hive-input';
+import { HiveTextarea } from '../hive-textarea';
+import { HiveButton } from '../hive-button';
+import { HiveBadge } from '../hive-badge';
+import { HiveSwitch } from '../hive-switch';
+import { HiveSelect } from '../hive-select';
 const PropertyInput = ({ property, value, onChange, propertyKey }) => {
     switch (property.type) {
         case 'string':

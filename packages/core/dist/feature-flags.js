@@ -13,6 +13,10 @@ exports.DEFAULT_FLAGS = {
     enableRealTimeNotifications: false,
     spaces: 'enabled',
     tools: 'enabled',
+    analytics: 'enabled',
+    realtime: 'enabled',
+    ai: 'disabled',
+    gamification: 'disabled',
 };
 // User-based variant assignment for A/B testing
 function getFeatureFlags(userId) {
@@ -33,6 +37,10 @@ function getFeatureFlags(userId) {
         // Analytics categories - always enabled
         spaces: 'enabled',
         tools: 'enabled',
+        analytics: 'enabled',
+        realtime: 'enabled',
+        ai: hash % 10 < 2 ? 'enabled' : 'disabled', // 20% of users
+        gamification: hash % 10 < 3 ? 'enabled' : 'disabled', // 30% of users
     };
 }
 // Simple hash function for consistent user assignment

@@ -267,7 +267,7 @@ export function HiveAcademicsStep({
             animate={{ opacity: 1, y: 0 }}
           >
             <HiveCard 
-              variant="glass"
+              variant="elevated"
               className="p-[var(--hive-spacing-4)]"
             >
               <h4 className="text-sm font-medium text-[var(--hive-text-primary)] mb-[var(--hive-spacing-3)] flex items-center">

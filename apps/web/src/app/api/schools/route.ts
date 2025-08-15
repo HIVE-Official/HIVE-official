@@ -2,8 +2,8 @@ import { dbAdmin } from "@/lib/firebase-admin";
 import type { School } from "@hive/core";
 import { NextResponse } from "next/server";
 import { currentEnvironment } from "@/lib/env";
-import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { logger } from "@/lib/structured-logger";
+import { ApiResponseHelper, HttpStatus as _HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 export async function GET() {
   try {
@@ -20,10 +20,7 @@ export async function GET() {
         name: "Test University (Development)",
         domain: "test.edu",
         status: "active",
-        type: "university",
-        location: "Development, NY",
-        signupCount: 999,
-        activationThreshold: 350,
+        waitlistCount: 0,
       };
       
       // Remove any existing test university and add it at the beginning
@@ -47,10 +44,7 @@ export async function GET() {
         name: "Test University (Development)",
         domain: "test.edu",
         status: "active",
-        type: "university",
-        location: "Development, NY",
-        signupCount: 999,
-        activationThreshold: 350,
+        waitlistCount: 0,
       }
     ];
     

@@ -2,7 +2,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from 'react';
 import { cva } from 'class-variance-authority';
-import { cn } from '../../lib/utils.js';
+import { cn } from '../../lib/utils';
 import { Crown, Shield, Star, Award, Zap, Users, BookOpen, EyeOff } from 'lucide-react';
 const profileBadgeVariants = cva("inline-flex items-center gap-1.5 font-medium rounded-full transition-all duration-200", {
     variants: {
@@ -13,15 +13,15 @@ const profileBadgeVariants = cva("inline-flex items-center gap-1.5 font-medium r
             lg: "px-5 py-2.5 text-base"
         },
         variant: {
-            builder: "bg-hive-gold/20 text-hive-gold border border-hive-gold/30 shadow-lg shadow-hive-gold/10",
-            verified: "bg-blue-500/20 text-blue-400 border border-blue-500/30 shadow-lg shadow-blue-500/10",
-            leader: "bg-purple-500/20 text-purple-400 border border-purple-500/30 shadow-lg shadow-purple-500/10",
-            ghost: "bg-gray-600/20 text-gray-400 border border-gray-600/30",
-            achievement: "bg-green-500/20 text-green-400 border border-green-500/30",
-            streak: "bg-orange-500/20 text-orange-400 border border-orange-500/30",
-            academic: "bg-indigo-500/20 text-indigo-400 border border-indigo-500/30",
-            social: "bg-pink-500/20 text-pink-400 border border-pink-500/30",
-            default: "bg-hive-surface-elevated text-hive-text-secondary border border-hive-border-subtle"
+            builder: "bg-[var(--hive-brand-gold)]/20 text-[var(--hive-brand-gold)] border border-[var(--hive-brand-gold)]/30 shadow-lg shadow-[var(--hive-brand-gold)]/10",
+            verified: "bg-[var(--hive-status-info)]/20 text-[var(--hive-status-info)] border border-[var(--hive-status-info)]/30 shadow-lg shadow-[var(--hive-status-info)]/10",
+            leader: "bg-[var(--hive-brand-secondary)]/20 text-[var(--hive-brand-secondary)] border border-[var(--hive-brand-secondary)]/30 shadow-lg shadow-[var(--hive-brand-secondary)]/10",
+            ghost: "bg-[var(--hive-text-muted)]/20 text-[var(--hive-text-muted)] border border-[var(--hive-text-muted)]/30",
+            achievement: "bg-[var(--hive-status-success)]/20 text-[var(--hive-status-success)] border border-[var(--hive-status-success)]/30",
+            streak: "bg-[var(--hive-status-warning)]/20 text-[var(--hive-status-warning)] border border-[var(--hive-status-warning)]/30",
+            academic: "bg-[var(--hive-brand-primary)]/20 text-[var(--hive-brand-primary)] border border-[var(--hive-brand-primary)]/30",
+            social: "bg-[var(--hive-brand-accent)]/20 text-[var(--hive-brand-accent)] border border-[var(--hive-brand-accent)]/30",
+            default: "bg-[var(--hive-background-secondary)] text-[var(--hive-text-secondary)] border border-[var(--hive-border-primary)]"
         },
         interactive: {
             true: "cursor-pointer hover:scale-105 hover:brightness-110",

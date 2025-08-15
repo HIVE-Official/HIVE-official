@@ -7,11 +7,33 @@
  */
 
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
-import { logger } from '../lib/logger';
+
+// Simple logger for UI package
+const logger = {
+  info: (message: string, context?: Record<string, unknown>) => {
+    console.info(`[HIVE UI] ${message}`, context);
+  },
+  warn: (message: string, context?: Record<string, unknown>) => {
+    console.warn(`[HIVE UI] ${message}`, context);
+  },
+  error: (message: string, context?: Record<string, unknown>) => {
+    console.error(`[HIVE UI] ${message}`, context);
+  },
+  debug: (message: string, context?: Record<string, unknown>) => {
+    if (process.env.NODE_ENV === 'development') {
+      console.debug(`[HIVE UI] ${message}`, context);
+    }
+  }
+};
+
+// Advanced auth features disabled for now - causing import failures
+const AdvancedAuthSecurity: any = null;
+const AuthPerformanceOptimizer: any = null;
 
 // Unified User Interface
 export interface HiveUser {
   id: string;
+  uid: string; // Firebase User ID - required for deployment and auth integration
   email: string;
   fullName?: string;
   handle?: string;
@@ -98,6 +120,10 @@ export interface UnifiedAuthContextType extends UnifiedAuthState {
   requiresOnboarding: () => boolean;
   hasValidSession: () => boolean;
   canAccessFeature: (feature: string) => boolean;
+  
+  // Error Recovery
+  clearError: () => void;
+  retryInitialization: () => Promise<void>;
 }
 
 // Create the context
@@ -112,15 +138,27 @@ export const useUnifiedAuth = () => {
   return context;
 };
 
-// Development mode detection
+// SECURITY: Development mode detection removed for production safety
+// All authentication must use proper validation channels
 const isDevelopmentMode = () => {
-  if (typeof window === 'undefined') return false;
-  return process.env.NODE_ENV === 'development' || 
-         window.localStorage.getItem('dev_auth_mode') === 'true';
+  return false; // Always enforce production security
 };
 
+// Firebase Integration Interface (optional dependency injection)
+export interface FirebaseAuthIntegration {
+  listenToAuthChanges: (callback: (user: any) => void) => () => void;
+  handleEmailLinkSignIn: (email?: string) => Promise<void>;
+  getFirebaseToken: () => Promise<string | null>;
+  signOut: () => Promise<void>;
+  isEmailLinkSignIn: () => boolean;
+}
+
 // Provider Component
-export const UnifiedAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const UnifiedAuthProvider: React.FC<{ 
+  children: React.ReactNode;
+  firebaseIntegration?: FirebaseAuthIntegration;
+}> = ({ children, firebaseIntegration }) => {
+
   // Core State
   const [authState, setAuthState] = useState<UnifiedAuthState>({
     user: null,
@@ -135,18 +173,35 @@ export const UnifiedAuthProvider: React.FC<{ children: React.ReactNode }> = ({ c
     setAuthState(prev => ({ ...prev, ...updates }));
   }, []);
 
+  // Get Auth Token - MOVED BEFORE validateSession to fix circular dependency
+  const getAuthToken = useCallback(async (): Promise<string | null> => {
+    if (typeof window === 'undefined') return null;
+
+    // Use Firebase token if integration is available
+    if (firebaseIntegration) {
+      try {
+        const firebaseToken = await firebaseIntegration.getFirebaseToken();
+        if (firebaseToken) return firebaseToken;
+      } catch (error) {
+        logger.error('Failed to get Firebase token', { error });
+      }
+    }
+
+    // Fallback to stored token
+    return window.localStorage.getItem('auth_token') || 
+           window.localStorage.getItem('firebase_token') ||
+           null;
+  }, [firebaseIntegration]);
+
   // Session Validation
   const validateSession = useCallback(async (): Promise<boolean> => {
     try {
       const token = await getAuthToken();
       if (!token) return false;
 
-      // Handle development mode
-      if (isDevelopmentMode() && token.startsWith('dev_token_')) {
-        return true;
-      }
+      // Development token validation removed for production security
 
-      // Validate with backend
+      // Validate with backend for production sessions
       const response = await fetch('/api/auth/session', {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -154,7 +209,8 @@ export const UnifiedAuthProvider: React.FC<{ children: React.ReactNode }> = ({ c
       });
 
       if (!response.ok) {
-        throw new Error(`Session validation failed: ${response.status}`);
+        logger.warn(`Session validation failed: ${response.status}`);
+        return false;
       }
 
       const data = await response.json();
@@ -163,26 +219,108 @@ export const UnifiedAuthProvider: React.FC<{ children: React.ReactNode }> = ({ c
       logger.error('Session validation failed', { error });
       return false;
     }
-  }, []);
+  }, [getAuthToken]);
 
-  // Get Auth Token
-  const getAuthToken = useCallback(async (): Promise<string | null> => {
-    if (typeof window === 'undefined') return null;
+  // Enhanced Session Persistence with Advanced Security
+  const persistSession = useCallback(async (user: HiveUser, session: HiveSession) => {
+    if (typeof window === 'undefined') return;
+    
+    let sessionData = {
+      userId: user.id,
+      email: user.email,
+      schoolId: user.schoolId,
+      onboardingCompleted: user.onboardingCompleted,
+      verifiedAt: session.issuedAt || new Date().toISOString(),
+      profileData: {
+        fullName: user.fullName || '',
+        handle: user.handle || '',
+        major: user.major || '',
+        avatarUrl: user.avatarUrl || '',
+        builderOptIn: user.builderOptIn || false,
+      },
+      token: session.token,
+      developmentMode: session.developmentMode || false,
+    };
 
-    if (isDevelopmentMode()) {
-      // Check for dev session
-      const sessionData = window.localStorage.getItem('hive_session');
-      if (sessionData) {
-        const session = JSON.parse(sessionData);
-        return `dev_token_${session.userId}`;
+    // Enhance with security features if available
+    if (AdvancedAuthSecurity) {
+      try {
+        const securityInstance = AdvancedAuthSecurity.getInstance();
+        sessionData = securityInstance.createSecureSession(user.id, sessionData);
+      } catch (error) {
+        logger.warn('Advanced security features failed, using basic session');
       }
-      return null;
     }
 
-    // Production mode - check for stored token
-    return window.localStorage.getItem('auth_token') || 
-           window.localStorage.getItem('firebase_token') ||
-           null;
+    // Use performance optimizer for async storage if available
+    if (AuthPerformanceOptimizer) {
+      try {
+        const optimizer = AuthPerformanceOptimizer.getInstance();
+        await optimizer.setStorageAsync('hive_session', JSON.stringify(sessionData));
+        
+        // Cache user data for performance
+        optimizer.setCachedUserData(user.id, user);
+        
+        if (session.developmentMode) {
+          await optimizer.setStorageAsync('dev_auth_mode', 'true');
+        }
+        return;
+      } catch (error) {
+        logger.warn('Performance optimizer failed, falling back to sync storage');
+      }
+    }
+
+    // Standard session storage (basic security - server validates tokens)
+    window.localStorage.setItem('hive_session', JSON.stringify(sessionData));
+    
+    // Store auth token separately for API calls
+    if (sessionData.token) {
+      window.localStorage.setItem('auth_token', sessionData.token);
+    }
+  }, []);
+
+  // Session Loading Helper
+  const loadPersistedSession = useCallback((): { user: HiveUser; session: HiveSession } | null => {
+    if (typeof window === 'undefined') return null;
+    
+    const sessionJson = window.localStorage.getItem('hive_session');
+    if (!sessionJson) return null;
+    
+    try {
+      const sessionData = JSON.parse(sessionJson);
+      
+      const user: HiveUser = {
+        id: sessionData.userId,
+        uid: sessionData.userId, // Map id to uid for Firebase compatibility
+        email: sessionData.email,
+        schoolId: sessionData.schoolId,
+        onboardingCompleted: sessionData.onboardingCompleted || false,
+        fullName: sessionData.profileData?.fullName,
+        handle: sessionData.profileData?.handle,
+        major: sessionData.profileData?.major,
+        avatarUrl: sessionData.profileData?.avatarUrl,
+        builderOptIn: sessionData.profileData?.builderOptIn || false,
+        developmentMode: sessionData.developmentMode || false,
+        isDeveloper: sessionData.developmentMode || false,
+      };
+
+      const session: HiveSession = {
+        token: sessionData.token || null,
+        issuedAt: sessionData.verifiedAt,
+        developmentMode: sessionData.developmentMode || false,
+      };
+      
+      // SECURITY: Reject sessions without valid tokens
+      if (!session.token) {
+        logger.warn('Session has no valid token, rejecting');
+        return null;
+      }
+      
+      return { user, session };
+    } catch (error) {
+      logger.error('Failed to parse persisted session', { error });
+      return null;
+    }
   }, []);
 
   // Initialize Auth State
@@ -190,160 +328,57 @@ export const UnifiedAuthProvider: React.FC<{ children: React.ReactNode }> = ({ c
     try {
       updateAuthState({ isLoading: true, error: null });
 
-      // Development mode initialization
-      if (isDevelopmentMode()) {
-        const sessionJson = window.localStorage.getItem('hive_session');
-        
-        if (!sessionJson) {
-          // Create dev session
-          const devUser: HiveUser = {
-            id: 'dev_user_123',
-            email: 'dev@hive.com',
-            fullName: 'Dev User',
-            handle: 'devuser',
-            major: 'Computer Science',
-            schoolId: 'dev_school',
-            onboardingCompleted: true,
-            builderOptIn: true,
-            developmentMode: true,
-            isDeveloper: true,
-          };
+      // If Firebase integration is available, use it for auth state
+      if (firebaseIntegration && typeof window !== 'undefined') {
+        // Check if this is an email link sign-in
+        if (firebaseIntegration.isEmailLinkSignIn()) {
+          try {
+            await firebaseIntegration.handleEmailLinkSignIn();
+            // Firebase auth state will trigger updates via listener
+            return;
+          } catch (error) {
+            logger.error('Email link sign-in failed', { error });
+            updateAuthState({
+              error: error instanceof Error ? error.message : 'Email link sign-in failed',
+              isLoading: false,
+            });
+            return;
+          }
+        }
 
-          const devSession: HiveSession = {
-            token: `dev_token_${devUser.id}`,
-            issuedAt: new Date().toISOString(),
-            developmentMode: true,
-          };
+        // Firebase will handle auth state via listener
+        // Just wait for the auth state to resolve
+        return;
+      }
 
-          // Store dev session
-          const sessionData = {
-            userId: devUser.id,
-            email: devUser.email,
-            schoolId: devUser.schoolId,
-            onboardingCompleted: true,
-            verifiedAt: new Date().toISOString(),
-            profileData: {
-              fullName: devUser.fullName!,
-              handle: devUser.handle!,
-              major: devUser.major!,
-              avatarUrl: devUser.avatarUrl || '',
-              builderOptIn: devUser.builderOptIn!,
-            }
-          };
-
-          window.localStorage.setItem('hive_session', JSON.stringify(sessionData));
-          window.localStorage.setItem('dev_auth_mode', 'true');
-
+      // Fallback to session-based auth
+      const persistedAuth = loadPersistedSession();
+      
+      if (persistedAuth) {
+        // SECURITY FIX: Validate session before trusting it
+        const isValid = await validateSession();
+        if (isValid) {
           updateAuthState({
-            user: devUser,
-            session: devSession,
+            user: persistedAuth.user,
+            session: persistedAuth.session,
             isAuthenticated: true,
             isLoading: false,
           });
           return;
+        } else {
+          // Clear invalid session
+          clearPersistedSession();
         }
-
-        // Parse existing dev session
-        const session = JSON.parse(sessionJson);
-        const devUser: HiveUser = {
-          id: session.userId,
-          email: session.email,
-          schoolId: session.schoolId,
-          onboardingCompleted: session.onboardingCompleted || !!session.profileData?.fullName,
-          fullName: session.profileData?.fullName,
-          handle: session.profileData?.handle,
-          major: session.profileData?.major,
-          avatarUrl: session.profileData?.avatarUrl,
-          builderOptIn: session.profileData?.builderOptIn,
-          developmentMode: true,
-          isDeveloper: true,
-        };
-
-        const devSession: HiveSession = {
-          token: `dev_token_${devUser.id}`,
-          issuedAt: session.verifiedAt,
-          developmentMode: true,
-        };
-
-        updateAuthState({
-          user: devUser,
-          session: devSession,
-          isAuthenticated: true,
-          isLoading: false,
-        });
-        return;
       }
 
-      // Production mode - validate existing session
-      const token = await getAuthToken();
-      if (!token) {
-        updateAuthState({
-          user: null,
-          session: null,
-          isAuthenticated: false,
-          isLoading: false,
-        });
-        return;
-      }
-
-      // Validate session with backend
-      const response = await fetch('/api/auth/session', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
+      // No valid session found
+      updateAuthState({
+        user: null,
+        session: null,
+        isAuthenticated: false,
+        isLoading: false,
       });
 
-      if (!response.ok) {
-        // Invalid session, clear it
-        window.localStorage.removeItem('auth_token');
-        window.localStorage.removeItem('firebase_token');
-        updateAuthState({
-          user: null,
-          session: null,
-          isAuthenticated: false,
-          isLoading: false,
-        });
-        return;
-      }
-
-      const data = await response.json();
-      if (data.valid && data.user) {
-        const user: HiveUser = {
-          id: data.user.id,
-          email: data.user.email,
-          fullName: data.user.fullName,
-          handle: data.user.handle,
-          major: data.user.major,
-          avatarUrl: data.user.avatarUrl,
-          schoolId: data.user.schoolId,
-          builderOptIn: data.user.builderOptIn,
-          onboardingCompleted: data.user.onboardingCompleted,
-          emailVerified: data.user.emailVerified,
-          createdAt: data.user.createdAt,
-          updatedAt: data.user.updatedAt,
-        };
-
-        const session: HiveSession = {
-          token,
-          issuedAt: data.session?.issuedAt,
-          expiresAt: data.session?.expiresAt,
-          lastActivity: new Date().toISOString(),
-        };
-
-        updateAuthState({
-          user,
-          session,
-          isAuthenticated: true,
-          isLoading: false,
-        });
-      } else {
-        updateAuthState({
-          user: null,
-          session: null,
-          isAuthenticated: false,
-          isLoading: false,
-        });
-      }
     } catch (error) {
       logger.error('Auth initialization failed', { error });
       updateAuthState({
@@ -354,7 +389,25 @@ export const UnifiedAuthProvider: React.FC<{ children: React.ReactNode }> = ({ c
         error: error instanceof Error ? error.message : 'Authentication failed',
       });
     }
-  }, [updateAuthState, getAuthToken]);
+  }, [updateAuthState, loadPersistedSession, firebaseIntegration]);
+
+  // Clear Persisted Session Helper
+  const clearPersistedSession = useCallback(() => {
+    if (typeof window === 'undefined') return;
+    
+    // Clear all auth-related storage keys
+    const keysToRemove = [
+      'hive_session',
+      'auth_token', 
+      'firebase_token',
+      'dev_auth_mode',
+      'emailForSignIn'
+    ];
+    
+    keysToRemove.forEach(key => {
+      window.localStorage.removeItem(key);
+    });
+  }, []);
 
   // Login Methods
   const login = useCallback(async (email: string, password?: string) => {
@@ -378,69 +431,76 @@ export const UnifiedAuthProvider: React.FC<{ children: React.ReactNode }> = ({ c
     }
   }, [updateAuthState]);
 
-  // Development Login
+  // Development Login - Re-enabled for development workflow
   const devLogin = useCallback(async (userId = 'dev_user_123') => {
-    if (!isDevelopmentMode()) {
-      throw new Error('Dev login only available in development mode');
+    if (process.env.NODE_ENV !== 'development') {
+      throw new Error('Development login only available in development mode');
     }
 
-    const devUser: HiveUser = {
-      id: userId,
-      email: `${userId}@hive.com`,
-      fullName: 'Dev User',
-      handle: userId.replace('dev_user_', 'user'),
-      major: 'Computer Science',
-      schoolId: 'dev_school',
-      onboardingCompleted: true,
-      builderOptIn: true,
-      developmentMode: true,
-      isDeveloper: true,
-    };
+    try {
+      updateAuthState({ isLoading: true, error: null });
 
-    const devSession: HiveSession = {
-      token: `dev_token_${userId}`,
-      issuedAt: new Date().toISOString(),
-      developmentMode: true,
-    };
+      const devUser: HiveUser = {
+        id: userId,
+        uid: userId,
+        email: 'dev@hive.com',
+        fullName: 'Dev User',
+        handle: 'devuser',
+        major: 'Computer Science',
+        schoolId: 'dev_school',
+        onboardingCompleted: true,
+        emailVerified: true,
+        builderOptIn: true,
+        isDeveloper: true,
+        developmentMode: true,
+        profileCompletion: 100,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
 
-    // Store session
-    const sessionData = {
-      userId: devUser.id,
-      email: devUser.email,
-      schoolId: devUser.schoolId,
-      onboardingCompleted: true,
-      verifiedAt: new Date().toISOString(),
-      profileData: {
-        fullName: devUser.fullName!,
-        handle: devUser.handle!,
-        major: devUser.major!,
-        avatarUrl: devUser.avatarUrl || '',
-        builderOptIn: devUser.builderOptIn!,
+      const devSession: HiveSession = {
+        token: `dev_session_${userId}_${Date.now()}`,
+        issuedAt: new Date().toISOString(),
+        developmentMode: true,
+        lastActivity: new Date().toISOString(),
+      };
+
+      updateAuthState({
+        user: devUser,
+        session: devSession,
+        isAuthenticated: true,
+        isLoading: false,
+      });
+
+      await persistSession(devUser, devSession);
+      
+      // Set dev auth mode flag
+      if (typeof window !== 'undefined') {
+        window.localStorage.setItem('dev_auth_mode', 'true');
       }
-    };
 
-    window.localStorage.setItem('hive_session', JSON.stringify(sessionData));
-    window.localStorage.setItem('dev_auth_mode', 'true');
-
-    updateAuthState({
-      user: devUser,
-      session: devSession,
-      isAuthenticated: true,
-      isLoading: false,
-    });
-  }, [updateAuthState]);
+      logger.info('Development login successful', { userId });
+    } catch (error) {
+      updateAuthState({
+        isLoading: false,
+        error: error instanceof Error ? error.message : 'Development login failed',
+      });
+      throw error;
+    }
+  }, [updateAuthState, persistSession]);
 
   // Logout
   const logout = useCallback(async () => {
     try {
       updateAuthState({ isLoading: true });
 
-      // Clear all auth data
-      if (typeof window !== 'undefined') {
-        window.localStorage.removeItem('hive_session');
-        window.localStorage.removeItem('auth_token');
-        window.localStorage.removeItem('firebase_token');
-        window.localStorage.removeItem('dev_auth_mode');
+      // Use Firebase signout if integration is available
+      if (firebaseIntegration) {
+        try {
+          await firebaseIntegration.signOut();
+        } catch (error) {
+          logger.error('Firebase logout failed', { error });
+        }
       }
 
       // Call logout API if not in dev mode
@@ -456,6 +516,9 @@ export const UnifiedAuthProvider: React.FC<{ children: React.ReactNode }> = ({ c
           logger.error('Logout API call failed', { error });
         }
       }
+
+      // Clear all persisted auth data
+      clearPersistedSession();
 
       updateAuthState({
         user: null,
@@ -473,18 +536,114 @@ export const UnifiedAuthProvider: React.FC<{ children: React.ReactNode }> = ({ c
         error: error instanceof Error ? error.message : 'Logout failed',
       });
     }
-  }, [updateAuthState, getAuthToken]);
+  }, [updateAuthState, getAuthToken, clearPersistedSession, firebaseIntegration]);
 
-  // Stub implementations for now
-  const sendMagicLink = useCallback(async (email: string) => {
-    // TODO: Implement magic link sending
-    console.log('Magic link would be sent to:', email);
-  }, []);
+  // Magic Link Implementation
+  const sendMagicLink = useCallback(async (email: string, schoolId?: string) => {
+    try {
+      updateAuthState({ isLoading: true, error: null });
 
-  const verifyMagicLink = useCallback(async (token: string) => {
-    // TODO: Implement magic link verification
-    console.log('Magic link token would be verified:', token);
-  }, []);
+      const response = await fetch('/api/auth/send-magic-link', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          schoolId: schoolId || 'default'
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to send magic link');
+      }
+
+      const data = await response.json();
+      logger.info('Magic link sent successfully', { email });
+      
+      updateAuthState({ isLoading: false });
+      return data;
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to send magic link';
+      updateAuthState({
+        isLoading: false,
+        error: errorMessage,
+      });
+      throw error;
+    }
+  }, [updateAuthState]);
+
+  const verifyMagicLink = useCallback(async (token: string, email?: string, schoolId?: string) => {
+    try {
+      updateAuthState({ isLoading: true, error: null });
+
+      const response = await fetch('/api/auth/verify-magic-link', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          token,
+          email: email || window.localStorage.getItem('emailForSignIn'),
+          schoolId: schoolId || 'default'
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to verify magic link');
+      }
+
+      const data = await response.json();
+      
+      if (data.success) {
+        // Clear stored email
+        window.localStorage.removeItem('emailForSignIn');
+        
+        if (data.needsOnboarding) {
+          // User needs onboarding
+          const newUser: HiveUser = {
+            id: data.userId,
+            uid: data.userId,
+            email: email || '',
+            onboardingCompleted: false,
+            emailVerified: true
+          };
+          
+          const newSession: HiveSession = {
+            token: token,
+            issuedAt: new Date().toISOString(),
+            developmentMode: data.dev || false
+          };
+          
+          updateAuthState({
+            user: newUser,
+            session: newSession,
+            isAuthenticated: true,
+            isLoading: false,
+          });
+          
+          await persistSession(newUser, newSession);
+        } else {
+          // Existing user, they can proceed to app
+          await initializeAuth();
+        }
+        
+        logger.info('Magic link verified successfully', { userId: data.userId });
+        return data;
+      }
+      
+      throw new Error('Magic link verification failed');
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to verify magic link';
+      updateAuthState({
+        isLoading: false,
+        error: errorMessage,
+      });
+      throw error;
+    }
+  }, [updateAuthState, persistSession]);
 
   const refreshSession = useCallback(async () => {
     await initializeAuth();
@@ -596,22 +755,12 @@ export const UnifiedAuthProvider: React.FC<{ children: React.ReactNode }> = ({ c
         isLoading: false 
       });
       
-      // Update stored session data
-      if (typeof window !== 'undefined') {
-        const sessionJson = window.localStorage.getItem('hive_session');
-        if (sessionJson) {
-          const session = JSON.parse(sessionJson);
-          session.onboardingCompleted = true;
-          session.profileData = {
-            fullName: onboardingData.fullName,
-            handle: onboardingData.handle,
-            major: onboardingData.major,
-            avatarUrl: onboardingData.avatarUrl || '',
-            builderOptIn: (onboardingData.builderRequestSpaces?.length || 0) > 0,
-          };
-          window.localStorage.setItem('hive_session', JSON.stringify(session));
-        }
-      }
+      // Update persisted session using centralized method
+      const updatedSession: HiveSession = {
+        ...authState.session!,
+        lastActivity: new Date().toISOString(),
+      };
+      persistSession(updatedUser, updatedSession);
 
       // Trigger profile data hydration
       await hydrateProfileData(updatedUser);
@@ -629,20 +778,17 @@ export const UnifiedAuthProvider: React.FC<{ children: React.ReactNode }> = ({ c
       });
       throw error;
     }
-  }, [authState.user, updateAuthState, getAuthToken, hydrateProfileData]);
+  }, [authState.user, authState.session, updateAuthState, getAuthToken, hydrateProfileData, persistSession]);
 
   const clearDevSession = useCallback(() => {
-    if (typeof window !== 'undefined') {
-      window.localStorage.removeItem('hive_session');
-      window.localStorage.removeItem('dev_auth_mode');
-    }
+    clearPersistedSession();
     updateAuthState({
       user: null,
       session: null,
       isAuthenticated: false,
       isLoading: false,
     });
-  }, [updateAuthState]);
+  }, [updateAuthState, clearPersistedSession]);
 
   // State Queries
   const requiresOnboarding = useCallback(() => {
@@ -666,9 +812,108 @@ export const UnifiedAuthProvider: React.FC<{ children: React.ReactNode }> = ({ c
     }
   }, [authState.isAuthenticated, authState.user]);
 
-  // Initialize auth on mount
+  // Error Recovery
+  const clearError = useCallback(() => {
+    updateAuthState({ error: null });
+  }, [updateAuthState]);
+
+  const retryInitialization = useCallback(async () => {
+    await initializeAuth();
+  }, [initializeAuth]);
+
+  // Firebase auth state listener
   useEffect(() => {
-    initializeAuth();
+    if (!firebaseIntegration || typeof window === 'undefined') return;
+
+    const unsubscribe = firebaseIntegration.listenToAuthChanges(async (firebaseUser) => {
+      if (firebaseUser) {
+        // User is signed in with Firebase
+        try {
+          // Get or create user session
+          const token = await firebaseIntegration.getFirebaseToken();
+          if (!token) {
+            logger.error('No Firebase token available');
+            return;
+          }
+
+          // Validate session with backend
+          const response = await fetch('/api/auth/session', {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+            },
+          });
+
+          if (response.ok) {
+            const sessionData = await response.json();
+            const user: HiveUser = {
+              id: sessionData.user.id,
+              uid: sessionData.user.id,
+              email: sessionData.user.email,
+              fullName: sessionData.user.fullName,
+              handle: sessionData.user.handle,
+              major: sessionData.user.major,
+              avatarUrl: sessionData.user.avatarUrl,
+              schoolId: sessionData.user.schoolId,
+              onboardingCompleted: sessionData.user.onboardingCompleted,
+              emailVerified: sessionData.user.emailVerified,
+              builderOptIn: sessionData.user.builderOptIn,
+            };
+
+            const session: HiveSession = {
+              token,
+              issuedAt: sessionData.session.issuedAt,
+              expiresAt: sessionData.session.expiresAt,
+            };
+
+            updateAuthState({
+              user,
+              session,
+              isAuthenticated: true,
+              isLoading: false,
+              error: null,
+            });
+
+            // Persist session
+            await persistSession(user, session);
+          } else {
+            logger.error('Session validation failed', { status: response.status });
+            updateAuthState({
+              user: null,
+              session: null,
+              isAuthenticated: false,
+              isLoading: false,
+            });
+          }
+        } catch (error) {
+          logger.error('Error processing Firebase auth state', { error });
+          updateAuthState({
+            user: null,
+            session: null,
+            isAuthenticated: false,
+            isLoading: false,
+            error: error instanceof Error ? error.message : 'Authentication failed',
+          });
+        }
+      } else {
+        // User is signed out
+        updateAuthState({
+          user: null,
+          session: null,
+          isAuthenticated: false,
+          isLoading: false,
+        });
+        clearPersistedSession();
+      }
+    });
+
+    return unsubscribe;
+  }, [firebaseIntegration, updateAuthState, persistSession, clearPersistedSession]);
+
+  // Initialize auth on mount - SECURITY FIX: Properly await async operation
+  useEffect(() => {
+    initializeAuth().catch(error => {
+      logger.error('Auth initialization failed on mount', { error });
+    });
   }, [initializeAuth]);
 
   // Listen for storage changes (multi-tab sync)
@@ -677,13 +922,28 @@ export const UnifiedAuthProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === 'hive_session' || e.key === 'auth_token') {
-        initializeAuth();
+        // SECURITY FIX: Properly await async operation
+        initializeAuth().catch(error => {
+          logger.error('Auth initialization failed on storage change', { error });
+        });
       }
     };
 
     window.addEventListener('storage', handleStorageChange);
     return () => window.removeEventListener('storage', handleStorageChange);
   }, [initializeAuth]);
+
+  // Auto-retry on network errors
+  useEffect(() => {
+    if (authState.error && authState.error.includes('network')) {
+      const retryTimer = setTimeout(() => {
+        logger.info('Auto-retrying after network error');
+        retryInitialization();
+      }, 5000);
+
+      return () => clearTimeout(retryTimer);
+    }
+  }, [authState.error, retryInitialization]);
 
   const contextValue: UnifiedAuthContextType = {
     ...authState,
@@ -701,6 +961,8 @@ export const UnifiedAuthProvider: React.FC<{ children: React.ReactNode }> = ({ c
     requiresOnboarding,
     hasValidSession,
     canAccessFeature,
+    clearError,
+    retryInitialization,
   };
 
   return (

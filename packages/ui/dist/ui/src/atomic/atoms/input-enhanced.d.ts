@@ -46,5 +46,10 @@ export declare const InputPresets: {
     Search: (props: Omit<SearchInputProps, "type">) => import("react/jsx-runtime").JSX.Element;
     Currency: (props: Omit<InputProps, "leftElement">) => import("react/jsx-runtime").JSX.Element;
 };
-export { Input, Input as InputEnhanced, SearchInput, PasswordInput, NumberInput, InputGroup, inputVariants };
+export interface FloatingLabelInputProps extends Omit<InputProps, 'label'> {
+    label: string;
+    labelClassName?: string;
+}
+declare const FloatingLabelInput: React.ForwardRefExoticComponent<FloatingLabelInputProps & React.RefAttributes<HTMLInputElement>>;
+export { Input, Input as InputEnhanced, SearchInput, PasswordInput, NumberInput, InputGroup, FloatingLabelInput, inputVariants };
 //# sourceMappingURL=input-enhanced.d.ts.map

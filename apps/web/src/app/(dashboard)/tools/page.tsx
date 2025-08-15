@@ -9,7 +9,9 @@ import {
   MessageSquare, 
   Timer, 
   Calculator, 
-  BarChart3
+  BarChart3,
+  Calendar,
+  Car
 } from "lucide-react";
 
 // Type definition for fetch headers
@@ -64,7 +66,48 @@ async function fetchPersonalTools(): Promise<any[]> {
   return data.tools || [];
 }
 
-// Convert to marketplace tool format
+// Import campus-specific templates and deployment system
+import { CAMPUS_TOOL_TEMPLATES, getViralTemplates } from '../../../lib/campus-tools-templates';
+import { TemplateDeploymentService, DEPLOYMENT_PRESETS } from '../../../lib/template-deployment';
+
+// Convert campus templates to marketplace format
+const CAMPUS_MARKETPLACE_TOOLS = CAMPUS_TOOL_TEMPLATES.map(template => ({
+  id: template.id,
+  name: template.name,
+  description: template.description,
+  category: template.category,
+  type: 'template' as const,
+  icon: template.category === 'academic' ? Calculator : 
+        template.category === 'social' ? MessageSquare :
+        template.category === 'events' ? Calendar :
+        template.category === 'services' ? Car :
+        BarChart3,
+  color: template.category === 'academic' ? '#10B981' :
+         template.category === 'social' ? '#3B82F6' :
+         template.category === 'events' ? '#F59E0B' :
+         template.category === 'services' ? '#8B5CF6' :
+         '#6B7280',
+  downloads: template.viralPotential === 'very-high' ? Math.floor(Math.random() * 500) + 200 :
+             template.viralPotential === 'high' ? Math.floor(Math.random() * 300) + 100 :
+             Math.floor(Math.random() * 150) + 50,
+  rating: 4.5 + Math.random() * 0.5,
+  ratingCount: Math.floor(Math.random() * 50) + 20,
+  creator: 'UB Students',
+  creatorType: 'community' as const,
+  tags: [template.category, 'campus', 'ub'],
+  version: '1.0.0',
+  lastUpdated: new Date(),
+  isFeatured: template.viralPotential === 'very-high',
+  isVerified: true,
+  isInstalled: false,
+  isPremium: false,
+  supportedPlatforms: ['web', 'mobile'] as const,
+  requiredPermissions: ['spaces.read', 'spaces.write'],
+  viralPotential: template.viralPotential,
+  ubSpecific: template.ubSpecific
+}));
+
+// Legacy marketplace tools for comparison
 const MARKETPLACE_TOOLS = [
   {
     id: 'poll-maker',
@@ -164,7 +207,8 @@ const MARKETPLACE_TOOLS = [
 export default function ToolsPage() {
   const [isClient, setIsClient] = useState(false);
   const [activeTab, setActiveTab] = useState<'marketplace' | 'personal' | 'hivelab'>('marketplace');
-  const { user } = useSession();
+   
+  const { user: _user } = useSession();
 
   // Temporarily using default flags while fixing React context issue
   const flags = useMemo(() => ({
@@ -203,29 +247,59 @@ export default function ToolsPage() {
 
   const handleToolInstall = async (toolId: string) => {
     try {
-      // Use session token or test token for API calls
-      const sessionData = window.localStorage.getItem('hive_session');
-      const authToken = sessionData ? 'session-token' : 'test-token';
-      
-      const response = await fetch('/api/tools/install', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${authToken}`,
-        },
-        body: JSON.stringify({ toolId }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || `Installation failed (${response.status})`);
+      const tool = [...CAMPUS_MARKETPLACE_TOOLS, ...MARKETPLACE_TOOLS].find(t => t.id === toolId);
+      if (!tool) {
+        throw new Error('Tool not found');
       }
 
-      flags.trackEvent('tools', 'install', { toolId });
+      // Check if this is a campus template
+      const isCampusTemplate = CAMPUS_TOOL_TEMPLATES.some(t => t.id === toolId);
       
-      // Show success feedback
-      const toolName = (marketplaceTools || MARKETPLACE_TOOLS).find(t => t.id === toolId)?.name || 'Tool';
-      alert(`${toolName} installed successfully!`);
+      if (isCampusTemplate) {
+        // Deploy campus template as working tool
+        const deploymentRequest = {
+          templateId: toolId,
+          userId: _user?.uid || 'anonymous',
+          socialSettings: DEPLOYMENT_PRESETS.space_shared // Default to viral sharing
+        };
+
+        const deployedTool = await TemplateDeploymentService.deployTemplate(deploymentRequest);
+        
+        flags.trackEvent('tools', 'template_deploy', { 
+          toolId, 
+          templateId: deployedTool.templateId,
+          viralPotential: tool.viralPotential 
+        });
+        
+        // Show success with link to use the tool
+        const message = `${tool.name} created and ready to use! 🎉\n\nShare with friends to get the most value.`;
+        alert(message);
+        
+        // Navigate to the deployed tool
+        window.location.href = `/tools/${deployedTool.id}/run`;
+        
+      } else {
+        // Legacy tool installation
+        const sessionData = window.localStorage.getItem('hive_session');
+        const authToken = sessionData ? 'session-token' : 'test-token';
+        
+        const response = await fetch('/api/tools/install', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authToken}`,
+          },
+          body: JSON.stringify({ toolId }),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.message || `Installation failed (${response.status})`);
+        }
+
+        flags.trackEvent('tools', 'install', { toolId });
+        alert(`${tool.name} installed successfully!`);
+      }
       
     } catch (error) {
       console.error('Failed to install tool:', error);
@@ -279,8 +353,8 @@ export default function ToolsPage() {
         onToolAction={handleToolAction}
         onToolPreview={handleToolPreview}
         onCreateTool={handleCreateTool}
-        marketplaceTools={marketplaceTools || MARKETPLACE_TOOLS}
-        personalTools={personalTools || MARKETPLACE_TOOLS.filter(t => t.isInstalled)}
+        marketplaceTools={marketplaceTools || [...CAMPUS_MARKETPLACE_TOOLS, ...MARKETPLACE_TOOLS]}
+        personalTools={personalTools || [...CAMPUS_MARKETPLACE_TOOLS, ...MARKETPLACE_TOOLS].filter(t => t.isInstalled)}
         loading={isLoading}
         error={error?.message || null}
         showDebugLabels={process.env.NODE_ENV === 'development'}

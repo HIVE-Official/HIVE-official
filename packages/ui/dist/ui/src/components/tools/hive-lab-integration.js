@@ -12,14 +12,14 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
  * - Cross-platform synchronization
  */
 import { useState, useCallback } from 'react';
-import { HiveCard, HiveButton, HiveBadge } from '../index.js';
+import { HiveCard, HiveButton, HiveBadge } from '../index';
 import { Zap, Users, TrendingUp, Share2, Settings, Layers, Cpu, Database } from 'lucide-react';
-import { cn } from '../../lib/utils.js';
-import { ToolRuntimeEngine } from './tool-runtime-engine.js';
-import { ToolMarketplace } from './tool-marketplace.js';
-import { SpaceToolsTab } from './space-tools-tab.js';
-import { EventSystemDashboard } from '../events/event-system-dashboard.js';
-import { PerformanceMonitor, useToolCache } from './performance-optimizer.js';
+import { cn } from '../../lib/utils';
+import { ToolRuntimeEngine } from './tool-runtime-engine';
+import { ToolMarketplace } from './tool-marketplace';
+import { SpaceToolsTab } from './space-tools-tab';
+import { EventSystemDashboard } from '../events/event-system-dashboard';
+import { PerformanceMonitor, useToolCache } from './performance-optimizer';
 export function HiveLabIntegration({ userId, spaceId, userRole = 'member', className }) {
     const [currentView, setCurrentView] = useState('dashboard');
     const [selectedTool, setSelectedTool] = useState(null);

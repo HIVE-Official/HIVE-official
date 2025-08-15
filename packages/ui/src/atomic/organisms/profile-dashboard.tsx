@@ -5,14 +5,11 @@ import { motion, AnimatePresence } from '../../components/framer-motion-proxy';
 import { cn } from '../../lib/utils';
 import { 
   Calendar, 
-  Clock, 
   MapPin, 
   Plus, 
   AlertTriangle, 
   Edit, 
   Trash2, 
-  Check, 
-  X,
   Loader2
 } from 'lucide-react';
 
@@ -130,11 +127,17 @@ const InteractiveCalendarWidget: React.FC<{
   onResolveConflict
 }) => {
   const [showCreateForm, setShowCreateForm] = useState(false);
-  const [createForm, setCreateForm] = useState({
+  const [createForm, setCreateForm] = useState<{
+    title: string;
+    startDate: string;
+    endDate: string;
+    type: CalendarEvent['type'];
+    location: string;
+  }>({
     title: '',
     startDate: '',
     endDate: '',
-    type: 'personal' as const,
+    type: 'personal',
     location: ''
   });
 
@@ -271,7 +274,7 @@ const InteractiveCalendarWidget: React.FC<{
           <div className="grid grid-cols-2 gap-2">
             <select
               value={createForm.type}
-              onChange={(e) => setCreateForm(prev => ({ ...prev, type: e.target.value as any }))}
+              onChange={(e) => setCreateForm(prev => ({ ...prev, type: e.target.value as CalendarEvent['type'] }))}
               className="px-3 py-2 bg-hive-background-primary border border-hive-border-default rounded-lg text-hive-text-primary text-sm"
             >
               <option value="personal">Personal</option>
@@ -378,7 +381,6 @@ export const ProfileDashboard: React.FC<ProfileDashboardProps> = ({
   calendarEvents = [],
   calendarConflicts = [],
   layout = 'desktop',
-  variant = 'default',
   showBuilder = true,
   showCalendar = true,
   isLoading = {},
@@ -499,7 +501,7 @@ export const ProfileDashboard: React.FC<ProfileDashboardProps> = ({
             <CampusBuilderTools
               availableTools={availableTools}
               createdTools={createdTools}
-              isBuilder={user.isBuilder}
+              isBuilder={user?.isBuilder ?? false}
               isLoading={isLoading.tools}
               isLocked={true}
               onToolClick={onToolClick}
@@ -562,7 +564,7 @@ export const ProfileDashboard: React.FC<ProfileDashboardProps> = ({
             <CampusBuilderTools
               availableTools={availableTools}
               createdTools={createdTools}
-              isBuilder={user.isBuilder}
+              isBuilder={user?.isBuilder ?? false}
               isLoading={isLoading.tools}
               variant="compact"
               isLocked={true}
@@ -660,7 +662,7 @@ export const ProfileDashboard: React.FC<ProfileDashboardProps> = ({
           <CampusBuilderTools
             availableTools={availableTools}
             createdTools={createdTools}
-            isBuilder={user.isBuilder}
+            isBuilder={user?.isBuilder ?? false}
             isLoading={isLoading.tools}
             variant="subtle"
             isLocked={true}

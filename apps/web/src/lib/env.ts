@@ -88,8 +88,10 @@ function getCurrentEnvironment(): "development" | "staging" | "production" | "te
 
   // Deployed environments
   if (env === "production") return "production";
-  if (env === "staging") return "staging";
   if (env === "test") return "test";
+  
+  // Fallback for staging or unknown environments
+  if (env === "staging" || vercelEnv === "preview") return "staging";
 
   return "development";
 }

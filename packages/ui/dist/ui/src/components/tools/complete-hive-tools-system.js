@@ -1,11 +1,11 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useState } from 'react';
-import { motion } from '../framer-motion-proxy.js';
+import { motion } from '../framer-motion-proxy';
 import { MessageSquare, Timer, Calculator, BarChart3, Download, Star, Eye, Search, Filter, Plus, Zap, Code, Palette, Users, Play, Settings, Share, Grid, List, ChevronDown, ArrowRight, Loader2, AlertCircle, Heart, Globe, Lock, Clock, Activity, User, Calendar } from 'lucide-react';
-import { HiveCard } from '../hive-card.js';
-import { HiveButton } from '../hive-button.js';
-import { HiveInput } from '../hive-input.js';
+import { HiveCard } from '../hive-card';
+import { HiveButton } from '../hive-button';
+import { HiveInput } from '../hive-input';
 export const CompleteHIVEToolsSystem = ({ activeTab = 'marketplace', userRole = 'student', selectedCategory = 'all', searchQuery = '', viewMode = 'grid', onTabChange, onToolInstall, onToolAction, onToolPreview, onCreateTool, onSearchChange, onCategoryChange, onViewModeChange, onToolFavorite, onToolShare, marketplaceTools = [], personalTools = [], loading = false, error = null, showDebugLabels = false }) => {
     const [internalActiveTab, setInternalActiveTab] = useState(activeTab);
     const [internalSearchQuery, setInternalSearchQuery] = useState(searchQuery);

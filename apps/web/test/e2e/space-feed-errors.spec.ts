@@ -6,25 +6,19 @@ test.describe('Space Feed Error Scenarios', () => {
   let testSpace: any
   
   test.beforeEach(async ({ page }) => {
-    testUser = await setupTestUser()
+    testUser = await setupTestUser(page)
     testSpace = {
       id: `test-space-${Date.now()}`,
       name: 'Test Space',
       description: 'A space for testing feed errors',
     }
     
-    // Setup authenticated user
-    await page.goto('/auth/login')
-    await page.fill('[data-testid="email-input"]', testUser.email)
-    await page.click('[data-testid="send-magic-link"]')
-    await page.goto(`/auth/verify?token=test-token&email=${encodeURIComponent(testUser.email)}`)
-    
     // Navigate to test space
     await page.goto(`/spaces/${testSpace.id}`)
   })
   
-  test.afterEach(async () => {
-    await cleanupTestData(testUser.id, testSpace.id)
+  test.afterEach(async ({ page }) => {
+    await cleanupTestData(page)
   })
   
   test('should handle network failures gracefully', async ({ page }) => {

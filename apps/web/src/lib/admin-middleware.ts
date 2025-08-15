@@ -4,9 +4,15 @@ import { requireAdmin, logAdminActivity } from './admin-auth';
 /**
  * Middleware to protect admin routes
  */
+interface Admin {
+  id: string;
+  email?: string;
+  [key: string]: unknown;
+}
+
 export async function withAdminAuth(
   _request: NextRequest,
-  handler: (_request: NextRequest, _admin: any) => Promise<NextResponse>
+  handler: (_request: NextRequest, _admin: Admin) => Promise<NextResponse>
 ) {
   const authResult = await requireAdmin(_request);
   
@@ -18,7 +24,7 @@ export async function withAdminAuth(
   }
 
   // Log admin activity
-  const clientIP = _request.ip || _request.headers.get('x-forwarded-for') || 'unknown';
+  const clientIP = (_request as any).ip || _request.headers.get('x-forwarded-for') || 'unknown';
   await logAdminActivity(
     authResult.admin!.id,
     `${_request.method} ${_request.nextUrl.pathname}`,
@@ -26,7 +32,7 @@ export async function withAdminAuth(
       userAgent: _request.headers.get('user-agent'),
       url: _request.url,
     },
-    clientIP
+    clientIP as string
   );
 
   return handler(_request, authResult.admin);
@@ -57,7 +63,7 @@ export function checkAdminRateLimit(adminId: string, limit: number = 100, window
 /**
  * Admin API response wrapper
  */
-export function adminResponse(data: any, status: number = 200) {
+export function adminResponse(data: unknown, status: number = 200) {
   return NextResponse.json({
     success: true,
     timestamp: new Date().toISOString(),
@@ -68,7 +74,7 @@ export function adminResponse(data: any, status: number = 200) {
 /**
  * Admin API error response wrapper
  */
-export function adminErrorResponse(error: string, status: number = 500, details?: any) {
+export function adminErrorResponse(error: string, status: number = 500, details?: unknown) {
   console.error(`Admin API Error: ${error}`, details);
   return NextResponse.json({
     success: false,

@@ -238,9 +238,9 @@ export function HiveHandleStep({ data, updateData, onNext }: HiveHandleStepProps
             floatingLabel={false}
             leftIcon={<AtSign className="w-4 h-4" />}
             rightIcon={getValidationIcon()}
-            helperText={data.handle ? getValidationMessage() : undefined}
-            errorText={validationState === "taken" || validationState === "invalid" ? getValidationMessage() : undefined}
-            successText={validationState === "available" ? getValidationMessage() : undefined}
+            helperText={data.handle ? getValidationMessage() ?? undefined : undefined}
+            errorText={validationState === "taken" || validationState === "invalid" ? getValidationMessage() ?? undefined : undefined}
+            successText={validationState === "available" ? getValidationMessage() ?? undefined : undefined}
             autoFocus
             className="w-full"
           />

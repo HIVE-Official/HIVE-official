@@ -121,8 +121,8 @@ export const CampusBuilderTools: React.FC<CampusBuilderToolsProps> = ({
     return `${Math.floor(diffInHours / 168)}w ago`;
   };
 
-  const displayedAvailableTools = availableTools.slice(0, 4);
-  const displayedCreatedTools = createdTools.slice(0, 3);
+  const displayedAvailableTools = availableTools?.slice(0, 4) ?? [];
+  const displayedCreatedTools = createdTools?.slice(0, 3) ?? [];
 
   if (isLoading) {
     return (
@@ -445,8 +445,8 @@ export const CampusBuilderTools: React.FC<CampusBuilderToolsProps> = ({
       <div className="relative z-10 mb-6">
         <div className="flex bg-charcoal/30 rounded-xl p-1 border border-steel/10">
           {[
-            { id: 'available', label: 'Create New', count: availableTools.length },
-            { id: 'created', label: 'My Tools', count: createdTools.length }
+            { id: 'available', label: 'Create New', count: availableTools?.length ?? 0 },
+            { id: 'created', label: 'My Tools', count: createdTools?.length ?? 0 }
           ].map((tab) => (
             <button
               key={tab.id}
@@ -649,8 +649,8 @@ export const CampusBuilderTools: React.FC<CampusBuilderToolsProps> = ({
         </AnimatePresence>
 
         {/* View More Actions */}
-        {((activeTab === 'available' && availableTools.length > 4) || 
-          (activeTab === 'created' && createdTools.length > 3)) && (
+        {((activeTab === 'available' && (availableTools?.length ?? 0) > 4) || 
+          (activeTab === 'created' && (createdTools?.length ?? 0) > 3)) && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -662,8 +662,8 @@ export const CampusBuilderTools: React.FC<CampusBuilderToolsProps> = ({
               className="text-mercury/70 hover:text-mercury transition-colors duration-200 text-sm"
             >
               {activeTab === 'available' 
-                ? `+${availableTools.length - 4} more templates` 
-                : `+${createdTools.length - 3} more tools`}
+                ? `+${(availableTools?.length ?? 0) - 4} more templates` 
+                : `+${(createdTools?.length ?? 0) - 3} more tools`}
             </button>
           </motion.div>
         )}

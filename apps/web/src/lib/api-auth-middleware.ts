@@ -12,6 +12,10 @@ export interface AuthContext {
   userId: string;
   token: string;
   isAdmin?: boolean;
+  user: {
+    email?: string;
+    emailVerified?: boolean;
+  };
 }
 
 export interface AuthOptions {
@@ -90,7 +94,11 @@ export async function validateApiAuth(
     return {
       userId: validation.userId!,
       token,
-      isAdmin: requireAdmin ? true : await isAdminUser(validation.userId!)
+      isAdmin: requireAdmin ? true : await isAdminUser(validation.userId!),
+      user: {
+        email: validation.email,
+        emailVerified: validation.emailVerified
+      }
     };
   }
 
@@ -103,7 +111,11 @@ export async function validateApiAuth(
         return {
           userId: 'test-user',
           token,
-          isAdmin: requireAdmin
+          isAdmin: requireAdmin,
+          user: {
+            email: 'test@example.com',
+            emailVerified: true
+          }
         };
       } else {
         console.warn(`⚠️ Development bypass denied for sensitive operation: ${operation}`);
@@ -126,7 +138,11 @@ export async function validateApiAuth(
     return {
       userId: validation.userId!,
       token,
-      isAdmin: requireAdmin ? true : await isAdminUser(validation.userId!)
+      isAdmin: requireAdmin ? true : await isAdminUser(validation.userId!),
+      user: {
+        email: validation.email,
+        emailVerified: validation.emailVerified
+      }
     };
   }
 

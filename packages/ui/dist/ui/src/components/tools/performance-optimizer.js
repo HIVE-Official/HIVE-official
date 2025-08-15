@@ -11,7 +11,7 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
  * - Real-time performance monitoring
  */
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { cn } from '../../lib/utils.js';
+import { cn } from '../../lib/utils';
 // Performance monitoring hook
 export function usePerformanceMonitor(componentName) {
     const renderCount = useRef(0);

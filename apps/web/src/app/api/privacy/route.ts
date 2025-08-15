@@ -4,7 +4,6 @@ import { dbAdmin } from '@/lib/firebase-admin';
 import { getCurrentUser } from '@/lib/server-auth';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
-import { doc, getDoc, setDoc, updateDoc, collection, query, where, getDocs } from 'firebase-admin/firestore';
 
 // Privacy settings interface
 interface PrivacySettings {
@@ -90,12 +89,12 @@ const defaultPrivacySettings: Omit<PrivacySettings, 'userId' | 'createdAt' | 'up
 // GET - Fetch user's privacy settings
 export async function GET(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
-    const privacyDoc = await getDoc(doc(dbAdmin, 'privacySettings', user.uid));
+    const privacyDoc = await dbAdmin.collection('privacySettings').doc(user.uid).get();
     
     if (!privacyDoc.exists) {
       // Create default settings if none exist
@@ -106,7 +105,7 @@ export async function GET(request: NextRequest) {
         updatedAt: new Date().toISOString()
       };
       
-      await setDoc(doc(dbAdmin, 'privacySettings', user.uid), newSettings);
+      await dbAdmin.collection('privacySettings').doc(user.uid).set(newSettings);
       return NextResponse.json({ settings: newSettings });
     }
 
@@ -121,7 +120,7 @@ export async function GET(request: NextRequest) {
 // PUT - Update privacy settings
 export async function PUT(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
@@ -135,7 +134,7 @@ export async function PUT(request: NextRequest) {
     }
 
     // Get existing settings
-    const privacyDoc = await getDoc(doc(dbAdmin, 'privacySettings', user.uid));
+    const privacyDoc = await dbAdmin.collection('privacySettings').doc(user.uid).get();
     const existingSettings = privacyDoc.exists ? privacyDoc.data() as PrivacySettings : {
       userId: user.uid,
       ...defaultPrivacySettings,
@@ -154,7 +153,7 @@ export async function PUT(request: NextRequest) {
       updatedAt: new Date().toISOString()
     };
 
-    await setDoc(doc(dbAdmin, 'privacySettings', user.uid), updatedSettings);
+    await dbAdmin.collection('privacySettings').doc(user.uid).set(updatedSettings);
 
     // Apply privacy changes immediately
     await applyPrivacyChanges(user.uid, updatedSettings);
@@ -193,13 +192,10 @@ async function applyPrivacyChanges(userId: string, settings: PrivacySettings) {
 // Helper function to update space visibility
 async function updateSpaceVisibility(userId: string, settings: PrivacySettings) {
   try {
-    const membershipsQuery = dbAdmin.collection(
-      dbAdmin.collection('members'),
-      where('userId', '==', userId),
-      where('status', '==', 'active')
-    );
-
-    const membershipsSnapshot = await getDocs(membershipsQuery);
+    const membershipsSnapshot = await dbAdmin.collection('members')
+      .where('userId', '==', userId)
+      .where('status', '==', 'active')
+      .get();
     
     // Update visibility in each space membership
     const updates = membershipsSnapshot.docs.map(async (memberDoc) => {
@@ -220,7 +216,7 @@ async function updateSpaceVisibility(userId: string, settings: PrivacySettings) 
         updatedAt: new Date().toISOString()
       };
 
-      return updateDoc(memberDoc.ref, updatedMemberData);
+      return memberDoc.ref.update(updatedMemberData);
     });
 
     await Promise.all(updates);
@@ -232,8 +228,8 @@ async function updateSpaceVisibility(userId: string, settings: PrivacySettings) 
 // Helper function to update profile visibility
 async function updateProfileVisibility(userId: string, profileVisibility: PrivacySettings['profileVisibility']) {
   try {
-    const userDocRef = doc(dbAdmin, 'users', userId);
-    const userDoc = await getDoc(userDocRef);
+    const userDocRef = dbAdmin.collection('users').doc(userId);
+    const userDoc = await userDocRef.get();
     
     if (userDoc.exists) {
       const userData = userDoc.data();
@@ -251,7 +247,7 @@ async function updateProfileVisibility(userId: string, profileVisibility: Privac
         updatedAt: new Date().toISOString()
       };
 
-      await updateDoc(userDocRef, updatedUserData);
+      await userDocRef.update(updatedUserData);
     }
   } catch (error) {
     logger.error('Error updating profile visibility', { error: error, endpoint: '/api/privacy' });
@@ -266,13 +262,10 @@ async function cleanupOldActivityData(userId: string, retentionPeriod: number) {
     const cutoffDateStr = cutoffDate.toISOString().split('T')[0];
 
     // Query old activity events
-    const oldEventsQuery = dbAdmin.collection(
-      dbAdmin.collection('activityEvents'),
-      where('userId', '==', userId),
-      where('date', '<', cutoffDateStr)
-    );
-
-    const oldEventsSnapshot = await getDocs(oldEventsQuery);
+    const oldEventsSnapshot = await dbAdmin.collection('activityEvents')
+      .where('userId', '==', userId)
+      .where('date', '<', cutoffDateStr)
+      .get();
     
     // Delete old events in batches
     const batch = dbAdmin.batch();
@@ -286,13 +279,10 @@ async function cleanupOldActivityData(userId: string, retentionPeriod: number) {
     }
 
     // Query old activity summaries
-    const oldSummariesQuery = dbAdmin.collection(
-      dbAdmin.collection('activitySummaries'),
-      where('userId', '==', userId),
-      where('date', '<', cutoffDateStr)
-    );
-
-    const oldSummariesSnapshot = await getDocs(oldSummariesQuery);
+    const oldSummariesSnapshot = await dbAdmin.collection('activitySummaries')
+      .where('userId', '==', userId)
+      .where('date', '<', cutoffDateStr)
+      .get();
     
     // Delete old summaries in batches
     const summaryBatch = dbAdmin.batch();

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { dbAdmin } from '@/lib/firebase-admin';
-import { logger } from "@/lib/logger";
+import { logger } from "@/lib/structured-logger";
 import { ApiResponseHelper, HttpStatus } from "@/lib/api-response-types";
 import { withAuth } from '@/lib/api-auth-middleware';
 
@@ -263,7 +263,7 @@ export const GET = withAuth(async (request: NextRequest, authContext, { params }
       return NextResponse.json({
         success: true,
         ritual,
-        developmentMode: true
+        // SECURITY: Development mode removed for production safety
       });
     }
 

@@ -3,8 +3,9 @@ import { z } from 'zod';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { getAuth } from 'firebase-admin/auth';
 import { getAuthTokenFromRequest } from '@/lib/auth';
-import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { logger } from "@/lib/structured-logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
+import * as admin from 'firebase-admin';
 
 const SearchToolsSchema = z.object({
   query: z.string().min(1).max(100),
@@ -34,7 +35,7 @@ export async function POST(request: NextRequest) {
     const { query, limit, offset, category, verified, minDeployments, sortBy, includePrivate } = searchParams;
 
     // Start with base query
-    let toolsQuery = dbAdmin.collection('tools');
+    let toolsQuery: admin.firestore.Query<admin.firestore.DocumentData> = dbAdmin.collection('tools');
 
     // Apply filters
     if (category) {

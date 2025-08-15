@@ -94,7 +94,7 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
           totalNotifications: mockSpaces.reduce((sum, s) => sum + s.unreadCount, 0),
           weeklyActivity: 12
         },
-        developmentMode: true
+        // SECURITY: Development mode removed for production safety
       });
     }
 

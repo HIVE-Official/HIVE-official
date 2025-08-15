@@ -1,9 +1,9 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { HiveCard, HiveButton, HiveBadge } from '../index.js';
+import { HiveCard, HiveButton, HiveBadge } from '../index';
 import { MessageSquare, Star, BarChart3, Users, Send, Eye, Download, ThumbsUp } from 'lucide-react';
-import { cn } from '../../lib/utils.js';
+import { cn } from '../../lib/utils';
 const StarRating = ({ rating, maxRating = 5, size = 'sm', onChange }) => {
     const sizeClasses = {
         sm: 'w-4 h-4',

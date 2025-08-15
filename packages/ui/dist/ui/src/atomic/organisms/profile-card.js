@@ -1,9 +1,9 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { cva } from 'class-variance-authority';
-import { cn } from '../../lib/utils.js';
-import { ProfileHeader } from '../molecules/profile-header.js';
-import { ProfileStats } from '../molecules/profile-stats.js';
+import { cn } from '../../lib/utils';
+import { ProfileHeader } from '../molecules/profile-header';
+import { ProfileStats } from '../molecules/profile-stats';
 import { Clock, Users, Zap, Award, Calendar } from 'lucide-react';
 const profileCardVariants = cva("bg-hive-surface-elevated border border-hive-border-subtle rounded-xl transition-all duration-200", {
     variants: {

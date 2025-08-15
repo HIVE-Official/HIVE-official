@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { dbAdmin as adminDb } from '@/lib/firebase-admin';
 import { getCurrentUser } from '@/lib/auth-server';
-import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { logger } from "@/lib/structured-logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
+import * as admin from 'firebase-admin';
 
 interface RecommendationContext {
   userId: string;
@@ -60,8 +61,8 @@ export async function GET(request: NextRequest) {
     }
 
     const { searchParams } = new URL(request.url);
-    const category = searchParams.get('category');
-    const limit_param = parseInt(searchParams.get('limit') || '20');
+    const category = searchParams.get('category') ?? undefined;
+    const limit_param = parseInt(searchParams.get('limit') ?? '20');
     const includeInstalled = searchParams.get('includeInstalled') === 'true';
 
     // Get user context
@@ -86,7 +87,18 @@ export async function GET(request: NextRequest) {
 async function buildUserContext(userId: string): Promise<RecommendationContext> {
   // Get user profile
   const userDoc = await adminDb.collection('users').doc(userId).get();
-  const userData = userDoc.exists ? userDoc.data() : {};
+  const userData = userDoc.exists ? userDoc.data() : null;
+  if (!userData) {
+    return {
+      userId,
+      userType: undefined,
+      institution: undefined,
+      interests: [],
+      spaceIds: [],
+      recentActivity: [],
+      installedToolIds: []
+    };
+  }
 
   // Get user's spaces
   const spaceMembershipsSnapshot = await adminDb
@@ -122,9 +134,9 @@ async function buildUserContext(userId: string): Promise<RecommendationContext> 
 
   return {
     userId,
-    userType: userData.userType,
-    institution: userData.institution,
-    interests: userData.interests || [],
+    userType: userData?.userType,
+    institution: userData?.institution,
+    interests: userData?.interests || [],
     spaceIds,
     recentActivity,
     installedToolIds
@@ -139,7 +151,7 @@ async function generateRecommendations(
   const { category, limit, includeInstalled = false } = options;
 
   // Get all marketplace tools
-  let marketplaceQuery = adminDb.collection('marketplace');
+  let marketplaceQuery: admin.firestore.Query<admin.firestore.DocumentData> = adminDb.collection('marketplace');
   
   if (category) {
     marketplaceQuery = marketplaceQuery.where('category', '==', category);
@@ -149,12 +161,12 @@ async function generateRecommendations(
   const allTools = marketplaceSnapshot.docs.map(doc => ({
     id: doc.id,
     ...doc.data()
-  }));
+  } as { id: string; toolId?: string; [key: string]: any }));
 
   // Filter out installed tools if requested
   const availableTools = includeInstalled 
     ? allTools 
-    : allTools.filter(tool => !context.installedToolIds.includes(tool.toolId));
+    : allTools.filter(tool => tool.toolId && !context.installedToolIds?.includes(tool.toolId));
 
   // Generate different types of recommendations
   const contentBasedRecs = await generateContentBasedRecommendations(context, availableTools);
@@ -226,9 +238,9 @@ async function generateContentBasedRecommendations(
     }
 
     // Score based on category preferences from recent activity
-    const categoryActivity = context.recentActivity.filter(activity => 
+    const categoryActivity = context.recentActivity?.filter(activity => 
       activity.includes('tool_interaction') || activity.includes('tool_installed')
-    ).length;
+    ).length || 0;
     
     if (categoryActivity > 0) {
       score += Math.min(categoryActivity * 5, 25);
@@ -303,7 +315,7 @@ async function generateCollaborativeRecommendations(
     const userToolIds = userInstallationsSnapshot.docs.map(doc => doc.data().toolId);
 
     for (const toolId of userToolIds) {
-      if (!context.installedToolIds.includes(toolId)) {
+      if (!context.installedToolIds?.includes(toolId)) {
         const tool = tools.find(t => t.toolId === toolId);
         if (tool) {
           const existing = collaborativeTools.get(toolId);
@@ -408,7 +420,7 @@ async function generateCategoryRecommendations(
   // Determine user's preferred categories based on installed tools
   const categoryPreferences = new Map<string, number>();
   
-  for (const toolId of context.installedToolIds) {
+  for (const toolId of context.installedToolIds || []) {
     const tool = tools.find(t => t.toolId === toolId);
     if (tool) {
       const count = categoryPreferences.get(tool.category) || 0;
@@ -422,7 +434,7 @@ async function generateCategoryRecommendations(
   for (const [category, preference] of categoryPreferences) {
     const categoryTools = tools
       .filter(tool => tool.category === category)
-      .filter(tool => !context.installedToolIds.includes(tool.toolId))
+      .filter(tool => !context.installedToolIds?.includes(tool.toolId))
       .sort((a, b) => b.stats.rating - a.stats.rating)
       .slice(0, 5);
 

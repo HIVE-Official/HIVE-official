@@ -1,6 +1,6 @@
 'use client';
 import { jsx as _jsx } from "react/jsx-runtime";
-import { cn } from '../../lib/utils.js';
+import { cn } from '../../lib/utils';
 const iconSizes = {
     xs: 'h-3 w-3', // 3
     sm: 'h-4 w-4', // 16px  
@@ -10,13 +10,13 @@ const iconSizes = {
     '2xl': 'h-10 w-10' // 10
 };
 const iconColors = {
-    primary: 'text-hive-text-primary',
-    secondary: 'text-hive-text-secondary',
-    muted: 'text-hive-text-mutedLight',
+    primary: 'text-[var(--hive-text-primary)]',
+    secondary: 'text-[var(--hive-text-secondary)]',
+    muted: 'text-[var(--hive-text-muted)]',
     gold: 'text-[var(--hive-brand-secondary)]',
-    ruby: 'text-hive-ruby',
-    emerald: 'text-hive-emerald',
-    sapphire: 'text-hive-sapphire'
+    ruby: 'text-[var(--hive-status-error)]',
+    emerald: 'text-[var(--hive-status-success)]',
+    sapphire: 'text-[var(--hive-brand-primary)]'
 };
 export const Icon = ({ icon: IconComponent, size = 'md', color = 'primary', variant = 'default', className, ...props }) => {
     const baseClasses = [

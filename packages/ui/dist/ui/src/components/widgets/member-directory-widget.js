@@ -3,9 +3,9 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Users, Crown, Shield, Star, Plus, Activity, TrendingUp, UserCog, Download, Eye } from 'lucide-react';
-import { cn } from '../../lib/utils.js';
-import { Button, Badge } from '../../atomic/atoms/index.js';
-import { MemberDirectoryTool } from '../tools/member-directory-tool.js';
+import { cn } from '../../lib/utils';
+import { Button, Badge } from '../../atomic/atoms';
+import { MemberDirectoryTool } from '../tools/member-directory-tool';
 export function MemberDirectoryWidget({ space, isLeader = false, currentUserRole = 'member', leaderMode, showCompact = false, maxMembers = 8, onMemberAction, authenticatedFetch, className }) {
     const [showFullDirectory, setShowFullDirectory] = useState(false);
     const [quickViewMode, setQuickViewMode] = useState('active');

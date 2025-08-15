@@ -1,6 +1,6 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { Label } from '../ui/label.js';
-import { useStandardElementStyles } from '../../hooks/use-standard-element-styles.js';
+import { Label } from '../ui/label';
+import { useStandardElementStyles } from '../../hooks/use-standard-element-styles';
 export const ProgressBarRenderer = ({ element, config, value, runtimeContext }) => {
     // Use standard style system (flexible input, consistent output)
     const { classes, styles } = useStandardElementStyles(config.style);

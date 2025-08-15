@@ -1,9 +1,9 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useCallback } from 'react';
-import { HiveCard, HiveButton, HiveBadge } from '../../index.js';
+import { HiveCard, HiveButton, HiveBadge } from '../../index';
 import { BarChart3, Plus, Trash2, Settings, Eye, Vote, Clock, CheckCircle } from 'lucide-react';
-import { cn } from '../../../lib/utils.js';
+import { cn } from '../../../lib/utils';
 // Interface Component - For Leaders/Builders (Utility Side)
 const PollInterface = ({ poll, onUpdate, onDelete, onToggleActive }) => {
     const [editingQuestion, setEditingQuestion] = useState(poll.question);

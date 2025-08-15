@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { cn } from '../../lib/utils';
-import { User, Check, Star, Crown, Eye, GraduationCap, Home, Users } from 'lucide-react';
+import { User } from 'lucide-react';
 
 export interface AvatarProps extends React.HTMLAttributes<HTMLDivElement> {
   src?: string;
@@ -31,23 +31,12 @@ const avatarSizes = {
 const statusColors = {
   online: 'bg-[var(--hive-status-success)] border-[var(--hive-status-success)]',
   offline: 'bg-[var(--hive-background-tertiary)] border-[var(--hive-border-default)]', 
-  away: 'bg-[var(--hive-brand-secondary)] border-[var(--hive-brand-secondary)]',
+  away: 'bg-transparent border-2 border-[var(--hive-brand-secondary)]', // GOLD OUTLINE ONLY (never fill)
   busy: 'bg-[var(--hive-status-error)] border-[var(--hive-status-error)]',
   ghost: 'bg-[var(--hive-text-tertiary)] border-[var(--hive-text-tertiary)]'
 };
 
-const roleBadges = {
-  student: { icon: GraduationCap, color: 'text-[var(--hive-status-info)]' },
-  builder: { icon: Star, color: 'text-[var(--hive-brand-secondary)]' },
-  leader: { icon: Crown, color: 'text-[var(--hive-brand-secondary)]' },
-  verified: { icon: Check, color: 'text-[var(--hive-status-success)]' }
-};
 
-const affiliationBadges = {
-  university: { icon: GraduationCap, color: 'text-[var(--hive-status-info)]' },
-  residential: { icon: Home, color: 'text-[var(--hive-text-secondary)]' },
-  greek: { icon: Users, color: 'text-[var(--hive-brand-secondary)]' }
-};
 
 const statusSizes = {
   xs: 'h-1.5 w-1.5',
@@ -58,14 +47,6 @@ const statusSizes = {
   '2xl': 'h-4 w-4'
 };
 
-const badgeSizes = {
-  xs: 'h-3 w-3',
-  sm: 'h-3.5 w-3.5',
-  md: 'h-4 w-4',
-  lg: 'h-5 w-5',
-  xl: 'h-6 w-6',
-  '2xl': 'h-7 w-7'
-};
 
 export const Avatar: React.FC<AvatarProps> = ({
   src,
@@ -75,10 +56,7 @@ export const Avatar: React.FC<AvatarProps> = ({
   initials,
   placeholder,
   interactive = false,
-  role,
-  affiliation,
   privacy = 'public',
-  showBadge = true,
   className,
   ...props
 }) => {
@@ -153,7 +131,7 @@ export const Avatar: React.FC<AvatarProps> = ({
       {/* Status Indicator */}
       {status && (
         <div className={cn(
-          'absolute -bottom-0.5 -right-0.5',
+          'absolute bottom-0 right-0',
           'rounded-full',
           'border-2 border-[var(--hive-background-primary)]',
           statusSizes[size],

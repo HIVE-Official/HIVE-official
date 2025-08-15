@@ -14,6 +14,10 @@ export * from "./src/lib/responsive-foundation";
 export * from "./src/lib/accessibility-foundation";
 export * from "./src/lib/component-foundation";
 
+// === ANIMATION SYSTEMS ===
+export * from "./src/components/animations";
+export { motion, AnimatePresence, MotionDiv, MotionButton, MotionSpan, MotionSection } from "./src/components/framer-motion-proxy";
+
 // === VERIFIED EXISTING COMPONENTS ===
 export { HiveLogo, HiveGlyphOnly, HiveLogoInteractive } from "./src/components/hive-logo";
 export { HiveModal, HiveConfirmModal, HiveAlertModal } from "./src/components/hive-modal";
@@ -42,6 +46,19 @@ export { PageContainer } from "./src/components/shell/page-container";
 
 // === PROFILE SYSTEM ===
 export { CalendarCard, adaptSmartCalendarProps } from "./src/components/profile";
+export { UnifiedProfileDashboard } from "./src/atomic/organisms/unified-profile-dashboard";
+
+// === CAMPUS MOLECULE COMPONENTS ===
+export { CampusIdentityHeader } from "./src/atomic/molecules/campus-identity-header";
+export { CampusSpacesCard } from "./src/atomic/molecules/campus-spaces-card";
+export { CampusActivityFeed } from "./src/atomic/molecules/campus-activity-feed";
+export { CampusBuilderTools } from "./src/atomic/molecules/campus-builder-tools";
+
+// === SPACES SYSTEM ===
+export { SpaceDetailsWidget } from "./src/components/spaces/space-details-widget";
+
+// === TOOLS SYSTEM ===
+export { ToolDetailsWidget } from "./src/components/tools/tool-details-widget";
 
 // === COMPLETE HIVE SYSTEMS ===
 export { 
@@ -65,6 +82,14 @@ export { WelcomeMat, useWelcomeMat } from "./src/components/welcome/welcome-mat"
 // === SHELL PROVIDERS & HOOKS ===
 export { ShellProvider, useShell } from "./src/components/shell/shell-provider";
 
+// === AUTH & ONBOARDING HOOKS ===
+export * from "./src/hooks";
+export { useOnboardingBridge } from "./src/hooks/use-onboarding-bridge";
+
+// === AUTH CONTEXT ===
+export * from "./src/contexts/unified-auth-context";
+export { UnifiedAuthProvider, useUnifiedAuth } from "./src/contexts/unified-auth-context";
+
 // === NAVIGATION PREFERENCES ===
 export { NavigationPreferences } from "./src/atomic/atoms/navigation-preferences";
 export { 
@@ -76,7 +101,7 @@ export {
 } from "./src/atomic/molecules/navigation-variants";
 
 // === SURFACES ===
-export { HivePostsSurface } from "./src/components/surfaces/hive-posts-surface";
+export { HivePostsSurface, type Comment } from "./src/components/surfaces/hive-posts-surface";
 export { HivePinnedSurface } from "./src/components/surfaces/hive-pinned-surface";
 export { HiveEventsSurface } from "./src/components/surfaces/hive-events-surface";
 export { HiveMembersSurface } from "./src/components/surfaces/hive-members-surface";
@@ -188,3 +213,60 @@ export {
   Switch,
   switchVariants,
 } from "./src/atomic/atoms/switch-enhanced";
+
+// === MOBILE INTERACTION HOOKS ===
+export {
+  useHapticFeedback,
+  useSwipeGestures,
+  usePullToRefresh,
+  useLongPress,
+  useTouchRipple,
+  useMobileViewport
+} from "./src/hooks/use-mobile-interactions";
+
+// === MOBILE COMPONENTS ===
+export { MobileFeed } from "./src/components/mobile/mobile-feed";
+
+// === MOBILE UTILITIES & PERFORMANCE ===
+export { 
+  MobilePerformanceManager, 
+  useMobilePerformance,
+  BatteryEfficientAnimations,
+  MemoryManager,
+  AdaptiveLoader,
+  PerformanceBudget,
+  mobilePerformanceManager
+} from "./src/utils/mobile-performance";
+
+export { 
+  MobileNative,
+  shareContent,
+  capturePhoto,
+  selectFiles,
+  getCurrentLocation,
+  vibrate,
+  WakeLock,
+  watchOrientation,
+  getNetworkInfo,
+  getBatteryInfo,
+  InstallPrompt,
+  selectContacts,
+  getDeviceMemory,
+  getHardwareConcurrency
+} from "./src/utils/mobile-native-features";
+
+export {
+  MobileServiceWorker,
+  useServiceWorker,
+  CacheStrategies,
+  OfflineStorage,
+  mobileServiceWorker
+} from "./src/utils/mobile-service-worker";
+
+export {
+  MobileTester,
+  mobileTester,
+  useMobileTesting,
+  DEVICE_PROFILES,
+  MOBILE_TEST_SCENARIOS
+} from "./src/utils/mobile-testing";

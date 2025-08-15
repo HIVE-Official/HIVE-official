@@ -31,84 +31,78 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
 
     // Note: Removed schoolId logic since spaces don't have this field
 
-    // Define space types for nested structure and their Firebase collection names
-    const spaceTypeMapping = {
-      'student_organizations': 'student_organizations',
-      'university_organizations': 'university_organizations',
-      'greek_life': 'greek_life',
-      'campus_living': 'campus_living',
-      'hive_exclusive': 'hive_exclusive',
-      'cohort': 'cohort'
-    };
+    // Use flat collection structure for better performance
+    let spacesQuery = dbAdmin.collection('spaces');
 
-    const spaceTypes = Object.keys(spaceTypeMapping);
-    const typesToQuery = type ? [type] : spaceTypes;
-
-    // Query nested structure: spaces/[spacetype]/spaces/spaceID
-    let spaces: any[] = [];
-    
-    for (const spaceType of typesToQuery) {
-      try {
-        logger.info('📊 Querying space type', { spaceType, endpoint: '/api/spaces/browse' });
-        
-        const spacesSnapshot = await dbAdmin.collection('spaces')
-          .doc(spaceType)
-          .collection('spaces')
-          .get();
-          
-        logger.info('Foundspaces in', { spacesSnapshot, spaceType, endpoint: '/api/spaces/browse' });
-        
-        // Add spaces from this type collection
-        const spacesFromType = spacesSnapshot.docs.map(doc => {
-          const data = doc.data();
-          return {
-            id: doc.id,
-            name: data.name,
-            description: data.description,
-            type: spaceType, // Use our API space type
-            status: data.status || 'dormant', // Use actual status from data
-            memberCount: data.metrics?.memberCount || 0,
-            createdAt: data.createdAt,
-            updatedAt: data.updatedAt,
-            tags: data.tags || [],
-            bannerUrl: data.bannerUrl,
-            isPrivate: data.isPrivate || false,
-            // Include original data for debugging
-            _originalData: data
-          };
-        });
-        
-        spaces.push(...spacesFromType);
-      } catch (error) {
-        logger.error('❌ Error querying spaces for type', { spaceType, error: error, endpoint: '/api/spaces/browse' });
-        // Continue with other types even if one fails
-      }
+    // Apply type filter
+    if (type) {
+      spacesQuery = spacesQuery.where('type', '==', type);
     }
 
-    // Apply text search filter (case-insensitive)
+    // Apply search filter
     if (search) {
       const searchLower = search.toLowerCase();
-      spaces = spaces.filter(space => 
-        space.name.toLowerCase().includes(searchLower) ||
-        (space.description && space.description.toLowerCase().includes(searchLower))
-      );
+      spacesQuery = spacesQuery
+        .where('name_lowercase', '>=', searchLower)
+        .where('name_lowercase', '<=', searchLower + '\uf8ff')
+        .orderBy('name_lowercase');
+    } else {
+      // Default ordering by member count (popular first), then name
+      spacesQuery = spacesQuery
+        .orderBy('metrics.memberCount', 'desc')
+        .orderBy('name_lowercase');
     }
 
-    // Sort by member count (popular first) then by name
-    spaces.sort((a, b) => {
-      const memberCountA = a.memberCount || 0;
-      const memberCountB = b.memberCount || 0;
-      
-      if (memberCountA !== memberCountB) {
-        return memberCountB - memberCountA; // Higher member count first
-      }
-      
-      return a.name.localeCompare(b.name); // Alphabetical for ties
+    // Apply pagination
+    if (offset > 0) {
+      spacesQuery = spacesQuery.offset(offset);
+    }
+    
+    spacesQuery = spacesQuery.limit(limit);
+
+    logger.info('📊 Querying spaces with filters', { type, search, limit, offset, endpoint: '/api/spaces/browse' });
+
+    const spacesSnapshot = await spacesQuery.get();
+
+    const spaces = spacesSnapshot.docs.map(doc => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        name: data.name,
+        description: data.description,
+        type: data.type,
+        status: data.status || 'active',
+        memberCount: data.metrics?.memberCount || 0,
+        createdAt: data.createdAt,
+        updatedAt: data.updatedAt,
+        tags: data.tags || [],
+        bannerUrl: data.bannerUrl,
+        isPrivate: data.isPrivate || false,
+        metrics: data.metrics || { memberCount: 0, postCount: 0, eventCount: 0 }
+      };
     });
 
-    // Apply pagination
-    const totalCount = spaces.length;
-    const paginatedSpaces = spaces.slice(offset, offset + limit);
+    // Get total count for pagination
+    let totalCount = 0;
+    try {
+      let countQuery = dbAdmin.collection('spaces');
+      if (type) {
+        countQuery = countQuery.where('type', '==', type);
+      }
+      if (search) {
+        const searchLower = search.toLowerCase();
+        countQuery = countQuery
+          .where('name_lowercase', '>=', searchLower)
+          .where('name_lowercase', '<=', searchLower + '\uf8ff');
+      }
+      const countSnapshot = await countQuery.count().get();
+      totalCount = countSnapshot.data().count;
+    } catch (error) {
+      logger.warn('Could not get total count, using spaces length', { error });
+      totalCount = spaces.length;
+    }
+
+    const paginatedSpaces = spaces;
 
     // Get user's current memberships to mark joined spaces
     // Skip membership check for test users (onboarding flow)
@@ -116,21 +110,26 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
     
     if (userId !== 'test-user' && userId !== 'dev_user_123') {
       try {
-        // Use collectionGroup to find all member documents for this user
-        const membershipQuery = dbAdmin.collectionGroup('members')
+        // Use flat spaceMembers collection instead of nested structure
+        const membershipQuery = dbAdmin.collection('spaceMembers')
           .where('userId', '==', userId)
-          .limit(50); // Limit for performance
+          .where('isActive', '==', true)
+          .limit(100); // Increased limit for performance
           
         const membershipsSnapshot = await membershipQuery.get();
         
         membershipsSnapshot.docs.forEach(doc => {
-          const spaceId = doc.ref.parent.parent?.id;
-          if (spaceId) {
-            userSpaceIds.add(spaceId);
+          const data = doc.data();
+          if (data.spaceId) {
+            userSpaceIds.add(data.spaceId);
           }
         });
         
-        logger.info('📊 Foundmemberships for user', { userSpaceIds, userId, endpoint: '/api/spaces/browse' });
+        logger.info('📊 Found memberships for user', { 
+          membershipCount: userSpaceIds.size, 
+          userId, 
+          endpoint: '/api/spaces/browse' 
+        });
         
       } catch (error) {
         logger.error('❌ Error getting memberships', { error: error, endpoint: '/api/spaces/browse' });

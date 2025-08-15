@@ -1,8 +1,36 @@
 "use client";
 
-import { Button, Card } from "@hive/ui";
+import { Button, Card, useUnifiedAuth } from "@hive/ui";
 import { Users, Star, MapPin, ArrowRight, Heart, Activity, Crown, Shield } from "lucide-react";
 import { type Space } from "@hive/core";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+
+// Temporary stubs until ExpandFocus and SpaceDetailsWidget are exported from @hive/ui
+function ExpandFocus({ children, /* isExpanded, */ onExpand, /* onCollapse, expandFrom, focusContent */ }: any) { // TODO: Temporary stub - unused params for future features
+  return <div onClick={onExpand}>{children}</div>;
+}
+
+function SpaceDetailsWidget({ space, membershipRole, onJoin, onLeave, onMessage, onSettings }: any) {
+  return (
+    <div className="p-4 bg-hive-background-secondary rounded-lg">
+      <h3 className="text-hive-text-primary font-semibold mb-2">{space.name}</h3>
+      <p className="text-hive-text-secondary text-sm mb-4">{space.description}</p>
+      <div className="flex gap-2">
+        {!membershipRole && (
+          <Button onClick={() => onJoin?.(space.id)} size="sm">Join</Button>
+        )}
+        {membershipRole && (
+          <Button onClick={() => onLeave?.(space.id)} size="sm" variant="outline">Leave</Button>
+        )}
+        <Button onClick={() => onMessage?.(space.id)} size="sm" variant="outline">Message</Button>
+        {(membershipRole === 'admin' || membershipRole === 'owner') && (
+          <Button onClick={() => onSettings?.(space.id)} size="sm" variant="outline">Settings</Button>
+        )}
+      </div>
+    </div>
+  );
+}
 
 interface UnifiedSpaceCardProps {
   space: Space;
@@ -19,8 +47,12 @@ export function UnifiedSpaceCard({
   membershipRole = "member",
   onAction 
 }: UnifiedSpaceCardProps) {
+  const router = useRouter();
+  const [isExpanded, setIsExpanded] = useState(false);
+  const unifiedAuth = useUnifiedAuth();
+  
   const handleCardClick = () => {
-    window.location.href = `/spaces/${space.id}`;
+    setIsExpanded(true);
   };
 
   const handleJoinClick = async (e: React.MouseEvent) => {
@@ -30,18 +62,12 @@ export function UnifiedSpaceCard({
         'Content-Type': 'application/json'
       };
       
-      // Get auth token
-      try {
-        const sessionJson = window.localStorage.getItem('hive_session');
-        if (sessionJson) {
-          const session = JSON.parse(sessionJson);
-          headers.Authorization = `Bearer ${process.env.NODE_ENV === 'development' ? 'test-token' : session.token}`;
-        } else {
-          headers.Authorization = `Bearer test-token`;
-        }
-      } catch (error) {
-        headers.Authorization = `Bearer test-token`;
+      // Get auth token from unified auth context
+      const authToken = await unifiedAuth.getAuthToken();
+      if (!authToken) {
+        throw new Error('Authentication required to join spaces');
       }
+      headers.Authorization = `Bearer ${authToken}`;
 
       const response = await fetch('/api/spaces/join', {
         method: 'POST',
@@ -139,22 +165,48 @@ export function UnifiedSpaceCard({
 
   if (variant === "list") {
     return (
-      <Card 
-        className="p-4 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)] hover:bg-[rgba(255,255,255,0.04)] transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#FFD700]/50 focus:ring-offset-2 focus:ring-offset-[#0A0A0A]"
-        onClick={handleCardClick}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            handleCardClick();
-          }
-        }}
-        tabIndex={0}
-        role="button"
-        aria-label={`View ${space.name} space - ${space.description || 'No description'}`}
+      <ExpandFocus
+        isExpanded={isExpanded}
+        onExpand={() => setIsExpanded(true)}
+        onCollapse={() => setIsExpanded(false)}
+        expandFrom="center"
+        focusContent={
+          <SpaceDetailsWidget
+            space={space}
+            membershipRole={showMembership ? membershipRole || null : null}
+            onJoin={(_spaceId: string) => { // TODO: spaceId for future join action tracking
+              onAction?.('join');
+              setIsExpanded(false);
+            }}
+            onLeave={(_spaceId: string) => { // TODO: spaceId for future leave action tracking
+              onAction?.('leave');
+              setIsExpanded(false);
+            }}
+            onMessage={(spaceId: string) => {
+              router.push(`/spaces/${spaceId}/chat`);
+            }}
+            onSettings={(spaceId: string) => {
+              router.push(`/spaces/${spaceId}/settings`);
+            }}
+          />
+        }
       >
+        <Card 
+          className="p-4 bg-hive-background-elevated/20 border-hive-border-subtle hover:bg-hive-background-elevated/40 transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-hive-brand-primary/50 focus:ring-offset-2 focus:ring-offset-hive-background-primary"
+          onClick={handleCardClick}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              handleCardClick();
+            }
+          }}
+          tabIndex={0}
+          role="button"
+          aria-label={`View ${space.name} space - ${space.description || 'No description'}`}
+        >
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white font-semibold">
+            <div className="w-12 h-12 bg-gradient-to-br from-hive-brand-primary to-hive-interactive-hover rounded-lg flex items-center justify-center text-hive-background-primary font-semibold">
               {getSpaceInitial()}
             </div>
             <div className="flex-1">
@@ -187,13 +239,100 @@ export function UnifiedSpaceCard({
           </Button>
         </div>
       </Card>
+      </ExpandFocus>
     );
   }
 
   if (variant === "compact") {
     return (
+      <ExpandFocus
+        isExpanded={isExpanded}
+        onExpand={() => setIsExpanded(true)}
+        onCollapse={() => setIsExpanded(false)}
+        expandFrom="center"
+        focusContent={
+          <SpaceDetailsWidget
+            space={space}
+            membershipRole={showMembership ? membershipRole || null : null}
+            onJoin={(_spaceId: string) => { // TODO: spaceId for future join action tracking
+              onAction?.('join');
+              setIsExpanded(false);
+            }}
+            onLeave={(_spaceId: string) => { // TODO: spaceId for future leave action tracking
+              onAction?.('leave');
+              setIsExpanded(false);
+            }}
+            onMessage={(spaceId: string) => {
+              router.push(`/spaces/${spaceId}/chat`);
+            }}
+            onSettings={(spaceId: string) => {
+              router.push(`/spaces/${spaceId}/settings`);
+            }}
+          />
+        }
+      >
+        <Card 
+          className="flex-shrink-0 w-64 p-4 bg-hive-background-elevated/20 border-hive-border-subtle hover:bg-hive-background-elevated/40 transition-all cursor-pointer group focus:outline-none focus:ring-2 focus:ring-hive-brand-primary/50 focus:ring-offset-2 focus:ring-offset-hive-background-primary"
+          onClick={handleCardClick}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              handleCardClick();
+            }
+          }}
+          tabIndex={0}
+          role="button"
+          aria-label={`View ${space.name} space - ${space.type?.replace('_', ' ')}`}
+        >
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-10 h-10 bg-gradient-to-br from-hive-brand-primary to-hive-interactive-hover rounded-lg flex items-center justify-center text-hive-background-primary font-semibold text-sm">
+              {getSpaceInitial()}
+            </div>
+            <div className="flex-1">
+              <h4 className="text-hive-text-primary font-medium text-sm truncate">{space.name}</h4>
+              <p className="text-xs text-hive-text-tertiary capitalize">{space.type?.replace('_', ' ')}</p>
+            </div>
+            <ArrowRight className="h-4 w-4 text-hive-brand-primary group-hover:translate-x-1 transition-transform" />
+          </div>
+          <div className="flex items-center text-xs text-hive-text-tertiary">
+            <Activity className="h-3 w-3 mr-1 text-green-400" />
+            Active now
+          </div>
+        </Card>
+      </ExpandFocus>
+    );
+  }
+
+  // Default: grid variant
+  return (
+    <ExpandFocus
+      isExpanded={isExpanded}
+      onExpand={() => setIsExpanded(true)}
+      onCollapse={() => setIsExpanded(false)}
+      expandFrom="center"
+      focusContent={
+        <SpaceDetailsWidget
+          space={space}
+          membershipRole={showMembership ? membershipRole || null : null}
+          onJoin={(_spaceId: string) => {
+            onAction?.('join');
+            setIsExpanded(false);
+          }}
+          onLeave={(_spaceId: string) => {
+            onAction?.('leave');
+            setIsExpanded(false);
+          }}
+          onMessage={(spaceId: string) => {
+            router.push(`/spaces/${spaceId}/chat`);
+          }}
+          onSettings={(spaceId: string) => {
+            router.push(`/spaces/${spaceId}/settings`);
+          }}
+        />
+      }
+    >
       <Card 
-        className="flex-shrink-0 w-64 p-4 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.1)] hover:bg-[rgba(255,255,255,0.04)] transition-all cursor-pointer group focus:outline-none focus:ring-2 focus:ring-[#FFD700]/50 focus:ring-offset-2 focus:ring-offset-[#0A0A0A]"
+        className="group p-6 bg-hive-background-elevated/20 border-hive-border-subtle hover:bg-hive-background-elevated/40 transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-hive-brand-primary/50 focus:ring-offset-2 focus:ring-offset-hive-background-primary"
         onClick={handleCardClick}
         onKeyDown={(e) => {
           if (e.key === 'Enter' || e.key === ' ') {
@@ -202,45 +341,12 @@ export function UnifiedSpaceCard({
           }
         }}
         tabIndex={0}
-        role="button"
-        aria-label={`View ${space.name} space - ${space.type?.replace('_', ' ')}`}
-      >
-        <div className="flex items-center gap-3 mb-3">
-          <div className="w-10 h-10 bg-gradient-to-br from-[#FFD700] to-[#FFE255] rounded-lg flex items-center justify-center text-[#0A0A0A] font-semibold text-sm">
-            {getSpaceInitial()}
-          </div>
-          <div className="flex-1">
-            <h4 className="text-white font-medium text-sm truncate">{space.name}</h4>
-            <p className="text-xs text-[#A1A1AA] capitalize">{space.type?.replace('_', ' ')}</p>
-          </div>
-          <ArrowRight className="h-4 w-4 text-[#FFD700] group-hover:translate-x-1 transition-transform" />
-        </div>
-        <div className="flex items-center text-xs text-[#A1A1AA]">
-          <Activity className="h-3 w-3 mr-1 text-green-400" />
-          Active now
-        </div>
-      </Card>
-    );
-  }
-
-  // Default: grid variant
-  return (
-    <Card 
-      className="group p-6 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)] hover:bg-[rgba(255,255,255,0.04)] transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#FFD700]/50 focus:ring-offset-2 focus:ring-offset-[#0A0A0A]"
-      onClick={handleCardClick}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          handleCardClick();
-        }
-      }}
-      tabIndex={0}
       role="button"
       aria-label={`View ${space.name} space - ${space.description || 'No description'}`}
     >
       
       <div className="flex items-start justify-between mb-4">
-        <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white font-semibold">
+        <div className="w-12 h-12 bg-gradient-to-br from-hive-brand-primary to-hive-interactive-hover rounded-lg flex items-center justify-center text-hive-background-primary font-semibold">
           {getSpaceInitial()}
         </div>
         <div className="flex items-center gap-2">
@@ -248,20 +354,20 @@ export function UnifiedSpaceCard({
           {getGreekLifeBadge()}
           <div className="flex items-center gap-1">
             <Star className="h-4 w-4 text-hive-gold" />
-            <span className="text-xs text-[#A1A1AA]">4.8</span>
+            <span className="text-xs text-hive-text-tertiary">4.8</span>
           </div>
         </div>
       </div>
 
-      <h3 className="font-semibold text-white mb-2 group-hover:text-[#FFD700] transition-colors">
+      <h3 className="font-semibold text-hive-text-primary mb-2 group-hover:text-hive-brand-primary transition-colors">
         {space.name}
       </h3>
       
-      <p className="text-sm text-[#A1A1AA] mb-4 line-clamp-2">
+      <p className="text-sm text-hive-text-tertiary mb-4 line-clamp-2">
         {space.description || "No description available"}
       </p>
 
-      <div className="flex items-center justify-between text-xs text-[#71717A] mb-4">
+      <div className="flex items-center justify-between text-xs text-hive-text-tertiary mb-4">
         <span className="flex items-center">
           <Users className="h-3 w-3 mr-1" />
           {space.memberCount || 0} members
@@ -276,7 +382,7 @@ export function UnifiedSpaceCard({
       <div className="flex gap-2">
         <Button 
           size="sm"
-          className="flex-1 bg-[#FFD700] text-[#0A0A0A] hover:bg-[#FFE255] disabled:opacity-50"
+          className="flex-1 bg-hive-brand-primary text-hive-background-primary hover:bg-hive-interactive-hover disabled:opacity-50"
           onClick={getActionButton().action === 'join' ? handleJoinClick : (e) => e.stopPropagation()}
           disabled={getActionButton().disabled}
           aria-label={`${getActionButton().text} ${space.name} space`}
@@ -288,7 +394,7 @@ export function UnifiedSpaceCard({
           <Button 
             size="sm"
             variant="outline"
-            className="border-[rgba(255,255,255,0.2)] text-white hover:bg-[rgba(255,255,255,0.1)]"
+            className="border-hive-border-secondary text-hive-text-primary hover:bg-hive-background-elevated/20"
             onClick={(e) => {
               e.stopPropagation();
               onAction('favorite');
@@ -300,5 +406,6 @@ export function UnifiedSpaceCard({
         )}
       </div>
     </Card>
+    </ExpandFocus>
   );
 }

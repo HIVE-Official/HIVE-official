@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { FieldValue } from "firebase-admin/firestore";
-import { getFirestoreAdmin } from "@hive/core/firebase-admin";
+import { dbAdmin } from "@/lib/firebase-admin";
 import { validateAuth } from "../../../../../lib/auth-server";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { toolId: string } }
+  { params }: { params: Promise<{ toolId: string }> }
 ) {
   try {
     // Validate authentication
@@ -15,7 +15,7 @@ export async function GET(
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
-    const { toolId } = params;
+    const { toolId } = await params;
     const searchParams = request.nextUrl.searchParams;
     const spaceId = searchParams.get("spaceId");
     const userId = searchParams.get("userId") || user.uid;
@@ -24,7 +24,7 @@ export async function GET(
       return NextResponse.json(ApiResponseHelper.error("spaceId parameter is required", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
-    const db = getFirestoreAdmin();
+    const db = dbAdmin;
     
     // Get tool state document
     const stateDoc = await db
@@ -46,7 +46,7 @@ export async function GET(
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { toolId: string } }
+  { params }: { params: Promise<{ toolId: string }> }
 ) {
   try {
     // Validate authentication
@@ -55,7 +55,7 @@ export async function POST(
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
-    const { toolId } = params;
+    const { toolId } = await params;
     const body = await request.json();
     const { spaceId, userId: requestUserId, state } = body;
 
@@ -72,7 +72,7 @@ export async function POST(
       );
     }
 
-    const db = getFirestoreAdmin();
+    const db = dbAdmin;
     
     // Verify user has access to the space
     const spaceMemberDoc = await db
@@ -158,7 +158,7 @@ export async function POST(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { toolId: string } }
+  { params }: { params: Promise<{ toolId: string }> }
 ) {
   try {
     // Validate authentication
@@ -167,7 +167,7 @@ export async function DELETE(
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
-    const { toolId } = params;
+    const { toolId } = await params;
     const searchParams = request.nextUrl.searchParams;
     const spaceId = searchParams.get("spaceId");
     const userId = searchParams.get("userId") || user.uid;
@@ -184,7 +184,7 @@ export async function DELETE(
       );
     }
 
-    const db = getFirestoreAdmin();
+    const db = dbAdmin;
     
     // Delete tool state document
     const stateDocId = `${toolId}_${spaceId}_${userId}`;

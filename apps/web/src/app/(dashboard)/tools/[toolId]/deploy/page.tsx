@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { Card, Button } from "@hive/ui";
-import { Alert } from "@/components/temp-stubs";
+import { Alert as _Alert } from "@/components/temp-stubs";
 import { 
   ArrowLeft, 
   User, 
@@ -18,7 +18,7 @@ import {
   Rocket
 } from 'lucide-react';
 import { useFeatureFlags } from '@hive/hooks';
-import { useAuth } from '@/hooks/use-auth';
+import { useUnifiedAuth } from '@hive/ui';
 import { ToolNavigation } from '@/lib/tool-navigation';
 
 interface DeploymentTarget {
@@ -52,7 +52,7 @@ export default function ToolDeployPage() {
   const _router = useRouter();
   const params = useParams();
   const flags = useFeatureFlags();
-  const { user, getAuthToken } = useAuth();
+  const { user, getAuthToken } = useUnifiedAuth();
   const toolId = params.toolId as string;
 
   const [step, setStep] = useState<'target' | 'config' | 'confirm' | 'success'>('target');

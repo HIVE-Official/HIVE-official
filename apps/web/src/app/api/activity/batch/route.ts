@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { getCurrentUser } from '@/lib/server-auth';
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { ApiResponseHelper, HttpStatus } from "@/lib/api-response-types";
 
 // Batch activity tracking endpoint
 export async function POST(request: NextRequest) {
@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
-    const body = await request.json();
+    const body = await request.json() as { events: unknown[] };
     const { events } = body;
 
     if (!Array.isArray(events) || events.length === 0) {
@@ -21,20 +21,19 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate events and add timestamps
-    const validEvents = events.map(event => {
+    const validEvents = events.map((event: any): ActivityEvent => {
       if (!event.type || !['space_visit', 'tool_interaction', 'content_creation', 'social_interaction', 'session_start', 'session_end'].includes(event.type)) {
         throw new Error(`Invalid activity type: ${event.type}`);
       }
 
       const now = new Date();
       return {
-        userId: user.uid,
-        type: event.type,
-        spaceId: event.spaceId || undefined,
-        toolId: event.toolId || undefined,
-        contentId: event.contentId || undefined,
-        duration: event.duration || undefined,
-        metadata: event.metadata || {},
+        type: event.type as string,
+        spaceId: event.spaceId as string | undefined,
+        toolId: event.toolId as string | undefined,
+        contentId: event.contentId as string | undefined,
+        duration: event.duration as number | undefined,
+        metadata: (event.metadata as Record<string, unknown>) || {},
         timestamp: now.toISOString(),
         date: now.toISOString().split('T')[0]
       };
@@ -55,7 +54,7 @@ export async function POST(request: NextRequest) {
     // Update daily summaries asynchronously (fire and forget)
     validEvents.forEach(event => {
       updateDailySummary(user.uid, event).catch(error => {
-        logger.error('Error updating daily summary', { error: error, endpoint: '/api/activity/batch' });
+        logger.error('Error updating daily summary', { error, endpoint: '/api/activity/batch' });
       });
     });
 
@@ -70,8 +69,19 @@ export async function POST(request: NextRequest) {
   }
 }
 
+interface ActivityEvent {
+  type: string;
+  spaceId?: string;
+  toolId?: string;
+  contentId?: string;
+  duration?: number;
+  metadata?: Record<string, unknown>;
+  timestamp: string;
+  date: string;
+}
+
 // Helper function to update daily summary (copied from main route)
-async function updateDailySummary(userId: string, event: any) {
+async function updateDailySummary(userId: string, event: ActivityEvent) {
   try {
     const summaryId = `${userId}_${event.date}`;
     const summaryRef = dbAdmin.collection('activitySummaries').doc(summaryId);
@@ -86,22 +96,22 @@ async function updateDailySummary(userId: string, event: any) {
       
       // Update existing summary
       const updatedData = {
-        totalTimeSpent: existingData.totalTimeSpent + (event.duration ? Math.round(event.duration / 60) : 0),
-        spacesVisited: event.spaceId && !existingData.spacesVisited.includes(event.spaceId) 
-          ? [...existingData.spacesVisited, event.spaceId]
-          : existingData.spacesVisited,
-        toolsUsed: event.toolId && !existingData.toolsUsed.includes(event.toolId)
-          ? [...existingData.toolsUsed, event.toolId]
-          : existingData.toolsUsed,
+        totalTimeSpent: (existingData.totalTimeSpent as number) + (event.duration ? Math.round(event.duration / 60) : 0),
+        spacesVisited: event.spaceId && !(existingData.spacesVisited as string[]).includes(event.spaceId) 
+          ? [...(existingData.spacesVisited as string[]), event.spaceId]
+          : (existingData.spacesVisited as string[]),
+        toolsUsed: event.toolId && !(existingData.toolsUsed as string[]).includes(event.toolId)
+          ? [...(existingData.toolsUsed as string[]), event.toolId]
+          : (existingData.toolsUsed as string[]),
         contentCreated: event.type === 'content_creation' 
-          ? existingData.contentCreated + 1 
-          : existingData.contentCreated,
+          ? (existingData.contentCreated as number) + 1 
+          : (existingData.contentCreated as number),
         socialInteractions: event.type === 'social_interaction'
-          ? existingData.socialInteractions + 1
-          : existingData.socialInteractions,
+          ? (existingData.socialInteractions as number) + 1
+          : (existingData.socialInteractions as number),
         sessionCount: event.type === 'session_start'
-          ? existingData.sessionCount + 1
-          : existingData.sessionCount,
+          ? (existingData.sessionCount as number) + 1
+          : (existingData.sessionCount as number),
         updatedAt: new Date().toISOString()
       };
 

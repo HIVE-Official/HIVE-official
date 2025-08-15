@@ -5,16 +5,18 @@ import { logger } from '../../../../../lib/structured-logger';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { handle: string } }
+  { params }: { params: Promise<{ handle: string }> }
 ) {
   const requestId = crypto.randomUUID();
   const clientIp = request.headers.get('x-forwarded-for') || 'unknown';
+  let handle: string = '';
   
   try {
+    ({ handle } = await params);
     logger.info('Public profile lookup started', {
       requestId,
-      handle: params.handle,
-      userAgent: request.headers.get('user-agent'),
+      handle: handle,
+      userAgent: request.headers.get('user-agent') ?? undefined,
       ip: clientIp
     });
 
@@ -22,33 +24,33 @@ export async function GET(
     // Basic rate limiting would go here
 
     // Input validation
-    const handle = params.handle?.toLowerCase()?.trim();
-    if (!handle || handle.length < 2 || handle.length > 50) {
+    const normalizedHandle = handle?.toLowerCase()?.trim() ?? '';
+    if (!normalizedHandle || normalizedHandle.length < 2 || normalizedHandle.length > 50) {
       return NextResponse.json(
-        { success: false, error: 'Invalid handle format' },
+        { success: false, error: 'Invalid normalizedHandle format' },
         { status: 400 }
       );
     }
 
-    // Sanitize handle - only alphanumeric, underscore, hyphen
-    if (!/^[a-z0-9_-]+$/.test(handle)) {
+    // Sanitize normalizedHandle - only alphanumeric, underscore, hyphen
+    if (!/^[a-z0-9_-]+$/.test(normalizedHandle)) {
       return NextResponse.json(
-        { success: false, error: 'Invalid handle characters' },
+        { success: false, error: 'Invalid normalizedHandle characters' },
         { status: 400 }
       );
     }
 
-    // Check if user exists by handle
+    // Check if user exists by normalizedHandle
     const usersQuery = await dbAdmin
       .collection('users')
-      .where('handle', '==', handle)
+      .where('normalizedHandle', '==', normalizedHandle)
       .limit(1)
       .get();
 
     if (usersQuery.empty) {
       logger.info('Public profile not found', {
         requestId,
-        handle
+        normalizedHandle
       });
 
       return NextResponse.json(
@@ -64,7 +66,7 @@ export async function GET(
     if (!userData.isPublic) {
       logger.info('Private profile access attempted', {
         requestId,
-        handle,
+        normalizedHandle,
         userId: userDoc.id
       });
 
@@ -78,7 +80,7 @@ export async function GET(
     const publicProfile = {
       id: userDoc.id,
       fullName: userData.fullName || '',
-      handle: userData.handle || handle,
+      normalizedHandle: userData.normalizedHandle || normalizedHandle,
       email: userData.showEmail ? userData.email : '', // Respect privacy setting
       major: userData.showMajor ? userData.major : '',
       academicYear: userData.showGraduationYear ? userData.academicYear : '',
@@ -121,7 +123,7 @@ export async function GET(
 
     logger.info('Public profile lookup successful', {
       requestId,
-      handle,
+      normalizedHandle,
       userId: userDoc.id,
       ghostMode: publicProfile.ghostMode
     });
@@ -135,7 +137,7 @@ export async function GET(
   } catch (error) {
     logger.error('Public profile lookup failed', {
       requestId,
-      handle: params.handle,
+      handle: handle,
       error: error instanceof Error ? error.message : String(error),
       stack: error instanceof Error ? error.stack : undefined
     });

@@ -4,6 +4,7 @@ import { dbAdmin as adminDb } from "@/lib/firebase-admin";
 import { getCurrentUser } from "@/lib/auth-server";
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import * as admin from 'firebase-admin';
 
 // GET /api/tools/browse - Browse and discover tools
 export async function GET(request: NextRequest) {
@@ -32,7 +33,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Build base query
-    let query = adminDb.collection("tools");
+    let query: admin.firestore.Query<admin.firestore.DocumentData> = adminDb.collection("tools");
 
     // Filter by user if specified
     if (userId && currentUser) {
@@ -156,7 +157,7 @@ export async function GET(request: NextRequest) {
     let total = filteredTools.length;
     if (offset === 0) {
       try {
-        let countQuery = adminDb.collection("tools");
+        let countQuery: admin.firestore.Query<admin.firestore.DocumentData> = adminDb.collection("tools");
         
         if (userId && currentUser) {
           if (userId === currentUser.uid) {

@@ -4,7 +4,7 @@ export interface ProgressProps extends React.HTMLAttributes<HTMLDivElement> {
     max?: number;
     variant?: 'default' | 'gradient' | 'striped' | 'circular';
     size?: 'sm' | 'md' | 'lg';
-    color?: 'primary' | 'success' | 'warning' | 'error' | 'gold' | 'emerald' | 'sapphire';
+    color?: 'primary' | 'success' | 'warning' | 'error' | 'info';
     showValue?: boolean;
     animated?: boolean;
     indeterminate?: boolean;

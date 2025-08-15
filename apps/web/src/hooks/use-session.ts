@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useUnifiedAuth } from '@hive/ui';
 
 interface SessionData {
   userId: string;
@@ -31,165 +31,47 @@ export interface User {
 }
 
 /**
- * Session hook for accessing user authentication and profile data
- * Uses localStorage-based session management
+ * DEPRECATED: Compatibility wrapper around UnifiedAuth
+ * Use useUnifiedAuth directly in new code
  */
 export function useSession() {
-  const [isLoading, setIsLoading] = useState(true);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
-  const [sessionData, setSessionData] = useState<SessionData | null>(null);
+  const unifiedAuth = useUnifiedAuth();
 
-  useEffect(() => {
-    const checkSession = () => {
-      try {
-        // DEVELOPMENT MODE: Auto-create dev session if none exists
-        if (process.env.NODE_ENV === 'development') {
-          const sessionJson = window.localStorage.getItem('hive_session');
-          
-          if (!sessionJson) {
-            const devSession: SessionData = {
-              userId: 'dev_user_123',
-              email: 'dev@hive.com',
-              schoolId: 'dev_school',
-              needsOnboarding: false,
-              onboardingCompleted: true,
-              verifiedAt: new Date().toISOString(),
-              profileData: {
-                fullName: 'Dev User',
-                handle: 'devuser',
-                major: 'Computer Science',
-                avatarUrl: '',
-                builderOptIn: true
-              }
-            };
-            
-            window.localStorage.setItem('hive_session', JSON.stringify(devSession));
-            window.localStorage.setItem('dev_auth_mode', 'true');
-            
-            const userData: User = {
-              id: devSession.userId,
-              email: devSession.email,
-              schoolId: devSession.schoolId,
-              onboardingCompleted: true,
-              fullName: devSession.profileData?.fullName,
-              handle: devSession.profileData?.handle,
-              major: devSession.profileData?.major,
-              avatarUrl: devSession.profileData?.avatarUrl,
-              builderOptIn: devSession.profileData?.builderOptIn,
-            };
+  // Transform UnifiedAuth data to match useSession interface
+  const user: User | null = unifiedAuth.user ? {
+    id: unifiedAuth.user.id,
+    email: unifiedAuth.user.email,
+    fullName: unifiedAuth.user.fullName,
+    handle: unifiedAuth.user.handle,
+    major: unifiedAuth.user.major,
+    avatarUrl: unifiedAuth.user.avatarUrl,
+    schoolId: unifiedAuth.user.schoolId || '',
+    builderOptIn: unifiedAuth.user.builderOptIn,
+    onboardingCompleted: unifiedAuth.user.onboardingCompleted,
+  } : null;
 
-            setIsAuthenticated(true);
-            setUser(userData);
-            setSessionData(devSession);
-            setIsLoading(false);
-            return;
-          }
-        }
-        
-        const sessionJson = window.localStorage.getItem('hive_session');
-        
-        if (!sessionJson) {
-          setIsAuthenticated(false);
-          setUser(null);
-          setSessionData(null);
-          setIsLoading(false);
-          return;
-        }
-
-        const session: SessionData = JSON.parse(sessionJson);
-        const devAuth = window.localStorage.getItem('dev_auth_mode');
-        
-        // For dev auth, skip expiration check
-        if (process.env.NODE_ENV === 'development' || devAuth === 'true') {
-          // Skip expiration check in development
-        } else {
-          // Check if session is expired (24 hours)
-          const sessionAge = Date.now() - new Date(session.verifiedAt).getTime();
-          const maxAge = 24 * 60 * 60 * 1000; // 24 hours
-          
-          if (sessionAge > maxAge) {
-            // Session expired, clear it
-            window.localStorage.removeItem('hive_session');
-            window.localStorage.removeItem('dev_auth_mode');
-            setIsAuthenticated(false);
-            setUser(null);
-            setSessionData(null);
-            setIsLoading(false);
-            return;
-          }
-        }
-
-        // Session is valid, create user object
-        // DEV FIX: If user has profile data, consider onboarding completed
-        const onboardingCompleted = session.onboardingCompleted || 
-          (devAuth === 'true' && !!session.profileData?.fullName);
-          
-        const userData: User = {
-          id: session.userId,
-          email: session.email,
-          schoolId: session.schoolId,
-          onboardingCompleted,
-          fullName: session.profileData?.fullName,
-          handle: session.profileData?.handle,
-          major: session.profileData?.major,
-          avatarUrl: session.profileData?.avatarUrl,
-          builderOptIn: session.profileData?.builderOptIn,
-        };
-        
-        console.log('🔍 useSession creating user data:', {
-          sessionOnboardingCompleted: session.onboardingCompleted,
-          userOnboardingCompleted: userData.onboardingCompleted,
-          hasProfileData: !!session.profileData,
-          fullName: session.profileData?.fullName,
-          devAuth
-        });
-
-        setIsAuthenticated(true);
-        setUser(userData);
-        setSessionData(session);
-        setIsLoading(false);
-      } catch (error) {
-        console.error('Error checking session:', error);
-        // Clear potentially corrupted session
-        window.localStorage.removeItem('hive_session');
-        window.localStorage.removeItem('dev_auth_mode');
-        setIsAuthenticated(false);
-        setUser(null);
-        setSessionData(null);
-        setIsLoading(false);
-      }
-    };
-
-    checkSession();
-
-    // Listen for storage changes (e.g., login/logout in other tabs)
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === 'hive_session') {
-        checkSession();
-      }
-    };
-
-    window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
-  }, []);
-
-  const logout = () => {
-    window.localStorage.removeItem('hive_session');
-    window.localStorage.removeItem('dev_auth_mode');
-    setIsAuthenticated(false);
-    setUser(null);
-    setSessionData(null);
-    
-    // Redirect to schools page
-    window.location.href = '/schools';
-  };
+  const sessionData: SessionData | null = unifiedAuth.user ? {
+    userId: unifiedAuth.user.id,
+    email: unifiedAuth.user.email,
+    schoolId: unifiedAuth.user.schoolId || '',
+    needsOnboarding: !unifiedAuth.user.onboardingCompleted,
+    onboardingCompleted: unifiedAuth.user.onboardingCompleted,
+    verifiedAt: unifiedAuth.session?.issuedAt || new Date().toISOString(),
+    profileData: {
+      fullName: unifiedAuth.user.fullName || '',
+      handle: unifiedAuth.user.handle || '',
+      major: unifiedAuth.user.major || '',
+      avatarUrl: unifiedAuth.user.avatarUrl || '',
+      builderOptIn: unifiedAuth.user.builderOptIn || false,
+    },
+  } : null;
 
   return {
-    isLoading,
-    isAuthenticated,
+    isLoading: unifiedAuth.isLoading,
+    isAuthenticated: unifiedAuth.isAuthenticated,
     user,
     sessionData,
-    logout,
+    // Legacy logout method
+    logout: unifiedAuth.logout,
   };
 }

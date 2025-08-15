@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+// import { useState, useEffect } from 'react'; // TODO: For future interactive features
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
 import { useSession } from '../../../../hooks/use-session';
@@ -15,9 +15,9 @@ import {
   Zap,
   Star,
   Target,
-  Badge,
+  // Badge, // TODO: For future badge display features
   ArrowRight,
-  Play,
+  // Play, // TODO: For future video/interactive features
   CheckCircle,
   Timer,
   ArrowLeft,
@@ -100,12 +100,12 @@ async function fetchRitualDetail(ritualId: string): Promise<RitualDetail> {
   try {
     const sessionJson = window.localStorage.getItem('hive_session');
     if (sessionJson) {
-      const session = JSON.parse(sessionJson);
+      const session = JSON.parse(sessionJson) as { token: string };
       headers.Authorization = `Bearer ${process.env.NODE_ENV === 'development' ? 'test-token' : session.token}`;
     } else {
       headers.Authorization = `Bearer test-token`;
     }
-  } catch (error) {
+  } catch {
     headers.Authorization = `Bearer test-token`;
   }
 
@@ -115,7 +115,7 @@ async function fetchRitualDetail(ritualId: string): Promise<RitualDetail> {
     throw new Error(`Failed to fetch ritual: ${response.status}`);
   }
   
-  const data = await response.json();
+  const data = await response.json() as { ritual: RitualDetail };
   return data.ritual;
 }
 
@@ -186,7 +186,7 @@ const ACTION_TYPES = {
 export default function RitualDetailPage() {
   const params = useParams();
   const ritualId = params.ritualId as string;
-  const { user } = useSession();
+  useSession(); // TODO: Will be used for personalization features
 
   const { data: ritual, isLoading, error } = useQuery({
     queryKey: ['ritual', ritualId],
@@ -196,13 +196,16 @@ export default function RitualDetailPage() {
 
   const handleCompleteAction = async (actionId: string) => {
     try {
-      const response = await fetch(`/api/rituals/${ritualId}/actions`, {
+      const response = await fetch(`/api/rituals/${ritualId}/participate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer test-token`,
         },
-        body: JSON.stringify({ actionId }),
+        body: JSON.stringify({ 
+          action: 'complete_action',
+          actionId 
+        }),
       });
 
       if (!response.ok) {
@@ -294,7 +297,7 @@ export default function RitualDetailPage() {
                 </div>
                 <h1 className="text-3xl font-bold text-hive-text-primary mb-2">{ritual.title}</h1>
                 <p className="text-lg text-hive-text-secondary mb-4">{ritual.description}</p>
-                <p className="text-hive-text-accent font-medium italic">"{ritual.tagline}"</p>
+                <p className="text-hive-text-accent font-medium italic">&ldquo;{ritual.tagline}&rdquo;</p>
               </div>
             </div>
 
@@ -497,7 +500,7 @@ export default function RitualDetailPage() {
                     <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
                       <CheckCircle className="h-6 w-6 text-white" />
                     </div>
-                    <h3 className="font-semibold text-hive-text-primary mb-2">You're Participating!</h3>
+                    <h3 className="font-semibold text-hive-text-primary mb-2">You&apos;re Participating!</h3>
                     <p className="text-sm text-hive-text-secondary mb-4">
                       Keep completing actions to earn rewards
                     </p>

@@ -6,6 +6,7 @@ import { getAuth } from "firebase-admin/auth";
 import { getAuthTokenFromRequest } from "@/lib/auth";
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import * as admin from 'firebase-admin';
 
 const CreateCommentSchema = z.object({
   content: z.string().min(1).max(1000),
@@ -219,7 +220,7 @@ export async function POST(
       .collection("posts")
       .doc(postId)
       .update({
-        replyCount: dbAdmin.FieldValue.increment(1),
+        replyCount: admin.firestore.FieldValue.increment(1),
         updatedAt: new Date()
       });
 

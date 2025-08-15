@@ -3,7 +3,6 @@
 import React from 'react';
 import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
 import { Button, Card } from "@hive/ui";
-import { Alert } from "@/components/temp-stubs";
 import { logger } from '../lib/logger';
 
 interface ErrorBoundaryState {
@@ -34,7 +33,7 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
     logger.error('Error Boundary caught an error', {
       error: error.message,
       stack: error.stack,
-      componentStack: errorInfo.componentStack,
+      componentStack: errorInfo.componentStack ?? undefined,
       errorBoundary: 'GlobalErrorBoundary'
     });
   }

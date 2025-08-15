@@ -1,176 +1,145 @@
-import type { NextRequest } from "next/server";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { getAuth } from "firebase-admin/auth";
-import { getFirestore, FieldValue } from "firebase-admin/firestore";
+import { FieldValue } from "firebase-admin/firestore";
 import { dbAdmin } from '@/lib/firebase-admin';
-import type { Space, MemberRole } from "@hive/core";
+import { withAuth } from '@/lib/api-auth-middleware';
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
-
-// Server-side member type that allows FieldValue for timestamps
-interface ServerMember {
-  uid: string;
-  role: MemberRole;
-  joinedAt: FieldValue;
-}
+import { ApiResponseHelper, HttpStatus } from "@/lib/api-response-types";
 
 const joinSpaceSchema = z.object({
-  spaceId: z.string().min(1, "Space ID is required") });
+  spaceId: z.string().min(1, "Space ID is required")
+});
 
 /**
- * Join a space manually
+ * Join a space manually - Updated for flat collection structure
  * POST /api/spaces/join
  */
-export async function POST(request: NextRequest) {
+export const POST = withAuth(async (request: NextRequest, authContext) => {
   try {
-    // Get the authorization header and verify the user
-    const authHeader = request.headers.get("authorization");
-    if (!authHeader?.startsWith("Bearer ")) {
-      return NextResponse.json(ApiResponseHelper.error("Missing or invalid authorization header", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-    }
-
-    const idToken = authHeader.substring(7);
-    const auth = getAuth();
-
-    let decodedToken;
-    try {
-      decodedToken = await auth.verifyIdToken(idToken);
-    } catch (authError) {
-      logger.error('Token verification failed', { error: authError, endpoint: '/api/spaces/join' });
-      return NextResponse.json(ApiResponseHelper.error("Invalid or expired token", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-    }
-
-    const userId = decodedToken.uid;
+    const userId = authContext.userId;
 
     // Parse and validate request body
     const body = (await request.json()) as unknown;
     const { spaceId } = joinSpaceSchema.parse(body);
 
-    // Get Firestore instance
-    const db = getFirestore();
+    // Get space details from flat collection
+    const spaceDoc = await dbAdmin.collection('spaces').doc(spaceId).get();
 
-    // Find the space in the nested structure: SPACES/[spacetype]/SPACES/spaceID
-    const spaceTypes = ['campus_living', 'greek_life', 'hive_exclusive', 'student_organizations', 'university_organizations'];
-    let spaceDoc: any = null;
-    let spaceDocRef: any = null;
-    let spaceType: string | null = null;
-
-    // Search through all space types to find the space
-    for (const type of spaceTypes) {
-      const potentialSpaceRef = dbAdmin.collection("spaces").doc(type).collection("spaces").doc(spaceId);
-      const potentialSpaceDoc = await potentialSpaceRef.get();
-      
-      if (potentialSpaceDoc.exists) {
-        spaceDoc = potentialSpaceDoc;
-        spaceDocRef = potentialSpaceRef;
-        spaceType = type;
-        break;
-      }
+    if (!spaceDoc.exists) {
+      return NextResponse.json(
+        ApiResponseHelper.error("Space not found", "RESOURCE_NOT_FOUND"), 
+        { status: HttpStatus.NOT_FOUND }
+      );
     }
 
-    if (!spaceDoc || !spaceDoc.exists) {
-      return NextResponse.json(ApiResponseHelper.error("Space not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
+    const space = spaceDoc.data()!;
+
+    // Check if space is private and requires invitation
+    if (space.isPrivate) {
+      return NextResponse.json(
+        ApiResponseHelper.error("This space is private and requires an invitation", "FORBIDDEN"), 
+        { status: HttpStatus.FORBIDDEN }
+      );
     }
 
-    const space = spaceDoc.data() as Space;
+    // Check if user is already a member using flat spaceMembers collection
+    const existingMembershipQuery = dbAdmin.collection('spaceMembers')
+      .where('spaceId', '==', spaceId)
+      .where('userId', '==', userId)
+      .limit(1);
+    
+    const existingMembershipSnapshot = await existingMembershipQuery.get();
 
-    // Note: Space status validation removed since spaces don't have status field in current data
-
-    // Check if user is already a member
-    const memberDocRef = db
-      .collection("spaces")
-      .doc(spaceType!)
-      .collection("spaces")
-      .doc(spaceId)
-      .collection("members")
-      .doc(userId);
-    const memberDoc = await memberDocRef.get();
-
-    if (memberDoc.exists) {
-      return NextResponse.json(ApiResponseHelper.error("You are already a member of this space", "UNKNOWN_ERROR"), { status: 409 });
-    }
-
-    // Greek life restriction: Check if user is trying to join a Greek life space
-    if (spaceType === 'greek_life') {
-      // Check if user is already in any Greek life space
-      const greekSpacesRef = dbAdmin.collection("spaces").doc("greek_life").collection("spaces");
-      const greekSpacesSnapshot = await greekSpacesRef.get();
-      
-      let existingGreekMembership = null;
-      
-      // Check membership across all Greek life spaces
-      for (const greekSpaceDoc of greekSpacesSnapshot.docs) {
-        const greekSpaceId = greekSpaceDoc.id;
-        if (greekSpaceId === spaceId) continue; // Skip the space they're trying to join
-        
-        const existingMemberDoc = await db
-          .collection("spaces")
-          .doc("greek_life")
-          .collection("spaces")
-          .doc(greekSpaceId)
-          .collection("members")
-          .doc(userId)
-          .get();
-          
-        if (existingMemberDoc.exists) {
-          const greekSpaceData = greekSpaceDoc.data();
-          existingGreekMembership = {
-            spaceId: greekSpaceId,
-            spaceName: greekSpaceData.name,
-            membershipData: existingMemberDoc.data()
-          };
-          break;
-        }
-      }
-      
-      if (existingGreekMembership) {
+    if (!existingMembershipSnapshot.empty) {
+      const existingMember = existingMembershipSnapshot.docs[0].data();
+      if (existingMember.isActive) {
         return NextResponse.json(
-          ApiResponseHelper.error(
-            `You can only be a member of one Greek life organization. You are already a member of ${existingGreekMembership.spaceName}. To join this space, you must first leave your current organization.`,
-            "BUSINESS_RULE_VIOLATION"
-          ), 
+          ApiResponseHelper.error("You are already a member of this space", "CONFLICT"), 
           { status: HttpStatus.CONFLICT }
         );
       }
+      // If inactive membership exists, we'll reactivate it below
     }
 
-    // Note: School validation removed since spaces don't have schoolId field in current data
-    // School validation ready for implementation when school association is added
+    // Greek life restriction: Check if user is trying to join a Greek life space
+    if (space.type === 'greek_life') {
+      // Check if user is already in any Greek life space
+      const existingGreekQuery = dbAdmin.collection('spaceMembers')
+        .where('userId', '==', userId)
+        .where('isActive', '==', true);
+      
+      const existingGreekSnapshot = await existingGreekQuery.get();
+      
+      for (const memberDoc of existingGreekSnapshot.docs) {
+        const memberData = memberDoc.data();
+        // Check if this membership is for a Greek life space
+        const memberSpaceDoc = await dbAdmin.collection('spaces').doc(memberData.spaceId).get();
+        if (memberSpaceDoc.exists && memberSpaceDoc.data()?.type === 'greek_life') {
+          return NextResponse.json(
+            ApiResponseHelper.error("You can only be a member of one Greek life organization at a time", "FORBIDDEN"), 
+            { status: HttpStatus.FORBIDDEN }
+          );
+        }
+      }
+    }
 
-    // Perform the join operation atomically
+    // Perform the join operation atomically using batch write
     const batch = dbAdmin.batch();
+    const now = FieldValue.serverTimestamp();
 
-    // Add user to members sub-collection
-    const newMember: ServerMember = {
-      uid: userId,
-      role: "member",
-      joinedAt: FieldValue.serverTimestamp(),
-    };
+    // If user had inactive membership, reactivate it
+    if (!existingMembershipSnapshot.empty) {
+      const existingMemberDoc = existingMembershipSnapshot.docs[0];
+      batch.update(existingMemberDoc.ref, {
+        isActive: true,
+        joinedAt: now,
+        permissions: ['post']
+      });
+    } else {
+      // Create new membership in flat spaceMembers collection
+      const memberRef = dbAdmin.collection('spaceMembers').doc();
+      batch.set(memberRef, {
+        spaceId,
+        userId,
+        role: 'member',
+        joinedAt: now,
+        isActive: true,
+        permissions: ['post'],
+        joinMethod: 'manual'
+      });
+    }
 
-    batch.set(memberDocRef, newMember);
+    // Update space member count
+    batch.update(spaceDoc.ref, {
+      'metrics.memberCount': FieldValue.increment(1),
+      'metrics.activeMembers': FieldValue.increment(1),
+      updatedAt: now
+    });
 
-    // Increment the space's member count
-    batch.update(spaceDocRef, {
-      memberCount: FieldValue.increment(1),
-      updatedAt: FieldValue.serverTimestamp() });
-
-    // Record the movement for cooldown tracking
-    const movementRecord = {
+    // Record join activity
+    const activityRef = dbAdmin.collection('activityEvents').doc();
+    batch.set(activityRef, {
       userId,
-      fromSpaceId: null,
-      toSpaceId: spaceId,
-      spaceType: spaceType!,
-      movementType: 'join',
+      type: 'space_join',
+      spaceId,
       timestamp: new Date().toISOString(),
-      reason: 'User joined space manually'
-    };
+      date: new Date().toISOString().split('T')[0],
+      metadata: {
+        spaceName: space.name,
+        spaceType: space.type,
+        joinMethod: 'manual'
+      }
+    });
 
-    const movementRef = dbAdmin.collection('spaceMovements').doc();
-    batch.set(movementRef, movementRecord);
-
-    // Execute the transaction
+    // Execute all operations atomically
     await batch.commit();
+
+    logger.info('✅ User joined space successfully', { 
+      userId, 
+      spaceId, 
+      spaceName: space.name,
+      endpoint: '/api/spaces/join' 
+    });
 
     return NextResponse.json({
       success: true,
@@ -179,9 +148,30 @@ export async function POST(request: NextRequest) {
         id: spaceId,
         name: space.name,
         type: space.type,
-      } });
-  } catch (error) {
-    logger.error('Error joining space', { error: error, endpoint: '/api/spaces/join' });
-    return NextResponse.json(ApiResponseHelper.error("Failed to join space. Please try again.", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
+        description: space.description
+      }
+    });
+
+  } catch (error: any) {
+    logger.error('Error joining space', { 
+      error: error.message,
+      stack: error.stack,
+      endpoint: '/api/spaces/join' 
+    });
+
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        ApiResponseHelper.error('Invalid request data', 'VALIDATION_ERROR'),
+        { status: HttpStatus.BAD_REQUEST }
+      );
+    }
+
+    return NextResponse.json(
+      ApiResponseHelper.error("Failed to join space. Please try again.", "INTERNAL_ERROR"),
+      { status: HttpStatus.INTERNAL_SERVER_ERROR }
+    );
   }
-}
+}, { 
+  allowDevelopmentBypass: false, // Space joining requires real auth
+  operation: 'join_space' 
+});

@@ -25,7 +25,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
       <select
         ref={ref}
         className={cn(
-          "flex w-full items-center justify-between rounded-lg border border-[var(--hive-border-default)] bg-[var(--hive-background-secondary)] px-3 py-2 text-sm text-[var(--hive-text-primary)] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[color-mix(in_srgb,var(--hive-brand-secondary)_30%,transparent)] focus:border-[var(--hive-brand-secondary)] disabled:cursor-not-allowed disabled:opacity-50",
+          "flex w-full items-center justify-between rounded-lg border border-[var(--hive-border-default)] bg-[var(--hive-background-secondary)] px-3 py-2 text-sm text-[var(--hive-text-primary)] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[color-mix(in_srgb,var(--hive-brand-secondary)_30%,transparent)] focus:border-[var(--hive-brand-secondary)] disabled:cursor-not-allowed disabled:opacity-50 [&>option]:bg-[var(--hive-background-primary)] [&>option]:text-[var(--hive-text-primary)] [&>option]:py-2 [&>option]:px-3 [&>option:hover]:bg-[var(--hive-brand-secondary)] [&>option:hover]:text-[var(--hive-background-primary)] [&>option:checked]:bg-[var(--hive-brand-secondary)] [&>option:checked]:text-[var(--hive-background-primary)]",
           className
         )}
         onChange={handleChange}

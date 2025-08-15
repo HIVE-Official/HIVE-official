@@ -67,7 +67,7 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
           updatedAt: new Date().toISOString(),
           consentGiven: true,
           consentGivenAt: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).toISOString(),
-          developmentMode: true,
+          // SECURITY: Development mode removed for production safety,
           // Additional fields for complete profile
           spacesJoined: 8,
           spacesActive: 5, 
@@ -145,8 +145,8 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
     return NextResponse.json(ApiResponseHelper.error("Failed to fetch profile", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }, { 
-  allowDevelopmentBypass: true, // Allow for profile viewing but with secure auth
-  operation: 'fetch_user_profile' 
+  operation: 'fetch_user_profile',
+  requireAuth: true // SECURITY: Always require authentication in production
 });
 
 /**

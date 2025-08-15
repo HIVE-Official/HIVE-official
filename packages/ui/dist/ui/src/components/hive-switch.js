@@ -3,8 +3,8 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from "react";
 import { cva } from 'class-variance-authority';
 import { motion } from 'framer-motion';
-import { cn } from "../lib/utils.js";
-import { motionDurations } from '../motion/hive-motion-system.js';
+import { cn } from "../lib/utils";
+import { motionDurations } from '../motion/hive-motion-system';
 // HIVE Switch variants - Luxury toggle with glass morphism and gold states
 const hiveSwitchVariants = cva(
 // Base styles - matte obsidian glass with heavy radius

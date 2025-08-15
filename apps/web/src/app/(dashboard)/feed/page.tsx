@@ -17,7 +17,7 @@ import {
   Settings,
   Globe
 } from 'lucide-react';
-import { useSession } from '../../../hooks/use-session';
+// import { useSession } from '../../../hooks/use-session'; // TODO: Use for personalized feed
 import { ErrorBoundary } from '../../../components/error-boundary';
 import { PostComposer } from '../../../components/social/post-composer';
 import { useState, useEffect } from 'react';
@@ -51,14 +51,14 @@ interface FeedPost {
   media?: {
     type: 'image' | 'video' | 'tool' | 'event';
     url?: string;
-    metadata?: any;
+    metadata?: Record<string, unknown>;
   };
   isLiked?: boolean;
   isBookmarked?: boolean;
 }
 
 export default function FeedPage() {
-  const { user: _user } = useSession();
+  // const { user } = useSession(); // TODO: Use for personalized feed and post composer
   const [feedFilter, setFeedFilter] = useState<'all' | 'following' | 'spaces' | 'academic'>('all');
   const [feedPosts, setFeedPosts] = useState<FeedPost[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -99,39 +99,47 @@ export default function FeedPage() {
           throw new Error('Failed to fetch feed');
         }
         
-        const data = await response.json();
+        const data = await response.json() as { success?: boolean; posts?: unknown[] };
         
         if (data.success && data.posts) {
           // Transform API posts to FeedPost format
-          const transformedPosts: FeedPost[] = data.posts.map((post: any) => ({
-            id: post.id,
-            type: mapContentTypeToFeedType(post._metadata?.contentType || post.type || 'post'),
-            author: {
-              id: post.authorId || post.author?.id || 'unknown',
-              name: post.authorName || post.author?.name || 'Anonymous',
-              handle: post.authorHandle || post.author?.handle || 'unknown',
-              avatar: post.authorAvatar || post.author?.avatar,
-              role: post.authorRole || post.author?.role
-            },
-            space: post._metadata?.spaceId ? {
-              id: post._metadata.spaceId,
-              name: post._metadata.spaceName || 'Unknown Space', 
-              type: 'space'
-            } : undefined,
-            title: post.title || extractTitleFromContent(post.content),
-            content: post.content || post.body || '',
-            timestamp: post.createdAt || post.timestamp || new Date().toISOString(),
-            engagement: {
-              likes: post.reactions?.heart || post.engagement?.likes || 0,
-              comments: post.reactions?.comments || post.engagement?.comments || 0,
-              shares: post.reactions?.shares || post.engagement?.shares || 0,
-              bookmarks: post.reactions?.bookmarks || post.engagement?.bookmarks || 0
-            },
-            tags: post.tags || [],
-            media: post.media,
-            isLiked: false, // TODO: Implement user-specific like status
-            isBookmarked: false // TODO: Implement user-specific bookmark status
-          }));
+          const transformedPosts: FeedPost[] = data.posts.map((post: unknown) => {
+            const postData = post as Record<string, unknown>;
+            const metadata = postData._metadata as Record<string, unknown> | undefined;
+            const author = postData.author as Record<string, unknown> | undefined;
+            const reactions = postData.reactions as Record<string, unknown> | undefined;
+            const engagement = postData.engagement as Record<string, unknown> | undefined;
+            
+            return {
+              id: String(postData.id || ''),
+              type: mapContentTypeToFeedType(String(metadata?.contentType || postData.type || 'post')),
+              author: {
+                id: String(postData.authorId || author?.id || 'unknown'),
+                name: String(postData.authorName || author?.name || 'Anonymous'),
+                handle: String(postData.authorHandle || author?.handle || 'unknown'),
+                avatar: String(postData.authorAvatar || author?.avatar || ''),
+                role: String(postData.authorRole || author?.role || '')
+              },
+              space: metadata?.spaceId ? {
+                id: String(metadata.spaceId),
+                name: String(metadata.spaceName || 'Unknown Space'), 
+                type: 'space' as const
+              } : undefined,
+              title: String(postData.title || extractTitleFromContent(String(postData.content || ''))),
+              content: String(postData.content || postData.body || ''),
+              timestamp: String(postData.createdAt || postData.timestamp || new Date().toISOString()),
+              engagement: {
+                likes: Number(reactions?.heart || engagement?.likes || 0),
+                comments: Number(reactions?.comments || engagement?.comments || 0),
+                shares: Number(reactions?.shares || engagement?.shares || 0),
+                bookmarks: Number(reactions?.bookmarks || engagement?.bookmarks || 0)
+              },
+              tags: Array.isArray(postData.tags) ? postData.tags.map(String) : [],
+              media: postData.media as FeedPost['media'],
+              isLiked: false,
+              isBookmarked: false
+            };
+          });
           
           setFeedPosts(transformedPosts);
         } else {
@@ -151,34 +159,74 @@ export default function FeedPage() {
     loadFeedData();
   }, [feedFilter]); // Reload when filter changes
 
-  const handleLike = (postId: string) => {
-    setFeedPosts(posts => posts.map(post => 
-      post.id === postId 
-        ? { 
-            ...post, 
-            isLiked: !post.isLiked,
-            engagement: {
-              ...post.engagement,
-              likes: post.isLiked ? post.engagement.likes - 1 : post.engagement.likes + 1
-            }
-          }
-        : post
-    ));
+  const handleLike = async (postId: string) => {
+    try {
+      const post = feedPosts.find(p => p.id === postId);
+      if (!post) return;
+
+      const action = post.isLiked ? 'unlike' : 'like';
+      
+      const response = await fetch('/api/social/interactions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${process.env.NODE_ENV === 'development' ? 'test-token' : 'user-token'}`
+        },
+        body: JSON.stringify({ postId, action })
+      });
+
+      if (response.ok) {
+        setFeedPosts(posts => posts.map(p => 
+          p.id === postId 
+            ? { 
+                ...p, 
+                isLiked: !p.isLiked,
+                engagement: {
+                  ...p.engagement,
+                  likes: p.isLiked ? p.engagement.likes - 1 : p.engagement.likes + 1
+                }
+              }
+            : p
+        ));
+      }
+    } catch (error) {
+      console.error('Error liking post:', error);
+    }
   };
 
-  const handleBookmark = (postId: string) => {
-    setFeedPosts(posts => posts.map(post => 
-      post.id === postId 
-        ? { 
-            ...post, 
-            isBookmarked: !post.isBookmarked,
-            engagement: {
-              ...post.engagement,
-              bookmarks: post.isBookmarked ? post.engagement.bookmarks - 1 : post.engagement.bookmarks + 1
-            }
-          }
-        : post
-    ));
+  const handleBookmark = async (postId: string) => {
+    try {
+      const post = feedPosts.find(p => p.id === postId);
+      if (!post) return;
+
+      const action = post.isBookmarked ? 'unbookmark' : 'bookmark';
+      
+      const response = await fetch('/api/social/interactions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${process.env.NODE_ENV === 'development' ? 'test-token' : 'user-token'}`
+        },
+        body: JSON.stringify({ postId, action })
+      });
+
+      if (response.ok) {
+        setFeedPosts(posts => posts.map(p => 
+          p.id === postId 
+            ? { 
+                ...p, 
+                isBookmarked: !p.isBookmarked,
+                engagement: {
+                  ...p.engagement,
+                  bookmarks: p.isBookmarked ? p.engagement.bookmarks - 1 : p.engagement.bookmarks + 1
+                }
+              }
+            : p
+        ));
+      }
+    } catch (error) {
+      console.error('Error bookmarking post:', error);
+    }
   };
 
   const formatTimeAgo = (timestamp: string) => {
@@ -340,9 +388,27 @@ export default function FeedPage() {
               avatarUrl: undefined
             }}
             onPost={async (postData) => {
-              // TODO: Implement API call to create post
-              console.log('Creating post:', postData);
-              setShowComposer(false);
+              try {
+                const response = await fetch('/api/social/posts', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${process.env.NODE_ENV === 'development' ? 'test-token' : 'user-token'}`
+                  },
+                  body: JSON.stringify(postData)
+                });
+
+                if (!response.ok) {
+                  throw new Error('Failed to create post');
+                }
+
+                setShowComposer(false);
+                // Reload feed data
+                window.location.reload();
+              } catch (error) {
+                console.error('Error creating post:', error);
+                alert('Failed to create post. Please try again.');
+              }
             }}
             onCancel={() => setShowComposer(false)}
             placeholder="Share what's happening on campus..."

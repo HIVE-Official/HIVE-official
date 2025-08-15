@@ -98,7 +98,7 @@ describe('Error Resilience System', () => {
         message: 'Validation failed'
       };
       Object.setPrototypeOf(zodError, Error.prototype);
-      zodError.constructor = { name: 'ZodError' };
+      (zodError as any).name = 'ZodError';
 
       const classified = ErrorClassifier.classify(zodError);
 
@@ -165,7 +165,7 @@ describe('Error Resilience System', () => {
         return 'success';
       });
 
-      const startTime = Date.now();
+      const _startTime = Date.now();
       
       const promise = RetryManager.executeWithRetry(operation, {
         maxRetries: 3,

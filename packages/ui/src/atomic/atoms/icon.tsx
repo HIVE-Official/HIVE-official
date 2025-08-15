@@ -21,13 +21,13 @@ const iconSizes = {
 };
 
 const iconColors = {
-  primary: 'text-hive-text-primary',
-  secondary: 'text-hive-text-secondary',
-  muted: 'text-hive-text-mutedLight',
+  primary: 'text-[var(--hive-text-primary)]',
+  secondary: 'text-[var(--hive-text-secondary)]',
+  muted: 'text-[var(--hive-text-muted)]',
   gold: 'text-[var(--hive-brand-secondary)]',
-  ruby: 'text-hive-ruby', 
-  emerald: 'text-hive-emerald',
-  sapphire: 'text-hive-sapphire'
+  ruby: 'text-[var(--hive-status-error)]', 
+  emerald: 'text-[var(--hive-status-success)]',
+  sapphire: 'text-[var(--hive-brand-primary)]'
 };
 
 export const Icon: React.FC<IconProps> = ({

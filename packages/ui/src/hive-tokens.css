@@ -1,4 +1,8 @@
 /* HIVE Design Tokens CSS Custom Properties */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
   /* HIVE Color Tokens */
   --hive-color-void: #000000;
@@ -56,6 +60,12 @@
   --hive-border-focus: rgba(255, 215, 0, 0.2);
   --hive-border-error: #EF4444;
   --hive-border-disabled: #4A4A4F;
+  
+  /* MISSING TOKENS - Critical fixes for 142+ broken files */
+  --hive-border-default: var(--hive-border-primary);     /* Map to existing primary border */
+  --hive-border-hover: var(--hive-border-gold-strong);   /* Map to existing gold strong */
+  --hive-border-strong: var(--hive-border-secondary);    /* Map to existing secondary border */
+  --hive-brand-hover: var(--hive-brand-accent);          /* Map to existing brand accent */
 
   /* HIVE Overlay Colors */
   --hive-overlay-glass: rgba(255, 255, 255, 0.05);

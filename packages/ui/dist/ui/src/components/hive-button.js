@@ -3,12 +3,12 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from 'react';
 import { cva } from 'class-variance-authority';
 import { Loader2 } from 'lucide-react';
-import { motion } from './framer-motion-proxy.js';
+import { motion } from './framer-motion-proxy';
 import { Slot } from '@radix-ui/react-slot';
-import { cn } from '../lib/utils.js';
-import { getMotionProps } from '../lib/motion-utils.js';
-import { HiveMagneticHover } from './hive-magnetic-interactions.js';
-import { magneticInteractions, liquidMetalPerformance, liquidMetalUtils } from '../motion/hive-liquid-metal.js';
+import { cn } from '../lib/utils';
+import { getMotionProps } from '../lib/motion-utils';
+import { HiveMagneticHover } from './hive-magnetic-interactions';
+import { magneticInteractions, liquidMetalPerformance, liquidMetalUtils } from '../motion/hive-liquid-metal';
 // HIVE Button variants - Luxury design system aligned
 const hiveButtonVariants = cva(
 // Base styles - premium appearance with semantic tokens and liquid motion

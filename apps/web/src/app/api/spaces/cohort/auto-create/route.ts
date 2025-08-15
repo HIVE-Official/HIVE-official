@@ -5,7 +5,7 @@ import { dbAdmin } from '@/lib/firebase-admin';
 import { generateCohortSpaces, type CohortSpaceConfig } from '@hive/core';
 import { z } from 'zod';
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { ApiResponseHelper as _ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 const createCohortSpacesSchema = z.object({
   major: z.string().min(1),
@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
     for (const spaceConfig of cohortSpaces) {
       try {
         const spaceRef = dbAdmin.collection('spaces')
-          .doc('cohort')
+          .doc('hive_exclusive')
           .collection('spaces')
           .doc(spaceConfig.id);
           
@@ -53,6 +53,7 @@ export async function POST(request: NextRequest) {
           // Create the space
           await spaceRef.set({
             ...spaceConfig,
+            type: 'hive_exclusive', // Explicitly set as HIVE Exclusive
             status: 'activated',
             memberCount: 0,
             createdAt: new Date(),
@@ -101,9 +102,9 @@ export async function POST(request: NextRequest) {
           });
           
           joinedSpaces.push(spaceConfig.id);
-          logger.info('👥 Auto-joined user to space', { userId: user, spaceName: spaceConfig.name, endpoint: '/api/spaces/cohort/auto-create' });
+          logger.info('👥 Auto-joined user to space', { userId: user.uid, spaceName: spaceConfig.name, endpoint: '/api/spaces/cohort/auto-create' });
         } else {
-          logger.info('📌 User already member of space', { userId: user, spaceName: spaceConfig.name, endpoint: '/api/spaces/cohort/auto-create' });
+          logger.info('📌 User already member of space', { userId: user.uid, spaceName: spaceConfig.name, endpoint: '/api/spaces/cohort/auto-create' });
         }
         
       } catch (error) {

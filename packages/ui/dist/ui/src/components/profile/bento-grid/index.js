@@ -1,5 +1,5 @@
-export { GridLayoutEngine } from './grid-layout-engine.js';
-export { BaseWidget } from './base-widget.js';
-export { LayoutPersistence } from './layout-persistence.js';
-export * from './types.js';
+export { GridLayoutEngine } from './grid-layout-engine';
+export { BaseWidget } from './base-widget';
+export { LayoutPersistence } from './layout-persistence';
+export * from './types';
 //# sourceMappingURL=index.js.map

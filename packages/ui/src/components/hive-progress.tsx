@@ -687,6 +687,7 @@ export interface HiveProgressProps {
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
   status?: 'default' | 'success' | 'warning' | 'error';
   showLabel?: boolean;
+  showValue?: boolean;
   showPercentage?: boolean;
   animated?: boolean;
   label?: string;
@@ -703,6 +704,7 @@ export const HiveProgress = React.forwardRef<HTMLDivElement, HiveProgressProps>(
     size = 'md',
     status = 'default',
     showLabel = false,
+    showValue = false,
     showPercentage = true,
     animated = true,
     label,
@@ -720,6 +722,7 @@ export const HiveProgress = React.forwardRef<HTMLDivElement, HiveProgressProps>(
             value={value}
             max={max}
             size={size === 'xs' ? 40 : size === 'sm' ? 60 : size === 'md' ? 80 : size === 'lg' ? 120 : 160}
+            showValue={showValue}
             showPercentage={showPercentage}
             animated={animated}
             className={className}
@@ -774,7 +777,7 @@ export const HiveProgress = React.forwardRef<HTMLDivElement, HiveProgressProps>(
             size={size === 'md' ? 'default' : size}
             variant="default"
             fillVariant={status === 'error' ? 'danger' : status}
-            showValue={false}
+            showValue={showValue}
             showPercentage={showPercentage}
             animated={animated}
             label={label}

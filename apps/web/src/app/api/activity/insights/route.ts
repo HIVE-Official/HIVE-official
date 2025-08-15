@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { getCurrentUser } from '@/lib/server-auth';
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
 
 // Advanced insights interface
 interface ActivityInsight {
@@ -120,7 +120,7 @@ export async function GET(request: NextRequest) {
 }
 
 // Helper function to generate advanced insights
-async function generateAdvancedInsights(summaries: any[], events: any[], timeRange: string, analysisType: string): Promise<ActivityInsight[]> {
+async function generateAdvancedInsights(summaries: any[], events: any[], timeRange: string, _analysisType: string): Promise<ActivityInsight[]> {
   const insights: ActivityInsight[] = [];
 
   if (summaries.length === 0) {

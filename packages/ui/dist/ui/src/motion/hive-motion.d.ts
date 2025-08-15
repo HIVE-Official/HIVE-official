@@ -153,7 +153,12 @@ export declare const hiveGPULayers: {
     readonly backfaceVisibility: "hidden";
     readonly perspective: 1000;
 };
-export declare const respectsReducedMotion: (styles: any) => any;
+export declare const respectsReducedMotion: (styles: Record<string, unknown>) => {
+    '@media (prefers-reduced-motion: reduce)': {
+        animation: string;
+        transition: string;
+    };
+};
 export type HiveEasing = keyof typeof hiveEasing;
 export type HiveDuration = keyof typeof hiveDuration;
 //# sourceMappingURL=hive-motion.d.ts.map

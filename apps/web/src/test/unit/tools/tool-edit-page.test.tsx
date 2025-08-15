@@ -34,12 +34,30 @@ vi.mock('@hive/ui', () => ({
   ),
 }));
 
-// Mock feature flags
-vi.mock('@hive/hooks', () => ({
-  useFeatureFlags: vi.fn(() => ({
-    trackEvent: vi.fn(),
-  })),
-}));
+// Import the mock directly from @hive/hooks
+import { useFeatureFlags } from '@hive/hooks';
+
+// Mock feature flags hook to get reference to the mock
+const mockUseFeatureFlags = vi.mocked(useFeatureFlags);
+const mockTrackEvent = vi.fn();
+
+// Set up the mock return value
+mockUseFeatureFlags.mockReturnValue({
+  toolBuilderVariant: 'visual',
+  navigationVariant: 'sidebar',
+  dashboardLayout: 'cards',
+  spaceDiscovery: 'grid',
+  enableAdvancedBuilder: true,
+  enableCollaborativeEditing: true,
+  enableRealTimeNotifications: true,
+  spaces: "enabled" as const,
+  tools: "enabled" as const,
+  analytics: "enabled" as const,
+  realtime: "enabled" as const,
+  ai: "disabled" as const,
+  gamification: "disabled" as const,
+  trackEvent: mockTrackEvent,
+});
 
 // Mock Lucide icons
 vi.mock('lucide-react', () => ({
@@ -57,6 +75,7 @@ vi.mock('lucide-react', () => ({
 describe('ToolEditPage', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockTrackEvent.mockClear();
   });
 
   afterEach(() => {
@@ -257,7 +276,6 @@ describe('ToolEditPage', () => {
     });
 
     it('handles test action', () => {
-      const mockTrackEvent = import('@hive/hooks').useFeatureFlags().trackEvent;
       render(<ToolEditPage />);
 
       const testButton = screen.getByText('Test');
@@ -292,7 +310,6 @@ describe('ToolEditPage', () => {
     });
 
     it('handles save action', async () => {
-      const mockTrackEvent = import('@hive/hooks').useFeatureFlags().trackEvent;
       render(<ToolEditPage />);
 
       // Make a change first
@@ -320,7 +337,6 @@ describe('ToolEditPage', () => {
 
   describe('Event Tracking', () => {
     it('tracks page view on mount', () => {
-      const mockTrackEvent = import('@hive/hooks').useFeatureFlags().trackEvent;
       render(<ToolEditPage />);
 
       expect(mockTrackEvent).toHaveBeenCalledWith('tools', 'view', { 
@@ -330,7 +346,6 @@ describe('ToolEditPage', () => {
     });
 
     it('tracks preview action', () => {
-      const mockTrackEvent = import('@hive/hooks').useFeatureFlags().trackEvent;
       render(<ToolEditPage />);
 
       const previewButton = screen.getByText('Preview');

@@ -2,8 +2,8 @@
 
 import { useState, useRef, useCallback } from 'react';
 import Image from 'next/image';
-import { HiveModal, Button, Progress } from "@hive/ui";
-import { HiveModalContent, HiveModalHeader, HiveModalTitle, HiveModalFooter } from "@/components/temp-stubs";
+import { Button, Progress } from "@hive/ui";
+import { HiveModal, HiveModalContent, HiveModalHeader, HiveModalTitle, HiveModalFooter } from "@/components/temp-stubs";
 import { Alert } from "@/components/temp-stubs";
 import { 
   Upload, 

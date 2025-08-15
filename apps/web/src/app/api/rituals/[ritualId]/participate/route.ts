@@ -1,8 +1,77 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
-import { ritualFramework } from '@/lib/rituals-framework';
-import { logger } from "@/lib/logger";
+import { dbAdmin } from '@/lib/firebase-admin';
+
+// Mock ritual framework for development
+const ritualFramework = {
+  joinRitual: async (ritualId: string, userId: string, entryPoint: string): Promise<boolean> => {
+    try {
+      // Create participation record
+      const participationRef = dbAdmin.collection('ritual_participation').doc();
+      await participationRef.set({
+        id: participationRef.id,
+        ritualId,
+        userId,
+        status: 'active',
+        joinedAt: new Date(),
+        progressPercentage: 0,
+        actionsCompleted: [],
+        rewardsEarned: [],
+        badgesAwarded: [],
+        entryPoint,
+        campusId: 'ub-buffalo',
+        createdAt: new Date(),
+        updatedAt: new Date()
+      });
+      return true;
+    } catch (error) {
+      console.error('Error joining ritual:', error);
+      return false;
+    }
+  },
+  
+  recordAction: async (ritualId: string, userId: string, actionId: string, metadata: any) => {
+    // Record action completion
+    const completionRef = dbAdmin.collection('ritual_action_completions').doc();
+    await completionRef.set({
+      id: completionRef.id,
+      ritualId,
+      userId,
+      actionId,
+      completedAt: new Date(),
+      metadata: metadata || {},
+      campusId: 'ub-buffalo'
+    });
+
+    // Update participation progress
+    const participationQuery = await dbAdmin.collection('ritual_participation')
+      .where('ritualId', '==', ritualId)
+      .where('userId', '==', userId)
+      .limit(1)
+      .get();
+
+    if (!participationQuery.empty) {
+      const participationRef = participationQuery.docs[0].ref;
+      const participationData = participationQuery.docs[0].data();
+      
+      const updatedActionsCompleted = [...(participationData.actionsCompleted || []), actionId];
+      const progressPercentage = Math.min(100, updatedActionsCompleted.length * 25); // Simple progress calc
+      
+      await participationRef.update({
+        actionsCompleted: updatedActionsCompleted,
+        progressPercentage,
+        lastActiveAt: new Date(),
+        updatedAt: new Date(),
+        ...(progressPercentage === 100 && {
+          status: 'completed',
+          completedAt: new Date()
+        })
+      });
+    }
+  }
+};
+import { logger } from "@/lib/structured-logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
 
@@ -24,10 +93,10 @@ const ParticipationActionSchema = z.object({
 export const POST = withAuth(async (
   request: NextRequest,
   authContext,
-  { params }: { params: { ritualId: string } }
+  { params }: { params: Promise<{ ritualId: string }> }
 ) => {
   try {
-    const { ritualId } = params;
+    const { ritualId } = await params;
     const userId = authContext.userId;
 
     const body = await request.json();
@@ -95,6 +164,6 @@ export const POST = withAuth(async (
     );
   }
 }, { 
-  allowDevelopmentBypass: true, // Ritual participation is safe for development
+  allowDevelopmentBypass: false, // Ritual participation requires authentication
   operation: 'participate_in_ritual' 
 });

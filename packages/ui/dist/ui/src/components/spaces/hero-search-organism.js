@@ -1,9 +1,9 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useState, useCallback } from "react";
-import { HiveButton } from "../hive-button.js";
+import { HiveButton } from "../hive-button";
 import { Search, Filter, Globe, Eye, TrendingUp, Users } from "lucide-react";
-import { cn } from "../../lib/utils.js";
+import { cn } from "../../lib/utils";
 function CampusVisualization({ totalSpaces = 360, categoryBreakdown, animationSpeed = "normal", interactive = true, className }) {
     const getAnimationDuration = () => {
         switch (animationSpeed) {

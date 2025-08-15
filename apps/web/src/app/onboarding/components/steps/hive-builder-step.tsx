@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { motion, AnimatePresence } from "@hive/ui";
+import { motion, AnimatePresence } from "framer-motion";
 import { Wrench, Users, Crown, Star, CheckCircle, Loader2, Search, BookOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { HiveCard, HiveButton, HiveInput } from "@hive/ui";
@@ -208,7 +208,7 @@ export function HiveBuilderStep({ data, updateData }: HiveBuilderStepProps) {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <HiveCard variant="error" className="p-[var(--hive-spacing-4)] text-center">
+          <HiveCard variant="default" className="p-[var(--hive-spacing-4)] text-center border-red-500/30 bg-red-900/10">
             <p className="text-[var(--hive-status-error)]">{error}</p>
           </HiveCard>
         </motion.div>
@@ -220,7 +220,7 @@ export function HiveBuilderStep({ data, updateData }: HiveBuilderStepProps) {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <HiveCard variant="subtle" className="p-[var(--hive-spacing-6)] text-center">
+          <HiveCard variant="default" className="p-[var(--hive-spacing-6)] text-center">
             <p className="text-[var(--hive-text-secondary)]">
               {searchTerm && searchTerm.length >= 2 
                 ? (data.userType === 'faculty' 
@@ -253,7 +253,7 @@ export function HiveBuilderStep({ data, updateData }: HiveBuilderStepProps) {
               transition={{ delay: 0.1 * index }}
             >
               <HiveCard
-                variant={selectedSpaces.includes(space.id) ? "premium" : "glass"}
+                variant={selectedSpaces.includes(space.id) ? "selected" : "elevated"}
                 className={cn(
                   "p-[var(--hive-spacing-4)] cursor-pointer transition-all duration-300 hover:scale-105",
                   selectedSpaces.includes(space.id)
@@ -296,7 +296,7 @@ export function HiveBuilderStep({ data, updateData }: HiveBuilderStepProps) {
           animate={{ opacity: 1, scale: 1 }}
           className="text-center"
         >
-          <HiveCard variant="success" className="p-[var(--hive-spacing-4)] inline-block">
+          <HiveCard variant="online" className="p-[var(--hive-spacing-4)] inline-block">
             <div className="flex items-center gap-2">
               <Star className="w-4 h-4 text-[var(--hive-status-success)]" />
               <span className="text-sm font-medium text-[var(--hive-text-primary)]">
@@ -313,7 +313,7 @@ export function HiveBuilderStep({ data, updateData }: HiveBuilderStepProps) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.6 }}
       >
-        <HiveCard variant="subtle" className="p-[var(--hive-spacing-4)] text-center">
+        <HiveCard variant="default" className="p-[var(--hive-spacing-4)] text-center">
           <h4 className="text-sm font-medium text-[var(--hive-text-primary)] mb-[var(--hive-spacing-3)] flex items-center justify-center">
             <div className="w-2 h-2 bg-[var(--hive-brand-primary)] rounded-full mr-2" />
             {data.userType === 'faculty' ? 'Faculty Management Requests' : 'HIVE Builder Program'}

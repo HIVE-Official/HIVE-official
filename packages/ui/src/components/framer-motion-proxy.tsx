@@ -16,6 +16,7 @@ export const motion = {
   h3: (props: any) => <h3 {...props} />,
   h4: (props: any) => <h4 {...props} />,
   p: (props: any) => <p {...props} />,
+  header: (props: any) => <header {...props} />,
   // Add more elements as needed
 };
 

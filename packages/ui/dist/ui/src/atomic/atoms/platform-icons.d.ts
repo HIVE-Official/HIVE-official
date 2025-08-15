@@ -1,11 +1,17 @@
 import React from 'react';
-export interface PlatformIconProps {
+export interface HiveIconProps {
     size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
     className?: string;
 }
-export declare const HiveIcon: React.FC<PlatformIconProps>;
+export interface PlatformIconProps {
+    icon: keyof typeof PlatformIcons;
+    size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+    className?: string;
+    color?: string;
+}
+export declare const HiveIcon: React.FC<HiveIconProps>;
 export declare const PlatformIcons: {
-    Hive: React.FC<PlatformIconProps>;
+    Hive: React.FC<HiveIconProps>;
     Profile: React.ForwardRefExoticComponent<Omit<import("lucide-react").LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>>;
     Spaces: React.ForwardRefExoticComponent<Omit<import("lucide-react").LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>>;
     Tools: React.ForwardRefExoticComponent<Omit<import("lucide-react").LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>>;
@@ -17,4 +23,5 @@ export declare const PlatformIcons: {
     Builder: React.ForwardRefExoticComponent<Omit<import("lucide-react").LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>>;
     Beta: React.ForwardRefExoticComponent<Omit<import("lucide-react").LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>>;
 };
+export declare const PlatformIcon: React.FC<PlatformIconProps>;
 //# sourceMappingURL=platform-icons.d.ts.map

@@ -1,6 +1,6 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import * as React from "react";
-import { cn } from "../lib/utils.js";
+import { cn } from "../lib/utils";
 import { cva } from "class-variance-authority";
 const headingVariants = cva("font-display font-semibold tracking-tight", {
     variants: {

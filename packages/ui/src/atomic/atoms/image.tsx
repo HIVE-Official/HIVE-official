@@ -87,7 +87,7 @@ export const Image = React.forwardRef<HTMLImageElement, ImageProps>(({
 
   const containerClasses = [
     'relative overflow-hidden',
-    'bg-hive-background-tertiary',
+    'bg-[var(--hive-background-tertiary)]',
     
     // Aspect ratio
     typeof aspectRatio === 'string' ? aspectRatios[aspectRatio] : '',
@@ -96,7 +96,7 @@ export const Image = React.forwardRef<HTMLImageElement, ImageProps>(({
     roundedVariants[rounded],
     
     // Border
-    bordered && 'border border-hive-border-default',
+    bordered && 'border border-[var(--hive-border-primary)]',
     
     // Custom aspect ratio
     typeof aspectRatio === 'number' && 'relative'
@@ -133,7 +133,7 @@ export const Image = React.forwardRef<HTMLImageElement, ImageProps>(({
     return (
       <div className={cn(containerClasses, className)} style={customStyle}>
         {typeof fallback === 'string' ? (
-          <div className="flex items-center justify-center h-full text-hive-text-secondary text-sm">
+          <div className="flex items-center justify-center h-full text-[var(--hive-text-secondary)] text-sm">
             {fallback}
           </div>
         ) : (
@@ -147,12 +147,12 @@ export const Image = React.forwardRef<HTMLImageElement, ImageProps>(({
     <div className={cn(containerClasses, className)} style={customStyle}>
       {/* Loading placeholder */}
       {isLoading && placeholder === 'skeleton' && (
-        <div className="absolute inset-0 bg-gradient-to-r from-hive-background-tertiary via-hive-background-secondary to-hive-background-tertiary animate-pulse" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[var(--hive-background-tertiary)] via-[var(--hive-background-secondary)] to-[var(--hive-background-tertiary)] animate-pulse" />
       )}
       
       {/* Blur placeholder */}
       {isLoading && placeholder === 'blur' && (
-        <div className="absolute inset-0 bg-hive-background-tertiary blur-sm" />
+        <div className="absolute inset-0 bg-[var(--hive-background-tertiary)] blur-sm" />
       )}
       
       {/* Actual image */}
@@ -172,9 +172,9 @@ export const Image = React.forwardRef<HTMLImageElement, ImageProps>(({
       
       {/* Error state without fallback */}
       {hasError && !fallback && (
-        <div className="absolute inset-0 flex items-center justify-center bg-hive-background-tertiary">
-          <div className="text-center text-hive-text-secondary">
-            <div className="w-8 h-8 mx-auto mb-2 bg-hive-steel rounded opacity-50" />
+        <div className="absolute inset-0 flex items-center justify-center bg-[var(--hive-background-tertiary)]">
+          <div className="text-center text-[var(--hive-text-secondary)]">
+            <div className="w-8 h-8 mx-auto mb-2 bg-[var(--hive-text-muted)] rounded opacity-50" />
             <p className="text-xs">Failed to load image</p>
           </div>
         </div>

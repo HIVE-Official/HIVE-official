@@ -887,7 +887,7 @@ export function initializeUnifiedState(user: User | null) {
     const integration = getPlatformIntegration();
     
     // Subscribe to real-time updates
-    const unsubscribePlatform = integration.subscribe('platform_update', (data) => {
+    const unsubscribePlatform = integration.subscribe('platform_update', (data: any) => {
       store.handleRealtimeUpdate({
         type: 'platform_update',
         slice: 'all',

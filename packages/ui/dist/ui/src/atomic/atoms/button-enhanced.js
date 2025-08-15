@@ -3,7 +3,7 @@ import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-run
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva } from "class-variance-authority";
-import { cn } from "../../lib/utils.js";
+import { cn } from "../../lib/utils";
 // HIVE Button System - Semantic Token Perfection
 // Zero hardcoded values - complete semantic token usage
 const buttonVariants = cva(
@@ -11,12 +11,14 @@ const buttonVariants = cva(
 "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color-mix(in_srgb,var(--hive-brand-secondary)_30%,transparent)] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50", {
     variants: {
         variant: {
-            // Primary brand button
+            // Primary brand button - GOLD OUTLINE ONLY (never fill)
             primary: [
-                "bg-[var(--hive-brand-secondary)]",
-                "text-[var(--hive-background-primary)]",
-                "hover:bg-[color-mix(in_srgb,var(--hive-brand-secondary)_90%,transparent)]",
-                "active:bg-[color-mix(in_srgb,var(--hive-brand-secondary)_80%,transparent)]",
+                "border-2 border-[var(--hive-brand-secondary)]",
+                "bg-transparent",
+                "text-[var(--hive-brand-secondary)]",
+                "hover:bg-[color-mix(in_srgb,var(--hive-brand-secondary)_10%,transparent)]",
+                "hover:border-[var(--hive-brand-secondary)]",
+                "active:bg-[color-mix(in_srgb,var(--hive-brand-secondary)_20%,transparent)]",
                 "shadow-sm hover:shadow-md",
             ],
             // Secondary outline button
@@ -73,12 +75,14 @@ const buttonVariants = cva(
                 "hover:underline",
                 "hover:text-[color-mix(in_srgb,var(--hive-brand-secondary)_80%,transparent)]",
             ],
-            // Accent button
+            // Accent button - GOLD OUTLINE VARIATION
             accent: [
-                "bg-[var(--hive-accent-primary)]",
-                "text-[var(--hive-text-inverse)]",
-                "hover:bg-[color-mix(in_srgb,var(--hive-accent-primary)_90%,transparent)]",
-                "active:bg-[color-mix(in_srgb,var(--hive-accent-primary)_80%,transparent)]",
+                "border-2 border-[var(--hive-brand-secondary)]",
+                "bg-[color-mix(in_srgb,var(--hive-brand-secondary)_5%,transparent)]",
+                "text-[var(--hive-brand-secondary)]",
+                "hover:bg-[color-mix(in_srgb,var(--hive-brand-secondary)_15%,transparent)]",
+                "hover:border-[var(--hive-brand-secondary)]",
+                "active:bg-[color-mix(in_srgb,var(--hive-brand-secondary)_25%,transparent)]",
                 "shadow-sm hover:shadow-md",
             ],
         },

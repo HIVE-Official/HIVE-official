@@ -1,9 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 // Use admin SDK methods since we're in an API route
 import { dbAdmin } from '@/lib/firebase-admin';
-import { getCurrentUser } from '@/lib/server-auth';
+import { getCurrentUser } from '@/lib/auth-server';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { sseRealtimeService } from '@/lib/sse-realtime-service';
+import { realtimeService } from '@/lib/firebase-realtime';
+import { serverTimestamp } from 'firebase/database';
 
 // WebSocket connection interfaces
 interface WebSocketConnection {
@@ -75,7 +78,7 @@ interface ChannelSubscription {
 // POST - Establish WebSocket connection
 export async function POST(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
@@ -112,13 +115,24 @@ export async function POST(request: NextRequest) {
     };
 
     // Store connection in Firestore
-    await setDoc(doc(db, 'realtimeConnections', connectionId), connection);
+    await dbAdmin.collection('realtimeConnections').doc(connectionId).set(connection);
 
     // Subscribe to default channels based on connection type
     const defaultChannels = await getDefaultChannels(user.uid, connectionType, spaceId);
     await subscribeToChannels(connectionId, user.uid, defaultChannels);
 
-    // Update user presence
+    // Update user presence in Firebase Realtime Database
+    await realtimeService.updatePresence(user.uid, {
+      status: 'online',
+      lastSeen: serverTimestamp(),
+      connectionId,
+      metadata: {
+        platform: clientInfo.platform || 'web',
+        version: clientInfo.version || '1.0.0'
+      }
+    });
+
+    // Update user presence in Firestore (for persistence)
     await updateUserPresence(user.uid, 'online', connectionId);
 
     // Start connection monitoring
@@ -152,7 +166,7 @@ export async function POST(request: NextRequest) {
 // GET - Get connection info and channel subscriptions
 export async function GET(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
@@ -163,8 +177,8 @@ export async function GET(request: NextRequest) {
 
     if (connectionId) {
       // Get specific connection
-      const connectionDoc = await getDoc(doc(db, 'realtimeConnections', connectionId));
-      if (!connectionDoc.exists || connectionDoc.data().userId !== user.uid) {
+      const connectionDoc = await dbAdmin.collection('realtimeConnections').doc(connectionId).get();
+      if (!connectionDoc.exists || connectionDoc.data()?.userId !== user.uid) {
         return NextResponse.json(ApiResponseHelper.error("Connection not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
       }
 
@@ -182,13 +196,11 @@ export async function GET(request: NextRequest) {
       });
     } else {
       // Get all user connections
-      const connectionsQuery = dbAdmin.collection(
-        dbAdmin.collection('realtimeConnections'),
-        where('userId', '==', user.uid),
-        where('status', '==', 'connected')
-      );
+      const connectionsQuery = dbAdmin.collection('realtimeConnections')
+        .where('userId', '==', user.uid)
+        .where('status', '==', 'connected');
 
-      const connectionsSnapshot = await getDocs(connectionsQuery);
+      const connectionsSnapshot = await connectionsQuery.get();
       const connections = connectionsSnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
@@ -212,7 +224,7 @@ export async function GET(request: NextRequest) {
 // PUT - Update connection settings or channels
 export async function PUT(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
@@ -225,8 +237,8 @@ export async function PUT(request: NextRequest) {
     }
 
     // Verify connection ownership
-    const connectionDoc = await getDoc(doc(db, 'realtimeConnections', connectionId));
-    if (!connectionDoc.exists || connectionDoc.data().userId !== user.uid) {
+    const connectionDoc = await dbAdmin.collection('realtimeConnections').doc(connectionId).get();
+    if (!connectionDoc.exists || connectionDoc.data()?.userId !== user.uid) {
       return NextResponse.json(ApiResponseHelper.error("Connection not found or not owned", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
@@ -253,7 +265,7 @@ export async function PUT(request: NextRequest) {
     }
 
     // Update connection
-    await updateDoc(doc(db, 'realtimeConnections', connectionId), updates);
+    await dbAdmin.collection('realtimeConnections').doc(connectionId).update(updates);
 
     return NextResponse.json({
       success: true,
@@ -270,7 +282,7 @@ export async function PUT(request: NextRequest) {
 // DELETE - Close WebSocket connection
 export async function DELETE(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
@@ -281,12 +293,10 @@ export async function DELETE(request: NextRequest) {
 
     if (closeAll) {
       // Close all connections for user
-      const connectionsQuery = dbAdmin.collection(
-        dbAdmin.collection('realtimeConnections'),
-        where('userId', '==', user.uid)
-      );
+      const connectionsQuery = dbAdmin.collection('realtimeConnections')
+        .where('userId', '==', user.uid);
 
-      const connectionsSnapshot = await getDocs(connectionsQuery);
+      const connectionsSnapshot = await connectionsQuery.get();
       let closedCount = 0;
 
       for (const connectionDoc of connectionsSnapshot.docs) {
@@ -311,13 +321,11 @@ export async function DELETE(request: NextRequest) {
       }
 
       // Check if user has other active connections
-      const remainingConnectionsQuery = dbAdmin.collection(
-        dbAdmin.collection('realtimeConnections'),
-        where('userId', '==', user.uid),
-        where('status', '==', 'connected')
-      );
+      const remainingConnectionsQuery = dbAdmin.collection('realtimeConnections')
+        .where('userId', '==', user.uid)
+        .where('status', '==', 'connected');
 
-      const remainingSnapshot = await getDocs(remainingConnectionsQuery);
+      const remainingSnapshot = await remainingConnectionsQuery.get();
       
       if (remainingSnapshot.empty) {
         await updateUserPresence(user.uid, 'offline');
@@ -401,13 +409,11 @@ async function getDefaultChannels(userId: string, connectionType: string, spaceI
 // Helper function to get user's spaces
 async function getUserSpaces(userId: string): Promise<string[]> {
   try {
-    const membershipsQuery = dbAdmin.collection(
-      dbAdmin.collection('members'),
-      where('userId', '==', userId),
-      where('status', '==', 'active')
-    );
+    const membershipsQuery = dbAdmin.collection('members')
+      .where('userId', '==', userId)
+      .where('status', '==', 'active');
 
-    const membershipsSnapshot = await getDocs(membershipsQuery);
+    const membershipsSnapshot = await membershipsQuery.get();
     return membershipsSnapshot.docs.map(doc => doc.data().spaceId);
   } catch (error) {
     logger.error('Error getting user spaces', { error: error, endpoint: '/api/realtime/websocket' });
@@ -433,19 +439,19 @@ async function subscribeToChannels(connectionId: string, userId: string, channel
       };
 
       const subscriptionId = `${connectionId}_${channel}`;
-      await setDoc(doc(db, 'channelSubscriptions', subscriptionId), {
+      await dbAdmin.collection('channelSubscriptions').doc(subscriptionId).set({
         ...subscription,
         connectionId
       });
     }
 
     // Update connection with new channels
-    const connectionDoc = await getDoc(doc(db, 'realtimeConnections', connectionId));
+    const connectionDoc = await dbAdmin.collection('realtimeConnections').doc(connectionId).get();
     if (connectionDoc.exists) {
-      const currentChannels = connectionDoc.data().channels || [];
+      const currentChannels = connectionDoc.data()?.channels || [];
       const updatedChannels = [...new Set([...currentChannels, ...channels])];
       
-      await updateDoc(doc(db, 'realtimeConnections', connectionId), {
+      await dbAdmin.collection('realtimeConnections').doc(connectionId).update({
         channels: updatedChannels
       });
     }
@@ -469,14 +475,12 @@ async function getChannelPermissions(userId: string, channel: string): Promise<C
 
     case 'space': {
       // Check space membership and role
-      const membershipQuery = dbAdmin.collection(
-        dbAdmin.collection('members'),
-        where('userId', '==', userId),
-        where('spaceId', '==', id),
-        where('status', '==', 'active')
-      );
+      const membershipQuery = dbAdmin.collection('members')
+        .where('userId', '==', userId)
+        .where('spaceId', '==', id)
+        .where('status', '==', 'active');
 
-      const membershipSnapshot = await getDocs(membershipQuery);
+      const membershipSnapshot = await membershipQuery.get();
       if (membershipSnapshot.empty) {
         return { canRead: false, canWrite: false, canModerate: false };
       }
@@ -508,16 +512,16 @@ async function unsubscribeFromChannels(connectionId: string, userId: string, cha
   try {
     for (const channel of channels) {
       const subscriptionId = `${connectionId}_${channel}`;
-      await deleteDoc(doc(db, 'channelSubscriptions', subscriptionId));
+      await dbAdmin.collection('channelSubscriptions').doc(subscriptionId).delete();
     }
 
     // Update connection channels
-    const connectionDoc = await getDoc(doc(db, 'realtimeConnections', connectionId));
+    const connectionDoc = await dbAdmin.collection('realtimeConnections').doc(connectionId).get();
     if (connectionDoc.exists) {
-      const currentChannels = connectionDoc.data().channels || [];
+      const currentChannels = connectionDoc.data()?.channels || [];
       const updatedChannels = currentChannels.filter((ch: string) => !channels.includes(ch));
       
-      await updateDoc(doc(db, 'realtimeConnections', connectionId), {
+      await dbAdmin.collection('realtimeConnections').doc(connectionId).update({
         channels: updatedChannels
       });
     }
@@ -530,16 +534,14 @@ async function unsubscribeFromChannels(connectionId: string, userId: string, cha
 async function replaceChannelSubscriptions(connectionId: string, userId: string, channels: string[]): Promise<void> {
   try {
     // Get current subscriptions
-    const currentSubscriptionsQuery = dbAdmin.collection(
-      dbAdmin.collection('channelSubscriptions'),
-      where('connectionId', '==', connectionId)
-    );
+    const currentSubscriptionsQuery = dbAdmin.collection('channelSubscriptions')
+      .where('connectionId', '==', connectionId);
 
-    const currentSubscriptionsSnapshot = await getDocs(currentSubscriptionsQuery);
+    const currentSubscriptionsSnapshot = await currentSubscriptionsQuery.get();
     
     // Remove all current subscriptions
     for (const subDoc of currentSubscriptionsSnapshot.docs) {
-      await deleteDoc(subDoc.ref);
+      await subDoc.ref.delete();
     }
 
     // Add new subscriptions
@@ -552,12 +554,10 @@ async function replaceChannelSubscriptions(connectionId: string, userId: string,
 // Helper function to get user channel subscriptions
 async function getUserChannelSubscriptions(userId: string): Promise<any[]> {
   try {
-    const subscriptionsQuery = dbAdmin.collection(
-      dbAdmin.collection('channelSubscriptions'),
-      where('userId', '==', userId)
-    );
+    const subscriptionsQuery = dbAdmin.collection('channelSubscriptions')
+      .where('userId', '==', userId);
 
-    const subscriptionsSnapshot = await getDocs(subscriptionsQuery);
+    const subscriptionsSnapshot = await subscriptionsQuery.get();
     return subscriptionsSnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
@@ -579,7 +579,7 @@ async function updateUserPresence(userId: string, status: 'online' | 'offline' |
       updatedAt: new Date().toISOString()
     };
 
-    await setDoc(doc(db, 'userPresence', userId), presenceData);
+    await dbAdmin.collection('userPresence').doc(userId).set(presenceData);
 
     // Broadcast presence update to relevant channels
     const userSpaces = await getUserSpaces(userId);
@@ -618,7 +618,7 @@ async function broadcastPresenceUpdate(spaceId: string, userId: string, status: 
       }
     };
 
-    await addDoc(dbAdmin.collection('realtimeMessages'), presenceMessage);
+    await dbAdmin.collection('realtimeMessages').add(presenceMessage);
   } catch (error) {
     logger.error('Error broadcasting presence update', { error: error, endpoint: '/api/realtime/websocket' });
   }
@@ -627,27 +627,25 @@ async function broadcastPresenceUpdate(spaceId: string, userId: string, status: 
 // Helper function to close connection
 async function closeConnection(connectionId: string, userId: string): Promise<boolean> {
   try {
-    const connectionDoc = await getDoc(doc(db, 'realtimeConnections', connectionId));
+    const connectionDoc = await dbAdmin.collection('realtimeConnections').doc(connectionId).get();
     
-    if (!connectionDoc.exists || connectionDoc.data().userId !== userId) {
+    if (!connectionDoc.exists || connectionDoc.data()?.userId !== userId) {
       return false;
     }
 
     // Update connection status
-    await updateDoc(doc(db, 'realtimeConnections', connectionId), {
+    await dbAdmin.collection('realtimeConnections').doc(connectionId).update({
       status: 'disconnected',
       'metadata.lastActivity': new Date().toISOString()
     });
 
     // Remove channel subscriptions
-    const subscriptionsQuery = dbAdmin.collection(
-      dbAdmin.collection('channelSubscriptions'),
-      where('connectionId', '==', connectionId)
-    );
+    const subscriptionsQuery = dbAdmin.collection('channelSubscriptions')
+      .where('connectionId', '==', connectionId);
 
-    const subscriptionsSnapshot = await getDocs(subscriptionsQuery);
+    const subscriptionsSnapshot = await subscriptionsQuery.get();
     for (const subDoc of subscriptionsSnapshot.docs) {
-      await deleteDoc(subDoc.ref);
+      await subDoc.ref.delete();
     }
 
     return true;

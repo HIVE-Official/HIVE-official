@@ -2,7 +2,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import Link from 'next/link';
 import Image from 'next/image';
-import { HiveButton } from '../hive-button.js';
+import { HiveButton } from '../hive-button';
 export function UnifiedHeader({ variant = 'landing', showBackButton = false, backHref = '/', rightAction, className = '' }) {
     const baseStyles = "relative z-10 border-b backdrop-blur-xl";
     const borderStyles = "border-white/10";

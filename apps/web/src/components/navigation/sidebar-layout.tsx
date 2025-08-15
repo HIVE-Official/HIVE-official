@@ -224,7 +224,7 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
                   </div>
                 </div>
                 <div className="px-2 py-1 rounded-full text-xs font-medium bg-hive-brand-secondary/20 text-hive-brand-secondary">
-                  {user.userType || 'student'}
+                  {'student'}
                 </div>
               </div>
             </div>

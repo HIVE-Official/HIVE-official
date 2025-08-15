@@ -5,23 +5,21 @@ import { useQuery } from "@tanstack/react-query";
 import { authenticatedFetch } from '../../../../lib/auth-utils';
 import { Button, Badge, HivePostsSurface, HiveEventsSurface, HiveMembersSurface, HivePinnedSurface, HiveToolsSurface, type Comment } from "@hive/ui";
 import { PageContainer } from "@/components/temp-stubs";
-import { Users, AlertTriangle, Loader2, Hash, Heart as _Heart, MessageSquare, Camera as _Camera, Code, Calendar, ArrowRight as _ArrowRight, Clock, Settings, Grid, List, Maximize2, X, Monitor, Activity } from "lucide-react";
+import { Users, AlertTriangle, Loader2, Hash, /* Heart as _Heart, */ MessageSquare, /* Camera as _Camera, */ Code, Calendar, /* ArrowRight as _ArrowRight, */ Clock, Settings, Grid, List, Maximize2, X, Monitor, Activity } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { type Space } from "@hive/core";
-import { useAuth } from "@hive/auth-logic";
+import { useUnifiedAuth } from "@hive/ui";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "../../../../lib/utils";
 import { SpaceErrorBoundaryWrapper } from "../components/space-error-boundary";
 import { SpaceLoadingSkeleton } from "../components/space-loading-skeleton";
 import { LeaveSpaceButton } from "../../../../components/spaces/leave-space-button";
 import { PostCreationModal } from "../../../../components/spaces/post-creation-modal";
-import { LeaderToolbar, useLeaderMode, type LeaderMode } from "../../../../components/spaces/leader-toolbar";
+import { LeaderToolbar, useLeaderMode /* , type LeaderMode */ } from "../../../../components/spaces/leader-toolbar";
 import { getUserSpaceMembership, type SpaceMembership } from "../../../../lib/space-permissions";
 
 async function fetchSpaceById(spaceId: string): Promise<Space> {
-  
-
   const response = await authenticatedFetch(`/api/spaces/${spaceId}`);
   if (response.status === 404) {
     throw new Error("Space not found");
@@ -29,7 +27,7 @@ async function fetchSpaceById(spaceId: string): Promise<Space> {
   if (!response.ok) {
     throw new Error(`Failed to fetch space: ${response.status}`);
   }
-  return response.json();
+  return response.json() as Promise<Space>;
 }
 
 function LoadingState() {
@@ -163,21 +161,50 @@ export default function SpaceDetailPage({
   const [postCreationType, setPostCreationType] = useState<'discussion' | 'question' | 'poll' | 'announcement' | 'link'>('discussion');
   
   // Leader mode management
-  const { currentMode, toggleMode, exitMode, isInMode, isInAnyMode } = useLeaderMode();
+  const { currentMode, toggleMode, /* exitMode, */ isInMode, /* isInAnyMode */ } = useLeaderMode(); // TODO: exitMode and isInAnyMode for future leader features
   
   // Configure mode state
   const [isEditingDescription, setIsEditingDescription] = useState(false);
   const [editedDescription, setEditedDescription] = useState('');
   
   // Insights mode state
-  const [analyticsData, setAnalyticsData] = useState<any>(null);
+  const [analyticsData, setAnalyticsData] = useState<{
+    contentData?: {
+      postsThisWeek?: number;
+      averageEngagement?: number;
+      totalPosts?: number;
+      contentGrowthRate?: number;
+    };
+    membershipData?: {
+      activeMembers?: number;
+      newMembers?: number;
+      averageEngagement?: number;
+    };
+    eventsData?: {
+      upcomingEvents?: number;
+      averageAttendance?: number;
+      totalEvents?: number;
+    };
+    toolsData?: {
+      activeTools?: number;
+      toolUsage?: number;
+      topTools?: string[];
+    };
+    resourcesData?: {
+      items?: number;
+      totalViews?: number;
+      mostViewed?: string;
+    };
+    overallHealth?: number;
+    activity?: any;
+  } | null>(null);
   const [analyticsLoading, setAnalyticsLoading] = useState(false);
   
   // Space membership and permissions state
   const [spaceMembership, setSpaceMembership] = useState<SpaceMembership | null>(null);
-  const [membershipLoading, setMembershipLoading] = useState(true);
+  const [/* membershipLoading */, setMembershipLoading] = useState(true); // TODO: For membership loading state
   
-  const { user } = useAuth();
+  const { user } = useUnifiedAuth();
 
   const handleJoinSpace = async () => {
     try {
@@ -190,7 +217,7 @@ export default function SpaceDetailPage({
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
+        const errorData = await response.json() as { error?: string };
         throw new Error(errorData.error || 'Failed to join space');
       }
 
@@ -198,8 +225,9 @@ export default function SpaceDetailPage({
       
       // Refresh to show updated membership state
       window.location.reload();
-    } catch (error: any) {
-      alert(error.message || 'Failed to join space');
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to join space';
+      alert(errorMessage);
     }
   };
 
@@ -251,8 +279,14 @@ export default function SpaceDetailPage({
     window.location.href = `/tools/${toolId}/analytics`;
   };
 
-  const handleCreatePost = (type: 'discussion' | 'question' | 'poll' | 'announcement' | 'link') => {
-    setPostCreationType(type);
+  const handleCreatePost = (type: 'activity' | 'discussion' | 'question' | 'poll' | 'announcement' | 'link' | 'study_session' | 'food_run' | 'ride_share' | 'meetup') => {
+    // Map all types to supported modal types
+    const mappedType: 'discussion' | 'question' | 'poll' | 'announcement' | 'link' = 
+      ['discussion', 'question', 'poll', 'announcement', 'link'].includes(type) 
+        ? type as 'discussion' | 'question' | 'poll' | 'announcement' | 'link'
+        : 'discussion'; // Default fallback
+    
+    setPostCreationType(mappedType);
     setShowPostCreation(true);
   };
 
@@ -266,11 +300,11 @@ export default function SpaceDetailPage({
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
+      const errorData = await response.json() as { error?: string };
       throw new Error(errorData.error || 'Failed to create comment');
     }
 
-    const result = await response.json();
+    const result = await response.json() as { data: Comment };
     return result.data;
   };
 
@@ -278,11 +312,11 @@ export default function SpaceDetailPage({
     const response = await authenticatedFetch(`/api/spaces/${spaceId}/posts/${postId}/comments`);
     
     if (!response.ok) {
-      const errorData = await response.json();
+      const errorData = await response.json() as { error?: string };
       throw new Error(errorData.error || 'Failed to load comments');
     }
 
-    const result = await response.json();
+    const result = await response.json() as { data: { comments: Comment[] } };
     return result.data.comments;
   };
 
@@ -297,7 +331,7 @@ export default function SpaceDetailPage({
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
+      const errorData = await response.json() as { error?: string };
       throw new Error(errorData.error || 'Failed to change member role');
     }
 
@@ -315,7 +349,7 @@ export default function SpaceDetailPage({
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
+      const errorData = await response.json() as { error?: string };
       throw new Error(errorData.error || 'Failed to remove member');
     }
 
@@ -335,7 +369,7 @@ export default function SpaceDetailPage({
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
+      const errorData = await response.json() as { error?: string };
       throw new Error(errorData.error || 'Failed to suspend member');
     }
 
@@ -389,7 +423,7 @@ export default function SpaceDetailPage({
           setAnalyticsLoading(true);
           const response = await authenticatedFetch(`/api/spaces/${spaceId}/analytics`);
           if (response.ok) {
-            const data = await response.json();
+            const data = await response.json() as { analytics: Record<string, unknown> };
             setAnalyticsData(data.analytics);
           }
         } catch (error) {
@@ -676,9 +710,9 @@ export default function SpaceDetailPage({
                         <div className="flex items-center justify-between text-xs">
                           <span className="text-neutral-400">Peak activity: 2-4 PM</span>
                           <span className={cn(
-                            analyticsData.contentData?.contentGrowthRate >= 0 ? "text-green-400" : "text-red-400"
+                            (analyticsData.contentData?.contentGrowthRate ?? 0) >= 0 ? "text-green-400" : "text-red-400"
                           )}>
-                            {analyticsData.contentData?.contentGrowthRate >= 0 ? "↑" : "↓"} {Math.abs(analyticsData.contentData?.contentGrowthRate || 0)}% vs last week
+                            {(analyticsData.contentData?.contentGrowthRate ?? 0) >= 0 ? "↑" : "↓"} {Math.abs(analyticsData.contentData?.contentGrowthRate || 0)}% vs last week
                           </span>
                         </div>
                       </>
@@ -700,6 +734,40 @@ export default function SpaceDetailPage({
                   onLoadComments={handleLoadComments}
                   leaderMode={currentMode}
                   canModerate={isLeader && isInMode('moderate')}
+                  // NEW: Enhanced coordination features
+                  showLiveActivity={true}
+                  liveActivityCount={analyticsData?.membershipData?.activeMembers || 0}
+                  currentUserId={user?.uid}
+                  onCoordinationResponse={async (postId, response) => {
+                    try {
+                      const apiResponse = await authenticatedFetch(`/api/spaces/${spaceId}/posts/${postId}/coordination`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(response)
+                      });
+                      if (!apiResponse.ok) throw new Error('Failed to submit coordination response');
+                      // Refresh to show updated coordination data
+                      window.location.reload();
+                    } catch (error) {
+                      console.error('Coordination response error:', error);
+                      alert('Failed to submit response. Please try again.');
+                    }
+                  }}
+                  onUpdateCoordinationStatus={async (postId, status) => {
+                    try {
+                      const apiResponse = await authenticatedFetch(`/api/spaces/${spaceId}/posts/${postId}/coordination/status`, {
+                        method: 'PATCH',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ status })
+                      });
+                      if (!apiResponse.ok) throw new Error('Failed to update coordination status');
+                      // Refresh to show updated status
+                      window.location.reload();
+                    } catch (error) {
+                      console.error('Coordination status error:', error);
+                      alert('Failed to update status. Please try again.');
+                    }
+                  }}
                 />
               </motion.div>
             </div>
@@ -794,16 +862,16 @@ export default function SpaceDetailPage({
                           <>
                             <div className="grid grid-cols-2 gap-3 mb-2">
                               <div className="text-center">
-                                <div className="text-lg font-bold text-orange-400">{analyticsData.eventData?.upcomingEvents || 0}</div>
+                                <div className="text-lg font-bold text-orange-400">{analyticsData.eventsData?.upcomingEvents || 0}</div>
                                 <div className="text-xs text-neutral-400">Upcoming</div>
                               </div>
                               <div className="text-center">
-                                <div className="text-lg font-bold text-green-400">{analyticsData.eventData?.averageAttendance || 0}%</div>
+                                <div className="text-lg font-bold text-green-400">{analyticsData.eventsData?.averageAttendance || 0}%</div>
                                 <div className="text-xs text-neutral-400">Avg Attendance</div>
                               </div>
                             </div>
                             <div className="text-xs text-neutral-400 text-center">
-                              Total events: <span className="text-white">{analyticsData.eventData?.totalEvents || 0}</span>
+                              Total events: <span className="text-white">{analyticsData.eventsData?.totalEvents || 0}</span>
                             </div>
                           </>
                         ) : (
@@ -826,16 +894,16 @@ export default function SpaceDetailPage({
                           <>
                             <div className="grid grid-cols-2 gap-3 mb-2">
                               <div className="text-center">
-                                <div className="text-lg font-bold text-cyan-400">{analyticsData.toolData?.activeTools || 0}</div>
+                                <div className="text-lg font-bold text-cyan-400">{analyticsData.toolsData?.activeTools || 0}</div>
                                 <div className="text-xs text-neutral-400">Active Tools</div>
                               </div>
                               <div className="text-center">
-                                <div className="text-lg font-bold text-yellow-400">{analyticsData.toolData?.toolUsage || 0}</div>
+                                <div className="text-lg font-bold text-yellow-400">{analyticsData.toolsData?.toolUsage || 0}</div>
                                 <div className="text-xs text-neutral-400">Weekly Uses</div>
                               </div>
                             </div>
                             <div className="text-xs text-neutral-400 text-center">
-                              Top: <span className="text-white">{analyticsData.toolData?.topTools?.[0]?.name || 'N/A'}</span>
+                              Top: <span className="text-white">{analyticsData.toolsData?.topTools?.[0] || 'N/A'}</span>
                             </div>
                           </>
                         ) : (
@@ -858,16 +926,16 @@ export default function SpaceDetailPage({
                           <>
                             <div className="grid grid-cols-2 gap-3 mb-2">
                               <div className="text-center">
-                                <div className="text-lg font-bold text-pink-400">{analyticsData.pinned?.items || 0}</div>
+                                <div className="text-lg font-bold text-pink-400">{analyticsData.resourcesData?.items || 0}</div>
                                 <div className="text-xs text-neutral-400">Pinned Items</div>
                               </div>
                               <div className="text-center">
-                                <div className="text-lg font-bold text-indigo-400">{analyticsData.pinned?.totalViews || 0}</div>
+                                <div className="text-lg font-bold text-indigo-400">{analyticsData.resourcesData?.totalViews || 0}</div>
                                 <div className="text-xs text-neutral-400">Total Views</div>
                               </div>
                             </div>
                             <div className="text-xs text-neutral-400 text-center">
-                              Most viewed: <span className="text-white">{analyticsData.pinned?.mostViewed || 'N/A'}</span>
+                              Most viewed: <span className="text-white">{analyticsData.resourcesData?.mostViewed || 'N/A'}</span>
                             </div>
                           </>
                         ) : (
@@ -878,17 +946,16 @@ export default function SpaceDetailPage({
                     {/* Enhanced Member Directory Widget for Leaders */}
                     {widget.id === 'members' && isLeader && (currentMode === 'manage' || currentMode === 'insights') ? (
                       <HiveMembersSurface
-                        spaceId={space.id}
-                        isLeader={isLeader}
-                        leaderMode={currentMode}
+                        space={space}
+                        isBuilder={isLeader}
+                        leaderMode={currentMode === 'manage' ? 'manage' : 'insights'}
                         maxMembers={5}
-                        authenticatedFetch={authenticatedFetch}
                       />
                     ) : widget.id === 'events' && isLeader && (currentMode === 'manage' || currentMode === 'insights') ? (
                       <HiveEventsSurface
                         space={space}
                         canCreateEvents={isLeader}
-                        canModerate={isLeader && currentMode === 'moderate'}
+                        canModerate={isLeader}
                       />
                     ) : (
                       <Component
@@ -967,54 +1034,54 @@ export default function SpaceDetailPage({
                           <div className="flex-1 bg-white/10 rounded-full h-2">
                             <div 
                               className="bg-gradient-to-r from-green-400 to-blue-400 h-2 rounded-full transition-all duration-500"
-                              style={{ width: `${(analyticsData.healthMetrics?.overallHealth || 0) * 10}%` }}
+                              style={{ width: `${((analyticsData as any).membershipData?.healthScore || (analyticsData.membershipData?.activeMembers ? Math.min(analyticsData.membershipData.activeMembers / 10, 10) : 0)) * 10}%` }}
                             ></div>
                           </div>
-                          <span className="text-sm font-bold text-white">{analyticsData.healthMetrics?.overallHealth || 0}/10</span>
+                          <span className="text-sm font-bold text-white">{(analyticsData as any).membershipData?.healthScore || Math.floor((analyticsData.membershipData?.activeMembers || 0) / 10)}/10</span>
                         </div>
                         <div className="grid grid-cols-2 gap-2 text-xs">
                           <div className="flex justify-between">
                             <span className="text-neutral-400">Activity</span>
                             <span className={cn(
-                              analyticsData.healthMetrics?.activity === 'High' ? "text-green-400" :
-                              analyticsData.healthMetrics?.activity === 'Medium' ? "text-yellow-400" : "text-red-400"
+                              (analyticsData as any).membershipData?.activity === 'High' ? "text-green-400" :
+                              (analyticsData as any).membershipData?.activity === 'Medium' ? "text-yellow-400" : "text-red-400"
                             )}>
-                              {analyticsData.healthMetrics?.activity || 'N/A'}
+                              {(analyticsData as any).membershipData?.activity || 'N/A'}
                             </span>
                           </div>
                           <div className="flex justify-between">
                             <span className="text-neutral-400">Engagement</span>
                             <span className={cn(
-                              analyticsData.healthMetrics?.engagement === 'High' ? "text-green-400" :
-                              analyticsData.healthMetrics?.engagement === 'Medium' ? "text-yellow-400" : "text-red-400"
+                              (analyticsData as any).membershipData?.engagement === 'High' ? "text-green-400" :
+                              (analyticsData as any).membershipData?.engagement === 'Medium' ? "text-yellow-400" : "text-red-400"
                             )}>
-                              {analyticsData.healthMetrics?.engagement || 'N/A'}
+                              {(analyticsData as any).membershipData?.engagement || 'N/A'}
                             </span>
                           </div>
                           <div className="flex justify-between">
                             <span className="text-neutral-400">Growth</span>
                             <span className={cn(
-                              analyticsData.healthMetrics?.growth === 'Growing' ? "text-green-400" :
-                              analyticsData.healthMetrics?.growth === 'Steady' ? "text-blue-400" : "text-yellow-400"
+                              (analyticsData as any).membershipData?.growth === 'Growing' ? "text-green-400" :
+                              (analyticsData as any).membershipData?.growth === 'Steady' ? "text-blue-400" : "text-yellow-400"
                             )}>
-                              {analyticsData.healthMetrics?.growth || 'N/A'}
+                              {(analyticsData as any).membershipData?.growth || 'N/A'}
                             </span>
                           </div>
                           <div className="flex justify-between">
                             <span className="text-neutral-400">Retention</span>
                             <span className={cn(
-                              analyticsData.healthMetrics?.retention === 'Excellent' ? "text-green-400" :
-                              analyticsData.healthMetrics?.retention === 'Good' ? "text-blue-400" : "text-yellow-400"
+                              (analyticsData as any).membershipData?.retention === 'Excellent' ? "text-green-400" :
+                              (analyticsData as any).membershipData?.retention === 'Good' ? "text-blue-400" : "text-yellow-400"
                             )}>
-                              {analyticsData.healthMetrics?.retention || 'N/A'}
+                              {(analyticsData as any).membershipData?.retention || 'N/A'}
                             </span>
                           </div>
                         </div>
-                        {analyticsData.healthMetrics?.alerts && analyticsData.healthMetrics.alerts.length > 0 && (
+                        {(analyticsData as any).membershipData?.alerts && (analyticsData as any).membershipData.alerts.length > 0 && (
                           <div className="mt-3 pt-2 border-t border-purple-500/20">
                             <div className="text-xs font-medium text-purple-400 mb-1">Latest Alert</div>
                             <div className="text-xs text-neutral-300">
-                              {analyticsData.healthMetrics.alerts[0].message}
+                              {(analyticsData as any).membershipData.alerts[0].message}
                             </div>
                           </div>
                         )}
@@ -1067,7 +1134,7 @@ export default function SpaceDetailPage({
                             } else {
                               alert('Failed to update description');
                             }
-                          } catch (error) {
+                          } catch {
                             alert('Failed to update description');
                           }
                         }}
@@ -1201,17 +1268,16 @@ export default function SpaceDetailPage({
                         {/* Full Member Directory Tool for Leaders */}
                         {widget.id === 'members' && isLeader && (currentMode === 'manage' || currentMode === 'insights') ? (
                           <HiveMembersSurface
-                            spaceId={space.id}
-                            isLeader={isLeader}
-                            leaderMode={currentMode}
+                            space={space}
+                            isBuilder={isLeader}
+                            leaderMode={currentMode === 'manage' ? 'manage' : 'insights'}
                             maxMembers={50}
-                            authenticatedFetch={authenticatedFetch}
                           />
                         ) : widget.id === 'events' && isLeader && (currentMode === 'manage' || currentMode === 'insights') ? (
                           <HiveEventsSurface
                             space={space}
                             canCreateEvents={isLeader}
-                            canModerate={isLeader && currentMode === 'moderate'}
+                            canModerate={isLeader}
                           />
                         ) : (
                           <Component

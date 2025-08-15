@@ -8,8 +8,8 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from 'react';
 import { cva } from 'class-variance-authority';
-import { cn } from '../../lib/utils.js';
-import { HiveCardBase } from './hive-card-system.js';
+import { cn } from '../../lib/utils';
+import { HiveCardBase } from './hive-card-system';
 // ============================================================================
 // CARD COMPOSITION VARIANTS
 // ============================================================================

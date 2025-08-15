@@ -35,7 +35,15 @@ export default function PublicProfilePage() {
   const params = useParams();
   const router = useRouter();
   const { user: currentUser } = useSession();
-  const handle = params.handle as string;
+  const [handle, setHandle] = useState<string>('');
+  
+  useEffect(() => {
+    const resolveParams = async () => {
+      const resolvedParams = await params;
+      setHandle(resolvedParams.handle as string);
+    };
+    resolveParams();
+  }, [params]);
   
   const [profileData, setProfileData] = useState<PublicProfileData | null>(null);
   const [isLoading, setIsLoading] = useState(true);

@@ -3,18 +3,17 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cva } from 'class-variance-authority';
-import { cn } from '../lib/utils.js';
-import { liquidMetal, motionDurations, liquidFlow } from '../motion/hive-motion-system.js';
+import { cn } from '../lib/utils';
+import { liquidMetal, motionDurations, liquidFlow } from '../motion/hive-motion-system';
 import { Eye, EyeOff } from 'lucide-react';
-import { getFormA11yProps, getTestProps } from '../lib/accessibility-foundation.js';
-import { touchTargets } from '../lib/responsive-foundation.js';
-import { componentBase, getValidationProps } from '../lib/component-foundation.js';
+import { getFormA11yProps, getTestProps } from '../lib/accessibility-foundation';
+import { touchTargets } from '../lib/responsive-foundation';
+import { componentBase, getValidationProps } from '../lib/component-foundation';
 // HIVE Input System - Builder's Toolkit with Liquid Metal Motion
 // Matte obsidian glass with floating labels and premium interactions
 const hiveInputVariants = cva(
 // Base styles - matte obsidian glass with accessibility and mobile support
-cn(componentBase.input, "relative backdrop-blur-xl border rounded-xl transition-all hive-motion-base", "bg-[#111113]/40 focus-within:bg-[#111113]/60", // Direct hex values instead of CSS variables
-touchTargets.comfortable), {
+cn(componentBase.input, "relative backdrop-blur-xl border rounded-xl transition-all hive-motion-base", "bg-transparent focus-within:bg-transparent", touchTargets.comfortable), {
     variants: {
         variant: {
             // Standard input - matte obsidian glass with semantic tokens
@@ -135,7 +134,7 @@ const HiveInput = React.forwardRef(({ className, variant, size, radius, label, h
                             }, transition: {
                                 duration: 0.2,
                                 ease: "easeOut",
-                            }, children: label })), _jsx("input", { ref: inputRef, type: inputType, value: value !== undefined ? value : internalValue, disabled: disabled || loading, maxLength: maxLength, required: required, className: cn("w-full h-full bg-transparent text-[var(--hive-text-primary)] placeholder-[var(--hive-text-placeholder)] focus:outline-none relative z-20", leftIcon ? "pl-10" : "pl-3", 
+                            }, children: label })), _jsx("input", { ref: inputRef, type: inputType, value: value !== undefined ? value : internalValue, disabled: disabled || loading, maxLength: maxLength, required: required, className: cn("w-full h-full !bg-transparent !bg-none border-none text-[var(--hive-text-primary)] placeholder-[var(--hive-text-placeholder)] focus:outline-none absolute inset-0 z-20", leftIcon ? "pl-10" : "pl-3", 
                             // Dynamic right padding based on what icons are present
                             (showCount || onClear || type === 'password' || loading || rightIcon) ? "pr-16" : "pr-4", floatingLabel ? "pt-6 pb-2" : (size === 'sm' ? "py-2" :
                                 size === 'lg' ? "py-4" :

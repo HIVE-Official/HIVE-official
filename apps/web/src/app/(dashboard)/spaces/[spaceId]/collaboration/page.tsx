@@ -9,13 +9,14 @@ import { CrossSpaceCollaboration } from "../../../../../components/spaces/cross-
 import { useRouter } from "next/navigation";
 
 interface SpaceCollaborationPageProps {
-  params: {
+  params: Promise<{
     spaceId: string;
-  };
+  }>;
 }
 
 export default function SpaceCollaborationPage({ params }: SpaceCollaborationPageProps) {
   const router = useRouter();
+  const [spaceId, setSpaceId] = useState<string>('');
   const [spaceData, setSpaceData] = useState<{
     name: string;
     userRole: 'admin' | 'moderator' | 'member';
@@ -23,6 +24,16 @@ export default function SpaceCollaborationPage({ params }: SpaceCollaborationPag
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    // Resolve params Promise
+    const resolveParams = async () => {
+      const resolvedParams = await params;
+      setSpaceId(resolvedParams.spaceId);
+    };
+    resolveParams();
+  }, [params]);
+
+  useEffect(() => {
+    if (!spaceId) return;
     const fetchSpaceData = async () => {
       try {
         await new Promise(resolve => setTimeout(resolve, 500));
@@ -39,7 +50,7 @@ export default function SpaceCollaborationPage({ params }: SpaceCollaborationPag
     };
 
     fetchSpaceData();
-  }, [params.spaceId]);
+  }, [spaceId]);
 
   if (isLoading) {
     return (
@@ -59,7 +70,7 @@ export default function SpaceCollaborationPage({ params }: SpaceCollaborationPag
       <PageContainer title="Space Not Found" maxWidth="7xl">
         <div className="text-center py-12">
           <h3 className="text-xl font-semibold text-white mb-2">Space Not Found</h3>
-          <p className="text-zinc-400 mb-6">The space you're looking for doesn't exist or you don't have access to it.</p>
+          <p className="text-zinc-400 mb-6">The space you&apos;re looking for doesn&apos;t exist or you don&apos;t have access to it.</p>
           <button
             onClick={() => router.push('/spaces')}
             className="text-hive-gold hover:text-hive-champagne"
@@ -84,7 +95,7 @@ export default function SpaceCollaborationPage({ params }: SpaceCollaborationPag
           },
           { 
             label: spaceData.name, 
-            href: `/spaces/${params.spaceId}`
+            href: `/spaces/${spaceId}`
           },
           { 
             label: "Collaboration", 
@@ -94,7 +105,7 @@ export default function SpaceCollaborationPage({ params }: SpaceCollaborationPag
         maxWidth="7xl"
       >
         <CrossSpaceCollaboration
-          currentSpaceId={params.spaceId}
+          currentSpaceId={spaceId}
           currentSpaceName={spaceData.name}
           userRole={spaceData.userRole}
         />

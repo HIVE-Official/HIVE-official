@@ -11,7 +11,7 @@
 "use client";
 import { jsx as _jsx } from "react/jsx-runtime";
 import { createContext, useContext, useReducer, useEffect } from 'react';
-import { hiveRoutes } from '../navigation/hive-navigation-routes.js';
+import { hiveRoutes } from '../navigation/hive-navigation-routes';
 // ============================================================================
 // STATE REDUCER
 // ============================================================================

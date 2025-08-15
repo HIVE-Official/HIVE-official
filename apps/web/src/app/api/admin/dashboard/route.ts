@@ -1,9 +1,9 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
-import { getAuth } from 'firebase-admin/auth';
+import { getAuth as _getAuth } from 'firebase-admin/auth';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
 import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
 
 /**
@@ -21,7 +21,7 @@ const ADMIN_USER_IDS = [
 /**
  * Check if user is an admin
  */
-async function isAdmin(userId: string): Promise<boolean> {
+async function _isAdmin(userId: string): Promise<boolean> {
   // TODO: Implement proper admin checking with admin roles table
   return ADMIN_USER_IDS.includes(userId);
 }

@@ -1,9 +1,9 @@
 import { useState, useRef, useCallback } from "react";
-import { motion, AnimatePresence } from "@hive/ui";
+import { motion, AnimatePresence } from "framer-motion";
 import Image from 'next/image';
 import { Camera, Upload, X, CheckCircle, User, Crop, RotateCcw } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { HiveButton, HiveCard, HiveFileUpload } from "@hive/ui";
+import { HiveButton, HiveCard } from "@hive/ui";
 import { getDefaultAvatarOptions } from "@/lib/avatar-generator";
 import type { HiveOnboardingData } from "../hive-onboarding-wizard";
 
@@ -220,7 +220,7 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
   }, [cropPosition, cropSize]);
 
   // Generate default avatar options based on user data
-  const avatarOptions = getDefaultAvatarOptions(data.handle || data.name || 'user');
+  const avatarOptions = getDefaultAvatarOptions(data.handle || data.fullName || 'user');
 
   // Show cropper modal
   if (showCropper && originalImage) {
@@ -415,7 +415,7 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
             {/* Selected Photo Card - Larger for Main Display */}
             <div className="relative group">
               <HiveCard
-                variant="glass"
+                variant="elevated"
                 className="w-40 h-48 p-0 overflow-hidden border-2 border-[var(--hive-brand-primary)]/30 shadow-xl"
               >
                 <Image
@@ -459,7 +459,7 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
           <div className="space-y-[var(--hive-spacing-6)]">
             {/* Upload Area */}
             <HiveCard
-              variant="glass"
+              variant="elevated"
               className="p-[var(--hive-spacing-8)] border-2 border-dashed border-[var(--hive-border-primary)]/30 hover:border-[var(--hive-brand-primary)]/50 transition-all duration-300 cursor-pointer group"
               onClick={openFileDialog}
             >
@@ -534,7 +534,7 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
                     // Removed whileHover and whileTap - using CSS hover/active states
                   >
                     <HiveCard
-                      variant="glass"
+                      variant="elevated"
                       className="relative h-32 overflow-hidden border-2 border-[var(--hive-border-primary)]/20 hover:border-[var(--hive-brand-primary)]/50 transition-all duration-200 group cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
                       onClick={() => selectAvatar(avatar)}
                     >
@@ -580,7 +580,7 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
           transition={{ delay: 0.6 }}
         >
           <HiveCard
-            variant="subtle"
+            variant="default"
             className="p-[var(--hive-spacing-4)]"
           >
             <h4 className="text-sm font-medium text-[var(--hive-text-primary)] mb-[var(--hive-spacing-3)] flex items-center">

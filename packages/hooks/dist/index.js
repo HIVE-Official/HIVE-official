@@ -1,9 +1,8 @@
 "use strict";
+// Auth hooks - REMOVED: use useUnifiedAuth from @hive/ui instead
+// export { useAuth } from './use-auth';
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.useNavigationVariant = exports.useToolBuilderVariant = exports.useFeatureFlags = exports.useDebounce = exports.useProfile = exports.useSpaces = exports.useOnboardingAnalytics = exports.useCreationAnalytics = exports.useAnalytics = exports.useAuth = void 0;
-// Auth hooks
-var use_auth_1 = require("./use-auth");
-Object.defineProperty(exports, "useAuth", { enumerable: true, get: function () { return use_auth_1.useAuth; } });
+exports.useNavigationVariant = exports.useToolBuilderVariant = exports.useFeatureFlags = exports.useDebounce = exports.useProfile = exports.useSpaces = exports.useOnboardingAnalytics = exports.useCreationAnalytics = exports.useAnalytics = void 0;
 // Analytics hooks
 var use_analytics_1 = require("./use-analytics");
 Object.defineProperty(exports, "useAnalytics", { enumerable: true, get: function () { return use_analytics_1.useAnalytics; } });

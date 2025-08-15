@@ -2,9 +2,9 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { usePathname } from 'next/navigation';
 import { AlignJustify, Search, Bell, Command, Zap, Settings, Hash } from 'lucide-react';
-import { Button } from '../../atomic/atoms/button-enhanced.js';
-import { UserMenu } from './user-menu.js';
-import { cn } from '../../lib/utils.js';
+import { Button } from '../../atomic/atoms/button-enhanced';
+import { UserMenu } from './user-menu';
+import { cn } from '../../lib/utils';
 export function NavigationHeader({ user, currentSection = 'profile', onToggleSidebar, sidebarCollapsed, showGlobalSearch = true, showNotifications = true, showBuilderAccess = true, onOpenNotifications, onOpenCommandPalette, unreadNotificationCount = 0, height = 'compact', className }) {
     const pathname = usePathname();
     // Get current section from pathname

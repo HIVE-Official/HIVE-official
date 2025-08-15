@@ -1,7 +1,7 @@
 'use client';
 import { jsxs as _jsxs, jsx as _jsx } from "react/jsx-runtime";
 import React from 'react';
-import { cn } from '../../lib/utils.js';
+import { cn } from '../../lib/utils';
 // Base spacing scale based on HIVE design tokens
 const spacingSizes = {
     xs: '0.25rem', // 1
@@ -118,8 +118,8 @@ export const Spacer = React.forwardRef(({ size = 'md', direction = 'vertical', r
         responsive && getResponsiveClasses(),
         // Debug visualization
         debug && [
-            'bg-hive-ruby/20',
-            'border border-dashed border-hive-ruby',
+            'bg-[color-mix(in_srgb,var(--hive-status-error)_20%,transparent)]',
+            'border border-dashed border-[var(--hive-status-error)]',
             'relative'
         ].filter(Boolean).join(' ')
     ].filter(Boolean).join(' ');
@@ -127,7 +127,7 @@ export const Spacer = React.forwardRef(({ size = 'md', direction = 'vertical', r
         ...getSpacingStyle(),
         ...style
     };
-    return (_jsx("div", { ref: ref, className: cn(baseClasses, className), style: responsive ? style : computedStyle, "aria-hidden": "true", ...props, children: debug && (_jsx("div", { className: "absolute inset-0 flex items-center justify-center", children: _jsxs("span", { className: "text-xs font-mono text-hive-ruby bg-[var(--hive-text-primary)] px-1 rounded", children: [size, " ", direction] }) })) }));
+    return (_jsx("div", { ref: ref, className: cn(baseClasses, className), style: responsive ? style : computedStyle, "aria-hidden": "true", ...props, children: debug && (_jsx("div", { className: "absolute inset-0 flex items-center justify-center", children: _jsxs("span", { className: "text-xs font-mono text-[var(--hive-status-error)] bg-[var(--hive-background-primary)] px-1 rounded", children: [size, " ", direction] }) })) }));
 });
 Spacer.displayName = 'Spacer';
 // Convenient preset components

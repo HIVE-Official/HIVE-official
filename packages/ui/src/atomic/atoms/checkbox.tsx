@@ -64,34 +64,34 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(({
     
     // States
     !disabled && !error && [
-      'border-hive-border-default',
-      'hover:border-hive-gold',
-      'focus-within:border-hive-gold focus-within:ring-2 focus-within:ring-hive-gold/20'
+      'border-[var(--hive-border-default)]',
+      'hover:border-[var(--hive-brand-gold)]',
+      'focus-within:border-[var(--hive-brand-gold)] focus-within:ring-2 focus-within:ring-[var(--hive-brand-gold)]/20'
     ].filter(Boolean).join(' '),
     
     disabled && [
       'border-[var(--hive-border-default)]',
-      'bg-hive-smoke',
+      'bg-[var(--hive-background-disabled)]',
       'cursor-not-allowed'
     ].join(' '),
     
     error && [
-      'border-hive-ruby',
-      'focus-within:border-hive-ruby focus-within:ring-2 focus-within:ring-hive-ruby/20'
+      'border-[var(--hive-status-error)]',
+      'focus-within:border-[var(--hive-status-error)] focus-within:ring-2 focus-within:ring-[var(--hive-status-error)]/20'
     ].join(' '),
     
     // Checked state
     showCheck && !disabled && [
-      'bg-[var(--hive-brand-secondary)] border-hive-gold',
-      error && 'bg-hive-ruby border-hive-ruby'
+      'bg-[var(--hive-brand-secondary)] border-[var(--hive-brand-gold)]',
+      error && 'bg-[var(--hive-status-error)] border-[var(--hive-status-error)]'
     ].filter(Boolean).join(' ')
   ].filter(Boolean).join(' ');
 
   const containerClasses = [
     'flex items-start gap-3',
     variant === 'card' && [
-      'p-4 rounded-xl border border-hive-border-default',
-      'hover:bg-hive-background-interactive',
+      'p-4 rounded-xl border border-[var(--hive-border-default)]',
+      'hover:bg-[var(--hive-background-secondary)]',
       !disabled && 'cursor-pointer',
       disabled && 'opacity-50'
     ].filter(Boolean).join(' ')
@@ -129,7 +129,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(({
         <div className="flex-1 min-w-0">
           {label && (
             <div className={cn(
-              'font-medium text-hive-text-primary',
+              'font-medium text-[var(--hive-text-primary)]',
               checkboxSizes[size].text,
               disabled && 'text-[var(--hive-text-disabled)]'
             )}>
@@ -138,7 +138,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(({
           )}
           {description && (
             <div className={cn(
-              'text-hive-text-secondary mt-1',
+              'text-[var(--hive-text-secondary)] mt-1',
               size === 'sm' && 'text-xs',
               size === 'md' && 'text-sm',
               size === 'lg' && 'text-base',
@@ -149,7 +149,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(({
           )}
           {error && (
             <div className={cn(
-              'text-hive-ruby mt-1',
+              'text-[var(--hive-status-error)] mt-1',
               size === 'sm' && 'text-xs',
               size === 'md' && 'text-sm', 
               size === 'lg' && 'text-base'

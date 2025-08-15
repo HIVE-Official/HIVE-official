@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from 'react';
-import { HiveModal, Button, Card, Switch, Badge, Progress } from "@hive/ui";
-import { HiveModalContent, HiveModalHeader, HiveModalTitle, HiveModalFooter } from "@/components/temp-stubs";
+import { Button, Card, Switch, Badge, Progress } from "@hive/ui";
+import { HiveModal, HiveModalContent, HiveModalHeader, HiveModalTitle, HiveModalFooter } from "@/components/temp-stubs";
 import { Alert, AlertDescription } from "@/components/temp-stubs";
 import { 
   Link, 

@@ -3,8 +3,8 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
 import React, { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cva } from 'class-variance-authority';
-import { cn } from '../../lib/utils.js';
-import { motionDurations } from '../../motion/hive-motion-system.js';
+import { cn } from '../../lib/utils';
+import { motionDurations } from '../../motion/hive-motion-system';
 import { Pin, Plus, Edit3, Trash2, ExternalLink, Calendar, Star, Clock, Link as LinkIcon, Image as ImageIcon, FileText, AlertCircle, Crown, ArrowRight } from 'lucide-react';
 // HIVE Pinned Surface - Core Information & Welcome Content
 // First impression and essential Space information display

@@ -181,12 +181,12 @@ export const FileInput = React.forwardRef<HTMLInputElement, FileInputProps>(({
     <div className="space-y-2">
       <div className={cn(
         'relative',
-        'border-2 border-dashed border-hive-border-default',
+        'border-2 border-dashed border-[var(--hive-border-primary)]',
         'rounded-xl',
         'transition-all duration-200 ease-out',
         fileInputSizes[size].dropzone,
-        dragActive && 'border-hive-gold bg-[var(--hive-brand-secondary)]/5',
-        error && 'border-hive-ruby',
+        dragActive && 'border-[var(--hive-brand-gold)] bg-[var(--hive-brand-secondary)]/5',
+        error && 'border-[var(--hive-status-error)]',
         disabled && 'opacity-50 cursor-not-allowed'
       )}>
         <input
@@ -201,17 +201,17 @@ export const FileInput = React.forwardRef<HTMLInputElement, FileInputProps>(({
         />
         
         <div className="text-center">
-          <Upload className="mx-auto h-8 w-8 text-hive-text-secondary mb-2" />
-          <p className="text-hive-text-primary font-medium">
+          <Upload className="mx-auto h-8 w-8 text-[var(--hive-text-secondary)] mb-2" />
+          <p className="text-[var(--hive-text-primary)] font-medium">
             Click to upload or drag and drop
           </p>
           {accept && (
-            <p className="text-hive-text-secondary text-sm mt-1">
+            <p className="text-[var(--hive-text-secondary)] text-sm mt-1">
               {accept.split(',').join(', ')}
             </p>
           )}
           {maxSize && (
-            <p className="text-hive-text-secondary text-sm">
+            <p className="text-[var(--hive-text-secondary)] text-sm">
               Max size: {formatFileSize(maxSize)}
             </p>
           )}
@@ -228,9 +228,9 @@ export const FileInput = React.forwardRef<HTMLInputElement, FileInputProps>(({
         'cursor-pointer',
         fileInputSizes[size].dropzone,
         dragActive 
-          ? 'border-hive-gold bg-[var(--hive-brand-secondary)]/5' 
-          : 'border-hive-border-default hover:border-hive-gold hover:bg-hive-background-interactive',
-        error && 'border-hive-ruby',
+          ? 'border-[var(--hive-brand-gold)] bg-[var(--hive-brand-secondary)]/5' 
+          : 'border-[var(--hive-border-primary)] hover:border-[var(--hive-brand-gold)] hover:bg-[var(--hive-background-interactive)]',
+        error && 'border-[var(--hive-status-error)]',
         disabled && 'opacity-50 cursor-not-allowed pointer-events-none'
       )}
       onDrop={handleDrop}
@@ -250,11 +250,11 @@ export const FileInput = React.forwardRef<HTMLInputElement, FileInputProps>(({
       />
       
       <div className="text-center">
-        <Upload className="mx-auto h-12 w-12 text-hive-text-secondary mb-4" />
-        <p className="text-hive-text-primary font-medium mb-2">
+        <Upload className="mx-auto h-12 w-12 text-[var(--hive-text-secondary)] mb-4" />
+        <p className="text-[var(--hive-text-primary)] font-medium mb-2">
           {dragActive ? 'Drop files here' : 'Drag & drop files here'}
         </p>
-        <p className="text-hive-text-secondary">
+        <p className="text-[var(--hive-text-secondary)]">
           or <span className="text-[var(--hive-brand-secondary)] font-medium">browse</span> to choose files
         </p>
       </div>
@@ -268,17 +268,17 @@ export const FileInput = React.forwardRef<HTMLInputElement, FileInputProps>(({
       disabled={disabled}
       className={cn(
         'inline-flex items-center gap-2',
-        'border border-hive-border-default',
+        'border border-[var(--hive-border-primary)]',
         'rounded-xl',
-        'bg-hive-background-secondary',
-        'text-hive-text-primary',
+        'bg-[var(--hive-background-secondary)]',
+        'text-[var(--hive-text-primary)]',
         'font-medium',
         'transition-all duration-200 ease-out',
-        'hover:bg-hive-background-interactive hover:border-hive-gold',
-        'focus:outline-none focus:ring-2 focus:ring-hive-gold/20 focus:border-hive-gold',
+        'hover:bg-[var(--hive-background-interactive)] hover:border-[var(--hive-brand-gold)]',
+        'focus:outline-none focus:ring-2 focus:ring-[var(--hive-brand-gold)]/20 focus:border-[var(--hive-brand-gold)]',
         'disabled:opacity-50 disabled:cursor-not-allowed',
         fileInputSizes[size].button,
-        error && 'border-hive-ruby'
+        error && 'border-[var(--hive-status-error)]'
       )}
     >
       <input
@@ -301,14 +301,14 @@ export const FileInput = React.forwardRef<HTMLInputElement, FileInputProps>(({
 
     return (
       <div className="space-y-2 mt-4">
-        <h4 className="text-sm font-medium text-hive-text-primary">
+        <h4 className="text-sm font-medium text-[var(--hive-text-primary)]">
           Selected Files ({selectedFiles.length})
         </h4>
         <div className="space-y-2">
           {selectedFiles.map((file, index) => (
             <div
               key={`${file.name}-${index}`}
-              className="flex items-center justify-between p-3 bg-hive-background-secondary rounded-lg border border-hive-border-default"
+              className="flex items-center justify-between p-3 bg-[var(--hive-background-secondary)] rounded-lg border border-[var(--hive-border-primary)]"
             >
               <div className="flex items-center gap-3 min-w-0 flex-1">
                 {preview && previewUrls[index] ? (
@@ -316,15 +316,15 @@ export const FileInput = React.forwardRef<HTMLInputElement, FileInputProps>(({
                     src={previewUrls[index]}
                     alt={file.name}
                     className={cn(
-                      'object-cover rounded border border-hive-border-default',
+                      'object-cover rounded border border-[var(--hive-border-primary)]',
                       fileInputSizes[size].preview
                     )}
                   />
                 ) : (
                   <div className={cn(
                     'flex items-center justify-center',
-                    'bg-hive-background-tertiary rounded border border-hive-border-default',
-                    'text-hive-text-secondary',
+                    'bg-[var(--hive-background-tertiary)] rounded border border-[var(--hive-border-primary)]',
+                    'text-[var(--hive-text-secondary)]',
                     fileInputSizes[size].preview
                   )}>
                     {getFileIcon(file)}
@@ -332,10 +332,10 @@ export const FileInput = React.forwardRef<HTMLInputElement, FileInputProps>(({
                 )}
                 
                 <div className="min-w-0 flex-1">
-                  <p className="text-sm font-medium text-hive-text-primary truncate">
+                  <p className="text-sm font-medium text-[var(--hive-text-primary)] truncate">
                     {file.name}
                   </p>
-                  <p className="text-xs text-hive-text-secondary">
+                  <p className="text-xs text-[var(--hive-text-secondary)]">
                     {formatFileSize(file.size)}
                   </p>
                 </div>
@@ -344,7 +344,7 @@ export const FileInput = React.forwardRef<HTMLInputElement, FileInputProps>(({
               <button
                 type="button"
                 onClick={() => removeFile(index)}
-                className="ml-2 p-1 text-hive-text-secondary hover:text-hive-ruby transition-colors duration-200"
+                className="ml-2 p-1 text-[var(--hive-text-secondary)] hover:text-[var(--hive-status-error)] transition-colors duration-200"
                 aria-label={`Remove ${file.name}`}
               >
                 <X className="w-4 h-4" />
@@ -359,7 +359,7 @@ export const FileInput = React.forwardRef<HTMLInputElement, FileInputProps>(({
   return (
     <div className={cn('space-y-2', className)}>
       {label && (
-        <label className="block text-sm font-medium text-hive-text-primary">
+        <label className="block text-sm font-medium text-[var(--hive-text-primary)]">
           {label}
         </label>
       )}
@@ -371,7 +371,7 @@ export const FileInput = React.forwardRef<HTMLInputElement, FileInputProps>(({
       {(error || helperText) && (
         <p className={cn(
           'text-xs',
-          error ? 'text-hive-ruby' : 'text-hive-text-secondary'
+          error ? 'text-[var(--hive-status-error)]' : 'text-[var(--hive-text-secondary)]'
         )}>
           {error || helperText}
         </p>

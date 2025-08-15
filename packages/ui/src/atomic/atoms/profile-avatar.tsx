@@ -7,7 +7,7 @@ import { Camera, Crown, Shield, Eye, EyeOff, Upload } from 'lucide-react';
 import Image from 'next/image';
 
 const profileAvatarVariants = cva(
-  "relative flex-shrink-0 bg-hive-surface-elevated border-hive-border-subtle overflow-hidden",
+  "relative flex-shrink-0 bg-[var(--hive-background-secondary)] border-[var(--hive-border-primary)] overflow-hidden",
   {
     variants: {
       size: {
@@ -25,17 +25,17 @@ const profileAvatarVariants = cva(
       },
       border: {
         none: "border-0",
-        subtle: "border-2 border-hive-border-subtle",
-        primary: "border-2 border-hive-gold",
-        builder: "border-3 border-hive-gold shadow-lg shadow-hive-gold/20",
-        verified: "border-3 border-blue-400 shadow-lg shadow-blue-400/20"
+        subtle: "border-2 border-[var(--hive-border-primary)]",
+        primary: "border-2 border-[var(--hive-brand-gold)]",
+        builder: "border-3 border-[var(--hive-brand-gold)] shadow-lg shadow-[var(--hive-brand-gold)]/20",
+        verified: "border-3 border-[var(--hive-status-info)] shadow-lg shadow-[var(--hive-status-info)]/20"
       },
       status: {
         none: "",
-        online: "ring-2 ring-green-400 ring-offset-2 ring-offset-hive-background-primary",
-        away: "ring-2 ring-yellow-400 ring-offset-2 ring-offset-hive-background-primary",
-        busy: "ring-2 ring-red-400 ring-offset-2 ring-offset-hive-background-primary",
-        offline: "ring-2 ring-gray-400 ring-offset-2 ring-offset-hive-background-primary"
+        online: "ring-2 ring-[var(--hive-status-success)] ring-offset-2 ring-offset-[var(--hive-background-primary)]",
+        away: "ring-2 ring-[var(--hive-status-warning)] ring-offset-2 ring-offset-[var(--hive-background-primary)]",
+        busy: "ring-2 ring-[var(--hive-status-error)] ring-offset-2 ring-offset-[var(--hive-background-primary)]",
+        offline: "ring-2 ring-[var(--hive-text-muted)] ring-offset-2 ring-offset-[var(--hive-background-primary)]"
       }
     },
     defaultVariants: {
@@ -48,7 +48,7 @@ const profileAvatarVariants = cva(
 );
 
 const statusDotVariants = cva(
-  "absolute rounded-full border-2 border-hive-background-primary",
+  "absolute rounded-full border-2 border-[var(--hive-background-primary)]",
   {
     variants: {
       size: {
@@ -61,10 +61,10 @@ const statusDotVariants = cva(
       },
       status: {
         none: "hidden",
-        online: "bg-green-400",
-        away: "bg-yellow-400", 
-        busy: "bg-red-400",
-        offline: "bg-gray-400"
+        online: "bg-[var(--hive-status-success)]",
+        away: "bg-[var(--hive-status-warning)]", 
+        busy: "bg-[var(--hive-status-error)]",
+        offline: "bg-[var(--hive-text-muted)]"
       }
     },
     defaultVariants: {
@@ -88,9 +88,9 @@ const badgeVariants = cva(
       },
       type: {
         none: "hidden",
-        builder: "bg-hive-gold rounded-full shadow-lg",
-        verified: "bg-blue-500 rounded-full shadow-lg",
-        ghost: "bg-gray-600 rounded-full shadow-lg"
+        builder: "bg-[var(--hive-brand-gold)] rounded-full shadow-lg",
+        verified: "bg-[var(--hive-status-info)] rounded-full shadow-lg",
+        ghost: "bg-[var(--hive-text-muted)] rounded-full shadow-lg"
       }
     },
     defaultVariants: {
@@ -242,7 +242,7 @@ export function ProfileAvatar({
     >
       {/* Avatar Image or Initials */}
       {loading ? (
-        <div className="w-full h-full bg-hive-surface-elevated animate-pulse" />
+        <div className="w-full h-full bg-[var(--hive-background-secondary)] animate-pulse" />
       ) : src ? (
         <Image
           src={src}
@@ -257,8 +257,8 @@ export function ProfileAvatar({
           }}
         />
       ) : (
-        <div className="w-full h-full bg-gradient-to-br from-hive-gold/20 to-hive-brand-secondary/20 flex items-center justify-center">
-          <span className={cn("font-bold text-hive-text-primary", textSize)}>
+        <div className="w-full h-full bg-gradient-to-br from-[var(--hive-brand-gold)]/20 to-[var(--hive-brand-secondary)]/20 flex items-center justify-center">
+          <span className={cn("font-bold text-[var(--hive-text-primary)]", textSize)}>
             {initials}
           </span>
         </div>
@@ -266,8 +266,8 @@ export function ProfileAvatar({
 
       {/* Fallback Initials (if image fails) */}
       {src && (
-        <div className="absolute inset-0 bg-gradient-to-br from-hive-gold/20 to-hive-brand-secondary/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-          <span className={cn("font-bold text-hive-text-primary", textSize)}>
+        <div className="absolute inset-0 bg-gradient-to-br from-[var(--hive-brand-gold)]/20 to-[var(--hive-brand-secondary)]/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+          <span className={cn("font-bold text-[var(--hive-text-primary)]", textSize)}>
             {initials}
           </span>
         </div>
@@ -342,8 +342,8 @@ export function ProfileAvatar({
 
       {/* Ghost Mode Overlay */}
       {ghostMode && (
-        <div className="absolute inset-0 bg-gray-900/20 flex items-center justify-center">
-          <EyeOff className={cn("text-gray-400", iconSize)} />
+        <div className="absolute inset-0 bg-[var(--hive-text-muted)]/20 flex items-center justify-center">
+          <EyeOff className={cn("text-[var(--hive-text-muted)]", iconSize)} />
         </div>
       )}
     </div>

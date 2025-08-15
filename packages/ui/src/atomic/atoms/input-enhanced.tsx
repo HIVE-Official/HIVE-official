@@ -374,6 +374,102 @@ export const InputPresets = {
   ),
 };
 
+// Floating Label Input Component
+export interface FloatingLabelInputProps extends Omit<InputProps, 'label'> {
+  label: string;
+  labelClassName?: string;
+}
+
+const FloatingLabelInput = React.forwardRef<HTMLInputElement, FloatingLabelInputProps>(
+  ({ label, labelClassName, className, id, ...props }, ref) => {
+    const [isFocused, setIsFocused] = React.useState(false);
+    const [hasValue, setHasValue] = React.useState(false);
+    const inputId = id || React.useId();
+    
+    const isFloated = isFocused || hasValue || props.value || props.defaultValue;
+    
+    React.useEffect(() => {
+      setHasValue(Boolean(props.value || props.defaultValue));
+    }, [props.value, props.defaultValue]);
+    
+    const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+      setIsFocused(true);
+      props.onFocus?.(e);
+    };
+    
+    const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+      setIsFocused(false);
+      setHasValue(Boolean(e.target.value));
+      props.onBlur?.(e);
+    };
+    
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setHasValue(Boolean(e.target.value));
+      props.onChange?.(e);
+    };
+    
+    return (
+      <div className="relative">
+        <input
+          ref={ref}
+          id={inputId}
+          className={cn(
+            inputVariants({ 
+              variant: props.error ? "error" : props.success ? "success" : props.variant,
+              size: props.size,
+              radius: props.radius 
+            }),
+            "peer placeholder-transparent",
+            className
+          )}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          onChange={handleChange}
+          placeholder={label}
+          {...props}
+        />
+        <label
+          htmlFor={inputId}
+          className={cn(
+            "absolute left-3 transition-all duration-200 pointer-events-none font-sans",
+            "peer-placeholder-shown:text-[var(--hive-text-tertiary)]",
+            "peer-focus:text-[var(--hive-brand-secondary)]",
+            props.error && "peer-focus:text-[var(--hive-status-error)]",
+            props.success && "peer-focus:text-[var(--hive-status-success)]",
+            isFloated ? [
+              "-top-2 left-2 text-xs bg-[var(--hive-background-primary)] px-1 z-10",
+              "text-[var(--hive-brand-secondary)]",
+              props.error && "text-[var(--hive-status-error)]",
+              props.success && "text-[var(--hive-status-success)]"
+            ] : [
+              "top-1/2 -translate-y-1/2 text-sm text-[var(--hive-text-tertiary)]"
+            ],
+            labelClassName
+          )}
+        >
+          {label}
+          {props.required && (
+            <span className="ml-1 text-[var(--hive-status-error)]">*</span>
+          )}
+        </label>
+        
+        {/* Helper Text / Error / Success */}
+        {(props.error || props.success || props.helperText) && (
+          <p className={cn(
+            "text-xs mt-2",
+            props.error && "text-[var(--hive-status-error)]",
+            props.success && "text-[var(--hive-status-success)]",
+            !props.error && !props.success && "text-[var(--hive-text-tertiary)]"
+          )}>
+            {props.error || props.success || props.helperText}
+          </p>
+        )}
+      </div>
+    );
+  }
+);
+FloatingLabelInput.displayName = "FloatingLabelInput";
+
 // Simple icons using semantic approach
 const SearchIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -442,6 +538,7 @@ export {
   SearchInput, 
   PasswordInput, 
   NumberInput, 
-  InputGroup, 
+  InputGroup,
+  FloatingLabelInput,
   inputVariants 
 };

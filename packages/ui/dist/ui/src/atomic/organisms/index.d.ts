@@ -16,4 +16,12 @@ export * from './ritual-initialize-workflow';
 export * from './ritual-discover-workflow';
 export * from './ritual-connect-workflow';
 export * from './activity-feed';
+export * from './profile-avatar-widget';
+export * from './profile-calendar-widget';
+export * from './profile-tools-widget';
+export * from './profile-spaces-widget';
+export * from './profile-activity-widget';
+export * from './profile-ghost-mode-widget';
+export * from './profile-hivelab-widget';
+export * from './profile-stats-widget';
 //# sourceMappingURL=index.d.ts.map

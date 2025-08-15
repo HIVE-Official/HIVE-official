@@ -3,12 +3,12 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Activity, Users, TrendingUp, Clock, Star, Eye, EyeOff, ChevronRight, BarChart3, Zap, Target, Award } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card.js';
-import { Button } from '../hive-button.js';
-import { Badge } from '../ui/badge.js';
-import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar.js';
-import { Progress } from '../hive-progress.js';
-import { Switch } from '../hive-switch.js';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Button } from '../hive-button';
+import { Badge } from '../ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { Progress } from '../hive-progress';
+import { Switch } from '../hive-switch';
 // Animation variants
 const containerVariants = {
     hidden: { opacity: 0 },

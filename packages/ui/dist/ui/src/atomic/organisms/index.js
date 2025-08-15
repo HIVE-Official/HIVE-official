@@ -2,28 +2,37 @@
 // Built using molecules and atoms with consistent HIVE patterns
 // === IMPLEMENTED ORGANISMS ===
 // Only export what actually exists to avoid build errors
-export * from './hive-space-card.js';
-export * from './header.js';
-export * from './profile-card.js';
-export * from './profile-dashboard.js';
-export * from './profile-system.js';
+export * from './hive-space-card';
+export * from './header';
+export * from './profile-card';
+export * from './profile-dashboard';
+export * from './profile-system';
 // === HIVE SPACES SYSTEM ===
-export * from './space-explore-hub.js';
-export * from './space-dashboard.js';
-export * from './space-member-directory.js';
-export * from './space-category-browser.js';
+export * from './space-explore-hub';
+export * from './space-dashboard';
+export * from './space-member-directory';
+export * from './space-category-browser';
 // === HIVE TOOLS SYSTEM ===
-export * from './tool-library-modal.js';
-export * from './tool-configuration-panel.js';
+export * from './tool-library-modal';
+export * from './tool-configuration-panel';
 // === HIVE CONTENT CREATION ===
-export * from './post-creation-modal.js';
+export * from './post-creation-modal';
 // === HIVE FEED & RITUALS SYSTEM ===
-export * from './rituals-hub.js';
-export * from './locked-feed-skeleton.js';
-export * from './ritual-initialize-workflow.js';
-export * from './ritual-discover-workflow.js';
-export * from './ritual-connect-workflow.js';
-export * from './activity-feed.js';
+export * from './rituals-hub';
+export * from './locked-feed-skeleton';
+export * from './ritual-initialize-workflow';
+export * from './ritual-discover-workflow';
+export * from './ritual-connect-workflow';
+export * from './activity-feed';
+// === HIVE PROFILE SYSTEM ===
+export * from './profile-avatar-widget';
+export * from './profile-calendar-widget';
+export * from './profile-tools-widget';
+export * from './profile-spaces-widget';
+export * from './profile-activity-widget';
+export * from './profile-ghost-mode-widget';
+export * from './profile-hivelab-widget';
+export * from './profile-stats-widget';
 // === PLANNED ORGANISMS ===
 // These will be implemented as part of the atomic design system completion
 // export * from './sidebar';

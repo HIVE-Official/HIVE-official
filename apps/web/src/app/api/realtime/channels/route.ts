@@ -58,7 +58,7 @@ interface ChannelMembership {
 // POST - Create a new chat channel
 export async function POST(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
@@ -123,7 +123,7 @@ export async function POST(request: NextRequest) {
     };
 
     // Create channel in Firestore
-    await setDoc(doc(db, 'chatChannels', channelId), channel);
+    await dbAdmin.collection('chatChannels').doc(channelId).set(channel);
 
     // Create channel memberships for all participants
     await createChannelMemberships(channelId, spaceId, initialParticipants, user.uid);
@@ -155,7 +155,7 @@ export async function POST(request: NextRequest) {
 // GET - Get chat channels for a space or user
 export async function GET(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
@@ -176,14 +176,12 @@ export async function GET(request: NextRequest) {
     }
 
     // Get user's channel memberships
-    const membershipQuery = dbAdmin.collection(
-      dbAdmin.collection('channelMemberships'),
-      where('userId', '==', user.uid),
-      where('spaceId', '==', spaceId),
-      where('isActive', '==', true)
-    );
+    const membershipQuery = dbAdmin.collection('channelMemberships')
+      .where('userId', '==', user.uid)
+      .where('spaceId', '==', spaceId)
+      .where('isActive', '==', true);
 
-    const membershipSnapshot = await getDocs(membershipQuery);
+    const membershipSnapshot = await membershipQuery.get();
     const channelIds = membershipSnapshot.docs.map(doc => doc.data().channelId);
 
     if (channelIds.length === 0) {
@@ -197,7 +195,7 @@ export async function GET(request: NextRequest) {
     const channels: ChatChannel[] = [];
     
     for (const channelId of channelIds) {
-      const channelDoc = await getDoc(doc(db, 'chatChannels', channelId));
+      const channelDoc = await dbAdmin.collection('chatChannels').doc(channelId).get();
       if (channelDoc.exists) {
         const channelData = { id: channelDoc.id, ...channelDoc.data() } as ChatChannel;
         
@@ -235,7 +233,7 @@ export async function GET(request: NextRequest) {
 // PUT - Update a chat channel
 export async function PUT(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
@@ -255,7 +253,7 @@ export async function PUT(request: NextRequest) {
     }
 
     // Get channel
-    const channelDoc = await getDoc(doc(db, 'chatChannels', channelId));
+    const channelDoc = await dbAdmin.collection('chatChannels').doc(channelId).get();
     if (!channelDoc.exists) {
       return NextResponse.json(ApiResponseHelper.error("Channel not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
@@ -314,7 +312,7 @@ export async function PUT(request: NextRequest) {
     }
 
     // Apply updates
-    await updateDoc(doc(db, 'chatChannels', channelId), updates);
+    await dbAdmin.collection('chatChannels').doc(channelId).update(updates);
 
     // Send system message for significant changes
     if (action === 'add_participants' || action === 'remove_participants') {
@@ -342,7 +340,7 @@ export async function PUT(request: NextRequest) {
 // DELETE - Delete a chat channel
 export async function DELETE(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
@@ -355,7 +353,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     // Get channel
-    const channelDoc = await getDoc(doc(db, 'chatChannels', channelId));
+    const channelDoc = await dbAdmin.collection('chatChannels').doc(channelId).get();
     if (!channelDoc.exists) {
       return NextResponse.json(ApiResponseHelper.error("Channel not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
@@ -369,7 +367,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     // Archive channel instead of hard delete (for data retention)
-    await updateDoc(doc(db, 'chatChannels', channelId), {
+    await dbAdmin.collection('chatChannels').doc(channelId).update({
       isActive: false,
       isArchived: true,
       deletedAt: new Date().toISOString(),
@@ -415,14 +413,12 @@ function getDefaultChannelSettings() {
 // Helper function to verify channel creation permission
 async function verifyChannelCreatePermission(userId: string, spaceId: string): Promise<boolean> {
   try {
-    const memberQuery = dbAdmin.collection(
-      dbAdmin.collection('members'),
-      where('userId', '==', userId),
-      where('spaceId', '==', spaceId),
-      where('status', '==', 'active')
-    );
+    const memberQuery = dbAdmin.collection('members')
+      .where('userId', '==', userId)
+      .where('spaceId', '==', spaceId)
+      .where('status', '==', 'active');
 
-    const memberSnapshot = await getDocs(memberQuery);
+    const memberSnapshot = await memberQuery.get();
     if (memberSnapshot.empty) {
       return false;
     }
@@ -438,14 +434,12 @@ async function verifyChannelCreatePermission(userId: string, spaceId: string): P
 // Helper function to check if channel name exists in space
 async function checkChannelNameExists(spaceId: string, name: string): Promise<boolean> {
   try {
-    const channelQuery = dbAdmin.collection(
-      dbAdmin.collection('chatChannels'),
-      where('spaceId', '==', spaceId),
-      where('name', '==', name),
-      where('isActive', '==', true)
-    );
+    const channelQuery = dbAdmin.collection('chatChannels')
+      .where('spaceId', '==', spaceId)
+      .where('name', '==', name)
+      .where('isActive', '==', true);
 
-    const channelSnapshot = await getDocs(channelQuery);
+    const channelSnapshot = await channelQuery.get();
     return !channelSnapshot.empty;
   } catch (error) {
     logger.error('Error checking channel name exists', { error: error, endpoint: '/api/realtime/channels' });
@@ -456,13 +450,11 @@ async function checkChannelNameExists(spaceId: string, name: string): Promise<bo
 // Helper function to get space members
 async function getSpaceMembers(spaceId: string): Promise<string[]> {
   try {
-    const memberQuery = dbAdmin.collection(
-      dbAdmin.collection('members'),
-      where('spaceId', '==', spaceId),
-      where('status', '==', 'active')
-    );
+    const memberQuery = dbAdmin.collection('members')
+      .where('spaceId', '==', spaceId)
+      .where('status', '==', 'active');
 
-    const memberSnapshot = await getDocs(memberQuery);
+    const memberSnapshot = await memberQuery.get();
     return memberSnapshot.docs.map(doc => doc.data().userId);
   } catch (error) {
     logger.error('Error getting space members', { error: error, endpoint: '/api/realtime/channels' });
@@ -492,7 +484,7 @@ async function createChannelMemberships(
         isActive: true
       };
 
-      return setDoc(doc(db, 'channelMemberships', `${channelId}_${userId}`), membership);
+      return dbAdmin.collection('channelMemberships').doc(`${channelId}_${userId}`).set(membership);
     });
 
     await Promise.all(membershipPromises);
@@ -504,14 +496,12 @@ async function createChannelMemberships(
 // Helper function to verify space access
 async function verifySpaceAccess(userId: string, spaceId: string): Promise<boolean> {
   try {
-    const memberQuery = dbAdmin.collection(
-      dbAdmin.collection('members'),
-      where('userId', '==', userId),
-      where('spaceId', '==', spaceId),
-      where('status', '==', 'active')
-    );
+    const memberQuery = dbAdmin.collection('members')
+      .where('userId', '==', userId)
+      .where('spaceId', '==', spaceId)
+      .where('status', '==', 'active');
 
-    const memberSnapshot = await getDocs(memberQuery);
+    const memberSnapshot = await memberQuery.get();
     return !memberSnapshot.empty;
   } catch (error) {
     logger.error('Error verifying space access', { error: error, endpoint: '/api/realtime/channels' });
@@ -523,7 +513,7 @@ async function verifySpaceAccess(userId: string, spaceId: string): Promise<boole
 async function getUnreadCount(userId: string, channelId: string): Promise<number> {
   try {
     // Get user's last read message
-    const membershipDoc = await getDoc(doc(db, 'channelMemberships', `${channelId}_${userId}`));
+    const membershipDoc = await dbAdmin.collection('channelMemberships').doc(`${channelId}_${userId}`).get();
     if (!membershipDoc.exists) {
       return 0;
     }
@@ -532,14 +522,12 @@ async function getUnreadCount(userId: string, channelId: string): Promise<number
     const lastReadTimestamp = membership.lastReadTimestamp || membership.joinedAt;
 
     // Count messages after last read timestamp
-    const unreadQuery = dbAdmin.collection(
-      dbAdmin.collection('chatMessages'),
-      where('channelId', '==', channelId),
-      where('metadata.timestamp', '>', lastReadTimestamp),
-      where('metadata.isDeleted', '==', false)
-    );
+    const unreadQuery = dbAdmin.collection('chatMessages')
+      .where('channelId', '==', channelId)
+      .where('metadata.timestamp', '>', lastReadTimestamp)
+      .where('metadata.isDeleted', '==', false);
 
-    const unreadSnapshot = await getDocs(unreadQuery);
+    const unreadSnapshot = await unreadQuery.get();
     return unreadSnapshot.size;
   } catch (error) {
     logger.error('Error getting unread count', { error: error, endpoint: '/api/realtime/channels' });
@@ -556,14 +544,12 @@ async function verifyChannelModifyPermission(userId: string, channel: ChatChanne
     }
 
     // Space moderators/admins can modify
-    const memberQuery = dbAdmin.collection(
-      dbAdmin.collection('members'),
-      where('userId', '==', userId),
-      where('spaceId', '==', channel.spaceId),
-      where('status', '==', 'active')
-    );
+    const memberQuery = dbAdmin.collection('members')
+      .where('userId', '==', userId)
+      .where('spaceId', '==', channel.spaceId)
+      .where('status', '==', 'active');
 
-    const memberSnapshot = await getDocs(memberQuery);
+    const memberSnapshot = await memberQuery.get();
     if (memberSnapshot.empty) {
       return false;
     }
@@ -584,14 +570,12 @@ async function verifyChannelDeletePermission(userId: string, channel: ChatChanne
       return true;
     }
 
-    const memberQuery = dbAdmin.collection(
-      dbAdmin.collection('members'),
-      where('userId', '==', userId),
-      where('spaceId', '==', channel.spaceId),
-      where('status', '==', 'active')
-    );
+    const memberQuery = dbAdmin.collection('members')
+      .where('userId', '==', userId)
+      .where('spaceId', '==', channel.spaceId)
+      .where('status', '==', 'active');
 
-    const memberSnapshot = await getDocs(memberQuery);
+    const memberSnapshot = await memberQuery.get();
     if (memberSnapshot.empty) {
       return false;
     }
@@ -608,7 +592,7 @@ async function verifyChannelDeletePermission(userId: string, channel: ChatChanne
 async function deactivateChannelMemberships(channelId: string, userIds: string[]): Promise<void> {
   try {
     const deactivatePromises = userIds.map(userId =>
-      updateDoc(doc(db, 'channelMemberships', `${channelId}_${userId}`), {
+      dbAdmin.collection('channelMemberships').doc(`${channelId}_${userId}`).update({
         isActive: false,
         leftAt: new Date().toISOString()
       })
@@ -623,15 +607,13 @@ async function deactivateChannelMemberships(channelId: string, userIds: string[]
 // Helper function to deactivate all channel memberships
 async function deactivateAllChannelMemberships(channelId: string): Promise<void> {
   try {
-    const membershipQuery = dbAdmin.collection(
-      dbAdmin.collection('channelMemberships'),
-      where('channelId', '==', channelId),
-      where('isActive', '==', true)
-    );
+    const membershipQuery = dbAdmin.collection('channelMemberships')
+      .where('channelId', '==', channelId)
+      .where('isActive', '==', true);
 
-    const membershipSnapshot = await getDocs(membershipQuery);
+    const membershipSnapshot = await membershipQuery.get();
     const deactivatePromises = membershipSnapshot.docs.map(doc =>
-      updateDoc(doc.ref, {
+      doc.ref.update({
         isActive: false,
         leftAt: new Date().toISOString()
       })
@@ -678,7 +660,7 @@ async function sendChannelSystemMessage(
       }
     };
 
-    await setDoc(doc(db, 'chatMessages', systemMessage.id), systemMessage);
+    await dbAdmin.collection('chatMessages').doc(systemMessage.id).set(systemMessage);
   } catch (error) {
     logger.error('Error sending system message', { error: error, endpoint: '/api/realtime/channels' });
   }
@@ -737,7 +719,7 @@ async function broadcastChannelUpdate(
       }
     };
 
-    await addDoc(dbAdmin.collection('realtimeMessages'), updateMessage);
+    await dbAdmin.collection('realtimeMessages').add(updateMessage);
   } catch (error) {
     logger.error('Error broadcasting channel update', { error: error, endpoint: '/api/realtime/channels' });
   }

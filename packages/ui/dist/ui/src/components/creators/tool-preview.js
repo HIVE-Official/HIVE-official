@@ -4,10 +4,10 @@
 import { jsxs as _jsxs, jsx as _jsx } from "react/jsx-runtime";
 import { useState, useEffect } from 'react';
 import { X, Monitor, Tablet, Smartphone, RotateCcw, RefreshCw, ExternalLink, Share2, Play } from 'lucide-react';
-import { cn } from '../../lib/utils.js';
-import { HiveButton } from '../hive-button.js';
-import { HiveBadge } from '../hive-badge.js';
-import { HiveMotionWrapper } from '../hive-motion-wrapper.js';
+import { cn } from '../../lib/utils';
+import { HiveButton } from '../hive-button';
+import { HiveBadge } from '../hive-badge';
+import { HiveMotionWrapper } from '../hive-motion-wrapper';
 // Device viewport configurations
 const DEVICE_VIEWPORTS = {
     desktop: {

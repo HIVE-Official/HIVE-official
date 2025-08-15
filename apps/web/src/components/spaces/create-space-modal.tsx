@@ -610,7 +610,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
               <h4 className="font-medium text-white mb-3">Recommended for {SPACE_TYPES[spaceData.type].name} Spaces</h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {suggestedTools.map((toolId) => {
-                  const tool = SUGGESTED_TOOLS[toolId];
+                  const tool = SUGGESTED_TOOLS[toolId as keyof typeof SUGGESTED_TOOLS];
                   const isSelected = spaceData.tools.includes(toolId);
                   
                   return (
@@ -676,8 +676,8 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                 <div className="flex flex-wrap gap-2">
                   {spaceData.tools.map((toolId) => (
                     <Badge key={toolId} variant="building-tools" className="flex items-center space-x-1">
-                      <span>{SUGGESTED_TOOLS[toolId].icon}</span>
-                      <span>{SUGGESTED_TOOLS[toolId].name}</span>
+                      <span>{SUGGESTED_TOOLS[toolId as keyof typeof SUGGESTED_TOOLS]?.icon}</span>
+                      <span>{SUGGESTED_TOOLS[toolId as keyof typeof SUGGESTED_TOOLS]?.name}</span>
                     </Badge>
                   ))}
                 </div>
@@ -783,8 +783,8 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                   <div className="flex flex-wrap gap-2">
                     {spaceData.tools.map((toolId) => (
                       <Badge key={toolId} variant="building-tools" className="flex items-center space-x-1">
-                        <span>{SUGGESTED_TOOLS[toolId].icon}</span>
-                        <span>{SUGGESTED_TOOLS[toolId].name}</span>
+                        <span>{SUGGESTED_TOOLS[toolId as keyof typeof SUGGESTED_TOOLS]?.icon}</span>
+                        <span>{SUGGESTED_TOOLS[toolId as keyof typeof SUGGESTED_TOOLS]?.name}</span>
                       </Badge>
                     ))}
                   </div>

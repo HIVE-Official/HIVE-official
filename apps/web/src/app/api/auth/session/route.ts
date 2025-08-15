@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { getAuth } from "firebase-admin/auth";
 import { dbAdmin } from "@/lib/firebase-admin";
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
 
 /**
  * Session validation endpoint - verifies token and returns user session info
@@ -19,25 +19,8 @@ export async function GET(request: NextRequest) {
 
     const idToken = authHeader.substring(7);
     
-    // Handle development mode tokens
-    if (idToken.startsWith("dev_token_")) {
-      const userId = idToken.replace("dev_token_", "");
-      logger.info('Development mode session validation for user', { data: userId, endpoint: '/api/auth/session' });
-      
-      return NextResponse.json({
-        valid: true,
-        user: {
-          id: userId,
-          email: `dev_user_${userId}@example.com`,
-          emailVerified: true,
-          developmentMode: true,
-        },
-        session: {
-          issuedAt: new Date().toISOString(),
-          expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // 24 hours
-          developmentMode: true,
-        } });
-    }
+    // SECURITY: Development token bypass removed for production safety
+    // All tokens must be validated through Firebase Auth
 
     const auth = getAuth();
 

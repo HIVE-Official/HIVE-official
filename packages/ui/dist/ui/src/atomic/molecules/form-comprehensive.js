@@ -1,10 +1,10 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from 'react';
-import { cn } from '../../lib/utils.js';
-import { InputEnhanced as Input } from '../atoms/input-enhanced.js';
-import { SelectEnhanced as Select } from '../atoms/select-enhanced.js';
-import { FormField } from './form-field.js';
+import { cn } from '../../lib/utils';
+import { InputEnhanced as Input } from '../atoms/input-enhanced';
+import { SelectEnhanced as Select } from '../atoms/select-enhanced';
+import { FormField } from './form-field';
 import { Mail, GraduationCap, Building2, Users, Calendar, Eye, Hammer, Zap, Package, CheckCircle, AlertCircle, ExternalLink } from 'lucide-react';
 export const UniversityEmailFieldMolecule = ({ value = '', onChange, onBlur, error, required = false, disabled = false, university, className }) => {
     const [isValidUniversityEmail, setIsValidUniversityEmail] = React.useState(null);

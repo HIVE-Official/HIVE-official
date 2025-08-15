@@ -41,6 +41,259 @@ import {
 
 // Post creation will be handled via props/callbacks
 
+// Coordination Post Component for campus coordination
+const CoordinationSection: React.FC<{
+  post: Post;
+  onCoordinationResponse?: (postId: string, response: Omit<CoordinationResponse, 'id' | 'createdAt'>) => Promise<void>;
+  onUpdateStatus?: (postId: string, status: 'planning' | 'confirmed' | 'in_progress' | 'completed' | 'cancelled') => Promise<void>;
+  currentUserId?: string;
+}> = ({ post, onCoordinationResponse, onUpdateStatus, currentUserId }) => {
+  const [showResponseForm, setShowResponseForm] = useState(false);
+  const [responseType, setResponseType] = useState<'interested' | 'going' | 'maybe' | 'cant_make_it'>('interested');
+  const [responseMessage, setResponseMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  const coordination = post.coordinationData;
+  if (!coordination) return null;
+  
+  const handleResponse = async () => {
+    if (!onCoordinationResponse || !currentUserId) return;
+    
+    setIsSubmitting(true);
+    try {
+      await onCoordinationResponse(post.id, {
+        userId: currentUserId,
+        responseType,
+        message: responseMessage.trim() || undefined,
+      });
+      setShowResponseForm(false);
+      setResponseMessage('');
+    } catch (error) {
+      console.error('Failed to submit coordination response:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+  
+  const userResponse = coordination.responses.find(r => r.userId === currentUserId);
+  const interestedCount = coordination.responses.filter(r => r.responseType === 'interested' || r.responseType === 'going').length;
+  
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'planning': return 'text-yellow-400 bg-yellow-500/20 border-yellow-500/30';
+      case 'confirmed': return 'text-green-400 bg-green-500/20 border-green-500/30';
+      case 'in_progress': return 'text-blue-400 bg-blue-500/20 border-blue-500/30';
+      case 'completed': return 'text-gray-400 bg-gray-500/20 border-gray-500/30';
+      case 'cancelled': return 'text-red-400 bg-red-500/20 border-red-500/30';
+      default: return 'text-gray-400 bg-gray-500/20 border-gray-500/30';
+    }
+  };
+  
+  return (
+    <motion.div
+      className="mt-4 p-4 bg-white/5 border border-white/10 rounded-lg"
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+    >
+      {/* Coordination Header */}
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-3">
+          <div className={cn("px-2 py-1 rounded text-xs border", getStatusColor(coordination.status))}>
+            {coordination.status.replace('_', ' ').toUpperCase()}
+          </div>
+          <span className="text-sm text-gray-300">
+            {interestedCount} {interestedCount === 1 ? 'person' : 'people'} interested
+            {coordination.maxParticipants && ` (${coordination.maxParticipants} max)`}
+          </span>
+        </div>
+        
+        {coordination.datetime && (
+          <div className="flex items-center gap-1 text-xs text-gray-400">
+            <Clock className="w-3 h-3" />
+            <span>
+              {new Date(
+                coordination.datetime instanceof Date 
+                  ? coordination.datetime 
+                  : coordination.datetime.toDate()
+              ).toLocaleDateString('en-US', { 
+                month: 'short', 
+                day: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit'
+              })}
+            </span>
+          </div>
+        )}
+      </div>
+      
+      {/* Coordination Details */}
+      {coordination.details && (
+        <div className="mb-3 space-y-2">
+          {coordination.details.subject && (
+            <div className="flex items-center gap-2 text-sm">
+              <span className="text-gray-400">Subject:</span>
+              <span className="text-white">{coordination.details.subject}</span>
+            </div>
+          )}
+          {coordination.details.restaurant && (
+            <div className="flex items-center gap-2 text-sm">
+              <span className="text-gray-400">Restaurant:</span>
+              <span className="text-white">{coordination.details.restaurant}</span>
+            </div>
+          )}
+          {coordination.details.destination && (
+            <div className="flex items-center gap-2 text-sm">
+              <span className="text-gray-400">Destination:</span>
+              <span className="text-white">{coordination.details.destination}</span>
+            </div>
+          )}
+          {coordination.location && (
+            <div className="flex items-center gap-2 text-sm">
+              <span className="text-gray-400">Location:</span>
+              <span className="text-white">{coordination.location}</span>
+            </div>
+          )}
+        </div>
+      )}
+      
+      {/* Responses */}
+      {coordination.responses.length > 0 && (
+        <div className="mb-3">
+          <div className="flex flex-wrap gap-1">
+            {coordination.responses.slice(0, 8).map((response, i) => (
+              <div
+                key={response.id}
+                className="flex items-center gap-1 px-2 py-1 bg-blue-500/20 border border-blue-500/30 rounded text-xs"
+              >
+                <div className="w-4 h-4 rounded-full bg-gray-600 overflow-hidden">
+                  {response.user?.photoURL ? (
+                    <img src={response.user.photoURL} alt="" className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center">
+                      <span className="text-xs text-white">
+                        {(response.user?.fullName || 'U').charAt(0).toUpperCase()}
+                      </span>
+                    </div>
+                  )}
+                </div>
+                <span className="text-blue-300">{response.user?.fullName || 'User'}</span>
+                {response.responseType === 'going' && (
+                  <span className="text-green-400">✓</span>
+                )}
+              </div>
+            ))}
+            {coordination.responses.length > 8 && (
+              <span className="text-xs text-gray-400 px-2 py-1">
+                +{coordination.responses.length - 8} more
+              </span>
+            )}
+          </div>
+        </div>
+      )}
+      
+      {/* User Response */}
+      <div className="flex items-center gap-2">
+        {userResponse ? (
+          <div className="flex items-center gap-2 text-sm">
+            <span className="text-gray-400">You're</span>
+            <span className={cn(
+              "px-2 py-1 rounded text-xs border",
+              userResponse.responseType === 'going' ? 'text-green-400 bg-green-500/20 border-green-500/30' :
+              userResponse.responseType === 'interested' ? 'text-blue-400 bg-blue-500/20 border-blue-500/30' :
+              userResponse.responseType === 'maybe' ? 'text-yellow-400 bg-yellow-500/20 border-yellow-500/30' :
+              'text-gray-400 bg-gray-500/20 border-gray-500/30'
+            )}>
+              {userResponse.responseType.replace('_', ' ')}
+            </span>
+            <motion.button
+              className="text-xs text-blue-400 hover:text-blue-300 transition-colors"
+              onClick={() => setShowResponseForm(true)}
+              whileHover={{ scale: 1.02 }}
+            >
+              Change
+            </motion.button>
+          </div>
+        ) : (
+          <motion.button
+            className="px-3 py-1.5 bg-blue-500/20 text-blue-400 border border-blue-500/30 rounded-lg hover:bg-blue-500/30 transition-all text-sm"
+            onClick={() => setShowResponseForm(true)}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            I'm Interested
+          </motion.button>
+        )}
+      </div>
+      
+      {/* Response Form */}
+      {showResponseForm && (
+        <motion.div
+          className="mt-3 p-3 bg-white/5 border border-white/10 rounded-lg"
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: 'auto' }}
+          exit={{ opacity: 0, height: 0 }}
+        >
+          <div className="space-y-3">
+            <div className="flex flex-wrap gap-2">
+              {(['interested', 'going', 'maybe', 'cant_make_it'] as const).map((type) => (
+                <motion.button
+                  key={type}
+                  className={cn(
+                    "px-3 py-1 rounded text-xs border transition-all",
+                    responseType === type
+                      ? 'text-blue-400 bg-blue-500/20 border-blue-500/30'
+                      : 'text-gray-400 bg-gray-500/20 border-gray-500/30 hover:text-white'
+                  )}
+                  onClick={() => setResponseType(type)}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  {type.replace('_', ' ')}
+                </motion.button>
+              ))}
+            </div>
+            
+            <textarea
+              className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-400 resize-none focus:outline-none focus:border-blue-400/50 transition-colors"
+              placeholder="Add a message (optional)..."
+              rows={2}
+              value={responseMessage}
+              onChange={(e) => setResponseMessage(e.target.value)}
+            />
+            
+            <div className="flex justify-end gap-2">
+              <motion.button
+                className="px-3 py-1 bg-gray-600 hover:bg-gray-700 text-white text-xs rounded-md transition-colors"
+                onClick={() => {
+                  setShowResponseForm(false);
+                  setResponseMessage('');
+                }}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                Cancel
+              </motion.button>
+              <motion.button
+                className="px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white text-xs rounded-md transition-colors disabled:opacity-50"
+                onClick={handleResponse}
+                disabled={isSubmitting}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                {isSubmitting ? (
+                  <><Loader2 className="w-3 h-3 mr-1 inline animate-spin" />Submitting...</>
+                ) : (
+                  'Submit Response'
+                )}
+              </motion.button>
+            </div>
+          </div>
+        </motion.div>
+      )}
+    </motion.div>
+  );
+};
+
 // Comment Thread Component for nested replies
 const CommentThread: React.FC<{
   comment: Comment;
@@ -200,7 +453,7 @@ const hivePostsSurfaceVariants = cva(
   }
 );
 
-// Post types with HIVE design patterns
+// Post types with HIVE design patterns - Enhanced for Campus Coordination
 const postTypes = {
   discussion: {
     icon: MessageSquare,
@@ -232,7 +485,73 @@ const postTypes = {
     color: 'text-[var(--hive-brand-accent)]',
     description: 'Share a resource'
   },
+  // NEW: Campus Coordination Post Types
+  study_session: {
+    icon: Users,
+    label: 'Study Session',
+    color: 'text-blue-400',
+    description: 'Organize study groups',
+    coordinationType: 'study_session'
+  },
+  food_run: {
+    icon: Users,
+    label: 'Food Run',
+    color: 'text-orange-400', 
+    description: 'Coordinate food orders',
+    coordinationType: 'food_run'
+  },
+  activity: {
+    icon: Calendar,
+    label: 'Activity',
+    color: 'text-green-400',
+    description: 'Plan group activities',
+    coordinationType: 'activity'
+  },
+  ride_share: {
+    icon: Users,
+    label: 'Ride Share',
+    color: 'text-purple-400',
+    description: 'Share transportation',
+    coordinationType: 'ride_share'
+  },
+  meetup: {
+    icon: Users,
+    label: 'Meetup',
+    color: 'text-pink-400',
+    description: 'Quick meetups',
+    coordinationType: 'meetup'
+  },
 } as const;
+
+// Coordination Response for campus coordination posts
+export interface CoordinationResponse {
+  id: string;
+  userId: string;
+  user?: {
+    id: string;
+    fullName: string;
+    handle: string;
+    photoURL?: string;
+  };
+  responseType: 'interested' | 'going' | 'maybe' | 'cant_make_it';
+  message?: string;
+  createdAt: Date | { toDate: () => Date };
+  // For specific coordination types
+  extraData?: {
+    // For study sessions
+    studyTopic?: string;
+    bringNotes?: boolean;
+    // For food runs
+    foodOrder?: string;
+    contribution?: number;
+    // For rides
+    canDrive?: boolean;
+    seatsAvailable?: number;
+    // For activities
+    skillLevel?: string;
+    equipment?: string[];
+  };
+}
 
 export interface Comment {
   id: string;
@@ -277,6 +596,39 @@ export interface Post {
   spaceId: string;
   comments?: Comment[];
   replyCount?: number;
+  
+  // NEW: Coordination Features
+  coordinationData?: {
+    coordinationType: 'study_session' | 'food_run' | 'activity' | 'ride_share' | 'meetup';
+    responses: CoordinationResponse[];
+    maxParticipants?: number;
+    currentParticipants?: number;
+    location?: string;
+    datetime?: Date | { toDate: () => Date };
+    status: 'planning' | 'confirmed' | 'in_progress' | 'completed' | 'cancelled';
+    requirements?: string[];
+    // Type-specific data
+    details?: {
+      // Study session
+      subject?: string;
+      duration?: number;
+      studyMaterials?: string[];
+      // Food run
+      restaurant?: string;
+      minOrder?: number;
+      deadline?: Date | { toDate: () => Date };
+      // Activity
+      activityType?: string;
+      skillLevel?: 'beginner' | 'intermediate' | 'advanced';
+      equipment?: string[];
+      // Ride share
+      destination?: string;
+      departureTime?: Date | { toDate: () => Date };
+      returnTime?: Date | { toDate: () => Date };
+      costPerPerson?: number;
+    };
+  };
+  
   // Legacy props for backward compatibility
   title?: string;
   authorName?: string;
@@ -315,6 +667,11 @@ export interface HivePostsSurfaceProps
   onDeletePost?: (postId: string) => void;
   onLockPost?: (postId: string) => void;
   onViewPost?: (postId: string) => void;
+  
+  // NEW: Coordination callbacks
+  onCoordinationResponse?: (postId: string, response: Omit<CoordinationResponse, 'id' | 'createdAt'>) => Promise<void>;
+  onUpdateCoordinationStatus?: (postId: string, status: 'planning' | 'confirmed' | 'in_progress' | 'completed' | 'cancelled') => Promise<void>;
+  
   sortBy?: 'recent' | 'popular' | 'trending';
   showFilters?: boolean;
   maxPosts?: number;
@@ -323,6 +680,14 @@ export interface HivePostsSurfaceProps
   authToken?: string;
   // Integration props
   usePlatformIntegration?: boolean;
+  
+  // NEW: Real-time activity
+  showLiveActivity?: boolean;
+  liveActivityCount?: number;
+  onActivityUpdate?: (activity: { type: string; user: string; action: string; timestamp: Date }) => void;
+  
+  // User context for coordination features
+  currentUserId?: string;
 }
 
 // Helper function to get auth token from session storage
@@ -385,12 +750,18 @@ export const HivePostsSurface = React.forwardRef<HTMLDivElement, HivePostsSurfac
     onDeletePost,
     onLockPost,
     onViewPost,
+    onCoordinationResponse,
+    onUpdateCoordinationStatus,
     sortBy = 'recent',
     showFilters = true,
     maxPosts = 10,
     autoFetch = true,
     authToken,
     usePlatformIntegration = true,
+    showLiveActivity = false,
+    liveActivityCount = 0,
+    onActivityUpdate,
+    currentUserId,
     ...props 
   }, ref) => {
     
@@ -629,6 +1000,27 @@ export const HivePostsSurface = React.forwardRef<HTMLDivElement, HivePostsSurfac
           <div className="flex items-center gap-4">
             <h3 className="text-lg font-semibold text-[var(--hive-text-primary)]">Posts</h3>
             <span className="text-sm text-[var(--hive-text-secondary)]">{posts.length} discussions</span>
+            
+            {/* NEW: Live Activity Indicator */}
+            {showLiveActivity && liveActivityCount && liveActivityCount > 0 && (
+              <motion.div
+                className="flex items-center gap-2 px-3 py-1 bg-green-500/20 border border-green-500/30 rounded-full"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ 
+                  opacity: 1, 
+                  scale: [1, 1.05, 1]
+                }}
+                transition={{ 
+                  opacity: { duration: 0.3 },
+                  scale: { repeat: Infinity, duration: 2 }
+                }}
+              >
+                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+                <span className="text-xs text-green-300">
+                  {liveActivityCount} active now
+                </span>
+              </motion.div>
+            )}
           </div>
           
           <div className="flex items-center gap-2">
@@ -1004,6 +1396,16 @@ export const HivePostsSurface = React.forwardRef<HTMLDivElement, HivePostsSurfac
                       </motion.button>
                     </div>
                   </div>
+                  
+                  {/* NEW: Coordination Section */}
+                  {post.coordinationData && (
+                    <CoordinationSection 
+                      post={post}
+                      onCoordinationResponse={onCoordinationResponse}
+                      onUpdateStatus={onUpdateCoordinationStatus}
+                      currentUserId={currentUserId}
+                    />
+                  )}
                   
                   {/* Comments Section */}
                   {expandedComments.has(post.id) && (

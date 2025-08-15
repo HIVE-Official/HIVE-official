@@ -4,6 +4,7 @@ import { dbAdmin } from '@/lib/firebase-admin';
 import { getCurrentUser } from '@/lib/server-auth';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { sseRealtimeService } from '@/lib/sse-realtime-service';
 
 // Real-time chat interfaces
 interface ChatMessage {
@@ -92,7 +93,7 @@ interface ChatAnalytics {
 // POST - Send a new chat message
 export async function POST(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
@@ -167,16 +168,19 @@ export async function POST(request: NextRequest) {
       }
     };
 
-    // Store message in Firestore
-    await setDoc(doc(db, 'chatMessages', messageId), message);
+    // Store message in Firestore for persistence
+    await dbAdmin.collection('chatMessages').doc(messageId).set(message);
+
+    // Send message to Firebase Realtime Database for real-time updates
+    await sseRealtimeService.sendChatMessage(spaceId, user.uid, content, messageType);
 
     // Update channel's last message
     await updateChannelLastMessage(channelId, message);
 
-    // Send real-time message to channel subscribers
+    // Send real-time message to channel subscribers via WebSocket system
     await broadcastMessageToChannel(message, channel);
 
-    // Handle mentions
+    // Handle mentions with real-time notifications
     if (mentions.length > 0) {
       await handleMessageMentions(message, mentions);
     }
@@ -202,7 +206,7 @@ export async function POST(request: NextRequest) {
 // GET - Get chat messages for a channel
 export async function GET(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
@@ -225,23 +229,21 @@ export async function GET(request: NextRequest) {
     }
 
     // Build query
-    let messagesQuery = dbAdmin.collection(
-      dbAdmin.collection('chatMessages'),
-      where('channelId', '==', channelId),
-      where('metadata.isDeleted', '==', false),
-      orderBy('metadata.timestamp', 'desc'),
-      fbLimit(limit)
-    );
+    let messagesQuery = dbAdmin.collection('chatMessages')
+      .where('channelId', '==', channelId)
+      .where('metadata.isDeleted', '==', false)
+      .orderBy('metadata.timestamp', 'desc')
+      .limit(limit);
 
     // Add pagination if specified
     if (before) {
-      const beforeDoc = await getDoc(doc(db, 'chatMessages', before));
+      const beforeDoc = await dbAdmin.collection('chatMessages').doc(before).get();
       if (beforeDoc.exists) {
-        messagesQuery = dbAdmin.collection(messagesQuery, startAfter(beforeDoc));
+        messagesQuery = messagesQuery.startAfter(beforeDoc);
       }
     }
 
-    const messagesSnapshot = await getDocs(messagesQuery);
+    const messagesSnapshot = await messagesQuery.get();
     const messages = messagesSnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
@@ -284,7 +286,7 @@ export async function GET(request: NextRequest) {
 // PUT - Update a chat message (edit, react, etc.)
 export async function PUT(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
@@ -303,7 +305,7 @@ export async function PUT(request: NextRequest) {
     }
 
     // Get message
-    const messageDoc = await getDoc(doc(db, 'chatMessages', messageId));
+    const messageDoc = await dbAdmin.collection('chatMessages').doc(messageId).get();
     if (!messageDoc.exists) {
       return NextResponse.json(ApiResponseHelper.error("Message not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
@@ -387,7 +389,7 @@ export async function PUT(request: NextRequest) {
     }
 
     // Apply updates
-    await updateDoc(doc(db, 'chatMessages', messageId), updates);
+    await dbAdmin.collection('chatMessages').doc(messageId).update(updates);
 
     // Broadcast update to channel
     if (action !== 'delete') {
@@ -409,7 +411,7 @@ export async function PUT(request: NextRequest) {
 // DELETE - Delete a chat message
 export async function DELETE(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
@@ -422,7 +424,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     // Get message
-    const messageDoc = await getDoc(doc(db, 'chatMessages', messageId));
+    const messageDoc = await dbAdmin.collection('chatMessages').doc(messageId).get();
     if (!messageDoc.exists) {
       return NextResponse.json(ApiResponseHelper.error("Message not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
@@ -438,7 +440,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     // Soft delete the message
-    await updateDoc(doc(db, 'chatMessages', messageId), {
+    await dbAdmin.collection('chatMessages').doc(messageId).update({
       'metadata.isDeleted': true,
       content: '[Message deleted]'
     });
@@ -461,14 +463,12 @@ export async function DELETE(request: NextRequest) {
 async function verifyChannelAccess(userId: string, channelId: string, spaceId: string): Promise<boolean> {
   try {
     // Check space membership
-    const memberQuery = dbAdmin.collection(
-      dbAdmin.collection('members'),
-      where('userId', '==', userId),
-      where('spaceId', '==', spaceId),
-      where('status', '==', 'active')
-    );
+    const memberQuery = dbAdmin.collection('members')
+      .where('userId', '==', userId)
+      .where('spaceId', '==', spaceId)
+      .where('status', '==', 'active');
 
-    const memberSnapshot = await getDocs(memberQuery);
+    const memberSnapshot = await memberQuery.get();
     if (memberSnapshot.empty) {
       return false;
     }
@@ -494,7 +494,7 @@ async function verifyChannelAccess(userId: string, channelId: string, spaceId: s
 // Helper function to get channel information
 async function getChannel(channelId: string): Promise<ChatChannel | null> {
   try {
-    const channelDoc = await getDoc(doc(db, 'chatChannels', channelId));
+    const channelDoc = await dbAdmin.collection('chatChannels').doc(channelId).get();
     if (!channelDoc.exists) {
       return null;
     }
@@ -508,14 +508,12 @@ async function getChannel(channelId: string): Promise<ChatChannel | null> {
 // Helper function to get user's space context
 async function getUserSpaceContext(userId: string, spaceId: string): Promise<any> {
   try {
-    const memberQuery = dbAdmin.collection(
-      dbAdmin.collection('members'),
-      where('userId', '==', userId),
-      where('spaceId', '==', spaceId),
-      where('status', '==', 'active')
-    );
+    const memberQuery = dbAdmin.collection('members')
+      .where('userId', '==', userId)
+      .where('spaceId', '==', spaceId)
+      .where('status', '==', 'active');
 
-    const memberSnapshot = await getDocs(memberQuery);
+    const memberSnapshot = await memberQuery.get();
     if (memberSnapshot.empty) {
       return null;
     }
@@ -545,7 +543,7 @@ function canSendMessage(userContext: any, channel: ChatChannel): boolean {
 // Helper function to update channel's last message
 async function updateChannelLastMessage(channelId: string, message: ChatMessage): Promise<void> {
   try {
-    await updateDoc(doc(db, 'chatChannels', channelId), {
+    await dbAdmin.collection('chatChannels').doc(channelId).update({
       lastMessage: {
         id: message.id,
         content: message.content.substring(0, 100),
@@ -587,7 +585,7 @@ async function broadcastMessageToChannel(message: ChatMessage, channel: ChatChan
       }
     };
 
-    await addDoc(dbAdmin.collection('realtimeMessages'), realtimeMessage);
+    await dbAdmin.collection('realtimeMessages').add(realtimeMessage);
   } catch (error) {
     logger.error('Error broadcasting message', { error: error, endpoint: '/api/realtime/chat' });
   }
@@ -625,7 +623,7 @@ async function handleMessageMentions(message: ChatMessage, mentions: string[]): 
         }
       };
 
-      await addDoc(dbAdmin.collection('realtimeMessages'), notification);
+      await dbAdmin.collection('realtimeMessages').add(notification);
     }
   } catch (error) {
     logger.error('Error handling mentions', { error: error, endpoint: '/api/realtime/chat' });
@@ -668,7 +666,7 @@ async function markMessagesAsRead(userId: string, channelId: string, messageIds:
   try {
     // Update read status for each message
     const updatePromises = messageIds.map(messageId =>
-      updateDoc(doc(db, 'chatMessages', messageId), {
+      dbAdmin.collection('chatMessages').doc(messageId).update({
         [`delivery.read`]: [...new Set([...[], userId])] // Add user to read array
       })
     );
@@ -682,15 +680,13 @@ async function markMessagesAsRead(userId: string, channelId: string, messageIds:
 // Helper function to get thread messages
 async function getThreadMessages(parentMessageId: string): Promise<ChatMessage[]> {
   try {
-    const threadQuery = dbAdmin.collection(
-      dbAdmin.collection('chatMessages'),
-      where('metadata.replyToMessageId', '==', parentMessageId),
-      where('metadata.isDeleted', '==', false),
-      orderBy('metadata.timestamp', 'asc'),
-      fbLimit(20)
-    );
+    const threadQuery = dbAdmin.collection('chatMessages')
+      .where('metadata.replyToMessageId', '==', parentMessageId)
+      .where('metadata.isDeleted', '==', false)
+      .orderBy('metadata.timestamp', 'asc')
+      .limit(20);
 
-    const threadSnapshot = await getDocs(threadQuery);
+    const threadSnapshot = await threadQuery.get();
     return threadSnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
@@ -729,7 +725,7 @@ async function broadcastMessageUpdate(messageId: string, action: string, updates
       }
     };
 
-    await addDoc(dbAdmin.collection('realtimeMessages'), updateMessage);
+    await dbAdmin.collection('realtimeMessages').add(updateMessage);
   } catch (error) {
     logger.error('Error broadcasting message update', { error: error, endpoint: '/api/realtime/chat' });
   }
@@ -761,7 +757,7 @@ async function broadcastMessageDeletion(messageId: string, channelId: string): P
       }
     };
 
-    await addDoc(dbAdmin.collection('realtimeMessages'), deletionMessage);
+    await dbAdmin.collection('realtimeMessages').add(deletionMessage);
   } catch (error) {
     logger.error('Error broadcasting message deletion', { error: error, endpoint: '/api/realtime/chat' });
   }
@@ -773,17 +769,19 @@ async function updateChatAnalytics(spaceId: string, messageType: string): Promis
     const today = new Date().toISOString().split('T')[0];
     const analyticsId = `${spaceId}_${today}`;
 
-    const analyticsDoc = await getDoc(doc(db, 'chatAnalytics', analyticsId));
+    const analyticsDoc = await dbAdmin.collection('chatAnalytics').doc(analyticsId).get();
     
     if (analyticsDoc.exists) {
       const currentData = analyticsDoc.data();
-      await updateDoc(doc(db, 'chatAnalytics', analyticsId), {
-        totalMessages: (currentData.totalMessages || 0) + 1,
-        [`messageFrequency.${messageType}`]: (currentData.messageFrequency?.[messageType] || 0) + 1,
-        lastUpdate: new Date().toISOString()
-      });
+      if (currentData) {
+        await dbAdmin.collection('chatAnalytics').doc(analyticsId).update({
+          totalMessages: (currentData.totalMessages || 0) + 1,
+          [`messageFrequency.${messageType}`]: (currentData.messageFrequency?.[messageType] || 0) + 1,
+          lastUpdate: new Date().toISOString()
+        });
+      }
     } else {
-      await setDoc(doc(db, 'chatAnalytics', analyticsId), {
+      await dbAdmin.collection('chatAnalytics').doc(analyticsId).set({
         spaceId,
         date: today,
         totalMessages: 1,

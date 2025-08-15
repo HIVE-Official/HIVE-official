@@ -1,14 +1,20 @@
 "use client";
 
 import { useState, useCallback } from 'react';
-import { VisualToolBuilder } from "@hive/ui";
+import { VisualToolComposer } from '@/components/tools/visual-tool-composer';
+
+// Define a simple Tool type for the builder
+interface Tool {
+  id: string;
+  name: string;
+  description: string;
+}
 import { PageContainer } from "@/components/temp-stubs";
-import { Tool } from '@hive/core';
 import { Zap, Wrench, Code, Palette, Database, BarChart3, Users, Rocket, ArrowLeft } from 'lucide-react';
 
 export default function HiveLabPage() {
   const [mode, setMode] = useState<'overview' | 'visual' | 'template' | 'wizard'>('overview');
-  const [currentTool, setCurrentTool] = useState<Tool | null>(null);
+  const [, setCurrentTool] = useState<Tool | null>(null);
 
   // Handle tool saving
   const handleToolSave = useCallback((tool: Tool) => {
@@ -58,12 +64,26 @@ export default function HiveLabPage() {
           </div>
         </div>
         <div className="flex-1">
-          <VisualToolBuilder
-            {...{
-              onSave: handleToolSave,
-              onPreview: handleToolPreview,
-              initialTool: currentTool || undefined
-            } as any}
+          <VisualToolComposer
+            onSave={async (composition) => {
+              // Convert composition to Tool for the handler
+              const tool = {
+                id: composition.id,
+                name: composition.name,
+                description: composition.description
+              };
+              handleToolSave(tool);
+            }}
+            onPreview={(composition) => {
+              const tool = {
+                id: composition.id,
+                name: composition.name,
+                description: composition.description
+              };
+              handleToolPreview(tool);
+            }}
+            onCancel={() => {}}
+            userId="current-user"
           />
         </div>
       </div>

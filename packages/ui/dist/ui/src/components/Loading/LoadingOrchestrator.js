@@ -1,9 +1,9 @@
 'use client';
 import { Fragment as _Fragment, jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import { cn } from '../../lib/utils.js';
-import { Text } from '../../atomic/atoms/text.js';
-import { useAdvancedViewport } from '../Layout/ResponsiveLayout.js';
+import { cn } from '../../lib/utils';
+import { Text } from '../../atomic/atoms/text';
+import { useAdvancedViewport } from '../Layout/ResponsiveLayout';
 // Custom hook for orchestrated loading
 function useLoadingOrchestrator(resources, strategy, campusContext) {
     const [loadingState, setLoadingState] = useState({

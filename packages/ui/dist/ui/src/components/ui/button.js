@@ -4,7 +4,7 @@ import { jsx as _jsx } from "react/jsx-runtime";
  * Maps standard button props to HIVE enhanced button variants
  */
 import React from 'react';
-import { Button as HiveButton } from '../../atomic/atoms/button-enhanced.js';
+import { Button as HiveButton } from '../../atomic/atoms/button-enhanced';
 // Map standard variants to HIVE variants
 const mapVariant = (variant) => {
     switch (variant) {

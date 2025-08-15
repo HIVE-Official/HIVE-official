@@ -18,4 +18,8 @@ export * from './input';
 export * from './select';
 export * from './checkbox';
 export * from './radio-group';
+export * from './switch';
+export * from './separator';
+export * from './textarea';
+export * from './progress';
 //# sourceMappingURL=index.d.ts.map

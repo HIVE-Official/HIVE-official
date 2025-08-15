@@ -2,7 +2,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from 'react';
 import { cva } from 'class-variance-authority';
-import { cn } from '../../lib/utils.js';
+import { cn } from '../../lib/utils';
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 const profileStatisticVariants = cva("flex flex-col items-center justify-center text-center transition-all duration-200", {
     variants: {
@@ -13,20 +13,20 @@ const profileStatisticVariants = cva("flex flex-col items-center justify-center 
             lg: "p-6 gap-3"
         },
         variant: {
-            default: "bg-hive-surface-elevated border border-hive-border-subtle rounded-xl",
+            default: "bg-[var(--hive-background-secondary)] border border-[var(--hive-border-primary)] rounded-xl",
             ghost: "bg-transparent",
-            highlight: "bg-gradient-to-br from-hive-gold/10 to-hive-brand-secondary/10 border border-hive-gold/20 rounded-xl",
-            compact: "bg-hive-surface-elevated/50 rounded-lg border border-hive-border-subtle/50"
+            highlight: "bg-gradient-to-br from-[var(--hive-brand-gold)]/10 to-[var(--hive-brand-secondary)]/10 border border-[var(--hive-brand-gold)]/20 rounded-xl",
+            compact: "bg-[var(--hive-background-secondary)]/50 rounded-lg border border-[var(--hive-border-primary)]/50"
         },
         interactive: {
-            true: "cursor-pointer hover:bg-hive-background-interactive hover:scale-105 hover:border-hive-gold/30",
+            true: "cursor-pointer hover:bg-[var(--hive-background-interactive)] hover:scale-105 hover:border-[var(--hive-brand-gold)]/30",
             false: ""
         },
         trend: {
             none: "",
-            up: "hover:shadow-green-400/10",
-            down: "hover:shadow-red-400/10",
-            neutral: "hover:shadow-gray-400/10"
+            up: "hover:shadow-[var(--hive-status-success)]/10",
+            down: "hover:shadow-[var(--hive-status-error)]/10",
+            neutral: "hover:shadow-[var(--hive-text-muted)]/10"
         }
     },
     defaultVariants: {
@@ -45,15 +45,15 @@ const valueVariants = cva("font-bold transition-colors", {
             lg: "text-3xl"
         },
         trend: {
-            none: "text-hive-text-primary",
-            up: "text-green-400",
-            down: "text-red-400",
-            neutral: "text-hive-text-primary"
+            none: "text-[var(--hive-text-primary)]",
+            up: "text-[var(--hive-status-success)]",
+            down: "text-[var(--hive-status-error)]",
+            neutral: "text-[var(--hive-text-primary)]"
         },
         emphasis: {
             normal: "",
-            gold: "text-hive-gold",
-            secondary: "text-hive-brand-secondary"
+            gold: "text-[var(--hive-brand-gold)]",
+            secondary: "text-[var(--hive-brand-secondary)]"
         }
     },
     defaultVariants: {
@@ -84,12 +84,12 @@ const iconVariants = cva("flex-shrink-0 transition-colors", {
             lg: "h-8 w-8"
         },
         color: {
-            default: "text-hive-text-secondary",
-            gold: "text-hive-gold",
-            secondary: "text-hive-brand-secondary",
-            success: "text-green-400",
-            warning: "text-yellow-400",
-            error: "text-red-400"
+            default: "text-[var(--hive-text-secondary)]",
+            gold: "text-[var(--hive-brand-gold)]",
+            secondary: "text-[var(--hive-brand-secondary)]",
+            success: "text-[var(--hive-status-success)]",
+            warning: "text-[var(--hive-status-warning)]",
+            error: "text-[var(--hive-status-error)]"
         }
     },
     defaultVariants: {
@@ -133,12 +133,12 @@ export function ProfileStatistic({ value, label, icon: Icon, iconColor = "defaul
         }
     }, [determinedTrend]);
     if (loading) {
-        return (_jsx("div", { className: cn(profileStatisticVariants({ size, variant, interactive: false }), className), children: _jsxs("div", { className: "space-y-2 w-full", children: [_jsx("div", { className: cn("bg-hive-surface-elevated animate-pulse rounded", {
+        return (_jsx("div", { className: cn(profileStatisticVariants({ size, variant, interactive: false }), className), children: _jsxs("div", { className: "space-y-2 w-full", children: [_jsx("div", { className: cn("bg-[var(--hive-background-secondary)] animate-pulse rounded", {
                             "h-6": size === "xs",
                             "h-7": size === "sm",
                             "h-8": size === "md",
                             "h-10": size === "lg"
-                        }) }), _jsx("div", { className: cn("bg-hive-surface-elevated animate-pulse rounded", {
+                        }) }), _jsx("div", { className: cn("bg-[var(--hive-background-secondary)] animate-pulse rounded", {
                             "h-3": size === "xs",
                             "h-4": size === "sm",
                             "h-5": size === "md",
@@ -151,17 +151,17 @@ export function ProfileStatistic({ value, label, icon: Icon, iconColor = "defaul
             interactive: determinedInteractive,
             trend: determinedTrend
         }), className), onClick: onClick, role: determinedInteractive ? "button" : undefined, tabIndex: determinedInteractive ? 0 : undefined, ...props, children: [Icon && (_jsx(Icon, { className: cn(iconVariants({ size, color: iconColor })) })), _jsxs("div", { className: "flex items-center gap-1", children: [_jsx("span", { className: cn(valueVariants({ size, trend: determinedTrend, emphasis })), children: formatValue(value) }), showTrend && TrendIcon && change !== undefined && (_jsxs("div", { className: "flex items-center gap-1", children: [_jsx(TrendIcon, { className: cn("h-4 w-4", {
-                                    "text-green-400": determinedTrend === "up",
-                                    "text-red-400": determinedTrend === "down",
-                                    "text-gray-400": determinedTrend === "neutral"
+                                    "text-[var(--hive-status-success)]": determinedTrend === "up",
+                                    "text-[var(--hive-status-error)]": determinedTrend === "down",
+                                    "text-[var(--hive-text-muted)]": determinedTrend === "neutral"
                                 }) }), changeLabel && (_jsx("span", { className: cn("text-xs font-medium", {
-                                    "text-green-400": determinedTrend === "up",
-                                    "text-red-400": determinedTrend === "down",
-                                    "text-gray-400": determinedTrend === "neutral"
-                                }), children: changeLabel }))] }))] }), _jsx("span", { className: cn(labelVariants({ size }), "text-hive-text-secondary"), children: label }), showTrend && change !== undefined && !changeLabel && (_jsx("span", { className: cn("text-xs font-medium", {
-                    "text-green-400": determinedTrend === "up",
-                    "text-red-400": determinedTrend === "down",
-                    "text-gray-400": determinedTrend === "neutral"
+                                    "text-[var(--hive-status-success)]": determinedTrend === "up",
+                                    "text-[var(--hive-status-error)]": determinedTrend === "down",
+                                    "text-[var(--hive-text-muted)]": determinedTrend === "neutral"
+                                }), children: changeLabel }))] }))] }), _jsx("span", { className: cn(labelVariants({ size }), "text-[var(--hive-text-secondary)]"), children: label }), showTrend && change !== undefined && !changeLabel && (_jsx("span", { className: cn("text-xs font-medium", {
+                    "text-[var(--hive-status-success)]": determinedTrend === "up",
+                    "text-[var(--hive-status-error)]": determinedTrend === "down",
+                    "text-[var(--hive-text-muted)]": determinedTrend === "neutral"
                 }), children: change > 0 ? `+${change}` : change }))] }));
 }
 // Export variants for external use

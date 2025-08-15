@@ -38,7 +38,7 @@ interface Integration {
   description: string;
   category: 'academic' | 'productivity' | 'communication' | 'campus-life';
   provider: string;
-  icon: any;
+  icon: React.ComponentType<{ className?: string }>;
   status: 'connected' | 'disconnected' | 'error' | 'syncing';
   isRequired?: boolean;
   isRecommended?: boolean;

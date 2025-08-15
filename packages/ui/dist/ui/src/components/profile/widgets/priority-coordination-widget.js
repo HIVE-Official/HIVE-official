@@ -3,9 +3,9 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AlertCircle, Clock, Users, BookOpen, MessageSquare, CheckCircle2, ArrowRight, Calendar, ChevronDown, ChevronUp, MoreHorizontal } from 'lucide-react';
-import { BaseWidget } from '../bento-grid/base-widget.js';
-import { HiveButton } from '../../hive-button.js';
-import { cn } from '../../../lib/utils.js';
+import { BaseWidget } from '../bento-grid/base-widget';
+import { HiveButton } from '../../hive-button';
+import { cn } from '../../../lib/utils';
 export const PriorityCoordinationWidget = ({ priorities = [], isLoading = false, onActionTaken, onPriorityClick, onViewAll, ...baseProps }) => {
     const [expandedSections, setExpandedSections] = useState(new Set(['urgent']));
     const [showAllItems, setShowAllItems] = useState(false);

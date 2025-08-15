@@ -7,12 +7,12 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
  * Takes a tool definition (composed of elements) and renders a working, interactive tool.
  */
 import { useState, useCallback, useEffect } from 'react';
-import { HiveButton } from '../index.js';
+import { HiveButton } from '../index';
 import { Play, RefreshCw, AlertCircle, CheckCircle } from 'lucide-react';
-import { cn } from '../../lib/utils.js';
-import { MobileToolWrapper } from './mobile-tool-wrapper.js';
+import { cn } from '../../lib/utils';
+import { MobileToolWrapper } from './mobile-tool-wrapper';
 // Event Elements (complete 24-element library)
-import { TextInputElement, DatePickerElement, SelectElement, NumberInputElement, CheckboxElement, RadioElement, EventCardElement, CounterElement, QRCodeElement, RSVPElement, FilterElement, AttendeeListElement, CalendarViewElement, NotificationElement, AnalyticsChartElement, FeedbackFormElement, ShareElement, RecurrenceElement, TagsElement, StatusElement, } from '../events/event-elements.js';
+import { TextInputElement, DatePickerElement, SelectElement, NumberInputElement, CheckboxElement, RadioElement, EventCardElement, CounterElement, QRCodeElement, RSVPElement, FilterElement, AttendeeListElement, CalendarViewElement, NotificationElement, AnalyticsChartElement, FeedbackFormElement, ShareElement, RecurrenceElement, TagsElement, StatusElement, } from '../events/event-elements';
 export function ToolRuntimeEngine({ tool, userId = 'current_user', spaceId, mode = 'production', onSave, onSubmit, className }) {
     // Runtime state management
     const [state, setState] = useState({

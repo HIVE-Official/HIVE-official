@@ -2,8 +2,16 @@ import { useState, useEffect, useCallback } from 'react';
 import type { CalendarCardData, CalendarCardState } from '@hive/ui';
 import { fetchCalendarEvents, transformApiEvent } from '../lib/calendar-api';
 
+interface CalendarEvent {
+  id: string;
+  title: string;
+  startTime: string;
+  endTime: string;
+  [key: string]: unknown;
+}
+
 interface UseCalendarDataOptions {
-  fetchEvents?: () => Promise<any[]>;
+  fetchEvents?: () => Promise<CalendarEvent[]>;
   autoFetch?: boolean;
 }
 

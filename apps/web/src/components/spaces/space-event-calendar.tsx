@@ -27,7 +27,7 @@ import {
   CheckCircle
 } from "lucide-react";
 
-interface SpaceEvent {
+export interface SpaceEvent {
   id: string;
   title: string;
   description: string;

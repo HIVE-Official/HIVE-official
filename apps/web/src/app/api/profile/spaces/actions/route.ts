@@ -4,7 +4,6 @@ import { dbAdmin } from '@/lib/firebase-admin';
 import { getCurrentUser } from '@/lib/server-auth';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
-import { doc, getDoc, collection, query, where, getDocs, updateDoc, addDoc } from 'firebase-admin/firestore';
 
 // Space quick actions for profile
 interface SpaceQuickAction {
@@ -17,7 +16,7 @@ interface SpaceQuickAction {
 // POST - Perform quick action on space
 export async function POST(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
@@ -36,13 +35,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Verify user is a member of the space
-    const membershipQuery = dbAdmin.collection(
-      dbAdmin.collection('members'),
-      where('userId', '==', user.uid),
-      where('spaceId', '==', spaceId)
-    );
+    const membershipQuery = dbAdmin.collection('members')
+      .where('userId', '==', user.uid)
+      .where('spaceId', '==', spaceId);
 
-    const membershipSnapshot = await getDocs(membershipQuery);
+    const membershipSnapshot = await membershipQuery.get();
     if (membershipSnapshot.empty) {
       return NextResponse.json(ApiResponseHelper.error("Not a member of this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
@@ -89,7 +86,7 @@ async function performSpaceAction(
     case 'favorite': {
       // Toggle favorite status
       const isFavorite = value !== undefined ? value : !membershipData.isFavorite;
-      await updateDoc(membershipRef, {
+      await membershipRef.update({
         isFavorite,
         updatedAt: now
       });
@@ -103,7 +100,7 @@ async function performSpaceAction(
     case 'mute': {
       // Toggle mute status
       const isMuted = value !== undefined ? value : !membershipData.isMuted;
-      await updateDoc(membershipRef, {
+      await membershipRef.update({
         isMuted,
         muteUntil: isMuted && metadata?.duration ? 
           new Date(Date.now() + metadata.duration * 60000).toISOString() : null,
@@ -117,7 +114,7 @@ async function performSpaceAction(
     case 'pin': {
       // Toggle pin status
       const isPinned = value !== undefined ? value : !membershipData.isPinned;
-      await updateDoc(membershipRef, {
+      await membershipRef.update({
         isPinned,
         pinnedAt: isPinned ? now : null,
         updatedAt: now
@@ -129,7 +126,7 @@ async function performSpaceAction(
     case 'archive': {
       // Archive/unarchive space membership
       const isArchived = value !== undefined ? value : !membershipData.isArchived;
-      await updateDoc(membershipRef, {
+      await membershipRef.update({
         isArchived,
         archivedAt: isArchived ? now : null,
         status: isArchived ? 'archived' : 'active',
@@ -141,7 +138,7 @@ async function performSpaceAction(
 
     case 'leave': {
       // Leave space
-      await updateDoc(membershipRef, {
+      await membershipRef.update({
         status: 'inactive',
         leftAt: now,
         updatedAt: now
@@ -165,10 +162,10 @@ async function performSpaceAction(
         requestedAt: now
       };
       
-      const requestRef = await addDoc(dbAdmin.collection('builderRequests'), requestData);
+      const requestRef = await dbAdmin.collection('builderRequests').add(requestData);
       
       // Update membership with pending request
-      await updateDoc(membershipRef, {
+      await membershipRef.update({
         hasBuilderRequest: true,
         builderRequestId: requestRef.id,
         updatedAt: now
@@ -188,10 +185,13 @@ async function performSpaceAction(
 // Helper function to update user space preferences
 async function updateUserSpacePreferences(userId: string, spaceId: string, preferenceType: string, value: any) {
   try {
-    const userDoc = await getDoc(doc(dbAdmin, 'users', userId));
+    const userDoc = await dbAdmin.collection('users').doc(userId).get();
     if (!userDoc.exists) return;
 
     const userData = userDoc.data();
+    if (!userData) {
+      throw new Error('User data not found');
+    }
     const spacePreferences = userData.spacePreferences || {};
     
     if (!spacePreferences[spaceId]) {
@@ -201,7 +201,7 @@ async function updateUserSpacePreferences(userId: string, spaceId: string, prefe
     spacePreferences[spaceId][preferenceType] = value;
     spacePreferences[spaceId].updatedAt = new Date().toISOString();
 
-    await updateDoc(doc(dbAdmin, 'users', userId), {
+    await dbAdmin.collection('users').doc(userId).update({
       spacePreferences,
       updatedAt: new Date().toISOString()
     });
@@ -213,13 +213,16 @@ async function updateUserSpacePreferences(userId: string, spaceId: string, prefe
 // Helper function to update space member count
 async function updateSpaceMemberCount(spaceId: string, change: number) {
   try {
-    const spaceDoc = await getDoc(doc(dbAdmin, 'spaces', spaceId));
+    const spaceDoc = await dbAdmin.collection('spaces').doc(spaceId).get();
     if (!spaceDoc.exists) return;
 
     const spaceData = spaceDoc.data();
+    if (!spaceData) {
+      throw new Error('Space data not found');
+    }
     const newMemberCount = Math.max(0, (spaceData.memberCount || 0) + change);
 
-    await updateDoc(doc(dbAdmin, 'spaces', spaceId), {
+    await dbAdmin.collection('spaces').doc(spaceId).update({
       memberCount: newMemberCount,
       updatedAt: new Date().toISOString()
     });
@@ -231,7 +234,7 @@ async function updateSpaceMemberCount(spaceId: string, change: number) {
 // GET - Get space action status
 export async function GET(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
@@ -244,25 +247,27 @@ export async function GET(request: NextRequest) {
     }
 
     // Get membership data
-    const membershipQuery = dbAdmin.collection(
-      dbAdmin.collection('members'),
-      where('userId', '==', user.uid),
-      where('spaceId', '==', spaceId)
-    );
+    const membershipQuery = dbAdmin.collection('members')
+      .where('userId', '==', user.uid)
+      .where('spaceId', '==', spaceId);
 
-    const membershipSnapshot = await getDocs(membershipQuery);
+    const membershipSnapshot = await membershipQuery.get();
     if (membershipSnapshot.empty) {
       return NextResponse.json(ApiResponseHelper.error("Not a member of this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     const membershipData = membershipSnapshot.docs[0].data();
+    if (!membershipData) {
+      return NextResponse.json(ApiResponseHelper.error("Membership data not found", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
+    }
 
     // Get builder request status if exists
     let builderRequestStatus = null;
     if (membershipData.hasBuilderRequest) {
-      const requestDoc = await getDoc(doc(dbAdmin, 'builderRequests', membershipData.builderRequestId));
+      const requestDoc = await dbAdmin.collection('builderRequests').doc(membershipData.builderRequestId).get();
       if (requestDoc.exists) {
-        builderRequestStatus = requestDoc.data().status;
+        const requestData = requestDoc.data();
+        builderRequestStatus = requestData?.status || null;
       }
     }
 

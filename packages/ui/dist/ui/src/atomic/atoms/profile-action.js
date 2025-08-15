@@ -2,7 +2,7 @@
 import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-runtime";
 import React from 'react';
 import { cva } from 'class-variance-authority';
-import { cn } from '../../lib/utils.js';
+import { cn } from '../../lib/utils';
 import { Edit3, Settings, Share2, MessageSquare, UserPlus, MoreHorizontal, Camera, Bell, Shield, Eye, EyeOff, Heart, Bookmark, Link, Download, Upload } from 'lucide-react';
 const profileActionVariants = cva("inline-flex items-center justify-center gap-2 font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed", {
     variants: {
@@ -13,12 +13,12 @@ const profileActionVariants = cva("inline-flex items-center justify-center gap-2
             lg: "px-6 py-3 text-base min-h-[44px]"
         },
         variant: {
-            primary: "bg-hive-gold text-hive-obsidian hover:bg-hive-champagne shadow-lg hover:shadow-xl",
-            secondary: "bg-hive-surface-elevated text-hive-text-primary border border-hive-border-subtle hover:bg-hive-background-interactive hover:border-hive-gold/30",
-            outline: "border border-hive-border-default text-hive-text-primary hover:bg-hive-background-interactive hover:border-hive-gold/30",
-            ghost: "text-hive-text-secondary hover:text-hive-text-primary hover:bg-hive-background-interactive",
-            destructive: "bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30",
-            success: "bg-green-500/20 text-green-400 border border-green-500/30 hover:bg-green-500/30"
+            primary: "bg-[var(--hive-brand-gold)] text-[var(--hive-text-inverse)] hover:bg-[var(--hive-brand-secondary)] shadow-lg hover:shadow-xl",
+            secondary: "bg-[var(--hive-background-secondary)] text-[var(--hive-text-primary)] border border-[var(--hive-border-primary)] hover:bg-[var(--hive-background-interactive)] hover:border-[var(--hive-brand-gold)]/30",
+            outline: "border border-[var(--hive-border-primary)] text-[var(--hive-text-primary)] hover:bg-[var(--hive-background-interactive)] hover:border-[var(--hive-brand-gold)]/30",
+            ghost: "text-[var(--hive-text-secondary)] hover:text-[var(--hive-text-primary)] hover:bg-[var(--hive-background-interactive)]",
+            destructive: "bg-[var(--hive-status-error)]/20 text-[var(--hive-status-error)] border border-[var(--hive-status-error)]/30 hover:bg-[var(--hive-status-error)]/30",
+            success: "bg-[var(--hive-status-success)]/20 text-[var(--hive-status-success)] border border-[var(--hive-status-success)]/30 hover:bg-[var(--hive-status-success)]/30"
         },
         shape: {
             rounded: "rounded-lg",
@@ -162,7 +162,7 @@ export function ProfileAction({ actionType, type = "button", label, icon: Custom
         }
         onClick?.(e);
     }, [loading, disabled, href, external, onClick]);
-    const content = (_jsxs(_Fragment, { children: [loading && (_jsx("div", { className: "animate-spin rounded-full border-2 border-current border-t-transparent h-4 w-4" })), !loading && finalIcon && (React.createElement(finalIcon, { className: cn(iconVariants({ size })) })), !iconOnly && !loading && (_jsx("span", { className: "truncate", children: finalLabel })), children, badge && (_jsx("span", { className: "ml-1 px-1.5 py-0.5 bg-hive-gold text-hive-obsidian text-xs font-bold rounded-full min-w-[16px] flex items-center justify-center", children: typeof badge === 'number' && badge > 99 ? '99+' : badge }))] }));
+    const content = (_jsxs(_Fragment, { children: [loading && (_jsx("div", { className: "animate-spin rounded-full border-2 border-current border-t-transparent h-4 w-4" })), !loading && finalIcon && (React.createElement(finalIcon, { className: cn(iconVariants({ size })) })), !iconOnly && !loading && (_jsx("span", { className: "truncate", children: finalLabel })), children, badge && (_jsx("span", { className: "ml-1 px-1.5 py-0.5 bg-[var(--hive-brand-gold)] text-[var(--hive-text-inverse)] text-xs font-bold rounded-full min-w-[16px] flex items-center justify-center", children: typeof badge === 'number' && badge > 99 ? '99+' : badge }))] }));
     // Render as link if href is provided
     if (href && !onClick) {
         return (_jsx("a", { href: href, target: external ? '_blank' : undefined, rel: external ? 'noopener noreferrer' : undefined, className: cn(profileActionVariants({

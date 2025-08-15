@@ -37,7 +37,7 @@ async function discoverAllComponents(): Promise<ComponentFile[]> {
           components.push({
             filePath: path.relative(path.join(__dirname, 'src'), filePath),
             componentName,
-            category: category as any,
+            category: category as 'atoms' | 'molecules' | 'organisms' | 'templates' | 'pages',
             exports
           });
         }
@@ -203,7 +203,7 @@ async function cleanAndRebuildStories() {
           await fs.unlink(path.join(categoryPath, file));
         }
       }
-    } catch (error) {
+    } catch {
       // Directory might not exist
       await fs.mkdir(categoryPath, { recursive: true });
     }

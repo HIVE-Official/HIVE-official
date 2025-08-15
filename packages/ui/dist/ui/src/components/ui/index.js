@@ -1,28 +1,29 @@
 // LEGACY UI COMPONENTS - Most moved to atomic enhanced versions
 // Only keeping components that don't have atomic equivalents yet
-export * from './alert.js';
-export * from './alert-dialog.js';
-export * from './avatar.js';
-export * from './badge.js';
-export * from './card.js';
-export * from './dropdown-menu.js';
-export * from './label.js';
-export * from './popover.js';
-export * from './resizable.js';
-export * from './scroll-area.js';
-export * from './skeleton.js';
-export * from './slider.js';
-export * from './tabs.js';
-export * from './toast.js';
-export * from './tooltip.js';
+export * from './alert';
+export * from './alert-dialog';
+export * from './avatar';
+export * from './badge';
+export * from './card';
+export * from './dropdown-menu';
+export * from './label';
+export * from './popover';
+export * from './resizable';
+export * from './scroll-area';
+export * from './skeleton';
+export * from './slider';
+export * from './tabs';
+export * from './toast';
+export * from './tooltip';
 // BRIDGE COMPONENTS - Temporary bridges to atomic enhanced versions for LiveToolRuntime
-export * from './button.js';
-export * from './input.js';
-export * from './select.js';
-export * from './checkbox.js';
-export * from './radio-group.js';
-// REMOVED (now use atomic enhanced versions):
-// - textarea.tsx → Use Textarea from atomic/atoms/textarea-enhanced.tsx
-// - switch.tsx → Use Switch from atomic/atoms/switch-enhanced.tsx
-// - separator.tsx → Use Separator from atomic/atoms/spacing-enhanced.tsx
+export * from './button';
+export * from './input';
+export * from './select';
+export * from './checkbox';
+export * from './radio-group';
+// BRIDGE COMPONENTS - Temporary bridges to atomic enhanced versions
+export * from './switch';
+export * from './separator';
+export * from './textarea';
+export * from './progress';
 //# sourceMappingURL=index.js.map

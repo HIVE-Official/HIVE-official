@@ -17,7 +17,7 @@ const textareaVariants = cva(
         error: "border-[var(--hive-status-error)] focus:border-[var(--hive-status-error)] focus:ring-[color-mix(in_srgb,var(--hive-status-error)_30%,transparent)]",
         success: "border-[var(--hive-status-success)] focus:border-[var(--hive-status-success)] focus:ring-[color-mix(in_srgb,var(--hive-status-success)_30%,transparent)]",
         warning: "border-[var(--hive-status-warning)] focus:border-[var(--hive-status-warning)] focus:ring-[color-mix(in_srgb,var(--hive-status-warning)_30%,transparent)]",
-        brand: "border-[var(--hive-brand-secondary)] focus:border-[var(--hive-brand-secondary)]",
+        brand: "bg-transparent border-2 border-[var(--hive-brand-secondary)] focus:border-[var(--hive-brand-secondary)] focus:ring-[color-mix(in_srgb,var(--hive-brand-secondary)_30%,transparent)]",
       },
       
       size: {
@@ -62,6 +62,8 @@ export interface TextareaProps
   showCharCount?: boolean;
   maxLength?: number;
   autoResize?: boolean;
+  minRows?: number;
+  maxRows?: number;
 }
 
 const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
@@ -78,7 +80,9 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
     required,
     showCharCount,
     maxLength,
-    autoResize,
+    autoResize = true, // Default to true for modern UX
+    minRows = 1,
+    maxRows = 10,
     value,
     onChange,
     id,
@@ -91,13 +95,34 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
     // Determine variant based on state
     const computedVariant = error ? "error" : success ? "success" : variant;
     
-    // Handle auto-resize
+    // Calculate line height based on size
+    const getLineHeight = () => {
+      switch (size) {
+        case 'sm': return 20;
+        case 'lg': return 28; 
+        case 'xl': return 32;
+        default: return 24;
+      }
+    };
+    
+    // Handle auto-resize with min/max constraints
     const handleAutoResize = React.useCallback(() => {
       if (autoResize && textareaRef.current) {
+        const lineHeight = getLineHeight();
+        const minHeight = lineHeight * minRows + 16; // Add padding
+        const maxHeight = lineHeight * maxRows + 16;
+        
+        // Reset height to get accurate scrollHeight
         textareaRef.current.style.height = 'auto';
-        textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+        
+        // Calculate new height
+        const scrollHeight = textareaRef.current.scrollHeight;
+        const newHeight = Math.min(Math.max(scrollHeight, minHeight), maxHeight);
+        
+        textareaRef.current.style.height = `${newHeight}px`;
+        textareaRef.current.style.overflowY = scrollHeight > maxHeight ? 'auto' : 'hidden';
       }
-    }, [autoResize]);
+    }, [autoResize, minRows, maxRows, size]);
     
     // Handle value changes
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -138,8 +163,8 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         <textarea
           id={textareaId}
           className={cn(
-            textareaVariants({ variant: computedVariant, size, radius, resize }),
-            autoResize && "overflow-hidden",
+            textareaVariants({ variant: computedVariant, size, radius, resize: autoResize ? "none" : resize }),
+            autoResize && "overflow-hidden transition-all duration-150 ease-out",
             className
           )}
           ref={setRefs}
@@ -257,6 +282,8 @@ export const TextareaPresets = {
       placeholder="Write your comment..."
       size="default"
       autoResize
+      minRows={1}
+      maxRows={6}
       showCharCount
       maxLength={500}
       {...props} 

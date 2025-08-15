@@ -3,8 +3,8 @@ import { dbAdmin } from '@/lib/firebase-admin';
 import { FieldValue } from 'firebase-admin/firestore';
 import { z } from 'zod';
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
-import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
+import { ApiResponseHelper, HttpStatus } from "@/lib/api-response-types";
+import { withAuth } from '@/lib/api-auth-middleware';
 
 // Activity event schema
 const activityEventSchema = z.object({
@@ -143,7 +143,8 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
         success: true,
         activities: mockActivity,
         totalCount: mockActivity.length,
-        developmentMode: true });
+        // SECURITY: Development mode removed for production safety
+      });
     }
 
     // Parse query parameters
@@ -241,10 +242,17 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
   operation: 'get_user_activity' 
 });
 
+interface ActivityData {
+  type: string;
+  spaceId?: string;
+  toolId?: string;
+  duration?: number;
+}
+
 /**
  * Update daily activity summary
  */
-async function updateDailyActivitySummary(userId: string, activityData: any) {
+async function updateDailyActivitySummary(userId: string, activityData: ActivityData) {
   try {
     const today = new Date().toISOString().split('T')[0];
     const summaryRef = dbAdmin.collection('activitySummaries').doc(`${userId}_${today}`);
@@ -267,28 +275,28 @@ async function updateDailyActivitySummary(userId: string, activityData: any) {
     } else {
       // Update existing summary
       const existingData = summaryDoc.data();
-      const updates: any = {
+      const updates: Record<string, unknown> = {
         updatedAt: FieldValue.serverTimestamp(),
       };
       
       if (activityData.duration) {
-        updates.totalTimeSpent = (existingData?.totalTimeSpent || 0) + activityData.duration;
+        updates.totalTimeSpent = ((existingData?.totalTimeSpent as number) || 0) + activityData.duration;
       }
       
-      if (activityData.spaceId && !existingData?.spacesVisited?.includes(activityData.spaceId)) {
-        updates.spacesVisited = [...(existingData?.spacesVisited || []), activityData.spaceId];
+      if (activityData.spaceId && !(existingData?.spacesVisited as string[] || []).includes(activityData.spaceId)) {
+        updates.spacesVisited = [...((existingData?.spacesVisited as string[]) || []), activityData.spaceId];
       }
       
-      if (activityData.toolId && !existingData?.toolsUsed?.includes(activityData.toolId)) {
-        updates.toolsUsed = [...(existingData?.toolsUsed || []), activityData.toolId];
+      if (activityData.toolId && !(existingData?.toolsUsed as string[] || []).includes(activityData.toolId)) {
+        updates.toolsUsed = [...((existingData?.toolsUsed as string[]) || []), activityData.toolId];
       }
       
       if (activityData.type === 'content_creation') {
-        updates.contentCreated = (existingData?.contentCreated || 0) + 1;
+        updates.contentCreated = ((existingData?.contentCreated as number) || 0) + 1;
       }
       
       if (activityData.type === 'social_interaction') {
-        updates.socialInteractions = (existingData?.socialInteractions || 0) + 1;
+        updates.socialInteractions = ((existingData?.socialInteractions as number) || 0) + 1;
       }
       
       await summaryRef.update(updates);

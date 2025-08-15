@@ -1,7 +1,7 @@
 'use client';
-import { jsx as _jsx } from "react/jsx-runtime";
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
-import { cn } from "../../lib/utils.js";
+import { cn } from "../../lib/utils";
 import { cva } from "class-variance-authority";
 // HIVE Brand System - Using Existing Assets and Design Tokens
 // Uses actual HIVE logos and PRD-aligned color system
@@ -29,19 +29,73 @@ const logoVariants = cva("shrink-0", {
         color: "auto",
     },
 });
-export const HiveLogo = React.forwardRef(({ className, size, color = "auto", ...props }, ref) => {
-    // Determine which logo to use based on color preference
-    const getLogoPath = () => {
-        if (color === "black")
-            return "/assets/hive-logo-black.svg";
-        if (color === "gold")
-            return "/assets/hive-logo-gold.svg";
-        if (color === "white")
-            return "/assets/hive-logo-white.svg";
-        // Auto mode - use gold by default (brand color)
-        return "/assets/hive-logo-gold.svg";
+// Inline SVG components for better control and styling
+const HiveLogoSVG = ({ color, variant, className, glowEffect }) => {
+    const logoPath = "M432.83,133.2l373.8,216.95v173.77s-111.81,64.31-111.81,64.31v-173.76l-262.47-150.64-262.27,150.84.28,303.16,259.55,150.31,5.53-.33,633.4-365.81,374.52,215.84v433.92l-372.35,215.04h-2.88l-372.84-215.99-.27-174.53,112.08-63.56v173.76c87.89,49.22,174.62,101.14,262.48,150.69l261.99-151.64v-302.41s-261.51-151.27-261.51-151.27l-2.58.31-635.13,366.97c-121.32-69.01-241.36-140.28-362.59-209.44-4.21-2.4-8.42-5.15-13.12-6.55v-433.92l375.23-216h.96Z";
+    const baseProps = {
+        viewBox: "0 0 1500 1500",
+        className,
+        xmlns: "http://www.w3.org/2000/svg"
     };
-    return (_jsx("div", { ref: ref, className: cn(logoVariants({ size }), className), ...props, children: _jsx("img", { src: getLogoPath(), alt: "HIVE", className: "h-full w-full object-contain", draggable: false }) }));
+    if (variant === 'gradient') {
+        return (_jsxs("svg", { ...baseProps, children: [_jsxs("defs", { children: [_jsxs("linearGradient", { id: "hiveGradient", x1: "0%", y1: "0%", x2: "100%", y2: "100%", children: [_jsx("stop", { offset: "0%", stopColor: "var(--hive-brand-secondary)" }), _jsx("stop", { offset: "50%", stopColor: "#fbbf24" }), _jsx("stop", { offset: "100%", stopColor: "#f59e0b" })] }), glowEffect && (_jsxs("filter", { id: "glow", children: [_jsx("feGaussianBlur", { stdDeviation: "8", result: "coloredBlur" }), _jsxs("feMerge", { children: [_jsx("feMergeNode", { in: "coloredBlur" }), _jsx("feMergeNode", { in: "SourceGraphic" })] })] }))] }), _jsx("path", { d: logoPath, fill: "url(#hiveGradient)", filter: glowEffect ? "url(#glow)" : undefined })] }));
+    }
+    if (variant === 'glass') {
+        return (_jsxs("svg", { ...baseProps, children: [_jsxs("defs", { children: [_jsxs("linearGradient", { id: "glassGradient", x1: "0%", y1: "0%", x2: "100%", y2: "100%", children: [_jsx("stop", { offset: "0%", stopColor: "rgba(255,255,255,0.3)" }), _jsx("stop", { offset: "50%", stopColor: "rgba(255,255,255,0.1)" }), _jsx("stop", { offset: "100%", stopColor: "rgba(255,255,255,0.05)" })] }), _jsx("filter", { id: "glassBorder", children: _jsx("feGaussianBlur", { in: "SourceGraphic", stdDeviation: "1" }) })] }), _jsx("path", { d: logoPath, fill: "url(#glassGradient)", stroke: "rgba(255,255,255,0.4)", strokeWidth: "2", filter: "url(#glassBorder)", style: { backdropFilter: 'blur(10px)' } })] }));
+    }
+    if (variant === 'neon') {
+        return (_jsxs("svg", { ...baseProps, children: [_jsx("defs", { children: _jsxs("filter", { id: "neonGlow", children: [_jsx("feGaussianBlur", { stdDeviation: "4", result: "coloredBlur" }), _jsxs("feMerge", { children: [_jsx("feMergeNode", { in: "coloredBlur" }), _jsx("feMergeNode", { in: "SourceGraphic" })] })] }) }), _jsx("path", { d: logoPath, fill: "none", stroke: color || "var(--hive-brand-secondary)", strokeWidth: "8", filter: "url(#neonGlow)", style: {
+                        filter: 'drop-shadow(0 0 10px currentColor)',
+                        animation: 'pulse 2s infinite'
+                    } })] }));
+    }
+    if (variant === 'textured') {
+        return (_jsxs("svg", { ...baseProps, children: [_jsx("defs", { children: _jsxs("pattern", { id: "texture", patternUnits: "userSpaceOnUse", width: "20", height: "20", children: [_jsx("rect", { width: "20", height: "20", fill: color || "currentColor", opacity: "0.9" }), _jsx("circle", { cx: "10", cy: "10", r: "2", fill: "rgba(255,255,255,0.2)" }), _jsx("circle", { cx: "5", cy: "5", r: "1", fill: "rgba(255,255,255,0.1)" }), _jsx("circle", { cx: "15", cy: "15", r: "1", fill: "rgba(255,255,255,0.1)" })] }) }), _jsx("path", { d: logoPath, fill: "url(#texture)" })] }));
+    }
+    if (variant === 'animated') {
+        return (_jsx("svg", { ...baseProps, className: `${className} animate-spin`, style: { animation: 'spin 8s linear infinite' }, children: _jsx("path", { d: logoPath, fill: color || "currentColor", style: {
+                    transformOrigin: 'center',
+                    animation: 'pulse 2s ease-in-out infinite alternate'
+                } }) }));
+    }
+    if (variant === 'monochrome') {
+        return (_jsx("svg", { ...baseProps, style: { filter: 'grayscale(100%) contrast(1.2)' }, children: _jsx("path", { d: logoPath, fill: color || "currentColor" }) }));
+    }
+    if (variant === 'outline') {
+        return (_jsx("svg", { ...baseProps, fill: "none", children: _jsx("path", { d: logoPath, stroke: color || "currentColor", strokeWidth: "20", fill: "none" }) }));
+    }
+    if (variant === 'minimal') {
+        return (_jsxs("svg", { viewBox: "0 0 100 100", className: className, fill: color || "currentColor", xmlns: "http://www.w3.org/2000/svg", children: [_jsx("polygon", { points: "50,10 85,30 85,70 50,90 15,70 15,30" }), _jsx("polygon", { points: "50,25 70,35 70,65 50,75 30,65 30,35", fill: "none", stroke: "rgba(255,255,255,0.3)", strokeWidth: "2" })] }));
+    }
+    // Default solid variant
+    return (_jsx("svg", { ...baseProps, fill: color || "currentColor", children: _jsx("path", { d: logoPath }) }));
+};
+export const HiveLogo = React.forwardRef(({ className, size, color = "auto", variant = "solid", withText = false, textPosition = "right", glowEffect = false, rounded = false, ...props }, ref) => {
+    // Determine color based on preference
+    const getColor = () => {
+        if (color === "black")
+            return "#000000";
+        if (color === "white")
+            return "#ffffff";
+        if (color === "gold")
+            return "var(--hive-brand-secondary)";
+        // Auto mode - use current color for theme adaptation
+        return undefined;
+    };
+    const logoColor = getColor();
+    const logoElement = (_jsx(HiveLogoSVG, { color: logoColor, variant: variant, glowEffect: glowEffect, className: "h-full w-full object-contain" }));
+    const textElement = withText && (_jsx("span", { className: cn("font-bold tracking-tight", size === 'xs' && "text-xs", size === 'sm' && "text-sm", size === 'default' && "text-base", size === 'md' && "text-lg", size === 'lg' && "text-xl", size === 'xl' && "text-2xl", size === '2xl' && "text-3xl", size === '3xl' && "text-4xl", color === 'auto' && "text-[var(--hive-brand-secondary)]", color === 'black' && "text-black", color === 'white' && "text-white", color === 'gold' && "text-[var(--hive-brand-secondary)]"), children: "HIVE" }));
+    return (_jsxs("div", { ref: ref, className: cn(
+        // Base container
+        "flex items-center", textPosition === 'right' && withText && "flex-row gap-3", textPosition === 'bottom' && withText && "flex-col gap-2", textPosition === 'center' && withText && "flex-col items-center gap-2", 
+        // Logo sizing
+        !withText && logoVariants({ size }), withText && "h-auto w-auto", 
+        // Effects and styling
+        "transition-all duration-300 ease-out", variant === 'outline' && "hover:drop-shadow-lg", variant === 'solid' && "hover:scale-105", variant === 'gradient' && "hover:brightness-110", variant === 'glass' && "hover:backdrop-blur-md", variant === 'neon' && "hover:brightness-125", variant === 'animated' && "hover:animation-play-state-paused", 
+        // Rounded container
+        rounded && "rounded-2xl p-2 bg-[var(--hive-background-secondary)]", 
+        // Glow effect
+        glowEffect && "drop-shadow-[0_0_15px_rgba(251,191,36,0.5)]", color === 'auto' && !withText && "text-[var(--hive-brand-secondary)]", className), ...props, children: [_jsx("div", { className: cn(logoVariants({ size }), withText && textPosition === 'right' && logoVariants({ size }), withText && textPosition !== 'right' && logoVariants({ size })), children: logoElement }), textElement] }));
 });
 HiveLogo.displayName = "HiveLogo";
 // Lucide Icon Wrapper using PRD color system

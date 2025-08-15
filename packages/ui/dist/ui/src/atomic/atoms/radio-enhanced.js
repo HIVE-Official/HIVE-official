@@ -2,12 +2,15 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
 import { cva } from "class-variance-authority";
-import { cn } from "../../lib/utils.js";
+import { cn } from "../../lib/utils";
 // HIVE Radio System - Semantic Token Perfection
 // Zero hardcoded values - complete semantic token usage
 const radioVariants = cva(
-// Base styles using semantic tokens only
-"peer aspect-square shrink-0 rounded-full border-2 border-[var(--hive-border-default)] bg-[var(--hive-background-secondary)] transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color-mix(in_srgb,var(--hive-brand-secondary)_30%,transparent)] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:border-[var(--hive-brand-secondary)]", {
+// Hidden native input
+"peer sr-only");
+const radioIndicatorVariants = cva(
+// Custom radio button styling
+"relative flex items-center justify-center aspect-square shrink-0 rounded-full border-2 bg-[var(--hive-background-secondary)] transition-all duration-200 cursor-pointer peer-focus-visible:ring-2 peer-focus-visible:ring-[color-mix(in_srgb,var(--hive-brand-secondary)_30%,transparent)] peer-focus-visible:ring-offset-2 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 hover:border-[var(--hive-brand-secondary)] peer-checked:border-[var(--hive-brand-secondary)] peer-checked:bg-[color-mix(in_srgb,var(--hive-brand-secondary)_10%,transparent)]", {
     variants: {
         size: {
             sm: "h-4 w-4",
@@ -16,11 +19,11 @@ const radioVariants = cva(
             xl: "h-7 w-7",
         },
         variant: {
-            default: "border-[var(--hive-border-default)] data-[state=checked]:border-[var(--hive-brand-secondary)]",
-            success: "border-[var(--hive-status-success)] data-[state=checked]:border-[var(--hive-status-success)]",
-            error: "border-[var(--hive-status-error)] data-[state=checked]:border-[var(--hive-status-error)]",
-            warning: "border-[var(--hive-status-warning)] data-[state=checked]:border-[var(--hive-status-warning)]",
-            info: "border-[var(--hive-status-info)] data-[state=checked]:border-[var(--hive-status-info)]",
+            default: "border-[var(--hive-border-default)] peer-checked:border-[var(--hive-brand-secondary)]",
+            success: "border-[var(--hive-status-success)] peer-checked:border-[var(--hive-status-success)]",
+            error: "border-[var(--hive-status-error)] peer-checked:border-[var(--hive-status-error)]",
+            warning: "border-[var(--hive-status-warning)] peer-checked:border-[var(--hive-status-warning)]",
+            info: "border-[var(--hive-status-info)] peer-checked:border-[var(--hive-status-info)]",
         }
     },
     defaultVariants: {
@@ -52,7 +55,11 @@ const radioLabelVariants = cva("text-sm leading-none peer-disabled:cursor-not-al
 });
 const Radio = React.forwardRef(({ className, size, variant, label, description, error, labelProps, checked, id, ...props }, ref) => {
     const radioId = id || React.useId();
-    const radioElement = (_jsxs("div", { className: "relative flex items-center", children: [_jsx("input", { type: "radio", id: radioId, className: cn(radioVariants({ size, variant }), className), ref: ref, checked: checked, "data-state": checked ? "checked" : "unchecked", ...props }), checked && (_jsx("div", { className: "absolute inset-0 flex items-center justify-center pointer-events-none", children: _jsx(RadioIndicator, { size: size, variant: variant }) }))] }));
+    const radioElement = (_jsxs("div", { className: "relative flex items-center", children: [_jsx("input", { type: "radio", id: radioId, className: cn(radioVariants(), className), ref: ref, checked: checked, ...props }), _jsx("div", { className: cn(radioIndicatorVariants({ size, variant })), children: _jsx("div", { className: cn("rounded-full transition-all duration-200", checked ? "opacity-100 scale-100" : "opacity-0 scale-0", 
+                    // Size based on parent
+                    size === "sm" && "h-1.5 w-1.5", size === "default" && "h-2 w-2", size === "lg" && "h-2.5 w-2.5", size === "xl" && "h-3 w-3", 
+                    // Color based on variant
+                    variant === "default" && "bg-[var(--hive-brand-secondary)]", variant === "success" && "bg-[var(--hive-status-success)]", variant === "error" && "bg-[var(--hive-status-error)]", variant === "warning" && "bg-[var(--hive-status-warning)]", variant === "info" && "bg-[var(--hive-status-info)]") }) })] }));
     if (label || description || error) {
         return (_jsxs("div", { className: "space-y-2", children: [_jsxs("div", { className: "flex items-start space-x-3", children: [radioElement, _jsxs("div", { className: "flex-1 space-y-1", children: [label && (_jsx("label", { htmlFor: radioId, className: cn(radioLabelVariants({
                                         color: labelProps?.color,
@@ -90,7 +97,8 @@ const RadioGroup = React.forwardRef(({ className, name, value, onChange, orienta
 });
 RadioGroup.displayName = "RadioGroup";
 const RadioCard = React.forwardRef(({ icon, badge, label, description, value, className, ...props }, ref) => {
-    return (_jsx("label", { className: cn("relative flex cursor-pointer rounded-lg border-2 border-[var(--hive-border-default)] bg-[var(--hive-background-secondary)] p-4 transition-all duration-200 hover:border-[var(--hive-border-hover)] hover:bg-[var(--hive-interactive-hover)] has-[:checked]:border-[var(--hive-brand-secondary)] has-[:checked]:bg-[color-mix(in_srgb,var(--hive-brand-secondary)_10%,transparent)]", className), children: _jsxs("div", { className: "flex items-start space-x-3 w-full", children: [_jsx(Radio, { ref: ref, className: "mt-0.5", value: value, ...props }), icon && (_jsx("div", { className: "flex-shrink-0 text-[var(--hive-text-secondary)]", children: icon })), _jsxs("div", { className: "flex-1 space-y-1", children: [label && (_jsx("div", { className: "text-sm font-medium text-[var(--hive-text-primary)]", children: label })), description && (_jsx("div", { className: "text-xs text-[var(--hive-text-tertiary)]", children: description }))] }), badge && (_jsx("div", { className: "flex-shrink-0", children: badge }))] }) }));
+    const radioId = React.useId();
+    return (_jsx("label", { htmlFor: radioId, className: cn("relative flex cursor-pointer rounded-lg border-2 border-[var(--hive-border-default)] bg-[var(--hive-background-secondary)] p-4 transition-all duration-200 hover:border-[var(--hive-border-hover)] hover:bg-[var(--hive-interactive-hover)] has-[:checked]:border-[var(--hive-brand-secondary)] has-[:checked]:bg-[color-mix(in_srgb,var(--hive-brand-secondary)_10%,transparent)]", className), children: _jsxs("div", { className: "flex items-start space-x-3 w-full", children: [_jsx(Radio, { ref: ref, id: radioId, className: "mt-0.5", value: value, ...props }), icon && (_jsx("div", { className: "flex-shrink-0 text-[var(--hive-text-secondary)]", children: icon })), _jsxs("div", { className: "flex-1 space-y-1", children: [label && (_jsx("div", { className: "text-sm font-medium text-[var(--hive-text-primary)]", children: label })), description && (_jsx("div", { className: "text-xs text-[var(--hive-text-tertiary)]", children: description }))] }), badge && (_jsx("div", { className: "flex-shrink-0", children: badge }))] }) }));
 });
 RadioCard.displayName = "RadioCard";
 // Radio presets for common patterns
@@ -104,21 +112,5 @@ export const RadioPresets = {
     // Theme Selection
     Theme: (props) => (_jsxs(RadioGroup, { ...props, children: [_jsx(Radio, { value: "light", label: "Light Theme", description: "Clean and bright interface" }), _jsx(Radio, { value: "dark", label: "Dark Theme", description: "Easy on the eyes" }), _jsx(Radio, { value: "auto", label: "Auto", description: "Matches system preference" })] })),
 };
-const RadioIndicator = ({ size = "default", variant = "default" }) => {
-    const indicatorSize = {
-        sm: "h-2 w-2",
-        default: "h-2.5 w-2.5",
-        lg: "h-3 w-3",
-        xl: "h-3.5 w-3.5",
-    };
-    const indicatorColor = {
-        default: "bg-[var(--hive-brand-secondary)]",
-        success: "bg-[var(--hive-status-success)]",
-        error: "bg-[var(--hive-status-error)]",
-        warning: "bg-[var(--hive-status-warning)]",
-        info: "bg-[var(--hive-status-info)]",
-    };
-    return (_jsx("div", { className: cn("rounded-full", indicatorSize[size || "default"], indicatorColor[variant || "default"]) }));
-};
-export { Radio, RadioGroup, RadioCard, radioVariants };
+export { Radio, RadioGroup, RadioCard, radioVariants, radioIndicatorVariants };
 //# sourceMappingURL=radio-enhanced.js.map

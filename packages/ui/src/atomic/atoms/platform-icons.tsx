@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { cn } from '../../lib/utils';
+import { HiveLogo } from './hive-brand';
 import { 
   User, 
   Grid3X3, 
@@ -12,45 +13,46 @@ import {
   Eye, 
   GraduationCap,
   Star,
-  TestTube,
-  Hexagon
+  TestTube
 } from 'lucide-react';
 
-export interface PlatformIconProps {
+export interface HiveIconProps {
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
   className?: string;
 }
 
-const iconSizes = {
-  xs: 16,
-  sm: 20, 
-  md: 24,
-  lg: 32,
-  xl: 40
+export interface PlatformIconProps {
+  icon: keyof typeof PlatformIcons;
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+  className?: string;
+  color?: string;
+}
+
+// Map platform icon sizes to HiveLogo sizes
+const mapSizeToHiveLogo = (size: string) => {
+  const sizeMap = {
+    xs: 'xs',
+    sm: 'sm', 
+    md: 'default',
+    lg: 'lg',
+    xl: 'xl'
+  } as const;
+  return sizeMap[size as keyof typeof sizeMap] || 'default';
 };
 
-// HIVE Logo Component (fallback to Hexagon if SVG not found)
-export const HiveIcon: React.FC<PlatformIconProps> = ({ size = 'md', className }) => {
-  const [imgError, setImgError] = React.useState(false);
-  
-  if (imgError) {
-    // Fallback to Lucide Hexagon icon
-    return <Hexagon size={iconSizes[size]} className={className} />;
-  }
-  
+// HIVE Logo Component using the unified HiveLogo component
+export const HiveIcon: React.FC<HiveIconProps> = ({ size = 'md', className }) => {
   return (
-    <img 
-      src="/assets/hive-logo-white.svg" 
-      alt="HIVE"
-      width={iconSizes[size]}
-      height={iconSizes[size]}
-      className={cn('inline-block', className)}
-      onError={() => setImgError(true)}
+    <HiveLogo 
+      size={mapSizeToHiveLogo(size)}
+      color="auto"
+      variant="solid"
+      className={className}
     />
   );
 };
 
-// Platform icons using Lucide
+// Platform icons using consistent Lucide icons
 export const PlatformIcons = {
   Hive: HiveIcon,
   Profile: User,
@@ -63,4 +65,36 @@ export const PlatformIcons = {
   University: GraduationCap,
   Builder: Star,
   Beta: TestTube
+};
+
+// Unified platform icon component
+export const PlatformIcon: React.FC<PlatformIconProps> = ({ 
+  icon, 
+  size = 'md', 
+  className,
+  color = 'currentColor',
+  ...props 
+}) => {
+  const IconComponent = PlatformIcons[icon];
+  
+  if (icon === 'Hive') {
+    return <HiveIcon size={size} className={className} />;
+  }
+  
+  const iconSizes = {
+    xs: 16,
+    sm: 20, 
+    md: 24,
+    lg: 32,
+    xl: 40
+  };
+  
+  return (
+    <IconComponent 
+      size={iconSizes[size]}
+      className={cn('shrink-0', className)}
+      color={color}
+      {...props}
+    />
+  );
 };

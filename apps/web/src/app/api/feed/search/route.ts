@@ -4,7 +4,8 @@ import { dbAdmin } from '@/lib/firebase-admin';
 import { getAuth } from 'firebase-admin/auth';
 import { getAuthTokenFromRequest } from '@/lib/auth';
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
+import * as admin from 'firebase-admin';
 
 const SearchFeedSchema = z.object({
   query: z.string().min(1).max(100),
@@ -51,14 +52,16 @@ export async function POST(request: NextRequest) {
       .where('userId', '==', decodedToken.uid)
       .get();
     
-    const userSpaceIds = userSpacesSnapshot.docs.map(doc => doc.ref.parent.parent?.id).filter(Boolean);
+    const userSpaceIds = userSpacesSnapshot.docs
+      .map(doc => doc.ref.parent.parent?.id)
+      .filter((id): id is string => Boolean(id));
 
     const feedItems = [];
     const queryLower = query.toLowerCase();
 
     // Search posts
     if (!type || type === 'post') {
-      let postsQuery = dbAdmin.collection('posts');
+      let postsQuery: admin.firestore.Query<admin.firestore.DocumentData> = dbAdmin.collection('posts');
       
       if (spaceId) {
         postsQuery = postsQuery.where('spaceId', '==', spaceId);
@@ -161,10 +164,10 @@ export async function POST(request: NextRequest) {
 
     // Search events
     if (!type || type === 'event') {
-      for (const spaceId of (spaceId ? [spaceId] : userSpaceIds.slice(0, 10))) {
-        let eventsQuery = db
+      for (const currentSpaceId of (spaceId ? [spaceId] : userSpaceIds.slice(0, 10))) {
+        let eventsQuery: admin.firestore.Query<admin.firestore.DocumentData> = db
           .collection('spaces')
-          .doc(spaceId)
+          .doc(currentSpaceId)
           .collection('events');
         
         if (timeFilter) {
@@ -206,7 +209,7 @@ export async function POST(request: NextRequest) {
           // Get space info
           let space = null;
           try {
-            const spaceDoc = await dbAdmin.collection('spaces').doc(spaceId).get();
+            const spaceDoc = await dbAdmin.collection('spaces').doc(currentSpaceId).get();
             if (spaceDoc.exists) {
               const spaceData = spaceDoc.data();
               space = {
@@ -256,7 +259,7 @@ export async function POST(request: NextRequest) {
 
     // Search tools
     if (!type || type === 'tool') {
-      let toolsQuery = dbAdmin.collection('tools');
+      let toolsQuery: admin.firestore.Query<admin.firestore.DocumentData> = dbAdmin.collection('tools');
       
       if (timeFilter) {
         toolsQuery = toolsQuery.where('createdAt', '>=', timeFilter);

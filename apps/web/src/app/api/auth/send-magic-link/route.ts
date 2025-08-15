@@ -12,7 +12,7 @@ import { validateWithSecurity, ApiSchemas } from "@/lib/secure-input-validation"
 import { enforceRateLimit } from "@/lib/secure-rate-limiter";
 import { isDevUser, validateDevSchool, createDevSession } from "@/lib/dev-auth-helper";
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
 
 /**
  * PRODUCTION-SAFE magic link sending

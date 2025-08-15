@@ -17,6 +17,10 @@ export interface FeatureFlags {
   // Analytics Categories (for tracking events)
   spaces: 'enabled';
   tools: 'enabled';
+  analytics: 'enabled';
+  realtime: 'enabled';
+  ai: 'enabled' | 'disabled';
+  gamification: 'enabled' | 'disabled';
 }
 
 export const DEFAULT_FLAGS: FeatureFlags = {
@@ -29,6 +33,10 @@ export const DEFAULT_FLAGS: FeatureFlags = {
   enableRealTimeNotifications: false,
   spaces: 'enabled',
   tools: 'enabled',
+  analytics: 'enabled',
+  realtime: 'enabled',
+  ai: 'disabled',
+  gamification: 'disabled',
 };
 
 // User-based variant assignment for A/B testing
@@ -56,6 +64,10 @@ export function getFeatureFlags(userId: string): FeatureFlags {
     // Analytics categories - always enabled
     spaces: 'enabled',
     tools: 'enabled',
+    analytics: 'enabled',
+    realtime: 'enabled',
+    ai: hash % 10 < 2 ? 'enabled' : 'disabled', // 20% of users
+    gamification: hash % 10 < 3 ? 'enabled' : 'disabled', // 30% of users
   };
 }
 

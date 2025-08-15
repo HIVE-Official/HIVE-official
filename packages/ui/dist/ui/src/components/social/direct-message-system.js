@@ -4,8 +4,8 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
  * Complete DM and chat functionality with real-time updates
  */
 import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
-import { Button } from '../ui/button.js';
-import { Avatar, HiveBadge as Badge } from '../index.js';
+import { Button } from '../ui/button';
+import { Avatar, HiveBadge as Badge } from '../index';
 import { MessageSquare, Send, Search, MoreVertical, Phone, Video, Info, Archive, Trash2, Paperclip, Smile, X, Check, CheckCheck, Clock, Pin, Edit3, Reply } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 const ConversationList = ({ conversations, activeConversationId, currentUserId, onSelectConversation, onArchiveConversation, onPinConversation, onMuteConversation }) => {

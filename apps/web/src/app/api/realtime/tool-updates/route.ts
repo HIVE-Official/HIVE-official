@@ -71,7 +71,7 @@ interface ToolConflictResolution {
 // POST - Process tool update and broadcast to subscribers
 export async function POST(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
@@ -105,6 +105,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(ApiResponseHelper.error("Tool not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
     const tool = toolDoc.data();
+    if (!tool) {
+      return NextResponse.json(ApiResponseHelper.error("Tool data not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
+    }
 
     // Determine affected users
     let affectedUsers = targetUsers;
@@ -122,7 +125,7 @@ export async function POST(request: NextRequest) {
     const updateEvent: ToolUpdateEvent = {
       id: `tool_update_${toolId}_${Date.now()}_${Math.random().toString(36).substr(2, 8)}`,
       toolId,
-      toolName: tool.name || 'Unknown Tool',
+      toolName: tool?.name || 'Unknown Tool',
       deploymentId,
       spaceId,
       userId: user.uid,
@@ -145,7 +148,7 @@ export async function POST(request: NextRequest) {
     };
 
     // Store update event
-    await setDoc(doc(db, 'toolUpdateEvents', updateEvent.id), updateEvent);
+    await dbAdmin.collection('toolUpdateEvents').doc(updateEvent.id).set(updateEvent);
 
     // Update tool state snapshot
     await updateToolStateSnapshot(updateEvent, currentSnapshot);
@@ -181,7 +184,7 @@ export async function POST(request: NextRequest) {
 // GET - Get tool updates and sync information
 export async function GET(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
@@ -199,36 +202,32 @@ export async function GET(request: NextRequest) {
     }
 
     // Verify user has access to this tool
-    const hasAccess = await verifyToolAccess(user.uid, toolId, deploymentId, spaceId);
+    const hasAccess = await verifyToolAccess(user.uid, toolId, deploymentId ?? undefined, spaceId ?? undefined);
     if (!hasAccess) {
       return NextResponse.json(ApiResponseHelper.error("Access denied to this tool", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     // Build query for updates
-    let updatesQuery = dbAdmin.collection(
-      dbAdmin.collection('toolUpdateEvents'),
-      where('toolId', '==', toolId)
-    );
+    let updatesQuery = dbAdmin.collection('toolUpdateEvents')
+      .where('toolId', '==', toolId);
 
     if (deploymentId) {
-      updatesQuery = dbAdmin.collection(updatesQuery, where('deploymentId', '==', deploymentId));
+      updatesQuery = updatesQuery.where('deploymentId', '==', deploymentId);
     }
 
     if (spaceId) {
-      updatesQuery = dbAdmin.collection(updatesQuery, where('spaceId', '==', spaceId));
+      updatesQuery = updatesQuery.where('spaceId', '==', spaceId);
     }
 
     if (since) {
-      updatesQuery = dbAdmin.collection(updatesQuery, where('timestamp', '>', since));
+      updatesQuery = updatesQuery.where('timestamp', '>', since);
     }
 
-    updatesQuery = dbAdmin.collection(
-      updatesQuery,
-      orderBy('sequenceNumber', 'desc'),
-      fbLimit(limit)
-    );
+    updatesQuery = updatesQuery
+      .orderBy('sequenceNumber', 'desc')
+      .limit(limit);
 
-    const updatesSnapshot = await getDocs(updatesQuery);
+    const updatesSnapshot = await updatesQuery.get();
     const updates = updatesSnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
@@ -237,11 +236,11 @@ export async function GET(request: NextRequest) {
     // Get current tool state snapshot if requested
     let stateSnapshot = null;
     if (includeSnapshot) {
-      stateSnapshot = await getToolStateSnapshot(toolId, deploymentId);
+      stateSnapshot = await getToolStateSnapshot(toolId, deploymentId ?? undefined);
     }
 
     // Get sync status
-    const syncStatus = await getToolSyncStatus(toolId, deploymentId, user.uid);
+    const syncStatus = await getToolSyncStatus(toolId, deploymentId ?? undefined, user.uid);
 
     return NextResponse.json({
       success: true,
@@ -260,7 +259,7 @@ export async function GET(request: NextRequest) {
 // PUT - Sync tool state and resolve conflicts
 export async function PUT(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
@@ -280,7 +279,7 @@ export async function PUT(request: NextRequest) {
     }
 
     // Verify access
-    const hasAccess = await verifyToolAccess(user.uid, toolId, deploymentId);
+    const hasAccess = await verifyToolAccess(user.uid, toolId, deploymentId ?? undefined);
     if (!hasAccess) {
       return NextResponse.json(ApiResponseHelper.error("Access denied to this tool", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
@@ -306,12 +305,14 @@ export async function PUT(request: NextRequest) {
     
     if (!hasConflict && !forceMerge) {
       // No conflict, update server state
-      await updateToolStateSnapshot({
+      const syncUpdateEvent: ToolUpdateEvent = {
         id: `sync_${toolId}_${Date.now()}`,
         toolId,
+        toolName: 'Tool', // This would need to be fetched properly
         deploymentId,
-        updateType: 'state_change',
+        spaceId: undefined,
         userId: user.uid,
+        updateType: 'state_change',
         eventData: {
           previousState: serverSnapshot.currentState,
           newState: clientState,
@@ -323,7 +324,8 @@ export async function PUT(request: NextRequest) {
         sequenceNumber: 0,
         broadcastChannels: [],
         requiresAck: false
-      } as ToolUpdateEvent, serverSnapshot);
+      };
+      await updateToolStateSnapshot(syncUpdateEvent, serverSnapshot);
 
       return NextResponse.json({
         success: true,
@@ -362,7 +364,7 @@ export async function PUT(request: NextRequest) {
 // DELETE - Clean up old tool updates and events
 export async function DELETE(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
@@ -378,7 +380,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     // Verify permission to clean up tool data
-    const hasPermission = await verifyToolUpdatePermission(user.uid, toolId, deploymentId);
+    const hasPermission = await verifyToolUpdatePermission(user.uid, toolId, deploymentId ?? undefined);
     if (!hasPermission) {
       return NextResponse.json(ApiResponseHelper.error("Not authorized to clean up this tool", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
@@ -387,26 +389,24 @@ export async function DELETE(request: NextRequest) {
 
     if (eventId) {
       // Delete specific event
-      const eventDoc = await getDoc(doc(db, 'toolUpdateEvents', eventId));
-      if (eventDoc.exists && eventDoc.data().toolId === toolId) {
-        await deleteDoc(doc(db, 'toolUpdateEvents', eventId));
+      const eventDoc = await dbAdmin.collection('toolUpdateEvents').doc(eventId).get();
+      if (eventDoc.exists && eventDoc.data()?.toolId === toolId) {
+        await dbAdmin.collection('toolUpdateEvents').doc(eventId).delete();
         deletedCount = 1;
       }
     } else if (olderThan) {
       // Delete events older than specified date
       const cutoffDate = new Date(olderThan).toISOString();
-      let cleanupQuery = dbAdmin.collection(
-        dbAdmin.collection('toolUpdateEvents'),
-        where('toolId', '==', toolId),
-        where('timestamp', '<', cutoffDate)
-      );
+      let cleanupQuery = dbAdmin.collection('toolUpdateEvents')
+        .where('toolId', '==', toolId)
+        .where('timestamp', '<', cutoffDate);
 
       if (deploymentId) {
-        cleanupQuery = dbAdmin.collection(cleanupQuery, where('deploymentId', '==', deploymentId));
+        cleanupQuery = cleanupQuery.where('deploymentId', '==', deploymentId);
       }
 
-      const cleanupSnapshot = await getDocs(cleanupQuery);
-      const deletePromises = cleanupSnapshot.docs.map(doc => deleteDoc(doc.ref));
+      const cleanupSnapshot = await cleanupQuery.get();
+      const deletePromises = cleanupSnapshot.docs.map(doc => doc.ref.delete());
       await Promise.all(deletePromises);
       deletedCount = cleanupSnapshot.size;
     } else {
@@ -439,16 +439,16 @@ async function verifyToolUpdatePermission(
     }
 
     const tool = toolDoc.data();
-    if (tool.authorId === userId) {
+    if (tool?.authorId === userId) {
       return true;
     }
 
     // Check deployment permissions if deploymentId provided
     if (deploymentId) {
-      const deploymentDoc = await getDoc(doc(db, 'toolDeployments', deploymentId));
+      const deploymentDoc = await dbAdmin.collection('toolDeployments').doc(deploymentId).get();
       if (deploymentDoc.exists) {
         const deployment = deploymentDoc.data();
-        if (deployment.deployedBy === userId) {
+        if (deployment?.deployedBy === userId) {
           return true;
         }
       }
@@ -456,14 +456,12 @@ async function verifyToolUpdatePermission(
 
     // Check space permissions if spaceId provided
     if (spaceId) {
-      const memberQuery = dbAdmin.collection(
-        dbAdmin.collection('members'),
-        where('userId', '==', userId),
-        where('spaceId', '==', spaceId),
-        where('status', '==', 'active')
-      );
+      const memberQuery = dbAdmin.collection('members')
+        .where('userId', '==', userId)
+        .where('spaceId', '==', spaceId)
+        .where('status', '==', 'active');
 
-      const memberSnapshot = await getDocs(memberQuery);
+      const memberSnapshot = await memberQuery.get();
       if (!memberSnapshot.empty) {
         const memberData = memberSnapshot.docs[0].data();
         return ['builder', 'moderator', 'admin'].includes(memberData.role || 'member');
@@ -487,30 +485,28 @@ async function verifyToolAccess(
   try {
     // Tool owners always have access
     const toolDoc = await dbAdmin.collection('tools').doc(toolId).get();
-    if (toolDoc.exists && toolDoc.data().authorId === userId) {
+    if (toolDoc.exists && toolDoc.data()?.authorId === userId) {
       return true;
     }
 
     // Check deployment access
     if (deploymentId) {
-      const deploymentDoc = await getDoc(doc(db, 'toolDeployments', deploymentId));
+      const deploymentDoc = await dbAdmin.collection('toolDeployments').doc(deploymentId).get();
       if (deploymentDoc.exists) {
         const deployment = deploymentDoc.data();
         
         // Check if user deployed this tool or is in the space
-        if (deployment.deployedBy === userId) {
+        if (deployment?.deployedBy === userId) {
           return true;
         }
         
-        if (deployment.spaceId) {
-          const memberQuery = dbAdmin.collection(
-            dbAdmin.collection('members'),
-            where('userId', '==', userId),
-            where('spaceId', '==', deployment.spaceId),
-            where('status', '==', 'active')
-          );
+        if (deployment?.spaceId) {
+          const memberQuery = dbAdmin.collection('members')
+            .where('userId', '==', userId)
+            .where('spaceId', '==', deployment.spaceId)
+            .where('status', '==', 'active');
           
-          const memberSnapshot = await getDocs(memberQuery);
+          const memberSnapshot = await memberQuery.get();
           return !memberSnapshot.empty;
         }
       }
@@ -518,14 +514,12 @@ async function verifyToolAccess(
 
     // Check space access
     if (spaceId) {
-      const memberQuery = dbAdmin.collection(
-        dbAdmin.collection('members'),
-        where('userId', '==', userId),
-        where('spaceId', '==', spaceId),
-        where('status', '==', 'active')
-      );
+      const memberQuery = dbAdmin.collection('members')
+        .where('userId', '==', userId)
+        .where('spaceId', '==', spaceId)
+        .where('status', '==', 'active');
       
-      const memberSnapshot = await getDocs(memberQuery);
+      const memberSnapshot = await memberQuery.get();
       return !memberSnapshot.empty;
     }
 
@@ -544,18 +538,23 @@ async function getToolUsers(toolId: string, deploymentId?: string, spaceId?: str
     // Add tool owner
     const toolDoc = await dbAdmin.collection('tools').doc(toolId).get();
     if (toolDoc.exists) {
-      users.add(toolDoc.data().authorId);
+      const tool = toolDoc.data();
+      if (tool?.authorId) {
+        users.add(tool.authorId);
+      }
     }
 
     // Add deployment users
     if (deploymentId) {
-      const deploymentDoc = await getDoc(doc(db, 'toolDeployments', deploymentId));
+      const deploymentDoc = await dbAdmin.collection('toolDeployments').doc(deploymentId).get();
       if (deploymentDoc.exists) {
         const deployment = deploymentDoc.data();
-        users.add(deployment.deployedBy);
+        if (deployment?.deployedBy) {
+          users.add(deployment.deployedBy);
+        }
         
         // Add space members if deployed to space
-        if (deployment.spaceId) {
+        if (deployment?.spaceId) {
           const spaceMembers = await getSpaceMembers(deployment.spaceId);
           spaceMembers.forEach(member => users.add(member));
         }
@@ -578,13 +577,11 @@ async function getToolUsers(toolId: string, deploymentId?: string, spaceId?: str
 // Helper function to get space members
 async function getSpaceMembers(spaceId: string): Promise<string[]> {
   try {
-    const memberQuery = dbAdmin.collection(
-      dbAdmin.collection('members'),
-      where('spaceId', '==', spaceId),
-      where('status', '==', 'active')
-    );
+    const memberQuery = dbAdmin.collection('members')
+      .where('spaceId', '==', spaceId)
+      .where('status', '==', 'active');
 
-    const memberSnapshot = await getDocs(memberQuery);
+    const memberSnapshot = await memberQuery.get();
     return memberSnapshot.docs.map(doc => doc.data().userId);
   } catch (error) {
     logger.error('Error getting space members', { error: error, endpoint: '/api/realtime/tool-updates' });
@@ -596,7 +593,7 @@ async function getSpaceMembers(spaceId: string): Promise<string[]> {
 async function getNextSequenceNumber(toolId: string, deploymentId?: string): Promise<number> {
   try {
     const snapshotId = deploymentId ? `${toolId}_${deploymentId}` : toolId;
-    const snapshotDoc = await getDoc(doc(db, 'toolStateSnapshots', snapshotId));
+    const snapshotDoc = await dbAdmin.collection('toolStateSnapshots').doc(snapshotId).get();
     
     if (snapshotDoc.exists) {
       const snapshot = snapshotDoc.data() as ToolStateSnapshot;
@@ -639,7 +636,7 @@ function generateBroadcastChannels(
 async function getToolStateSnapshot(toolId: string, deploymentId?: string): Promise<ToolStateSnapshot | null> {
   try {
     const snapshotId = deploymentId ? `${toolId}_${deploymentId}` : toolId;
-    const snapshotDoc = await getDoc(doc(db, 'toolStateSnapshots', snapshotId));
+    const snapshotDoc = await dbAdmin.collection('toolStateSnapshots').doc(snapshotId).get();
     
     if (snapshotDoc.exists) {
       return { ...snapshotDoc.data() } as ToolStateSnapshot;
@@ -689,7 +686,7 @@ async function updateToolStateSnapshot(updateEvent: ToolUpdateEvent, currentSnap
       };
     }
     
-    await setDoc(doc(db, 'toolStateSnapshots', snapshotId), newSnapshot);
+    await dbAdmin.collection('toolStateSnapshots').doc(snapshotId).set(newSnapshot);
   } catch (error) {
     logger.error('Error updating tool state snapshot', { error: error, endpoint: '/api/realtime/tool-updates' });
   }
@@ -720,7 +717,7 @@ async function createToolStateSnapshot(
       }
     };
     
-    await setDoc(doc(db, 'toolStateSnapshots', snapshotId), snapshot);
+    await dbAdmin.collection('toolStateSnapshots').doc(snapshotId).set(snapshot);
   } catch (error) {
     logger.error('Error creating tool state snapshot', { error: error, endpoint: '/api/realtime/tool-updates' });
   }
@@ -762,7 +759,7 @@ async function broadcastToolUpdate(updateEvent: ToolUpdateEvent): Promise<void> 
         }
       };
 
-      await addDoc(dbAdmin.collection('realtimeMessages'), realtimeMessage);
+      await dbAdmin.collection('realtimeMessages').add(realtimeMessage);
     }
   } catch (error) {
     logger.error('Error broadcasting tool update', { error: error, endpoint: '/api/realtime/tool-updates' });
@@ -811,7 +808,7 @@ async function initializeAckTracking(updateEvent: ToolUpdateEvent): Promise<void
       status: 'pending'
     };
 
-    await setDoc(doc(db, 'toolUpdateAcks', updateEvent.id), ackTracking);
+    await dbAdmin.collection('toolUpdateAcks').doc(updateEvent.id).set(ackTracking);
   } catch (error) {
     logger.error('Error initializing ack tracking', { error: error, endpoint: '/api/realtime/tool-updates' });
   }
@@ -898,12 +895,14 @@ async function resolveToolStateConflict(
     }
 
     // Update server state with resolution
-    await updateToolStateSnapshot({
+    const conflictResolutionEvent: ToolUpdateEvent = {
       id: `conflict_resolution_${toolId}_${Date.now()}`,
       toolId,
+      toolName: 'Tool', // This would need to be fetched properly
       deploymentId,
-      updateType: 'configuration_change',
+      spaceId: undefined,
       userId,
+      updateType: 'configuration_change',
       eventData: {
         previousState: serverSnapshot.currentState,
         newState: resolvedState,
@@ -919,7 +918,8 @@ async function resolveToolStateConflict(
       sequenceNumber: 0,
       broadcastChannels: [],
       requiresAck: false
-    } as ToolUpdateEvent, serverSnapshot);
+    };
+    await updateToolStateSnapshot(conflictResolutionEvent, serverSnapshot);
 
     return {
       resolvedState,

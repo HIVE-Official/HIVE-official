@@ -3,13 +3,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { getCurrentUser } from '@/lib/server-auth';
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
-import { getFirestore, collection, query, where, getDocs, doc, getDoc, updateDoc } from 'firebase-admin/firestore';
+import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
+import * as admin from 'firebase-admin';
 
 // Ghost Mode quick toggle and status
 export async function GET(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
       targetUserId = checkUserId;
     }
 
-    const privacyDoc = await getDoc(doc(dbAdmin, 'privacySettings', targetUserId));
+    const privacyDoc = await dbAdmin.collection('privacySettings').doc(targetUserId).get();
     
     if (!privacyDoc.exists) {
       return NextResponse.json({ 
@@ -42,6 +42,20 @@ export async function GET(request: NextRequest) {
     }
 
     const settings = privacyDoc.data();
+    if (!settings) {
+      return NextResponse.json({ 
+        ghostMode: {
+          enabled: false,
+          level: 'normal',
+          hideFromDirectory: false,
+          hideActivity: false,
+          hideSpaceMemberships: false,
+          hideLastSeen: false,
+          hideOnlineStatus: false,
+        },
+        isVisible: true
+      });
+    }
     const ghostMode = settings.ghostMode;
     
     // Determine visibility based on ghost mode settings
@@ -61,7 +75,7 @@ export async function GET(request: NextRequest) {
 // POST - Quick toggle ghost mode
 export async function POST(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
@@ -74,13 +88,16 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(ApiResponseHelper.error("Invalid ghost mode level", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
-    const privacyDoc = await getDoc(doc(dbAdmin, 'privacySettings', user.uid));
+    const privacyDoc = await dbAdmin.collection('privacySettings').doc(user.uid).get();
     
     if (!privacyDoc.exists) {
       return NextResponse.json(ApiResponseHelper.error("Privacy settings not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     const settings = privacyDoc.data();
+    if (!settings) {
+      return NextResponse.json(ApiResponseHelper.error("Privacy settings not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
+    }
     const currentGhostMode = settings.ghostMode;
 
     // Apply ghost mode level presets
@@ -119,7 +136,7 @@ export async function POST(request: NextRequest) {
       ...currentGhostMode,
       enabled: enabled !== undefined ? enabled : currentGhostMode.enabled,
       level: level || currentGhostMode.level,
-      ...(level ? levelPresets[level] : {})
+      ...(level && level in levelPresets ? levelPresets[level as keyof typeof levelPresets] : {})
     };
 
     // Handle temporary ghost mode
@@ -137,7 +154,7 @@ export async function POST(request: NextRequest) {
       updatedAt: new Date().toISOString()
     };
 
-    await updateDoc(doc(dbAdmin, 'privacySettings', user.uid), updatedSettings);
+    await dbAdmin.collection('privacySettings').doc(user.uid).update(updatedSettings);
 
     // Apply changes immediately
     await applyGhostModeChanges(user.uid, updatedGhostMode);
@@ -169,21 +186,17 @@ async function checkUserVisibility(targetUserId: string, viewerUserId: string, g
   }
 
   // Check if users are in the same spaces
-  const targetMembershipsQuery = query(
-    collection(dbAdmin, 'members'),
-    where('userId', '==', targetUserId),
-    where('status', '==', 'active')
-  );
+  const targetMembershipsQuery: admin.firestore.Query<admin.firestore.DocumentData> = dbAdmin.collection('members')
+    .where('userId', '==', targetUserId)
+    .where('status', '==', 'active');
 
-  const viewerMembershipsQuery = query(
-    collection(dbAdmin, 'members'),
-    where('userId', '==', viewerUserId),
-    where('status', '==', 'active')
-  );
+  const viewerMembershipsQuery: admin.firestore.Query<admin.firestore.DocumentData> = dbAdmin.collection('members')
+    .where('userId', '==', viewerUserId)
+    .where('status', '==', 'active');
 
   const [targetMemberships, viewerMemberships] = await Promise.all([
-    getDocs(targetMembershipsQuery),
-    getDocs(viewerMembershipsQuery)
+    targetMembershipsQuery.get(),
+    viewerMembershipsQuery.get()
   ]);
 
   const targetSpaces = new Set(targetMemberships.docs.map(doc => doc.data().spaceId));
@@ -215,13 +228,11 @@ async function checkUserVisibility(targetUserId: string, viewerUserId: string, g
 async function applyGhostModeChanges(userId: string, ghostMode: any) {
   try {
     // Update user's visibility in spaces
-    const membershipsQuery = query(
-      collection(dbAdmin, 'members'),
-      where('userId', '==', userId),
-      where('status', '==', 'active')
-    );
+    const membershipsQuery: admin.firestore.Query<admin.firestore.DocumentData> = dbAdmin.collection('members')
+      .where('userId', '==', userId)
+      .where('status', '==', 'active');
 
-    const membershipsSnapshot = await getDocs(membershipsQuery);
+    const membershipsSnapshot = await membershipsQuery.get();
     
     const updates = membershipsSnapshot.docs.map(async (memberDoc) => {
       const memberData = memberDoc.data();
@@ -241,17 +252,17 @@ async function applyGhostModeChanges(userId: string, ghostMode: any) {
         updatedAt: new Date().toISOString()
       };
 
-      return updateDoc(memberDoc.ref, updatedMemberData);
+      return memberDoc.ref.update(updatedMemberData);
     });
 
     await Promise.all(updates);
 
     // Update user's online status
-    const userDocRef = doc(dbAdmin, 'users', userId);
-    const userDoc = await getDoc(userDocRef);
+    const userDocRef = dbAdmin.collection('users').doc(userId);
+    const userDoc = await userDocRef.get();
     
     if (userDoc.exists) {
-      await updateDoc(userDocRef, {
+      await userDocRef.update({
         visibility: {
           showOnlineStatus: !ghostMode.hideOnlineStatus,
           showLastSeen: !ghostMode.hideLastSeen,
@@ -269,7 +280,7 @@ async function applyGhostModeChanges(userId: string, ghostMode: any) {
 function scheduleGhostModeDisable(userId: string, durationMinutes: number) {
   // In a real implementation, this would use a job queue or scheduled function
   // For now, we'll just log that this should be implemented
-  logger.info('Ghost mode for usershould be disabled after minutes', { userId, durationMinutes, endpoint: '/api/privacy/ghost-mode' });
+  logger.info('Ghost mode for user should be disabled after minutes', { userId, durationMinutes, endpoint: '/api/privacy/ghost-mode' });
   
   // This could be implemented with:
   // - Firebase Cloud Functions with pub/sub scheduling

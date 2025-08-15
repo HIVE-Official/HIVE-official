@@ -4,7 +4,6 @@ import { dbAdmin } from '@/lib/firebase-admin';
 import { getCurrentUser } from '@/lib/server-auth';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
-import { doc, getDoc, collection, query, where, getDocs } from 'firebase-admin/firestore';
 
 // Visibility check interface
 interface VisibilityCheck {
@@ -21,7 +20,7 @@ interface VisibilityCheck {
 // POST - Check visibility between users
 export async function POST(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
@@ -50,11 +49,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Get target user's privacy settings
-    const targetPrivacyDoc = await getDoc(doc(dbAdmin, 'privacySettings', targetUserId));
+    const targetPrivacyDoc = await dbAdmin.collection('privacySettings').doc(targetUserId).get();
     const targetPrivacy = targetPrivacyDoc.exists ? targetPrivacyDoc.data() : null;
 
     // Get viewer's privacy settings (for mutual visibility checks)
-    const viewerPrivacyDoc = await getDoc(doc(dbAdmin, 'privacySettings', user.uid));
+    const viewerPrivacyDoc = await dbAdmin.collection('privacySettings').doc(user.uid).get();
     const viewerPrivacy = viewerPrivacyDoc.exists ? viewerPrivacyDoc.data() : null;
 
     // Determine relationship and shared spaces
@@ -86,7 +85,7 @@ export async function POST(request: NextRequest) {
 // GET - Batch visibility check for multiple users
 export async function GET(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
@@ -104,7 +103,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Get viewer's privacy settings
-    const viewerPrivacyDoc = await getDoc(doc(dbAdmin, 'privacySettings', user.uid));
+    const viewerPrivacyDoc = await dbAdmin.collection('privacySettings').doc(user.uid).get();
     const viewerPrivacy = viewerPrivacyDoc.exists ? viewerPrivacyDoc.data() : null;
 
     // Process each user
@@ -129,7 +128,7 @@ export async function GET(request: NextRequest) {
           }
 
           // Get target user's privacy settings
-          const targetPrivacyDoc = await getDoc(doc(dbAdmin, 'privacySettings', targetUserId));
+          const targetPrivacyDoc = await dbAdmin.collection('privacySettings').doc(targetUserId).get();
           const targetPrivacy = targetPrivacyDoc.exists ? targetPrivacyDoc.data() : null;
 
           // Determine relationship and shared spaces
@@ -201,16 +200,14 @@ async function determineRelationship(viewerId: string, targetId: string): Promis
 async function getSharedSpaces(viewerId: string, targetId: string): Promise<string[]> {
   try {
     const [viewerMemberships, targetMemberships] = await Promise.all([
-      getDocs(dbAdmin.collection(
-        dbAdmin.collection('members'),
-        where('userId', '==', viewerId),
-        where('status', '==', 'active')
-      )),
-      getDocs(dbAdmin.collection(
-        dbAdmin.collection('members'),
-        where('userId', '==', targetId),
-        where('status', '==', 'active')
-      ))
+      dbAdmin.collection('members')
+        .where('userId', '==', viewerId)
+        .where('status', '==', 'active')
+        .get(),
+      dbAdmin.collection('members')
+        .where('userId', '==', targetId)
+        .where('status', '==', 'active')
+        .get()
     ]);
 
     const viewerSpaces = new Set(viewerMemberships.docs.map(doc => doc.data().spaceId));

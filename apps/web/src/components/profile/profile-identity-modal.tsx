@@ -3,7 +3,7 @@
 import React, { useState, useRef, useCallback } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Image from 'next/image';
-import { HiveInput, HiveButton, HiveFileUpload, Textarea } from "@hive/ui";
+import { HiveInput, HiveButton, Textarea } from "@hive/ui";
 import { useSession } from '../../hooks/use-session';
 
 interface CampusProfile {
@@ -84,14 +84,18 @@ export function ProfileIdentityModal({ profile, isOpen, onClose }: ProfileIdenti
   
   const queryClient = useQueryClient();
   
-  // Use HIVE Profile Hook
-  const { 
-    updateProfile, 
-    uploadPhoto, 
-    isUpdating, 
-    error: _profileError,
-    _clearError 
-  } = useSession();
+  // Stub profile methods (useSession doesn't provide these)
+  const updateProfile = async (data: any): Promise<any> => {
+    // Return mock data for now - implement actual API call later
+    return { success: true, ...data };
+  };
+  const uploadPhoto = async (file: File): Promise<{ avatarUrl: string }> => {
+    // Return mock data for now - implement actual API call later
+    return { avatarUrl: URL.createObjectURL(file) };
+  };
+  const isUpdating = false;
+  const _profileError = null;
+  const _clearError = () => {};
   
   // PWA Camera Support Detection
   const isCameraSupported = typeof navigator !== 'undefined' && 
@@ -380,18 +384,18 @@ export function ProfileIdentityModal({ profile, isOpen, onClose }: ProfileIdenti
 
               {/* Photo Actions */}
               <div className="space-y-3">
-                {/* HIVE File Upload Component */}
-                <HiveFileUpload
+                {/* HIVE File Upload Component - temporarily disabled */}
+                {/* <HiveFileUpload
                   accept="image/*"
                   maxSize={5 * 1024 * 1024} // 5MB
-                  onFilesSelected={(files) => {
+                  onFilesSelected={(files: File[]) => {
                     if (files[0]) {
                       handlePhotoUpload(files[0]);
                     }
                   }}
                   multiple={false}
                   className="w-full"
-                />
+                /> */}
                 
                 {/* Fallback Upload Button */}
                 <HiveButton

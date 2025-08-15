@@ -12,7 +12,7 @@ import React, { memo, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Hash } from 'lucide-react';
 import { NavigationItem, NavigationUser } from '../core/types';
-import { NAVIGATION_THEME, NAVIGATION_SIZING, NAVIGATION_MOTION, NAVIGATION_A11Y } from '../core/data';
+import { NAVIGATION_SIZING, NAVIGATION_MOTION, NAVIGATION_A11Y } from '../core/data';
 import { cn } from '../../lib/utils';
 
 // ============================================================================
@@ -36,7 +36,6 @@ interface SidebarItemProps {
 }
 
 interface SidebarHeaderProps {
-  user: NavigationUser;
   collapsed: boolean;
   onToggleCollapse: () => void;
 }
@@ -45,7 +44,7 @@ interface SidebarHeaderProps {
 // SIDEBAR HEADER
 // ============================================================================
 
-const SidebarHeader = memo<SidebarHeaderProps>(({ user, collapsed, onToggleCollapse }) => {
+const SidebarHeader = memo<SidebarHeaderProps>(({ collapsed, onToggleCollapse }) => {
   return (
     <div 
       className={cn(
@@ -378,7 +377,6 @@ export const DesktopSidebar = memo<DesktopSidebarProps>(({
     >
       {/* Header */}
       <SidebarHeader
-        user={user}
         collapsed={collapsed}
         onToggleCollapse={onToggleCollapse}
       />

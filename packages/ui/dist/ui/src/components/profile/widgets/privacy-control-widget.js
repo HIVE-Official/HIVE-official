@@ -3,10 +3,10 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Eye, EyeOff, Shield, Users, Clock, Settings, BookOpen, AlertTriangle, ExternalLink } from 'lucide-react';
-import { BaseWidget } from '../bento-grid/base-widget.js';
-import { HiveButton } from '../../hive-button.js';
-import { HiveSwitch } from '../../hive-switch.js';
-import { cn } from '../../../lib/utils.js';
+import { BaseWidget } from '../bento-grid/base-widget';
+import { HiveButton } from '../../hive-button';
+import { HiveSwitch } from '../../hive-switch';
+import { cn } from '../../../lib/utils';
 export const PrivacyControlWidget = ({ privacySettings, isLoading = false, onPrivacyChange, onOpenFullSettings, ...baseProps }) => {
     const [activeTab, setActiveTab] = useState('status');
     const updatePrivacySetting = (path, value) => {

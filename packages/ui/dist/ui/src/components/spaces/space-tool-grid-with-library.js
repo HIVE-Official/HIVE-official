@@ -1,10 +1,10 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useState, useCallback } from 'react';
-import { HiveCard, HiveButton, HiveBadge } from '../index.js';
-import { PlantNewToolButton } from '../library/plant-new-tool-button.js';
+import { HiveCard, HiveButton, HiveBadge } from '../index';
+import { PlantNewToolButton } from '../library/plant-new-tool-button';
 import { Settings, Play, MoreVertical, Users, BarChart3, Clock, Zap, Grid, List } from 'lucide-react';
-import { cn } from '../../lib/utils.js';
+import { cn } from '../../lib/utils';
 const ToolCard = ({ tool, onLaunch, onConfigure, onRemove, variant = 'grid' }) => {
     const [showActions, setShowActions] = useState(false);
     const IconComponent = tool.icon;

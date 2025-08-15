@@ -10,8 +10,8 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
 import { memo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Bell, Hash, Command, ChevronDown } from 'lucide-react';
-import { NAVIGATION_SIZING, NAVIGATION_MOTION, NAVIGATION_A11Y } from '../core/data.js';
-import { cn } from '../../lib/utils.js';
+import { NAVIGATION_SIZING, NAVIGATION_MOTION, NAVIGATION_A11Y } from '../core/data';
+import { cn } from '../../lib/utils';
 // ============================================================================
 // TOPBAR NAVIGATION ITEM
 // ============================================================================

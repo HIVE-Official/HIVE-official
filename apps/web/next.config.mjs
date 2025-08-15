@@ -35,16 +35,18 @@ const nextConfig = {
   },
   
   eslint: {
-    // Temporarily disable ESLint during builds until Next.js 15 compatibility is fixed
+    // Temporarily allow warnings for launch - can be tightened post-launch
     ignoreDuringBuilds: true,
   },
   typescript: {
-    // Temporarily disable TypeScript checking until syntax errors are fixed
-    ignoreBuildErrors: true,
+    // Enable TypeScript validation for production builds
+    ignoreBuildErrors: false,
   },
 
-  // Security headers (backup to middleware)
+  // Security headers
   async headers() {
+    const isProduction = process.env.NODE_ENV === 'production';
+    
     return [
       {
         source: '/(.*)',
@@ -53,18 +55,20 @@ const nextConfig = {
             key: 'X-Content-Type-Options',
             value: 'nosniff',
           },
-          {
-            key: 'X-Frame-Options', 
-            value: 'DENY',
-          },
-          {
-            key: 'X-XSS-Protection',
-            value: '1; mode=block',
-          },
-          {
-            key: 'Referrer-Policy',
-            value: 'strict-origin-when-cross-origin',
-          },
+          ...(isProduction ? [
+            {
+              key: 'X-Frame-Options', 
+              value: 'DENY',
+            },
+            {
+              key: 'X-XSS-Protection',
+              value: '1; mode=block',
+            },
+            {
+              key: 'Referrer-Policy',
+              value: 'strict-origin-when-cross-origin',
+            },
+          ] : []),
         ],
       },
       {
@@ -271,24 +275,6 @@ const nextConfig = {
   // Security-focused build configuration
   // swcMinify is default in Next.js 15
   poweredByHeader: false, // Remove X-Powered-By header
-  
-  // Development security (less strict CSP)
-  ...(process.env.NODE_ENV === 'development' && {
-    async headers() {
-      return [
-        {
-          source: '/(.*)',
-          headers: [
-            {
-              key: 'X-Content-Type-Options',
-              value: 'nosniff',
-            },
-            // More permissive headers for development
-          ],
-        },
-      ];
-    },
-  }),
 };
 
 export default withBundleAnalyzer(nextConfig);

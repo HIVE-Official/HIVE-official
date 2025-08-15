@@ -54,18 +54,12 @@ async function fetchPersonalTools(): Promise<PersonalTool[]> {
     'Content-Type': 'application/json',
   };
   
-  try {
-    const sessionJson = window.localStorage.getItem('hive_session');
-    if (sessionJson) {
-      const session = JSON.parse(sessionJson);
-      headers.Authorization = `Bearer ${process.env.NODE_ENV === 'development' ? 'dev_token_' + (session.userId || '123') : session.token}`;
-    } else {
-      headers.Authorization = `Bearer dev_token_123`;
-    }
-  } catch (_error) {
-    console.warn('Could not get auth token for tools, using dev token');
-    headers.Authorization = `Bearer dev_token_123`;
+  // Secure authentication - no more dev tokens
+  const token = localStorage.getItem('hive_session_token');
+  if (!token || typeof token !== 'string' || token.length < 10) {
+    throw new Error('Authentication required - please log in');
   }
+  headers.Authorization = `Bearer ${token}`;
 
   const response = await fetch('/api/tools/personal', { headers });
   
@@ -83,18 +77,12 @@ async function fetchToolUsageStats(): Promise<ToolUsageStats> {
     'Content-Type': 'application/json',
   };
   
-  try {
-    const sessionJson = window.localStorage.getItem('hive_session');
-    if (sessionJson) {
-      const session = JSON.parse(sessionJson);
-      headers.Authorization = `Bearer ${process.env.NODE_ENV === 'development' ? 'dev_token_' + (session.userId || '123') : session.token}`;
-    } else {
-      headers.Authorization = `Bearer dev_token_123`;
-    }
-  } catch (_error) {
-    console.warn('Could not get auth token for tool stats, using dev token');
-    headers.Authorization = `Bearer dev_token_123`;
+  // Secure authentication - no more dev tokens
+  const token = localStorage.getItem('hive_session_token');
+  if (!token || typeof token !== 'string' || token.length < 10) {
+    throw new Error('Authentication required - please log in');
   }
+  headers.Authorization = `Bearer ${token}`;
 
   const response = await fetch('/api/tools/usage-stats', { headers });
   

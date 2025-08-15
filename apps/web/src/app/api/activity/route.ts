@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 // Use admin SDK methods since we're in an API route
-import { collection, doc, getDoc, getDocs, addDoc, updateDoc, setDoc, query, where, orderBy, limit } from 'firebase-admin/firestore';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { getCurrentUser } from '@/lib/server-auth';
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { ApiResponseHelper, HttpStatus } from "@/lib/api-response-types";
 
 // Activity tracking types
 interface ActivityEvent {
@@ -37,7 +36,7 @@ interface ActivitySummary {
 // POST - Log activity event
 export async function POST(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
@@ -64,7 +63,7 @@ export async function POST(request: NextRequest) {
     };
 
     // Log the activity event
-    const docRef = await addDoc(collection(dbAdmin, 'activityEvents'), activityEvent);
+    const docRef = await dbAdmin.collection('activityEvents').add(activityEvent);
 
     // Update daily summary asynchronously
     updateDailySummary(user.uid, activityEvent);
@@ -83,7 +82,7 @@ export async function POST(request: NextRequest) {
 // GET - Fetch activity analytics
 export async function GET(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
@@ -112,15 +111,13 @@ export async function GET(request: NextRequest) {
     const endDateStr = endDate.toISOString().split('T')[0];
 
     // Fetch daily summaries
-    const summariesQuery = query(
-      collection(dbAdmin, 'activitySummaries'),
-      where('userId', '==', user.uid),
-      where('date', '>=', startDateStr),
-      where('date', '<=', endDateStr),
-      orderBy('date', 'desc')
-    );
+    const summariesQuery = dbAdmin.collection('activitySummaries')
+      .where('userId', '==', user.uid)
+      .where('date', '>=', startDateStr)
+      .where('date', '<=', endDateStr)
+      .orderBy('date', 'desc');
 
-    const summariesSnapshot = await getDocs(summariesQuery);
+    const summariesSnapshot = await summariesQuery.get();
     const summaries = summariesSnapshot.docs.map((doc: any) => ({
       id: doc.id,
       ...doc.data()
@@ -132,16 +129,14 @@ export async function GET(request: NextRequest) {
     let detailEvents: any[] = [];
     if (includeDetails) {
       // Fetch recent activity events for details
-      const eventsQuery = query(
-        collection(dbAdmin, 'activityEvents'),
-        where('userId', '==', user.uid),
-        where('date', '>=', startDateStr),
-        where('date', '<=', endDateStr),
-        orderBy('timestamp', 'desc'),
-        limit(100)
-      );
+      const eventsQuery = dbAdmin.collection('activityEvents')
+        .where('userId', '==', user.uid)
+        .where('date', '>=', startDateStr)
+        .where('date', '<=', endDateStr)
+        .orderBy('timestamp', 'desc')
+        .limit(100);
 
-      const eventsSnapshot = await getDocs(eventsQuery);
+      const eventsSnapshot = await eventsQuery.get();
       detailEvents = eventsSnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
@@ -168,10 +163,10 @@ export async function GET(request: NextRequest) {
 async function updateDailySummary(userId: string, event: ActivityEvent) {
   try {
     const summaryId = `${userId}_${event.date}`;
-    const summaryRef = doc(dbAdmin, 'activitySummaries', summaryId);
+    const summaryRef = dbAdmin.collection('activitySummaries').doc(summaryId);
     
     // Get existing summary or create new one
-    const summaryDoc = await getDoc(summaryRef);
+    const summaryDoc = await summaryRef.get();
     
     if (summaryDoc.exists) {
       const existingData = summaryDoc.data() as ActivitySummary;
@@ -197,7 +192,7 @@ async function updateDailySummary(userId: string, event: ActivityEvent) {
         updatedAt: new Date().toISOString()
       };
 
-      await updateDoc(summaryRef, updatedData);
+      await summaryRef.update(updatedData);
     } else {
       // Create new summary
       const newSummary: ActivitySummary = {
@@ -214,7 +209,7 @@ async function updateDailySummary(userId: string, event: ActivityEvent) {
         updatedAt: new Date().toISOString()
       };
 
-      await setDoc(summaryRef, newSummary);
+      await summaryRef.set(newSummary);
     }
   } catch (error) {
     logger.error('Error updating daily summary', { error: error, endpoint: '/api/activity' });

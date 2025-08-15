@@ -5,11 +5,11 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
  * Interface for browsing and installing community-created tools
  */
 import { useState, useCallback, useMemo } from 'react';
-import { HiveCard } from '../hive-card.js';
-import { Button } from '../ui/button.js';
-import { Input } from '../ui/input.js';
-import { Badge } from '../ui/badge.js';
-import { LiveToolRuntime } from '../live-tool-runtime.js';
+import { HiveCard } from '../hive-card';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { Badge } from '../ui/badge';
+import { LiveToolRuntime } from '../live-tool-runtime';
 import { Search, Star, Download, Eye, CheckCircle, Zap, User, Heart, Share2, MoreHorizontal } from 'lucide-react';
 export const CommunityToolBrowser = ({ communityTools, onInstall, onPreview, onLike, onShare, installedToolIds, currentSpaceId, isLoading = false }) => {
     const [searchQuery, setSearchQuery] = useState('');

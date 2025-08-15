@@ -6,7 +6,7 @@
  */
 "use client";
 import { useState } from 'react';
-import { useHiveState } from './hive-state-management.js';
+import { useHiveState } from './hive-state-management';
 // ============================================================================
 // AUTHENTICATION HOOKS
 // ============================================================================

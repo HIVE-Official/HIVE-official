@@ -70,6 +70,7 @@ export interface HiveProgressProps {
     size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
     status?: 'default' | 'success' | 'warning' | 'error';
     showLabel?: boolean;
+    showValue?: boolean;
     showPercentage?: boolean;
     animated?: boolean;
     label?: string;

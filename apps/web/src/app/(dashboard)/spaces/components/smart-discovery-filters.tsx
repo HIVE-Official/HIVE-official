@@ -4,15 +4,15 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { Card, Button, Badge } from "@hive/ui";
 import { 
   Search, 
-  Filter as _Filter, 
+  /* Filter as _Filter, */ 
   X, 
-  ChevronDown as _ChevronDown,
+  /* ChevronDown as _ChevronDown, */
   Users,
   Clock,
   TrendingUp,
   Star,
-  MapPin as _MapPin,
-  Calendar as _Calendar,
+  /* MapPin as _MapPin,
+  Calendar as _Calendar, */
   Zap,
   Heart,
   Target,
@@ -299,7 +299,7 @@ export function SmartDiscoveryFilters({
             size="sm"
             variant="outline"
             onClick={() => {
-              const _currentCategories = activeFilters.category || [];
+              const _currentCategories = activeFilters.category || []; // TODO: For future multi-category support
               handleFilterChange("category", interest);
             }}
             className={`flex-shrink-0 border-white/20 text-neutral-300 ${

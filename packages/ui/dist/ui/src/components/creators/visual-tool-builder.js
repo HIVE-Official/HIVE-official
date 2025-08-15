@@ -4,13 +4,13 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useState, useCallback, useRef } from 'react';
 import { Play, Save, Eye, Undo, Redo, Trash2, Move, ZoomIn, ZoomOut, Grid3X3, Layers, MousePointer, Hand } from 'lucide-react';
-import { cn } from '../../lib/utils.js';
-import { HiveButton } from '../hive-button.js';
-import { HiveBadge } from '../hive-badge.js';
-import { HiveMotionWrapper } from '../hive-motion-wrapper.js';
-import { ElementPicker } from './element-picker.js';
-import { ElementConfig } from './element-config.js';
-import { ToolPreview } from './tool-preview.js';
+import { cn } from '../../lib/utils';
+import { HiveButton } from '../hive-button';
+import { HiveBadge } from '../hive-badge';
+import { HiveMotionWrapper } from '../hive-motion-wrapper';
+import { ElementPicker } from './element-picker';
+import { ElementConfig } from './element-config';
+import { ToolPreview } from './tool-preview';
 const Canvas = ({ tool, elements, onElementAdd, onElementUpdate, onElementDelete, onElementSelect, selectedElementId, canvas, onCanvasUpdate }) => {
     const canvasRef = useRef(null);
     const [draggedElement, setDraggedElement] = useState(null);

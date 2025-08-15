@@ -3,9 +3,9 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar, Clock, MapPin, Users, Plus, Eye, Activity, TrendingUp, UserCheck, Share2, BarChart3, Download } from 'lucide-react';
-import { cn } from '../../lib/utils.js';
-import { Button, Badge } from '../../atomic/atoms/index.js';
-import { EventManagerTool } from '../tools/event-manager-tool.js';
+import { cn } from '../../lib/utils';
+import { Button, Badge } from '../../atomic/atoms';
+import { EventManagerTool } from '../tools/event-manager-tool';
 export function EventManagerWidget({ space, isLeader = false, currentUserRole = 'member', leaderMode, showCompact = false, maxEvents = 6, onEventAction, authenticatedFetch, className }) {
     const [showFullManager, setShowFullManager] = useState(false);
     const [quickViewMode, setQuickViewMode] = useState('upcoming');

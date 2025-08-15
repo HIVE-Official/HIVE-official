@@ -2,7 +2,7 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { getAuth } from "firebase-admin/auth";
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
 
 /**
  * Logout endpoint - revokes user session
@@ -18,14 +18,8 @@ export async function POST(request: NextRequest) {
 
     const idToken = authHeader.substring(7);
     
-    // Handle development mode tokens
-    if (idToken.startsWith("dev_token_")) {
-      logger.info('Development mode logout - token invalidated locally', { endpoint: '/api/auth/logout' });
-      
-      return NextResponse.json({
-        success: true,
-        message: "Logged out successfully (development mode)" });
-    }
+    // SECURITY: Development token bypass removed for production safety
+    // All tokens must be validated through Firebase Auth
 
     const auth = getAuth();
 

@@ -1,7 +1,7 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useCallback, useMemo } from 'react';
-import { HiveCard, HiveButton, HiveBadge } from '../index.js';
+import { HiveCard, HiveButton, HiveBadge } from '../index';
 import { Plus, Search, Wand2, Sparkles, Target, Users, BarChart3, MessageSquare, Zap, Clock, TrendingUp, Star, X } from 'lucide-react';
 // Mock contextual suggestions based on space type and current tools
 const generateContextualSuggestions = (space) => {

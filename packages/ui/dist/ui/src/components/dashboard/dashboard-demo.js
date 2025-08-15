@@ -3,13 +3,13 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Activity, Brain, BarChart3, Users, Zap, Target, Clock, TrendingUp } from 'lucide-react';
-import { BentoGrid, createGridItem, defaultLayouts } from './bento-grid.js';
-import { PersonalTools, mockPersonalToolsData } from './personal-tools.js';
-import { CalendarWidget, mockCalendarData } from './calendar-widget.js';
-import { ActivityTracker, mockActivityTrackerData } from './activity-tracker.js';
-import { Button } from '../hive-button.js';
-import { Badge } from '../ui/badge.js';
-import { Progress } from '../hive-progress.js';
+import { BentoGrid, createGridItem, defaultLayouts } from './bento-grid';
+import { PersonalTools, mockPersonalToolsData } from './personal-tools';
+import { CalendarWidget, mockCalendarData } from './calendar-widget';
+import { ActivityTracker, mockActivityTrackerData } from './activity-tracker';
+import { Button } from '../hive-button';
+import { Badge } from '../ui/badge';
+import { Progress } from '../hive-progress';
 // Quick Stats Widget
 function QuickStatsWidget() {
     const stats = [

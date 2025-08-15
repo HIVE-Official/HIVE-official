@@ -1,10 +1,10 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState } from 'react';
-import { motion } from '../framer-motion-proxy.js';
+import { motion } from '../framer-motion-proxy';
 import { BarChart3, Users, TrendingUp, TrendingDown, Activity, Calendar, MessageSquare, Zap, ChevronRight, Download, RefreshCw, AlertTriangle, CheckCircle } from 'lucide-react';
-import { HiveCard } from '../hive-card.js';
-import { HiveButton } from '../hive-button.js';
+import { HiveCard } from '../hive-card';
+import { HiveButton } from '../hive-button';
 export const SpaceAnalyticsDashboard = ({ analytics, isLeader = false, onRefresh, onExportData, onUpdateSettings }) => {
     const [activeTab, setActiveTab] = useState('overview');
     const [timeRange, setTimeRange] = useState('30d');

@@ -35,7 +35,7 @@ export declare const generateContrastReport: () => {
 /**
  * Validate specific color combination
  */
-export declare const validateColorCombination: (foreground: string, background: string, _context?: string) => {
+export declare const validateColorCombination: (foreground: string, background: string) => {
     isValid: boolean;
     ratio: number;
     level: "AAA" | "AA" | "FAIL";

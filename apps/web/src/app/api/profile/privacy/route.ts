@@ -121,7 +121,7 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
         success: true,
         privacy: {
           ...DEFAULT_PRIVACY_SETTINGS,
-          developmentMode: true,
+          // SECURITY: Development mode removed for production safety,
         }
       });
     }

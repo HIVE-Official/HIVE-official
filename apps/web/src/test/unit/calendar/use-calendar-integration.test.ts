@@ -1,8 +1,8 @@
+import React from 'react';
 import { renderHook, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useCalendarIntegration, type CalendarEvent, type CalendarStats, type CalendarIntegration } from '../../../hooks/use-calendar-integration';
-import React from 'react';
 
 // Mock the useSession hook
 vi.mock('../../../hooks/use-session', () => ({
@@ -34,6 +34,14 @@ const consoleSpy = {
   warn: vi.spyOn(console, 'warn').mockImplementation(() => {}),
   error: vi.spyOn(console, 'error').mockImplementation(() => {}),
 };
+
+// Mock process.env
+Object.defineProperty(process, 'env', {
+  value: {
+    NODE_ENV: 'test',
+    ...process.env
+  }
+});
 
 describe('useCalendarIntegration', () => {
   let queryClient: QueryClient;
@@ -108,7 +116,7 @@ describe('useCalendarIntegration', () => {
       defaultOptions: {
         queries: {
           retry: false,
-          cacheTime: 0,
+          gcTime: 0,
           staleTime: 0,
         },
       },

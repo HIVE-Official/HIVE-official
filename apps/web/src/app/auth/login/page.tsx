@@ -1,11 +1,15 @@
 'use client';
 
-import { useState, Suspense } from 'react';
+import { useState, useEffect, Suspense } from 'react';
+
+// Force dynamic rendering to avoid SSG issues with auth
+export const dynamic = 'force-dynamic';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Loader2, Mail, ArrowLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
-import { HiveButton, HiveInput, HiveCard, HiveModal, HiveLogo } from "@hive/ui";
+import { HiveButton, HiveInput, HiveCard, HiveLogo } from "@hive/ui";
+import { HiveModal } from "@/components/temp-stubs";
 
 interface LoginFormData {
   email: string;
@@ -25,20 +29,23 @@ function LoginPageContent() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [devMagicLink, setDevMagicLink] = useState<string | null>(null);
-  const [isRedirecting, setIsRedirecting] = useState(false);
+   
+  const [_isRedirecting, _setIsRedirecting] = useState(false);
 
-  // Client-side redirect if no school context
-  if (typeof window !== 'undefined' && (!schoolId || !schoolName || !schoolDomain)) {
-    router.push('/schools');
-    return null;
-  }
+  // Redirect if missing required school context
+  useEffect(() => {
+    if (!schoolId || !schoolName || !schoolDomain) {
+      router.push('/schools');
+    }
+  }, [schoolId, schoolName, schoolDomain, router]);
 
-  // Server-side rendering fallback
+  // Show loading if redirecting due to missing school context
   if (!schoolId || !schoolName || !schoolDomain) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <p>Redirecting to school selection...</p>
+      <div className="min-h-screen bg-[var(--hive-background-primary)] flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <Loader2 className="h-8 w-8 text-[var(--hive-brand-primary)] animate-spin mx-auto" />
+          <p className="text-[var(--hive-text-secondary)]">Redirecting to school selection...</p>
         </div>
       </div>
     );
@@ -79,31 +86,8 @@ function LoginPageContent() {
         throw new Error(data.error || 'Failed to send magic link');
       }
 
-      // In development mode with dev users, redirect directly instead of showing email modal
-      if (data.dev) {
-        
-        // Set up the session data that the onboarding page expects
-        const userSession = {
-          userId: data.user?.userId || 'dev-user-unknown',
-          email: formData.email,
-          schoolId: schoolId,
-          needsOnboarding: true, // Development users need onboarding
-          verifiedAt: new Date().toISOString(),
-          handle: data.user?.handle || 'dev-user',
-          role: data.user?.role || 'student'
-        };
-        
-        window.localStorage.setItem('hive_session', JSON.stringify(userSession));
-        window.localStorage.setItem('dev_auth_mode', 'true');
-        
-        
-        setIsRedirecting(true);
-        // Development mode - redirect directly to onboarding or dashboard
-        setTimeout(() => {
-          router.push('/onboarding');
-        }, 1500);
-        return;
-      }
+      // SECURITY: Development auth bypass removed for production safety
+      // All authentication must go through proper magic link verification
 
       // Store dev magic link if available
       if (data.devMode && data.magicLink) {
@@ -115,16 +99,31 @@ function LoginPageContent() {
       console.error('Authentication error:', err);
       const errorMessage = err instanceof Error ? err.message : 'Something went wrong';
       
-      // Provide more specific error messages
-      if (errorMessage.includes('fetch')) {
-        setError('Network error. Please check your connection and try again.');
+      // Provide more specific error messages with actionable advice
+      let userFriendlyError = errorMessage;
+      
+      if (errorMessage.includes('fetch') || errorMessage.includes('network')) {
+        userFriendlyError = 'Network error. Please check your internet connection and try again.';
       } else if (errorMessage.includes('Invalid email')) {
-        setError('Please enter a valid email address.');
-      } else if (errorMessage.includes('unauthorized')) {
-        setError('This email is not authorized for this school.');
-      } else {
-        setError(errorMessage);
+        userFriendlyError = 'Please enter a valid email address.';
+      } else if (errorMessage.includes('unauthorized') || errorMessage.includes('not authorized')) {
+        userFriendlyError = `This email is not authorized for ${schoolName}. Please use your @${schoolDomain} email address.`;
+      } else if (errorMessage.includes('rate limit')) {
+        userFriendlyError = 'Too many attempts. Please wait a few minutes before trying again.';
+      } else if (errorMessage.includes('server') || errorMessage.includes('500')) {
+        userFriendlyError = 'Server error. Please try again in a few moments.';
+      } else if (errorMessage.includes('timeout')) {
+        userFriendlyError = 'Request timed out. Please check your connection and try again.';
+      } else if (errorMessage.includes('domain')) {
+        userFriendlyError = `Please use your @${schoolDomain} email address for ${schoolName}.`;
       }
+      
+      setError(userFriendlyError);
+      
+      // Auto-clear error after 5 seconds for better UX
+      setTimeout(() => {
+        setError(null);
+      }, 5000);
     } finally {
       setIsLoading(false);
     }
@@ -319,12 +318,11 @@ function LoginPageContent() {
 
       {/* Redirect Success Modal */}
       <HiveModal
-        isOpen={isRedirecting}
+        isOpen={_isRedirecting}
         onClose={() => {}}
         title="Authentication successful"
         size="sm"
-        motionPreset="slideUp"
-        hideCloseButton={true}
+        showCloseButton={false}
       >
         <motion.div 
           className="text-center space-y-6"
@@ -353,7 +351,6 @@ function LoginPageContent() {
         onClose={() => setSuccess(false)}
         title="Check your inbox"
         size="sm"
-        motionPreset="slideUp"
       >
         <motion.div 
           className="text-center space-y-6"

@@ -10,7 +10,7 @@ import {
   Code,
   Settings,
   Clock,
-  Memory,
+  Cpu,
   CheckCircle,
   XCircle,
   AlertTriangle,

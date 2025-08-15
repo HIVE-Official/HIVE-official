@@ -215,13 +215,17 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
       .limit(20)
       .get();
 
-    const requests = requestsSnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data(),
-      submittedAt: doc.data().submittedAt?.toDate?.()?.toISOString(),
-      reviewedAt: doc.data().reviewedAt?.toDate?.()?.toISOString(),
-      expiresAt: doc.data().expiresAt?.toDate?.()?.toISOString()
-    }));
+    const requests = requestsSnapshot.docs.map(doc => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        ...data,
+        status: data.status || 'pending',
+        submittedAt: data.submittedAt?.toDate?.()?.toISOString(),
+        reviewedAt: data.reviewedAt?.toDate?.()?.toISOString(),
+        expiresAt: data.expiresAt?.toDate?.()?.toISOString()
+      };
+    });
 
     // Group requests by status
     const requestsByStatus = requests.reduce((acc, request) => {

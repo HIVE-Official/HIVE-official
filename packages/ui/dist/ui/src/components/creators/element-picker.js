@@ -4,12 +4,12 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useMemo } from 'react';
 import { Search, Filter, Grid3X3, List, ChevronDown, Star } from 'lucide-react';
-import { cn } from '../../lib/utils.js';
-import { HiveInput } from '../hive-input.js';
-import { HiveButton } from '../hive-button.js';
-import { HiveBadge } from '../hive-badge.js';
-import { HiveCard, HiveCardContent } from '../hive-card.js';
-import { HiveMotionWrapper } from '../hive-motion-wrapper.js';
+import { cn } from '../../lib/utils';
+import { HiveInput } from '../hive-input';
+import { HiveButton } from '../hive-button';
+import { HiveBadge } from '../hive-badge';
+import { HiveCard, HiveCardContent } from '../hive-card';
+import { HiveMotionWrapper } from '../hive-motion-wrapper';
 // Element categories with enhanced campus focus
 export const ELEMENT_CATEGORIES = [
     {

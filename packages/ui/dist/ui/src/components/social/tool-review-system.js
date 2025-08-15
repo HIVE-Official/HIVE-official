@@ -4,9 +4,9 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
  * Complete reviews and ratings for tools in the marketplace
  */
 import { useState, useCallback, useMemo } from 'react';
-import { Button } from '../ui/button.js';
-import { Avatar } from '../index.js';
-import { HiveBadge as Badge } from '../index.js';
+import { Button } from '../ui/button';
+import { Avatar } from '../index';
+import { HiveBadge as Badge } from '../index';
 import { Star, MessageSquare, ThumbsUp, ThumbsDown, Flag, Edit3, Trash2, MoreHorizontal, Send, ChevronDown, TrendingUp, Award, CheckCircle, AlertTriangle, Search, X, Share } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 const StarRating = ({ rating, size = 'md', interactive = false, onChange }) => {

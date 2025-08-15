@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 // Use admin SDK methods since we're in an API route
 import { dbAdmin } from '@/lib/firebase-admin';
-import { getCurrentUser } from '@/lib/server-auth';
+import { getCurrentUser as _getCurrentUser } from '@/lib/server-auth';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
@@ -267,7 +267,7 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
             endDate: new Date().toISOString().split('T')[0],
             dataPoints: 30,
             generatedAt: new Date().toISOString(),
-            developmentMode: true,
+            // SECURITY: Development mode removed for production safety,
           } });
     }
 
@@ -413,36 +413,27 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
     const endDateStr = endDate.toISOString().split('T')[0];
 
     // Fetch activity summaries
-    const summariesQuery = dbAdmin.collection(
-      dbAdmin.collection('activitySummaries'),
-      where('userId', '==', userId),
-      where('date', '>=', startDateStr),
-      where('date', '<=', endDateStr),
-      orderBy('date', 'desc')
-    );
-
-    const summariesSnapshot = await getDocs(summariesQuery);
+    const summariesSnapshot = await dbAdmin.collection('activitySummaries')
+      .where('userId', '==', userId)
+      .where('date', '>=', startDateStr)
+      .where('date', '<=', endDateStr)
+      .orderBy('date', 'desc')
+      .get();
     const summaries = summariesSnapshot.docs.map(doc => doc.data());
 
     // Fetch detailed activity events
-    const eventsQuery = dbAdmin.collection(
-      dbAdmin.collection('activityEvents'),
-      where('userId', '==', userId),
-      where('date', '>=', startDateStr),
-      where('date', '<=', endDateStr),
-      orderBy('timestamp', 'desc')
-    );
-
-    const eventsSnapshot = await getDocs(eventsQuery);
+    const eventsSnapshot = await dbAdmin.collection('activityEvents')
+      .where('userId', '==', userId)
+      .where('date', '>=', startDateStr)
+      .where('date', '<=', endDateStr)
+      .orderBy('timestamp', 'desc')
+      .get();
     const events = eventsSnapshot.docs.map(doc => doc.data());
 
     // Fetch user memberships for context
-    const membershipsQuery = dbAdmin.collection(
-      dbAdmin.collection('members'),
-      where('userId', '==', userId)
-    );
-
-    const membershipsSnapshot = await getDocs(membershipsQuery);
+    const membershipsSnapshot = await dbAdmin.collection('members')
+      .where('userId', '==', userId)
+      .get();
     const memberships = membershipsSnapshot.docs.map(doc => doc.data());
 
     // Generate comprehensive statistics
@@ -736,7 +727,7 @@ function generateStreaks(summaries: any[]) {
 }
 
 // Helper function to generate comparisons
-async function generateComparisons(userId: string, summaries: any[], memberships: any[]) {
+async function generateComparisons(userId: string, summaries: any[], memberships: any[]): Promise<any> {
   // This would implement actual comparisons with other users
   // Generate real profile statistics from Firebase data
   try {

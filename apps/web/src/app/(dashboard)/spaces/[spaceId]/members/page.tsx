@@ -21,12 +21,11 @@ import {
   ArrowLeft
 } from "lucide-react";
 import { ErrorBoundary } from "../../../../../components/error-boundary";
-import { useRouter } from "next/navigation";
 
 interface SpaceMembersPageProps {
-  params: {
+  params: Promise<{
     spaceId: string;
-  };
+  }>;
 }
 
 interface SpaceMember {
@@ -57,7 +56,7 @@ interface InviteLink {
 }
 
 export default function SpaceMembersPage({ params }: SpaceMembersPageProps) {
-  const _router = useRouter();
+  const [spaceId, setSpaceId] = useState<string>('');
   const [members, setMembers] = useState<SpaceMember[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [roleFilter, setRoleFilter] = useState<'all' | 'admin' | 'moderator' | 'member'>('all');
@@ -70,6 +69,16 @@ export default function SpaceMembersPage({ params }: SpaceMembersPageProps) {
   const [userRole, setUserRole] = useState<'admin' | 'moderator' | 'member'>('member');
 
   useEffect(() => {
+    // Resolve params Promise
+    const resolveParams = async () => {
+      const resolvedParams = await params;
+      setSpaceId(resolvedParams.spaceId);
+    };
+    resolveParams();
+  }, [params]);
+
+  useEffect(() => {
+    if (!spaceId) return;
     // Mock data fetch
     const fetchData = async () => {
       await new Promise(resolve => setTimeout(resolve, 500));
@@ -179,7 +188,7 @@ export default function SpaceMembersPage({ params }: SpaceMembersPageProps) {
     };
 
     fetchData();
-  }, [params.spaceId]);
+  }, [spaceId]);
 
   const filteredMembers = members.filter(member => {
     const matchesSearch = member.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -229,9 +238,6 @@ export default function SpaceMembersPage({ params }: SpaceMembersPageProps) {
     }
   };
 
-  const handleMemberAction = (_member: SpaceMember, _action: string) => {
-    // In a real implementation, this would make API calls
-  };
 
   const copyInviteLink = async (link: string) => {
     try {
@@ -285,7 +291,7 @@ export default function SpaceMembersPage({ params }: SpaceMembersPageProps) {
           },
           { 
             label: spaceName, 
-            href: `/spaces/${params.spaceId}`
+            href: `/spaces/${spaceId}`
           },
           { 
             label: "Members", 
@@ -322,7 +328,7 @@ export default function SpaceMembersPage({ params }: SpaceMembersPageProps) {
             
             <select
               value={roleFilter}
-              onChange={(e) => setRoleFilter(e.target.value as any)}
+              onChange={(e) => setRoleFilter(e.target.value as 'all' | 'admin' | 'moderator' | 'member')}
               className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-white text-sm focus:border-hive-gold focus:outline-none"
             >
               <option value="all">All Roles</option>
@@ -333,7 +339,7 @@ export default function SpaceMembersPage({ params }: SpaceMembersPageProps) {
             
             <select
               value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value as any)}
+              onChange={(e) => setStatusFilter(e.target.value as 'all' | 'active' | 'inactive')}
               className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-white text-sm focus:border-hive-gold focus:outline-none"
             >
               <option value="all">All Status</option>
@@ -651,7 +657,7 @@ export default function SpaceMembersPage({ params }: SpaceMembersPageProps) {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => handleMemberAction(showMemberDetails, 'message')}
+                    onClick={() => {/* Message functionality to be implemented */}}
                   >
                     <MessageSquare className="h-4 w-4 mr-2" />
                     Message
@@ -662,7 +668,7 @@ export default function SpaceMembersPage({ params }: SpaceMembersPageProps) {
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => handleMemberAction(showMemberDetails, showMemberDetails.role === 'moderator' ? 'demote' : 'promote')}
+                        onClick={() => {/* Promotion/demotion functionality to be implemented */}}
                       >
                         {showMemberDetails.role === 'moderator' ? (
                           <>
@@ -680,7 +686,7 @@ export default function SpaceMembersPage({ params }: SpaceMembersPageProps) {
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => handleMemberAction(showMemberDetails, 'remove')}
+                        onClick={() => {/* Remove member functionality to be implemented */}}
                         className="text-red-400 border-red-500/30 hover:bg-red-500/10"
                       >
                         Remove Member

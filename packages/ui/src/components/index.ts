@@ -3,6 +3,10 @@
 // These are the primary exports following HIVE design system
 export * from '../atomic';
 
+// === ENHANCED COMPONENTS DIRECT EXPORTS ===
+// Export enhanced Button directly for convenience
+export { Button, ButtonGroup, IconButton, buttonVariants } from '../atomic/atoms/button-enhanced';
+
 // === BRANDED HIVE COMPONENTS (STREAMLINED) ===
 // Premium HIVE components - use atomic design system as primary foundation
 export { 
@@ -117,7 +121,11 @@ export * from "./ui/scroll-area";
 export { 
   Alert as ShadcnAlert,
   AlertDescription as ShadcnAlertDescription,
-  AlertTitle as ShadcnAlertTitle
+  AlertTitle as ShadcnAlertTitle,
+  // Also export without prefix for convenience
+  Alert,
+  AlertDescription,
+  AlertTitle
 } from "./ui/alert";
 
 
@@ -218,6 +226,10 @@ export {
   type ProgressProps as HiveProgressProps,
   type ProgressProps
 } from "../atomic/atoms/progress";
+export { 
+  Spinner,
+  type SpinnerProps
+} from "../atomic/atoms/spinner";
 export * from "./hive-modular-card";
 // export * from "./hive-icons"; // Commented out to avoid HiveLogo conflict with hive-logo
 
@@ -257,6 +269,7 @@ export {
   HiveMembersSurface,
   type PinnedContent,
   type Post,
+  type Comment,
   type Event as HiveEvent,
   type Tool,
   type ChatMessage,
@@ -305,8 +318,8 @@ export * from "./state";
 // Responsive System - Mobile-First Breakpoint Strategy
 export * from "./responsive";
 
-// Authentication Components
-export { HiveAuthFlow, AuthProvider } from "./auth";
+// Authentication Components - Using UnifiedAuthProvider as single source of truth
+export { HiveAuthFlow } from "./auth";
 export type { AuthStep, AuthState, AuthContextType } from "./auth";
 
 // Onboarding Components
@@ -428,7 +441,8 @@ export {
   HiveLabSection, 
   ProfileStats,
   CalendarCard,
-  adaptSmartCalendarProps
+  adaptSmartCalendarProps,
+  EnhancedProfileDashboard
 } from "./profile";
 export type { 
   User as ProfileUser, 

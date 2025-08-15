@@ -15,6 +15,7 @@ import {
 } from '@hive/ui';
 import {
   Search,
+  Loader2,
   Clock,
   Users,
   Code,

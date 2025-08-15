@@ -2,7 +2,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
 import { cva } from "class-variance-authority";
-import { cn } from "../../lib/utils.js";
+import { cn } from "../../lib/utils";
 // HIVE Input System - Semantic Token Perfection
 // Zero hardcoded values - complete semantic token usage
 const inputVariants = cva(
@@ -91,6 +91,41 @@ export const InputPresets = {
     // Currency Input
     Currency: (props) => (_jsx(Input, { type: "number", leftElement: _jsx("span", { className: "text-[var(--hive-text-tertiary)]", children: "$" }), placeholder: "0.00", ...props })),
 };
+const FloatingLabelInput = React.forwardRef(({ label, labelClassName, className, id, ...props }, ref) => {
+    const [isFocused, setIsFocused] = React.useState(false);
+    const [hasValue, setHasValue] = React.useState(false);
+    const inputId = id || React.useId();
+    const isFloated = isFocused || hasValue || props.value || props.defaultValue;
+    React.useEffect(() => {
+        setHasValue(Boolean(props.value || props.defaultValue));
+    }, [props.value, props.defaultValue]);
+    const handleFocus = (e) => {
+        setIsFocused(true);
+        props.onFocus?.(e);
+    };
+    const handleBlur = (e) => {
+        setIsFocused(false);
+        setHasValue(Boolean(e.target.value));
+        props.onBlur?.(e);
+    };
+    const handleChange = (e) => {
+        setHasValue(Boolean(e.target.value));
+        props.onChange?.(e);
+    };
+    return (_jsxs("div", { className: "relative", children: [_jsx("input", { ref: ref, id: inputId, className: cn(inputVariants({
+                    variant: props.error ? "error" : props.success ? "success" : props.variant,
+                    size: props.size,
+                    radius: props.radius
+                }), "peer placeholder-transparent", className), onFocus: handleFocus, onBlur: handleBlur, onChange: handleChange, placeholder: label, ...props }), _jsxs("label", { htmlFor: inputId, className: cn("absolute left-3 transition-all duration-200 pointer-events-none font-sans", "peer-placeholder-shown:text-[var(--hive-text-tertiary)]", "peer-focus:text-[var(--hive-brand-secondary)]", props.error && "peer-focus:text-[var(--hive-status-error)]", props.success && "peer-focus:text-[var(--hive-status-success)]", isFloated ? [
+                    "-top-2 left-2 text-xs bg-[var(--hive-background-primary)] px-1 z-10",
+                    "text-[var(--hive-brand-secondary)]",
+                    props.error && "text-[var(--hive-status-error)]",
+                    props.success && "text-[var(--hive-status-success)]"
+                ] : [
+                    "top-1/2 -translate-y-1/2 text-sm text-[var(--hive-text-tertiary)]"
+                ], labelClassName), children: [label, props.required && (_jsx("span", { className: "ml-1 text-[var(--hive-status-error)]", children: "*" }))] }), (props.error || props.success || props.helperText) && (_jsx("p", { className: cn("text-xs mt-2", props.error && "text-[var(--hive-status-error)]", props.success && "text-[var(--hive-status-success)]", !props.error && !props.success && "text-[var(--hive-text-tertiary)]"), children: props.error || props.success || props.helperText }))] }));
+});
+FloatingLabelInput.displayName = "FloatingLabelInput";
 // Simple icons using semantic approach
 const SearchIcon = () => (_jsxs("svg", { width: "16", height: "16", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: [_jsx("circle", { cx: "11", cy: "11", r: "8" }), _jsx("path", { d: "m21 21-4.35-4.35" })] }));
 const ClearIcon = () => (_jsx("svg", { width: "12", height: "12", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: _jsx("path", { d: "M18 6L6 18M6 6l12 12" }) }));
@@ -101,5 +136,5 @@ const ChevronDownIcon = () => (_jsx("svg", { width: "12", height: "12", viewBox:
 const EmailIcon = () => (_jsxs("svg", { width: "16", height: "16", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: [_jsx("path", { d: "M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" }), _jsx("polyline", { points: "22,6 12,13 2,6" })] }));
 const PhoneIcon = () => (_jsx("svg", { width: "16", height: "16", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: _jsx("path", { d: "M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" }) }));
 const LinkIcon = () => (_jsxs("svg", { width: "16", height: "16", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: [_jsx("path", { d: "M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" }), _jsx("path", { d: "M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" })] }));
-export { Input, Input as InputEnhanced, SearchInput, PasswordInput, NumberInput, InputGroup, inputVariants };
+export { Input, Input as InputEnhanced, SearchInput, PasswordInput, NumberInput, InputGroup, FloatingLabelInput, inputVariants };
 //# sourceMappingURL=input-enhanced.js.map

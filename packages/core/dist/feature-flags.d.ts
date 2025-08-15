@@ -8,6 +8,10 @@ export interface FeatureFlags {
     enableRealTimeNotifications: boolean;
     spaces: 'enabled';
     tools: 'enabled';
+    analytics: 'enabled';
+    realtime: 'enabled';
+    ai: 'enabled' | 'disabled';
+    gamification: 'enabled' | 'disabled';
 }
 export declare const DEFAULT_FLAGS: FeatureFlags;
 export declare function getFeatureFlags(userId: string): FeatureFlags;

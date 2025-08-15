@@ -1,11 +1,10 @@
 "use client";
 
-import { useState, useEffect as _useEffect } from "react";
+import { useState } from "react";
 import { Card, Button, Badge } from "@hive/ui";
-import { Alert } from "@/components/temp-stubs";
 import { 
   Search, 
-  Heart as _Heart, 
+ 
   Users, 
   MessageSquare,
   AlertCircle,
@@ -263,6 +262,7 @@ export function InclusiveCommunityFinder({
   inclusiveSpaces,
   onFindMore 
 }: InclusiveCommunityFinderProps) {
+   
   const [_showPersonalized, _setShowPersonalized] = useState(false);
 
   const getPersonalizedMessage = () => {
@@ -379,6 +379,7 @@ interface TransferStudentHelperProps {
 export function TransferStudentHelper({
   studentType,
   currentUniversity,
+   
   previousUniversity: _previousUniversity,
   country,
   onboardingSpaces,

@@ -1,10 +1,10 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import React, { useState, useCallback } from 'react';
-import { HiveCard, HiveButton, HiveInput, HiveTextarea, HiveBadge } from '../index.js';
+import { HiveCard, HiveButton, HiveInput, HiveTextarea, HiveBadge } from '../index';
 import { Calendar, MapPin, Users, Settings, Eye, Save, Share, AlertCircle } from 'lucide-react';
-import { cn } from '../../lib/utils.js';
-import { validateEventDefinition } from './event-system-core.js';
+import { cn } from '../../lib/utils';
+import { validateEventDefinition } from './event-system-core';
 const EVENT_CATEGORIES = [
     { value: 'academic', label: 'Academic', description: 'Study sessions, lectures, workshops' },
     { value: 'social', label: 'Social', description: 'Parties, mixers, casual hangouts' },

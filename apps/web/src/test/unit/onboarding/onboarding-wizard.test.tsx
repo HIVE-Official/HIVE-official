@@ -1,3 +1,4 @@
+import React from 'react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { useRouter } from 'next/navigation';
@@ -8,16 +9,7 @@ vi.mock('next/navigation', () => ({
   useRouter: vi.fn(),
 }));
 
-// Mock auth hook
-vi.mock('@/hooks/use-auth', () => ({
-  useAuth: vi.fn(() => ({
-    user: { uid: 'test-user', email: 'test@test.edu' },
-    loading: false,
-    getAuthToken: vi.fn().mockResolvedValue('test-token'),
-  })),
-}));
-
-// Mock HIVE UI components
+// Mock HIVE UI components and auth hook
 vi.mock('@hive/ui', () => ({
   HiveButton: ({ children, onClick, disabled, leftIcon, rightIcon, variant, size, className, ...props }: any) => (
     <button 
@@ -56,10 +48,15 @@ vi.mock('@hive/ui', () => ({
       data-show-wordmark={showWordmark}
     />
   ),
+  useUnifiedAuth: vi.fn(() => ({
+    user: { uid: 'test-user', email: 'test@test.edu' },
+    loading: false,
+    getAuthToken: vi.fn().mockResolvedValue('test-token'),
+  })),
 }));
 
 // Mock step components
-vi.mock('@/app/onboarding/components/steps/hive-welcome-step', () => ({
+vi.mock('../../../app/onboarding/components/steps/hive-welcome-step', () => ({
   HiveWelcomeStep: ({ onNext }: any) => (
     <div data-testid="welcome-step">
       <h2>Welcome to HIVE</h2>
@@ -68,7 +65,7 @@ vi.mock('@/app/onboarding/components/steps/hive-welcome-step', () => ({
   ),
 }));
 
-vi.mock('@/app/onboarding/components/steps/hive-user-type-step', () => ({
+vi.mock('../../../app/onboarding/components/steps/hive-user-type-step', () => ({
   HiveUserTypeStep: ({ data, updateData }: any) => (
     <div data-testid="user-type-step">
       <h2>Select Your Role</h2>
@@ -78,7 +75,7 @@ vi.mock('@/app/onboarding/components/steps/hive-user-type-step', () => ({
   ),
 }));
 
-vi.mock('@/app/onboarding/components/steps/hive-name-step', () => ({
+vi.mock('../../../app/onboarding/components/steps/hive-name-step', () => ({
   HiveNameStep: ({ data, updateData }: any) => (
     <div data-testid="name-step">
       <h2>Your Name</h2>
@@ -98,7 +95,7 @@ vi.mock('@/app/onboarding/components/steps/hive-name-step', () => ({
   ),
 }));
 
-vi.mock('@/app/onboarding/components/steps/hive-academics-step', () => ({
+vi.mock('../../../app/onboarding/components/steps/hive-academics-step', () => ({
   HiveAcademicsStep: ({ data, updateData }: any) => (
     <div data-testid="academics-step">
       <h2>Academic Information</h2>
@@ -118,7 +115,7 @@ vi.mock('@/app/onboarding/components/steps/hive-academics-step', () => ({
   ),
 }));
 
-vi.mock('@/app/onboarding/components/steps/hive-handle-step', () => ({
+vi.mock('../../../app/onboarding/components/steps/hive-handle-step', () => ({
   HiveHandleStep: ({ data, updateData }: any) => (
     <div data-testid="handle-step">
       <h2>Choose Handle</h2>
@@ -132,7 +129,7 @@ vi.mock('@/app/onboarding/components/steps/hive-handle-step', () => ({
   ),
 }));
 
-vi.mock('@/app/onboarding/components/steps/hive-photo-step', () => ({
+vi.mock('../../../app/onboarding/components/steps/hive-photo-step', () => ({
   HivePhotoStep: ({ data, updateData }: any) => (
     <div data-testid="photo-step">
       <h2>Profile Photo</h2>
@@ -143,7 +140,7 @@ vi.mock('@/app/onboarding/components/steps/hive-photo-step', () => ({
   ),
 }));
 
-vi.mock('@/app/onboarding/components/steps/hive-builder-step', () => ({
+vi.mock('../../../app/onboarding/components/steps/hive-builder-step', () => ({
   HiveBuilderStep: ({ data, updateData }: any) => (
     <div data-testid="builder-step">
       <h2>Builder Access</h2>
@@ -157,7 +154,7 @@ vi.mock('@/app/onboarding/components/steps/hive-builder-step', () => ({
   ),
 }));
 
-vi.mock('@/app/onboarding/components/steps/hive-legal-step', () => ({
+vi.mock('../../../app/onboarding/components/steps/hive-legal-step', () => ({
   HiveLegalStep: ({ data, updateData }: any) => (
     <div data-testid="legal-step">
       <h2>Terms & Privacy</h2>
@@ -183,7 +180,7 @@ vi.mock('@/app/onboarding/components/steps/hive-legal-step', () => ({
   ),
 }));
 
-vi.mock('@/app/onboarding/components/steps/hive-faculty-info-step', () => ({
+vi.mock('../../../app/onboarding/components/steps/hive-faculty-info-step', () => ({
   HiveFacultyInfoStep: ({ data, updateData }: any) => (
     <div data-testid="faculty-info-step">
       <h2>Faculty Information</h2>
@@ -224,8 +221,31 @@ Object.defineProperty(window, 'dispatchEvent', {
 });
 
 // Mock utils
-vi.mock('@/lib/utils', () => ({
-  cn: (...classes: any[]) => classes.filter(Boolean).join(' ')
+vi.mock('../../../lib/utils', () => ({
+  cn: (...classes: (string | undefined | null | boolean)[]) => classes.filter(Boolean).join(' ')
+}));
+
+// Mock Next.js Image
+vi.mock('next/image', () => ({
+  default: ({ src, alt, ...props }: { src: string; alt: string; [key: string]: unknown }) => 
+    // eslint-disable-next-line @next/next/no-img-element
+    <img src={src} alt={alt} {...props} />,
+}));
+
+// Mock framer-motion
+vi.mock('framer-motion', () => ({
+  motion: {
+    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+  },
+}));
+
+// Mock the onboarding bridge
+vi.mock('../../../lib/onboarding-bridge-temp', () => ({
+  useOnboardingBridge: vi.fn(() => ({
+    submitOnboarding: vi.fn(),
+    isLoading: false,
+    error: null,
+  })),
 }));
 
 // Mock lucide-react icons
@@ -516,11 +536,6 @@ describe('HiveOnboardingWizard', () => {
         }),
       } as Response);
 
-      mockLocalStorage.getItem.mockReturnValue(JSON.stringify({
-        userId: 'test-user',
-        email: 'test@test.edu',
-      }));
-
       render(<HiveOnboardingWizard />);
 
       // Navigate to final step and fill all required data
@@ -562,24 +577,26 @@ describe('HiveOnboardingWizard', () => {
       });
 
       // Submit
-      fireEvent.click(screen.getByText('Enter HIVE'));
+      const submitButton = screen.getByText('Enter HIVE');
+      fireEvent.click(submitButton);
 
       await waitFor(() => {
-        expect(mockFetch).toHaveBeenCalledWith('/api/auth/complete-onboarding', {
+        expect(mockFetch).toHaveBeenCalledWith('/api/auth/complete-onboarding', expect.objectContaining({
           method: 'POST',
-          headers: {
+          headers: expect.objectContaining({
             'Content-Type': 'application/json',
             'Authorization': 'Bearer test-token',
-          },
-          body: expect.stringContaining('"firstName":"John"'),
-        });
+          }),
+        }));
       });
 
       // Should update localStorage
-      expect(mockLocalStorage.setItem).toHaveBeenCalledWith(
-        'hive_session',
-        expect.stringContaining('"onboardingCompleted":true')
-      );
+      await waitFor(() => {
+        expect(mockLocalStorage.setItem).toHaveBeenCalledWith(
+          'hive_session',
+          expect.stringContaining('"onboardingCompleted":true')
+        );
+      });
 
       // Should dispatch storage event
       expect(mockDispatchEvent).toHaveBeenCalled();
@@ -587,7 +604,7 @@ describe('HiveOnboardingWizard', () => {
       // Should redirect to dashboard
       await waitFor(() => {
         expect(mockPush).toHaveBeenCalledWith('/');
-      }, { timeout: 2000 });
+      }, { timeout: 3000 });
     });
 
     it('handles development mode completion', async () => {

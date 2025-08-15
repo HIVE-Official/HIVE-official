@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { useSession } from '../../../hooks/use-session';
+// import { useSession } from '../../../hooks/use-session'; // TODO: For user-specific ritual filtering
 import { ErrorBoundary } from '../../../components/error-boundary';
 import { 
   Sparkles, 
@@ -66,12 +66,12 @@ async function fetchRituals(): Promise<{ rituals: Ritual[], participation: Ritua
   try {
     const sessionJson = window.localStorage.getItem('hive_session');
     if (sessionJson) {
-      const session = JSON.parse(sessionJson);
+      const session = JSON.parse(sessionJson) as { token: string };
       headers.Authorization = `Bearer ${process.env.NODE_ENV === 'development' ? 'test-token' : session.token}`;
     } else {
       headers.Authorization = `Bearer test-token`;
     }
-  } catch (error) {
+  } catch {
     headers.Authorization = `Bearer test-token`;
   }
 
@@ -81,7 +81,7 @@ async function fetchRituals(): Promise<{ rituals: Ritual[], participation: Ritua
     throw new Error(`Failed to fetch rituals: ${response.status}`);
   }
   
-  const data = await response.json();
+  const data = await response.json() as { rituals?: Ritual[]; participation?: RitualParticipation[] };
   return {
     rituals: data.rituals || [],
     participation: data.participation || []
@@ -147,7 +147,8 @@ const PARTICIPATION_TYPES = {
 
 export default function RitualsPage() {
   const [activeTab, setActiveTab] = useState<'active' | 'upcoming' | 'completed'>('active');
-  const { user } = useSession();
+  // Future user-specific ritual filtering
+  // const { user } = useSession();
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['rituals'],
@@ -168,13 +169,16 @@ export default function RitualsPage() {
 
   const handleJoinRitual = async (ritualId: string) => {
     try {
-      const response = await fetch('/api/rituals/join', {
+      const response = await fetch(`/api/rituals/${ritualId}/participate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer test-token`,
         },
-        body: JSON.stringify({ ritualId }),
+        body: JSON.stringify({ 
+          action: 'join',
+          entryPoint: 'ritual_browser'
+        }),
       });
 
       if (!response.ok) {
@@ -266,7 +270,7 @@ export default function RitualsPage() {
                 return (
                   <button
                     key={tab.id}
-                    onClick={() => setActiveTab(tab.id as any)}
+                    onClick={() => setActiveTab(tab.id as "active" | "upcoming" | "completed")}
                     className={`flex items-center space-x-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
                       isActive
                         ? 'bg-hive-brand-secondary text-hive-text-primary shadow-sm'

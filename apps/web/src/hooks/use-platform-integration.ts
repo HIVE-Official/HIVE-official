@@ -5,7 +5,7 @@
  * Provides unified access to real-time data, search, and notifications
  */
 
-import { useEffect, useState, useCallback, useMemo } from 'react';
+import { useEffect, useState, useCallback, useMemo as _useMemo } from 'react';
 import { useUnifiedStore, useFeedState, useSpacesState, useToolsState, useNotificationsState, useRealtimeState } from '@/lib/unified-state-management';
 import { getPlatformIntegration, type FeedItem } from '@/lib/platform-integration';
 import { getSearchEngine, type SearchResult, type SearchQuery, searchPlatform } from '@/lib/platform-wide-search';

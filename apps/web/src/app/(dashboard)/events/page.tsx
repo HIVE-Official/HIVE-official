@@ -22,6 +22,62 @@ import { CreateEventModal } from "../../../components/events/create-event-modal"
 import { EventDetailsModal } from "../../../components/events/event-details-modal";
 
 // Event interfaces
+interface RawEventData {
+  id?: unknown;
+  title?: unknown;
+  description?: unknown;
+  type?: unknown;
+  organizer?: {
+    id?: unknown;
+    name?: unknown;
+    handle?: unknown;
+    verified?: unknown;
+  };
+  organizerId?: unknown;
+  organizerName?: unknown;
+  organizerHandle?: unknown;
+  startTime?: unknown;
+  endTime?: unknown;
+  timezone?: unknown;
+  datetime?: {
+    start?: unknown;
+    end?: unknown;
+    timezone?: unknown;
+  };
+  locationType?: unknown;
+  locationName?: unknown;
+  locationAddress?: unknown;
+  virtualLink?: unknown;
+  location?: {
+    name?: unknown;
+  };
+  maxCapacity?: unknown;
+  currentCapacity?: unknown;
+  waitlistCount?: unknown;
+  capacity?: {
+    max?: unknown;
+    current?: unknown;
+    waitlist?: unknown;
+  };
+  tools?: unknown[];
+  tags?: unknown[];
+  visibility?: unknown;
+  rsvpStatus?: unknown;
+  isBookmarked?: unknown;
+  goingCount?: unknown;
+  interestedCount?: unknown;
+  commentsCount?: unknown;
+  sharesCount?: unknown;
+  engagement?: {
+    going?: unknown;
+    interested?: unknown;
+    comments?: unknown;
+    shares?: unknown;
+  };
+  createdAt?: unknown;
+  updatedAt?: unknown;
+}
+
 interface EventData {
   id: string;
   title: string;
@@ -90,22 +146,71 @@ export default function EventsPage() {
         const spacesResponse = await fetch('/api/spaces/my');
         if (!spacesResponse.ok) throw new Error('Failed to fetch user spaces');
         
-        const spacesData = await spacesResponse.json();
+        const spacesData = await spacesResponse.json() as { spaces?: unknown[] };
         const userSpaces = spacesData.spaces || [];
         
         // Fetch events from all user spaces
-        const eventPromises = userSpaces.map(async (space: any) => {
+        const eventPromises = userSpaces.map(async (space: unknown) => {
+          const spaceData = space as Record<string, unknown>;
           try {
-            const eventsResponse = await fetch(`/api/spaces/${space.id}/events`);
+            const eventsResponse = await fetch(`/api/spaces/${String(spaceData.id)}/events`);
             if (eventsResponse.ok) {
-              const eventsData = await eventsResponse.json();
-              return eventsData.events?.map((event: any) => ({
-                ...event,
-                space: { id: space.id, name: space.name, type: space.type || 'general' }
-              })) || [];
+              const eventsData = await eventsResponse.json() as { events?: unknown[] };
+              return eventsData.events?.map((event: unknown): EventData => {
+                const eventData = event as Record<string, unknown>;
+                
+                // Map raw event data to EventData format
+                return {
+                  id: String((eventData as RawEventData).id || `event-${Date.now()}-${Math.random()}`),
+                  title: String((eventData as RawEventData).title || 'Untitled Event'),
+                  description: String((eventData as RawEventData).description || ''),
+                  type: ((eventData as RawEventData).type as EventData['type']) || 'social',
+                  organizer: {
+                    id: String((eventData as RawEventData).organizer?.id || (eventData as RawEventData).organizerId || 'unknown'),
+                    name: String((eventData as RawEventData).organizer?.name || (eventData as RawEventData).organizerName || 'Event Organizer'),
+                    handle: String((eventData as RawEventData).organizer?.handle || (eventData as RawEventData).organizerHandle || 'organizer'),
+                    verified: Boolean((eventData as RawEventData).organizer?.verified)
+                  },
+                  space: { 
+                    id: String(spaceData.id), 
+                    name: String(spaceData.name), 
+                    type: String(spaceData.type || 'general') 
+                  },
+                  datetime: {
+                    start: String((eventData as RawEventData).startTime || (eventData as RawEventData).datetime?.start || new Date().toISOString()),
+                    end: String((eventData as RawEventData).endTime || (eventData as RawEventData).datetime?.end || new Date(Date.now() + 3600000).toISOString()),
+                    timezone: String((eventData as RawEventData).timezone || (eventData as RawEventData).datetime?.timezone || 'America/New_York')
+                  },
+                  location: {
+                    type: ((eventData as RawEventData).locationType as 'physical' | 'virtual' | 'hybrid') || 'physical',
+                    name: String((eventData as RawEventData).locationName || (eventData as RawEventData).location?.name || 'TBD'),
+                    address: (eventData as RawEventData).locationAddress ? String((eventData as RawEventData).locationAddress) : undefined,
+                    virtualLink: (eventData as RawEventData).virtualLink ? String((eventData as RawEventData).virtualLink) : undefined
+                  },
+                  capacity: {
+                    max: Number((eventData as RawEventData).maxCapacity || (eventData as RawEventData).capacity?.max || 50),
+                    current: Number((eventData as RawEventData).currentCapacity || (eventData as RawEventData).capacity?.current || 0),
+                    waitlist: Number((eventData as RawEventData).waitlistCount || (eventData as RawEventData).capacity?.waitlist || 0)
+                  },
+                  tools: Array.isArray((eventData as RawEventData).tools) ? (eventData as RawEventData).tools!.map(String) : [],
+                  tags: Array.isArray((eventData as RawEventData).tags) ? (eventData as RawEventData).tags!.map(String) : [],
+                  visibility: ((eventData as RawEventData).visibility as EventData['visibility']) || 'public',
+                  rsvpStatus: ((eventData as RawEventData).rsvpStatus as EventData['rsvpStatus']) || null,
+                  isBookmarked: Boolean((eventData as RawEventData).isBookmarked),
+                  engagement: {
+                    going: Number((eventData as RawEventData).goingCount || (eventData as RawEventData).engagement?.going || 0),
+                    interested: Number((eventData as RawEventData).interestedCount || (eventData as RawEventData).engagement?.interested || 0),
+                    comments: Number((eventData as RawEventData).commentsCount || (eventData as RawEventData).engagement?.comments || 0),
+                    shares: Number((eventData as RawEventData).sharesCount || (eventData as RawEventData).engagement?.shares || 0)
+                  },
+                  requirements: Array.isArray(eventData.requirements) ? eventData.requirements.map(String) : [],
+                  createdAt: String((eventData as RawEventData).createdAt || new Date().toISOString()),
+                  updatedAt: String((eventData as RawEventData).updatedAt || new Date().toISOString())
+                };
+              }) || [];
             }
           } catch (error) {
-            console.error(`Failed to fetch events for space ${space.id}:`, error);
+            console.error(`Failed to fetch events for space ${String(spaceData.id)}:`, error);
           }
           return [];
         });

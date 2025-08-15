@@ -1,35 +1,35 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from 'react';
-import { cn } from '../../lib/utils.js';
+import { cn } from '../../lib/utils';
 const sliderColors = {
     primary: {
         track: 'bg-[var(--hive-brand-secondary)]',
-        thumb: 'bg-[var(--hive-brand-secondary)] border-hive-gold shadow-hive-gold/20'
+        thumb: 'bg-[var(--hive-brand-secondary)] border-[var(--hive-brand-secondary)] shadow-[color-mix(in_srgb,var(--hive-brand-secondary)_20%,transparent)]'
     },
     success: {
-        track: 'bg-hive-emerald',
-        thumb: 'bg-hive-emerald border-hive-emerald shadow-hive-emerald/20'
+        track: 'bg-[var(--hive-status-success)]',
+        thumb: 'bg-[var(--hive-status-success)] border-[var(--hive-status-success)] shadow-[color-mix(in_srgb,var(--hive-status-success)_20%,transparent)]'
     },
     warning: {
-        track: 'bg-[var(--hive-brand-secondary)]',
-        thumb: 'bg-[var(--hive-brand-secondary)] border-hive-gold shadow-hive-gold/20'
+        track: 'bg-[var(--hive-status-warning)]',
+        thumb: 'bg-[var(--hive-status-warning)] border-[var(--hive-status-warning)] shadow-[color-mix(in_srgb,var(--hive-status-warning)_20%,transparent)]'
     },
     error: {
-        track: 'bg-hive-ruby',
-        thumb: 'bg-hive-ruby border-hive-ruby shadow-hive-ruby/20'
+        track: 'bg-[var(--hive-status-error)]',
+        thumb: 'bg-[var(--hive-status-error)] border-[var(--hive-status-error)] shadow-[color-mix(in_srgb,var(--hive-status-error)_20%,transparent)]'
     },
     gold: {
         track: 'bg-[var(--hive-brand-secondary)]',
-        thumb: 'bg-[var(--hive-brand-secondary)] border-hive-gold shadow-hive-gold/20'
+        thumb: 'bg-[var(--hive-brand-secondary)] border-[var(--hive-brand-secondary)] shadow-[color-mix(in_srgb,var(--hive-brand-secondary)_20%,transparent)]'
     },
     emerald: {
-        track: 'bg-hive-emerald',
-        thumb: 'bg-hive-emerald border-hive-emerald shadow-hive-emerald/20'
+        track: 'bg-[var(--hive-status-success)]',
+        thumb: 'bg-[var(--hive-status-success)] border-[var(--hive-status-success)] shadow-[color-mix(in_srgb,var(--hive-status-success)_20%,transparent)]'
     },
     sapphire: {
-        track: 'bg-hive-sapphire',
-        thumb: 'bg-hive-sapphire border-hive-sapphire shadow-hive-sapphire/20'
+        track: 'bg-[var(--hive-status-info)]',
+        thumb: 'bg-[var(--hive-status-info)] border-[var(--hive-status-info)] shadow-[color-mix(in_srgb,var(--hive-status-info)_20%,transparent)]'
     }
 };
 const sliderSizes = {
@@ -78,7 +78,7 @@ export const Slider = React.forwardRef(({ min = 0, max = 100, step = 1, value, d
     };
     const trackClasses = [
         'relative rounded-full',
-        'bg-hive-background-tertiary',
+        'bg-[var(--hive-background-tertiary)]',
         sliderSizes[size].track,
         vertical ? 'w-full' : 'h-full'
     ].filter(Boolean).join(' ');
@@ -90,14 +90,14 @@ export const Slider = React.forwardRef(({ min = 0, max = 100, step = 1, value, d
     ].filter(Boolean).join(' ');
     const thumbClasses = [
         'absolute rounded-full',
-        'border-2 border-white',
+        'border-2 border-[var(--hive-background-primary)]',
         'transition-all duration-200 ease-out',
         'cursor-pointer',
         'shadow-lg',
         sliderSizes[size].thumb,
         sliderColors[color].thumb,
         'hover:scale-110',
-        'focus:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2',
+        'focus:scale-110 focus:outline-none focus:ring-2 focus:ring-[color-mix(in_srgb,var(--hive-brand-secondary)_30%,transparent)] focus:ring-offset-2',
         disabled && 'cursor-not-allowed opacity-50'
     ].filter(Boolean).join(' ');
     const containerClasses = [
@@ -138,14 +138,14 @@ export const Slider = React.forwardRef(({ min = 0, max = 100, step = 1, value, d
     const renderMarks = () => {
         if (!marks || !showMarks)
             return null;
-        return (_jsx("div", { className: cn('flex justify-between text-xs text-hive-text-secondary mt-2', vertical && 'flex-col h-full absolute left-8 top-0'), children: Object.entries(marks).map(([markValue, markLabel]) => {
+        return (_jsx("div", { className: cn('flex justify-between text-xs text-[var(--hive-text-secondary)] mt-2', vertical && 'flex-col h-full absolute left-8 top-0'), children: Object.entries(marks).map(([markValue, markLabel]) => {
                 const percentage = getPercentage(Number(markValue));
                 return (_jsx("div", { className: cn('flex items-center', vertical && 'absolute'), style: vertical ? {
                         bottom: `calc(${percentage}% - 0.5rem)`
                     } : undefined, children: _jsx("span", { children: markLabel }) }, markValue));
             }) }));
     };
-    return (_jsxs("div", { ref: ref, className: cn('space-y-2', className), ...props, children: [label && (_jsxs("div", { className: "flex items-center justify-between", children: [_jsx("label", { className: "text-sm font-medium text-hive-text-primary", children: label }), showValue && (_jsx("span", { className: "text-sm text-hive-text-secondary", children: Array.isArray(currentValue)
+    return (_jsxs("div", { ref: ref, className: cn('space-y-2', className), ...props, children: [label && (_jsxs("div", { className: "flex items-center justify-between", children: [_jsx("label", { className: "text-sm font-medium text-[var(--hive-text-primary)]", children: label }), showValue && (_jsx("span", { className: "text-sm text-[var(--hive-text-secondary)]", children: Array.isArray(currentValue)
                             ? `${formatDisplayValue(currentValue[0])} - ${formatDisplayValue(currentValue[1])}`
                             : formatDisplayValue(currentValue) }))] })), _jsxs("div", { className: cn('relative', vertical && 'flex items-start gap-4'), children: [isRange ? renderRangeSlider() : renderSingleSlider(), renderMarks()] })] }));
 });

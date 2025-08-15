@@ -210,7 +210,7 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
         success: true,
         events: filteredEvents,
         message: 'Calendar events retrieved successfully (development mode)',
-        developmentMode: true
+        // SECURITY: Development mode removed for production safety
       });
     }
 

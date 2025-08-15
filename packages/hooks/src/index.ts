@@ -1,5 +1,5 @@
-// Auth hooks
-export { useAuth } from './use-auth';
+// Auth hooks - REMOVED: use useUnifiedAuth from @hive/ui instead
+// export { useAuth } from './use-auth';
 
 // Analytics hooks
 export { useAnalytics } from './use-analytics';

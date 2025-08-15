@@ -7,7 +7,7 @@ import { NextRequest } from 'next/server';
 import { handleDevAuth } from '@/lib/dev-auth-helper';
 import { currentEnvironment } from '@/lib/env';
 import { NextResponse } from 'next/server';
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
 
 /**
  * Development authentication endpoint

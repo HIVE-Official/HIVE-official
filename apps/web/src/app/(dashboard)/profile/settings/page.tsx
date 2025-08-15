@@ -146,7 +146,7 @@ export default function ProfileSettingsPage() {
     loadSettings();
   }, [user]);
 
-  const handlePrivacyChange = (field: keyof PrivacySettings, value: any) => {
+  const handlePrivacyChange = (field: string, value: boolean | object) => {
     if (!privacySettings) return;
     
     setPrivacySettings(prev => ({
@@ -167,7 +167,7 @@ export default function ProfileSettingsPage() {
     setHasChanges(true);
   };
 
-  const handleAccountChange = (field: keyof AccountSettings, value: any) => {
+  const handleAccountChange = (field: keyof AccountSettings, value: string | boolean) => {
     setAccountSettings(prev => ({
       ...prev,
       [field]: value

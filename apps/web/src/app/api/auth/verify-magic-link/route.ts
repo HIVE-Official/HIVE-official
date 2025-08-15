@@ -4,12 +4,12 @@ import { z } from "zod";
 import { dbAdmin } from "@/lib/firebase-admin";
 import { getAuth } from "firebase-admin/auth";
 import { type Timestamp } from "firebase-admin/firestore";
-import { handleApiError, AuthenticationError, ValidationError } from "@/lib/api-error-handler";
+import { handleApiError, AuthenticationError as _AuthenticationError, ValidationError } from "@/lib/api-error-handler";
 import { auditAuthEvent } from "@/lib/production-auth";
 import { currentEnvironment } from "@/lib/env";
 import { validateWithSecurity, ApiSchemas } from "@/lib/secure-input-validation";
 import { enforceRateLimit } from "@/lib/secure-rate-limiter";
-import { logger } from "@/lib/logger";
+import { logger } from "@/lib/structured-logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 /**
@@ -88,25 +88,35 @@ export async function POST(request: NextRequest) {
         securityLevel: validationResult.securityLevel
       });
       
-      return NextResponse.json(ApiResponseHelper.error("Request validation failed", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
+      return NextResponse.json(ApiResponse as _ApiResponseHelper.error("Request validation failed", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
-    const { email, schoolId, token } = validationResult.data!;
+    if (!validationResult.data) {
+      return NextResponse.json(ApiResponse as _ApiResponseHelper.error("Invalid validation data", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
+    }
+
+    const { email, schoolId, token } = validationResult.data;
+    
+    // Ensure all required fields are strings
+    if (typeof email !== 'string' || typeof token !== 'string') {
+      return NextResponse.json(ApiResponse as _ApiResponseHelper.error("Invalid input types", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
+    }
     
     // SECURITY: Additional environment-based checks
     if (currentEnvironment === 'production') {
       // In production, validate school domain strictly
-      if (!schoolId) {
-        return NextResponse.json(ApiResponseHelper.error("School ID is required", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
+      if (!schoolId || typeof schoolId !== 'string') {
+        return NextResponse.json(ApiResponse as _ApiResponseHelper.error("School ID is required", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
       }
-      const isValidDomain = await validateSchoolDomain(email, schoolId!);
+      // At this point, schoolId is guaranteed to be a string
+      const isValidDomain = await validateSchoolDomain(email, schoolId);
       if (!isValidDomain) {
         await auditAuthEvent('failure', request, {
           operation: 'verify_magic_link',
           error: 'invalid_school_domain'
         });
         
-        return NextResponse.json(ApiResponseHelper.error("Email domain does not match school", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
+        return NextResponse.json(ApiResponse as _ApiResponseHelper.error("Email domain does not match school", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
       }
     }
     
@@ -142,7 +152,7 @@ export async function POST(request: NextRequest) {
         });
         
         // Don't expose Firebase error details
-        return NextResponse.json(ApiResponseHelper.error("Invalid or expired magic link", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
+        return NextResponse.json(ApiResponse as _ApiResponseHelper.error("Invalid or expired magic link", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
       }
     }
     
@@ -153,7 +163,7 @@ export async function POST(request: NextRequest) {
         error: 'email_mismatch'
       });
       
-      return NextResponse.json(ApiResponseHelper.error("Email mismatch", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
+      return NextResponse.json(ApiResponse as _ApiResponseHelper.error("Email mismatch", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
     
     // Apply the action code to complete the sign-in (only for regular magic links)

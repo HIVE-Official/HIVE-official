@@ -1,7 +1,7 @@
 // Export all components
-export * from './components/index.js';
+export * from './components';
 // Export contexts
-export * from './contexts/unified-auth-context.js';
+export * from './contexts/unified-auth-context';
 // Export utilities
-export * from './lib/utils.js';
+export * from './lib/utils';
 //# sourceMappingURL=index.js.map

@@ -14,28 +14,28 @@ export interface LinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement>
 
 const linkVariants = {
   default: [
-    'text-blue-400',
-    'hover:text-blue-300',
-    'active:text-blue-500',
+    'text-[var(--hive-brand-primary)]',
+    'hover:text-[var(--hive-brand-secondary)]',
+    'active:text-[var(--hive-brand-primary)]',
     'transition-colors duration-200 ease-out'
   ].join(' '),
   ghost: [
     'text-[var(--hive-text-primary)]',
-    'hover:text-blue-400',
+    'hover:text-[var(--hive-brand-primary)]',
     'transition-colors duration-200 ease-out'
   ].join(' '),
   underline: [
     'text-[var(--hive-text-primary)]',
-    'underline decoration-blue-400 underline-offset-2',
-    'hover:text-blue-400 hover:decoration-blue-300',
+    'underline decoration-[var(--hive-brand-primary)] underline-offset-2',
+    'hover:text-[var(--hive-brand-primary)] hover:decoration-[var(--hive-brand-secondary)]',
     'transition-all duration-200 ease-out'
   ].join(' '),
   button: [
     'inline-flex items-center justify-center gap-2',
-    'px-4 py-2 rounded-hive-md',
-    'bg-blue-600 text-[var(--hive-text-primary)] font-medium',
-    'hover:bg-blue-500',
-    'active:bg-blue-700',
+    'px-4 py-2 rounded-lg',
+    'bg-[var(--hive-brand-primary)] text-white font-medium',
+    'hover:bg-[var(--hive-brand-secondary)]',
+    'active:bg-[var(--hive-brand-primary)]',
     'transition-all duration-200 ease-out'
   ].join(' ')
 };
@@ -47,10 +47,10 @@ const linkSizes = {
 };
 
 const linkColors = {
-  primary: 'text-[var(--hive-text-primary)] hover:text-blue-400',
-  secondary: 'text-gray-400 hover:text-[var(--hive-text-primary)]',
-  gold: 'text-yellow-400 hover:text-yellow-300',
-  muted: 'text-gray-500 hover:text-gray-400'
+  primary: 'text-[var(--hive-text-primary)] hover:text-[var(--hive-brand-primary)]',
+  secondary: 'text-[var(--hive-text-secondary)] hover:text-[var(--hive-text-primary)]',
+  gold: 'text-[var(--hive-brand-secondary)] hover:text-[var(--hive-brand-primary)]',
+  muted: 'text-[var(--hive-text-muted)] hover:text-[var(--hive-text-secondary)]'
 };
 
 export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(({
@@ -67,7 +67,7 @@ export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(({
   const baseClasses = [
     // Base styles
     'font-medium',
-    'focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-black',
+    'focus:outline-none focus:ring-2 focus:ring-[var(--hive-brand-primary)] focus:ring-offset-2 focus:ring-offset-[var(--hive-background-primary)]',
     'rounded-sm',
     
     // Size

@@ -1,6 +1,8 @@
 import React from 'react';
-import { render, RenderOptions } from '@testing-library/react';
+import { render, RenderOptions, screen } from '@testing-library/react';
 import { vi, beforeEach, afterEach, expect, describe, it } from 'vitest';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { mockLocalStorage } from './setup';
 
 // Mock providers for testing
 const MockProviders: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -15,22 +17,20 @@ const MockProviders: React.FC<{ children: React.ReactNode }> = ({ children }) =>
 const customRender = (
   ui: React.ReactElement,
   options?: Omit<RenderOptions, 'wrapper'> & {
-    routerMock?: any;
-    searchParamsMock?: any;
+    routerMock?: object;
+    searchParamsMock?: object;
   }
 ) => {
   const { routerMock, searchParamsMock, ...renderOptions } = options || {};
 
   // Set up router mock
   if (routerMock) {
-    const { useRouter } = require('next/navigation');
-    useRouter.mockReturnValue(routerMock);
+    (useRouter as vi.MockedFunction<typeof useRouter>).mockReturnValue(routerMock);
   }
 
   // Set up search params mock
   if (searchParamsMock) {
-    const { useSearchParams } = require('next/navigation');
-    useSearchParams.mockReturnValue(searchParamsMock);
+    (useSearchParams as any).mockReturnValue(searchParamsMock);
   }
 
   return render(ui, {
@@ -111,7 +111,7 @@ export const createTestTool = (overrides = {}) => ({
 });
 
 // Mock API response helpers
-export const createMockApiResponse = (data: any, options = {}) => ({
+export const createMockApiResponse = (data: unknown, options = {}) => ({
   ok: true,
   status: 200,
   json: async () => data,
@@ -167,15 +167,13 @@ export const setupTestEnvironment = () => {
 };
 
 // Local storage test helpers
-export const mockLocalStorageValue = (key: string, value: any) => {
-  const { mockLocalStorage } = require('./setup');
+export const mockLocalStorageValue = (key: string, value: string | null) => {
   mockLocalStorage.getItem.mockImplementation((k) => 
     k === key ? JSON.stringify(value) : null
   );
 };
 
-export const expectLocalStorageCall = (key: string, value: any) => {
-  const { mockLocalStorage } = require('./setup');
+export const expectLocalStorageCall = (key: string, value: string) => {
   expect(mockLocalStorage.setItem).toHaveBeenCalledWith(
     key,
     JSON.stringify(value)
@@ -208,7 +206,7 @@ export const submitForm = async (buttonText = 'submit') => {
 };
 
 // Async testing helpers
-export const waitForApiCall = async (mockFetch: any, expectedUrl: string) => {
+export const waitForApiCall = async (mockFetch: vi.MockedFunction<typeof fetch>, expectedUrl: string) => {
   const { waitFor } = await import('@testing-library/react');
   
   await waitFor(() => {
@@ -219,7 +217,7 @@ export const waitForApiCall = async (mockFetch: any, expectedUrl: string) => {
   });
 };
 
-export const waitForRedirect = async (mockRouter: any, expectedPath: string) => {
+export const waitForRedirect = async (mockRouter: object, expectedPath: string) => {
   const { waitFor } = await import('@testing-library/react');
   
   await waitFor(() => {
@@ -229,12 +227,10 @@ export const waitForRedirect = async (mockRouter: any, expectedPath: string) => 
 
 // Component testing helpers
 export const getByTestId = (testId: string) => {
-  const { screen } = require('@testing-library/react');
   return screen.getByTestId(testId);
 };
 
 export const queryByTestId = (testId: string) => {
-  const { screen } = require('@testing-library/react');
   return screen.queryByTestId(testId);
 };
 

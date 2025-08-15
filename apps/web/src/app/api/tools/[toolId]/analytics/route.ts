@@ -79,14 +79,14 @@ interface ToolAnalytics {
 }
 
 // GET - Get tool analytics
-export async function GET(request: NextRequest, { params }: { params: { toolId: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ toolId: string }> }) {
   try {
     const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
-    const { toolId } = params;
+    const { toolId } = await params;
     const { searchParams } = new URL(request.url);
     
     // Get tool details and check ownership
@@ -155,7 +155,7 @@ async function generateToolAnalytics(query: AnalyticsQuery): Promise<ToolAnalyti
   const installations = installationsSnapshot.docs.map(doc => ({
     id: doc.id,
     ...doc.data()
-  }));
+  } as { id: string; status?: string; [key: string]: any }));
 
   // Get reviews
   const reviewsSnapshot = await adminDb
@@ -388,7 +388,7 @@ function calculateUserRetention(events: any[]) {
 
   const day1Retention = Object.entries(userFirstUsage)
     .filter(([userId, firstUsage]) => {
-      const firstDate = new Date(firstUsage);
+      const firstDate = new Date(firstUsage as string);
       const lastDate = new Date(userLastUsage[userId]);
       const daysDiff = (lastDate.getTime() - firstDate.getTime()) / (1000 * 60 * 60 * 24);
       return daysDiff >= 1;
@@ -396,7 +396,7 @@ function calculateUserRetention(events: any[]) {
 
   const day7Retention = Object.entries(userFirstUsage)
     .filter(([userId, firstUsage]) => {
-      const firstDate = new Date(firstUsage);
+      const firstDate = new Date(firstUsage as string);
       const lastDate = new Date(userLastUsage[userId]);
       const daysDiff = (lastDate.getTime() - firstDate.getTime()) / (1000 * 60 * 60 * 24);
       return daysDiff >= 7;
@@ -404,7 +404,7 @@ function calculateUserRetention(events: any[]) {
 
   const day30Retention = Object.entries(userFirstUsage)
     .filter(([userId, firstUsage]) => {
-      const firstDate = new Date(firstUsage);
+      const firstDate = new Date(firstUsage as string);
       const lastDate = new Date(userLastUsage[userId]);
       const daysDiff = (lastDate.getTime() - firstDate.getTime()) / (1000 * 60 * 60 * 24);
       return daysDiff >= 30;
@@ -427,7 +427,7 @@ async function calculateDemographics(events: any[]) {
     return userDoc.exists ? { id: userId, ...userDoc.data() } : null;
   });
 
-  const users = (await Promise.all(userPromises)).filter(Boolean);
+  const users = (await Promise.all(userPromises)).filter(Boolean) as Array<{ id: string; userType?: string; institution?: string; [key: string]: any }>;
 
   // Calculate by user type
   const userTypeCounts = users.reduce((acc, user) => {

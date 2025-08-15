@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getCurrentUser } from '../../../../../lib/auth-server';
+import { getCurrentUser as _getCurrentUser } from '../../../../../lib/auth-server';
 import { logger } from "@/lib/logger";
 import { withAuth } from '@/lib/api-auth-middleware';
 

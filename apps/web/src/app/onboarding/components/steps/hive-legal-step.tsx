@@ -1,4 +1,4 @@
-import { motion } from "@hive/ui";
+import { motion } from "framer-motion";
 import { Shield, FileText, Eye, Check, ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { HiveCard } from "@hive/ui";
@@ -109,7 +109,7 @@ export function HiveLegalStep({ data, updateData }: HiveLegalStepProps) {
             transition={{ delay: 0.4 + index * 0.1 }}
           >
             <HiveCard
-              variant={agreement.checked ? "premium" : "glass"}
+              variant={agreement.checked ? "selected" : "elevated"}
               className={cn(
                 "p-[var(--hive-spacing-4)] transition-all duration-300 cursor-pointer",
                 agreement.checked
@@ -177,7 +177,7 @@ export function HiveLegalStep({ data, updateData }: HiveLegalStepProps) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.7 }}
       >
-        <HiveCard variant="subtle" className="p-[var(--hive-spacing-4)]">
+        <HiveCard variant="default" className="p-[var(--hive-spacing-4)]">
           <h4 className="text-sm font-medium text-[var(--hive-text-primary)] mb-[var(--hive-spacing-3)] flex items-center">
             <Shield className="w-4 h-4 mr-2 text-[var(--hive-brand-primary)]" />
             Your Privacy Matters
@@ -207,7 +207,7 @@ export function HiveLegalStep({ data, updateData }: HiveLegalStepProps) {
         transition={{ delay: 0.9 }}
       >
         <HiveCard 
-          variant={data.acceptedTerms && data.acceptedPrivacy ? "success" : "glass"}
+          variant={data.acceptedTerms && data.acceptedPrivacy ? "online" : "elevated"}
           className="p-[var(--hive-spacing-4)]"
         >
           <div className="flex items-center justify-between">

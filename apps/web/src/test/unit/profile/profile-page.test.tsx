@@ -2,7 +2,6 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import ProfilePage from '../../../app/(dashboard)/profile/page';
-import { PageContainer } from "@/components/temp-stubs";
 
 // Mock all the complex components
 vi.mock('@hive/ui', () => ({
@@ -109,6 +108,18 @@ vi.mock('lucide-react', () => {
     Home: mockIcon,
   };
 });
+
+// Mock temp stubs
+vi.mock('@/components/temp-stubs', () => ({
+  PageContainer: ({ children, title, subtitle, actions }: any) => (
+    <div data-testid="page-container">
+      <div data-testid="page-title">{title}</div>
+      <div data-testid="page-subtitle">{subtitle}</div>
+      <div data-testid="page-actions">{actions}</div>
+      {children}
+    </div>
+  ),
+}));
 
 describe('ProfilePage', () => {
   const mockUser = {
@@ -470,8 +481,8 @@ describe('ProfilePage', () => {
   });
 
   describe('Error Handling', () => {
-    it('handles missing user data gracefully', () => {
-      const mockUseSession = import('../../../hooks/use-session');
+    it('handles missing user data gracefully', async () => {
+      const mockUseSession = await import('../../../hooks/use-session');
       vi.mocked(mockUseSession.useSession).mockReturnValue({ user: null });
 
       render(<ProfilePage />);
@@ -480,7 +491,7 @@ describe('ProfilePage', () => {
     });
 
     it('handles calendar data errors', async () => {
-      const mockUseCalendarData = import('../../../hooks/use-calendar-data');
+      const mockUseCalendarData = await import('../../../hooks/use-calendar-data');
       vi.mocked(mockUseCalendarData.useCalendarData).mockReturnValue({
         data: null,
         state: 'error',

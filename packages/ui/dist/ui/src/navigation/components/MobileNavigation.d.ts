@@ -6,10 +6,9 @@
  * smooth animations, and flawless user experience.
  */
 import React from 'react';
-import { NavigationItem, NavigationUser } from '../core/types';
+import { NavigationItem } from '../core/types';
 interface MobileNavigationProps {
     items: ReadonlyArray<NavigationItem>;
-    user: NavigationUser;
     onNavigate: (href: string) => void;
     className?: string;
     testId?: string;

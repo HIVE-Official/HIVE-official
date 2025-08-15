@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 // Use admin SDK methods since we're in an API route
 import { dbAdmin } from '@/lib/firebase-admin';
-import { getCurrentUser } from '@/lib/server-auth';
+import { getCurrentUser } from '@/lib/auth-server';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { sseRealtimeService } from '@/lib/sse-realtime-service';
 
 // Presence indicator interfaces
 interface UserPresence {
@@ -100,7 +101,7 @@ interface PresenceEvent {
 // POST - Update user presence and activity
 export async function POST(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
@@ -127,7 +128,11 @@ export async function POST(request: NextRequest) {
       userId: user.uid,
       userName: user.displayName || user.email || 'Unknown User',
       lastSeen: new Date().toISOString(),
-      'metadata.lastActivityUpdate': new Date().toISOString()
+      metadata: {
+        timezone: 'UTC',
+        locale: 'en-US',
+        lastActivityUpdate: new Date().toISOString()
+      }
     };
 
     // Update status if provided
@@ -174,7 +179,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Store presence update
-    await updateDoc(doc(db, 'userPresence', user.uid), presenceUpdate);
+    await dbAdmin.collection('userPresence').doc(user.uid).update(presenceUpdate);
 
     // Create presence event
     const presenceEvent: PresenceEvent = {
@@ -189,7 +194,7 @@ export async function POST(request: NextRequest) {
     };
 
     // Store presence event
-    await setDoc(doc(db, 'presenceEvents', presenceEvent.id), presenceEvent);
+    await dbAdmin.collection('presenceEvents').doc(presenceEvent.id).set(presenceEvent);
 
     // Broadcast presence update to relevant spaces
     await broadcastPresenceUpdate(presenceEvent);
@@ -205,7 +210,7 @@ export async function POST(request: NextRequest) {
         userId: user.uid,
         status: presenceUpdate.status || currentPresence?.status,
         activity: presenceUpdate.currentActivity || currentPresence?.currentActivity,
-        lastUpdate: presenceUpdate['metadata.lastActivityUpdate']
+        lastUpdate: presenceUpdate.metadata?.lastActivityUpdate
       }
     });
   } catch (error) {
@@ -217,7 +222,7 @@ export async function POST(request: NextRequest) {
 // GET - Get presence information
 export async function GET(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
@@ -237,7 +242,7 @@ export async function GET(request: NextRequest) {
       }
 
       // Check if requesting user has permission to see this presence
-      const canView = await canViewUserPresence(user.uid, userId, spaceId);
+      const canView = await canViewUserPresence(user.uid, userId, spaceId ?? undefined);
       if (!canView) {
         return NextResponse.json({ 
           presence: getPrivacyFilteredPresence(userPresence) 
@@ -286,7 +291,7 @@ export async function GET(request: NextRequest) {
 // PUT - Update presence settings
 export async function PUT(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
@@ -308,7 +313,7 @@ export async function PUT(request: NextRequest) {
       ...settings
     };
 
-    await updateDoc(doc(db, 'userPresence', user.uid), {
+    await dbAdmin.collection('userPresence').doc(user.uid).update({
       settings: updatedSettings,
       'metadata.lastActivityUpdate': new Date().toISOString()
     });
@@ -326,7 +331,7 @@ export async function PUT(request: NextRequest) {
 // DELETE - Remove user presence or clean up old data
 export async function DELETE(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
@@ -342,7 +347,7 @@ export async function DELETE(request: NextRequest) {
       if (currentPresence?.connections) {
         const updatedConnections = currentPresence.connections.filter(c => c.connectionId !== connectionId);
         
-        await updateDoc(doc(db, 'userPresence', user.uid), {
+        await dbAdmin.collection('userPresence').doc(user.uid).update({
           connections: updatedConnections,
           status: updatedConnections.length === 0 ? 'offline' : currentPresence.status,
           'metadata.lastActivityUpdate': new Date().toISOString()
@@ -369,14 +374,12 @@ export async function DELETE(request: NextRequest) {
     } else if (cleanupOld && olderThan) {
       // Clean up old presence events
       const cutoffDate = new Date(olderThan).toISOString();
-      const oldEventsQuery = dbAdmin.collection(
-        dbAdmin.collection('presenceEvents'),
-        where('userId', '==', user.uid),
-        where('timestamp', '<', cutoffDate)
-      );
+      const oldEventsQuery = dbAdmin.collection('presenceEvents')
+        .where('userId', '==', user.uid)
+        .where('timestamp', '<', cutoffDate);
 
-      const oldEventsSnapshot = await getDocs(oldEventsQuery);
-      const deletePromises = oldEventsSnapshot.docs.map(doc => deleteDoc(doc.ref));
+      const oldEventsSnapshot = await oldEventsQuery.get();
+      const deletePromises = oldEventsSnapshot.docs.map(doc => doc.ref.delete());
       await Promise.all(deletePromises);
 
       return NextResponse.json({
@@ -385,7 +388,7 @@ export async function DELETE(request: NextRequest) {
       });
     } else {
       // Set user offline
-      await updateDoc(doc(db, 'userPresence', user.uid), {
+      await dbAdmin.collection('userPresence').doc(user.uid).update({
         status: 'offline',
         connections: [],
         'metadata.lastActivityUpdate': new Date().toISOString()
@@ -415,10 +418,10 @@ export async function DELETE(request: NextRequest) {
 // Helper function to get user presence
 async function getUserPresence(userId: string): Promise<UserPresence | null> {
   try {
-    const presenceDoc = await getDoc(doc(db, 'userPresence', userId));
+    const presenceDoc = await dbAdmin.collection('userPresence').doc(userId).get();
     
     if (presenceDoc.exists) {
-      return { id: presenceDoc.id, ...presenceDoc.data() } as UserPresence;
+      return { ...presenceDoc.data() } as UserPresence;
     }
     
     return null;
@@ -450,8 +453,9 @@ async function getSpacePresence(spaceId: string, requestingUserId: string, inclu
     }
 
     // Get space info
-    const spaceDoc = await getDoc(doc(db, 'spaces', spaceId));
-    const spaceName = spaceDoc.exists ? spaceDoc.data().name : 'Unknown Space';
+    const spaceDoc = await dbAdmin.collection('spaces').doc(spaceId).get();
+    const spaceData = spaceDoc.exists ? spaceDoc.data() : null;
+    const spaceName = spaceData?.name ?? 'Unknown Space';
 
     // Build active users list
     const activeUsers = memberPresences
@@ -501,13 +505,11 @@ async function getSpacePresence(spaceId: string, requestingUserId: string, inclu
 // Helper function to get user spaces
 async function getUserSpaces(userId: string): Promise<string[]> {
   try {
-    const memberQuery = dbAdmin.collection(
-      dbAdmin.collection('members'),
-      where('userId', '==', userId),
-      where('status', '==', 'active')
-    );
+    const memberQuery = dbAdmin.collection('members')
+      .where('userId', '==', userId)
+      .where('status', '==', 'active');
 
-    const memberSnapshot = await getDocs(memberQuery);
+    const memberSnapshot = await memberQuery.get();
     return memberSnapshot.docs.map(doc => doc.data().spaceId);
   } catch (error) {
     logger.error('Error getting user spaces', { error: error, endpoint: '/api/realtime/presence' });
@@ -518,13 +520,11 @@ async function getUserSpaces(userId: string): Promise<string[]> {
 // Helper function to get space members
 async function getSpaceMembers(spaceId: string): Promise<string[]> {
   try {
-    const memberQuery = dbAdmin.collection(
-      dbAdmin.collection('members'),
-      where('spaceId', '==', spaceId),
-      where('status', '==', 'active')
-    );
+    const memberQuery = dbAdmin.collection('members')
+      .where('spaceId', '==', spaceId)
+      .where('status', '==', 'active');
 
-    const memberSnapshot = await getDocs(memberQuery);
+    const memberSnapshot = await memberQuery.get();
     return memberSnapshot.docs.map(doc => doc.data().userId);
   } catch (error) {
     logger.error('Error getting space members', { error: error, endpoint: '/api/realtime/presence' });
@@ -535,14 +535,12 @@ async function getSpaceMembers(spaceId: string): Promise<string[]> {
 // Helper function to verify space access
 async function verifySpaceAccess(userId: string, spaceId: string): Promise<boolean> {
   try {
-    const memberQuery = dbAdmin.collection(
-      dbAdmin.collection('members'),
-      where('userId', '==', userId),
-      where('spaceId', '==', spaceId),
-      where('status', '==', 'active')
-    );
+    const memberQuery = dbAdmin.collection('members')
+      .where('userId', '==', userId)
+      .where('spaceId', '==', spaceId)
+      .where('status', '==', 'active');
 
-    const memberSnapshot = await getDocs(memberQuery);
+    const memberSnapshot = await memberQuery.get();
     return !memberSnapshot.empty;
   } catch (error) {
     logger.error('Error verifying space access', { error: error, endpoint: '/api/realtime/presence' });
@@ -635,7 +633,7 @@ async function broadcastPresenceUpdate(presenceEvent: PresenceEvent): Promise<vo
         }
       };
 
-      await addDoc(dbAdmin.collection('realtimeMessages'), realtimeMessage);
+      await dbAdmin.collection('realtimeMessages').add(realtimeMessage);
     }
   } catch (error) {
     logger.error('Error broadcasting presence update', { error: error, endpoint: '/api/realtime/presence' });
@@ -648,7 +646,7 @@ async function updateSpacePresence(spaceId: string, presenceEvent: PresenceEvent
     const spacePresenceId = `space_presence_${spaceId}`;
     
     // Get current space presence stats
-    const spacePresenceDoc = await getDoc(doc(db, 'spacePresenceStats', spacePresenceId));
+    const spacePresenceDoc = await dbAdmin.collection('spacePresenceStats').doc(spacePresenceId).get();
     
     let currentStats = {
       spaceId,
@@ -673,7 +671,7 @@ async function updateSpacePresence(spaceId: string, presenceEvent: PresenceEvent
     const updatedRecentEvents = [recentEvent, ...currentStats.recentEvents].slice(0, 20); // Keep last 20 events
 
     // Update stats
-    await setDoc(doc(db, 'spacePresenceStats', spacePresenceId), {
+    await dbAdmin.collection('spacePresenceStats').doc(spacePresenceId).set({
       ...currentStats,
       recentEvents: updatedRecentEvents,
       lastUpdate: new Date().toISOString()
@@ -686,11 +684,11 @@ async function updateSpacePresence(spaceId: string, presenceEvent: PresenceEvent
 // Helper function to get recent space activity
 async function getRecentSpaceActivity(spaceId: string, limit = 10): Promise<any[]> {
   try {
-    const statsDoc = await getDoc(doc(db, 'spacePresenceStats', `space_presence_${spaceId}`));
+    const statsDoc = await dbAdmin.collection('spacePresenceStats').doc(`space_presence_${spaceId}`).get();
     
     if (statsDoc.exists) {
       const data = statsDoc.data();
-      return (data.recentEvents || []).slice(0, limit).map((event: any) => ({
+      return (data?.recentEvents || []).slice(0, limit).map((event: any) => ({
         userId: event.userId,
         userName: event.userName || 'Unknown User',
         action: event.eventType,
@@ -710,17 +708,15 @@ async function getRecentSpaceActivity(spaceId: string, limit = 10): Promise<any[
 async function cleanupStalePresence(): Promise<number> {
   try {
     const staleThreshold = new Date(Date.now() - 24 * 60 * 60 * 1000); // 24 hours
-    const stalePresenceQuery = dbAdmin.collection(
-      dbAdmin.collection('userPresence'),
-      where('metadata.lastActivityUpdate', '<', staleThreshold.toISOString())
-    );
+    const stalePresenceQuery = dbAdmin.collection('userPresence')
+      .where('metadata.lastActivityUpdate', '<', staleThreshold.toISOString());
 
-    const stalePresenceSnapshot = await getDocs(stalePresenceQuery);
+    const stalePresenceSnapshot = await stalePresenceQuery.get();
     let cleaned = 0;
 
     for (const presenceDoc of stalePresenceSnapshot.docs) {
       // Set to offline instead of deleting
-      await updateDoc(presenceDoc.ref, {
+      await presenceDoc.ref.update({
         status: 'offline',
         connections: [],
         'metadata.lastActivityUpdate': new Date().toISOString()

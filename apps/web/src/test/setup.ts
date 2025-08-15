@@ -5,14 +5,22 @@ import React from 'react';
 // Import Jest DOM matchers to fix "toBeInTheDocument" type errors
 import '@testing-library/jest-dom';
 
-// DOM is provided by vitest jsdom environment
+// JSDOM environment provides document and window - don't override them
 
-// Fix React context reading issue - ensure React is properly available
+// Fix React context reading issue - ensure React is properly available globally
 if (typeof global.React === 'undefined') {
   global.React = React;
 }
 
-// Set up essential window mocks EARLY - before any module imports
+// Also ensure React is available in globalThis for wider compatibility
+if (typeof globalThis.React === 'undefined') {
+  globalThis.React = React;
+}
+
+// Make React available in all test files 
+global.React = React;
+
+// Set up essential window mocks - work with existing JSDOM window
 const createMediaQueryList = (matches: boolean = false, media: string = '') => ({
   matches,
   media,
@@ -26,16 +34,19 @@ const createMediaQueryList = (matches: boolean = false, media: string = '') => (
 
 const matchMediaMock = vi.fn().mockImplementation((query: string) => createMediaQueryList(false, query));
 
-// Ensure global window exists for framer-motion
-if (typeof global.window === 'undefined') {
-  Object.defineProperty(global, 'window', {
-    value: { matchMedia: matchMediaMock },
+// Add matchMedia to existing window object instead of creating new one
+if (typeof window !== 'undefined') {
+  Object.defineProperty(window, 'matchMedia', {
     writable: true,
-    configurable: true,
+    value: matchMediaMock,
   });
+  
+  // Also set on global for backwards compatibility
+  global.matchMedia = matchMediaMock;
+} else {
+  // Fallback if JSDOM window isn't available
+  global.matchMedia = matchMediaMock;
 }
-
-global.matchMedia = matchMediaMock;
 
 // Mock Next.js modules that are commonly used in tests
 vi.mock('next/navigation', () => ({
@@ -120,10 +131,6 @@ const createMotionComponentFactory = () => {
 
 // Mock all framer-motion proxy paths with same factory
 const framerMotionMock = createMotionComponentFactory();
-vi.mock('@hive/ui', () => ({
-  ...vi.importActual('@hive/ui'),
-  ...framerMotionMock
-}));
 vi.mock('../../packages/ui/src/components/framer-motion-proxy', () => framerMotionMock);
 
 // Mock environment variables for tests
@@ -137,41 +144,80 @@ try {
   // NODE_ENV is already defined and read-only
 }
 
-// Mock global fetch if not available
-global.fetch = vi.fn();
+// Mock global fetch with proper Response interface
+const mockResponse = (data: any, ok: boolean = true, status: number = 200) => ({
+  ok,
+  status,
+  statusText: ok ? 'OK' : 'Error',
+  json: vi.fn().mockResolvedValue(data),
+  text: vi.fn().mockResolvedValue(JSON.stringify(data)),
+  headers: new Headers(),
+  url: '',
+  redirected: false,
+  type: 'default' as Response['type'],
+  body: null,
+  bodyUsed: false,
+  clone: vi.fn(),
+  arrayBuffer: vi.fn(),
+  blob: vi.fn(),
+  formData: vi.fn(),
+});
 
-// Mock auth context to prevent useContext errors
-vi.mock('@/hooks/use-auth', () => ({
-  useAuth: vi.fn(() => ({
-    user: {
-      uid: 'test-user-id',
-      email: 'test@example.com',
-      displayName: 'Test User',
-      emailVerified: true,
-    },
-    loading: false,
-    error: null,
-    signIn: vi.fn(),
-    signOut: vi.fn(),
-    signUp: vi.fn(),
-    getAuthToken: vi.fn(() => Promise.resolve('test-token')),
-  })),
-  AuthContext: React.createContext(null),
-  useAuthProvider: vi.fn(() => ({
-    user: {
-      uid: 'test-user-id',
-      email: 'test@example.com',
-      displayName: 'Test User',
-      emailVerified: true,
-    },
-    loading: false,
-    error: null,
-    signIn: vi.fn(),
-    signOut: vi.fn(),
-    signUp: vi.fn(),
-    getAuthToken: vi.fn(() => Promise.resolve('test-token')),
-  })),
-}));
+global.fetch = vi.fn().mockImplementation((url: string) => {
+  // Default success response for calendar API
+  if (url.includes('/api/calendar')) {
+    return Promise.resolve(mockResponse({ events: [] }));
+  }
+  
+  // Default success response for other APIs
+  return Promise.resolve(mockResponse({ success: true }));
+});
+
+// Mock auth context replaced by @hive/ui unified auth mock below
+
+// Mock unified auth context from @hive/ui
+vi.mock('@hive/ui', async () => {
+  const actual = await vi.importActual('@hive/ui');
+  return {
+    ...actual,
+    ...framerMotionMock,
+    useUnifiedAuth: vi.fn(() => ({
+      user: {
+        id: 'test-user-id',
+        email: 'test@example.com',
+        fullName: 'Test User',
+        handle: 'testuser',
+        onboardingCompleted: true,
+      },
+      isAuthenticated: true,
+      isLoading: false,
+      error: null,
+      signIn: vi.fn(),
+      signOut: vi.fn(),
+      completeOnboarding: vi.fn(() => Promise.resolve({ success: true })),
+      getAuthToken: vi.fn(() => Promise.resolve('test-token')),
+      hasValidSession: vi.fn(() => true),
+      canAccessFeature: vi.fn(() => true),
+      requiresOnboarding: vi.fn(() => false),
+      refreshSession: vi.fn(() => Promise.resolve()),
+    })),
+    useOnboardingBridge: vi.fn(() => ({
+      completeOnboarding: vi.fn(() => Promise.resolve({ success: true })),
+      needsOnboarding: vi.fn(() => false),
+      getOnboardingProgress: vi.fn(() => ({ completedSteps: 7, totalSteps: 7, isComplete: true })),
+      createPostOnboardingSpaces: vi.fn(() => Promise.resolve({ totalSpaces: 3 })),
+      isAuthenticated: true,
+      user: {
+        id: 'test-user-id',
+        email: 'test@example.com',
+        fullName: 'Test User',
+        handle: 'testuser',
+      },
+      isLoading: false,
+      error: null,
+    })),
+  };
+});
 
 // Mock shell context to prevent useContext errors  
 vi.mock('@hive/ui/src/components/shell/shell-provider', () => ({
@@ -238,6 +284,30 @@ vi.mock('@/hooks/use-session', () => ({
     error: null,
     signIn: vi.fn(),
     signOut: vi.fn()
+  }))
+}));
+
+// Mock @hive/hooks package to prevent useFeatureFlags and other hook errors
+vi.mock('@hive/hooks', () => ({
+  useFeatureFlags: vi.fn(() => ({
+    spaces: true,
+    tools: true,
+    calendar: true,
+    analytics: true,
+    realtime: true,
+    ai: false,
+    gamification: false,
+    trackEvent: vi.fn()
+  })),
+  useAnalytics: vi.fn(() => ({
+    track: vi.fn(),
+    identify: vi.fn(),
+    page: vi.fn()
+  })),
+  useNavigation: vi.fn(() => ({
+    push: vi.fn(),
+    replace: vi.fn(),
+    back: vi.fn()
   }))
 }));
 

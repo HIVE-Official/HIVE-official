@@ -3,8 +3,8 @@
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Button, Card } from "@hive/ui";
-import { Alert } from "@/components/temp-stubs";
-import { LiveToolRuntime } from "@hive/ui";
+import { Alert as _Alert } from "@/components/temp-stubs";
+import { LiveToolRuntime as _LiveToolRuntime } from "@hive/ui";
 import { ArrowLeft, Settings, Share, Download, Activity, Zap, Clock, AlertCircle } from "lucide-react";
 import { useFeatureFlags } from "@hive/hooks";
 import { useSession } from "../../../../../hooks/use-session";
@@ -244,7 +244,7 @@ const useToolData = (toolId: string, spaceId?: string) => {
 export default function ToolRunPage() {
   const params = useParams();
   const router = useRouter();
-  const { sessionData } = useSession();
+  const { sessionData: _sessionData } = useSession();
   const flags = useFeatureFlags();
   
   const toolId = params.toolId as string;
@@ -257,7 +257,7 @@ export default function ToolRunPage() {
     flags.trackEvent('tools', 'view', { page: 'tool-run', toolId });
   }, [flags, toolId]);
 
-  const handleToolAction = (instanceId: string, action: string, data?: any) => {
+  const _handleToolAction = (instanceId: string, action: string, data?: any) => {
     console.log('Tool action:', { instanceId, action, data });
     
     // Log the action

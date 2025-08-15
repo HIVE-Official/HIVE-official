@@ -15,6 +15,8 @@ export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextArea
     showCharCount?: boolean;
     maxLength?: number;
     autoResize?: boolean;
+    minRows?: number;
+    maxRows?: number;
 }
 declare const Textarea: React.ForwardRefExoticComponent<TextareaProps & React.RefAttributes<HTMLTextAreaElement>>;
 export interface CodeTextareaProps extends Omit<TextareaProps, 'className'> {

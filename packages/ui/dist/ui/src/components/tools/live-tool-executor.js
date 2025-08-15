@@ -4,8 +4,8 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
  * Real-time tool execution with state management and collaborative features
  */
 import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
-import { Button } from '../ui/button.js';
-import { Avatar, HiveBadge as Badge } from '../index.js';
+import { Button } from '../ui/button';
+import { Avatar, HiveBadge as Badge } from '../index';
 import { Play, Pause, Square, RotateCcw, Save, Share, Settings, Maximize2, Minimize2, Users, EyeOff, Loader2, AlertTriangle, CheckCircle, Clock, Activity, Zap, Terminal, Bug, MoreHorizontal, Box, Network, Cpu, HardDrive } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 const ExecutionControls = ({ status, onExecute, onPause, onStop, onReset, permissions, isLoading = false }) => {

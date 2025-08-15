@@ -3,10 +3,6 @@
 import { useState } from 'react';
 import {
   HiveModal,
-  HiveModalContent,
-  HiveModalHeader,
-  HiveModalTitle,
-  HiveModalFooter,
   Button,
   Card,
   Switch,
@@ -147,21 +143,13 @@ export function ToolConfigModal({
   const optionalPermissions = tool.permissions.filter(p => !p.required);
 
   return (
-    <HiveModal open={isOpen} onOpenChange={onClose} size="xl">
-      <HiveModalContent className="max-w-3xl">
-        <HiveModalHeader>
-          <HiveModalTitle className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-purple-500 rounded-lg flex items-center justify-center">
-              <IconComponent className="h-5 w-5 text-white" />
-            </div>
-            <div>
-              <span>Configure {tool.name}</span>
-              <div className="text-sm text-hive-text-mutedLight font-normal">
-                Version {tool.version} • {tool.isCustom ? 'Custom Tool' : 'Marketplace Tool'}
-              </div>
-            </div>
-          </HiveModalTitle>
-        </HiveModalHeader>
+    <HiveModal 
+      open={isOpen} 
+      onOpenChange={onClose} 
+      size="xl"
+      title={`Configure ${tool.name}`}
+      description={`Version ${tool.version} • ${tool.isCustom ? 'Custom Tool' : 'Marketplace Tool'}`}
+    >
 
         <div className="p-6">
           <Tabs defaultValue="permissions" className="space-y-6">
@@ -352,50 +340,47 @@ export function ToolConfigModal({
           </Tabs>
         </div>
 
-        <HiveModalFooter>
-          <div className="flex items-center justify-between w-full">
-            <div>
-              {onUninstall && !tool.isCustom && (
-                <Button
-                  variant="outline"
-                  onClick={onUninstall}
-                  className="border-red-500 text-red-400 hover:bg-red-500/10"
-                  disabled={isSaving}
-                >
-                  <Trash2 className="h-4 w-4 mr-2" />
-                  Uninstall
-                </Button>
-              )}
-            </div>
-            <div className="flex items-center space-x-3">
+        <div className="flex items-center justify-between w-full px-6 py-4 border-t border-white/10">
+          <div>
+            {onUninstall && !tool.isCustom && (
               <Button
                 variant="outline"
-                onClick={onClose}
+                onClick={onUninstall}
+                className="border-red-500 text-red-400 hover:bg-red-500/10"
                 disabled={isSaving}
               >
-                Cancel
+                <Trash2 className="h-4 w-4 mr-2" />
+                Uninstall
               </Button>
-              <Button
-                onClick={handleSave}
-                disabled={isSaving}
-                className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne"
-              >
-                {isSaving ? (
-                  <>
-                    <Settings className="h-4 w-4 mr-2 animate-spin" />
-                    Saving...
-                  </>
-                ) : (
-                  <>
-                    <Check className="h-4 w-4 mr-2" />
-                    Save Changes
-                  </>
-                )}
-              </Button>
-            </div>
+            )}
           </div>
-        </HiveModalFooter>
-      </HiveModalContent>
+          <div className="flex items-center space-x-3">
+            <Button
+              variant="outline"
+              onClick={onClose}
+              disabled={isSaving}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleSave}
+              disabled={isSaving}
+              className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne"
+            >
+              {isSaving ? (
+                <>
+                  <Settings className="h-4 w-4 mr-2 animate-spin" />
+                  Saving...
+                </>
+              ) : (
+                <>
+                  <Check className="h-4 w-4 mr-2" />
+                  Save Changes
+                </>
+              )}
+            </Button>
+          </div>
+        </div>
     </HiveModal>
   );
 }

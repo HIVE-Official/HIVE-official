@@ -1,8 +1,8 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { HiveCard } from '../hive-card.js';
-import { HiveButton } from '../hive-button.js';
-import { HiveBadge } from '../hive-badge.js';
+import { HiveCard } from '../hive-card';
+import { HiveButton } from '../hive-button';
+import { HiveBadge } from '../hive-badge';
 import { Wrench, Lock, Plus, Calendar, Calculator, BookOpen, Zap, Star, AlertCircle, Loader2 } from 'lucide-react';
 export const HiveLabSection = ({ hiveLab, isLoading = false, onCreateTool, onViewTool }) => {
     if (isLoading) {

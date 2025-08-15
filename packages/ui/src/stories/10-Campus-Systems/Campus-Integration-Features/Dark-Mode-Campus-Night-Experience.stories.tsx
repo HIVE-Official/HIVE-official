@@ -903,7 +903,7 @@ const DarkModeShowcase = () => {
                       style={{ backgroundColor: currentTheme['background-tertiary'] }}
                     >
                       <div style={{ color: currentTheme['text-muted'] }}>// Brightness adaptation</div>
-                      <div style={{ color: currentTheme['text-primary'] }}>const adjustBrightness = (level) => &#123;</div>
+                      <div style={{ color: currentTheme['text-primary'] }}>const adjustBrightness = (level) =&gt; &#123;</div>
                       <div className="pl-4" style={{ color: currentTheme['text-primary'] }}>document.documentElement</div>
                       <div className="pl-8" style={{ color: currentTheme['text-primary'] }}>.style.filter = `brightness($&#123;level&#125;%)`;</div>
                       <div style={{ color: currentTheme['text-primary'] }}>&#125;;</div>

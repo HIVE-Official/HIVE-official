@@ -1,8 +1,8 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
-import { HiveCard } from '../hive-card.js';
-import { HiveButton } from '../hive-button.js';
-import { HiveBadge } from '../hive-badge.js';
+import { HiveCard } from '../hive-card';
+import { HiveButton } from '../hive-button';
+import { HiveBadge } from '../hive-badge';
 import { Calendar, Clock, MapPin, Users, Plus, AlertCircle, Loader2, BookOpen, Coffee, Award } from 'lucide-react';
 export const SmartCalendar = ({ events, isLoading = false, error, onEventClick, onAddEvent }) => {
     if (isLoading) {

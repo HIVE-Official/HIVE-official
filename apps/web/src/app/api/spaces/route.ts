@@ -1,12 +1,13 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { collection, query, where, orderBy, limit, getDocs, doc, setDoc, FieldValue } from "firebase-admin/firestore";
+import { FieldValue } from "firebase-admin/firestore";
 import { z } from "zod";
 import type { Space, SpaceType } from "@hive/core";
 import { dbAdmin } from "@/lib/firebase-admin";
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
+import * as admin from 'firebase-admin';
 
 const createSpaceSchema = z.object({
   name: z.string().min(1).max(100),
@@ -17,58 +18,45 @@ const createSpaceSchema = z.object({
   tags: z.array(z.string()).default([])
 });
 
-export async function GET(request: Request) {
+export const GET = withAuth(async (request: NextRequest, authContext) => {
   try {
     const { searchParams } = new URL(request.url);
     const filterType = searchParams.get("type") as SpaceType | "all" | null;
     const searchTerm = searchParams.get("q")?.toLowerCase() || null;
+    const limit = Math.min(parseInt(searchParams.get("limit") || "50"), 100);
+    const offset = Math.max(parseInt(searchParams.get("offset") || "0"), 0);
 
-    let spacesQuery = query(collection(dbAdmin, "spaces"));
+    // Use flat collection structure - all spaces in one collection
+    let spacesQuery: admin.firestore.Query<admin.firestore.DocumentData> = dbAdmin.collection("spaces");
 
+    // Apply type filter
     if (filterType && filterType !== "all") {
-      spacesQuery = query(collection(dbAdmin, "spaces"), where("type", "==", filterType));
+      spacesQuery = spacesQuery.where("type", "==", filterType);
     }
 
-    // Note: Firestore doesn't support full-text search on its own.
-    // This search implementation is a basic "starts-with" search on the name.
-    // For a real-world application, a dedicated search service like Algolia or Typesense would be required.
+    // Apply search filter
     if (searchTerm) {
-      if (filterType && filterType !== "all") {
-        spacesQuery = query(
-          collection(dbAdmin, "spaces"), 
-          where("type", "==", filterType),
-          where("name_lowercase", ">=", searchTerm),
-          where("name_lowercase", "<=", searchTerm + "\uf8ff"),
-          orderBy("name_lowercase"),
-          limit(50)
-        );
-      } else {
-        spacesQuery = query(
-          collection(dbAdmin, "spaces"),
-          where("name_lowercase", ">=", searchTerm),
-          where("name_lowercase", "<=", searchTerm + "\uf8ff"),
-          orderBy("name_lowercase"),
-          limit(50)
-        );
-      }
+      spacesQuery = spacesQuery
+        .where("name_lowercase", ">=", searchTerm)
+        .where("name_lowercase", "<=", searchTerm + "\uf8ff")
+        .orderBy("name_lowercase");
     } else {
-      if (filterType && filterType !== "all") {
-        spacesQuery = query(
-          collection(dbAdmin, "spaces"), 
-          where("type", "==", filterType),
-          orderBy("name_lowercase"),
-          limit(50)
-        );
-      } else {
-        spacesQuery = query(
-          collection(dbAdmin, "spaces"),
-          orderBy("name_lowercase"),
-          limit(50)
-        );
-      }
+      // Default ordering by member count (popular first), then name
+      spacesQuery = spacesQuery
+        .orderBy("metrics.memberCount", "desc")
+        .orderBy("name_lowercase");
     }
 
-    const snapshot = await getDocs(spacesQuery);
+    // Apply pagination
+    if (offset > 0) {
+      // For offset pagination, we need to use startAfter with cursor
+      // This is a simplified implementation - production would use proper cursors
+      spacesQuery = spacesQuery.offset(offset);
+    }
+    
+    spacesQuery = spacesQuery.limit(limit);
+
+    const snapshot = await spacesQuery.get();
 
     if (snapshot.empty) {
       return NextResponse.json(ApiResponseHelper.success([]), { status: HttpStatus.OK });
@@ -79,12 +67,44 @@ export async function GET(request: Request) {
       ...doc.data(),
     })) as Space[];
 
-    return NextResponse.json(ApiResponseHelper.success(spaces), { status: HttpStatus.OK });
+    // Get total count for pagination (expensive but necessary)
+    let totalCount = 0;
+    try {
+      let countQuery = dbAdmin.collection("spaces");
+      if (filterType && filterType !== "all") {
+        countQuery = countQuery.where("type", "==", filterType);
+      }
+      if (searchTerm) {
+        countQuery = countQuery
+          .where("name_lowercase", ">=", searchTerm)
+          .where("name_lowercase", "<=", searchTerm + "\uf8ff");
+      }
+      const countSnapshot = await countQuery.count().get();
+      totalCount = countSnapshot.data().count;
+    } catch (error) {
+      logger.warn('Could not get total count, using spaces length', { error });
+      totalCount = spaces.length;
+    }
+
+    return NextResponse.json(ApiResponseHelper.success({
+      spaces,
+      pagination: {
+        limit,
+        offset,
+        totalCount,
+        hasMore: offset + limit < totalCount,
+        nextOffset: offset + limit < totalCount ? offset + limit : null
+      }
+    }), { status: HttpStatus.OK });
+    
   } catch (error) {
     logger.error('Error fetching spaces', { error: error, endpoint: '/api/spaces' });
     return NextResponse.json(ApiResponseHelper.error("Failed to fetch spaces", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
-}
+}, { 
+  allowDevelopmentBypass: true, // Space browsing can allow development bypass
+  operation: 'list_spaces' 
+});
 
 export const POST = withAuth(async (request: NextRequest, authContext) => {
   try {
@@ -94,8 +114,9 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
     const body = await request.json();
     const { name, description, type, subType, isPrivate, tags } = createSpaceSchema.parse(body);
 
-    // Generate space ID and create space document
-    const spaceId = doc(collection(dbAdmin, 'spaces', type, 'spaces')).id;
+    // Generate space ID and create space document - use flat structure
+    const spaceRef = dbAdmin.collection('spaces').doc();
+    const spaceId = spaceRef.id;
     const now = FieldValue.serverTimestamp();
     
     const spaceData = {
@@ -104,7 +125,7 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
       description,
       type,
       subType: subType || null,
-      status: 'dormant', // New spaces start in dormant mode
+      status: 'active', // New spaces start active
       isPrivate,
       tags: tags.map(tag => ({ sub_type: tag })),
       createdAt: now,
@@ -113,27 +134,32 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
       metrics: {
         memberCount: 1, // Creator is first member
         postCount: 0,
-        eventCount: 0
+        eventCount: 0,
+        toolCount: 0,
+        activeMembers: 1
       },
       bannerUrl: null
     };
 
-    // Create space in nested structure
-    await setDoc(doc(dbAdmin, 'spaces', type, 'spaces', spaceId), spaceData);
+    // Use batch write for atomicity
+    const batch = dbAdmin.batch();
 
-    // Add creator as owner
-    await setDoc(doc(dbAdmin, 'spaces', type, 'spaces', spaceId, 'members', userId), {
+    // Create space in flat structure
+    batch.set(spaceRef, spaceData);
+
+    // Add creator as owner in separate members collection
+    const memberRef = dbAdmin.collection('spaceMembers').doc();
+    batch.set(memberRef, {
+      spaceId,
       userId,
       role: 'owner',
       joinedAt: now,
-      isActive: true
+      isActive: true,
+      permissions: ['admin', 'moderate', 'post', 'invite']
     });
 
-    // Initialize empty collections for space widgets
-    const collections = ['posts', 'events', 'pinned'];
-    for (const coll of collections) {
-      await setDoc(doc(dbAdmin, 'spaces', type, 'spaces', spaceId, coll, '_placeholder'), { placeholder: true });
-    }
+    // Commit all changes atomically
+    await batch.commit();
 
     logger.info('✅ Created space by user', {  type, userId, endpoint: '/api/spaces'  });
 

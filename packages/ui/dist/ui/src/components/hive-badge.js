@@ -1,9 +1,9 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from 'react';
 import { cva } from 'class-variance-authority';
-import { cn } from '../lib/utils.js';
-import { getTestProps } from '../lib/accessibility-foundation.js';
-import { responsiveAnimations } from '../lib/responsive-foundation.js';
+import { cn } from '../lib/utils';
+import { getTestProps } from '../lib/accessibility-foundation';
+import { responsiveAnimations } from '../lib/responsive-foundation';
 // HIVE Badge variants - Luxury chips with standardized foundation patterns
 const hiveBadgeVariants = cva(cn("inline-flex items-center gap-1.5 font-medium select-none", responsiveAnimations.motion, "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--hive-brand-primary)]/30 focus-visible:ring-offset-1"), {
     variants: {

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { joinWaitlist } from "@/lib/join-waitlist";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { ApiResponseHelper as _ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 export async function POST(req: Request) {
   try {

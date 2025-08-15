@@ -1,14 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Card, Button, Badge as _Badge } from "@hive/ui";
+import { Card, Button } from "@hive/ui";
 import { 
   Users, 
-  Heart as _Heart, 
+ 
   MessageSquare,
   Calendar,
-  Settings as _Settings,
-  Bell as _Bell,
   Shield,
   CheckCircle,
   ArrowRight,

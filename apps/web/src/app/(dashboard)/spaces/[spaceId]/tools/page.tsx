@@ -23,12 +23,12 @@ import {
   Trash2
 } from "lucide-react";
 import { ErrorBoundary } from "../../../../../components/error-boundary";
-import { useRouter } from "next/navigation";
+import { useRouter as _useRouter } from "next/navigation";
 
 interface SpaceToolsPageProps {
-  params: {
+  params: Promise<{
     spaceId: string;
-  };
+  }>;
 }
 
 interface SpaceTool {
@@ -54,7 +54,7 @@ interface SpaceTool {
     autoLaunch: boolean;
     requirePermission: boolean;
     maxConcurrentUsers?: number;
-    customConfig?: any;
+    customConfig?: Record<string, unknown>;
   };
   integrations: string[];
   createdBy?: string;
@@ -74,7 +74,7 @@ interface ToolTemplate {
 }
 
 export default function SpaceToolsPage({ params }: SpaceToolsPageProps) {
-  const _router = useRouter();
+  const [spaceId, setSpaceId] = useState<string>('');
   const [tools, setTools] = useState<SpaceTool[]>([]);
   const [showAddTool, setShowAddTool] = useState(false);
   const [showToolSettings, setShowToolSettings] = useState<SpaceTool | null>(null);
@@ -87,6 +87,16 @@ export default function SpaceToolsPage({ params }: SpaceToolsPageProps) {
   const [availableTemplates, setAvailableTemplates] = useState<ToolTemplate[]>([]);
 
   useEffect(() => {
+    // Resolve params Promise
+    const resolveParams = async () => {
+      const resolvedParams = await params;
+      setSpaceId(resolvedParams.spaceId);
+    };
+    resolveParams();
+  }, [params]);
+
+  useEffect(() => {
+    if (!spaceId) return;
     const fetchData = async () => {
       await new Promise(resolve => setTimeout(resolve, 500));
       
@@ -259,7 +269,7 @@ export default function SpaceToolsPage({ params }: SpaceToolsPageProps) {
     };
 
     fetchData();
-  }, [params.spaceId]);
+  }, [spaceId]);
 
   const filteredTools = tools.filter(tool => {
     const matchesSearch = tool.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -373,7 +383,7 @@ export default function SpaceToolsPage({ params }: SpaceToolsPageProps) {
           },
           { 
             label: spaceName, 
-            href: `/spaces/${params.spaceId}`
+            href: `/spaces/${spaceId}`
           },
           { 
             label: "Tools", 
@@ -459,7 +469,7 @@ export default function SpaceToolsPage({ params }: SpaceToolsPageProps) {
             
             <select
               value={categoryFilter}
-              onChange={(e) => setCategoryFilter(e.target.value as any)}
+              onChange={(e) => setCategoryFilter(e.target.value as 'all' | 'academic' | 'engagement' | 'productivity' | 'communication' | 'collaboration' | 'organization')}
               className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-white text-sm focus:border-hive-gold focus:outline-none"
             >
               <option value="all">All Categories</option>
@@ -473,7 +483,7 @@ export default function SpaceToolsPage({ params }: SpaceToolsPageProps) {
             
             <select
               value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value as any)}
+              onChange={(e) => setStatusFilter(e.target.value as 'all' | 'active' | 'inactive')}
               className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-white text-sm focus:border-hive-gold focus:outline-none"
             >
               <option value="all">All Status</option>

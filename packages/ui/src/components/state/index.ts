@@ -11,7 +11,7 @@ export {
 } from './hive-state-management';
 
 export {
-  useAuth,
+  // useAuth removed - use useUnifiedAuth from unified-auth-context instead
   useOnboarding,
   useBuilderProgression,
   usePrivacy

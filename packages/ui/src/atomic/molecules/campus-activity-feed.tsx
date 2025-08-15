@@ -129,8 +129,8 @@ export const CampusActivityFeed: React.FC<CampusActivityFeedProps> = ({
       .slice(0, 2);
   };
 
-  const displayedActivities = activities.slice(0, maxItems);
-  const hasMoreActivities = activities.length > maxItems;
+  const displayedActivities = activities?.slice(0, maxItems) ?? [];
+  const hasMoreActivities = (activities?.length ?? 0) > maxItems;
 
   const handleFilterToggle = (filter: string) => {
     const newFilters = activeFilters.includes(filter)
@@ -386,13 +386,13 @@ export const CampusActivityFeed: React.FC<CampusActivityFeedProps> = ({
               onClick={onViewAll}
               className="text-mercury hover:text-platinum transition-colors duration-200 text-sm"
             >
-              +{activities.length - maxItems} more activities
+              +{(activities?.length ?? 0) - maxItems} more activities
             </button>
           </motion.div>
         )}
 
         {/* Empty State */}
-        {activities.length === 0 && !isLoading && (
+        {(activities?.length ?? 0) === 0 && !isLoading && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

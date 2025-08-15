@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { withAdminAuth } from '@/lib/admin-middleware';
 import { adminActivityLogger } from '@/lib/admin-activity-logger';
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { ApiResponseHelper as _ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
 
 /**
  * Admin Activity Logs Export API
@@ -10,7 +10,7 @@ import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-ty
  */
 
 export async function GET(request: NextRequest) {
-  return withAdminAuth(request, async (request, admin) => {
+  return withAdminAuth(request, async (request, _admin) => {
     try {
       const url = new URL(request.url);
       const filters = {

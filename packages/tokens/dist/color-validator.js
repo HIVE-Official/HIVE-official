@@ -60,7 +60,7 @@ export const generateContrastReport = () => {
 /**
  * Validate specific color combination
  */
-export const validateColorCombination = (foreground, background, _context = '') => {
+export const validateColorCombination = (foreground, background) => {
     const ratio = getContrastRatio(foreground, background);
     let level;
     let isValid;

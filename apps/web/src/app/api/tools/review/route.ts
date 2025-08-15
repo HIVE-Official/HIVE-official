@@ -3,7 +3,7 @@ import { dbAdmin as adminDb } from '@/lib/firebase-admin';
 import { getCurrentUser } from '@/lib/auth-server';
 import { z } from 'zod';
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
 
 const ReviewActionSchema = z.object({
   requestId: z.string(),
@@ -222,7 +222,10 @@ export async function GET(request: NextRequest) {
 
     const requests = [];
     for (const doc of requestsSnapshot.docs) {
-      const requestData = { id: doc.id, ...doc.data() };
+      const requestData = { id: doc.id, ...doc.data() } as { id: string; toolId?: string; requestedBy?: string; [key: string]: any };
+      
+      // Skip if missing required fields
+      if (!requestData.toolId || !requestData.requestedBy) continue;
       
       // Get tool details
       const toolDoc = await adminDb.collection('tools').doc(requestData.toolId).get();

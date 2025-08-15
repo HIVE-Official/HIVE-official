@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { currentEnvironment, isFirebaseAdminConfigured } from "@/lib/env";
 import { environmentInfo } from "@/lib/firebase-admin";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { ApiResponseHelper as _ApiResponseHelper, HttpStatus as _HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 export async function GET() {
   return NextResponse.json({

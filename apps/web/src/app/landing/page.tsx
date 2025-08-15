@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from "react";
 // import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { HiveLogo, HiveButton, HiveCard, HiveModal } from "@hive/ui";
+import { HiveLogo, HiveButton, HiveCard } from "@hive/ui";
+import { HiveModal } from "@/components/temp-stubs";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function LandingPage() {
@@ -230,7 +231,6 @@ export default function LandingPage() {
             onClose={() => setIsLearnMoreOpen(false)}
             title="About HIVE"
             size="lg"
-            motionPreset="slideUp"
           >
             <motion.div 
               className="space-y-6"

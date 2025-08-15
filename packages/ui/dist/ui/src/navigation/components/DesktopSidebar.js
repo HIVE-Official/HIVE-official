@@ -10,12 +10,12 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { memo, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Hash } from 'lucide-react';
-import { NAVIGATION_SIZING, NAVIGATION_MOTION, NAVIGATION_A11Y } from '../core/data.js';
-import { cn } from '../../lib/utils.js';
+import { NAVIGATION_SIZING, NAVIGATION_MOTION, NAVIGATION_A11Y } from '../core/data';
+import { cn } from '../../lib/utils';
 // ============================================================================
 // SIDEBAR HEADER
 // ============================================================================
-const SidebarHeader = memo(({ user, collapsed, onToggleCollapse }) => {
+const SidebarHeader = memo(({ collapsed, onToggleCollapse }) => {
     return (_jsxs("div", { className: cn('flex items-center justify-between p-4 border-b', 'border-[var(--hive-border-subtle)]'), children: [_jsx(AnimatePresence, { mode: "wait", children: !collapsed && (_jsxs(motion.div, { className: "flex items-center gap-3", initial: { opacity: 0, x: -20 }, animate: { opacity: 1, x: 0 }, exit: { opacity: 0, x: -20 }, transition: { duration: NAVIGATION_MOTION.duration.fast / 1000 }, children: [_jsx("div", { className: "w-8 h-8 bg-[var(--hive-brand-secondary)] rounded-lg flex items-center justify-center", children: _jsx(Hash, { className: "w-5 h-5 text-[var(--hive-text-inverse)]" }) }), _jsxs("div", { children: [_jsx("div", { className: "text-sm font-bold text-[var(--hive-brand-secondary)] tracking-wider", children: "HIVE" }), _jsx("div", { className: "text-xs text-[var(--hive-text-tertiary)]", children: "Campus OS" })] })] })) }), _jsx(motion.button, { type: "button", onClick: onToggleCollapse, className: cn('w-8 h-8 flex items-center justify-center rounded-lg', 'text-[var(--hive-text-secondary)] hover:text-[var(--hive-text-primary)]', 'hover:bg-[var(--hive-interactive-hover)]', 'transition-all duration-200', 'focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--hive-brand-secondary)]', collapsed && 'mx-auto'), "aria-label": collapsed ? 'Expand sidebar' : 'Collapse sidebar', "data-testid": "sidebar-toggle", whileHover: { scale: 1.1 }, whileTap: { scale: 0.9 }, children: collapsed ? (_jsx(ChevronRight, { className: "w-4 h-4" })) : (_jsx(ChevronLeft, { className: "w-4 h-4" })) })] }));
 });
 SidebarHeader.displayName = 'SidebarHeader';
@@ -94,7 +94,7 @@ export const DesktopSidebar = memo(({ items, user, collapsed, onNavigate, onTogg
         'z-40', className), style: {
             width: collapsed ? NAVIGATION_SIZING.widths.sidebarCollapsed : NAVIGATION_SIZING.widths.sidebarExpanded,
             boxShadow: 'inset -1px 0 0 var(--hive-brand-secondary)/10'
-        }, "aria-label": NAVIGATION_A11Y.labels.sidebarNavigation, "data-testid": testId, initial: { x: -100, opacity: 0 }, animate: { x: 0, opacity: 1 }, transition: { duration: NAVIGATION_MOTION.duration.normal / 1000 }, children: [_jsx(SidebarHeader, { user: user, collapsed: collapsed, onToggleCollapse: onToggleCollapse }), _jsx(UserProfileSection, { user: user, collapsed: collapsed }), _jsx("nav", { className: "flex-1 px-2 py-4 overflow-y-auto", children: _jsx("div", { className: "space-y-1", children: items.map((item) => (_jsx(SidebarItem, { item: item, collapsed: collapsed, onNavigate: onNavigate }, item.id))) }) }), _jsx(motion.div, { className: "p-3 border-t border-[var(--hive-border-subtle)]", initial: { opacity: 0 }, animate: { opacity: 1 }, transition: { delay: 0.2 }, children: !collapsed && (_jsxs("div", { className: "text-xs text-[var(--hive-text-tertiary)] text-center", children: [NAVIGATION_A11Y.keyboardShortcuts.toggleSidebar, " to toggle"] })) })] }));
+        }, "aria-label": NAVIGATION_A11Y.labels.sidebarNavigation, "data-testid": testId, initial: { x: -100, opacity: 0 }, animate: { x: 0, opacity: 1 }, transition: { duration: NAVIGATION_MOTION.duration.normal / 1000 }, children: [_jsx(SidebarHeader, { collapsed: collapsed, onToggleCollapse: onToggleCollapse }), _jsx(UserProfileSection, { user: user, collapsed: collapsed }), _jsx("nav", { className: "flex-1 px-2 py-4 overflow-y-auto", children: _jsx("div", { className: "space-y-1", children: items.map((item) => (_jsx(SidebarItem, { item: item, collapsed: collapsed, onNavigate: onNavigate }, item.id))) }) }), _jsx(motion.div, { className: "p-3 border-t border-[var(--hive-border-subtle)]", initial: { opacity: 0 }, animate: { opacity: 1 }, transition: { delay: 0.2 }, children: !collapsed && (_jsxs("div", { className: "text-xs text-[var(--hive-text-tertiary)] text-center", children: [NAVIGATION_A11Y.keyboardShortcuts.toggleSidebar, " to toggle"] })) })] }));
 });
 DesktopSidebar.displayName = 'DesktopSidebar';
 export const SidebarOverlay = memo(({ isOpen, onClose }) => {

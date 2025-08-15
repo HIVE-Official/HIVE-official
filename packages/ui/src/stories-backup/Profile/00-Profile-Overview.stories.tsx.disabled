@@ -1,0 +1,293 @@
+import type { Meta, StoryObj } from '@storybook/react';
+import React from 'react';
+
+const meta = {
+  title: 'Profile/00-Profile Overview',
+  parameters: {
+    layout: 'fullscreen',
+    docs: {
+      description: {
+        component: 'HIVE Profile System - Complete social utility profile with coordinated widgets, privacy controls, and intelligent personalization. The command center of your campus life.'
+      }
+    }
+  },
+  tags: ['autodocs'],
+} satisfies Meta;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const ProfileSystemOverview: Story = {
+  name: '🏠 HIVE Profile System Overview',
+  render: () => (
+    <div className="min-h-screen bg-hive-background-primary p-8">
+      <div className="max-w-7xl mx-auto space-y-12">
+        {/* Header */}
+        <div className="text-center space-y-6">
+          <h1 className="text-5xl font-bold text-hive-text-primary">HIVE Profile System</h1>
+          <p className="text-2xl text-hive-text-secondary max-w-4xl mx-auto leading-relaxed">
+            Social utility reimagined - where your profile becomes a <strong>coordinated command center</strong> for campus life, 
+            not just another social media page.
+          </p>
+        </div>
+
+        {/* Core Principles */}
+        <div className="bg-gradient-to-br from-hive-brand-primary/5 to-hive-brand-secondary/5 border border-hive-brand-secondary/20 rounded-2xl p-8">
+          <h2 className="text-3xl font-bold text-hive-text-primary mb-8 text-center">Core Design Philosophy</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="text-center space-y-4">
+              <div className="w-16 h-16 bg-hive-brand-secondary rounded-2xl flex items-center justify-center text-3xl mx-auto">
+                🎯
+              </div>
+              <h3 className="text-xl font-bold text-hive-text-primary">Utility-First Social</h3>
+              <p className="text-hive-text-secondary">
+                Every social interaction has purpose. Profiles coordinate actual life activities, not just showcase highlights.
+              </p>
+            </div>
+            
+            <div className="text-center space-y-4">
+              <div className="w-16 h-16 bg-hive-brand-secondary rounded-2xl flex items-center justify-center text-3xl mx-auto">
+                🔒
+              </div>
+              <h3 className="text-xl font-bold text-hive-text-primary">Privacy-First Design</h3>
+              <p className="text-hive-text-secondary">
+                Ghost Mode, granular controls, and transparent data usage. Privacy is built-in, not bolted-on.
+              </p>
+            </div>
+            
+            <div className="text-center space-y-4">
+              <div className="w-16 h-16 bg-hive-brand-secondary rounded-2xl flex items-center justify-center text-3xl mx-auto">
+                🧩
+              </div>
+              <h3 className="text-xl font-bold text-hive-text-primary">Coordinated Widgets</h3>
+              <p className="text-hive-text-secondary">
+                Intelligent widget system that adapts to your coordination needs with drag-and-drop customization.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* System Architecture */}
+        <div className="space-y-8">
+          <h2 className="text-3xl font-bold text-hive-text-primary text-center">System Architecture</h2>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* vBETA Core Widgets */}
+            <div className="bg-white border border-hive-border-default rounded-xl p-6">
+              <h3 className="text-xl font-bold text-hive-text-primary mb-6">vBETA Core Widgets</h3>
+              <div className="space-y-4">
+                <div className="flex items-center gap-4 p-3 bg-hive-background-primary rounded-lg">
+                  <div className="w-10 h-10 bg-hive-brand-secondary rounded-lg flex items-center justify-center text-white font-bold">👤</div>
+                  <div>
+                    <div className="font-medium text-hive-text-primary">Avatar Widget (1x1)</div>
+                    <div className="text-sm text-hive-text-secondary">Social identity anchor with contextual status</div>
+                  </div>
+                  <div className="text-xs bg-hive-status-success/10 text-hive-status-success px-2 py-1 rounded-full">Ready</div>
+                </div>
+
+                <div className="flex items-center gap-4 p-3 bg-hive-background-primary rounded-lg">
+                  <div className="w-10 h-10 bg-hive-brand-secondary rounded-lg flex items-center justify-center text-white font-bold">📋</div>
+                  <div>
+                    <div className="font-medium text-hive-text-primary">Priority Coordination (1x1/2x1)</div>
+                    <div className="text-sm text-hive-text-secondary">Intelligent task management with urgency AI</div>
+                  </div>
+                  <div className="text-xs bg-hive-status-success/10 text-hive-status-success px-2 py-1 rounded-full">Ready</div>
+                </div>
+
+                <div className="flex items-center gap-4 p-3 bg-hive-background-primary rounded-lg">
+                  <div className="w-10 h-10 bg-hive-brand-secondary rounded-lg flex items-center justify-center text-white font-bold">🏢</div>
+                  <div>
+                    <div className="font-medium text-hive-text-primary">Community Coordination (1x2/2x1)</div>
+                    <div className="text-sm text-hive-text-secondary">Space management with activity intelligence</div>
+                  </div>
+                  <div className="text-xs bg-hive-status-success/10 text-hive-status-success px-2 py-1 rounded-full">Ready</div>
+                </div>
+
+                <div className="flex items-center gap-4 p-3 bg-hive-background-primary rounded-lg">
+                  <div className="w-10 h-10 bg-hive-brand-secondary rounded-lg flex items-center justify-center text-white font-bold">📅</div>
+                  <div>
+                    <div className="font-medium text-hive-text-primary">Social Calendar (2x1)</div>
+                    <div className="text-sm text-hive-text-secondary">Time coordination with conflict detection</div>
+                  </div>
+                  <div className="text-xs bg-hive-status-success/10 text-hive-status-success px-2 py-1 rounded-full">Ready</div>
+                </div>
+
+                <div className="flex items-center gap-4 p-3 bg-hive-background-primary rounded-lg">
+                  <div className="w-10 h-10 bg-hive-brand-secondary rounded-lg flex items-center justify-center text-white font-bold">🔒</div>
+                  <div>
+                    <div className="font-medium text-hive-text-primary">Privacy Control (1x1)</div>
+                    <div className="text-sm text-hive-text-secondary">Ghost Mode and granular privacy management</div>
+                  </div>
+                  <div className="text-xs bg-hive-status-success/10 text-hive-status-success px-2 py-1 rounded-full">Ready</div>
+                </div>
+              </div>
+            </div>
+
+            {/* v1 Preview & Advanced Features */}
+            <div className="bg-white border border-hive-border-default rounded-xl p-6">
+              <h3 className="text-xl font-bold text-hive-text-primary mb-6">v1 Preview & Advanced Features</h3>
+              <div className="space-y-4">
+                <div className="flex items-center gap-4 p-3 bg-hive-background-primary rounded-lg">
+                  <div className="w-10 h-10 bg-hive-text-tertiary rounded-lg flex items-center justify-center text-white font-bold">🛠️</div>
+                  <div>
+                    <div className="font-medium text-hive-text-primary">Personal Tools (2x2)</div>
+                    <div className="text-sm text-hive-text-secondary">HiveLAB tool marketplace preview</div>
+                  </div>
+                  <div className="text-xs bg-hive-brand-secondary/10 text-hive-brand-secondary px-2 py-1 rounded-full">v1 Preview</div>
+                </div>
+
+                <div className="flex items-center gap-4 p-3 bg-hive-background-primary rounded-lg opacity-60">
+                  <div className="w-10 h-10 bg-hive-text-tertiary rounded-lg flex items-center justify-center text-white font-bold">⚙️</div>
+                  <div>
+                    <div className="font-medium text-hive-text-primary">Configuration Panel</div>
+                    <div className="text-sm text-hive-text-secondary">Universal widget settings and customization</div>
+                  </div>
+                  <div className="text-xs bg-hive-text-tertiary/10 text-hive-text-tertiary px-2 py-1 rounded-full">Planned</div>
+                </div>
+
+                <div className="flex items-center gap-4 p-3 bg-hive-background-primary rounded-lg opacity-60">
+                  <div className="w-10 h-10 bg-hive-text-tertiary rounded-lg flex items-center justify-center text-white font-bold">📱</div>
+                  <div>
+                    <div className="font-medium text-hive-text-primary">Mobile Gestures</div>
+                    <div className="text-sm text-hive-text-secondary">Long-press + haptic Edit Mode activation</div>
+                  </div>
+                  <div className="text-xs bg-hive-text-tertiary/10 text-hive-text-tertiary px-2 py-1 rounded-full">Planned</div>
+                </div>
+
+                <div className="flex items-center gap-4 p-3 bg-hive-background-primary rounded-lg opacity-60">
+                  <div className="w-10 h-10 bg-hive-text-tertiary rounded-lg flex items-center justify-center text-white font-bold">🔄</div>
+                  <div>
+                    <div className="font-medium text-hive-text-primary">Layout Sync</div>
+                    <div className="text-sm text-hive-text-secondary">Cross-device layout persistence</div>
+                  </div>
+                  <div className="text-xs bg-hive-text-tertiary/10 text-hive-text-tertiary px-2 py-1 rounded-full">Planned</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Key Interactions */}
+        <div className="bg-hive-background-secondary border border-hive-border-default rounded-xl p-8">
+          <h2 className="text-3xl font-bold text-hive-text-primary mb-8 text-center">Key Interaction Patterns</h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="text-center space-y-4">
+              <div className="w-12 h-12 bg-hive-brand-primary rounded-xl flex items-center justify-center text-2xl mx-auto">
+                🖱️
+              </div>
+              <h3 className="font-bold text-hive-text-primary">Click to Focus</h3>
+              <p className="text-sm text-hive-text-secondary">
+                Click any widget to expand into full-screen Focus Mode with complete functionality
+              </p>
+            </div>
+
+            <div className="text-center space-y-4">
+              <div className="w-12 h-12 bg-hive-brand-primary rounded-xl flex items-center justify-center text-2xl mx-auto">
+                ✏️
+              </div>
+              <h3 className="font-bold text-hive-text-primary">Edit Mode</h3>
+              <p className="text-sm text-hive-text-secondary">
+                Explicit Edit Mode activation enables drag-and-drop layout customization
+              </p>
+            </div>
+
+            <div className="text-center space-y-4">
+              <div className="w-12 h-12 bg-hive-brand-primary rounded-xl flex items-center justify-center text-2xl mx-auto">
+                👻
+              </div>
+              <h3 className="font-bold text-hive-text-primary">Ghost Mode</h3>
+              <p className="text-sm text-hive-text-secondary">
+                One-click complete invisibility while maintaining space participation
+              </p>
+            </div>
+
+            <div className="text-center space-y-4">
+              <div className="w-12 h-12 bg-hive-brand-primary rounded-xl flex items-center justify-center text-2xl mx-auto">
+                🔄
+              </div>
+              <h3 className="font-bold text-hive-text-primary">Real-time Sync</h3>
+              <p className="text-sm text-hive-text-secondary">
+                All coordination data syncs instantly across devices and spaces
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Development Status */}
+        <div className="bg-white border border-hive-border-default rounded-xl p-8">
+          <h2 className="text-3xl font-bold text-hive-text-primary mb-8 text-center">Development Progress</h2>
+          
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <span className="text-lg font-medium text-hive-text-primary">vBETA Core Widgets</span>
+              <div className="flex items-center gap-3">
+                <div className="w-32 h-2 bg-hive-background-secondary rounded-full">
+                  <div className="w-full h-2 bg-hive-status-success rounded-full"></div>
+                </div>
+                <span className="text-sm font-bold text-hive-status-success">100%</span>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <span className="text-lg font-medium text-hive-text-primary">Layout System & Templates</span>
+              <div className="flex items-center gap-3">
+                <div className="w-32 h-2 bg-hive-background-secondary rounded-full">
+                  <div className="w-3/4 h-2 bg-hive-status-warning rounded-full"></div>
+                </div>
+                <span className="text-sm font-bold text-hive-status-warning">75%</span>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <span className="text-lg font-medium text-hive-text-primary">Advanced Features (v1 Preview)</span>
+              <div className="flex items-center gap-3">
+                <div className="w-32 h-2 bg-hive-background-secondary rounded-full">
+                  <div className="w-1/4 h-2 bg-hive-brand-secondary rounded-full"></div>
+                </div>
+                <span className="text-sm font-bold text-hive-brand-secondary">25%</span>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <span className="text-lg font-medium text-hive-text-primary">Mobile Experience & Gestures</span>
+              <div className="flex items-center gap-3">
+                <div className="w-32 h-2 bg-hive-background-secondary rounded-full">
+                  <div className="w-0 h-2 bg-hive-text-tertiary rounded-full"></div>
+                </div>
+                <span className="text-sm font-bold text-hive-text-tertiary">0%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Navigation Guide */}
+        <div className="bg-gradient-to-r from-hive-brand-primary/10 to-hive-brand-secondary/10 border border-hive-brand-secondary/30 rounded-xl p-8 text-center">
+          <h2 className="text-2xl font-bold text-hive-text-primary mb-4">Explore the Profile System</h2>
+          <p className="text-hive-text-secondary mb-6">
+            Navigate through the atomic design system to see each component in detail
+          </p>
+          
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="p-4 bg-white/50 rounded-lg">
+              <div className="font-medium text-hive-text-primary">01 Foundation</div>
+              <div className="text-sm text-hive-text-secondary">Design tokens & principles</div>
+            </div>
+            <div className="p-4 bg-white/50 rounded-lg">
+              <div className="font-medium text-hive-text-primary">02 Atoms</div>
+              <div className="text-sm text-hive-text-secondary">Core UI elements</div>
+            </div>
+            <div className="p-4 bg-white/50 rounded-lg">
+              <div className="font-medium text-hive-text-primary">03 Widgets</div>
+              <div className="text-sm text-hive-text-secondary">Coordinated organisms</div>
+            </div>
+            <div className="p-4 bg-white/50 rounded-lg">
+              <div className="font-medium text-hive-text-primary">04 Templates</div>
+              <div className="text-sm text-hive-text-secondary">Complete layouts</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+};

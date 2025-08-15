@@ -1,20 +1,34 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import { CookieUtils } from '@/lib/cookie-utils';
+
+// Force dynamic rendering to avoid SSG issues
+export const dynamic = 'force-dynamic';
 
 export default function DebugAuthPage() {
   const [debug, setDebug] = useState<any>({});
+  const [returnTo, setReturnTo] = useState<string>('/');
 
   useEffect(() => {
+    // Get return URL from query params
+    const urlParams = new URLSearchParams(window.location.search);
+    const returnUrl = urlParams.get('returnTo') || '/';
+    setReturnTo(returnUrl);
+    
     const checkAuth = () => {
       const sessionJson = localStorage.getItem('hive_session');
       const devAuth = localStorage.getItem('dev_auth_mode');
+      const sessionCookie = CookieUtils.getSessionToken();
       
       setDebug({
         hasSessionJson: !!sessionJson,
         sessionData: sessionJson ? JSON.parse(sessionJson) : null,
         devAuthMode: devAuth,
+        sessionCookie: sessionCookie,
+        hasCookie: !!sessionCookie,
         allLocalStorage: Object.entries(localStorage),
+        allCookies: document.cookie.split(';').map(c => c.trim()),
         timestamp: new Date().toISOString()
       });
     };
@@ -28,16 +42,19 @@ export default function DebugAuthPage() {
 
   const clearAuth = () => {
     localStorage.clear();
+    CookieUtils.clearSessionToken();
     location.reload();
   };
 
   const setTestAuth = () => {
+    const userId = 'debug-user';
     const testSession = {
-      userId: 'debug-user',
+      userId,
       email: 'debug@test.edu',
       schoolId: 'test-university',
       verifiedAt: new Date().toISOString(),
       onboardingCompleted: true,
+      developmentMode: true,
       profileData: {
         fullName: 'Debug User',
         handle: 'debug-user',
@@ -47,9 +64,25 @@ export default function DebugAuthPage() {
       }
     };
     
+    // Set localStorage data
     localStorage.setItem('hive_session', JSON.stringify(testSession));
     localStorage.setItem('dev_auth_mode', 'true');
-    location.reload();
+    
+    // Set session cookie for middleware
+    const sessionToken = CookieUtils.generateDevSessionToken(userId);
+    CookieUtils.setSessionToken(sessionToken);
+    
+    console.log('✅ Debug auth set:', {
+      localStorage: 'hive_session + dev_auth_mode',
+      cookie: 'session-token',
+      token: sessionToken,
+      redirectTo: returnTo
+    });
+    
+    // Redirect to the return URL instead of reloading
+    setTimeout(() => {
+      window.location.href = returnTo;
+    }, 500);
   };
 
   return (
@@ -80,10 +113,10 @@ export default function DebugAuthPage() {
                 Go to Dev Login
               </a>
               <a 
-                href="/"
+                href={returnTo}
                 className="block w-full bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded text-white text-center"
               >
-                Go to Dashboard
+                Go to {returnTo === '/' ? 'Dashboard' : returnTo}
               </a>
             </div>
           </div>

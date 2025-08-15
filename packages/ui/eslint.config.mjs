@@ -36,6 +36,7 @@ export default [
       "**/*.stories.{js,jsx,ts,tsx}",
       "**/*.test.{js,jsx,ts,tsx}",
       "**/*.spec.{js,jsx,ts,tsx}",
+      "src/stories/generate-missing-stories.ts",
     ],
     plugins: {
       import: fixupPluginRules(importPlugin),
@@ -116,6 +117,7 @@ export default [
       "tailwind.config.ts",
       "*.config.*",
       "node_modules/**",
+      "src/stories/generate-missing-stories.ts",
     ],
   },
 ];

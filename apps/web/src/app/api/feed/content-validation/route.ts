@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { collection, doc, getDoc, query, where, getDocs, addDoc, updateDoc, orderBy, limit as fbLimit } from 'firebase-admin/firestore';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { getCurrentUser } from '@/lib/server-auth';
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
 
 // Content validation interfaces
 interface ContentValidationResult {
@@ -48,7 +47,7 @@ interface FeedContentAnalytics {
 // POST - Validate content for feed inclusion
 export async function POST(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
@@ -100,7 +99,7 @@ export async function POST(request: NextRequest) {
 // GET - Get content validation analytics
 export async function GET(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
@@ -166,7 +165,7 @@ async function getContentEnforcementPolicy(spaceId?: string, enforcementLevel: s
   try {
     if (spaceId) {
       // Check for space-specific policy
-      const policyDoc = await getDoc(doc(dbAdmin, 'contentPolicies', spaceId));
+      const policyDoc = await dbAdmin.collection('contentPolicies').doc(spaceId).get();
       if (policyDoc.exists) {
         return policyDoc.data() as ContentEnforcementPolicy;
       }
@@ -202,20 +201,22 @@ async function validateContentItem(
 
       // Get tool metadata
       if (contentItem.toolId) {
-        const toolDoc = await getDoc(doc(dbAdmin, 'tools', contentItem.toolId));
-        if (toolDoc.exists()) {
+        const toolDoc = await dbAdmin.collection('tools').doc(contentItem.toolId).get();
+        if (toolDoc.exists) {
           const tool = toolDoc.data();
-          toolMetadata = {
-            toolId: contentItem.toolId,
-            toolName: tool.name || 'Unknown Tool',
-            deploymentId: contentItem.deploymentId,
-            elementIds: contentItem.elementIds || [],
-            interactionType: contentItem.metadata?.action || 'unknown'
-          };
-          
-          // Quality bonus for sophisticated tools
-          const elementCount = tool.elements?.length || 0;
-          qualityScore += Math.min(20, elementCount * 3);
+          if (tool) {
+            toolMetadata = {
+              toolId: contentItem.toolId,
+              toolName: tool.name || 'Unknown Tool',
+              deploymentId: contentItem.deploymentId,
+              elementIds: contentItem.elementIds || [],
+              interactionType: contentItem.metadata?.action || 'unknown'
+            };
+            
+            // Quality bonus for sophisticated tools
+            const elementCount = tool.elements?.length || 0;
+            qualityScore += Math.min(20, elementCount * 3);
+          }
         }
       }
     }
@@ -420,7 +421,7 @@ function generateContentAnalytics(validationResults: ContentValidationResult[]):
 // Helper function to log validation metrics
 async function logValidationMetrics(userId: string, spaceId: string | undefined, metrics: any): Promise<void> {
   try {
-    await addDoc(collection(dbAdmin, 'validationMetrics'), {
+    await dbAdmin.collection('validationMetrics').add({
       userId,
       spaceId,
       ...metrics,
@@ -439,17 +440,15 @@ async function getContentValidationAnalytics(
   includeDetails: boolean
 ): Promise<FeedContentAnalytics> {
   try {
-    let metricsQuery = query(
-      collection(dbAdmin, 'validationMetrics'),
-      where('date', '>=', startDate.toISOString().split('T')[0]),
-      orderBy('timestamp', 'desc')
-    );
+    let metricsQuery = dbAdmin.collection('validationMetrics')
+      .where('date', '>=', startDate.toISOString().split('T')[0])
+      .orderBy('timestamp', 'desc');
 
     if (spaceId) {
-      metricsQuery = query(metricsQuery, where('spaceId', '==', spaceId));
+      metricsQuery = metricsQuery.where('spaceId', '==', spaceId);
     }
 
-    const metricsSnapshot = await getDocs(query(metricsQuery, fbLimit(100)));
+    const metricsSnapshot = await metricsQuery.limit(100).get();
     const metrics = metricsSnapshot.docs.map(doc => doc.data());
 
     if (metrics.length === 0) {

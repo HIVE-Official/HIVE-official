@@ -1,12 +1,28 @@
 'use client';
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { GlobalErrorBoundary, useGlobalErrorBoundary } from "@hive/ui";
-import { useAuth } from '../hooks/use-auth';
+
+// Temporary stubs until GlobalErrorBoundary is exported from @hive/ui
+interface GlobalErrorBoundaryProps {
+  children: React.ReactNode;
+  [key: string]: unknown;
+}
+
+function GlobalErrorBoundary({ children }: GlobalErrorBoundaryProps) {
+  return <>{children}</>;
+}
+
+function useGlobalErrorBoundary() {
+  return {
+    trackError: (error: Error, context?: Record<string, unknown>) => console.error('Error tracked:', error, context),
+    getAnalytics: () => ({}),
+    reset: () => {}
+  };
+}
 
 interface ErrorProviderContext {
-  reportError: (error: Error, _context?: any) => void;
-  getErrorAnalytics: () => any;
+  reportError: (error: Error, _context?: Record<string, unknown>) => void;
+  getErrorAnalytics: () => Record<string, unknown>;
   resetErrorState: () => void;
   isOnline: boolean;
   campusInfo?: {
@@ -23,7 +39,8 @@ interface ErrorProviderProps {
 }
 
 export function ErrorProvider({ children }: ErrorProviderProps) {
-  const { user } = useAuth();
+  // Temporarily remove auth dependency to fix SSG issues
+  const user: Record<string, unknown> | null = null;
   const { trackError, getAnalytics, reset } = useGlobalErrorBoundary();
   const [isOnline, setIsOnline] = useState(true);
   const [campusInfo, setCampusInfo] = useState<ErrorProviderContext['campusInfo']>();
@@ -57,7 +74,7 @@ export function ErrorProvider({ children }: ErrorProviderProps) {
         });
 
         if (response.ok) {
-          const info = await response.json();
+          const info = await response.json() as ErrorProviderContext['campusInfo'];
           setCampusInfo(info);
         }
       } catch (error) {
@@ -105,7 +122,7 @@ export function ErrorProvider({ children }: ErrorProviderProps) {
   }, [trackError, user, campusInfo, isOnline]);
 
   const contextValue: ErrorProviderContext = {
-    reportError: (error: Error, context?: any) => {
+    reportError: (error: Error, context?: Record<string, unknown>) => {
       trackError(error, {
         ...context,
         user,
@@ -128,10 +145,10 @@ export function ErrorProvider({ children }: ErrorProviderProps) {
         maxRetryAttempts={3}
         context={{
           user: user ? {
-            id: user.uid,
-            name: user.displayName || undefined,
+            id: user.id,
+            name: user.fullName || undefined,  
             email: user.email || undefined,
-            isAdmin: false, // You'd determine this from user claims
+            isAdmin: user.isAdmin || false,
           } : undefined,
           campus: campusInfo ? {
             id: campusInfo.id,
@@ -158,7 +175,7 @@ export function useErrorHandler() {
 }
 
 // HOC for components that need error handling
-export function withErrorHandling<P extends Record<string, any>>(
+export function withErrorHandling<P extends Record<string, unknown>>(
   Component: React.ComponentType<P>,
   componentName?: string
 ) {

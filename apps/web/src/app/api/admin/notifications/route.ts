@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { withAdminAuth } from '@/lib/admin-middleware';
 import { adminNotifications } from '@/lib/admin-notifications';
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { ApiResponseHelper as _ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
 
 /**
  * Admin Notifications API
@@ -11,7 +11,7 @@ import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-ty
  */
 
 export async function GET(request: NextRequest) {
-  return withAdminAuth(request, async (request, admin) => {
+  return withAdminAuth(request, async (request, _admin) => {
     try {
       const url = new URL(request.url);
       const limit = parseInt(url.searchParams.get('limit') || '50');
@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  return withAdminAuth(request, async (request, admin) => {
+  return withAdminAuth(request, async (request, _admin) => {
     try {
       const body = await request.json();
       const { action, notificationId } = body;
@@ -52,11 +52,11 @@ export async function POST(request: NextRequest) {
               { status: HttpStatus.BAD_REQUEST }
             );
           }
-          result = await adminNotifications.markAsRead(notificationId, admin.id);
+          result = await adminNotifications.markAsRead(notificationId, _admin.id);
           break;
 
         case 'mark_all_read':
-          result = await adminNotifications.markAllAsRead(admin.id);
+          result = await adminNotifications.markAllAsRead(_admin.id);
           break;
 
         case 'cleanup': {

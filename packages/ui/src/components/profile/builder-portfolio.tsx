@@ -2,6 +2,8 @@
 
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { ExpandFocus } from '../animations/expand-focus';
+import { ToolDetailsWidget } from '../tools/tool-details-widget';
 import { 
   Star, 
   Download, 
@@ -487,6 +489,11 @@ const ToolCard: React.FC<ToolCardProps> = ({
   onEdit,
   onViewAnalytics
 }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const handleCardClick = () => {
+    setIsExpanded(true);
+  };
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'featured':
@@ -504,7 +511,31 @@ const ToolCard: React.FC<ToolCardProps> = ({
 
   if (view === 'list') {
     return (
-      <HiveCard className="p-6 cursor-pointer hover:shadow-lg transition-shadow" onClick={onClick}>
+      <ExpandFocus
+        isExpanded={isExpanded}
+        onExpand={() => setIsExpanded(true)}
+        onCollapse={() => setIsExpanded(false)}
+        expandFrom="center"
+        focusContent={
+          <ToolDetailsWidget
+            tool={tool}
+            isOwnTool={isOwnProfile}
+            onRun={(toolId) => {
+              onClick();
+              setIsExpanded(false);
+            }}
+            onEdit={(toolId) => {
+              onEdit();
+              setIsExpanded(false);
+            }}
+            onViewAnalytics={(toolId) => {
+              onViewAnalytics();
+              setIsExpanded(false);
+            }}
+          />
+        }
+      >
+        <HiveCard className="p-6 cursor-pointer hover:shadow-lg transition-shadow" onClick={handleCardClick}>
         <div className="flex items-center gap-6">
           <div className="w-16 h-16 rounded-xl bg-hive-surface-elevated flex items-center justify-center text-2xl">
             {tool.icon}
@@ -558,11 +589,36 @@ const ToolCard: React.FC<ToolCardProps> = ({
           )}
         </div>
       </HiveCard>
+      </ExpandFocus>
     );
   }
 
   return (
-    <HiveCard className="overflow-hidden cursor-pointer hover:shadow-lg transition-shadow" onClick={onClick}>
+    <ExpandFocus
+      isExpanded={isExpanded}
+      onExpand={() => setIsExpanded(true)}
+      onCollapse={() => setIsExpanded(false)}
+      expandFrom="center"
+      focusContent={
+        <ToolDetailsWidget
+          tool={tool}
+          isOwnTool={isOwnProfile}
+          onRun={(toolId) => {
+            onClick();
+            setIsExpanded(false);
+          }}
+          onEdit={(toolId) => {
+            onEdit();
+            setIsExpanded(false);
+          }}
+          onViewAnalytics={(toolId) => {
+            onViewAnalytics();
+            setIsExpanded(false);
+          }}
+        />
+      }
+    >
+      <HiveCard className="overflow-hidden cursor-pointer hover:shadow-lg transition-shadow" onClick={handleCardClick}>
       {/* Tool Header */}
       <div className="p-6 pb-4">
         <div className="flex items-start justify-between mb-3">
@@ -654,6 +710,7 @@ const ToolCard: React.FC<ToolCardProps> = ({
         )}
       </div>
     </HiveCard>
+    </ExpandFocus>
   );
 };
 

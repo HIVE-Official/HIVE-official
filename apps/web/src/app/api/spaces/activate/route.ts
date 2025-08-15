@@ -108,7 +108,7 @@ const MOCK_SPACES = {
     name: 'Computer Science Majors',
     status: 'draft',
     plan: 'free',
-    features: [],
+    features: [] as string[],
     settings: {}
   },
   'study-groups': {

@@ -1,12 +1,12 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from '../framer-motion-proxy.js';
-import { HiveCard } from '../hive-card.js';
-import { HiveButton } from '../hive-button.js';
-import { HiveBadge } from '../hive-badge.js';
+import { motion, AnimatePresence } from '../framer-motion-proxy';
+import { HiveCard } from '../hive-card';
+import { HiveButton } from '../hive-button';
+import { HiveBadge } from '../hive-badge';
 import { Eye, EyeOff, Lock, Unlock, Shield, Users, Settings, Clock, AlertTriangle } from 'lucide-react';
-import { cn } from '../../lib/utils.js';
+import { cn } from '../../lib/utils';
 import { usePrivacyUtils } from '@hive/core';
 const levelConfig = {
     invisible: {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
 declare const hiveRichTextEditorVariants: (props?: {
-    variant?: "default" | "elevated" | "minimal" | "premium";
+    variant?: "default" | "minimal" | "elevated" | "premium";
     size?: "default" | "sm" | "lg" | "xl";
     mode?: "split" | "preview" | "edit";
 } & import("class-variance-authority/types").ClassProp) => string;

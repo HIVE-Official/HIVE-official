@@ -11,7 +11,7 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { createContext, useContext, useState, useEffect } from 'react';
-import { cn } from '../../lib/utils.js';
+import { cn } from '../../lib/utils';
 export const hiveBreakpoints = {
     mobile: 768, // Most campus device usage is mobile
     tablet: 1024, // iPad/Surface usage in libraries/study spaces

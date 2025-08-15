@@ -1,6 +1,4 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { NextRequest, NextResponse } from 'next/server';
-import { createRequest, createResponse } from 'node-mocks-http';
 
 // Mock dependencies
 vi.mock('@/lib/firebase-admin');

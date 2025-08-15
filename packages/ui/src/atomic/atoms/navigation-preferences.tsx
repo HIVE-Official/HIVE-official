@@ -39,8 +39,8 @@ export function NavigationPreferences({ value, onChange, className }: Navigation
             className={cn(
               "flex items-start space-x-3 p-4 rounded-lg border cursor-pointer transition-colors",
               value === option.value
-                ? "border-[#FFD700] bg-[rgba(255,215,0,0.05)]"
-                : "border-[rgba(255,255,255,0.12)] bg-[rgba(255,255,255,0.02)] hover:border-[rgba(255,255,255,0.2)]"
+                ? "border-[var(--hive-brand-gold)] bg-[var(--hive-brand-gold)]/5"
+                : "border-[var(--hive-border-primary)] bg-[var(--hive-background-secondary)] hover:border-[var(--hive-border-interactive)]"
             )}
           >
             <input
@@ -49,20 +49,20 @@ export function NavigationPreferences({ value, onChange, className }: Navigation
               value={option.value}
               checked={value === option.value}
               onChange={() => onChange(option.value)}
-              className="mt-1 w-4 h-4 text-[#FFD700] bg-transparent border-[rgba(255,255,255,0.3)] focus:ring-[#FFD700] focus:ring-2"
+              className="mt-1 w-4 h-4 text-[var(--hive-brand-gold)] bg-transparent border-[var(--hive-border-primary)] focus:ring-[var(--hive-brand-gold)] focus:ring-2"
             />
             <div className="flex-1 min-w-0">
               <div className="flex items-center space-x-2">
-                <span className="text-sm font-medium text-white">
+                <span className="text-sm font-medium text-[var(--hive-text-primary)]">
                   {option.label}
                 </span>
                 {value === option.value && (
-                  <span className="text-xs px-2 py-1 bg-[#FFD700] text-[#0A0A0A] rounded-full font-medium">
+                  <span className="text-xs px-2 py-1 bg-[var(--hive-brand-gold)] text-[var(--hive-text-inverse)] rounded-full font-medium">
                     Active
                   </span>
                 )}
               </div>
-              <p className="text-xs text-[#A1A1AA] mt-1">
+              <p className="text-xs text-[var(--hive-text-secondary)] mt-1">
                 {option.description}
               </p>
             </div>

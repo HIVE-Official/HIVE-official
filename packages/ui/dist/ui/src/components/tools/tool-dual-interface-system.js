@@ -1,9 +1,9 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useMemo } from 'react';
-import { HiveCard, HiveButton, HiveBadge } from '../index.js';
+import { HiveCard, HiveButton, HiveBadge } from '../index';
 import { Settings, Eye, EyeOff, BarChart3, MessageSquare, Monitor, Play, Pause, Download, Zap } from 'lucide-react';
-import { cn } from '../../lib/utils.js';
+import { cn } from '../../lib/utils';
 // Mock Interface Component (Utility Side - for leaders/builders)
 const PollInterface = ({ toolState, onUpdate }) => (_jsxs("div", { className: "space-y-4", children: [_jsxs("div", { className: "flex items-center justify-between", children: [_jsx("h3", { className: "font-semibold text-gray-900", children: "Poll Configuration" }), _jsxs("div", { className: "flex items-center gap-2", children: [_jsx(HiveBadge, { className: "bg-blue-100 text-blue-800 border-blue-200", children: "Interface" }), _jsxs(HiveBadge, { variant: "outline", children: [toolState?.responses?.length || 0, " responses"] })] })] }), _jsxs("div", { className: "p-4 bg-gray-50 rounded-lg", children: [_jsx("h4", { className: "font-medium mb-2", children: "Question" }), _jsx("input", { type: "text", value: toolState?.question || "What's your favorite study location?", onChange: (e) => onUpdate({ question: e.target.value }), className: "w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-amber-500" })] }), _jsxs("div", { className: "p-4 bg-gray-50 rounded-lg", children: [_jsx("h4", { className: "font-medium mb-2", children: "Options" }), _jsx("div", { className: "space-y-2", children: (toolState?.options || ['Library', 'Coffee Shop', 'Dorm Room', 'Study Hall']).map((option, index) => (_jsxs("div", { className: "flex items-center justify-between", children: [_jsx("input", { type: "text", value: option, onChange: (e) => {
                                     const newOptions = [...(toolState?.options || [])];

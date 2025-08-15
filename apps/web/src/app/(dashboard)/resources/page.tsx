@@ -94,7 +94,7 @@ export default function ResourcesPage() {
                 <div className="flex-1">
                   <h3 className="text-white font-medium mb-2 group-hover:text-[#FFD700] transition-colors">Your First Tool</h3>
                   <p className="text-[#A1A1AA] text-sm mb-3">
-                    Learn how to create your first tool using HiveLab's visual builder.
+                    Learn how to create your first tool using HiveLab&apos;s visual builder.
                   </p>
                   <div className="flex items-center space-x-2 text-xs text-[#A1A1AA]">
                     <Video className="h-3 w-3" />

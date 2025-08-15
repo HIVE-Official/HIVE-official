@@ -1,9 +1,9 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState } from 'react';
-import { NavigationHeader } from './navigation-header.js';
-import { NavigationSidebar } from './navigation-sidebar.js';
-import { cn } from '../../lib/utils.js';
+import { NavigationHeader } from './navigation-header';
+import { NavigationSidebar } from './navigation-sidebar';
+import { cn } from '../../lib/utils';
 export function AppShell({ children, user, currentSection = 'profile', layoutType = 'dashboard', className, showGlobalSearch = true, showNotifications = true, showBuilderAccess = true, onOpenCommandPalette, onOpenNotifications, sidebarWidth = 'standard', headerHeight = 'standard' }) {
     const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
     // Dynamic sidebar widths for different contexts

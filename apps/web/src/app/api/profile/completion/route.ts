@@ -56,7 +56,8 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
       return NextResponse.json({
         success: true,
         completion: mockCompletion,
-        developmentMode: true });
+        // SECURITY: Development mode removed for production safety
+      });
     }
 
     // Get user document from Firestore

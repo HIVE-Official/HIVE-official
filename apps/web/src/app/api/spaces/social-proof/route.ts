@@ -475,7 +475,7 @@ async function getRecentSpaceActivity(spaceType: string, spaceId: string) {
       })
     );
 
-    return recentJoins.filter(Boolean).slice(0, 5);
+    return recentJoins.filter((join): join is NonNullable<typeof join> => join !== null).slice(0, 5);
   } catch (error) {
     logger.error('Error getting recent activity', { error: error, endpoint: '/api/spaces/social-proof' });
     return [];

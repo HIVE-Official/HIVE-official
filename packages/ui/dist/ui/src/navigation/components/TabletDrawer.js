@@ -9,12 +9,12 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
 import { memo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Hash } from 'lucide-react';
-import { NAVIGATION_SIZING, NAVIGATION_MOTION, NAVIGATION_A11Y } from '../core/data.js';
-import { cn } from '../../lib/utils.js';
+import { NAVIGATION_SIZING, NAVIGATION_MOTION, NAVIGATION_A11Y } from '../core/data';
+import { cn } from '../../lib/utils';
 // ============================================================================
 // DRAWER HEADER
 // ============================================================================
-const DrawerHeader = memo(({ user, onClose }) => {
+const DrawerHeader = memo(({ onClose }) => {
     return (_jsxs("div", { className: "flex items-center justify-between p-6 border-b border-[var(--hive-border-subtle)]", children: [_jsxs(motion.div, { className: "flex items-center gap-3", initial: { opacity: 0, x: -20 }, animate: { opacity: 1, x: 0 }, transition: { duration: NAVIGATION_MOTION.duration.fast / 1000, delay: 0.1 }, children: [_jsx("div", { className: "w-10 h-10 bg-[var(--hive-brand-secondary)] rounded-xl flex items-center justify-center", children: _jsx(Hash, { className: "w-6 h-6 text-[var(--hive-text-inverse)]" }) }), _jsxs("div", { children: [_jsx("div", { className: "text-lg font-bold text-[var(--hive-brand-secondary)] tracking-wider", children: "HIVE" }), _jsx("div", { className: "text-sm text-[var(--hive-text-tertiary)]", children: "Campus OS" })] })] }), _jsx(motion.button, { type: "button", onClick: onClose, className: cn('w-10 h-10 flex items-center justify-center rounded-xl', 'text-[var(--hive-text-secondary)] hover:text-[var(--hive-text-primary)]', 'hover:bg-[var(--hive-interactive-hover)]', 'transition-all duration-200', 'focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--hive-brand-secondary)]'), "aria-label": "Close navigation drawer", "data-testid": "drawer-close-button", whileHover: { scale: 1.05 }, whileTap: { scale: 0.95 }, children: _jsx(X, { className: "w-5 h-5" }) })] }));
 });
 DrawerHeader.displayName = 'DrawerHeader';
@@ -90,7 +90,7 @@ export const TabletDrawer = memo(({ items, user, isOpen, onNavigate, onClose, cl
                         damping: 30,
                         stiffness: 300,
                         duration: NAVIGATION_MOTION.duration.normal / 1000
-                    }, "aria-label": NAVIGATION_A11Y.labels.sidebarNavigation, "data-testid": testId, onKeyDown: handleKeyDown, tabIndex: -1, children: [_jsx(DrawerHeader, { user: user, onClose: onClose }), _jsx(UserProfileSection, { user: user }), _jsx("nav", { className: "flex-1 p-4 overflow-y-auto", children: _jsx("div", { className: "space-y-2", children: items.map((item, index) => (_jsx(motion.div, { initial: { opacity: 0, x: -20 }, animate: { opacity: 1, x: 0 }, transition: {
+                    }, "aria-label": NAVIGATION_A11Y.labels.sidebarNavigation, "data-testid": testId, onKeyDown: handleKeyDown, tabIndex: -1, children: [_jsx(DrawerHeader, { onClose: onClose }), _jsx(UserProfileSection, { user: user }), _jsx("nav", { className: "flex-1 p-4 overflow-y-auto", children: _jsx("div", { className: "space-y-2", children: items.map((item, index) => (_jsx(motion.div, { initial: { opacity: 0, x: -20 }, animate: { opacity: 1, x: 0 }, transition: {
                                         delay: 0.1 + (index * 0.05),
                                         duration: NAVIGATION_MOTION.duration.fast / 1000
                                     }, children: _jsx(DrawerItem, { item: item, onNavigate: onNavigate, onClose: onClose }) }, item.id))) }) }), _jsx(motion.div, { className: "p-4 border-t border-[var(--hive-border-subtle)]", initial: { opacity: 0 }, animate: { opacity: 1 }, transition: { delay: 0.4 }, children: _jsx("div", { className: "text-xs text-[var(--hive-text-tertiary)] text-center", children: "Swipe left or tap outside to close" }) })] })] })) }));

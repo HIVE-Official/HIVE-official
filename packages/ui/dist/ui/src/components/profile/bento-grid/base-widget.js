@@ -3,9 +3,9 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Settings, Maximize2, Minimize2, X, Move } from 'lucide-react';
-import { HiveCard } from '../../hive-card.js';
-import { HiveButton } from '../../hive-button.js';
-import { cn } from '../../../lib/utils.js';
+import { HiveCard } from '../../hive-card';
+import { HiveButton } from '../../hive-button';
+import { cn } from '../../../lib/utils';
 export const BaseWidget = ({ id, title, size, position, settings, isEditing, isDragging = false, onSettingsChange, onSizeChange, onPositionChange, onRemove, children, className }) => {
     const [showSettings, setShowSettings] = useState(false);
     const [isHovered, setIsHovered] = useState(false);

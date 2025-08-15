@@ -3,17 +3,17 @@ import { NextRequest, NextResponse } from 'next/server';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { getCurrentUser } from '@/lib/server-auth';
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
 
 // GET - Fetch specific personal event
-export async function GET(request: NextRequest, { params }: { params: { eventId: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ eventId: string }> }) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
-    const { eventId } = params;
+    const { eventId } = await params;
     const eventDoc = await dbAdmin.collection('personalEvents').doc(eventId).get();
 
     if (!eventDoc.exists) {
@@ -46,14 +46,14 @@ export async function GET(request: NextRequest, { params }: { params: { eventId:
 }
 
 // PUT - Update personal event
-export async function PUT(request: NextRequest, { params }: { params: { eventId: string } }) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ eventId: string }> }) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
-    const { eventId } = params;
+    const { eventId } = await params;
     const body = await request.json();
     const { title, description, startDate, endDate, location, isAllDay, reminderMinutes } = body;
 
@@ -114,14 +114,14 @@ export async function PUT(request: NextRequest, { params }: { params: { eventId:
 }
 
 // PATCH - Partially update personal event
-export async function PATCH(request: NextRequest, { params }: { params: { eventId: string } }) {
+export async function PATCH(request: NextRequest, { params }: { params: Promise<{ eventId: string }> }) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
-    const { eventId } = params;
+    const { eventId } = await params;
     const body = await request.json();
 
     const eventDoc = await dbAdmin.collection('personalEvents').doc(eventId).get();
@@ -180,14 +180,14 @@ export async function PATCH(request: NextRequest, { params }: { params: { eventI
 }
 
 // DELETE - Delete personal event
-export async function DELETE(request: NextRequest, { params }: { params: { eventId: string } }) {
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ eventId: string }> }) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
-    const { eventId } = params;
+    const { eventId } = await params;
     const eventDoc = await dbAdmin.collection('personalEvents').doc(eventId).get();
 
     if (!eventDoc.exists) {

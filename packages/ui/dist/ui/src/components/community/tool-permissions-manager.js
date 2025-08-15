@@ -5,12 +5,12 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
  * Comprehensive interface for managing tool permissions and access control
  */
 import { useState, useCallback, useMemo } from 'react';
-import { HiveCard } from '../hive-card.js';
-import { Button } from '../ui/button.js';
-import { Input } from '../ui/input.js';
-import { Label } from '../ui/label.js';
-import { Checkbox } from '../ui/checkbox.js';
-import { Badge } from '../ui/badge.js';
+import { HiveCard } from '../hive-card';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { Label } from '../ui/label';
+import { Checkbox } from '../ui/checkbox';
+import { Badge } from '../ui/badge';
 import { Users, Lock, Globe, Eye, Settings, Shield, AlertCircle, CheckCircle, Crown, Star, UserCheck, UserX, Clock, Plus, Trash2, Edit, Save, X } from 'lucide-react';
 export const ToolPermissionsManager = ({ tool, currentConfig, spaceMembers, onConfigChange, onSave, userRole, isLoading = false }) => {
     const [config, setConfig] = useState(currentConfig);

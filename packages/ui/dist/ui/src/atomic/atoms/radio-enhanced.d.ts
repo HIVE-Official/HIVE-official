@@ -1,6 +1,7 @@
 import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
-declare const radioVariants: (props?: {
+declare const radioVariants: (props?: import("class-variance-authority/types").ClassProp) => string;
+declare const radioIndicatorVariants: (props?: {
     size?: "default" | "sm" | "lg" | "xl";
     variant?: "default" | "success" | "warning" | "error" | "info";
 } & import("class-variance-authority/types").ClassProp) => string;
@@ -46,5 +47,5 @@ export declare const RadioPresets: {
     Size: (props: Omit<RadioGroupProps, "children">) => import("react/jsx-runtime").JSX.Element;
     Theme: (props: Omit<RadioGroupProps, "children">) => import("react/jsx-runtime").JSX.Element;
 };
-export { Radio, RadioGroup, RadioCard, radioVariants };
+export { Radio, RadioGroup, RadioCard, radioVariants, radioIndicatorVariants };
 //# sourceMappingURL=radio-enhanced.d.ts.map

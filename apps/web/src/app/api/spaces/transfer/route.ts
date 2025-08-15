@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 // Use admin SDK methods since we're in an API route
 import { dbAdmin } from '@/lib/firebase-admin';
-import { getCurrentUser } from '@/lib/server-auth';
-import { logger } from "@/lib/logger";
+import { FieldValue } from 'firebase-admin/firestore';
+import { getCurrentUser as _getCurrentUser } from '@/lib/server-auth';
+import { logger } from "@/lib/structured-logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
 
@@ -80,14 +81,11 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
     }
 
     // Check if user is a member of the source space
-    const membershipQuery = dbAdmin.collection(
-      dbAdmin.collection('members'),
-      where('userId', '==', userId),
-      where('spaceId', '==', fromSpaceId),
-      where('status', '==', 'active')
-    );
-
-    const membershipSnapshot = await getDocs(membershipQuery);
+    const membershipSnapshot = await dbAdmin.collection('members')
+      .where('userId', '==', userId)
+      .where('spaceId', '==', fromSpaceId)
+      .where('status', '==', 'active')
+      .get();
     if (membershipSnapshot.empty) {
       return NextResponse.json(ApiResponseHelper.error("You are not a member of the source space", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
@@ -109,26 +107,20 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
     }
 
     // Check if user is already a member of target space
-    const targetMembershipQuery = dbAdmin.collection(
-      dbAdmin.collection('members'),
-      where('userId', '==', userId),
-      where('spaceId', '==', toSpaceId)
-    );
-
-    const targetMembershipSnapshot = await getDocs(targetMembershipQuery);
+    const targetMembershipSnapshot = await dbAdmin.collection('members')
+      .where('userId', '==', userId)
+      .where('spaceId', '==', toSpaceId)
+      .get();
     if (!targetMembershipSnapshot.empty) {
       return NextResponse.json(ApiResponseHelper.error("You are already a member of the target space", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
     // Special handling for fraternity_and_sorority (only 1 membership allowed)
     if (fromSpaceInfo.spaceType === 'fraternity_and_sorority') {
-      const allGreekMembershipsQuery = dbAdmin.collection(
-        dbAdmin.collection('members'),
-        where('userId', '==', userId),
-        where('status', '==', 'active')
-      );
-
-      const allGreekMemberships = await getDocs(allGreekMembershipsQuery);
+      const allGreekMemberships = await dbAdmin.collection('members')
+        .where('userId', '==', userId)
+        .where('status', '==', 'active')
+        .get();
       const greekMemberships = [];
 
       for (const memberDoc of allGreekMemberships.docs) {
@@ -145,14 +137,14 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
     }
 
     // Perform the transfer atomically
-    const batch = writeBatch(db);
+    const batch = dbAdmin.batch();
 
     // 1. Remove from source space
     const sourceMemRef = membershipSnapshot.docs[0].ref;
     batch.delete(sourceMemRef);
 
     // 2. Add to target space
-    const targetMemRef = doc(dbAdmin.collection('members'));
+    const targetMemRef = dbAdmin.collection('members').doc();
     batch.set(targetMemRef, {
       userId,
       spaceId: toSpaceId,
@@ -160,23 +152,23 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
       spaceType: toSpaceInfo.spaceType,
       role: memberData.role || 'member',
       status: 'active',
-      joinedAt: serverTimestamp(),
+      joinedAt: FieldValue.serverTimestamp(),
       transferredFrom: fromSpaceId,
       transferReason: reason || 'User requested transfer'
     });
 
     // 3. Update member counts
-    const fromSpaceRef = doc(db, 'spaces', fromSpaceInfo.spaceType, 'spaces', fromSpaceId);
-    const toSpaceRef = doc(db, 'spaces', toSpaceInfo.spaceType, 'spaces', toSpaceId);
+    const fromSpaceRef = dbAdmin.collection('spaces').doc(fromSpaceId);
+    const toSpaceRef = dbAdmin.collection('spaces').doc(toSpaceId);
 
     batch.update(fromSpaceRef, {
       memberCount: fromSpaceInfo.space.memberCount - 1,
-      updatedAt: serverTimestamp()
+      updatedAt: FieldValue.serverTimestamp()
     });
 
     batch.update(toSpaceRef, {
       memberCount: (toSpaceInfo.space.memberCount || 0) + 1,
-      updatedAt: serverTimestamp()
+      updatedAt: FieldValue.serverTimestamp()
     });
 
     // 4. Record the movement for cooldown tracking
@@ -191,7 +183,7 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
       adminOverride
     };
 
-    const movementRef = doc(dbAdmin.collection('spaceMovements'));
+    const movementRef = dbAdmin.collection('spaceMovements').doc();
     batch.set(movementRef, movementRecord);
 
     // Commit the batch
@@ -263,27 +255,21 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
     }
 
     // Get movement history
-    const movementHistoryQuery = dbAdmin.collection(
-      dbAdmin.collection('spaceMovements'),
-      where('userId', '==', userId),
-      orderBy('timestamp', 'desc'),
-      limit(20)
-    );
-
-    const movementHistorySnapshot = await getDocs(movementHistoryQuery);
+    const movementHistorySnapshot = await dbAdmin.collection('spaceMovements')
+      .where('userId', '==', userId)
+      .orderBy('timestamp', 'desc')
+      .limit(20)
+      .get();
     const movementHistory = movementHistorySnapshot.docs.map(doc => doc.data());
 
     // Get current restrictions for each space type
-    const restrictions = {};
+    const restrictions: Record<string, any> = {};
     for (const [type, restriction] of Object.entries(MOVEMENT_RESTRICTIONS)) {
-      const userSpacesQuery = dbAdmin.collection(
-        dbAdmin.collection('members'),
-        where('userId', '==', userId),
-        where('spaceType', '==', type),
-        where('status', '==', 'active')
-      );
-
-      const userSpacesSnapshot = await getDocs(userSpacesQuery);
+      const userSpacesSnapshot = await dbAdmin.collection('members')
+        .where('userId', '==', userId)
+        .where('spaceType', '==', type)
+        .where('status', '==', 'active')
+        .get();
       if (!userSpacesSnapshot.empty) {
         const spaceData = userSpacesSnapshot.docs[0].data();
         const spaceInfo = await findSpaceInfo(spaceData.spaceId);
@@ -316,8 +302,7 @@ async function findSpaceInfo(spaceId: string): Promise<{ space: any; spaceType: 
   
   for (const type of spaceTypes) {
     try {
-      const spaceRef = doc(db, 'spaces', type, 'spaces', spaceId);
-      const spaceDoc = await getDoc(spaceRef);
+      const spaceDoc = await dbAdmin.collection('spaces').doc(spaceId).get();
       
       if (spaceDoc.exists) {
         return {
@@ -350,14 +335,11 @@ async function validateMovementRestrictions(
   const cooldownDate = new Date();
   cooldownDate.setDate(cooldownDate.getDate() - restriction.cooldownDays);
 
-  const recentMovementsQuery = dbAdmin.collection(
-    dbAdmin.collection('spaceMovements'),
-    where('userId', '==', userId),
-    where('spaceType', '==', spaceType),
-    where('timestamp', '>=', cooldownDate.toISOString())
-  );
-
-  const recentMovementsSnapshot = await getDocs(recentMovementsQuery);
+  const recentMovementsSnapshot = await dbAdmin.collection('spaceMovements')
+    .where('userId', '==', userId)
+    .where('spaceType', '==', spaceType)
+    .where('timestamp', '>=', cooldownDate.toISOString())
+    .get();
   const recentMovements = recentMovementsSnapshot.docs.map(doc => doc.data());
 
   // Check cooldown
@@ -385,14 +367,11 @@ async function validateMovementRestrictions(
 
     // If moving between different graduation years, check lock duration
     if (fromSpaceYear && toSpaceYear && fromSpaceYear !== toSpaceYear) {
-      const membershipQuery = dbAdmin.collection(
-        dbAdmin.collection('members'),
-        where('userId', '==', userId),
-        where('spaceId', '==', fromSpace.id),
-        where('status', '==', 'active')
-      );
-
-      const membershipSnapshot = await getDocs(membershipQuery);
+      const membershipSnapshot = await dbAdmin.collection('members')
+        .where('userId', '==', userId)
+        .where('spaceId', '==', fromSpace.id)
+        .where('status', '==', 'active')
+        .get();
       if (!membershipSnapshot.empty) {
         const memberData = membershipSnapshot.docs[0].data();
         const joinedDate = new Date(memberData.joinedAt?.seconds ? memberData.joinedAt.seconds * 1000 : memberData.joinedAt);

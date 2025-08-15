@@ -4,9 +4,9 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
  * Complete follow/unfollow functionality for users and spaces
  */
 import { useState, useCallback, useMemo } from 'react';
-import { Button } from '../ui/button.js';
-import { Avatar } from '../index.js';
-import { HiveBadge as Badge } from '../index.js';
+import { Button } from '../ui/button';
+import { Avatar } from '../index';
+import { HiveBadge as Badge } from '../index';
 import { UserPlus, Users, Bell, BellOff, Star, MapPin, Calendar, BookOpen, MoreHorizontal, Check, Search, Filter, UserCheck, Eye, EyeOff, ChevronDown, Heart, MessageCircle, Share } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 const FollowButton = ({ isFollowing, isLoading = false, onFollow, onUnfollow, variant = 'default', showNotificationToggle = false, hasNotifications = false, onToggleNotifications }) => {

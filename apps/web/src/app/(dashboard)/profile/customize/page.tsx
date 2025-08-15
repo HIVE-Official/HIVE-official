@@ -32,6 +32,7 @@ import {
   Wrench,
   Activity
 } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { ErrorBoundary } from '../../../../components/error-boundary';
 import { CardCustomizationModal } from '../../../../components/profile/card-customization-modal';
 import { useSession } from '../../../../hooks/use-session';
@@ -41,7 +42,7 @@ interface CardConfig {
   name: string;
   description: string;
   category: 'identity' | 'academic' | 'community' | 'platform' | 'privacy';
-  icon: any;
+  icon: LucideIcon;
   size: '1x1' | '2x1' | '1x2' | '2x2';
   isVisible: boolean;
   position: { x: number; y: number };
@@ -199,8 +200,9 @@ export default function ProfileCustomizePage() {
   const { user } = useSession();
   
   const [cards, setCards] = useState<CardConfig[]>(DEFAULT_CARDS);
-  // Future card selection functionality
-  const [selectedCard, setSelectedCard] = useState<string | null>(null);
+  // Future card selection functionality - currently unused
+   
+  const [_selectedCard, _setSelectedCard] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
   const [hasChanges, setHasChanges] = useState(false);
   const [isGridVisible, setIsGridVisible] = useState(true);
@@ -222,8 +224,9 @@ export default function ProfileCustomizePage() {
     setHasChanges(true);
   }, []);
 
-  // Future drag-and-drop functionality
-  const handleCardMove = useCallback((cardId: string, newPosition: { x: number; y: number }) => {
+  // Future drag-and-drop functionality - currently unused
+   
+  const _handleCardMove = useCallback((cardId: string, newPosition: { x: number; y: number }) => {
     setCards(prev => prev.map(card => 
       card.id === cardId 
         ? { ...card, position: newPosition }
@@ -252,7 +255,11 @@ export default function ProfileCustomizePage() {
     setHasChanges(true);
   }, []);
 
-  const handleCardConfigSave = (config: any) => {
+  const handleCardConfigSave = (config: {
+    size: '1x1' | '2x1' | '1x2' | '2x2';
+    isVisible: boolean;
+    position: { x: number; y: number };
+  }) => {
     if (!editingCard) return;
     
     setCards(prev => prev.map(card => 
@@ -453,7 +460,7 @@ export default function ProfileCustomizePage() {
                       className={`
                         p-4 rounded-lg bg-hive-background-overlay border-hive-border-default
                         hover:bg-hive-background-interactive transition-colors cursor-pointer
-                        ${selectedCard === card.id ? 'ring-2 ring-hive-gold' : ''}
+                        ${_selectedCard === card.id ? 'ring-2 ring-hive-gold' : ''}
                         ${card.size === '2x1' && viewMode === 'desktop' ? 'col-span-2' : ''}
                         ${card.size === '1x2' && viewMode === 'desktop' ? 'row-span-2' : ''}
                         ${card.size === '2x2' && viewMode === 'desktop' ? 'col-span-2 row-span-2' : ''}
@@ -495,7 +502,7 @@ export default function ProfileCustomizePage() {
                   <TabsContent key={category} value={category} className="space-y-3">
                     {getCardsByCategory(category).map((card) => {
                       const IconComponent = card.icon;
-                      const isBuilder = (user as any)?.isBuilder || false;
+                      const isBuilder = user?.builderOptIn || false;
                       const isDisabled = card.builderOnly && !isBuilder;
                       
                       return (

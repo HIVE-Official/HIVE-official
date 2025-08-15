@@ -1,14 +1,16 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo as _useMemo } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Button, Card } from "@hive/ui";
 import { ArrowLeft, Play, Edit, Settings, Eye, Maximize2, Minimize2, RefreshCw, Code2 } from "lucide-react";
 import { useFeatureFlags } from "@hive/hooks";
-import { useAuth } from "@/hooks/use-auth";
+import { useUnifiedAuth } from "@hive/ui";
 import { ToolNavigation } from "@/lib/tool-navigation";
+import { ToolRuntime } from "@/components/tools/tool-runtime";
+import { ToolComposition } from "@/lib/element-system";
 
-interface ToolPreview {
+interface _ToolPreview {
   id: string;
   name: string;
   description: string;
@@ -23,208 +25,120 @@ interface ToolPreview {
   settings: Record<string, any>;
 }
 
-// Mock tool data
-const MOCK_TOOL: ToolPreview = {
+// Mock tool composition using the element system
+const MOCK_TOOL_COMPOSITION: ToolComposition = {
   id: 'poll-maker',
   name: 'Poll Maker',
   description: 'Create interactive polls for spaces and events',
   elements: [
     {
-      id: 'title-input',
-      type: 'input',
-      label: 'Poll Question',
-      properties: { placeholder: 'What should we order for lunch?', required: true },
-      position: { x: 20, y: 20 },
-      size: { width: 460, height: 48 }
+      elementId: 'form-builder',
+      instanceId: 'poll-form',
+      config: {
+        fields: [
+          { name: 'question', type: 'text', label: 'Poll Question', placeholder: 'What should we order for lunch?', required: true },
+          { name: 'option1', type: 'text', label: 'Option 1', placeholder: 'Pizza', required: true },
+          { name: 'option2', type: 'text', label: 'Option 2', placeholder: 'Sandwiches', required: true },
+          { name: 'option3', type: 'text', label: 'Option 3 (optional)', placeholder: 'Salads', required: false },
+        ],
+        validateOnChange: true,
+        showProgress: false
+      },
+      position: { x: 0, y: 0 },
+      size: { width: 400, height: 300 }
     },
     {
-      id: 'option1',
-      type: 'input',
-      label: 'Option 1',
-      properties: { placeholder: 'Pizza', required: true },
-      position: { x: 20, y: 80 },
-      size: { width: 220, height: 40 }
+      elementId: 'filter-selector',
+      instanceId: 'poll-settings',
+      config: {
+        options: [
+          { value: 'anonymous', label: 'Allow Anonymous Voting' },
+          { value: 'show_results', label: 'Show Results After Voting' },
+          { value: 'multiple_choice', label: 'Allow Multiple Choices' }
+        ],
+        allowMultiple: true,
+        showCounts: false
+      },
+      position: { x: 420, y: 0 },
+      size: { width: 300, height: 150 }
     },
     {
-      id: 'option2',
-      type: 'input',
-      label: 'Option 2',
-      properties: { placeholder: 'Sandwiches', required: true },
-      position: { x: 260, y: 80 },
-      size: { width: 220, height: 40 }
-    },
-    {
-      id: 'add-option',
-      type: 'button',
-      label: '+ Add Option',
-      properties: { variant: 'outline' },
-      position: { x: 20, y: 140 },
-      size: { width: 120, height: 36 }
-    },
-    {
-      id: 'settings-text',
-      type: 'text',
-      label: 'Poll Settings',
-      properties: { style: 'heading' },
-      position: { x: 20, y: 190 },
-      size: { width: 200, height: 24 }
-    },
-    {
-      id: 'anonymous',
-      type: 'button',
-      label: '☐ Allow Anonymous Voting',
-      properties: { variant: 'ghost', toggle: true },
-      position: { x: 20, y: 220 },
-      size: { width: 200, height: 32 }
-    },
-    {
-      id: 'results',
-      type: 'button',
-      label: '☐ Show Results After Voting',
-      properties: { variant: 'ghost', toggle: true },
-      position: { x: 240, y: 220 },
-      size: { width: 220, height: 32 }
-    },
-    {
-      id: 'create-button',
-      type: 'button',
-      label: 'Create Poll',
-      properties: { variant: 'primary' },
-      position: { x: 20, y: 270 },
-      size: { width: 140, height: 44 }
-    },
-    {
-      id: 'preview-button',
-      type: 'button',
-      label: 'Preview',
-      properties: { variant: 'outline' },
-      position: { x: 180, y: 270 },
-      size: { width: 100, height: 44 }
+      elementId: 'result-list',
+      instanceId: 'poll-preview',
+      config: {
+        itemsPerPage: 10,
+        showPagination: false,
+        cardStyle: 'compact'
+      },
+      position: { x: 420, y: 170 },
+      size: { width: 300, height: 130 }
     }
   ],
-  settings: {
-    allowAnonymousVoting: true,
-    showResults: 'after_voting'
-  }
+  connections: [
+    {
+      from: { instanceId: 'poll-form', output: 'formData' },
+      to: { instanceId: 'poll-preview', input: 'items' }
+    },
+    {
+      from: { instanceId: 'poll-settings', output: 'selectedFilters' },
+      to: { instanceId: 'poll-form', input: 'settings' }
+    }
+  ],
+  layout: 'grid'
 };
 
-// Interactive tool renderer
-const ToolRenderer = ({ tool, isInteractive = false }: { tool: ToolPreview; isInteractive?: boolean }) => {
-  const [formData, setFormData] = useState<Record<string, any>>({});
-  const [toggleStates, setToggleStates] = useState<Record<string, boolean>>({
-    anonymous: true,
-    results: true
-  });
+// Tool Runtime Wrapper Component
+const ToolRuntimeWrapper = ({ composition, mode }: { composition: ToolComposition; mode: 'preview' | 'live' }) => {
+  const { user } = useUnifiedAuth();
+  const [executionResults, setExecutionResults] = useState<any[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleInputChange = (elementId: string, value: string) => {
-    if (!isInteractive) return;
-    setFormData(prev => ({ ...prev, [elementId]: value }));
+  const handleExecutionResult = (result: any) => {
+    setExecutionResults(prev => [...prev, { timestamp: Date.now(), result }].slice(-10));
   };
 
-  const handleToggle = (elementId: string) => {
-    if (!isInteractive) return;
-    setToggleStates(prev => ({ ...prev, [elementId]: !prev[elementId] }));
-  };
-
-  const handleSubmit = () => {
-    if (!isInteractive) return;
-    alert('Poll created successfully! (This is a preview)');
+  const handleError = (errorMessage: string) => {
+    setError(errorMessage);
   };
 
   return (
-    <div className="relative w-full h-[400px] bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.1)] rounded-lg overflow-hidden">
-      {tool.elements.map(element => {
-        const style = {
-          position: 'absolute' as const,
-          left: element.position.x,
-          top: element.position.y,
-          width: element.size.width,
-          height: element.size.height
-        };
-
-        switch (element.type) {
-          case 'input':
-            return (
-              <input
-                key={element.id}
-                type="text"
-                placeholder={element.properties.placeholder}
-                value={formData[element.id] || ''}
-                onChange={(e) => handleInputChange(element.id, e.target.value)}
-                style={style}
-                className={`p-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.2)] rounded-lg text-white text-sm placeholder:text-[#A1A1AA] focus:border-[#FFD700]/50 focus:outline-none ${!isInteractive ? 'pointer-events-none' : ''}`}
-              />
-            );
-            
-          case 'button': {
-            const isToggleButton = element.properties.toggle;
-            const isToggled = toggleStates[element.id.replace('-', '')];
-            
-            if (isToggleButton) {
-              return (
-                <button
-                  key={element.id}
-                  onClick={() => handleToggle(element.id.replace('-', ''))}
-                  style={style}
-                  className={`flex items-center gap-2 px-3 text-sm text-left ${
-                    isToggled 
-                      ? 'text-[#FFD700]' 
-                      : 'text-[#A1A1AA] hover:text-white'
-                  } ${!isInteractive ? 'pointer-events-none' : 'transition-colors'}`}
-                >
-                  {element.label.replace('☐', isToggled ? '☑' : '☐')}
-                </button>
-              );
-            }
-            
-            const getButtonStyle = (variant: string) => {
-              switch (variant) {
-                case 'primary':
-                  return 'bg-[#FFD700] text-[#0A0A0A] hover:bg-[#FFE255]';
-                case 'outline':
-                  return 'border border-[rgba(255,255,255,0.2)] text-[#A1A1AA] hover:text-white hover:border-[#FFD700]/30';
-                default:
-                  return 'bg-[rgba(255,255,255,0.05)] text-white hover:bg-[rgba(255,255,255,0.1)]';
-              }
-            };
-            
-            return (
-              <button
-                key={element.id}
-                onClick={element.id === 'create-button' ? handleSubmit : undefined}
-                style={style}
-                className={`rounded-lg font-medium text-sm transition-all ${getButtonStyle(element.properties.variant)} ${!isInteractive ? 'pointer-events-none opacity-75' : ''}`}
-              >
-                {element.label}
-              </button>
-            );
-          }
-            
-          case 'text': {
-            const isHeading = element.properties.style === 'heading';
-            return (
-              <div
-                key={element.id}
-                style={style}
-                className={`text-white flex items-center ${isHeading ? 'font-semibold text-base' : 'text-sm'}`}
-              >
-                {element.label}
+    <div className="space-y-4">
+      <ToolRuntime
+        composition={composition}
+        userId={user?.uid || 'anonymous'}
+        mode={mode}
+        onExecutionResult={handleExecutionResult}
+        onError={handleError}
+      />
+      
+      {/* Execution Results Display */}
+      {executionResults.length > 0 && (
+        <Card className="p-4 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)]">
+          <h4 className="text-sm font-medium text-white mb-2">Recent Executions</h4>
+          <div className="space-y-1 max-h-32 overflow-y-auto">
+            {executionResults.map((entry, index) => (
+              <div key={index} className="text-xs p-2 bg-[rgba(255,255,255,0.05)] rounded">
+                <div className="flex justify-between text-[#A1A1AA]">
+                  <span>Result {index + 1}</span>
+                  <span>{new Date(entry.timestamp).toLocaleTimeString()}</span>
+                </div>
+                <div className="text-white mt-1">
+                  {JSON.stringify(entry.result, null, 2).slice(0, 100)}...
+                </div>
               </div>
-            );
-          }
-            
-          default:
-            return (
-              <div
-                key={element.id}
-                style={style}
-                className="bg-[rgba(255,255,255,0.05)] border border-dashed border-[rgba(255,255,255,0.2)] rounded flex items-center justify-center text-xs text-[#A1A1AA]"
-              >
-                {element.type}
-              </div>
-            );
-        }
-      })}
+            ))}
+          </div>
+        </Card>
+      )}
+      
+      {/* Error Display */}
+      {error && (
+        <Card className="p-4 bg-red-900/20 border-red-500/20">
+          <div className="text-red-400 text-sm">
+            <strong>Error:</strong> {error}
+          </div>
+        </Card>
+      )}
     </div>
   );
 };
@@ -232,36 +146,38 @@ const ToolRenderer = ({ tool, isInteractive = false }: { tool: ToolPreview; isIn
 export default function ToolPreviewPage() {
   const params = useParams();
   const _router = useRouter();
-  const [tool] = useState<ToolPreview>(MOCK_TOOL);
-  const [previewMode, setPreviewMode] = useState<'static' | 'interactive'>('interactive');
+  const [composition] = useState<ToolComposition>(MOCK_TOOL_COMPOSITION);
+  const [previewMode, setPreviewMode] = useState<'preview' | 'live'>('preview');
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showCode, setShowCode] = useState(false);
   const flags = useFeatureFlags();
-  const { user: _user } = useAuth();
+  const { user: _user } = useUnifiedAuth();
 
   useEffect(() => {
     flags.trackEvent('tools', 'view', { page: 'tool-preview', toolId: params.toolId });
   }, [flags, params.toolId]);
 
   const handleEdit = () => {
-    flags.trackEvent('tools', 'interact', { action: 'edit_from_preview', toolId: tool.id });
-    ToolNavigation.editTool(tool.id);
+    flags.trackEvent('tools', 'interact', { action: 'edit_from_preview', toolId: composition.id });
+    ToolNavigation.editTool(composition.id);
   };
 
   const handleRun = () => {
-    flags.trackEvent('tools', 'interact', { action: 'run_from_preview', toolId: tool.id });
-    ToolNavigation.toRun(tool.id);
+    flags.trackEvent('tools', 'interact', { action: 'run_from_preview', toolId: composition.id });
+    ToolNavigation.toRun(composition.id);
   };
 
-  const generatedCode = `// Generated Tool Code - ${tool.name}
-export const ${tool.name.replace(/\s+/g, '')}Tool = {
-  id: '${tool.id}',
-  name: '${tool.name}',
-  description: '${tool.description}',
-  elements: ${JSON.stringify(tool.elements, null, 2)},
+  const generatedCode = `// Generated Tool Code - ${composition.name}
+export const ${composition.name.replace(/\s+/g, '')}Tool = {
+  id: '${composition.id}',
+  name: '${composition.name}',
+  description: '${composition.description}',
+  elements: ${JSON.stringify(composition.elements, null, 2)},
+  connections: ${JSON.stringify(composition.connections, null, 2)},
+  layout: '${composition.layout}',
   render: (props) => {
-    // Tool rendering logic here
-    return <ToolRenderer {...props} />;
+    // Tool rendering logic using element system
+    return <ToolRuntime composition={this} {...props} />;
   }
 };`;
 
@@ -283,10 +199,10 @@ export const ${tool.name.replace(/\s+/g, '')}Tool = {
               </Button>
               <div>
                 <h1 className="text-xl font-semibold text-white">
-                  Preview: {tool.name}
+                  Preview: {composition.name}
                 </h1>
                 <p className="text-sm text-[#A1A1AA]">
-                  {tool.description}
+                  {composition.description}
                 </p>
               </div>
             </div>
@@ -295,21 +211,21 @@ export const ${tool.name.replace(/\s+/g, '')}Tool = {
               <div className="flex items-center bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-lg">
                 <Button
                   size="sm"
-                  variant={previewMode === 'static' ? 'default' : 'ghost'}
-                  onClick={() => setPreviewMode('static')}
-                  className={previewMode === 'static' ? 'bg-[#FFD700] text-[#0A0A0A]' : 'text-[#A1A1AA] hover:text-white'}
+                  variant={previewMode === 'preview' ? 'default' : 'ghost'}
+                  onClick={() => setPreviewMode('preview')}
+                  className={previewMode === 'preview' ? 'bg-[#FFD700] text-[#0A0A0A]' : 'text-[#A1A1AA] hover:text-white'}
                 >
                   <Eye className="h-4 w-4 mr-2" />
-                  Static
+                  Preview
                 </Button>
                 <Button
                   size="sm"
-                  variant={previewMode === 'interactive' ? 'default' : 'ghost'}
-                  onClick={() => setPreviewMode('interactive')}
-                  className={previewMode === 'interactive' ? 'bg-[#FFD700] text-[#0A0A0A]' : 'text-[#A1A1AA] hover:text-white'}
+                  variant={previewMode === 'live' ? 'default' : 'ghost'}
+                  onClick={() => setPreviewMode('live')}
+                  className={previewMode === 'live' ? 'bg-[#FFD700] text-[#0A0A0A]' : 'text-[#A1A1AA] hover:text-white'}
                 >
                   <Play className="h-4 w-4 mr-2" />
-                  Interactive
+                  Live
                 </Button>
               </div>
               
@@ -385,14 +301,14 @@ export const ${tool.name.replace(/\s+/g, '')}Tool = {
                 <div className="h-full flex flex-col">
                   <div className="flex items-center justify-between mb-4">
                     <div className="text-sm text-[#A1A1AA]">
-                      {previewMode === 'interactive' ? 'Interactive Preview' : 'Static Preview'}
+                      {previewMode === 'live' ? 'Live Execution' : 'Preview Mode'}
                     </div>
-                    {previewMode === 'interactive' && (
-                      <div className="text-xs text-green-400">● Live Preview</div>
+                    {previewMode === 'live' && (
+                      <div className="text-xs text-green-400">● Live Runtime</div>
                     )}
                   </div>
-                  <div className="flex-1 min-h-0">
-                    <ToolRenderer tool={tool} isInteractive={previewMode === 'interactive'} />
+                  <div className="flex-1 min-h-0 overflow-auto">
+                    <ToolRuntimeWrapper composition={composition} mode={previewMode} />
                   </div>
                 </div>
               )}
@@ -407,19 +323,27 @@ export const ${tool.name.replace(/\s+/g, '')}Tool = {
               <div className="space-y-3 text-sm">
                 <div>
                   <span className="text-[#A1A1AA]">Name:</span>
-                  <span className="text-white ml-2">{tool.name}</span>
+                  <span className="text-white ml-2">{composition.name}</span>
                 </div>
                 <div>
                   <span className="text-[#A1A1AA]">ID:</span>
-                  <span className="text-white ml-2 font-mono">{tool.id}</span>
+                  <span className="text-white ml-2 font-mono">{composition.id}</span>
                 </div>
                 <div>
                   <span className="text-[#A1A1AA]">Elements:</span>
-                  <span className="text-white ml-2">{tool.elements.length}</span>
+                  <span className="text-white ml-2">{composition.elements.length}</span>
+                </div>
+                <div>
+                  <span className="text-[#A1A1AA]">Connections:</span>
+                  <span className="text-white ml-2">{composition.connections.length}</span>
+                </div>
+                <div>
+                  <span className="text-[#A1A1AA]">Layout:</span>
+                  <span className="text-white ml-2 capitalize">{composition.layout}</span>
                 </div>
                 <div>
                   <span className="text-[#A1A1AA]">Description:</span>
-                  <p className="text-white mt-1">{tool.description}</p>
+                  <p className="text-white mt-1">{composition.description}</p>
                 </div>
               </div>
             </Card>
@@ -428,15 +352,15 @@ export const ${tool.name.replace(/\s+/g, '')}Tool = {
             <Card className="p-6 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)] flex-1 min-h-0">
               <h3 className="text-lg font-semibold text-white mb-4">Elements</h3>
               <div className="space-y-2 overflow-auto">
-                {tool.elements.map((element, _index) => (
+                {composition.elements.map((element, _index) => (
                   <div
-                    key={element.id}
+                    key={element.instanceId}
                     className="p-3 bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.06)] rounded-lg"
                   >
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-white font-medium text-sm">{element.label}</span>
-                      <span className="text-xs text-[#A1A1AA] bg-[rgba(255,255,255,0.05)] px-2 py-1 rounded capitalize">
-                        {element.type}
+                      <span className="text-white font-medium text-sm">{element.instanceId}</span>
+                      <span className="text-xs text-[#A1A1AA] bg-[rgba(255,255,255,0.05)] px-2 py-1 rounded">
+                        {element.elementId}
                       </span>
                     </div>
                     <div className="text-xs text-[#A1A1AA]">
@@ -467,7 +391,7 @@ export const ${tool.name.replace(/\s+/g, '')}Tool = {
                   Edit Tool
                 </Button>
                 <Button
-                  onClick={() => ToolNavigation.toSettings(tool.id)}
+                  onClick={() => ToolNavigation.toSettings(composition.id)}
                   className="w-full bg-[rgba(255,255,255,0.05)] text-white hover:bg-[rgba(255,255,255,0.1)] justify-start"
                 >
                   <Settings className="h-4 w-4 mr-3" />

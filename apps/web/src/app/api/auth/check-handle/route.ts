@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { checkHandleAvailability } from "@/lib/handle-service";
 import { createCrudHandler } from "@/lib/api-wrapper";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { ApiResponseHelper as _ApiResponseHelper, HttpStatus as _HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 // Validation schemas
 const checkHandleBodySchema = z.object({

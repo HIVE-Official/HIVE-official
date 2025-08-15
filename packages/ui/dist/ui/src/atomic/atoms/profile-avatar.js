@@ -2,10 +2,10 @@
 import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-runtime";
 import React from 'react';
 import { cva } from 'class-variance-authority';
-import { cn } from '../../lib/utils.js';
+import { cn } from '../../lib/utils';
 import { Camera, Crown, Shield, EyeOff, Upload } from 'lucide-react';
 import Image from 'next/image';
-const profileAvatarVariants = cva("relative flex-shrink-0 bg-hive-surface-elevated border-hive-border-subtle overflow-hidden", {
+const profileAvatarVariants = cva("relative flex-shrink-0 bg-[var(--hive-background-secondary)] border-[var(--hive-border-primary)] overflow-hidden", {
     variants: {
         size: {
             xs: "w-8 h-8",
@@ -22,17 +22,17 @@ const profileAvatarVariants = cva("relative flex-shrink-0 bg-hive-surface-elevat
         },
         border: {
             none: "border-0",
-            subtle: "border-2 border-hive-border-subtle",
-            primary: "border-2 border-hive-gold",
-            builder: "border-3 border-hive-gold shadow-lg shadow-hive-gold/20",
-            verified: "border-3 border-blue-400 shadow-lg shadow-blue-400/20"
+            subtle: "border-2 border-[var(--hive-border-primary)]",
+            primary: "border-2 border-[var(--hive-brand-gold)]",
+            builder: "border-3 border-[var(--hive-brand-gold)] shadow-lg shadow-[var(--hive-brand-gold)]/20",
+            verified: "border-3 border-[var(--hive-status-info)] shadow-lg shadow-[var(--hive-status-info)]/20"
         },
         status: {
             none: "",
-            online: "ring-2 ring-green-400 ring-offset-2 ring-offset-hive-background-primary",
-            away: "ring-2 ring-yellow-400 ring-offset-2 ring-offset-hive-background-primary",
-            busy: "ring-2 ring-red-400 ring-offset-2 ring-offset-hive-background-primary",
-            offline: "ring-2 ring-gray-400 ring-offset-2 ring-offset-hive-background-primary"
+            online: "ring-2 ring-[var(--hive-status-success)] ring-offset-2 ring-offset-[var(--hive-background-primary)]",
+            away: "ring-2 ring-[var(--hive-status-warning)] ring-offset-2 ring-offset-[var(--hive-background-primary)]",
+            busy: "ring-2 ring-[var(--hive-status-error)] ring-offset-2 ring-offset-[var(--hive-background-primary)]",
+            offline: "ring-2 ring-[var(--hive-text-muted)] ring-offset-2 ring-offset-[var(--hive-background-primary)]"
         }
     },
     defaultVariants: {
@@ -42,7 +42,7 @@ const profileAvatarVariants = cva("relative flex-shrink-0 bg-hive-surface-elevat
         status: "none"
     }
 });
-const statusDotVariants = cva("absolute rounded-full border-2 border-hive-background-primary", {
+const statusDotVariants = cva("absolute rounded-full border-2 border-[var(--hive-background-primary)]", {
     variants: {
         size: {
             xs: "w-2 h-2 bottom-0 right-0",
@@ -54,10 +54,10 @@ const statusDotVariants = cva("absolute rounded-full border-2 border-hive-backgr
         },
         status: {
             none: "hidden",
-            online: "bg-green-400",
-            away: "bg-yellow-400",
-            busy: "bg-red-400",
-            offline: "bg-gray-400"
+            online: "bg-[var(--hive-status-success)]",
+            away: "bg-[var(--hive-status-warning)]",
+            busy: "bg-[var(--hive-status-error)]",
+            offline: "bg-[var(--hive-text-muted)]"
         }
     },
     defaultVariants: {
@@ -77,9 +77,9 @@ const badgeVariants = cva("absolute flex items-center justify-center text-white"
         },
         type: {
             none: "hidden",
-            builder: "bg-hive-gold rounded-full shadow-lg",
-            verified: "bg-blue-500 rounded-full shadow-lg",
-            ghost: "bg-gray-600 rounded-full shadow-lg"
+            builder: "bg-[var(--hive-brand-gold)] rounded-full shadow-lg",
+            verified: "bg-[var(--hive-status-info)] rounded-full shadow-lg",
+            ghost: "bg-[var(--hive-text-muted)] rounded-full shadow-lg"
         }
     },
     defaultVariants: {
@@ -173,10 +173,10 @@ export function ProfileAvatar({ src, alt, name, isBuilder = false, isVerified = 
         };
         return sizeMap[size];
     };
-    return (_jsxs("div", { className: cn(profileAvatarVariants({ size, shape, border: determinedBorder, status: determinedStatus }), "group cursor-pointer transition-all duration-200", editable && "hover:brightness-110 hover:scale-105", className), onClick: editable ? handleClick : undefined, ...props, children: [loading ? (_jsx("div", { className: "w-full h-full bg-hive-surface-elevated animate-pulse" })) : src ? (_jsx(Image, { src: src, alt: alt || `${name}'s profile`, width: getAvatarSize(), height: getAvatarSize(), className: "w-full h-full object-cover", loading: "lazy", onError: () => {
+    return (_jsxs("div", { className: cn(profileAvatarVariants({ size, shape, border: determinedBorder, status: determinedStatus }), "group cursor-pointer transition-all duration-200", editable && "hover:brightness-110 hover:scale-105", className), onClick: editable ? handleClick : undefined, ...props, children: [loading ? (_jsx("div", { className: "w-full h-full bg-[var(--hive-background-secondary)] animate-pulse" })) : src ? (_jsx(Image, { src: src, alt: alt || `${name}'s profile`, width: getAvatarSize(), height: getAvatarSize(), className: "w-full h-full object-cover", loading: "lazy", onError: () => {
                     // Image loading error will be handled by Next.js
                     console.warn(`Failed to load avatar image: ${src}`);
-                } })) : (_jsx("div", { className: "w-full h-full bg-gradient-to-br from-hive-gold/20 to-hive-brand-secondary/20 flex items-center justify-center", children: _jsx("span", { className: cn("font-bold text-hive-text-primary", textSize), children: initials }) })), src && (_jsx("div", { className: "absolute inset-0 bg-gradient-to-br from-hive-gold/20 to-hive-brand-secondary/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity", children: _jsx("span", { className: cn("font-bold text-hive-text-primary", textSize), children: initials }) })), showStatus && (_jsx("div", { className: cn(statusDotVariants({ size, status: determinedStatus })) })), showBadges && (_jsxs(_Fragment, { children: [isBuilder && (_jsx("div", { className: cn(badgeVariants({ size, type: "builder" })), children: _jsx(Crown, { className: iconSize }) })), isVerified && !isBuilder && (_jsx("div", { className: cn(badgeVariants({ size, type: "verified" })), children: _jsx(Shield, { className: iconSize }) })), ghostMode && !isBuilder && !isVerified && (_jsx("div", { className: cn(badgeVariants({ size, type: "ghost" })), children: _jsx(EyeOff, { className: iconSize }) }))] })), editable && (_jsxs(_Fragment, { children: [_jsx("div", { className: "absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center", children: _jsxs("div", { className: "flex flex-col items-center space-y-1 text-white", children: [_jsx(Camera, { className: cn("text-white", iconSize) }), _jsx("span", { className: "text-xs font-medium hidden sm:block", children: onUpload ? 'Upload' : 'Edit' })] }) }), onUpload && (_jsxs(_Fragment, { children: [_jsx("input", { ref: fileInputRef, type: "file", accept: "image/*", onChange: handleFileChange, className: "hidden", "aria-label": "Upload profile photo" }), _jsx("button", { onClick: triggerUpload, className: "absolute -bottom-2 -right-2 w-6 h-6 bg-[var(--hive-brand-primary)] rounded-full border-2 border-[var(--hive-background-primary)] flex items-center justify-center hover:scale-110 transition-transform sm:hidden", "aria-label": "Upload profile photo", children: _jsx(Upload, { className: "w-3 h-3 text-[var(--hive-background-primary)]" }) })] }))] })), ghostMode && (_jsx("div", { className: "absolute inset-0 bg-gray-900/20 flex items-center justify-center", children: _jsx(EyeOff, { className: cn("text-gray-400", iconSize) }) }))] }));
+                } })) : (_jsx("div", { className: "w-full h-full bg-gradient-to-br from-[var(--hive-brand-gold)]/20 to-[var(--hive-brand-secondary)]/20 flex items-center justify-center", children: _jsx("span", { className: cn("font-bold text-[var(--hive-text-primary)]", textSize), children: initials }) })), src && (_jsx("div", { className: "absolute inset-0 bg-gradient-to-br from-[var(--hive-brand-gold)]/20 to-[var(--hive-brand-secondary)]/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity", children: _jsx("span", { className: cn("font-bold text-[var(--hive-text-primary)]", textSize), children: initials }) })), showStatus && (_jsx("div", { className: cn(statusDotVariants({ size, status: determinedStatus })) })), showBadges && (_jsxs(_Fragment, { children: [isBuilder && (_jsx("div", { className: cn(badgeVariants({ size, type: "builder" })), children: _jsx(Crown, { className: iconSize }) })), isVerified && !isBuilder && (_jsx("div", { className: cn(badgeVariants({ size, type: "verified" })), children: _jsx(Shield, { className: iconSize }) })), ghostMode && !isBuilder && !isVerified && (_jsx("div", { className: cn(badgeVariants({ size, type: "ghost" })), children: _jsx(EyeOff, { className: iconSize }) }))] })), editable && (_jsxs(_Fragment, { children: [_jsx("div", { className: "absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center", children: _jsxs("div", { className: "flex flex-col items-center space-y-1 text-white", children: [_jsx(Camera, { className: cn("text-white", iconSize) }), _jsx("span", { className: "text-xs font-medium hidden sm:block", children: onUpload ? 'Upload' : 'Edit' })] }) }), onUpload && (_jsxs(_Fragment, { children: [_jsx("input", { ref: fileInputRef, type: "file", accept: "image/*", onChange: handleFileChange, className: "hidden", "aria-label": "Upload profile photo" }), _jsx("button", { onClick: triggerUpload, className: "absolute -bottom-2 -right-2 w-6 h-6 bg-[var(--hive-brand-primary)] rounded-full border-2 border-[var(--hive-background-primary)] flex items-center justify-center hover:scale-110 transition-transform sm:hidden", "aria-label": "Upload profile photo", children: _jsx(Upload, { className: "w-3 h-3 text-[var(--hive-background-primary)]" }) })] }))] })), ghostMode && (_jsx("div", { className: "absolute inset-0 bg-[var(--hive-text-muted)]/20 flex items-center justify-center", children: _jsx(EyeOff, { className: cn("text-[var(--hive-text-muted)]", iconSize) }) }))] }));
 }
 // Export variants for external use
 export { profileAvatarVariants };

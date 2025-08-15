@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { logger } from "@/lib/structured-logger";
+import { ApiResponseHelper as _ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 interface SearchResult {
   id: string;
@@ -292,7 +292,7 @@ export async function GET(request: NextRequest) {
     const results: SearchResult[] = allItems
       .map(item => ({
         ...item,
-        relevanceScore: calculateRelevanceScore(item, query, category)
+        relevanceScore: calculateRelevanceScore(item, query, category ?? undefined)
       }))
       .filter(item => item.relevanceScore > 0)
       .sort((a, b) => b.relevanceScore - a.relevanceScore)

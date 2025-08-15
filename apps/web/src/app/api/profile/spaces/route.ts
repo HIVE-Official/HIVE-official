@@ -5,6 +5,16 @@ import { getCurrentUser } from '@/lib/auth-server';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
+// Internal membership data structure
+interface MembershipData {
+  id: string;
+  role: string;
+  status: string;
+  joinedAt: string;
+  lastActivity: string;
+  [key: string]: any;
+}
+
 // Space membership interface for profile
 interface ProfileSpaceMembership {
   spaceId: string;
@@ -81,68 +91,75 @@ export async function GET(request: NextRequest) {
     const timeRange = searchParams.get('timeRange') || 'week'; // week, month, all
 
     // Fetch user's memberships
-    const membershipsQuery = dbAdmin.collection(
-      dbAdmin.collection('members'),
-      where('userId', '==', user.uid),
-      orderBy('lastActivity', 'desc')
-    );
-
-    const membershipsSnapshot = await getDocs(membershipsQuery);
-    const memberships = membershipsSnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    }));
+    const membershipsSnapshot = await dbAdmin.collection('members')
+      .where('userId', '==', user.uid)
+      .orderBy('lastActivity', 'desc')
+      .get();
+    const memberships: MembershipData[] = membershipsSnapshot.docs.map(doc => {
+      const data = doc.data();
+      return {
+        id: data.spaceId || doc.id, // Use spaceId from data or fallback to doc id
+        role: data.role || 'member',
+        status: data.status || 'active',
+        joinedAt: data.joinedAt || new Date().toISOString(),
+        lastActivity: data.lastActivity || new Date().toISOString(),
+        ...data
+      };
+    });
 
     // Fetch space details for each membership
-    const spaceMemberships: ProfileSpaceMembership[] = await Promise.all(
+    const spaceMemberships: (ProfileSpaceMembership | null)[] = await Promise.all(
       memberships.map(async (membership) => {
         try {
-          const spaceDoc = await getDoc(doc(db, 'spaces', membership.spaceId));
+          const spaceDoc = await dbAdmin.collection('spaces').doc(membership.id).get();
           if (!spaceDoc.exists) {
             return null;
           }
 
           const spaceData = spaceDoc.data();
+          if (!spaceData) {
+            return null;
+          }
           
           // Calculate activity level and recent activity
           const recentActivity = includeActivity ? 
-            await getSpaceActivityForUser(user.uid, membership.spaceId, timeRange) : 
+            await getSpaceActivityForUser(user.uid, membership.id, timeRange) : 
             { posts: 0, interactions: 0, toolUsage: 0, timeSpent: 0 };
 
           const activityLevel = calculateActivityLevel(recentActivity);
 
           // Get notifications count
-          const notifications = await getSpaceNotifications(user.uid, membership.spaceId);
+          const notifications = await getSpaceNotifications(user.uid, membership.id);
 
           // Get quick stats
           const quickStats = includeStats ? 
-            await getSpaceQuickStats(user.uid, membership.spaceId) : 
+            await getSpaceQuickStats(user.uid, membership.id) : 
             { myPosts: 0, myTools: 0, myInteractions: 0 };
 
           return {
-            spaceId: membership.spaceId,
-            spaceName: spaceData.name,
-            spaceDescription: spaceData.description,
+            spaceId: membership.id,
+            spaceName: spaceData.name || 'Unknown Space',
+            spaceDescription: spaceData.description || '',
             spaceType: spaceData.type || 'general',
             memberCount: spaceData.memberCount || 0,
-            role: membership.role || 'member',
-            status: membership.status || 'active',
-            joinedAt: membership.joinedAt,
-            lastActivity: membership.lastActivity,
+            role: (membership.role || 'member') as 'member' | 'moderator' | 'admin' | 'builder',
+            status: (membership.status || 'active') as 'active' | 'inactive' | 'pending',
+            joinedAt: membership.joinedAt || new Date().toISOString(),
+            lastActivity: membership.lastActivity || new Date().toISOString(),
             activityLevel,
             recentActivity,
             notifications,
             quickStats
           };
         } catch (error) {
-          logger.error('Error fetching space data for', { spaceId: membership.spaceId, error: error, endpoint: '/api/profile/spaces' });
+          logger.error('Error fetching space data for', { spaceId: membership.id, error: error, endpoint: '/api/profile/spaces' });
           return null;
         }
       })
     );
 
-    // Filter out null results
-    const validSpaceMemberships = spaceMemberships.filter(Boolean) as ProfileSpaceMembership[];
+    // Filter out null results - ensure type safety
+    const validSpaceMemberships = spaceMemberships.filter((membership): membership is ProfileSpaceMembership => membership !== null);
 
     // Generate activity summary
     const activitySummary = includeActivity ? 
@@ -184,15 +201,12 @@ async function getSpaceActivityForUser(userId: string, spaceId: string, timeRang
     const endDateStr = endDate.toISOString().split('T')[0];
 
     // Get activity events for this space
-    const activityQuery = dbAdmin.collection(
-      dbAdmin.collection('activityEvents'),
-      where('userId', '==', userId),
-      where('spaceId', '==', spaceId),
-      where('date', '>=', startDateStr),
-      where('date', '<=', endDateStr)
-    );
-
-    const activitySnapshot = await getDocs(activityQuery);
+    const activitySnapshot = await dbAdmin.collection('activityEvents')
+      .where('userId', '==', userId)
+      .where('spaceId', '==', spaceId)
+      .where('date', '>=', startDateStr)
+      .where('date', '<=', endDateStr)
+      .get();
     const activities = activitySnapshot.docs.map(doc => doc.data());
 
     // Aggregate activity data
@@ -243,32 +257,26 @@ async function getSpaceNotifications(userId: string, spaceId: string) {
 async function getSpaceQuickStats(userId: string, spaceId: string) {
   try {
     // Get user's posts in this space
-    const postsQuery = dbAdmin.collection(
-      dbAdmin.collection('posts'),
-      where('authorId', '==', userId),
-      where('spaceId', '==', spaceId)
-    );
-    const postsSnapshot = await getDocs(postsQuery);
+    const postsSnapshot = await dbAdmin.collection('posts')
+      .where('authorId', '==', userId)
+      .where('spaceId', '==', spaceId)
+      .get();
     const myPosts = postsSnapshot.docs.length;
 
     // Get user's tools deployed in this space
-    const toolsQuery = dbAdmin.collection(
-      dbAdmin.collection('deployedTools'),
-      where('creatorId', '==', userId),
-      where('spaceId', '==', spaceId)
-    );
-    const toolsSnapshot = await getDocs(toolsQuery);
+    const toolsSnapshot = await dbAdmin.collection('deployedTools')
+      .where('creatorId', '==', userId)
+      .where('spaceId', '==', spaceId)
+      .get();
     const myTools = toolsSnapshot.docs.length;
 
     // Get user's interactions in this space (simplified)
-    const interactionsQuery = dbAdmin.collection(
-      dbAdmin.collection('activityEvents'),
-      where('userId', '==', userId),
-      where('spaceId', '==', spaceId),
-      where('type', '==', 'social_interaction'),
-      limit(100) // Limit for performance
-    );
-    const interactionsSnapshot = await getDocs(interactionsQuery);
+    const interactionsSnapshot = await dbAdmin.collection('activityEvents')
+      .where('userId', '==', userId)
+      .where('spaceId', '==', spaceId)
+      .where('type', '==', 'social_interaction')
+      .limit(100) // Limit for performance
+      .get();
     const myInteractions = interactionsSnapshot.docs.length;
 
     return {

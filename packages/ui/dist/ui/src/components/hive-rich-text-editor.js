@@ -3,7 +3,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cva } from 'class-variance-authority';
-import { cn } from '../lib/utils.js';
+import { cn } from '../lib/utils';
 import { Bold, Italic, Underline, Strikethrough, Code, Link, Image, List, ListOrdered, Quote, Heading1, Heading2, Heading3, Eye, Maximize, Minimize, Save, Users, AtSign, Hash, Upload, Check, AlertCircle } from 'lucide-react';
 // HIVE Rich Text Editor System - Campus-focused markdown editor
 // Enables students to create rich content with campus integrations

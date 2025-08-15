@@ -2,7 +2,7 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { cn } from '../lib/utils.js';
+import { cn } from '../lib/utils';
 import { Zap, Users, Calendar, MessageSquare, Search, Settings, User, Code, Heart, Share2, X } from 'lucide-react';
 // Default quick actions
 const defaultQuickActions = [

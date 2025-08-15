@@ -1,9 +1,9 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select.js';
-import { Label } from '../ui/label.js';
-import { Checkbox } from '../ui/checkbox.js';
-import { RadioGroup, RadioGroupItem } from '../ui/radio-group.js';
-import { useStandardElementStyles, useStandardElementBehavior } from '../../hooks/use-standard-element-styles.js';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import { Label } from '../ui/label';
+import { Checkbox } from '../ui/checkbox';
+import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
+import { useStandardElementStyles, useStandardElementBehavior } from '../../hooks/use-standard-element-styles';
 export const ChoiceSelectRenderer = ({ element, config, value, onChange, readOnly = false, runtimeContext }) => {
     // Use standard style system (flexible input, consistent output)
     const { classes, styles } = useStandardElementStyles(config.style);

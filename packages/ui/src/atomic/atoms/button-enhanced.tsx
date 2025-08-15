@@ -14,12 +14,14 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        // Primary brand button
+        // Primary brand button - GOLD OUTLINE ONLY (never fill)
         primary: [
-          "bg-[var(--hive-brand-secondary)]",
-          "text-[var(--hive-background-primary)]", 
-          "hover:bg-[color-mix(in_srgb,var(--hive-brand-secondary)_90%,transparent)]",
-          "active:bg-[color-mix(in_srgb,var(--hive-brand-secondary)_80%,transparent)]",
+          "border-2 border-[var(--hive-brand-secondary)]",
+          "bg-transparent",
+          "text-[var(--hive-brand-secondary)]", 
+          "hover:bg-[color-mix(in_srgb,var(--hive-brand-secondary)_10%,transparent)]",
+          "hover:border-[var(--hive-brand-secondary)]",
+          "active:bg-[color-mix(in_srgb,var(--hive-brand-secondary)_20%,transparent)]",
           "shadow-sm hover:shadow-md",
         ],
         
@@ -84,12 +86,14 @@ const buttonVariants = cva(
           "hover:text-[color-mix(in_srgb,var(--hive-brand-secondary)_80%,transparent)]",
         ],
         
-        // Accent button
+        // Accent button - GOLD OUTLINE VARIATION
         accent: [
-          "bg-[var(--hive-accent-primary)]",
-          "text-[var(--hive-text-inverse)]",
-          "hover:bg-[color-mix(in_srgb,var(--hive-accent-primary)_90%,transparent)]",
-          "active:bg-[color-mix(in_srgb,var(--hive-accent-primary)_80%,transparent)]",
+          "border-2 border-[var(--hive-brand-secondary)]",
+          "bg-[color-mix(in_srgb,var(--hive-brand-secondary)_5%,transparent)]",
+          "text-[var(--hive-brand-secondary)]",
+          "hover:bg-[color-mix(in_srgb,var(--hive-brand-secondary)_15%,transparent)]",
+          "hover:border-[var(--hive-brand-secondary)]",
+          "active:bg-[color-mix(in_srgb,var(--hive-brand-secondary)_25%,transparent)]",
           "shadow-sm hover:shadow-md",
         ],
       },

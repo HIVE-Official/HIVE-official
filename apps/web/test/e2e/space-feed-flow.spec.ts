@@ -7,7 +7,7 @@ test.describe('Space Feed Flow', () => {
   
   test.beforeEach(async ({ page }) => {
     // Setup test user and space
-    testUser = await setupTestUser()
+    testUser = await setupTestUser(page)
     
     // Create a test space
     testSpace = {
@@ -18,15 +18,6 @@ test.describe('Space Feed Flow', () => {
       category: 'academic',
     }
     
-    // Navigate to login and authenticate
-    await page.goto('/auth/login')
-    await page.fill('[data-testid="email-input"]', testUser.email)
-    await page.click('[data-testid="send-magic-link"]')
-    
-    // Mock magic link verification
-    await page.goto(`/auth/verify?token=test-token&email=${encodeURIComponent(testUser.email)}`)
-    await expect(page).toHaveURL('/welcome')
-    
     // Complete onboarding if needed
     if (await page.locator('[data-testid="onboarding-step"]').isVisible()) {
       await page.fill('[data-testid="full-name"]', testUser.fullName)
@@ -36,8 +27,8 @@ test.describe('Space Feed Flow', () => {
     }
   })
   
-  test.afterEach(async () => {
-    await cleanupTestData(testUser.id, testSpace.id)
+  test.afterEach(async ({ page }) => {
+    await cleanupTestData(page)
   })
   
   test('should complete full space feed flow', async ({ page }) => {
@@ -146,7 +137,7 @@ test.describe('Space Feed Flow', () => {
     await expect(page.locator('[data-testid="mention-option"]').first()).toBeVisible()
     
     // Select first mention
-    await page.click('[data-testid="mention-option"]').first()
+    await page.locator('[data-testid="mention-option"]').first().click()
     
     // Verify mention was inserted
     await expect(page.locator('[data-testid="post-content-input"]')).toHaveValue(/Hey @\w+ /)

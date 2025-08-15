@@ -60,7 +60,17 @@ const DEV_TEST_USERS = [
  * Check if a token is a development bypass token
  */
 export function isDevBypassToken(token: string): boolean {
-  return DEV_BYPASS_TOKENS.includes(token as any);
+  // Check hardcoded dev tokens
+  if (DEV_BYPASS_TOKENS.includes(token as any)) {
+    return true;
+  }
+  
+  // Check debug session tokens (dev_session_userId_timestamp_random)
+  if (token.startsWith('dev_session_')) {
+    return true;
+  }
+  
+  return false;
 }
 
 /**
@@ -71,10 +81,46 @@ export function isTestUserId(userId: string): boolean {
 }
 
 /**
+ * Extract user ID from debug session token
+ * Debug tokens format: dev_session_userId_timestamp_random
+ */
+function extractUserIdFromDebugToken(token: string): string | null {
+  if (!token.startsWith('dev_session_')) {
+    return null;
+  }
+
+  try {
+    // Parse token: dev_session_userId_timestamp_random
+    const parts = token.split('_');
+    if (parts.length < 3) {
+      return 'debug-user'; // Fallback
+    }
+
+    // Extract userId (everything between dev_session_ and the last two parts)
+    let userId: string;
+    if (parts.length >= 4) {
+      userId = parts.slice(2, -2).join('_');
+      // If userId is empty after slicing, use all parts after dev_session_
+      if (!userId) {
+        userId = parts.slice(2).join('_');
+      }
+    } else {
+      // For shorter tokens, take everything after dev_session_
+      userId = parts.slice(2).join('_');
+    }
+    
+    return userId || 'debug-user';
+  } catch (error) {
+    console.error('Failed to extract user ID from debug token:', error);
+    return 'debug-user';
+  }
+}
+
+/**
  * Get security configuration for current environment
  */
 export function getSecurityConfig() {
-  return SECURITY_CONFIG[currentEnvironment];
+  return SECURITY_CONFIG[currentEnvironment as keyof typeof SECURITY_CONFIG];
 }
 
 /**
@@ -104,7 +150,7 @@ export async function validateDevBypass(
 
   // In development, allow dev tokens
   if (config.allowTestTokens && isDevelopment) {
-    console.log(`🔓 Dev bypass allowed: ${token} in ${currentEnvironment}`);
+    // Development bypass token validated
     return { allowed: true, reason: 'Development environment' };
   }
 
@@ -293,8 +339,19 @@ export async function validateAuthToken(
     };
   }
 
-  // If it's a dev token and bypass is allowed, return test user
+  // If it's a dev token and bypass is allowed, extract user ID
   if (isDevBypassToken(token) && bypassValidation.allowed) {
+    // Handle debug session tokens
+    if (token.startsWith('dev_session_')) {
+      const userId = extractUserIdFromDebugToken(token);
+      return {
+        valid: true,
+        userId: userId || 'debug-user',
+        reason: 'Debug session token'
+      };
+    }
+    
+    // Handle legacy dev tokens
     return {
       valid: true,
       userId: 'test-user',
@@ -377,6 +434,18 @@ export async function blockDevPatternsInProduction(
   if (authHeader) {
     const token = authHeader.replace('Bearer ', '');
     if (isDevBypassToken(token)) {
+      // Log the security incident
+      await logSecurityEvent('production_dev_token_blocked', {
+        ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip'),
+        userAgent: request.headers.get('user-agent'),
+        path: new URL(request.url).pathname,
+        tags: {
+          tokenType: token.startsWith('dev_session_') ? 'debug_session' : 'dev_bypass',
+          environment: currentEnvironment,
+          alertLevel: 'critical'
+        }
+      });
+      
       return {
         blocked: true,
         reason: 'Development token detected in production environment'

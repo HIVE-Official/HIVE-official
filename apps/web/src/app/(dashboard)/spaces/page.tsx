@@ -6,12 +6,12 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { authenticatedFetch } from '../../../lib/auth-utils';
 import { Button, Card } from "@hive/ui";
 import { PageContainer } from "@/components/temp-stubs";
-import { Heart, Users, Settings, Star, Clock, Activity, Plus, Crown, Search, Filter as _Filter, Grid, List, TrendingUp, ArrowUpDown, Compass, AlertCircle } from "lucide-react";
+import { Heart, Users, Settings as _Settings, Star, Clock, Activity, Plus, Crown, Search, Grid, List, TrendingUp, ArrowUpDown, Compass, AlertCircle } from "lucide-react";
 import { type Space, type SpaceType } from "@hive/core";
 import { useDebounce } from "@hive/hooks";
 import { cn } from "@hive/ui";
 import { UnifiedSpaceCard } from "./components/unified-space-card";
-import { CreateSpaceModal } from "../../../components/spaces/create-space-modal";
+import { CreateSpaceModal as _CreateSpaceModal } from "../../../components/spaces/create-space-modal";
 import { SpaceLoadingSkeleton } from "./components/space-loading-skeleton";
 import { SmartSpaceDiscovery } from "../../../components/spaces/smart-space-discovery";
 import { ErrorBoundary } from '../../../components/error-boundary';
@@ -73,7 +73,7 @@ export default function UnifiedSpacesPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const queryClient = useQueryClient();
-  const { user } = useSession();
+  const { user: _user } = useSession();
   
   // Tab management - My Spaces vs Browse
   const [activeView, setActiveView] = useState<"my" | "browse">("my");
@@ -179,12 +179,12 @@ export default function UnifiedSpacesPage() {
 
   const currentMySpaces = mySpacesData?.[mySpacesTab] || [];
 
-  const [createError, setCreateError] = useState<string | null>(null);
-  const [isCreatingSpace, setIsCreatingSpace] = useState(false);
+  const [_createError, _setCreateError] = useState<string | null>(null);
+  const [_isCreatingSpace, _setIsCreatingSpace] = useState(false);
 
-  const handleSpaceCreated = async (spaceData: any) => {
-    setIsCreatingSpace(true);
-    setCreateError(null);
+  const _handleSpaceCreated = async (spaceData: any) => {
+    _setIsCreatingSpace(true);
+    _setCreateError(null);
     
     try {
       const response = await authenticatedFetch('/api/spaces', {
@@ -229,20 +229,20 @@ export default function UnifiedSpacesPage() {
       }
     } catch (error) {
       console.error('Failed to create space:', error);
-      setCreateError(error instanceof Error ? error.message : 'Failed to create space. Please try again.');
+      _setCreateError(error instanceof Error ? error.message : 'Failed to create space. Please try again.');
     } finally {
-      setIsCreatingSpace(false);
+      _setIsCreatingSpace(false);
     }
   };
 
   const [joiningSpaces, setJoiningSpaces] = useState<Set<string>>(new Set());
-  const [joinErrors, setJoinErrors] = useState<Record<string, string>>({});
+  const [_joinErrors, _setJoinErrors] = useState<Record<string, string>>({});
 
   const handleJoinSpace = async (spaceId: string) => {
     if (joiningSpaces.has(spaceId)) return; // Prevent double-joining
     
     setJoiningSpaces(prev => new Set(prev).add(spaceId));
-    setJoinErrors(prev => {
+    _setJoinErrors(prev => {
       const { [spaceId]: _, ...rest } = prev;
       return rest;
     });
@@ -270,7 +270,7 @@ export default function UnifiedSpacesPage() {
       
     } catch (error) {
       console.error('Failed to join space:', error);
-      setJoinErrors(prev => ({
+      _setJoinErrors(prev => ({
         ...prev,
         [spaceId]: error instanceof Error ? error.message : 'Failed to join space'
       }));
@@ -320,11 +320,13 @@ export default function UnifiedSpacesPage() {
               </Button>
             )}
             <Button 
-              className="bg-[#FFD700] text-[#0A0A0A] hover:bg-[#FFE255]"
+              className="bg-[#FFD700]/30 text-[#FFD700] border border-[#FFD700]/50 hover:bg-[#FFD700]/40 transition-colors"
               onClick={() => setShowCreateModal(true)}
+              title="Space Creation coming in v1"
             >
               <Plus className="h-4 w-4 mr-2" />
               Create Space
+              <span className="ml-2 text-xs bg-[#FFD700]/20 text-[#FFD700] px-2 py-1 rounded-full">v1</span>
             </Button>
           </div>
         }
@@ -632,7 +634,13 @@ export default function UnifiedSpacesPage() {
 
             {/* Empty States */}
             {activeView === "my" && currentMySpaces.length === 0 && (
-              <MySpacesEmptyState activeTab={mySpacesTab} />
+              <MySpacesEmptyState 
+                activeTab={mySpacesTab} 
+                onSwitchToBrowse={() => {
+                  setActiveView("browse");
+                  router.push("/spaces?view=browse");
+                }} 
+              />
             )}
 
             {activeView === "browse" && filteredBrowseSpaces.length === 0 && (
@@ -641,24 +649,45 @@ export default function UnifiedSpacesPage() {
           </>
         )}
 
-        {/* Create Space Modal */}
-        <CreateSpaceModal
-          isOpen={showCreateModal}
-          onClose={() => {
-            setShowCreateModal(false);
-            setCreateError(null);
-          }}
-          onCreateSpace={handleSpaceCreated}
-          isLoading={isCreatingSpace}
-          error={createError}
-        />
+        {/* Create Space Modal - Coming in v1 */}
+        {showCreateModal && (
+          <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="bg-[#0A0A0A] border border-white/[0.1] rounded-2xl w-full max-w-md p-8 text-center">
+              <div className="w-16 h-16 bg-[#FFD700]/20 rounded-xl flex items-center justify-center text-2xl mx-auto mb-4">
+                🚀
+              </div>
+              <h3 className="text-xl font-semibold text-white mb-2">Space Creation Coming Soon!</h3>
+              <p className="text-neutral-400 mb-6 leading-relaxed">
+                We&apos;re building an amazing space creation experience for v1. For now, join existing communities and help us shape what spaces should become!
+              </p>
+              <div className="flex gap-3 justify-center">
+                <Button 
+                  onClick={() => {
+                    setShowCreateModal(false);
+                    setActiveView("browse");
+                  }}
+                  className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne"
+                >
+                  Browse Spaces
+                </Button>
+                <Button 
+                  onClick={() => setShowCreateModal(false)}
+                  variant="outline"
+                  className="border-white/20 text-white hover:bg-white/5"
+                >
+                  Got it
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
       </PageContainer>
     </ErrorBoundary>
   );
 }
 
 // Empty State Components
-function MySpacesEmptyState({ activeTab }: { activeTab: string }) {
+function MySpacesEmptyState({ activeTab, onSwitchToBrowse }: { activeTab: string; onSwitchToBrowse: () => void }) {
   const getEmptyContent = () => {
     switch (activeTab) {
       case "joined":
@@ -679,7 +708,7 @@ function MySpacesEmptyState({ activeTab }: { activeTab: string }) {
         return {
           icon: Crown,
           title: "No spaces owned",
-          description: "Space creation is coming in v1. For now, browse and join existing communities.",
+          description: "Space creation is coming in v1! For now, browse and join existing communities to get started.",
           action: "Browse Spaces",
         };
       case "recent":
@@ -707,10 +736,7 @@ function MySpacesEmptyState({ activeTab }: { activeTab: string }) {
       <h3 className="text-xl font-semibold text-white mb-2">{title}</h3>
       <p className="text-neutral-400 mb-6">{description}</p>
       <Button 
-        onClick={() => {
-          // Switch to browse tab
-          window.location.href = "/spaces?view=browse";
-        }}
+        onClick={onSwitchToBrowse}
         className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne"
       >
         {action}
@@ -721,13 +747,12 @@ function MySpacesEmptyState({ activeTab }: { activeTab: string }) {
 
 function BrowseEmptyState({ 
   searchTerm, 
-  filter, 
   setSearchTerm, 
   setFilter 
 }: { 
   searchTerm: string; 
   filter: SpaceType | "all"; 
-  setSearchTerm: (term: string) => void; 
+  setSearchTerm: (_term: string) => void; 
   setFilter: (filter: SpaceType | "all") => void; 
 }) {
   return (
