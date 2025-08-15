@@ -74,6 +74,22 @@ export const FieldValue = {
   arrayRemove: (...items: any[]) => items,
 };
 
+// Mock Theme Provider and related hooks for next-themes
+export const useTheme = () => ({
+  theme: 'dark',
+  setTheme: (theme: string) => console.log('[MOCK] setTheme:', theme),
+  resolvedTheme: 'dark',
+  themes: ['light', 'dark', 'system'],
+  systemTheme: 'dark',
+});
+
+export const ThemeProvider: React.FC<{ children: React.ReactNode; [key: string]: any }> = ({ 
+  children, 
+  ...props 
+}) => {
+  return <>{children}</>;
+};
+
 // Default export with all mocks
 export default {
   mockFirebaseConfig,
@@ -81,4 +97,6 @@ export default {
   useAuth,
   getFirestore,
   FieldValue,
+  useTheme,
+  ThemeProvider,
 };

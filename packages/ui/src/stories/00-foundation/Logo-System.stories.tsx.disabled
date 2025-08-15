@@ -1,0 +1,400 @@
+/**
+ * HIVE Logo System
+ * Brand identity components and usage guidelines
+ */
+
+import type { Meta, StoryObj } from '@storybook/react';
+import { HiveLogo, HiveGlyphOnly, HiveLogoInteractive } from '../components/hive-logo';
+import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
+import '../hive-tokens.css';
+
+const meta = {
+  title: '01-Brand/Logo System',
+  component: HiveLogo,
+  parameters: {
+    layout: 'fullscreen',
+    docs: {
+      description: {
+        component: `
+# HIVE Logo System
+
+The complete HIVE brand identity system with flexible logo components for all contexts.
+
+## Usage Guidelines
+- **Primary Logo**: Use the full logo with wordmark in most contexts
+- **Glyph Only**: Use the glyph alone when space is limited or when the wordmark is nearby
+- **Interactive**: Use for clickable logo elements with hover effects
+- **Variants**: Choose appropriate color variants for different backgrounds
+
+## Brand Consistency
+- Always maintain proper spacing around the logo
+- Never distort or modify the logo proportions
+- Use approved color variants only
+        `
+      }
+    }
+  }
+} satisfies Meta<typeof HiveLogo>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+const LogoShowcase = () => {
+  return (
+    <div className="min-h-screen p-8" style={{ 
+      background: 'linear-gradient(135deg, var(--hive-background-primary) 0%, var(--hive-color-void) 50%, var(--hive-background-secondary) 100%)',
+      color: 'var(--hive-text-primary)'
+    }}>
+      <div className="max-w-6xl mx-auto">
+        
+        {/* Header */}
+        <div className="mb-12 text-center">
+          <div className="flex justify-center mb-6">
+            <HiveLogo size="2xl" variant="gold" />
+          </div>
+          <h1 className="text-4xl font-bold mb-4" style={{ color: 'var(--hive-brand-primary)' }}>
+            HIVE Logo System
+          </h1>
+          <p className="text-xl" style={{ color: 'var(--hive-text-secondary)' }}>
+            Brand identity components for consistent visual identity across the platform
+          </p>
+        </div>
+
+        <div className="space-y-12">
+          
+          {/* Logo Variants */}
+          <Card className="hive-glass border hive-interactive cursor-pointer"
+                style={{
+                  background: 'var(--hive-overlay-glass)',
+                  borderColor: 'var(--hive-border-subtle)',
+                  transition: 'all var(--hive-duration-smooth) var(--hive-easing-liquid)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--hive-border-gold)';
+                  e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--hive-border-subtle)';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}>
+            <CardHeader>
+              <CardTitle style={{ color: 'var(--hive-brand-primary)' }}>
+                Logo Variants
+              </CardTitle>
+              <p style={{ color: 'var(--hive-text-muted)' }}>Different color treatments for various contexts</p>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                
+                <div className="text-center space-y-4">
+                  <div className="p-6 rounded-lg" style={{ backgroundColor: 'var(--hive-background-secondary)' }}>
+                    <HiveLogo size="lg" variant="primary" />
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-white mb-1">Primary</h4>
+                    <p className="text-sm text-gray-400">Default variant for dark backgrounds</p>
+                  </div>
+                </div>
+
+                <div className="text-center space-y-4">
+                  <div className="p-6 rounded-lg" style={{ backgroundColor: 'var(--hive-background-secondary)' }}>
+                    <HiveLogo size="lg" variant="gold" />
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-white mb-1">Gold</h4>
+                    <p className="text-sm text-gray-400">Premium accent variant</p>
+                  </div>
+                </div>
+
+                <div className="text-center space-y-4">
+                  <div className="p-6 rounded-lg bg-white">
+                    <HiveLogo size="lg" variant="inverted" />
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-white mb-1">Inverted</h4>
+                    <p className="text-sm text-gray-400">For light backgrounds</p>
+                  </div>
+                </div>
+
+                <div className="text-center space-y-4">
+                  <div className="p-6 rounded-lg bg-gray-600">
+                    <HiveLogo size="lg" variant="monochrome" className="text-white" />
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-white mb-1">Monochrome</h4>
+                    <p className="text-sm text-gray-400">Inherits text color</p>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Logo Sizes */}
+          <Card className="hive-glass border hive-interactive cursor-pointer"
+                style={{
+                  background: 'var(--hive-overlay-glass)',
+                  borderColor: 'var(--hive-border-subtle)',
+                  transition: 'all var(--hive-duration-smooth) var(--hive-easing-liquid)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--hive-border-gold)';
+                  e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--hive-border-subtle)';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}>
+            <CardHeader>
+              <CardTitle style={{ color: 'var(--hive-brand-primary)' }}>
+                Logo Sizes
+              </CardTitle>
+              <p style={{ color: 'var(--hive-text-muted)' }}>Scalable sizing system for all contexts</p>
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-wrap items-end gap-8">
+                <div className="text-center space-y-2">
+                  <HiveLogo size="xs" variant="primary" />
+                  <p className="text-xs text-gray-400">xs</p>
+                </div>
+                <div className="text-center space-y-2">
+                  <HiveLogo size="sm" variant="primary" />
+                  <p className="text-xs text-gray-400">sm</p>
+                </div>
+                <div className="text-center space-y-2">
+                  <HiveLogo size="md" variant="primary" />
+                  <p className="text-xs text-gray-400">md</p>
+                </div>
+                <div className="text-center space-y-2">
+                  <HiveLogo size="lg" variant="primary" />
+                  <p className="text-xs text-gray-400">lg</p>
+                </div>
+                <div className="text-center space-y-2">
+                  <HiveLogo size="xl" variant="primary" />
+                  <p className="text-xs text-gray-400">xl</p>
+                </div>
+                <div className="text-center space-y-2">
+                  <HiveLogo size="2xl" variant="primary" />
+                  <p className="text-xs text-gray-400">2xl</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Logo Layouts */}
+          <Card className="hive-glass border hive-interactive cursor-pointer"
+                style={{
+                  background: 'var(--hive-overlay-glass)',
+                  borderColor: 'var(--hive-border-subtle)',
+                  transition: 'all var(--hive-duration-smooth) var(--hive-easing-liquid)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--hive-border-gold)';
+                  e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--hive-border-subtle)';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}>
+            <CardHeader>
+              <CardTitle style={{ color: 'var(--hive-brand-primary)' }}>
+                Logo Layouts & Options
+              </CardTitle>
+              <p style={{ color: 'var(--hive-text-muted)' }}>Different configurations for various use cases</p>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                
+                <div className="text-center space-y-4">
+                  <div className="p-6 rounded-lg" style={{ backgroundColor: 'var(--hive-background-secondary)' }}>
+                    <HiveLogo size="lg" variant="gold" layout="horizontal" />
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-white mb-1">Horizontal Layout</h4>
+                    <p className="text-sm text-gray-400">Default layout with glyph and wordmark side by side</p>
+                  </div>
+                </div>
+
+                <div className="text-center space-y-4">
+                  <div className="p-6 rounded-lg" style={{ backgroundColor: 'var(--hive-background-secondary)' }}>
+                    <HiveLogo size="lg" variant="gold" layout="vertical" />
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-white mb-1">Vertical Layout</h4>
+                    <p className="text-sm text-gray-400">Stacked layout for compact spaces</p>
+                  </div>
+                </div>
+
+                <div className="text-center space-y-4">
+                  <div className="p-6 rounded-lg" style={{ backgroundColor: 'var(--hive-background-secondary)' }}>
+                    <HiveGlyphOnly size="lg" variant="gold" />
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-white mb-1">Glyph Only</h4>
+                    <p className="text-sm text-gray-400">Icon-only variant for minimal spaces</p>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Interactive Logo */}
+          <Card className="hive-glass border hive-interactive cursor-pointer"
+                style={{
+                  background: 'var(--hive-overlay-glass)',
+                  borderColor: 'var(--hive-border-subtle)',
+                  transition: 'all var(--hive-duration-smooth) var(--hive-easing-liquid)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--hive-border-gold)';
+                  e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--hive-border-subtle)';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}>
+            <CardHeader>
+              <CardTitle style={{ color: 'var(--hive-brand-primary)' }}>
+                Interactive Logo
+              </CardTitle>
+              <p style={{ color: 'var(--hive-text-muted)' }}>Clickable logo with hover effects for navigation</p>
+            </CardHeader>
+            <CardContent>
+              <div className="flex justify-center items-center gap-8">
+                <div className="text-center space-y-4">
+                  <HiveLogoInteractive 
+                    size="xl" 
+                    variant="gold" 
+                    onClick={() => alert('Logo clicked!')}
+                  />
+                  <p className="text-sm text-gray-400">Click the logo to try the interaction</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Usage Examples */}
+          <Card className="hive-glass border hive-interactive cursor-pointer"
+                style={{
+                  background: 'var(--hive-overlay-glass)',
+                  borderColor: 'var(--hive-border-subtle)',
+                  transition: 'all var(--hive-duration-smooth) var(--hive-easing-liquid)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--hive-border-gold)';
+                  e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--hive-border-subtle)';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}>
+            <CardHeader>
+              <CardTitle style={{ color: 'var(--hive-brand-primary)' }}>
+                Usage Examples
+              </CardTitle>
+              <p style={{ color: 'var(--hive-text-muted)' }}>Common implementation patterns</p>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-6">
+                
+                {/* Header Example */}
+                <div>
+                  <h4 className="text-white font-medium mb-3">Navigation Header</h4>
+                  <div className="p-4 rounded-lg border" style={{ 
+                    backgroundColor: 'var(--hive-background-secondary)',
+                    borderColor: 'var(--hive-border-subtle)'
+                  }}>
+                    <div className="flex items-center justify-between">
+                      <HiveLogoInteractive size="md" variant="gold" />
+                      <div className="flex space-x-4">
+                        <span className="text-gray-300">Navigation</span>
+                        <span className="text-gray-300">Items</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Mobile Navigation */}
+                <div>
+                  <h4 className="text-white font-medium mb-3">Mobile Navigation</h4>
+                  <div className="p-4 rounded-lg border max-w-xs" style={{ 
+                    backgroundColor: 'var(--hive-background-secondary)',
+                    borderColor: 'var(--hive-border-subtle)'
+                  }}>
+                    <div className="flex items-center justify-between">
+                      <HiveGlyphOnly size="sm" variant="gold" />
+                      <div className="text-xs text-gray-300">Menu</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Footer Example */}
+                <div>
+                  <h4 className="text-white font-medium mb-3">Footer Brand</h4>
+                  <div className="p-4 rounded-lg border" style={{ 
+                    backgroundColor: 'var(--hive-background-secondary)',
+                    borderColor: 'var(--hive-border-subtle)'
+                  }}>
+                    <div className="flex flex-col items-center text-center space-y-2">
+                      <HiveLogo size="sm" variant="primary" />
+                      <p className="text-xs text-gray-400">© 2024 HIVE. All rights reserved.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Brand Guidelines */}
+          <Card className="hive-glass border hive-interactive cursor-pointer"
+                style={{
+                  background: 'var(--hive-overlay-glass)',
+                  borderColor: 'var(--hive-border-subtle)',
+                  transition: 'all var(--hive-duration-smooth) var(--hive-easing-liquid)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--hive-border-gold)';
+                  e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--hive-border-subtle)';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}>
+            <CardHeader>
+              <CardTitle style={{ color: 'var(--hive-brand-primary)' }}>Brand Guidelines</CardTitle>
+              <p style={{ color: 'var(--hive-text-muted)' }}>Essential rules for maintaining brand consistency</p>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h4 className="text-white font-medium mb-2">Do's</h4>
+                  <ul className="space-y-1 text-sm text-gray-400">
+                    <li>• Use approved color variants</li>
+                    <li>• Maintain proper spacing and proportions</li>
+                    <li>• Choose appropriate size for context</li>
+                    <li>• Use interactive variant for clickable elements</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="text-white font-medium mb-2">Don'ts</h4>
+                  <ul className="space-y-1 text-sm text-gray-400">
+                    <li>• Don't distort or stretch the logo</li>
+                    <li>• Don't use unofficial colors</li>
+                    <li>• Don't place on busy backgrounds</li>
+                    <li>• Don't modify the logo design</li>
+                  </ul>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export const LogoSystem: Story = {
+  render: () => <LogoShowcase />,
+  parameters: {
+    layout: 'fullscreen'
+  }
+};

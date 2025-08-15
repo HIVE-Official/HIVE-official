@@ -4,33 +4,72 @@ import path from 'path';
 
 const config: StorybookConfig = {
   stories: [
-    // ORGANIZED ATOMIC DESIGN SYSTEM - Clean structure
-    '../src/stories/00-foundation/**/*.stories.@(js|jsx|ts|tsx)',
-    '../src/stories/01-atoms/**/*.stories.@(js|jsx|ts|tsx)',
-    '../src/stories/02-molecules/**/*.stories.@(js|jsx|ts|tsx)', // Re-enabled with comprehensive new stories
-    '../src/stories/03-organisms/**/*.stories.@(js|jsx|ts|tsx)',
-    '../src/stories/04-templates/**/*.stories.@(js|jsx|ts|tsx)',
-    '../src/stories/05-shell/**/*.stories.@(js|jsx|ts|tsx)', // HIVE Shell System
-    '../src/stories/05-pages/**/*.stories.@(js|jsx|ts|tsx)',
+    // 🏗️ FOUNDATION FIRST - Core design system and tokens
+    '../src/stories/00-Foundation/**/*.stories.@(js|jsx|ts|tsx)',
+    '../src/atomic/foundations/**/*.stories.@(js|jsx|ts|tsx)',
     
-    // SYSTEM-BASED ORGANIZATION
-    '../src/stories/Profile/**/*.stories.@(js|jsx|ts|tsx)', // Profile System
-    '../src/stories/Search/**/*.stories.@(js|jsx|ts|tsx)', // Search System
-    '../src/stories/Admin/**/*.stories.@(js|jsx|ts|tsx)', // Admin System
-    '../src/stories/Settings/**/*.stories.@(js|jsx|ts|tsx)', // Settings System
-    '../src/stories/01-Atomic-Components/**/*.stories.@(js|jsx|ts|tsx)', // Atomic Components
-    '../src/stories/02-Molecular-Components/**/*.stories.@(js|jsx|ts|tsx)', // Molecular Components
-    '../src/stories/03-Navigation-System/**/*.stories.@(js|jsx|ts|tsx)', // Navigation System
-    '../src/stories/04-Spaces-System/**/*.stories.@(js|jsx|ts|tsx)', // Spaces System
-    '../src/stories/05-Profile-System/**/*.stories.@(js|jsx|ts|tsx)', // Profile System (Legacy)
-    '../src/stories/06-feed-rituals/**/*.stories.@(js|jsx|ts|tsx)', // Feed & Rituals
-    '../src/stories/07-Tools-Creation/**/*.stories.@(js|jsx|ts|tsx)', // Tools & Creation
-    '../src/stories/99-System-Integration/**/*.stories.@(js|jsx|ts|tsx)', // System Integration
+    // 🧱 ATOMIC BUILDING BLOCKS - Core UI components
+    '../src/stories/01-Atoms/**/*.stories.@(js|jsx|ts|tsx)',
+    '../src/atomic/atoms/**/*.stories.@(js|jsx|ts|tsx)',
     
-    // ATOMIC DESIGN SYSTEM - Co-located stories (NEW)
-    '../src/atomic/**/*.stories.@(js|jsx|ts|tsx)',
+    // 🔗 MOLECULES - Combined atomic elements
+    '../src/stories/02-Molecules/**/*.stories.@(js|jsx|ts|tsx)',
+    '../src/atomic/molecules/**/*.stories.@(js|jsx|ts|tsx)',
     
-    // Include all MDX docs
+    // 🏛️ ORGANISMS - Complex component systems
+    '../src/stories/03-Organisms/**/*.stories.@(js|jsx|ts|tsx)',
+    '../src/atomic/organisms/**/*.stories.@(js|jsx|ts|tsx)',
+    
+    // 📱 FEATURE SLICE: Authentication & Onboarding
+    '../src/stories/10-Auth-Onboarding/**/*.stories.@(js|jsx|ts|tsx)',
+    '../src/components/auth/**/*.stories.@(js|jsx|ts|tsx)',
+    '../src/components/onboarding/**/*.stories.@(js|jsx|ts|tsx)',
+    
+    // 🧭 FEATURE SLICE: Navigation & Layout
+    '../src/stories/11-Navigation-Layout/**/*.stories.@(js|jsx|ts|tsx)',
+    '../src/navigation/**/*.stories.@(js|jsx|ts|tsx)',
+    '../src/components/navigation/**/*.stories.@(js|jsx|ts|tsx)',
+    
+    // 👤 FEATURE SLICE: Profile System
+    '../src/stories/12-Profile-System/**/*.stories.@(js|jsx|ts|tsx)',
+    '../src/components/profile/**/*.stories.@(js|jsx|ts|tsx)',
+    
+    // 🏠 FEATURE SLICE: Spaces & Communities
+    '../src/stories/13-Spaces-Communities/**/*.stories.@(js|jsx|ts|tsx)',
+    '../src/components/spaces/**/*.stories.@(js|jsx|ts|tsx)',
+    
+    // 📰 FEATURE SLICE: Feed & Social
+    '../src/stories/14-Feed-Social/**/*.stories.@(js|jsx|ts|tsx)',
+    '../src/components/social/**/*.stories.@(js|jsx|ts|tsx)',
+    
+    // 🔧 FEATURE SLICE: Tools & Creation
+    '../src/stories/15-Tools-Creation/**/*.stories.@(js|jsx|ts|tsx)',
+    '../src/components/tools/**/*.stories.@(js|jsx|ts|tsx)',
+    '../src/components/creators/**/*.stories.@(js|jsx|ts|tsx)',
+    '../src/components/hivelab/**/*.stories.@(js|jsx|ts|tsx)',
+    
+    // ⚡ FEATURE SLICE: Rituals & Coordination
+    '../src/stories/16-Rituals-Coordination/**/*.stories.@(js|jsx|ts|tsx)',
+    '../src/components/rituals/**/*.stories.@(js|jsx|ts|tsx)',
+    
+    // 🎓 FEATURE SLICE: Campus Integration
+    '../src/stories/17-Campus-Integration/**/*.stories.@(js|jsx|ts|tsx)',
+    '../src/components/campus/**/*.stories.@(js|jsx|ts|tsx)',
+    '../src/components/mobile/**/*.stories.@(js|jsx|ts|tsx)',
+    
+    // 🔐 FEATURE SLICE: Admin & Moderation
+    '../src/stories/18-Admin-Moderation/**/*.stories.@(js|jsx|ts|tsx)',
+    '../src/components/admin/**/*.stories.@(js|jsx|ts|tsx)',
+    
+    // 🏗️ PLATFORM SYSTEMS - Cross-cutting concerns
+    '../src/stories/90-Platform-Systems/**/*.stories.@(js|jsx|ts|tsx)',
+    '../src/components/shell/**/*.stories.@(js|jsx|ts|tsx)',
+    '../src/components/dashboard/**/*.stories.@(js|jsx|ts|tsx)',
+    
+    // 🔬 DEVELOPMENT & QUALITY
+    '../src/stories/99-Development/**/*.stories.@(js|jsx|ts|tsx)',
+    
+    // Include all MDX documentation
     '../src/**/*.mdx'
   ],
   addons: [
@@ -95,6 +134,8 @@ const config: StorybookConfig = {
           // Mock Next.js navigation for Storybook
           'next/navigation': path.resolve(__dirname, 'next-mocks.tsx'),
           'next/router': path.resolve(__dirname, 'next-mocks.tsx'),
+          // Mock next-themes for Storybook
+          'next-themes': path.resolve(__dirname, 'mocks.tsx'),
           // Mock navigation context hook
           '../../hooks/use-navigation-context': path.resolve(__dirname, 'navigation-context-mock.tsx'),
           // Mock server-side modules for browser compatibility

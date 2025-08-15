@@ -1,0 +1,1152 @@
+/**
+ * HIVE Profile Navigation & State Management: Complete Demo
+ * Advanced navigation patterns and state management for profile system
+ */
+
+import type { Meta, StoryObj } from '@storybook/react';
+import React, { useState, useEffect, useReducer, useCallback, useContext, createContext } from 'react';
+import { motion, AnimatePresence } from '../components/framer-motion-proxy';
+import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
+import { Button } from '../components/ui/button';
+import { Badge } from '../components/ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '../components/ui/avatar';
+import { Input } from '../components/ui/input';
+import { Switch } from '../components/ui/switch';
+import { Progress } from '../components/ui/progress';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../components/ui/dialog';
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '../components/ui/breadcrumb';
+import { Popover, PopoverContent, PopoverTrigger } from '../components/ui/popover';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from '../components/ui/command';
+import '../hive-tokens.css';
+import { 
+  User, Users, Calendar, Settings, Shield, Home, ArrowLeft, ArrowRight, ChevronRight, 
+  Edit, Bell, Save, X, Check, AlertTriangle, RefreshCw, Search, Filter, MoreHorizontal,
+  Eye, EyeOff, Crown, Wrench, BookOpen, MessageSquare, Heart, Star, Trophy, Activity,
+  MapPin, Clock, Zap, Smartphone, Laptop, Tablet, Menu, ChevronDown, ChevronUp,
+  Layers, Grid, List, Navigation, Route, Workflow, GitBranch, History, Undo, Redo
+} from 'lucide-react';
+
+// Navigation State Management
+interface NavigationState {
+  currentPath: string[];
+  history: string[][];
+  breadcrumbs: Array<{ label: string; path: string[] }>;
+  backStack: string[][];
+  forwardStack: string[][];
+  contextualActions: Array<{ label: string; action: string; icon: React.ComponentType }>;
+  quickAccess: Array<{ label: string; path: string[]; icon: React.ComponentType }>;
+}
+
+interface ProfileNavigationContext {
+  navigation: NavigationState;
+  navigate: (path: string[], options?: { replace?: boolean; addToHistory?: boolean }) => void;
+  goBack: () => void;
+  goForward: () => void;
+  canGoBack: boolean;
+  canGoForward: boolean;
+  getCurrentSection: () => string;
+  updateContextualActions: (actions: NavigationState['contextualActions']) => void;
+}
+
+// Navigation Routes Configuration
+const ROUTES = {
+  'dashboard': {
+    label: 'Dashboard',
+    icon: Home,
+    component: 'ProfileDashboard',
+    breadcrumb: 'Profile',
+    actions: [
+      { label: 'Edit Profile', action: 'edit', icon: Edit },
+      { label: 'Settings', action: 'settings', icon: Settings }
+    ]
+  },
+  'edit': {
+    label: 'Edit Profile',
+    icon: Edit,
+    component: 'ProfileEdit',
+    breadcrumb: 'Edit Profile',
+    parent: 'dashboard',
+    actions: [
+      { label: 'Save Changes', action: 'save', icon: Save },
+      { label: 'Discard Changes', action: 'discard', icon: X }
+    ]
+  },
+  'edit.basic': {
+    label: 'Basic Information',
+    icon: User,
+    component: 'BasicInfoEdit',
+    breadcrumb: 'Basic Info',
+    parent: 'edit',
+    actions: []
+  },
+  'edit.academic': {
+    label: 'Academic Details',
+    icon: BookOpen,
+    component: 'AcademicEdit',
+    breadcrumb: 'Academic',
+    parent: 'edit',
+    actions: []
+  },
+  'privacy': {
+    label: 'Privacy Settings',
+    icon: Shield,
+    component: 'PrivacySettings',
+    breadcrumb: 'Privacy',
+    parent: 'dashboard',
+    actions: [
+      { label: 'Enable Ghost Mode', action: 'ghost-mode', icon: EyeOff }
+    ]
+  },
+  'spaces': {
+    label: 'My Spaces',
+    icon: Users,
+    component: 'SpacesOverview',
+    breadcrumb: 'Spaces',
+    actions: [
+      { label: 'Join Space', action: 'join-space', icon: Users },
+      { label: 'Create Space', action: 'create-space', icon: Users }
+    ]
+  },
+  'spaces.course': {
+    label: 'Course Spaces',
+    icon: BookOpen,
+    component: 'CourseSpaces',
+    breadcrumb: 'Courses',
+    parent: 'spaces',
+    actions: []
+  },
+  'tools': {
+    label: 'My Tools',
+    icon: Wrench,
+    component: 'ToolsOverview',
+    breadcrumb: 'Tools',
+    actions: [
+      { label: 'Create Tool', action: 'create-tool', icon: Wrench }
+    ]
+  },
+  'settings': {
+    label: 'Settings',
+    icon: Settings,
+    component: 'ProfileSettings',
+    breadcrumb: 'Settings',
+    actions: []
+  },
+  'settings.notifications': {
+    label: 'Notifications',
+    icon: Bell,
+    component: 'NotificationSettings',
+    breadcrumb: 'Notifications',
+    parent: 'settings',
+    actions: []
+  }
+};
+
+// Navigation Context
+const NavigationContext = createContext<ProfileNavigationContext | null>(null);
+
+// Navigation Hook
+function useNavigation() {
+  const context = useContext(NavigationContext);
+  if (!context) {
+    throw new Error('useNavigation must be used within NavigationProvider');
+  }
+  return context;
+}
+
+// Navigation Reducer
+function navigationReducer(state: NavigationState, action: any): NavigationState {
+  switch (action.type) {
+    case 'NAVIGATE':
+      const newPath = action.path;
+      const currentPathStr = state.currentPath.join('.');
+      const newPathStr = newPath.join('.');
+      
+      if (currentPathStr === newPathStr) return state;
+      
+      // Build breadcrumbs
+      const breadcrumbs = [];
+      let currentRoute = newPathStr;
+      
+      while (currentRoute) {
+        const route = ROUTES[currentRoute as keyof typeof ROUTES];
+        if (route) {
+          breadcrumbs.unshift({
+            label: route.breadcrumb,
+            path: currentRoute.split('.')
+          });
+          currentRoute = route.parent || '';
+        } else {
+          break;
+        }
+      }
+      
+      // Update history
+      const newHistory = action.options?.replace 
+        ? state.history
+        : [...state.history, state.currentPath];
+      
+      // Update back/forward stacks
+      const newBackStack = action.options?.replace
+        ? state.backStack
+        : [...state.backStack, state.currentPath];
+      
+      return {
+        ...state,
+        currentPath: newPath,
+        history: newHistory,
+        breadcrumbs,
+        backStack: newBackStack,
+        forwardStack: [], // Clear forward stack on new navigation
+        contextualActions: ROUTES[newPathStr as keyof typeof ROUTES]?.actions || []
+      };
+    
+    case 'GO_BACK':
+      if (state.backStack.length === 0) return state;
+      
+      const previousPath = state.backStack[state.backStack.length - 1];
+      const newBackStack = state.backStack.slice(0, -1);
+      const newForwardStack = [...state.forwardStack, state.currentPath];
+      
+      return {
+        ...state,
+        currentPath: previousPath,
+        backStack: newBackStack,
+        forwardStack: newForwardStack
+      };
+    
+    case 'GO_FORWARD':
+      if (state.forwardStack.length === 0) return state;
+      
+      const nextPath = state.forwardStack[state.forwardStack.length - 1];
+      const newForwardStack = state.forwardStack.slice(0, -1);
+      const newBackStack = [...state.backStack, state.currentPath];
+      
+      return {
+        ...state,
+        currentPath: nextPath,
+        backStack: newBackStack,
+        forwardStack: newForwardStack
+      };
+    
+    case 'UPDATE_ACTIONS':
+      return {
+        ...state,
+        contextualActions: action.actions
+      };
+    
+    default:
+      return state;
+  }
+}
+
+// Navigation Provider Component
+function NavigationProvider({ children }: { children: React.ReactNode }) {
+  const [state, dispatch] = useReducer(navigationReducer, {
+    currentPath: ['dashboard'],
+    history: [],
+    breadcrumbs: [{ label: 'Profile', path: ['dashboard'] }],
+    backStack: [],
+    forwardStack: [],
+    contextualActions: ROUTES.dashboard.actions,
+    quickAccess: [
+      { label: 'Dashboard', path: ['dashboard'], icon: Home },
+      { label: 'Edit Profile', path: ['edit'], icon: Edit },
+      { label: 'Privacy', path: ['privacy'], icon: Shield },
+      { label: 'Settings', path: ['settings'], icon: Settings }
+    ]
+  });
+
+  const navigate = useCallback((path: string[], options?: { replace?: boolean; addToHistory?: boolean }) => {
+    dispatch({ type: 'NAVIGATE', path, options });
+  }, []);
+
+  const goBack = useCallback(() => {
+    dispatch({ type: 'GO_BACK' });
+  }, []);
+
+  const goForward = useCallback(() => {
+    dispatch({ type: 'GO_FORWARD' });
+  }, []);
+
+  const getCurrentSection = useCallback(() => {
+    return state.currentPath.join('.');
+  }, [state.currentPath]);
+
+  const updateContextualActions = useCallback((actions: NavigationState['contextualActions']) => {
+    dispatch({ type: 'UPDATE_ACTIONS', actions });
+  }, []);
+
+  const value: ProfileNavigationContext = {
+    navigation: state,
+    navigate,
+    goBack,
+    goForward,
+    canGoBack: state.backStack.length > 0,
+    canGoForward: state.forwardStack.length > 0,
+    getCurrentSection,
+    updateContextualActions
+  };
+
+  return (
+    <NavigationContext.Provider value={value}>
+      {children}
+    </NavigationContext.Provider>
+  );
+}
+
+// Advanced Navigation Demo Component
+function AdvancedNavigationDemo() {
+  const { navigation, navigate, goBack, goForward, canGoBack, canGoForward } = useNavigation();
+  const [deviceMode, setDeviceMode] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
+  const [showNavigationPanel, setShowNavigationPanel] = useState(false);
+  const [pendingChanges, setPendingChanges] = useState(false);
+
+  // Simulated profile data with changes tracking
+  const [profileData, setProfileData] = useState({
+    name: 'Sarah Chen',
+    handle: 'sarahc_cs',
+    bio: 'CS student passionate about building tools that help campus life.',
+    year: '2026',
+    major: 'Computer Science',
+    privacy: {
+      ghostMode: false,
+      profileVisibility: 'campus',
+      showOnlineStatus: true
+    }
+  });
+
+  const handleFieldChange = (field: string, value: any) => {
+    setProfileData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+    setPendingChanges(true);
+  };
+
+  const handleSave = () => {
+    setPendingChanges(false);
+    // Simulate save
+  };
+
+  // Smart Breadcrumb Component
+  const SmartBreadcrumb = () => (
+    <Breadcrumb className="mb-4">
+      <BreadcrumbList>
+        {navigation.breadcrumbs.map((crumb, index) => (
+          <React.Fragment key={crumb.path.join('.')}>
+            {index > 0 && <BreadcrumbSeparator />}
+            {index === navigation.breadcrumbs.length - 1 ? (
+              <BreadcrumbPage>{crumb.label}</BreadcrumbPage>
+            ) : (
+              <BreadcrumbLink
+                onClick={() => navigate(crumb.path)}
+                className="cursor-pointer hover:text-[var(--hive-brand-primary)]"
+              >
+                {crumb.label}
+              </BreadcrumbLink>
+            )}
+          </React.Fragment>
+        ))}
+      </BreadcrumbList>
+    </Breadcrumb>
+  );
+
+  // Navigation Controls
+  const NavigationControls = () => (
+    <div className="flex items-center gap-2 mb-4">
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={goBack}
+        disabled={!canGoBack}
+        className="flex items-center gap-2"
+      >
+        <ArrowLeft className="w-4 h-4" />
+        Back
+      </Button>
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={goForward}
+        disabled={!canGoForward}
+        className="flex items-center gap-2"
+      >
+        Forward
+        <ArrowRight className="w-4 h-4" />
+      </Button>
+      
+      <div className="flex-1" />
+      
+      {/* Quick Access Menu */}
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button variant="outline" size="sm">
+            <Navigation className="w-4 h-4 mr-2" />
+            Quick Access
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-56">
+          <Command>
+            <CommandInput placeholder="Search sections..." />
+            <CommandEmpty>No sections found.</CommandEmpty>
+            <CommandGroup heading="Quick Access">
+              {navigation.quickAccess.map((item) => (
+                <CommandItem
+                  key={item.path.join('.')}
+                  onSelect={() => navigate(item.path)}
+                  className="flex items-center gap-2"
+                >
+                  <item.icon className="w-4 h-4" />
+                  {item.label}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </Command>
+        </PopoverContent>
+      </Popover>
+
+      {/* Contextual Actions */}
+      {navigation.contextualActions.length > 0 && (
+        <div className="flex gap-2">
+          {navigation.contextualActions.map((action, index) => (
+            <Button
+              key={index}
+              variant={action.action === 'save' ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => {
+                if (action.action === 'save') handleSave();
+                if (action.action === 'edit') navigate(['edit']);
+                if (action.action === 'settings') navigate(['settings']);
+              }}
+              className="flex items-center gap-2"
+            >
+              <action.icon className="w-4 h-4" />
+              {action.label}
+            </Button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+
+  // Content Renderer based on current path
+  const ContentRenderer = () => {
+    const currentSection = navigation.currentPath.join('.');
+    
+    switch (currentSection) {
+      case 'dashboard':
+        return <DashboardContent />;
+      case 'edit':
+        return <EditProfileContent data={profileData} onChange={handleFieldChange} />;
+      case 'edit.basic':
+        return <BasicInfoEdit data={profileData} onChange={handleFieldChange} />;
+      case 'edit.academic':
+        return <AcademicEdit data={profileData} onChange={handleFieldChange} />;
+      case 'privacy':
+        return <PrivacyContent data={profileData.privacy} onChange={handleFieldChange} />;
+      case 'spaces':
+        return <SpacesContent />;
+      case 'spaces.course':
+        return <CourseSpacesContent />;
+      case 'tools':
+        return <ToolsContent />;
+      case 'settings':
+        return <SettingsContent />;
+      case 'settings.notifications':
+        return <NotificationSettingsContent />;
+      default:
+        return <div>Section not found</div>;
+    }
+  };
+
+  // Sidebar Navigation (Desktop/Tablet)
+  const SidebarNavigation = () => (
+    <div className="w-64 bg-[var(--hive-background-secondary)] border-r border-[var(--hive-border-primary)] h-full">
+      <div className="p-4 border-b border-[var(--hive-border-primary)]">
+        <h2 className="font-semibold text-[var(--hive-text-primary)]">Profile Navigation</h2>
+      </div>
+      
+      <nav className="p-4 space-y-2">
+        {Object.entries(ROUTES).filter(([key]) => !key.includes('.')).map(([key, route]) => (
+          <button
+            key={key}
+            onClick={() => navigate([key])}
+            className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left transition-all ${
+              navigation.currentPath[0] === key
+                ? 'bg-[var(--hive-brand-primary)] text-white'
+                : 'text-[var(--hive-text-secondary)] hover:bg-[var(--hive-background-primary)] hover:text-[var(--hive-text-primary)]'
+            }`}
+          >
+            <route.icon className="w-5 h-5" />
+            <span>{route.label}</span>
+          </button>
+        ))}
+      </nav>
+      
+      {/* Navigation History */}
+      <div className="p-4 border-t border-[var(--hive-border-primary)]">
+        <h3 className="text-sm font-medium text-[var(--hive-text-primary)] mb-2">Recent</h3>
+        <div className="space-y-1">
+          {navigation.history.slice(-3).map((path, index) => {
+            const route = ROUTES[path.join('.') as keyof typeof ROUTES];
+            if (!route) return null;
+            
+            return (
+              <button
+                key={index}
+                onClick={() => navigate(path)}
+                className="w-full flex items-center gap-2 px-2 py-1 text-sm text-[var(--hive-text-muted)] hover:text-[var(--hive-text-primary)] rounded"
+              >
+                <History className="w-3 h-3" />
+                {route.label}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+
+  // Mobile Navigation
+  const MobileNavigation = () => (
+    <div className="border-b border-[var(--hive-border-primary)] bg-[var(--hive-background-secondary)]">
+      <div className="flex items-center justify-between p-4">
+        <div className="flex items-center gap-3">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setShowNavigationPanel(true)}
+          >
+            <Menu className="w-5 h-5" />
+          </Button>
+          <h1 className="font-semibold text-[var(--hive-text-primary)]">
+            {ROUTES[navigation.currentPath.join('.') as keyof typeof ROUTES]?.label || 'Profile'}
+          </h1>
+        </div>
+        
+        {navigation.contextualActions.length > 0 && (
+          <Button variant="ghost" size="sm">
+            <MoreHorizontal className="w-5 h-5" />
+          </Button>
+        )}
+      </div>
+      
+      {/* Mobile Navigation Panel */}
+      <Dialog open={showNavigationPanel} onOpenChange={setShowNavigationPanel}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Navigation</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-2">
+            {Object.entries(ROUTES).filter(([key]) => !key.includes('.')).map(([key, route]) => (
+              <button
+                key={key}
+                onClick={() => {
+                  navigate([key]);
+                  setShowNavigationPanel(false);
+                }}
+                className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left hover:bg-[var(--hive-background-secondary)]"
+              >
+                <route.icon className="w-5 h-5" />
+                <span>{route.label}</span>
+              </button>
+            ))}
+          </div>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+
+  // Device Controls
+  const DeviceControls = () => (
+    <div className="fixed top-4 right-4 z-50 flex gap-2 bg-white rounded-lg shadow-lg p-2">
+      {(['desktop', 'tablet', 'mobile'] as const).map((device) => (
+        <button
+          key={device}
+          onClick={() => setDeviceMode(device)}
+          className={`px-3 py-2 rounded text-sm font-medium transition-all ${
+            deviceMode === device
+              ? 'bg-[var(--hive-brand-primary)] text-white'
+              : 'text-[var(--hive-text-muted)] hover:bg-[var(--hive-background-secondary)]'
+          }`}
+        >
+          {device === 'desktop' && <Laptop className="w-4 h-4" />}
+          {device === 'tablet' && <Tablet className="w-4 h-4" />}
+          {device === 'mobile' && <Smartphone className="w-4 h-4" />}
+        </button>
+      ))}
+    </div>
+  );
+
+  // Main Layout
+  const containerClass = {
+    desktop: 'flex h-screen max-w-none',
+    tablet: 'flex h-screen max-w-6xl mx-auto',
+    mobile: 'flex flex-col h-screen max-w-sm mx-auto'
+  }[deviceMode];
+
+  return (
+    <div className={`${containerClass} bg-[var(--hive-background-primary)]`}>
+      <DeviceControls />
+      
+      {/* Sidebar (Desktop/Tablet only) */}
+      {deviceMode !== 'mobile' && <SidebarNavigation />}
+      
+      {/* Mobile Navigation */}
+      {deviceMode === 'mobile' && <MobileNavigation />}
+      
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="flex-1 p-6 overflow-auto">
+          <SmartBreadcrumb />
+          <NavigationControls />
+          
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={navigation.currentPath.join('.')}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.2 }}
+            >
+              <ContentRenderer />
+            </motion.div>
+          </AnimatePresence>
+        </div>
+      </div>
+      
+      {/* Pending Changes Indicator */}
+      {pendingChanges && (
+        <motion.div
+          initial={{ opacity: 0, y: 100 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-[var(--hive-brand-primary)] text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-3"
+        >
+          <AlertTriangle className="w-5 h-5" />
+          <span>You have unsaved changes</span>
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={handleSave}
+          >
+            Save Now
+          </Button>
+        </motion.div>
+      )}
+    </div>
+  );
+}
+
+// Content Components
+const DashboardContent = () => (
+  <div className="space-y-6">
+    <Card>
+      <CardHeader>
+        <CardTitle>Profile Dashboard</CardTitle>
+        <p className="text-[var(--hive-text-muted)]">Your University at Buffalo profile overview</p>
+      </CardHeader>
+      <CardContent>
+        <div className="grid md:grid-cols-3 gap-4">
+          <div className="text-center p-4 bg-[var(--hive-background-secondary)] rounded-lg">
+            <Users className="w-8 h-8 mx-auto mb-2 text-[var(--hive-brand-primary)]" />
+            <div className="font-semibold text-[var(--hive-text-primary)]">12</div>
+            <div className="text-sm text-[var(--hive-text-muted)]">Spaces Joined</div>
+          </div>
+          <div className="text-center p-4 bg-[var(--hive-background-secondary)] rounded-lg">
+            <Wrench className="w-8 h-8 mx-auto mb-2 text-[var(--hive-brand-primary)]" />
+            <div className="font-semibold text-[var(--hive-text-primary)]">4</div>
+            <div className="text-sm text-[var(--hive-text-muted)]">Tools Created</div>
+          </div>
+          <div className="text-center p-4 bg-[var(--hive-background-secondary)] rounded-lg">
+            <Trophy className="w-8 h-8 mx-auto mb-2 text-[var(--hive-brand-primary)]" />
+            <div className="font-semibold text-[var(--hive-text-primary)]">1.2K</div>
+            <div className="text-sm text-[var(--hive-text-muted)]">Reputation</div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  </div>
+);
+
+const EditProfileContent = ({ data, onChange }: any) => {
+  const { navigate } = useNavigation();
+  
+  return (
+    <div className="space-y-6">
+      <Card>
+        <CardHeader>
+          <CardTitle>Edit Profile</CardTitle>
+          <p className="text-[var(--hive-text-muted)]">Update your profile information</p>
+        </CardHeader>
+        <CardContent>
+          <Tabs defaultValue="basic">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="basic" onClick={() => navigate(['edit', 'basic'])}>Basic Info</TabsTrigger>
+              <TabsTrigger value="academic" onClick={() => navigate(['edit', 'academic'])}>Academic</TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="basic" className="space-y-4">
+              <div>
+                <label className="text-sm font-medium">Name</label>
+                <Input 
+                  value={data.name} 
+                  onChange={(e) => onChange('name', e.target.value)}
+                />
+              </div>
+              <div>
+                <label className="text-sm font-medium">Bio</label>
+                <Input 
+                  value={data.bio} 
+                  onChange={(e) => onChange('bio', e.target.value)}
+                />
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="academic" className="space-y-4">
+              <div>
+                <label className="text-sm font-medium">Year</label>
+                <Input 
+                  value={data.year} 
+                  onChange={(e) => onChange('year', e.target.value)}
+                />
+              </div>
+              <div>
+                <label className="text-sm font-medium">Major</label>
+                <Input 
+                  value={data.major} 
+                  onChange={(e) => onChange('major', e.target.value)}
+                />
+              </div>
+            </TabsContent>
+          </Tabs>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
+const BasicInfoEdit = ({ data, onChange }: any) => (
+  <Card>
+    <CardHeader>
+      <CardTitle>Basic Information</CardTitle>
+    </CardHeader>
+    <CardContent className="space-y-4">
+      <div>
+        <label className="text-sm font-medium">Display Name</label>
+        <Input value={data.name} onChange={(e) => onChange('name', e.target.value)} />
+      </div>
+      <div>
+        <label className="text-sm font-medium">Handle</label>
+        <Input value={data.handle} onChange={(e) => onChange('handle', e.target.value)} />
+      </div>
+      <div>
+        <label className="text-sm font-medium">Bio</label>
+        <Input value={data.bio} onChange={(e) => onChange('bio', e.target.value)} />
+      </div>
+    </CardContent>
+  </Card>
+);
+
+const AcademicEdit = ({ data, onChange }: any) => (
+  <Card>
+    <CardHeader>
+      <CardTitle>Academic Information</CardTitle>
+    </CardHeader>
+    <CardContent className="space-y-4">
+      <div className="grid md:grid-cols-2 gap-4">
+        <div>
+          <label className="text-sm font-medium">Graduation Year</label>
+          <Input value={data.year} onChange={(e) => onChange('year', e.target.value)} />
+        </div>
+        <div>
+          <label className="text-sm font-medium">Major</label>
+          <Input value={data.major} onChange={(e) => onChange('major', e.target.value)} />
+        </div>
+      </div>
+    </CardContent>
+  </Card>
+);
+
+const PrivacyContent = ({ data, onChange }: any) => (
+  <Card>
+    <CardHeader>
+      <CardTitle>Privacy & Visibility</CardTitle>
+      <p className="text-[var(--hive-text-muted)]">Control who can see your profile and activity</p>
+    </CardHeader>
+    <CardContent className="space-y-4">
+      <div className="flex items-center justify-between">
+        <div>
+          <p className="font-medium">Ghost Mode</p>
+          <p className="text-sm text-[var(--hive-text-muted)]">Hide your online status</p>
+        </div>
+        <Switch 
+          checked={data.ghostMode} 
+          onCheckedChange={(checked) => onChange('privacy.ghostMode', checked)}
+        />
+      </div>
+      <div className="flex items-center justify-between">
+        <div>
+          <p className="font-medium">Show Online Status</p>
+          <p className="text-sm text-[var(--hive-text-muted)]">Let others see when you're online</p>
+        </div>
+        <Switch 
+          checked={data.showOnlineStatus} 
+          onCheckedChange={(checked) => onChange('privacy.showOnlineStatus', checked)}
+        />
+      </div>
+    </CardContent>
+  </Card>
+);
+
+const SpacesContent = () => {
+  const { navigate } = useNavigation();
+  
+  return (
+    <div className="space-y-6">
+      <Card>
+        <CardHeader>
+          <CardTitle>My Spaces</CardTitle>
+          <p className="text-[var(--hive-text-muted)]">Spaces you've joined at University at Buffalo</p>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-2">
+            <Button 
+              variant="outline" 
+              className="w-full justify-start"
+              onClick={() => navigate(['spaces', 'course'])}
+            >
+              <BookOpen className="w-4 h-4 mr-2" />
+              Course Spaces
+              <ChevronRight className="w-4 h-4 ml-auto" />
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
+const CourseSpacesContent = () => (
+  <Card>
+    <CardHeader>
+      <CardTitle>Course Spaces</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <div className="space-y-3">
+        {[
+          'CSE 331: Algorithm Analysis',
+          'MTH 309: Discrete Mathematics',
+          'CSE 250: Data Structures'
+        ].map((course) => (
+          <div key={course} className="flex items-center gap-3 p-3 bg-[var(--hive-background-secondary)] rounded-lg">
+            <BookOpen className="w-5 h-5 text-[var(--hive-brand-primary)]" />
+            <span className="font-medium">{course}</span>
+            <Badge variant="outline" className="ml-auto">Enrolled</Badge>
+          </div>
+        ))}
+      </div>
+    </CardContent>
+  </Card>
+);
+
+const ToolsContent = () => (
+  <Card>
+    <CardHeader>
+      <CardTitle>My Tools</CardTitle>
+      <p className="text-[var(--hive-text-muted)]">Tools you've created for the HIVE community</p>
+    </CardHeader>
+    <CardContent>
+      <div className="space-y-3">
+        {[
+          { name: 'GPA Calculator', uses: '1.2K' },
+          { name: 'Laundry Tracker', uses: '456' }
+        ].map((tool) => (
+          <div key={tool.name} className="flex items-center justify-between p-3 bg-[var(--hive-background-secondary)] rounded-lg">
+            <div className="flex items-center gap-3">
+              <Wrench className="w-5 h-5 text-[var(--hive-brand-primary)]" />
+              <span className="font-medium">{tool.name}</span>
+            </div>
+            <div className="text-sm text-[var(--hive-text-muted)]">{tool.uses} uses</div>
+          </div>
+        ))}
+      </div>
+    </CardContent>
+  </Card>
+);
+
+const SettingsContent = () => {
+  const { navigate } = useNavigation();
+  
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Settings</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-2">
+          <Button 
+            variant="outline" 
+            className="w-full justify-start"
+            onClick={() => navigate(['settings', 'notifications'])}
+          >
+            <Bell className="w-4 h-4 mr-2" />
+            Notification Settings
+            <ChevronRight className="w-4 h-4 ml-auto" />
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+
+const NotificationSettingsContent = () => (
+  <Card>
+    <CardHeader>
+      <CardTitle>Notification Settings</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <div className="space-y-4">
+        {[
+          'Email Notifications',
+          'Push Notifications',
+          'Space Updates',
+          'Tool Activity'
+        ].map((setting) => (
+          <div key={setting} className="flex items-center justify-between">
+            <span>{setting}</span>
+            <Switch defaultChecked />
+          </div>
+        ))}
+      </div>
+    </CardContent>
+  </Card>
+);
+
+const meta: Meta = {
+  title: '05-Live-Frontend/Profile Navigation & State Management',
+  parameters: {
+    layout: 'fullscreen',
+    docs: {
+      description: {
+        component: `
+# HIVE Profile Navigation & State Management
+
+**Advanced navigation patterns and comprehensive state management for the HIVE profile system.**
+
+## 🧭 Navigation Features
+
+### **Smart Navigation System**
+- **Hierarchical Routing** - Nested routes with automatic breadcrumb generation
+- **History Management** - Full back/forward navigation with state preservation
+- **Quick Access** - Command palette for instant section jumping
+- **Contextual Actions** - Dynamic action buttons based on current section
+
+### **State Management**
+- **Navigation State** - Current path, history, breadcrumbs, and contextual actions
+- **Profile State** - User data with change tracking and validation
+- **UI State** - Device modes, modal states, and pending changes
+- **Persistence** - State preservation across navigation and sessions
+
+### **Mobile-First Design**
+- **Responsive Navigation** - Adapts seamlessly across desktop, tablet, and mobile
+- **Touch-Optimized** - Large touch targets and gesture-friendly interactions
+- **Progressive Enhancement** - Full functionality on all device types
+- **Context Preservation** - Maintains state and position across device changes
+
+## 🎯 Interactive Features
+
+### **Advanced Navigation Patterns**
+- **Breadcrumb Navigation** - Smart breadcrumbs with clickable path segments
+- **Quick Access Menu** - Search-enabled command palette for instant navigation
+- **Contextual Actions** - Dynamic buttons that change based on current section
+- **History Management** - Browser-like back/forward with state preservation
+
+### **State Management Demonstrations**
+- **Change Tracking** - Real-time detection and indication of unsaved changes
+- **Form State** - Intelligent form state management with validation
+- **Navigation State** - Complete navigation history and breadcrumb management
+- **Device State** - Responsive state management across device sizes
+
+### **UX Excellence**
+- **Smooth Transitions** - Animated transitions between sections
+- **Loading States** - Proper loading and error states for all interactions
+- **Accessibility** - Full keyboard navigation and screen reader support
+- **Performance** - Optimized rendering and state updates
+
+## 🎓 University at Buffalo Integration
+
+Every navigation pattern is designed for UB campus life:
+- **Academic Workflows** - Course space navigation and academic information management
+- **Campus Context** - Housing, organizations, and campus-specific features
+- **Builder Tools** - Advanced navigation for platform contributors
+- **Social Integration** - Seamless navigation between profile and community features
+        `,
+      },
+    },
+  },
+  tags: ['autodocs'],
+};
+
+export default meta;
+type Story = StoryObj;
+
+export const AdvancedNavigationDemo: Story = {
+  render: () => (
+    <NavigationProvider>
+      <AdvancedNavigationDemo />
+    </NavigationProvider>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: `
+**Complete navigation and state management demonstration with advanced patterns.**
+
+Features demonstrated:
+- **Smart Navigation** - Hierarchical routing with automatic breadcrumbs and history
+- **State Management** - Profile data management with change tracking
+- **Responsive Design** - Desktop, tablet, and mobile navigation patterns
+- **Contextual Actions** - Dynamic actions based on current section
+- **Quick Access** - Command palette for instant section navigation
+
+Use the device controls (top-right) to test responsive navigation patterns across different screen sizes.
+        `,
+      },
+    },
+  },
+};
+
+export const NavigationPatternsShowcase: Story = {
+  render: () => {
+    const [activePattern, setActivePattern] = useState('breadcrumbs');
+    
+    const patterns = {
+      breadcrumbs: {
+        title: 'Smart Breadcrumbs',
+        description: 'Hierarchical navigation with clickable path segments',
+        component: () => (
+          <div className="space-y-4">
+            <Breadcrumb>
+              <BreadcrumbList>
+                <BreadcrumbLink onClick={() => {}}>Profile</BreadcrumbLink>
+                <BreadcrumbSeparator />
+                <BreadcrumbLink onClick={() => {}}>Edit Profile</BreadcrumbLink>
+                <BreadcrumbSeparator />
+                <BreadcrumbPage>Basic Information</BreadcrumbPage>
+              </BreadcrumbList>
+            </Breadcrumb>
+            <p className="text-sm text-[var(--hive-text-muted)]">
+              Breadcrumbs automatically generate based on navigation hierarchy and provide quick access to parent sections.
+            </p>
+          </div>
+        )
+      },
+      quickaccess: {
+        title: 'Quick Access Menu',
+        description: 'Search-enabled command palette for instant navigation',
+        component: () => (
+          <div className="space-y-4">
+            <Command className="border rounded-lg">
+              <CommandInput placeholder="Search sections..." />
+              <CommandEmpty>No sections found.</CommandEmpty>
+              <CommandGroup heading="Profile Sections">
+                <CommandItem><Home className="w-4 h-4 mr-2" />Dashboard</CommandItem>
+                <CommandItem><Edit className="w-4 h-4 mr-2" />Edit Profile</CommandItem>
+                <CommandItem><Shield className="w-4 h-4 mr-2" />Privacy Settings</CommandItem>
+                <CommandItem><Users className="w-4 h-4 mr-2" />My Spaces</CommandItem>
+              </CommandGroup>
+            </Command>
+            <p className="text-sm text-[var(--hive-text-muted)]">
+              Quick access menu allows instant navigation to any section with keyboard shortcuts and search.
+            </p>
+          </div>
+        )
+      },
+      contextual: {
+        title: 'Contextual Actions',
+        description: 'Dynamic actions that change based on current section',
+        component: () => (
+          <div className="space-y-4">
+            <div className="flex gap-2">
+              <Button size="sm"><Save className="w-4 h-4 mr-2" />Save Changes</Button>
+              <Button variant="outline" size="sm"><X className="w-4 h-4 mr-2" />Discard</Button>
+            </div>
+            <p className="text-sm text-[var(--hive-text-muted)]">
+              Action buttons automatically update based on the current section and available operations.
+            </p>
+          </div>
+        )
+      },
+      history: {
+        title: 'Navigation History',
+        description: 'Browser-like navigation with back/forward controls',
+        component: () => (
+          <div className="space-y-4">
+            <div className="flex gap-2">
+              <Button variant="outline" size="sm"><ArrowLeft className="w-4 h-4 mr-2" />Back</Button>
+              <Button variant="outline" size="sm">Forward<ArrowRight className="w-4 h-4 ml-2" /></Button>
+            </div>
+            <div className="space-y-2">
+              <p className="text-sm font-medium">Recent Navigation:</p>
+              <div className="space-y-1">
+                {['Dashboard', 'Edit Profile', 'Privacy Settings'].map((item, index) => (
+                  <div key={index} className="flex items-center gap-2 text-sm text-[var(--hive-text-muted)]">
+                    <History className="w-3 h-3" />
+                    {item}
+                  </div>
+                ))}
+              </div>
+            </div>
+            <p className="text-sm text-[var(--hive-text-muted)]">
+              Full navigation history with back/forward controls and recent section access.
+            </p>
+          </div>
+        )
+      }
+    };
+
+    return (
+      <div className="space-y-6">
+        <div className="text-center">
+          <h3 className="text-xl font-bold text-[var(--hive-text-primary)] mb-2">Navigation Patterns</h3>
+          <p className="text-[var(--hive-text-muted)]">
+            Advanced navigation patterns for the HIVE profile system
+          </p>
+        </div>
+
+        <div className="flex flex-wrap gap-2 justify-center">
+          {Object.entries(patterns).map(([key, pattern]) => (
+            <Button
+              key={key}
+              variant={activePattern === key ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setActivePattern(key)}
+            >
+              {pattern.title}
+            </Button>
+          ))}
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>{patterns[activePattern as keyof typeof patterns].title}</CardTitle>
+            <p className="text-[var(--hive-text-muted)]">
+              {patterns[activePattern as keyof typeof patterns].description}
+            </p>
+          </CardHeader>
+          <CardContent>
+            {patterns[activePattern as keyof typeof patterns].component()}
+          </CardContent>
+        </Card>
+      </div>
+    );
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Showcase of individual navigation patterns including breadcrumbs, quick access, contextual actions, and history management.',
+      },
+    },
+  },
+};

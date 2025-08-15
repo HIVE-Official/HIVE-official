@@ -1,425 +1,625 @@
+/**
+ * DESIGN TOKENS - HIVE FOUNDATION SYSTEM
+ * 
+ * The DNA of HIVE design system - colors, typography, spacing, shadows, and motion
+ * that create consistent visual language across the entire University at Buffalo platform.
+ */
+
+import React, { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Button } from '../../components/ui/button';
+import { Badge } from '../../components/ui/badge';
+import { Input } from '../../components/ui/input';
+import { 
+  Palette,
+  Type,
+  Ruler,
+  Layers,
+  Zap,
+  Search,
+  Copy,
+  CheckCircle,
+  Eye,
+  Lightbulb,
+  Monitor,
+  Smartphone,
+  Contrast
+} from 'lucide-react';
+import '../../hive-tokens.css';
 
 const meta: Meta = {
-  title: '00-Foundation/Design Tokens',
+  title: '🎨 01-Foundation/Design Tokens',
   parameters: {
-    layout: 'padded',
+    layout: 'fullscreen',
     docs: {
       description: {
         component: `
-# HIVE Design Tokens
+# 🎨 Design Tokens - HIVE Foundation System
 
-Complete semantic token system powering the HIVE platform design system.
+**The visual DNA that creates consistent University at Buffalo campus platform experiences**
 
-## Token Categories
+Design tokens are the foundational elements that ensure visual consistency across every component, screen, and interaction in HIVE. These atomic design decisions create the cohesive experience that makes HIVE feel like a unified platform designed specifically for campus social utility.
 
-### Colors
-- **Brand Colors**: Primary blue (#0070F3), secondary gold (#FFD700)
-- **Surface Colors**: Background, foreground, and surface variations
-- **Text Colors**: Primary, secondary, tertiary, and disabled states
-- **Status Colors**: Success, warning, error, and info states
-- **Border Colors**: Default, muted, and interactive borders
+## 🧬 TOKEN PHILOSOPHY
 
-### Typography
-- **Font Families**: Sans, mono, and display fonts
-- **Font Sizes**: 12px to 48px responsive scale
-- **Font Weights**: 400 (normal), 500 (medium), 600 (semibold), 700 (bold)
-- **Line Heights**: Optimized for readability and density
+### **Campus-First Design Language**
+Every token reflects authentic university experiences:
+- **Color System** - Warm, approachable colors that feel both professional and social
+- **Typography** - Clear, accessible type that works for academic and social content
+- **Spacing System** - Consistent rhythm that creates scannable, organized interfaces
+- **Shadow System** - Subtle depth that enhances usability without distraction
 
-### Spacing
-- **Scale**: 4px base unit (0.25rem) with powers of 2
-- **Breakpoints**: Mobile-first responsive design
-- **Layout**: Container, section, and component spacing
+### **Semantic Token Architecture**
+- **Primitive Tokens** - Raw values (hex colors, pixel measurements)
+- **Semantic Tokens** - Contextual usage (text-primary, background-secondary)
+- **Component Tokens** - Component-specific overrides (button-primary-bg)
+- **Theme Tokens** - Mode variations (dark-text-primary, light-background)
 
-### Elevation
-- **Shadows**: Subtle depth for cards and overlays
-- **Z-Index**: Layering system for modals, dropdowns, and overlays
+## 🎨 COLOR SYSTEM
 
-## Usage Guidelines
+### **Brand Colors**
+- **Primary Gold** - \`#D4A574\` - HIVE's signature warmth and approachability
+- **Accent Copper** - \`#B8956A\` - Complementary richness for highlights
+- **Secondary Navy** - \`#2D3748\` - Professional depth for text and structure
 
-All HIVE components use semantic tokens exclusively. Never use hardcoded values.
+### **Semantic Color Palette**
+- **Text Colors** - Primary, secondary, muted, inverse with 4.5:1+ contrast
+- **Background Colors** - Primary, secondary, tertiary for layered interfaces
+- **Border Colors** - Default, accent, focus for clear visual hierarchy
+- **Status Colors** - Success, warning, error, info with campus context
 
-**Good**: \`var(--hive-brand-primary)\`
-**Bad**: \`#0070F3\`
+### **Campus Context Colors**
+- **Academic** - Blue tones for educational content and tools
+- **Social** - Warm tones for community features and interactions
+- **Administrative** - Professional grays for official functions
+- **Seasonal** - Subtle variations that reflect campus calendar
 
-This ensures consistency, theming support, and maintainability across the platform.
-        `,
-      },
+## 📝 TYPOGRAPHY SYSTEM
+
+### **Font Family**
+- **Inter Variable** - Modern, highly legible sans-serif optimized for screens
+- **Monospace** - JetBrains Mono for code snippets and technical content
+- **System Fallbacks** - Robust fallback stack for any device
+
+### **Type Scale**
+- **Display** - 48px/52px - Hero sections, major headings
+- **Heading 1** - 36px/40px - Page titles, section headers
+- **Heading 2** - 30px/36px - Subsection headers
+- **Heading 3** - 24px/32px - Component titles
+- **Body Large** - 18px/28px - Important body text, introductions
+- **Body** - 16px/24px - Default body text, descriptions
+- **Body Small** - 14px/20px - Secondary text, captions
+- **Caption** - 12px/16px - Labels, metadata, timestamps
+
+### **Font Weights**
+- **400 Regular** - Body text, descriptions
+- **500 Medium** - Emphasis, important labels
+- **600 Semibold** - Headings, component titles
+- **700 Bold** - Major headings, call-to-action text
+
+## 📏 SPACING SYSTEM
+
+### **Base Unit: 4px**
+All spacing follows 4px base unit for pixel-perfect alignment:
+- **xs** - 4px - Tight spacing, inline elements
+- **sm** - 8px - Close relationships, form fields
+- **md** - 16px - Standard spacing, component padding
+- **lg** - 24px - Section spacing, card padding
+- **xl** - 32px - Major section breaks
+- **2xl** - 48px - Page section spacing
+- **3xl** - 64px - Large breakpoint spacing
+
+### **Campus Layout Patterns**
+- **Content Width** - 1200px max-width for readability
+- **Sidebar Width** - 280px for navigation and tools
+- **Mobile Margins** - 16px minimum for thumb accessibility
+- **Touch Targets** - 44px minimum for mobile interactions
+
+## 🌊 SHADOW SYSTEM
+
+### **Elevation Hierarchy**
+- **Level 0** - No shadow - Flat elements, backgrounds
+- **Level 1** - Subtle shadow - Cards, form inputs
+- **Level 2** - Medium shadow - Dropdowns, tooltips
+- **Level 3** - Strong shadow - Modals, floating panels
+- **Level 4** - Maximum shadow - Critical alerts, overlays
+
+### **Campus Context Shadows**
+- **Academic** - Cooler shadow tones for educational interfaces
+- **Social** - Warmer shadow tones for community features
+- **Interactive** - Enhanced shadows for hover and focus states
+- **Accessibility** - High contrast shadows for visibility needs
+
+## ⚡ MOTION SYSTEM
+
+### **Animation Durations**
+- **Immediate** - 100ms - Hover states, micro-interactions
+- **Quick** - 200ms - State changes, toggles
+- **Standard** - 300ms - Page transitions, drawer open/close
+- **Deliberate** - 500ms - Modal appearances, major state changes
+
+### **Easing Functions**
+- **Linear** - Constant speed for progress indicators
+- **Ease-out** - Natural deceleration for UI entrances
+- **Ease-in** - Natural acceleration for UI exits
+- **Bounce** - Playful emphasis for success states
+
+### **Campus Motion Patterns**
+- **Academic Focus** - Smooth, professional transitions
+- **Social Energy** - Slightly more playful, engaging animations
+- **Mobile Context** - Optimized for touch interactions and gestures
+- **Accessibility** - Reduced motion options for user preferences
+        `
+      }
     },
-  },
-  tags: ['autodocs'],
+    backgrounds: {
+      default: 'dark',
+      values: [
+        { name: 'dark', value: '#0a0a0a' },
+        { name: 'light', value: '#ffffff' }
+      ]
+    }
+  }
 };
 
 export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const ColorTokens: StoryObj = {
-  render: () => (
-    <div className="space-y-8">
-      <div>
-        <h3 className="text-xl font-semibold mb-6 text-[var(--hive-text-primary)]">Brand Colors</h3>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="space-y-2">
-            <div className="w-full h-20 bg-[var(--hive-brand-primary)] rounded-lg border"></div>
-            <div className="text-sm">
-              <div className="font-medium text-[var(--hive-text-primary)]">Primary</div>
-              <div className="text-[var(--hive-text-secondary)] font-mono text-xs">--hive-brand-primary</div>
-            </div>
-          </div>
-          <div className="space-y-2">
-            <div className="w-full h-20 bg-[var(--hive-brand-secondary)] rounded-lg border"></div>
-            <div className="text-sm">
-              <div className="font-medium text-[var(--hive-text-primary)]">Secondary</div>
-              <div className="text-[var(--hive-text-secondary)] font-mono text-xs">--hive-brand-secondary</div>
-            </div>
-          </div>
-          <div className="space-y-2">
-            <div className="w-full h-20 bg-[var(--hive-brand-hover)] rounded-lg border"></div>
-            <div className="text-sm">
-              <div className="font-medium text-[var(--hive-text-primary)]">Hover</div>
-              <div className="text-[var(--hive-text-secondary)] font-mono text-xs">--hive-brand-hover</div>
-            </div>
-          </div>
-          <div className="space-y-2">
-            <div className="w-full h-20 bg-[var(--hive-interactive-focus)] rounded-lg border"></div>
-            <div className="text-sm">
-              <div className="font-medium text-[var(--hive-text-primary)]">Focus</div>
-              <div className="text-[var(--hive-text-secondary)] font-mono text-xs">--hive-interactive-focus</div>
-            </div>
-          </div>
-        </div>
-      </div>
+// =============================================================================
+// COLOR SYSTEM DATA
+// =============================================================================
 
-      <div>
-        <h3 className="text-xl font-semibold mb-6 text-[var(--hive-text-primary)]">Surface Colors</h3>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-          <div className="space-y-2">
-            <div className="w-full h-20 bg-[var(--hive-background-primary)] border rounded-lg"></div>
-            <div className="text-sm">
-              <div className="font-medium text-[var(--hive-text-primary)]">Background Primary</div>
-              <div className="text-[var(--hive-text-secondary)] font-mono text-xs">--hive-background-primary</div>
-            </div>
-          </div>
-          <div className="space-y-2">
-            <div className="w-full h-20 bg-[var(--hive-background-secondary)] border rounded-lg"></div>
-            <div className="text-sm">
-              <div className="font-medium text-[var(--hive-text-primary)]">Background Secondary</div>
-              <div className="text-[var(--hive-text-secondary)] font-mono text-xs">--hive-background-secondary</div>
-            </div>
-          </div>
-          <div className="space-y-2">
-            <div className="w-full h-20 bg-[var(--hive-background-tertiary)] border rounded-lg"></div>
-            <div className="text-sm">
-              <div className="font-medium text-[var(--hive-text-primary)]">Background Tertiary</div>
-              <div className="text-[var(--hive-text-secondary)] font-mono text-xs">--hive-background-tertiary</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div>
-        <h3 className="text-xl font-semibold mb-6 text-[var(--hive-text-primary)]">Status Colors</h3>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="space-y-2">
-            <div className="w-full h-20 bg-[var(--hive-status-success)] rounded-lg"></div>
-            <div className="text-sm">
-              <div className="font-medium text-[var(--hive-text-primary)]">Success</div>
-              <div className="text-[var(--hive-text-secondary)] font-mono text-xs">--hive-status-success</div>
-            </div>
-          </div>
-          <div className="space-y-2">
-            <div className="w-full h-20 bg-[var(--hive-status-warning)] rounded-lg"></div>
-            <div className="text-sm">
-              <div className="font-medium text-[var(--hive-text-primary)]">Warning</div>
-              <div className="text-[var(--hive-text-secondary)] font-mono text-xs">--hive-status-warning</div>
-            </div>
-          </div>
-          <div className="space-y-2">
-            <div className="w-full h-20 bg-[var(--hive-status-error)] rounded-lg"></div>
-            <div className="text-sm">
-              <div className="font-medium text-[var(--hive-text-primary)]">Error</div>
-              <div className="text-[var(--hive-text-secondary)] font-mono text-xs">--hive-status-error</div>
-            </div>
-          </div>
-          <div className="space-y-2">
-            <div className="w-full h-20 bg-[var(--hive-status-info)] rounded-lg"></div>
-            <div className="text-sm">
-              <div className="font-medium text-[var(--hive-text-primary)]">Info</div>
-              <div className="text-[var(--hive-text-secondary)] font-mono text-xs">--hive-status-info</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  ),
-  parameters: {
-    docs: {
-      description: {
-        story: 'Complete color token system with semantic naming for consistent theming.',
-      },
-    },
+const colorCategories = [
+  {
+    id: 'brand',
+    title: 'Brand Colors',
+    description: 'Core HIVE brand identity colors',
+    colors: [
+      { name: 'Primary Gold', var: '--hive-brand-primary', hex: '#D4A574', usage: 'Primary actions, brand elements' },
+      { name: 'Accent Copper', var: '--hive-brand-accent', hex: '#B8956A', usage: 'Highlights, secondary actions' },
+      { name: 'Secondary Navy', var: '--hive-brand-secondary', hex: '#2D3748', usage: 'Professional elements, structure' }
+    ]
   },
-};
-
-export const TypographyTokens: StoryObj = {
-  render: () => (
-    <div className="space-y-8">
-      <div>
-        <h3 className="text-xl font-semibold mb-6 text-[var(--hive-text-primary)]">Text Colors</h3>
-        <div className="space-y-4">
-          <div className="flex items-center gap-4">
-            <div className="w-8 h-8 bg-[var(--hive-text-primary)] rounded border"></div>
-            <div>
-              <div className="font-medium text-[var(--hive-text-primary)]">Primary Text</div>
-              <div className="text-[var(--hive-text-secondary)] font-mono text-sm">--hive-text-primary</div>
-            </div>
-          </div>
-          <div className="flex items-center gap-4">
-            <div className="w-8 h-8 bg-[var(--hive-text-secondary)] rounded border"></div>
-            <div>
-              <div className="font-medium text-[var(--hive-text-primary)]">Secondary Text</div>
-              <div className="text-[var(--hive-text-secondary)] font-mono text-sm">--hive-text-secondary</div>
-            </div>
-          </div>
-          <div className="flex items-center gap-4">
-            <div className="w-8 h-8 bg-[var(--hive-text-tertiary)] rounded border"></div>
-            <div>
-              <div className="font-medium text-[var(--hive-text-primary)]">Tertiary Text</div>
-              <div className="text-[var(--hive-text-secondary)] font-mono text-sm">--hive-text-tertiary</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div>
-        <h3 className="text-xl font-semibold mb-6 text-[var(--hive-text-primary)]">Typography Scale</h3>
-        <div className="space-y-4">
-          <div className="text-4xl font-bold text-[var(--hive-text-primary)]">Display Large (36px)</div>
-          <div className="text-3xl font-semibold text-[var(--hive-text-primary)]">Heading 1 (30px)</div>
-          <div className="text-2xl font-semibold text-[var(--hive-text-primary)]">Heading 2 (24px)</div>
-          <div className="text-xl font-semibold text-[var(--hive-text-primary)]">Heading 3 (20px)</div>
-          <div className="text-lg font-medium text-[var(--hive-text-primary)]">Heading 4 (18px)</div>
-          <div className="text-base text-[var(--hive-text-primary)]">Body Large (16px)</div>
-          <div className="text-sm text-[var(--hive-text-secondary)]">Body Small (14px)</div>
-          <div className="text-xs text-[var(--hive-text-tertiary)]">Caption (12px)</div>
-        </div>
-      </div>
-
-      <div>
-        <h3 className="text-xl font-semibold mb-6 text-[var(--hive-text-primary)]">Font Weights</h3>
-        <div className="space-y-2">
-          <div className="text-lg font-normal text-[var(--hive-text-primary)]">Normal (400)</div>
-          <div className="text-lg font-medium text-[var(--hive-text-primary)]">Medium (500)</div>
-          <div className="text-lg font-semibold text-[var(--hive-text-primary)]">Semibold (600)</div>
-          <div className="text-lg font-bold text-[var(--hive-text-primary)]">Bold (700)</div>
-        </div>
-      </div>
-    </div>
-  ),
-  parameters: {
-    docs: {
-      description: {
-        story: 'Typography system with semantic text colors and consistent scale.',
-      },
-    },
+  {
+    id: 'text',
+    title: 'Text Colors',
+    description: 'Semantic text color hierarchy',
+    colors: [
+      { name: 'Primary Text', var: '--hive-text-primary', hex: '#FFFFFF', usage: 'Main content, headings' },
+      { name: 'Secondary Text', var: '--hive-text-secondary', hex: '#A0A0A0', usage: 'Supporting text, descriptions' },
+      { name: 'Muted Text', var: '--hive-text-muted', hex: '#6B7280', usage: 'Placeholder text, disabled states' },
+      { name: 'Inverse Text', var: '--hive-text-inverse', hex: '#000000', usage: 'Text on brand backgrounds' }
+    ]
   },
-};
-
-export const SpacingTokens: StoryObj = {
-  render: () => (
-    <div className="space-y-8">
-      <div>
-        <h3 className="text-xl font-semibold mb-6 text-[var(--hive-text-primary)]">Spacing Scale</h3>
-        <div className="space-y-4">
-          {[
-            { size: '0.25rem', name: '1', class: 'w-1' },
-            { size: '0.5rem', name: '2', class: 'w-2' },
-            { size: '0.75rem', name: '3', class: 'w-3' },
-            { size: '1rem', name: '4', class: 'w-4' },
-            { size: '1.25rem', name: '5', class: 'w-5' },
-            { size: '1.5rem', name: '6', class: 'w-6' },
-            { size: '2rem', name: '8', class: 'w-8' },
-            { size: '3rem', name: '12', class: 'w-12' },
-            { size: '4rem', name: '16', class: 'w-16' },
-            { size: '6rem', name: '24', class: 'w-24' },
-          ].map((item) => (
-            <div key={item.name} className="flex items-center gap-4">
-              <div className={`${item.class} h-6 bg-[var(--hive-brand-primary)] rounded`}></div>
-              <div>
-                <div className="font-medium text-[var(--hive-text-primary)]">Space {item.name}</div>
-                <div className="text-[var(--hive-text-secondary)] font-mono text-sm">{item.size}</div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  ),
-  parameters: {
-    docs: {
-      description: {
-        story: 'Consistent spacing scale based on 4px (0.25rem) units.',
-      },
-    },
+  {
+    id: 'background',
+    title: 'Background Colors',
+    description: 'Layered background system',
+    colors: [
+      { name: 'Primary Background', var: '--hive-background-primary', hex: '#0A0A0A', usage: 'Main app background' },
+      { name: 'Secondary Background', var: '--hive-background-secondary', hex: '#1A1A1A', usage: 'Card backgrounds, panels' },
+      { name: 'Tertiary Background', var: '--hive-background-tertiary', hex: '#2A2A2A', usage: 'Input fields, subtle areas' }
+    ]
   },
-};
+  {
+    id: 'border',
+    title: 'Border Colors',
+    description: 'Visual hierarchy and structure',
+    colors: [
+      { name: 'Default Border', var: '--hive-border-default', hex: '#333333', usage: 'Standard borders, dividers' },
+      { name: 'Accent Border', var: '--hive-border-accent', hex: '--hive-brand-primary', usage: 'Highlighted borders' },
+      { name: 'Focus Border', var: '--hive-border-focus', hex: '--hive-brand-primary', usage: 'Focus indicators' },
+      { name: 'Gold Border', var: '--hive-border-gold', hex: '--hive-brand-primary', usage: 'Premium elements' }
+    ]
+  }
+];
 
-export const BorderRadiusTokens: StoryObj = {
-  render: () => (
-    <div className="space-y-8">
-      <div>
-        <h3 className="text-xl font-semibold mb-6 text-[var(--hive-text-primary)]">Border Radius Scale</h3>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          {[
-            { name: 'None', class: 'rounded-none', value: '0px' },
-            { name: 'Small', class: 'rounded-sm', value: '2px' },
-            { name: 'Default', class: 'rounded', value: '4px' },
-            { name: 'Medium', class: 'rounded-md', value: '6px' },
-            { name: 'Large', class: 'rounded-lg', value: '8px' },
-            { name: 'XLarge', class: 'rounded-xl', value: '12px' },
-            { name: '2XLarge', class: 'rounded-2xl', value: '16px' },
-            { name: 'Full', class: 'rounded-full', value: '9999px' },
-          ].map((item) => (
-            <div key={item.name} className="space-y-2">
-              <div className={`w-full h-16 bg-[var(--hive-surface-primary)] border ${item.class}`}></div>
-              <div className="text-sm">
-                <div className="font-medium text-[var(--hive-text-primary)]">{item.name}</div>
-                <div className="text-[var(--hive-text-secondary)] font-mono text-xs">{item.value}</div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  ),
-  parameters: {
-    docs: {
-      description: {
-        story: 'Border radius system from sharp to fully rounded corners.',
-      },
-    },
-  },
-};
+const typographyScale = [
+  { name: 'Display', size: '48px', lineHeight: '52px', weight: '700', usage: 'Hero sections, major headings' },
+  { name: 'Heading 1', size: '36px', lineHeight: '40px', weight: '600', usage: 'Page titles, section headers' },
+  { name: 'Heading 2', size: '30px', lineHeight: '36px', weight: '600', usage: 'Subsection headers' },
+  { name: 'Heading 3', size: '24px', lineHeight: '32px', weight: '600', usage: 'Component titles' },
+  { name: 'Body Large', size: '18px', lineHeight: '28px', weight: '400', usage: 'Important body text' },
+  { name: 'Body', size: '16px', lineHeight: '24px', weight: '400', usage: 'Default body text' },
+  { name: 'Body Small', size: '14px', lineHeight: '20px', weight: '400', usage: 'Secondary text' },
+  { name: 'Caption', size: '12px', lineHeight: '16px', weight: '400', usage: 'Labels, metadata' }
+];
 
-export const ElevationTokens: StoryObj = {
-  render: () => (
-    <div className="space-y-8">
-      <div>
-        <h3 className="text-xl font-semibold mb-6 text-[var(--hive-text-primary)]">Shadow Elevation</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {[
-            { name: 'Small', class: 'shadow-sm', description: 'Subtle depth for buttons and inputs' },
-            { name: 'Default', class: 'shadow', description: 'Standard cards and components' },
-            { name: 'Medium', class: 'shadow-md', description: 'Elevated panels and dropdowns' },
-            { name: 'Large', class: 'shadow-lg', description: 'Modals and important overlays' },
-            { name: 'XLarge', class: 'shadow-xl', description: 'Major floating elements' },
-            { name: '2XLarge', class: 'shadow-2xl', description: 'Maximum elevation for focus' },
-          ].map((item) => (
-            <div key={item.name} className="space-y-3">
-              <div className={`w-full h-24 bg-[var(--hive-background-secondary)] border rounded-lg ${item.class}`}></div>
-              <div>
-                <div className="font-medium text-[var(--hive-text-primary)]">{item.name}</div>
-                <div className="text-[var(--hive-text-secondary)] text-sm">{item.description}</div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  ),
-  parameters: {
-    docs: {
-      description: {
-        story: 'Elevation system using shadows to create visual hierarchy.',
-      },
-    },
-  },
-};
+const spacingScale = [
+  { name: 'xs', value: '4px', usage: 'Tight spacing, inline elements' },
+  { name: 'sm', value: '8px', usage: 'Close relationships, form fields' },
+  { name: 'md', value: '16px', usage: 'Standard spacing, component padding' },
+  { name: 'lg', value: '24px', usage: 'Section spacing, card padding' },
+  { name: 'xl', value: '32px', usage: 'Major section breaks' },
+  { name: '2xl', value: '48px', usage: 'Page section spacing' },
+  { name: '3xl', value: '64px', usage: 'Large breakpoint spacing' }
+];
 
-export const MotionTokens: StoryObj = {
-  render: () => (
+const shadowLevels = [
+  { level: 0, name: 'None', shadow: 'none', usage: 'Flat elements, backgrounds' },
+  { level: 1, name: 'Subtle', shadow: '0 1px 3px rgba(0, 0, 0, 0.12)', usage: 'Cards, form inputs' },
+  { level: 2, name: 'Medium', shadow: '0 4px 6px rgba(0, 0, 0, 0.15)', usage: 'Dropdowns, tooltips' },
+  { level: 3, name: 'Strong', shadow: '0 8px 25px rgba(0, 0, 0, 0.18)', usage: 'Modals, floating panels' },
+  { level: 4, name: 'Maximum', shadow: '0 16px 40px rgba(0, 0, 0, 0.25)', usage: 'Critical alerts, overlays' }
+];
+
+// =============================================================================
+// INTERACTIVE SHOWCASE COMPONENTS
+// =============================================================================
+
+const ColorShowcase = () => {
+  const [copiedColor, setCopiedColor] = useState<string | null>(null);
+
+  const copyToClipboard = (text: string, name: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedColor(name);
+    setTimeout(() => setCopiedColor(null), 2000);
+  };
+
+  return (
     <div className="space-y-8">
-      <div>
-        <h3 className="text-xl font-semibold mb-6 text-[var(--hive-text-primary)]">Motion System</h3>
-        <p className="text-[var(--hive-text-secondary)] mb-6">
-          HIVE's motion system creates campus-first animations that feel responsive and premium.
-        </p>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Duration Tokens */}
-          <div>
-            <h4 className="text-lg font-semibold mb-4 text-[var(--hive-text-primary)]">Duration Tokens</h4>
-            <div className="space-y-3">
-              {[
-                { name: 'Fast', value: '150ms', token: '--hive-duration-fast', desc: 'Micro-interactions' },
-                { name: 'Base', value: '200ms', token: '--hive-duration-base', desc: 'Standard transitions' },
-                { name: 'Slow', value: '300ms', token: '--hive-duration-slow', desc: 'Modal appearances' },
-                { name: 'Slower', value: '500ms', token: '--hive-duration-slower', desc: 'Complex changes' },
-              ].map((item) => (
-                <div key={item.name} className="flex items-center justify-between p-3 bg-[var(--hive-background-secondary)] rounded border">
-                  <div>
-                    <div className="font-medium text-[var(--hive-text-primary)]">{item.name}</div>
-                    <div className="text-sm text-[var(--hive-text-secondary)]">{item.desc}</div>
-                  </div>
-                  <div className="text-right">
-                    <div className="font-mono text-sm text-[var(--hive-text-primary)]">{item.value}</div>
-                    <div className="font-mono text-xs text-[var(--hive-text-secondary)]">{item.token}</div>
+      <h3 className="text-lg font-semibold text-[var(--hive-text-primary)]">
+        HIVE Color System
+      </h3>
+      
+      {colorCategories.map((category) => (
+        <Card key={category.id} className="border-[var(--hive-border-default)] bg-[var(--hive-background-secondary)]">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-[var(--hive-text-primary)]">
+              <Palette className="w-5 h-5" />
+              {category.title}
+            </CardTitle>
+            <p className="text-sm text-[var(--hive-text-secondary)]">{category.description}</p>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {category.colors.map((color, index) => (
+                <div key={index} className="flex items-center gap-4 p-3 rounded-lg bg-[var(--hive-background-primary)] border border-[var(--hive-border-default)]">
+                  <div 
+                    className="w-12 h-12 rounded-lg border border-[var(--hive-border-default)] flex-shrink-0"
+                    style={{ backgroundColor: color.hex.startsWith('#') ? color.hex : `var(${color.hex})` }}
+                  />
+                  <div className="flex-1">
+                    <div className="font-medium text-[var(--hive-text-primary)] mb-1">{color.name}</div>
+                    <div className="text-xs text-[var(--hive-text-muted)] mb-1">{color.usage}</div>
+                    <div className="flex items-center gap-2">
+                      <code className="text-xs font-mono text-[var(--hive-text-secondary)] bg-[var(--hive-background-tertiary)] px-2 py-1 rounded">
+                        {color.var}
+                      </code>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => copyToClipboard(color.var, color.name)}
+                        className="h-6 w-6 p-0"
+                      >
+                        {copiedColor === color.name ? (
+                          <CheckCircle className="w-3 h-3 text-green-400" />
+                        ) : (
+                          <Copy className="w-3 h-3" />
+                        )}
+                      </Button>
+                    </div>
                   </div>
                 </div>
               ))}
             </div>
-          </div>
-          
-          {/* Easing Tokens */}
-          <div>
-            <h4 className="text-lg font-semibold mb-4 text-[var(--hive-text-primary)]">Easing Functions</h4>
-            <div className="space-y-3">
-              {[
-                { name: 'Ease Out', value: 'cubic-bezier(0.0, 0.0, 0.2, 1)', token: '--hive-ease-out', desc: 'Natural deceleration' },
-                { name: 'Ease In-Out', value: 'cubic-bezier(0.4, 0.0, 0.2, 1)', token: '--hive-ease-in-out', desc: 'Symmetric motion' },
-                { name: 'Ease Smooth', value: 'cubic-bezier(0.4, 0.0, 0.6, 1)', token: '--hive-ease-smooth', desc: 'HIVE signature' },
-              ].map((item) => (
-                <div key={item.name} className="p-3 bg-[var(--hive-background-secondary)] rounded border">
-                  <div className="font-medium text-[var(--hive-text-primary)]">{item.name}</div>
-                  <div className="text-sm text-[var(--hive-text-secondary)] mb-2">{item.desc}</div>
-                  <div className="font-mono text-xs text-[var(--hive-text-tertiary)]">{item.token}</div>
-                </div>
-              ))}
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+  );
+};
+
+const TypographyShowcase = () => {
+  return (
+    <div className="space-y-6">
+      <h3 className="text-lg font-semibold text-[var(--hive-text-primary)]">
+        Typography System
+      </h3>
+      
+      <Card className="border-[var(--hive-border-default)] bg-[var(--hive-background-secondary)]">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-[var(--hive-text-primary)]">
+            <Type className="w-5 h-5" />
+            Type Scale & Hierarchy
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          {typographyScale.map((type, index) => (
+            <div key={index} className="border-b border-[var(--hive-border-default)] pb-4 last:border-b-0">
+              <div 
+                className="text-[var(--hive-text-primary)] mb-2"
+                style={{ 
+                  fontSize: type.size, 
+                  lineHeight: type.lineHeight, 
+                  fontWeight: type.weight 
+                }}
+              >
+                The quick brown fox jumps over the lazy dog
+              </div>
+              <div className="flex items-center gap-4 text-sm text-[var(--hive-text-secondary)]">
+                <span className="font-medium">{type.name}</span>
+                <span>{type.size}/{type.lineHeight}</span>
+                <span>Weight {type.weight}</span>
+                <span className="text-[var(--hive-text-muted)]">{type.usage}</span>
+              </div>
             </div>
-          </div>
-        </div>
-        
-        {/* Liquid Metal Motion */}
-        <div className="mt-8">
-          <h4 className="text-lg font-semibold mb-4 text-[var(--hive-text-primary)]">Liquid Metal Motion</h4>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {[
-              { name: 'Subtle', token: '--hive-liquid-subtle', desc: 'Gentle premium feel' },
-              { name: 'Smooth', token: '--hive-liquid-smooth', desc: 'Fluid major transitions' },
-              { name: 'Bouncy', token: '--hive-liquid-bouncy', desc: 'Playful positive feedback' },
-            ].map((item) => (
-              <div key={item.name} className="p-3 bg-[var(--hive-background-secondary)] rounded border">
-                <div className="font-medium text-[var(--hive-text-primary)]">{item.name}</div>
-                <div className="text-sm text-[var(--hive-text-secondary)] mb-2">{item.desc}</div>
-                <div className="font-mono text-xs text-[var(--hive-text-tertiary)]">{item.token}</div>
+          ))}
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
+const SpacingShowcase = () => {
+  return (
+    <div className="space-y-6">
+      <h3 className="text-lg font-semibold text-[var(--hive-text-primary)]">
+        Spacing System
+      </h3>
+      
+      <Card className="border-[var(--hive-border-default)] bg-[var(--hive-background-secondary)]">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-[var(--hive-text-primary)]">
+            <Ruler className="w-5 h-5" />
+            4px Base Unit System
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {spacingScale.map((spacing, index) => (
+              <div key={index} className="flex items-center gap-4">
+                <div className="w-20 text-sm font-mono text-[var(--hive-text-primary)]">
+                  {spacing.name}
+                </div>
+                <div 
+                  className="bg-[var(--hive-brand-primary)] h-8 rounded"
+                  style={{ width: spacing.value }}
+                />
+                <div className="text-sm text-[var(--hive-text-secondary)]">
+                  {spacing.value}
+                </div>
+                <div className="text-sm text-[var(--hive-text-muted)]">
+                  {spacing.usage}
+                </div>
               </div>
             ))}
           </div>
-        </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
+const ShadowShowcase = () => {
+  return (
+    <div className="space-y-6">
+      <h3 className="text-lg font-semibold text-[var(--hive-text-primary)]">
+        Shadow System
+      </h3>
+      
+      <Card className="border-[var(--hive-border-default)] bg-[var(--hive-background-secondary)]">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-[var(--hive-text-primary)]">
+            <Layers className="w-5 h-5" />
+            Elevation Hierarchy
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {shadowLevels.map((shadow, index) => (
+              <div key={index} className="space-y-2">
+                <div 
+                  className="h-24 bg-[var(--hive-background-primary)] border border-[var(--hive-border-default)] rounded-lg flex items-center justify-center"
+                  style={{ boxShadow: shadow.shadow }}
+                >
+                  <div className="text-center">
+                    <div className="text-sm font-medium text-[var(--hive-text-primary)]">
+                      Level {shadow.level}
+                    </div>
+                    <div className="text-xs text-[var(--hive-text-secondary)]">
+                      {shadow.name}
+                    </div>
+                  </div>
+                </div>
+                <div className="text-xs text-[var(--hive-text-muted)]">
+                  {shadow.usage}
+                </div>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
+// =============================================================================
+// DESIGN TOKENS MAIN COMPONENT
+// =============================================================================
+
+const DesignTokensSystem = () => {
+  const [activeSection, setActiveSection] = useState('colors');
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const sections = [
+    { id: 'colors', label: 'Colors', icon: Palette },
+    { id: 'typography', label: 'Typography', icon: Type },
+    { id: 'spacing', label: 'Spacing', icon: Ruler },
+    { id: 'shadows', label: 'Shadows', icon: Layers }
+  ];
+
+  return (
+    <div className="min-h-screen bg-[var(--hive-background-primary)] text-[var(--hive-text-primary)]">
+      <div className="max-w-7xl mx-auto p-6">
         
-        <div className="p-4 bg-[var(--hive-background-tertiary)] rounded-lg border-l-4 border-[var(--hive-brand-primary)]">
-          <p className="text-sm text-[var(--hive-text-secondary)]">
-            <strong className="text-[var(--hive-text-primary)]">Pro Tip:</strong> For interactive motion examples and detailed usage, 
-            check the dedicated <strong>Motion System</strong> story in the Foundation section.
+        {/* Header */}
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center gap-3 mb-6">
+            <div className="p-3 rounded-xl bg-gradient-to-r from-[var(--hive-brand-primary)]/10 to-[var(--hive-brand-accent)]/10 border border-[var(--hive-border-gold)]">
+              <Lightbulb className="w-8 h-8 text-[var(--hive-brand-primary)]" />
+            </div>
+            <div>
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-[var(--hive-brand-primary)] to-[var(--hive-brand-accent)] bg-clip-text text-transparent">
+                Design Tokens
+              </h1>
+              <p className="text-[var(--hive-text-secondary)] text-lg">
+                HIVE Foundation System
+              </p>
+            </div>
+          </div>
+          
+          <p className="text-xl text-[var(--hive-text-secondary)] mb-8 max-w-3xl mx-auto">
+            The visual DNA that creates consistent University at Buffalo campus platform experiences. 
+            Every color, spacing, and typography decision designed for authentic campus social utility.
           </p>
+          
+          {/* Search */}
+          <div className="max-w-md mx-auto relative mb-8">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[var(--hive-text-secondary)] w-4 h-4" />
+            <Input
+              type="text"
+              placeholder="Search design tokens..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10 bg-[var(--hive-background-secondary)] border-[var(--hive-border-default)]"
+            />
+          </div>
         </div>
+
+        {/* Section Navigation */}
+        <div className="flex flex-wrap gap-2 mb-8 justify-center">
+          {sections.map((section) => (
+            <Button
+              key={section.id}
+              variant={activeSection === section.id ? 'primary' : 'secondary'}
+              onClick={() => setActiveSection(section.id)}
+              className="flex items-center gap-2"
+            >
+              <section.icon className="w-4 h-4" />
+              {section.label}
+            </Button>
+          ))}
+        </div>
+
+        {/* Content Sections */}
+        <div className="space-y-12">
+          {activeSection === 'colors' && <ColorShowcase />}
+          {activeSection === 'typography' && <TypographyShowcase />}
+          {activeSection === 'spacing' && <SpacingShowcase />}
+          {activeSection === 'shadows' && <ShadowShowcase />}
+        </div>
+
+        {/* Campus Context */}
+        <Card className="border-[var(--hive-border-default)] bg-[var(--hive-background-secondary)] mt-12">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-[var(--hive-brand-primary)]">
+              <Monitor className="w-5 h-5" />
+              Campus Platform Optimization
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div>
+                <h4 className="font-medium text-[var(--hive-text-primary)] mb-4 flex items-center gap-2">
+                  <Eye className="w-4 h-4" />
+                  Accessibility Standards
+                </h4>
+                <div className="space-y-2 text-sm text-[var(--hive-text-secondary)]">
+                  <div>• WCAG 2.1 AA color contrast (4.5:1+)</div>
+                  <div>• 44px+ touch targets for mobile</div>
+                  <div>• High contrast mode support</div>
+                  <div>• Screen reader optimized hierarchy</div>
+                </div>
+              </div>
+              <div>
+                <h4 className="font-medium text-[var(--hive-text-primary)] mb-4 flex items-center gap-2">
+                  <Smartphone className="w-4 h-4" />
+                  Mobile Campus Usage
+                </h4>
+                <div className="space-y-2 text-sm text-[var(--hive-text-secondary)]">
+                  <div>• Between-class quick interactions</div>
+                  <div>• One-handed thumb navigation</div>
+                  <div>• Poor WiFi performance optimization</div>
+                  <div>• Thumb-reachable UI elements</div>
+                </div>
+              </div>
+              <div>
+                <h4 className="font-medium text-[var(--hive-text-primary)] mb-4 flex items-center gap-2">
+                  <Contrast className="w-4 h-4" />
+                  Campus Context
+                </h4>
+                <div className="space-y-2 text-sm text-[var(--hive-text-secondary)]">
+                  <div>• University at Buffalo branding</div>
+                  <div>• Academic calendar awareness</div>
+                  <div>• Campus social dynamics</div>
+                  <div>• Professional + social balance</div>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
-  ),
+  );
+};
+
+// =============================================================================
+// STORYBOOK STORIES
+// =============================================================================
+
+export const CompleteDesignSystem: Story = {
+  render: () => <DesignTokensSystem />,
   parameters: {
     docs: {
       description: {
-        story: 'Complete motion token system with durations, easing functions, and HIVE Liquid Metal Motion.',
-      },
-    },
-  },
+        story: 'Complete HIVE design token system with interactive showcases for colors, typography, spacing, and shadows optimized for University at Buffalo campus usage.'
+      }
+    }
+  }
+};
+
+export const ColorSystem: Story = {
+  render: () => <ColorShowcase />,
+  parameters: {
+    docs: {
+      description: {
+        story: 'HIVE color system with brand colors, semantic hierarchy, and campus context optimizations.'
+      }
+    }
+  }
+};
+
+export const TypographySystem: Story = {
+  render: () => <TypographyShowcase />,
+  parameters: {
+    docs: {
+      description: {
+        story: 'Typography scale and hierarchy designed for campus content readability and accessibility.'
+      }
+    }
+  }
+};
+
+export const SpacingSystem: Story = {
+  render: () => <SpacingShowcase />,
+  parameters: {
+    docs: {
+      description: {
+        story: '4px base unit spacing system that creates consistent rhythm across all HIVE interfaces.'
+      }
+    }
+  }
+};
+
+export const ShadowSystem: Story = {
+  render: () => <ShadowShowcase />,
+  parameters: {
+    docs: {
+      description: {
+        story: 'Five-level elevation system that creates clear visual hierarchy and depth in campus interfaces.'
+      }
+    }
+  }
 };
