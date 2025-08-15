@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 import { Settings, BarChart3, Shield, Calendar, Bell, User, BookOpen, Trophy, Users, MapPin, GraduationCap, Clock, Zap, Star, Eye, EyeOff } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card';
 import { Button } from '../../atomic/atoms/button-enhanced';
 import { Avatar, AvatarFallback, AvatarImage } from '../../atomic/atoms/avatar';
 import { Badge } from '../../atomic/atoms/badge';

@@ -5,18 +5,18 @@
 
 import type { Meta, StoryObj } from '@storybook/react';
 import React, { useState } from 'react';
-import { Card, CardContent, CardHeader } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
-import { Badge } from '../../components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
+import { Card, CardContent, CardHeader } from '../../../components/ui/card';
+import { Button } from '../../../components/ui/button';
+import { Badge } from '../../../components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../components/ui/tabs';
 
 // Import all profile card components
-import { AvatarCard, mockUserProfile, type UserProfile } from '../../components/profile/cards/avatar-card';
-import { CalendarCard, mockCalendarEvents, type CalendarEvent } from '../../components/profile/cards/calendar-card';
-import { NotificationsCard, mockNotifications, type Notification } from '../../components/profile/cards/notifications-card';
-import { SpacesCard, mockSpaces, mockRecommendedSpaces, type Space } from '../../components/profile/cards/spaces-card';
-import { GhostModeCard, mockGhostModeSettings, type GhostModeSettings } from '../../components/profile/cards/ghost-mode-card';
-import { HiveLabCard, mockTools, mockBuilderStats, type Tool, type BuilderStats } from '../../components/profile/cards/hive-lab-card';
+import { AvatarCard, mockUserProfile, type UserProfile } from '../../../components/profile/cards/avatar-card';
+import { CalendarCard, mockCalendarEvents, type CalendarEvent } from '../../../components/profile/cards/calendar-card';
+import { NotificationsCard, mockNotifications, type Notification } from '../../../components/profile/cards/notifications-card';
+import { SpacesCard, mockSpaces, mockRecommendedSpaces, type Space } from '../../../components/profile/cards/spaces-card';
+import { GhostModeCard, mockGhostModeSettings, type GhostModeSettings } from '../../../components/profile/cards/ghost-mode-card';
+import { HiveLabCard, mockTools, mockBuilderStats, type Tool, type BuilderStats } from '../../../components/profile/cards/hive-lab-card';
 
 import { 
   Users, 

@@ -1,15 +1,15 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
-import { Input } from '../../components/ui/input';
-import { Label } from '../../components/ui/label';
-import { Badge } from '../../components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '../../components/ui/avatar';
-import { HiveProgress as Progress } from '../../components/hive-progress';
-import { Separator } from '../../components/ui/separator';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
-import { Alert, AlertDescription, AlertTitle } from '../../components/ui/alert';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card';
+import { Button } from '../../../components/ui/button';
+import { Input } from '../../../components/ui/input';
+import { Label } from '../../../components/ui/label';
+import { Badge } from '../../../components/ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '../../../components/ui/avatar';
+import { HiveProgress as Progress } from '../../../components/hive-progress';
+import { Separator } from '../../../components/ui/separator';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../components/ui/tabs';
+import { Alert, AlertDescription, AlertTitle } from '../../../components/ui/alert';
 import { 
   Wifi,
   WifiOff,

@@ -8,7 +8,7 @@ import {
   ChevronRight, Plus, Filter, TrendingUp, Eye,
   CheckCircle, AlertCircle, Timer, Play, Pause
 } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card';
 import { Button } from '../../atomic/atoms/button-enhanced';
 import { Avatar, AvatarFallback, AvatarImage } from '../../atomic/atoms/avatar';
 import { Badge } from '../../atomic/atoms/badge';

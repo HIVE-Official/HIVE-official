@@ -5,25 +5,25 @@
 
 import type { Meta, StoryObj } from '@storybook/react';
 import React, { useState } from 'react';
-import { motion } from '../../components/framer-motion-proxy';
-import { Button } from '../../components/ui/button';
-import { Card, CardContent, CardHeader } from '../../components/ui/card';
-import { Badge } from '../../components/ui/badge';
-import { Switch } from '../../components/ui/switch';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
+import { motion } from '../../../components/framer-motion-proxy';
+import { Button } from '../../../components/ui/button';
+import { Card, CardContent, CardHeader } from '../../../components/ui/card';
+import { Badge } from '../../../components/ui/badge';
+import { Switch } from '../../../components/ui/switch';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../components/ui/tabs';
 
 // Import all components
-import { ProfileDashboard, defaultProfileDashboardProps } from '../../components/profile/profile-dashboard';
+import { ProfileDashboard, defaultProfileDashboardProps } from '../../../components/profile/profile-dashboard';
 import { FirebaseProvider } from '../contexts/firebase-context';
 
 // Import individual components for isolated testing
-import { AvatarCard, mockUserProfile } from '../../components/profile/cards/avatar-card';
-import { CalendarCard, mockCalendarEvents } from '../../components/profile/cards/calendar-card';
-import { NotificationsCard, mockNotifications } from '../../components/profile/cards/notifications-card';
-import { SpacesCard, mockSpaces, mockRecommendedSpaces } from '../../components/profile/cards/spaces-card';
-import { GhostModeCard, mockGhostModeSettings } from '../../components/profile/cards/ghost-mode-card';
-import { HiveLabCard, mockTools, mockBuilderStats } from '../../components/profile/cards/hive-lab-card';
-import { BentoGridLayout, useBentoGrid } from '../../components/profile/bento-grid/bento-grid-layout';
+import { AvatarCard, mockUserProfile } from '../../../components/profile/cards/avatar-card';
+import { CalendarCard, mockCalendarEvents } from '../../../components/profile/cards/calendar-card';
+import { NotificationsCard, mockNotifications } from '../../../components/profile/cards/notifications-card';
+import { SpacesCard, mockSpaces, mockRecommendedSpaces } from '../../../components/profile/cards/spaces-card';
+import { GhostModeCard, mockGhostModeSettings } from '../../../components/profile/cards/ghost-mode-card';
+import { HiveLabCard, mockTools, mockBuilderStats } from '../../../components/profile/cards/hive-lab-card';
+import { BentoGridLayout, useBentoGrid } from '../../../components/profile/bento-grid/bento-grid-layout';
 
 import { 
   Monitor, 

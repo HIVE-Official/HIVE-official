@@ -5,15 +5,15 @@
 
 import type { Meta, StoryObj } from '@storybook/react';
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from '../../components/framer-motion-proxy';
+import { motion, AnimatePresence } from '../../../components/framer-motion-proxy';
 import { hiveVariants, hiveEasing, hiveDuration } from '../../motion/hive-motion';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
-import { Badge } from '../../components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '../../components/ui/avatar';
-import { Input } from '../../components/ui/input';
-import { Switch } from '../../components/ui/switch';
-import { Progress } from '../../components/ui/progress';
+import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
+import { Button } from '../../../components/ui/button';
+import { Badge } from '../../../components/ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '../../../components/ui/avatar';
+import { Input } from '../../../components/ui/input';
+import { Switch } from '../../../components/ui/switch';
+import { Progress } from '../../../components/ui/progress';
 import '../../hive-tokens.css';
 import { 
   User,

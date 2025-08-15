@@ -6,7 +6,7 @@ import {
   Layers, Code, Puzzle, Wrench, Lightbulb, ArrowRight,
   CheckCircle, Play, Pause, RotateCcw, Download
 } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card';
 import { Button } from '../../atomic/atoms/button-enhanced';
 import { Badge } from '../../atomic/atoms/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '../../atomic/atoms/avatar';

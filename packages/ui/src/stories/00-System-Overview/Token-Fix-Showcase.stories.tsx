@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Badge } from '../../components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
+import { Badge } from '../../../components/ui/badge';
 import { Input } from '../atomic/atoms/input-enhanced';
 import { Button } from '../atomic/atoms/button-enhanced';
 import { Switch } from '../atomic/atoms/switch-enhanced';

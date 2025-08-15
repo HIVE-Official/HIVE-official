@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
-import { Input } from '../../components/ui/input';
-import { Badge } from '../../components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '../../components/ui/avatar';
-import { HiveProgress as Progress } from '../../components/hive-progress';
-import { Slider } from '../../components/ui/slider';
-import { Switch } from '../../components/ui/switch';
-import { Alert, AlertDescription, AlertTitle } from '../../components/ui/alert';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card';
+import { Button } from '../../../components/ui/button';
+import { Input } from '../../../components/ui/input';
+import { Badge } from '../../../components/ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '../../../components/ui/avatar';
+import { HiveProgress as Progress } from '../../../components/hive-progress';
+import { Slider } from '../../../components/ui/slider';
+import { Switch } from '../../../components/ui/switch';
+import { Alert, AlertDescription, AlertTitle } from '../../../components/ui/alert';
 import { 
   Smartphone,
   Tablet,

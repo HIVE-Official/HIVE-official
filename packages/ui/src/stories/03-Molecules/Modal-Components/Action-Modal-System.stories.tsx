@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 import { Plus, Users, Calendar, BookOpen, X, AlertTriangle, CheckCircle, Info, Trash2, Edit, Share2, Settings, UserPlus, MessageSquare, Upload, Download } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card';
 import { Button } from '../../atomic/atoms/button-enhanced';
 import { Input } from '../../atomic/atoms/input-enhanced';
 import { Label } from '../../atomic/atoms/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../components/ui/select';
 import { Textarea } from '../../atomic/atoms/textarea-enhanced';
 import { Badge } from '../../atomic/atoms/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '../../atomic/atoms/avatar';

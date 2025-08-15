@@ -5,15 +5,15 @@
 
 import type { Meta, StoryObj } from '@storybook/react';
 import React, { useState, useCallback } from 'react';
-import { motion } from '../../components/framer-motion-proxy';
-import { Card, CardContent, CardHeader } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
-import { Badge } from '../../components/ui/badge';
-import { Switch } from '../../components/ui/switch';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
+import { motion } from '../../../components/framer-motion-proxy';
+import { Card, CardContent, CardHeader } from '../../../components/ui/card';
+import { Button } from '../../../components/ui/button';
+import { Badge } from '../../../components/ui/badge';
+import { Switch } from '../../../components/ui/switch';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../components/ui/tabs';
 
 // Import the bento grid system
-import { BentoGridLayout, useBentoGrid, type GridItem } from '../../components/profile/bento-grid/bento-grid-layout';
+import { BentoGridLayout, useBentoGrid, type GridItem } from '../../../components/profile/bento-grid/bento-grid-layout';
 
 import { 
   Monitor, 

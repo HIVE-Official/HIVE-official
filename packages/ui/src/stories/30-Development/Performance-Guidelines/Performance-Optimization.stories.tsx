@@ -1,17 +1,17 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React, { useState, useEffect, useMemo, useCallback, memo, lazy, Suspense, useRef } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
-import { Input } from '../../components/ui/input';
-import { Label } from '../../components/ui/label';
-import { Badge } from '../../components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '../../components/ui/avatar';
-import { Progress } from '../../components/ui/progress';
-import { Separator } from '../../components/ui/separator';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
-import { Alert, AlertDescription, AlertTitle } from '../../components/ui/alert';
-import { Switch } from '../../components/ui/switch';
-import { Slider } from '../../components/ui/slider';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card';
+import { Button } from '../../../components/ui/button';
+import { Input } from '../../../components/ui/input';
+import { Label } from '../../../components/ui/label';
+import { Badge } from '../../../components/ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '../../../components/ui/avatar';
+import { Progress } from '../../../components/ui/progress';
+import { Separator } from '../../../components/ui/separator';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../components/ui/tabs';
+import { Alert, AlertDescription, AlertTitle } from '../../../components/ui/alert';
+import { Switch } from '../../../components/ui/switch';
+import { Slider } from '../../../components/ui/slider';
 import { 
   Zap,
   Activity,

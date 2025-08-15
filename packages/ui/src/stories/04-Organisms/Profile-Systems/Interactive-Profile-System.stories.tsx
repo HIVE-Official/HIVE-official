@@ -5,19 +5,19 @@
 
 import type { Meta, StoryObj } from '@storybook/react';
 import React, { useState, useEffect, useReducer, useCallback } from 'react';
-import { motion, AnimatePresence } from '../../components/framer-motion-proxy';
+import { motion, AnimatePresence } from '../../../components/framer-motion-proxy';
 import { hiveVariants, hiveEasing, hiveDuration } from '../../motion/hive-motion';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
-import { Badge } from '../../components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '../../components/ui/avatar';
-import { Input } from '../../components/ui/input';
-import { Switch } from '../../components/ui/switch';
-import { Progress } from '../../components/ui/progress';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../../components/ui/dialog';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select';
-import { Textarea } from '../../components/ui/textarea';
+import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
+import { Button } from '../../../components/ui/button';
+import { Badge } from '../../../components/ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '../../../components/ui/avatar';
+import { Input } from '../../../components/ui/input';
+import { Switch } from '../../../components/ui/switch';
+import { Progress } from '../../../components/ui/progress';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../components/ui/tabs';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../../../components/ui/dialog';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../components/ui/select';
+import { Textarea } from '../../../components/ui/textarea';
 import '../../hive-tokens.css';
 import { 
   User, Users, Calendar, Bell, Heart, MessageSquare, Share, Settings, BarChart3, Shield, Edit, Wrench,

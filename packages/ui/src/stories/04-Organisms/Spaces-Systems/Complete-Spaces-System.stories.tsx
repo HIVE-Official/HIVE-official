@@ -7,27 +7,27 @@
 
 import React, { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { Button } from '../../components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Badge } from '../../components/ui/badge';
+import { Button } from '../../../components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
+import { Badge } from '../../../components/ui/badge';
 import { 
   UBSpaceTemplateCard,
   UBSpacesDirectory,
   SpaceActivationModal,
   UB_SPACE_TEMPLATES
-} from '../../components/spaces/ub-space-templates';
+} from '../../../components/spaces/ub-space-templates';
 import { 
   UBMobileBottomNav,
   UBMobileHeader,
   UBMobileTouchButton,
   UBMobileSwipeCard
-} from '../../components/mobile/ub-mobile-touch-optimization';
+} from '../../../components/mobile/ub-mobile-touch-optimization';
 import { CampusSpacesCard } from '../atomic/molecules/campus-spaces-card';
 import { 
   UBAdminMetricsOverview,
   UBModerationQueue,
   UBAdminQuickActions
-} from '../../components/admin/ub-admin-dashboard';
+} from '../../../components/admin/ub-admin-dashboard';
 import { action } from '@storybook/addon-actions';
 import { 
   Users, 

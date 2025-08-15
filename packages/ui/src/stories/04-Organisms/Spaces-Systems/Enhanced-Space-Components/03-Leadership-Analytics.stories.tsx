@@ -4,13 +4,13 @@
  */
 
 import type { Meta, StoryObj } from '@storybook/react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
-import { Badge } from '../../components/ui/badge';
-import { Avatar, AvatarFallback } from '../../components/ui/avatar';
-import { HiveProgress } from '../../components/hive-progress';
-import { Separator } from '../../components/ui/separator';
-import { Switch } from '../../components/ui/switch';
+import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
+import { Button } from '../../../components/ui/button';
+import { Badge } from '../../../components/ui/badge';
+import { Avatar, AvatarFallback } from '../../../components/ui/avatar';
+import { HiveProgress } from '../../../components/hive-progress';
+import { Separator } from '../../../components/ui/separator';
+import { Switch } from '../../../components/ui/switch';
 import { 
   Users, 
   Settings,
