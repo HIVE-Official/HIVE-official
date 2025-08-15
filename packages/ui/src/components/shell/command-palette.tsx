@@ -12,7 +12,7 @@ import {
   Calendar,
   BookOpen
 } from 'lucide-react';
-import { Button } from '../../atomic/atoms/button-enhanced';
+import { Button } from '../../ui/button-enhanced';
 import { cn } from '../../lib/utils';
 
 interface CommandPaletteProps {

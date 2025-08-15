@@ -8,7 +8,7 @@ import {
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { colors, semantic, shadows, gradients } from '@hive/tokens';
-import { Button } from '../../atomic/atoms/button-enhanced';
+import { Button } from '../../ui/button-enhanced';
 import { 
   useNavigation, 
   NavigationContainer, 

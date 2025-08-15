@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 import { Search, Bell, MessageSquare, Plus, Menu, Home, Users, Calendar, BookOpen, Settings, User, LogOut, ChevronDown, X } from 'lucide-react';
 import { Button } from '../../../components/ui/button';
-import { Input } from '../../atomic/atoms/input-enhanced';
+import { Input } from '../../ui/input-enhanced';
 import { Avatar, AvatarFallback, AvatarImage } from '../../../components/ui/avatar';
 import { Badge } from '../../../components/ui/badge';
 

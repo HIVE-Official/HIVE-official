@@ -3,10 +3,10 @@ import React from 'react';
 import { Plus, Users, Calendar, BookOpen, X, AlertTriangle, CheckCircle, Info, Trash2, Edit, Share2, Settings, UserPlus, MessageSquare, Upload, Download } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card';
 import { Button } from '../../../components/ui/button';
-import { Input } from '../../atomic/atoms/input-enhanced';
+import { Input } from '../../ui/input-enhanced';
 import { Label } from '../../../components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../components/ui/select';
-import { Textarea } from '../../atomic/atoms/textarea-enhanced';
+import { Textarea } from '../../ui/textarea-enhanced';
 import { Badge } from '../../../components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '../../../components/ui/avatar';
 

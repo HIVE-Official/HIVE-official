@@ -22,7 +22,8 @@ import {
   Upload
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
-import { Button, Badge } from '../../atomic/atoms';
+import { Button } from '../ui/button';
+import { Badge } from '../ui/badge';
 import { EventManagerTool } from '../tools/event-manager-tool';
 import { type Space } from '@hive/core';
 

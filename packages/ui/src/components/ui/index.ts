@@ -29,3 +29,12 @@ export * from './switch';
 export * from './separator';
 export * from './textarea';
 export * from './progress';
+
+// ENHANCED ATOMIC COMPONENTS - Migrated from atomic directory
+export * from './spacer';
+export * from './spinner';
+export * from './typography';
+export * from './container';
+export * from './tag';
+export * from './file-input';
+export * from './platform-icons';

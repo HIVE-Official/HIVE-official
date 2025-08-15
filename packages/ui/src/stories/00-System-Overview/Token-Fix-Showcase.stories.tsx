@@ -2,11 +2,11 @@ import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
 import { Badge } from '../../../components/ui/badge';
-import { Input } from '../atomic/atoms/input-enhanced';
-import { Button } from '../atomic/atoms/button-enhanced';
-import { Switch } from '../atomic/atoms/switch-enhanced';
-import { Select } from '../atomic/atoms/select-enhanced';
-import { Avatar, AvatarFallback, AvatarImage } from '../atomic/atoms/avatar';
+import { Input } from '../ui/input-enhanced';
+import { Button } from '../ui/button-enhanced';
+import { Switch } from '../ui/switch-enhanced';
+import { Select } from '../ui/select-enhanced';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import '../../hive-tokens.css';
 
 const meta: Meta = {

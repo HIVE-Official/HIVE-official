@@ -25,9 +25,9 @@ import {
   BookOpen,
   HelpCircle
 } from 'lucide-react';
-import { Button } from '../../atomic/atoms/button-enhanced';
+import { Button } from '../../ui/button-enhanced';
 import { Badge } from '../ui/badge';
-import { Separator } from '../../atomic/atoms/separator';
+import { Separator } from '../../ui/separator';
 import { cn } from '../../lib/utils';
 
 interface NavigationItem {

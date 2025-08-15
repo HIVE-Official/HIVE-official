@@ -23,7 +23,7 @@ import { ProfileAnalyticsWidget } from './widgets/profile-analytics-widget';
 import { PrivacyControlWidget } from './widgets/privacy-control-widget';
 
 // Import existing profile components
-import { ProfileDashboard, type ProfileDashboardProps } from '../../atomic/organisms/profile-dashboard';
+import { ProfileDashboard, type ProfileDashboardProps } from '../profile/profile-dashboard';
 
 interface EnhancedProfileDashboardProps extends ProfileDashboardProps {
   // Additional props for expand-focus functionality

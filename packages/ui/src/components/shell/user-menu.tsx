@@ -18,7 +18,7 @@ import {
   Star
 } from 'lucide-react';
 import { Avatar, AvatarImage, AvatarFallback } from '../ui/avatar';
-import { Button } from '../../atomic/atoms/button-enhanced';
+import { Button } from '../../ui/button-enhanced';
 import {
   DropdownMenu,
   DropdownMenuContent,

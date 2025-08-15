@@ -2,7 +2,7 @@
 
 import React, { useState, createContext, useContext } from 'react';
 import { cn } from '../../lib/utils';
-import { ButtonEnhanced as Button } from '../../atomic/atoms/button-enhanced';
+import { ButtonEnhanced as Button } from '../../ui/button-enhanced';
 import { 
   ArrowLeft, 
   ArrowRight, 

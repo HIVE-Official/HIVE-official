@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { Button } from "../../atomic/atoms/button-enhanced";
-import { Textarea } from "../../atomic/atoms/textarea-enhanced";
+import { Button } from "../../ui/button-enhanced";
+import { Textarea } from "../../ui/textarea-enhanced";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Badge } from "../ui/badge";

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { ChevronRight, Home, Users, Code, Zap, Calendar, BookOpen, User, Settings, Compass, Heart } from 'lucide-react';
-import { Button } from '../../atomic/atoms/button-enhanced';
+import { Button } from '../../ui/button-enhanced';
 import { cn } from '../../lib/utils';
 
 interface BreadcrumbItem {

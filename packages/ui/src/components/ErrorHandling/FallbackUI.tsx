@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { cn } from '../../lib/utils';
-import { Text } from '../../atomic/atoms/text';
-import { Button } from '../../atomic/atoms/button';
+import { Text } from '../../ui/text';
+import { Button } from '../../ui/button';
 import { useAdvancedViewport } from '../Layout/ResponsiveLayout';
 
 // Fallback strategies for different failure scenarios

@@ -8,7 +8,7 @@ import {
   Search, Bell, Settings, Plus, ChevronDown,
   MapPin, Building, Coffee, Beaker
 } from 'lucide-react';
-import { Button } from '../../atomic/atoms/button-enhanced';
+import { Button } from '../../ui/button-enhanced';
 import { 
   useNavigation, 
   NavigationContainer, 

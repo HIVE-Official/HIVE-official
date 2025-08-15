@@ -3,7 +3,7 @@
 import React from 'react';
 import { usePathname } from 'next/navigation';
 import { AlignJustify, Search, Bell, Command, Zap, Settings, Hash } from 'lucide-react';
-import { Button } from '../../atomic/atoms/button-enhanced';
+import { Button } from '../../ui/button-enhanced';
 import { UserMenu } from './user-menu';
 import { cn } from '../../lib/utils';
 

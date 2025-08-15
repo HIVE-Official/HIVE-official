@@ -23,7 +23,8 @@ import {
   Eye
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
-import { Button, Badge } from '../../atomic/atoms';
+import { Button } from '../ui/button';
+import { Badge } from '../ui/badge';
 import { MemberDirectoryTool } from '../tools/member-directory-tool';
 import { type Space } from '@hive/core';
 

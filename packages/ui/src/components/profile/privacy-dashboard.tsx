@@ -35,7 +35,7 @@ import {
 import { HiveCard } from '../hive-card';
 import { HiveButton } from '../hive-button';
 import { Badge } from '../ui/badge';
-import { Switch } from '../../atomic/atoms/switch-enhanced';
+import { Switch } from '../../ui/switch-enhanced';
 import { cn } from '../../lib/utils';
 
 // Privacy Settings Types

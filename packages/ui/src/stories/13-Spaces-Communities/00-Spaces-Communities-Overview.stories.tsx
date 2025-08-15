@@ -3,8 +3,8 @@ import React from 'react';
 import { Badge } from '../../../components/ui/badge';
 import { Button } from '../../../components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../atomic/ui/card';
-import { Container } from '../../atomic/atoms/container';
-import { Text as Typography } from '../../atomic/atoms/text';
+import { Container } from '../../ui/container';
+import { Text as Typography } from '../../ui/text';
 
 /**
  * # 🏠 Spaces & Communities Feature Slice
