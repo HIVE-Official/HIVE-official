@@ -2,11 +2,11 @@ import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 import { Mail, Lock, Eye, EyeOff, User, School, Calendar, AlertCircle, CheckCircle, Loader2, ArrowRight } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card';
-import { Button } from '../../atomic/atoms/button-enhanced';
+import { Button } from '../../../components/ui/button';
 import { Input } from '../../atomic/atoms/input-enhanced';
-import { Label } from '../../atomic/atoms/label';
+import { Label } from '../../../components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../components/ui/select';
-import { Checkbox } from '../../atomic/atoms/checkbox';
+import { Checkbox } from '../../../components/ui/checkbox';
 
 const meta: Meta = {
   title: '03-Molecules/Form-Components/Auth Form System',

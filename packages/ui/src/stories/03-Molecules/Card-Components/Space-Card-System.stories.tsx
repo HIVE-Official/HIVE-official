@@ -2,9 +2,9 @@ import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 import { Users, MapPin, Clock, Star, Settings, ArrowRight, BookOpen, Home, Building, GraduationCap, Calendar, MessageSquare, Lock, Globe } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card';
-import { Badge } from '../../atomic/atoms/badge';
-import { Button } from '../../atomic/atoms/button-enhanced';
-import { Avatar, AvatarFallback, AvatarImage } from '../../atomic/atoms/avatar';
+import { Badge } from '../../../components/ui/badge';
+import { Button } from '../../../components/ui/button';
+import { Avatar, AvatarFallback } from '../../../components/ui/avatar';
 
 const meta: Meta = {
   title: '03-Molecules/Card-Components/Space Card System',

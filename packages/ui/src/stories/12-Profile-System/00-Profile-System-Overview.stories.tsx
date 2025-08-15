@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
-import { Badge } from '../../atomic/atoms/badge';
-import { Button } from '../../atomic/atoms/button-enhanced';
+import { Badge } from '../../../components/ui/badge';
+import { Button } from '../../../components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Container } from '../../atomic/atoms/container';
 import { Text as Typography } from '../../atomic/atoms/text';
-import { Avatar } from '../../atomic/atoms/avatar';
-import { Progress } from '../../atomic/atoms/progress';
+import { Avatar } from '../../../components/ui/avatar';
+import { Progress } from '../../../components/ui/progress';
 
 /**
  * # 👤 Profile System Feature Slice

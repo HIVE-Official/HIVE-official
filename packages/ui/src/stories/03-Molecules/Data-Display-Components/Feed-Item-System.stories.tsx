@@ -2,9 +2,9 @@ import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 import { Heart, MessageCircle, Share2, Bookmark, MoreHorizontal, Users, MapPin, Clock, Calendar, BookOpen, Pin, Trash2, Edit, ChevronUp, ChevronDown } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card';
-import { Button } from '../../atomic/atoms/button-enhanced';
-import { Avatar, AvatarFallback, AvatarImage } from '../../atomic/atoms/avatar';
-import { Badge } from '../../atomic/atoms/badge';
+import { Button } from '../../../components/ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from '../../../components/ui/avatar';
+import { Badge } from '../../../components/ui/badge';
 
 const meta: Meta = {
   title: '03-Molecules/Data-Display-Components/Feed Item System',

@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 import { Layout, Grid, Maximize2, Minimize2, Smartphone, Tablet, Monitor, Users, BookOpen, Calendar, Home } from 'lucide-react';
-import { Container } from '../../../atomic/atoms/container';
-import { Spacer } from '../../../atomic/atoms/spacer';
+import { Container } from '../../../../components/ui/container';
+import { Spacer } from '../../../../components/ui/spacer';
 
 const meta: Meta = {
   title: '02-Atoms/Layout-Elements/Container & Spacing System',
