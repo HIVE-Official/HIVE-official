@@ -4,7 +4,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
-import { Typography } from '../ui/typography';
+import { Text } from '../ui/typography';
 import { PlatformIcons } from '../ui/platform-icons';
 import { cn } from '../../lib/utils';
 import { 
@@ -159,7 +159,7 @@ export function SimpleToolBuilder({
       {/* Header */}
       <div className="text-center">
         <div className="flex items-center justify-center gap-2 mb-4">
-          <Icon icon={Zap} size="lg" color="primary" />
+          <Zap className="h-6 w-6 text-[var(--hive-brand-secondary)]" />
           <Text variant="h1" weight="bold">
             UB Campus Tool Builder
           </Text>
@@ -240,7 +240,7 @@ interface ToolTemplateSelectionProps {
   onSelectTemplate: (template: UBToolTemplate) => void;
 }
 
-function ToolTemplateSelection({ templates, onSelectTemplate }: ToolTemplateSelectionProps) {
+export function ToolTemplateSelection({ templates, onSelectTemplate }: ToolTemplateSelectionProps) {
   const categorizedTemplates = templates.reduce((acc, template) => {
     if (!acc[template.category]) acc[template.category] = [];
     acc[template.category].push(template);
@@ -332,7 +332,7 @@ function ToolTemplateCard({ template, onSelect }: ToolTemplateCardProps) {
         
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Icon icon={Users} size="sm" color="secondary" />
+            <Users className="h-4 w-4 text-[var(--hive-text-secondary)]" />
             <Text variant="body-xs" color="secondary">
               ~{template.expectedUsers} users
             </Text>
@@ -359,7 +359,7 @@ interface ToolConfigurationProps {
   onBack: () => void;
 }
 
-function ToolConfiguration({ 
+export function ToolConfiguration({ 
   template, 
   config, 
   onConfigChange, 
@@ -370,7 +370,7 @@ function ToolConfiguration({
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Icon icon={Settings} size="sm" color="primary" />
+          <Settings className="h-4 w-4 text-[var(--hive-brand-secondary)]" />
           Configure: {template.name}
         </CardTitle>
       </CardHeader>
@@ -462,7 +462,7 @@ interface ToolPreviewProps {
   onBack: () => void;
 }
 
-function ToolPreview({ template, config, onBuild, onBack }: ToolPreviewProps) {
+export function ToolPreview({ template, config, onBuild, onBack }: ToolPreviewProps) {
   const IconComponent = template.icon;
   
   return (
@@ -470,7 +470,7 @@ function ToolPreview({ template, config, onBuild, onBack }: ToolPreviewProps) {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Icon icon={Eye} size="sm" color="primary" />
+            <Eye className="h-4 w-4 text-[var(--hive-brand-secondary)]" />
             Preview: {config.toolName}
           </CardTitle>
         </CardHeader>
@@ -531,11 +531,11 @@ function ToolPreview({ template, config, onBuild, onBack }: ToolPreviewProps) {
         
         <div className="flex items-center gap-3">
           <Button variant="ghost" size="sm">
-            <Icon icon={Share2} size="sm" className="mr-2" />
+            <Share2 className="h-4 w-4 mr-2" />
             Share Preview
           </Button>
           <Button variant="primary" onClick={onBuild}>
-            <Icon icon={Zap} size="sm" className="mr-2" />
+            <Zap className="h-4 w-4 mr-2" />
             Build & Deploy Tool
           </Button>
         </div>

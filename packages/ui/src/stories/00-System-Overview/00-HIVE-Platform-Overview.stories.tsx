@@ -5,7 +5,7 @@ import { Button } from '../../components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
 import { Container } from '../../components/ui/container';
 import { Text as Typography } from '../../components/ui/typography';
-import { HiveBrand } from '../../components/ui/hive-brand';
+import { HiveLogo } from '../../components/hive-logo';
 
 /**
  * # HIVE Platform Overview
@@ -97,7 +97,7 @@ const HivePlatformOverview = () => {
       {/* Header */}
       <div className="text-center space-y-4">
         <div className="flex justify-center mb-6">
-          <HiveBrand size="large" showWordmark />
+          <HiveLogo size="large" showWordmark />
         </div>
         <Typography variant="h1" className="text-4xl font-bold">
           HIVE Platform Overview
