@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
-import { Badge } from '../../../components/ui/badge';
-import { Button } from '../../../components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../atomic/ui/card';
-import { Container } from '../../ui/container';
-import { Text as Typography } from '../../ui/text';
-import { HiveLogo } from '../../ui/hive-brand';
+import { Badge } from '../../components/ui/badge';
+import { Button } from '../../components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
+import { Container } from '../../components/ui/container';
+import { Text as Typography } from '../../components/ui/typography';
+import { HiveBrand } from '../../components/ui/hive-brand';
 
 /**
  * # HIVE Platform Overview
@@ -97,7 +97,7 @@ const HivePlatformOverview = () => {
       {/* Header */}
       <div className="text-center space-y-4">
         <div className="flex justify-center mb-6">
-          <HiveLogo size="large" showWordmark />
+          <HiveBrand size="large" showWordmark />
         </div>
         <Typography variant="h1" className="text-4xl font-bold">
           HIVE Platform Overview

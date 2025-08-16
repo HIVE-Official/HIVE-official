@@ -2,7 +2,7 @@
 
 import React, { useState, createContext, useContext } from 'react';
 import { cn } from '../../lib/utils';
-import { ButtonEnhanced as Button } from '../../ui/button-enhanced';
+import { Button } from '../ui/button';
 import { Check, Mail, ArrowLeft, ArrowRight, Loader2, AlertCircle, Sparkles, Zap, Users, Shield } from 'lucide-react';
 
 // =============================================================================

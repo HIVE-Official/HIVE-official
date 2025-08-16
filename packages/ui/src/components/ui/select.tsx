@@ -317,6 +317,14 @@ const ClearIcon = () => (
   </svg>
 );
 
+// For compatibility with Radix-style API used in stories
+export const SelectTrigger = Select;
+export const SelectContent = ({ children }: { children: React.ReactNode }) => <>{children}</>;
+export const SelectValue = ({ placeholder }: { placeholder?: string }) => <option value="" disabled>{placeholder}</option>;
+export const SelectItem = ({ value, children, disabled }: { value: string; children: React.ReactNode; disabled?: boolean }) => (
+  <option value={value} disabled={disabled}>{children}</option>
+);
+
 export { 
   Select, 
   Select as SelectEnhanced,

@@ -2,10 +2,10 @@
 
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { Badge } from '../../ui/badge';
-import { ButtonEnhanced as Button } from '../../ui/button-enhanced';
-import { Text } from '../../ui/text';
-import { Icon } from '../../ui/icon';
+import { Badge } from '../ui/badge';
+import { Button } from '../ui/button';
+import { Typography } from '../ui/typography';
+import { PlatformIcons } from '../ui/platform-icons';
 import { cn } from '../../lib/utils';
 import { 
   Plus,

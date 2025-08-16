@@ -8,20 +8,16 @@ const config: StorybookConfig = {
     '../src/stories/00-System-Overview/**/*.stories.@(js|jsx|ts|tsx)',
     
     // 🏗️ FOUNDATION - Core design system and tokens
-    '../src/stories/00-Foundation/**/*.stories.@(js|jsx|ts|tsx)',
-    '../src/atomic/foundations/**/*.stories.@(js|jsx|ts|tsx)',
+    '../src/stories/01-Foundation/**/*.stories.@(js|jsx|ts|tsx)',
     
     // 🧱 ATOMS - Core UI building blocks
     '../src/stories/01-Atoms/**/*.stories.@(js|jsx|ts|tsx)',
-    '../src/atomic/atoms/**/*.stories.@(js|jsx|ts|tsx)',
     
     // 🔗 MOLECULES - Combined atomic elements
     '../src/stories/03-Molecules/**/*.stories.@(js|jsx|ts|tsx)',
-    '../src/atomic/molecules/**/*.stories.@(js|jsx|ts|tsx)',
     
     // 🏛️ ORGANISMS - Complex component systems
     '../src/stories/04-Organisms/**/*.stories.@(js|jsx|ts|tsx)',
-    '../src/atomic/organisms/**/*.stories.@(js|jsx|ts|tsx)',
     
     // 🔄 COMPLETE SYSTEMS - Cross-system integrations
     '../src/stories/07-Complete-Feed-Rituals-System/**/*.stories.@(js|jsx|ts|tsx)',

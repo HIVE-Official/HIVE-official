@@ -1,9 +1,9 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { SearchBar } from './search-bar';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Badge } from '../atoms/badge';
-import { Text } from '../atoms/text';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { Badge } from './ui/badge';
+import { Text } from './ui/typography';
 import { action } from '@storybook/addon-actions';
 import '../../hive-tokens.css';
 

@@ -2,9 +2,9 @@
 
 import React from 'react';
 import { cn } from '../../lib/utils';
-import { InputEnhanced as Input } from '../atoms/input-enhanced';
-import { ButtonEnhanced as Button } from '../atoms/button-enhanced';
-import { Spinner } from '../atoms/spinner';
+import { Input } from './ui/input';
+import { Button } from './ui/button';
+import { Spinner } from './ui/spinner';
 import { Search, X } from 'lucide-react';
 
 export interface SearchBarProps {

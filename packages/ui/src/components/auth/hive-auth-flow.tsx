@@ -2,7 +2,7 @@
 
 import React, { useState, createContext, useContext } from 'react';
 import { cn } from '../../lib/utils';
-import { HiveButton } from '../hive-button';
+import { Button } from '../ui/button';
 import { Check, Mail, ArrowLeft, ArrowRight, Loader2, AlertCircle } from 'lucide-react';
 
 // =============================================================================
@@ -298,23 +298,23 @@ function WelcomeStep() {
 
       {/* Action Buttons */}
       <div className="space-y-3">
-        <HiveButton 
+        <Button 
           variant="premium" 
           size="lg"
           className="w-full"
           onClick={() => setStep('sign-up')}
         >
           Create Account
-        </HiveButton>
+        </Button>
         
-        <HiveButton 
+        <Button 
           variant="outline" 
           size="lg"
           className="w-full"
           onClick={() => setStep('sign-in')}
         >
           Sign In
-        </HiveButton>
+        </Button>
       </div>
 
       {/* Footer */}
@@ -409,7 +409,7 @@ function SignInStep() {
           </div>
         )}
 
-        <HiveButton 
+        <Button 
           type="submit"
           variant="premium" 
           size="lg"
@@ -418,7 +418,7 @@ function SignInStep() {
         >
           {state.loading && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
           {usePassword ? 'Sign In' : 'Send Magic Link'}
-        </HiveButton>
+        </Button>
       </form>
 
       {/* Toggle Auth Method */}
@@ -592,7 +592,7 @@ function SignUpStep() {
           />
         </div>
 
-        <HiveButton 
+        <Button 
           type="submit"
           variant="premium" 
           size="lg"
@@ -601,7 +601,7 @@ function SignUpStep() {
         >
           {state.loading && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
           Create Account
-        </HiveButton>
+        </Button>
       </form>
 
       {/* Footer */}
@@ -677,7 +677,7 @@ function ForgotPasswordStep() {
           />
         </div>
 
-        <HiveButton 
+        <Button 
           type="submit"
           variant="premium" 
           size="lg"
@@ -686,7 +686,7 @@ function ForgotPasswordStep() {
         >
           {state.loading && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
           Send Reset Link
-        </HiveButton>
+        </Button>
       </form>
     </div>
   );
@@ -721,14 +721,14 @@ function VerifyEmailStep() {
           Click the link in your email to verify your account and complete registration.
         </p>
         
-        <HiveButton 
+        <Button 
           variant="outline" 
           size="lg"
           className="w-full"
           onClick={goBack}
         >
           Back to Sign Up
-        </HiveButton>
+        </Button>
       </div>
     </div>
   );
@@ -759,14 +759,14 @@ function MagicLinkSentStep() {
           We sent a secure link to <strong>{state.email}</strong>. Click it to sign in instantly.
         </p>
         
-        <HiveButton 
+        <Button 
           variant="outline" 
           size="lg"
           className="w-full"
           onClick={goBack}
         >
           Back to Sign In
-        </HiveButton>
+        </Button>
       </div>
     </div>
   );

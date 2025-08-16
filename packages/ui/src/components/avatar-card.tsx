@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { cn } from '../../lib/utils';
-import { Avatar } from '../atoms/avatar';
+import { Avatar } from './ui/avatar';
 import { Check, Star, Crown, GraduationCap } from 'lucide-react';
 
 const roleBadges = {

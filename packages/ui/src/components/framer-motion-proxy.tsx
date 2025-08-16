@@ -57,3 +57,9 @@ export const useTransform = (motionValue: any, input?: any, output?: any) => ({
 });
 export const MotionSpan = motion.span;
 export const MotionSection = motion.section;
+
+// Mock Reorder for drag-and-drop functionality
+export const Reorder = {
+  Group: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+  Item: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+};
