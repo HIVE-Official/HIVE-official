@@ -1,141 +1,185 @@
 /**
- * Comprehensive University at Buffalo Majors Database
- *
- * This file contains all undergraduate, master's, and PhD programs
- * organized by degree level for use across the HIVE application.
+ * University at Buffalo (SUNY Buffalo) Academic Majors
+ * Organized by school/college for better UX
  */
 
-import { type MajorType } from '../types/major';
+export interface Major {
+  name: string;
+  code?: string;
+  school: string;
+}
 
-export const UNDERGRADUATE_MAJORS: MajorType[] = [
-  { name: 'Accounting', level: 'undergraduate' },
-  { name: 'Acting', level: 'undergraduate' },
-  { name: 'Aerospace Engineering', level: 'undergraduate' },
-  { name: 'African American Studies', level: 'undergraduate' },
-  { name: 'American Studies', level: 'undergraduate' },
-  { name: 'Anthropology', level: 'undergraduate' },
-  { name: 'Architecture', level: 'undergraduate' },
-  { name: 'Art', level: 'undergraduate' },
-  { name: 'Art History', level: 'undergraduate' },
-  { name: 'Asian Studies', level: 'undergraduate' },
-  { name: 'Biochemistry', level: 'undergraduate' },
-  { name: 'Bioinformatics & Computational Biology', level: 'undergraduate' },
-  { name: 'Biological Sciences', level: 'undergraduate' },
-  { name: 'Biomedical Engineering', level: 'undergraduate' },
-  { name: 'Biomedical Sciences', level: 'undergraduate' },
-  { name: 'Biotechnology', level: 'undergraduate' },
-  { name: 'Business Administration', level: 'undergraduate' },
-  { name: 'Chemical Engineering', level: 'undergraduate' },
-  { name: 'Chemistry', level: 'undergraduate' },
-  { name: 'Civil Engineering', level: 'undergraduate' },
-  { name: 'Classics', level: 'undergraduate' },
-  { name: 'Cognitive Science', level: 'undergraduate' },
-  { name: 'Communication', level: 'undergraduate' },
-  { name: 'Computational Linguistics', level: 'undergraduate' },
-  { name: 'Computational Physics', level: 'undergraduate' },
-  { name: 'Computer Engineering', level: 'undergraduate' },
-  { name: 'Computer Science', level: 'undergraduate' },
-  { name: 'Criminology', level: 'undergraduate' },
-  { name: 'Dance', level: 'undergraduate' },
-  { name: 'Economics', level: 'undergraduate' },
-  { name: 'Electrical Engineering', level: 'undergraduate' },
-  { name: 'Engineering Physics', level: 'undergraduate' },
-  { name: 'Engineering Science', level: 'undergraduate' },
-  { name: 'English', level: 'undergraduate' },
-  { name: 'Environmental Design', level: 'undergraduate' },
-  { name: 'Environmental Engineering', level: 'undergraduate' },
-  { name: 'Environmental Science', level: 'undergraduate' },
-  { name: 'Environmental Studies', level: 'undergraduate' },
-  { name: 'Environmental Sustainability', level: 'undergraduate' },
-  { name: 'Exercise Science', level: 'undergraduate' },
-  { name: 'Film Studies', level: 'undergraduate' },
-  { name: 'Fine Arts', level: 'undergraduate' },
-  { name: 'French', level: 'undergraduate' },
-  { name: 'Geographic Information Science', level: 'undergraduate' },
-  { name: 'Geography', level: 'undergraduate' },
-  { name: 'Geological Sciences', level: 'undergraduate' },
-  { name: 'German', level: 'undergraduate' },
-  { name: 'Global Affairs', level: 'undergraduate' },
-  { name: 'Global Gender Studies', level: 'undergraduate' },
-  { name: 'Health and Human Services', level: 'undergraduate' },
-  { name: 'History', level: 'undergraduate' },
-  { name: 'Indigenous Studies', level: 'undergraduate' },
-  { name: 'Industrial Engineering', level: 'undergraduate' },
-  { name: 'Information Technology & Management', level: 'undergraduate' },
-  { name: 'International Studies', level: 'undergraduate' },
-  { name: 'International Trade', level: 'undergraduate' },
-  { name: 'Italian', level: 'undergraduate' },
-  { name: 'Jewish Studies', level: 'undergraduate' },
-  { name: 'Law', level: 'undergraduate' },
-  { name: 'Legal Studies', level: 'undergraduate' },
-  { name: 'Linguistics', level: 'undergraduate' },
-  { name: 'Materials Science & Engineering', level: 'undergraduate' },
-  { name: 'Mathematical Physics', level: 'undergraduate' },
-  { name: 'Mathematics', level: 'undergraduate' },
-  { name: 'Mathematics-Economics', level: 'undergraduate' },
-  { name: 'Mechanical Engineering', level: 'undergraduate' },
-  { name: 'Media Study', level: 'undergraduate' },
-  { name: 'Medical Laboratory Science', level: 'undergraduate' },
-  { name: 'Medicinal Chemistry', level: 'undergraduate' },
-  { name: 'Music', level: 'undergraduate' },
-  { name: 'Music Performance', level: 'undergraduate' },
-  { name: 'Music Theatre', level: 'undergraduate' },
-  { name: 'Neuroscience', level: 'undergraduate' },
-  { name: 'Nuclear Medicine Technology', level: 'undergraduate' },
-  { name: 'Nursing', level: 'undergraduate' },
-  { name: 'Nursing RN-to-BS', level: 'undergraduate' },
-  { name: 'Nutrition Science', level: 'undergraduate' },
-  { name: 'Occupational Science', level: 'undergraduate' },
-  { name: 'Occupational Therapy', level: 'undergraduate' },
-  { name: 'Pharmaceutical Sciences', level: 'undergraduate' },
-  { name: 'Pharmacology & Toxicology', level: 'undergraduate' },
-  { name: 'Pharmacy', level: 'undergraduate' },
-  { name: 'Philosophy', level: 'undergraduate' },
-  { name: 'Philosophy, Politics & Economics', level: 'undergraduate' },
-  { name: 'Physics', level: 'undergraduate' },
-  { name: 'Political Science', level: 'undergraduate' },
-  { name: 'Psychology', level: 'undergraduate' },
-  { name: 'Public Health', level: 'undergraduate' },
-  { name: 'Sociology', level: 'undergraduate' },
-  { name: 'Spanish', level: 'undergraduate' },
-  { name: 'Special Studies', level: 'undergraduate' },
-  { name: 'Speech & Hearing Science', level: 'undergraduate' },
-  { name: 'Statistics', level: 'undergraduate' },
-  { name: 'Studio Art', level: 'undergraduate' },
-  { name: 'Theatre', level: 'undergraduate' },
-  { name: 'Theatre Design/Technology', level: 'undergraduate' },
-  { name: 'Urban & Public Policy Studies', level: 'undergraduate' }
+export const UB_MAJORS: Major[] = [
+  // School of Architecture and Planning
+  { name: 'Architecture', school: 'Architecture and Planning' },
+  { name: 'Urban and Regional Planning', school: 'Architecture and Planning' },
+
+  // School of Arts and Sciences
+  { name: 'Anthropology', school: 'Arts and Sciences' },
+  { name: 'Art', school: 'Arts and Sciences' },
+  { name: 'Art History', school: 'Arts and Sciences' },
+  { name: 'Biological Sciences', school: 'Arts and Sciences' },
+  { name: 'Biotechnology', school: 'Arts and Sciences' },
+  { name: 'Chemistry', school: 'Arts and Sciences' },
+  { name: 'Classics', school: 'Arts and Sciences' },
+  { name: 'Communication', school: 'Arts and Sciences' },
+  { name: 'Computer Science', school: 'Arts and Sciences' },
+  { name: 'Data Science', school: 'Arts and Sciences' },
+  { name: 'Dance', school: 'Arts and Sciences' },
+  { name: 'Economics', school: 'Arts and Sciences' },
+  { name: 'English', school: 'Arts and Sciences' },
+  { name: 'Environmental Science', school: 'Arts and Sciences' },
+  { name: 'Environmental Geosciences', school: 'Arts and Sciences' },
+  { name: 'Film Studies', school: 'Arts and Sciences' },
+  { name: 'French', school: 'Arts and Sciences' },
+  { name: 'Geography', school: 'Arts and Sciences' },
+  { name: 'Geological Sciences', school: 'Arts and Sciences' },
+  { name: 'German', school: 'Arts and Sciences' },
+  { name: 'History', school: 'Arts and Sciences' },
+  { name: 'Information Systems', school: 'Arts and Sciences' },
+  { name: 'International Trade', school: 'Arts and Sciences' },
+  { name: 'Italian', school: 'Arts and Sciences' },
+  { name: 'Japanese', school: 'Arts and Sciences' },
+  { name: 'Journalism', school: 'Arts and Sciences' },
+  { name: 'Korean', school: 'Arts and Sciences' },
+  { name: 'Latin American Studies', school: 'Arts and Sciences' },
+  { name: 'Linguistics', school: 'Arts and Sciences' },
+  { name: 'Mathematics', school: 'Arts and Sciences' },
+  { name: 'Media Study', school: 'Arts and Sciences' },
+  { name: 'Microbiology', school: 'Arts and Sciences' },
+  { name: 'Music', school: 'Arts and Sciences' },
+  { name: 'Neuroscience', school: 'Arts and Sciences' },
+  { name: 'Philosophy', school: 'Arts and Sciences' },
+  { name: 'Physics', school: 'Arts and Sciences' },
+  { name: 'Political Science', school: 'Arts and Sciences' },
+  { name: 'Psychology', school: 'Arts and Sciences' },
+  { name: 'Russian', school: 'Arts and Sciences' },
+  { name: 'Sociology', school: 'Arts and Sciences' },
+  { name: 'Spanish', school: 'Arts and Sciences' },
+  { name: 'Statistics', school: 'Arts and Sciences' },
+  { name: 'Theatre', school: 'Arts and Sciences' },
+
+  // School of Engineering and Applied Sciences
+  { name: 'Aerospace Engineering', school: 'Engineering and Applied Sciences' },
+  { name: 'Biomedical Engineering', school: 'Engineering and Applied Sciences' },
+  { name: 'Chemical Engineering', school: 'Engineering and Applied Sciences' },
+  { name: 'Civil Engineering', school: 'Engineering and Applied Sciences' },
+  { name: 'Computer Engineering', school: 'Engineering and Applied Sciences' },
+  { name: 'Computer Science and Engineering', school: 'Engineering and Applied Sciences' },
+  { name: 'Electrical Engineering', school: 'Engineering and Applied Sciences' },
+  { name: 'Engineering Physics', school: 'Engineering and Applied Sciences' },
+  { name: 'Environmental Engineering', school: 'Engineering and Applied Sciences' },
+  { name: 'Industrial Engineering', school: 'Engineering and Applied Sciences' },
+  { name: 'Materials Science and Engineering', school: 'Engineering and Applied Sciences' },
+  { name: 'Mechanical Engineering', school: 'Engineering and Applied Sciences' },
+  { name: 'Structural Engineering', school: 'Engineering and Applied Sciences' },
+
+  // School of Management
+  { name: 'Accounting', school: 'Management' },
+  { name: 'Business Administration', school: 'Management' },
+  { name: 'Economics and Finance', school: 'Management' },
+  { name: 'Entrepreneurship', school: 'Management' },
+  { name: 'Finance', school: 'Management' },
+  { name: 'Human Resource Management', school: 'Management' },
+  { name: 'International Business', school: 'Management' },
+  { name: 'Management Information Systems', school: 'Management' },
+  { name: 'Marketing', school: 'Management' },
+  { name: 'MBA', school: 'Management' },
+  { name: 'Operations Management', school: 'Management' },
+  { name: 'Supply Chain Management', school: 'Management' },
+
+  // School of Medicine and Biomedical Sciences
+  { name: 'Biochemistry', school: 'Medicine and Biomedical Sciences' },
+  { name: 'Biomedical Sciences', school: 'Medicine and Biomedical Sciences' },
+  { name: 'Biotechnology', school: 'Medicine and Biomedical Sciences' },
+  { name: 'Exercise Science', school: 'Medicine and Biomedical Sciences' },
+  { name: 'Medical Technology', school: 'Medicine and Biomedical Sciences' },
+  { name: 'Medicine (MD)', school: 'Medicine and Biomedical Sciences' },
+  { name: 'Nuclear Medicine Technology', school: 'Medicine and Biomedical Sciences' },
+  { name: 'Occupational Therapy', school: 'Medicine and Biomedical Sciences' },
+  { name: 'Pathology', school: 'Medicine and Biomedical Sciences' },
+  { name: 'Pharmacy', school: 'Medicine and Biomedical Sciences' },
+  { name: 'Physical Therapy', school: 'Medicine and Biomedical Sciences' },
+  { name: 'Physician Assistant', school: 'Medicine and Biomedical Sciences' },
+
+  // Graduate School of Education
+  { name: 'Art Education', school: 'Education' },
+  { name: 'Counseling', school: 'Education' },
+  { name: 'Educational Leadership', school: 'Education' },
+  { name: 'Elementary Education', school: 'Education' },
+  { name: 'English Education', school: 'Education' },
+  { name: 'Mathematics Education', school: 'Education' },
+  { name: 'Music Education', school: 'Education' },
+  { name: 'Science Education', school: 'Education' },
+  { name: 'Social Studies Education', school: 'Education' },
+  { name: 'Special Education', school: 'Education' },
+
+  // School of Law
+  { name: 'Law', school: 'Law' },
+
+  // School of Nursing
+  { name: 'Nursing', school: 'Nursing' },
+
+  // School of Public Health and Health Professions
+  { name: 'Athletic Training', school: 'Public Health and Health Professions' },
+  { name: 'Health Services Administration', school: 'Public Health and Health Professions' },
+  { name: 'Nutrition Science', school: 'Public Health and Health Professions' },
+  { name: 'Public Health', school: 'Public Health and Health Professions' },
+  { name: 'Rehabilitation Science', school: 'Public Health and Health Professions' },
+
+  // School of Social Work
+  { name: 'Social Work', school: 'Social Work' },
+
+  // Interdisciplinary Programs
+  { name: 'American Studies', school: 'Interdisciplinary' },
+  { name: 'Artificial Intelligence', school: 'Interdisciplinary' },
+  { name: 'Bioinformatics', school: 'Interdisciplinary' },
+  { name: 'Cognitive Science', school: 'Interdisciplinary' },
+  { name: 'Computational Biology', school: 'Interdisciplinary' },
+  { name: 'Creative Writing', school: 'Interdisciplinary' },
+  { name: 'Cybersecurity', school: 'Interdisciplinary' },
+  { name: 'Digital Media Arts', school: 'Interdisciplinary' },
+  { name: 'Environmental Studies', school: 'Interdisciplinary' },
+  { name: 'Game Design', school: 'Interdisciplinary' },
+  { name: 'Global Gender and Sexuality Studies', school: 'Interdisciplinary' },
+  { name: 'Health Informatics', school: 'Interdisciplinary' },
+  { name: 'Human-Computer Interaction', school: 'Interdisciplinary' },
+  { name: 'International Studies', school: 'Interdisciplinary' },
+  { name: 'Pre-Health', school: 'Interdisciplinary' },
+  { name: 'Pre-Law', school: 'Interdisciplinary' },
+  { name: 'Pre-Medicine', school: 'Interdisciplinary' },
+  { name: 'Public Administration', school: 'Interdisciplinary' },
+  { name: 'Sustainability Studies', school: 'Interdisciplinary' },
+  { name: 'Urban Planning', school: 'Interdisciplinary' },
+  { name: 'Undeclared', school: 'Undeclared' },
 ];
 
-// Placeholder for future graduate programs
-export const MASTERS_MAJORS: MajorType[] = [
-  // Add master's programs when available
-];
+/**
+ * Get majors grouped by school
+ */
+export function getMajorsBySchool(): Record<string, Major[]> {
+  return UB_MAJORS.reduce((acc, major) => {
+    if (!acc[major.school]) {
+      acc[major.school] = [];
+    }
+    acc[major.school].push(major);
+    return acc;
+  }, {} as Record<string, Major[]>);
+}
 
-export const PHD_MAJORS: MajorType[] = [
-  // Add PhD programs when available  
-];
+/**
+ * Get all unique school names
+ */
+export function getSchoolNames(): string[] {
+  return [...new Set(UB_MAJORS.map(major => major.school))].sort();
+}
 
-// Combined list of all majors
-export const ALL_MAJORS: MajorType[] = [
-  ...UNDERGRADUATE_MAJORS,
-  ...MASTERS_MAJORS,
-  ...PHD_MAJORS
-];
-
-// Utility functions
-export const getMajorsByLevel = (level: MajorType['level']) => {
-  return ALL_MAJORS.filter(major => major.level === level);
-};
-
-export const getMajorsByCategory = (category: string) => {
-  // This would be extended when we add category information to majors
-  return ALL_MAJORS.filter(major => major.name.toLowerCase().includes(category.toLowerCase()));
-};
-
-export const searchMajors = (query: string) => {
-  const lowerQuery = query.toLowerCase();
-  return ALL_MAJORS.filter(major => 
-    major.name.toLowerCase().includes(lowerQuery)
+/**
+ * Search majors by name
+ */
+export function searchMajors(query: string): Major[] {
+  const lowercaseQuery = query.toLowerCase();
+  return UB_MAJORS.filter(major =>
+    major.name.toLowerCase().includes(lowercaseQuery)
   );
-};
+} 

@@ -85,19 +85,12 @@ jspm_packages/
 # Yarn Integrity file
 .yarn-integrity
 
-# dotenv environment variable files (web app only)
-apps/web/.env
-apps/web/.env.development
-apps/web/.env.preview
-apps/web/.env.production
-apps/web/.env.development.local
-apps/web/.env.test.local
-apps/web/.env.production.local
-apps/web/.env.local
-apps/web/.env*.local
-
-# Keep example file trackable for documentation
-!apps/web/.env.example
+# dotenv environment variable files
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
 
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
@@ -114,24 +107,9 @@ apps/web/.env*.local
 
 # Build outputs
 .next/
-dist/
-**/dist/
+/dist
 /out
 /build
-**/tsconfig.tsbuildinfo
-**/*.tsbuildinfo
-**/*.backup.json
-
-# TypeScript compilation artifacts in source directories
-# These should only exist in dist/ or lib/ directories
-**/src/**/*.js
-**/src/**/*.js.map  
-**/src/**/*.d.ts
-**/src/**/*.d.ts.map
-# Exception: Allow intentional JS files (config files, etc.)
-!**/src/**/*.config.js
-!**/src/**/*.test.js
-!**/src/**/*.spec.js
 
 # Turbo
 .turbo/
@@ -141,11 +119,10 @@ storybook-static/
 
 # Firebase credentials should never be committed
 firebase/serviceAccountKey.json
-firebase/scripts/service-account*.json
-firebase/scripts/serviceAccount*.json
 
 # Firebase debug logs
 *.log
+lint-output.txt
 
 # Firebase cache
 .firebase/
@@ -153,6 +130,18 @@ firebase/scripts/serviceAccount*.json
 # Firebase hosting cache
 .firebase/hosting.*/
 
-*storybook.log
-.vercel
-.env*.local
+# Temporary development files
+test-dashboard.html
+debug-session.js
+clear-storage.html
+*.backup
+
+# Migration and temporary scripts
+migrate-*.js
+fix-*.js
+
+# Analysis reports
+*-report.json
+
+# Claude-specific files
+.claude/

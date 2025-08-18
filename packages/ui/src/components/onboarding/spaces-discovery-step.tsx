@@ -7,7 +7,7 @@ import { Button } from '../button';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '../card';
 import { Input } from '../input';
 import { Alert } from '../alert';
-import { cn } from '../../lib/utils';
+import { cn } from '../lib/utils';
 
 interface Space {
   id: string;

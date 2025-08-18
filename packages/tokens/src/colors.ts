@@ -1,217 +1,218 @@
-/**
- * HIVE Brand System v1.0 - PRODUCTION STANDARD
- * Monochrome + Yellow Color System (CORRECTED)
- * Aligned with /memory-bank/hive-brand-system.md
- */
+// HIVE Color Design System
+// PRD-Aligned: Vercel-inspired monochrome with gold accent
+// Legacy: Dark luxury theme (preserved for backward compatibility)
 
-// ============================================================================
-// PRODUCTION COLOR TOKENS - CORRECTED VALUES
-// ============================================================================
-
+// Core Dark Luxury Palette - Rich blacks and sophisticated metals
 export const colors = {
-  // Canvas & Surfaces (90% of interface)
-  background: "#0A0A0A", // Primary canvas (matte black)
-  surface: "#111111", // Card backgrounds, elevated surfaces
-  border: "#2A2A2A", // CORRECTED: Dividers, input borders
-
-  // Text Hierarchy
-  foreground: "#FFFFFF", // Primary text, headlines
-  muted: "#6B7280", // Secondary text, metadata
-  disabled: "#3F3F46", // Disabled states, placeholder text
-
-  // Yellow Accent System (≤10% usage) - FINAL CORRECTED VALUES
-  accent: {
-    DEFAULT: "#FFD700", // Gold - primary accent for text, borders, focus
-    600: "#EAC200", // CORRECTED: Gold hover state
-    700: "#C4A500", // CORRECTED: Gold pressed state
-  },
-
-  // Surface variants for depth
-  "surface-01": "#111111", // Primary cards, feed rows
-  "surface-02": "#181818", // Drawers, dropdowns, modals
-  "surface-03": "#1F1F1F", // Nested blocks, input backgrounds
-
-  // Focus system
-  ring: "#FFD700", // Gold focus ring
-  "ring-offset": "#0A0A0A", // Background for ring offset
-
-  // Legacy token mappings for backward compatibility
-  "bg-canvas": "#0A0A0A",
-  "bg-card": "#111111",
-  "accent-gold": "#FFD700",
-  "accent-gold-hover": "#EAC200", // CORRECTED
-  "accent-gold-pressed": "#C4A500", // CORRECTED
-  "text-primary": "#FFFFFF",
-  "text-muted": "#6B7280",
-  "border-primary": "#2A2A2A", // CORRECTED
-
-  // NO SUCCESS/ERROR/WARNING COLORS (Pure monochrome + yellow system)
-  // Status feedback is handled via motion, not colors
-} as const;
-
-// ============================================================================
-// SHADCN/UI COLOR MAPPINGS (Brand-compliant)
-// ============================================================================
-
-export const shadcnColors = {
-  background: colors.background,
-  foreground: colors.foreground,
-
-  primary: {
-    DEFAULT: colors.accent.DEFAULT, // Gold
-    foreground: colors.background, // Dark text on gold background
-  },
-
-  secondary: {
-    DEFAULT: colors.surface, // Surface
-    foreground: colors.foreground, // White text
-  },
-
-  muted: {
-    DEFAULT: colors.muted, // Muted text color
-    foreground: colors.foreground, // White text
-  },
-
-  accent: {
-    DEFAULT: colors.accent.DEFAULT, // Gold
-    foreground: colors.background, // Dark text on gold
-  },
-
-  destructive: {
-    DEFAULT: colors.surface, // NO red - use surface
-    foreground: colors.foreground, // White text
-  },
-
-  border: colors.border, // CORRECTED border
-  input: colors.border, // CORRECTED input border
-  ring: colors.ring, // Gold focus ring
-
-  card: {
-    DEFAULT: colors.surface, // Surface background
-    foreground: colors.foreground, // White text
-  },
-
-  popover: {
-    DEFAULT: colors["surface-02"], // Elevated surface
-    foreground: colors.foreground, // White text
+  // Rich Blacks - Multiple depth levels
+  void: '#000000',           // Pure void for maximum contrast
+  obsidian: '#0A0A0B',      // Main background - rich black
+  charcoal: '#111113',      // Card backgrounds
+  graphite: '#1A1A1C',      // Elevated surfaces
+  slate: '#222225',         // Interactive elements
+  steel: '#2A2A2D',         // Borders and dividers
+  
+  // Luxury Grays - Sophisticated neutrals
+  platinum: '#E5E5E7',      // Primary text
+  silver: '#C1C1C4',        // Secondary text
+  mercury: '#9B9B9F',       // Muted text
+  pewter: '#6B6B70',        // Disabled text
+  smoke: '#4A4A4F',         // Subtle elements
+  
+  // Accent Gold - Premium highlights
+  gold: '#FFD700',          // Primary accent
+  champagne: '#F7E98E',     // Lighter gold
+  amber: '#FFA500',         // Warning states
+  bronze: '#CD7F32',        // Muted accent
+  
+  // Status Colors - Refined versions
+  emerald: '#10B981',       // Success
+  ruby: '#EF4444',          // Error
+  sapphire: '#3B82F6',      // Info
+  citrine: '#F59E0B',       // Warning
+  
+  // Legacy Support - Keep for backwards compatibility
+  black: '#0A0A0B',         // Map to obsidian
+  white: '#E5E5E7',         // Map to platinum
+  
+  // Semantic Color Mappings - For consistent hardcoded value replacements
+  textMutedLight: '#A1A1AA', // Most used muted text color
+  textMutedDark: '#71717A',  // Secondary muted text
+  backgroundOverlayLight: 'rgba(255, 255, 255, 0.02)', // Light background overlay
+  backgroundOverlayMedium: 'rgba(255, 255, 255, 0.05)', // Medium background overlay
+  borderSubtle: 'rgba(255, 255, 255, 0.06)', // Subtle borders
+  borderInteractive: 'rgba(255, 255, 255, 0.1)', // Interactive borders
+  goldAccent: '#FFD700',     // Primary gold accent (already exists but for clarity)
+  goldHover: '#FFE255',      // Gold hover state
+  
+  // Gray Scale - Luxury metal hierarchy
+  gray: {
+    50: '#4A4A4F',          // smoke
+    100: '#6B6B70',         // pewter
+    200: '#9B9B9F',         // mercury
+    300: '#C1C1C4',         // silver
+    400: '#E5E5E7',         // platinum
+    500: '#2A2A2D',         // steel
+    600: '#222225',         // slate
+    700: '#1A1A1C',         // graphite
+    800: '#111113',         // charcoal
+    900: '#0A0A0B',         // obsidian
+    950: '#000000',         // void
   },
 } as const;
 
-// ============================================================================
-// CSS CUSTOM PROPERTY MAPPINGS
-// ============================================================================
-
-export const cssVars = {
-  // Brand tokens
-  "--background": colors.background,
-  "--surface": colors.surface,
-  "--border": colors.border, // CORRECTED
-  "--foreground": colors.foreground,
-  "--muted": colors.muted,
-  "--disabled": colors.disabled,
-  "--accent": colors.accent.DEFAULT,
-  "--accent-hover": colors.accent[600], // CORRECTED
-  "--accent-active": colors.accent[700], // CORRECTED
-
-  // Surface variants
-  "--surface-01": colors["surface-01"],
-  "--surface-02": colors["surface-02"],
-  "--surface-03": colors["surface-03"],
-
-  // Focus system
-  "--ring": colors.ring,
-  "--ring-offset": colors["ring-offset"],
+// Transparent Overlays - Luxury glass effects
+export const overlay = {
+  // Glass morphism
+  glass: 'rgba(255, 255, 255, 0.05)',
+  'glass-medium': 'rgba(255, 255, 255, 0.08)',
+  'glass-strong': 'rgba(255, 255, 255, 0.12)',
+  
+  // Gold glows
+  'gold-subtle': 'rgba(255, 215, 0, 0.1)',
+  'gold-medium': 'rgba(255, 215, 0, 0.15)',
+  'gold-strong': 'rgba(255, 215, 0, 0.3)',
+  'gold-glow': 'rgba(255, 215, 0, 0.4)',
+  
+  // Shadows
+  'shadow-soft': 'rgba(0, 0, 0, 0.2)',
+  'shadow-medium': 'rgba(0, 0, 0, 0.3)',
+  'shadow-deep': 'rgba(0, 0, 0, 0.4)',
+  'shadow-void': 'rgba(0, 0, 0, 0.6)',
+  
+  // Legacy support
+  white: 'rgba(255, 255, 255, 0.05)',
+  'white-medium': 'rgba(255, 255, 255, 0.08)',
+  'white-strong': 'rgba(255, 255, 255, 0.12)',
 } as const;
 
-// ============================================================================
-// BRAND COMPLIANCE VALIDATION
-// ============================================================================
+// Luxury Gradients - Subtle sophistication
+export const gradients = {
+  // Background gradients
+  midnight: 'linear-gradient(135deg, #0A0A0B 0%, #111113 100%)',
+  obsidian: 'linear-gradient(180deg, #0A0A0B 0%, #1A1A1C 100%)',
+  charcoal: 'linear-gradient(45deg, #111113 0%, #222225 100%)',
+  
+  // Interactive gradients
+  'gold-shimmer': 'linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.1), transparent)',
+  'silver-sheen': 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent)',
+  
+  // Glass morphism
+  'glass-dark': 'linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05))',
+  'glass-gold': 'linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05))',
+  
+  // Depth gradients
+  'surface-elevated': 'linear-gradient(180deg, #1A1A1C 0%, #222225 100%)',
+  'surface-pressed': 'linear-gradient(180deg, #111113 0%, #0A0A0B 100%)',
+} as const;
 
-export const COLOR_COMPLIANCE = {
-  rules: [
-    "Pure monochrome + yellow system only",
-    "Border color must be #2A2A2A (not #374151 or #262626)",
-    "Gold hover must be #EAC200 (not #E6C200)",
-    "Gold active must be #C4A500",
-    "NO success/error/warning colors (green/red/blue)",
-    "NO gold fills except ritual badges",
-    "Status feedback via motion, not colors",
-  ],
+// Borders - Premium sophistication
+export const border = {
+  // Metal borders
+  steel: colors.steel,                    // #2A2A2D
+  graphite: colors.graphite,              // #1A1A1C
+  slate: colors.slate,                    // #222225
+  
+  // Glass borders
+  glass: overlay.glass,                   // rgba(255, 255, 255, 0.05)
+  'glass-strong': overlay['glass-strong'], // rgba(255, 255, 255, 0.12)
+  
+  // Gold accents
+  gold: 'rgba(255, 215, 0, 0.2)',
+  'gold-strong': 'rgba(255, 215, 0, 0.4)',
+  'gold-glow': 'rgba(255, 215, 0, 0.6)',
+  
+  // Legacy support
+  subtle: overlay.glass,
+  medium: overlay['glass-medium'],
+} as const;
 
-  violations: [
-    "Using red/green/blue for status feedback",
-    "Gold fills on primary buttons",
-    "Wrong border colors (#374151, #262626, etc.)",
-    "Wrong gold hover values (#E6C200, #FFCC00, etc.)",
-    "Multiple accent color systems",
-  ],
+// Shadows - Layered depth system
+export const shadows = {
+  // Elevation shadows
+  level1: '0 1px 3px rgba(0, 0, 0, 0.3)',
+  level2: '0 4px 6px rgba(0, 0, 0, 0.3)',
+  level3: '0 8px 15px rgba(0, 0, 0, 0.3)',
+  level4: '0 12px 25px rgba(0, 0, 0, 0.4)',
+  level5: '0 20px 40px rgba(0, 0, 0, 0.5)',
+  
+  // Interactive shadows
+  hover: '0 8px 25px rgba(0, 0, 0, 0.3)',
+  active: '0 4px 12px rgba(0, 0, 0, 0.4)',
+  focus: '0 0 0 2px rgba(255, 215, 0, 0.3)',
+  
+  // Glow effects
+  'gold-glow': '0 0 20px rgba(255, 215, 0, 0.3)',
+  'gold-glow-strong': '0 0 30px rgba(255, 215, 0, 0.4)',
+  'emerald-glow': '0 0 20px rgba(16, 185, 129, 0.3)',
+  'ruby-glow': '0 0 20px rgba(239, 68, 68, 0.3)',
+  
+  // Inner shadows
+  'inset-deep': 'inset 0 2px 4px rgba(0, 0, 0, 0.3)',
+  'inset-soft': 'inset 0 1px 2px rgba(0, 0, 0, 0.2)',
+} as const;
 
-  goldUsage: {
-    allowed: [
-      "Text color for emphasis",
-      "Border color for focus/active states",
-      "Focus ring color",
-      "Ritual badge backgrounds ONLY",
-    ],
-    forbidden: [
-      "Primary button backgrounds",
-      "Secondary button backgrounds",
-      "Card backgrounds",
-      "Large surface areas",
-    ],
+// Clean semantic mapping - Dark luxury hierarchy
+export const semantic = {
+  background: {
+    primary: colors.obsidian,           // #0A0A0B - Main app background
+    secondary: colors.charcoal,         // #111113 - Card backgrounds
+    tertiary: colors.graphite,          // #1A1A1C - Elevated surfaces
+    overlay: overlay.glass,             // Glass morphism overlays
+    interactive: colors.slate,          // #222225 - Interactive elements
+  },
+  
+  text: {
+    primary: colors.platinum,           // #E5E5E7 - Main text
+    secondary: colors.silver,           // #C1C1C4 - Secondary text
+    muted: colors.mercury,              // #9B9B9F - Muted text
+    disabled: colors.pewter,            // #6B6B70 - Disabled text
+    inverse: colors.obsidian,           // #0A0A0B - Text on gold/light
+    // NEW: Add missing commonly used text colors from audit
+    mutedLight: '#A1A1AA',             // Most used non-tokenized color (60+ uses)
+    mutedDark: '#71717A',              // Secondary muted text color
+    subtle: '#3F3F46',                 // Very subtle text elements
+  },
+  
+  brand: {
+    primary: colors.gold,               // #FFD700 - HIVE gold
+    secondary: colors.champagne,        // #F7E98E - Lighter gold
+    accent: colors.amber,               // #FFA500 - Warning accent
+    muted: colors.bronze,               // #CD7F32 - Muted accent
+  },
+  
+  interactive: {
+    hover: overlay['glass-medium'],     // Glass hover effect
+    focus: colors.gold,                 // Gold focus ring
+    active: overlay['glass-strong'],    // Glass active state
+    disabled: colors.smoke,             // #4A4A4F - Disabled state
+  },
+  
+  status: {
+    success: colors.emerald,            // #10B981 - Success green
+    warning: colors.citrine,            // #F59E0B - Warning amber
+    error: colors.ruby,                 // #EF4444 - Error red
+    info: colors.sapphire,              // #3B82F6 - Info blue
+  },
+  
+  border: {
+    primary: border.steel,              // #2A2A2D - Primary borders
+    secondary: border.graphite,         // #1A1A1C - Secondary borders
+    subtle: border.glass,               // Glass subtle borders
+    focus: border.gold,                 // Gold focus borders
+    error: colors.ruby,                 // Red error borders
+    // NEW: Add missing commonly used border colors from audit  
+    muted: '#3F3F46',                   // Subtle borders (commonly used)
+    interactive: '#A1A1AA',             // Interactive element borders
   },
 } as const;
 
-// ============================================================================
-// UTILITY FUNCTIONS
-// ============================================================================
+// === PRD-ALIGNED COLOR SYSTEM (PRIMARY) ===
+// Import the new PRD-aligned color system for migration
+export * from './colors-prd-aligned';
 
-/**
- * Get a color value with TypeScript safety
- */
-export function getColor(path: keyof typeof colors): string {
-  return colors[path] as string;
-}
-
-/**
- * Get an accent color variant
- */
-export function getAccent(
-  variant: keyof typeof colors.accent = "DEFAULT"
-): string {
-  return colors.accent[variant];
-}
-
-/**
- * Validate if a color follows brand guidelines
- */
-export function isValidBorderColor(color: string): boolean {
-  return color === colors.border;
-}
-
-export function isValidGoldHover(color: string): boolean {
-  return color === colors.accent[600];
-}
-
-export function isValidGoldActive(color: string): boolean {
-  return color === colors.accent[700];
-}
-
-// ============================================================================
-// EXPORTS
-// ============================================================================
-
-export default colors;
-
-// Type exports for better TypeScript support
+// Type exports
 export type ColorToken = keyof typeof colors;
-export type AccentVariant = keyof typeof colors.accent;
-export type SurfaceVariant = "surface-01" | "surface-02" | "surface-03";
-
-// Brand compliance note: This color system enforces:
-// - CORRECTED border color: #2A2A2A
-// - CORRECTED gold hover: #EAC200 (not #E6C200)
-// - CORRECTED gold active: #C4A500
-// - Pure monochrome + yellow system (no success/error colors)
-// - Motion-based status feedback instead of color-based
-// - Gold fills ONLY for ritual badges
+export type SemanticToken = keyof typeof semantic;
+export type GradientToken = keyof typeof gradients;
+export type ShadowToken = keyof typeof shadows;

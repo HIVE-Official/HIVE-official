@@ -6,7 +6,7 @@ import { Code, Palette, Calculator, FlaskConical, Globe, Music, Camera, Gamepad2
 import { Button } from '../button';
 import { Card, CardContent } from '../card';
 import { Input } from '../input';
-import { cn } from '../../lib/utils';
+import { cn } from '../lib/utils';
 
 interface Interest {
   id: string;

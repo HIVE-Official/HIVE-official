@@ -1,8 +1,7 @@
-import { onSchedule } from "firebase-functions/v2/scheduler";
+import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 import * as https from "https";
 import * as xml2js from "xml2js";
-import { logger } from "./types/firebase";
 
 // RSS feed URL for UB events
 const UB_EVENTS_RSS_URL = "https://buffalo.campuslabs.com/engage/events.rss";
@@ -11,18 +10,16 @@ const UB_EVENTS_RSS_URL = "https://buffalo.campuslabs.com/engage/events.rss";
  * Cloud Function to sync events from RSS to Firestore
  * Triggered by a schedule (once a week on Monday at 2am)
  */
-export const syncEventsFromRSS = onSchedule(
-  {
-    schedule: "0 2 * * 1", // Run once a week on Monday at 2:00 AM
-    timeZone: "America/New_York",
-  },
-  async () => {
-    logger.info("Starting weekly RSS event sync...");
+export const syncEventsFromRSS = functions.pubsub
+  .schedule("0 2 * * 1") // Run once a week on Monday at 2:00 AM
+  .timeZone("America/New_York")
+  .onRun(async () => {
+    console.log("Starting weekly RSS event sync...");
 
     try {
       // Fetch events from RSS feed
       const events = await fetchEventsFromRSS();
-      logger.info(`Fetched ${events.length} events from RSS`);
+      console.log(`Fetched ${events.length} events from RSS`);
 
       // Get the Firestore database
       const db = admin.firestore();
@@ -36,193 +33,138 @@ export const syncEventsFromRSS = onSchedule(
       const processingBatchSize = 10; // Process in small batches to avoid timeouts
 
       for (let i = 0; i < events.length; i += processingBatchSize) {
-        const currentBatch = events.slice(
-          i,
-          Math.min(i + processingBatchSize, events.length)
-        );
+        const currentBatch = events.slice(i, Math.min(i + processingBatchSize, events.length));
 
         // Process each event in this batch
-        await Promise.all(
-          currentBatch.map(async (event) => {
-            try {
-              const docRef = eventsCollection.doc(event.id);
-              const docSnapshot = await docRef.get();
+        await Promise.all(currentBatch.map(async (event) => {
+          try {
+            const docRef = eventsCollection.doc(event.id);
+            const docSnapshot = await docRef.get();
 
-              if (docSnapshot.exists) {
-                const existingData = docSnapshot.data();
+            if (docSnapshot.exists) {
+              const existingData = docSnapshot.data();
 
-                // Check if this event has been modified by a user
-                const isUserModified = existingData?.isUserModified === true;
-                const source = existingData?.source || "external";
+              // Check if this event has been modified by a user
+              const isUserModified = existingData.isUserModified === true;
+              const source = existingData.source || "external";
 
-                // Only update RSS/external events that haven't been modified
-                if (source.includes("external") && !isUserModified) {
-                  eventsToUpdate.push(event);
-                  logger.info(`Will update RSS event: ${event.title}`);
-                } else {
-                  eventsToSkip.push(event);
-                  logger.info(
-                    `Skipping ${isUserModified ? "user-modified" : source} event: ${event.title}`
-                  );
-                }
-              } else {
-                // New event, add it to Firestore
+              // Only update RSS/external events that haven't been modified
+              if (source.includes("external") && !isUserModified) {
                 eventsToUpdate.push(event);
-                logger.info(`Will add new event: ${event.title}`);
+                console.log(`Will update RSS event: ${event.title}`);
+              } else {
+                eventsToSkip.push(event);
+                console.log(`Skipping ${isUserModified ? "user-modified" : source} event: ${event.title}`);
               }
-            } catch (error) {
-              logger.error(`Error checking event ${event.id}:`, error);
-              // On error, assume it's safe to update
+            } else {
+              // New event, add it to Firestore
               eventsToUpdate.push(event);
+              console.log(`Will add new event: ${event.title}`);
             }
-          })
-        );
+          } catch (error) {
+            console.error(`Error checking event ${event.id}:`, error);
+            // On error, assume it's safe to update
+            eventsToUpdate.push(event);
+          }
+        }));
       }
 
-      logger.info(
-        `Will update ${eventsToUpdate.length} events and skip ${eventsToSkip.length} events`
-      );
+      console.log(`Will update ${eventsToUpdate.length} events and skip ${eventsToSkip.length} events`);
 
       // If no events to update, we're done
       if (eventsToUpdate.length === 0) {
-        logger.info("No events need to be updated in Firestore");
+        console.log("No events need to be updated in Firestore");
 
         // Update metadata even if no events were updated
-        await db.collection("metadata").doc("rss_sync").set(
-          {
-            last_sync_timestamp: admin.firestore.FieldValue.serverTimestamp(),
-            event_count: 0,
-            skipped_count: eventsToSkip.length,
-            status: "success_nothing_to_update",
-          },
-          { merge: true }
-        );
+        await db.collection("metadata").doc("rss_sync").set({
+          last_sync_timestamp: admin.firestore.FieldValue.serverTimestamp(),
+          event_count: 0,
+          skipped_count: eventsToSkip.length,
+          status: "success_nothing_to_update",
+        }, {merge: true});
 
-        return;
+        return null;
       }
 
       // Update the events in batches
       await saveEventsToFirestore(eventsToUpdate);
 
       // Update metadata
-      await db.collection("metadata").doc("rss_sync").set(
-        {
-          last_sync_timestamp: admin.firestore.FieldValue.serverTimestamp(),
-          event_count: eventsToUpdate.length,
-          skipped_count: eventsToSkip.length,
-          status: "success",
-        },
-        { merge: true }
-      );
+      await db.collection("metadata").doc("rss_sync").set({
+        last_sync_timestamp: admin.firestore.FieldValue.serverTimestamp(),
+        event_count: eventsToUpdate.length,
+        skipped_count: eventsToSkip.length,
+        status: "success",
+      }, {merge: true});
 
-      logger.info(
-        `Weekly events sync completed successfully: ${eventsToUpdate.length} updated, ${eventsToSkip.length} skipped`
-      );
+      console.log(`Weekly events sync completed successfully: ${eventsToUpdate.length} updated, ${eventsToSkip.length} skipped`);
+      return null;
     } catch (error) {
-      logger.error("Error syncing events:", error);
+      console.error("Error syncing events:", error);
 
       // Log error to Firestore for monitoring
-      await admin
-        .firestore()
-        .collection("metadata")
-        .doc("rss_sync")
-        .set(
-          {
-            last_sync_timestamp: admin.firestore.FieldValue.serverTimestamp(),
-            status: "error",
-            error_message:
-              error instanceof Error ? error.message : "Unknown error",
-          },
-          { merge: true }
-        );
+      await admin.firestore().collection("metadata").doc("rss_sync").set({
+        last_sync_timestamp: admin.firestore.FieldValue.serverTimestamp(),
+        status: "error",
+        error_message: error.message || "Unknown error",
+      }, {merge: true});
 
       throw error;
     }
-  }
-);
+  });
 
 /**
  * Fetch events from the RSS feed
  */
-async function fetchEventsFromRSS(): Promise<EventData[]> {
+async function fetchEventsFromRSS(): Promise<any[]> {
   return new Promise((resolve, reject) => {
-    https
-      .get(UB_EVENTS_RSS_URL, (res) => {
-        if (res.statusCode !== 200) {
-          reject(new Error(`Failed to fetch RSS feed: ${res.statusCode}`));
-          return;
-        }
+    https.get(UB_EVENTS_RSS_URL, (res) => {
+      if (res.statusCode !== 200) {
+        reject(new Error(`Failed to fetch RSS feed: ${res.statusCode}`));
+        return;
+      }
 
-        let data = "";
+      let data = "";
 
-        res.on("data", (chunk) => {
-          data += chunk;
-        });
-
-        res.on("end", async () => {
-          try {
-            // Parse XML to JS object
-            const parser = new xml2js.Parser({ explicitArray: false });
-            const result = await parser.parseStringPromise(data);
-
-            if (
-              !result.rss ||
-              !result.rss.channel ||
-              !result.rss.channel.item
-            ) {
-              reject(new Error("Invalid RSS format"));
-              return;
-            }
-
-            const items = Array.isArray(result.rss.channel.item)
-              ? result.rss.channel.item
-              : [result.rss.channel.item];
-
-            // Process and normalize event data
-            const events = items.map(processRssItem);
-            resolve(events);
-          } catch (error) {
-            reject(error);
-          }
-        });
-      })
-      .on("error", (error) => {
-        reject(error);
+      res.on("data", (chunk) => {
+        data += chunk;
       });
+
+      res.on("end", async () => {
+        try {
+          // Parse XML to JS object
+          const parser = new xml2js.Parser({explicitArray: false});
+          const result = await parser.parseStringPromise(data);
+
+          if (!result.rss || !result.rss.channel || !result.rss.channel.item) {
+            reject(new Error("Invalid RSS format"));
+            return;
+          }
+
+          const items = Array.isArray(result.rss.channel.item) ?
+            result.rss.channel.item :
+            [result.rss.channel.item];
+
+          // Process and normalize event data
+          const events = items.map(processRssItem);
+          resolve(events);
+        } catch (error) {
+          reject(error);
+        }
+      });
+    }).on("error", (error) => {
+      reject(error);
+    });
   });
 }
 
 /**
  * Process an RSS item into our event format
  */
-interface RssItem {
-  guid?: string;
-  title?: string;
-  description?: string;
-  pubDate?: string;
-  link?: string;
-}
-
-interface EventData {
-  id: string;
-  title: string;
-  description: string;
-  startDate: string;
-  endDate: string;
-  location: string;
-  organizerName: string;
-  link: string;
-  updatedAt: string;
-  synced_at: FirebaseFirestore.FieldValue;
-}
-
-function processRssItem(item: RssItem): EventData {
+function processRssItem(item: any): any {
   // Generate an ID from the guid or title
-  const id = item.guid
-    ? String(item.guid).replace(/[^\w-]/g, "-")
-    : String(item.title)
-        .toLowerCase()
-        .replace(/[^\w-]/g, "-");
+  const id = item.guid ? String(item.guid).replace(/[^\w-]/g, "-") :
+    String(item.title).toLowerCase().replace(/[^\w-]/g, "-");
 
   // Parse dates
   let startDate = null;
@@ -231,15 +173,12 @@ function processRssItem(item: RssItem): EventData {
   if (item.pubDate) {
     startDate = new Date(item.pubDate);
     // Default end date to 2 hours after start if not specified
-    endDate = new Date(startDate.getTime() + 2 * 60 * 60 * 1000);
+    endDate = new Date(startDate.getTime() + (2 * 60 * 60 * 1000));
   }
 
   // Extract more data if available
   const location = extractLocation(item.description || "");
-  const organizerName = extractOrganizer(
-    item.description || "",
-    item.title || ""
-  );
+  const organizerName = extractOrganizer(item.description || "", item.title || "");
 
   return {
     id,
@@ -270,9 +209,7 @@ function extractLocation(description: string): string {
  */
 function extractOrganizer(description: string, title: string): string {
   // Try to find organizer in the description
-  const organizerMatch = description.match(
-    /(?:hosted|organized|presented) by[:|\s]+([^<\n]+)/i
-  );
+  const organizerMatch = description.match(/(?:hosted|organized|presented) by[:|\s]+([^<\n]+)/i);
   if (organizerMatch) {
     return organizerMatch[1].trim();
   }
@@ -298,13 +235,11 @@ function sanitizeDescription(description: string): string {
 /**
  * Save events to Firestore in batches, preserving user modifications
  */
-async function saveEventsToFirestore(events: EventData[]): Promise<void> {
+async function saveEventsToFirestore(events: any[]): Promise<void> {
   const db = admin.firestore();
   const batchSize = 500; // Firestore batch limit is 500 operations
 
-  logger.info(
-    `Saving ${events.length} events to Firestore in batches of ${batchSize}`
-  );
+  console.log(`Saving ${events.length} events to Firestore in batches of ${batchSize}`);
 
   // Process in batches
   for (let i = 0; i < events.length; i += batchSize) {
@@ -320,12 +255,10 @@ async function saveEventsToFirestore(events: EventData[]): Promise<void> {
       event.isUserModified = false; // Default to false for RSS events
 
       // Use merge: true to preserve any fields not in our model
-      batch.set(docRef, event, { merge: true });
+      batch.set(docRef, event, {merge: true});
     });
 
     await batch.commit();
-    logger.info(
-      `Committed batch ${i / batchSize + 1} with ${currentBatch.length} events`
-    );
+    console.log(`Committed batch ${i/batchSize + 1} with ${currentBatch.length} events`);
   }
 }

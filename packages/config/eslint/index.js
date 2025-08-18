@@ -6,7 +6,7 @@ import { FlatCompat } from "@eslint/eslintrc";
 import { fixupConfigRules, fixupPluginRules } from "@eslint/compat";
 import tseslint from "typescript-eslint";
 import unicorn from "eslint-plugin-unicorn";
-import unusedImports from "eslint-plugin-unused-imports";
+import importPlugin from "eslint-plugin-import";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -24,24 +24,24 @@ const compat = new FlatCompat({
 export default [
   // Base JavaScript config
   js.configs.recommended,
-
+  
   // TypeScript configs
   ...tseslint.configs.recommended,
   ...tseslint.configs.recommendedTypeChecked,
-
+  
   // Patched configs for compatibility
   ...fixupConfigRules([
     ...compat.extends("turbo"),
     ...compat.extends("prettier"),
   ]),
-
+  
   // Global configuration
   {
     plugins: {
       unicorn: fixupPluginRules(unicorn),
-      "unused-imports": fixupPluginRules(unusedImports),
+      import: fixupPluginRules(importPlugin),
     },
-
+    
     languageOptions: {
       parser: tseslint.parser,
       parserOptions: {
@@ -52,7 +52,7 @@ export default [
         JSX: "readonly",
       },
     },
-
+    
     settings: {
       "import/resolver": {
         typescript: {
@@ -60,51 +60,25 @@ export default [
         },
       },
     },
-
+    
     linterOptions: {
       reportUnusedDisableDirectives: "error",
     },
-
+    
     rules: {
       "turbo/no-undeclared-env-vars": "off",
       "unicorn/filename-case": [
         "error",
         {
-          case: "kebabCase",
-        },
+          "case": "kebabCase"
+        }
       ],
-      "@typescript-eslint/no-unused-vars": "off",
-      "unused-imports/no-unused-imports": "error",
-      "unused-imports/no-unused-vars": [
-        "error",
-        { vars: "all", args: "after-used", ignoreRestSiblings: true },
-      ],
-      "@typescript-eslint/consistent-type-imports": [
-        "error",
-        { prefer: "type-imports" },
-      ],
+      "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
+      "@typescript-eslint/consistent-type-imports": ["error", { prefer: "type-imports" }],
       "@typescript-eslint/no-floating-promises": "error",
-      "no-restricted-syntax": [
-        "error",
-        {
-          selector: "Literal[value=/^#(?:[0-9a-fA-F]{3}){1,2}$/]",
-          message:
-            "Do not use raw hex color values. Import colors from '@hive/tokens/colors' instead.",
-        },
-      ],
-      "react/no-unescaped-entities": "off",
-      "no-console": "off",
     },
   },
-
-  // Allow raw hex colors in token files
-  {
-    files: ["packages/tokens/**/*.ts", "**/*.stories.tsx"],
-    rules: {
-      "no-restricted-syntax": "off",
-    },
-  },
-
+  
   // Ignore patterns
   {
     ignores: [
@@ -115,6 +89,10 @@ export default [
       ".next/",
       "**/eslint.config.mjs",
       "**/eslint.config.js",
+      "**/*.d.ts",
+      "**/*.d.ts.map",
+      "**/src/**/*.js",
+      "**/src/**/*.js.map",
     ],
   },
-];
+]; 

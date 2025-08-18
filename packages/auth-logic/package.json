@@ -2,48 +2,30 @@
   "name": "@hive/auth-logic",
   "version": "0.1.0",
   "private": true,
-  "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
-    }
-  },
-  "files": [
-    "dist"
-  ],
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
   "scripts": {
-    "prebuild": "pnpm run clean",
-    "build": "tsup src/index.ts --format cjs,esm",
-    "lint": "eslint . --max-warnings 15",
-    "typecheck": "tsc --noEmit",
-    "dev": "tsup src/index.ts --format cjs,esm --watch",
-    "clean": "rm -rf dist",
-    "test": "vitest"
-  },
-  "dependencies": {
-    "@hive/core": "workspace:*",
-    "firebase": "^11.0.0",
-    "firebase-admin": "^11.0.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "zod": "^3.22.4"
+    "lint": "npx eslint . --max-warnings 10",
+    "test": "cd ../.. && npx vitest run --config packages/auth-logic/vitest.config.ts packages/auth-logic/src"
   },
   "devDependencies": {
     "@hive/eslint-config": "workspace:*",
     "@hive/typescript-config": "workspace:*",
-    "@types/node": "^20.12.1",
-    "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0",
-    "cross-env": "^7.0.3",
-    "eslint": "^9.29.0",
-    "tsup": "^8.0.0",
-    "typescript-eslint": "^8.35.0",
+    "@types/node": "^24.0.1",
+    "@types/react": "^18.3.12",
+    "eslint": "^9.28.0",
     "typescript": "^5.8.3",
-    "vitest": "^3.2.4"
+    "vitest": "^2.0.4"
   },
-  "packageManager": "pnpm@9.1.1"
+  "overrides": {
+    "eslint": "$eslint"
+  },
+  "dependencies": {
+    "@hive/core": "workspace:*",
+    "firebase": "^11.0.0",
+    "react": "^18.3.1"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0"
+  }
 }

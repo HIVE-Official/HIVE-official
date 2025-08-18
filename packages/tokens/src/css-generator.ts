@@ -1,247 +1,273 @@
-/**
- * HIVE Design System - CSS Variable Generator
- * Automatically generates CSS variables from design tokens
- * Ensures platform-wide consistency
- */
-
-import { colors } from './colors';
+// CSS Custom Properties Generator for HIVE Design Tokens
+import { colors, semantic, overlay, gradients, shadows, border } from './colors';
 import { typography } from './typography';
-import { spacing } from './spacing';
+import { spacing, layoutSizes } from './spacing';
+import { radius } from './radius';
 import { motion } from './motion';
+import { effects } from './effects';
 
-/**
- * Convert hex colors to HSL for CSS variables
- */
-function hexToHsl(hex: string): string {
-  // Remove the hash if present
-  hex = hex.replace('#', '');
-  
-  // Parse the hex values
-  const r = parseInt(hex.substring(0, 2), 16) / 255;
-  const g = parseInt(hex.substring(2, 4), 16) / 255;
-  const b = parseInt(hex.substring(4, 6), 16) / 255;
-
-  const max = Math.max(r, g, b);
-  const min = Math.min(r, g, b);
-  let h: number, s: number;
-  const l = (max + min) / 2;
-
-  if (max === min) {
-    h = s = 0; // achromatic
-  } else {
-    const d = max - min;
-    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-
-    switch (max) {
-      case r: h = (g - b) / d + (g < b ? 6 : 0); break;
-      case g: h = (b - r) / d + 2; break;
-      case b: h = (r - g) / d + 4; break;
-      default: h = 0;
-    }
-
-    h /= 6;
-  }
-
-  return `${Math.round(h * 360)} ${Math.round(s * 100)}% ${Math.round(l * 100)}%`;
-}
-
-/**
- * Generate CSS custom properties from design tokens
- */
-export function generateCSSVariables(): string {
+// Generate CSS custom properties from design tokens
+export function generateCSSCustomProperties(): string {
   const cssVars: string[] = [];
-
-  // Header comment
-  cssVars.push('/* ============================================================================');
-  cssVars.push(' * HIVE DESIGN SYSTEM v2.0 - AUTO-GENERATED CSS VARIABLES');
-  cssVars.push(' * Generated from packages/tokens - DO NOT EDIT MANUALLY');
-  cssVars.push(' * ============================================================================ */');
+  
+  // Colors
+  cssVars.push('  /* HIVE Color Tokens */');
+  Object.entries(colors).forEach(([key, value]) => {
+    if (typeof value === 'string') {
+      cssVars.push(`  --hive-color-${key}: ${value};`);
+    } else if (typeof value === 'object') {
+      Object.entries(value).forEach(([subKey, subValue]) => {
+        cssVars.push(`  --hive-color-${key}-${subKey}: ${subValue};`);
+      });
+    }
+  });
+  
   cssVars.push('');
-
-  // Core colors
-  cssVars.push('/* Core Brand Colors - Monochrome + Gold System */');
-  cssVars.push(`--background: ${hexToHsl(colors.background)};`);
-  cssVars.push(`--foreground: ${hexToHsl(colors.foreground)};`);
-  cssVars.push(`--surface: ${hexToHsl(colors.surface)};`);
-  cssVars.push(`--border: ${hexToHsl(colors.border)};`);
-  cssVars.push(`--muted: ${hexToHsl(colors.muted)};`);
-  cssVars.push(`--disabled: ${hexToHsl(colors.disabled)};`);
+  cssVars.push('  /* HIVE Semantic Colors */');
+  Object.entries(semantic).forEach(([category, values]) => {
+    Object.entries(values).forEach(([key, value]) => {
+      cssVars.push(`  --hive-${category}-${key}: ${value};`);
+    });
+  });
+  
   cssVars.push('');
-
-  // Surface hierarchy
-  cssVars.push('/* Surface Hierarchy (Depth System) */');
-  cssVars.push(`--surface-01: ${hexToHsl(colors["surface-01"])};`);
-  cssVars.push(`--surface-02: ${hexToHsl(colors["surface-02"])};`);
-  cssVars.push(`--surface-03: ${hexToHsl(colors["surface-03"])};`);
+  cssVars.push('  /* HIVE Overlay Colors */');
+  Object.entries(overlay).forEach(([key, value]) => {
+    cssVars.push(`  --hive-overlay-${key}: ${value};`);
+  });
+  
   cssVars.push('');
-
-  // Gold accent system
-  cssVars.push('/* Gold Accent System (≤10% usage) */');
-  cssVars.push(`--accent: ${hexToHsl(colors.accent.DEFAULT)};`);
-  cssVars.push(`--accent-hover: ${hexToHsl(colors.accent[600])};`);
-  cssVars.push(`--accent-active: ${hexToHsl(colors.accent[700])};`);
-  cssVars.push(`--accent-foreground: ${hexToHsl(colors.background)};`);
+  cssVars.push('  /* HIVE Gradients */');
+  Object.entries(gradients).forEach(([key, value]) => {
+    cssVars.push(`  --hive-gradient-${key}: ${value};`);
+  });
+  
   cssVars.push('');
-
-  // Focus system
-  cssVars.push('/* Focus & Ring System */');
-  cssVars.push(`--ring: ${hexToHsl(colors.ring)};`);
-  cssVars.push(`--ring-offset: ${hexToHsl(colors["ring-offset"])};`);
+  cssVars.push('  /* HIVE Shadows */');
+  Object.entries(shadows).forEach(([key, value]) => {
+    cssVars.push(`  --hive-shadow-${key}: ${value};`);
+  });
+  
   cssVars.push('');
-
-  // Typography scale
-  cssVars.push('/* Typography System */');
-  cssVars.push(`--font-display: ${typography.fontFamily.display.join(', ')};`);
-  cssVars.push(`--font-sans: ${typography.fontFamily.sans.join(', ')};`);
-  cssVars.push(`--font-mono: ${typography.fontFamily.mono.join(', ')};`);
+  cssVars.push('  /* HIVE Border Colors */');
+  Object.entries(border).forEach(([key, value]) => {
+    cssVars.push(`  --hive-border-${key}: ${value};`);
+  });
+  
+  // Add missing border variants that components expect
+  cssVars.push(`  --hive-border-gold-strong: rgba(255, 215, 0, 0.4);`);
+  cssVars.push(`  --hive-border-glass-strong: rgba(255, 255, 255, 0.12);`);
+  
+  // Typography
   cssVars.push('');
-
-  cssVars.push('/* Typography Scale */');
+  cssVars.push('  /* HIVE Typography */');
   Object.entries(typography.fontSize).forEach(([key, value]) => {
-    cssVars.push(`--text-${key}: ${value.size};`);
+    cssVars.push(`  --hive-font-size-${key}: ${value};`);
   });
+  
+  Object.entries(typography.fontWeight).forEach(([key, value]) => {
+    cssVars.push(`  --hive-font-weight-${key}: ${value};`);
+  });
+  
+  Object.entries(typography.lineHeight).forEach(([key, value]) => {
+    cssVars.push(`  --hive-line-height-${key}: ${value};`);
+  });
+  
+  Object.entries(typography.letterSpacing).forEach(([key, value]) => {
+    cssVars.push(`  --hive-letter-spacing-${key}: ${value};`);
+  });
+  
+  // Spacing
   cssVars.push('');
-
-  // Spacing scale
-  cssVars.push('/* Spacing System */');
+  cssVars.push('  /* HIVE Spacing */');
   Object.entries(spacing).forEach(([key, value]) => {
-    cssVars.push(`--spacing-${key}: ${value};`);
+    cssVars.push(`  --hive-spacing-${key}: ${value};`);
   });
+  
+  // Layout sizes for hybrid approach
   cssVars.push('');
-
-  // Motion system
-  cssVars.push('/* Motion System - HIVE Brand Timing */');
+  cssVars.push('  /* HIVE Layout Sizes */');
+  Object.entries(layoutSizes.height).forEach(([key, value]) => {
+    cssVars.push(`  --hive-height-${key}: ${value};`);
+  });
+  
+  Object.entries(layoutSizes.width).forEach(([key, value]) => {
+    cssVars.push(`  --hive-width-${key}: ${value};`);
+  });
+  
+  // Radius
+  cssVars.push('');
+  cssVars.push('  /* HIVE Radius */');
+  Object.entries(radius).forEach(([key, value]) => {
+    cssVars.push(`  --hive-radius-${key}: ${value};`);
+  });
+  
+  // Motion
+  cssVars.push('');
+  cssVars.push('  /* HIVE Motion */');
   Object.entries(motion.easing).forEach(([key, value]) => {
-    cssVars.push(`--motion-${key}: ${value};`);
+    cssVars.push(`  --hive-easing-${key}: ${value};`);
   });
-  cssVars.push('');
-
+  
   Object.entries(motion.duration).forEach(([key, value]) => {
-    cssVars.push(`--motion-${key}: ${value};`);
+    cssVars.push(`  --hive-duration-${key}: ${value};`);
   });
+  
+  Object.entries(motion.cascade).forEach(([key, value]) => {
+    cssVars.push(`  --hive-cascade-${key}: ${value};`);
+  });
+  
+  Object.entries(motion.transform).forEach(([key, value]) => {
+    cssVars.push(`  --hive-transform-${key}: ${value};`);
+  });
+  
+  // Effects
   cssVars.push('');
-
-  return cssVars.join('\n');
+  cssVars.push('  /* HIVE Effects */');
+  Object.entries(effects.boxShadow).forEach(([key, value]) => {
+    cssVars.push(`  --hive-shadow-${key}: ${value};`);
+  });
+  
+  // Add missing shadow variants that components expect
+  cssVars.push(`  --hive-shadow-gold-glow: 0 0 20px rgba(255, 215, 0, 0.3);`);
+  cssVars.push(`  --hive-shadow-gold-glow-strong: 0 0 30px rgba(255, 215, 0, 0.4);`);
+  cssVars.push(`  --hive-shadow-emerald-glow: 0 0 20px rgba(16, 185, 129, 0.3);`);
+  
+  Object.entries(effects.backdropBlur).forEach(([key, value]) => {
+    cssVars.push(`  --hive-backdrop-blur-${key}: ${value};`);
+  });
+  
+  Object.entries(effects.opacity).forEach(([key, value]) => {
+    cssVars.push(`  --hive-opacity-${key}: ${value};`);
+  });
+  
+  Object.entries(effects.zIndex).forEach(([key, value]) => {
+    cssVars.push(`  --hive-z-${key}: ${value};`);
+  });
+  
+  return `:root {\n${cssVars.join('\n')}\n}`;
 }
 
-/**
- * Generate utility classes for design tokens
- */
+// Generate Tailwind CSS color config
+export function generateTailwindColorConfig(): Record<string, string | Record<string, string>> {
+  const tailwindColors: Record<string, string | Record<string, string>> = {};
+  
+  // Add individual colors
+  Object.entries(colors).forEach(([key, value]) => {
+    if (typeof value === 'string') {
+      tailwindColors[key] = value;
+    } else if (typeof value === 'object') {
+      tailwindColors[key] = value;
+    }
+  });
+  
+  // Add semantic colors
+  Object.entries(semantic).forEach(([category, values]) => {
+    tailwindColors[category] = values;
+  });
+  
+  // Add overlay colors with CSS variable fallback
+  Object.entries(overlay).forEach(([key, value]) => {
+    tailwindColors[`overlay-${key}`] = value;
+  });
+  
+  // Add border colors
+  Object.entries(border).forEach(([key, value]) => {
+    tailwindColors[`border-${key}`] = value;
+  });
+  
+  return tailwindColors;
+}
+
+// Generate utility classes for common patterns
 export function generateUtilityClasses(): string {
   const utilities: string[] = [];
-
-  utilities.push('/* ============================================================================');
-  utilities.push(' * HIVE DESIGN SYSTEM UTILITY CLASSES');
-  utilities.push(' * ============================================================================ */');
+  
+  utilities.push('@layer utilities {');
+  utilities.push('  /* HIVE Glass Morphism */');
+  utilities.push('  .hive-glass {');
+  utilities.push(`    background: ${overlay.glass};`);
+  utilities.push('    backdrop-filter: blur(12px) saturate(180%);');
+  utilities.push('    border: 1px solid var(--hive-overlay-glass);');
+  utilities.push('  }');
   utilities.push('');
-
-  // Typography utilities
-  utilities.push('/* Typography Utilities */');
-  Object.keys(typography.fontSize).forEach(key => {
-    utilities.push(`.text-${key} {`);
-    utilities.push(`  font-size: var(--text-${key});`);
-    utilities.push(`  line-height: ${typography.fontSize[key as keyof typeof typography.fontSize].lineHeight};`);
-    utilities.push(`  font-weight: ${typography.fontSize[key as keyof typeof typography.fontSize].fontWeight};`);
-    utilities.push('}');
-    utilities.push('');
-  });
-
-  // Motion utilities
-  utilities.push('/* Motion Utilities */');
-  Object.keys(motion.duration).forEach(key => {
-    utilities.push(`.transition-hive-${key} {`);
-    utilities.push(`  transition-duration: var(--motion-${key});`);
-    utilities.push(`  transition-timing-function: var(--motion-hive);`);
-    utilities.push('}');
-    utilities.push('');
-  });
-
-  // Surface utilities
-  utilities.push('/* Surface Utilities */');
-  ['01', '02', '03'].forEach(level => {
-    utilities.push(`.surface-${level} {`);
-    utilities.push(`  background-color: hsl(var(--surface-${level}));`);
-    utilities.push('}');
-    utilities.push('');
-  });
-
-  // Focus utilities
-  utilities.push('/* Focus Utilities */');
-  utilities.push('.focus-hive {');
-  utilities.push('  outline: 2px solid hsl(var(--ring));');
-  utilities.push('  outline-offset: 2px;');
+  
+  utilities.push('  .hive-glass-strong {');
+  utilities.push(`    background: ${overlay['glass-strong']};`);
+  utilities.push('    backdrop-filter: blur(16px) saturate(200%);');
+  utilities.push('    border: 1px solid var(--hive-overlay-glass-strong);');
+  utilities.push('  }');
+  utilities.push('');
+  
+  utilities.push('  /* HIVE Gold Glow Effects */');
+  utilities.push('  .hive-gold-glow {');
+  utilities.push(`    box-shadow: ${shadows['gold-glow']};`);
+  utilities.push('  }');
+  utilities.push('');
+  
+  utilities.push('  .hive-gold-glow-strong {');
+  utilities.push(`    box-shadow: ${shadows['gold-glow-strong']};`);
+  utilities.push('  }');
+  utilities.push('');
+  
+  utilities.push('  /* HIVE Interactive States */');
+  utilities.push('  .hive-interactive {');
+  utilities.push('    transition: all var(--hive-duration-smooth) var(--hive-easing-liquid);');
+  utilities.push('    will-change: transform, box-shadow;');
+  utilities.push('    transform-origin: center;');
+  utilities.push('    backface-visibility: hidden;');
+  utilities.push('    transform: translateZ(0);');
+  utilities.push('  }');
+  utilities.push('');
+  
+  utilities.push('  .hive-interactive:hover {');
+  utilities.push('    transform: translateY(var(--hive-transform-moveHover)) scale(var(--hive-transform-scaleHover));');
+  utilities.push('  }');
+  utilities.push('');
+  
+  utilities.push('  .hive-interactive:active {');
+  utilities.push('    transform: translateY(var(--hive-transform-movePress)) scale(var(--hive-transform-scaleTap));');
+  utilities.push('  }');
+  utilities.push('');
+  
+  utilities.push('  /* HIVE Motion Variants */');
+  utilities.push('  .hive-motion-quick {');
+  utilities.push('    transition-duration: var(--hive-duration-quick);');
+  utilities.push('  }');
+  utilities.push('');
+  
+  utilities.push('  .hive-motion-flowing {');
+  utilities.push('    transition-duration: var(--hive-duration-flowing);');
+  utilities.push('  }');
+  utilities.push('');
+  
+  utilities.push('  .hive-motion-dramatic {');
+  utilities.push('    transition-duration: var(--hive-duration-dramatic);');
+  utilities.push('  }');
+  utilities.push('');
+  
+  utilities.push('  /* HIVE Focus States */');
+  utilities.push('  .hive-focus {');
+  utilities.push('    outline: none;');
+  utilities.push('    box-shadow: var(--hive-shadow-focus);');
+  utilities.push('  }');
+  utilities.push('');
+  
+  utilities.push('  /* HIVE Glow Effects */');
+  utilities.push('  .hive-glow-gold {');
+  utilities.push('    box-shadow: var(--hive-shadow-goldGlow);');
+  utilities.push('    transition: box-shadow var(--hive-duration-smooth) var(--hive-easing-liquid);');
+  utilities.push('  }');
+  utilities.push('');
+  
+  utilities.push('  .hive-glow-emerald {');
+  utilities.push('    box-shadow: var(--hive-shadow-emeraldGlow);');
+  utilities.push('    transition: box-shadow var(--hive-duration-smooth) var(--hive-easing-liquid);');
+  utilities.push('  }');
   utilities.push('}');
-  utilities.push('');
-
+  
   return utilities.join('\n');
 }
 
-/**
- * Generate complete CSS file with variables and utilities
- */
-export function generateCompleteCSS(): string {
-  const sections: string[] = [];
-
-  sections.push(':root {');
-  sections.push(generateCSSVariables());
-  sections.push('}');
-  sections.push('');
-
-  sections.push('.dark {');
-  sections.push('/* HIVE is dark-first - same values as root */');
-  sections.push(generateCSSVariables());
-  sections.push('}');
-  sections.push('');
-
-  sections.push('@layer utilities {');
-  sections.push(generateUtilityClasses());
-  sections.push('}');
-
-  return sections.join('\n');
-}
-
-/**
- * Validate design token consistency
- */
-export function validateTokens(): { isValid: boolean; errors: string[] } {
-  const errors: string[] = [];
-
-  // Check border color compliance
-  if (colors.border !== '#2A2A2A') {
-    errors.push(`Border color violation: Expected #2A2A2A, got ${colors.border}`);
-  }
-
-  // Check gold accent compliance
-  if (colors.accent.DEFAULT !== '#FFD700') {
-    errors.push(`Gold accent violation: Expected #FFD700, got ${colors.accent.DEFAULT}`);
-  }
-
-  if (colors.accent[600] !== '#EAC200') {
-    errors.push(`Gold hover violation: Expected #EAC200, got ${colors.accent[600]}`);
-  }
-
-  if (colors.accent[700] !== '#C4A500') {
-    errors.push(`Gold active violation: Expected #C4A500, got ${colors.accent[700]}`);
-  }
-
-  // Check motion timing compliance
-  if (motion.duration.base !== '180ms') {
-    errors.push(`Motion timing violation: Expected 180ms, got ${motion.duration.base}`);
-  }
-
-  if (motion.easing.hive !== 'cubic-bezier(0.33, 0.65, 0, 1)') {
-    errors.push(`Motion curve violation: Expected HIVE brand curve, got ${motion.easing.hive}`);
-  }
-
-  return {
-    isValid: errors.length === 0,
-    errors
-  };
-}
-
-export default {
-  generateCSSVariables,
-  generateUtilityClasses,
-  generateCompleteCSS,
-  validateTokens
-};
+export type CSSToken = keyof typeof colors;
+export type SemanticCSSToken = keyof typeof semantic;

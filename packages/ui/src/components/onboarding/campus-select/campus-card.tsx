@@ -1,6 +1,6 @@
 import React from 'react';
 import { Badge } from '../../badge';
-import { cn } from '../../../lib/utils';
+import { cn } from '../../lib/utils';
 
 export interface CampusCardProps {
   id: string;

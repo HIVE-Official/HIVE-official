@@ -281,6 +281,7 @@ describe("Auth API Integration", () => {
           searchType: "email",
         }),
       });
+
       expect(response.ok).toBe(false);
       expect(response.status).toBe(403);
     });

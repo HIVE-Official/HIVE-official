@@ -62,7 +62,7 @@ export default function GlobalError({
     <html>
       <body style={{ margin: 0, padding: 0 }}>
         {/* Background gradients matching home page */}
-        <div className="fixed inset-0 bg-[#0A0A0A]">
+        <div className="fixed inset-0 bg-[var(--hive-background-primary)]">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,#111111,transparent_50%)]" />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,#111111,transparent_50%)]" />
         </div>
@@ -74,9 +74,9 @@ export default function GlobalError({
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.24, ease: [0.33, 0.65, 0, 1] }}
           >
-            <div className="rounded-lg border border-[#FFD700]/30 bg-[#111111] p-8 shadow-xl">
+            <div className="rounded-lg border border-[var(--hive-brand-secondary)]/30 bg-[#111111] p-8 shadow-xl">
               {/* Gold accent line */}
-              <div className="h-1 bg-gradient-to-r from-[#FFD700] to-[#FFD700]/50 rounded-full mb-6" />
+              <div className="h-1 bg-gradient-to-r from-[var(--hive-brand-secondary)] to-[var(--hive-brand-secondary)]/50 rounded-full mb-6" />
               
               <div className="flex flex-col items-center gap-6 text-center">
                 <motion.div
@@ -84,8 +84,8 @@ export default function GlobalError({
                   animate={{ scale: 1 }}
                   transition={{ type: "spring", duration: 0.5, ease: [0.33, 0.65, 0, 1] }}
                 >
-                  <div className="rounded-full bg-[#FFD700]/10 p-3">
-                    <AlertTriangle className="h-6 w-6 text-[#FFD700]" />
+                  <div className="rounded-full bg-[var(--hive-brand-secondary)]/10 p-3">
+                    <AlertTriangle className="h-6 w-6 text-[var(--hive-brand-secondary)]" />
                   </div>
                 </motion.div>
 
@@ -114,7 +114,7 @@ export default function GlobalError({
                 <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
                   <motion.button
                     onClick={handleReset}
-                    className="flex items-center justify-center gap-2 px-6 py-3 bg-transparent border border-[#2A2A2A] rounded-lg hover:bg-[#111111] hover:border-[#FFD700]/50 text-white transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] focus:ring-2 focus:ring-[#FFD700] focus:ring-offset-2 focus:ring-offset-[#0A0A0A]"
+                    className="flex items-center justify-center gap-2 px-6 py-3 bg-transparent border border-[#2A2A2A] rounded-lg hover:bg-[#111111] hover:border-[var(--hive-brand-secondary)]/50 text-white transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] focus:ring-2 focus:ring-[var(--hive-brand-secondary)] focus:ring-offset-2 focus:ring-offset-[var(--hive-background-primary)]"
                     whileHover={{ scale: 1.02, y: -1 }}
                     whileTap={{ scale: 0.98 }}
                     style={{
@@ -127,7 +127,7 @@ export default function GlobalError({
                   </motion.button>
                   <motion.button
                     onClick={handleGoHome}
-                    className="flex items-center justify-center gap-2 px-6 py-3 bg-[#FFD700] text-[#0A0A0A] rounded-lg hover:bg-[#FFD700]/90 transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] focus:ring-2 focus:ring-[#FFD700] focus:ring-offset-2 focus:ring-offset-[#0A0A0A]"
+                    className="flex items-center justify-center gap-2 px-6 py-3 bg-[var(--hive-brand-secondary)] text-[var(--hive-background-primary)] rounded-lg hover:bg-[var(--hive-brand-secondary)]/90 transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] focus:ring-2 focus:ring-[var(--hive-brand-secondary)] focus:ring-offset-2 focus:ring-offset-[var(--hive-background-primary)]"
                     whileHover={{ scale: 1.02, y: -1 }}
                     whileTap={{ scale: 0.98 }}
                     style={{
@@ -142,7 +142,7 @@ export default function GlobalError({
 
                 {/* Show error details in development */}
                 {process.env.NODE_ENV === 'development' && (
-                  <div className="mt-4 w-full rounded-lg border border-[#2A2A2A] bg-[#0A0A0A] p-4 text-left">
+                  <div className="mt-4 w-full rounded-lg border border-[#2A2A2A] bg-[var(--hive-background-primary)] p-4 text-left">
                     <p 
                       className="text-[#6B7280] text-sm"
                       style={{ fontFamily: 'Geist Mono, ui-monospace, monospace' }}
@@ -170,7 +170,7 @@ export default function GlobalError({
                   Need help? Contact{' '}
                   <a
                     href="mailto:support@thehiveuni.com"
-                    className="text-[#FFD700] hover:text-[#FFD700]/80 transition-colors duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)]"
+                    className="text-[var(--hive-brand-secondary)] hover:text-[var(--hive-brand-secondary)]/80 transition-colors duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)]"
                     style={{
                       fontFamily: 'Geist Sans, system-ui, sans-serif',
                       fontWeight: 500

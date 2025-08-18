@@ -1,8 +1,7 @@
-export * from "./CheckEmailInfo";
-export * from './splash-screen';
-export * from './school-pick';
-export * from './email-gate';
-export * from './magic-link-sent';
-export * from './auth-flow';
-export * from './dev-mode-panel';
-export * from './email-form'; 
+export { HiveAuthFlow } from './hive-auth-flow';
+// AuthProvider and useAuth removed - use UnifiedAuthProvider and useUnifiedAuth instead
+export type { 
+  AuthStep,
+  AuthState,
+  AuthContextType 
+} from './hive-auth-flow';

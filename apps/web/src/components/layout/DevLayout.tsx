@@ -19,8 +19,8 @@ function DesktopDevNav() {
 	return (
 		<>
 			{/* Dev Mode Banner */}
-			<div className="bg-[#FFD700]/10 border-b border-[#FFD700]/30 px-4 py-1 text-center">
-				<span className="text-[#FFD700] text-xs font-mono">
+			<div className="bg-[var(--hive-brand-secondary)]/10 border-b border-[var(--hive-brand-secondary)]/30 px-4 py-1 text-center">
+				<span className="text-[var(--hive-brand-secondary)] text-xs font-mono">
 					🚀 DEVELOPMENT MODE - Full App Shell Testing
 				</span>
 			</div>
@@ -43,7 +43,7 @@ function DesktopDevNav() {
 					<AppHeader.Nav className='ml-8'>
 						<Link
 							href='/dev/feed'
-							className={`text-sm font-medium transition-colors hover:text-[#FFD700] ${
+							className={`text-sm font-medium transition-colors hover:text-[var(--hive-brand-secondary)] ${
 								pathname === '/dev/feed' ? 'text-foreground' : 'text-muted'
 							}`}
 						>
@@ -51,7 +51,7 @@ function DesktopDevNav() {
 						</Link>
 						<Link
 							href='/dev/campus'
-							className={`text-sm font-medium transition-colors hover:text-[#FFD700] ${
+							className={`text-sm font-medium transition-colors hover:text-[var(--hive-brand-secondary)] ${
 								pathname === '/dev/campus' ? 'text-foreground' : 'text-muted'
 							}`}
 						>
@@ -59,7 +59,7 @@ function DesktopDevNav() {
 						</Link>
 						<Link
 							href='/dev/spaces'
-							className={`text-sm font-medium transition-colors hover:text-[#FFD700] ${
+							className={`text-sm font-medium transition-colors hover:text-[var(--hive-brand-secondary)] ${
 								pathname === '/dev/spaces' ? 'text-foreground' : 'text-muted'
 							}`}
 						>
@@ -67,7 +67,7 @@ function DesktopDevNav() {
 						</Link>
 						<Link
 							href='/dev/profile'
-							className={`text-sm font-medium transition-colors hover:text-[#FFD700] ${
+							className={`text-sm font-medium transition-colors hover:text-[var(--hive-brand-secondary)] ${
 								pathname === '/dev/profile' ? 'text-foreground' : 'text-muted'
 							}`}
 						>
@@ -78,12 +78,12 @@ function DesktopDevNav() {
 						<Button 
 							variant='outline'
 							size="sm"
-							className="border-[#FFD700] text-[#FFD700] hover:bg-[#FFD700] hover:text-black transition-colors duration-[180ms]"
+							className="border-[var(--hive-brand-secondary)] text-[var(--hive-brand-secondary)] hover:bg-[var(--hive-brand-secondary)] hover:text-black transition-colors duration-[180ms]"
 						>
 							Create
 						</Button>
 						<Link href="/dev/profile">
-							<Avatar className="border border-border hover:border-[#FFD700]/50 transition-colors duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] w-8 h-8">
+							<Avatar className="border border-border hover:border-[var(--hive-brand-secondary)]/50 transition-colors duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] w-8 h-8">
 								<AvatarFallback className="bg-[#2A2A2A] text-foreground text-sm">
 									{mockUser.fullName.charAt(0)}
 								</AvatarFallback>
@@ -101,8 +101,8 @@ function MobileDevNav() {
 	return (
 		<>
 			{/* Dev Mode Banner for Mobile */}
-			<div className="bg-[#FFD700]/10 border-b border-[#FFD700]/30 px-4 py-1.5 text-center">
-				<span className="text-[#FFD700] text-xs font-mono">
+			<div className="bg-[var(--hive-brand-secondary)]/10 border-b border-[var(--hive-brand-secondary)]/30 px-4 py-1.5 text-center">
+				<span className="text-[var(--hive-brand-secondary)] text-xs font-mono">
 					🚀 DEV MODE
 				</span>
 			</div>

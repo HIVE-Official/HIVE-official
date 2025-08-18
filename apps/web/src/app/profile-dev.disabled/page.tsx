@@ -18,11 +18,11 @@ const mockUser: AuthUser = {
 
 export default function ProfileDevPage() {
   return (
-    <div className="min-h-screen bg-[#0A0A0A]">
+    <div className="min-h-screen bg-[var(--hive-background-primary)]">
       {/* Dev banner */}
-      <div className="bg-[#FFD700]/10 border-b border-[#FFD700]/30 px-4 py-2">
+      <div className="bg-[var(--hive-brand-secondary)]/10 border-b border-[var(--hive-brand-secondary)]/30 px-4 py-2">
         <div className="container mx-auto">
-          <p className="text-[#FFD700] text-sm font-mono">
+          <p className="text-[var(--hive-brand-secondary)] text-sm font-mono">
             🚀 DEVELOPMENT MODE - Profile System Testing
           </p>
         </div>

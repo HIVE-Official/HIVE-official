@@ -255,7 +255,7 @@ function logError(errorData: z.infer<typeof ErrorPayloadSchema>) {
   } else if (priority === 'high') {
     console.warn('[HIGH PRIORITY ERROR]', JSON.stringify(logEntry, null, 2));
   } else if (priority !== 'ignore') {
-    console.log('[ERROR]', JSON.stringify(logEntry, null, 2));
+    
   }
 
   // In production, you'd send critical/high priority errors to monitoring services

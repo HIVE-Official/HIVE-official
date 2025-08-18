@@ -1,57 +1,31 @@
-import {
-  createHttpsFunction,
-  FunctionContext,
-  getFirestore,
-  functions,
-} from "../types/firebase";
+import * as functions from "firebase-functions";
+import {getFirestore} from "firebase-admin/firestore";
+import {UserProfileSchema} from "@hive/validation";
 
-// Temporary UserProfileSchema - replace with @hive/validation import once workspace is fixed
-// const updatableProfileFields = {
-//   preferredName: "string",
-//   major: "string",
-//   isBuilder: "boolean",
-// };
+// A subset of the schema that users are allowed to update
+const updatableProfileFields = UserProfileSchema.pick({
+  preferredName: true,
+  major: true,
+  isBuilder: true,
+  // Note: handle and avatar are updated via separate functions
+}).partial();
 
-interface UpdateUserProfileData {
-  preferredName?: string;
-  major?: string;
-  isBuilder?: boolean;
-}
-
-export const updateUserProfile = createHttpsFunction<UpdateUserProfileData>(
-  async (data: UpdateUserProfileData, context: FunctionContext) => {
-    if (!context.auth) {
-      throw new functions.https.HttpsError(
-        "unauthenticated",
-        "User must be authenticated."
-      );
-    }
-
-    // Basic validation
-    const allowedFields = ["preferredName", "major", "isBuilder"];
-    const updateData: Record<string, string | boolean> = {};
-
-    for (const [key, value] of Object.entries(data)) {
-      if (allowedFields.includes(key)) {
-        if (typeof value === "string" || typeof value === "boolean") {
-          updateData[key] = value;
-        }
-      }
-    }
-
-    if (Object.keys(updateData).length === 0) {
-      throw new functions.https.HttpsError(
-        "invalid-argument",
-        "No valid fields provided for update."
-      );
-    }
-
-    const uid = context.auth.uid;
-    const db = getFirestore();
-    const userRef = db.collection("users").doc(uid);
-
-    await userRef.update(updateData);
-
-    return { success: true, message: "Profile updated successfully." };
+export const updateUserProfile = functions.https.onCall(async (data, context) => {
+  if (!context.auth) {
+    throw new functions.https.HttpsError("unauthenticated", "User must be authenticated.");
   }
-);
+
+  const parseResult = updatableProfileFields.safeParse(data);
+
+  if (!parseResult.success) {
+    throw new functions.https.HttpsError("invalid-argument", "Invalid data provided.", parseResult.error.flatten());
+  }
+
+  const uid = context.auth.uid;
+  const db = getFirestore();
+  const userRef = db.collection("users").doc(uid);
+
+  await userRef.update(parseResult.data);
+
+  return {success: true, message: "Profile updated successfully."};
+});

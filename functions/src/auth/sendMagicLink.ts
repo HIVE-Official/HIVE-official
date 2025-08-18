@@ -9,11 +9,11 @@ async function sendEmail(
   subject: string,
   body: string
 ): Promise<void> {
-  functions.logger.info("---- SENDING EMAIL ----");
-  functions.logger.info(`TO: ${email}`);
-  functions.logger.info(`SUBJECT: ${subject}`);
-  functions.logger.info(`BODY: ${body}`);
-  functions.logger.info("-----------------------");
+  console.log("---- SENDING EMAIL ----");
+  console.log(`TO: ${email}`);
+  console.log(`SUBJECT: ${subject}`);
+  console.log(`BODY: ${body}`);
+  console.log("-----------------------");
   return Promise.resolve();
 }
 
@@ -24,7 +24,6 @@ function generateToken(): string {
 
 interface MagicLinkData {
   email: string;
-  schoolId: string;
 }
 
 export const sendMagicLink = functions.https.onCall(
@@ -32,11 +31,8 @@ export const sendMagicLink = functions.https.onCall(
     // Extract data from request
     const data = request.data as MagicLinkData;
 
-    if (!data.email || !data.schoolId) {
-      throw new FirebaseHttpsError(
-        "invalid-argument",
-        "Email and schoolId are required"
-      );
+    if (!data.email) {
+      throw new FirebaseHttpsError("invalid-argument", "Email is required");
     }
 
     try {
@@ -47,7 +43,6 @@ export const sendMagicLink = functions.https.onCall(
       // Store the magic link token in Firestore
       await db.collection("magic_links").add({
         email: data.email,
-        schoolId: data.schoolId,
         token,
         expiresAt,
         used: false,
@@ -64,7 +59,7 @@ export const sendMagicLink = functions.https.onCall(
 
       return { success: true, message: "Magic link sent successfully" };
     } catch (error) {
-      functions.logger.error("Error sending magic link:", error);
+      console.error("Error sending magic link:", error);
       throw new FirebaseHttpsError("internal", "Failed to send magic link");
     }
   }

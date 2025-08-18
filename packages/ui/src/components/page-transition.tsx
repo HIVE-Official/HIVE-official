@@ -1,146 +1,85 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { hiveVariants } from '../lib/motion';
-import { useAdaptiveMotion } from '../lib/adaptive-motion';
+import React, { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
+import { cn } from '../lib/utils';
+import { darkLuxury } from '../theme/dark-luxury';
 
 interface PageTransitionProps {
   children: React.ReactNode;
   className?: string;
-  layoutId?: string;
-  transition?: 'fade' | 'slide' | 'scale' | 'ritual';
-  context?: 'academic' | 'social' | 'ritual' | 'navigation';
 }
 
-export const PageTransition: React.FC<PageTransitionProps> = ({
-  children,
-  className,
-  layoutId,
-  transition = 'fade',
-  context = 'navigation',
-}) => {
-  const { variants: _variants } = useAdaptiveMotion(context);
+export function PageTransition({ children, className }: PageTransitionProps) {
+  const pathname = usePathname();
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [displayChildren, setDisplayChildren] = useState(children);
 
-  const getTransitionVariant = () => {
-    switch (transition) {
-      case 'slide':
-        return hiveVariants.slideUp;
-      case 'scale':
-        return hiveVariants.scaleIn;
-      case 'ritual':
-        return _variants.ritual;
-      case 'fade':
-      default:
-        return hiveVariants.fadeIn;
-    }
-  };
+  useEffect(() => {
+    // Start transition
+    setIsTransitioning(true);
+    
+    // Small delay to show transition effect
+    const timer = setTimeout(() => {
+      setDisplayChildren(children);
+      setIsTransitioning(false);
+    }, 150);
+
+    return () => clearTimeout(timer);
+  }, [pathname, children]);
 
   return (
-    <motion.div
-      className={className}
-      layoutId={layoutId}
-      variants={getTransitionVariant()}
-      initial="hidden"
-      animate="visible"
-      exit="hidden"
+    <div 
+      className={cn(
+        "relative min-h-full",
+        className
+      )}
     >
-      {children}
-    </motion.div>
-  );
-};
-
-interface PageContainerProps {
-  children: React.ReactNode;
-  className?: string;
-  stagger?: boolean;
-  context?: 'academic' | 'social' | 'ritual' | 'navigation';
-}
-
-export const PageContainer: React.FC<PageContainerProps> = ({
-  children,
-  className,
-  stagger = true,
-  context = 'navigation',
-}) => {
-  const { variants: _variants } = useAdaptiveMotion(context);
-
-  return (
-    <motion.div
-      className={className}
-      variants={stagger ? hiveVariants.container : hiveVariants.fadeIn}
-      initial="hidden"
-      animate="visible"
-      exit="hidden"
-    >
-      {children}
-    </motion.div>
-  );
-};
-
-interface PageSectionProps {
-  children: React.ReactNode;
-  className?: string;
-  delay?: number;
-}
-
-export const PageSection: React.FC<PageSectionProps> = ({
-  children,
-  className,
-  delay = 0,
-}) => {
-  return (
-    <motion.section
-      className={className}
-      variants={hiveVariants.item}
-      transition={{ delay }}
-    >
-      {children}
-    </motion.section>
-  );
-};
-
-interface RouteTransitionProps {
-  children: React.ReactNode;
-  routeKey: string;
-  className?: string;
-}
-
-export const RouteTransition: React.FC<RouteTransitionProps> = ({
-  children,
-  routeKey,
-  className,
-}) => {
-  return (
-    <AnimatePresence mode="wait" initial={false}>
-      <motion.div
-        key={routeKey}
-        className={className}
-        variants={hiveVariants.fadeIn}
-        initial="hidden"
-        animate="visible"
-        exit="hidden"
+      {/* Page content with transition */}
+      <div
+        className={cn(
+          "transition-all duration-300 ease-out",
+          isTransitioning 
+            ? "opacity-0 translate-y-2 scale-[0.98]" 
+            : "opacity-100 translate-y-0 scale-100"
+        )}
+        style={{
+          transitionProperty: 'opacity, transform',
+          transitionDuration: '300ms',
+          transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
+        }}
       >
-        {children}
-      </motion.div>
-    </AnimatePresence>
+        {displayChildren}
+      </div>
+
+      {/* Loading overlay during transition */}
+      {isTransitioning && (
+        <div 
+          className="absolute inset-0 flex items-center justify-center pointer-events-none"
+          style={{
+            background: `linear-gradient(135deg, ${darkLuxury.obsidian}95 0%, ${darkLuxury.charcoal}95 100%)`,
+            backdropFilter: 'blur(2)',
+          }}
+        >
+          <div className="flex items-center gap-3">
+            <div 
+              className="w-6 h-6 border-2 border-current border-t-transparent rounded-full animate-spin"
+              style={{ 
+                color: darkLuxury.gold,
+                borderTopColor: 'transparent'
+              }}
+            />
+            <span 
+              className="text-sm font-medium"
+              style={{ color: darkLuxury.mercury }}
+            >
+              Loading...
+            </span>
+          </div>
+        </div>
+      )}
+    </div>
   );
-};
-
-// Higher-order component for page animations
-export function withPageTransition<P extends Record<string, unknown>>(
-  Component: React.ComponentType<P>,
-  options: Partial<PageTransitionProps> = {}
-) {
-  const WrappedComponent = React.forwardRef<HTMLElement, P>((props, _ref) => (
-    <PageTransition {...options}>
-      <Component {...(props as P)} />
-    </PageTransition>
-  ));
-
-  WrappedComponent.displayName = `withPageTransition(${Component.displayName || Component.name})`;
-  
-  return WrappedComponent;
 }
 
 export default PageTransition;

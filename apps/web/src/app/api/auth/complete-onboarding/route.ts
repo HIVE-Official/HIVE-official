@@ -1,254 +1,332 @@
-import { NextRequest, NextResponse } from "next/server";
-import { logger } from "@hive/core";
-import { dbAdmin, authAdmin, environmentInfo } from "../../../../lib/firebase-admin";
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
+import { z } from "zod";
+import { dbAdmin } from "@/lib/firebase-admin";
+import { getAuth } from "firebase-admin/auth";
+import { type Timestamp } from "firebase-admin/firestore";
+import { validateHandleFormat } from "@/lib/handle-service";
+import { 
+  executeOnboardingTransaction, 
+  executeBuilderRequestCreation,
+  TransactionError
+} from "@/lib/transaction-manager";
+import { createRequestLogger } from "@/lib/structured-logger";
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
-// Temporary inline type definition to avoid import issues
-interface OnboardingData {
-  displayName?: string;
-  major?: string;
-  majors?: string[];
+
+const completeOnboardingSchema = z.object({
+  fullName: z
+    .string()
+    .min(1, "Full name is required")
+    .max(100, "Full name too long"),
+  userType: z.enum(["student", "alumni", "faculty"]),
+  firstName: z.string().optional(),
+  lastName: z.string().optional(),
+  major: z.string().min(1, "Major is required"),
+  academicLevel: z.string().optional(),
+  graduationYear: z.number().int().min(1900).max(2040),
+  handle: z
+    .string()
+    .min(3, "Handle must be at least 3 characters")
+    .max(20, "Handle must be at most 20 characters")
+    .regex(
+      /^[a-zA-Z0-9._-]+$/,
+      "Handle can only contain letters, numbers, periods, underscores, and hyphens"
+    ),
+  avatarUrl: z.string().url().optional().or(z.literal("")),
+  builderRequestSpaces: z.array(z.string()).default([]),
+  consentGiven: z
+    .boolean()
+    .refine((val) => val === true, "Consent must be given") });
+
+interface UserData {
   handle?: string;
-  avatarUrl?: string;
-  builderOptIn?: boolean;
-  consentGiven?: boolean;
+  fullName?: string;
+  userType?: "student" | "alumni" | "faculty";
+  firstName?: string;
+  lastName?: string;
+  major?: string;
   academicLevel?: string;
   graduationYear?: number;
-  interests?: string[];
-  isStudentLeader?: boolean;
-  spaceClaims?: Array<{
-    spaceId: string;
-    spaceName: string;
-    spaceType: string;
-    claimReason: string;
-    status: string;
-  }>;
+  avatarUrl?: string;
+  builderRequestSpaces?: string[];
+  consentGiven?: boolean;
+  consentGivenAt?: Timestamp;
+  onboardingCompletedAt?: Timestamp;
+  updatedAt?: Timestamp;
 }
 
-// More robust build time detection
-const isBuildTime = environmentInfo.isBuildTime;
-
-// This is required for Next.js edge runtime compatibility
-export const runtime = 'nodejs';
-
 export async function POST(request: NextRequest) {
-  // During build time, return a mock response
-  if (isBuildTime) {
-    return new NextResponse(
-      JSON.stringify({
-        ok: true,
-        message: "Build time - mock onboarding completion",
-        userId: "build-time-user-id"
-      }),
-      { 
-        status: 200,
-        headers: { 'Content-Type': 'application/json' }
-      }
-    );
-  }
-
   try {
     // Get the authorization header
-    const authHeader = request.headers.get('authorization');
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return NextResponse.json(
-        { message: "Authorization token required" },
-        { status: 401 }
-      );
+    const authHeader = request.headers.get("authorization");
+    if (!authHeader?.startsWith("Bearer ")) {
+      return NextResponse.json(ApiResponseHelper.error("Missing or invalid authorization header", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
-    const idToken = authHeader.split('Bearer ')[1];
+    const idToken = authHeader.substring(7);
     
+    // SECURITY: Development token bypass removed for production safety
+    // All tokens must be validated through Firebase Auth
+    
+    const auth = getAuth();
+
     // Verify the ID token
     let decodedToken;
     try {
-      decodedToken = await authAdmin.verifyIdToken(idToken);
+      decodedToken = await auth.verifyIdToken(idToken);
     } catch (error) {
-      logger.error("Invalid ID token:", error);
-      return NextResponse.json(
-        { message: "Invalid or expired token" },
-        { status: 401 }
-      );
+      logger.error('Invalid ID token', { error: error, endpoint: '/api/auth/complete-onboarding' });
+      return NextResponse.json(ApiResponseHelper.error("Invalid or expired token", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
-    const currentUser = {
-      uid: decodedToken.uid,
-      email: decodedToken.email,
-      emailVerified: decodedToken.email_verified,
-    };
-
-    const onboardingData = (await request.json()) as Partial<OnboardingData>;
-    const {
-      displayName,
-      major,
-      majors = [],
-      handle,
-      avatarUrl,
-      builderOptIn,
-      consentGiven,
-      academicLevel,
-      graduationYear,
-      interests = [],
-      isStudentLeader = false,
-      spaceClaims = [],
-    } = onboardingData;
-
-    // Validate required fields
-    if (
-      !displayName ||
-      (!major && majors.length === 0) ||
-      !handle ||
-      consentGiven === undefined
-    ) {
-      return NextResponse.json(
-        {
-          message:
-            "Missing required fields: displayName, major/majors, handle, and consentGiven are required",
-        },
-        { status: 400 }
-      );
+    if (!decodedToken?.uid || !decodedToken?.email) {
+      return NextResponse.json(ApiResponseHelper.error("Invalid token data", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
-    // Validate handle format
-    const handleRegex = /^[a-z0-9_]{3,20}$/;
-    if (!handleRegex.test(handle)) {
-      return NextResponse.json(
-        {
-          message:
-            "Handle must be 3-20 characters, lowercase letters, numbers, and underscores only",
-        },
-        { status: 400 }
-      );
-    }
+    const userId = decodedToken.uid;
+    const userEmail = decodedToken.email;
 
-    // Development mode bypass
-    if (!process.env.NEXT_PUBLIC_FIREBASE_API_KEY) {
-      logger.info("🔥 Development mode: bypassing Firestore operations");
-
-      logger.info("Development mode onboarding completed for user:", {
-        uid: currentUser.uid,
-        email: currentUser.email,
-        displayName,
-        handle,
-        major: major || majors[0],
-        builderOptIn,
-        consentGiven,
-      });
-
-      return NextResponse.json({
-        ok: true,
-        message: "Onboarding completed successfully",
-        userId: currentUser.uid,
-      });
-    }
-
-    // Production mode: Full Firestore implementation
+    // Parse and validate the request body
+    let body: unknown;
     try {
-      // Check handle availability
-      const handleQuery = await dbAdmin
-        .collection("users")
-        .where("handle", "==", handle)
-        .limit(1)
-        .get();
+      body = await request.json();
+    } catch (jsonError) {
+      return NextResponse.json(ApiResponseHelper.error("Invalid JSON in request body", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
+    }
 
-      if (!handleQuery.empty) {
+    let onboardingData;
+    try {
+      onboardingData = completeOnboardingSchema.parse(body);
+    } catch (validationError) {
+      if (validationError instanceof z.ZodError) {
         return NextResponse.json(
-          {
-            message: "Handle is already taken. Please choose a different one.",
-          },
-          { status: 409 }
+          { error: "Invalid request data", details: validationError.errors },
+          { status: HttpStatus.BAD_REQUEST }
         );
       }
+      throw validationError;
+    }
 
-      // Prepare user document data
-      const now = new Date();
-      const finalMajors = majors.length > 0 ? majors : [major!];
-
-      const userData = {
-        // Identity
-        uid: currentUser.uid,
-        email: currentUser.email,
-        displayName,
-        handle,
-        avatarUrl: avatarUrl || null,
-
-        // Status
-        emailVerified: currentUser.emailVerified,
-        onboardingCompleted: true,
-        verificationLevel: "verified" as const,
-
-        // Academic Info
-        academicLevel: academicLevel || "undergraduate",
-        majors: finalMajors,
-        major: finalMajors[0], // Compatibility field
-        graduationYear: graduationYear || new Date().getFullYear() + 4,
-        interests,
-
-        // Leadership
-        isStudentLeader,
-        spaceClaims,
-
-        // Metadata
-        builderOptIn: builderOptIn || false,
-        consentGiven,
-        isComplete: true,
-        createdAt: now,
-        updatedAt: now,
-        completedAt: now,
-        lastActiveAt: now,
-      };
-
-      // Use Firestore transaction for data consistency
-      await dbAdmin.runTransaction(async (transaction) => {
-        const userRef = dbAdmin.collection("users").doc(currentUser.uid);
-
-        // Double-check handle availability within transaction
-        const handleCheckRef = dbAdmin.collection("users");
-        const handleSnapshot = await transaction.get(
-          handleCheckRef.where("handle", "==", handle).limit(1)
-        );
-
-        if (!handleSnapshot.empty) {
-          throw new Error("Handle was taken during processing");
-        }
-
-        // Create or update user document
-        transaction.set(userRef, userData, { merge: true });
-
-        // If student leader has space claims, store them separately
-        if (isStudentLeader && spaceClaims.length > 0) {
-          for (const claim of spaceClaims) {
-            const claimRef = dbAdmin
-              .collection("verification")
-              .doc();
-            
-            transaction.set(claimRef, {
-              ...claim,
-              userId: currentUser.uid,
-              createdAt: now,
-              updatedAt: now,
-              status: "PENDING",
-            });
-          }
-        }
-      });
-
-      return NextResponse.json({
-        ok: true,
-        message: "Onboarding completed successfully",
-        userId: currentUser.uid,
-      });
-    } catch (error) {
-      logger.error("Error completing onboarding:", error);
+    // Validate handle format first (outside transaction)
+    const formatValidation = validateHandleFormat(onboardingData.handle);
+    if (!formatValidation.isAvailable) {
       return NextResponse.json(
-        { message: "Failed to complete onboarding" },
-        { status: 500 }
+        { error: formatValidation.error },
+        { status: HttpStatus.BAD_REQUEST }
       );
     }
-  } catch (error) {
-    logger.error("Unexpected error during onboarding:", error);
-    return NextResponse.json(
-      { message: "Internal server error" },
-      { status: 500 }
+
+    const normalizedHandle = formatValidation.normalizedHandle!;
+
+    // Get request ID for tracking
+    const requestId = request.headers.get('x-request-id') || `req_${Date.now()}`;
+    const requestLogger = createRequestLogger(requestId, userId);
+
+    await requestLogger.info('Starting onboarding completion', {
+      operation: 'complete_onboarding',
+      handle: normalizedHandle,
+      userType: onboardingData.userType
+    });
+
+    // Use transaction manager for atomicity and consistency
+    const transactionResult = await executeOnboardingTransaction(
+      userId,
+      userEmail,
+      onboardingData,
+      normalizedHandle,
+      { requestId }
     );
+
+    if (!transactionResult.success) {
+      await requestLogger.error('Onboarding transaction failed', {
+        operation: 'complete_onboarding',
+        error: transactionResult.error?.message,
+        operationsCompleted: transactionResult.operationsCompleted,
+        operationsFailed: transactionResult.operationsFailed,
+        duration: transactionResult.duration
+      }, transactionResult.error);
+
+      // Handle specific error types
+      if (transactionResult.error instanceof TransactionError) {
+        const message = transactionResult.error.message;
+        if (message.includes('Handle is already taken')) {
+          return NextResponse.json(ApiResponseHelper.error("Handle is already taken", "UNKNOWN_ERROR"), { status: 409 });
+        }
+        if (message.includes('Onboarding already completed')) {
+          return NextResponse.json(ApiResponseHelper.error("Onboarding already completed", "UNKNOWN_ERROR"), { status: 409 });
+        }
+        if (message.includes('User not found')) {
+          return NextResponse.json(ApiResponseHelper.error("User not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
+        }
+      }
+
+      return NextResponse.json(ApiResponseHelper.error("Failed to complete onboarding", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
+    }
+
+    const result = transactionResult.data!;
+
+    await requestLogger.info('Onboarding transaction completed successfully', {
+      operation: 'complete_onboarding',
+      handle: normalizedHandle,
+      duration: transactionResult.duration,
+      operationsCompleted: transactionResult.operationsCompleted
+    });
+
+    // Create builder requests if user selected spaces (using transaction manager)
+    if (onboardingData.builderRequestSpaces && onboardingData.builderRequestSpaces.length > 0) {
+      await requestLogger.info('Creating builder requests', {
+        operation: 'create_builder_requests',
+        spaceCount: onboardingData.builderRequestSpaces.length,
+        spaceIds: onboardingData.builderRequestSpaces
+      });
+
+      const builderRequestResult = await executeBuilderRequestCreation(
+        userId,
+        userEmail,
+        result.updatedUserData.fullName || "",
+        onboardingData.builderRequestSpaces,
+        onboardingData.userType,
+        { requestId }
+      );
+
+      if (!builderRequestResult.success) {
+        await requestLogger.warn('Builder request creation failed, but onboarding succeeded', {
+          operation: 'create_builder_requests',
+          error: builderRequestResult.error,
+          operationsCompleted: builderRequestResult.operationsCompleted,
+          operationsFailed: builderRequestResult.operationsFailed
+        });
+      } else {
+        await requestLogger.info('Builder requests created successfully', {
+          operation: 'create_builder_requests',
+          duration: builderRequestResult.duration,
+          operationsCompleted: builderRequestResult.operationsCompleted
+        });
+      }
+    }
+
+    // After successful onboarding, create and auto-join cohort spaces
+    try {
+      await requestLogger.info('Creating cohort spaces', {
+        operation: 'create_cohort_spaces',
+        major: onboardingData.major,
+        graduationYear: onboardingData.graduationYear
+      });
+
+      const cohortResponse = await fetch(
+        `${request.url.split("/api")[0]}/api/spaces/cohort/auto-create`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${idToken}`,
+          },
+          body: JSON.stringify({
+            major: onboardingData.major,
+            graduationYear: onboardingData.graduationYear
+          }),
+        }
+      );
+
+      if (!cohortResponse.ok) {
+        const errorText = await cohortResponse.text();
+        await requestLogger.warn('Cohort space creation failed, but onboarding succeeded', {
+          operation: 'create_cohort_spaces',
+          status: cohortResponse.status,
+          error: errorText
+        });
+      } else {
+        const cohortResult = await cohortResponse.json();
+        await requestLogger.info('Cohort spaces created successfully', {
+          operation: 'create_cohort_spaces',
+          result: cohortResult
+        });
+      }
+    } catch (cohortError) {
+      await requestLogger.warn('Cohort space creation error, but onboarding succeeded', {
+        operation: 'create_cohort_spaces',
+        error: cohortError instanceof Error ? cohortError : new Error(String(cohortError))
+      });
+    }
+
+    // After cohort space creation, auto-join the user to other relevant spaces
+    try {
+      await requestLogger.info('Attempting auto-join to spaces', {
+        operation: 'auto_join_spaces'
+      });
+
+      const autoJoinResponse = await fetch(
+        `${request.url.split("/api")[0]}/api/spaces/auto-join`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ userId }),
+        }
+      );
+
+      if (!autoJoinResponse.ok) {
+        const errorText = await autoJoinResponse.text();
+        await requestLogger.warn('Auto-join failed, but onboarding succeeded', {
+          operation: 'auto_join_spaces',
+          status: autoJoinResponse.status,
+          error: errorText
+        });
+      } else {
+        const autoJoinResult = (await autoJoinResponse.json()) as unknown;
+        await requestLogger.info('Auto-join successful', {
+          operation: 'auto_join_spaces',
+          result: autoJoinResult
+        });
+      }
+    } catch (autoJoinError) {
+      await requestLogger.warn('Auto-join error, but onboarding succeeded', {
+        operation: 'auto_join_spaces',
+        error: autoJoinError instanceof Error ? autoJoinError : new Error(String(autoJoinError))
+      });
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: "Onboarding completed successfully",
+      user: {
+        id: userId,
+        fullName: result.updatedUserData.fullName,
+        userType: result.updatedUserData.userType,
+        handle: result.normalizedHandle,
+        major: result.updatedUserData.major,
+        academicLevel: result.updatedUserData.academicLevel,
+        graduationYear: result.updatedUserData.graduationYear,
+        builderRequestSpaces: result.updatedUserData.builderRequestSpaces,
+      },
+      builderRequestsCreated: onboardingData.builderRequestSpaces?.length || 0 });
+  } catch (error) {
+    logger.error('Error completing onboarding', { error: error, endpoint: '/api/auth/complete-onboarding' });
+
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        { error: "Invalid request data", details: error.errors },
+        { status: HttpStatus.BAD_REQUEST }
+      );
+    }
+
+    if (error instanceof Error) {
+      if (error.message === "Handle is already taken") {
+        return NextResponse.json(ApiResponseHelper.error("Handle is already taken", "UNKNOWN_ERROR"), { status: 409 });
+      }
+
+      if (error.message === "Onboarding already completed") {
+        return NextResponse.json(ApiResponseHelper.error("Onboarding already completed", "UNKNOWN_ERROR"), { status: 409 });
+      }
+
+      if (error.message === "User not found") {
+        return NextResponse.json(ApiResponseHelper.error("User not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
+      }
+    }
+
+    return NextResponse.json(ApiResponseHelper.error("Failed to complete onboarding", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

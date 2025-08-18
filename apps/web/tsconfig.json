@@ -1,56 +1,28 @@
 {
   "compilerOptions": {
-    "target": "es2020",
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "isolatedModules": true,
-    "moduleResolution": "bundler",
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
-    "skipLibCheck": true,
-    "strict": false,
-    "allowSyntheticDefaultImports": true,
-    "module": "esnext",
-    "resolveJsonModule": true,
-    "types": ["node"],
+    "target": "ES2017",
     "lib": ["dom", "dom.iterable", "esnext"],
-    "sourceMap": true,
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
     "plugins": [
       {
         "name": "next"
       }
     ],
-    "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./src/*"
-      ],
-      "@hive/*": [
-        "../../packages/*/src"
-      ]
+      "@/*": ["./src/*"]
     },
-    "jsx": "preserve",
-    "allowJs": true,
-    "incremental": true,
-    "noEmit": true
+    "types": ["@testing-library/jest-dom", "vitest/globals"]
   },
-  "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    "../../packages/*/src/**/*.ts",
-    "../../packages/*/src/**/*.tsx",
-    "next-env.d.ts",
-    ".next/types/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    ".next",
-    "test",
-    "tests",
-    "**/*.test.ts",
-    "**/*.test.tsx",
-    "../../packages/ui/src/**/*.test.tsx",
-    "src/app/(wip)/**",
-    "src/app/api/**"
-  ]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/test/vitest-jest-dom.d.ts"],
+  "exclude": ["node_modules"]
 }

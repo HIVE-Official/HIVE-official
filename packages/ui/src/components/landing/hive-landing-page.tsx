@@ -8,7 +8,7 @@ import { Input } from '../input';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '../card';
 import { Alert } from '../alert';
 import { CountdownTimer } from './countdown-timer';
-import { cn } from '../../lib/utils';
+import { cn } from '../lib/utils';
 
 interface HiveLandingPageProps {
   launchDate?: Date;

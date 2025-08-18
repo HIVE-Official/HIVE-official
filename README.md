@@ -116,6 +116,23 @@ The application handles various states gracefully:
    # Fill in your Firebase and other configuration
    ```
 
+   The application expects the following variables:
+
+   | Variable | Description |
+   | --- | --- |
+   | `NEXT_PUBLIC_FIREBASE_API_KEY` | Firebase API key |
+   | `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN` | Firebase auth domain |
+   | `NEXT_PUBLIC_FIREBASE_PROJECT_ID` | Firebase project id |
+   | `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET` | Firebase storage bucket |
+   | `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID` | Firebase messaging sender id |
+   | `NEXT_PUBLIC_FIREBASE_APP_ID` | Firebase app id |
+   | `NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID` | Optional analytics id |
+   | `FIREBASE_PROJECT_ID` | Firebase admin project id |
+   | `FIREBASE_CLIENT_EMAIL` | Firebase admin client email |
+   | `FIREBASE_PRIVATE_KEY` | Firebase admin private key |
+   | `NEXTAUTH_SECRET` | NextAuth secret |
+   | `NEXTAUTH_URL` | NextAuth base URL |
+
 4. Start the development server:
 
    ```bash
@@ -127,13 +144,10 @@ The application handles various states gracefully:
 ### Development Commands
 
 ```bash
-# Install dependencies (required first)
-pnpm install
-
 # Start development server
 pnpm dev
 
-# Build all packages and applications
+# Build for production
 pnpm build
 
 # Run linting
@@ -148,25 +162,9 @@ pnpm test
 # Start Storybook
 pnpm storybook
 
-# Clean all build artifacts
+# Clean all node_modules and build artifacts
 pnpm clean
 ```
-
-### Important Build Notes
-
-Before running `pnpm build`, ensure:
-
-1. All dependencies are installed with `pnpm install`
-2. Your Node.js version is 18.0 or higher
-3. You have proper access to all required environment variables
-
-If you encounter any build issues:
-
-1. Clean the build artifacts: `pnpm clean`
-2. Remove node_modules: `rm -rf node_modules`
-3. Clear pnpm store: `pnpm store prune`
-4. Reinstall dependencies: `pnpm install`
-5. Rebuild: `pnpm build`
 
 ## Development Workflow
 

@@ -1,0 +1,29 @@
+"use client";
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { useState } from 'react';
+import { motion } from 'framer-motion';
+import { Button } from '../button';
+import { BookOpen, Mail, ArrowLeft, CheckCircle } from 'lucide-react';
+import { hiveVariants } from '../../lib/motion';
+export const AlumniComingSoonStep = ({ onBack, schoolName, userEmail, }) => {
+    const [isSubscribed, setIsSubscribed] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const handleNotifyMe = async () => {
+        setIsSubmitting(true);
+        // Simulate email subscription
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        setIsSubscribed(true);
+        setIsSubmitting(false);
+    };
+    if (isSubscribed) {
+        return (_jsxs("div", { className: "min-h-screen bg-background flex items-center justify-center p-4", children: [_jsxs("div", { className: "absolute inset-0", children: [_jsx("div", { className: "absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,#111111,transparent_50%)]" }), _jsx("div", { className: "absolute inset-0 bg-[radial-gradient(circle_at_50%_100%,#111111,transparent_50%)]" })] }), _jsx("div", { className: "w-full max-w-lg relative z-10", children: _jsx("div", { className: "module-border module-surface module-padding text-center space-y-6", children: _jsxs(motion.div, { initial: { opacity: 0, scale: 0.9 }, animate: { opacity: 1, scale: 1 }, className: "space-y-4", children: [_jsx("div", { className: "w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto", children: _jsx(CheckCircle, { className: "w-8 h-8 text-accent" }) }), _jsxs("div", { children: [_jsx("h3", { className: "text-xl font-display font-medium text-foreground mb-2", children: "You're on the list!" }), _jsxs("p", { className: "text-muted font-body", children: ["We'll send you an email at ", _jsx("span", { className: "text-accent", children: userEmail }), " as soon as alumni access is available."] })] }), _jsxs(Button, { variant: "outline", onClick: onBack, className: "mt-6", children: [_jsx(ArrowLeft, { className: "w-4 h-4 mr-2" }), "Go Back"] })] }) }) })] }));
+    }
+    return (_jsxs("div", { className: "min-h-screen bg-background flex items-center justify-center p-4", children: [_jsxs("div", { className: "absolute inset-0", children: [_jsx("div", { className: "absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,#111111,transparent_50%)]" }), _jsx("div", { className: "absolute inset-0 bg-[radial-gradient(circle_at_50%_100%,#111111,transparent_50%)]" })] }), _jsx("div", { className: "w-full max-w-2xl relative z-10", children: _jsxs("div", { className: "module-border module-surface module-padding space-y-8", children: [_jsxs(motion.div, { className: "text-center space-y-4", variants: hiveVariants.item, initial: "hidden", animate: "visible", children: [_jsx("div", { className: "w-20 h-20 bg-surface-01 rounded-full flex items-center justify-center mx-auto", children: _jsx(BookOpen, { className: "w-10 h-10 text-accent" }) }), _jsxs("div", { children: [_jsx("h1", { className: "text-2xl font-display font-semibold text-foreground mb-3", children: "Alumni Access Coming Soon" }), _jsxs("p", { className: "text-muted font-body text-lg", children: ["We're working on something special for ", schoolName, " alumni"] })] })] }), _jsx(motion.div, { className: "space-y-4", variants: hiveVariants.container, initial: "hidden", animate: "visible", children: _jsxs("div", { className: "bg-surface-01 rounded-lg p-6 space-y-4", children: [_jsx("h3", { className: "font-medium font-body text-foreground", children: "What's coming for alumni:" }), _jsx("ul", { className: "space-y-3", children: [
+                                            'Connect with fellow graduates from your class',
+                                            'Mentor current students in your field',
+                                            'Access exclusive alumni events and networking',
+                                            'Share career opportunities and insights',
+                                            'Stay updated with campus news and developments'
+                                        ].map((feature, index) => (_jsxs(motion.li, { className: "flex items-start gap-3 text-muted font-body", variants: hiveVariants.item, transition: { delay: index * 0.1 }, children: [_jsx("div", { className: "w-1.5 h-1.5 bg-accent rounded-full mt-2 flex-shrink-0" }), feature] }, feature))) })] }) }), _jsxs(motion.div, { className: "bg-surface-01 border border-border rounded-lg p-6 space-y-4", variants: hiveVariants.item, initial: "hidden", animate: "visible", transition: { delay: 0.3 }, children: [_jsxs("div", { className: "flex items-center gap-3 mb-4", children: [_jsx(Mail, { className: "w-5 h-5 text-accent" }), _jsx("h3", { className: "font-medium font-body text-foreground", children: "Get notified when it's ready" })] }), _jsxs("p", { className: "text-muted font-body text-sm mb-4", children: ["We'll send you an email at ", _jsx("span", { className: "text-accent font-medium", children: userEmail }), " as soon as alumni access becomes available."] }), _jsx(Button, { onClick: handleNotifyMe, disabled: isSubmitting, variant: "ritual", className: "w-full", children: isSubmitting ? 'Adding you to the list...' : 'Notify Me When Ready' })] }), _jsx(motion.div, { className: "flex gap-3 pt-4", variants: hiveVariants.item, initial: "hidden", animate: "visible", transition: { delay: 0.4 }, children: _jsxs(Button, { variant: "outline", onClick: onBack, className: "flex-1", children: [_jsx(ArrowLeft, { className: "w-4 h-4 mr-2" }), "Back to Role Selection"] }) })] }) })] }));
+};
+//# sourceMappingURL=alumni-coming-soon-step.js.map

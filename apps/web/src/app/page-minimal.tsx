@@ -11,7 +11,7 @@ export default function MinimalHomePage() {
 
   if (!mounted) {
     return (
-      <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center">
+      <div className="min-h-screen bg-[var(--hive-background-primary)] flex items-center justify-center">
         <div className="animate-pulse">
           <div className="w-24 h-24 bg-gray-800 rounded-full"></div>
         </div>
@@ -20,7 +20,7 @@ export default function MinimalHomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0A0A0A] text-white flex items-center justify-center p-4">
+    <div className="min-h-screen bg-[var(--hive-background-primary)] text-white flex items-center justify-center p-4">
       <div className="text-center space-y-8">
         <h1 className="text-6xl font-bold">HIVE</h1>
         <p className="text-xl text-gray-400">Campus Tools · Launching July 31st, 2025</p>

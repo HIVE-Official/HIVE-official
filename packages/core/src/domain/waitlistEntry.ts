@@ -1,4 +1,4 @@
-import type { Timestamp } from "firebase/firestore";
+import { Timestamp } from 'firebase/firestore';
 
 /**
  * Represents an entry in the waitlist for a specific school.
@@ -15,4 +15,4 @@ export interface WaitlistEntry {
    * The timestamp when the user joined the waitlist.
    */
   joinedAt: Timestamp;
-}
+} 

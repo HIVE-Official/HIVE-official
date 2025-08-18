@@ -13,10 +13,10 @@ const ActivationRequestSchema = z.object({
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { spaceId: string } }
+  { params }: { params: Promise<{ spaceId: string }> }
 ) {
   try {
-    const { spaceId } = params;
+    const { spaceId } = await params;
     
     // Parse and validate request body
     const body = await request.json();

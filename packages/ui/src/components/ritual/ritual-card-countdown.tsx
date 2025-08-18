@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '../button';
 import { Badge } from '../badge';
-import { cn } from '../../lib/utils';
+import { cn } from '../lib/utils';
 import { 
   Flame, 
   Users, 

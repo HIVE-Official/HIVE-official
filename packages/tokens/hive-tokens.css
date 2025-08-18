@@ -1,0 +1,270 @@
+/* Auto-generated HIVE Design Tokens - DO NOT EDIT MANUALLY */
+/* Generated from packages/tokens/src/ token definitions */
+/* Last updated: January 2025 */
+
+:root {
+  /* HIVE Color Tokens */
+  --hive-color-void: #000000;
+  --hive-color-obsidian: #0A0A0B;
+  --hive-color-charcoal: #111113;
+  --hive-color-graphite: #1A1A1C;
+  --hive-color-slate: #222225;
+  --hive-color-steel: #2A2A2D;
+  --hive-color-platinum: #E5E5E7;
+  --hive-color-silver: #C1C1C4;
+  --hive-color-mercury: #9B9B9F;
+  --hive-color-pewter: #6B6B70;
+  --hive-color-smoke: #4A4A4F;
+  --hive-color-gold: #FFD700;
+  --hive-color-champagne: #F7E98E;
+  --hive-color-amber: #FFA500;
+  --hive-color-bronze: #CD7F32;
+  --hive-color-emerald: #10B981;
+  --hive-color-ruby: #EF4444;
+  --hive-color-sapphire: #3B82F6;
+  --hive-color-citrine: #F59E0B;
+
+  /* HIVE Semantic Colors */
+  --hive-background-primary: #0A0A0B;
+  --hive-background-secondary: #111113;
+  --hive-background-tertiary: #1A1A1C;
+  --hive-background-overlay: rgba(10, 10, 11, 0.80);
+  --hive-background-interactive: rgba(255, 255, 255, 0.05);
+  --hive-background-disabled: #111113;
+  --hive-text-primary: #E5E5E7;
+  --hive-text-secondary: #C1C1C4;
+  --hive-text-muted: #9B9B9F;
+  --hive-text-disabled: #6B6B70;
+  --hive-text-inverse: #0A0A0B;
+  --hive-text-placeholder: #6B6B70;
+  --hive-brand-primary: #FFD700;
+  --hive-brand-secondary: #F7E98E;
+  --hive-brand-accent: #FFA500;
+  --hive-brand-muted: #CD7F32;
+  --hive-interactive-hover: rgba(255, 255, 255, 0.08);
+  --hive-interactive-focus: #FFD700;
+  --hive-interactive-active: rgba(255, 255, 255, 0.12);
+  --hive-interactive-disabled: #4A4A4F;
+  --hive-status-success: #10B981;
+  --hive-status-warning: #F59E0B;
+  --hive-status-error: #EF4444;
+  --hive-status-info: #3B82F6;
+
+  /* HIVE Border Colors */
+  --hive-border-primary: #2A2A2D;
+  --hive-border-secondary: #1A1A1C;
+  --hive-border-subtle: rgba(255, 255, 255, 0.05);
+  --hive-border-interactive: rgba(255, 255, 255, 0.10);
+  --hive-border-focus: rgba(255, 215, 0, 0.50);
+  --hive-border-gold: rgba(255, 215, 0, 0.2);
+  --hive-border-gold-strong: rgba(255, 215, 0, 0.4);
+  --hive-border-glass-strong: rgba(255, 255, 255, 0.12);
+  --hive-border-disabled: #4A4A4F;
+
+  /* HIVE Typography */
+  --hive-font-size-2xl: 4.5rem;
+  --hive-font-size-xl: 3.75rem;
+  --hive-font-size-lg: 3rem;
+  --hive-font-size-md: 2.25rem;
+  --hive-font-size-sm: 1.875rem;
+  --hive-font-size-xs: 1.5rem;
+  --hive-font-size-2xs: 1.25rem;
+  --hive-font-size-3xs: 1.125rem;
+  --hive-font-size-heading-xl: 1.875rem;
+  --hive-font-size-heading-lg: 1.5rem;
+  --hive-font-size-heading-md: 1.25rem;
+  --hive-font-size-heading-sm: 1.125rem;
+  --hive-font-size-body-lg: 1.125rem;
+  --hive-font-size-body-md: 1rem;
+  --hive-font-size-body-sm: 0.875rem;
+  --hive-font-size-body-xs: 0.75rem;
+  --hive-font-size-body-2xs: 0.625rem;
+  --hive-font-weight-light: 300;
+  --hive-font-weight-normal: 400;
+  --hive-font-weight-medium: 500;
+  --hive-font-weight-semibold: 600;
+  --hive-font-weight-bold: 700;
+  --hive-line-height-none: 1;
+  --hive-line-height-tight: 1.25;
+  --hive-line-height-snug: 1.375;
+  --hive-line-height-normal: 1.5;
+  --hive-line-height-relaxed: 1.625;
+  --hive-line-height-loose: 2;
+  --hive-letter-spacing-tighter: -0.05em;
+  --hive-letter-spacing-tight: -0.025em;
+  --hive-letter-spacing-normal: 0;
+  --hive-letter-spacing-wide: 0.025em;
+  --hive-letter-spacing-wider: 0.05em;
+  --hive-letter-spacing-widest: 0.1em;
+
+  /* HIVE Spacing (8px Grid System) */
+  --hive-spacing-0: 0;
+  --hive-spacing-1: 0.5rem;
+  --hive-spacing-2: 1rem;
+  --hive-spacing-3: 1.5rem;
+  --hive-spacing-4: 2rem;
+  --hive-spacing-5: 2.5rem;
+  --hive-spacing-6: 3rem;
+  --hive-spacing-8: 4rem;
+  --hive-spacing-10: 5rem;
+  --hive-spacing-12: 6rem;
+  --hive-spacing-16: 8rem;
+  --hive-spacing-20: 10rem;
+  --hive-spacing-24: 12rem;
+  --hive-spacing-32: 16rem;
+  --hive-spacing-xs: 0.5rem;
+  --hive-spacing-sm: 1rem;
+  --hive-spacing-md: 2rem;
+  --hive-spacing-lg: 3rem;
+  --hive-spacing-xl: 4rem;
+  --hive-spacing-2xl: 6rem;
+
+  /* HIVE Radius (Heavy Radius Design) */
+  --hive-radius-sm: 0.5rem;
+  --hive-radius-md: 0.75rem;
+  --hive-radius-lg: 1rem;
+  --hive-radius-xl: 1.5rem;
+  --hive-radius-2xl: 2rem;
+  --hive-radius-3xl: 2.5rem;
+  --hive-radius-full: 9999px;
+
+  /* HIVE Motion System */
+  --hive-easing-liquid: cubic-bezier(0.23, 1, 0.32, 1);
+  --hive-easing-magnetic: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --hive-easing-silk: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --hive-easing-steel: cubic-bezier(0.4, 0, 0.2, 1);
+  --hive-easing-molten: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --hive-duration-instant: 0.1s;
+  --hive-duration-quick: 0.2s;
+  --hive-duration-smooth: 0.4s;
+  --hive-duration-flowing: 0.6s;
+  --hive-duration-dramatic: 0.8s;
+  --hive-duration-cinematic: 1.0s;
+  --hive-cascade-wave: 0.03s;
+  --hive-cascade-ripple: 0.08s;
+  --hive-cascade-stagger: 0.05s;
+  --hive-cascade-sequence: 0.12s;
+  --hive-transform-scaleHover: 1.02;
+  --hive-transform-scaleTap: 0.98;
+  --hive-transform-scaleGrow: 1.05;
+  --hive-transform-moveHover: -2px;
+  --hive-transform-movePress: 0px;
+
+  /* HIVE Effects */
+  --hive-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.25);
+  --hive-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.25), 0 2px 4px -1px rgba(0, 0, 0, 0.15);
+  --hive-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.25), 0 4px 6px -2px rgba(0, 0, 0, 0.15);
+  --hive-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.25), 0 10px 10px -5px rgba(0, 0, 0, 0.15);
+  --hive-shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+  --hive-shadow-focus: 0 0 0 2px var(--hive-brand-primary);
+  --hive-shadow-goldGlow: 0 0 20px rgba(255, 215, 0, 0.3), 0 0 40px rgba(255, 215, 0, 0.1);
+  --hive-shadow-gold-glow: 0 0 20px rgba(255, 215, 0, 0.3);
+  --hive-shadow-gold-glow-strong: 0 0 30px rgba(255, 215, 0, 0.4);
+  --hive-shadow-emeraldGlow: 0 0 20px rgba(16, 185, 129, 0.3), 0 0 40px rgba(16, 185, 129, 0.1);
+  --hive-shadow-emerald-glow: 0 0 20px rgba(16, 185, 129, 0.3);
+  --hive-shadow-rubyGlow: 0 0 20px rgba(239, 68, 68, 0.3), 0 0 40px rgba(239, 68, 68, 0.1);
+  --hive-shadow-sapphireGlow: 0 0 20px rgba(59, 130, 246, 0.3), 0 0 40px rgba(59, 130, 246, 0.1);
+  --hive-backdrop-blur-xs: blur(4px);
+  --hive-backdrop-blur-sm: blur(8px);
+  --hive-backdrop-blur-md: blur(12px);
+  --hive-backdrop-blur-lg: blur(16px);
+  --hive-backdrop-blur-xl: blur(20px);
+  --hive-backdrop-blur-2xl: blur(40px);
+  --hive-opacity-disabled: 0.5;
+  --hive-opacity-loading: 0.7;
+  --hive-opacity-overlay: 0.8;
+  --hive-opacity-glass: 0.05;
+  --hive-opacity-glass-strong: 0.12;
+  --hive-z-dropdown: 1000;
+  --hive-z-sticky: 1020;
+  --hive-z-modal: 1050;
+  --hive-z-popover: 1070;
+  --hive-z-tooltip: 1080;
+  --hive-z-toast: 1090;
+
+  /* HIVE Overlay Colors */
+  --hive-overlay-glass: rgba(255, 255, 255, 0.05);
+  --hive-overlay-glass-strong: rgba(255, 255, 255, 0.12);
+  --hive-overlay-glass-subtle: rgba(255, 255, 255, 0.02);
+  --hive-overlay-gold-subtle: rgba(255, 215, 0, 0.1);
+  --hive-overlay-dark: rgba(10, 10, 11, 0.80);
+}
+
+/* HIVE Utility Classes */
+@layer utilities {
+  /* Glass Morphism Effects */
+  .hive-glass {
+    background: var(--hive-overlay-glass);
+    backdrop-filter: var(--hive-backdrop-blur-md) saturate(180%);
+    border: 1px solid var(--hive-overlay-glass);
+  }
+
+  .hive-glass-strong {
+    background: var(--hive-overlay-glass-strong);
+    backdrop-filter: var(--hive-backdrop-blur-lg) saturate(200%);
+    border: 1px solid var(--hive-overlay-glass-strong);
+  }
+
+  .hive-gold-glass {
+    background: var(--hive-overlay-gold-subtle);
+    backdrop-filter: var(--hive-backdrop-blur-md) saturate(180%);
+    border: 1px solid rgba(255, 215, 0, 0.3);
+  }
+
+  /* Interactive States */
+  .hive-interactive {
+    transition: all var(--hive-duration-smooth) var(--hive-easing-liquid);
+    will-change: transform, box-shadow;
+    transform-origin: center;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+  }
+
+  .hive-interactive:hover {
+    transform: translateY(var(--hive-transform-moveHover)) scale(var(--hive-transform-scaleHover));
+  }
+
+  .hive-interactive:active {
+    transform: translateY(var(--hive-transform-movePress)) scale(var(--hive-transform-scaleTap));
+  }
+
+  /* Focus States */
+  .hive-focus {
+    outline: none;
+    box-shadow: var(--hive-shadow-focus);
+  }
+
+  /* Motion Variants */
+  .hive-motion-quick {
+    transition-duration: var(--hive-duration-quick);
+  }
+
+  .hive-motion-flowing {
+    transition-duration: var(--hive-duration-flowing);
+  }
+
+  .hive-motion-dramatic {
+    transition-duration: var(--hive-duration-dramatic);
+  }
+
+  /* Glow Effects */
+  .hive-glow-gold {
+    box-shadow: var(--hive-shadow-goldGlow);
+    transition: box-shadow var(--hive-duration-smooth) var(--hive-easing-liquid);
+  }
+
+  .hive-glow-emerald {
+    box-shadow: var(--hive-shadow-emeraldGlow);
+    transition: box-shadow var(--hive-duration-smooth) var(--hive-easing-liquid);
+  }
+
+  .hive-glow-ruby {
+    box-shadow: var(--hive-shadow-rubyGlow);
+    transition: box-shadow var(--hive-duration-smooth) var(--hive-easing-liquid);
+  }
+
+  .hive-glow-sapphire {
+    box-shadow: var(--hive-shadow-sapphireGlow);
+    transition: box-shadow var(--hive-duration-smooth) var(--hive-easing-liquid);
+  }
+}

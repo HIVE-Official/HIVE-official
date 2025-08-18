@@ -1,12 +1,14 @@
-// Temporary server-side authentication utilities
+// Temporary stub for auth utilities
+// TODO: Implement proper server-side auth
 
-import type { AuthUser } from "@hive/auth-logic";
-
-interface ExtendedAuthUser extends AuthUser {
-  emailVerified: boolean;
-  customClaims: Record<string, unknown>;
-}
 import { authAdmin } from "./firebase-admin";
+
+export interface AuthUser {
+  uid: string;
+  email: string;
+  emailVerified: boolean;
+  customClaims?: Record<string, any>;
+}
 
 /**
  * Verifies the Firebase ID token from the request headers
@@ -15,7 +17,7 @@ import { authAdmin } from "./firebase-admin";
  */
 export async function verifyAuthToken(
   request: Request
-): Promise<ExtendedAuthUser | null> {
+): Promise<AuthUser | null> {
   try {
     const authHeader = request.headers.get("authorization");
 
@@ -31,9 +33,6 @@ export async function verifyAuthToken(
       email: decodedToken.email || "",
       emailVerified: decodedToken.email_verified || false,
       customClaims: decodedToken.custom_claims,
-      fullName: decodedToken.name,
-      onboardingCompleted: (decodedToken.custom_claims?.onboardingCompleted as boolean) || false,
-      getIdToken: async () => token,
     };
   } catch (error) {
     console.error("Auth token verification failed:", error);
@@ -61,7 +60,7 @@ export function getAuthTokenFromRequest(request: Request): string | null {
  * @param request - The incoming request object
  * @returns Promise<AuthUser> - Throws if not authenticated
  */
-export async function requireAuth(request: Request): Promise<ExtendedAuthUser> {
+export async function requireAuth(request: Request): Promise<AuthUser> {
   const user = await verifyAuthToken(request);
 
   if (!user) {
@@ -76,8 +75,8 @@ export async function requireAuth(request: Request): Promise<ExtendedAuthUser> {
  * @param user - The authenticated user
  * @returns boolean
  */
-export function isAdmin(user: ExtendedAuthUser): boolean {
-  return (user.customClaims as { role?: string })?.role === "admin" || false;
+export function isAdmin(user: AuthUser): boolean {
+  return user.customClaims?.role === "admin" || false;
 }
 
 /**
@@ -85,11 +84,14 @@ export function isAdmin(user: ExtendedAuthUser): boolean {
  * @param user - The authenticated user
  * @returns boolean
  */
-export function isBuilder(user: ExtendedAuthUser): boolean {
-  const roles = (user.customClaims as { roles?: string[] })?.roles;
-  return roles?.includes("builder") || false;
+export function isBuilder(user: AuthUser): boolean {
+  return user.customClaims?.roles?.includes("builder") || false;
 }
 
-export async function getCurrentUser(): Promise<ExtendedAuthUser | null> {
+/**
+ * Get current user (placeholder)
+ * @returns Promise<AuthUser | null>
+ */
+export async function getCurrentUser(): Promise<AuthUser | null> {
   return null;
-}
+} 

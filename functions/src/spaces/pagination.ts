@@ -1,77 +1,71 @@
 import {
-  createHttpsFunction,
-  FunctionContext,
-  getFirestore,
   functions,
-  logger,
+  firestore,
+  assertAuthenticated,
+  getDocumentData,
+  type FunctionContext,
+  type SpaceDocument,
 } from "../types/firebase";
 
 interface GetSpaceContentData {
   spaceId: string;
-  limit?: number;
-  startAfter?: string;
-  contentType?: "posts" | "tools" | "events";
+  contentType: string;
+  lastVisible?: string;
 }
 
-export const getSpaceContent = createHttpsFunction<GetSpaceContentData>(
+export const getSpaceContent = functions.https.onCall(
   async (data: GetSpaceContentData, context: FunctionContext) => {
-    if (!context.auth) {
+    assertAuthenticated(context);
+    const { spaceId, contentType, lastVisible } = data;
+    const uid = context.auth.uid;
+
+    const pageSize = 10;
+    const db = firestore();
+
+    const spaceRef = db.doc(`spaces/${spaceId}`);
+    const spaceDoc = await spaceRef.get();
+
+    if (!spaceDoc.exists) {
       throw new functions.https.HttpsError(
-        "unauthenticated",
-        "User must be authenticated."
+        "not-found",
+        "The specified space does not exist."
       );
     }
 
-    const { spaceId, limit = 20, startAfter, contentType = "posts" } = data;
-
-    if (!spaceId) {
+    const space = getDocumentData<SpaceDocument>(spaceDoc);
+    if (!space) {
       throw new functions.https.HttpsError(
-        "invalid-argument",
-        "spaceId is required."
+        "not-found",
+        "Space data not found."
       );
     }
 
-    try {
-      const db = getFirestore();
-
-      // Build query
-      let query = db
-        .collection("spaces")
-        .doc(spaceId)
-        .collection(contentType)
-        .orderBy("createdAt", "desc")
-        .limit(limit);
-
-      // Add pagination if startAfter is provided
-      if (startAfter) {
-        const startAfterDoc = await db
-          .collection("spaces")
-          .doc(spaceId)
-          .collection(contentType)
-          .doc(startAfter)
-          .get();
-        if (startAfterDoc.exists) {
-          query = query.startAfter(startAfterDoc);
-        }
+    // Check permissions for private spaces
+    const isPublic = (space as Record<string, unknown>).isPublic as boolean;
+    if (!isPublic) {
+      const memberDoc = await spaceRef.collection("members").doc(uid).get();
+      if (!memberDoc.exists) {
+        throw new functions.https.HttpsError(
+          "permission-denied",
+          "You do not have permission to view this content."
+        );
       }
-
-      const snapshot = await query.get();
-
-      const docs = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-
-      logger.info(
-        `Retrieved ${docs.length} ${contentType} from space ${spaceId}`
-      );
-      return { docs };
-    } catch (error) {
-      logger.error("Error getting space content:", error);
-      throw new functions.https.HttpsError(
-        "internal",
-        "Failed to get space content."
-      );
     }
+
+    let query = db
+      .collection(`spaces/${spaceId}/${contentType}`)
+      .limit(pageSize);
+
+    if (lastVisible) {
+      const lastDoc = await db
+        .doc(`spaces/${spaceId}/${contentType}/${lastVisible}`)
+        .get();
+      query = query.startAfter(lastDoc);
+    }
+
+    const snapshot = await query.get();
+    const docs = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+
+    return { docs };
   }
 );

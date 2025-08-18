@@ -1,0 +1,166 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+@import "./hive-tokens.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* Typography configuration with Inter and Space Grotesk */
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+  
+  .font-sans {
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+  
+  .font-display {
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+  }
+
+  :root {
+    /* HIVE Design System - Dark Luxury Theme */
+    --background: var(--hive-background-primary);
+    --foreground: var(--hive-text-primary);
+
+    --card: var(--hive-background-secondary);
+    --card-foreground: var(--hive-text-primary);
+
+    --popover: var(--hive-background-secondary);
+    --popover-foreground: var(--hive-text-primary);
+
+    --primary: var(--hive-brand-primary);
+    --primary-foreground: var(--hive-background-primary);
+
+    --secondary: var(--hive-background-tertiary);
+    --secondary-foreground: var(--hive-text-primary);
+
+    --muted: var(--hive-background-tertiary);
+    --muted-foreground: var(--hive-text-muted);
+
+    --accent: var(--hive-background-interactive);
+    --accent-foreground: var(--hive-text-primary);
+
+    --destructive: var(--hive-status-error);
+    --destructive-foreground: var(--hive-text-primary);
+
+    --border: var(--hive-border-primary);
+    --input: var(--hive-border-primary);
+    --ring: var(--hive-brand-primary);
+
+    --radius: var(--hive-radius-lg);
+  }
+
+  /* Dark theme is the default for HIVE */
+  .dark {
+    --background: var(--hive-background-primary);
+    --foreground: var(--hive-text-primary);
+
+    --card: var(--hive-background-secondary);
+    --card-foreground: var(--hive-text-primary);
+
+    --popover: var(--hive-background-secondary);
+    --popover-foreground: var(--hive-text-primary);
+
+    --primary: var(--hive-brand-primary);
+    --primary-foreground: var(--hive-background-primary);
+
+    --secondary: var(--hive-background-tertiary);
+    --secondary-foreground: var(--hive-text-primary);
+
+    --muted: var(--hive-background-tertiary);
+    --muted-foreground: var(--hive-text-muted);
+
+    --accent: var(--hive-background-interactive);
+    --accent-foreground: var(--hive-text-primary);
+
+    --destructive: var(--hive-status-error);
+    --destructive-foreground: var(--hive-text-primary);
+
+    --border: var(--hive-border-primary);
+    --input: var(--hive-border-primary);
+    --ring: var(--hive-brand-primary);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  
+  /* HIVE Motion System - Buttery Smooth Animations */
+  * {
+    transition-timing-function: var(--hive-easing);
+    will-change: auto;
+  }
+  
+  /* Glass Morphism Base */
+  .glass {
+    backdrop-filter: blur(12px) saturate(150%);
+    -webkit-backdrop-filter: blur(12px) saturate(150%);
+    background: var(--hive-overlay-glass-strong);
+    border: 1px solid var(--hive-border-primary);
+  }
+  
+  /* Liquid Metal Effects */
+  .liquid-metal {
+    background: linear-gradient(135deg, 
+      var(--hive-overlay-gold-subtle) 0%,
+      var(--hive-overlay-gold-subtle) 25%,
+      var(--hive-background-secondary) 50%,
+      var(--hive-background-tertiary) 75%,
+      var(--hive-overlay-gold-subtle) 100%
+    );
+    background-size: 200% 200%;
+    animation: liquidFlow 8s ease-in-out infinite;
+  }
+  
+  @keyframes liquidFlow {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+  
+  /* HIVE Interactive States */
+  .hive-interactive {
+    transition: all var(--hive-duration-smooth) var(--hive-easing);
+    transform-origin: center;
+  }
+  
+  .hive-interactive:hover {
+    transform: translateY(-1px) scale(1.02);
+    box-shadow: 
+      var(--hive-shadow-hover),
+      var(--hive-shadow-gold-glow);
+  }
+  
+  .hive-interactive:active {
+    transform: translateY(0) scale(0.98);
+    transition-duration: var(--hive-duration-quick);
+  }
+  
+  /* Focus Accessibility */
+  .hive-focus:focus-visible {
+    outline: 2px solid var(--hive-brand-primary);
+    outline-offset: 2px;
+    box-shadow: var(--hive-shadow-focus);
+  }
+  
+  /* Reduced Motion Support */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+    
+    .liquid-metal {
+      animation: none;
+      background: var(--hive-background-secondary);
+    }
+  }
+} 

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import {
   Button,
   Card,
@@ -16,17 +16,11 @@ import {
   // SelectTrigger,
   // SelectValue,
   // Checkbox,
-  // Import the new design system components
-  AcademicCardStep as UIAcademicCardStep,
-  InterestsStep as UIInterestsStep,
-  OnboardingCompleteStep as UIOnboardingCompleteStep,
-  ClaimSpaceStep as UIClaimSpaceStep,
 } from "@hive/ui";
-import { Loader2, Upload } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { debounce } from "lodash";
-import { AuthUser } from "@hive/auth-logic";
-import { logger, type OnboardingState, type AcademicLevel } from "@hive/core";
-import Image from "next/image";
+import { User } from "@/hooks/use-session";
+import { type OnboardingStepName } from "@hive/core";
 
 // A utility to generate a handle from a name
 const generateHandle = (name: string) => {
@@ -38,25 +32,23 @@ const generateHandle = (name: string) => {
 };
 
 interface StepProps {
-  user: AuthUser;
-  onNext: (nextStep?: number, data?: Partial<OnboardingState>) => void;
+  user: User;
+  onNext: (_nextStep?: number) => void;
   onPrev?: () => void;
-  data?: Partial<OnboardingState>;
+  setCompletedSteps?: (_updater: (_prev: OnboardingStepName[]) => OnboardingStepName[]) => void;
 }
 
-export const DisplayNameAvatarStep: React.FC<StepProps> = ({
+export const DisplayNameStep: React.FC<StepProps> = ({
   user,
   onNext,
   onPrev,
-  data,
+  setCompletedSteps,
 }) => {
-  const [displayName, setDisplayName] = useState<string>(data?.displayName || "");
-  const [handle, setHandle] = useState<string>(data?.handle || "");
+  const [fullName, setFullName] = useState("");
+  const [handle, setHandle] = useState("");
   const [isCheckingHandle, setIsCheckingHandle] = useState(false);
   const [handleError, setHandleError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | undefined>(data?.avatarUrl);
 
   // Prefill from email
   useEffect(() => {
@@ -69,22 +61,22 @@ export const DisplayNameAvatarStep: React.FC<StepProps> = ({
         .split(" ")
         .map((n) => n.charAt(0).toUpperCase() + n.slice(1))
         .join(" ");
-      setDisplayName(capitalized);
+      setFullName(capitalized);
       setHandle(generateHandle(capitalized));
     }
   }, [user]);
 
   // Create a debounced function for handle checking
   const debouncedCheck = debounce(async (h: string) => {
-    if (h.length < 3) {
-      setHandleError("Handle must be at least 3 characters.");
+      if (h.length < 3) {
+        setHandleError("Handle must be at least 3 characters.");
+        setIsCheckingHandle(false);
+        return;
+      }
+      setIsCheckingHandle(true);
+      const isAvailable = !["admin", "test", "root"].includes(h); // Mocking
+      setHandleError(isAvailable ? null : "This handle is already taken.");
       setIsCheckingHandle(false);
-      return;
-    }
-    setIsCheckingHandle(true);
-    const isAvailable = !["admin", "test", "root"].includes(h); // Mocking
-    setHandleError(isAvailable ? null : "This handle is already taken.");
-    setIsCheckingHandle(false);
   }, 500);
 
   useEffect(() => {
@@ -93,14 +85,9 @@ export const DisplayNameAvatarStep: React.FC<StepProps> = ({
     }
   }, [handle, debouncedCheck]);
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      setSelectedFile(file);
-      const url = URL.createObjectURL(file);
-      setPreviewUrl(url);
-    }
-  };
+  const handleStepComplete = useCallback((step: OnboardingStepName) => {
+    setCompletedSteps?.(prev => [...prev, step]);
+  }, [setCompletedSteps]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -108,21 +95,11 @@ export const DisplayNameAvatarStep: React.FC<StepProps> = ({
 
     setIsLoading(true);
     try {
-      // Upload avatar if selected
-      let avatarUrl = data?.avatarUrl;
-      if (selectedFile) {
-        avatarUrl = previewUrl;
-      }
-
-      onNext(undefined, {
-        displayName,
-        handle,
-        avatarUrl,
-      });
+      console.info("Saving:", { fullName, handle });
+      onNext(); // Proceed to the next step
+      handleStepComplete("name");
     } catch (error) {
-      logger.error("Failed to save display name and avatar", { 
-        error: error instanceof Error ? error : new Error(String(error))
-      });
+      console.error("Failed to save display name", error);
       setIsLoading(false);
     }
   };
@@ -137,16 +114,15 @@ export const DisplayNameAvatarStep: React.FC<StepProps> = ({
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="displayName" className="text-zinc-300">
-              Display Name
+            <Label htmlFor="fullName" className="text-zinc-300">
+              Full Name
             </Label>
             <Input
-              id="displayName"
-              value={displayName}
+              id="fullName"
+              value={fullName}
               onChange={(e) => {
-                setDisplayName(e.target.value);
+                setFullName(e.target.value);
                 setHandle(generateHandle(e.target.value));
               }}
               className="bg-zinc-800 border-zinc-700"
@@ -173,61 +149,22 @@ export const DisplayNameAvatarStep: React.FC<StepProps> = ({
               )}
             </div>
             {handleError && (
-              <p className="text-xs text-muted pt-1 animate-pulse">{handleError}</p>
+              <p className="text-xs text-red-500 pt-1">{handleError}</p>
             )}
           </div>
-            <div className="space-y-2">
-              <Label className="text-zinc-300">Profile Picture</Label>
-              <div className="flex items-center gap-4">
-                {previewUrl ? (
-                  <div className="relative w-20 h-20 rounded-full overflow-hidden">
-                    <Image
-                      src={previewUrl}
-                      alt="Avatar preview"
-                      width={80}
-                      height={80}
-                      className="object-cover"
-                    />
-                  </div>
-                ) : (
-                  <div className="w-20 h-20 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center">
-                    <Upload className="w-8 h-8 text-zinc-500" />
-                  </div>
-                )}
-                <div className="flex-1">
-                  <Input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleFileChange}
-                    className="hidden"
-                    id="avatar-upload"
-                  />
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className="w-full"
-                    onClick={() => document.getElementById("avatar-upload")?.click()}
-                  >
-                    Choose Photo
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="flex justify-end gap-3">
+          <div className="flex gap-2">
             {onPrev && (
-              <Button
-                type="button"
-                variant="outline"
-                onClick={onPrev}
-                disabled={isLoading}
-              >
+              <Button type="button" variant="outline" onClick={onPrev}>
                 Back
               </Button>
             )}
-            <Button type="submit" disabled={isLoading || !!handleError}>
+            <Button
+              type="submit"
+              className="w-full bg-yellow-500 text-black hover:bg-yellow-600"
+              disabled={!!handleError || isCheckingHandle || isLoading}
+            >
               {isLoading ? (
-                <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               ) : null}
               Continue
             </Button>
@@ -241,72 +178,68 @@ export const DisplayNameAvatarStep: React.FC<StepProps> = ({
 export const LeaderQuestionStep: React.FC<StepProps> = ({
   onNext,
   onPrev,
-  data,
+  setCompletedSteps,
 }) => {
-  const [isLeader, setIsLeader] = useState<boolean | null>(data?.isLeader || null);
+  const [choice, setChoice] = useState<boolean | null>(null);
+
+  const handleStepComplete = useCallback((step: OnboardingStepName) => {
+    setCompletedSteps?.(prev => [...prev, step]);
+  }, [setCompletedSteps]);
 
   const handleSubmit = async () => {
-    if (isLeader === null) return;
-
-    onNext(undefined, {
-      isLeader,
-      shouldClaimSpace: isLeader,
-    });
+    try {
+      console.info("Saving leader question response");
+      onNext();
+      handleStepComplete("builder");
+    } catch (error) {
+      console.error("Failed to save leader question", error);
+    }
   };
 
   return (
-    <Card className="w-full max-w-lg bg-card border-border">
+    <Card className="w-full max-w-lg bg-zinc-900 border-zinc-800">
       <CardHeader>
-        <CardTitle className="text-card-foreground">Are you a leader?</CardTitle>
-        <CardDescription className="text-muted-foreground">
-          Leaders can create and manage spaces for their organizations.
+        <CardTitle className="text-white">Leadership Role</CardTitle>
+        <CardDescription className="text-zinc-400">
+          Would you like to take on a leadership role in your campus community?
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-6">
-        <div className="grid grid-cols-1 gap-4">
+      <CardContent>
+        <div className="space-y-4">
           <Button
             type="button"
-            onClick={() => setIsLeader(true)}
-            variant="surface"
+            onClick={() => setChoice(true)}
             className={`w-full ${
-              isLeader === true
-                ? "bg-surface-03"
-                : ""
+              choice === true
+                ? "bg-yellow-500 text-black hover:bg-yellow-600"
+                : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
             }`}
           >
-            Yes, I&apos;m a leader
+            Yes, I&apos;d like to lead
           </Button>
           <Button
             type="button"
-            onClick={() => setIsLeader(false)}
-            variant="surface"
+            onClick={() => setChoice(false)}
             className={`w-full ${
-              isLeader === false
-                ? "bg-surface-03"
-                : ""
+              choice === false
+                ? "bg-yellow-500 text-black hover:bg-yellow-600"
+                : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
             }`}
           >
-            No, I&apos;m a member
+            No, I&apos;ll pass for now
           </Button>
         </div>
-
-        <div className="flex gap-2">
+        <div className="mt-6 flex gap-2">
           {onPrev && (
-            <Button
-              type="button"
-              variant="outline"
-              onClick={onPrev}
-              className="flex-1"
-            >
+            <Button type="button" variant="outline" onClick={onPrev}>
               Back
             </Button>
           )}
           <Button
             type="button"
-            variant="default"
             onClick={handleSubmit}
-            className="flex-1"
-            disabled={isLeader === null}
+            className="w-full bg-zinc-700 text-white hover:bg-zinc-600"
+            disabled={choice === null}
           >
             Continue
           </Button>
@@ -319,125 +252,167 @@ export const LeaderQuestionStep: React.FC<StepProps> = ({
 export const ClaimSpaceStep: React.FC<StepProps> = ({
   onNext,
   onPrev,
-  data,
+  setCompletedSteps,
 }) => {
-  const [spaceName, setSpaceName] = useState<string>(data?.spaceName || "");
-  const [spaceDescription, setSpaceDescription] = useState<string>(data?.spaceDescription || "");
-  const [isLoading, setIsLoading] = useState(false);
+  const handleStepComplete = useCallback((step: OnboardingStepName) => {
+    setCompletedSteps?.(prev => [...prev, step]);
+  }, [setCompletedSteps]);
 
-  // Skip this step if they're not a leader
-  useEffect(() => {
-    if (data?.isLeader === false) {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      console.info("Saving space claims");
       onNext();
+      handleStepComplete("builder");
+    } catch (error) {
+      console.error("Failed to save space claims", error);
     }
-  }, [data?.isLeader, onNext]);
-
-  const handleSubmit = () => {
-    if (!spaceName || !spaceDescription) return;
-    
-    setIsLoading(true);
-    
-    // Execute async logic but don't return promise to match expected signature
-    void (async () => {
-      try {
-        // Space creation API integration pending
-        logger.info("Creating space:", { spaceName, spaceDescription });
-        
-        onNext(undefined, {
-          spaceName,
-          spaceDescription,
-          spaceCreated: true,
-        });
-      } catch (error) {
-        logger.error("Failed to create space", { 
-          error: error instanceof Error ? error : new Error(String(error))
-        });
-        setIsLoading(false);
-      }
-    })();
   };
 
   return (
-    <UIClaimSpaceStep
-      spaceName={spaceName}
-      spaceDescription={spaceDescription}
-      onSpaceNameChange={(value: string) => setSpaceName(value)}
-      onSpaceDescriptionChange={(value: string) => setSpaceDescription(value)}
-      onSubmit={handleSubmit}
-      isLoading={isLoading}
-      onBack={onPrev}
-    />
+    <Card className="w-full max-w-lg bg-zinc-900 border-zinc-800">
+      <CardHeader>
+        <CardTitle className="text-white">Claim Your Space</CardTitle>
+        <CardDescription className="text-zinc-400">
+          Select the spaces you&apos;d like to lead
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="space-y-4">
+            {/* Space list will be populated here */}
+          </div>
+          <div className="flex gap-2">
+            {onPrev && (
+              <Button type="button" variant="outline" onClick={onPrev}>
+                Back
+              </Button>
+            )}
+            <Button
+              type="submit"
+              className="w-full bg-yellow-500 text-black hover:bg-yellow-600"
+            >
+              Continue
+            </Button>
+          </div>
+        </form>
+      </CardContent>
+    </Card>
+  );
+};
+
+export const PendingNoticeStep: React.FC<StepProps> = ({
+  onNext,
+  setCompletedSteps,
+}) => {
+  const handleStepComplete = useCallback((step: OnboardingStepName) => {
+    setCompletedSteps?.(prev => [...prev, step]);
+  }, [setCompletedSteps]);
+
+  const handleSubmit = async () => {
+    try {
+      console.info("Proceeding from pending notice");
+      onNext();
+      handleStepComplete("builder");
+    } catch (error) {
+      console.error("Failed to proceed from pending notice", error);
+    }
+  };
+
+  return (
+    <Card className="w-full max-w-lg bg-zinc-900 border-zinc-800">
+      <CardHeader>
+        <CardTitle className="text-white">Request Pending</CardTitle>
+        <CardDescription className="text-zinc-400">
+          Your space leadership request is being reviewed
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Button
+          onClick={handleSubmit}
+          className="w-full bg-yellow-500 text-black hover:bg-yellow-600"
+        >
+          Continue
+        </Button>
+      </CardContent>
+    </Card>
   );
 };
 
 export const AcademicCardStep: React.FC<StepProps> = ({
   onNext,
-  onPrev,
-  data,
+  setCompletedSteps,
 }) => {
-  const handleSubmit = async (formData: Record<string, unknown> | null) => {
-    if (!formData) return;
-    const { academicLevel, majors, graduationYear } = formData as {
-      academicLevel: AcademicLevel;
-      majors: string[];
-      graduationYear: number;
-    };
+  const handleStepComplete = useCallback((step: OnboardingStepName) => {
+    setCompletedSteps?.(prev => [...prev, step]);
+  }, [setCompletedSteps]);
 
-    onNext(undefined, {
-      academicLevel,
-      majors,
-      graduationYear,
-    });
+  const handleSubmit = async (data: Record<string, unknown> | null) => {
+    console.info("Saving academic card:", data);
+    onNext();
+    handleStepComplete("academics");
   };
 
-  return (
-    <UIAcademicCardStep
-      initialData={{
-        majors: data?.majors || (data?.major ? [data.major] : []),
-        graduationYear: data?.graduationYear || new Date().getFullYear() + 4,
-      }}
-      onSubmit={handleSubmit}
-      onSkip={onPrev}
-    />
-  );
+  return <div>Academic Card Step - Component not available</div>;
+};
+
+export const AvatarUploadStep: React.FC<StepProps> = ({
+  onNext,
+  setCompletedSteps,
+}) => {
+  const handleStepComplete = useCallback((step: OnboardingStepName) => {
+    setCompletedSteps?.(prev => [...prev, step]);
+  }, [setCompletedSteps]);
+
+  const handleSubmit = async (data: Record<string, unknown> | null) => {
+    console.info("Uploading avatar:", data);
+    onNext();
+    handleStepComplete("photo");
+  };
+
+  const handleSkip = () => {
+    console.info("Skipping avatar upload");
+    onNext();
+    handleStepComplete("photo");
+  };
+
+  return <div>Avatar Upload Step - Component not available</div>;
 };
 
 export const InterestsStep: React.FC<StepProps> = ({
   onNext,
-  onPrev,
-  data,
+  setCompletedSteps,
 }) => {
-  const handleSubmit = async (formData: { interests: string[] } | null) => {
-    if (!formData) return;
-    
-    onNext(undefined, {
-      interests: formData.interests,
-    });
+  const handleStepComplete = useCallback((step: OnboardingStepName) => {
+    setCompletedSteps?.(prev => [...prev, step]);
+  }, [setCompletedSteps]);
+
+  const handleSubmit = async (data: Record<string, unknown> | null) => {
+    console.info("Saving interests:", data);
+    onNext();
+    handleStepComplete("academics");
   };
 
-  return (
-    <UIInterestsStep
-      initialInterests={data?.interests || []}
-      onSubmit={handleSubmit}
-      onBack={onPrev}
-    />
-  );
+  return <div>Interests Step - Component not available</div>;
 };
 
 export const OnboardingCompleteStep: React.FC<StepProps> = ({
   onNext,
-  user: _user,
+  setCompletedSteps,
 }) => {
+  const handleStepComplete = useCallback((step: OnboardingStepName) => {
+    setCompletedSteps?.(prev => [...prev, step]);
+  }, [setCompletedSteps]);
+
   const handleSubmit = async () => {
     try {
-      logger.info("Completing onboarding");
+      console.info("Completing onboarding");
       onNext();
+      handleStepComplete("legal");
     } catch (error) {
-      logger.error("Failed to complete onboarding", { 
-        error: error instanceof Error ? error : new Error(String(error))
-      });
+      console.error("Failed to complete onboarding", error);
     }
   };
 
-  return <UIOnboardingCompleteStep onGoToFeed={handleSubmit} />;
+  return <div>Onboarding Complete Step - Component not available</div>;
 };

@@ -1,56 +1,18 @@
-import { test, expect, type Page } from '@playwright/test'
-import { setupTestUser, cleanupTestData } from './helpers/test-setup'
-import type { TestTool, TestElement as _TestElement, ElementConfig } from './types/tool-builder'
-
-// Mock element type
-interface MockElement {
-  id: string;
-  elementId: string;
-  config: ElementConfig;
-  position: { x: number; y: number };
-  order: number;
-  isVisible: boolean;
-  isLocked: boolean;
-}
-
-// Extend window interface for mock properties
-declare global {
-  interface Window {
-    __mockToolElements: MockElement[]
-    __mockElementError: boolean
-    __mockSlowRender: boolean
-  }
-}
-
-// Test data
-const TEST_TOOL: TestTool = {
-  name: 'Test Tool',
-  description: 'Test description'
-};
-
-// Mock elements data
-const MOCK_ELEMENTS: MockElement[] = Array.from({ length: 50 }, (_, i) => ({
-  id: `element_${i}`,
-  elementId: 'textBlock-v1',
-  config: { text: `Element ${i}` },
-  position: { x: 100, y: 100 + i * 30 },
-  order: i,
-  isVisible: true,
-  isLocked: false,
-}));
+import type { Page } from '@playwright/test';
+import { test, expect } from '@playwright/test'
 
 // Helper functions
-async function _loginTestUser(page: Page) {
+async function loginTestUser(page: Page) {
   await page.goto('/auth/login')
   await page.fill('[data-testid="email-input"]', 'test@example.com')
   await page.click('[data-testid="login-button"]')
   await page.waitForURL('/profile')
 }
 
-async function createNewTool(page: Page, toolData: TestTool = TEST_TOOL) {
+async function createNewTool(page: Page) {
   await page.goto('/tools/create')
-  await page.fill('[data-testid="tool-name-input"]', toolData.name)
-  await page.fill('[data-testid="tool-description-input"]', toolData.description)
+  await page.fill('[data-testid="tool-name-input"]', 'Test Tool')
+  await page.fill('[data-testid="tool-description-input"]', 'Test description')
   await page.click('[data-testid="create-tool-button"]')
   await page.waitForURL(/\/tools\/[a-zA-Z0-9]+\/edit/)
 }
@@ -74,11 +36,7 @@ async function simulateSlowNetwork(page: Page, url: string, delay = 5000) {
 
 test.describe('Tool Builder - Error Handling', () => {
   test.beforeEach(async ({ page }) => {
-    await setupTestUser(page)
-  })
-
-  test.afterEach(async ({ page }) => {
-    await cleanupTestData(page)
+    await loginTestUser(page)
   })
 
   test('should handle tool creation failure', async ({ page }) => {
@@ -86,7 +44,7 @@ test.describe('Tool Builder - Error Handling', () => {
     await simulateNetworkError(page, '/api/tools', 500)
     
     await page.goto('/tools/create')
-    await page.fill('[data-testid="tool-name-input"]', TEST_TOOL.name)
+    await page.fill('[data-testid="tool-name-input"]', 'Test Tool')
     await page.click('[data-testid="create-tool-button"]')
     
     // Should show error message
@@ -204,9 +162,18 @@ test.describe('Tool Builder - Error Handling', () => {
     await createNewTool(page)
     
     // Mock tool with maximum elements
-    await page.evaluate((mockElements) => {
-      window.__mockToolElements = mockElements
-    }, MOCK_ELEMENTS)
+    await page.evaluate(() => {
+      // Simulate tool with 50 elements (max limit)
+      window.__mockToolElements = Array.from({ length: 50 }, (_, i) => ({
+        id: `element_${i}`,
+        elementId: 'textBlock-v1',
+        config: { text: `Element ${i}` },
+        position: { x: 100, y: 100 + i * 30 },
+        order: i,
+        isVisible: true,
+        isLocked: false,
+      }))
+    })
     
     // Try to add another element
     await page.dragAndDrop('[data-testid="element-textBlock"]', '[data-testid="design-canvas"]')
@@ -216,65 +183,77 @@ test.describe('Tool Builder - Error Handling', () => {
     await expect(page.locator('[data-testid="element-count"]')).toContainText('50/50 elements')
   })
 
-  test('should handle slow element loading', async ({ page }) => {
+  test('should handle preview mode errors', async ({ page }) => {
     await createNewTool(page)
     
-    // Simulate slow element loading
-    await page.evaluate(() => {
-      window.__mockSlowRender = true
-    })
-    
-    // Add element
+    // Add element with invalid configuration
     await page.dragAndDrop('[data-testid="element-textBlock"]', '[data-testid="design-canvas"]')
     
-    // Verify loading state
-    await expect(page.locator('[data-testid="element-loading"]')).toBeVisible()
-    await expect(page.locator('[data-testid="element-loading"]')).toContainText('Loading element')
-  })
-
-  test('handle large number of elements', async ({ page }) => {
-    // Mock tool elements
-    await page.evaluate((mockElements) => {
-      window.__mockToolElements = mockElements
-    }, MOCK_ELEMENTS)
-
-    await page.goto('/builder/new')
-
-    // Verify warning message
-    await expect(page.locator('[data-testid="element-limit-warning"]')).toBeVisible()
-    await expect(page.locator('[data-testid="element-limit-warning"]')).toContainText('Large number of elements')
-  })
-
-  test('handle element rendering errors', async ({ page }) => {
-    // Mock element error
+    // Simulate element rendering error
     await page.evaluate(() => {
       window.__mockElementError = true
     })
-
-    await page.goto('/builder/new')
-
-    // Verify error message
-    await expect(page.locator('[data-testid="element-error"]')).toBeVisible()
-    await expect(page.locator('[data-testid="element-error"]')).toContainText('Error rendering element')
+    
+    // Switch to preview mode
+    await page.click('[data-testid="mode-preview"]')
+    
+    // Should show element error
+    await expect(page.locator('[data-testid="element-error"]')).toContainText('Failed to render element')
+    await expect(page.locator('[data-testid="error-fallback"]')).toBeVisible()
   })
 
-  test('handle slow element rendering', async ({ page }) => {
-    // Mock slow render
+  test('should handle JSON editor validation', async ({ page }) => {
+    await createNewTool(page)
+    await page.dragAndDrop('[data-testid="element-textBlock"]', '[data-testid="design-canvas"]')
+    
+    // Switch to code mode
+    await page.click('[data-testid="mode-code"]')
+    
+    // Enter invalid JSON
+    await page.fill('[data-testid="json-editor"]', '{ invalid json }')
+    
+    // Should show JSON validation error
+    await expect(page.locator('[data-testid="json-error"]')).toContainText('Invalid JSON')
+    
+    // Should not apply invalid changes
+    await page.click('[data-testid="mode-design"]')
+    await expect(page.locator('[data-testid="canvas-element-textBlock"]')).toBeVisible()
+  })
+
+  test('should handle sharing errors', async ({ page }) => {
+    await createNewTool(page)
+    
+    // Simulate sharing API failure
+    await simulateNetworkError(page, '/api/tools/*/share', 403)
+    
+    await page.click('[data-testid="share-button"]')
+    await page.click('[data-testid="create-share-link"]')
+    
+    // Should show sharing error
+    await expect(page.locator('[data-testid="share-error"]')).toContainText('Failed to create share link')
+    await expect(page.locator('[data-testid="retry-share"]')).toBeVisible()
+  })
+
+  test('should handle authentication errors', async ({ page }) => {
+    await createNewTool(page)
+    
+    // Simulate token expiration
     await page.evaluate(() => {
-      window.__mockSlowRender = true
+      localStorage.removeItem('firebase-auth-token')
     })
-
-    await page.goto('/builder/new')
-
-    // Verify loading state
-    await expect(page.locator('[data-testid="element-loading"]')).toBeVisible()
-    await expect(page.locator('[data-testid="element-loading"]')).toContainText('Loading element')
+    
+    // Try to save
+    await page.click('[data-testid="save-button"]')
+    
+    // Should redirect to login
+    await expect(page).toHaveURL('/auth/login')
+    await expect(page.locator('[data-testid="session-expired"]')).toContainText('Session expired')
   })
 })
 
 test.describe('Tool Builder - Network Issues', () => {
   test.beforeEach(async ({ page }) => {
-    await setupTestUser(page)
+    await loginTestUser(page)
   })
 
   test('should handle slow network gracefully', async ({ page }) => {
@@ -282,7 +261,7 @@ test.describe('Tool Builder - Network Issues', () => {
     await simulateSlowNetwork(page, '/api/tools/*', 3000)
     
     await page.goto('/tools/create')
-    await page.fill('[data-testid="tool-name-input"]', TEST_TOOL.name)
+    await page.fill('[data-testid="tool-name-input"]', 'Test Tool')
     await page.click('[data-testid="create-tool-button"]')
     
     // Should show loading state
@@ -344,7 +323,7 @@ test.describe('Tool Builder - Network Issues', () => {
 
 test.describe('Tool Builder - Data Validation', () => {
   test.beforeEach(async ({ page }) => {
-    await setupTestUser(page)
+    await loginTestUser(page)
   })
 
   test('should validate tool name requirements', async ({ page }) => {
@@ -434,7 +413,7 @@ test.describe('Tool Builder - Data Validation', () => {
 
 test.describe('Tool Builder - Performance Issues', () => {
   test.beforeEach(async ({ page }) => {
-    await setupTestUser(page)
+    await loginTestUser(page)
   })
 
   test('should handle large tool files', async ({ page }) => {

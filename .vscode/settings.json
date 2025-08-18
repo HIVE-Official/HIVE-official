@@ -8,10 +8,9 @@
     "typescriptreact"
   ],
   "eslint.workingDirectories": [
-    "apps/web",
-    "apps/admin", 
-    "packages/*",
-    "firebase"
+    {
+      "mode": "auto"
+    }
   ],
   "eslint.useFlatConfig": true,
   "eslint.format.enable": true,
@@ -29,16 +28,6 @@
   "typescript.preferences.includePackageJsonAutoImports": "on",
   "typescript.suggest.autoImports": true,
   "typescript.updateImportsOnFileMove.enabled": "always",
-  "typescript.exclude": [
-    "**/firebase/**"
-  ],
-  "typescript.workspaceSymbols.scope": "allOpenProjects",
-  "typescript.preferences.useAliasesForRenames": false,
-  "files.associations": {
-    "*.ts": "typescript"
-  },
-  "typescript.surveys.enabled": false,
-  "typescript.locale": "en",
   "[typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.codeActionsOnSave": {

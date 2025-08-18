@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '../button';
 import { Input } from '../input';
 import { Label } from '../label';
-import { cn } from '../../lib/utils';
+import { cn } from '../lib/utils';
 import { LoadingSpinner } from '../loading-spinner';
 import { hiveVariants } from '../../lib/motion';
 import { useAdaptiveMotion } from '../../lib/adaptive-motion';

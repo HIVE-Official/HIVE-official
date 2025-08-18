@@ -1,0 +1,717 @@
+'use client';
+
+import React, { useState, useMemo } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ExpandFocus } from '../animations/expand-focus';
+import { ToolDetailsWidget } from '../tools/tool-details-widget';
+import { 
+  Star, 
+  Download, 
+  Eye,
+  Heart,
+  MessageSquare,
+  Share2,
+  Edit3,
+  Plus,
+  Filter,
+  Search,
+  Crown,
+  Award,
+  Zap,
+  TrendingUp,
+  Users,
+  Calendar,
+  Code,
+  Palette,
+  Database,
+  Globe,
+  Smartphone,
+  Monitor,
+  Play,
+  Pause,
+  MoreHorizontal,
+  ExternalLink,
+  GitBranch,
+  Package,
+  BookOpen,
+  Target
+} from 'lucide-react';
+import { HiveCard } from '../hive-card';
+import { HiveButton } from '../hive-button';
+import { Badge } from '../../ui/badge';
+import { cn } from '../lib/utils';
+
+// Builder Portfolio Types
+export interface Tool {
+  id: string;
+  name: string;
+  description: string;
+  shortDescription?: string;
+  category: ToolCategory;
+  tags: string[];
+  icon: string;
+  coverImage?: string;
+  screenshots: string[];
+  version: string;
+  status: 'draft' | 'published' | 'deprecated' | 'featured';
+  createdAt: string;
+  updatedAt: string;
+  publishedAt?: string;
+  
+  // Statistics
+  stats: {
+    installs: number;
+    activeUsers: number;
+    views: number;
+    likes: number;
+    comments: number;
+    rating: number;
+    ratingCount: number;
+  };
+  
+  // Technical details
+  technical: {
+    complexity: 'beginner' | 'intermediate' | 'advanced' | 'expert';
+    buildTime: number; // hours
+    dependencies: string[];
+    platforms: ('web' | 'mobile' | 'desktop')[];
+    codeLines: number;
+  };
+  
+  // Collaboration
+  collaborators: string[];
+  isOpenSource: boolean;
+  githubUrl?: string;
+  demoUrl?: string;
+  docsUrl?: string;
+}
+
+export type ToolCategory = 'productivity' | 'academic' | 'social' | 'utility' | 'ai' | 'design' | 'data' | 'game';
+
+export interface Achievement {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  category: 'creation' | 'impact' | 'community' | 'technical' | 'milestone';
+  rarity: 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
+  earnedAt: string;
+  progress?: {
+    current: number;
+    total: number;
+  };
+}
+
+export interface BuilderStats {
+  totalTools: number;
+  totalInstalls: number;
+  totalViews: number;
+  totalLikes: number;
+  averageRating: number;
+  builderLevel: 'Newcomer' | 'Developer' | 'Creator' | 'Architect' | 'Visionary';
+  experiencePoints: number;
+  nextLevelXP: number;
+  streak: {
+    current: number;
+    longest: number;
+    lastBuildDate: string;
+  };
+  specialties: ToolCategory[];
+  collaborations: number;
+  contributions: number;
+}
+
+interface BuilderPortfolioProps {
+  tools: Tool[];
+  achievements: Achievement[];
+  stats: BuilderStats;
+  isOwnProfile?: boolean;
+  onToolClick?: (tool: Tool) => void;
+  onEditTool?: (tool: Tool) => void;
+  onCreateTool?: () => void;
+  onViewAnalytics?: (tool: Tool) => void;
+  className?: string;
+}
+
+export const BuilderPortfolio: React.FC<BuilderPortfolioProps> = ({
+  tools,
+  achievements,
+  stats,
+  isOwnProfile = false,
+  onToolClick,
+  onEditTool,
+  onCreateTool,
+  onViewAnalytics,
+  className
+}) => {
+  const [view, setView] = useState<'grid' | 'list'>('grid');
+  const [filter, setFilter] = useState<'all' | ToolCategory>('all');
+  const [sortBy, setSortBy] = useState<'recent' | 'popular' | 'rating'>('recent');
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const filteredAndSortedTools = useMemo(() => {
+    let filtered = tools;
+
+    // Filter by category
+    if (filter !== 'all') {
+      filtered = filtered.filter(tool => tool.category === filter);
+    }
+
+    // Filter by search query
+    if (searchQuery) {
+      filtered = filtered.filter(tool => 
+        tool.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        tool.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        tool.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+      );
+    }
+
+    // Sort
+    filtered.sort((a, b) => {
+      switch (sortBy) {
+        case 'popular':
+          return b.stats.installs - a.stats.installs;
+        case 'rating':
+          return b.stats.rating - a.stats.rating;
+        case 'recent':
+        default:
+          return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
+      }
+    });
+
+    return filtered;
+  }, [tools, filter, sortBy, searchQuery]);
+
+  const categories: { id: ToolCategory | 'all'; label: string; icon: React.ReactNode }[] = [
+    { id: 'all', label: 'All Tools', icon: <Package className="h-4 w-4" /> },
+    { id: 'productivity', label: 'Productivity', icon: <Target className="h-4 w-4" /> },
+    { id: 'academic', label: 'Academic', icon: <BookOpen className="h-4 w-4" /> },
+    { id: 'social', label: 'Social', icon: <Users className="h-4 w-4" /> },
+    { id: 'ai', label: 'AI/ML', icon: <Zap className="h-4 w-4" /> },
+    { id: 'design', label: 'Design', icon: <Palette className="h-4 w-4" /> },
+    { id: 'data', label: 'Data', icon: <Database className="h-4 w-4" /> }
+  ];
+
+  const getBuilderLevelColor = (level: string) => {
+    switch (level) {
+      case 'Visionary':
+        return 'text-purple-400 bg-purple-400/10';
+      case 'Architect':
+        return 'text-blue-400 bg-blue-400/10';
+      case 'Creator':
+        return 'text-green-400 bg-green-400/10';
+      case 'Developer':
+        return 'text-yellow-400 bg-yellow-400/10';
+      default:
+        return 'text-gray-400 bg-gray-400/10';
+    }
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'featured':
+        return 'text-purple-400 bg-purple-400/10 border-purple-400/20';
+      case 'published':
+        return 'text-green-400 bg-green-400/10 border-green-400/20';
+      case 'draft':
+        return 'text-yellow-400 bg-yellow-400/10 border-yellow-400/20';
+      case 'deprecated':
+        return 'text-red-400 bg-red-400/10 border-red-400/20';
+      default:
+        return 'text-gray-400 bg-gray-400/10 border-gray-400/20';
+    }
+  };
+
+  const progressPercentage = (stats.experiencePoints / stats.nextLevelXP) * 100;
+
+  return (
+    <div className={cn("space-y-6", className)}>
+      {/* Builder Stats Header */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Builder Level & Progress */}
+        <HiveCard className="p-6 lg:col-span-2">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-xl bg-hive-gold/20 flex items-center justify-center">
+                <Crown className="h-6 w-6 text-hive-gold" />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-hive-text-primary">Builder Level</h3>
+                <Badge className={getBuilderLevelColor(stats.builderLevel)}>
+                  {stats.builderLevel}
+                </Badge>
+              </div>
+            </div>
+            
+            {isOwnProfile && (
+              <HiveButton onClick={onCreateTool} className="gap-2">
+                <Plus className="h-4 w-4" />
+                Create Tool
+              </HiveButton>
+            )}
+          </div>
+
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <span className="text-hive-text-secondary">Progress to next level</span>
+              <span className="text-hive-text-primary font-medium">
+                {stats.experiencePoints} / {stats.nextLevelXP} XP
+              </span>
+            </div>
+            <div className="w-full bg-hive-background-primary rounded-full h-3">
+              <div
+                className="bg-hive-gold h-3 rounded-full transition-all duration-300"
+                style={{ width: `${progressPercentage}%` }}
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+            <div className="text-center">
+              <div className="text-2xl font-bold text-hive-text-primary">{stats.totalTools}</div>
+              <div className="text-sm text-hive-text-secondary">Tools Created</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-hive-text-primary">
+                {stats.totalInstalls.toLocaleString()}
+              </div>
+              <div className="text-sm text-hive-text-secondary">Total Installs</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-hive-text-primary">
+                {stats.averageRating.toFixed(1)}
+              </div>
+              <div className="text-sm text-hive-text-secondary">Avg Rating</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-hive-text-primary">{stats.streak.current}</div>
+              <div className="text-sm text-hive-text-secondary">Day Streak</div>
+            </div>
+          </div>
+        </HiveCard>
+
+        {/* Recent Achievements */}
+        <HiveCard className="p-6">
+          <div className="flex items-center gap-2 mb-4">
+            <Award className="h-5 w-5 text-hive-gold" />
+            <h3 className="font-semibold text-hive-text-primary">Recent Achievements</h3>
+          </div>
+          
+          <div className="space-y-3">
+            {achievements.slice(0, 3).map((achievement) => (
+              <div key={achievement.id} className="flex items-center gap-3">
+                <div className="text-2xl">{achievement.icon}</div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-hive-text-primary truncate">
+                    {achievement.name}
+                  </p>
+                  <p className="text-xs text-hive-text-secondary truncate">
+                    {achievement.description}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          {achievements.length > 3 && (
+            <HiveButton variant="ghost" size="sm" className="w-full mt-4">
+              View All Achievements
+            </HiveButton>
+          )}
+        </HiveCard>
+      </div>
+
+      {/* Tools Section */}
+      <div className="space-y-4">
+        {/* Tools Header & Controls */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h3 className="text-xl font-semibold text-hive-text-primary">
+              Created Tools ({filteredAndSortedTools.length})
+            </h3>
+            <p className="text-hive-text-secondary">
+              Tools and applications built for the campus community
+            </p>
+          </div>
+
+          <div className="flex items-center gap-3">
+            {/* Search */}
+            <div className="relative">
+              <Search className="h-4 w-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-hive-text-secondary" />
+              <input
+                type="text"
+                placeholder="Search tools..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10 pr-4 py-2 bg-hive-surface-elevated border border-hive-border-subtle rounded-lg text-hive-text-primary placeholder-hive-text-secondary focus:outline-none focus:ring-2 focus:ring-hive-gold"
+              />
+            </div>
+
+            {/* Sort */}
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as any)}
+              className="px-3 py-2 bg-hive-surface-elevated border border-hive-border-subtle rounded-lg text-hive-text-primary focus:outline-none focus:ring-2 focus:ring-hive-gold"
+            >
+              <option value="recent">Most Recent</option>
+              <option value="popular">Most Popular</option>
+              <option value="rating">Highest Rated</option>
+            </select>
+
+            {/* View Toggle */}
+            <div className="flex items-center gap-1 bg-hive-surface-elevated rounded-lg p-1">
+              <button
+                onClick={() => setView('grid')}
+                className={cn(
+                  "p-2 rounded-md transition-colors",
+                  view === 'grid' 
+                    ? "bg-hive-gold text-hive-text-primary" 
+                    : "text-hive-text-secondary hover:text-hive-text-primary"
+                )}
+              >
+                <div className="w-4 h-4 grid grid-cols-2 gap-0.5">
+                  <div className="bg-current rounded-sm"></div>
+                  <div className="bg-current rounded-sm"></div>
+                  <div className="bg-current rounded-sm"></div>
+                  <div className="bg-current rounded-sm"></div>
+                </div>
+              </button>
+              <button
+                onClick={() => setView('list')}
+                className={cn(
+                  "p-2 rounded-md transition-colors",
+                  view === 'list' 
+                    ? "bg-hive-gold text-hive-text-primary" 
+                    : "text-hive-text-secondary hover:text-hive-text-primary"
+                )}
+              >
+                <div className="w-4 h-4 flex flex-col gap-1">
+                  <div className="bg-current h-0.5 rounded-sm"></div>
+                  <div className="bg-current h-0.5 rounded-sm"></div>
+                  <div className="bg-current h-0.5 rounded-sm"></div>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Category Filter */}
+        <div className="flex items-center gap-2 overflow-x-auto pb-2">
+          {categories.map((category) => (
+            <button
+              key={category.id}
+              onClick={() => setFilter(category.id)}
+              className={cn(
+                "flex items-center gap-2 px-4 py-2 rounded-lg whitespace-nowrap transition-colors",
+                filter === category.id
+                  ? "bg-hive-gold text-hive-text-primary"
+                  : "bg-hive-surface-elevated text-hive-text-secondary hover:text-hive-text-primary hover:bg-hive-background-primary"
+              )}
+            >
+              {category.icon}
+              {category.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Tools Grid/List */}
+        <div className={cn(
+          view === 'grid' 
+            ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+            : "space-y-4"
+        )}>
+          <AnimatePresence mode="popLayout">
+            {filteredAndSortedTools.map((tool) => (
+              <motion.div
+                key={tool.id}
+                layout
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.2 }}
+              >
+                <ToolCard
+                  tool={tool}
+                  view={view}
+                  isOwnProfile={isOwnProfile}
+                  onClick={() => onToolClick?.(tool)}
+                  onEdit={() => onEditTool?.(tool)}
+                  onViewAnalytics={() => onViewAnalytics?.(tool)}
+                />
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </div>
+
+        {/* Empty State */}
+        {filteredAndSortedTools.length === 0 && (
+          <div className="text-center py-12">
+            <div className="w-20 h-20 rounded-full bg-hive-surface-elevated flex items-center justify-center mx-auto mb-4">
+              <Package className="h-10 w-10 text-hive-text-secondary" />
+            </div>
+            <h3 className="text-lg font-semibold text-hive-text-primary mb-2">
+              {searchQuery || filter !== 'all' ? 'No tools found' : 'No tools created yet'}
+            </h3>
+            <p className="text-hive-text-secondary mb-6">
+              {searchQuery || filter !== 'all' 
+                ? 'Try adjusting your search or filter criteria'
+                : 'Start building tools to help your campus community'
+              }
+            </p>
+            {isOwnProfile && (
+              <HiveButton onClick={onCreateTool}>
+                <Plus className="h-4 w-4 mr-2" />
+                Create Your First Tool
+              </HiveButton>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+// Tool Card Component
+interface ToolCardProps {
+  tool: Tool;
+  view: 'grid' | 'list';
+  isOwnProfile: boolean;
+  onClick: () => void;
+  onEdit: () => void;
+  onViewAnalytics: () => void;
+}
+
+const ToolCard: React.FC<ToolCardProps> = ({
+  tool,
+  view,
+  isOwnProfile,
+  onClick,
+  onEdit,
+  onViewAnalytics
+}) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const handleCardClick = () => {
+    setIsExpanded(true);
+  };
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'featured':
+        return 'text-purple-400 bg-purple-400/10 border-purple-400/20';
+      case 'published':
+        return 'text-green-400 bg-green-400/10 border-green-400/20';
+      case 'draft':
+        return 'text-yellow-400 bg-yellow-400/10 border-yellow-400/20';
+      case 'deprecated':
+        return 'text-red-400 bg-red-400/10 border-red-400/20';
+      default:
+        return 'text-gray-400 bg-gray-400/10 border-gray-400/20';
+    }
+  };
+
+  if (view === 'list') {
+    return (
+      <ExpandFocus
+        isExpanded={isExpanded}
+        onExpand={() => setIsExpanded(true)}
+        onCollapse={() => setIsExpanded(false)}
+        expandFrom="center"
+        focusContent={
+          <ToolDetailsWidget
+            tool={tool}
+            isOwnTool={isOwnProfile}
+            onRun={(toolId) => {
+              onClick();
+              setIsExpanded(false);
+            }}
+            onEdit={(toolId) => {
+              onEdit();
+              setIsExpanded(false);
+            }}
+            onViewAnalytics={(toolId) => {
+              onViewAnalytics();
+              setIsExpanded(false);
+            }}
+          />
+        }
+      >
+        <HiveCard className="p-6 cursor-pointer hover:shadow-lg transition-shadow" onClick={handleCardClick}>
+        <div className="flex items-center gap-6">
+          <div className="w-16 h-16 rounded-xl bg-hive-surface-elevated flex items-center justify-center text-2xl">
+            {tool.icon}
+          </div>
+          
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-3 mb-2">
+              <h4 className="text-lg font-semibold text-hive-text-primary truncate">{tool.name}</h4>
+              <Badge className={getStatusColor(tool.status)}>
+                {tool.status}
+              </Badge>
+              {tool.status === 'featured' && (
+                <Badge className="bg-hive-gold/10 text-hive-gold border-hive-gold/20">
+                  <Star className="h-3 w-3 mr-1" />
+                  Featured
+                </Badge>
+              )}
+            </div>
+            
+            <p className="text-hive-text-secondary mb-3 line-clamp-2">{tool.description}</p>
+            
+            <div className="flex items-center gap-6 text-sm text-hive-text-secondary">
+              <div className="flex items-center gap-1">
+                <Download className="h-4 w-4" />
+                {tool.stats.installs.toLocaleString()}
+              </div>
+              <div className="flex items-center gap-1">
+                <Star className="h-4 w-4" />
+                {tool.stats.rating.toFixed(1)}
+              </div>
+              <div className="flex items-center gap-1">
+                <Eye className="h-4 w-4" />
+                {tool.stats.views.toLocaleString()}
+              </div>
+              <div className="flex items-center gap-1">
+                <Heart className="h-4 w-4" />
+                {tool.stats.likes}
+              </div>
+            </div>
+          </div>
+
+          {isOwnProfile && (
+            <div className="flex items-center gap-2">
+              <HiveButton variant="outline" size="sm" onClick={(e) => { e.stopPropagation(); onViewAnalytics(); }}>
+                <TrendingUp className="h-4 w-4" />
+              </HiveButton>
+              <HiveButton variant="outline" size="sm" onClick={(e) => { e.stopPropagation(); onEdit(); }}>
+                <Edit3 className="h-4 w-4" />
+              </HiveButton>
+            </div>
+          )}
+        </div>
+      </HiveCard>
+      </ExpandFocus>
+    );
+  }
+
+  return (
+    <ExpandFocus
+      isExpanded={isExpanded}
+      onExpand={() => setIsExpanded(true)}
+      onCollapse={() => setIsExpanded(false)}
+      expandFrom="center"
+      focusContent={
+        <ToolDetailsWidget
+          tool={tool}
+          isOwnTool={isOwnProfile}
+          onRun={(toolId) => {
+            onClick();
+            setIsExpanded(false);
+          }}
+          onEdit={(toolId) => {
+            onEdit();
+            setIsExpanded(false);
+          }}
+          onViewAnalytics={(toolId) => {
+            onViewAnalytics();
+            setIsExpanded(false);
+          }}
+        />
+      }
+    >
+      <HiveCard className="overflow-hidden cursor-pointer hover:shadow-lg transition-shadow" onClick={handleCardClick}>
+      {/* Tool Header */}
+      <div className="p-6 pb-4">
+        <div className="flex items-start justify-between mb-3">
+          <div className="w-12 h-12 rounded-xl bg-hive-surface-elevated flex items-center justify-center text-xl">
+            {tool.icon}
+          </div>
+          
+          <div className="flex items-center gap-2">
+            <Badge className={getStatusColor(tool.status)}>
+              {tool.status}
+            </Badge>
+            {tool.status === 'featured' && (
+              <Star className="h-4 w-4 text-hive-gold" />
+            )}
+            {isOwnProfile && (
+              <button
+                onClick={(e) => { e.stopPropagation(); onEdit(); }}
+                className="p-1 rounded-md text-hive-text-secondary hover:text-hive-text-primary hover:bg-hive-background-primary"
+              >
+                <Edit3 className="h-4 w-4" />
+              </button>
+            )}
+          </div>
+        </div>
+
+        <h4 className="text-lg font-semibold text-hive-text-primary mb-2 line-clamp-1">
+          {tool.name}
+        </h4>
+        <p className="text-hive-text-secondary text-sm line-clamp-2 mb-4">
+          {tool.shortDescription || tool.description}
+        </p>
+
+        <div className="flex flex-wrap gap-1 mb-4">
+          {tool.tags.slice(0, 3).map((tag) => (
+            <Badge key={tag} variant="secondary" className="text-xs">
+              {tag}
+            </Badge>
+          ))}
+          {tool.tags.length > 3 && (
+            <Badge variant="secondary" className="text-xs">
+              +{tool.tags.length - 3}
+            </Badge>
+          )}
+        </div>
+      </div>
+
+      {/* Tool Stats */}
+      <div className="px-6 pb-6">
+        <div className="grid grid-cols-2 gap-4 text-sm">
+          <div className="flex items-center justify-between">
+            <span className="text-hive-text-secondary">Installs</span>
+            <span className="font-medium text-hive-text-primary">
+              {tool.stats.installs.toLocaleString()}
+            </span>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-hive-text-secondary">Rating</span>
+            <div className="flex items-center gap-1">
+              <Star className="h-3 w-3 text-yellow-400 fill-current" />
+              <span className="font-medium text-hive-text-primary">
+                {tool.stats.rating.toFixed(1)}
+              </span>
+            </div>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-hive-text-secondary">Views</span>
+            <span className="font-medium text-hive-text-primary">
+              {tool.stats.views.toLocaleString()}
+            </span>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-hive-text-secondary">Likes</span>
+            <span className="font-medium text-hive-text-primary">
+              {tool.stats.likes}
+            </span>
+          </div>
+        </div>
+
+        {isOwnProfile && (
+          <HiveButton 
+            variant="outline" 
+            size="sm" 
+            className="w-full mt-4"
+            onClick={(e) => { e.stopPropagation(); onViewAnalytics(); }}
+          >
+            <TrendingUp className="h-4 w-4 mr-2" />
+            View Analytics
+          </HiveButton>
+        )}
+      </div>
+    </HiveCard>
+    </ExpandFocus>
+  );
+};
+
+export default BuilderPortfolio;

@@ -1,139 +1,88 @@
-/// <reference lib="dom" />
-import * as React from "react"
-import type { ComponentPropsWithRef, ElementType, ReactNode } from "react"
-import { cva, type VariantProps } from "class-variance-authority"
+import * as React from "react";
+import { cn } from "../lib/utils";
+import { cva, type VariantProps } from "class-variance-authority";
 
-import { cn } from "../lib/utils"
-
-const typographyVariants = cva(
-  "text-foreground",
-  {
-    variants: {
-      variant: {
-        // Display & Headings - Space Grotesk Variable
-        "display": "font-display text-display font-semibold leading-tight tracking-tight",
-        "h1": "font-display text-h1 font-semibold leading-tight tracking-tight",
-        "h2": "font-display text-h2 font-semibold leading-tight tracking-tight", 
-        "h3": "font-display text-h3 font-semibold leading-tight tracking-tight",
-        "h4": "font-display text-h4 font-semibold leading-tight tracking-tight",
-        
-        // Body text - Geist
-        "body": "font-sans text-body leading-relaxed",
-        "body-sm": "font-sans text-body-sm leading-relaxed",
-        "caption": "font-sans text-caption leading-normal text-muted-foreground",
-        
-        // UI text - Geist
-        "button": "font-sans text-button font-medium leading-none",
-        "label": "font-sans text-caption font-medium leading-none",
-        "nav": "font-sans text-body-sm font-medium leading-none",
-        
-        // Code - Geist Mono
-        "code": "font-mono text-code leading-relaxed bg-muted px-1.5 py-0.5 rounded-md",
-        "code-block": "font-mono text-code leading-relaxed",
-        
-        // Special variants
-        "muted": "font-sans text-body-sm text-muted-foreground leading-relaxed",
-        "subtle": "font-sans text-caption text-muted-foreground leading-normal",
-        "small": "font-sans text-caption leading-normal",
-        
-        // Marketing/Hero variants
-        "hero": "font-display text-display font-semibold leading-none tracking-tight",
-        "lead": "font-sans text-body text-muted-foreground leading-relaxed",
-      },
-      align: {
-        left: "text-left",
-        center: "text-center", 
-        right: "text-right",
-        justify: "text-justify",
-      },
-      weight: {
-        light: "font-light",
-        normal: "font-normal",
-        medium: "font-medium",
-        semibold: "font-semibold",
-        bold: "font-bold",
-      }
+const headingVariants = cva("font-display font-semibold tracking-tight", {
+  variants: {
+    level: {
+      1: "text-h1",
+      2: "text-h2",
+      3: "text-lg font-medium",
+      4: "text-base font-medium",
     },
-    defaultVariants: {
-      variant: "body",
-      align: "left",
-    },
-  }
-)
+  },
+  defaultVariants: {
+    level: 2,
+  },
+});
 
-export type TypographyVariant = NonNullable<VariantProps<typeof typographyVariants>["variant"]>
-export type TypographyAlign = NonNullable<VariantProps<typeof typographyVariants>["align"]>
-export type TypographyWeight = NonNullable<VariantProps<typeof typographyVariants>["weight"]>
+export interface HeadingProps
+  extends React.HTMLAttributes<HTMLHeadingElement>,
+    VariantProps<typeof headingVariants> {}
 
-export interface TypographyProps
-  extends ComponentPropsWithRef<"div">,
-    VariantProps<typeof typographyVariants> {
-  as?: ElementType;
-  children?: ReactNode;
-}
+const Heading = React.forwardRef<HTMLHeadingElement, HeadingProps>(
+  ({ className, level = 2, ...props }, ref) => {
+    const Component =
+      level === 1 ? "h1" : level === 2 ? "h2" : level === 3 ? "h3" : "h4";
 
-const Typography = React.forwardRef<unknown, TypographyProps>(
-  ({ className, variant, align, weight, as, children, ...props }, ref) => {
-    // Smart element mapping based on variant
-    const getElement = (): ElementType => {
-      if (as) return as
-      
-      switch (variant) {
-        case "display":
-        case "hero":
-        case "h1": return "h1"
-        case "h2": return "h2" 
-        case "h3": return "h3"
-        case "h4": return "h4"
-        case "caption":
-        case "label":
-        case "small":
-        case "subtle": return "span"
-        case "code": return "code"
-        case "code-block": return "pre"
-        default: return "p"
-      }
+    if (Component === "h1") {
+      return (
+        <h1
+          ref={ref}
+          className={cn(headingVariants({ level }), className)}
+          {...props}
+        />
+      );
     }
-    
-    const Element = getElement()
-    
+    if (Component === "h2") {
+      return (
+        <h2
+          ref={ref}
+          className={cn(headingVariants({ level }), className)}
+          {...props}
+        />
+      );
+    }
+    if (Component === "h3") {
+      return (
+        <h3
+          ref={ref}
+          className={cn(headingVariants({ level }), className)}
+          {...props}
+        />
+      );
+    }
     return (
-      <Element
-        className={cn(typographyVariants({ variant, align, weight, className }))}
+      <h4
         ref={ref}
+        className={cn(headingVariants({ level }), className)}
         {...props}
-      >
-        {children}
-      </Element>
-    )
+      />
+    );
   }
-)
-Typography.displayName = "Typography"
+);
+Heading.displayName = "Heading";
 
-// Convenience components for common use cases
-const Heading = React.forwardRef<unknown, Omit<TypographyProps, "variant"> & { level: 1 | 2 | 3 | 4 }>(
-  ({ level, ...props }, ref) => {
-    const variant = `h${level}` as "h1" | "h2" | "h3" | "h4"
-    return <Typography {...props} variant={variant} ref={ref} />
-  }
-)
-Heading.displayName = "Heading"
+const Text = React.forwardRef<
+  HTMLParagraphElement,
+  React.HTMLAttributes<HTMLParagraphElement>
+>(({ className, ...props }, ref) => {
+  return <p ref={ref} className={cn("text-body", className)} {...props} />;
+});
+Text.displayName = "Text";
 
-const Text = React.forwardRef<unknown, Omit<TypographyProps, "variant">>(
-  (props, ref) => <Typography {...props} variant="body" ref={ref} />
-)
-Text.displayName = "Text"
+const Muted = React.forwardRef<
+  HTMLParagraphElement,
+  React.HTMLAttributes<HTMLParagraphElement>
+>(({ className, ...props }, ref) => {
+  return (
+    <p
+      ref={ref}
+      className={cn("text-sm text-text-muted", className)}
+      {...props}
+    />
+  );
+});
+Muted.displayName = "Muted";
 
-const Caption = React.forwardRef<unknown, Omit<TypographyProps, "variant">>(
-  (props, ref) => <Typography {...props} variant="caption" as="span" ref={ref} />
-)
-Caption.displayName = "Caption"
-
-const Code = React.forwardRef<unknown, Omit<TypographyProps, "variant"> & { block?: boolean }>(
-  ({ block, ...props }, ref) => (
-    <Typography {...props} variant={block ? "code-block" : "code"} ref={ref} />
-  )
-)
-Code.displayName = "Code"
-
-export { Typography, Heading, Text, Caption, Code, typographyVariants } 
+export { Heading, Text, Muted };

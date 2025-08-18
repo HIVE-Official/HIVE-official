@@ -1,182 +1,121 @@
-import "server-only";
+// Temporary stub for firebase-admin utilities
+// TODO: Use proper firebase-admin from @hive/core
+
 import * as admin from "firebase-admin";
-import { env, isDevelopment, getFirebaseAdminConfig } from "@hive/core";
+import { env, isFirebaseAdminConfigured, currentEnvironment } from "./env";
 
 let firebaseInitialized = false;
-let dbAdmin: admin.firestore.Firestore | null = null;
-let authAdmin: admin.auth.Auth | null = null;
+let dbAdmin: admin.firestore.Firestore;
+let authAdmin: admin.auth.Auth;
 
-// More robust build time detection
-const isBuildTime = process.env.NEXT_PHASE === "phase-production-build" || 
-                   process.env.VERCEL_ENV === "production" ||
-                   process.env.NODE_ENV === "production";
+try {
+  if (!admin.apps.length) {
+    let credential: admin.credential.Credential | undefined;
 
-// Mock school data for development
-const mockSchoolData = {
-  buffalo: {
-    id: 'buffalo',
-    name: 'University at Buffalo',
-    domain: 'buffalo.edu',
-    status: 'open',
-    studentsUntilOpen: 0,
-    waitlistCount: 0
-  }
-};
-
-// Mock instances for build time or when Firebase is not configured
-const mockDb = {
-  collection: (collectionName: string) => ({
-    doc: (docId: string) => ({
-      get: async () => {
-        console.log(`🔄 Mock Firebase call: collection(${collectionName}).doc(${docId}).get() - development mode`);
-        
-        if (collectionName === 'schools' && mockSchoolData[docId as keyof typeof mockSchoolData]) {
-          const schoolData = mockSchoolData[docId as keyof typeof mockSchoolData];
-          return { 
-            exists: true, 
-            data: () => schoolData,
-            id: docId
-          };
-        }
-        
-        return { exists: false, data: () => null };
-      },
-      set: async () => {
-        console.log(`🔄 Mock Firebase call: collection(${collectionName}).doc(${docId}).set() - development mode`);
-      },
-      update: async () => {
-        console.log(`🔄 Mock Firebase call: collection(${collectionName}).doc(${docId}).update() - development mode`);
-      },
-      delete: async () => {
-        console.log(`🔄 Mock Firebase call: collection(${collectionName}).doc(${docId}).delete() - development mode`);
-      },
-    }),
-    get: async () => {
-      console.log(`🔄 Mock Firebase call: collection(${collectionName}).get() - development mode`);
-      return {
-        docs: [],
-        size: 0,
-        empty: true
-      };
-    },
-    add: async (data: any) => {
-      console.log(`🔄 Mock Firebase call: collection(${collectionName}).add() - development mode`, data);
-      return { id: 'mock-doc-id' };
-    },
-  }),
-} as unknown as admin.firestore.Firestore;
-
-const mockAuth = {
-  verifyIdToken: async () => ({ uid: "mock-uid" }),
-  getUser: async () => ({ uid: "mock-uid", email: "mock@example.com" }),
-  createUser: async () => ({ uid: "mock-uid" }),
-  updateUser: async () => ({ uid: "mock-uid" }),
-  deleteUser: async () => {},
-} as unknown as admin.auth.Auth;
-
-// 🔒 SECURITY: Validate credentials before using them
-function validateFirebaseCredentials(config: any): boolean {
-  if (!config) return false;
-  
-  // Check for placeholder/invalid values
-  const invalidPatterns = [
-    'YOUR_PRIVATE_KEY_HERE',
-    'your-service-account@',
-    'demo-',
-    'mock-',
-    'test-',
-    'localhost'
-  ];
-  
-  const hasInvalidPattern = invalidPatterns.some(pattern => 
-    config.privateKey?.includes(pattern) || 
-    config.clientEmail?.includes(pattern) || 
-    config.projectId?.includes(pattern)
-  );
-  
-  if (hasInvalidPattern) {
-    console.warn("🔒 SECURITY: Firebase credentials contain placeholder values");
-    return false;
-  }
-  
-  // Validate structure
-  if (!config.privateKey?.includes('BEGIN PRIVATE KEY')) {
-    console.warn("🔒 SECURITY: Invalid private key format");
-    return false;
-  }
-  
-  return true;
-}
-
-// During build time or when Firebase is not configured, use mock instances
-const adminConfig = getFirebaseAdminConfig();
-const isValidConfig = validateFirebaseCredentials(adminConfig);
-
-if (process.env.NEXT_PHASE === "phase-production-build" || !adminConfig || !isValidConfig) {
-  if (!isValidConfig && adminConfig) {
-    console.error("🔒 SECURITY: Invalid Firebase credentials detected, using mock services");
-  } else {
-    console.log("🔥 Using mock Firebase Admin for development");
-  }
-  dbAdmin = mockDb;
-  authAdmin = mockAuth;
-} else {
-  // Initialize Firebase Admin if not already initialized
-  if (!firebaseInitialized) {
-    try {
-      if (!admin.apps.length) {
-        console.log("🔥 Initializing Firebase Admin with validated credentials");
-        
-        admin.initializeApp({
-          credential: admin.credential.cert({
-            projectId: adminConfig.projectId,
-            clientEmail: adminConfig.clientEmail,
-            privateKey: adminConfig.privateKey,
-          }),
-          projectId: adminConfig.projectId,
-        });
-
-        firebaseInitialized = true;
-        dbAdmin = admin.firestore();
-        authAdmin = admin.auth();
-        
-        console.log("✅ Firebase Admin initialized successfully");
-      } else {
-        dbAdmin = admin.firestore();
-        authAdmin = admin.auth();
+    // Try different credential formats
+    if (env.FIREBASE_PRIVATE_KEY && env.FIREBASE_CLIENT_EMAIL) {
+      // Format 1: Individual environment variables (Vercel recommended)
+      credential = admin.credential.cert({
+        projectId: env.FIREBASE_PROJECT_ID,
+        clientEmail: env.FIREBASE_CLIENT_EMAIL,
+        privateKey: env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n"),
+      });
+    } else if (process.env.FIREBASE_SERVICE_ACCOUNT_KEY) {
+      // Format 2: Base64 encoded service account (existing packages/core pattern)
+      try {
+        const serviceAccountJson = JSON.parse(
+          Buffer.from(
+            process.env.FIREBASE_SERVICE_ACCOUNT_KEY,
+            "base64"
+          ).toString("ascii")
+        );
+        credential = admin.credential.cert(serviceAccountJson);
+      } catch (error) {
+        console.warn("Failed to parse base64 service account:", error);
       }
-    } catch (error) {
-      console.error("🔥 Error initializing Firebase Admin, falling back to mock:", error);
-      
-      // 🔒 SECURITY: Log credential validation errors in production
-      if (isProduction) {
-        console.error("🚨 PRODUCTION ERROR: Firebase Admin initialization failed with valid-looking credentials");
+    } else {
+      // Format 3: Application default credentials (development fallback)
+      try {
+        credential = admin.credential.applicationDefault();
+      } catch (credError) {
+        console.warn(
+          `⚠️ No Firebase Admin credentials available for ${currentEnvironment}`
+        );
+        throw credError;
       }
-      
-      dbAdmin = mockDb;
-      authAdmin = mockAuth;
     }
+
+    if (credential) {
+      admin.initializeApp({
+        credential: credential,
+        projectId: env.FIREBASE_PROJECT_ID,
+      });
+
+      dbAdmin = admin.firestore();
+      authAdmin = admin.auth();
+      firebaseInitialized = true;
+
+    } else {
+      throw new Error("No valid Firebase credentials found");
+    }
+  } else {
+    // App already initialized
+    dbAdmin = admin.firestore();
+    authAdmin = admin.auth();
+    firebaseInitialized = true;
   }
+} catch (error) {
+  console.error(
+    `🚨 CRITICAL: Firebase Admin initialization failed for ${currentEnvironment}:`,
+    error
+  );
+
+  // In production, Firebase Admin MUST be properly configured
+  if (currentEnvironment === 'production') {
+    throw new Error(
+      `PRODUCTION FAILURE: Firebase Admin credentials not configured. This will prevent the application from functioning. Please check environment variables: FIREBASE_PROJECT_ID, FIREBASE_PRIVATE_KEY, FIREBASE_CLIENT_EMAIL`
+    );
+  }
+
+  // Development fallback - but still throw errors to encourage proper setup
+  
+  dbAdmin = {
+    collection: () => {
+      throw new Error(`Firebase Admin not configured for ${currentEnvironment}. Add credentials to continue.`);
+    },
+  } as any;
+
+  authAdmin = {
+    verifyIdToken: async () => {
+      throw new Error(`Firebase Admin not configured for ${currentEnvironment}. Add credentials to continue.`);
+    },
+    createCustomToken: async () => {
+      throw new Error(`Firebase Admin not configured for ${currentEnvironment}. Add credentials to continue.`);
+    },
+  } as any;
 }
 
-// Primary exports
 export { dbAdmin, authAdmin };
 
-// Compatibility exports
+// Re-export for compatibility with existing code
 export const db = dbAdmin;
 export const auth = authAdmin;
-export const adminDb = dbAdmin;
-export const adminAuth = authAdmin;
-
-// Configuration status
 export const isFirebaseConfigured = firebaseInitialized;
+
+// Re-export environment utilities
+export { currentEnvironment, isFirebaseAdminConfigured } from "./env";
 
 // Environment info for debugging
 export const environmentInfo = {
-  environment: env.NODE_ENV,
+  environment: currentEnvironment,
   firebaseConfigured: firebaseInitialized,
-  hasCredentials: getFirebaseAdminConfig() !== null,
-  projectId: env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  isDevelopment,
-  isBuildTime,
+  hasServiceAccount: isFirebaseAdminConfigured,
+  projectId: env.FIREBASE_PROJECT_ID,
+  credentialSource: firebaseInitialized
+    ? env.FIREBASE_PRIVATE_KEY
+      ? "individual_vars"
+      : process.env.FIREBASE_SERVICE_ACCOUNT_KEY
+        ? "base64_key"
+        : "application_default"
+    : "none",
 };

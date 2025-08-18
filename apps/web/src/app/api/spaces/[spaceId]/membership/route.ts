@@ -1,14 +1,15 @@
-import { NextRequest, NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getAuth } from "firebase-admin/auth";
 import { dbAdmin } from "@/lib/firebase-admin";
-import { logger } from "@hive/core";
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 const membershipQuerySchema = z.object({
   limit: z.coerce.number().min(1).max(100).default(50),
   offset: z.coerce.number().min(0).default(0),
-  role: z.enum(["creator", "admin", "member"]).optional(),
-});
+  role: z.enum(["creator", "admin", "member"]).optional() });
 
 /**
  * Get space membership details including member list
@@ -29,10 +30,7 @@ export async function GET(
     // Verify the requesting user is authenticated
     const authHeader = request.headers.get("Authorization");
     if (!authHeader?.startsWith("Bearer ")) {
-      return NextResponse.json(
-        { error: "Authorization header required" },
-        { status: 401 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Authorization header required", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const token = authHeader.substring(7);
@@ -41,23 +39,37 @@ export async function GET(
     const decodedToken = await auth.verifyIdToken(token);
     const requestingUserId = decodedToken.uid;
 
-    // Check if space exists
-    const spaceDoc = await dbAdmin.collection("spaces").doc(spaceId).get();
-    if (!spaceDoc.exists) {
-      return NextResponse.json({ error: "Space not found" }, { status: 404 });
+    // Find the space in the nested structure: spaces/[spacetype]/spaces/spaceID
+    const spaceTypes = ['campus_living', 'fraternity_and_sorority', 'hive_exclusive', 'student_organizations', 'university_organizations'];
+    let spaceDoc: any = null;
+    let spaceType: string | null = null;
+
+    // Search through all space types to find the space
+    for (const type of spaceTypes) {
+      const potentialSpaceRef = dbAdmin.collection("spaces").doc(type).collection("spaces").doc(spaceId);
+      const potentialDoc = await potentialSpaceRef.get();
+      
+      if (potentialDoc.exists) {
+        spaceDoc = potentialDoc;
+        spaceType = type;
+        break;
+      }
+    }
+
+    if (!spaceDoc || !spaceDoc.exists) {
+      return NextResponse.json(ApiResponseHelper.error("Space not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     const spaceData = spaceDoc.data();
 
     if (!spaceData) {
-      return NextResponse.json(
-        { error: "Space data not found" },
-        { status: 404 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Space data not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     // Check if requesting user is a member of this space
     const requestingUserMemberDoc = await dbAdmin
+      .collection("spaces")
+      .doc(spaceType!)
       .collection("spaces")
       .doc(spaceId)
       .collection("members")
@@ -65,23 +77,19 @@ export async function GET(
       .get();
 
     if (!requestingUserMemberDoc.exists) {
-      return NextResponse.json(
-        { error: "Access denied: Not a member of this space" },
-        { status: 403 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Access denied: Not a member of this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     const requestingUserMembership = requestingUserMemberDoc.data();
 
     if (!requestingUserMembership) {
-      return NextResponse.json(
-        { error: "Membership data not found" },
-        { status: 403 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Membership data not found", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     // Build members query
     let membersQuery = dbAdmin
+      .collection("spaces")
+      .doc(spaceType!)
       .collection("spaces")
       .doc(spaceId)
       .collection("members")
@@ -100,6 +108,8 @@ export async function GET(
 
     // Get total count for pagination
     const totalMembersSnapshot = await dbAdmin
+      .collection("spaces")
+      .doc(spaceType!)
       .collection("spaces")
       .doc(spaceId)
       .collection("members")
@@ -137,7 +147,7 @@ export async function GET(
             : null,
         };
       } catch (error) {
-        logger.error(`Error fetching user ${userId}:`, error);
+        logger.error('Error fetching user', { userId, error: error, endpoint: '/api/spaces/[spaceId]/membership' });
         return {
           userId,
           membership: {
@@ -205,29 +215,21 @@ export async function GET(
       },
       filters: {
         role: role || null,
-      },
-    });
-  } catch (error: unknown) {
-    logger.error("Get space membership error:", error);
+      } });
+  } catch (error: any) {
+    logger.error('Get space membership error', { error: error, endpoint: '/api/spaces/[spaceId]/membership' });
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: "Invalid query parameters", details: error.errors },
-        { status: 400 }
+        { status: HttpStatus.BAD_REQUEST }
       );
     }
 
-    if (
-      error instanceof Error &&
-      "code" in error &&
-      (error as { code: string }).code === "auth/id-token-expired"
-    ) {
-      return NextResponse.json({ error: "Token expired" }, { status: 401 });
+    if (error.code === "auth/id-token-expired") {
+      return NextResponse.json(ApiResponseHelper.error("Token expired", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+    return NextResponse.json(ApiResponseHelper.error("Internal server error", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

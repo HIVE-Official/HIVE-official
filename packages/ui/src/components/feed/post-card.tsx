@@ -1,252 +1,428 @@
 "use client";
 
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Button } from '../button';
-import { Badge } from '../badge';
-import { cn } from '../../lib/utils';
-import { 
-  Heart, 
-  MessageCircle, 
-  Share, 
+import React, { useState } from "react";
+import { formatDistanceToNow } from "date-fns";
+import { Card, CardContent } from "../../atomic/molecules/card";
+import { Button } from "../../atomic/atoms/button-enhanced";
+import { Avatar, AvatarFallback, AvatarImage } from "../../atomic/atoms/avatar";
+import { Badge } from "../../atomic/atoms/badge";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "../ui/alert-dialog";
+import {
+  Heart,
   MoreHorizontal,
-  Flame,
-  Sparkles,
-  User
-} from 'lucide-react';
+  Edit3,
+  Trash2,
+  Pin,
+  Flag,
+  Image as ImageIcon,
+  BarChart3,
+  Calendar,
+  Wrench,
+  Loader2,
+} from "lucide-react";
+import { cn } from "../../lib/utils";
+import type { Post } from "@hive/core";
+// import { PostType } from '@hive/core'
 
-export interface PostCardProps {
-  id: string;
-  author: {
-    id: string;
-    displayName: string;
-    handle: string;
-    avatarUrl?: string;
-    verificationLevel: 'verified' | 'verified+' | 'faculty';
+interface PostCardProps {
+  post: Post & {
+    author: {
+      id: string;
+      fullName: string;
+      handle: string;
+      photoURL?: string;
+      role?: "member" | "builder" | "admin";
+    };
   };
-  content: string;
-  type: 'text' | 'first_light' | 'ritual_response' | 'space_update';
-  timestamp: string;
-  likes: number;
-  comments: number;
-  isLiked: boolean;
-  space?: {
+  currentUser: {
     id: string;
-    name: string;
+    role?: "member" | "builder" | "admin";
   };
-  ritual?: {
-    id: string;
-    name: string;
-    type: string;
-  };
-  onLike?: () => void;
-  onComment?: () => void;
-  onShare?: () => void;
+  onReact: (
+    postId: string,
+    reaction: "heart",
+    action: "add" | "remove"
+  ) => Promise<void>;
+  onEdit?: (postId: string) => void;
+  onDelete: (postId: string) => Promise<void>;
+  onPin?: (postId: string, pin: boolean) => Promise<void>;
+  onFlag?: (postId: string, reason?: string) => Promise<void>;
   className?: string;
 }
 
-const postTypeConfig = {
-  text: {
-    badge: null,
-    icon: null,
-    gradient: '',
-  },
-  first_light: {
-    badge: { label: 'First Light', variant: 'ritual' as const },
-    icon: Flame,
-    gradient: 'from-accent/10 via-transparent to-transparent',
-  },
-  ritual_response: {
-    badge: { label: 'Ritual', variant: 'accent' as const },
-    icon: Sparkles,
-    gradient: 'from-accent/5 via-transparent to-transparent',
-  },
-  space_update: {
-    badge: { label: 'Space Update', variant: 'chip' as const },
-    icon: null,
-    gradient: '',
-  },
-};
+const POST_TYPE_ICONS = {
+  text: null,
+  image: ImageIcon,
+  poll: BarChart3,
+  event: Calendar,
+  toolshare: Wrench,
+} as const;
+
+const POST_TYPE_COLORS = {
+  text: "default",
+  image: "blue",
+  poll: "green",
+  event: "purple",
+  toolshare: "orange",
+} as const;
 
 export const PostCard: React.FC<PostCardProps> = ({
-  id: _id,
-  author,
-  content,
-  type,
-  timestamp,
-  likes,
-  comments,
-  isLiked,
-  space,
-  ritual,
-  onLike,
-  onComment,
-  onShare,
+  post,
+  currentUser,
+  onReact,
+  onEdit,
+  onDelete,
+  onPin,
+  onFlag,
   className,
 }) => {
-  const [isAnimating, setIsAnimating] = useState(false);
-  const config = postTypeConfig[type];
+  const [isReacting, setIsReacting] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
-  const handleLike = () => {
-    if (isAnimating) return;
-    setIsAnimating(true);
-    onLike?.();
-    setTimeout(() => setIsAnimating(false), 600);
+  const isAuthor = post.authorId === currentUser.id;
+  const canModerate =
+    currentUser.role === "builder" || currentUser.role === "admin";
+  const canEdit = isAuthor && !post.isDeleted;
+  const canDelete = (isAuthor || canModerate) && !post.isDeleted;
+  const canPin = canModerate && !post.isDeleted;
+  const canFlag = !isAuthor && !post.isDeleted && !post.isFlagged;
+
+  // Check if user has reacted
+  const userHasReacted =
+    post.reactedUsers?.heart?.includes(currentUser.id) || false;
+
+  // Calculate if the post can be edited (within edit window)
+  const now = new Date();
+  const createdAt: Date =
+    post.createdAt instanceof Date ? post.createdAt : new Date(post.createdAt);
+  const editWindowMs = 15 * 60 * 1000; // 15 minutes
+  const canEditTime = now.getTime() - createdAt.getTime() <= editWindowMs;
+  const canEditNow = canEdit && canEditTime;
+
+  const handleReact = async () => {
+    if (isReacting) return;
+
+    setIsReacting(true);
+    try {
+      const action = userHasReacted ? "remove" : "add";
+      await onReact(post.id, "heart", action);
+    } catch (error) {
+      console.error("Error reacting to post:", error);
+    } finally {
+      setIsReacting(false);
+    }
   };
 
+  const handleDelete = async () => {
+    setIsDeleting(true);
+    try {
+      await onDelete(post.id);
+      setShowDeleteDialog(false);
+    } catch (error) {
+      console.error("Error deleting post:", error);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const handlePin = async () => {
+    if (!onPin) return;
+    try {
+      await onPin(post.id, !post.isPinned);
+    } catch (error) {
+      console.error("Error pinning post:", error);
+    }
+  };
+
+  const handleFlag = async () => {
+    if (!onFlag) return;
+    try {
+      await onFlag(post.id, "Inappropriate content");
+    } catch (error) {
+      console.error("Error flagging post:", error);
+    }
+  };
+
+  const formatContent = (content: string) => {
+    // Simple mention highlighting - in production, use proper rich text rendering
+    return content.replace(
+      /@(\w+)/g,
+      '<span class="text-primary font-medium">@$1</span>'
+    );
+  };
+
+  const TypeIcon =
+    (POST_TYPE_ICONS[post.type] as React.ComponentType<{
+      className?: string;
+    }>) || null;
+
   return (
-    <motion.article
-      layout
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className={cn(
-        "relative bg-surface border border-border rounded-lg p-4",
-        "transition-all duration-base ease-brand",
-        "hover:border-accent/20 hover:shadow-sm",
-        className
-      )}
-    >
-      {/* Background gradient for special posts */}
-      {config.gradient && (
-        <div className={cn(
-          "absolute inset-0 bg-gradient-to-br rounded-lg",
-          config.gradient
-        )} />
-      )}
+    <>
+      <Card
+        className={cn(
+          "transition-colors hover:bg-muted/50",
+          post.isPinned && "border-primary/50 bg-primary/5",
+          post.isFlagged && "border-destructive/50 bg-destructive/5",
+          className
+        )}
+      >
+        <CardContent className="p-4">
+          {/* Pinned Badge */}
+          {post.isPinned && (
+            <div className="flex items-center gap-2 mb-3 text-sm text-primary">
+              <Pin className="h-4 w-4" />
+              <span className="font-medium">Pinned Post</span>
+            </div>
+          )}
 
-      <div className="relative space-y-3">
-        {/* Header */}
-        <div className="flex items-start justify-between">
-          <div className="flex items-center gap-3">
-            {/* Avatar */}
-            <div className="relative">
-              <div className="w-10 h-10 bg-surface-02 rounded-full flex items-center justify-center">
-                {author.avatarUrl ? (
-                  <img 
-                    src={author.avatarUrl} 
-                    alt={author.displayName}
-                    className="w-full h-full rounded-full object-cover"
-                  />
-                ) : (
-                  <User className="w-5 h-5 text-muted" />
-                )}
-              </div>
-              
-              {/* Verification indicator */}
-              {author.verificationLevel === 'verified+' && (
-                <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-accent rounded-full flex items-center justify-center">
-                  <Sparkles className="w-2 h-2 text-background" />
+          {/* Header */}
+          <div className="flex items-start justify-between mb-3">
+            <div className="flex items-start gap-3">
+              <Avatar className="h-10 w-10">
+                <AvatarImage
+                  src={post.author.photoURL}
+                  alt={post.author.fullName}
+                />
+                <AvatarFallback>
+                  {post.author.fullName
+                    .split(" ")
+                    .map((n) => n[0])
+                    .join("")
+                    .toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="font-semibold text-sm">
+                    {post.author.fullName}
+                  </span>
+                  <span className="text-muted-foreground text-sm">
+                    @{post.author.handle}
+                  </span>
+
+                  {post.author.role && post.author.role !== "member" && (
+                    <Badge variant="secondary" className="text-xs capitalize">
+                      {post.author.role}
+                    </Badge>
+                  )}
+
+                  {post.type !== "text" && (
+                    <Badge
+                      variant="outline"
+                      className={cn(
+                        "text-xs",
+                        POST_TYPE_COLORS[post.type] === "blue" &&
+                          "border-blue-200 text-blue-700",
+                        POST_TYPE_COLORS[post.type] === "green" &&
+                          "border-green-200 text-green-700",
+                        POST_TYPE_COLORS[post.type] === "purple" &&
+                          "border-purple-200 text-purple-700",
+                        POST_TYPE_COLORS[post.type] === "orange" &&
+                          "border-orange-200 text-orange-700"
+                      )}
+                    >
+                      {TypeIcon && <TypeIcon className="h-3 w-3 mr-1" />}
+                      {post.type}
+                    </Badge>
+                  )}
                 </div>
-              )}
+
+                <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1">
+                  <time dateTime={post.createdAt.toString()}>
+                    {formatDistanceToNow(createdAt, { addSuffix: true })}
+                  </time>
+
+                  {post.isEdited && (
+                    <>
+                      <span>•</span>
+                      <span>(edited)</span>
+                    </>
+                  )}
+                </div>
+              </div>
             </div>
 
-            {/* Author info */}
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2">
-                <span className="font-medium text-foreground font-body truncate">
-                  {author.displayName}
-                </span>
-                <span className="text-muted text-sm">@{author.handle}</span>
-              </div>
-              
-              <div className="flex items-center gap-2 mt-0.5">
-                <span className="text-muted text-xs">{timestamp}</span>
-                
-                {/* Space context */}
-                {space && (
-                  <>
-                    <span className="text-muted text-xs">•</span>
-                    <Badge variant="chip" size="xs">
-                      {space.name}
-                    </Badge>
-                  </>
-                )}
-                
-                {/* Post type badge */}
-                {config.badge && (
-                  <>
-                    <span className="text-muted text-xs">•</span>
-                    <Badge variant={config.badge.variant} size="xs">
-                      {config.icon && <config.icon className="w-2 h-2 mr-1" />}
-                      {config.badge.label}
-                    </Badge>
-                  </>
-                )}
-              </div>
-            </div>
+            {/* Actions Menu */}
+            {(canEditNow || canDelete || canPin || canFlag) && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                    <MoreHorizontal className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  {canEditNow && onEdit && (
+                    <DropdownMenuItem onClick={() => onEdit(post.id)}>
+                      <Edit3 className="h-4 w-4 mr-2" />
+                      Edit
+                    </DropdownMenuItem>
+                  )}
+
+                  {canPin && (
+                    <DropdownMenuItem onClick={() => void handlePin()}>
+                      <Pin className="h-4 w-4 mr-2" />
+                      {post.isPinned ? "Unpin" : "Pin"}
+                    </DropdownMenuItem>
+                  )}
+
+                  {canFlag && (
+                    <DropdownMenuItem onClick={() => void handleFlag()}>
+                      <Flag className="h-4 w-4 mr-2" />
+                      Report
+                    </DropdownMenuItem>
+                  )}
+
+                  {(canEditNow || canPin || canFlag) && canDelete && (
+                    <DropdownMenuSeparator />
+                  )}
+
+                  {canDelete && (
+                    <DropdownMenuItem
+                      onClick={() => setShowDeleteDialog(true)}
+                      className="text-destructive focus:text-destructive"
+                    >
+                      <Trash2 className="h-4 w-4 mr-2" />
+                      Delete
+                    </DropdownMenuItem>
+                  )}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
           </div>
 
-          {/* More actions */}
-          <Button variant="ghost" size="sm" className="opacity-0 group-hover:opacity-100">
-            <MoreHorizontal className="w-4 h-4" />
-          </Button>
-        </div>
+          {/* Content */}
+          <div className="mb-4">
+            {post.isDeleted ? (
+              <div className="text-muted-foreground italic text-sm">
+                {post.content}
+              </div>
+            ) : (
+              <div
+                className="text-sm leading-relaxed whitespace-pre-wrap break-words"
+                dangerouslySetInnerHTML={{
+                  __html: formatContent(post.content),
+                }}
+              />
+            )}
+          </div>
 
-        {/* Content */}
-        <div className="space-y-3">
-          <p className="text-foreground font-body leading-relaxed whitespace-pre-wrap">
-            {content}
-          </p>
-
-          {/* Ritual context */}
-          {ritual && (
-            <div className="p-3 bg-surface-01 border border-border rounded-lg">
-              <div className="flex items-center gap-2 text-sm">
-                <Sparkles className="w-4 h-4 text-accent" />
-                <span className="text-muted">
-                  Responding to <span className="text-accent font-medium">{ritual.name}</span>
-                </span>
+          {/* Type-specific content */}
+          {!post.isDeleted && post.type === "poll" && post.pollMetadata && (
+            <div className="mb-4 p-3 bg-muted/50 rounded-lg">
+              <div className="font-medium text-sm mb-2">
+                {post.pollMetadata.question}
+              </div>
+              <div className="space-y-2">
+                {post.pollMetadata.options.map((option, index) => (
+                  <div
+                    key={index}
+                    className="text-sm p-2 bg-background rounded border"
+                  >
+                    {option}
+                  </div>
+                ))}
               </div>
             </div>
           )}
-        </div>
 
-        {/* Actions */}
-        <div className="flex items-center justify-between pt-2 border-t border-border/50">
-          <div className="flex items-center gap-4">
-            {/* Like */}
-            <motion.button
-              onClick={handleLike}
-              className={cn(
-                "flex items-center gap-2 text-sm transition-colors",
-                isLiked ? "text-accent" : "text-muted hover:text-accent"
+          {!post.isDeleted && post.type === "event" && post.eventMetadata && (
+            <div className="mb-4 p-3 bg-muted/50 rounded-lg">
+              <div className="font-medium text-sm mb-1">
+                {post.eventMetadata.title}
+              </div>
+              {post.eventMetadata.description && (
+                <div className="text-sm text-muted-foreground mb-2">
+                  {post.eventMetadata.description}
+                </div>
               )}
-              whileTap={{ scale: 0.95 }}
-            >
-              <motion.div
-                animate={isLiked && isAnimating ? { 
-                  scale: [1, 1.2, 1],
-                  rotate: [0, -10, 10, 0] 
-                } : {}}
-                transition={{ duration: 0.6 }}
+              <div className="text-xs text-muted-foreground">
+                {new Date(post.eventMetadata.startTime).toLocaleString()}
+              </div>
+            </div>
+          )}
+
+          {/* Reactions */}
+          {!post.isDeleted && (
+            <div className="flex items-center gap-4">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => void handleReact()}
+                disabled={isReacting}
+                className={cn(
+                  "h-8 px-3 gap-2 transition-colors",
+                  userHasReacted
+                    ? "text-red-500 hover:text-red-600 hover:bg-red-50"
+                    : "text-muted-foreground hover:text-red-500 hover:bg-red-50"
+                )}
               >
-                <Heart className={cn(
-                  "w-4 h-4 transition-all",
-                  isLiked && "fill-current"
-                )} />
-              </motion.div>
-              <span className="font-medium">{likes}</span>
-            </motion.button>
+                {isReacting ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Heart
+                    className={cn(
+                      "h-4 w-4 transition-all",
+                      userHasReacted && "fill-current"
+                    )}
+                  />
+                )}
+                <span className="text-sm font-medium">
+                  {post.reactions.heart > 0 ? post.reactions.heart : ""}
+                </span>
+              </Button>
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
-            {/* Comment */}
-            <button
-              onClick={onComment}
-              className="flex items-center gap-2 text-sm text-muted hover:text-accent transition-colors"
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Post</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this post? This action cannot be
+              undone. The post will be replaced with a placeholder for 24 hours
+              before being permanently removed.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => void handleDelete()}
+              disabled={isDeleting}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              <MessageCircle className="w-4 h-4" />
-              <span className="font-medium">{comments}</span>
-            </button>
-          </div>
-
-          {/* Share */}
-          <button
-            onClick={onShare}
-            className="p-2 text-muted hover:text-accent transition-colors rounded-lg hover:bg-surface-01"
-          >
-            <Share className="w-4 h-4" />
-          </button>
-        </div>
-      </div>
-    </motion.article>
+              {isDeleting ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Deleting...
+                </>
+              ) : (
+                "Delete"
+              )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 };

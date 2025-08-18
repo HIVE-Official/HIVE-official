@@ -1,0 +1,123 @@
+
+> hive-ui@1.0.0 build
+> turbo run build
+
+turbo 2.5.4
+
+• Packages in scope: @hive/analytics, @hive/api-client, @hive/auth-logic, @hive/core, @hive/eslint-config, @hive/hooks, @hive/i18n, @hive/tokens, @hive/typescript-config, @hive/ui, @hive/utilities, @hive/validation, admin, web
+• Running build in 14 packages
+• Remote caching disabled
+@hive/tokens:build: cache miss, executing 32fd83a3682f0c82
+@hive/api-client:build: cache hit, replaying logs 3c16be6e6cce3c89
+@hive/core:build: cache miss, executing 889e526d9c8a1a25
+@hive/api-client:build: 
+@hive/api-client:build: > @hive/api-client@0.1.0 build /Users/laneyfraass/hive_ui/packages/api-client
+@hive/api-client:build: > npx tsc
+@hive/api-client:build: 
+web:build: cache miss, executing e80d67e67cefcd6f
+@hive/eslint-config:build: cache hit, replaying logs 5d182306266c76aa
+@hive/eslint-config:build: 
+@hive/eslint-config:build: > @hive/eslint-config@0.1.0 build /Users/laneyfraass/hive_ui/packages/config/eslint
+@hive/eslint-config:build: > echo 'No build needed for ESLint config'
+@hive/eslint-config:build: 
+@hive/eslint-config:build: No build needed for ESLint config
+@hive/hooks:build: cache hit, replaying logs cc2325ccd6e8b07a
+@hive/hooks:build: 
+@hive/hooks:build: > @hive/hooks@0.1.0 build /Users/laneyfraass/hive_ui/packages/hooks
+@hive/hooks:build: > npx tsc
+@hive/hooks:build: 
+@hive/ui:build: cache miss, executing df804233428ea534
+@hive/i18n:build: cache hit, replaying logs f52ad738b798f17d
+@hive/i18n:build: 
+@hive/i18n:build: > @hive/i18n@0.1.0 build /Users/laneyfraass/hive_ui/packages/i18n
+@hive/i18n:build: > npx tsc
+@hive/i18n:build: 
+@hive/analytics:build: cache hit, replaying logs 5633adb33e5ec34d
+@hive/analytics:build: 
+@hive/analytics:build: > @hive/analytics@0.1.0 build /Users/laneyfraass/hive_ui/packages/analytics
+@hive/analytics:build: > npx tsc
+@hive/analytics:build: 
+@hive/utilities:build: cache hit, replaying logs ec69681d71c2a2f2
+@hive/utilities:build: 
+@hive/utilities:build: > @hive/utilities@0.1.0 build /Users/laneyfraass/hive_ui/packages/utilities
+@hive/utilities:build: > npx tsc
+@hive/utilities:build: 
+@hive/validation:build: cache hit, replaying logs 1fc7a874261db1a4
+@hive/validation:build: 
+@hive/validation:build: > @hive/validation@0.1.0 build /Users/laneyfraass/hive_ui/packages/validation
+@hive/validation:build: > npx tsc
+@hive/validation:build: 
+admin:build: cache hit, replaying logs c3e8fa33fe823787
+admin:build: 
+admin:build: > admin@1.0.0 build /Users/laneyfraass/hive_ui/apps/admin
+admin:build: > npx next build
+admin:build: 
+admin:build:    ▲ Next.js 15.3.3
+admin:build:    - Environments: .env.local
+admin:build: 
+admin:build:    Creating an optimized production build ...
+admin:build:  ✓ Compiled successfully in 51s
+admin:build:    Skipping validation of types
+admin:build:    Skipping linting
+admin:build:    Collecting page data ...
+admin:build:    Generating static pages (0/2) ...
+admin:build:  ✓ Generating static pages (2/2)
+admin:build:    Finalizing page optimization ...
+admin:build:    Collecting build traces ...
+admin:build: 
+admin:build: Route (app)                                 Size  First Load JS
+admin:build: ┌ ƒ /_not-found                            141 B         102 kB
+admin:build: ├ ƒ /dashboard                           10.6 kB         500 kB
+admin:build: └ ƒ /spaces                              5.26 kB         495 kB
+admin:build: + First Load JS shared by all             102 kB
+admin:build:   ├ chunks/315-f9c119648c90c326.js       46.4 kB
+admin:build:   ├ chunks/87c73c54-357bd076d53dcb38.js  53.2 kB
+admin:build:   └ other shared chunks (total)          1.93 kB
+admin:build: 
+admin:build: 
+admin:build: ƒ  (Dynamic)  server-rendered on demand
+admin:build: 
+@hive/ui:build: 
+@hive/ui:build: > @hive/ui@0.0.0 build /Users/laneyfraass/hive_ui/packages/ui
+@hive/ui:build: > npx tsc && node ../../node_modules/tailwindcss/lib/cli.js -i ./src/styles.css -o ./dist/styles.css --minify && node fix-imports.cjs
+@hive/ui:build: 
+web:build: 
+web:build: > web@1.0.0 build /Users/laneyfraass/hive_ui/apps/web
+web:build: > next build
+web:build: 
+@hive/core:build: 
+@hive/core:build: > @hive/core@0.1.0 build /Users/laneyfraass/hive_ui/packages/core
+@hive/core:build: > npx tsc
+@hive/core:build: 
+@hive/tokens:build: 
+@hive/tokens:build: > @hive/tokens@0.1.0 build /Users/laneyfraass/hive_ui/packages/tokens
+@hive/tokens:build: > npx tsc
+@hive/tokens:build: 
+web:build:    ▲ Next.js 15.3.3
+web:build:    - Environments: .env.local, .env.production
+web:build: 
+web:build:    Creating an optimized production build ...
+web:build: Failed to compile.
+web:build: 
+web:build: ./src/app/page.tsx
+web:build: Module not found: Can't resolve '../../packages/ui/src/contexts/unified-auth-context'
+web:build: 
+web:build: https://nextjs.org/docs/messages/module-not-found
+web:build: 
+web:build: ./src/components/auth-guard.tsx
+web:build: Module not found: Can't resolve '../../../packages/ui/src/contexts/unified-auth-context'
+web:build: 
+web:build: https://nextjs.org/docs/messages/module-not-found
+web:build: 
+web:build: 
+web:build: > Build failed because of webpack errors
+web:build:  ELIFECYCLE  Command failed with exit code 1.
+web:build: ERROR: command finished with error: command (/Users/laneyfraass/hive_ui/apps/web) /Users/laneyfraass/.nvm/versions/node/v22.16.0/bin/pnpm run build exited (1)
+web#build: command (/Users/laneyfraass/hive_ui/apps/web) /Users/laneyfraass/.nvm/versions/node/v22.16.0/bin/pnpm run build exited (1)
+
+ Tasks:    10 successful, 12 total
+Cached:    8 cached, 12 total
+  Time:    21.612s 
+Failed:    web#build
+
+ ERROR  run failed: command  exited (1)

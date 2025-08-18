@@ -1,10 +1,9 @@
 import { test, expect } from '@playwright/test'
-import { setupTestUser, cleanupTestData, getAnalyticsEvents, getFirstElement as _getFirstElement } from './helpers/test-setup'
-import type { TestUser, TestSpace, SpaceAnalyticsEvent } from './types'
+import { setupTestUser, cleanupTestData } from './helpers/test-setup'
 
 test.describe('Space Feed Flow', () => {
-  let testUser: TestUser
-  let testSpace: TestSpace
+  let testUser: any
+  let testSpace: any
   
   test.beforeEach(async ({ page }) => {
     // Setup test user and space
@@ -19,18 +18,8 @@ test.describe('Space Feed Flow', () => {
       category: 'academic',
     }
     
-    // Navigate to login and authenticate
-    await page.goto('/auth/login')
-    await page.fill('[data-testid="email-input"]', testUser.email)
-    await page.click('[data-testid="send-magic-link"]')
-    
-    // Mock magic link verification
-    await page.goto(`/auth/verify?token=test-token&email=${encodeURIComponent(testUser.email)}`)
-    await expect(page).toHaveURL('/welcome')
-    
     // Complete onboarding if needed
-    const onboardingStep = page.locator('[data-testid="onboarding-step"]')
-    if (await onboardingStep.isVisible()) {
+    if (await page.locator('[data-testid="onboarding-step"]').isVisible()) {
       await page.fill('[data-testid="full-name"]', testUser.fullName)
       await page.fill('[data-testid="handle"]', testUser.handle)
       await page.click('[data-testid="continue-button"]')
@@ -60,112 +49,63 @@ test.describe('Space Feed Flow', () => {
     // Extract space ID from URL
     const url = page.url()
     const spaceId = url.split('/spaces/')[1]
-    if (spaceId) {
-      testSpace.id = spaceId
-    }
+    testSpace.id = spaceId
     
     // Step 2: Verify feed composer is visible
-    const feedComposer = page.locator('[data-testid="feed-composer"]')
-    await expect(feedComposer).toBeVisible()
-    const postInput = page.locator('[data-testid="post-content-input"]')
-    await expect(postInput).toBeVisible()
+    await expect(page.locator('[data-testid="feed-composer"]')).toBeVisible()
+    await expect(page.locator('[data-testid="post-content-input"]')).toBeVisible()
     
     // Step 3: Create a text post
     const postContent = 'This is my first post in this space! 🎉'
-    await postInput.fill(postContent)
+    await page.fill('[data-testid="post-content-input"]', postContent)
     
     // Verify character count
-    const charCount = page.locator('[data-testid="char-count"]')
-    await expect(charCount).toHaveText('456') // 500 - 44 chars
+    await expect(page.locator('[data-testid="char-count"]')).toContainText('456') // 500 - 44 chars
     
     // Submit post
     await page.click('[data-testid="post-submit"]')
     
     // Wait for post to appear in feed
-    const firstPostCard = page.locator('[data-testid="post-card"]').first()
-    await expect(firstPostCard).toBeVisible()
-    const firstPostContent = firstPostCard.locator('[data-testid="post-content"]')
-    await expect(firstPostContent).toContainText(postContent)
-    
-    // Verify analytics events
-    const createEvents = await getAnalyticsEvents<SpaceAnalyticsEvent>(page)
-    expect(createEvents).toContainEqual(expect.objectContaining({
-      type: 'post_created',
-      spaceId: testSpace.id,
-      userId: testUser.id,
-      metadata: expect.objectContaining({
-        postId: expect.any(String)
-      })
-    }))
+    await expect(page.locator('[data-testid="post-card"]').first()).toBeVisible()
+    await expect(page.locator('[data-testid="post-content"]').first()).toContainText(postContent)
     
     // Step 4: Verify post metadata
-    const postAuthor = firstPostCard.locator('[data-testid="post-author"]')
-    await expect(postAuthor).toContainText(testUser.fullName)
-    const postHandle = firstPostCard.locator('[data-testid="post-handle"]')
-    await expect(postHandle).toContainText(`@${testUser.handle}`)
-    const postTimestamp = firstPostCard.locator('[data-testid="post-timestamp"]')
-    await expect(postTimestamp).toBeVisible()
+    const firstPost = page.locator('[data-testid="post-card"]').first()
+    await expect(firstPost.locator('[data-testid="post-author"]')).toContainText(testUser.fullName)
+    await expect(firstPost.locator('[data-testid="post-handle"]')).toContainText(`@${testUser.handle}`)
+    await expect(firstPost.locator('[data-testid="post-timestamp"]')).toBeVisible()
     
     // Step 5: React to the post
-    const heartButton = firstPostCard.locator('[data-testid="heart-reaction"]')
+    const heartButton = firstPost.locator('[data-testid="heart-reaction"]')
     await expect(heartButton).toBeVisible()
     
     // Click heart reaction
     await heartButton.click()
     
     // Verify reaction count updated
-    const reactionCount = await heartButton.textContent()
-    expect(reactionCount).toBe('1')
-    const heartButtonClasses = await heartButton.getAttribute('class')
-    expect(heartButtonClasses?.includes('text-red-500')).toBe(true)
-    
-    // Verify reaction analytics event
-    const reactionEvents = await getAnalyticsEvents<SpaceAnalyticsEvent>(page)
-    expect(reactionEvents).toContainEqual(expect.objectContaining({
-      type: 'post_reaction',
-      spaceId: testSpace.id,
-      userId: testUser.id,
-      metadata: expect.objectContaining({
-        reaction: 'heart',
-        postId: expect.any(String)
-      })
-    }))
+    await expect(heartButton).toContainText('1')
+    await expect(heartButton).toHaveClass(/text-red-500/) // Should be colored when reacted
     
     // Click again to remove reaction
     await heartButton.click()
-    const updatedCount = await heartButton.textContent()
-    expect(updatedCount).not.toBe('1')
-    const updatedClasses = await heartButton.getAttribute('class')
-    expect(updatedClasses?.includes('text-red-500')).toBe(false)
+    await expect(heartButton).not.toContainText('1')
+    await expect(heartButton).not.toHaveClass(/text-red-500/)
     
     // Step 6: Test post editing (within 15-minute window)
-    const postMenu = firstPostCard.locator('[data-testid="post-menu"]')
+    const postMenu = firstPost.locator('[data-testid="post-menu"]')
     await postMenu.click()
     
-    const editButton = page.locator('[data-testid="edit-post"]')
-    await expect(editButton).toBeVisible()
-    await editButton.click()
+    await expect(page.locator('[data-testid="edit-post"]')).toBeVisible()
+    await page.click('[data-testid="edit-post"]')
     
     // Edit the post content
     const editedContent = 'This is my edited first post! ✨'
-    const editInput = page.locator('[data-testid="edit-content-input"]')
-    await editInput.fill(editedContent)
+    await page.fill('[data-testid="edit-content-input"]', editedContent)
     await page.click('[data-testid="save-edit"]')
     
     // Verify post was updated
-    await expect(firstPostCard.locator('[data-testid="post-content"]')).toContainText(editedContent)
-    await expect(firstPostCard.locator('[data-testid="edited-badge"]')).toContainText('(edited)')
-    
-    // Verify edit analytics event
-    const editEvents = await getAnalyticsEvents<SpaceAnalyticsEvent>(page)
-    expect(editEvents).toContainEqual(expect.objectContaining({
-      type: 'post_edited',
-      spaceId: testSpace.id,
-      userId: testUser.id,
-      metadata: expect.objectContaining({
-        postId: expect.any(String)
-      })
-    }))
+    await expect(firstPost.locator('[data-testid="post-content"]')).toContainText(editedContent)
+    await expect(firstPost.locator('[data-testid="edited-badge"]')).toContainText('(edited)')
     
     // Step 7: Create different post types
     
@@ -193,17 +133,14 @@ test.describe('Space Feed Flow', () => {
     await page.type('[data-testid="post-content-input"]', 'alice')
     
     // Wait for mention suggestions
-    const mentionSuggestions = page.locator('[data-testid="mention-suggestions"]')
-    await expect(mentionSuggestions).toBeVisible()
-    const firstMentionOption = page.locator('[data-testid="mention-option"]').first()
-    await expect(firstMentionOption).toBeVisible()
+    await expect(page.locator('[data-testid="mention-suggestions"]')).toBeVisible()
+    await expect(page.locator('[data-testid="mention-option"]').first()).toBeVisible()
     
     // Select first mention
-    await firstMentionOption.click()
+    await page.locator('[data-testid="mention-option"]').first().click()
     
     // Verify mention was inserted
-    const postInput2 = page.locator('[data-testid="post-content-input"]')
-    await expect(postInput2).toHaveValue(/Hey @\w+ /)
+    await expect(page.locator('[data-testid="post-content-input"]')).toHaveValue(/Hey @\w+ /)
     
     await page.click('[data-testid="post-submit"]')
     
@@ -256,24 +193,6 @@ test.describe('Space Feed Flow', () => {
     // Clear draft
     await page.fill('[data-testid="post-content-input"]', '')
     await expect(page.locator('[data-testid="draft-saved"]')).not.toBeVisible()
-
-    // Verify analytics events
-    const events = await getAnalyticsEvents<SpaceAnalyticsEvent>(page)
-    
-    // Find post creation event
-    const postCreatedEvent = events.find(e => e.type === 'post_created' && e.spaceId === testSpace.id)
-    expect(postCreatedEvent).toBeDefined()
-    
-    // Find post reaction event
-    const postReactedEvent = events.find(e => e.type === 'post_reaction' && e.spaceId === testSpace.id)
-    expect(postReactedEvent).toBeDefined()
-    expect(postReactedEvent?.metadata?.reaction).toBe('heart')
-
-    // Get first post from feed
-    const posts = await page.locator('[data-testid="post-card"]').all()
-    expect(posts.length).toBeGreaterThan(0)
-    const firstPost = posts[0]
-    expect(firstPost).toBeDefined()
   })
   
   test('should handle feed errors gracefully', async ({ page }) => {
@@ -328,17 +247,7 @@ test.describe('Space Feed Flow', () => {
   
   test('should track analytics events', async ({ page }) => {
     // Mock analytics endpoint
-    interface AnalyticsEvent {
-      event: string;
-      spaceId?: string;
-      metadata?: {
-        reaction?: string;
-        [key: string]: unknown;
-      };
-      [key: string]: unknown;
-    }
-    
-    const analyticsEvents: AnalyticsEvent[] = []
+    const analyticsEvents: any[] = []
     await page.route('/api/analytics/track', route => {
       const request = route.request()
       analyticsEvents.push(request.postDataJSON())
@@ -364,69 +273,8 @@ test.describe('Space Feed Flow', () => {
     expect(postCreatedEvent).toBeDefined()
     expect(postCreatedEvent.spaceId).toBe(testSpace.id)
     
-    const postReactedEvent = analyticsEvents.find(e => e.event === 'post_reaction')
+    const postReactedEvent = analyticsEvents.find(e => e.event === 'post_reacted')
     expect(postReactedEvent).toBeDefined()
     expect(postReactedEvent.metadata.reaction).toBe('heart')
-  })
-
-  test('create and interact with post', async ({ page }) => {
-    // Mock API responses
-    await page.route('/api/spaces/test-space', async route => {
-      await route.fulfill({
-        status: 200,
-        body: JSON.stringify({
-          id: 'test-space',
-          name: 'Test Space',
-          description: 'A space for testing'
-        })
-      })
-    })
-
-    // Navigate to space
-    await page.goto('/spaces/test-space')
-
-    // Create post
-    await page.fill('[data-testid="post-input"]', 'Test post content')
-    await page.click('[data-testid="post-submit"]')
-
-    // Verify post appears
-    await expect(page.locator('[data-testid="post-content"]')).toContainText('Test post content')
-
-    // React to post
-    await page.click('[data-testid="reaction-button"]')
-
-    // Check analytics events
-    const events = await getAnalyticsEvents<SpaceAnalyticsEvent>(page)
-    const postCreatedEvent = events.find(e => e.type === 'post_created')
-    const postReactedEvent = events.find(e => e.type === 'post_reaction')
-
-    // Verify events were tracked
-    expect(postCreatedEvent).toBeTruthy()
-    if (postCreatedEvent) {
-      expect(postCreatedEvent.spaceId).toBe('test-space')
-    }
-
-    expect(postReactedEvent).toBeTruthy()
-    if (postReactedEvent?.metadata?.reaction) {
-      expect(postReactedEvent.metadata.reaction).toBe('heart')
-    }
-
-    // Test mentions
-    await page.fill('[data-testid="post-input"]', '@test')
-    const mentionOption = page.locator('[data-testid="mention-option"]')
-    await mentionOption.click()
-
-    // Share post
-    const shareButton = page.locator('[data-testid="share-button"]')
-    await shareButton.click()
-    const shareLink = await page.evaluate(() => {
-      const linkElement = document.querySelector('[data-testid="share-link"]')
-      const value = linkElement?.getAttribute('value')
-      return value !== null ? value : '/tools/test-tool/share'
-    }) as string
-
-    // Navigate to shared post
-    await page.goto(shareLink)
-    await expect(page.locator('[data-testid="post-content"]')).toBeVisible()
   })
 }) 

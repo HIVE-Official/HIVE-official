@@ -1,49 +1,51 @@
-// HIVE Brand System v1.0 - Spacing System (CORRECTED)
-// Aligns with 8dp grid system from /memory-bank/design-checklist.md
+// Spacing design tokens - Mobile-Optimized 4px Grid System (HIVE Standard)
 
 export const spacing = {
-  // 8dp Grid System (1 unit = 8px)
-  "0": "0px", // 0 units
-  "1": "8px", // 1 unit
-  "2": "16px", // 2 units
-  "3": "24px", // 3 units
-  "4": "32px", // 4 units
-  "5": "40px", // 5 units
-  "6": "48px", // 6 units
-  "7": "56px", // 7 units
-  "8": "64px", // 8 units
-  "9": "72px", // 9 units
-  "10": "80px", // 10 units
-
-  // Legacy aliases for backward compatibility and semantic clarity
-  xs: "8px", // 1 unit
-  sm: "16px", // 2 units
-  md: "24px", // 3 units
-  lg: "32px", // 4 units
-  xl: "48px", // 6 units
+  // Core 4px grid - base unit is 4px (mobile-optimized)
+  0: '0',                    // 0px
+  1: '0.25rem',             // 4px - base unit (mobile-first)
+  2: '0.5rem',              // 8px  
+  3: '0.75rem',             // 12px
+  4: '1rem',                // 16px
+  5: '1.25rem',             // 20px
+  6: '1.5rem',              // 24px
+  8: '2rem',                // 32px
+  10: '2.5rem',             // 40px
+  12: '3rem',               // 48px
+  16: '4rem',               // 64px
+  20: '5rem',               // 80px
+  24: '6rem',               // 96px
+  32: '8rem',               // 128px
+  
+  // Legacy aliases for backwards compatibility (mobile-optimized)
+  xs: '0.25rem',            // 4px (space-1)
+  sm: '0.5rem',             // 8px (space-2)
+  md: '1rem',               // 16px (space-4)
+  lg: '1.5rem',             // 24px (space-6)
+  xl: '2rem',               // 32px (space-8)
+  '2xl': '3rem',            // 48px (space-12)
+  
+  // NEW: Add missing commonly used spacing gaps from audit (mobile-optimized)
+  7: '1.75rem',             // 28px - common in layouts
+  14: '3.5rem',             // 56px - major section gaps  
+  18: '4.5rem',             // 72px - large section spacing
+  28: '7rem',               // 112px - hero spacing
 } as const;
 
-// Utility for creating Tailwind-compatible spacing scale
-export const getTailwindSpacing = () => {
-  return { ...spacing };
-};
-
-// Type definition for spacing tokens
-export type SpacingToken = keyof typeof spacing;
-
-// Spacing usage guidelines
-export const spacingUsage = {
-  rules: [
-    "All component margins and paddings must use the 8dp grid system.",
-    "Use numeric tokens (e.g., p-2, m-4) for clarity.",
-    "Avoid one-off spacing values.",
-    "Layout components should provide spacing props (e.g., <Stack gap={2}>).",
-  ],
-  componentSpacing: {
-    padding: "Use tokens 2, 3, or 4 for internal component padding.",
-    margin: "Use tokens 2, 4, or 6 for spacing between components.",
-    gap: "Use tokens 1, 2, or 3 for gaps in flex/grid layouts.",
+// NEW: Common layout dimensions for hybrid approach (Option B)
+export const layoutSizes = {
+  height: {
+    xs: '12.5rem',          // 200px - common arbitrary value h-[200px]
+    sm: '18.75rem',         // 300px - common arbitrary value h-[300px]  
+    md: '25rem',            // 400px - common arbitrary value h-[400px]
+    lg: '31.25rem',         // 500px - very common arbitrary value h-[500px]
   },
+  width: {
+    xs: '8.75rem',          // 140px - common arbitrary value w-[140px]
+    sm: '12.5rem',          // 200px - common arbitrary value w-[200px]
+    md: '25rem',            // 400px - common arbitrary value w-[400px]
+  }
 } as const;
 
-export default spacing; 
+export type SpacingToken = keyof typeof spacing;
+export type LayoutSizeToken = keyof typeof layoutSizes; 

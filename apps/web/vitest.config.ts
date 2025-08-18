@@ -2,20 +2,15 @@
 import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import path from 'path';
-import type { PluginOption } from 'vite';
 
 export default defineConfig({
-  plugins: [react() as PluginOption],
+  plugins: [react()],
   test: {
-    environment: 'jsdom',
-    setupFiles: ['./src/test/setup.ts'],
-    include: ['**/*.test.{ts,tsx}'],
     globals: true,
-    coverage: {
-      provider: 'v8',
-      reporter: ['text', 'json', 'html'],
-      reportsDirectory: './coverage',
-    },
+    environment: 'jsdom',
+    setupFiles: ['@testing-library/jest-dom/vitest', './src/test/setup.ts'],
+    exclude: ['**/e2e/**', '**/node_modules/**'],
+    root: './',
   },
   resolve: {
     alias: {

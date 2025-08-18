@@ -4,11 +4,28 @@
     "baseUrl": ".",
     "paths": {
       "@/*": [
-        "src/*",
-        "../../packages/ui/src/*"
+        "src/*"
       ],
-      "@hive/*": [
-        "../../packages/*/src"
+      "@hive/ui": [
+        "../../packages/ui/src"
+      ],
+      "@hive/core": [
+        "../../packages/core/src"
+      ],
+      "@hive/hooks": [
+        "../../packages/hooks/src"
+      ],
+      "@hive/auth-logic": [
+        "../../packages/auth-logic/src"
+      ],
+      "@hive/tokens": [
+        "../../packages/tokens"
+      ],
+      "@hive/utilities": [
+        "../../packages/utilities/src"
+      ],
+      "@hive/validation": [
+        "../../packages/validation/src"
       ]
     },
     "plugins": [
@@ -23,33 +40,30 @@
     ],
     "allowJs": true,
     "skipLibCheck": true,
-    "noEmit": false,
+    "strict": false,
+    "noEmit": true,
     "incremental": true,
-    "allowSyntheticDefaultImports": true,
     "module": "esnext",
     "esModuleInterop": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
     "target": "ES2017",
-    "rootDir": "../../",
-    "composite": false,
     "typeRoots": [
       "../../node_modules/@types",
       "../../node_modules",
       "node_modules/@types"
-    ]
+    ],
+    "strictNullChecks": true
   },
   "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
     "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
     ".next/types/**/*.ts"
   ],
   "exclude": [
-    "node_modules",
-    "dist"
-  ],
-  "references": []
+    "node_modules"
+  ]
 }

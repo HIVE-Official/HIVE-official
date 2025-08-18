@@ -20,11 +20,11 @@ const mockUser = {
 export default function DevProfilePage() {
   return (
     <DevLayout>
-      <div className="min-h-screen bg-[#0A0A0A]">
+      <div className="min-h-screen bg-[var(--hive-background-primary)]">
         <main className="container mx-auto px-4 py-8">
           {/* Dev Info Section */}
-          <div className="mb-8 bg-[#FFD700]/10 border border-[#FFD700]/30 rounded-lg p-4">
-            <h2 className="text-lg font-display font-semibold text-[#FFD700] mb-2">
+          <div className="mb-8 bg-[var(--hive-brand-secondary)]/10 border border-[var(--hive-brand-secondary)]/30 rounded-lg p-4">
+            <h2 className="text-lg font-display font-semibold text-[var(--hive-brand-secondary)] mb-2">
               🎛️ Profile Development Mode
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
@@ -34,7 +34,7 @@ export default function DevProfilePage() {
               </div>
               <div>
                 <span className="text-muted">Builder Status:</span>
-                <span className="text-[#FFD700] ml-2">Active Builder</span>
+                <span className="text-[var(--hive-brand-secondary)] ml-2">Active Builder</span>
               </div>
               <div>
                 <span className="text-muted">Tools Created:</span>

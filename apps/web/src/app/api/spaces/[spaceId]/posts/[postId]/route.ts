@@ -1,16 +1,16 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 import { z } from "zod";
 import { dbAdmin } from "@/lib/firebase-admin";
 import { getAuth } from "firebase-admin/auth";
-import { logger } from "@hive/core";
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 const EditPostSchema = z.object({
-  content: z.string().min(1).max(2000),
-});
+  content: z.string().min(1).max(2000) });
 
 const ReactionSchema = z.object({
-  reaction: z.enum(["heart", "thumbsUp", "laugh", "wow", "sad", "angry"]),
-});
+  reaction: z.enum(["heart", "thumbsUp", "laugh", "wow", "sad", "angry"]) });
 
 const db = dbAdmin;
 
@@ -25,10 +25,10 @@ export async function GET(
     // Get auth header and verify token
     const authHeader = request.headers.get("authorization");
     if (!authHeader?.startsWith("Bearer ")) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
-    const token = authHeader.split("Bearer ")[1];
+    const token = authHeader.substring(7);
     const auth = getAuth();
     const decodedToken = await auth.verifyIdToken(token);
     const userId = decodedToken.uid;
@@ -42,10 +42,7 @@ export async function GET(
       .get();
 
     if (!memberDoc.exists) {
-      return NextResponse.json(
-        { error: "Not a member of this space" },
-        { status: 403 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Not a member of this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     // Get the post
@@ -57,20 +54,17 @@ export async function GET(
       .get();
 
     if (!postDoc.exists) {
-      return NextResponse.json({ error: "Post not found" }, { status: 404 });
+      return NextResponse.json(ApiResponseHelper.error("Post not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     const postData = postDoc.data();
 
     if (!postData) {
-      return NextResponse.json(
-        { error: "Post data not found" },
-        { status: 404 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Post data not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     // Get author info
-    const authorDoc = await db.collection("users").doc(postData.authorId).get();
+    const authorDoc = await dbAdmin.collection("users").doc(postData.authorId).get();
     const author = authorDoc.exists ? authorDoc.data() : null;
 
     const post = {
@@ -88,11 +82,8 @@ export async function GET(
 
     return NextResponse.json({ post });
   } catch (error) {
-    logger.error("Error fetching post:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch post" },
-      { status: 500 }
-    );
+    logger.error('Error fetching post', { error: error, endpoint: '/api/spaces/[spaceId]/posts/[postId]' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to fetch post", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -107,10 +98,10 @@ export async function PATCH(
     // Get auth header and verify token
     const authHeader = request.headers.get("authorization");
     if (!authHeader?.startsWith("Bearer ")) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
-    const token = authHeader.split("Bearer ")[1];
+    const token = authHeader.substring(7);
     const auth = getAuth();
     const decodedToken = await auth.verifyIdToken(token);
     const userId = decodedToken.uid;
@@ -127,16 +118,13 @@ export async function PATCH(
       .get();
 
     if (!postDoc.exists) {
-      return NextResponse.json({ error: "Post not found" }, { status: 404 });
+      return NextResponse.json(ApiResponseHelper.error("Post not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     const postData = postDoc.data();
 
     if (!postData) {
-      return NextResponse.json(
-        { error: "Post data not found" },
-        { status: 404 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Post data not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     // Check if post is within edit window (15 minutes)
@@ -150,16 +138,13 @@ export async function PATCH(
           error:
             "Edit window has expired. Posts can only be edited within 15 minutes of creation.",
         },
-        { status: 400 }
+        { status: HttpStatus.BAD_REQUEST }
       );
     }
 
     // Check permissions - only author can edit
     if (postData.authorId !== userId) {
-      return NextResponse.json(
-        { error: "Only the author can edit this post" },
-        { status: 403 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Only the author can edit this post", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     // Update the post
@@ -171,8 +156,7 @@ export async function PATCH(
       .update({
         ...validatedData,
         isEdited: true,
-        updatedAt: new Date(),
-      });
+        updatedAt: new Date() });
 
     // Get updated post with author info
     const updatedPostDoc = await db
@@ -185,10 +169,7 @@ export async function PATCH(
     const updatedPostData = updatedPostDoc.data();
 
     if (!updatedPostData) {
-      return NextResponse.json(
-        { error: "Updated post data not found" },
-        { status: 404 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Updated post data not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     const authorDoc = await db
@@ -216,12 +197,12 @@ export async function PATCH(
           error: "Invalid post data",
           details: error.errors,
         },
-        { status: 400 }
+        { status: HttpStatus.BAD_REQUEST }
       );
     }
 
-    logger.error("Error editing post:", error);
-    return NextResponse.json({ error: "Failed to edit post" }, { status: 500 });
+    logger.error('Error editing post', { error: error, endpoint: '/api/spaces/[spaceId]/posts/[postId]' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to edit post", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -236,10 +217,10 @@ export async function DELETE(
     // Get auth header and verify token
     const authHeader = request.headers.get("authorization");
     if (!authHeader?.startsWith("Bearer ")) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
-    const token = authHeader.split("Bearer ")[1];
+    const token = authHeader.substring(7);
     const auth = getAuth();
     const decodedToken = await auth.verifyIdToken(token);
     const userId = decodedToken.uid;
@@ -253,16 +234,13 @@ export async function DELETE(
       .get();
 
     if (!postDoc.exists) {
-      return NextResponse.json({ error: "Post not found" }, { status: 404 });
+      return NextResponse.json(ApiResponseHelper.error("Post not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     const postData = postDoc.data();
 
     if (!postData) {
-      return NextResponse.json(
-        { error: "Post data not found" },
-        { status: 404 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Post data not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     // Check permissions - author, space builders, or admins can delete
@@ -274,19 +252,13 @@ export async function DELETE(
       .get();
 
     if (!memberDoc.exists) {
-      return NextResponse.json(
-        { error: "Not a member of this space" },
-        { status: 403 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Not a member of this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     const memberData = memberDoc.data();
 
     if (!memberData) {
-      return NextResponse.json(
-        { error: "Member data not found" },
-        { status: 403 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Member data not found", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     const canDelete =
@@ -295,10 +267,7 @@ export async function DELETE(
       memberData.role === "admin";
 
     if (!canDelete) {
-      return NextResponse.json(
-        { error: "Insufficient permissions to delete this post" },
-        { status: 403 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Insufficient permissions to delete this post", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     // Soft delete the post
@@ -310,16 +279,12 @@ export async function DELETE(
       .update({
         isDeleted: true,
         deletedAt: new Date(),
-        deletedBy: userId,
-      });
+        deletedBy: userId });
 
     return NextResponse.json({ message: "Post deleted successfully" });
   } catch (error) {
-    logger.error("Error deleting post:", error);
-    return NextResponse.json(
-      { error: "Failed to delete post" },
-      { status: 500 }
-    );
+    logger.error('Error deleting post', { error: error, endpoint: '/api/spaces/[spaceId]/posts/[postId]' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to delete post", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -334,10 +299,10 @@ export async function POST(
     // Get auth header and verify token
     const authHeader = request.headers.get("authorization");
     if (!authHeader?.startsWith("Bearer ")) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
-    const token = authHeader.split("Bearer ")[1];
+    const token = authHeader.substring(7);
     const auth = getAuth();
     const decodedToken = await auth.verifyIdToken(token);
     const userId = decodedToken.uid;
@@ -354,10 +319,7 @@ export async function POST(
       .get();
 
     if (!memberDoc.exists) {
-      return NextResponse.json(
-        { error: "Not a member of this space" },
-        { status: 403 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Not a member of this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     // Get the post
@@ -369,16 +331,13 @@ export async function POST(
 
     const postDoc = await postRef.get();
     if (!postDoc.exists) {
-      return NextResponse.json({ error: "Post not found" }, { status: 404 });
+      return NextResponse.json(ApiResponseHelper.error("Post not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     const postData = postDoc.data();
 
     if (!postData) {
-      return NextResponse.json(
-        { error: "Post data not found" },
-        { status: 404 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Post data not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     // Update reactions
@@ -409,14 +368,12 @@ export async function POST(
     await postRef.update({
       reactions: currentReactions,
       reactedUsers: currentReactedUsers,
-      updatedAt: new Date(),
-    });
+      updatedAt: new Date() });
 
     return NextResponse.json({
       success: true,
       reactions: currentReactions,
-      userReacted: currentReactedUsers[reaction].includes(userId),
-    });
+      userReacted: currentReactedUsers[reaction].includes(userId) });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -424,14 +381,11 @@ export async function POST(
           error: "Invalid reaction data",
           details: error.errors,
         },
-        { status: 400 }
+        { status: HttpStatus.BAD_REQUEST }
       );
     }
 
-    logger.error("Error updating reaction:", error);
-    return NextResponse.json(
-      { error: "Failed to update reaction" },
-      { status: 500 }
-    );
+    logger.error('Error updating reaction', { error: error, endpoint: '/api/spaces/[spaceId]/posts/[postId]' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to update reaction", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

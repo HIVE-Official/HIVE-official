@@ -1,6 +1,6 @@
 import React from 'react'
 import { Button } from '../button'
-import { cn } from '../../lib/utils'
+import { cn } from '../lib/utils'
 import { HiveLogo } from '../HiveLogo'
 import { Countdown } from '../countdown'
 

@@ -1,148 +1,234 @@
 "use client";
 
-import React, {
-  useState,
-  useEffect,
-  createContext,
-  useContext,
-  type ReactNode
-} from "react";
-import { auth as firebaseAuth } from "../firebase-config";
-import { onAuthStateChanged, signInWithCustomToken as firebaseSignInWithCustomToken } from "firebase/auth";
-import type { AuthUser, AuthContextType, DevModeConfig } from "../types";
-import { logger } from "@hive/core";
+import { useState, useEffect } from "react";
+import type { User } from "firebase/auth";
+import { auth } from "../firebase-config";
+import { onAuthStateChanged } from "firebase/auth";
+import { doc, getDoc, getFirestore } from "firebase/firestore";
+import { handleAuthError, type AuthError } from "../error-handler";
+import { SessionManager } from "../session-manager";
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export interface AuthUser {
+  uid: string;
+  email: string | null;
+  fullName: string | null;
+  handle: string | null;
+  bio: string | null;
+  major: string | null;
+  graduationYear: number | null;
+  avatarUrl: string | null;
+  isBuilder: boolean;
+  schoolId: string | null;
+  onboardingCompleted: boolean;
+  getIdToken: () => Promise<string>;
+}
 
-export const mockUser: AuthUser = {
-  uid: 'mock-uid',
-  email: 'dev@buffalo.edu',
-  fullName: 'Dev User',
-  onboardingCompleted: false,
-  emailVerified: true,
-  customClaims: {
-    isBuilder: true,
-  },
-  getIdToken: () => Promise.resolve('mock-token'),
-};
+export interface UseAuthReturn {
+  user: AuthUser | null;
+  isLoading: boolean;
+  isAuthenticated: boolean;
+  error: AuthError | null;
+  clearError: () => void;
+  refreshUser: () => Promise<void>;
+  clearDevMode?: () => void;
+}
 
-const defaultDevConfig: DevModeConfig = {
-  enabled: !process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  mockUser,
-  skipOnboarding: false,
-  simulateErrors: {
-    auth: false,
-    onboarding: false,
-    network: false,
-  },
-  delayMs: 1000,
-};
-
-export function AuthProvider({ children }: { children: ReactNode }) {
+export function useAuth(): UseAuthReturn {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [devMode, setDevMode] = useState<DevModeConfig>(defaultDevConfig);
+  const [error, setError] = useState<AuthError | null>(null);
 
-  const signInWithCustomToken = async (token: string) => {
-    if (!firebaseAuth) throw new Error("Firebase auth not initialized");
-    await firebaseSignInWithCustomToken(firebaseAuth, token);
+  const clearError = () => setError(null);
+
+  // Development mode user management
+  const checkDevUser = (): AuthUser | null => {
+    if (typeof window === 'undefined') return null;
+    
+    const devAuthMode = window.localStorage.getItem('dev_auth_mode');
+    const devUserData = window.localStorage.getItem('dev_user');
+    
+    if (devAuthMode === 'true' && devUserData) {
+      try {
+        const devUser = JSON.parse(devUserData);
+        return {
+          ...devUser,
+          getIdToken: async () => 'dev_token_' + devUser.uid
+        };
+      } catch (error) {
+        console.error('Error parsing dev user data:', error);
+        return null;
+      }
+    }
+    
+    return null;
   };
 
-  // Dev mode controls
-  const setDevModeConfig = (config: Partial<DevModeConfig>) => {
-    if (process.env.NODE_ENV === 'production') {
-      logger.warn('Dev mode controls attempted in production');
+  // Clear development mode data
+  const clearDevMode = () => {
+    if (typeof window !== 'undefined') {
+      window.localStorage.removeItem('dev_auth_mode');
+      window.localStorage.removeItem('dev_user');
+      console.log('Development mode data cleared');
+    }
+  };
+
+  const fetchUserData = async (firebaseUser: User): Promise<AuthUser> => {
+    try {
+      const db = getFirestore();
+      const userDocRef = doc(db, "users", firebaseUser.uid);
+      const userDoc = await getDoc(userDocRef);
+      
+      if (userDoc.exists()) {
+        const userData = userDoc.data();
+        return {
+          uid: firebaseUser.uid,
+          email: firebaseUser.email,
+          fullName: userData.fullName || null,
+          handle: userData.handle || null,
+          bio: userData.bio || null,
+          major: userData.major || null,
+          graduationYear: userData.graduationYear || null,
+          avatarUrl: userData.avatarUrl || null,
+          isBuilder: userData.builderOptIn || false,
+          schoolId: userData.schoolId || null,
+          onboardingCompleted: !!(userData.handle && userData.fullName),
+          getIdToken: () => firebaseUser.getIdToken(),
+        };
+      } else {
+        // User document doesn't exist yet - needs onboarding
+        return {
+          uid: firebaseUser.uid,
+          email: firebaseUser.email,
+          fullName: null,
+          handle: null,
+          bio: null,
+          major: null,
+          graduationYear: null,
+          avatarUrl: null,
+          isBuilder: false,
+          schoolId: null,
+          onboardingCompleted: false,
+          getIdToken: () => firebaseUser.getIdToken(),
+        };
+      }
+    } catch (fetchError) {
+      console.error("Error fetching user data:", fetchError);
+      // Fallback to basic user object
+      return {
+        uid: firebaseUser.uid,
+        email: firebaseUser.email,
+        fullName: firebaseUser.displayName || null,
+        handle: null,
+        bio: null,
+        major: null,
+        graduationYear: null,
+        avatarUrl: null,
+        isBuilder: false,
+        schoolId: null,
+        onboardingCompleted: false,
+        getIdToken: () => firebaseUser.getIdToken(),
+      };
+    }
+  };
+
+  const refreshUser = async (): Promise<void> => {
+    // Check for development mode user first
+    const devUser = checkDevUser();
+    if (devUser) {
+      setUser(devUser);
+      setError(null);
       return;
     }
-    setDevMode(prev => ({ ...prev, ...config }));
+    
+    if (!auth) return;
+    const currentUser = auth.currentUser;
+    if (currentUser) {
+      try {
+        setIsLoading(true);
+        const userData = await fetchUserData(currentUser);
+        setUser(userData);
+        setError(null);
+      } catch (refreshError) {
+        const authError = handleAuthError(refreshError);
+        setError(authError);
+      } finally {
+        setIsLoading(false);
+      }
+    }
   };
 
   useEffect(() => {
-    // Dev mode handling
-    if (devMode.enabled) {
-      const simulateDevMode = async () => {
-        await new Promise(resolve => setTimeout(resolve, devMode.delayMs));
-        
-        if (devMode.simulateErrors.network) {
-          logger.error('🔥 Dev mode: Simulating network error');
-          setUser(null);
-          setIsLoading(false);
-          return;
+    const sessionManager = SessionManager.getInstance();
+    
+    // Check for development mode user first
+    const devUser = checkDevUser();
+    if (devUser) {
+      console.log('Development mode user detected:', devUser);
+      setUser(devUser);
+      setError(null);
+      setIsLoading(false);
+      
+      // Listen for localStorage changes to update dev user
+      const handleStorageChange = (e: StorageEvent) => {
+        if (e.key === 'dev_user' || e.key === 'dev_auth_mode') {
+          const updatedDevUser = checkDevUser();
+          if (updatedDevUser) {
+            setUser(updatedDevUser);
+          } else {
+            setUser(null);
+          }
         }
-
-        if (devMode.simulateErrors.auth) {
-          logger.error('🔥 Dev mode: Simulating auth error');
-          setUser(null);
-          setIsLoading(false);
-          return;
-        }
-
-        if (devMode.simulateErrors.onboarding) {
-          logger.error('🔥 Dev mode: Simulating onboarding error');
-          const errorUser = { ...devMode.mockUser, onboardingCompleted: false };
-          setUser(errorUser);
-          setIsLoading(false);
-          return;
-        }
-
-        logger.info('🔥 Dev mode: Using mock user');
-        const mockUserWithOnboarding = {
-          ...devMode.mockUser,
-          onboardingCompleted: devMode.skipOnboarding,
-        };
-        setUser(mockUserWithOnboarding);
-        setIsLoading(false);
       };
-
-      void simulateDevMode();
-      return;
+      
+      window.addEventListener('storage', handleStorageChange);
+      
+      return () => {
+        window.removeEventListener('storage', handleStorageChange);
+      };
     }
-
-    // Production auth handling
-    if (!firebaseAuth) {
+    
+    if (!auth) {
       setIsLoading(false);
       return;
     }
-
-    const unsubscribe = onAuthStateChanged(firebaseAuth, async (firebaseUser) => {
-      if (firebaseUser) {
-        const idTokenResult = await firebaseUser.getIdTokenResult();
-        const onboardingCompleted = !!idTokenResult.claims.onboardingCompleted;
-        const authUser: AuthUser = {
-          uid: firebaseUser.uid,
-          email: firebaseUser.email,
-          fullName: firebaseUser.displayName || firebaseUser.email?.split("@")[0] || "User",
-          onboardingCompleted,
-          emailVerified: firebaseUser.emailVerified,
-          customClaims: idTokenResult.claims,
-          getIdToken: () => firebaseUser.getIdToken(),
-        };
-        setUser(authUser);
-      } else {
-        setUser(null);
+    
+    const unsubscribe = onAuthStateChanged(
+      auth,
+      async (firebaseUser: User | null) => {
+        try {
+          if (firebaseUser) {
+            // Update session management
+            sessionManager.updateSession(firebaseUser);
+            
+            const userData = await fetchUserData(firebaseUser);
+            setUser(userData);
+            setError(null);
+          } else {
+            sessionManager.clearSession();
+            setUser(null);
+            setError(null);
+          }
+        } catch (authError) {
+          console.error("Auth state change error:", authError);
+          const error = handleAuthError(authError);
+          setError(error);
+          setUser(null);
+        } finally {
+          setIsLoading(false);
+        }
       }
-      setIsLoading(false);
-    });
+    );
 
     return () => unsubscribe();
-  }, [devMode]);
+  }, []);
 
-  const value: AuthContextType = {
+  return {
     user,
     isLoading,
     isAuthenticated: !!user,
-    signInWithCustomToken,
-    devMode: process.env.NODE_ENV !== 'production' ? devMode : undefined,
-    setDevModeConfig: process.env.NODE_ENV !== 'production' ? setDevModeConfig : undefined,
+    error,
+    clearError,
+    refreshUser,
+    clearDevMode: process.env.NODE_ENV === 'development' ? clearDevMode : undefined,
   };
-
-  return React.createElement(AuthContext.Provider, { value }, children);
-}
-
-export function useAuth() {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return context;
 }

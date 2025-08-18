@@ -1,103 +1,84 @@
 import {
-  createHttpsFunction,
-  FunctionContext,
-  getFirestore,
-  FieldValue,
   functions,
+  firestore,
   logger,
+  assertAuthenticated,
+  getDocumentData,
+  type FunctionContext,
+  type MemberDocument,
 } from "../types/firebase";
 
 interface RequestBuilderRoleData {
   spaceId: string;
-  reason?: string;
 }
 
-export const requestBuilderRole = createHttpsFunction<RequestBuilderRoleData>(
+export const requestBuilderRole = functions.https.onCall(
   async (data: RequestBuilderRoleData, context: FunctionContext) => {
-    if (!context.auth) {
-      throw new functions.https.HttpsError(
-        "unauthenticated",
-        "User must be authenticated."
-      );
-    }
+    assertAuthenticated(context);
+    const userId = context.auth.uid;
 
-    const uid = context.auth.uid;
-    const { spaceId, reason = "" } = data;
-
-    if (!spaceId) {
+    const { spaceId } = data;
+    if (!spaceId || typeof spaceId !== "string") {
       throw new functions.https.HttpsError(
         "invalid-argument",
-        "spaceId is required."
+        "The function must be called with a valid 'spaceId' argument."
       );
     }
 
+    const db = firestore();
+    const memberRef = db
+      .collection("spaces")
+      .doc(spaceId)
+      .collection("members")
+      .doc(userId);
+
     try {
-      const db = getFirestore();
+      await db.runTransaction(async (transaction) => {
+        const memberDoc = await transaction.get(memberRef);
 
-      // Check if user is a member of the space
-      const memberDoc = await db
-        .collection("spaces")
-        .doc(spaceId)
-        .collection("members")
-        .doc(uid)
-        .get();
+        if (!memberDoc.exists) {
+          throw new functions.https.HttpsError(
+            "not-found",
+            "You must be a member of this space to request a builder role."
+          );
+        }
 
-      if (!memberDoc.exists) {
-        throw new functions.https.HttpsError(
-          "failed-precondition",
-          "User must be a member of the space."
-        );
-      }
+        const memberData = getDocumentData<MemberDocument>(memberDoc);
+        if (!memberData) {
+          throw new functions.https.HttpsError(
+            "not-found",
+            "Member data not found."
+          );
+        }
 
-      const memberData = memberDoc.data();
-      if (memberData?.role === "builder" || memberData?.role === "admin") {
-        throw new functions.https.HttpsError(
-          "already-exists",
-          "User already has builder role or higher."
-        );
-      }
+        if (memberData.role !== "member") {
+          throw new functions.https.HttpsError(
+            "failed-precondition",
+            `Your current role (${memberData.role}) does not permit this action.`
+          );
+        }
 
-      // Check if there's already a pending request
-      const existingRequest = await db
-        .collection("builder_role_requests")
-        .where("userId", "==", uid)
-        .where("spaceId", "==", spaceId)
-        .where("status", "==", "pending")
-        .get();
-
-      if (!existingRequest.empty) {
-        throw new functions.https.HttpsError(
-          "already-exists",
-          "A request is already pending for this user."
-        );
-      }
-
-      // Create the builder role request
-      await db.collection("builder_role_requests").add({
-        userId: uid,
-        spaceId,
-        reason,
-        status: "pending",
-        requestedAt: FieldValue.serverTimestamp(),
+        transaction.update(memberRef, { role: "requested_builder" });
       });
 
-      // Notify space admins (optional - could be done via trigger)
       logger.info(
-        `Builder role request created for user ${uid} in space ${spaceId}`
+        `User ${userId} successfully requested builder role for space ${spaceId}`
       );
-
       return {
         success: true,
-        message: "Builder role request submitted successfully.",
+        message: "Your request has been submitted for review.",
       };
     } catch (error) {
-      logger.error("Error requesting builder role:", error);
+      logger.error(
+        `Error processing builder role request for user ${userId} in space ${spaceId}`,
+        error as Error
+      );
       if (error instanceof functions.https.HttpsError) {
         throw error;
       }
       throw new functions.https.HttpsError(
         "internal",
-        "Failed to submit builder role request."
+        "An unexpected error occurred while submitting your request."
       );
     }
   }

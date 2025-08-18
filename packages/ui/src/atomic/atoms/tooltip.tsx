@@ -1,0 +1,234 @@
+'use client';
+
+import React from 'react';
+import { cn } from '../../lib/utils';
+
+export interface TooltipProps {
+  content: React.ReactNode;
+  placement?: 'top' | 'bottom' | 'left' | 'right';
+  trigger?: 'hover' | 'click' | 'focus';
+  delay?: number;
+  arrow?: boolean;
+  variant?: 'default' | 'dark' | 'light';
+  size?: 'sm' | 'md' | 'lg';
+  disabled?: boolean;
+  children: React.ReactElement;
+}
+
+const tooltipVariants = {
+  default: [
+    'bg-[var(--hive-background-secondary)]',
+    'border border-[var(--hive-border-primary)]',
+    'text-[var(--hive-text-primary)]',
+    'shadow-lg'
+  ].join(' '),
+  dark: [
+    'bg-[var(--hive-background-primary)]',
+    'border border-[var(--hive-border-secondary)]',
+    'text-[var(--hive-text-primary)]',
+    'shadow-xl'
+  ].join(' '),
+  light: [
+    'bg-[var(--hive-background-tertiary)]',
+    'border border-[var(--hive-border-tertiary)]',
+    'text-[var(--hive-text-secondary)]',
+    'shadow-md'
+  ].join(' ')
+};
+
+const tooltipSizes = {
+  sm: 'px-2 py-1 text-xs max-w-xs',
+  md: 'px-3 py-2 text-sm max-w-sm',
+  lg: 'px-4 py-3 text-base max-w-md'
+};
+
+const placementClasses = {
+  top: 'bottom-full left-1/2 -translate-x-1/2 mb-2',
+  bottom: 'top-full left-1/2 -translate-x-1/2 mt-2',
+  left: 'right-full top-1/2 -translate-y-1/2 mr-2',
+  right: 'left-full top-1/2 -translate-y-1/2 ml-2'
+};
+
+const arrowClasses = {
+  top: 'top-full left-1/2 -translate-x-1/2 border-l-transparent border-r-transparent border-b-transparent',
+  bottom: 'bottom-full left-1/2 -translate-x-1/2 border-l-transparent border-r-transparent border-t-transparent',
+  left: 'left-full top-1/2 -translate-y-1/2 border-t-transparent border-b-transparent border-r-transparent',
+  right: 'right-full top-1/2 -translate-y-1/2 border-t-transparent border-b-transparent border-l-transparent'
+};
+
+const arrowColors = {
+  default: {
+    top: 'border-t-[var(--hive-background-secondary)]',
+    bottom: 'border-b-[var(--hive-background-secondary)]',
+    left: 'border-l-[var(--hive-background-secondary)]',
+    right: 'border-r-[var(--hive-background-secondary)]'
+  },
+  dark: {
+    top: 'border-t-[var(--hive-background-primary)]',
+    bottom: 'border-b-[var(--hive-background-primary)]',
+    left: 'border-l-[var(--hive-background-primary)]',
+    right: 'border-r-[var(--hive-background-primary)]'
+  },
+  light: {
+    top: 'border-t-[var(--hive-background-tertiary)]',
+    bottom: 'border-b-[var(--hive-background-tertiary)]',
+    left: 'border-l-[var(--hive-background-tertiary)]',
+    right: 'border-r-[var(--hive-background-tertiary)]'
+  }
+};
+
+export const Tooltip: React.FC<TooltipProps> = ({
+  content,
+  placement = 'top',
+  trigger = 'hover',
+  delay = 200,
+  arrow = true,
+  variant = 'default',
+  size = 'md',
+  disabled = false,
+  children
+}) => {
+  const [isVisible, setIsVisible] = React.useState(false);
+  const [timeoutId, setTimeoutId] = React.useState<NodeJS.Timeout | null>(null);
+  const tooltipRef = React.useRef<HTMLDivElement>(null);
+  const triggerRef = React.useRef<HTMLElement>(null);
+
+  const showTooltip = React.useCallback(() => {
+    if (disabled) return;
+    
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+    
+    const id = setTimeout(() => {
+      setIsVisible(true);
+    }, delay);
+    
+    setTimeoutId(id);
+  }, [disabled, delay, timeoutId]);
+
+  const hideTooltip = React.useCallback(() => {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+      setTimeoutId(null);
+    }
+    setIsVisible(false);
+  }, [timeoutId]);
+
+  const toggleTooltip = React.useCallback(() => {
+    if (disabled) return;
+    setIsVisible(prev => !prev);
+  }, [disabled]);
+
+  // Handle outside clicks for click trigger
+  React.useEffect(() => {
+    if (trigger !== 'click' || !isVisible) return;
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        tooltipRef.current && 
+        triggerRef.current &&
+        !tooltipRef.current.contains(event.target as Node) &&
+        !triggerRef.current.contains(event.target as Node)
+      ) {
+        hideTooltip();
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [trigger, isVisible, hideTooltip]);
+
+  // Cleanup timeout on unmount
+  React.useEffect(() => {
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
+  }, [timeoutId]);
+
+  const getEventHandlers = () => {
+    switch (trigger) {
+      case 'hover':
+        return {
+          onMouseEnter: showTooltip,
+          onMouseLeave: hideTooltip,
+          onFocus: showTooltip,
+          onBlur: hideTooltip
+        };
+      case 'click':
+        return {
+          onClick: toggleTooltip
+        };
+      case 'focus':
+        return {
+          onFocus: showTooltip,
+          onBlur: hideTooltip
+        };
+      default:
+        return {};
+    }
+  };
+
+  const tooltipClasses = [
+    'absolute z-50',
+    'rounded-lg',
+    'pointer-events-none',
+    'transition-all duration-200 ease-out',
+    'font-medium',
+    tooltipVariants[variant],
+    tooltipSizes[size],
+    placementClasses[placement],
+    isVisible ? 'opacity-100 visible' : 'opacity-0 invisible'
+  ].filter(Boolean).join(' ');
+
+  const arrowClass = arrow ? [
+    'absolute w-0 h-0',
+    'border-4',
+    arrowClasses[placement],
+    arrowColors[variant][placement]
+  ].filter(Boolean).join(' ') : '';
+
+  const clonedChild = React.cloneElement(children, {
+    ref: triggerRef,
+    ...getEventHandlers(),
+    ...(trigger === 'click' && { 'aria-expanded': isVisible }),
+    'aria-describedby': isVisible ? 'tooltip' : undefined
+  });
+
+  return (
+    <div className="relative inline-block">
+      {clonedChild}
+      
+      {content && (
+        <div
+          ref={tooltipRef}
+          id="tooltip"
+          role="tooltip"
+          className={tooltipClasses}
+        >
+          {content}
+          {arrow && <div className={arrowClass} />}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// Convenient preset components
+export const InfoTooltip: React.FC<Omit<TooltipProps, 'variant'>> = (props) => (
+  <Tooltip variant="default" {...props} />
+);
+
+export const DarkTooltip: React.FC<Omit<TooltipProps, 'variant'>> = (props) => (
+  <Tooltip variant="dark" {...props} />
+);
+
+export const LightTooltip: React.FC<Omit<TooltipProps, 'variant'>> = (props) => (
+  <Tooltip variant="light" {...props} />
+);
+
+export const ClickTooltip: React.FC<Omit<TooltipProps, 'trigger'>> = (props) => (
+  <Tooltip trigger="click" {...props} />
+);

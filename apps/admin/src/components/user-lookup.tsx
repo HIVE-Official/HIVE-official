@@ -14,9 +14,9 @@ export function UserLookup() {
           placeholder="Search by email, handle, or user ID..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="flex-1 rounded-md border border-gray-600 bg-gray-800 px-3 py-2 text-white placeholder-gray-400 focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+          className="flex-1 rounded-md border border-gray-600 bg-gray-800 px-3 py-2 text-white placeholder-gray-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500"
         />
-        <Button variant="default" size="sm">
+        <Button variant="primary" size="sm">
           Search
         </Button>
       </div>

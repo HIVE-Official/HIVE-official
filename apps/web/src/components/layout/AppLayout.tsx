@@ -29,7 +29,7 @@ function DesktopNav() {
 				<AppHeader.Nav className='ml-8'>
 					<Link
 						href='/feed'
-						className={`text-sm font-medium transition-colors hover:text-[#FFD700] ${
+						className={`text-sm font-medium transition-colors hover:text-[var(--hive-brand-secondary)] ${
 							pathname === '/feed' ? 'text-foreground' : 'text-muted'
 						}`}
 					>
@@ -37,7 +37,7 @@ function DesktopNav() {
 					</Link>
 					<Link
 						href='/campus'
-						className={`text-sm font-medium transition-colors hover:text-[#FFD700] ${
+						className={`text-sm font-medium transition-colors hover:text-[var(--hive-brand-secondary)] ${
 							pathname === '/campus' ? 'text-foreground' : 'text-muted'
 						}`}
 					>
@@ -45,7 +45,7 @@ function DesktopNav() {
 					</Link>
 					<Link
 						href='/spaces'
-						className={`text-sm font-medium transition-colors hover:text-[#FFD700] ${
+						className={`text-sm font-medium transition-colors hover:text-[var(--hive-brand-secondary)] ${
 							pathname === '/spaces' ? 'text-foreground' : 'text-muted'
 						}`}
 					>
@@ -53,7 +53,7 @@ function DesktopNav() {
 					</Link>
 					<Link
 						href='/profile'
-						className={`text-sm font-medium transition-colors hover:text-[#FFD700] ${
+						className={`text-sm font-medium transition-colors hover:text-[var(--hive-brand-secondary)] ${
 							pathname === '/profile' ? 'text-foreground' : 'text-muted'
 						}`}
 					>
@@ -64,12 +64,12 @@ function DesktopNav() {
 					<Button 
 						variant='outline'
 						size="sm"
-						className="border-[#FFD700] text-[#FFD700] hover:bg-[#FFD700] hover:text-black transition-colors duration-[180ms]"
+						className="border-[var(--hive-brand-secondary)] text-[var(--hive-brand-secondary)] hover:bg-[var(--hive-brand-secondary)] hover:text-black transition-colors duration-[180ms]"
 					>
 						Create
 					</Button>
 					<Link href="/profile">
-						<Avatar className="border border-border hover:border-[#FFD700]/50 transition-colors duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] w-8 h-8">
+						<Avatar className="border border-border hover:border-[var(--hive-brand-secondary)]/50 transition-colors duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] w-8 h-8">
 							<AvatarFallback className="bg-[#2A2A2A] text-foreground text-sm">
 								{user?.fullName?.charAt(0) || user?.email?.charAt(0) || 'U'}
 							</AvatarFallback>

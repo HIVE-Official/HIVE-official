@@ -1,6 +1,5 @@
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect, beforeEach, vi } from "vitest";
 import { POST } from "./route";
-import type { NextRequest } from "next/server";
 
 // Mock Firebase
 const mockFirebaseDb = {
@@ -16,8 +15,8 @@ const mockFirebaseDb = {
   increment: vi.fn(),
 };
 
-vi.mock("@/lib/firebase", () => ({
-  db: mockFirebaseDb,
+vi.mock("@/lib/firebase-admin", () => ({
+  dbAdmin: mockFirebaseDb,
 }));
 
 vi.mock("firebase/firestore", () => ({
@@ -33,6 +32,23 @@ vi.mock("firebase/firestore", () => ({
   increment: vi.fn(),
 }));
 
+vi.mock("@hive/core", () => ({
+  getCohortSpaceId: vi.fn((major, year) => {
+    if (major && year) return `cs-${year}`;
+    if (major) return `cs-major`;
+    if (year) return `class-${year}`;
+    return "default";
+  }),
+  generateCohortSpaces: vi.fn(() => [
+    {
+      id: "cs-2025",
+      name: "UB Computer Science '25",
+      type: "cohort",
+      description: "Computer Science Class of 2025",
+    },
+  ]),
+}));
+
 describe("/api/spaces/auto-join", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -45,7 +61,7 @@ describe("/api/spaces/auto-join", () => {
       body: JSON.stringify({}),
     });
 
-    const response = await POST(request as NextRequest);
+    const response = await POST(request as any);
     const data = await response.json();
 
     expect(response.status).toBe(400);
@@ -64,26 +80,55 @@ describe("/api/spaces/auto-join", () => {
       body: JSON.stringify({ userId: "test-user-id" }),
     });
 
-    const response = await POST(request as NextRequest);
+    const response = await POST(request as any);
     const data = await response.json();
 
     expect(response.status).toBe(404);
     expect(data.error).toBe("User not found");
   });
 
-  it("should return 400 if user missing required fields", async () => {
-    // Mock getDoc to return a user document missing required fields
-    mockFirebaseDb.getDoc.mockResolvedValue({
-      exists: () => true,
+  it("should return 200 and auto-join spaces for valid user", async () => {
+    // Mock user document with complete data
+    const mockUserDoc = {
+      exists: true,
       data: () => ({
         id: "test-user-id",
         uid: "test-user-id",
         email: "test@buffalo.edu",
         fullName: "Test User",
         handle: "testuser",
-        // missing major and schoolId
+        major: "Computer Science",
+        graduationYear: 2025,
+        schoolId: "university-at-buffalo",
+      }),
+    };
+
+    // Mock Firebase operations
+    mockFirebaseDb.collection.mockReturnValue({
+      doc: vi.fn().mockReturnValue({
+        get: vi.fn().mockResolvedValue(mockUserDoc),
+        collection: vi.fn().mockReturnValue({
+          doc: vi.fn().mockReturnValue({
+            get: vi.fn().mockResolvedValue({ exists: false }),
+            set: vi.fn().mockResolvedValue(undefined),
+          }),
+        }),
+        set: vi.fn().mockResolvedValue(undefined),
+        update: vi.fn().mockResolvedValue(undefined),
       }),
     });
+
+    mockFirebaseDb.doc.mockReturnValue({
+      get: vi.fn().mockResolvedValue(mockUserDoc),
+    });
+
+    // Mock batch operations
+    const mockBatch = {
+      set: vi.fn(),
+      update: vi.fn(),
+      commit: vi.fn().mockResolvedValue(undefined),
+    };
+    mockFirebaseDb.writeBatch.mockReturnValue(mockBatch);
 
     const request = new Request("http://localhost:3000/api/spaces/auto-join", {
       method: "POST",
@@ -91,10 +136,11 @@ describe("/api/spaces/auto-join", () => {
       body: JSON.stringify({ userId: "test-user-id" }),
     });
 
-    const response = await POST(request as NextRequest);
+    const response = await POST(request as any);
     const data = await response.json();
 
-    expect(response.status).toBe(400);
-    expect(data.error).toBe("User missing required fields (major, schoolId)");
+    expect(response.status).toBe(200);
+    expect(data.success).toBe(true);
+    expect(data.userId).toBe("test-user-id");
   });
 });

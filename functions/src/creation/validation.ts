@@ -1,41 +1,32 @@
-import { z } from "zod";
+import { z } from 'zod';
 
-const elementSchemas: Record<
-  string,
-  z.ZodObject<
-    z.ZodRawShape,
-    "strip",
-    z.ZodTypeAny,
-    Record<string, unknown>,
-    Record<string, unknown>
-  >
-> = {
+const elementSchemas: Record<string, z.ZodObject<any, any, any>> = {
   textBlock: z.object({
-    content: z.string().min(1, "Content cannot be empty."),
-    style: z.enum(["h1", "h2", "h3", "body", "caption"]),
+    content: z.string().min(1, 'Content cannot be empty.'),
+    style: z.enum(['h1', 'h2', 'h3', 'body', 'caption']),
   }),
   imageBlock: z.object({
-    src: z.string().url("Must be a valid URL."),
+    src: z.string().url('Must be a valid URL.'),
     alt: z.string(),
-    fit: z.enum(["cover", "contain"]),
+    fit: z.enum(['cover', 'contain']),
   }),
   divider: z.object({
     thickness: z.number().min(1).max(8),
-    variant: z.enum(["solid", "dashed"]),
+    variant: z.enum(['solid', 'dashed']),
   }),
   stack: z.object({
-    direction: z.enum(["vertical", "horizontal"]),
+    direction: z.enum(['vertical', 'horizontal']),
     gap: z.number().min(0).max(16),
-    align: z.enum(["start", "center", "end"]),
+    align: z.enum(['start', 'center', 'end']),
   }),
   button: z.object({
     label: z.string().min(1),
-    variant: z.enum(["primary", "secondary", "ghost", "destructive"]),
-    action: z.string().url().or(z.literal("")),
+    variant: z.enum(['primary', 'secondary', 'ghost', 'destructive']),
+    action: z.string().url().or(z.literal('')),
   }),
   choiceSelect: z.object({
     prompt: z.string(),
-    options: z.array(z.string()).min(2, "Must have at least two options."),
+    options: z.array(z.string()).min(2, 'Must have at least two options.'),
     multi: z.boolean(),
   }),
   textInput: z.object({
@@ -49,7 +40,7 @@ const elementSchemas: Record<
   }),
   countdownTimer: z.object({
     endTimestamp: z.number().positive(),
-    style: z.enum(["default", "compact"]),
+    style: z.enum(['default', 'compact']),
   }),
   progressBar: z.object({
     goal: z.number().positive(),
@@ -62,7 +53,7 @@ const elementSchemas: Record<
   pingTrigger: z.object({
     message: z.string().min(1),
     delaySeconds: z.number().min(0).max(3600),
-    scope: z.enum(["personal", "space"]),
+    scope: z.enum(['personal', 'space']),
   }),
 };
 
@@ -80,26 +71,8 @@ export const validateElementConfig = (elementId: string, config: unknown) => {
 
   const validation = schema.safeParse(config);
   if (!validation.success) {
-    throw new Error(
-      `Invalid configuration for ${elementId}: ${validation.error.flatten().fieldErrors}`
-    );
+    throw new Error(`Invalid configuration for ${elementId}: ${validation.error.flatten().fieldErrors}`);
   }
 
   return validation.data;
-};
-
-export function validateTool(
-  name: string,
-  properties: Record<string, unknown>,
-  config: Record<string, unknown>
-): boolean {
-  // Validation logic here
-  return (
-    typeof name === "string" &&
-    name.length > 0 &&
-    typeof properties === "object" &&
-    properties !== null &&
-    typeof config === "object" &&
-    config !== null
-  );
-}
+}; 

@@ -22,7 +22,7 @@ export default function DevSpacesPage() {
             {/* Academic Spaces */}
             <div className="bg-surface-01 border border-border rounded-lg p-6">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 bg-[#FFD700] rounded-lg flex items-center justify-center">
+                <div className="w-10 h-10 bg-[var(--hive-brand-secondary)] rounded-lg flex items-center justify-center">
                   <span className="text-black font-semibold">📚</span>
                 </div>
                 <h3 className="text-lg font-display font-semibold text-foreground">
@@ -32,7 +32,7 @@ export default function DevSpacesPage() {
               <div className="space-y-3">
                 <div className="flex items-center justify-between p-3 bg-[#2A2A2A]/30 rounded">
                   <span className="text-foreground">CS 250 - Data Structures</span>
-                  <span className="text-xs text-[#FFD700]">Joined</span>
+                  <span className="text-xs text-[var(--hive-brand-secondary)]">Joined</span>
                 </div>
                 <div className="flex items-center justify-between p-3 bg-[#2A2A2A]/30 rounded">
                   <span className="text-foreground">MTH 241 - Calculus</span>
@@ -40,7 +40,7 @@ export default function DevSpacesPage() {
                 </div>
                 <div className="flex items-center justify-between p-3 bg-[#2A2A2A]/30 rounded">
                   <span className="text-foreground">CS Honor Society</span>
-                  <span className="text-xs text-[#FFD700]">Builder</span>
+                  <span className="text-xs text-[var(--hive-brand-secondary)]">Builder</span>
                 </div>
               </div>
             </div>
@@ -58,11 +58,11 @@ export default function DevSpacesPage() {
               <div className="space-y-3">
                 <div className="flex items-center justify-between p-3 bg-[#2A2A2A]/30 rounded">
                   <span className="text-foreground">Greiner Hall</span>
-                  <span className="text-xs text-[#FFD700]">Joined</span>
+                  <span className="text-xs text-[var(--hive-brand-secondary)]">Joined</span>
                 </div>
                 <div className="flex items-center justify-between p-3 bg-[#2A2A2A]/30 rounded">
                   <span className="text-foreground">Floor 3 Study Group</span>
-                  <span className="text-xs text-[#FFD700]">Joined</span>
+                  <span className="text-xs text-[var(--hive-brand-secondary)]">Joined</span>
                 </div>
                 <div className="flex items-center justify-between p-3 bg-[#2A2A2A]/30 rounded">
                   <span className="text-foreground">Dorm Activities</span>
@@ -84,11 +84,11 @@ export default function DevSpacesPage() {
               <div className="space-y-3">
                 <div className="flex items-center justify-between p-3 bg-[#2A2A2A]/30 rounded">
                   <span className="text-foreground">Tech Entrepreneurship</span>
-                  <span className="text-xs text-[#FFD700]">Builder</span>
+                  <span className="text-xs text-[var(--hive-brand-secondary)]">Builder</span>
                 </div>
                 <div className="flex items-center justify-between p-3 bg-[#2A2A2A]/30 rounded">
                   <span className="text-foreground">UB ACM</span>
-                  <span className="text-xs text-[#FFD700]">Joined</span>
+                  <span className="text-xs text-[var(--hive-brand-secondary)]">Joined</span>
                 </div>
                 <div className="flex items-center justify-between p-3 bg-[#2A2A2A]/30 rounded">
                   <span className="text-foreground">Design Society</span>
@@ -107,14 +107,14 @@ export default function DevSpacesPage() {
               <div className="p-4 bg-[#2A2A2A]/30 rounded-lg">
                 <h4 className="text-md font-semibold text-foreground mb-2">Research Labs</h4>
                 <p className="text-sm text-muted mb-3">Find research opportunities in your field</p>
-                <button className="text-xs text-[#FFD700] hover:text-[#FFD700]/80">
+                <button className="text-xs text-[var(--hive-brand-secondary)] hover:text-[var(--hive-brand-secondary)]/80">
                   Browse Labs →
                 </button>
               </div>
               <div className="p-4 bg-[#2A2A2A]/30 rounded-lg">
                 <h4 className="text-md font-semibold text-foreground mb-2">Study Groups</h4>
                 <p className="text-sm text-muted mb-3">Join collaborative learning sessions</p>
-                <button className="text-xs text-[#FFD700] hover:text-[#FFD700]/80">
+                <button className="text-xs text-[var(--hive-brand-secondary)] hover:text-[var(--hive-brand-secondary)]/80">
                   Find Groups →
                 </button>
               </div>
@@ -122,8 +122,8 @@ export default function DevSpacesPage() {
           </div>
 
           {/* Development Status */}
-          <div className="bg-[#FFD700]/10 border border-[#FFD700]/30 rounded-lg p-6">
-            <h3 className="text-xl font-display font-semibold text-[#FFD700] mb-4">
+          <div className="bg-[var(--hive-brand-secondary)]/10 border border-[var(--hive-brand-secondary)]/30 rounded-lg p-6">
+            <h3 className="text-xl font-display font-semibold text-[var(--hive-brand-secondary)] mb-4">
               🔧 Spaces Development Status
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

@@ -1,19 +1,6 @@
-export * from './interests-step';
-export * from './interests-selection-step';
-export * from './avatar-upload-step';
-export * from './academic-card-step';
-export * from './academic-step';
-export * from './onboarding-complete-step';
-export * from './claim-space-step';
-export * from './types';
-export * from './welcome-step';
-export * from './create-profile-step';
-export * from './school-pledge-step';
-export * from './onboarding-complete-step';
-export * from './image-crop-modal';
-export * from './role-selection-step';
-export * from './welcome-role-step';
-export * from './faculty-verification-step';
-export * from './alumni-coming-soon-step';
-export * from './alumni-waitlist-modal';
-export * from './faculty-modal'; 
+export { HiveOnboardingWizard, OnboardingProvider, useOnboarding } from './hive-onboarding-wizard';
+export type { 
+  OnboardingStep,
+  OnboardingState,
+  OnboardingContextType 
+} from './hive-onboarding-wizard';

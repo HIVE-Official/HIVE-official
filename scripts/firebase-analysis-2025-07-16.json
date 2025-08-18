@@ -1,0 +1,58 @@
+{
+  "totalSpaces": 4,
+  "spacesByType": {
+    "academic": 3,
+    "interest": 1
+  },
+  "spacesByStatus": {
+    "activated": 4
+  },
+  "typeInconsistencies": [
+    "Type \"major\" found in codebase but not in expected types: student, university, residential, academics, greek_life",
+    "Type \"interest\" found in codebase but not in expected types: student, university, residential, academics, greek_life",
+    "Type \"creative\" found in codebase but not in expected types: student, university, residential, academics, greek_life",
+    "Type \"organization\" found in codebase but not in expected types: student, university, residential, academics, greek_life",
+    "Type \"academic\" found in codebase but not in expected types: student, university, residential, academics, greek_life",
+    "Type \"social\" found in codebase but not in expected types: student, university, residential, academics, greek_life",
+    "Type \"administrative\" found in codebase but not in expected types: student, university, residential, academics, greek_life",
+    "Type \"professional\" found in codebase but not in expected types: student, university, residential, academics, greek_life",
+    "Type \"sports\" found in codebase but not in expected types: student, university, residential, academics, greek_life",
+    "Type \"cultural\" found in codebase but not in expected types: student, university, residential, academics, greek_life",
+    "Type \"service\" found in codebase but not in expected types: student, university, residential, academics, greek_life",
+    "Type \"club\" found in codebase but not in expected types: student, university, residential, academics, greek_life",
+    "Space ub-computer-science has unexpected type: academic",
+    "Space ub-psychology has unexpected type: academic",
+    "Space ub-business has unexpected type: academic",
+    "Space ub-study-group has unexpected type: interest"
+  ],
+  "statusInconsistencies": [],
+  "dataIssues": [
+    "Space ub-study-group has zero members",
+    "107 UB majors lack dedicated spaces",
+    "No spaces found for type: university",
+    "No spaces found for type: residential",
+    "No spaces found for type: greek_life"
+  ],
+  "ubAnalysis": {
+    "academicSpaces": 3,
+    "residentialSpaces": 0,
+    "greekLifeSpaces": 0,
+    "universitySpaces": 0,
+    "studentSpaces": 1,
+    "unknownTypes": 0
+  },
+  "recommendations": [
+    "🔧 CRITICAL: Standardize SpaceType definitions across all files to use: student, university, residential, academics, greek_life",
+    "📊 MISSING DATA: Create comprehensive UB space data (currently only 4 spaces exist)",
+    "🏠 MISSING: Add UB residential spaces (dorms, apartments, housing)",
+    "🏛️ MISSING: Add UB Greek life spaces (fraternities, sororities)",
+    "🏫 MISSING: Add UB university-wide spaces (events, announcements, services)",
+    "🎓 INCOMPLETE: Add missing UB academic spaces (100+ majors need spaces)",
+    "👥 INCOMPLETE: Add UB student organization spaces (clubs, societies, interest groups)",
+    "🏗️ ARCHITECTURE: Consolidate space types to the 5 standard categories",
+    "🔍 DATA QUALITY: Fix identified data issues and inconsistencies",
+    "📋 SCHEMA: Update all SpaceType definitions to match real UB structure",
+    "🔄 MIGRATION: Create data migration script to update existing spaces",
+    "🌱 SEEDING: Implement comprehensive UB space seeding system"
+  ]
+}

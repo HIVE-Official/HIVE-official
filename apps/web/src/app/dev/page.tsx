@@ -21,57 +21,57 @@ export default function DevHomePage() {
           {/* Navigation Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
             <Link href="/dev/feed" className="group">
-              <div className="bg-surface-01 border border-border rounded-lg p-6 hover:border-[#FFD700]/50 transition-colors duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)]">
+              <div className="bg-surface-01 border border-border rounded-lg p-6 hover:border-[var(--hive-brand-secondary)]/50 transition-colors duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)]">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 bg-[#FFD700] rounded-lg flex items-center justify-center">
+                  <div className="w-12 h-12 bg-[var(--hive-brand-secondary)] rounded-lg flex items-center justify-center">
                     <span className="text-black text-xl">📝</span>
                   </div>
-                  <h3 className="text-xl font-display font-semibold text-foreground group-hover:text-[#FFD700]">
+                  <h3 className="text-xl font-display font-semibold text-foreground group-hover:text-[var(--hive-brand-secondary)]">
                     Feed
                   </h3>
                 </div>
                 <p className="text-muted mb-4">
                   Campus community posts, events, and social interactions with complete app shell.
                 </p>
-                <div className="text-xs text-[#FFD700]">
+                <div className="text-xs text-[var(--hive-brand-secondary)]">
                   View Development →
                 </div>
               </div>
             </Link>
 
             <Link href="/dev/profile" className="group">
-              <div className="bg-surface-01 border border-border rounded-lg p-6 hover:border-[#FFD700]/50 transition-colors duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)]">
+              <div className="bg-surface-01 border border-border rounded-lg p-6 hover:border-[var(--hive-brand-secondary)]/50 transition-colors duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)]">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 bg-[#FFD700] rounded-lg flex items-center justify-center">
+                  <div className="w-12 h-12 bg-[var(--hive-brand-secondary)] rounded-lg flex items-center justify-center">
                     <span className="text-black text-xl">👤</span>
                   </div>
-                  <h3 className="text-xl font-display font-semibold text-foreground group-hover:text-[#FFD700]">
+                  <h3 className="text-xl font-display font-semibold text-foreground group-hover:text-[var(--hive-brand-secondary)]">
                     Profile
                   </h3>
                 </div>
                 <p className="text-muted mb-4">
                   Bento grid profile dashboard with tools, calendar, and privacy controls.
                 </p>
-                <div className="text-xs text-[#FFD700]">
+                <div className="text-xs text-[var(--hive-brand-secondary)]">
                   View Development →
                 </div>
               </div>
             </Link>
 
             <Link href="/dev/spaces" className="group">
-              <div className="bg-surface-01 border border-border rounded-lg p-6 hover:border-[#FFD700]/50 transition-colors duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)]">
+              <div className="bg-surface-01 border border-border rounded-lg p-6 hover:border-[var(--hive-brand-secondary)]/50 transition-colors duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)]">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 bg-[#FFD700] rounded-lg flex items-center justify-center">
+                  <div className="w-12 h-12 bg-[var(--hive-brand-secondary)] rounded-lg flex items-center justify-center">
                     <span className="text-black text-xl">🏛️</span>
                   </div>
-                  <h3 className="text-xl font-display font-semibold text-foreground group-hover:text-[#FFD700]">
+                  <h3 className="text-xl font-display font-semibold text-foreground group-hover:text-[var(--hive-brand-secondary)]">
                     Spaces
                   </h3>
                 </div>
                 <p className="text-muted mb-4">
                   Campus community discovery, academic spaces, and organizations.
                 </p>
-                <div className="text-xs text-[#FFD700]">
+                <div className="text-xs text-[var(--hive-brand-secondary)]">
                   View Development →
                 </div>
               </div>
@@ -79,8 +79,8 @@ export default function DevHomePage() {
           </div>
 
           {/* Development Features */}
-          <div className="bg-[#FFD700]/10 border border-[#FFD700]/30 rounded-lg p-6 mb-8">
-            <h2 className="text-2xl font-display font-semibold text-[#FFD700] mb-6">
+          <div className="bg-[var(--hive-brand-secondary)]/10 border border-[var(--hive-brand-secondary)]/30 rounded-lg p-6 mb-8">
+            <h2 className="text-2xl font-display font-semibold text-[var(--hive-brand-secondary)] mb-6">
               🛠️ Development Features
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -99,7 +99,7 @@ export default function DevHomePage() {
               <div>
                 <h3 className="text-lg font-semibold text-foreground mb-4">🎨 Design System</h3>
                 <ul className="space-y-2 text-muted">
-                  <li>• Monochrome + gold (#FFD700) palette</li>
+                  <li>• Monochrome + gold (var(--hive-brand-secondary)) palette</li>
                   <li>• Space Grotesk display typography</li>
                   <li>• 180ms transition timing</li>
                   <li>• Consistent spacing and hierarchy</li>

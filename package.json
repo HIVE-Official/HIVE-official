@@ -1,50 +1,50 @@
 {
   "name": "hive-ui",
+  "version": "1.0.0",
   "private": true,
+  "packageManager": "pnpm@9.1.1",
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
   "scripts": {
-    "build": "pnpm --filter=@hive/validation build && pnpm --filter=@hive/core build && pnpm --filter=web... build",
-    "vercel-build": "pnpm install --no-frozen-lockfile && pnpm run build",
+    "build": "turbo run build",
     "dev": "turbo run dev",
-    "lint": "cross-env BROWSERSLIST_IGNORE_OLD_DATA=1 BROWSERSLIST_UPDATE_DB=0 NO_UPDATE_NOTIFIER=1 TURBO_TELEMETRY_DISABLED=1 CI=1 turbo run lint",
-    "clean": "turbo run clean",
+    "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
-    "analyze-code": "ts-node scripts/analyze-code.ts",
-    "init-db": "ts-node --project scripts/tsconfig.json scripts/init-schools-auth.ts",
-    "add-schools": "node scripts/add-schools-simple.js",
-    "add-schools-local": "node scripts/add-schools-web.js",
-    "check-quality": "pnpm lint && pnpm typecheck && pnpm analyze-code && pnpm test",
-    "precommit": "pnpm check-quality"
+    "test:e2e": "turbo run test:e2e",
+    "clean": "turbo run clean",
+    "storybook": "turbo run storybook",
+    "build-storybook": "turbo run build-storybook"
   },
   "devDependencies": {
-    "cross-env": "^7.0.3",
-    "eslint": "^9.30.0",
-    "firebase-admin": "^11.0.0",
-    "ts-node": "^10.9.2",
-    "typescript-eslint": "^8.35.1"
-  },
-  "packageManager": "pnpm@9.1.1",
-  "dependencies": {
-    "@radix-ui/react-slot": "^1.2.3",
-    "@types/node": "^24.0.8",
-    "@types/react": "^19.1.8",
-    "@types/react-dom": "^19.1.6",
-    "class-variance-authority": "^0.7.1",
-    "firebase": "^11.10.0",
-    "framer-motion": "^12.20.1",
-    "lucide-react": "^0.525.0",
-    "next": "^15.3.5",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
+    "@vitest/coverage-v8": "^3.2.4",
+    "eslint-plugin-import": "^2.29.1",
     "turbo": "^2.5.4"
   },
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "packages/config/*"
+  ],
   "pnpm": {
     "overrides": {
-      "@hive/core": "workspace:*",
-      "@hive/validation": "workspace:*",
-      "@hive/auth-logic": "workspace:*",
-      "@hive/analytics": "workspace:*",
-      "@hive/ui": "workspace:*"
+      "react": "^18.0.0",
+      "react-dom": "^18.0.0",
+      "@types/react": "^18.0.0",
+      "@types/react-dom": "^18.0.0",
+      "framer-motion": "^11.11.17",
+      "esbuild@<=0.24.2": ">=0.25.0",
+      "form-data@>=4.0.0 <4.0.4": ">=4.0.4",
+      "form-data@<2.5.4": ">=2.5.4",
+      "@eslint/plugin-kit@<0.3.4": ">=0.3.4"
     }
+  },
+  "dependencies": {
+    "glob": "^11.0.3",
+    "lucide-react": "^0.411.0",
+    "recharts": "^3.1.0",
+    "vitest": "^3.2.4"
   }
 }

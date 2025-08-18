@@ -27,28 +27,6 @@ service cloud.firestore {
       return isAuthenticated() && 
         exists(/databases/$(database)/documents/spaces/$(spaceId)/leaders/$(request.auth.uid));
     }
-
-    // Schools collection
-    match /schools/{schoolId} {
-      // Anyone can read school data
-      allow read: if true;
-      
-      // Only admins can create/update/delete schools
-      allow write: if isAdmin();
-
-      // School waitlist subcollection
-      match /waitlist/{userId} {
-        // Users can read their own waitlist status
-        allow read: if isOwner(userId);
-        
-        // Users can join the waitlist
-        allow create: if isOwner(userId) && 
-          request.resource.data.timestamp == request.time;
-        
-        // Only admins can update/delete waitlist entries
-        allow update, delete: if isAdmin();
-      }
-    }
     
     // Security rules for verification collections
     match /emailVerifications/{docId} {
@@ -87,24 +65,7 @@ service cloud.firestore {
       allow read: if isAdmin() || 
         (isAuthenticated() && resource.data.userId == request.auth.uid);
     }
-
-    // ===========================================================================
-    // POSTS COLLECTION
-    // ===========================================================================
-    match /posts/{postId} {
-      // READ: Public posts are readable by anyone.
-      //       'Members' posts are readable by any authenticated user.
-      allow read: if resource.data.visibility == 'public' || 
-                    (isAuthenticated() && resource.data.visibility == 'members') ||
-                    isAdmin();
-
-      // CREATE: An authenticated user can create a post if they are the author.
-      allow create: if isAuthenticated() && request.resource.data.authorId == request.auth.uid;
-
-      // UPDATE, DELETE: Only the post owner or an admin can modify or delete a post.
-      allow update, delete: if isOwner(resource.data.authorId) || isAdmin();
-    }
-
+    
     // Other collections...
   }
 } 

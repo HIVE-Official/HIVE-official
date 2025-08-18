@@ -6,7 +6,7 @@ import { Search, MapPin, Users, GraduationCap, CheckCircle, Plus } from 'lucide-
 import { Button } from '../button';
 import { Input } from '../input';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '../card';
-import { cn } from '../../lib/utils';
+import { cn } from '../lib/utils';
 
 interface School {
   id: string;

@@ -1,25 +1,51 @@
-// Simple admin authentication check
-// In production, this would integrate with Firebase Auth and check admin roles
+import type { AdminUser } from './admin-auth';
 
-export interface Admin {
-  id: string
-  email: string
-  role: 'admin' | 'moderator'
-  name: string
+/**
+ * Get current admin user from session
+ */
+export async function getCurrentAdmin(): Promise<AdminUser | null> {
+  try {
+    // TODO: Implement server-side admin session verification
+    // For now, return mock data for development
+    if (process.env.NODE_ENV === 'development') {
+      return {
+        id: 'test-admin',
+        email: 'admin@hive.com',
+        role: 'admin' as const,
+        permissions: ['read', 'write', 'delete'],
+        lastLogin: new Date(),
+      };
+    }
+    return null;
+  } catch (error) {
+    console.error('Error getting current admin:', error);
+    return null;
+  }
 }
 
-export function getCurrentAdmin(): Admin | null {
-  // For development, return mock admin
+/**
+ * Client-side admin authentication hook
+ */
+export function useAdminAuth() {
+  // TODO: Implement client-side admin authentication
+  // For now, return mock data for development
   if (process.env.NODE_ENV === 'development') {
     return {
-      id: 'admin-1',
-      email: 'admin@hive.com',
-      role: 'admin',
-      name: 'Admin User'
-    }
+      admin: {
+        id: 'test-user',
+        email: 'admin@hive.com',
+        role: 'admin' as const,
+        permissions: ['read', 'write', 'delete'],
+        lastLogin: new Date(),
+      },
+      loading: false,
+      error: null,
+    };
   }
 
-  // In production, check actual authentication
-  // This would check Firebase Auth and verify admin role
-  return null
+  return {
+    admin: null,
+    loading: false,
+    error: 'Authentication not implemented for production',
+  };
 }

@@ -56,8 +56,8 @@ export function ProfileClient() {
   if (isLoading || profileLoading) {
     return (
       <AppLayout>
-        <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center">
-          <div className="flex items-center gap-3 text-[#FFD700]">
+        <div className="min-h-screen bg-[var(--hive-background-primary)] flex items-center justify-center">
+          <div className="flex items-center gap-3 text-[var(--hive-brand-secondary)]">
             <Loader2 className="w-6 h-6 animate-spin" />
             <span className="font-medium">Loading your profile...</span>
           </div>
@@ -69,7 +69,7 @@ export function ProfileClient() {
   if (!user || !profile) {
     return (
       <AppLayout>
-        <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center">
+        <div className="min-h-screen bg-[var(--hive-background-primary)] flex items-center justify-center">
           <div className="text-center">
             <h2 className="text-xl font-semibold text-foreground mb-2">Profile Not Found</h2>
             <p className="text-muted">
@@ -77,7 +77,7 @@ export function ProfileClient() {
             </p>
             <button 
               onClick={() => window.location.reload()}
-              className="mt-4 px-4 py-2 bg-[#FFD700] text-black rounded-lg font-medium text-sm hover:bg-[#FFD700]/90 transition-colors duration-[180ms]"
+              className="mt-4 px-4 py-2 bg-[var(--hive-brand-secondary)] text-black rounded-lg font-medium text-sm hover:bg-[var(--hive-brand-secondary)]/90 transition-colors duration-[180ms]"
             >
               Try Again
             </button>
@@ -89,7 +89,7 @@ export function ProfileClient() {
 
   return (
     <AppLayout>
-      <div className="min-h-screen bg-[#0A0A0A]">
+      <div className="min-h-screen bg-[var(--hive-background-primary)]">
         <main className="container mx-auto px-4 py-8">
           <BentoProfileDashboard 
             user={{

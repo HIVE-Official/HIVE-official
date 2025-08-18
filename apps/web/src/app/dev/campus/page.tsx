@@ -22,7 +22,7 @@ export default function DevCampusPage() {
             {/* Campus Map */}
             <div className="bg-surface-01 border border-border rounded-lg p-6">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 bg-[#FFD700] rounded-lg flex items-center justify-center">
+                <div className="w-10 h-10 bg-[var(--hive-brand-secondary)] rounded-lg flex items-center justify-center">
                   <span className="text-black font-semibold">🗺️</span>
                 </div>
                 <h3 className="text-lg font-display font-semibold text-foreground">
@@ -35,7 +35,7 @@ export default function DevCampusPage() {
               <div className="bg-[#2A2A2A] rounded h-32 mb-4 flex items-center justify-center">
                 <span className="text-muted">Map Placeholder</span>
               </div>
-              <button className="text-xs text-[#FFD700] hover:text-[#FFD700]/80">
+              <button className="text-xs text-[var(--hive-brand-secondary)] hover:text-[var(--hive-brand-secondary)]/80">
                 Open Full Map →
               </button>
             </div>
@@ -79,7 +79,7 @@ export default function DevCampusPage() {
               <div className="space-y-3">
                 <div className="p-3 bg-[#2A2A2A]/30 rounded">
                   <div className="text-sm font-medium text-foreground">Library Hours</div>
-                  <div className="text-xs text-[#FFD700]">Open 24/7</div>
+                  <div className="text-xs text-[var(--hive-brand-secondary)]">Open 24/7</div>
                 </div>
                 <div className="p-3 bg-[#2A2A2A]/30 rounded">
                   <div className="text-sm font-medium text-foreground">Dining Halls</div>
@@ -96,7 +96,7 @@ export default function DevCampusPage() {
           {/* Campus Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
             <div className="text-center">
-              <div className="text-3xl font-bold text-[#FFD700] mb-2">32K</div>
+              <div className="text-3xl font-bold text-[var(--hive-brand-secondary)] mb-2">32K</div>
               <div className="text-sm text-muted">Students</div>
             </div>
             <div className="text-center">
@@ -139,8 +139,8 @@ export default function DevCampusPage() {
           </div>
 
           {/* Development Status */}
-          <div className="bg-[#FFD700]/10 border border-[#FFD700]/30 rounded-lg p-6">
-            <h3 className="text-xl font-display font-semibold text-[#FFD700] mb-4">
+          <div className="bg-[var(--hive-brand-secondary)]/10 border border-[var(--hive-brand-secondary)]/30 rounded-lg p-6">
+            <h3 className="text-xl font-display font-semibold text-[var(--hive-brand-secondary)] mb-4">
               🔧 Campus Development Status
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

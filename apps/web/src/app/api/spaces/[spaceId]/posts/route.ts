@@ -1,24 +1,25 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 import { z } from "zod";
 import { dbAdmin } from "@/lib/firebase-admin";
 import { getAuth } from "firebase-admin/auth";
 import { getAuthTokenFromRequest } from "@/lib/auth";
 import { postCreationRateLimit } from "@/lib/rate-limit";
-import { logger } from "@hive/core";
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 const CreatePostSchema = z.object({
   content: z.string().min(1).max(2000),
   type: z.enum(["text", "image", "link", "tool"]).default("text"),
   imageUrl: z.string().url().optional(),
   linkUrl: z.string().url().optional(),
-  toolId: z.string().optional(),
-});
+  toolId: z.string().optional() });
 
 const db = dbAdmin;
 
 // Simple profanity check - in production, use a proper service
 const checkProfanity = (text: string): boolean => {
-  const profanityWords = ["spam", "scam", "hack"];
+  const profanityWords = ["spam", "scam"]; // Minimal list for demo
   return profanityWords.some((word) => text.toLowerCase().includes(word));
 };
 
@@ -31,10 +32,7 @@ export async function GET(
     // Get and validate auth token
     const token = getAuthTokenFromRequest(request);
     if (!token) {
-      return NextResponse.json(
-        { error: "Authentication required" },
-        { status: 401 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Authentication required", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
     const auth = getAuth();
@@ -55,10 +53,7 @@ export async function GET(
       .get();
 
     if (!memberDoc.exists) {
-      return NextResponse.json(
-        { error: "Not a member of this space" },
-        { status: 403 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Not a member of this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     // Build query for posts
@@ -117,8 +112,7 @@ export async function GET(
               handle: author.handle,
               photoURL: author.photoURL,
             }
-          : null,
-      });
+          : null });
     }
 
     // Process regular posts
@@ -145,8 +139,7 @@ export async function GET(
               handle: author.handle,
               photoURL: author.photoURL,
             }
-          : null,
-      });
+          : null });
     }
 
     return NextResponse.json({
@@ -155,14 +148,10 @@ export async function GET(
       lastPostId:
         postsSnapshot.docs.length > 0
           ? postsSnapshot.docs[postsSnapshot.docs.length - 1].id
-          : null,
-    });
+          : null });
   } catch (error) {
-    logger.error("Error fetching posts:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch posts" },
-      { status: 500 }
-    );
+    logger.error('Error fetching posts', { error: error, endpoint: '/api/spaces/[spaceId]/posts' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to fetch posts", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -177,37 +166,28 @@ export async function POST(
     // Get auth header and verify token
     const authHeader = request.headers.get("authorization");
     if (!authHeader?.startsWith("Bearer ")) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
-    const token = authHeader.split("Bearer ")[1];
+    const token = authHeader.substring(7);
     const auth = getAuth();
     const decodedToken = await auth.verifyIdToken(token);
 
     // Check rate limiting
-    const { success, limit, remaining, reset, pending } = await postCreationRateLimit.limit(decodedToken.uid);
-    
-    // Handle pending operations for edge functions
-    if (pending) {
-      request.signal.addEventListener("abort", () => {
-        // Handle cleanup if needed
-      });
-    }
-
-    if (!success) {
+    const rateLimitResult = postCreationRateLimit.check(decodedToken.uid);
+    if (!rateLimitResult.success) {
       return NextResponse.json(
         {
           error: "Rate limit exceeded. Please wait before posting again.",
-          limit,
-          remaining,
-          reset,
         },
         {
           status: 429,
           headers: {
-            "X-RateLimit-Limit": limit.toString(),
-            "X-RateLimit-Remaining": remaining.toString(),
-            "X-RateLimit-Reset": reset.toString(),
+            "X-RateLimit-Limit": rateLimitResult.limit.toString(),
+            "X-RateLimit-Remaining": rateLimitResult.remaining.toString(),
+            "X-RateLimit-Reset": new Date(
+              rateLimitResult.resetTime
+            ).toISOString(),
           },
         }
       );
@@ -222,42 +202,75 @@ export async function POST(
       .get();
 
     if (!memberDoc.exists) {
-      return NextResponse.json(
-        { error: "Not a member of this space" },
-        { status: 403 }
-      );
+      return NextResponse.json(ApiResponseHelper.error("Not a member of this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
-    // Parse and validate request body
-    const body = await request.json();
-    const validatedBody = CreatePostSchema.parse(body);
+    const body = (await request.json()) as unknown;
+    const validatedData = CreatePostSchema.parse(body);
 
     // Check for profanity
-    if (checkProfanity(validatedBody.content)) {
+    if (checkProfanity(validatedData.content)) {
       return NextResponse.json(
-        { error: "Content contains inappropriate language" },
-        { status: 400 }
+        {
+          error:
+            "Post contains inappropriate content. Please revise and try again.",
+        },
+        { status: HttpStatus.BAD_REQUEST }
       );
     }
 
     // Create post document
-    const postRef = db.collection("spaces").doc(spaceId).collection("posts").doc();
-    await postRef.set({
-      id: postRef.id,
-      ...validatedBody,
+    const postData = {
+      ...validatedData,
       authorId: decodedToken.uid,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      likes: 0,
-      comments: 0,
-    });
+      spaceId: spaceId,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      reactions: {
+        heart: 0,
+      },
+      reactedUsers: {
+        heart: [],
+      },
+      isPinned: false,
+      isEdited: false,
+      isDeleted: false,
+    };
 
-    return NextResponse.json({ id: postRef.id });
+    const postRef = await db
+      .collection("spaces")
+      .doc(spaceId)
+      .collection("posts")
+      .add(postData);
+
+    // Get the created post with author info
+    const authorDoc = await dbAdmin.collection("users").doc(decodedToken.uid).get();
+    const author = authorDoc.data();
+
+    const createdPost = {
+      id: postRef.id,
+      ...postData,
+      author: {
+        id: decodedToken.uid,
+        fullName: author?.fullName || "Unknown User",
+        handle: author?.handle || "unknown",
+        photoURL: author?.photoURL || null,
+      },
+    };
+
+    return NextResponse.json({ post: createdPost }, { status: HttpStatus.CREATED });
   } catch (error) {
-    logger.error("Error creating post:", error);
-    return NextResponse.json(
-      { error: "Failed to create post" },
-      { status: 500 }
-    );
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        {
+          error: "Invalid post data",
+          details: error.errors,
+        },
+        { status: HttpStatus.BAD_REQUEST }
+      );
+    }
+
+    logger.error('Error creating post', { error: error, endpoint: '/api/spaces/[spaceId]/posts' });
+    return NextResponse.json(ApiResponseHelper.error("Failed to create post", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

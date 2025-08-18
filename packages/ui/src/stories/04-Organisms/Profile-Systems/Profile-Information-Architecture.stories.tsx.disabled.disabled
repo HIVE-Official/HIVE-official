@@ -1,0 +1,931 @@
+/**
+ * HIVE Profile Information Architecture: Complete IA & Navigation Flows
+ * Comprehensive demonstration of profile system information architecture
+ */
+
+import type { Meta, StoryObj } from '@storybook/react';
+import React, { useState, useCallback } from 'react';
+import { motion, AnimatePresence } from '../components/framer-motion-proxy';
+import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
+import { Button } from '../components/ui/button';
+import { Badge } from '../components/ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '../components/ui/avatar';
+import { Progress } from '../components/ui/progress';
+import { Separator } from '../components/ui/separator';
+import '../hive-tokens.css';
+import { 
+  User, Users, Calendar, Settings, Shield, Home, ArrowRight, ChevronRight, 
+  Edit, Eye, Bell, Lock, Globe, Smartphone, Heart, Star, Trophy, Target,
+  Wrench, Code, BarChart3, MessageSquare, Share, BookOpen, Crown, Coffee,
+  MapPin, Clock, Activity, TrendingUp, Plus, Search, Filter, Grid, List,
+  Menu, X, ChevronDown, ChevronUp, Layout, Palette, Volume2, Moon, Zap
+} from 'lucide-react';
+
+// Information Architecture Map
+const profileIA = {
+  'Profile Dashboard': {
+    icon: Home,
+    description: 'Main profile overview and quick actions',
+    sections: [
+      'Profile Header & Identity',
+      'Activity Stats & Metrics', 
+      'Recent Spaces & Connections',
+      'Upcoming Calendar Events',
+      'Quick Action Cards'
+    ],
+    userFlow: [
+      'Student lands on profile dashboard',
+      'Views personal stats and recent activity',
+      'Quick access to edit profile or settings',
+      'Navigate to specific sections as needed'
+    ]
+  },
+  'Profile Editing': {
+    icon: Edit,
+    description: 'Comprehensive profile information management',
+    sections: [
+      'Basic Information (Name, Handle, Bio)',
+      'Academic Details (Year, Major, Housing)',
+      'Contact & Social Links',
+      'Profile Photo Management',
+      'Preview & Validation'
+    ],
+    userFlow: [
+      'Click edit from profile dashboard',
+      'Navigate through tabbed sections',
+      'Real-time preview of changes',
+      'Save or discard modifications'
+    ]
+  },
+  'Privacy & Visibility': {
+    icon: Shield,
+    description: 'Privacy controls and visibility settings',
+    sections: [
+      'Profile Visibility (Public/Campus/Friends/Private)',
+      'Online Status & Ghost Mode',
+      'Activity Sharing Preferences',
+      'Direct Message Settings',
+      'Calendar Sharing Controls'
+    ],
+    userFlow: [
+      'Access from settings or profile edit',
+      'Configure visibility levels',
+      'Toggle ghost mode for privacy',
+      'Set activity sharing preferences'
+    ]
+  },
+  'Academic Integration': {
+    icon: BookOpen,
+    description: 'University at Buffalo academic context',
+    sections: [
+      'Course Spaces & Enrollment',
+      'Study Groups & Academic Communities',
+      'Campus Housing Integration',
+      'Academic Calendar Sync',
+      'GPA & Academic Progress'
+    ],
+    userFlow: [
+      'Connect UB academic information',
+      'Join course-specific spaces',
+      'Sync with academic calendar',
+      'Track academic progress'
+    ]
+  },
+  'Social Connections': {
+    icon: Users,
+    description: 'Campus community and networking',
+    sections: [
+      'Connections & Friends',
+      'Mutual Spaces & Interests',
+      'Campus Networking',
+      'Study Buddy Matching',
+      'Social Activity Feed'
+    ],
+    userFlow: [
+      'Discover campus connections',
+      'Join shared interest spaces',
+      'Find study partners',
+      'Build campus network'
+    ]
+  },
+  'Tools & Creations': {
+    icon: Wrench,
+    description: 'Builder tools and platform contributions',
+    sections: [
+      'Created Tools Portfolio',
+      'Tool Usage Analytics',
+      'Builder Recognition',
+      'Community Contributions',
+      'Development Dashboard'
+    ],
+    userFlow: [
+      'View created tools and usage',
+      'Track community impact',
+      'Earn builder recognition',
+      'Contribute to platform'
+    ]
+  },
+  'Settings & Preferences': {
+    icon: Settings,
+    description: 'Platform preferences and configuration',
+    sections: [
+      'Notification Preferences',
+      'Theme & Appearance',
+      'Language & Accessibility',
+      'Data & Privacy Controls',
+      'Account Management'
+    ],
+    userFlow: [
+      'Configure notification settings',
+      'Customize appearance preferences',
+      'Manage privacy controls',
+      'Update account information'
+    ]
+  }
+};
+
+// Navigation Flow Component
+function NavigationFlowDemo() {
+  const [currentSection, setCurrentSection] = useState('Profile Dashboard');
+  const [viewMode, setViewMode] = useState<'overview' | 'detailed' | 'flow'>('overview');
+  const [showMobileView, setShowMobileView] = useState(false);
+
+  const handleSectionChange = useCallback((section: string) => {
+    setCurrentSection(section);
+  }, []);
+
+  const IAOverview = () => (
+    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {Object.entries(profileIA).map(([section, details]) => (
+        <Card 
+          key={section}
+          className={`cursor-pointer transition-all hover:shadow-lg ${
+            currentSection === section ? 'ring-2 ring-[var(--hive-brand-primary)]' : ''
+          }`}
+          onClick={() => handleSectionChange(section)}
+        >
+          <CardHeader className="pb-3">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-lg bg-[var(--hive-brand-primary)] flex items-center justify-center">
+                <details.icon className="w-5 h-5 text-white" />
+              </div>
+              <div className="flex-1">
+                <CardTitle className="text-base">{section}</CardTitle>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-[var(--hive-text-muted)] mb-4">
+              {details.description}
+            </p>
+            <div className="space-y-2">
+              <p className="text-xs font-medium text-[var(--hive-text-secondary)]">Key Areas:</p>
+              <div className="flex flex-wrap gap-1">
+                {details.sections.slice(0, 3).map((area, index) => (
+                  <Badge key={index} variant="outline" className="text-xs">
+                    {area.split(' ').slice(0, 2).join(' ')}
+                  </Badge>
+                ))}
+                {details.sections.length > 3 && (
+                  <Badge variant="outline" className="text-xs">
+                    +{details.sections.length - 3}
+                  </Badge>
+                )}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+  );
+
+  const DetailedView = () => {
+    const currentDetails = profileIA[currentSection as keyof typeof profileIA];
+    
+    return (
+      <div className="grid lg:grid-cols-3 gap-6">
+        {/* Section Navigation */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">Profile Sections</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            {Object.keys(profileIA).map((section) => (
+              <button
+                key={section}
+                onClick={() => handleSectionChange(section)}
+                className={`w-full text-left px-3 py-2 rounded-lg transition-all ${
+                  currentSection === section
+                    ? 'bg-[var(--hive-brand-primary)] text-white'
+                    : 'hover:bg-[var(--hive-background-secondary)] text-[var(--hive-text-secondary)]'
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  <profileIA[section as keyof typeof profileIA].icon className="w-4 h-4" />
+                  <span className="text-sm font-medium">{section}</span>
+                </div>
+              </button>
+            ))}
+          </CardContent>
+        </Card>
+
+        {/* Current Section Details */}
+        <div className="lg:col-span-2 space-y-6">
+          <Card>
+            <CardHeader>
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-lg bg-[var(--hive-brand-primary)] flex items-center justify-center">
+                  <currentDetails.icon className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <CardTitle className="text-xl">{currentSection}</CardTitle>
+                  <p className="text-[var(--hive-text-muted)]">{currentDetails.description}</p>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              
+              {/* Sections Breakdown */}
+              <div>
+                <h4 className="font-semibold text-[var(--hive-text-primary)] mb-3">Content Sections</h4>
+                <div className="grid md:grid-cols-2 gap-3">
+                  {currentDetails.sections.map((section, index) => (
+                    <div key={index} className="flex items-center gap-3 p-3 bg-[var(--hive-background-secondary)] rounded-lg">
+                      <div className="w-6 h-6 rounded bg-[var(--hive-brand-primary)] flex items-center justify-center">
+                        <span className="text-xs text-white font-medium">{index + 1}</span>
+                      </div>
+                      <span className="text-sm text-[var(--hive-text-primary)]">{section}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* User Flow */}
+              <div>
+                <h4 className="font-semibold text-[var(--hive-text-primary)] mb-3">Typical User Flow</h4>
+                <div className="space-y-3">
+                  {currentDetails.userFlow.map((step, index) => (
+                    <div key={index} className="flex items-start gap-3">
+                      <div className="w-6 h-6 rounded-full bg-[var(--hive-status-info)] flex items-center justify-center mt-0.5">
+                        <span className="text-xs text-white font-medium">{index + 1}</span>
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm text-[var(--hive-text-secondary)]">{step}</p>
+                        {index < currentDetails.userFlow.length - 1 && (
+                          <div className="w-px h-4 bg-[var(--hive-border-primary)] ml-3 mt-2" />
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+            </CardContent>
+          </Card>
+
+          {/* Interactive Mockup */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Interactive Mockup</CardTitle>
+              <p className="text-sm text-[var(--hive-text-muted)]">
+                Visual representation of {currentSection.toLowerCase()} interface
+              </p>
+            </CardHeader>
+            <CardContent>
+              {currentSection === 'Profile Dashboard' && <DashboardMockup />}
+              {currentSection === 'Profile Editing' && <EditingMockup />}
+              {currentSection === 'Privacy & Visibility' && <PrivacyMockup />}
+              {currentSection === 'Academic Integration' && <AcademicMockup />}
+              {currentSection === 'Social Connections' && <SocialMockup />}
+              {currentSection === 'Tools & Creations' && <ToolsMockup />}
+              {currentSection === 'Settings & Preferences' && <SettingsMockup />}
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  };
+
+  const FlowVisualization = () => (
+    <div className="space-y-8">
+      <div className="text-center">
+        <h3 className="text-xl font-bold text-[var(--hive-text-primary)] mb-2">
+          Complete Profile System Information Architecture
+        </h3>
+        <p className="text-[var(--hive-text-muted)]">
+          Visual representation of navigation flows and section relationships
+        </p>
+      </div>
+
+      {/* Main Flow Diagram */}
+      <div className="relative">
+        <svg className="w-full h-96" viewBox="0 0 800 400">
+          {/* Central Hub */}
+          <circle cx="400" cy="200" r="60" fill="var(--hive-brand-primary)" />
+          <text x="400" y="200" textAnchor="middle" dy="0.3em" fill="white" fontSize="14" fontWeight="bold">
+            Profile
+          </text>
+          <text x="400" y="215" textAnchor="middle" dy="0.3em" fill="white" fontSize="12">
+            Dashboard
+          </text>
+
+          {/* Section Nodes */}
+          {Object.entries(profileIA).filter(([key]) => key !== 'Profile Dashboard').map(([section, details], index) => {
+            const angle = (index * 2 * Math.PI) / 6;
+            const x = 400 + 150 * Math.cos(angle);
+            const y = 200 + 150 * Math.sin(angle);
+            
+            return (
+              <g key={section}>
+                {/* Connection Line */}
+                <line x1="400" y1="200" x2={x} y2={y} stroke="var(--hive-border-primary)" strokeWidth="2" />
+                
+                {/* Section Node */}
+                <circle cx={x} cy={y} r="40" fill="var(--hive-background-secondary)" stroke="var(--hive-border-primary)" strokeWidth="2" />
+                <text x={x} y={y - 5} textAnchor="middle" dy="0.3em" fill="var(--hive-text-primary)" fontSize="10" fontWeight="medium">
+                  {section.split(' ')[0]}
+                </text>
+                <text x={x} y={y + 8} textAnchor="middle" dy="0.3em" fill="var(--hive-text-primary)" fontSize="10">
+                  {section.split(' ').slice(1).join(' ')}
+                </text>
+              </g>
+            );
+          })}
+        </svg>
+      </div>
+
+      {/* Flow Legend */}
+      <div className="grid md:grid-cols-3 gap-4">
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-8 h-8 rounded-full bg-[var(--hive-brand-primary)] flex items-center justify-center">
+                <Home className="w-4 h-4 text-white" />
+              </div>
+              <h4 className="font-medium">Central Hub</h4>
+            </div>
+            <p className="text-sm text-[var(--hive-text-muted)]">
+              Profile Dashboard serves as the central navigation point for all profile-related activities
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-8 h-8 rounded-full bg-[var(--hive-background-secondary)] border-2 border-[var(--hive-border-primary)] flex items-center justify-center">
+                <ArrowRight className="w-4 h-4 text-[var(--hive-text-primary)]" />
+              </div>
+              <h4 className="font-medium">Section Access</h4>
+            </div>
+            <p className="text-sm text-[var(--hive-text-muted)]">
+              Each section is directly accessible from the dashboard with clear navigation paths
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-8 h-8 rounded-full bg-[var(--hive-status-success)] flex items-center justify-center">
+                <ChevronRight className="w-4 h-4 text-white" />
+              </div>
+              <h4 className="font-medium">Deep Flows</h4>
+            </div>
+            <p className="text-sm text-[var(--hive-text-muted)]">
+              Complex workflows like editing and privacy settings have multi-step flows with clear progression
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="space-y-6">
+      {/* View Controls */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-[var(--hive-text-primary)]">Profile Information Architecture</h2>
+          <p className="text-[var(--hive-text-muted)]">Complete navigation flows and content organization</p>
+        </div>
+        <div className="flex gap-2">
+          <Button
+            variant={viewMode === 'overview' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setViewMode('overview')}
+          >
+            <Grid className="w-4 h-4 mr-2" />
+            Overview
+          </Button>
+          <Button
+            variant={viewMode === 'detailed' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setViewMode('detailed')}
+          >
+            <List className="w-4 h-4 mr-2" />
+            Detailed
+          </Button>
+          <Button
+            variant={viewMode === 'flow' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setViewMode('flow')}
+          >
+            <Activity className="w-4 h-4 mr-2" />
+            Flow
+          </Button>
+        </div>
+      </div>
+
+      {/* Content Based on View Mode */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={viewMode}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.3 }}
+        >
+          {viewMode === 'overview' && <IAOverview />}
+          {viewMode === 'detailed' && <DetailedView />}
+          {viewMode === 'flow' && <FlowVisualization />}
+        </motion.div>
+      </AnimatePresence>
+
+      {/* Mobile View Toggle */}
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <CardTitle>Mobile Experience</CardTitle>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowMobileView(!showMobileView)}
+            >
+              <Smartphone className="w-4 h-4 mr-2" />
+              {showMobileView ? 'Hide' : 'Show'} Mobile
+            </Button>
+          </div>
+        </CardHeader>
+        {showMobileView && (
+          <CardContent>
+            <MobileNavigationDemo />
+          </CardContent>
+        )}
+      </Card>
+    </div>
+  );
+}
+
+// Section Mockup Components
+const DashboardMockup = () => (
+  <div className="bg-[var(--hive-background-secondary)] p-4 rounded-lg space-y-4">
+    <div className="flex items-center gap-4">
+      <Avatar className="w-16 h-16">
+        <AvatarImage src="https://images.unsplash.com/photo-1494790108755-2616b2e5c60a?w=64&h=64&fit=crop&crop=face" />
+        <AvatarFallback>SC</AvatarFallback>
+      </Avatar>
+      <div className="flex-1">
+        <h3 className="font-semibold text-[var(--hive-text-primary)]">Sarah Chen</h3>
+        <p className="text-sm text-[var(--hive-text-muted)]">@sarahc_cs • 2026 • Computer Science</p>
+        <div className="flex items-center gap-2 mt-1">
+          <div className="w-2 h-2 rounded-full bg-green-500" />
+          <span className="text-xs text-[var(--hive-text-muted)]">Online</span>
+        </div>
+      </div>
+      <Button size="sm" variant="outline">
+        <Edit className="w-4 h-4 mr-2" />
+        Edit
+      </Button>
+    </div>
+    
+    <div className="grid grid-cols-4 gap-3">
+      {[
+        { label: 'Spaces', value: '12', icon: Users },
+        { label: 'Tools', value: '4', icon: Wrench },
+        { label: 'Friends', value: '89', icon: Heart },
+        { label: 'Points', value: '1.2K', icon: Trophy },
+      ].map((stat) => (
+        <div key={stat.label} className="text-center p-3 bg-[var(--hive-background-primary)] rounded">
+          <stat.icon className="w-5 h-5 mx-auto mb-1 text-[var(--hive-brand-primary)]" />
+          <div className="font-semibold text-[var(--hive-text-primary)]">{stat.value}</div>
+          <div className="text-xs text-[var(--hive-text-muted)]">{stat.label}</div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+const EditingMockup = () => (
+  <div className="bg-[var(--hive-background-secondary)] p-4 rounded-lg space-y-4">
+    <div className="flex items-center justify-between mb-4">
+      <h3 className="font-semibold text-[var(--hive-text-primary)]">Edit Profile</h3>
+      <div className="flex gap-2">
+        <Button size="sm" variant="outline">Cancel</Button>
+        <Button size="sm">Save</Button>
+      </div>
+    </div>
+    
+    <div className="space-y-3">
+      <div>
+        <label className="text-xs font-medium text-[var(--hive-text-secondary)]">Display Name</label>
+        <div className="h-8 bg-[var(--hive-background-primary)] rounded border mt-1"></div>
+      </div>
+      <div>
+        <label className="text-xs font-medium text-[var(--hive-text-secondary)]">Bio</label>
+        <div className="h-16 bg-[var(--hive-background-primary)] rounded border mt-1"></div>
+      </div>
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <label className="text-xs font-medium text-[var(--hive-text-secondary)]">Year</label>
+          <div className="h-8 bg-[var(--hive-background-primary)] rounded border mt-1"></div>
+        </div>
+        <div>
+          <label className="text-xs font-medium text-[var(--hive-text-secondary)]">Major</label>
+          <div className="h-8 bg-[var(--hive-background-primary)] rounded border mt-1"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+const PrivacyMockup = () => (
+  <div className="bg-[var(--hive-background-secondary)] p-4 rounded-lg space-y-3">
+    <h3 className="font-semibold text-[var(--hive-text-primary)] mb-3">Privacy Settings</h3>
+    
+    {[
+      'Profile Visibility',
+      'Show Online Status', 
+      'Allow Messages',
+      'Share Calendar',
+      'Ghost Mode'
+    ].map((setting) => (
+      <div key={setting} className="flex items-center justify-between p-2 bg-[var(--hive-background-primary)] rounded">
+        <span className="text-sm text-[var(--hive-text-primary)]">{setting}</span>
+        <div className="w-8 h-4 bg-[var(--hive-brand-primary)] rounded-full"></div>
+      </div>
+    ))}
+  </div>
+);
+
+const AcademicMockup = () => (
+  <div className="bg-[var(--hive-background-secondary)] p-4 rounded-lg space-y-3">
+    <h3 className="font-semibold text-[var(--hive-text-primary)] mb-3">Academic Integration</h3>
+    
+    <div className="space-y-2">
+      {[
+        'CSE 331: Algorithm Analysis',
+        'MTH 309: Discrete Mathematics',
+        'CSE 250: Data Structures'
+      ].map((course) => (
+        <div key={course} className="flex items-center gap-3 p-2 bg-[var(--hive-background-primary)] rounded">
+          <BookOpen className="w-4 h-4 text-[var(--hive-brand-primary)]" />
+          <span className="text-sm text-[var(--hive-text-primary)]">{course}</span>
+          <Badge variant="outline" className="ml-auto text-xs">Enrolled</Badge>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+const SocialMockup = () => (
+  <div className="bg-[var(--hive-background-secondary)] p-4 rounded-lg space-y-3">
+    <h3 className="font-semibold text-[var(--hive-text-primary)] mb-3">Social Connections</h3>
+    
+    <div className="grid grid-cols-3 gap-2">
+      {Array.from({ length: 6 }, (_, i) => (
+        <div key={i} className="text-center p-2 bg-[var(--hive-background-primary)] rounded">
+          <Avatar className="w-8 h-8 mx-auto mb-1">
+            <AvatarFallback className="text-xs">U{i + 1}</AvatarFallback>
+          </Avatar>
+          <div className="text-xs text-[var(--hive-text-primary)]">User {i + 1}</div>
+        </div>
+      ))}
+    </div>
+    
+    <Button size="sm" className="w-full mt-3">
+      <UserPlus className="w-4 h-4 mr-2" />
+      Find Campus Friends
+    </Button>
+  </div>
+);
+
+const ToolsMockup = () => (
+  <div className="bg-[var(--hive-background-secondary)] p-4 rounded-lg space-y-3">
+    <div className="flex items-center justify-between mb-3">
+      <h3 className="font-semibold text-[var(--hive-text-primary)]">My Tools</h3>
+      <Badge variant="outline" className="text-xs">Builder</Badge>
+    </div>
+    
+    <div className="space-y-2">
+      {[
+        { name: 'GPA Calculator', uses: '1.2K' },
+        { name: 'Laundry Tracker', uses: '456' },
+        { name: 'Study Timer', uses: '89' }
+      ].map((tool) => (
+        <div key={tool.name} className="flex items-center justify-between p-2 bg-[var(--hive-background-primary)] rounded">
+          <div className="flex items-center gap-2">
+            <Wrench className="w-4 h-4 text-[var(--hive-brand-primary)]" />
+            <span className="text-sm text-[var(--hive-text-primary)]">{tool.name}</span>
+          </div>
+          <div className="text-xs text-[var(--hive-text-muted)]">{tool.uses} uses</div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+const SettingsMockup = () => (
+  <div className="bg-[var(--hive-background-secondary)] p-4 rounded-lg space-y-3">
+    <h3 className="font-semibold text-[var(--hive-text-primary)] mb-3">Settings</h3>
+    
+    <div className="space-y-2">
+      {[
+        { icon: Bell, label: 'Notifications' },
+        { icon: Palette, label: 'Appearance' },
+        { icon: Globe, label: 'Language' },
+        { icon: Shield, label: 'Privacy' },
+        { icon: User, label: 'Account' }
+      ].map((setting) => (
+        <div key={setting.label} className="flex items-center gap-3 p-2 bg-[var(--hive-background-primary)] rounded hover:bg-[var(--hive-background-tertiary)] cursor-pointer">
+          <setting.icon className="w-4 h-4 text-[var(--hive-text-muted)]" />
+          <span className="text-sm text-[var(--hive-text-primary)]">{setting.label}</span>
+          <ChevronRight className="w-4 h-4 text-[var(--hive-text-muted)] ml-auto" />
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+const MobileNavigationDemo = () => (
+  <div className="max-w-sm mx-auto bg-[var(--hive-background-secondary)] rounded-lg overflow-hidden">
+    {/* Mobile Header */}
+    <div className="flex items-center justify-between p-4 bg-[var(--hive-background-primary)]">
+      <h3 className="font-semibold text-[var(--hive-text-primary)]">Profile</h3>
+      <Button variant="ghost" size="sm">
+        <Menu className="w-5 h-5" />
+      </Button>
+    </div>
+    
+    {/* Profile Quick View */}
+    <div className="p-4 border-b border-[var(--hive-border-primary)]">
+      <div className="flex items-center gap-3">
+        <Avatar className="w-12 h-12">
+          <AvatarImage src="https://images.unsplash.com/photo-1494790108755-2616b2e5c60a?w=48&h=48&fit=crop&crop=face" />
+          <AvatarFallback>SC</AvatarFallback>
+        </Avatar>
+        <div className="flex-1">
+          <p className="font-medium text-[var(--hive-text-primary)]">Sarah Chen</p>
+          <p className="text-sm text-[var(--hive-text-muted)]">@sarahc_cs</p>
+        </div>
+        <Button size="sm" variant="outline">Edit</Button>
+      </div>
+    </div>
+    
+    {/* Mobile Navigation Items */}
+    <div className="p-2">
+      {Object.entries(profileIA).map(([section, details]) => (
+        <button
+          key={section}
+          className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-[var(--hive-background-primary)] text-left"
+        >
+          <details.icon className="w-5 h-5 text-[var(--hive-text-muted)]" />
+          <span className="text-sm text-[var(--hive-text-primary)]">{section}</span>
+          <ChevronRight className="w-4 h-4 text-[var(--hive-text-muted)] ml-auto" />
+        </button>
+      ))}
+    </div>
+    
+    {/* Mobile Bottom Navigation */}
+    <div className="flex items-center justify-around p-3 bg-[var(--hive-background-primary)] border-t border-[var(--hive-border-primary)]">
+      {[
+        { icon: Home, label: 'Home' },
+        { icon: Users, label: 'Spaces' },
+        { icon: Calendar, label: 'Calendar' },
+        { icon: User, label: 'Profile', active: true }
+      ].map((item) => (
+        <div key={item.label} className="flex flex-col items-center gap-1">
+          <item.icon className={`w-5 h-5 ${item.active ? 'text-[var(--hive-brand-primary)]' : 'text-[var(--hive-text-muted)]'}`} />
+          <span className={`text-xs ${item.active ? 'text-[var(--hive-brand-primary)]' : 'text-[var(--hive-text-muted)]'}`}>
+            {item.label}
+          </span>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+const meta: Meta = {
+  title: '05-Live-Frontend/Profile Information Architecture',
+  parameters: {
+    layout: 'fullscreen',
+    docs: {
+      description: {
+        component: `
+# HIVE Profile Information Architecture
+
+**Complete information architecture and navigation flow documentation for the HIVE profile system.**
+
+## 🏗️ Information Architecture Overview
+
+The HIVE profile system is organized around a central dashboard with spoke-like access to specialized sections:
+
+### **Core Sections**
+- **Profile Dashboard** - Central hub with overview and quick actions
+- **Profile Editing** - Comprehensive information management
+- **Privacy & Visibility** - Privacy controls and visibility settings
+- **Academic Integration** - University at Buffalo academic context
+- **Social Connections** - Campus community and networking
+- **Tools & Creations** - Builder tools and platform contributions
+- **Settings & Preferences** - Platform preferences and configuration
+
+### **Navigation Principles**
+- **Hub-and-Spoke Model** - Dashboard as central navigation point
+- **Progressive Disclosure** - Complex sections broken into manageable steps
+- **Context Awareness** - Navigation adapts to user type (student, faculty, builder)
+- **Mobile-First** - Touch-friendly navigation optimized for campus mobility
+
+## 📱 Multi-Device Experience
+
+The information architecture adapts seamlessly across devices:
+- **Desktop** - Full sidebar navigation with detailed content areas
+- **Tablet** - Collapsible navigation with optimized layouts
+- **Mobile** - Bottom tab navigation with slide-out menus
+
+## 🎓 University at Buffalo Context
+
+Every section is designed specifically for UB campus life:
+- **Academic Integration** - Course spaces, study groups, and housing
+- **Campus Navigation** - Building-aware location services
+- **Social Hierarchy** - Student, TA, faculty, and builder recognition
+- **Privacy Controls** - Campus-appropriate visibility settings
+        `,
+      },
+    },
+  },
+  tags: ['autodocs'],
+};
+
+export default meta;
+type Story = StoryObj;
+
+export const CompleteInformationArchitecture: Story = {
+  render: () => <NavigationFlowDemo />,
+  parameters: {
+    docs: {
+      description: {
+        story: `
+**Complete information architecture visualization with interactive navigation flows.**
+
+This demonstration includes:
+- **Overview Mode** - Grid view of all profile sections with key features
+- **Detailed Mode** - In-depth exploration of section content and user flows  
+- **Flow Mode** - Visual diagram of navigation relationships and pathways
+- **Mobile Demo** - Mobile-specific navigation patterns and interactions
+
+Use the view mode controls to explore different aspects of the profile system's information architecture.
+        `,
+      },
+    },
+  },
+};
+
+export const UserFlowVisualization: Story = {
+  render: () => {
+    const [activeFlow, setActiveFlow] = useState('new-user');
+    
+    const userFlows = {
+      'new-user': {
+        title: 'New User Onboarding',
+        description: 'First-time user setting up their UB profile',
+        steps: [
+          'Land on profile setup page',
+          'Upload profile photo or use initials',
+          'Enter basic info (name, handle, bio)',
+          'Select academic details (year, major, housing)',
+          'Configure privacy preferences',
+          'Join first course spaces',
+          'Complete profile setup'
+        ]
+      },
+      'profile-update': {
+        title: 'Profile Information Update',
+        description: 'Existing user updating their profile information',
+        steps: [
+          'Navigate to profile dashboard',
+          'Click edit profile button',
+          'Update specific fields in tabbed interface',
+          'Preview changes in real-time',
+          'Save changes with confirmation',
+          'Return to updated dashboard'
+        ]
+      },
+      'privacy-config': {
+        title: 'Privacy Configuration',
+        description: 'Student adjusting privacy and visibility settings',
+        steps: [
+          'Access privacy settings from profile or settings menu',
+          'Review current visibility level',
+          'Adjust profile visibility (public/campus/friends/private)',
+          'Configure ghost mode for temporary privacy',
+          'Set activity sharing preferences',
+          'Save privacy configuration'
+        ]
+      },
+      'builder-journey': {
+        title: 'Builder Recognition Journey',
+        description: 'Student becoming a recognized platform builder',
+        steps: [
+          'Create first tool or element',
+          'Share tool with campus community',
+          'Receive positive feedback and usage',
+          'Earn builder recognition badge',
+          'Access builder dashboard and analytics',
+          'Contribute more tools to platform'
+        ]
+      }
+    };
+
+    return (
+      <div className="space-y-6">
+        <div className="text-center">
+          <h3 className="text-xl font-bold text-[var(--hive-text-primary)] mb-2">User Flow Visualization</h3>
+          <p className="text-[var(--hive-text-muted)]">
+            Common user journeys through the HIVE profile system
+          </p>
+        </div>
+
+        {/* Flow Selection */}
+        <div className="flex flex-wrap gap-2 justify-center">
+          {Object.entries(userFlows).map(([key, flow]) => (
+            <Button
+              key={key}
+              variant={activeFlow === key ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setActiveFlow(key)}
+              className="text-sm"
+            >
+              {flow.title}
+            </Button>
+          ))}
+        </div>
+
+        {/* Active Flow Display */}
+        <Card>
+          <CardHeader>
+            <CardTitle>{userFlows[activeFlow as keyof typeof userFlows].title}</CardTitle>
+            <p className="text-[var(--hive-text-muted)]">
+              {userFlows[activeFlow as keyof typeof userFlows].description}
+            </p>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-6">
+              {userFlows[activeFlow as keyof typeof userFlows].steps.map((step, index) => (
+                <div key={index} className="flex items-start gap-4">
+                  <div className="w-8 h-8 rounded-full bg-[var(--hive-brand-primary)] flex items-center justify-center">
+                    <span className="text-sm text-white font-medium">{index + 1}</span>
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-[var(--hive-text-primary)]">{step}</p>
+                    {index < userFlows[activeFlow as keyof typeof userFlows].steps.length - 1 && (
+                      <div className="w-px h-8 bg-[var(--hive-border-primary)] ml-4 mt-2" />
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Flow Metrics */}
+        <div className="grid md:grid-cols-3 gap-4">
+          <Card>
+            <CardContent className="p-4 text-center">
+              <div className="text-2xl font-bold text-[var(--hive-brand-primary)] mb-1">7</div>
+              <p className="text-sm text-[var(--hive-text-muted)]">Average Steps</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-4 text-center">
+              <div className="text-2xl font-bold text-[var(--hive-brand-primary)] mb-1">3-5</div>
+              <p className="text-sm text-[var(--hive-text-muted)]">Minutes to Complete</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-4 text-center">
+              <div className="text-2xl font-bold text-[var(--hive-brand-primary)] mb-1">94%</div>
+              <p className="text-sm text-[var(--hive-text-muted)]">Completion Rate</p>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Visualization of common user flows through the profile system, showing step-by-step journeys for different user scenarios.',
+      },
+    },
+  },
+};

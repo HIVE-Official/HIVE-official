@@ -1,0 +1,54 @@
+/* Safe Area Utilities for iOS devices */
+.safe-area-pt {
+  padding-top: env(safe-area-inset-top);
+}
+
+.safe-area-pb {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.safe-area-pl {
+  padding-left: env(safe-area-inset-left);
+}
+
+.safe-area-pr {
+  padding-right: env(safe-area-inset-right);
+}
+
+.safe-area-p {
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+/* Height utilities for safe area */
+.h-safe-area-inset-top {
+  height: env(safe-area-inset-top);
+}
+
+.h-safe-area-inset-bottom {
+  height: env(safe-area-inset-bottom);
+}
+
+/* Bottom navigation safe area support */
+.bottom-nav-safe {
+  padding-bottom: max(1rem, env(safe-area-inset-bottom));
+}
+
+/* Viewport height minus safe areas */
+.min-h-screen-safe {
+  min-height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+}
+
+.h-screen-safe {
+  height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+}
+
+/* iOS specific overrides */
+@supports (padding: max(0px)) {
+  .safe-area-pb {
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+  
+  .bottom-nav-safe {
+    padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+  }
+}

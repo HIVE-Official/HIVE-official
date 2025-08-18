@@ -58,7 +58,7 @@ export default function ModerationPage() {
     setReviewingId(null);
     
     // In real implementation, call API to approve photo
-    console.log('Approved photo:', photoId);
+    
   };
 
   const handleReject = async (photoId: string, reason: string = 'Violates community guidelines') => {
@@ -71,7 +71,7 @@ export default function ModerationPage() {
     setReviewingId(null);
     
     // In real implementation, call API to reject photo
-    console.log('Rejected photo:', photoId, 'Reason:', reason);
+    
   };
 
   const formatTimeAgo = (date: Date) => {

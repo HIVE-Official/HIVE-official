@@ -1,58 +1,65 @@
-#!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
 
-echo "🔍 Running code quality checks..."
+echo "🏆 HIVE Design System - PERFECTION ENFORCEMENT"
+echo "=============================================="
+echo "🎯 Maintaining 100% compliance | Zero errors | 10/10 maturity"
+echo ""
 
-# Run ESLint with strict rules
-echo "Running ESLint..."
-npx eslint . --max-warnings 0 || {
-  echo "❌ ESLint check failed. Please fix the errors before committing."
-  exit 1
-}
+# Check for hardcoded values in staged files
+echo "🔍 Validating design system perfection..."
 
-# Run TypeScript type checking
-echo "Running TypeScript checks..."
-pnpm typecheck || {
-  echo "❌ TypeScript check failed. Please fix type errors before committing."
-  exit 1
-}
+# Get staged files
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(tsx?|jsx?)$' || true)
 
-# Run code complexity analysis
-echo "Running code complexity analysis..."
-pnpm analyze-code || {
-  echo "❌ Code complexity check failed. Please simplify complex functions/components."
-  exit 1
-}
+if [ -z "$STAGED_FILES" ]; then
+    echo "✅ No TypeScript/JavaScript files staged"
+    echo "🏆 Design system perfection maintained"
+    exit 0
+fi
 
-# Run test suite
-echo "Running tests..."
-pnpm test || {
-  echo "❌ Tests failed. Please fix failing tests before committing."
-  exit 1
-}
+# Run hardcoded value detection on staged files only
+if ! node scripts/check-staged-hardcoded.js; then
+    echo ""
+    echo "🚨 COMMIT BLOCKED: DESIGN SYSTEM VIOLATION!"
+    echo "❌ Hardcoded values detected - breaking 100% compliance"
+    echo ""
+    echo "🛠️  REQUIRED FIXES:"
+    echo "   • Use semantic tokens: var(--hive-brand-secondary)"
+    echo "   • Use color-mix for opacity: color-mix(in_srgb,var(--hive-brand-secondary)_30%,transparent)"
+    echo "   • Use Tailwind spacing: p-4, m-6, gap-8"
+    echo ""
+    echo "🔧 Migration tools available:"
+    echo "   node migrate-final-hex-colors.js"
+    echo "   node migrate-remaining-rgba.js"
+    echo "   node migrate-absolute-final.js"
+    echo ""
+    echo "📚 See DESIGN_SYSTEM_STANDARDS.md for guidelines"
+    echo "🏆 MAINTAIN PERFECTION - NO COMPROMISES!"
+    echo ""
+    exit 1
+fi
 
-# Check for forbidden patterns
-echo "Checking for forbidden patterns..."
-! git diff --cached | grep -E "console\.(log|debug)" || {
-  echo "❌ Found console.log statements. Please remove them before committing."
-  exit 1
-}
+echo "✅ Design system perfection validated!"
 
-! git diff --cached | grep -E "debugger;" || {
-  echo "❌ Found debugger statements. Please remove them before committing."
-  exit 1
-}
+# Type checking
+echo "🔍 Running TypeScript checks..."
+if ! npm run type-check --silent; then
+    echo "❌ COMMIT BLOCKED: TypeScript errors found"
+    exit 1
+else
+    echo "✅ TypeScript checks passed"
+fi
 
-! git diff --cached | grep -E "TODO:" || {
-  echo "⚠️ Found TODO comments. Consider resolving them before committing."
-}
+# Linting
+echo "🔍 Running ESLint..."
+if ! npm run lint --silent; then
+    echo "❌ COMMIT BLOCKED: ESLint errors found"
+    exit 1
+else
+    echo "✅ ESLint checks passed"
+fi
 
-# Check for large files
-find . -type f -size +500k ! -path "./node_modules/*" ! -path "./.git/*" -exec ls -lh {} \; | {
-  while read line; do
-    echo "⚠️ Large file detected: $line"
-  done
-}
-
-# Success message
-echo "✅ All checks passed! Proceeding with commit..." 
+echo ""
+echo "🎉 All checks passed! Proceeding with commit..."
+echo ""

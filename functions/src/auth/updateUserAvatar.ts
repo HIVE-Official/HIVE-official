@@ -39,7 +39,7 @@ export const updateUserAvatar = functions.https.onCall(
 
       return { success: true, message: "Avatar updated successfully" };
     } catch (error) {
-      functions.logger.error("Error updating avatar:", error);
+      console.error("Error updating avatar:", error);
       throw new FirebaseHttpsError("internal", "Failed to update avatar");
     }
   }

@@ -1,0 +1,81 @@
+/**
+ * HIVE Base Theme
+ * Core theme foundation for HIVE campus platform
+ */
+export const baseTheme = {
+    name: 'hive-base',
+    colors: {
+        // Primary HIVE brand colors
+        primary: {
+            50: 'var(--hive-gold-50)',
+            100: 'var(--hive-gold-100)',
+            200: 'var(--hive-gold-200)',
+            300: 'var(--hive-gold-300)',
+            400: 'var(--hive-gold-400)',
+            500: 'var(--hive-gold-500)',
+            600: 'var(--hive-gold-600)',
+            700: 'var(--hive-gold-700)',
+            800: 'var(--hive-gold-800)',
+            900: 'var(--hive-gold-900)',
+        },
+        // Campus neutrals
+        neutral: {
+            50: 'var(--hive-neutral-50)',
+            100: 'var(--hive-neutral-100)',
+            200: 'var(--hive-neutral-200)',
+            300: 'var(--hive-neutral-300)',
+            400: 'var(--hive-neutral-400)',
+            500: 'var(--hive-neutral-500)',
+            600: 'var(--hive-neutral-600)',
+            700: 'var(--hive-neutral-700)',
+            800: 'var(--hive-neutral-800)',
+            900: 'var(--hive-neutral-900)',
+        },
+        // Semantic colors
+        semantic: {
+            success: 'var(--hive-emerald-500)',
+            warning: 'var(--hive-amber-500)',
+            error: 'var(--hive-red-500)',
+            info: 'var(--hive-blue-500)',
+        },
+    },
+    spacing: {
+        xs: 'var(--hive-space-xs)',
+        sm: 'var(--hive-space-sm)',
+        md: 'var(--hive-space-md)',
+        lg: 'var(--hive-space-lg)',
+        xl: 'var(--hive-space-xl)',
+        '2xl': 'var(--hive-space-2xl)',
+    },
+    typography: {
+        fontFamily: {
+            sans: 'var(--hive-font-sans)',
+            heading: 'var(--hive-font-heading)',
+            mono: 'var(--hive-font-mono)',
+        },
+        fontSize: {
+            xs: 'var(--hive-text-xs)',
+            sm: 'var(--hive-text-sm)',
+            base: 'var(--hive-text-base)',
+            lg: 'var(--hive-text-lg)',
+            xl: 'var(--hive-text-xl)',
+            '2xl': 'var(--hive-text-2xl)',
+            '3xl': 'var(--hive-text-3xl)',
+        }
+    },
+    radius: {
+        none: 'var(--hive-radius-none)',
+        sm: 'var(--hive-radius-sm)',
+        md: 'var(--hive-radius-md)',
+        lg: 'var(--hive-radius-lg)',
+        full: 'var(--hive-radius-full)',
+    },
+    shadows: {
+        sm: 'var(--hive-shadow-sm)',
+        md: 'var(--hive-shadow-md)',
+        lg: 'var(--hive-shadow-lg)',
+        brand: 'var(--hive-shadow-brand)',
+        gold: 'var(--hive-shadow-gold-glow)',
+    }
+};
+//# sourceMappingURL=base.js.map

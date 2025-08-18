@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion, Variants, Easing } from 'framer-motion';
 import { HiveLogo } from '../HiveLogo';
-import { cn } from '../../lib/utils';
+import { cn } from '../lib/utils';
 
 interface SplashScreenProps {
   tagline?: string;

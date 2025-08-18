@@ -14,34 +14,34 @@ export const hiveTransitions = {
     ease: [0.33, 0.65, 0, 1], // HIVE signature curve
   } satisfies Transition,
 
-  fast: {
-    duration: parseFloat(motion.duration.fast) / 1000,
+  quick: {
+    duration: parseFloat(motion.duration.quick) / 1000,
     ease: [0.33, 0.65, 0, 1],
   } satisfies Transition,
 
-  base: {
-    duration: parseFloat(motion.duration.base) / 1000,
+  smooth: {
+    duration: parseFloat(motion.duration.smooth) / 1000,
     ease: [0.33, 0.65, 0, 1],
   } satisfies Transition,
 
-  slow: {
-    duration: parseFloat(motion.duration.slow) / 1000,
+  liquid: {
+    duration: parseFloat(motion.duration.liquid) / 1000,
     ease: [0.25, 0.46, 0.45, 0.94], // smooth curve
   } satisfies Transition,
 
-  ritual: {
-    duration: parseFloat(motion.duration.ritual) / 1000,
+  dramatic: {
+    duration: parseFloat(motion.duration.dramatic) / 1000,
     ease: [0.68, -0.55, 0.265, 1.55], // snap curve for special moments
   } satisfies Transition,
 
   // Easing variations
-  smooth: {
-    duration: parseFloat(motion.duration.base) / 1000,
+  flowing: {
+    duration: parseFloat(motion.duration.flowing) / 1000,
     ease: [0.25, 0.46, 0.45, 0.94],
   } satisfies Transition,
 
   elegant: {
-    duration: parseFloat(motion.duration.base) / 1000,
+    duration: parseFloat(motion.duration.smooth) / 1000,
     ease: [0.23, 1, 0.32, 1],
   } satisfies Transition,
 } as const;
@@ -53,7 +53,7 @@ export const hiveVariants = {
     hidden: { opacity: 0 },
     visible: { 
       opacity: 1,
-      transition: hiveTransitions.base,
+      transition: hiveTransitions.smooth,
     },
   } satisfies Variants,
 
@@ -62,7 +62,7 @@ export const hiveVariants = {
     visible: { 
       opacity: 1, 
       y: 0,
-      transition: hiveTransitions.base,
+      transition: hiveTransitions.smooth,
     },
   } satisfies Variants,
 
@@ -71,7 +71,7 @@ export const hiveVariants = {
     visible: { 
       opacity: 1, 
       y: 0,
-      transition: hiveTransitions.base,
+      transition: hiveTransitions.smooth,
     },
   } satisfies Variants,
 
@@ -80,7 +80,7 @@ export const hiveVariants = {
     visible: { 
       opacity: 1, 
       scale: 1,
-      transition: hiveTransitions.base,
+      transition: hiveTransitions.smooth,
     },
   } satisfies Variants,
 
@@ -88,8 +88,8 @@ export const hiveVariants = {
   hover: {
     rest: { scale: 1 },
     hover: { 
-      scale: parseFloat(motion.scale.micro),
-      transition: hiveTransitions.fast,
+      scale: parseFloat(motion.transform.scaleHover),
+      transition: hiveTransitions.quick,
     },
   } satisfies Variants,
 
@@ -146,7 +146,7 @@ export const hiveVariants = {
         'brightness(1.1)',
         'brightness(1)',
       ],
-      transition: hiveTransitions.ritual,
+      transition: hiveTransitions.dramatic,
     },
   } satisfies Variants,
 
@@ -162,7 +162,7 @@ export const hiveVariants = {
       scale: 1, 
       rotate: 0,
       filter: 'blur(0px)',
-      transition: hiveTransitions.ritual,
+      transition: hiveTransitions.dramatic,
     },
   } satisfies Variants,
 
@@ -184,7 +184,7 @@ export const hiveVariants = {
     visible: {
       opacity: 1,
       y: 0,
-      transition: hiveTransitions.base,
+      transition: hiveTransitions.smooth,
     },
   } satisfies Variants,
 } as const;
@@ -197,7 +197,7 @@ export const hivePresets = {
       scale: 1.01,
       y: -1,
       boxShadow: '0 8px 25px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 215, 0, 0.1)',
-      transition: hiveTransitions.fast,
+      transition: hiveTransitions.quick,
     },
   } satisfies Partial<MotionProps>,
 
@@ -206,7 +206,7 @@ export const hivePresets = {
     whileHover: {
       scale: 1.02,
       boxShadow: '0 0 15px rgba(255, 215, 0, 0.2)',
-      transition: hiveTransitions.fast,
+      transition: hiveTransitions.quick,
     },
     whileTap: {
       scale: 0.98,
@@ -223,7 +223,7 @@ export const hivePresets = {
       hidden: { 
         opacity: 0, 
         scale: 0.95,
-        transition: hiveTransitions.base,
+        transition: hiveTransitions.smooth,
       },
       visible: { 
         opacity: 1, 
@@ -255,16 +255,29 @@ export const hivePresets = {
 
 // HIVE Animation Utilities
 export const createHiveTransition = (
-  duration: keyof typeof motion.duration = 'fast',
-  easing: keyof typeof motion.easing = 'hive'
+  duration: keyof typeof motion.duration = 'quick',
+  easing: keyof typeof motion.easing = 'liquid'
 ): Transition => {
   const easingMap = {
-    hive: [0.33, 0.65, 0, 1],
+    liquid: [0.33, 0.65, 0, 1],
     smooth: [0.25, 0.46, 0.45, 0.94],
     snap: [0.68, -0.55, 0.265, 1.55],
     elegant: [0.23, 1, 0.32, 1],
-    linear: [0, 0, 1, 1],
-    ease: [0.25, 0.1, 0.25, 1],
+    magnetic: [0.25, 0.46, 0.45, 0.94],
+    silk: [0.16, 1, 0.3, 1],
+    steel: [0.34, 1.56, 0.64, 1],
+    molten: [0.19, 1, 0.22, 1],
+    orchestrated: [0.215, 0.61, 0.355, 1],
+    cinematic: [0.165, 0.84, 0.44, 1],
+    cascade: [0.19, 1, 0.22, 1],
+    toolSnap: [0.68, -0.6, 0.32, 1.6],
+    toolFloat: [0.25, 0.46, 0.45, 0.94],
+    toolPlant: [0.34, 1.56, 0.64, 1],
+    easeIn: [0.4, 0, 1, 1],
+    easeOut: [0, 0, 0.2, 1],
+    easeInOut: [0.4, 0, 0.2, 1],
+    spring: [0.175, 0.885, 0.32, 1.275],
+    bounce: [0.68, -0.55, 0.265, 1.55],
   } as const;
 
   return {
@@ -274,21 +287,21 @@ export const createHiveTransition = (
 };
 
 export const createHiveScale = (
-  scale: keyof typeof motion.scale = 'micro'
+  scale: keyof typeof motion.transform = 'scaleHover'
 ): Partial<MotionProps> => ({
   whileHover: {
-    scale: parseFloat(motion.scale[scale]),
-    transition: hiveTransitions.fast,
+    scale: parseFloat(motion.transform[scale]),
+    transition: hiveTransitions.quick,
   },
 });
 
 export const createGoldAccent = (
-  duration: keyof typeof motion.duration = 'fast'
+  duration: keyof typeof motion.duration = 'quick'
 ): Partial<MotionProps> => ({
   whileHover: {
     boxShadow: '0 0 20px rgba(255, 215, 0, 0.3)',
     borderColor: '#FFD700',
-    transition: createHiveTransition(duration, 'hive'),
+    transition: createHiveTransition(duration, 'liquid'),
   },
 });
 

@@ -1,39 +1,43 @@
 "use client";
-import React, { createContext, useContext, useState, useMemo, useCallback } from 'react';
-// import { useAuth } from "@hive/hooks";
-// import { WelcomeMat, useWelcomeMat } from "@hive/ui";
 
-interface WelcomeMatContextType {
-  isVisible: boolean;
-  showWelcomeMat: () => void;
-  hideWelcomeMat: () => void;
+import { useSession } from "../hooks/use-session";
+import { WelcomeMat, useWelcomeMat } from "@hive/ui";
+
+interface WelcomeMatProviderProps {
+  children: React.ReactNode;
 }
 
-const WelcomeMatContext = createContext<WelcomeMatContextType | undefined>(undefined);
+export const WelcomeMatProvider = ({ children }: WelcomeMatProviderProps) => {
+  const { user, isLoading } = useSession();
+  const { isVisible, dismissWelcomeMat, hasCheckedStorage } = useWelcomeMat();
 
-export const WelcomeMatProvider = ({ children }: { children: React.ReactNode }) => {
-  const [isVisible, setIsVisible] = useState(false);
-
-  const showWelcomeMat = useCallback(() => setIsVisible(true), []);
-  const hideWelcomeMat = useCallback(() => setIsVisible(false), []);
-
-  const value = useMemo(() => ({
-    isVisible,
-    showWelcomeMat,
-    hideWelcomeMat
-  }), [isVisible, showWelcomeMat, hideWelcomeMat]);
+  // Only show welcome mat for authenticated users who have completed onboarding
+  // AND are not on auth/onboarding pages
+  const isOnAuthPage = typeof window !== 'undefined' && (
+    window.location.pathname.startsWith('/schools') ||
+    window.location.pathname.startsWith('/auth') ||
+    window.location.pathname.startsWith('/onboarding') ||
+    window.location.pathname.startsWith('/waitlist')
+  );
+  
+  const shouldShowWelcomeMat =
+    !isLoading &&
+    user &&
+    user.onboardingCompleted &&
+    hasCheckedStorage &&
+    isVisible &&
+    !isOnAuthPage;
 
   return (
-    <WelcomeMatContext.Provider value={value}>
+    <>
       {children}
-    </WelcomeMatContext.Provider>
+      {shouldShowWelcomeMat && (
+        <WelcomeMat
+          isVisible={true}
+          onDismiss={dismissWelcomeMat}
+          userName={user.fullName || undefined}
+        />
+      )}
+    </>
   );
-};
-
-export const useWelcomeMat = () => {
-  const context = useContext(WelcomeMatContext);
-  if (context === undefined) {
-    throw new Error('useWelcomeMat must be used within a WelcomeMatProvider');
-  }
-  return context;
 };

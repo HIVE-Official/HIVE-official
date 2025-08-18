@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { cn } from '../../lib/utils';
+import { cn } from '../lib/utils';
 import { SchoolPick, EmailGate, MagicLinkSent } from ".";
 import type { School } from '@hive/core';
 

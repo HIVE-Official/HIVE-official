@@ -61,8 +61,8 @@ export default function DevFeedPage() {
               </div>
             </div>
 
-            <div className="mt-12 bg-[#FFD700]/10 border border-[#FFD700]/30 rounded-lg p-6 max-w-2xl mx-auto">
-              <h3 className="text-xl font-display font-semibold text-[#FFD700] mb-3">
+            <div className="mt-12 bg-[var(--hive-brand-secondary)]/10 border border-[var(--hive-brand-secondary)]/30 rounded-lg p-6 max-w-2xl mx-auto">
+              <h3 className="text-xl font-display font-semibold text-[var(--hive-brand-secondary)] mb-3">
                 🔧 Development Features
               </h3>
               <ul className="text-left text-muted space-y-2">

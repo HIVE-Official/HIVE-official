@@ -3,61 +3,44 @@
   "version": "0.1.0",
   "private": true,
   "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
-  "sideEffects": false,
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
-    },
-    "./client": {
-      "types": "./dist/client.d.ts",
-      "require": "./dist/client.js"
+      "require": "./dist/index.js",
+      "import": "./dist/index.js"
     },
     "./server": {
-      "types": "./dist/server-index.d.ts",
-      "require": "./dist/server-index.js"
+      "types": "./dist/server.d.ts",
+      "require": "./dist/server.js",
+      "import": "./dist/server.js"
     }
   },
   "files": [
-    "dist/**"
+    "dist"
   ],
   "scripts": {
-    "dev": "tsup src/index.ts --format esm,cjs --watch --external react & tsc -p tsconfig.declarations.json --watch",
-    "build": "tsup src/index.ts --format esm,cjs && tsc --declaration --emitDeclarationOnly --outDir dist",
-    "typecheck": "tsc --noEmit",
-    "lint": "../../node_modules/.bin/eslint . --max-warnings 15 || pnpm exec --package=eslint eslint . --max-warnings 15",
-    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
-    "db:init": "tsx src/scripts/init-database.ts",
-    "db:rules": "tsx src/scripts/update-security-rules.ts"
+    "build": "npx tsc",
+    "dev": "npx tsc --watch",
+    "clean": "npx rimraf dist",
+    "lint": "npx eslint . --max-warnings 10",
+    "typecheck": "npx tsc --noEmit"
   },
-  "dependencies": {
-    "@hive/validation": "workspace:*",
-    "@upstash/ratelimit": "^2.0.5",
-    "@upstash/redis": "^1.35.0",
-    "firebase": "^11.0.0",
-    "firebase-admin": "^11.0.0",
-    "zod": "^3.25.67",
-    "zustand": "^4.0.0"
-  },
-  "keywords": [],
-  "author": "",
-  "packageManager": "pnpm@9.1.1",
   "devDependencies": {
     "@hive/eslint-config": "workspace:*",
     "@hive/typescript-config": "workspace:*",
-    "@types/node": "^24.0.8",
-    "concurrently": "^8.0.0",
-    "cross-env": "^7.0.3",
-    "eslint": "^9.29.0",
-    "eslint-plugin-react": "^7.37.5",
-    "globals": "^15.0.0",
-    "typescript-eslint": "^8.35.0",
-    "typescript": "^5.8.3",
-    "vitest": "^3.2.4",
-    "@types/react": "^18.2.0",
-    "tsx": "^4.0.0"
+    "@types/node": "^20.0.0",
+    "eslint": "^9.28.0",
+    "rimraf": "^6.0.1",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "firebase": "^11.0.0",
+    "firebase-admin": "^13.2.0",
+    "zod": "^3.25.64",
+    "zustand": "^5.0.5"
+  },
+  "overrides": {
+    "eslint": "$eslint"
   }
 }

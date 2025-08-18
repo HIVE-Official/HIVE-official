@@ -1,155 +1,205 @@
-import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
-import { getAuth } from "firebase-admin/auth";
-import { dbAdmin } from "@/lib/firebase-admin";
-import { logger, type Space, type SpaceType } from "@hive/core";
+import type { NextRequest} from 'next/server';
+import { NextResponse } from 'next/server';
+import { z } from 'zod';
+import { dbAdmin } from '@/lib/firebase-admin';
+import { type Space } from '@hive/core';
+import { logger } from "@/lib/logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
 
 const browseSpacesSchema = z.object({
   schoolId: z.string().optional(),
-  type: z
-    .enum(["major", "residential", "interest", "creative", "organization"])
-    .optional(),
+  type: z.enum(['student_organizations', 'university_organizations', 'greek_life', 'campus_living', 'hive_exclusive', 'cohort']).optional(),
   subType: z.string().optional(),
   limit: z.coerce.number().min(1).max(50).default(20),
   offset: z.coerce.number().min(0).default(0),
-  search: z.string().optional(),
+  search: z.string().optional()
 });
 
 /**
  * Browse available spaces at a user's school
  * Returns paginated list of spaces with membership status
- * Now supports nested collection structure: spaces/{spacetype}/spaces/{spaceid}
  */
-export async function GET(request: NextRequest): Promise<NextResponse> {
+export const GET = withAuth(async (request: NextRequest, authContext) => {
   try {
     // Parse query parameters
     const url = new URL(request.url);
     const queryParams = Object.fromEntries(url.searchParams.entries());
-    const { schoolId, type, subType, limit, offset, search } =
-      browseSpacesSchema.parse(queryParams);
+    const { schoolId, type, subType, limit, offset, search } = browseSpacesSchema.parse(queryParams);
 
-    // Verify the requesting user is authenticated
-    const authHeader = request.headers.get("Authorization");
-    if (!authHeader?.startsWith("Bearer ")) {
-      return NextResponse.json(
-        { error: "Authorization header required" },
-        { status: 401 }
-      );
+    const userId = authContext.userId;
+
+    // Note: Removed schoolId logic since spaces don't have this field
+
+    // Use flat collection structure for better performance
+    let spacesQuery = dbAdmin.collection('spaces');
+
+    // Apply type filter
+    if (type) {
+      spacesQuery = spacesQuery.where('type', '==', type);
     }
 
-    const token = authHeader.substring(7);
-    const auth = getAuth();
-
-    const decodedToken = await auth.verifyIdToken(token);
-    const userId = decodedToken.uid;
-
-    // Get user's school if not provided
-    let userSchoolId = schoolId;
-    if (!userSchoolId) {
-      const userDoc = await dbAdmin.collection("users").doc(userId).get();
-      if (!userDoc.exists) {
-        return NextResponse.json({ error: "User not found" }, { status: 404 });
-      }
-      userSchoolId = userDoc.data()?.schoolId;
-      if (!userSchoolId) {
-        return NextResponse.json(
-          { error: "User school not set" },
-          { status: 400 }
-        );
-      }
-    }
-
-    let allSpaces: Space[] = [];
-
-    // Define space types to search through
-    const spaceTypes: SpaceType[] = ["major", "residential", "interest", "creative", "organization"];
-    const typesToSearch = type ? [type] : spaceTypes;
-
-    // Search through each space type's nested collection
-    for (const spaceType of typesToSearch) {
-      let query = dbAdmin
-        .collection("spaces")
-        .doc(spaceType)
-        .collection("spaces")
-        .where("schoolId", "==", userSchoolId)
-        .where("status", "==", "activated");
-
-      // Add subType filter if specified (using tags array)
-      if (subType) {
-        query = query.where("tags", "array-contains", {
-          type: spaceType,
-          sub_type: subType,
-        });
-      }
-
-      // Execute the query for this space type
-      const spacesSnapshot = await query.get();
-
-      // Convert to array and add to results
-      const spaces = spacesSnapshot.docs.map((doc) => ({
-        ...doc.data(),
-        id: doc.id,
-        type: spaceType, // Ensure type is set from collection path
-      })) as Space[];
-
-      allSpaces = allSpaces.concat(spaces);
-    }
-
-    // Apply text search if needed (client-side filtering)
+    // Apply search filter
     if (search) {
       const searchLower = search.toLowerCase();
-      allSpaces = allSpaces.filter(
-        (space) =>
-          space.name.toLowerCase().includes(searchLower) ||
-          space.description.toLowerCase().includes(searchLower)
-      );
+      spacesQuery = spacesQuery
+        .where('name_lowercase', '>=', searchLower)
+        .where('name_lowercase', '<=', searchLower + '\uf8ff')
+        .orderBy('name_lowercase');
+    } else {
+      // Default ordering by member count (popular first), then name
+      spacesQuery = spacesQuery
+        .orderBy('metrics.memberCount', 'desc')
+        .orderBy('name_lowercase');
     }
 
-    // Sort by member count (most popular first) and name
-    allSpaces.sort((a, b) => {
-      if (b.memberCount !== a.memberCount) {
-        return b.memberCount - a.memberCount;
-      }
-      return a.name.localeCompare(b.name);
-    });
-
     // Apply pagination
-    const paginatedSpaces = allSpaces.slice(offset, offset + limit);
+    if (offset > 0) {
+      spacesQuery = spacesQuery.offset(offset);
+    }
+    
+    spacesQuery = spacesQuery.limit(limit);
 
-    // Get user's memberships to show join status
-    const userMembershipsPromises = paginatedSpaces.map(async (space) => {
-      const memberDoc = await dbAdmin
-        .collection("spaces")
-        .doc(space.type)
-        .collection("spaces")
-        .doc(space.id)
-        .collection("members")
-        .doc(userId)
-        .get();
+    logger.info('📊 Querying spaces with filters', { type, search, limit, offset, endpoint: '/api/spaces/browse' });
 
+    const spacesSnapshot = await spacesQuery.get();
+
+    const spaces = spacesSnapshot.docs.map(doc => {
+      const data = doc.data();
       return {
-        ...space,
-        isMember: memberDoc.exists,
-        membershipStatus: memberDoc.exists ? memberDoc.data()?.status : null,
+        id: doc.id,
+        name: data.name,
+        description: data.description,
+        type: data.type,
+        status: data.status || 'active',
+        memberCount: data.metrics?.memberCount || 0,
+        createdAt: data.createdAt,
+        updatedAt: data.updatedAt,
+        tags: data.tags || [],
+        bannerUrl: data.bannerUrl,
+        isPrivate: data.isPrivate || false,
+        metrics: data.metrics || { memberCount: 0, postCount: 0, eventCount: 0 }
       };
     });
 
-    const spacesWithMembership = await Promise.all(userMembershipsPromises);
+    // Get total count for pagination
+    let totalCount = 0;
+    try {
+      let countQuery = dbAdmin.collection('spaces');
+      if (type) {
+        countQuery = countQuery.where('type', '==', type);
+      }
+      if (search) {
+        const searchLower = search.toLowerCase();
+        countQuery = countQuery
+          .where('name_lowercase', '>=', searchLower)
+          .where('name_lowercase', '<=', searchLower + '\uf8ff');
+      }
+      const countSnapshot = await countQuery.count().get();
+      totalCount = countSnapshot.data().count;
+    } catch (error) {
+      logger.warn('Could not get total count, using spaces length', { error });
+      totalCount = spaces.length;
+    }
+
+    const paginatedSpaces = spaces;
+
+    // Get user's current memberships to mark joined spaces
+    // Skip membership check for test users (onboarding flow)
+    const userSpaceIds = new Set<string>();
+    
+    if (userId !== 'test-user' && userId !== 'dev_user_123') {
+      try {
+        // Use flat spaceMembers collection instead of nested structure
+        const membershipQuery = dbAdmin.collection('spaceMembers')
+          .where('userId', '==', userId)
+          .where('isActive', '==', true)
+          .limit(100); // Increased limit for performance
+          
+        const membershipsSnapshot = await membershipQuery.get();
+        
+        membershipsSnapshot.docs.forEach(doc => {
+          const data = doc.data();
+          if (data.spaceId) {
+            userSpaceIds.add(data.spaceId);
+          }
+        });
+        
+        logger.info('📊 Found memberships for user', { 
+          membershipCount: userSpaceIds.size, 
+          userId, 
+          endpoint: '/api/spaces/browse' 
+        });
+        
+      } catch (error) {
+        logger.error('❌ Error getting memberships', { error: error, endpoint: '/api/spaces/browse' });
+        // Continue without membership data rather than failing
+      }
+    } else {
+      logger.info('📊 Skipping membership check for test token (onboarding flow)', { endpoint: '/api/spaces/browse' });
+    }
+
+    // Add membership status to each space
+    const spacesWithMembership = paginatedSpaces.map(space => ({
+      id: space.id,
+      name: space.name,
+      description: space.description,
+      type: space.type,
+      tags: space.tags,
+      status: space.status,
+      memberCount: space.memberCount,
+      createdAt: space.createdAt,
+      updatedAt: space.updatedAt,
+      bannerUrl: space.bannerUrl,
+      isPrivate: space.isPrivate,
+      isMember: userSpaceIds.has(space.id)
+    }));
+
+    // Group spaces by type for better organization
+    const spacesByType = spacesWithMembership.reduce((acc, space) => {
+      const spaceType = space.type;
+      if (!acc[spaceType]) {
+        acc[spaceType] = [];
+      }
+      acc[spaceType].push(space);
+      return acc;
+    }, {} as Record<string, typeof spacesWithMembership>);
 
     return NextResponse.json({
+      success: true,
       spaces: spacesWithMembership,
+      spacesByType: spacesByType,
       pagination: {
-        total: allSpaces.length,
         limit,
         offset,
-        hasMore: offset + limit < allSpaces.length,
+        totalCount,
+        hasMore: offset + limit < totalCount,
+        nextOffset: offset + limit < totalCount ? offset + limit : null
       },
+      filters: {
+        type: type || null,
+        subType: subType || null,
+        search: search || null
+      },
+      typeCounts: Object.keys(spacesByType).reduce((acc, type) => {
+        acc[type] = spacesByType[type].length;
+        return acc;
+      }, {} as Record<string, number>)
     });
-  } catch (error) {
-    logger.error("Error browsing spaces:", error);
-    return NextResponse.json(
-      { error: "Failed to browse spaces" },
-      { status: 500 }
-    );
+
+  } catch (error: any) {
+    logger.error('Browse spaces error', { error: error, endpoint: '/api/spaces/browse' });
+
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        { error: 'Invalid query parameters', details: error.errors },
+        { status: HttpStatus.BAD_REQUEST }
+      );
+    }
+
+    return NextResponse.json(ApiResponseHelper.error("Internal server error", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
-}
+}, { 
+  allowDevelopmentBypass: true, // Space browsing is safe for development
+  operation: 'browse_spaces' 
+}); 

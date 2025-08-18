@@ -1,5 +1,6 @@
-// Mock API client for Team 1 development
-// This will be replaced with real API integration in Phase 3
+// DEPRECATED: Mock API client - ONLY FOR TESTING
+// This file is excluded from production builds
+// All production code uses real Firebase API routes
 
 import { Timestamp } from "firebase/firestore";
 import type {
@@ -9,6 +10,11 @@ import type {
   User,
   School,
 } from "@hive/core";
+
+// Production safety check
+if (process.env.NODE_ENV === 'production') {
+  throw new Error('Mock API client should never be imported in production builds');
+}
 
 // Mock data
 const mockSpaces: Space[] = [
@@ -72,26 +78,14 @@ const mockUsers: User[] = [
     fullName: "John Doe",
     handle: "johndoe",
     schoolId: "school-1",
+    major: "Computer Science",
+    graduationYear: 2025,
     createdAt: Timestamp.fromDate(new Date("2024-01-01")),
     updatedAt: Timestamp.fromDate(new Date("2024-01-01")),
-    interestTags: ["webdev", "ai"],
-    majorId: "cs",
-    isFirstYear: true,
-    isLeaderCandidate: false,
-    organizations: [],
-    clubs: [],
-    academicInterests: [],
     isPublic: true,
     consentGiven: true,
-    showDormitory: true,
-    showOrganizations: true,
     builderOptIn: false,
     isBuilder: false,
-    builderAchievements: {
-      toolsCreated: 0,
-      totalEngagement: 0,
-      invitesSent: 0,
-    },
     builderAnalyticsEnabled: true,
     onboardingCompleted: true,
     isVerified: true,
@@ -104,7 +98,7 @@ const mockSchools: School[] = [
     id: "school-1",
     name: "University of Example",
     domain: "example.edu",
-    status: "open",
+    status: "active",
     waitlistCount: 0,
     studentsUntilOpen: 0,
     city: "Example City",
@@ -125,7 +119,7 @@ const mockSchools: School[] = [
     id: "ub",
     name: "University at Buffalo",
     domain: "buffalo.edu",
-    status: "open",
+    status: "active",
     waitlistCount: 0,
     studentsUntilOpen: 0,
     city: "Buffalo",
@@ -146,7 +140,7 @@ const mockSchools: School[] = [
     id: "binghamton",
     name: "Binghamton University",
     domain: "binghamton.edu",
-    status: "open",
+    status: "active",
     waitlistCount: 0,
     studentsUntilOpen: 0,
     city: "Binghamton",

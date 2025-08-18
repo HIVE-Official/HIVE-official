@@ -1,156 +1,181 @@
-import {
-  createHttpsFunction,
-  FunctionContext,
-  getFirestore,
-  FieldValue,
-  functions,
-  logger,
-  onDocumentCreated,
-} from "../types/firebase";
+import * as functions from "firebase-functions";
+import * as admin from "firebase-admin";
+import {SpaceMember} from "../../../packages/core/src/domain/member";
+import {Space} from "../../../packages/core/src/domain/space";
 
-interface AutoJoinData {
-  spaceId: string;
-  userId?: string;
-}
+const db = admin.firestore();
 
 /**
- * Auto-join users to spaces based on criteria
+ * Triggered on new user creation to automatically add them to relevant spaces
+ * like their major and residential hall. This is critical for ensuring a
+ * user does not have an empty experience on their first login.
  */
-export const autoJoinToSpace = onDocumentCreated(
-  "users/{userId}",
-  async (event) => {
-    try {
-      const userId = event.params.userId;
-      const userData = event.data?.data();
+export const autoJoinOnCreate = functions.auth.user().onCreate(async (user) => {
+  const {uid} = user;
+  functions.logger.info(`Starting auto-join process for user: ${uid}`);
 
-      if (!userData?.email) {
-        logger.info("No email found for user, skipping auto-join");
+  try {
+    // 1. Fetch the user's profile from Firestore
+    const userDocRef = db.collection("users").doc(uid);
+    const userDoc = await userDocRef.get();
+
+    if (!userDoc.exists) {
+      functions.logger.error(`User document not found for user ${uid}. Cannot perform auto-join.`);
+      return;
+    }
+
+    const userData = userDoc.data();
+    if (!userData || !userData.schoolId || !userData.major) {
+      functions.logger.warn(`User ${uid} is missing schoolId or major. Skipping auto-join.`);
+      return;
+    }
+
+    const {schoolId, major, residency} = userData;
+
+    // 2. Find all spaces that should be auto-joined
+    const spacesToJoinQuery = db.collection("spaces")
+      .where("schoolId", "==", schoolId)
+      .where("tags", "array-contains-any", [
+        {type: "academic", sub_type: major},
+        ...(residency ? [{type: "residential", sub_type: residency}] : []),
+      ]);
+
+    const spacesSnapshot = await spacesToJoinQuery.get();
+
+    if (spacesSnapshot.empty) {
+      functions.logger.info(`No auto-join spaces found for user ${uid} with major: ${major}`);
+      return;
+    }
+
+    // 3. Create a batch write to atomically join all spaces and update counts
+    const batch = db.batch();
+    const spacesJoined: string[] = [];
+
+    spacesSnapshot.forEach((doc) => {
+      const space = doc.data() as Space;
+      functions.logger.info(`Adding user ${uid} to space ${doc.id} (${space.name})`);
+
+      // Add user to the members sub-collection
+      const memberRef = db.collection("spaces").doc(doc.id).collection("members").doc(uid);
+      const newMember: SpaceMember = {
+        userId: uid,
+        spaceId: doc.id,
+        role: "member",
+        joinedAt: new Date(),
+      };
+      batch.set(memberRef, newMember);
+
+      // Atomically increment the member count
+      const spaceRef = doc.ref;
+      batch.update(spaceRef, {memberCount: admin.firestore.FieldValue.increment(1)});
+      spacesJoined.push(space.name);
+    });
+
+    await batch.commit();
+    functions.logger.info(`Successfully auto-joined user ${uid} to spaces: ${spacesJoined.join(", ")}`);
+  } catch (error) {
+    functions.logger.error(`Error in auto-join for user ${uid}:`, error);
+  }
+});
+
+/**
+ * Triggered on user profile updates to automatically manage their membership
+ * in major- or residency-based spaces.
+ */
+export const autoJoinOnUpdate = functions.firestore
+  .document("users/{userId}")
+  .onUpdate(async (change, context) => {
+    const {userId} = context.params;
+    const beforeData = change.before.data();
+    const afterData = change.after.data();
+
+    // Check if relevant fields have changed
+    const majorBefore = beforeData.major;
+    const majorAfter = afterData.major;
+    const residencyBefore = beforeData.residency;
+    const residencyAfter = afterData.residency;
+
+    const needsUpdate = majorBefore !== majorAfter || residencyBefore !== residencyAfter;
+
+    if (!needsUpdate) {
+      functions.logger.info(`No relevant profile changes for user ${userId}. Skipping space membership update.`);
+      return;
+    }
+
+    functions.logger.info(`Profile changed for user ${userId}. Updating space memberships.`);
+
+    try {
+      const schoolId = afterData.schoolId;
+      if (!schoolId) {
+        functions.logger.warn(`User ${userId} is missing schoolId. Cannot update memberships.`);
         return;
       }
 
-      const db = getFirestore();
+      const batch = db.batch();
 
-      // Auto-join logic based on email domain or other criteria
-      const email = userData.email as string;
-      const domain = email.split("@")[1];
-
-      // Find spaces that allow auto-join for this domain
-      const spacesSnapshot = await db
-        .collection("spaces")
-        .where("autoJoinDomains", "array-contains", domain)
-        .get();
-
-      for (const spaceDoc of spacesSnapshot.docs) {
-        const spaceId = spaceDoc.id;
-
-        // Check if user is already a member
-        const memberDoc = await db
-          .collection("spaces")
-          .doc(spaceId)
-          .collection("members")
-          .doc(userId)
-          .get();
-
-        if (!memberDoc.exists) {
-          // Add user as member
-          await db
-            .collection("spaces")
-            .doc(spaceId)
-            .collection("members")
-            .doc(userId)
-            .set({
-              userId,
-              role: "member",
-              joinedAt: FieldValue.serverTimestamp(),
-              autoJoined: true,
-            });
-
-          // Update space member count
-          await spaceDoc.ref.update({
-            memberCount: FieldValue.increment(1),
-          });
-
-          logger.info(`Auto-joined user ${userId} to space ${spaceId}`);
+      // Logic to leave old spaces
+      if (majorBefore && majorBefore !== majorAfter) {
+        const tagToFind = { type: 'academic', sub_type: majorBefore };
+        const oldMajorSpaceQuery = await db.collection('spaces')
+            .where('schoolId', '==', schoolId)
+            .where('tags', 'array-contains', tagToFind)
+            .limit(1).get();
+        if (!oldMajorSpaceQuery.empty) {
+          const spaceId = oldMajorSpaceQuery.docs[0].id;
+          const memberRef = db.doc(`spaces/${spaceId}/members/${userId}`);
+          batch.delete(memberRef);
+          batch.update(db.doc(`spaces/${spaceId}`), {memberCount: admin.firestore.FieldValue.increment(-1)});
         }
       }
+
+      // Logic to join new spaces
+      if (majorAfter && majorBefore !== majorAfter) {
+        const tagToFind = { type: 'academic', sub_type: majorAfter };
+        const newMajorSpaceQuery = await db.collection('spaces')
+            .where('schoolId', '==', schoolId)
+            .where('tags', 'array-contains', tagToFind)
+            .limit(1).get();
+        if (!newMajorSpaceQuery.empty) {
+          const spaceId = newMajorSpaceQuery.docs[0].id;
+          const memberRef = db.doc(`spaces/${spaceId}/members/${userId}`);
+          batch.set(memberRef, {userId, spaceId, role: "member", joinedAt: new Date()});
+          batch.update(db.doc(`spaces/${spaceId}`), {memberCount: admin.firestore.FieldValue.increment(1)});
+        }
+      }
+
+      // Logic to leave old residency
+      if (residencyBefore && residencyBefore !== residencyAfter) {
+        const tagToFind = { type: 'residential', sub_type: residencyBefore };
+        const oldResidencySpaceQuery = await db.collection('spaces')
+            .where('schoolId', '==', schoolId)
+            .where('tags', 'array-contains', tagToFind)
+            .limit(1).get();
+        if (!oldResidencySpaceQuery.empty) {
+          const spaceId = oldResidencySpaceQuery.docs[0].id;
+          const memberRef = db.doc(`spaces/${spaceId}/members/${userId}`);
+          batch.delete(memberRef);
+          batch.update(db.doc(`spaces/${spaceId}`), {memberCount: admin.firestore.FieldValue.increment(-1)});
+        }
+      }
+
+      // Logic to join new residency
+      if (residencyAfter && residencyBefore !== residencyAfter) {
+        const tagToFind = { type: 'residential', sub_type: residencyAfter };
+        const newResidencySpaceQuery = await db.collection('spaces')
+            .where('schoolId', '==', schoolId)
+            .where('tags', 'array-contains', tagToFind)
+            .limit(1).get();
+        if (!newResidencySpaceQuery.empty) {
+          const spaceId = newResidencySpaceQuery.docs[0].id;
+          const memberRef = db.doc(`spaces/${spaceId}/members/${userId}`);
+          batch.set(memberRef, {userId, spaceId, role: "member", joinedAt: new Date()});
+          batch.update(db.doc(`spaces/${spaceId}`), {memberCount: admin.firestore.FieldValue.increment(1)});
+        }
+      }
+
+      await batch.commit();
+      functions.logger.info(`Successfully updated space memberships for user ${userId}.`);
     } catch (error) {
-      logger.error("Error in auto-join process:", error);
+      functions.logger.error(`Error updating memberships for user ${userId}:`, error);
     }
-  }
-);
-
-/**
- * Manual join space function
- */
-export const joinSpace = createHttpsFunction<AutoJoinData>(
-  async (data: AutoJoinData, context: FunctionContext) => {
-    if (!context.auth) {
-      throw new functions.https.HttpsError(
-        "unauthenticated",
-        "User must be authenticated."
-      );
-    }
-
-    const uid = context.auth.uid;
-    const { spaceId } = data;
-
-    if (!spaceId) {
-      throw new functions.https.HttpsError(
-        "invalid-argument",
-        "spaceId is required."
-      );
-    }
-
-    try {
-      const db = getFirestore();
-
-      // Check if space exists
-      const spaceDoc = await db.collection("spaces").doc(spaceId).get();
-      if (!spaceDoc.exists) {
-        throw new functions.https.HttpsError("not-found", "Space not found.");
-      }
-
-      // Check if user is already a member
-      const memberDoc = await db
-        .collection("spaces")
-        .doc(spaceId)
-        .collection("members")
-        .doc(uid)
-        .get();
-
-      if (memberDoc.exists) {
-        throw new functions.https.HttpsError(
-          "already-exists",
-          "User is already a member."
-        );
-      }
-
-      // Add user as member
-      await db
-        .collection("spaces")
-        .doc(spaceId)
-        .collection("members")
-        .doc(uid)
-        .set({
-          userId: uid,
-          role: "member",
-          joinedAt: FieldValue.serverTimestamp(),
-          autoJoined: false,
-        });
-
-      // Update space member count
-      await spaceDoc.ref.update({
-        memberCount: FieldValue.increment(1),
-      });
-
-      logger.info(`User ${uid} joined space ${spaceId}`);
-      return { success: true };
-    } catch (error) {
-      logger.error("Error joining space:", error);
-      if (error instanceof functions.https.HttpsError) {
-        throw error;
-      }
-      throw new functions.https.HttpsError("internal", "Failed to join space.");
-    }
-  }
-);
+  });

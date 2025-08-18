@@ -35,7 +35,7 @@ async function fixEventDates() {
             updatedData.startDate = admin.firestore.Timestamp.fromDate(startDate);
             needsUpdate = true;
           }
-        } catch (_e) {
+        } catch (e) {
           console.log(`❌ Error parsing startDate for event ${eventId}: ${eventData.startDate}`);
         }
       }
@@ -48,7 +48,7 @@ async function fixEventDates() {
             updatedData.endDate = admin.firestore.Timestamp.fromDate(endDate);
             needsUpdate = true;
           }
-        } catch (_e) {
+        } catch (e) {
           console.log(`❌ Error parsing endDate for event ${eventId}: ${eventData.endDate}`);
         }
       }
@@ -61,7 +61,7 @@ async function fixEventDates() {
             updatedData.lastModified = admin.firestore.Timestamp.fromDate(lastModified);
             needsUpdate = true;
           }
-        } catch (_e) {
+        } catch (e) {
           console.log(`❌ Error parsing lastModified for event ${eventId}: ${eventData.lastModified}`);
         }
       }
@@ -74,7 +74,7 @@ async function fixEventDates() {
             updatedData.stateUpdatedAt = admin.firestore.Timestamp.fromDate(stateUpdatedAt);
             needsUpdate = true;
           }
-        } catch (_e) {
+        } catch (e) {
           console.log(`❌ Error parsing stateUpdatedAt for event ${eventId}: ${eventData.stateUpdatedAt}`);
         }
       }
@@ -94,7 +94,7 @@ async function fixEventDates() {
                 updatedEntry.timestamp = admin.firestore.Timestamp.fromDate(timestamp);
                 historyChanged = true;
               }
-            } catch (_e) {
+            } catch (e) {
               console.log(`❌ Error parsing history timestamp for event ${eventId}: ${entry.timestamp}`);
             }
           }

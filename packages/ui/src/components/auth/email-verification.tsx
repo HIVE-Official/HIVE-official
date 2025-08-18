@@ -6,7 +6,7 @@ import { Mail, CheckCircle, AlertCircle, Clock, RefreshCw, ExternalLink } from '
 import { Button } from '../button';
 import { Alert } from '../alert';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '../card';
-import { cn } from '../../lib/utils';
+import { cn } from '../lib/utils';
 
 interface EmailVerificationProps {
   email: string;

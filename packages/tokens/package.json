@@ -7,22 +7,24 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js",
+      "import": "./dist/index.js"
     }
   },
   "scripts": {
-    "build": "tsc",
-    "lint": "eslint . --max-warnings 15",
-    "typecheck": "tsc --noEmit"
+    "build": "npx tsc",
+    "lint": "npx eslint . --max-warnings 10",
+    "typecheck": "npx tsc --noEmit"
   },
   "devDependencies": {
     "@hive/eslint-config": "workspace:*",
     "@hive/typescript-config": "workspace:*",
-    "@types/node": "^24.0.4",
-    "eslint": "^9.29.0",
-    "typescript-eslint": "^8.35.0",
+    "@types/node": "^20.19.0",
+    "eslint": "^9.28.0",
     "typescript": "^5.8.3"
   },
-  "packageManager": "pnpm@9.1.1"
+  "overrides": {
+    "eslint": "$eslint"
+  }
 }

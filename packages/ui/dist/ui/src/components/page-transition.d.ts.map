@@ -1,0 +1,1 @@
+{"version":3,"file":"page-transition.d.ts","sourceRoot":"","sources":["../../../../src/components/page-transition.tsx"],"names":[],"mappings":"AAEA,OAAO,KAA8B,MAAM,OAAO,CAAC;AAKnD,UAAU,mBAAmB;IAC3B,QAAQ,EAAE,KAAK,CAAC,SAAS,CAAC;IAC1B,SAAS,CAAC,EAAE,MAAM,CAAC;CACpB;AAED,wBAAgB,cAAc,CAAC,EAAE,QAAQ,EAAE,SAAS,EAAE,EAAE,mBAAmB,2CAsE1E;AAED,eAAe,cAAc,CAAC"}

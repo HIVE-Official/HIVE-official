@@ -9,7 +9,6 @@ import {
   FirebaseErrorHandler,
   useFirebaseErrorHandler,
 } from "./firebase-error-handler";
-import { logger } from "@hive/core";
 
 // Example 1: Basic error handling in a function
 export async function exampleAuthOperation() {
@@ -19,9 +18,9 @@ export async function exampleAuthOperation() {
   } catch (error) {
     const userFriendlyError = FirebaseErrorHandler.handleError(error);
 
-    logger.debug("User sees error", { message: userFriendlyError.message });
-    logger.debug("Error action", { action: userFriendlyError.action });
-    logger.debug("Error retry status", { isRetryable: userFriendlyError.isRetryable });
+    console.log("User sees:", userFriendlyError.message);
+    console.log("Action:", userFriendlyError.action);
+    console.log("Can retry:", userFriendlyError.isRetryable);
 
     return userFriendlyError;
   }
@@ -35,23 +34,23 @@ export function ExampleAuthComponent() {
     try {
       // Your Firebase Auth sign-in logic here
       // await signInWithEmailAndPassword(auth, email, password);
-      logger.info("Sign in successful", { email });
+      console.log("Sign in successful for:", email);
     } catch (error) {
       const errorDisplay = getErrorDisplay(error);
 
       // Show error to user
-      console.error(
+      alert(
         `${errorDisplay.message}\nAction: ${errorDisplay.actionButtonText}`
       );
 
       if (errorDisplay.shouldShowRetry) {
         // Show retry button
-        logger.debug("Show retry button");
+        console.log("Show retry button");
       }
 
       if (errorDisplay.shouldContactSupport) {
         // Show contact support option
-        logger.debug("Show contact support");
+        console.log("Show contact support");
       }
     }
   };
@@ -73,7 +72,7 @@ export async function exampleFunctionCall() {
       window.location.href = "/auth/login";
     } else if (userFriendlyError.isRetryable) {
       // Show retry option
-      logger.debug("Retry available");
+      console.log("Retry available");
     }
 
     return userFriendlyError;
@@ -90,7 +89,7 @@ export function getErrorBoundaryExample() {
         <FirebaseErrorBoundary
           onError={(error, errorInfo) => {
             // Log to analytics service
-            logger.error('Error boundary caught:', error);
+            console.error('Error boundary caught:', error);
           }}
         >
           <YourAppContent />
@@ -125,24 +124,16 @@ export const commonErrorScenarios = {
     const error = FirebaseErrorHandler.handleAuthError(
       new Error("auth/user-not-found")
     );
-    logger.debug("Error details", { 
-      message: error.message,
-      action: error.action,
-      severity: error.severity,
-      code: error.code 
-    });
+    console.log("Message:", error.message); // "No account found with this email address..."
+    console.log("Action:", error.action); // "sign-up"
   },
 
   "auth/too-many-requests": () => {
     const error = FirebaseErrorHandler.handleAuthError(
       new Error("auth/too-many-requests")
     );
-    logger.debug("Error details", { 
-      message: error.message,
-      action: error.action,
-      severity: error.severity,
-      code: error.code 
-    });
+    console.log("Message:", error.message); // "Too many failed attempts..."
+    console.log("Severity:", error.severity); // "warning"
   },
 
   // Functions errors
@@ -150,12 +141,8 @@ export const commonErrorScenarios = {
     const error = FirebaseErrorHandler.handleFunctionsError(
       new Error("functions/permission-denied")
     );
-    logger.debug("Error details", { 
-      message: error.message,
-      action: error.action,
-      severity: error.severity,
-      code: error.code 
-    });
+    console.log("Message:", error.message); // "You don't have permission..."
+    console.log("Action:", error.action); // "contact-support"
   },
 
   // Generic errors
@@ -163,58 +150,9 @@ export const commonErrorScenarios = {
     const error = FirebaseErrorHandler.handleError(
       new Error("Something went wrong")
     );
-    logger.debug("Error details", { 
-      message: error.message,
-      code: error.code 
-    });
+    console.log("Message:", error.message); // Uses the original error message
+    console.log("Code:", error.code); // "generic-error"
   },
-};
-
-export const demoAuthErrors = {
-  // Simulated Firebase Auth errors for testing
-  'auth/user-not-found': {
-    code: 'auth/user-not-found',
-    message: 'There is no user record corresponding to this identifier. The user may have been deleted.',
-  },
-  'auth/wrong-password': {
-    code: 'auth/wrong-password',
-    message: 'The password is invalid or the user does not have a password.',
-  },
-  'auth/email-already-in-use': {
-    code: 'auth/email-already-in-use',
-    message: 'The email address is already in use by another account.',
-  },
-  'auth/weak-password': {
-    code: 'auth/weak-password',
-    message: 'The password is too weak.',
-  },
-  'auth/invalid-email': {
-    code: 'auth/invalid-email',
-    message: 'The email address is badly formatted.',
-  },
-  'auth/user-disabled': {
-    code: 'auth/user-disabled',
-    message: 'The user account has been disabled by an administrator.',
-  },
-  'auth/too-many-requests': {
-    code: 'auth/too-many-requests',
-    message: 'We have blocked all requests from this device due to unusual activity. Try again later.',
-  },
-  'auth/operation-not-allowed': {
-    code: 'auth/operation-not-allowed',
-    message: 'The given sign-in provider is disabled for this Firebase project.',
-  },
-};
-
-export const triggerDemoError = (errorCode: keyof typeof demoAuthErrors) => {
-  const error = demoAuthErrors[errorCode];
-  if (error) {
-    console.error('🔥 Demo Firebase Error:', error);
-    throw new Error(`${error.code}: ${error.message}`);
-  } else {
-    console.error('🔥 Demo Firebase Error: Unknown error code:', errorCode);
-    throw new Error(`Unknown error code: ${errorCode}`);
-  }
 };
 
 export default {

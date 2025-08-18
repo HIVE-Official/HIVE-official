@@ -1,0 +1,868 @@
+/**
+ * HIVE Complete HiveLAB System: Comprehensive Tool Creation Experience
+ * 
+ * The complete tool creation, collaboration, and deployment ecosystem as experienced 
+ * by UB students. This showcases the full builder journey from ideation to campus-wide deployment.
+ */
+
+import type { Meta, StoryObj } from '@storybook/react';
+import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
+import { Button } from '../components/ui/button';
+import { Badge } from '../components/ui/badge';
+import { Avatar, AvatarFallback } from '../components/ui/avatar';
+import { Input } from '../components/ui/input';
+import { HiveProgress } from '../components/hive-progress';
+import { Separator } from '../components/ui/separator';
+import { Switch } from '../components/ui/switch';
+import { 
+  Zap,
+  Search, 
+  Filter, 
+  Plus,
+  Code,
+  Wrench,
+  Settings,
+  Star,
+  Heart,
+  MessageSquare,
+  Share,
+  MoreVertical,
+  Users,
+  TrendingUp,
+  Award,
+  Play,
+  Download,
+  Eye,
+  Copy,
+  ExternalLink,
+  ChevronRight,
+  Lightbulb,
+  Smartphone,
+  Globe,
+  Database,
+  Palette,
+  BarChart3,
+  Calendar,
+  Activity,
+  CheckCircle,
+  AlertTriangle,
+  Sparkles,
+  Crown,
+  Target,
+  Layers,
+  BookOpen,
+  Coffee,
+  Rocket,
+  GitBranch,
+  Cpu,
+  Paintbrush,
+  Blocks,
+  Workflow,
+  TestTube,
+  Megaphone,
+  Users2,
+  Clock,
+  MapPin,
+  Bell,
+  Upload,
+  FileText,
+  Image,
+  Video,
+  Mic
+} from 'lucide-react';
+import { useState } from 'react';
+import '../hive-tokens.css';
+
+const meta = {
+  title: '08-Complete-HiveLAB-System/Complete HiveLAB Experience',
+  component: HiveLabSystemDemo,
+  parameters: {
+    layout: 'fullscreen',
+    docs: {
+      description: {
+        component: `
+# HIVE Complete HiveLAB System
+
+The comprehensive tool creation and deployment ecosystem for UB students. This showcases the complete journey from initial tool concept to campus-wide adoption, including collaborative building, marketplace distribution, and community-driven improvement.
+
+## Core HiveLAB Features
+- **Visual Tool Builder**: Drag-and-drop interface for creating campus utilities
+- **Collaborative Development**: Real-time co-building with peers and communities
+- **Campus Marketplace**: Tool discovery, installation, and community ratings
+- **Version Control**: Tool versioning, branching, and rollback capabilities
+- **Performance Analytics**: Usage metrics, optimization suggestions, and impact tracking
+- **Deployment Pipeline**: One-click publishing with staging and production environments
+
+## Builder Ecosystem
+- **Tool Templates**: Pre-built patterns for common campus utilities
+- **Component Library**: Reusable elements for consistent UX
+- **API Integrations**: Campus systems, external services, and data sources
+- **Testing Framework**: Automated testing and quality assurance
+- **Community Review**: Peer feedback and collaborative improvement
+
+## Campus Integration
+- **UB-Specific Tools**: Dining halls, study rooms, campus events, course planning
+- **Academic Calendar**: Semester schedules, finals weeks, registration periods
+- **Dorm Life Utilities**: Laundry tracking, floor coordination, maintenance requests
+- **Social Coordination**: Event planning, group formation, resource sharing
+        `
+      }
+    }
+  }
+} satisfies Meta;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+// Mock data for HiveLAB system
+const mockTools = [
+  {
+    id: 'ub_dining_tracker',
+    name: 'UB Dining Hall Tracker',
+    description: 'Real-time crowd levels and wait times for all campus dining locations',
+    category: 'Campus Life',
+    subcategory: 'Dining',
+    author: {
+      name: 'Sarah Chen',
+      handle: '@sarahc',
+      avatar: 'SC',
+      isVerified: true,
+      builderLevel: 'Expert',
+      reputation: 847
+    },
+    stats: {
+      activeUsers: 2847,
+      rating: 4.9,
+      reviewCount: 234,
+      installs: 3421,
+      saves: 189,
+      shares: 67
+    },
+    development: {
+      status: 'production',
+      version: '3.2.1',
+      lastUpdated: '2024-11-15T10:30:00Z',
+      buildTime: '45s',
+      testsPassed: 98,
+      codeQuality: 'A+',
+      performance: 'Excellent'
+    },
+    features: [
+      'Real-time crowd tracking',
+      'Menu integration', 
+      'Wait time predictions',
+      'Location mapping',
+      'Nutrition information'
+    ],
+    integrations: ['UB Dining Services', 'Google Maps', 'Campus Calendar'],
+    collaborators: ['@alexm', '@jordanp', '@taylorw'],
+    deployment: {
+      environments: ['staging', 'production'],
+      url: 'https://tools.hive.college/dining-tracker',
+      analytics: {
+        dailyUsers: 1247,
+        peakUsage: '12:00-13:00',
+        crashRate: 0.001,
+        loadTime: '1.2s'
+      }
+    },
+    community: {
+      discussions: 45,
+      contributions: 23,
+      forks: 8,
+      improvements: 156
+    }
+  },
+  {
+    id: 'study_group_coordinator',
+    name: 'Study Group Coordinator',
+    description: 'Smart matching for study partners based on courses, schedules, and learning styles',
+    category: 'Academic',
+    subcategory: 'Study Tools',
+    author: {
+      name: 'Marcus Johnson',
+      handle: '@mjohnson',
+      avatar: 'MJ',
+      isVerified: true,
+      builderLevel: 'Advanced',
+      reputation: 623
+    },
+    stats: {
+      activeUsers: 1834,
+      rating: 4.7,
+      reviewCount: 167,
+      installs: 2156,
+      saves: 134,
+      shares: 89
+    },
+    development: {
+      status: 'beta',
+      version: '2.1.0-beta.3',
+      lastUpdated: '2024-11-14T16:45:00Z',
+      buildTime: '32s',
+      testsPassed: 94,
+      codeQuality: 'A',
+      performance: 'Good'
+    },
+    features: [
+      'Smart course matching',
+      'Schedule coordination',
+      'Learning style compatibility',
+      'Location preferences',
+      'Group size optimization'
+    ],
+    integrations: ['UB Student Information System', 'Google Calendar', 'Library Systems'],
+    collaborators: ['@emilyR', '@davidL'],
+    deployment: {
+      environments: ['staging'],
+      url: 'https://staging.tools.hive.college/study-groups',
+      analytics: {
+        dailyUsers: 423,
+        peakUsage: '19:00-22:00',
+        crashRate: 0.003,
+        loadTime: '1.8s'
+      }
+    },
+    community: {
+      discussions: 28,
+      contributions: 12,
+      forks: 3,
+      improvements: 87
+    }
+  }
+];
+
+const mockTemplates = [
+  {
+    id: 'event_coordination',
+    name: 'Event Coordination Template',
+    description: 'Complete event planning with RSVP, reminders, and attendance tracking',
+    category: 'Social',
+    usageCount: 156,
+    complexity: 'Intermediate',
+    buildTime: '15-30 minutes',
+    features: ['RSVP System', 'Calendar Integration', 'Automated Reminders', 'Check-in QR Codes']
+  },
+  {
+    id: 'resource_sharing',
+    name: 'Resource Sharing Hub',
+    description: 'Community resource management with booking and availability tracking',
+    category: 'Utility',
+    usageCount: 89,
+    complexity: 'Advanced',
+    buildTime: '45-90 minutes',
+    features: ['Booking Calendar', 'Resource Inventory', 'Usage Analytics', 'Maintenance Tracking']
+  },
+  {
+    id: 'poll_survey',
+    name: 'Smart Poll & Survey',
+    description: 'Interactive polling with real-time results and advanced analytics',
+    category: 'Engagement',
+    usageCount: 234,
+    complexity: 'Beginner',
+    buildTime: '5-15 minutes',
+    features: ['Multiple Question Types', 'Real-time Results', 'Anonymous Options', 'Export Data']
+  }
+];
+
+const HiveLabSystemDemo = () => {
+  const [activeTab, setActiveTab] = useState('builder');
+  const [selectedTool, setSelectedTool] = useState(null);
+  const [builderView, setBuilderView] = useState('canvas');
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white">
+      
+      {/* Header */}
+      <div className="border-b border-gray-800 bg-black/50 backdrop-blur-sm">
+        <div className="max-w-7xl mx-auto p-4">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h1 className="text-3xl font-bold text-white flex items-center">
+                <Zap className="w-8 h-8 mr-3" style={{ color: 'var(--hive-brand-primary)' }} />
+                HiveLAB
+              </h1>
+              <p className="text-gray-400">Build, deploy, and share campus utilities with your community</p>
+            </div>
+            <div className="flex items-center space-x-3">
+              <Button size="icon" variant="outline" className="border-gray-600 text-white">
+                <Bell className="w-4 h-4" />
+              </Button>
+              <Button size="icon" variant="outline" className="border-gray-600 text-white">
+                <Settings className="w-4 h-4" />
+              </Button>
+              <Button className="hive-interactive" style={{ backgroundColor: 'var(--hive-brand-primary)', color: 'var(--hive-text-inverse)' }}>
+                <Plus className="w-4 h-4 mr-2" />
+                Create Tool
+              </Button>
+            </div>
+          </div>
+
+          {/* Tab Navigation */}
+          <div className="flex space-x-1 bg-gray-800 rounded-lg p-1 mb-4">
+            {[
+              { id: 'builder', label: 'Tool Builder', icon: Wrench },
+              { id: 'marketplace', label: 'Marketplace', icon: Search },
+              { id: 'my-tools', label: 'My Tools', icon: Code },
+              { id: 'analytics', label: 'Analytics', icon: BarChart3 },
+              { id: 'collaborate', label: 'Collaborate', icon: Users },
+            ].map(({ id, label, icon: Icon }) => (
+              <button
+                key={id}
+                onClick={() => setActiveTab(id)}
+                className={`flex items-center px-4 py-2 rounded-md transition-colors ${ 
+                  activeTab === id
+                    ? 'text-black hive-interactive'
+                    : 'text-gray-400 hover:text-white'
+                }`}
+                style={activeTab === id ? {
+                  backgroundColor: 'var(--hive-brand-primary)',
+                  color: 'var(--hive-text-inverse)'
+                } : {}}
+              >
+                <Icon className="w-4 h-4 mr-2" />
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto p-4">
+
+        {/* Tool Builder Tab */}
+        {activeTab === 'builder' && (
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            
+            {/* Builder Sidebar */}
+            <div className="lg:col-span-1 space-y-6">
+              
+              {/* Quick Stats */}
+              <Card className="bg-gray-800/50 border-gray-700">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-white text-sm">Builder Stats</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-400 text-sm">Tools Created</span>
+                    <span className="text-white font-semibold">12</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-400 text-sm">Total Installs</span>
+                    <span className="text-white font-semibold">8,423</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-400 text-sm">Community Rating</span>
+                    <div className="flex items-center">
+                      <Star className="w-4 h-4 mr-1 fill-current" style={{ color: 'var(--hive-brand-primary)' }} />
+                      <span className="text-white font-semibold">4.8</span>
+                    </div>
+                  </div>
+                  <Separator className="bg-gray-700" />
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-400 text-sm">Builder Level</span>
+                    <Badge className="hive-interactive" style={{ backgroundColor: 'var(--hive-brand-primary)', color: 'var(--hive-text-inverse)' }}>
+                      Expert
+                    </Badge>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Component Library */}
+              <Card className="bg-gray-800/50 border-gray-700">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-white text-sm">Component Library</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  {[
+                    { name: 'Form Builder', icon: FileText, usage: 89 },
+                    { name: 'Data Display', icon: BarChart3, usage: 67 },
+                    { name: 'Map Integration', icon: MapPin, usage: 45 },
+                    { name: 'Calendar Widget', icon: Calendar, usage: 78 },
+                    { name: 'User Authentication', icon: Users, usage: 92 },
+                    { name: 'File Upload', icon: Upload, usage: 34 }
+                  ].map((component) => (
+                    <div key={component.name} className="flex items-center justify-between p-2 hover:bg-gray-700/50 rounded cursor-pointer">
+                      <div className="flex items-center">
+                        <component.icon className="w-4 h-4 mr-2 text-gray-400" />
+                        <span className="text-white text-sm">{component.name}</span>
+                      </div>
+                      <span className="text-xs text-gray-500">{component.usage}%</span>
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+
+              {/* Templates */}
+              <Card className="bg-gray-800/50 border-gray-700">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-white text-sm">Popular Templates</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  {mockTemplates.map((template) => (
+                    <div key={template.id} className="p-3 bg-black/30 rounded-lg">
+                      <div className="flex items-start justify-between mb-2">
+                        <h4 className="text-white font-medium text-sm">{template.name}</h4>
+                        <Badge 
+                          className={`text-xs ${
+                            template.complexity === 'Beginner' ? 'bg-green-600 text-white' :
+                            template.complexity === 'Intermediate' ? 'bg-yellow-600 text-black' :
+                            'bg-red-600 text-white'
+                          }`}
+                        >
+                          {template.complexity}
+                        </Badge>
+                      </div>
+                      <p className="text-gray-400 text-xs mb-2">{template.description}</p>
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="text-gray-500">{template.usageCount} uses</span>
+                        <span className="text-gray-500">{template.buildTime}</span>
+                      </div>
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Builder Canvas */}
+            <div className="lg:col-span-3">
+              <Card className="bg-gray-800/50 border-gray-700 h-[600px]">
+                <CardHeader className="pb-3">
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-white">Visual Tool Builder</CardTitle>
+                    <div className="flex items-center space-x-2">
+                      <Button size="sm" variant="outline" className="border-gray-600 text-white">
+                        <TestTube className="w-4 h-4 mr-2" />
+                        Test
+                      </Button>
+                      <Button size="sm" variant="outline" className="border-gray-600 text-white">
+                        <Eye className="w-4 h-4 mr-2" />
+                        Preview
+                      </Button>
+                      <Button size="sm" className="bg-green-600 text-white hover:bg-green-700">
+                        <Rocket className="w-4 h-4 mr-2" />
+                        Deploy
+                      </Button>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="h-full p-6">
+                  <div className="h-full bg-gradient-to-br from-gray-700/20 to-gray-800/20 rounded-lg border-2 border-dashed border-gray-600 flex items-center justify-center">
+                    <div className="text-center space-y-4">
+                      <div className="w-16 h-16 mx-auto rounded-full flex items-center justify-center" style={{ backgroundColor: 'var(--hive-brand-primary)' }}>
+                        <Blocks className="w-8 h-8 text-black" />
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-semibold text-white mb-2">Start Building Your Tool</h3>
+                        <p className="text-gray-400 mb-4">Drag components from the library or choose a template to get started</p>
+                        <div className="flex items-center justify-center space-x-3">
+                          <Button size="sm" className="hive-interactive" style={{ backgroundColor: 'var(--hive-brand-primary)', color: 'var(--hive-text-inverse)' }}>
+                            <Plus className="w-4 h-4 mr-2" />
+                            Add Component
+                          </Button>
+                          <Button size="sm" variant="outline" className="border-gray-600 text-white">
+                            <Layers className="w-4 h-4 mr-2" />
+                            Use Template
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        )}
+
+        {/* Marketplace Tab */}
+        {activeTab === 'marketplace' && (
+          <div className="space-y-6">
+            
+            {/* Marketplace Header */}
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-bold text-white">Campus Tool Marketplace</h2>
+                <p className="text-gray-400">Discover and install tools built by the UB community</p>
+              </div>
+              <div className="flex items-center space-x-3">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                  <Input
+                    type="text"
+                    placeholder="Search tools..."
+                    className="bg-gray-900 border-gray-700 text-white placeholder-gray-400 pl-10 w-64"
+                  />
+                </div>
+                <Button size="icon" variant="outline" className="border-gray-600 text-white">
+                  <Filter className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+
+            {/* Featured Tools */}
+            <div>
+              <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
+                <Crown className="w-5 h-5 mr-2" style={{ color: 'var(--hive-brand-primary)' }} />
+                Featured Tools
+              </h3>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {mockTools.map((tool) => (
+                  <Card key={tool.id} className="bg-gray-800/50 border-gray-700 hive-interactive cursor-pointer"
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.borderColor = 'var(--hive-border-gold)';
+                          e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.borderColor = 'var(--hive-border-primary)';
+                          e.currentTarget.style.boxShadow = 'none';
+                        }}>
+                    <CardHeader className="pb-3">
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-center">
+                          <div className="w-12 h-12 rounded-xl flex items-center justify-center mr-3 hive-interactive" 
+                               style={{ backgroundColor: 'var(--hive-brand-primary)' }}>
+                            <Zap className="w-6 h-6 text-black" />
+                          </div>
+                          <div>
+                            <CardTitle className="text-white text-lg">{tool.name}</CardTitle>
+                            <p className="text-gray-400 text-sm">{tool.subcategory}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <div className="flex items-center">
+                            <Star className="w-4 h-4 mr-1 fill-current" style={{ color: 'var(--hive-brand-primary)' }} />
+                            <span className="text-white text-sm">{tool.stats.rating}</span>
+                          </div>
+                          <Badge 
+                            className={`${
+                              tool.development.status === 'production' ? 'bg-green-600 text-white' : 
+                              'bg-blue-600 text-white'
+                            }`}
+                          >
+                            {tool.development.status}
+                          </Badge>
+                        </div>
+                      </div>
+                    </CardHeader>
+
+                    <CardContent className="space-y-4">
+                      <p className="text-gray-300 text-sm">{tool.description}</p>
+
+                      {/* Author & Collaborators */}
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center">
+                          <Avatar className="w-8 h-8 mr-2">
+                            <AvatarFallback className="bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs">
+                              {tool.author.avatar}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <div className="flex items-center">
+                              <span className="text-gray-400 text-sm">By {tool.author.name}</span>
+                              {tool.author.isVerified && <Award className="w-3 h-3 ml-1" style={{ color: 'var(--hive-brand-primary)' }} />}
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <Badge 
+                                className="text-xs"
+                                style={{
+                                  backgroundColor: 'var(--hive-brand-primary)',
+                                  color: 'var(--hive-text-inverse)'
+                                }}
+                              >
+                                {tool.author.builderLevel}
+                              </Badge>
+                              {tool.collaborators.length > 0 && (
+                                <span className="text-xs text-gray-500">
+                                  +{tool.collaborators.length} collaborators
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Stats Row */}
+                      <div className="flex items-center justify-between text-sm">
+                        <div className="flex items-center space-x-4 text-gray-400">
+                          <span className="flex items-center">
+                            <Users className="w-4 h-4 mr-1" />
+                            {tool.stats.activeUsers}
+                          </span>
+                          <span className="flex items-center">
+                            <Download className="w-4 h-4 mr-1" />
+                            {tool.stats.installs}
+                          </span>
+                          <span className="flex items-center">
+                            <MessageSquare className="w-4 h-4 mr-1" />
+                            {tool.community.discussions}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Features */}
+                      <div className="space-y-2">
+                        <h5 className="text-white text-sm font-medium">Key Features</h5>
+                        <div className="flex flex-wrap gap-1">
+                          {tool.features.slice(0, 3).map((feature) => (
+                            <Badge key={feature} variant="outline" className="border-gray-600 text-gray-400 text-xs">
+                              {feature}
+                            </Badge>
+                          ))}
+                          {tool.features.length > 3 && (
+                            <Badge variant="outline" className="border-gray-600 text-gray-400 text-xs">
+                              +{tool.features.length - 3} more
+                            </Badge>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Performance Metrics */}
+                      <div className="p-3 bg-black/30 rounded-lg space-y-2">
+                        <h5 className="text-white text-sm font-medium">Performance</h5>
+                        <div className="grid grid-cols-3 gap-3 text-xs">
+                          <div className="text-center">
+                            <div className="text-green-400 font-semibold">{tool.deployment.analytics.loadTime}</div>
+                            <div className="text-gray-500">Load Time</div>
+                          </div>
+                          <div className="text-center">
+                            <div className="text-blue-400 font-semibold">{tool.development.codeQuality}</div>
+                            <div className="text-gray-500">Quality</div>
+                          </div>
+                          <div className="text-center">
+                            <div className="text-purple-400 font-semibold">{tool.deployment.analytics.dailyUsers}</div>
+                            <div className="text-gray-500">Daily Users</div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Action Buttons */}
+                      <div className="flex space-x-2 pt-2">
+                        <Button size="sm" className="flex-1 hive-interactive" style={{ backgroundColor: 'var(--hive-brand-primary)', color: 'var(--hive-text-inverse)' }}>
+                          <Download className="w-4 h-4 mr-2" />
+                          Install Tool
+                        </Button>
+                        <Button size="icon" variant="outline" className="border-gray-600 text-white">
+                          <Heart className="w-4 h-4" />
+                        </Button>
+                        <Button size="icon" variant="outline" className="border-gray-600 text-white">
+                          <Share className="w-4 h-4" />
+                        </Button>
+                        <Button size="icon" variant="outline" className="border-gray-600 text-white">
+                          <Eye className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Analytics Tab */}
+        {activeTab === 'analytics' && (
+          <div className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <Card className="bg-gray-800/50 border-gray-700 text-center">
+                <CardContent className="pt-6">
+                  <div className="text-3xl font-bold" style={{ color: 'var(--hive-brand-primary)' }}>12</div>
+                  <div className="text-sm text-gray-400">Tools Created</div>
+                  <div className="text-xs text-green-400 mt-1">+2 this week</div>
+                </CardContent>
+              </Card>
+              <Card className="bg-gray-800/50 border-gray-700 text-center">
+                <CardContent className="pt-6">
+                  <div className="text-3xl font-bold text-blue-400">8.4k</div>
+                  <div className="text-sm text-gray-400">Total Installs</div>
+                  <div className="text-xs text-green-400 mt-1">+347 this week</div>
+                </CardContent>
+              </Card>
+              <Card className="bg-gray-800/50 border-gray-700 text-center">
+                <CardContent className="pt-6">
+                  <div className="text-3xl font-bold text-purple-400">4.8</div>
+                  <div className="text-sm text-gray-400">Avg Rating</div>
+                  <div className="text-xs text-green-400 mt-1">+0.2 this month</div>
+                </CardContent>
+              </Card>
+              <Card className="bg-gray-800/50 border-gray-700 text-center">
+                <CardContent className="pt-6">
+                  <div className="text-3xl font-bold text-orange-400">2.1k</div>
+                  <div className="text-sm text-gray-400">Active Users</div>
+                  <div className="text-xs text-green-400 mt-1">+156 this week</div>
+                </CardContent>
+              </Card>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Usage Trends */}
+              <Card className="bg-gray-800/50 border-gray-700">
+                <CardHeader>
+                  <CardTitle className="text-white flex items-center">
+                    <TrendingUp className="w-5 h-5 mr-2" style={{ color: 'var(--hive-brand-primary)' }} />
+                    Usage Trends
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="h-48 bg-gradient-to-br from-gray-700/20 to-gray-800/20 rounded-lg flex items-center justify-center">
+                    <div className="text-center text-gray-400">
+                      <BarChart3 className="w-12 h-12 mx-auto mb-2 opacity-50" />
+                      <p>Usage analytics visualization</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Community Impact */}
+              <Card className="bg-gray-800/50 border-gray-700">
+                <CardHeader>
+                  <CardTitle className="text-white flex items-center">
+                    <Users className="w-5 h-5 mr-2" style={{ color: 'var(--hive-brand-primary)' }} />
+                    Community Impact
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-400">Community Contributions</span>
+                    <span className="text-white font-semibold">47</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-400">Tool Forks</span>
+                    <span className="text-white font-semibold">23</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-400">Feature Requests</span>
+                    <span className="text-white font-semibold">89</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-400">Bug Reports</span>
+                    <span className="text-white font-semibold">12</span>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export const CompleteHiveLabExperience: Story = {
+  render: () => <HiveLabSystemDemo />,
+  parameters: {
+    layout: 'fullscreen',
+    backgrounds: {
+      default: 'dark'
+    }
+  }
+};
+
+export const ToolBuilderWorkflow: Story = {
+  render: () => {
+    const [currentStep, setCurrentStep] = useState(0);
+    const builderSteps = [
+      { id: 'template', name: 'Choose Template', icon: Layers },
+      { id: 'design', name: 'Design Interface', icon: Paintbrush },
+      { id: 'logic', name: 'Add Logic', icon: Cpu },
+      { id: 'test', name: 'Test & Debug', icon: TestTube },
+      { id: 'deploy', name: 'Deploy', icon: Rocket }
+    ];
+
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white p-8">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold text-white mb-4">Tool Builder Workflow</h1>
+            <p className="text-gray-400">Step-by-step tool creation process</p>
+          </div>
+
+          {/* Progress Steps */}
+          <div className="flex items-center justify-between mb-8">
+            {builderSteps.map((step, index) => (
+              <div key={step.id} className="flex items-center">
+                <div 
+                  className={`w-12 h-12 rounded-full flex items-center justify-center cursor-pointer transition-all ${ 
+                    index <= currentStep ? 'text-black' : 'text-gray-400 bg-gray-700'
+                  }`}
+                  style={index <= currentStep ? {
+                    backgroundColor: 'var(--hive-brand-primary)',
+                    color: 'var(--hive-text-inverse)'
+                  } : {}}
+                  onClick={() => setCurrentStep(index)}
+                >
+                  <step.icon className="w-6 h-6" />
+                </div>
+                {index < builderSteps.length - 1 && (
+                  <div className={`w-16 h-1 mx-2 ${index < currentStep ? 'hive-interactive' : 'bg-gray-700'}`}
+                       style={index < currentStep ? { backgroundColor: 'var(--hive-brand-primary)' } : {}} />
+                )}
+              </div>
+            ))}
+          </div>
+
+          {/* Step Content */}
+          <Card className="bg-gray-800/50 border-gray-700 h-96">
+            <CardHeader>
+              <CardTitle className="text-white flex items-center">
+                <builderSteps[currentStep].icon className="w-5 h-5 mr-2" style={{ color: 'var(--hive-brand-primary)' }} />
+                {builderSteps[currentStep].name}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="h-full bg-gradient-to-br from-gray-700/20 to-gray-800/20 rounded-lg flex items-center justify-center">
+                <div className="text-center">
+                  <builderSteps[currentStep].icon className="w-16 h-16 mx-auto mb-4 opacity-50" />
+                  <h3 className="text-xl font-semibold text-white mb-2">
+                    {builderSteps[currentStep].name} Interface
+                  </h3>
+                  <p className="text-gray-400">Interactive {builderSteps[currentStep].name.toLowerCase()} workspace</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Navigation */}
+          <div className="flex items-center justify-between mt-6">
+            <Button 
+              variant="outline" 
+              className="border-gray-600 text-white"
+              onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
+              disabled={currentStep === 0}
+            >
+              Previous
+            </Button>
+            <Button 
+              className="hive-interactive"
+              style={{ backgroundColor: 'var(--hive-brand-primary)', color: 'var(--hive-text-inverse)' }}
+              onClick={() => setCurrentStep(Math.min(builderSteps.length - 1, currentStep + 1))}
+              disabled={currentStep === builderSteps.length - 1}
+            >
+              Next Step
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  },
+  parameters: {
+    layout: 'fullscreen',
+    backgrounds: {
+      default: 'dark'
+    }
+  }
+};
+
+export const MobileHiveLabExperience: Story = {
+  render: () => (
+    <div className="max-w-sm mx-auto">
+      <HiveLabSystemDemo />
+    </div>
+  ),
+  parameters: {
+    layout: 'fullscreen',
+    viewport: {
+      defaultViewport: 'mobile1'
+    }
+  }
+};

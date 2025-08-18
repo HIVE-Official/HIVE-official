@@ -1,159 +1,161 @@
-// HIVE Brand System v1.0 - Motion Tokens (CUSTOM BRAND)
-// Premium motion system for dark-first UI with gold accents
-// NO Material Design - this is HIVE's custom motion language
+// Motion design tokens - Liquid Metal Motion System
 
 export const motion = {
-  // HIVE-specific durations (web-optimized, premium feel)
-  duration: {
-    instant: "50ms",   // Immediate feedback (hover, focus)
-    fast: "120ms",     // Micro-interactions, state changes  
-    base: "180ms",     // Content transitions, modals
-    slow: "280ms",     // Complex animations, emphasis
-    ritual: "400ms",   // Special HIVE moments, celebrations
-  },
-
-  // HIVE brand easing (tech sleek + modular)
+  // Liquid Metal Easing - Signature HIVE feel (orchestrated curves)
   easing: {
-    // Primary HIVE curve for all interactions
-    hive: "cubic-bezier(0.33, 0.65, 0, 1)",            // Signature HIVE curve
+    // Primary HIVE signature curves
+    liquid: 'cubic-bezier(0.23, 1, 0.32, 1)',         // Main easing curve - liquid mercury
+    magnetic: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)', // Gravitational pull
+    silk: 'cubic-bezier(0.16, 1, 0.3, 1)',           // Silk touch
+    steel: 'cubic-bezier(0.34, 1.56, 0.64, 1)',      // Steel spring
+    molten: 'cubic-bezier(0.19, 1, 0.22, 1)',        // Molten flow
+    snap: 'cubic-bezier(0.25, 0.1, 0.25, 1)',        // Premium snap
     
-    // Variations for specific contexts
-    smooth: "cubic-bezier(0.25, 0.46, 0.45, 0.94)",     // Smooth, confident
-    snap: "cubic-bezier(0.68, -0.55, 0.265, 1.55)",     // Playful bounce (minimal use)
-    elegant: "cubic-bezier(0.23, 1, 0.32, 1)",          // Elegant, refined
+    // Orchestrated sequence curves
+    orchestrated: 'cubic-bezier(0.215, 0.61, 0.355, 1)', // For milestone sequences
+    cinematic: 'cubic-bezier(0.165, 0.84, 0.44, 1)',     // For major moments
+    cascade: 'cubic-bezier(0.19, 1, 0.22, 1)',           // For ripple effects
     
-    // Performance easing (when needed)
-    linear: "linear",
-    ease: "ease",
-  },
-
-  // HIVE-specific scale values (subtle, premium)
-  scale: {
-    none: "1",
-    micro: "1.01",     // Subtle hover for cards
-    small: "1.02",     // Button hover
-    medium: "1.05",    // Emphasis
-    large: "1.1",      // Strong emphasis
-    ritual: "1.15",    // Special HIVE moments
-  },
-
-  // HIVE keyframes (dark-first, gold accents)
-  keyframes: {
-    // Subtle entrance animations
-    fadeIn: "hive-fade-in",
-    slideUp: "hive-slide-up", 
-    slideDown: "hive-slide-down",
-    scaleIn: "hive-scale-in",
+    // Tool-specific curves
+    toolSnap: 'cubic-bezier(0.68, -0.6, 0.32, 1.6)',     // Magnetic tool assembly
+    toolFloat: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',   // Floating tools
+    toolPlant: 'cubic-bezier(0.34, 1.56, 0.64, 1)',      // Tool planting
     
-    // Gold accent animations
-    goldPulse: "hive-gold-pulse",
-    goldGlow: "hive-gold-glow",
-    
-    // Dark surface animations
-    surfaceRise: "hive-surface-rise",
-    embossReveal: "hive-emboss-reveal",
-    
-    // Special HIVE moments
-    ritualBurst: "hive-ritual-burst",
-    spaceJoin: "hive-space-join",
-  },
-
-  // Performance optimization hints
-  performance: {
-    // GPU-accelerated properties (safe to animate)
-    gpu: ["transform", "opacity", "filter"],
-    // Properties that cause layout (avoid animating)
-    layout: ["width", "height", "padding", "margin", "border-width"],
-    // HIVE-optimized will-change hints
-    willChange: {
-      transform: "transform",
-      opacity: "opacity", 
-      filter: "filter",
-      auto: "auto",
-    },
-  },
-
-  // Accessibility support
-  accessibility: {
-    // Reduced motion fallbacks
-    reducedMotion: {
-      duration: "0.01ms",
-      easing: "linear",
-      scale: "1",
-    },
-    // Focus indicators (HIVE gold)
-    focus: {
-      ring: "2px solid #FFD700",
-      offset: "2px",
-      duration: "120ms",
-    },
-  },
-};
-
-// HIVE motion utilities
-export const createHiveTransition = (
-  property: string = "all",
-  duration: keyof typeof motion.duration = "fast",
-  easing: keyof typeof motion.easing = "hive"
-) => {
-  return `${property} ${motion.duration[duration]} ${motion.easing[easing]}`;
-};
-
-export const createHiveHover = (
-  scale: keyof typeof motion.scale = "micro"
-) => {
-  return {
-    transition: createHiveTransition("transform", "fast", "hive"),
-    "&:hover": {
-      transform: `scale(${motion.scale[scale]})`,
-    },
-  };
-};
-
-export const createGoldAccent = (
-  duration: keyof typeof motion.duration = "fast"
-) => {
-  return {
-    transition: createHiveTransition("all", duration, "hive"),
-    "&:hover": {
-      boxShadow: "0 0 20px rgba(255, 215, 0, 0.3)",
-      borderColor: "#FFD700",
-    },
-  };
-};
-
-// HIVE-specific animation presets
-export const hiveAnimations = {
-  // Card hover (subtle emboss effect)
-  cardHover: {
-    transition: createHiveTransition("all", "fast", "smooth"),
-    "&:hover": {
-      transform: "scale(1.01) translateY(-1px)",
-      boxShadow: "0 8px 25px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 215, 0, 0.1)",
-    },
+    // Legacy support
+    easeIn: 'cubic-bezier(0.4, 0, 1, 1)',            // Entrance
+    easeOut: 'cubic-bezier(0, 0, 0.2, 1)',           // Exit
+    easeInOut: 'cubic-bezier(0.4, 0, 0.2, 1)',       // Bidirectional
+    spring: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)', // Spring feel
+    bounce: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',  // Bounce back
   },
   
-  // Button press (HIVE gold)
-  buttonPress: {
-    transition: createHiveTransition("all", "fast", "snap"),
-    "&:active": {
-      transform: "scale(0.98)",
-    },
-    "&:hover": {
-      transform: "scale(1.02)",
-      boxShadow: "0 0 15px rgba(255, 215, 0, 0.2)",
-    },
+  // Duration Scale - Orchestrated timing (aligned with hive-motion.ts)
+  duration: {
+    instant: '0.1s',        // Micro-interactions
+    snap: '0.15s',          // Button presses
+    quick: '0.2s',          // Button press, toggle
+    smooth: '0.25s',        // Hover states
+    liquid: '0.35s',        // Card movements
+    flowing: '0.5s',        // Layout changes
+    cascade: '0.75s',       // Sequential animations
+    dramatic: '1.0s',       // Space activation, major state change
+    orchestrated: '1.2s',   // Full sequences, achievement moments
+    cinematic: '1.0s',      // Cinematic moments
   },
   
-  // Modal entrance (elegant)
-  modalEnter: {
-    animation: `${motion.keyframes.fadeIn} ${motion.duration.base} ${motion.easing.elegant}, ${motion.keyframes.scaleIn} ${motion.duration.base} ${motion.easing.elegant}`,
+  // Cascade Timing - For ripple effects and orchestrated sequences
+  cascade: {
+    wave: '0.03s',          // Ultra-fast wave effects (18ms)
+    ripple: '0.05s',        // Standard ripple spread (30ms)
+    stagger: '0.08s',       // Sequential element reveals (48ms)
+    sequence: '0.12s',      // Deliberate orchestrated sequences (72ms)
+    milestone: '0.15s',     // Major milestone celebrations (90ms)
+    cinematic: '0.2s',      // Epic space activation moments (120ms)
   },
   
-  // Ritual celebration (special HIVE moment)
-  ritualCelebration: {
-    animation: `${motion.keyframes.ritualBurst} ${motion.duration.ritual} ${motion.easing.hive}`,
+  // Orchestration timing patterns for complex sequences
+  orchestration: {
+    // Tool creation sequence timing
+    toolCreation: {
+      elementAppear: '0.1s',     // Individual elements appear
+      elementConnect: '0.08s',   // Elements connect magnetically
+      toolComplete: '0.15s',     // Tool completion celebration
+      plantDelay: '0.3s',        // Delay before planting
+    },
+    
+    // Space activation sequence timing
+    spaceActivation: {
+      rippleStart: '0s',         // Immediate ripple from activation point
+      connectedElements: '0.05s', // Connected UI elements respond
+      secondaryWave: '0.3s',     // Secondary wave for distant elements
+      celebration: '0.8s',       // Celebration sequence starts
+    },
+    
+    // Feed update sequence timing
+    feedUpdate: {
+      newItemAppear: '0.1s',     // New feed item appears
+      existingItemShift: '0.05s', // Existing items shift
+      readIndicator: '0.2s',     // Read/unread indicators update
+    },
+    
+    // Builder progression timing
+    builderProgression: {
+      skillUnlock: '0.2s',       // New skill unlocks
+      badgeAppear: '0.15s',      // Achievement badge appears
+      rightsPropagation: '0.1s', // New rights propagate through UI
+    }
   },
-};
+  
+  // Transform Values - Consistent scaling and movement
+  transform: {
+    // Scale transforms
+    scaleHover: '1.02',     // Subtle hover scale
+    scaleTap: '0.98',       // Press down scale
+    scaleModal: '1.05',     // Modal entrance scale
+    
+    // Translation values
+    moveHover: '-2px',      // Upward hover movement
+    movePress: '0px',       // Return to baseline
+    moveSlide: '20px',      // Slide in/out distance
+    
+    // Rotation values
+    rotateSubtle: '1deg',   // Subtle rotation
+    rotateMedium: '3deg',   // Medium rotation
+    rotateFull: '360deg',   // Full rotation
+  },
+  
+  // Spring Physics - For realistic motion feel
+  spring: {
+    // Mass - weight feeling
+    light: '0.5',          // Light, snappy elements
+    normal: '0.8',         // Standard weight
+    heavy: '1.2',          // Substantial elements
+    
+    // Stiffness - responsiveness
+    soft: '200',           // Gentle, flowing
+    medium: '400',         // Balanced response
+    firm: '600',           // Quick, decisive
+    snap: '800',           // Immediate snap
+    
+    // Damping - settle behavior
+    loose: '15',           // Some overshoot
+    balanced: '25',        // Smooth settle
+    tight: '30',           // Quick settle
+    overdamped: '40',      // No overshoot
+  },
+  
+  // Magnetic Zones - Tool assembly physics
+  magnetic: {
+    near: '20px',          // Detection zone
+    snap: '8px',           // Snap threshold
+    release: '40px',       // Release distance
+  },
+} as const;
 
-export default motion;
+// Performance optimization constants
+export const performance = {
+  willChange: {
+    transform: 'transform',
+    opacity: 'opacity',
+    auto: 'auto',
+    scroll: 'scroll-position',
+  },
+  
+  transformOrigin: {
+    center: 'center',
+    top: 'top',
+    bottom: 'bottom',
+    left: 'left',
+    right: 'right',
+  },
+  
+  backfaceVisibility: {
+    visible: 'visible',
+    hidden: 'hidden',
+  },
+} as const;
+
+export type MotionToken = keyof typeof motion;
+export type MotionEasing = keyof typeof motion.easing;
+export type MotionDuration = keyof typeof motion.duration;
+export type MotionCascade = keyof typeof motion.cascade;
