@@ -29,8 +29,8 @@ import {
   TrendingUp
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
-import { Button } from '../ui/button';
-import { Badge } from '../ui/badge';
+import { Button } from '../../components/ui/button';
+import { Badge } from '../../components/ui/badge';
 
 // Enhanced Member interface for directory
 interface DirectoryMember {

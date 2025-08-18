@@ -36,7 +36,7 @@ import {
 import '../../../hive-tokens.css';
 
 const meta: Meta = {
-  title: '⚛️ 02-Atoms/Content Elements/Typography System',
+  title: '02-Atoms/Content Elements/Typography System',
   parameters: {
     layout: 'fullscreen',
     docs: {

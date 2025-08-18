@@ -29,7 +29,7 @@ import {
 } from 'lucide-react';
 import { HiveCard } from '../hive-card';
 import { HiveButton } from '../hive-button';
-import { Badge } from '../ui/badge';
+import { Badge } from '../../components/ui/badge';
 import { cn } from '../../lib/utils';
 
 // Types for analytics data

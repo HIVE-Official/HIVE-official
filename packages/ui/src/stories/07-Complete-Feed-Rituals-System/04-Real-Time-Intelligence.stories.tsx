@@ -6,14 +6,14 @@
  */
 
 import type { Meta, StoryObj } from '@storybook/react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
-import { Button } from '../../../components/ui/button';
-import { Badge } from '../../../components/ui/badge';
-import { Avatar, AvatarFallback } from '../../../components/ui/avatar';
-import { Input } from '../../../components/ui/input';
-import { HiveProgress } from '../../../components/hive-progress';
-import { Separator } from '../../../components/ui/separator';
-import { Switch } from '../../../components/ui/switch';
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Button } from '../../components/ui/button';
+import { Badge } from '../../components/ui/badge';
+import { Avatar, AvatarFallback } from '../../components/ui/avatar';
+import { Input } from '../../components/ui/input';
+import { HiveProgress } from '../../components/hive-progress';
+import { Separator } from '../../components/ui/separator';
+import { Switch } from '../../components/ui/switch';
 import { 
   Activity,
   Zap,
@@ -68,7 +68,7 @@ import { useState, useEffect } from 'react';
 import '../../hive-tokens.css';
 
 const meta = {
-  title: '07-Complete-Feed-Rituals-System/Real-Time Intelligence',
+  title: '06-Platform Systems/Real-Time Intelligence',
   component: RealTimeIntelligenceDemo,
   parameters: {
     layout: 'fullscreen',

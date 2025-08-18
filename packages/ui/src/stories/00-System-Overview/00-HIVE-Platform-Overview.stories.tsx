@@ -237,7 +237,7 @@ const HivePlatformOverview = () => {
 };
 
 const meta: Meta<typeof HivePlatformOverview> = {
-  title: '00 System Overview/HIVE Platform Overview',
+  title: '00-Platform Overview/HIVE Platform Overview',
   component: HivePlatformOverview,
   parameters: {
     layout: 'fullscreen',

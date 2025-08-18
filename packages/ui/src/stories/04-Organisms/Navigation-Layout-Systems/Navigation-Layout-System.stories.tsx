@@ -9,10 +9,13 @@ import { motion, AnimatePresence } from '../../../components/framer-motion-proxy
 import { hiveVariants, hiveEasing, hiveDuration } from '../../motion/hive-motion';
 
 // Import actual HIVE navigation components
-import { DesktopSidebar } from '../navigation/components/DesktopSidebar';
-import { MobileNavigation } from '../navigation/components/MobileNavigation';
-import { NavigationContainer } from '../navigation/components/NavigationContainer';
-import { NavigationItem, NavigationUser } from '../navigation/core/types';
+import { 
+  SidebarNavigation,
+  NavigationContainer,
+  NavigationItem, 
+  NavigationUser 
+} from '../../../components/navigation';
+import { CampusBar } from '../../../components/navigation';
 
 // Import UI components
 import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
@@ -78,7 +81,7 @@ import {
   Lock
 } from 'lucide-react';
 
-import '../../hive-tokens.css';
+import '../../../hive-tokens.css';
 
 const meta = {
   title: '09-Live-Frontend/Navigation & Layout System',

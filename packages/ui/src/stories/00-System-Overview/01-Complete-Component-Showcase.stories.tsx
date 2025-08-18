@@ -1,18 +1,18 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
-import { Badge } from '../../../components/ui/badge';
-import { Button } from '../../../components/ui/button';
+import { Badge } from '../../components/ui/badge';
+import { Button } from '../../components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../atomic/ui/card';
-import { Container } from '../../ui/container';
-import { Text as Typography } from '../../ui/text';
-import { Input } from '../../ui/input-enhanced';
-import { Avatar } from '../../../components/ui/avatar';
-import { Slider } from '../../../components/ui/slider';
-import { Progress } from '../../../components/ui/progress';
-import { Switch } from '../../ui/switch-enhanced';
-import { Checkbox } from '../../ui/checkbox-enhanced';
-import { RadioGroup, RadioGroupItem } from '../../ui/radio-enhanced';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../ui/select-enhanced';
+import { Container } from '../../components/ui/container';
+import { Text as Typography } from '../../atomic/atoms/text';
+import { Input } from '../../atomic/atoms/input-enhanced';
+import { Avatar } from '../../components/ui/avatar';
+import { Slider } from '../../components/ui/slider';
+import { Progress } from '../../components/ui/progress';
+import { Switch } from '../../atomic/atoms/switch-enhanced';
+import { Checkbox } from '../../atomic/atoms/checkbox-enhanced';
+import { RadioGroup, RadioGroupItem } from '../../atomic/atoms/radio-enhanced';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../atomic/atoms/select-enhanced';
 
 /**
  * # Complete HIVE Component Showcase
@@ -422,7 +422,7 @@ const CompleteComponentShowcase = () => {
 };
 
 const meta: Meta<typeof CompleteComponentShowcase> = {
-  title: '00 System Overview/Complete Component Showcase',
+  title: '00-Platform Overview/Complete Component Showcase',
   component: CompleteComponentShowcase,
   parameters: {
     layout: 'fullscreen',

@@ -15,9 +15,9 @@ import {
   Bell,
   BookOpen
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { Button } from '../hive-button';
-import { Badge } from '../ui/badge';
+import { Badge } from '../../components/ui/badge';
 
 // Calendar event types
 export interface CalendarEvent {

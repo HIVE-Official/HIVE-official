@@ -1,8 +1,7 @@
 "use client";
 
-import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-// import { useSession } from '../../../hooks/use-session'; // TODO: For user-specific ritual filtering
+import React, { useState } from 'react';
+import { useAuth } from '@hive/ui';
 import { ErrorBoundary } from '../../../components/error-boundary';
 import { 
   Sparkles, 
@@ -14,7 +13,6 @@ import {
   Zap,
   Star,
   Target,
-  Badge,
   ArrowRight,
   Play,
   CheckCircle,
@@ -57,23 +55,17 @@ interface RitualParticipation {
   badgesAwarded: string[];
 }
 
-// Fetch rituals data
-async function fetchRituals(): Promise<{ rituals: Ritual[], participation: RitualParticipation[] }> {
+// Fetch rituals data with proper authentication
+async function fetchRituals(user: any, getAuthToken: () => Promise<string | null>): Promise<{ rituals: Ritual[], participation: RitualParticipation[] }> {
+  if (!user) {
+    throw new Error('Authentication required');
+  }
+
+  const authToken = await getAuthToken();
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
+    'Authorization': `Bearer ${authToken}`,
   };
-
-  try {
-    const sessionJson = window.localStorage.getItem('hive_session');
-    if (sessionJson) {
-      const session = JSON.parse(sessionJson) as { token: string };
-      headers.Authorization = `Bearer ${process.env.NODE_ENV === 'development' ? 'test-token' : session.token}`;
-    } else {
-      headers.Authorization = `Bearer test-token`;
-    }
-  } catch {
-    headers.Authorization = `Bearer test-token`;
-  }
 
   const response = await fetch('/api/rituals', { headers });
   
@@ -147,13 +139,14 @@ const PARTICIPATION_TYPES = {
 
 export default function RitualsPage() {
   const [activeTab, setActiveTab] = useState<'active' | 'upcoming' | 'completed'>('active');
-  // Future user-specific ritual filtering
-  // const { user } = useSession();
+  const { user, getAuthToken } = useAuth();
+  const isAuthenticated = !!user;
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ['rituals'],
-    queryFn: fetchRituals,
+    queryKey: ['rituals', user?.id],
+    queryFn: () => fetchRituals(user, getAuthToken),
     staleTime: 300000, // 5 minutes
+    enabled: isAuthenticated && !!user,
   });
 
   const rituals = data?.rituals || [];
@@ -168,12 +161,15 @@ export default function RitualsPage() {
   });
 
   const handleJoinRitual = async (ritualId: string) => {
+    if (!user) return;
+    
     try {
+      const authToken = await getAuthToken();
       const response = await fetch(`/api/rituals/${ritualId}/participate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer test-token`,
+          'Authorization': `Bearer ${authToken}`,
         },
         body: JSON.stringify({ 
           action: 'join',
@@ -210,6 +206,25 @@ export default function RitualsPage() {
     if (days > 0) return `${days}d ${hours}h remaining`;
     return `${hours}h remaining`;
   };
+
+  // Show authentication required state
+  if (!isAuthenticated || !user) {
+    return (
+      <div className="min-h-screen bg-hive-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 bg-hive-surface-elevated rounded-full flex items-center justify-center mx-auto mb-4">
+            <Users className="h-8 w-8 text-hive-text-secondary" />
+          </div>
+          <h3 className="text-lg font-semibold text-hive-text-primary mb-2">
+            Authentication Required
+          </h3>
+          <p className="text-hive-text-secondary">
+            Please sign in to view campus rituals.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   if (isLoading) {
     return (

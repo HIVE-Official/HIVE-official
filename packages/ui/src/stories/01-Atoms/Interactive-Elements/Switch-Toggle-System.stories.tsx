@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 import { Bell, Eye, EyeOff, Shield, Users, Calendar, MapPin, Smartphone, Mail, MessageSquare, Globe, Lock } from 'lucide-react';
 import { Switch } from '../../../components/ui/switch';
-import { Label } from '../../../../components/ui/label';
+import { Label } from '../../../components/ui/label';
 
 const meta: Meta = {
   title: '02-Atoms/Interactive-Elements/Switch & Toggle System',

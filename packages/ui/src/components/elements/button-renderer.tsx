@@ -6,7 +6,7 @@
 
 import React from 'react';
 import { ElementInstance } from '@hive/core';
-import { Button } from '../ui/button';
+import { Button } from '../../components/ui/button';
 import { useStandardElementStyles, useStandardElementBehavior } from '../../hooks/use-standard-element-styles';
 
 interface ButtonConfig {

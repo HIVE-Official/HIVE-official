@@ -35,7 +35,7 @@ import {
 import '../../../hive-tokens.css';
 
 const meta: Meta<typeof Button> = {
-  title: '⚛️ 02-Atoms/Interactive Elements/Button Enhanced',
+  title: '02-Atoms/Interactive Elements/Button Enhanced',
   component: Button,
   parameters: {
     layout: 'fullscreen',

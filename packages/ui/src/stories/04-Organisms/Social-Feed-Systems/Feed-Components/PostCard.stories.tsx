@@ -4,11 +4,11 @@
  */
 
 import type { Meta, StoryObj } from '@storybook/react';
-import { Button } from '../../../components/ui/button';
-import { Card, CardContent } from '../../../components/ui/card';
-import { Badge } from '../../../components/ui/badge';
-import { Avatar, AvatarFallback } from '../../../components/ui/avatar';
-import { Progress } from '../../../components/ui/progress';
+import { Button } from '../../../../components/ui/button';
+import { Card, CardContent } from '../../../../components/ui/card';
+import { Badge } from '../../../../components/ui/badge';
+import { Avatar, AvatarFallback } from '../../../../components/ui/avatar';
+import { Progress } from '../../../../components/ui/progress';
 import { 
   Heart,
   MessageCircle,
@@ -28,7 +28,7 @@ import {
   Clock
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
-import '../../hive-tokens.css';
+import '../../../../hive-tokens.css';
 
 // Mock Post Card Component for Storybook
 const PostCard = ({ post, currentUserId, onLike, onComment, onShare, onVote, showComments = true }: any) => {

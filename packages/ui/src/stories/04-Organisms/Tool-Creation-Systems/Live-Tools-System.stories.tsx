@@ -55,7 +55,7 @@ import {
   Coffee
 } from 'lucide-react';
 import { useState } from 'react';
-import '../../hive-tokens.css';
+import '../../../hive-tokens.css';
 
 const meta = {
   title: '08-Live-Frontend/Tools System',

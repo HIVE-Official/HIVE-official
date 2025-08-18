@@ -1,10 +1,10 @@
 'use client';
 
 import React, { useState, useCallback, useRef, useEffect } from 'react';
-import { motion, AnimatePresence, Reorder } from '../../../components/framer-motion-proxy';
+import { motion, AnimatePresence, Reorder } from '../../components/framer-motion-proxy';
 import { cn } from '../../../lib/utils';
-import { Button } from '../../../components/ui/button';
-import { Card } from '../../../components/ui/card';
+import { Button } from '../../components/ui/button';
+import { Card } from '../../components/ui/card';
 import { 
   Edit, 
   Save, 

@@ -140,7 +140,7 @@ import {
 import '../../../hive-tokens.css';
 
 const meta: Meta = {
-  title: '⚛️ 02-Atoms/Content Elements/Icon Library',
+  title: '02-Atoms/Content Elements/Icon Library',
   parameters: {
     layout: 'fullscreen',
     docs: {
@@ -792,7 +792,7 @@ const IconLibraryShowcase = () => {
 
   const sections = [
     { id: 'categories', label: 'Icon Categories', icon: GraduationCap },
-    { id: 'sizes', label: 'Size System', icon: Ruler },
+    { id: 'sizes', label: 'Size System', icon: BarChart3 },
     { id: 'context', label: 'Campus Context', icon: MapPin },
     { id: 'accessibility', label: 'Accessibility', icon: Eye }
   ];

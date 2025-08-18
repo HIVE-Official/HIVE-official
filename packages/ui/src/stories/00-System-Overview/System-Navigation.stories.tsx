@@ -7,9 +7,9 @@
 
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
-import { Button } from '../../../components/ui/button';
-import { Badge } from '../../../components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Button } from '../../components/ui/button';
+import { Badge } from '../../components/ui/badge';
 import { 
   Home,
   Users,
@@ -33,7 +33,7 @@ import {
 import '../../hive-tokens.css';
 
 const meta: Meta = {
-  title: '🏠 SYSTEM NAVIGATION/Complete Storybook Index',
+  title: '00-Platform Overview/System Navigation',
   parameters: {
     layout: 'fullscreen',
     docs: {

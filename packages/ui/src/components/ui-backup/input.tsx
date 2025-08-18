@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { Input as HiveInput, type InputProps as HiveInputProps } from '../../ui/input-enhanced';
+import { Input as HiveInput, type InputProps as HiveInputProps } from '../../atomic/atoms/input-enhanced';
 
 export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
   size?: 'sm' | 'default' | 'lg';

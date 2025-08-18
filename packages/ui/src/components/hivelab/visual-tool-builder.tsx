@@ -17,7 +17,7 @@ import {
   CreateTool
 } from '@hive/core';
 import { HiveCard } from '../hive-card';
-import { Button } from '../ui/button';
+import { Button } from '../../components/ui/button';
 import { LiveToolRuntime } from '../live-tool-runtime';
 import { ElementConfigPanel } from './element-config-panel';
 import { SpaceToolDeployment } from '../community/space-tool-deployment';

@@ -42,7 +42,7 @@ import {
   CloudMoon
 } from 'lucide-react';
 import { hiveVariants, hiveEasing, hiveDuration } from '../../motion/hive-motion';
-import '../../hive-tokens.css';
+import '../../../hive-tokens.css';
 
 const meta = {
   title: '14-Dark Mode/Campus Night Experience',

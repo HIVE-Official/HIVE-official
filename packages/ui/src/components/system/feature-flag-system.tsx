@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useCallback, createContext, useContext, useEffect } from 'react';
-import { Button } from '../ui/button';
+import { Button } from '../../components/ui/button';
 import { HiveBadge as Badge } from '../index';
 import { 
   Settings, 

@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { cn } from '../lib/utils';
 import { darkLuxury, luxuryShadows, luxuryRadius, luxurySpacing } from '../theme/dark-luxury';
-import { HiveMagneticHover, HiveCascade } from '../components/hive-motion-wrapper';
+import { HiveMagneticHover, HiveCascade } from '../../components/hive-motion-wrapper';
 
 // HIVE Layout System - Soft Brutalism
 // Strong geometric shapes with approachable rounded corners

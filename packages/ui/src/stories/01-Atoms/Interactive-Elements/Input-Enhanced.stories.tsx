@@ -42,7 +42,7 @@ import {
 import '../../../hive-tokens.css';
 
 const meta: Meta<typeof Input> = {
-  title: '⚛️ 02-Atoms/Interactive Elements/Input Enhanced',
+  title: '02-Atoms/Interactive Elements/Input Enhanced',
   component: Input,
   parameters: {
     layout: 'fullscreen',

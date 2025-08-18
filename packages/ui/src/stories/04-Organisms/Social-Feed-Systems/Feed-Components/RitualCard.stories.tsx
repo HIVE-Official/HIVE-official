@@ -5,10 +5,10 @@
 
 import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
-import { Button } from '../../../components/ui/button';
-import { Badge } from '../../../components/ui/badge';
-import { Progress } from '../../../components/ui/progress';
+import { Card, CardContent, CardHeader, CardTitle } from '../../../../components/ui/card';
+import { Button } from '../../../../components/ui/button';
+import { Badge } from '../../../../components/ui/badge';
+import { Progress } from '../../../../components/ui/progress';
 import { 
   CheckCircle,
   Timer,
@@ -20,7 +20,7 @@ import {
   Target,
   Award
 } from 'lucide-react';
-import '../../hive-tokens.css';
+import '../../../../hive-tokens.css';
 
 // Mock Ritual Card Component for Storybook
 const RitualCard = ({ ritual, onComplete, onStart, onToggleFavorite }: any) => {

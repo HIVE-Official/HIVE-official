@@ -6,8 +6,8 @@
 
 import React from 'react';
 import { ElementInstance } from '@hive/core';
-import { Input } from '../ui/input';
-import { Label } from '../ui/label';
+import { Input } from '../../components/ui/input';
+import { Label } from '../../components/ui/label';
 import { useStandardElementStyles, useStandardElementBehavior } from '../../hooks/use-standard-element-styles';
 
 interface TextInputConfig {

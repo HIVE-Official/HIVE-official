@@ -48,7 +48,7 @@ import {
 import '../../../hive-tokens.css';
 
 const meta: Meta<typeof Badge> = {
-  title: '⚛️ 02-Atoms/Feedback Elements/Badge System',
+  title: '02-Atoms/Feedback Elements/Badge System',
   component: Badge,
   parameters: {
     layout: 'fullscreen',

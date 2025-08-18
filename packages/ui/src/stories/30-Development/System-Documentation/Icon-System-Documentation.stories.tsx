@@ -29,7 +29,7 @@ import {
   UserCheck, Users2, Activity, TrendingUp, Award, Target, Handshake, Megaphone
 } from 'lucide-react';
 import { hiveVariants, hiveEasing, hiveDuration } from '../../motion/hive-motion';
-import '../../hive-tokens.css';
+import '../../../hive-tokens.css';
 
 const meta = {
   title: '11-Icon-System/Documentation',

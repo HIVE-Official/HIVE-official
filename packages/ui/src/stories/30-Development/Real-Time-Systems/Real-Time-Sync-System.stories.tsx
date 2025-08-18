@@ -6,7 +6,7 @@ import { Input } from '../../../components/ui/input';
 import { Label } from '../../../components/ui/label';
 import { Badge } from '../../../components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '../../../components/ui/avatar';
-import { HiveProgress as Progress } from '../../../components/hive-progress';
+import { HiveProgress as Progress } from '../../components/hive-progress';
 import { Separator } from '../../../components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../components/ui/tabs';
 import { Alert, AlertDescription, AlertTitle } from '../../../components/ui/alert';

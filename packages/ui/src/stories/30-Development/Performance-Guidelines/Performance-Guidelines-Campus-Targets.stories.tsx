@@ -33,7 +33,7 @@ import {
   Download
 } from 'lucide-react';
 import { hiveVariants, hiveEasing, hiveDuration } from '../../motion/hive-motion';
-import '../../hive-tokens.css';
+import '../../../hive-tokens.css';
 
 const meta = {
   title: '10-Performance/Campus Guidelines & Targets',

@@ -1,15 +1,15 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { FormField, TextFormField, EmailFormField, PasswordFormField } from './form-field';
-import { InputEnhanced as Input } from '../atoms/input-enhanced';
-import { SelectEnhanced as Select } from '../atoms/select-enhanced';
-import { Textarea } from '../atoms/textarea-enhanced';
-import { Checkbox } from '../atoms/checkbox-enhanced';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Badge } from '../atoms/badge';
-import { Text } from '../atoms/text';
+import { InputEnhanced as Input } from '../atomic/atoms/input-enhanced';
+import { SelectEnhanced as Select } from '../atomic/atoms/select-enhanced';
+import { Textarea } from '../atomic/atoms/textarea-enhanced';
+import { Checkbox } from '../atomic/atoms/checkbox-enhanced';
+import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
+import { Badge } from '../atomic/atoms/badge';
+import { Text } from '../atomic/atoms/text';
 import { action } from '@storybook/addon-actions';
-import '../../hive-tokens.css';
+import '../hive-tokens.css';
 
 const meta: Meta<typeof FormField> = {
   title: '02-Molecules/Form Field - COMPLETE DEFINITION',

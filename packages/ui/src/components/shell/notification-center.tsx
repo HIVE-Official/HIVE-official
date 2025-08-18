@@ -12,8 +12,8 @@ import {
   Calendar,
   Settings
 } from 'lucide-react';
-import { Button } from '../../ui/button-enhanced';
-import { Avatar, AvatarImage, AvatarFallback } from '../ui/avatar';
+import { Button } from '../../atomic/atoms/button-enhanced';
+import { Avatar, AvatarImage, AvatarFallback } from '../../components/ui/avatar';
 import { cn } from '../../lib/utils';
 
 interface Notification {

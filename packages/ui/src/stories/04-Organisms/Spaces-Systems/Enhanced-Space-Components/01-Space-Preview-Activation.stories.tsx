@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../../../../components
 import { Button } from '../../../../components/ui/button';
 import { Badge } from '../../../../components/ui/badge';
 import { Avatar, AvatarFallback } from '../../../../components/ui/avatar';
-import { HiveProgress } from '../../../components/hive-progress';
+import { HiveProgress } from '../../../../components/hive-progress';
 import { Separator } from '../../../../components/ui/separator';
 import { 
   Users, 
@@ -43,7 +43,7 @@ import {
   Code
 } from 'lucide-react';
 import { useState } from 'react';
-import '../../hive-tokens.css';
+import "../../../../hive-tokens.css";
 
 const meta = {
   title: '06-Complete-Spaces-System/Space Preview & Activation',

@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useCallback, useEffect, useRef, useMemo } from 'react';
-import { Button } from '../ui/button';
+import { Button } from '../../components/ui/button';
 import { Avatar, HiveBadge as Badge } from '../index';
 import { 
   MessageSquare, 

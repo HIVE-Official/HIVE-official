@@ -5,7 +5,7 @@ import { Button } from '../../../components/ui/button';
 import { Input } from '../../../components/ui/input';
 import { Badge } from '../../../components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '../../../components/ui/avatar';
-import { HiveProgress as Progress } from '../../../components/hive-progress';
+import { HiveProgress as Progress } from '../../components/hive-progress';
 import { Slider } from '../../../components/ui/slider';
 import { Switch } from '../../../components/ui/switch';
 import { Alert, AlertDescription, AlertTitle } from '../../../components/ui/alert';

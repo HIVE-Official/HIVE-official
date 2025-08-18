@@ -34,8 +34,8 @@ import {
 } from 'lucide-react';
 import { HiveCard } from '../hive-card';
 import { HiveButton } from '../hive-button';
-import { Badge } from '../ui/badge';
-import { Switch } from '../../ui/switch-enhanced';
+import { Badge } from '../../components/ui/badge';
+import { Switch } from '../../atomic/atoms/switch-enhanced';
 import { cn } from '../../lib/utils';
 
 // Privacy Settings Types

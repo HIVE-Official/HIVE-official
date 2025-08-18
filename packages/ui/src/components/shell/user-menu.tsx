@@ -17,8 +17,8 @@ import {
   Shield,
   Star
 } from 'lucide-react';
-import { Avatar, AvatarImage, AvatarFallback } from '../ui/avatar';
-import { Button } from '../../ui/button-enhanced';
+import { Avatar, AvatarImage, AvatarFallback } from '../../components/ui/avatar';
+import { Button } from '../../atomic/atoms/button-enhanced';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,7 +27,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
   DropdownMenuGroup,
-} from '../ui/dropdown-menu';
+} from '../../components/ui/dropdown-menu';
 
 interface UserMenuProps {
   user: {

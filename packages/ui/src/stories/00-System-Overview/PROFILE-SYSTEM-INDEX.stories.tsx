@@ -5,14 +5,14 @@
 
 import type { Meta, StoryObj } from '@storybook/react';
 import React, { useState } from 'react';
-import { Card, CardContent, CardHeader } from '../../../components/ui/card';
-import { Button } from '../../../components/ui/button';
-import { Badge } from '../../../components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../components/ui/tabs';
+import { Card, CardContent, CardHeader } from '../../components/ui/card';
+import { Button } from '../../components/ui/button';
+import { Badge } from '../../components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
 
 // Import the complete system
-import { ProfileDashboard, defaultProfileDashboardProps } from '../../../components/profile/profile-dashboard';
-import { FirebaseProvider } from '../contexts/firebase-context';
+import { ProfileDashboard, defaultProfileDashboardProps } from '../../components/profile/profile-dashboard';
+import { FirebaseProvider } from '../../contexts/firebase-context';
 
 import { 
   Users, 

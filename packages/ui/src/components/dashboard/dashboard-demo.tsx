@@ -19,9 +19,9 @@ import { HiveDashboard } from './hive-dashboard';
 import { PersonalTools, mockPersonalToolsData } from './personal-tools';
 import { CalendarWidget, mockCalendarData } from './calendar-widget';
 import { ActivityTracker, mockActivityTrackerData } from './activity-tracker';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { Button } from '../hive-button';
-import { Badge } from '../ui/badge';
+import { Badge } from '../../components/ui/badge';
 import { Progress } from '../hive-progress';
 
 interface DashboardDemoProps {

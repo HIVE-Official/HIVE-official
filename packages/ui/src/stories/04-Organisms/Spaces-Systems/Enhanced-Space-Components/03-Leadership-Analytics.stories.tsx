@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../../../../components
 import { Button } from '../../../../components/ui/button';
 import { Badge } from '../../../../components/ui/badge';
 import { Avatar, AvatarFallback } from '../../../../components/ui/avatar';
-import { HiveProgress } from '../../../components/hive-progress';
+import { HiveProgress } from '../../../../components/hive-progress';
 import { Separator } from '../../../../components/ui/separator';
 import { Switch } from '../../../../components/ui/switch';
 import { 
@@ -62,7 +62,7 @@ import {
   Wrench
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import '../../hive-tokens.css';
+import "../../../../hive-tokens.css";
 
 const meta = {
   title: '06-Complete-Spaces-System/Leadership & Analytics',

@@ -8,7 +8,7 @@
 
 import React, { useState } from 'react';
 import { ElementInstance } from '@hive/core';
-import { Label } from '../ui/label';
+import { Label } from '../../components/ui/label';
 import { Star } from 'lucide-react';
 import { useStandardElementStyles, useStandardElementBehavior } from '../../hooks/use-standard-element-styles';
 

@@ -47,7 +47,7 @@ import {
   Smile
 } from 'lucide-react';
 import { useState } from 'react';
-import '../../hive-tokens.css';
+import '../../../hive-tokens.css';
 
 const meta = {
   title: '07-Live-Frontend/Feed & Rituals System',

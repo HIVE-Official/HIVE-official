@@ -6,7 +6,7 @@
 
 import React from 'react';
 import { ElementInstance } from '@hive/core';
-import { Label } from '../ui/label';
+import { Label } from '../../components/ui/label';
 import { useStandardElementStyles } from '../../hooks/use-standard-element-styles';
 
 interface ProgressBarConfig {

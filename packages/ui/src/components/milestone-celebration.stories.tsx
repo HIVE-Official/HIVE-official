@@ -1,11 +1,11 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { MilestoneCelebration } from './milestone-celebration';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Badge } from '../atoms/badge';
-import { Text } from '../atoms/text';
+import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
+import { Badge } from '../atomic/atoms/badge';
+import { Text } from '../atomic/atoms/text';
 import { action } from '@storybook/addon-actions';
-import '../../hive-tokens.css';
+import '../hive-tokens.css';
 
 const meta: Meta<typeof MilestoneCelebration> = {
   title: '02-Molecules/Milestone Celebration - COMPLETE DEFINITION',

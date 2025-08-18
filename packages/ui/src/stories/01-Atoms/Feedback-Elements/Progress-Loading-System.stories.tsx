@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { Loader2, CheckCircle, AlertCircle, Users, BookOpen, Calendar, MapPin, Settings, Upload } from 'lucide-react';
 import { Progress } from '../../../components/ui/progress';
-import { Spinner } from '../../../../components/ui/spinner';
-import { Skeleton } from '../../../../components/ui/skeleton';
+import { Spinner } from '../../../components/ui/spinner';
+import { Skeleton } from '../../../components/ui/skeleton';
 
 const meta: Meta = {
   title: '02-Atoms/Feedback-Elements/Progress & Loading System',

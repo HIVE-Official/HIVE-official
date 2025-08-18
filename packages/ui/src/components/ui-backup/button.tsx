@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { Button as HiveButton, type ButtonProps as HiveButtonProps } from '../../ui/button-enhanced';
+import { Button as HiveButton, type ButtonProps as HiveButtonProps } from '../../atomic/atoms/button-enhanced';
 
 // Standard button variants that tools expect
 type StandardVariant = 'default' | 'secondary' | 'outline' | 'ghost' | 'destructive';

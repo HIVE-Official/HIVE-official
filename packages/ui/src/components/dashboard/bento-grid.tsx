@@ -3,9 +3,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence, useDragControls, Reorder } from 'framer-motion';
 import { GripVertical, Maximize2, Minimize2, Settings, X, Plus } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { Button } from '../hive-button';
-import { Badge } from '../ui/badge';
+import { Badge } from '../../components/ui/badge';
 
 // Grid item types and sizes
 export type GridSize = 'small' | 'medium' | 'large' | 'xl';

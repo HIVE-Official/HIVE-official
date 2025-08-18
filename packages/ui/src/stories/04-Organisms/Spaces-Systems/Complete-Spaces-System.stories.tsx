@@ -22,7 +22,7 @@ import {
   UBMobileTouchButton,
   UBMobileSwipeCard
 } from '../../../components/mobile/ub-mobile-touch-optimization';
-import { CampusSpacesCard } from '../atomic/molecules/campus-spaces-card';
+import { CampusSpacesCard } from '../../atomic/molecules/campus-spaces-card';
 import { 
   UBAdminMetricsOverview,
   UBModerationQueue,
@@ -49,7 +49,7 @@ import {
   Building2,
   GraduationCap
 } from 'lucide-react';
-import '../../hive-tokens.css';
+import '../../../hive-tokens.css';
 
 // =============================================================================
 // META CONFIGURATION

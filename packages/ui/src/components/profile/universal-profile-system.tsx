@@ -33,11 +33,11 @@ import {
   Filter,
   Search
 } from 'lucide-react';
-import { Button } from '../../ui/button-enhanced';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { Badge } from '../ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
-import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { Button } from '../../atomic/atoms/button-enhanced';
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Badge } from '../../components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
+import { Avatar, AvatarFallback, AvatarImage } from '../../components/ui/avatar';
 // import { UniversalBottomNav } from '../navigation/universal-bottom-nav'; // Component doesn't exist
 import { cn } from '../../lib/utils';
 

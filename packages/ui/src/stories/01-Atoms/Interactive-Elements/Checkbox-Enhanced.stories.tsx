@@ -39,7 +39,7 @@ import {
 import '../../../hive-tokens.css';
 
 const meta: Meta<typeof Checkbox> = {
-  title: '⚛️ 02-Atoms/Interactive Elements/Checkbox Enhanced',
+  title: '02-Atoms/Interactive Elements/Checkbox Enhanced',
   component: Checkbox,
   parameters: {
     layout: 'fullscreen',

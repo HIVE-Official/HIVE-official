@@ -5,7 +5,7 @@ import { motion, AnimatePresence, useAnimation } from 'framer-motion';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../lib/utils';
 import { liquidMetal, motionDurations, cascadeTiming } from '../motion/hive-motion-system';
-import { HiveSpaceCard } from '../components/spaces/hive-space-card';
+import { HiveSpaceCard } from '../../components/spaces/hive-space-card';
 import { HiveCommandPalette } from './hive-command-palette';
 import { type Space, type SpaceType } from '@hive/core';
 import { 

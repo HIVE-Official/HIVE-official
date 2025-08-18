@@ -22,8 +22,8 @@ import {
   Upload
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
-import { Button } from '../ui/button';
-import { Badge } from '../ui/badge';
+import { Button } from '../../components/ui/button';
+import { Badge } from '../../components/ui/badge';
 import { EventManagerTool } from '../tools/event-manager-tool';
 import { type Space } from '@hive/core';
 

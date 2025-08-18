@@ -2,8 +2,8 @@
 
 import React, { useMemo, useRef } from 'react';
 import { cn } from '../../lib/utils';
-import { Text } from '../../ui/text';
-import { Button } from '../../ui/button';
+import { Text } from '../../atomic/atoms/text';
+import { Button } from '../../components/ui/button';
 import { useAdvancedViewport } from './ResponsiveLayout';
 
 // Page context types for intelligent header adaptation

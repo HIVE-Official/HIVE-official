@@ -8,8 +8,8 @@
 import React, { useState, useMemo } from 'react';
 import { Tool } from '@hive/core';
 import { HiveCard } from '../hive-card';
-import { Button } from '../ui/button';
-import { Badge } from '../ui/badge';
+import { Button } from '../../components/ui/button';
+import { Badge } from '../../components/ui/badge';
 import { 
   BarChart3,
   Users,

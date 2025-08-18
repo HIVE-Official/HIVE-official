@@ -2,8 +2,8 @@
 
 import React, { Component, type ReactNode, type ErrorInfo } from 'react';
 import { cn } from '../../lib/utils';
-import { Text } from '../../ui/text';
-import { Button } from '../../ui/button';
+import { Text } from '../../atomic/atoms/text';
+import { Button } from '../../components/ui/button';
 
 // Enhanced error types with HIVE context
 interface HiveError {

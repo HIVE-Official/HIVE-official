@@ -60,7 +60,7 @@ import {
   Bell
 } from 'lucide-react';
 import { useState } from 'react';
-import '../../hive-tokens.css';
+import "../../../../hive-tokens.css";
 
 const meta = {
   title: '06-Complete-Spaces-System/Universal Surfaces',

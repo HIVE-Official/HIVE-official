@@ -6,8 +6,8 @@ import { cn } from '../../lib/utils';
 import { ProfileCard, type ActivityItem } from './profile-card';
 import { ProfileHeader, type ProfileUser } from '../molecules/profile-header';
 import { ProfileStats, type HiveProfileStats as ProfileStatsType } from '../molecules/profile-stats';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { 
   LayoutGrid, 
   List, 
