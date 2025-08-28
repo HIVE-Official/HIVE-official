@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { cva } from 'class-variance-authority';
 import { Search, Command, X, ArrowRight } from 'lucide-react';
 import { motion } from '../framer-motion-proxy';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 // HIVE Navigation Input variants - Following input design patterns
 const hiveNavigationInputVariants = cva(
 // Base styles - premium search input with semantic tokens

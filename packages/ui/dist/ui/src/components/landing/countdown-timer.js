@@ -2,7 +2,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 export const CountdownTimer = ({ targetDate, onComplete, className, size = 'md', variant = 'default' }) => {
     const [timeLeft, setTimeLeft] = useState([]);
     const [isComplete, setIsComplete] = useState(false);

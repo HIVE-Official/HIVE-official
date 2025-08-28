@@ -1,7 +1,7 @@
 import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
 declare const hiveNavigationInputVariants: (props?: {
-    variant?: "default" | "minimal" | "premium" | "command";
+    variant?: "default" | "minimal" | "command" | "premium";
     size?: "default" | "sm" | "lg";
 } & import("class-variance-authority/types").ClassProp) => string;
 export interface HiveNavigationInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'>, VariantProps<typeof hiveNavigationInputVariants> {

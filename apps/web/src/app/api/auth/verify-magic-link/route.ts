@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getAuth } from "firebase-admin/auth";
 import { dbAdmin } from "@/lib/firebase-admin";
-import { logger } from "@/lib/logger";
+// import { logger } from "@/lib/logger";
 
 /**
  * HIVE Magic Link Verifier - Clean Firebase Implementation
@@ -24,33 +24,21 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { token, email, schoolId } = verifyMagicLinkSchema.parse(body);
 
-    const auth = getAuth();
-
     // Handle development tokens
     if (process.env.NODE_ENV === 'development' && token.startsWith('dev_magic_')) {
-      logger.info('🔧 Development magic link verification', { email });
+      console.log('🔧 Development magic link verification', { email });
       
-      // Create or get development user
-      let userRecord;
-      try {
-        userRecord = await auth.getUserByEmail(email);
-      } catch {
-        // Create new development user
-        userRecord = await auth.createUser({
-          email,
-          emailVerified: true,
-          uid: `dev_${email.replace('@', '_').replace(/[^a-zA-Z0-9]/g, '_')}`
-        });
-      }
-
-      // Check if user has completed onboarding
-      const userDoc = await dbAdmin.collection("users").doc(userRecord.uid).get();
+      // Create development user ID based on email
+      const userUid = `dev_${email.replace('@', '_').replace(/[^a-zA-Z0-9]/g, '_')}`;
+      
+      // Check if user has completed onboarding (mock check)
+      const userDoc = await dbAdmin.collection("users").doc(userUid).get();
       const needsOnboarding = !userDoc.exists || !userDoc.data()?.onboardingCompleted;
 
       if (needsOnboarding && !userDoc.exists) {
         // Create basic user document for new users
-        await dbAdmin.collection("users").doc(userRecord.uid).set({
-          id: userRecord.uid,
+        await dbAdmin.collection("users").doc(userUid).set({
+          id: userUid,
           email,
           schoolId,
           emailVerified: true,
@@ -58,26 +46,42 @@ export async function POST(request: NextRequest) {
           createdAt: new Date(),
           updatedAt: new Date(),
         });
+        console.log('🔧 Development: Created user document for', email);
       }
 
-      // Create custom token for the client to authenticate with
-      const clientToken = await auth.createCustomToken(userRecord.uid);
+      // Create a simple JWT-like development token
+      const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
+      const payload = btoa(JSON.stringify({
+        iss: 'https://securetoken.google.com/dev-project',
+        aud: 'dev-project',
+        user_id: userUid,
+        sub: userUid,
+        iat: Math.floor(Date.now() / 1000),
+        exp: Math.floor(Date.now() / 1000) + 3600,
+        email: email,
+        email_verified: true,
+      }));
+      const signature = btoa('dev-signature');
+      const clientToken = `${header}.${payload}.${signature}`;
 
       return NextResponse.json({
         success: true,
         needsOnboarding,
-        userId: userRecord.uid,
+        userId: userUid,
         token: clientToken,
         dev: true
       });
     }
+
+    // Production flow requires Firebase Admin
+    const auth = getAuth();
 
     // Production: Verify Firebase Custom Token
     let decodedToken;
     try {
       decodedToken = await auth.verifyIdToken(token);
     } catch (error) {
-      logger.error('Invalid magic link token', { error });
+      console.error('Invalid magic link token', { error });
       return NextResponse.json(
         { error: "Invalid or expired magic link" },
         { status: 400 }
@@ -130,7 +134,7 @@ export async function POST(request: NextRequest) {
         isPublic: false
       });
 
-      logger.info('New user created', { userId: userRecord.uid, email: email.replace(/(.{2}).*@/, '$1***@') });
+      console.log('New user created', { userId: userRecord.uid, email: email.replace(/(.{2}).*@/, '$1***@') });
 
       // Create Firebase ID token for client
       const clientToken = await auth.createCustomToken(userRecord.uid);
@@ -145,7 +149,7 @@ export async function POST(request: NextRequest) {
       // Existing user
       const userData = userDoc.data()!;
       
-      logger.info('Existing user login', { userId: userRecord.uid, email: email.replace(/(.{2}).*@/, '$1***@') });
+      console.log('Existing user login', { userId: userRecord.uid, email: email.replace(/(.{2}).*@/, '$1***@') });
 
       // Create Firebase ID token for client
       const clientToken = await auth.createCustomToken(userRecord.uid);
@@ -159,7 +163,7 @@ export async function POST(request: NextRequest) {
     }
 
   } catch (error) {
-    logger.error('Magic link verification failed', { error });
+    console.error('Magic link verification failed', { error });
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(

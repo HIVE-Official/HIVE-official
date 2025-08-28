@@ -1,7 +1,7 @@
 import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
 declare const headingVariants: (props?: {
-    level?: 1 | 2 | 3 | 4;
+    level?: 1 | 3 | 2 | 4;
 } & import("class-variance-authority/types").ClassProp) => string;
 export interface HeadingProps extends React.HTMLAttributes<HTMLHeadingElement>, VariantProps<typeof headingVariants> {
 }

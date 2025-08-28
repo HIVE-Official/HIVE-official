@@ -9,7 +9,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useEffect, useCallback } from 'react';
 import { HiveCard, HiveButton, HiveBadge } from '../index';
 import { Plus, Play, MoreVertical, Users, TrendingUp, Search } from 'lucide-react';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 import { ToolRuntimeEngine } from './tool-runtime-engine';
 import { ToolMarketplace } from './tool-marketplace';
 export function SpaceToolsTab({ spaceId, userId, userRole, className }) {

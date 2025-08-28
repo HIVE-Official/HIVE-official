@@ -3,7 +3,7 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Users, Crown, Shield, Star, Plus, Activity, TrendingUp, UserCog, Download, Eye } from 'lucide-react';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 import { Button } from '../../ui/button';
 import { Badge } from '../../ui/badge';
 import { MemberDirectoryTool } from '../tools/member-directory-tool';

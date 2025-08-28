@@ -143,20 +143,20 @@ export const CompleteShowcase: Story = {
                     <Checkbox
                       label="Enable notifications"
                       description="Receive updates about space activity"
-                      variant="default"
+                      variant="primary"
                       onChange={action('default-compact')}
                     />
                     <Checkbox
                       label="Join study group"
                       description="Participate in CSE 331 algorithm study sessions"
-                      variant="default"
+                      variant="primary"
                       checked
                       onChange={action('default-compact-checked')}
                     />
                     <Checkbox
                       label="Share calendar availability"
                       description="Let group members see your free time"
-                      variant="default"
+                      variant="primary"
                       onChange={action('default-compact-calendar')}
                     />
                   </div>

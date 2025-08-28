@@ -90,7 +90,7 @@ export const AllButtonVariants: Story = {
                 <Settings className="w-4 h-4 mr-2" />
                 Secondary Button
               </Button>
-              <Button variant="outline" className="w-full">
+              <Button variant="secondary" className="w-full">
                 <Users className="w-4 h-4 mr-2" />
                 Outline Button
               </Button>
@@ -112,7 +112,7 @@ export const AllButtonVariants: Story = {
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Legacy Support</h3>
             <div className="space-y-3">
-              <Button variant="ritual" className="w-full">
+              <Button variant="primary" className="w-full">
                 <Star className="w-4 h-4 mr-2" />
                 Ritual Button
               </Button>
@@ -310,7 +310,7 @@ export const LoadingStates: Story = {
         
         <div className="space-y-4">
           <h3 className="text-lg font-semibold text-center">Ritual</h3>
-          <Button variant="ritual" loading className="w-full">
+          <Button variant="primary" loading className="w-full">
             Completing...
           </Button>
         </div>

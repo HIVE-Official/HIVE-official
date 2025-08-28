@@ -25,12 +25,18 @@ function hasValidTokenFormat(token: string): boolean {
     return true;
   }
   
-  // Firebase JWT tokens are typically 900+ characters
-  // This is just a basic format check, not cryptographic verification
-  if (token.length > 100 && token.includes('.')) {
+  // JWT token format (both Firebase production and emulator)
+  if (token.includes('.')) {
     const parts = token.split('.');
     // JWT should have 3 parts: header.payload.signature
-    return parts.length === 3 && parts.every(part => part.length > 0);
+    if (parts.length === 3 && parts.every(part => part.length > 0)) {
+      // In development, accept shorter JWTs from emulator
+      if (process.env.NODE_ENV === 'development') {
+        return true;
+      }
+      // In production, require longer tokens (Firebase production JWTs are typically 900+ chars)
+      return token.length > 100;
+    }
   }
   
   return false;

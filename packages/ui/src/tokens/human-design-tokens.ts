@@ -1,0 +1,271 @@
+/**
+ * HIVE Human Design Tokens
+ * 
+ * Replaces AI-generated patterns with intentional, purpose-driven design decisions.
+ * Every token has a specific functional meaning for campus social utility.
+ */
+
+// =============================================================================
+// CORNER RADIUS - Functional Meaning Over Decoration
+// =============================================================================
+
+export const cornerRadius = {
+  // Sharp corners - urgent states, system messages
+  none: '0px',
+  
+  // Minimal rounding - data, code blocks, technical content
+  subtle: '2px',
+  
+  // Standard rounding - interactive elements (buttons, inputs, cards)
+  standard: '6px',
+  
+  // Friendly rounding - content containers, user-generated content
+  friendly: '8px',
+  
+  // Full rounding - avatars, status indicators only
+  full: '50%',
+} as const;
+
+// =============================================================================
+// SHADOWS - Functional Hierarchy Over Drama
+// =============================================================================
+
+export const shadows = {
+  // No shadow - buttons, inline elements, flat surfaces
+  none: 'none',
+  
+  // Subtle elevation - content cards, list items
+  subtle: '0 1px 3px 0 rgba(0, 0, 0, 0.3)',
+  
+  // Clear separation - dropdowns, tooltips, temporary overlays
+  floating: '0 4px 12px 0 rgba(0, 0, 0, 0.4)',
+  
+  // Modal separation - modals, slide-outs, major overlays
+  modal: '0 8px 32px 0 rgba(0, 0, 0, 0.5)',
+} as const;
+
+// =============================================================================
+// TRANSITIONS - Selective Animation Over Noise
+// =============================================================================
+
+export const transitions = {
+  // No animation - most UI interactions
+  none: 'none',
+  
+  // Quick feedback - button states, form feedback
+  quick: 'all 0.1s ease',
+  
+  // State change - component state transitions  
+  state: 'all 0.15s ease',
+  
+  // Entrance/exit - modals, tooltips appearing/disappearing
+  entrance: 'opacity 0.2s ease, transform 0.2s ease',
+} as const;
+
+// =============================================================================
+// SPACING - Campus-Optimized Information Hierarchy
+// =============================================================================
+
+export const spacing = {
+  // Tight grouping - related information (name + handle, time + location)
+  related: '0.25rem', // 4px - space-y-1
+  
+  // Comfortable separation - different content items
+  comfortable: '1rem',  // 16px - space-y-4
+  
+  // Section separation - major content sections
+  section: '2rem',      // 32px - space-y-8
+  
+  // Page-level breathing room - top-level page sections
+  page: '3rem',         // 48px - space-y-12
+} as const;
+
+// =============================================================================
+// BORDERS - Functional Guidance Over Decoration  
+// =============================================================================
+
+export const borders = {
+  // Subtle separation - between list items, light boundaries
+  subtle: '#404040',    // Softer than pure gray-500
+  
+  // Clear boundaries - around cards, containers, form fields
+  boundary: '#525252',  // gray-600 equivalent
+  
+  // Interactive states - focus rings, active selections
+  interactive: '#FBBF24', // amber-400 - HIVE brand
+  
+  // Status indication
+  success: '#22C55E',   // green-500
+  warning: '#F59E0B',   // amber-500
+  error: '#EF4444',     // red-500
+} as const;
+
+// =============================================================================
+// COLORS - Campus Social Utility Color Psychology
+// =============================================================================
+
+export const colors = {
+  // Background system - warmer than pure black
+  background: {
+    primary: '#0a0a0a',    // Warmer app background
+    surface: '#171717',    // Elevated surfaces
+    elevated: '#1f1f23',   // Cards, containers
+  },
+  
+  // Text hierarchy - optimized for mobile scanning
+  text: {
+    primary: '#ffffff',    // Main content
+    secondary: '#a1a1aa',  // Supporting information
+    tertiary: '#71717a',   // Metadata, timestamps
+  },
+  
+  // Interactive elements - campus brand integration
+  interactive: {
+    primary: '#FBBF24',    // HIVE gold - primary actions
+    hover: '#F59E0B',      // Darker gold for hover
+    disabled: '#78716c',   // Muted state
+  },
+  
+  // Status communication
+  status: {
+    online: '#22C55E',     // Active, available
+    away: '#F59E0B',       // Busy, studying
+    offline: '#71717a',    // Unavailable
+  },
+} as const;
+
+// =============================================================================
+// TYPOGRAPHY - Campus-Optimized Reading Hierarchy
+// =============================================================================
+
+export const typography = {
+  // Information scanning hierarchy
+  primary: {
+    fontSize: '1.125rem',  // 18px - main content students scan for
+    fontWeight: '600',     // semibold
+    lineHeight: '1.4',
+  },
+  
+  secondary: {
+    fontSize: '0.875rem',  // 14px - supporting details
+    fontWeight: '400',     // normal
+    lineHeight: '1.5',
+  },
+  
+  interactive: {
+    fontSize: '0.875rem',  // 14px - actions, links
+    fontWeight: '500',     // medium
+    lineHeight: '1.4',
+  },
+  
+  metadata: {
+    fontSize: '0.75rem',   // 12px - timestamps, counts
+    fontWeight: '500',     // medium
+    lineHeight: '1.3',
+    textTransform: 'uppercase' as const,
+    letterSpacing: '0.05em',
+  },
+} as const;
+
+// =============================================================================
+// MOBILE OPTIMIZATION - Campus Usage Patterns
+// =============================================================================
+
+export const mobile = {
+  // Students walking between classes
+  walkingFriendly: {
+    minTouchTarget: '44px',      // Minimum tap area
+    thumbReach: 'bottom-4 right-4', // Easy thumb access
+    quickScan: '1.125rem',       // 18px - readable while walking
+  },
+  
+  // Quick campus actions
+  campusActions: {
+    urgentButton: {
+      padding: '0.75rem 1rem',   // 12px 16px
+      fontSize: '1rem',          // 16px
+      fontWeight: '600',         // semibold
+    },
+    
+    quickAction: {
+      size: '3.5rem',           // 56px - floating action button
+      position: 'fixed bottom-20 right-4',
+    },
+  },
+} as const;
+
+// =============================================================================
+// COMPONENT MAPPINGS - Applying Tokens to Components
+// =============================================================================
+
+export const componentTokens = {
+  // Button variants with functional meaning
+  button: {
+    primary: {
+      borderRadius: cornerRadius.standard,
+      boxShadow: shadows.none,
+      transition: transitions.quick,
+    },
+    
+    secondary: {
+      borderRadius: cornerRadius.standard,
+      boxShadow: shadows.none,
+      transition: transitions.none,
+    },
+  },
+  
+  // Card variants based on content type
+  card: {
+    content: {
+      borderRadius: cornerRadius.friendly,
+      boxShadow: shadows.subtle,
+      transition: transitions.none,
+    },
+    
+    interactive: {
+      borderRadius: cornerRadius.standard,
+      boxShadow: shadows.none,
+      transition: transitions.state,
+    },
+  },
+  
+  // Modal hierarchy
+  modal: {
+    standard: {
+      borderRadius: cornerRadius.friendly,
+      boxShadow: shadows.modal,
+      transition: transitions.entrance,
+    },
+  },
+} as const;
+
+// =============================================================================
+// USAGE GUIDELINES
+// =============================================================================
+
+/**
+ * CORNER RADIUS USAGE:
+ * - none: System alerts, error states, code blocks
+ * - subtle: Data tables, technical information
+ * - standard: Buttons, inputs, interactive elements
+ * - friendly: Content cards, user-generated content
+ * - full: Only avatars and status indicators
+ * 
+ * SHADOW USAGE:
+ * - none: Buttons, inline text, flat interfaces
+ * - subtle: Content cards, list separations
+ * - floating: Dropdowns, tooltips, temporary overlays
+ * - modal: Modals, slide-outs, major overlays
+ * 
+ * TRANSITION USAGE:
+ * - none: Most interactions (immediate feedback is better)
+ * - quick: Button hover states, form validation
+ * - state: Component state changes (open/closed, active/inactive)
+ * - entrance: Modals, tooltips, temporary elements
+ * 
+ * AVOID:
+ * - rounded-2xl, rounded-3xl (use friendly at most)
+ * - shadow-xl, shadow-2xl (use modal at most)
+ * - transition-all duration-300 (use selective transitions)
+ * - Decorative gradients (use functional color only)
+ */

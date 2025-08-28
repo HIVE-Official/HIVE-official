@@ -29,15 +29,15 @@ export declare const PersonalToolSchema: z.ZodObject<{
     id: string;
     name: string;
     description: string;
-    icon: string;
     config: Record<string, any>;
+    icon: string;
     createdAt?: any;
 }, {
     id: string;
     name: string;
     description: string;
-    icon: string;
     config: Record<string, any>;
+    icon: string;
     createdAt?: any;
 }>;
 export type MotionEntry = z.infer<typeof MotionEntrySchema>;

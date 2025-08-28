@@ -64,11 +64,11 @@ export const BentoGridProfile = () => {
               {isGhostMode ? <Eye className="w-4 h-4 mr-2" /> : <EyeOff className="w-4 h-4 mr-2" />}
               Ghost Mode
             </Button>
-            <Button variant="outline" size="sm">
+            <Button variant="secondary" size="sm">
               <Edit3 className="w-4 h-4 mr-2" />
               Edit Profile
             </Button>
-            <Button variant="outline" size="sm">
+            <Button variant="secondary" size="sm">
               <Share2 className="w-4 h-4 mr-2" />
               Share
             </Button>
@@ -114,19 +114,19 @@ export const BentoGridProfile = () => {
             <Card className="bg-[#111111] border-white/10 p-6 h-full">
               <h3 className="text-lg font-semibold mb-4">Quick Actions</h3>
               <div className="space-y-3">
-                <Button variant="outline" className="w-full justify-start">
+                <Button variant="secondary" className="w-full justify-start">
                   <Plus className="w-4 h-4 mr-2" />
                   Create Space
                 </Button>
-                <Button variant="outline" className="w-full justify-start">
+                <Button variant="secondary" className="w-full justify-start">
                   <Code className="w-4 h-4 mr-2" />
                   Build Tool
                 </Button>
-                <Button variant="outline" className="w-full justify-start">
+                <Button variant="secondary" className="w-full justify-start">
                   <Users className="w-4 h-4 mr-2" />
                   Find People
                 </Button>
-                <Button variant="outline" className="w-full justify-start">
+                <Button variant="secondary" className="w-full justify-start">
                   <Calendar className="w-4 h-4 mr-2" />
                   Schedule
                 </Button>
@@ -349,11 +349,11 @@ export const CardGridProfile = () => {
                   <p className="text-xl text-white/70">Computer Science • Class of 2026</p>
                 </div>
                 <div className="flex gap-3 mt-4 lg:mt-0">
-                  <Button variant="outline" size="sm">
+                  <Button variant="secondary" size="sm">
                     <Edit3 className="w-4 h-4 mr-2" />
                     Edit Profile
                   </Button>
-                  <Button variant="outline" size="sm">
+                  <Button variant="secondary" size="sm">
                     <Share2 className="w-4 h-4 mr-2" />
                     Share Profile
                   </Button>
@@ -752,11 +752,11 @@ export const TimelineProfile = () => {
             </div>
             
             <div className="flex gap-3">
-              <Button variant="outline" size="sm">
+              <Button variant="secondary" size="sm">
                 <Edit3 className="w-4 h-4 mr-2" />
                 Edit Profile
               </Button>
-              <Button variant="outline" size="sm">
+              <Button variant="secondary" size="sm">
                 <Share2 className="w-4 h-4 mr-2" />
                 Share
               </Button>

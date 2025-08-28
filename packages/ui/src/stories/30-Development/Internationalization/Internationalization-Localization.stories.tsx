@@ -1152,11 +1152,11 @@ const RTLLayoutDemo = () => {
             <Heart className="h-4 w-4 mr-2" />
             {currentLanguage.direction === 'rtl' ? 'إعجاب' : t('common.like')}
           </Button>
-          <Button size="sm" variant="outline" className="border-gray-600 text-gray-300">
+          <Button size="sm" variant="secondary" className="border-gray-600 text-gray-300">
             <MessageCircle className="h-4 w-4 mr-2" />
             {currentLanguage.direction === 'rtl' ? 'تعليق' : t('common.comment')}
           </Button>
-          <Button size="sm" variant="outline" className="border-gray-600 text-gray-300">
+          <Button size="sm" variant="secondary" className="border-gray-600 text-gray-300">
             <Share2 className="h-4 w-4 mr-2" />
             {currentLanguage.direction === 'rtl' ? 'مشاركة' : t('common.share')}
           </Button>

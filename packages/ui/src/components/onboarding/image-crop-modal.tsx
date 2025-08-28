@@ -182,7 +182,7 @@ export const ImageCropModal: React.FC<ImageCropModalProps> = ({
               <div className="text-center">
                 <div className="flex items-center justify-center gap-4 mb-4">
                   <Button
-                    variant="outline"
+                    variant="secondary"
                     size="sm"
                     onClick={() => setScale(Math.max(0.5, scale - 0.2))}
                   >
@@ -191,7 +191,7 @@ export const ImageCropModal: React.FC<ImageCropModalProps> = ({
                   </Button>
                   
                   <Button
-                    variant="outline"
+                    variant="secondary"
                     size="sm"
                     onClick={() => setScale(Math.min(2, scale + 0.2))}
                   >
@@ -213,11 +213,11 @@ export const ImageCropModal: React.FC<ImageCropModalProps> = ({
 
             {/* Action Buttons */}
             <div className="flex gap-3 pt-4">
-              <Button variant="outline" onClick={onClose} className="flex-1">
+              <Button variant="secondary" onClick={onClose} className="flex-1">
                 Cancel
               </Button>
               <Button 
-                variant="ritual" 
+                variant="primary" 
                 onClick={handleCropComplete}
                 className="flex-1"
               >

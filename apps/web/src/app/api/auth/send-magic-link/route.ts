@@ -4,7 +4,7 @@ import { z } from "zod";
 import { getAuth } from "firebase-admin/auth";
 import { dbAdmin } from "@/lib/firebase-admin";
 import { sendMagicLinkEmail } from "@/lib/email";
-import { logger } from "@/lib/logger";
+// import { logger } from "@/lib/logger";
 
 /**
  * HIVE Magic Link Sender - Clean Firebase Implementation
@@ -24,6 +24,35 @@ async function validateSchool(schoolId: string): Promise<{ valid: boolean; domai
     const schoolDoc = await dbAdmin.collection("schools").doc(schoolId).get();
     
     if (!schoolDoc.exists) {
+      // Development mode: Auto-create UB school if it doesn't exist
+      if (process.env.NODE_ENV === 'development' && (schoolId === 'buffalo' || schoolId === 'ub-buffalo')) {
+        console.log('🔧 Development: Auto-creating UB school document');
+        
+        const ubSchoolData = {
+          name: "University at Buffalo",
+          domain: "buffalo.edu",
+          status: "active",
+          active: true,
+          campusType: "public",
+          location: {
+            city: "Buffalo",
+            state: "NY",
+            country: "US"
+          },
+          createdAt: new Date(),
+          updatedAt: new Date()
+        };
+        
+        // Create the school document
+        await dbAdmin.collection("schools").doc(schoolId).set(ubSchoolData);
+        
+        return {
+          valid: true,
+          domain: ubSchoolData.domain,
+          name: ubSchoolData.name
+        };
+      }
+      
       return { valid: false };
     }
     
@@ -38,7 +67,7 @@ async function validateSchool(schoolId: string): Promise<{ valid: boolean; domai
       name: data.name
     };
   } catch (error) {
-    logger.error('School validation failed', { error, schoolId });
+    console.error('School validation failed', { error, schoolId });
     return { valid: false };
   }
 }
@@ -76,7 +105,7 @@ export async function POST(request: NextRequest) {
     if (process.env.NODE_ENV === 'development') {
       const testEmails = ['student@test.edu', 'faculty@test.edu', 'admin@test.edu'];
       if (testEmails.includes(email)) {
-        logger.info('🔧 Development test user detected', { email });
+        console.log('🔧 Development test user detected', { email });
         
         // Create a simple development magic link
         const devToken = `dev_magic_${email.replace('@', '_').replace('.', '_')}_${Date.now()}`;
@@ -93,41 +122,60 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Create Firebase Custom Token for magic link
-    const auth = getAuth();
+    let customToken: string;
     
-    // Generate custom token with user email as the UID (temporarily)
-    // We'll create the proper user later when they verify
-    const customTokenUid = email.replace('@', '_at_').replace(/[^a-zA-Z0-9]/g, '_');
-    const customToken = await auth.createCustomToken(customTokenUid, {
-      email: email,
-      schoolId: schoolId,
-      magicLinkAuth: true,
-      timestamp: Date.now()
-    });
+    // Development mode: Create simple development token
+    if (process.env.NODE_ENV === 'development') {
+      console.log('🔧 Development: Creating simple magic link token');
+      customToken = `dev_magic_${email.replace('@', '_at_').replace(/[^a-zA-Z0-9]/g, '_')}_${Date.now()}`;
+    } else {
+      // Production: Create Firebase Custom Token for magic link
+      const auth = getAuth();
+      
+      // Generate custom token with user email as the UID (temporarily)
+      // We'll create the proper user later when they verify
+      const customTokenUid = email.replace('@', '_at_').replace(/[^a-zA-Z0-9]/g, '_');
+      customToken = await auth.createCustomToken(customTokenUid, {
+        email: email,
+        schoolId: schoolId,
+        magicLinkAuth: true,
+        timestamp: Date.now()
+      });
+    }
 
     // Create magic link URL
     const magicLink = `${process.env.NEXT_PUBLIC_APP_URL}/auth/verify?token=${customToken}&email=${encodeURIComponent(email)}&schoolId=${schoolId}`;
 
-    // Send email with magic link
-    await sendMagicLinkEmail({
-      to: email,
-      magicLink,
-      schoolName: school.name!
-    });
+    // Send email with magic link (skip in development)
+    if (process.env.NODE_ENV === 'development') {
+      console.log('🔧 Development: Magic link created (not sending email)');
+      console.log('🔗 Magic Link:', magicLink);
+      
+      return NextResponse.json({
+        success: true,
+        message: "Magic link created for development (check console)",
+        devLink: magicLink
+      });
+    } else {
+      await sendMagicLinkEmail({
+        to: email,
+        magicLink,
+        schoolName: school.name!
+      });
 
-    logger.info('Magic link sent successfully', { 
-      email: email.replace(/(.{2}).*@/, '$1***@'), // Mask email for privacy
-      schoolId 
-    });
+      console.log('Magic link sent successfully', { 
+        email: email.replace(/(.{2}).*@/, '$1***@'), // Mask email for privacy
+        schoolId 
+      });
 
-    return NextResponse.json({
-      success: true,
-      message: "Magic link sent to your email address"
-    });
+      return NextResponse.json({
+        success: true,
+        message: "Magic link sent to your email address"
+      });
+    }
 
   } catch (error) {
-    logger.error('Magic link sending failed', { error });
+    console.error('Magic link sending failed', { error });
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(

@@ -381,7 +381,7 @@ export interface FloatingLabelInputProps extends Omit<InputProps, 'label'> {
 }
 
 const FloatingLabelInput = React.forwardRef<HTMLInputElement, FloatingLabelInputProps>(
-  ({ label, labelClassName, className, id, ...props }, ref) => {
+  ({ label, labelClassName, className, id, variant, size, radius, error, success, helperText, required, ...props }, ref) => {
     const [isFocused, setIsFocused] = React.useState(false);
     const [hasValue, setHasValue] = React.useState(false);
     const inputId = id || React.useId();
@@ -415,9 +415,9 @@ const FloatingLabelInput = React.forwardRef<HTMLInputElement, FloatingLabelInput
           id={inputId}
           className={cn(
             inputVariants({ 
-              variant: props.error ? "error" : props.success ? "success" : props.variant,
-              size: props.size,
-              radius: props.radius 
+              variant: error ? "error" : success ? "success" : variant,
+              size: size,
+              radius: radius 
             }),
             "peer placeholder-transparent",
             className
@@ -434,13 +434,13 @@ const FloatingLabelInput = React.forwardRef<HTMLInputElement, FloatingLabelInput
             "absolute left-3 transition-all duration-200 pointer-events-none font-sans",
             "peer-placeholder-shown:text-[var(--hive-text-tertiary)]",
             "peer-focus:text-[var(--hive-brand-secondary)]",
-            props.error && "peer-focus:text-[var(--hive-status-error)]",
-            props.success && "peer-focus:text-[var(--hive-status-success)]",
+            error && "peer-focus:text-[var(--hive-status-error)]",
+            success && "peer-focus:text-[var(--hive-status-success)]",
             isFloated ? [
               "-top-2 left-2 text-xs bg-[var(--hive-background-primary)] px-1 z-10",
               "text-[var(--hive-brand-secondary)]",
-              props.error && "text-[var(--hive-status-error)]",
-              props.success && "text-[var(--hive-status-success)]"
+              error && "text-[var(--hive-status-error)]",
+              success && "text-[var(--hive-status-success)]"
             ] : [
               "top-1/2 -translate-y-1/2 text-sm text-[var(--hive-text-tertiary)]"
             ],
@@ -448,20 +448,20 @@ const FloatingLabelInput = React.forwardRef<HTMLInputElement, FloatingLabelInput
           )}
         >
           {label}
-          {props.required && (
+          {required && (
             <span className="ml-1 text-[var(--hive-status-error)]">*</span>
           )}
         </label>
         
         {/* Helper Text / Error / Success */}
-        {(props.error || props.success || props.helperText) && (
+        {(error || success || helperText) && (
           <p className={cn(
             "text-xs mt-2",
-            props.error && "text-[var(--hive-status-error)]",
-            props.success && "text-[var(--hive-status-success)]",
-            !props.error && !props.success && "text-[var(--hive-text-tertiary)]"
+            error && "text-[var(--hive-status-error)]",
+            success && "text-[var(--hive-status-success)]",
+            !error && !success && "text-[var(--hive-text-tertiary)]"
           )}>
-            {props.error || props.success || props.helperText}
+            {error || success || helperText}
           </p>
         )}
       </div>

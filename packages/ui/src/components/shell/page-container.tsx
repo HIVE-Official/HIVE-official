@@ -2,7 +2,7 @@
 
 import React from 'react';
 // import { BreadcrumbNavigation } from './breadcrumb-navigation'; // Temporarily disabled
-import { cn } from '../../lib/utils';
+import { cn } from '../lib/utils';
 
 interface BreadcrumbItem {
   label: string;

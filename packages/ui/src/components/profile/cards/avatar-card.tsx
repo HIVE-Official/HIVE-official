@@ -2,10 +2,10 @@
 
 import React, { useState, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from '../../framer-motion-proxy';
-import { cn } from '../../../lib/utils';
-import { Card, CardContent, CardHeader } from '../../ui/card';
-import { Button } from '../../ui/button';
-import { Badge } from '../../ui/badge';
+import { cn } from '../../lib/utils';
+import { Card, CardContent, CardHeader } from '../../atomic/ui/card';
+import { Button } from '../../atomic/atoms/button-enhanced';
+import { Badge } from '../../atomic/atoms/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '../../ui/avatar';
 import { Input } from '../../ui/input';
 import { Textarea } from '../../ui/textarea';
@@ -143,7 +143,7 @@ function PhotoUploadDialog({
               className="hidden"
             />
             <Button
-              variant="outline"
+              variant="secondary"
               className="w-full"
               onClick={() => fileInputRef.current?.click()}
             >
@@ -236,7 +236,7 @@ function ProfileEditForm({
       <div className="flex items-center justify-between">
         <h4 className="font-medium text-[var(--hive-text-primary)]">Edit Profile</h4>
         <div className="flex gap-2">
-          <Button size="sm" variant="outline" onClick={onCancel}>
+          <Button size="sm" variant="secondary" onClick={onCancel}>
             <X className="w-4 h-4" />
           </Button>
           <Button size="sm" onClick={handleSave} disabled={!hasChanges}>
@@ -431,13 +431,13 @@ export function AvatarCard({
               {/* Status Badges */}
               <div className="flex flex-wrap gap-1">
                 {profile.builderStatus && (
-                  <Badge variant="default" className="bg-[var(--hive-brand-gold)] text-white text-xs">
+                  <Badge variant="primary" className="bg-[var(--hive-brand-gold)] text-white text-xs">
                     <Crown className="w-3 h-3 mr-1" />
                     Builder
                   </Badge>
                 )}
                 {profile.isVerified && (
-                  <Badge variant="outline" className="text-xs">
+                  <Badge variant="secondary" className="text-xs">
                     <Shield className="w-3 h-3 mr-1" />
                     Verified
                   </Badge>

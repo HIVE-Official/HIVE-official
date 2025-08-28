@@ -232,7 +232,7 @@ const MoleculeShowcase = () => {
                         </Avatar>
                       ))}
                     </div>
-                    <Button size="sm" variant="outline" className="text-white" style={{ borderColor: 'var(--hive-border-primary)' }}>
+                    <Button size="sm" variant="secondary" className="text-white" style={{ borderColor: 'var(--hive-border-primary)' }}>
                       Member
                     </Button>
                   </div>
@@ -359,7 +359,7 @@ const MoleculeShowcase = () => {
                     <Button size="sm" className="flex-1 hive-interactive" style={{ backgroundColor: 'var(--hive-brand-primary)', color: 'var(--hive-text-inverse)' }}>
                       Connect
                     </Button>
-                    <Button size="sm" variant="outline" className="text-white" style={{ borderColor: 'var(--hive-border-primary)' }}>
+                    <Button size="sm" variant="secondary" className="text-white" style={{ borderColor: 'var(--hive-border-primary)' }}>
                       View Profile
                     </Button>
                   </div>
@@ -397,7 +397,7 @@ const MoleculeShowcase = () => {
                     <Button size="sm" className="flex-1" style={{ backgroundColor: 'var(--hive-status-info)', color: 'var(--hive-text-inverse)' }}>
                       Follow
                     </Button>
-                    <Button size="sm" variant="outline" className="text-white" style={{ borderColor: 'var(--hive-border-primary)' }}>
+                    <Button size="sm" variant="secondary" className="text-white" style={{ borderColor: 'var(--hive-border-primary)' }}>
                       Message
                     </Button>
                   </div>
@@ -413,7 +413,7 @@ const MoleculeShowcase = () => {
                       <h4 className="text-white font-semibold">Alex Liu</h4>
                       <p className="text-gray-400 text-sm">@alexl</p>
                     </div>
-                    <Badge variant="outline" style={{ borderColor: 'var(--hive-border-primary)', color: 'var(--hive-text-secondary)' }}>Freshman</Badge>
+                    <Badge variant="secondary" style={{ borderColor: 'var(--hive-border-primary)', color: 'var(--hive-text-secondary)' }}>Freshman</Badge>
                   </div>
                   
                   <p className="text-gray-300 text-sm mb-4">
@@ -435,7 +435,7 @@ const MoleculeShowcase = () => {
                     <Button size="sm" className="flex-1 bg-green-500 text-white hover:bg-green-600">
                       Connect
                     </Button>
-                    <Button size="sm" variant="outline" className="text-white" style={{ borderColor: 'var(--hive-border-primary)' }}>
+                    <Button size="sm" variant="secondary" className="text-white" style={{ borderColor: 'var(--hive-border-primary)' }}>
                       View Profile
                     </Button>
                   </div>
@@ -500,9 +500,9 @@ const MoleculeShowcase = () => {
                     </Button>
                   </div>
                   <div className="flex flex-wrap gap-2 mt-2">
-                    <Badge variant="outline" className="cursor-pointer hive-interactive" style={{ borderColor: 'var(--hive-border-primary)', color: 'var(--hive-text-secondary)' }} onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--hive-brand-primary)'; e.currentTarget.style.color = 'var(--hive-brand-primary)'; }} onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--hive-border-primary)'; e.currentTarget.style.color = 'var(--hive-text-muted)'; }}>Academic</Badge>
-                    <Badge variant="outline" className="cursor-pointer hive-interactive" style={{ borderColor: 'var(--hive-border-primary)', color: 'var(--hive-text-secondary)' }} onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--hive-brand-primary)'; e.currentTarget.style.color = 'var(--hive-brand-primary)'; }} onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--hive-border-primary)'; e.currentTarget.style.color = 'var(--hive-text-muted)'; }}>Social</Badge>
-                    <Badge variant="outline" className="cursor-pointer hive-interactive" style={{ borderColor: 'var(--hive-border-primary)', color: 'var(--hive-text-secondary)' }} onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--hive-brand-primary)'; e.currentTarget.style.color = 'var(--hive-brand-primary)'; }} onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--hive-border-primary)'; e.currentTarget.style.color = 'var(--hive-text-muted)'; }}>Housing</Badge>
+                    <Badge variant="secondary" className="cursor-pointer hive-interactive" style={{ borderColor: 'var(--hive-border-primary)', color: 'var(--hive-text-secondary)' }} onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--hive-brand-primary)'; e.currentTarget.style.color = 'var(--hive-brand-primary)'; }} onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--hive-border-primary)'; e.currentTarget.style.color = 'var(--hive-text-muted)'; }}>Academic</Badge>
+                    <Badge variant="secondary" className="cursor-pointer hive-interactive" style={{ borderColor: 'var(--hive-border-primary)', color: 'var(--hive-text-secondary)' }} onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--hive-brand-primary)'; e.currentTarget.style.color = 'var(--hive-brand-primary)'; }} onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--hive-border-primary)'; e.currentTarget.style.color = 'var(--hive-text-muted)'; }}>Social</Badge>
+                    <Badge variant="secondary" className="cursor-pointer hive-interactive" style={{ borderColor: 'var(--hive-border-primary)', color: 'var(--hive-text-secondary)' }} onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--hive-brand-primary)'; e.currentTarget.style.color = 'var(--hive-brand-primary)'; }} onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--hive-border-primary)'; e.currentTarget.style.color = 'var(--hive-text-muted)'; }}>Housing</Badge>
                   </div>
                 </div>
 

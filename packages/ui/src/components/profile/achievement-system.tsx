@@ -35,7 +35,7 @@ import {
 } from 'lucide-react';
 import { HiveCard } from '../hive-card';
 import { HiveButton } from '../hive-button';
-import { Badge } from '../../ui/badge';
+import { Badge } from '../../atomic/atoms/badge';
 import { cn } from '../lib/utils';
 
 // Achievement System Types
@@ -240,13 +240,13 @@ export const AchievementSystem: React.FC<AchievementSystemProps> = ({
         </div>
         
         <div className="flex items-center gap-3">
-          <HiveButton variant="outline" size="sm" onClick={() => setShowSecrets(!showSecrets)}>
+          <HiveButton variant="secondary" size="sm" onClick={() => setShowSecrets(!showSecrets)}>
             {showSecrets ? <EyeOff className="h-4 w-4 mr-2" /> : <Eye className="h-4 w-4 mr-2" />}
             {showSecrets ? 'Hide' : 'Show'} Secrets
           </HiveButton>
           
           {isOwnProfile && (
-            <HiveButton variant="outline" size="sm">
+            <HiveButton variant="secondary" size="sm">
               <Download className="h-4 w-4 mr-2" />
               Export Progress
             </HiveButton>

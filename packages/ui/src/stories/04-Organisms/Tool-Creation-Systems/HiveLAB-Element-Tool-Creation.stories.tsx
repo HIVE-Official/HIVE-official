@@ -434,13 +434,13 @@ const HiveLABShowcase = () => {
                   </p>
                   <div className="flex flex-wrap gap-1">
                     {tool.elements.slice(0, 3).map((element, idx) => (
-                      <Badge key={idx} variant="outline" className="text-xs"
+                      <Badge key={idx} variant="secondary" className="text-xs"
                              style={{ borderColor: 'var(--hive-border-subtle)', color: 'var(--hive-text-muted)' }}>
                         {element}
                       </Badge>
                     ))}
                     {tool.elements.length > 3 && (
-                      <Badge variant="outline" className="text-xs"
+                      <Badge variant="secondary" className="text-xs"
                              style={{ borderColor: 'var(--hive-border-subtle)', color: 'var(--hive-text-muted)' }}>
                         +{tool.elements.length - 3} more
                       </Badge>
@@ -534,7 +534,7 @@ const HiveLABShowcase = () => {
                   </h6>
                   <div className="flex flex-wrap gap-2">
                     {selectedTool.elements.map((element, idx) => (
-                      <Badge key={idx} variant="outline"
+                      <Badge key={idx} variant="secondary"
                              style={{ borderColor: 'var(--hive-border-gold)', color: 'var(--hive-brand-primary)' }}>
                         {element}
                       </Badge>
@@ -603,7 +603,7 @@ const HiveLABShowcase = () => {
                 </h5>
                 <div className="flex flex-wrap gap-1">
                   {element.config.map((option: string, idx: number) => (
-                    <Badge key={idx} variant="outline" className="text-xs"
+                    <Badge key={idx} variant="secondary" className="text-xs"
                            style={{ borderColor: 'var(--hive-border-subtle)', color: 'var(--hive-text-muted)' }}>
                       {option}
                     </Badge>
@@ -774,7 +774,7 @@ const HiveLABShowcase = () => {
                                   {element.description}
                                 </p>
                                 <div className="flex items-center justify-between">
-                                  <Badge variant="outline" className="text-xs"
+                                  <Badge variant="secondary" className="text-xs"
                                          style={{ borderColor: category.color, color: category.color }}>
                                     {element.dataType}
                                   </Badge>

@@ -134,7 +134,7 @@ export const CompleteShowcase: Story = {
                   <div className="grid md:grid-cols-2 gap-6">
                     
                     <div className="space-y-2">
-                      <Label variant="default" htmlFor="student-id" required>Student ID</Label>
+                      <Label variant="primary" htmlFor="student-id" required>Student ID</Label>
                       <input
                         id="student-id"
                         type="text"
@@ -144,7 +144,7 @@ export const CompleteShowcase: Story = {
                     </div>
 
                     <div className="space-y-2">
-                      <Label variant="default" htmlFor="student-name" required>Full Name</Label>
+                      <Label variant="primary" htmlFor="student-name" required>Full Name</Label>
                       <input
                         id="student-name"
                         type="text"
@@ -154,7 +154,7 @@ export const CompleteShowcase: Story = {
                     </div>
 
                     <div className="space-y-2">
-                      <Label variant="default" htmlFor="student-email" required>University Email</Label>
+                      <Label variant="primary" htmlFor="student-email" required>University Email</Label>
                       <input
                         id="student-email"
                         type="email"
@@ -164,7 +164,7 @@ export const CompleteShowcase: Story = {
                     </div>
 
                     <div className="space-y-2">
-                      <Label variant="default" htmlFor="student-major">Academic Major</Label>
+                      <Label variant="primary" htmlFor="student-major">Academic Major</Label>
                       <select
                         id="student-major"
                         className="w-full px-3 py-2 border border-[var(--hive-border-primary)] rounded-lg bg-[var(--hive-background-primary)] text-[var(--hive-text-primary)] focus:ring-2 focus:ring-[var(--hive-brand-primary)] focus:border-transparent"

@@ -4,7 +4,7 @@ import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { CampusCard } from './campus-card';
 import { SearchInput } from './search-input';
-import { cn } from '@/lib/utils';
+import { cn } from '../../../lib/utils';
 export const CampusSelector = ({ campuses, selectedCampusId, onSelect, className }) => {
     const [searchQuery, setSearchQuery] = useState('');
     const filteredCampuses = useMemo(() => {

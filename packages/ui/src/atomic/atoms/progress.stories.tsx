@@ -163,7 +163,7 @@ export const CompleteShowcase: Story = {
             <Progress 
               value={70} 
               label="Default - Clean Progress Bar" 
-              variant="default" 
+              variant="primary" 
               color="primary" 
               showValue 
             />

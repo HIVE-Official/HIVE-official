@@ -2,7 +2,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { motion } from 'framer-motion';
 import { cva } from 'class-variance-authority';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 import { getMotionProps } from '../lib/motion-utils';
 // Extended HIVE Logo Variants System
 // Comprehensive collection of logo variations for different contexts and effects

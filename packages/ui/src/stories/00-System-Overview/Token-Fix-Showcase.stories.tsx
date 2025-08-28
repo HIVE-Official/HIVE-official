@@ -182,7 +182,7 @@ export const TokenFixShowcase: Story = {
               </div>
 
               <div className="flex gap-2">
-                <Badge variant="outline" className="border-[var(--hive-border-default)]">Fixed Border</Badge>
+                <Badge variant="secondary" className="border-[var(--hive-border-default)]">Fixed Border</Badge>
                 <Badge variant="secondary">Working Style</Badge>
                 <Badge className="bg-[var(--hive-brand-primary)]">Brand Colors</Badge>
               </div>

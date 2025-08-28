@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useCallback, createContext, useContext, useEffect } from 'react';
-import { Button } from '../../ui/button';
+import { Button } from '../../atomic/atoms/button-enhanced';
 import { HiveBadge as Badge } from '../index';
 import { 
   Settings, 
@@ -435,7 +435,7 @@ const FeatureFlagCard: React.FC<{
                 {flag.status}
               </Badge>
               {flag.rolloutPercentage && flag.rolloutPercentage < 100 && (
-                <Badge size="sm" variant="outline">
+                <Badge size="sm" variant="secondary">
                   {flag.rolloutPercentage}%
                 </Badge>
               )}
@@ -492,7 +492,7 @@ const FeatureFlagCard: React.FC<{
             {flag.isEnabled ? 'Enabled' : 'Disabled'}
           </div>
           {flag.dependencies && flag.dependencies.length > 0 && (
-            <Badge size="xs" variant="outline" className="flex items-center space-x-1">
+            <Badge size="xs" variant="secondary" className="flex items-center space-x-1">
               <Link className="w-2 h-2" />
               <span>{flag.dependencies.length}</span>
             </Badge>
@@ -528,7 +528,7 @@ const FeatureFlagCard: React.FC<{
                 <h4 className="text-xs font-medium text-[var(--hive-text-primary)] mb-1">Dependencies</h4>
                 <div className="flex flex-wrap gap-1">
                   {flag.dependencies.map((dep) => (
-                    <Badge key={dep} size="xs" variant="outline">
+                    <Badge key={dep} size="xs" variant="secondary">
                       {dep}
                     </Badge>
                   ))}
@@ -765,7 +765,7 @@ export const FeatureFlagSystem: React.FC<FeatureFlagSystemProps> = ({
           {canEdit && (
             <>
               <Button
-                variant="outline"
+                variant="secondary"
                 onClick={() => onExportFlags?.('json')}
                 className="flex items-center space-x-2"
               >
@@ -773,7 +773,7 @@ export const FeatureFlagSystem: React.FC<FeatureFlagSystemProps> = ({
                 <span>Export</span>
               </Button>
               <Button
-                variant="outline"
+                variant="secondary"
                 onClick={() => document.getElementById('import-input')?.click()}
                 className="flex items-center space-x-2"
               >
@@ -895,7 +895,7 @@ export const FeatureFlagSystem: React.FC<FeatureFlagSystemProps> = ({
 
         {canEdit && (
           <Button
-            variant="outline"
+            variant="secondary"
             onClick={() => setShowBulkActions(!showBulkActions)}
             className="flex items-center space-x-2"
           >
@@ -918,7 +918,7 @@ export const FeatureFlagSystem: React.FC<FeatureFlagSystemProps> = ({
               <div className="flex items-center space-x-4">
                 <Button
                   size="sm"
-                  variant="outline"
+                  variant="secondary"
                   onClick={handleSelectAll}
                 >
                   {selectedFlags.length === filteredFlags.length ? 'Deselect All' : 'Select All'}

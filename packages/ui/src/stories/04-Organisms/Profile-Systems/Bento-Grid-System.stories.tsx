@@ -146,7 +146,7 @@ function MockCard({ item }: { item: GridItem }) {
       <CardContent className="p-4 h-full flex flex-col items-center justify-center text-center">
         <Icon className="w-8 h-8 mb-3" />
         <h3 className="font-semibold text-lg mb-2">{config.label}</h3>
-        <Badge variant="outline" className="mb-2">
+        <Badge variant="secondary" className="mb-2">
           {item.size.width}x{item.size.height}
         </Badge>
         <p className="text-sm opacity-80">
@@ -259,7 +259,7 @@ function GridAnalytics({ items }: { items: GridItem[] }) {
           {Object.entries(cardSizes).map(([size, count]) => (
             <div key={size} className="flex items-center justify-between text-sm">
               <span className="text-[var(--hive-text-secondary)]">{size} cards</span>
-              <Badge variant="outline">{count}</Badge>
+              <Badge variant="secondary">{count}</Badge>
             </div>
           ))}
         </div>
@@ -567,7 +567,7 @@ export const EditModeFeaturesDemo: StoryObj = {
               </Button>
               
               <Button
-                variant="outline"
+                variant="secondary"
                 onClick={handleResetLayout}
               >
                 <RotateCcw className="w-4 h-4 mr-2" />

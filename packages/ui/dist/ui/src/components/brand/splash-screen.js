@@ -1,7 +1,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { motion } from 'framer-motion';
 import { HiveLogo } from '../HiveLogo';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 const SplashScreen = ({ tagline = 'Finally, Your Campus.', className, }) => {
     const containerVariants = {
         hidden: { opacity: 0 },

@@ -3,7 +3,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from 'react';
 import { motion } from 'framer-motion';
 import { cva } from 'class-variance-authority';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 import { liquidMetal, motionDurations } from '../motion/hive-motion-system';
 import { CheckCircle, AlertCircle } from 'lucide-react';
 // HIVE Progress System - Advanced Loading States with Liquid Metal Motion

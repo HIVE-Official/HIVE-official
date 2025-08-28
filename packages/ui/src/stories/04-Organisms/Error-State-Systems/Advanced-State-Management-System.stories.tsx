@@ -1116,7 +1116,7 @@ const SyncControls = () => {
           <Button
             size="sm"
             onClick={simulateConflict}
-            variant="outline"
+            variant="secondary"
             className="border-yellow-600 text-yellow-500 hover:bg-yellow-900/20"
           >
             Create Conflict

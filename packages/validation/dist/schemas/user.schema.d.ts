@@ -34,15 +34,15 @@ export declare const userSchema: z.ZodObject<{
     createdAt: z.ZodDefault<z.ZodDate>;
     updatedAt: z.ZodDefault<z.ZodDate>;
 }, "strip", z.ZodTypeAny, {
-    email: string;
-    handle: string;
-    fullName: string;
-    major: string;
-    isBuilder: boolean;
     createdAt: Date;
     updatedAt: Date;
+    email: string;
+    fullName: string;
+    major: string;
     graduationYear: number;
+    handle: string;
     onboardingCompleted: boolean;
+    isBuilder: boolean;
     legal: {
         termsOfServiceAcceptedVersion: string;
         privacyPolicyAcceptedVersion: string;
@@ -55,24 +55,24 @@ export declare const userSchema: z.ZodObject<{
     } | undefined;
 }, {
     email: string;
-    handle: string;
     fullName: string;
     major: string;
     graduationYear: number;
+    handle: string;
     legal: {
         termsOfServiceAcceptedVersion: string;
         privacyPolicyAcceptedVersion: string;
         acceptedAt: Date;
     };
-    preferredName?: string | undefined;
-    isBuilder?: boolean | undefined;
     createdAt?: Date | undefined;
     updatedAt?: Date | undefined;
+    preferredName?: string | undefined;
     avatar?: {
         path: string;
         url: string;
     } | undefined;
     onboardingCompleted?: boolean | undefined;
+    isBuilder?: boolean | undefined;
 }>;
 export type User = z.infer<typeof userSchema>;
 //# sourceMappingURL=user.schema.d.ts.map

@@ -166,7 +166,7 @@ export function SpaceToolsTab({ spaceId, userId, userRole, className }: SpaceToo
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <HiveButton
-              variant="outline"
+              variant="secondary"
               size="sm"
               onClick={() => {
                 setRunningTool(null);
@@ -202,7 +202,7 @@ export function SpaceToolsTab({ spaceId, userId, userRole, className }: SpaceToo
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-semibold text-gray-900">Add Tools to Space</h2>
           <HiveButton
-            variant="outline"
+            variant="secondary"
             onClick={() => setCurrentView('installed')}
           >
             ← Back to Installed
@@ -343,7 +343,7 @@ function InstalledToolCard({ tool, userRole, onLaunch, onToggle }: InstalledTool
             <div className="flex items-center gap-2 mb-1">
               <h3 className="font-semibold text-gray-900 truncate">{tool.name}</h3>
               {!tool.settings.enabled && (
-                <HiveBadge variant="outline" className="text-xs">Disabled</HiveBadge>
+                <HiveBadge variant="secondary" className="text-xs">Disabled</HiveBadge>
               )}
             </div>
             <p className="text-sm text-gray-600 line-clamp-2">
@@ -391,7 +391,7 @@ function InstalledToolCard({ tool, userRole, onLaunch, onToggle }: InstalledTool
           
           {canManage && (
             <HiveButton
-              variant="outline"
+              variant="secondary"
               size="sm"
               onClick={() => onToggle(!tool.settings.enabled)}
             >

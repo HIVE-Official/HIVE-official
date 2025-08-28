@@ -3,7 +3,7 @@
  * Adapts animations based on student energy states and time of day
  */
 import React from 'react';
-import { motion } from '@hive/tokens';
+import { motion } from '../../../tokens/src/motion';
 import type { Variants, Transition } from 'framer-motion';
 export type StudentEnergyState = 'high-energy' | 'transition' | 'evening' | 'late-night' | 'reduced-motion';
 export type CampusContext = 'academic' | 'social' | 'ritual' | 'navigation';

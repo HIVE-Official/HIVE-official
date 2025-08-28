@@ -2,7 +2,7 @@
 
 import React, { useMemo } from 'react';
 import { cn } from '../lib/utils';
-import { semantic } from '@hive/tokens';
+import { semantic } from '../../../../tokens/src';
 import { 
   NavigationProvider, 
   useNavigation,

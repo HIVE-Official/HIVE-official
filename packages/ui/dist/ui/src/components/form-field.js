@@ -1,7 +1,7 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from 'react';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 import { InputEnhanced as Input } from '../atomic/atoms/input-enhanced';
 import { Text } from '../atomic/atoms/text';
 export const FormField = ({ label, description, error, required = false, children, className }) => {

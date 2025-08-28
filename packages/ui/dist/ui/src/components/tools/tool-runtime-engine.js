@@ -9,7 +9,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useCallback, useEffect } from 'react';
 import { HiveButton } from '../index';
 import { Play, RefreshCw, AlertCircle, CheckCircle } from 'lucide-react';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 import { MobileToolWrapper } from './mobile-tool-wrapper';
 // Event Elements (complete 24-element library)
 import { TextInputElement, DatePickerElement, SelectElement, NumberInputElement, CheckboxElement, RadioElement, EventCardElement, CounterElement, QRCodeElement, RSVPElement, FilterElement, AttendeeListElement, CalendarViewElement, NotificationElement, AnalyticsChartElement, FeedbackFormElement, ShareElement, RecurrenceElement, TagsElement, StatusElement, } from '../events/event-elements';

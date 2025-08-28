@@ -258,7 +258,7 @@ export const FacultyModal: React.FC<FacultyModalProps> = ({
                 <div className="space-y-4 pt-2">
                   <Button
                     type="submit"
-                    variant="ritual"
+                    variant="primary"
                     size="lg"
                     className="w-full h-12"
                     disabled={!firstName.trim() || !lastName.trim() || !role.trim() || !selectedSpaceId.trim() || isSubmitting}
@@ -278,7 +278,7 @@ export const FacultyModal: React.FC<FacultyModalProps> = ({
                   
                   <Button
                     type="button"
-                    variant="outline"
+                    variant="secondary"
                     size="lg"
                     onClick={handleClose}
                     className="w-full h-12"

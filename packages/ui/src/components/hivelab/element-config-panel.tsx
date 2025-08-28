@@ -8,7 +8,7 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { ElementInstance, Element } from '@hive/core';
 import { HiveCard } from '../hive-card';
-import { Button } from '../../ui/button';
+import { Button } from '../../atomic/atoms/button-enhanced';
 import { Input } from '../../ui/input';
 import { Label } from '../../ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../ui/select';
@@ -253,7 +253,7 @@ const OptionEditor: React.FC<{
         <Label className="text-sm font-medium">Options</Label>
         <Button
           size="sm"
-          variant="outline"
+          variant="secondary"
           onClick={addOption}
           className="h-8"
         >

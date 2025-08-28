@@ -713,7 +713,7 @@ const PerformanceControls = ({
         
         <Button
           onClick={onReset}
-          variant="outline"
+          variant="secondary"
           size="sm"
           className="border-gray-600 text-gray-300"
         >

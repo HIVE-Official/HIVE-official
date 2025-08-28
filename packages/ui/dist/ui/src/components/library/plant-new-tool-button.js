@@ -3,7 +3,7 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
 import { useState, useRef } from 'react';
 import { HiveButton } from '../index';
 import { Plus, Sparkles } from 'lucide-react';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 import { LibraryContextualAccess } from './library-contextual-access';
 export function PlantNewToolButton({ space, onToolInstall, variant = 'default', className, disabled = false, showLabel = true }) {
     const [showLibrary, setShowLibrary] = useState(false);

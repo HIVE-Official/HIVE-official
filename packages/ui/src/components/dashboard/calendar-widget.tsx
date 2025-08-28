@@ -15,9 +15,9 @@ import {
   Bell,
   BookOpen
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Button } from '../hive-button';
-import { Badge } from '../../ui/badge';
+import { Badge } from '../../atomic/atoms/badge';
 
 // Calendar event types
 export interface CalendarEvent {
@@ -219,7 +219,7 @@ export function CalendarWidget({
               </div>
               <div className="flex items-center space-x-2">
                 <Button 
-                  variant="outline" 
+                  variant="secondary" 
                   size="sm"
                   onClick={onAddEvent}
                 >
@@ -332,7 +332,7 @@ export function CalendarWidget({
                               in {deadline.spaceName}
                             </span>
                           )}
-                          <Badge variant="outline" className="text-xs">
+                          <Badge variant="secondary" className="text-xs">
                             {deadline.type}
                           </Badge>
                         </div>
@@ -407,7 +407,7 @@ export function CalendarWidget({
                       </p>
                     </div>
                     <Badge 
-                      variant="outline" 
+                      variant="secondary" 
                       className={`text-xs ${getEventTypeColor(event.type)}`}
                     >
                       {event.type}

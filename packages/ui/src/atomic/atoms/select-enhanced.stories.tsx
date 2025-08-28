@@ -119,7 +119,7 @@ export const CompleteShowcase: Story = {
               ]}
               placeholder="Default variant"
               label="Default"
-              variant="default"
+              variant="primary"
             />
             <Select
               options={[
@@ -433,7 +433,7 @@ export const CompleteShowcase: Story = {
                   ]}
                   placeholder="Select professor"
                   label="Preferred Professor"
-                  variant="default"
+                  variant="primary"
                 />
                 <Select
                   options={[
@@ -443,7 +443,7 @@ export const CompleteShowcase: Story = {
                   ]}
                   placeholder="Schedule preference"
                   label="Schedule"
-                  variant="default"
+                  variant="primary"
                 />
                 <SelectPresets.Priority 
                   label="Registration Priority"
@@ -481,7 +481,7 @@ export const CompleteShowcase: Story = {
                   ]}
                   placeholder="Floor preference"
                   label="Floor/Wing"
-                  variant="default"
+                  variant="primary"
                 />
               </div>
               <div className="grid md:grid-cols-3 gap-4">
@@ -494,7 +494,7 @@ export const CompleteShowcase: Story = {
                   ]}
                   placeholder="Select meal plan"
                   label="Meal Plan"
-                  variant="default"
+                  variant="primary"
                 />
                 <MultiSelect
                   options={[
@@ -541,7 +541,7 @@ export const CompleteShowcase: Story = {
                   ]}
                   placeholder="Study location"
                   label="Preferred Location"
-                  variant="default"
+                  variant="primary"
                 />
               </div>
               <div className="grid md:grid-cols-3 gap-4">
@@ -554,7 +554,7 @@ export const CompleteShowcase: Story = {
                   ]}
                   placeholder="Group size"
                   label="Group Size"
-                  variant="default"
+                  variant="primary"
                 />
                 <MultiSelect
                   options={[
@@ -576,7 +576,7 @@ export const CompleteShowcase: Story = {
                   ]}
                   placeholder="Skill level"
                   label="Your Level"
-                  variant="default"
+                  variant="primary"
                 />
               </div>
             </div>
@@ -609,7 +609,7 @@ export const CompleteShowcase: Story = {
                   ]}
                   placeholder="Time commitment"
                   label="Availability"
-                  variant="default"
+                  variant="primary"
                 />
               </div>
               <div className="grid md:grid-cols-3 gap-4">
@@ -621,7 +621,7 @@ export const CompleteShowcase: Story = {
                   ]}
                   placeholder="Participation timeline"
                   label="Timeline"
-                  variant="default"
+                  variant="primary"
                 />
                 <Select
                   options={[
@@ -631,7 +631,7 @@ export const CompleteShowcase: Story = {
                   ]}
                   placeholder="Involvement level"
                   label="Role Interest"
-                  variant="default"
+                  variant="primary"
                 />
                 <SelectPresets.Priority 
                   label="Registration Priority"

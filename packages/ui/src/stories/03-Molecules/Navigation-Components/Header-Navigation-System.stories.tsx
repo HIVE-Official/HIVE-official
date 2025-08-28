@@ -441,7 +441,7 @@ export const MobileHeaderNavigation: Story = {
                 />
               </div>
               <Button 
-                variant="outline" 
+                variant="secondary" 
                 size="sm"
                 onClick={() => setShowSearch(false)}
               >
@@ -640,13 +640,13 @@ export const InteractiveHeaderDemo: Story = {
 
               {/* Actions */}
               <div className="flex items-center gap-3">
-                <Button size="sm" variant="outline">
+                <Button size="sm" variant="secondary">
                   <Plus className="h-4 w-4 mr-2" />
                   Create
                 </Button>
                 
                 <div className="relative">
-                  <Button size="sm" variant="outline" className="relative">
+                  <Button size="sm" variant="secondary" className="relative">
                     <Bell className="h-4 w-4" />
                     {unreadCount > 0 && (
                       <div className="absolute -top-2 -right-2 w-5 h-5 bg-red-600 text-white text-xs rounded-full flex items-center justify-center">
@@ -706,7 +706,7 @@ export const InteractiveHeaderDemo: Story = {
                     {!notification.isRead && (
                       <Button 
                         size="sm" 
-                        variant="outline"
+                        variant="secondary"
                         onClick={() => markAsRead(notification.id)}
                       >
                         Mark Read

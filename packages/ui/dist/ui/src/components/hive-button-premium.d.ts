@@ -1,9 +1,9 @@
 import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
 declare const hivePremiumButtonVariants: (props?: {
-    variant?: "primary" | "secondary" | "success" | "outline" | "ghost" | "chip-gold" | "chip-glass" | "gold-glow" | "danger";
-    size?: "default" | "xs" | "sm" | "lg" | "xl" | "icon" | "icon-sm" | "icon-lg";
-    radius?: "xl" | "medium" | "large" | "pill" | "soft";
+    variant?: "primary" | "secondary" | "ghost" | "outline" | "success" | "chip-gold" | "chip-glass" | "danger" | "gold-glow";
+    size?: "default" | "sm" | "lg" | "xl" | "icon" | "icon-sm" | "icon-lg" | "xs";
+    radius?: "xl" | "large" | "medium" | "pill" | "soft";
 } & import("class-variance-authority/types").ClassProp) => string;
 export interface HivePremiumButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'onDrag' | 'onDragEnd' | 'onDragStart'>, VariantProps<typeof hivePremiumButtonVariants> {
     magneticHover?: boolean;

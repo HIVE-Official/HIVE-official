@@ -206,7 +206,7 @@ export const AcademicCardStep: React.FC<AcademicCardStepProps> = ({
                 </Button>
                 <Button 
                   type="button"
-                  variant="outline"
+                  variant="secondary"
                   onClick={() => {
                     setShowCustomInput(false);
                     setCustomMajor("");
@@ -267,7 +267,7 @@ export const AcademicCardStep: React.FC<AcademicCardStepProps> = ({
           {onSkip && (
             <Button
               type="button"
-              variant="outline"
+              variant="secondary"
               onClick={handleSkip}
               className="flex-1"
             >

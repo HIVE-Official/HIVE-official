@@ -440,7 +440,7 @@ const PerformanceShowcase = () => {
                   <span style={{ color: 'var(--hive-text-secondary)' }}>Constraints:</span>
                   <div className="flex flex-wrap gap-1 mt-1">
                     {scenario.constraints.map((constraint, idx) => (
-                      <Badge key={idx} variant="outline" className="text-xs"
+                      <Badge key={idx} variant="secondary" className="text-xs"
                              style={{ borderColor: 'var(--hive-border-subtle)', color: 'var(--hive-text-muted)' }}>
                         {constraint}
                       </Badge>
@@ -619,7 +619,7 @@ const PerformanceShowcase = () => {
                         </h5>
                         <div className="flex flex-wrap gap-2">
                           {metric.optimizations.map((optimization: string, idx: number) => (
-                            <Badge key={idx} variant="outline" className="text-xs"
+                            <Badge key={idx} variant="secondary" className="text-xs"
                                    style={{ borderColor: 'var(--hive-border-subtle)', color: 'var(--hive-text-muted)' }}>
                               {optimization}
                             </Badge>

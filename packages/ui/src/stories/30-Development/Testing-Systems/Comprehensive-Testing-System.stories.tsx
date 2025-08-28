@@ -720,7 +720,7 @@ const TestSuiteCard = ({
                   onClick={() => onRunTest(suite.id, test.id)}
                   disabled={isRunning || test.status === 'running'}
                   size="sm"
-                  variant="outline"
+                  variant="secondary"
                   className="border-gray-600 text-gray-300"
                 >
                   {test.status === 'running' ? (
@@ -958,7 +958,7 @@ const ComprehensiveTestingSystem = () => {
             <Button
               onClick={testing.resetTests}
               disabled={testing.isRunning}
-              variant="outline"
+              variant="secondary"
               className="border-gray-600 text-gray-300"
             >
               <RefreshCw className="h-4 w-4 mr-2" />

@@ -775,7 +775,7 @@ export const HiveProgress = React.forwardRef<HTMLDivElement, HiveProgressProps>(
             value={value}
             max={max}
             size={size === 'md' ? 'default' : size}
-            variant="default"
+            variant="primary"
             fillVariant={status === 'error' ? 'danger' : status}
             showValue={showValue}
             showPercentage={showPercentage}

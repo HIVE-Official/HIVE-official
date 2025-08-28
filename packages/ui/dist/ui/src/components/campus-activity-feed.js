@@ -2,7 +2,7 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useState } from 'react';
 import { motion, AnimatePresence } from './framer-motion-proxy';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 const activityTypeConfig = {
     message: {
         icon: '💬',

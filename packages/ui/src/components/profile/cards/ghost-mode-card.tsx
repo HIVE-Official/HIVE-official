@@ -2,10 +2,10 @@
 
 import React, { useState, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from '../../framer-motion-proxy';
-import { cn } from '../../../lib/utils';
-import { Card, CardContent, CardHeader } from '../../ui/card';
-import { Button } from '../../ui/button';
-import { Badge } from '../../ui/badge';
+import { cn } from '../../lib/utils';
+import { Card, CardContent, CardHeader } from '../../atomic/ui/card';
+import { Button } from '../../atomic/atoms/button-enhanced';
+import { Badge } from '../../atomic/atoms/badge';
 import { Switch } from '../../ui/switch';
 import { Avatar, AvatarFallback, AvatarImage } from '../../ui/avatar';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../../dialog';

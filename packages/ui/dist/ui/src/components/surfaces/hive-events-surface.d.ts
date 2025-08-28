@@ -2,7 +2,7 @@ import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
 import { type Space } from '@hive/core';
 declare const hiveEventsSurfaceVariants: (props?: {
-    mode?: "view" | "builder" | "edit";
+    mode?: "view" | "edit" | "builder";
 } & import("class-variance-authority/types").ClassProp) => string;
 declare const eventTypes: {
     readonly academic: {

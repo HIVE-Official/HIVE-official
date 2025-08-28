@@ -8,8 +8,8 @@
 import React, { useState, useMemo } from 'react';
 import { Tool } from '@hive/core';
 import { HiveCard } from '../hive-card';
-import { Button } from '../../ui/button';
-import { Badge } from '../../ui/badge';
+import { Button } from '../../atomic/atoms/button-enhanced';
+import { Badge } from '../../atomic/atoms/badge';
 import { 
   BarChart3,
   Users,
@@ -199,7 +199,7 @@ export const ToolUsageTracker: React.FC<ToolUsageTrackerProps> = ({
           </select>
           
           {canExportData && (
-            <Button variant="outline" onClick={onExportData}>
+            <Button variant="secondary" onClick={onExportData}>
               <Download className="w-4 h-4 mr-2" />
               Export
             </Button>
@@ -430,7 +430,7 @@ export const ToolUsageTracker: React.FC<ToolUsageTrackerProps> = ({
                           </p>
                           <div className="flex items-center space-x-2">
                             {session.completedSuccessfully ? (
-                              <Badge variant="default" className="text-xs">Completed</Badge>
+                              <Badge variant="primary" className="text-xs">Completed</Badge>
                             ) : session.errors && session.errors.length > 0 ? (
                               <Badge variant="destructive" className="text-xs">Error</Badge>
                             ) : (
@@ -444,7 +444,7 @@ export const ToolUsageTracker: React.FC<ToolUsageTrackerProps> = ({
                   
                   {usageData.sessions.length > 10 && (
                     <div className="text-center py-4">
-                      <Button variant="outline" size="sm">
+                      <Button variant="secondary" size="sm">
                         Load More Sessions
                       </Button>
                     </div>

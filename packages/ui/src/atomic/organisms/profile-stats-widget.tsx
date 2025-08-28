@@ -213,7 +213,7 @@ export const ProfileStatsWidget: React.FC<ProfileStatsWidgetProps> = ({
               Personal Analytics
             </Text>
             {streak > 0 && (
-              <Badge variant="outline" className="text-xs">
+              <Badge variant="secondary" className="text-xs">
                 <Trophy className="h-3 w-3 mr-1" />
                 Level {platformLevel}
               </Badge>
@@ -425,7 +425,7 @@ export const ProfileStatsWidget: React.FC<ProfileStatsWidgetProps> = ({
         <div className="flex gap-2 pt-2 border-t border-[var(--hive-border-primary)]">
           {isEditable && onSetGoal && (
             <Button
-              variant="outline"
+              variant="secondary"
               size="sm"
               onClick={onSetGoal}
               className="flex-1"
@@ -437,7 +437,7 @@ export const ProfileStatsWidget: React.FC<ProfileStatsWidgetProps> = ({
           
           {onViewAllStats && (
             <Button
-              variant="default"
+              variant="primary"
               size="sm"
               onClick={onViewAllStats}
               className="flex-1"
@@ -482,7 +482,7 @@ export const ProfileStatsWidget: React.FC<ProfileStatsWidgetProps> = ({
             </Text>
             {isEditable && onSetGoal && (
               <Button
-                variant="outline"
+                variant="secondary"
                 size="sm"
                 onClick={onSetGoal}
               >

@@ -2,10 +2,10 @@
 
 import React, { useState, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from '../../framer-motion-proxy';
-import { cn } from '../../../lib/utils';
-import { Card, CardContent, CardHeader } from '../../ui/card';
-import { Button } from '../../ui/button';
-import { Badge } from '../../ui/badge';
+import { cn } from '../../lib/utils';
+import { Card, CardContent, CardHeader } from '../../atomic/ui/card';
+import { Button } from '../../atomic/atoms/button-enhanced';
+import { Badge } from '../../atomic/atoms/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '../../ui/avatar';
 import { Progress } from '../../ui/progress';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../../dialog';
@@ -246,7 +246,7 @@ function ToolItem({
             <h5 className="font-medium text-xs text-[var(--hive-text-primary)] truncate">
               {tool.name}
             </h5>
-            <Badge variant="outline" className="text-xs px-1 py-0">
+            <Badge variant="secondary" className="text-xs px-1 py-0">
               <StatusIcon className="w-2 h-2 mr-1" />
               {statusConfig_.label}
             </Badge>
@@ -415,7 +415,7 @@ function QuickActions({
           <Button
             key={type}
             size="sm"
-            variant="outline"
+            variant="secondary"
             className="h-8 px-2 text-xs"
             onClick={onCreateTool}
           >
@@ -479,7 +479,7 @@ export function HiveLabCard({
               HiveLAB
             </h3>
             {isBuilder && (
-              <Badge variant="default" className="text-xs bg-[var(--hive-brand-gold)]">
+              <Badge variant="primary" className="text-xs bg-[var(--hive-brand-gold)]">
                 <Crown className="w-3 h-3 mr-1" />
                 Builder
               </Badge>

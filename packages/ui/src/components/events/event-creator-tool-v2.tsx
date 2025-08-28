@@ -467,7 +467,7 @@ export function EventCreatorToolV2({ spaceId, onEventCreated, onCancel, initialE
       <div className="flex items-center justify-between">
         <div className="flex gap-3">
           {onCancel && (
-            <HiveButton variant="outline" onClick={onCancel}>
+            <HiveButton variant="secondary" onClick={onCancel}>
               Cancel
             </HiveButton>
           )}
@@ -476,7 +476,7 @@ export function EventCreatorToolV2({ spaceId, onEventCreated, onCancel, initialE
         <div className="flex gap-3">
           {currentStepIndex > 0 && (
             <HiveButton
-              variant="outline"
+              variant="secondary"
               onClick={() => setCurrentStep(steps[currentStepIndex - 1].id)}
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
@@ -487,7 +487,7 @@ export function EventCreatorToolV2({ spaceId, onEventCreated, onCancel, initialE
           {currentStep === 'preview' ? (
             <>
               <HiveButton
-                variant="outline"
+                variant="secondary"
                 onClick={() => handleSaveEvent(false)}
                 disabled={isLoading}
               >

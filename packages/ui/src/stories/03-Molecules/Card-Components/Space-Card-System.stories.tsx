@@ -270,7 +270,7 @@ export const SpaceBrowseCards: Story = {
               {/* Tags */}
               <div className="flex flex-wrap gap-2 mb-4">
                 {space.tags.slice(0, 3).map((tag, index) => (
-                  <Badge key={index} variant="outline" className="text-xs">
+                  <Badge key={index} variant="secondary" className="text-xs">
                     {tag}
                   </Badge>
                 ))}
@@ -306,7 +306,7 @@ export const SpaceBrowseCards: Story = {
                       <MessageSquare className="h-4 w-4 mr-2" />
                       Open Space
                     </Button>
-                    <Button size="sm" variant="outline">
+                    <Button size="sm" variant="secondary">
                       <Settings className="h-4 w-4" />
                     </Button>
                   </>
@@ -316,11 +316,11 @@ export const SpaceBrowseCards: Story = {
                     Join Space
                   </Button>
                 ) : (
-                  <Button size="sm" variant="outline" disabled className="flex-1">
+                  <Button size="sm" variant="secondary" disabled className="flex-1">
                     {space.inviteOnly ? 'Invite Required' : 'Space Full'}
                   </Button>
                 )}
-                <Button size="sm" variant="outline">
+                <Button size="sm" variant="secondary">
                   View Details
                   <ArrowRight className="h-4 w-4 ml-2" />
                 </Button>
@@ -377,7 +377,7 @@ export const CompactSpaceCards: Story = {
                           <Clock className="h-3 w-3" />
                           {space.lastActive}
                         </span>
-                        <Badge variant="outline" className="text-xs">
+                        <Badge variant="secondary" className="text-xs">
                           {space.category}
                         </Badge>
                       </div>
@@ -386,7 +386,7 @@ export const CompactSpaceCards: Story = {
                     {/* Action Buttons */}
                     <div className="flex items-center gap-2 ml-4">
                       {space.isJoined ? (
-                        <Button size="sm" variant="outline">
+                        <Button size="sm" variant="secondary">
                           <Settings className="h-4 w-4" />
                         </Button>
                       ) : space.canJoin ? (
@@ -394,7 +394,7 @@ export const CompactSpaceCards: Story = {
                           Join
                         </Button>
                       ) : (
-                        <Button size="sm" variant="outline" disabled>
+                        <Button size="sm" variant="secondary" disabled>
                           {space.isPrivate ? 'Private' : 'Full'}
                         </Button>
                       )}
@@ -519,7 +519,7 @@ export const InteractiveSpaceCards: Story = {
                         </Button>
                         <Button 
                           size="sm" 
-                          variant="outline"
+                          variant="secondary"
                           onClick={() => handleLeaveSpace(space.id)}
                         >
                           Leave
@@ -535,7 +535,7 @@ export const InteractiveSpaceCards: Story = {
                         Join Space
                       </Button>
                     ) : (
-                      <Button size="sm" variant="outline" disabled className="flex-1">
+                      <Button size="sm" variant="secondary" disabled className="flex-1">
                         {space.inviteOnly ? 'Invite Required' : 'Space Full'}
                       </Button>
                     )}

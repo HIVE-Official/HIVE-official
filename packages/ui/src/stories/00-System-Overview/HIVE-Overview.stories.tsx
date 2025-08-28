@@ -166,7 +166,7 @@ const HiveOverview = () => {
                     <CardTitle style={{ color: 'var(--hive-brand-primary)' }} className="text-lg">
                       {section.title}
                     </CardTitle>
-                    <Badge variant="outline" 
+                    <Badge variant="secondary" 
                            className="text-xs mt-2"
                            style={{ 
                              borderColor: 'var(--hive-border-subtle)',
@@ -274,7 +274,7 @@ const HiveOverview = () => {
                     }}>
               Start Exploring
             </Button>
-            <Button variant="outline" 
+            <Button variant="secondary" 
                     size="lg" 
                     className="hive-interactive"
                     style={{ 

@@ -110,7 +110,7 @@ export const SchoolPledgeStep: React.FC<SchoolPledgeStepProps> = ({
           >
             <Button 
               onClick={onNext} 
-              variant="ritual" 
+              variant="primary" 
               size="lg" 
               className="w-full font-body"
             >

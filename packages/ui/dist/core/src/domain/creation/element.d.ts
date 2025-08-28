@@ -19,30 +19,30 @@ export declare const StyleConfigSchema: z.ZodObject<{
     width: z.ZodOptional<z.ZodUnion<[z.ZodNumber, z.ZodEnum<["auto", "full"]>]>>;
     height: z.ZodOptional<z.ZodUnion<[z.ZodNumber, z.ZodEnum<["auto", "full"]>]>>;
 }, "strip", z.ZodTypeAny, {
-    height?: number | "full" | "auto";
-    width?: number | "full" | "auto";
-    fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-    fontWeight?: "bold" | "normal" | "medium" | "semibold";
-    padding?: number;
+    height?: number | "auto" | "full";
+    width?: number | "auto" | "full";
+    fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+    fontWeight?: "bold" | "medium" | "normal" | "semibold";
     backgroundColor?: string;
-    textAlign?: "center" | "right" | "left";
+    textAlign?: "center" | "left" | "right";
     borderColor?: string;
     borderRadius?: number;
     borderWidth?: number;
     margin?: number;
+    padding?: number;
     textColor?: string;
 }, {
-    height?: number | "full" | "auto";
-    width?: number | "full" | "auto";
-    fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-    fontWeight?: "bold" | "normal" | "medium" | "semibold";
-    padding?: number;
+    height?: number | "auto" | "full";
+    width?: number | "auto" | "full";
+    fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+    fontWeight?: "bold" | "medium" | "normal" | "semibold";
     backgroundColor?: string;
-    textAlign?: "center" | "right" | "left";
+    textAlign?: "center" | "left" | "right";
     borderColor?: string;
     borderRadius?: number;
     borderWidth?: number;
     margin?: number;
+    padding?: number;
     textColor?: string;
 }>;
 export declare const ConditionalRuleSchema: z.ZodObject<{
@@ -53,13 +53,13 @@ export declare const ConditionalRuleSchema: z.ZodObject<{
         sourceProperty: z.ZodString;
         value: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean]>>;
     }, "strip", z.ZodTypeAny, {
-        type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
         value?: string | number | boolean;
+        type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
         sourceElementId?: string;
         sourceProperty?: string;
     }, {
-        type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
         value?: string | number | boolean;
+        type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
         sourceElementId?: string;
         sourceProperty?: string;
     }>;
@@ -69,44 +69,44 @@ export declare const ConditionalRuleSchema: z.ZodObject<{
         targetProperty: z.ZodOptional<z.ZodString>;
         value: z.ZodOptional<z.ZodUnknown>;
     }, "strip", z.ZodTypeAny, {
-        type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
         value?: unknown;
+        type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
         targetElementId?: string;
         targetProperty?: string;
     }, {
-        type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
         value?: unknown;
+        type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
         targetElementId?: string;
         targetProperty?: string;
     }>, "many">;
 }, "strip", z.ZodTypeAny, {
     id?: string;
-    actions?: {
-        type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-        value?: unknown;
-        targetElementId?: string;
-        targetProperty?: string;
-    }[];
     condition?: {
-        type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
         value?: string | number | boolean;
+        type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
         sourceElementId?: string;
         sourceProperty?: string;
     };
+    actions?: {
+        value?: unknown;
+        type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+        targetElementId?: string;
+        targetProperty?: string;
+    }[];
 }, {
     id?: string;
-    actions?: {
-        type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-        value?: unknown;
-        targetElementId?: string;
-        targetProperty?: string;
-    }[];
     condition?: {
-        type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
         value?: string | number | boolean;
+        type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
         sourceElementId?: string;
         sourceProperty?: string;
     };
+    actions?: {
+        value?: unknown;
+        type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+        targetElementId?: string;
+        targetProperty?: string;
+    }[];
 }>;
 export declare const TextBlockConfigSchema: z.ZodObject<{
     text: z.ZodString;
@@ -124,30 +124,30 @@ export declare const TextBlockConfigSchema: z.ZodObject<{
         width: z.ZodOptional<z.ZodUnion<[z.ZodNumber, z.ZodEnum<["auto", "full"]>]>>;
         height: z.ZodOptional<z.ZodUnion<[z.ZodNumber, z.ZodEnum<["auto", "full"]>]>>;
     }, "strip", z.ZodTypeAny, {
-        height?: number | "full" | "auto";
-        width?: number | "full" | "auto";
-        fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-        fontWeight?: "bold" | "normal" | "medium" | "semibold";
-        padding?: number;
+        height?: number | "auto" | "full";
+        width?: number | "auto" | "full";
+        fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+        fontWeight?: "bold" | "medium" | "normal" | "semibold";
         backgroundColor?: string;
-        textAlign?: "center" | "right" | "left";
+        textAlign?: "center" | "left" | "right";
         borderColor?: string;
         borderRadius?: number;
         borderWidth?: number;
         margin?: number;
+        padding?: number;
         textColor?: string;
     }, {
-        height?: number | "full" | "auto";
-        width?: number | "full" | "auto";
-        fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-        fontWeight?: "bold" | "normal" | "medium" | "semibold";
-        padding?: number;
+        height?: number | "auto" | "full";
+        width?: number | "auto" | "full";
+        fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+        fontWeight?: "bold" | "medium" | "normal" | "semibold";
         backgroundColor?: string;
-        textAlign?: "center" | "right" | "left";
+        textAlign?: "center" | "left" | "right";
         borderColor?: string;
         borderRadius?: number;
         borderWidth?: number;
         margin?: number;
+        padding?: number;
         textColor?: string;
     }>>;
     conditionalRules: z.ZodOptional<z.ZodArray<z.ZodObject<{
@@ -158,13 +158,13 @@ export declare const TextBlockConfigSchema: z.ZodObject<{
             sourceProperty: z.ZodString;
             value: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean]>>;
         }, "strip", z.ZodTypeAny, {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         }, {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         }>;
@@ -174,106 +174,106 @@ export declare const TextBlockConfigSchema: z.ZodObject<{
             targetProperty: z.ZodOptional<z.ZodString>;
             value: z.ZodOptional<z.ZodUnknown>;
         }, "strip", z.ZodTypeAny, {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
             targetElementId?: string;
             targetProperty?: string;
         }, {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
             targetElementId?: string;
             targetProperty?: string;
         }>, "many">;
     }, "strip", z.ZodTypeAny, {
         id?: string;
-        actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-            value?: unknown;
-            targetElementId?: string;
-            targetProperty?: string;
-        }[];
         condition?: {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         };
+        actions?: {
+            value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+            targetElementId?: string;
+            targetProperty?: string;
+        }[];
     }, {
         id?: string;
-        actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-            value?: unknown;
-            targetElementId?: string;
-            targetProperty?: string;
-        }[];
         condition?: {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         };
+        actions?: {
+            value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+            targetElementId?: string;
+            targetProperty?: string;
+        }[];
     }>, "many">>;
 }, "strip", z.ZodTypeAny, {
     style?: {
-        height?: number | "full" | "auto";
-        width?: number | "full" | "auto";
-        fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-        fontWeight?: "bold" | "normal" | "medium" | "semibold";
-        padding?: number;
+        height?: number | "auto" | "full";
+        width?: number | "auto" | "full";
+        fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+        fontWeight?: "bold" | "medium" | "normal" | "semibold";
         backgroundColor?: string;
-        textAlign?: "center" | "right" | "left";
+        textAlign?: "center" | "left" | "right";
         borderColor?: string;
         borderRadius?: number;
         borderWidth?: number;
         margin?: number;
+        padding?: number;
         textColor?: string;
     };
     text?: string;
     conditionalRules?: {
         id?: string;
-        actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-            value?: unknown;
-            targetElementId?: string;
-            targetProperty?: string;
-        }[];
         condition?: {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         };
+        actions?: {
+            value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+            targetElementId?: string;
+            targetProperty?: string;
+        }[];
     }[];
 }, {
     style?: {
-        height?: number | "full" | "auto";
-        width?: number | "full" | "auto";
-        fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-        fontWeight?: "bold" | "normal" | "medium" | "semibold";
-        padding?: number;
+        height?: number | "auto" | "full";
+        width?: number | "auto" | "full";
+        fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+        fontWeight?: "bold" | "medium" | "normal" | "semibold";
         backgroundColor?: string;
-        textAlign?: "center" | "right" | "left";
+        textAlign?: "center" | "left" | "right";
         borderColor?: string;
         borderRadius?: number;
         borderWidth?: number;
         margin?: number;
+        padding?: number;
         textColor?: string;
     };
     text?: string;
     conditionalRules?: {
         id?: string;
-        actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-            value?: unknown;
-            targetElementId?: string;
-            targetProperty?: string;
-        }[];
         condition?: {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         };
+        actions?: {
+            value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+            targetElementId?: string;
+            targetProperty?: string;
+        }[];
     }[];
 }>;
 export declare const ImageBlockConfigSchema: z.ZodObject<{
@@ -294,30 +294,30 @@ export declare const ImageBlockConfigSchema: z.ZodObject<{
         width: z.ZodOptional<z.ZodUnion<[z.ZodNumber, z.ZodEnum<["auto", "full"]>]>>;
         height: z.ZodOptional<z.ZodUnion<[z.ZodNumber, z.ZodEnum<["auto", "full"]>]>>;
     }, "strip", z.ZodTypeAny, {
-        height?: number | "full" | "auto";
-        width?: number | "full" | "auto";
-        fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-        fontWeight?: "bold" | "normal" | "medium" | "semibold";
-        padding?: number;
+        height?: number | "auto" | "full";
+        width?: number | "auto" | "full";
+        fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+        fontWeight?: "bold" | "medium" | "normal" | "semibold";
         backgroundColor?: string;
-        textAlign?: "center" | "right" | "left";
+        textAlign?: "center" | "left" | "right";
         borderColor?: string;
         borderRadius?: number;
         borderWidth?: number;
         margin?: number;
+        padding?: number;
         textColor?: string;
     }, {
-        height?: number | "full" | "auto";
-        width?: number | "full" | "auto";
-        fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-        fontWeight?: "bold" | "normal" | "medium" | "semibold";
-        padding?: number;
+        height?: number | "auto" | "full";
+        width?: number | "auto" | "full";
+        fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+        fontWeight?: "bold" | "medium" | "normal" | "semibold";
         backgroundColor?: string;
-        textAlign?: "center" | "right" | "left";
+        textAlign?: "center" | "left" | "right";
         borderColor?: string;
         borderRadius?: number;
         borderWidth?: number;
         margin?: number;
+        padding?: number;
         textColor?: string;
     }>>;
     conditionalRules: z.ZodOptional<z.ZodArray<z.ZodObject<{
@@ -328,13 +328,13 @@ export declare const ImageBlockConfigSchema: z.ZodObject<{
             sourceProperty: z.ZodString;
             value: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean]>>;
         }, "strip", z.ZodTypeAny, {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         }, {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         }>;
@@ -344,110 +344,110 @@ export declare const ImageBlockConfigSchema: z.ZodObject<{
             targetProperty: z.ZodOptional<z.ZodString>;
             value: z.ZodOptional<z.ZodUnknown>;
         }, "strip", z.ZodTypeAny, {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
             targetElementId?: string;
             targetProperty?: string;
         }, {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
             targetElementId?: string;
             targetProperty?: string;
         }>, "many">;
     }, "strip", z.ZodTypeAny, {
         id?: string;
-        actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-            value?: unknown;
-            targetElementId?: string;
-            targetProperty?: string;
-        }[];
         condition?: {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         };
+        actions?: {
+            value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+            targetElementId?: string;
+            targetProperty?: string;
+        }[];
     }, {
         id?: string;
-        actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-            value?: unknown;
-            targetElementId?: string;
-            targetProperty?: string;
-        }[];
         condition?: {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         };
+        actions?: {
+            value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+            targetElementId?: string;
+            targetProperty?: string;
+        }[];
     }>, "many">>;
 }, "strip", z.ZodTypeAny, {
     style?: {
-        height?: number | "full" | "auto";
-        width?: number | "full" | "auto";
-        fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-        fontWeight?: "bold" | "normal" | "medium" | "semibold";
-        padding?: number;
+        height?: number | "auto" | "full";
+        width?: number | "auto" | "full";
+        fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+        fontWeight?: "bold" | "medium" | "normal" | "semibold";
         backgroundColor?: string;
-        textAlign?: "center" | "right" | "left";
+        textAlign?: "center" | "left" | "right";
         borderColor?: string;
         borderRadius?: number;
         borderWidth?: number;
         margin?: number;
+        padding?: number;
         textColor?: string;
     };
+    caption?: string;
     alt?: string;
     src?: string;
-    caption?: string;
     conditionalRules?: {
         id?: string;
-        actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-            value?: unknown;
-            targetElementId?: string;
-            targetProperty?: string;
-        }[];
         condition?: {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         };
+        actions?: {
+            value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+            targetElementId?: string;
+            targetProperty?: string;
+        }[];
     }[];
 }, {
     style?: {
-        height?: number | "full" | "auto";
-        width?: number | "full" | "auto";
-        fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-        fontWeight?: "bold" | "normal" | "medium" | "semibold";
-        padding?: number;
+        height?: number | "auto" | "full";
+        width?: number | "auto" | "full";
+        fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+        fontWeight?: "bold" | "medium" | "normal" | "semibold";
         backgroundColor?: string;
-        textAlign?: "center" | "right" | "left";
+        textAlign?: "center" | "left" | "right";
         borderColor?: string;
         borderRadius?: number;
         borderWidth?: number;
         margin?: number;
+        padding?: number;
         textColor?: string;
     };
+    caption?: string;
     alt?: string;
     src?: string;
-    caption?: string;
     conditionalRules?: {
         id?: string;
-        actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-            value?: unknown;
-            targetElementId?: string;
-            targetProperty?: string;
-        }[];
         condition?: {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         };
+        actions?: {
+            value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+            targetElementId?: string;
+            targetProperty?: string;
+        }[];
     }[];
 }>;
 export declare const DividerConfigSchema: z.ZodObject<{
@@ -463,13 +463,13 @@ export declare const DividerConfigSchema: z.ZodObject<{
             sourceProperty: z.ZodString;
             value: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean]>>;
         }, "strip", z.ZodTypeAny, {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         }, {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         }>;
@@ -479,83 +479,83 @@ export declare const DividerConfigSchema: z.ZodObject<{
             targetProperty: z.ZodOptional<z.ZodString>;
             value: z.ZodOptional<z.ZodUnknown>;
         }, "strip", z.ZodTypeAny, {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
             targetElementId?: string;
             targetProperty?: string;
         }, {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
             targetElementId?: string;
             targetProperty?: string;
         }>, "many">;
     }, "strip", z.ZodTypeAny, {
         id?: string;
-        actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-            value?: unknown;
-            targetElementId?: string;
-            targetProperty?: string;
-        }[];
         condition?: {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         };
+        actions?: {
+            value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+            targetElementId?: string;
+            targetProperty?: string;
+        }[];
     }, {
         id?: string;
-        actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-            value?: unknown;
-            targetElementId?: string;
-            targetProperty?: string;
-        }[];
         condition?: {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         };
+        actions?: {
+            value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+            targetElementId?: string;
+            targetProperty?: string;
+        }[];
     }>, "many">>;
 }, "strip", z.ZodTypeAny, {
-    style?: "solid" | "dashed" | "dotted";
+    style?: "dashed" | "dotted" | "solid";
     color?: string;
     margin?: number;
     conditionalRules?: {
         id?: string;
-        actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-            value?: unknown;
-            targetElementId?: string;
-            targetProperty?: string;
-        }[];
         condition?: {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         };
+        actions?: {
+            value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+            targetElementId?: string;
+            targetProperty?: string;
+        }[];
     }[];
     thickness?: number;
 }, {
-    style?: "solid" | "dashed" | "dotted";
+    style?: "dashed" | "dotted" | "solid";
     color?: string;
     margin?: number;
     conditionalRules?: {
         id?: string;
-        actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-            value?: unknown;
-            targetElementId?: string;
-            targetProperty?: string;
-        }[];
         condition?: {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         };
+        actions?: {
+            value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+            targetElementId?: string;
+            targetProperty?: string;
+        }[];
     }[];
     thickness?: number;
 }>;
@@ -578,30 +578,30 @@ export declare const StackConfigSchema: z.ZodObject<{
         width: z.ZodOptional<z.ZodUnion<[z.ZodNumber, z.ZodEnum<["auto", "full"]>]>>;
         height: z.ZodOptional<z.ZodUnion<[z.ZodNumber, z.ZodEnum<["auto", "full"]>]>>;
     }, "strip", z.ZodTypeAny, {
-        height?: number | "full" | "auto";
-        width?: number | "full" | "auto";
-        fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-        fontWeight?: "bold" | "normal" | "medium" | "semibold";
-        padding?: number;
+        height?: number | "auto" | "full";
+        width?: number | "auto" | "full";
+        fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+        fontWeight?: "bold" | "medium" | "normal" | "semibold";
         backgroundColor?: string;
-        textAlign?: "center" | "right" | "left";
+        textAlign?: "center" | "left" | "right";
         borderColor?: string;
         borderRadius?: number;
         borderWidth?: number;
         margin?: number;
+        padding?: number;
         textColor?: string;
     }, {
-        height?: number | "full" | "auto";
-        width?: number | "full" | "auto";
-        fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-        fontWeight?: "bold" | "normal" | "medium" | "semibold";
-        padding?: number;
+        height?: number | "auto" | "full";
+        width?: number | "auto" | "full";
+        fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+        fontWeight?: "bold" | "medium" | "normal" | "semibold";
         backgroundColor?: string;
-        textAlign?: "center" | "right" | "left";
+        textAlign?: "center" | "left" | "right";
         borderColor?: string;
         borderRadius?: number;
         borderWidth?: number;
         margin?: number;
+        padding?: number;
         textColor?: string;
     }>>;
     conditionalRules: z.ZodOptional<z.ZodArray<z.ZodObject<{
@@ -612,13 +612,13 @@ export declare const StackConfigSchema: z.ZodObject<{
             sourceProperty: z.ZodString;
             value: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean]>>;
         }, "strip", z.ZodTypeAny, {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         }, {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         }>;
@@ -628,113 +628,113 @@ export declare const StackConfigSchema: z.ZodObject<{
             targetProperty: z.ZodOptional<z.ZodString>;
             value: z.ZodOptional<z.ZodUnknown>;
         }, "strip", z.ZodTypeAny, {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
             targetElementId?: string;
             targetProperty?: string;
         }, {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
             targetElementId?: string;
             targetProperty?: string;
         }>, "many">;
     }, "strip", z.ZodTypeAny, {
         id?: string;
-        actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-            value?: unknown;
-            targetElementId?: string;
-            targetProperty?: string;
-        }[];
         condition?: {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         };
+        actions?: {
+            value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+            targetElementId?: string;
+            targetProperty?: string;
+        }[];
     }, {
         id?: string;
-        actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-            value?: unknown;
-            targetElementId?: string;
-            targetProperty?: string;
-        }[];
         condition?: {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         };
+        actions?: {
+            value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+            targetElementId?: string;
+            targetProperty?: string;
+        }[];
     }>, "many">>;
 }, "strip", z.ZodTypeAny, {
     style?: {
-        height?: number | "full" | "auto";
-        width?: number | "full" | "auto";
-        fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-        fontWeight?: "bold" | "normal" | "medium" | "semibold";
-        padding?: number;
+        height?: number | "auto" | "full";
+        width?: number | "auto" | "full";
+        fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+        fontWeight?: "bold" | "medium" | "normal" | "semibold";
         backgroundColor?: string;
-        textAlign?: "center" | "right" | "left";
+        textAlign?: "center" | "left" | "right";
         borderColor?: string;
         borderRadius?: number;
         borderWidth?: number;
         margin?: number;
+        padding?: number;
         textColor?: string;
     };
-    spacing?: number;
     direction?: "horizontal" | "vertical";
+    spacing?: number;
     wrap?: boolean;
     conditionalRules?: {
         id?: string;
-        actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-            value?: unknown;
-            targetElementId?: string;
-            targetProperty?: string;
-        }[];
         condition?: {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         };
+        actions?: {
+            value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+            targetElementId?: string;
+            targetProperty?: string;
+        }[];
     }[];
-    alignment?: "center" | "end" | "start" | "stretch";
+    alignment?: "end" | "center" | "start" | "stretch";
 }, {
     style?: {
-        height?: number | "full" | "auto";
-        width?: number | "full" | "auto";
-        fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-        fontWeight?: "bold" | "normal" | "medium" | "semibold";
-        padding?: number;
+        height?: number | "auto" | "full";
+        width?: number | "auto" | "full";
+        fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+        fontWeight?: "bold" | "medium" | "normal" | "semibold";
         backgroundColor?: string;
-        textAlign?: "center" | "right" | "left";
+        textAlign?: "center" | "left" | "right";
         borderColor?: string;
         borderRadius?: number;
         borderWidth?: number;
         margin?: number;
+        padding?: number;
         textColor?: string;
     };
-    spacing?: number;
     direction?: "horizontal" | "vertical";
+    spacing?: number;
     wrap?: boolean;
     conditionalRules?: {
         id?: string;
-        actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-            value?: unknown;
-            targetElementId?: string;
-            targetProperty?: string;
-        }[];
         condition?: {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         };
+        actions?: {
+            value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+            targetElementId?: string;
+            targetProperty?: string;
+        }[];
     }[];
-    alignment?: "center" | "end" | "start" | "stretch";
+    alignment?: "end" | "center" | "start" | "stretch";
 }>;
 export declare const ButtonConfigSchema: z.ZodObject<{
     text: z.ZodString;
@@ -747,12 +747,12 @@ export declare const ButtonConfigSchema: z.ZodObject<{
         data: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnknown>>;
     }, "strip", z.ZodTypeAny, {
         type?: "submit" | "reset" | "custom" | "navigate";
-        data?: Record<string, unknown>;
         target?: string;
+        data?: Record<string, unknown>;
     }, {
         type?: "submit" | "reset" | "custom" | "navigate";
-        data?: Record<string, unknown>;
         target?: string;
+        data?: Record<string, unknown>;
     }>>;
     style: z.ZodOptional<z.ZodObject<{
         backgroundColor: z.ZodOptional<z.ZodString>;
@@ -768,30 +768,30 @@ export declare const ButtonConfigSchema: z.ZodObject<{
         width: z.ZodOptional<z.ZodUnion<[z.ZodNumber, z.ZodEnum<["auto", "full"]>]>>;
         height: z.ZodOptional<z.ZodUnion<[z.ZodNumber, z.ZodEnum<["auto", "full"]>]>>;
     }, "strip", z.ZodTypeAny, {
-        height?: number | "full" | "auto";
-        width?: number | "full" | "auto";
-        fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-        fontWeight?: "bold" | "normal" | "medium" | "semibold";
-        padding?: number;
+        height?: number | "auto" | "full";
+        width?: number | "auto" | "full";
+        fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+        fontWeight?: "bold" | "medium" | "normal" | "semibold";
         backgroundColor?: string;
-        textAlign?: "center" | "right" | "left";
+        textAlign?: "center" | "left" | "right";
         borderColor?: string;
         borderRadius?: number;
         borderWidth?: number;
         margin?: number;
+        padding?: number;
         textColor?: string;
     }, {
-        height?: number | "full" | "auto";
-        width?: number | "full" | "auto";
-        fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-        fontWeight?: "bold" | "normal" | "medium" | "semibold";
-        padding?: number;
+        height?: number | "auto" | "full";
+        width?: number | "auto" | "full";
+        fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+        fontWeight?: "bold" | "medium" | "normal" | "semibold";
         backgroundColor?: string;
-        textAlign?: "center" | "right" | "left";
+        textAlign?: "center" | "left" | "right";
         borderColor?: string;
         borderRadius?: number;
         borderWidth?: number;
         margin?: number;
+        padding?: number;
         textColor?: string;
     }>>;
     conditionalRules: z.ZodOptional<z.ZodArray<z.ZodObject<{
@@ -802,13 +802,13 @@ export declare const ButtonConfigSchema: z.ZodObject<{
             sourceProperty: z.ZodString;
             value: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean]>>;
         }, "strip", z.ZodTypeAny, {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         }, {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         }>;
@@ -818,122 +818,122 @@ export declare const ButtonConfigSchema: z.ZodObject<{
             targetProperty: z.ZodOptional<z.ZodString>;
             value: z.ZodOptional<z.ZodUnknown>;
         }, "strip", z.ZodTypeAny, {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
             targetElementId?: string;
             targetProperty?: string;
         }, {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
             targetElementId?: string;
             targetProperty?: string;
         }>, "many">;
     }, "strip", z.ZodTypeAny, {
         id?: string;
-        actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-            value?: unknown;
-            targetElementId?: string;
-            targetProperty?: string;
-        }[];
         condition?: {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         };
+        actions?: {
+            value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+            targetElementId?: string;
+            targetProperty?: string;
+        }[];
     }, {
         id?: string;
-        actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-            value?: unknown;
-            targetElementId?: string;
-            targetProperty?: string;
-        }[];
         condition?: {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         };
+        actions?: {
+            value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+            targetElementId?: string;
+            targetProperty?: string;
+        }[];
     }>, "many">>;
 }, "strip", z.ZodTypeAny, {
-    variant?: "primary" | "secondary" | "outline" | "ghost";
+    variant?: "primary" | "secondary" | "ghost" | "outline";
     size?: "sm" | "md" | "lg";
     disabled?: boolean;
     style?: {
-        height?: number | "full" | "auto";
-        width?: number | "full" | "auto";
-        fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-        fontWeight?: "bold" | "normal" | "medium" | "semibold";
-        padding?: number;
+        height?: number | "auto" | "full";
+        width?: number | "auto" | "full";
+        fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+        fontWeight?: "bold" | "medium" | "normal" | "semibold";
         backgroundColor?: string;
-        textAlign?: "center" | "right" | "left";
+        textAlign?: "center" | "left" | "right";
         borderColor?: string;
         borderRadius?: number;
         borderWidth?: number;
         margin?: number;
+        padding?: number;
         textColor?: string;
     };
     onClick?: {
         type?: "submit" | "reset" | "custom" | "navigate";
-        data?: Record<string, unknown>;
         target?: string;
+        data?: Record<string, unknown>;
     };
     text?: string;
     conditionalRules?: {
         id?: string;
-        actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-            value?: unknown;
-            targetElementId?: string;
-            targetProperty?: string;
-        }[];
         condition?: {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         };
+        actions?: {
+            value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+            targetElementId?: string;
+            targetProperty?: string;
+        }[];
     }[];
 }, {
-    variant?: "primary" | "secondary" | "outline" | "ghost";
+    variant?: "primary" | "secondary" | "ghost" | "outline";
     size?: "sm" | "md" | "lg";
     disabled?: boolean;
     style?: {
-        height?: number | "full" | "auto";
-        width?: number | "full" | "auto";
-        fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-        fontWeight?: "bold" | "normal" | "medium" | "semibold";
-        padding?: number;
+        height?: number | "auto" | "full";
+        width?: number | "auto" | "full";
+        fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+        fontWeight?: "bold" | "medium" | "normal" | "semibold";
         backgroundColor?: string;
-        textAlign?: "center" | "right" | "left";
+        textAlign?: "center" | "left" | "right";
         borderColor?: string;
         borderRadius?: number;
         borderWidth?: number;
         margin?: number;
+        padding?: number;
         textColor?: string;
     };
     onClick?: {
         type?: "submit" | "reset" | "custom" | "navigate";
-        data?: Record<string, unknown>;
         target?: string;
+        data?: Record<string, unknown>;
     };
     text?: string;
     conditionalRules?: {
         id?: string;
-        actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-            value?: unknown;
-            targetElementId?: string;
-            targetProperty?: string;
-        }[];
         condition?: {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         };
+        actions?: {
+            value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+            targetElementId?: string;
+            targetProperty?: string;
+        }[];
     }[];
 }>;
 export declare const ChoiceSelectConfigSchema: z.ZodObject<{
@@ -943,12 +943,12 @@ export declare const ChoiceSelectConfigSchema: z.ZodObject<{
         label: z.ZodString;
         disabled: z.ZodDefault<z.ZodBoolean>;
     }, "strip", z.ZodTypeAny, {
-        disabled?: boolean;
         value?: string;
+        disabled?: boolean;
         label?: string;
     }, {
-        disabled?: boolean;
         value?: string;
+        disabled?: boolean;
         label?: string;
     }>, "many">;
     multiple: z.ZodDefault<z.ZodBoolean>;
@@ -968,30 +968,30 @@ export declare const ChoiceSelectConfigSchema: z.ZodObject<{
         width: z.ZodOptional<z.ZodUnion<[z.ZodNumber, z.ZodEnum<["auto", "full"]>]>>;
         height: z.ZodOptional<z.ZodUnion<[z.ZodNumber, z.ZodEnum<["auto", "full"]>]>>;
     }, "strip", z.ZodTypeAny, {
-        height?: number | "full" | "auto";
-        width?: number | "full" | "auto";
-        fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-        fontWeight?: "bold" | "normal" | "medium" | "semibold";
-        padding?: number;
+        height?: number | "auto" | "full";
+        width?: number | "auto" | "full";
+        fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+        fontWeight?: "bold" | "medium" | "normal" | "semibold";
         backgroundColor?: string;
-        textAlign?: "center" | "right" | "left";
+        textAlign?: "center" | "left" | "right";
         borderColor?: string;
         borderRadius?: number;
         borderWidth?: number;
         margin?: number;
+        padding?: number;
         textColor?: string;
     }, {
-        height?: number | "full" | "auto";
-        width?: number | "full" | "auto";
-        fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-        fontWeight?: "bold" | "normal" | "medium" | "semibold";
-        padding?: number;
+        height?: number | "auto" | "full";
+        width?: number | "auto" | "full";
+        fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+        fontWeight?: "bold" | "medium" | "normal" | "semibold";
         backgroundColor?: string;
-        textAlign?: "center" | "right" | "left";
+        textAlign?: "center" | "left" | "right";
         borderColor?: string;
         borderRadius?: number;
         borderWidth?: number;
         margin?: number;
+        padding?: number;
         textColor?: string;
     }>>;
     conditionalRules: z.ZodOptional<z.ZodArray<z.ZodObject<{
@@ -1002,13 +1002,13 @@ export declare const ChoiceSelectConfigSchema: z.ZodObject<{
             sourceProperty: z.ZodString;
             value: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean]>>;
         }, "strip", z.ZodTypeAny, {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         }, {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         }>;
@@ -1018,122 +1018,122 @@ export declare const ChoiceSelectConfigSchema: z.ZodObject<{
             targetProperty: z.ZodOptional<z.ZodString>;
             value: z.ZodOptional<z.ZodUnknown>;
         }, "strip", z.ZodTypeAny, {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
             targetElementId?: string;
             targetProperty?: string;
         }, {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
             targetElementId?: string;
             targetProperty?: string;
         }>, "many">;
     }, "strip", z.ZodTypeAny, {
         id?: string;
-        actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-            value?: unknown;
-            targetElementId?: string;
-            targetProperty?: string;
-        }[];
         condition?: {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         };
+        actions?: {
+            value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+            targetElementId?: string;
+            targetProperty?: string;
+        }[];
     }, {
         id?: string;
-        actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-            value?: unknown;
-            targetElementId?: string;
-            targetProperty?: string;
-        }[];
         condition?: {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         };
+        actions?: {
+            value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+            targetElementId?: string;
+            targetProperty?: string;
+        }[];
     }>, "many">>;
 }, "strip", z.ZodTypeAny, {
     style?: {
-        height?: number | "full" | "auto";
-        width?: number | "full" | "auto";
-        fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-        fontWeight?: "bold" | "normal" | "medium" | "semibold";
-        padding?: number;
+        height?: number | "auto" | "full";
+        width?: number | "auto" | "full";
+        fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+        fontWeight?: "bold" | "medium" | "normal" | "semibold";
         backgroundColor?: string;
-        textAlign?: "center" | "right" | "left";
+        textAlign?: "center" | "left" | "right";
         borderColor?: string;
         borderRadius?: number;
         borderWidth?: number;
         margin?: number;
+        padding?: number;
         textColor?: string;
     };
+    label?: string;
     multiple?: boolean;
     placeholder?: string;
     required?: boolean;
-    label?: string;
     options?: {
-        disabled?: boolean;
         value?: string;
+        disabled?: boolean;
         label?: string;
     }[];
     conditionalRules?: {
         id?: string;
-        actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-            value?: unknown;
-            targetElementId?: string;
-            targetProperty?: string;
-        }[];
         condition?: {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         };
+        actions?: {
+            value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+            targetElementId?: string;
+            targetProperty?: string;
+        }[];
     }[];
 }, {
     style?: {
-        height?: number | "full" | "auto";
-        width?: number | "full" | "auto";
-        fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-        fontWeight?: "bold" | "normal" | "medium" | "semibold";
-        padding?: number;
+        height?: number | "auto" | "full";
+        width?: number | "auto" | "full";
+        fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+        fontWeight?: "bold" | "medium" | "normal" | "semibold";
         backgroundColor?: string;
-        textAlign?: "center" | "right" | "left";
+        textAlign?: "center" | "left" | "right";
         borderColor?: string;
         borderRadius?: number;
         borderWidth?: number;
         margin?: number;
+        padding?: number;
         textColor?: string;
     };
+    label?: string;
     multiple?: boolean;
     placeholder?: string;
     required?: boolean;
-    label?: string;
     options?: {
-        disabled?: boolean;
         value?: string;
+        disabled?: boolean;
         label?: string;
     }[];
     conditionalRules?: {
         id?: string;
-        actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-            value?: unknown;
-            targetElementId?: string;
-            targetProperty?: string;
-        }[];
         condition?: {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         };
+        actions?: {
+            value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+            targetElementId?: string;
+            targetProperty?: string;
+        }[];
     }[];
 }>;
 export declare const TextInputConfigSchema: z.ZodObject<{
@@ -1158,30 +1158,30 @@ export declare const TextInputConfigSchema: z.ZodObject<{
         width: z.ZodOptional<z.ZodUnion<[z.ZodNumber, z.ZodEnum<["auto", "full"]>]>>;
         height: z.ZodOptional<z.ZodUnion<[z.ZodNumber, z.ZodEnum<["auto", "full"]>]>>;
     }, "strip", z.ZodTypeAny, {
-        height?: number | "full" | "auto";
-        width?: number | "full" | "auto";
-        fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-        fontWeight?: "bold" | "normal" | "medium" | "semibold";
-        padding?: number;
+        height?: number | "auto" | "full";
+        width?: number | "auto" | "full";
+        fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+        fontWeight?: "bold" | "medium" | "normal" | "semibold";
         backgroundColor?: string;
-        textAlign?: "center" | "right" | "left";
+        textAlign?: "center" | "left" | "right";
         borderColor?: string;
         borderRadius?: number;
         borderWidth?: number;
         margin?: number;
+        padding?: number;
         textColor?: string;
     }, {
-        height?: number | "full" | "auto";
-        width?: number | "full" | "auto";
-        fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-        fontWeight?: "bold" | "normal" | "medium" | "semibold";
-        padding?: number;
+        height?: number | "auto" | "full";
+        width?: number | "auto" | "full";
+        fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+        fontWeight?: "bold" | "medium" | "normal" | "semibold";
         backgroundColor?: string;
-        textAlign?: "center" | "right" | "left";
+        textAlign?: "center" | "left" | "right";
         borderColor?: string;
         borderRadius?: number;
         borderWidth?: number;
         margin?: number;
+        padding?: number;
         textColor?: string;
     }>>;
     conditionalRules: z.ZodOptional<z.ZodArray<z.ZodObject<{
@@ -1192,13 +1192,13 @@ export declare const TextInputConfigSchema: z.ZodObject<{
             sourceProperty: z.ZodString;
             value: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean]>>;
         }, "strip", z.ZodTypeAny, {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         }, {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         }>;
@@ -1208,118 +1208,118 @@ export declare const TextInputConfigSchema: z.ZodObject<{
             targetProperty: z.ZodOptional<z.ZodString>;
             value: z.ZodOptional<z.ZodUnknown>;
         }, "strip", z.ZodTypeAny, {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
             targetElementId?: string;
             targetProperty?: string;
         }, {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
             targetElementId?: string;
             targetProperty?: string;
         }>, "many">;
     }, "strip", z.ZodTypeAny, {
         id?: string;
-        actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-            value?: unknown;
-            targetElementId?: string;
-            targetProperty?: string;
-        }[];
         condition?: {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         };
+        actions?: {
+            value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+            targetElementId?: string;
+            targetProperty?: string;
+        }[];
     }, {
         id?: string;
-        actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-            value?: unknown;
-            targetElementId?: string;
-            targetProperty?: string;
-        }[];
         condition?: {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         };
+        actions?: {
+            value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+            targetElementId?: string;
+            targetProperty?: string;
+        }[];
     }>, "many">>;
 }, "strip", z.ZodTypeAny, {
-    type?: "number" | "text" | "tel" | "url" | "email" | "password";
+    type?: "number" | "email" | "text" | "tel" | "url" | "password";
     style?: {
-        height?: number | "full" | "auto";
-        width?: number | "full" | "auto";
-        fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-        fontWeight?: "bold" | "normal" | "medium" | "semibold";
-        padding?: number;
+        height?: number | "auto" | "full";
+        width?: number | "auto" | "full";
+        fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+        fontWeight?: "bold" | "medium" | "normal" | "semibold";
         backgroundColor?: string;
-        textAlign?: "center" | "right" | "left";
+        textAlign?: "center" | "left" | "right";
         borderColor?: string;
         borderRadius?: number;
         borderWidth?: number;
         margin?: number;
+        padding?: number;
         textColor?: string;
     };
+    label?: string;
+    pattern?: string;
     maxLength?: number;
     minLength?: number;
-    pattern?: string;
     placeholder?: string;
     required?: boolean;
-    label?: string;
     conditionalRules?: {
         id?: string;
-        actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-            value?: unknown;
-            targetElementId?: string;
-            targetProperty?: string;
-        }[];
         condition?: {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         };
+        actions?: {
+            value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+            targetElementId?: string;
+            targetProperty?: string;
+        }[];
     }[];
 }, {
-    type?: "number" | "text" | "tel" | "url" | "email" | "password";
+    type?: "number" | "email" | "text" | "tel" | "url" | "password";
     style?: {
-        height?: number | "full" | "auto";
-        width?: number | "full" | "auto";
-        fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-        fontWeight?: "bold" | "normal" | "medium" | "semibold";
-        padding?: number;
+        height?: number | "auto" | "full";
+        width?: number | "auto" | "full";
+        fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+        fontWeight?: "bold" | "medium" | "normal" | "semibold";
         backgroundColor?: string;
-        textAlign?: "center" | "right" | "left";
+        textAlign?: "center" | "left" | "right";
         borderColor?: string;
         borderRadius?: number;
         borderWidth?: number;
         margin?: number;
+        padding?: number;
         textColor?: string;
     };
+    label?: string;
+    pattern?: string;
     maxLength?: number;
     minLength?: number;
-    pattern?: string;
     placeholder?: string;
     required?: boolean;
-    label?: string;
     conditionalRules?: {
         id?: string;
-        actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-            value?: unknown;
-            targetElementId?: string;
-            targetProperty?: string;
-        }[];
         condition?: {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         };
+        actions?: {
+            value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+            targetElementId?: string;
+            targetProperty?: string;
+        }[];
     }[];
 }>;
 export declare const RatingStarsConfigSchema: z.ZodObject<{
@@ -1343,30 +1343,30 @@ export declare const RatingStarsConfigSchema: z.ZodObject<{
         width: z.ZodOptional<z.ZodUnion<[z.ZodNumber, z.ZodEnum<["auto", "full"]>]>>;
         height: z.ZodOptional<z.ZodUnion<[z.ZodNumber, z.ZodEnum<["auto", "full"]>]>>;
     }, "strip", z.ZodTypeAny, {
-        height?: number | "full" | "auto";
-        width?: number | "full" | "auto";
-        fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-        fontWeight?: "bold" | "normal" | "medium" | "semibold";
-        padding?: number;
+        height?: number | "auto" | "full";
+        width?: number | "auto" | "full";
+        fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+        fontWeight?: "bold" | "medium" | "normal" | "semibold";
         backgroundColor?: string;
-        textAlign?: "center" | "right" | "left";
+        textAlign?: "center" | "left" | "right";
         borderColor?: string;
         borderRadius?: number;
         borderWidth?: number;
         margin?: number;
+        padding?: number;
         textColor?: string;
     }, {
-        height?: number | "full" | "auto";
-        width?: number | "full" | "auto";
-        fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-        fontWeight?: "bold" | "normal" | "medium" | "semibold";
-        padding?: number;
+        height?: number | "auto" | "full";
+        width?: number | "auto" | "full";
+        fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+        fontWeight?: "bold" | "medium" | "normal" | "semibold";
         backgroundColor?: string;
-        textAlign?: "center" | "right" | "left";
+        textAlign?: "center" | "left" | "right";
         borderColor?: string;
         borderRadius?: number;
         borderWidth?: number;
         margin?: number;
+        padding?: number;
         textColor?: string;
     }>>;
     conditionalRules: z.ZodOptional<z.ZodArray<z.ZodObject<{
@@ -1377,13 +1377,13 @@ export declare const RatingStarsConfigSchema: z.ZodObject<{
             sourceProperty: z.ZodString;
             value: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean]>>;
         }, "strip", z.ZodTypeAny, {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         }, {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         }>;
@@ -1393,114 +1393,114 @@ export declare const RatingStarsConfigSchema: z.ZodObject<{
             targetProperty: z.ZodOptional<z.ZodString>;
             value: z.ZodOptional<z.ZodUnknown>;
         }, "strip", z.ZodTypeAny, {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
             targetElementId?: string;
             targetProperty?: string;
         }, {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
             targetElementId?: string;
             targetProperty?: string;
         }>, "many">;
     }, "strip", z.ZodTypeAny, {
         id?: string;
-        actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-            value?: unknown;
-            targetElementId?: string;
-            targetProperty?: string;
-        }[];
         condition?: {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         };
+        actions?: {
+            value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+            targetElementId?: string;
+            targetProperty?: string;
+        }[];
     }, {
         id?: string;
-        actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-            value?: unknown;
-            targetElementId?: string;
-            targetProperty?: string;
-        }[];
         condition?: {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         };
+        actions?: {
+            value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+            targetElementId?: string;
+            targetProperty?: string;
+        }[];
     }>, "many">>;
 }, "strip", z.ZodTypeAny, {
     size?: "sm" | "md" | "lg";
     style?: {
-        height?: number | "full" | "auto";
-        width?: number | "full" | "auto";
-        fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-        fontWeight?: "bold" | "normal" | "medium" | "semibold";
-        padding?: number;
+        height?: number | "auto" | "full";
+        width?: number | "auto" | "full";
+        fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+        fontWeight?: "bold" | "medium" | "normal" | "semibold";
         backgroundColor?: string;
-        textAlign?: "center" | "right" | "left";
+        textAlign?: "center" | "left" | "right";
         borderColor?: string;
         borderRadius?: number;
         borderWidth?: number;
         margin?: number;
+        padding?: number;
         textColor?: string;
     };
     color?: string;
-    required?: boolean;
     label?: string;
+    required?: boolean;
     conditionalRules?: {
         id?: string;
-        actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-            value?: unknown;
-            targetElementId?: string;
-            targetProperty?: string;
-        }[];
         condition?: {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         };
+        actions?: {
+            value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+            targetElementId?: string;
+            targetProperty?: string;
+        }[];
     }[];
     maxRating?: number;
     allowHalf?: boolean;
 }, {
     size?: "sm" | "md" | "lg";
     style?: {
-        height?: number | "full" | "auto";
-        width?: number | "full" | "auto";
-        fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-        fontWeight?: "bold" | "normal" | "medium" | "semibold";
-        padding?: number;
+        height?: number | "auto" | "full";
+        width?: number | "auto" | "full";
+        fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+        fontWeight?: "bold" | "medium" | "normal" | "semibold";
         backgroundColor?: string;
-        textAlign?: "center" | "right" | "left";
+        textAlign?: "center" | "left" | "right";
         borderColor?: string;
         borderRadius?: number;
         borderWidth?: number;
         margin?: number;
+        padding?: number;
         textColor?: string;
     };
     color?: string;
-    required?: boolean;
     label?: string;
+    required?: boolean;
     conditionalRules?: {
         id?: string;
-        actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-            value?: unknown;
-            targetElementId?: string;
-            targetProperty?: string;
-        }[];
         condition?: {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         };
+        actions?: {
+            value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+            targetElementId?: string;
+            targetProperty?: string;
+        }[];
     }[];
     maxRating?: number;
     allowHalf?: boolean;
@@ -1513,11 +1513,11 @@ export declare const CountdownTimerConfigSchema: z.ZodObject<{
         type: z.ZodEnum<["message", "redirect", "trigger"]>;
         value: z.ZodString;
     }, "strip", z.ZodTypeAny, {
-        type?: "message" | "trigger" | "redirect";
         value?: string;
+        type?: "message" | "trigger" | "redirect";
     }, {
-        type?: "message" | "trigger" | "redirect";
         value?: string;
+        type?: "message" | "trigger" | "redirect";
     }>>;
     style: z.ZodOptional<z.ZodObject<{
         backgroundColor: z.ZodOptional<z.ZodString>;
@@ -1533,30 +1533,30 @@ export declare const CountdownTimerConfigSchema: z.ZodObject<{
         width: z.ZodOptional<z.ZodUnion<[z.ZodNumber, z.ZodEnum<["auto", "full"]>]>>;
         height: z.ZodOptional<z.ZodUnion<[z.ZodNumber, z.ZodEnum<["auto", "full"]>]>>;
     }, "strip", z.ZodTypeAny, {
-        height?: number | "full" | "auto";
-        width?: number | "full" | "auto";
-        fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-        fontWeight?: "bold" | "normal" | "medium" | "semibold";
-        padding?: number;
+        height?: number | "auto" | "full";
+        width?: number | "auto" | "full";
+        fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+        fontWeight?: "bold" | "medium" | "normal" | "semibold";
         backgroundColor?: string;
-        textAlign?: "center" | "right" | "left";
+        textAlign?: "center" | "left" | "right";
         borderColor?: string;
         borderRadius?: number;
         borderWidth?: number;
         margin?: number;
+        padding?: number;
         textColor?: string;
     }, {
-        height?: number | "full" | "auto";
-        width?: number | "full" | "auto";
-        fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-        fontWeight?: "bold" | "normal" | "medium" | "semibold";
-        padding?: number;
+        height?: number | "auto" | "full";
+        width?: number | "auto" | "full";
+        fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+        fontWeight?: "bold" | "medium" | "normal" | "semibold";
         backgroundColor?: string;
-        textAlign?: "center" | "right" | "left";
+        textAlign?: "center" | "left" | "right";
         borderColor?: string;
         borderRadius?: number;
         borderWidth?: number;
         margin?: number;
+        padding?: number;
         textColor?: string;
     }>>;
     conditionalRules: z.ZodOptional<z.ZodArray<z.ZodObject<{
@@ -1567,13 +1567,13 @@ export declare const CountdownTimerConfigSchema: z.ZodObject<{
             sourceProperty: z.ZodString;
             value: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean]>>;
         }, "strip", z.ZodTypeAny, {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         }, {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         }>;
@@ -1583,118 +1583,118 @@ export declare const CountdownTimerConfigSchema: z.ZodObject<{
             targetProperty: z.ZodOptional<z.ZodString>;
             value: z.ZodOptional<z.ZodUnknown>;
         }, "strip", z.ZodTypeAny, {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
             targetElementId?: string;
             targetProperty?: string;
         }, {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
             targetElementId?: string;
             targetProperty?: string;
         }>, "many">;
     }, "strip", z.ZodTypeAny, {
         id?: string;
-        actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-            value?: unknown;
-            targetElementId?: string;
-            targetProperty?: string;
-        }[];
         condition?: {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         };
+        actions?: {
+            value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+            targetElementId?: string;
+            targetProperty?: string;
+        }[];
     }, {
         id?: string;
-        actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-            value?: unknown;
-            targetElementId?: string;
-            targetProperty?: string;
-        }[];
         condition?: {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         };
+        actions?: {
+            value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+            targetElementId?: string;
+            targetProperty?: string;
+        }[];
     }>, "many">>;
 }, "strip", z.ZodTypeAny, {
     style?: {
-        height?: number | "full" | "auto";
-        width?: number | "full" | "auto";
-        fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-        fontWeight?: "bold" | "normal" | "medium" | "semibold";
-        padding?: number;
+        height?: number | "auto" | "full";
+        width?: number | "auto" | "full";
+        fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+        fontWeight?: "bold" | "medium" | "normal" | "semibold";
         backgroundColor?: string;
-        textAlign?: "center" | "right" | "left";
+        textAlign?: "center" | "left" | "right";
         borderColor?: string;
         borderRadius?: number;
         borderWidth?: number;
         margin?: number;
+        padding?: number;
         textColor?: string;
     };
-    label?: string;
     format?: "days" | "hours" | "minutes" | "seconds" | "dhms";
+    label?: string;
     conditionalRules?: {
         id?: string;
-        actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-            value?: unknown;
-            targetElementId?: string;
-            targetProperty?: string;
-        }[];
         condition?: {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         };
+        actions?: {
+            value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+            targetElementId?: string;
+            targetProperty?: string;
+        }[];
     }[];
     targetDate?: string;
     onComplete?: {
-        type?: "message" | "trigger" | "redirect";
         value?: string;
+        type?: "message" | "trigger" | "redirect";
     };
 }, {
     style?: {
-        height?: number | "full" | "auto";
-        width?: number | "full" | "auto";
-        fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-        fontWeight?: "bold" | "normal" | "medium" | "semibold";
-        padding?: number;
+        height?: number | "auto" | "full";
+        width?: number | "auto" | "full";
+        fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+        fontWeight?: "bold" | "medium" | "normal" | "semibold";
         backgroundColor?: string;
-        textAlign?: "center" | "right" | "left";
+        textAlign?: "center" | "left" | "right";
         borderColor?: string;
         borderRadius?: number;
         borderWidth?: number;
         margin?: number;
+        padding?: number;
         textColor?: string;
     };
-    label?: string;
     format?: "days" | "hours" | "minutes" | "seconds" | "dhms";
+    label?: string;
     conditionalRules?: {
         id?: string;
-        actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-            value?: unknown;
-            targetElementId?: string;
-            targetProperty?: string;
-        }[];
         condition?: {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         };
+        actions?: {
+            value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+            targetElementId?: string;
+            targetProperty?: string;
+        }[];
     }[];
     targetDate?: string;
     onComplete?: {
-        type?: "message" | "trigger" | "redirect";
         value?: string;
+        type?: "message" | "trigger" | "redirect";
     };
 }>;
 export declare const ProgressBarConfigSchema: z.ZodObject<{
@@ -1719,30 +1719,30 @@ export declare const ProgressBarConfigSchema: z.ZodObject<{
         width: z.ZodOptional<z.ZodUnion<[z.ZodNumber, z.ZodEnum<["auto", "full"]>]>>;
         height: z.ZodOptional<z.ZodUnion<[z.ZodNumber, z.ZodEnum<["auto", "full"]>]>>;
     }, "strip", z.ZodTypeAny, {
-        height?: number | "full" | "auto";
-        width?: number | "full" | "auto";
-        fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-        fontWeight?: "bold" | "normal" | "medium" | "semibold";
-        padding?: number;
+        height?: number | "auto" | "full";
+        width?: number | "auto" | "full";
+        fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+        fontWeight?: "bold" | "medium" | "normal" | "semibold";
         backgroundColor?: string;
-        textAlign?: "center" | "right" | "left";
+        textAlign?: "center" | "left" | "right";
         borderColor?: string;
         borderRadius?: number;
         borderWidth?: number;
         margin?: number;
+        padding?: number;
         textColor?: string;
     }, {
-        height?: number | "full" | "auto";
-        width?: number | "full" | "auto";
-        fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-        fontWeight?: "bold" | "normal" | "medium" | "semibold";
-        padding?: number;
+        height?: number | "auto" | "full";
+        width?: number | "auto" | "full";
+        fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+        fontWeight?: "bold" | "medium" | "normal" | "semibold";
         backgroundColor?: string;
-        textAlign?: "center" | "right" | "left";
+        textAlign?: "center" | "left" | "right";
         borderColor?: string;
         borderRadius?: number;
         borderWidth?: number;
         margin?: number;
+        padding?: number;
         textColor?: string;
     }>>;
     conditionalRules: z.ZodOptional<z.ZodArray<z.ZodObject<{
@@ -1753,13 +1753,13 @@ export declare const ProgressBarConfigSchema: z.ZodObject<{
             sourceProperty: z.ZodString;
             value: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean]>>;
         }, "strip", z.ZodTypeAny, {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         }, {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         }>;
@@ -1769,59 +1769,59 @@ export declare const ProgressBarConfigSchema: z.ZodObject<{
             targetProperty: z.ZodOptional<z.ZodString>;
             value: z.ZodOptional<z.ZodUnknown>;
         }, "strip", z.ZodTypeAny, {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
             targetElementId?: string;
             targetProperty?: string;
         }, {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
             targetElementId?: string;
             targetProperty?: string;
         }>, "many">;
     }, "strip", z.ZodTypeAny, {
         id?: string;
-        actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-            value?: unknown;
-            targetElementId?: string;
-            targetProperty?: string;
-        }[];
         condition?: {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         };
+        actions?: {
+            value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+            targetElementId?: string;
+            targetProperty?: string;
+        }[];
     }, {
         id?: string;
-        actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-            value?: unknown;
-            targetElementId?: string;
-            targetProperty?: string;
-        }[];
         condition?: {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         };
+        actions?: {
+            value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+            targetElementId?: string;
+            targetProperty?: string;
+        }[];
     }>, "many">>;
 }, "strip", z.ZodTypeAny, {
     value?: number;
     style?: {
-        height?: number | "full" | "auto";
-        width?: number | "full" | "auto";
-        fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-        fontWeight?: "bold" | "normal" | "medium" | "semibold";
-        padding?: number;
+        height?: number | "auto" | "full";
+        width?: number | "auto" | "full";
+        fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+        fontWeight?: "bold" | "medium" | "normal" | "semibold";
         backgroundColor?: string;
-        textAlign?: "center" | "right" | "left";
+        textAlign?: "center" | "left" | "right";
         borderColor?: string;
         borderRadius?: number;
         borderWidth?: number;
         margin?: number;
+        padding?: number;
         textColor?: string;
     };
     color?: string;
@@ -1831,34 +1831,34 @@ export declare const ProgressBarConfigSchema: z.ZodObject<{
     backgroundColor?: string;
     conditionalRules?: {
         id?: string;
-        actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-            value?: unknown;
-            targetElementId?: string;
-            targetProperty?: string;
-        }[];
         condition?: {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         };
+        actions?: {
+            value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+            targetElementId?: string;
+            targetProperty?: string;
+        }[];
     }[];
     showPercentage?: boolean;
 }, {
     value?: number;
     style?: {
-        height?: number | "full" | "auto";
-        width?: number | "full" | "auto";
-        fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-        fontWeight?: "bold" | "normal" | "medium" | "semibold";
-        padding?: number;
+        height?: number | "auto" | "full";
+        width?: number | "auto" | "full";
+        fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+        fontWeight?: "bold" | "medium" | "normal" | "semibold";
         backgroundColor?: string;
-        textAlign?: "center" | "right" | "left";
+        textAlign?: "center" | "left" | "right";
         borderColor?: string;
         borderRadius?: number;
         borderWidth?: number;
         margin?: number;
+        padding?: number;
         textColor?: string;
     };
     color?: string;
@@ -1868,18 +1868,18 @@ export declare const ProgressBarConfigSchema: z.ZodObject<{
     backgroundColor?: string;
     conditionalRules?: {
         id?: string;
-        actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-            value?: unknown;
-            targetElementId?: string;
-            targetProperty?: string;
-        }[];
         condition?: {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         };
+        actions?: {
+            value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+            targetElementId?: string;
+            targetProperty?: string;
+        }[];
     }[];
     showPercentage?: boolean;
 }>;
@@ -1906,12 +1906,12 @@ export declare const ConditionGateConfigSchema: z.ZodObject<{
         targetElementId: z.ZodString;
         value: z.ZodOptional<z.ZodUnknown>;
     }, "strip", z.ZodTypeAny, {
-        type?: "show" | "hide" | "trigger" | "setValue";
         value?: unknown;
+        type?: "show" | "hide" | "setValue" | "trigger";
         targetElementId?: string;
     }, {
-        type?: "show" | "hide" | "trigger" | "setValue";
         value?: unknown;
+        type?: "show" | "hide" | "setValue" | "trigger";
         targetElementId?: string;
     }>, "many">;
     onFalse: z.ZodOptional<z.ZodArray<z.ZodObject<{
@@ -1919,12 +1919,12 @@ export declare const ConditionGateConfigSchema: z.ZodObject<{
         targetElementId: z.ZodString;
         value: z.ZodOptional<z.ZodUnknown>;
     }, "strip", z.ZodTypeAny, {
-        type?: "show" | "hide" | "trigger" | "setValue";
         value?: unknown;
+        type?: "show" | "hide" | "setValue" | "trigger";
         targetElementId?: string;
     }, {
-        type?: "show" | "hide" | "trigger" | "setValue";
         value?: unknown;
+        type?: "show" | "hide" | "setValue" | "trigger";
         targetElementId?: string;
     }>, "many">>;
     conditionalRules: z.ZodOptional<z.ZodArray<z.ZodObject<{
@@ -1935,13 +1935,13 @@ export declare const ConditionGateConfigSchema: z.ZodObject<{
             sourceProperty: z.ZodString;
             value: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean]>>;
         }, "strip", z.ZodTypeAny, {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         }, {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         }>;
@@ -1951,60 +1951,60 @@ export declare const ConditionGateConfigSchema: z.ZodObject<{
             targetProperty: z.ZodOptional<z.ZodString>;
             value: z.ZodOptional<z.ZodUnknown>;
         }, "strip", z.ZodTypeAny, {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
             targetElementId?: string;
             targetProperty?: string;
         }, {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
             targetElementId?: string;
             targetProperty?: string;
         }>, "many">;
     }, "strip", z.ZodTypeAny, {
         id?: string;
-        actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-            value?: unknown;
-            targetElementId?: string;
-            targetProperty?: string;
-        }[];
         condition?: {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         };
+        actions?: {
+            value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+            targetElementId?: string;
+            targetProperty?: string;
+        }[];
     }, {
         id?: string;
-        actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-            value?: unknown;
-            targetElementId?: string;
-            targetProperty?: string;
-        }[];
         condition?: {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         };
+        actions?: {
+            value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+            targetElementId?: string;
+            targetProperty?: string;
+        }[];
     }>, "many">>;
 }, "strip", z.ZodTypeAny, {
     conditionalRules?: {
         id?: string;
-        actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-            value?: unknown;
-            targetElementId?: string;
-            targetProperty?: string;
-        }[];
         condition?: {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         };
+        actions?: {
+            value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+            targetElementId?: string;
+            targetProperty?: string;
+        }[];
     }[];
     conditions?: {
         value?: string | number | boolean;
@@ -2014,30 +2014,30 @@ export declare const ConditionGateConfigSchema: z.ZodObject<{
     }[];
     logic?: "and" | "or";
     onTrue?: {
-        type?: "show" | "hide" | "trigger" | "setValue";
         value?: unknown;
+        type?: "show" | "hide" | "setValue" | "trigger";
         targetElementId?: string;
     }[];
     onFalse?: {
-        type?: "show" | "hide" | "trigger" | "setValue";
         value?: unknown;
+        type?: "show" | "hide" | "setValue" | "trigger";
         targetElementId?: string;
     }[];
 }, {
     conditionalRules?: {
         id?: string;
-        actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-            value?: unknown;
-            targetElementId?: string;
-            targetProperty?: string;
-        }[];
         condition?: {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         };
+        actions?: {
+            value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+            targetElementId?: string;
+            targetProperty?: string;
+        }[];
     }[];
     conditions?: {
         value?: string | number | boolean;
@@ -2047,13 +2047,13 @@ export declare const ConditionGateConfigSchema: z.ZodObject<{
     }[];
     logic?: "and" | "or";
     onTrue?: {
-        type?: "show" | "hide" | "trigger" | "setValue";
         value?: unknown;
+        type?: "show" | "hide" | "setValue" | "trigger";
         targetElementId?: string;
     }[];
     onFalse?: {
-        type?: "show" | "hide" | "trigger" | "setValue";
         value?: unknown;
+        type?: "show" | "hide" | "setValue" | "trigger";
         targetElementId?: string;
     }[];
 }>;
@@ -2071,14 +2071,14 @@ export declare const PingTriggerConfigSchema: z.ZodObject<{
         type?: "element" | "external" | "analytics";
         url?: string;
         data?: Record<string, unknown>;
-        event?: string;
         elementId?: string;
+        event?: string;
     }, {
         type?: "element" | "external" | "analytics";
         url?: string;
         data?: Record<string, unknown>;
-        event?: string;
         elementId?: string;
+        event?: string;
     }>;
     style: z.ZodOptional<z.ZodObject<{
         backgroundColor: z.ZodOptional<z.ZodString>;
@@ -2094,30 +2094,30 @@ export declare const PingTriggerConfigSchema: z.ZodObject<{
         width: z.ZodOptional<z.ZodUnion<[z.ZodNumber, z.ZodEnum<["auto", "full"]>]>>;
         height: z.ZodOptional<z.ZodUnion<[z.ZodNumber, z.ZodEnum<["auto", "full"]>]>>;
     }, "strip", z.ZodTypeAny, {
-        height?: number | "full" | "auto";
-        width?: number | "full" | "auto";
-        fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-        fontWeight?: "bold" | "normal" | "medium" | "semibold";
-        padding?: number;
+        height?: number | "auto" | "full";
+        width?: number | "auto" | "full";
+        fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+        fontWeight?: "bold" | "medium" | "normal" | "semibold";
         backgroundColor?: string;
-        textAlign?: "center" | "right" | "left";
+        textAlign?: "center" | "left" | "right";
         borderColor?: string;
         borderRadius?: number;
         borderWidth?: number;
         margin?: number;
+        padding?: number;
         textColor?: string;
     }, {
-        height?: number | "full" | "auto";
-        width?: number | "full" | "auto";
-        fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-        fontWeight?: "bold" | "normal" | "medium" | "semibold";
-        padding?: number;
+        height?: number | "auto" | "full";
+        width?: number | "auto" | "full";
+        fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+        fontWeight?: "bold" | "medium" | "normal" | "semibold";
         backgroundColor?: string;
-        textAlign?: "center" | "right" | "left";
+        textAlign?: "center" | "left" | "right";
         borderColor?: string;
         borderRadius?: number;
         borderWidth?: number;
         margin?: number;
+        padding?: number;
         textColor?: string;
     }>>;
     conditionalRules: z.ZodOptional<z.ZodArray<z.ZodObject<{
@@ -2128,13 +2128,13 @@ export declare const PingTriggerConfigSchema: z.ZodObject<{
             sourceProperty: z.ZodString;
             value: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean]>>;
         }, "strip", z.ZodTypeAny, {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         }, {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         }>;
@@ -2144,125 +2144,125 @@ export declare const PingTriggerConfigSchema: z.ZodObject<{
             targetProperty: z.ZodOptional<z.ZodString>;
             value: z.ZodOptional<z.ZodUnknown>;
         }, "strip", z.ZodTypeAny, {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
             targetElementId?: string;
             targetProperty?: string;
         }, {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
             targetElementId?: string;
             targetProperty?: string;
         }>, "many">;
     }, "strip", z.ZodTypeAny, {
         id?: string;
-        actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-            value?: unknown;
-            targetElementId?: string;
-            targetProperty?: string;
-        }[];
         condition?: {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         };
+        actions?: {
+            value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+            targetElementId?: string;
+            targetProperty?: string;
+        }[];
     }, {
         id?: string;
-        actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-            value?: unknown;
-            targetElementId?: string;
-            targetProperty?: string;
-        }[];
         condition?: {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         };
+        actions?: {
+            value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+            targetElementId?: string;
+            targetProperty?: string;
+        }[];
     }>, "many">>;
 }, "strip", z.ZodTypeAny, {
     style?: {
-        height?: number | "full" | "auto";
-        width?: number | "full" | "auto";
-        fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-        fontWeight?: "bold" | "normal" | "medium" | "semibold";
-        padding?: number;
+        height?: number | "auto" | "full";
+        width?: number | "auto" | "full";
+        fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+        fontWeight?: "bold" | "medium" | "normal" | "semibold";
         backgroundColor?: string;
-        textAlign?: "center" | "right" | "left";
+        textAlign?: "center" | "left" | "right";
         borderColor?: string;
         borderRadius?: number;
         borderWidth?: number;
         margin?: number;
+        padding?: number;
         textColor?: string;
     };
-    label?: string;
     target?: {
         type?: "element" | "external" | "analytics";
         url?: string;
         data?: Record<string, unknown>;
-        event?: string;
         elementId?: string;
+        event?: string;
     };
-    delay?: number;
+    label?: string;
     conditionalRules?: {
         id?: string;
-        actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-            value?: unknown;
-            targetElementId?: string;
-            targetProperty?: string;
-        }[];
         condition?: {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         };
+        actions?: {
+            value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+            targetElementId?: string;
+            targetProperty?: string;
+        }[];
     }[];
     triggerOn?: "timer" | "click" | "focus" | "hover";
+    delay?: number;
 }, {
     style?: {
-        height?: number | "full" | "auto";
-        width?: number | "full" | "auto";
-        fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-        fontWeight?: "bold" | "normal" | "medium" | "semibold";
-        padding?: number;
+        height?: number | "auto" | "full";
+        width?: number | "auto" | "full";
+        fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+        fontWeight?: "bold" | "medium" | "normal" | "semibold";
         backgroundColor?: string;
-        textAlign?: "center" | "right" | "left";
+        textAlign?: "center" | "left" | "right";
         borderColor?: string;
         borderRadius?: number;
         borderWidth?: number;
         margin?: number;
+        padding?: number;
         textColor?: string;
     };
-    label?: string;
     target?: {
         type?: "element" | "external" | "analytics";
         url?: string;
         data?: Record<string, unknown>;
-        event?: string;
         elementId?: string;
+        event?: string;
     };
-    delay?: number;
+    label?: string;
     conditionalRules?: {
         id?: string;
-        actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-            value?: unknown;
-            targetElementId?: string;
-            targetProperty?: string;
-        }[];
         condition?: {
-            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             sourceElementId?: string;
             sourceProperty?: string;
         };
+        actions?: {
+            value?: unknown;
+            type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+            targetElementId?: string;
+            targetProperty?: string;
+        }[];
     }[];
     triggerOn?: "timer" | "click" | "focus" | "hover";
+    delay?: number;
 }>;
 export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.ZodObject<{
     type: z.ZodLiteral<"textBlock">;
@@ -2282,30 +2282,30 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             width: z.ZodOptional<z.ZodUnion<[z.ZodNumber, z.ZodEnum<["auto", "full"]>]>>;
             height: z.ZodOptional<z.ZodUnion<[z.ZodNumber, z.ZodEnum<["auto", "full"]>]>>;
         }, "strip", z.ZodTypeAny, {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         }, {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         }>>;
         conditionalRules: z.ZodOptional<z.ZodArray<z.ZodObject<{
@@ -2316,13 +2316,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 sourceProperty: z.ZodString;
                 value: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean]>>;
             }, "strip", z.ZodTypeAny, {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             }, {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             }>;
@@ -2332,174 +2332,174 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 targetProperty: z.ZodOptional<z.ZodString>;
                 value: z.ZodOptional<z.ZodUnknown>;
             }, "strip", z.ZodTypeAny, {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
                 targetElementId?: string;
                 targetProperty?: string;
             }, {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
                 targetElementId?: string;
                 targetProperty?: string;
             }>, "many">;
         }, "strip", z.ZodTypeAny, {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }, {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }>, "many">>;
     }, "strip", z.ZodTypeAny, {
         style?: {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         };
         text?: string;
         conditionalRules?: {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }[];
     }, {
         style?: {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         };
         text?: string;
         conditionalRules?: {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }[];
     }>;
 }, "strip", z.ZodTypeAny, {
     type?: "textBlock";
     config?: {
         style?: {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         };
         text?: string;
         conditionalRules?: {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }[];
     };
 }, {
     type?: "textBlock";
     config?: {
         style?: {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         };
         text?: string;
         conditionalRules?: {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }[];
     };
 }>, z.ZodObject<{
@@ -2522,30 +2522,30 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             width: z.ZodOptional<z.ZodUnion<[z.ZodNumber, z.ZodEnum<["auto", "full"]>]>>;
             height: z.ZodOptional<z.ZodUnion<[z.ZodNumber, z.ZodEnum<["auto", "full"]>]>>;
         }, "strip", z.ZodTypeAny, {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         }, {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         }>>;
         conditionalRules: z.ZodOptional<z.ZodArray<z.ZodObject<{
@@ -2556,13 +2556,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 sourceProperty: z.ZodString;
                 value: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean]>>;
             }, "strip", z.ZodTypeAny, {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             }, {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             }>;
@@ -2572,182 +2572,182 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 targetProperty: z.ZodOptional<z.ZodString>;
                 value: z.ZodOptional<z.ZodUnknown>;
             }, "strip", z.ZodTypeAny, {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
                 targetElementId?: string;
                 targetProperty?: string;
             }, {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
                 targetElementId?: string;
                 targetProperty?: string;
             }>, "many">;
         }, "strip", z.ZodTypeAny, {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }, {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }>, "many">>;
     }, "strip", z.ZodTypeAny, {
         style?: {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         };
+        caption?: string;
         alt?: string;
         src?: string;
-        caption?: string;
         conditionalRules?: {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }[];
     }, {
         style?: {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         };
+        caption?: string;
         alt?: string;
         src?: string;
-        caption?: string;
         conditionalRules?: {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }[];
     }>;
 }, "strip", z.ZodTypeAny, {
     type?: "imageBlock";
     config?: {
         style?: {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         };
+        caption?: string;
         alt?: string;
         src?: string;
-        caption?: string;
         conditionalRules?: {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }[];
     };
 }, {
     type?: "imageBlock";
     config?: {
         style?: {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         };
+        caption?: string;
         alt?: string;
         src?: string;
-        caption?: string;
         conditionalRules?: {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }[];
     };
 }>, z.ZodObject<{
@@ -2765,13 +2765,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 sourceProperty: z.ZodString;
                 value: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean]>>;
             }, "strip", z.ZodTypeAny, {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             }, {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             }>;
@@ -2781,129 +2781,129 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 targetProperty: z.ZodOptional<z.ZodString>;
                 value: z.ZodOptional<z.ZodUnknown>;
             }, "strip", z.ZodTypeAny, {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
                 targetElementId?: string;
                 targetProperty?: string;
             }, {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
                 targetElementId?: string;
                 targetProperty?: string;
             }>, "many">;
         }, "strip", z.ZodTypeAny, {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }, {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }>, "many">>;
     }, "strip", z.ZodTypeAny, {
-        style?: "solid" | "dashed" | "dotted";
+        style?: "dashed" | "dotted" | "solid";
         color?: string;
         margin?: number;
         conditionalRules?: {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }[];
         thickness?: number;
     }, {
-        style?: "solid" | "dashed" | "dotted";
+        style?: "dashed" | "dotted" | "solid";
         color?: string;
         margin?: number;
         conditionalRules?: {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }[];
         thickness?: number;
     }>;
 }, "strip", z.ZodTypeAny, {
     type?: "divider";
     config?: {
-        style?: "solid" | "dashed" | "dotted";
+        style?: "dashed" | "dotted" | "solid";
         color?: string;
         margin?: number;
         conditionalRules?: {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }[];
         thickness?: number;
     };
 }, {
     type?: "divider";
     config?: {
-        style?: "solid" | "dashed" | "dotted";
+        style?: "dashed" | "dotted" | "solid";
         color?: string;
         margin?: number;
         conditionalRules?: {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }[];
         thickness?: number;
     };
@@ -2928,30 +2928,30 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             width: z.ZodOptional<z.ZodUnion<[z.ZodNumber, z.ZodEnum<["auto", "full"]>]>>;
             height: z.ZodOptional<z.ZodUnion<[z.ZodNumber, z.ZodEnum<["auto", "full"]>]>>;
         }, "strip", z.ZodTypeAny, {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         }, {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         }>>;
         conditionalRules: z.ZodOptional<z.ZodArray<z.ZodObject<{
@@ -2962,13 +2962,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 sourceProperty: z.ZodString;
                 value: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean]>>;
             }, "strip", z.ZodTypeAny, {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             }, {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             }>;
@@ -2978,187 +2978,187 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 targetProperty: z.ZodOptional<z.ZodString>;
                 value: z.ZodOptional<z.ZodUnknown>;
             }, "strip", z.ZodTypeAny, {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
                 targetElementId?: string;
                 targetProperty?: string;
             }, {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
                 targetElementId?: string;
                 targetProperty?: string;
             }>, "many">;
         }, "strip", z.ZodTypeAny, {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }, {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }>, "many">>;
     }, "strip", z.ZodTypeAny, {
         style?: {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         };
-        spacing?: number;
         direction?: "horizontal" | "vertical";
+        spacing?: number;
         wrap?: boolean;
         conditionalRules?: {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }[];
-        alignment?: "center" | "end" | "start" | "stretch";
+        alignment?: "end" | "center" | "start" | "stretch";
     }, {
         style?: {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         };
-        spacing?: number;
         direction?: "horizontal" | "vertical";
+        spacing?: number;
         wrap?: boolean;
         conditionalRules?: {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }[];
-        alignment?: "center" | "end" | "start" | "stretch";
+        alignment?: "end" | "center" | "start" | "stretch";
     }>;
 }, "strip", z.ZodTypeAny, {
     type?: "stack";
     config?: {
         style?: {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         };
-        spacing?: number;
         direction?: "horizontal" | "vertical";
+        spacing?: number;
         wrap?: boolean;
         conditionalRules?: {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }[];
-        alignment?: "center" | "end" | "start" | "stretch";
+        alignment?: "end" | "center" | "start" | "stretch";
     };
 }, {
     type?: "stack";
     config?: {
         style?: {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         };
-        spacing?: number;
         direction?: "horizontal" | "vertical";
+        spacing?: number;
         wrap?: boolean;
         conditionalRules?: {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }[];
-        alignment?: "center" | "end" | "start" | "stretch";
+        alignment?: "end" | "center" | "start" | "stretch";
     };
 }>, z.ZodObject<{
     type: z.ZodLiteral<"button">;
@@ -3173,12 +3173,12 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             data: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnknown>>;
         }, "strip", z.ZodTypeAny, {
             type?: "submit" | "reset" | "custom" | "navigate";
-            data?: Record<string, unknown>;
             target?: string;
+            data?: Record<string, unknown>;
         }, {
             type?: "submit" | "reset" | "custom" | "navigate";
-            data?: Record<string, unknown>;
             target?: string;
+            data?: Record<string, unknown>;
         }>>;
         style: z.ZodOptional<z.ZodObject<{
             backgroundColor: z.ZodOptional<z.ZodString>;
@@ -3194,30 +3194,30 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             width: z.ZodOptional<z.ZodUnion<[z.ZodNumber, z.ZodEnum<["auto", "full"]>]>>;
             height: z.ZodOptional<z.ZodUnion<[z.ZodNumber, z.ZodEnum<["auto", "full"]>]>>;
         }, "strip", z.ZodTypeAny, {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         }, {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         }>>;
         conditionalRules: z.ZodOptional<z.ZodArray<z.ZodObject<{
@@ -3228,13 +3228,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 sourceProperty: z.ZodString;
                 value: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean]>>;
             }, "strip", z.ZodTypeAny, {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             }, {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             }>;
@@ -3244,206 +3244,206 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 targetProperty: z.ZodOptional<z.ZodString>;
                 value: z.ZodOptional<z.ZodUnknown>;
             }, "strip", z.ZodTypeAny, {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
                 targetElementId?: string;
                 targetProperty?: string;
             }, {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
                 targetElementId?: string;
                 targetProperty?: string;
             }>, "many">;
         }, "strip", z.ZodTypeAny, {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }, {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }>, "many">>;
     }, "strip", z.ZodTypeAny, {
-        variant?: "primary" | "secondary" | "outline" | "ghost";
+        variant?: "primary" | "secondary" | "ghost" | "outline";
         size?: "sm" | "md" | "lg";
         disabled?: boolean;
         style?: {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         };
         onClick?: {
             type?: "submit" | "reset" | "custom" | "navigate";
-            data?: Record<string, unknown>;
             target?: string;
+            data?: Record<string, unknown>;
         };
         text?: string;
         conditionalRules?: {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }[];
     }, {
-        variant?: "primary" | "secondary" | "outline" | "ghost";
+        variant?: "primary" | "secondary" | "ghost" | "outline";
         size?: "sm" | "md" | "lg";
         disabled?: boolean;
         style?: {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         };
         onClick?: {
             type?: "submit" | "reset" | "custom" | "navigate";
-            data?: Record<string, unknown>;
             target?: string;
+            data?: Record<string, unknown>;
         };
         text?: string;
         conditionalRules?: {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }[];
     }>;
 }, "strip", z.ZodTypeAny, {
     type?: "button";
     config?: {
-        variant?: "primary" | "secondary" | "outline" | "ghost";
+        variant?: "primary" | "secondary" | "ghost" | "outline";
         size?: "sm" | "md" | "lg";
         disabled?: boolean;
         style?: {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         };
         onClick?: {
             type?: "submit" | "reset" | "custom" | "navigate";
-            data?: Record<string, unknown>;
             target?: string;
+            data?: Record<string, unknown>;
         };
         text?: string;
         conditionalRules?: {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }[];
     };
 }, {
     type?: "button";
     config?: {
-        variant?: "primary" | "secondary" | "outline" | "ghost";
+        variant?: "primary" | "secondary" | "ghost" | "outline";
         size?: "sm" | "md" | "lg";
         disabled?: boolean;
         style?: {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         };
         onClick?: {
             type?: "submit" | "reset" | "custom" | "navigate";
-            data?: Record<string, unknown>;
             target?: string;
+            data?: Record<string, unknown>;
         };
         text?: string;
         conditionalRules?: {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }[];
     };
 }>, z.ZodObject<{
@@ -3455,12 +3455,12 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             label: z.ZodString;
             disabled: z.ZodDefault<z.ZodBoolean>;
         }, "strip", z.ZodTypeAny, {
-            disabled?: boolean;
             value?: string;
+            disabled?: boolean;
             label?: string;
         }, {
-            disabled?: boolean;
             value?: string;
+            disabled?: boolean;
             label?: string;
         }>, "many">;
         multiple: z.ZodDefault<z.ZodBoolean>;
@@ -3480,30 +3480,30 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             width: z.ZodOptional<z.ZodUnion<[z.ZodNumber, z.ZodEnum<["auto", "full"]>]>>;
             height: z.ZodOptional<z.ZodUnion<[z.ZodNumber, z.ZodEnum<["auto", "full"]>]>>;
         }, "strip", z.ZodTypeAny, {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         }, {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         }>>;
         conditionalRules: z.ZodOptional<z.ZodArray<z.ZodObject<{
@@ -3514,13 +3514,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 sourceProperty: z.ZodString;
                 value: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean]>>;
             }, "strip", z.ZodTypeAny, {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             }, {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             }>;
@@ -3530,206 +3530,206 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 targetProperty: z.ZodOptional<z.ZodString>;
                 value: z.ZodOptional<z.ZodUnknown>;
             }, "strip", z.ZodTypeAny, {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
                 targetElementId?: string;
                 targetProperty?: string;
             }, {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
                 targetElementId?: string;
                 targetProperty?: string;
             }>, "many">;
         }, "strip", z.ZodTypeAny, {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }, {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }>, "many">>;
     }, "strip", z.ZodTypeAny, {
         style?: {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         };
+        label?: string;
         multiple?: boolean;
         placeholder?: string;
         required?: boolean;
-        label?: string;
         options?: {
-            disabled?: boolean;
             value?: string;
+            disabled?: boolean;
             label?: string;
         }[];
         conditionalRules?: {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }[];
     }, {
         style?: {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         };
+        label?: string;
         multiple?: boolean;
         placeholder?: string;
         required?: boolean;
-        label?: string;
         options?: {
-            disabled?: boolean;
             value?: string;
+            disabled?: boolean;
             label?: string;
         }[];
         conditionalRules?: {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }[];
     }>;
 }, "strip", z.ZodTypeAny, {
     type?: "choiceSelect";
     config?: {
         style?: {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         };
+        label?: string;
         multiple?: boolean;
         placeholder?: string;
         required?: boolean;
-        label?: string;
         options?: {
-            disabled?: boolean;
             value?: string;
+            disabled?: boolean;
             label?: string;
         }[];
         conditionalRules?: {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }[];
     };
 }, {
     type?: "choiceSelect";
     config?: {
         style?: {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         };
+        label?: string;
         multiple?: boolean;
         placeholder?: string;
         required?: boolean;
-        label?: string;
         options?: {
-            disabled?: boolean;
             value?: string;
+            disabled?: boolean;
             label?: string;
         }[];
         conditionalRules?: {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }[];
     };
 }>, z.ZodObject<{
@@ -3756,30 +3756,30 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             width: z.ZodOptional<z.ZodUnion<[z.ZodNumber, z.ZodEnum<["auto", "full"]>]>>;
             height: z.ZodOptional<z.ZodUnion<[z.ZodNumber, z.ZodEnum<["auto", "full"]>]>>;
         }, "strip", z.ZodTypeAny, {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         }, {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         }>>;
         conditionalRules: z.ZodOptional<z.ZodArray<z.ZodObject<{
@@ -3790,13 +3790,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 sourceProperty: z.ZodString;
                 value: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean]>>;
             }, "strip", z.ZodTypeAny, {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             }, {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             }>;
@@ -3806,198 +3806,198 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 targetProperty: z.ZodOptional<z.ZodString>;
                 value: z.ZodOptional<z.ZodUnknown>;
             }, "strip", z.ZodTypeAny, {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
                 targetElementId?: string;
                 targetProperty?: string;
             }, {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
                 targetElementId?: string;
                 targetProperty?: string;
             }>, "many">;
         }, "strip", z.ZodTypeAny, {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }, {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }>, "many">>;
     }, "strip", z.ZodTypeAny, {
-        type?: "number" | "text" | "tel" | "url" | "email" | "password";
+        type?: "number" | "email" | "text" | "tel" | "url" | "password";
         style?: {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         };
+        label?: string;
+        pattern?: string;
         maxLength?: number;
         minLength?: number;
-        pattern?: string;
         placeholder?: string;
         required?: boolean;
-        label?: string;
         conditionalRules?: {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }[];
     }, {
-        type?: "number" | "text" | "tel" | "url" | "email" | "password";
+        type?: "number" | "email" | "text" | "tel" | "url" | "password";
         style?: {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         };
+        label?: string;
+        pattern?: string;
         maxLength?: number;
         minLength?: number;
-        pattern?: string;
         placeholder?: string;
         required?: boolean;
-        label?: string;
         conditionalRules?: {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }[];
     }>;
 }, "strip", z.ZodTypeAny, {
     type?: "textInput";
     config?: {
-        type?: "number" | "text" | "tel" | "url" | "email" | "password";
+        type?: "number" | "email" | "text" | "tel" | "url" | "password";
         style?: {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         };
+        label?: string;
+        pattern?: string;
         maxLength?: number;
         minLength?: number;
-        pattern?: string;
         placeholder?: string;
         required?: boolean;
-        label?: string;
         conditionalRules?: {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }[];
     };
 }, {
     type?: "textInput";
     config?: {
-        type?: "number" | "text" | "tel" | "url" | "email" | "password";
+        type?: "number" | "email" | "text" | "tel" | "url" | "password";
         style?: {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         };
+        label?: string;
+        pattern?: string;
         maxLength?: number;
         minLength?: number;
-        pattern?: string;
         placeholder?: string;
         required?: boolean;
-        label?: string;
         conditionalRules?: {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }[];
     };
 }>, z.ZodObject<{
@@ -4023,30 +4023,30 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             width: z.ZodOptional<z.ZodUnion<[z.ZodNumber, z.ZodEnum<["auto", "full"]>]>>;
             height: z.ZodOptional<z.ZodUnion<[z.ZodNumber, z.ZodEnum<["auto", "full"]>]>>;
         }, "strip", z.ZodTypeAny, {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         }, {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         }>>;
         conditionalRules: z.ZodOptional<z.ZodArray<z.ZodObject<{
@@ -4057,13 +4057,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 sourceProperty: z.ZodString;
                 value: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean]>>;
             }, "strip", z.ZodTypeAny, {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             }, {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             }>;
@@ -4073,114 +4073,114 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 targetProperty: z.ZodOptional<z.ZodString>;
                 value: z.ZodOptional<z.ZodUnknown>;
             }, "strip", z.ZodTypeAny, {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
                 targetElementId?: string;
                 targetProperty?: string;
             }, {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
                 targetElementId?: string;
                 targetProperty?: string;
             }>, "many">;
         }, "strip", z.ZodTypeAny, {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }, {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }>, "many">>;
     }, "strip", z.ZodTypeAny, {
         size?: "sm" | "md" | "lg";
         style?: {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         };
         color?: string;
-        required?: boolean;
         label?: string;
+        required?: boolean;
         conditionalRules?: {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }[];
         maxRating?: number;
         allowHalf?: boolean;
     }, {
         size?: "sm" | "md" | "lg";
         style?: {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         };
         color?: string;
-        required?: boolean;
         label?: string;
+        required?: boolean;
         conditionalRules?: {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }[];
         maxRating?: number;
         allowHalf?: boolean;
@@ -4190,36 +4190,36 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
     config?: {
         size?: "sm" | "md" | "lg";
         style?: {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         };
         color?: string;
-        required?: boolean;
         label?: string;
+        required?: boolean;
         conditionalRules?: {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }[];
         maxRating?: number;
         allowHalf?: boolean;
@@ -4229,36 +4229,36 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
     config?: {
         size?: "sm" | "md" | "lg";
         style?: {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         };
         color?: string;
-        required?: boolean;
         label?: string;
+        required?: boolean;
         conditionalRules?: {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }[];
         maxRating?: number;
         allowHalf?: boolean;
@@ -4273,11 +4273,11 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             type: z.ZodEnum<["message", "redirect", "trigger"]>;
             value: z.ZodString;
         }, "strip", z.ZodTypeAny, {
-            type?: "message" | "trigger" | "redirect";
             value?: string;
+            type?: "message" | "trigger" | "redirect";
         }, {
-            type?: "message" | "trigger" | "redirect";
             value?: string;
+            type?: "message" | "trigger" | "redirect";
         }>>;
         style: z.ZodOptional<z.ZodObject<{
             backgroundColor: z.ZodOptional<z.ZodString>;
@@ -4293,30 +4293,30 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             width: z.ZodOptional<z.ZodUnion<[z.ZodNumber, z.ZodEnum<["auto", "full"]>]>>;
             height: z.ZodOptional<z.ZodUnion<[z.ZodNumber, z.ZodEnum<["auto", "full"]>]>>;
         }, "strip", z.ZodTypeAny, {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         }, {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         }>>;
         conditionalRules: z.ZodOptional<z.ZodArray<z.ZodObject<{
@@ -4327,13 +4327,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 sourceProperty: z.ZodString;
                 value: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean]>>;
             }, "strip", z.ZodTypeAny, {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             }, {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             }>;
@@ -4343,198 +4343,198 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 targetProperty: z.ZodOptional<z.ZodString>;
                 value: z.ZodOptional<z.ZodUnknown>;
             }, "strip", z.ZodTypeAny, {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
                 targetElementId?: string;
                 targetProperty?: string;
             }, {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
                 targetElementId?: string;
                 targetProperty?: string;
             }>, "many">;
         }, "strip", z.ZodTypeAny, {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }, {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }>, "many">>;
     }, "strip", z.ZodTypeAny, {
         style?: {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         };
-        label?: string;
         format?: "days" | "hours" | "minutes" | "seconds" | "dhms";
+        label?: string;
         conditionalRules?: {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }[];
         targetDate?: string;
         onComplete?: {
-            type?: "message" | "trigger" | "redirect";
             value?: string;
+            type?: "message" | "trigger" | "redirect";
         };
     }, {
         style?: {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         };
-        label?: string;
         format?: "days" | "hours" | "minutes" | "seconds" | "dhms";
+        label?: string;
         conditionalRules?: {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }[];
         targetDate?: string;
         onComplete?: {
-            type?: "message" | "trigger" | "redirect";
             value?: string;
+            type?: "message" | "trigger" | "redirect";
         };
     }>;
 }, "strip", z.ZodTypeAny, {
     type?: "countdownTimer";
     config?: {
         style?: {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         };
-        label?: string;
         format?: "days" | "hours" | "minutes" | "seconds" | "dhms";
+        label?: string;
         conditionalRules?: {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }[];
         targetDate?: string;
         onComplete?: {
-            type?: "message" | "trigger" | "redirect";
             value?: string;
+            type?: "message" | "trigger" | "redirect";
         };
     };
 }, {
     type?: "countdownTimer";
     config?: {
         style?: {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         };
-        label?: string;
         format?: "days" | "hours" | "minutes" | "seconds" | "dhms";
+        label?: string;
         conditionalRules?: {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }[];
         targetDate?: string;
         onComplete?: {
-            type?: "message" | "trigger" | "redirect";
             value?: string;
+            type?: "message" | "trigger" | "redirect";
         };
     };
 }>, z.ZodObject<{
@@ -4561,30 +4561,30 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             width: z.ZodOptional<z.ZodUnion<[z.ZodNumber, z.ZodEnum<["auto", "full"]>]>>;
             height: z.ZodOptional<z.ZodUnion<[z.ZodNumber, z.ZodEnum<["auto", "full"]>]>>;
         }, "strip", z.ZodTypeAny, {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         }, {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         }>>;
         conditionalRules: z.ZodOptional<z.ZodArray<z.ZodObject<{
@@ -4595,13 +4595,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 sourceProperty: z.ZodString;
                 value: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean]>>;
             }, "strip", z.ZodTypeAny, {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             }, {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             }>;
@@ -4611,59 +4611,59 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 targetProperty: z.ZodOptional<z.ZodString>;
                 value: z.ZodOptional<z.ZodUnknown>;
             }, "strip", z.ZodTypeAny, {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
                 targetElementId?: string;
                 targetProperty?: string;
             }, {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
                 targetElementId?: string;
                 targetProperty?: string;
             }>, "many">;
         }, "strip", z.ZodTypeAny, {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }, {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }>, "many">>;
     }, "strip", z.ZodTypeAny, {
         value?: number;
         style?: {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         };
         color?: string;
@@ -4673,34 +4673,34 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         backgroundColor?: string;
         conditionalRules?: {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }[];
         showPercentage?: boolean;
     }, {
         value?: number;
         style?: {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         };
         color?: string;
@@ -4710,18 +4710,18 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         backgroundColor?: string;
         conditionalRules?: {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }[];
         showPercentage?: boolean;
     }>;
@@ -4730,17 +4730,17 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
     config?: {
         value?: number;
         style?: {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         };
         color?: string;
@@ -4750,18 +4750,18 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         backgroundColor?: string;
         conditionalRules?: {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }[];
         showPercentage?: boolean;
     };
@@ -4770,17 +4770,17 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
     config?: {
         value?: number;
         style?: {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         };
         color?: string;
@@ -4790,18 +4790,18 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         backgroundColor?: string;
         conditionalRules?: {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }[];
         showPercentage?: boolean;
     };
@@ -4830,12 +4830,12 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             targetElementId: z.ZodString;
             value: z.ZodOptional<z.ZodUnknown>;
         }, "strip", z.ZodTypeAny, {
-            type?: "show" | "hide" | "trigger" | "setValue";
             value?: unknown;
+            type?: "show" | "hide" | "setValue" | "trigger";
             targetElementId?: string;
         }, {
-            type?: "show" | "hide" | "trigger" | "setValue";
             value?: unknown;
+            type?: "show" | "hide" | "setValue" | "trigger";
             targetElementId?: string;
         }>, "many">;
         onFalse: z.ZodOptional<z.ZodArray<z.ZodObject<{
@@ -4843,12 +4843,12 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             targetElementId: z.ZodString;
             value: z.ZodOptional<z.ZodUnknown>;
         }, "strip", z.ZodTypeAny, {
-            type?: "show" | "hide" | "trigger" | "setValue";
             value?: unknown;
+            type?: "show" | "hide" | "setValue" | "trigger";
             targetElementId?: string;
         }, {
-            type?: "show" | "hide" | "trigger" | "setValue";
             value?: unknown;
+            type?: "show" | "hide" | "setValue" | "trigger";
             targetElementId?: string;
         }>, "many">>;
         conditionalRules: z.ZodOptional<z.ZodArray<z.ZodObject<{
@@ -4859,13 +4859,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 sourceProperty: z.ZodString;
                 value: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean]>>;
             }, "strip", z.ZodTypeAny, {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             }, {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             }>;
@@ -4875,60 +4875,60 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 targetProperty: z.ZodOptional<z.ZodString>;
                 value: z.ZodOptional<z.ZodUnknown>;
             }, "strip", z.ZodTypeAny, {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
                 targetElementId?: string;
                 targetProperty?: string;
             }, {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
                 targetElementId?: string;
                 targetProperty?: string;
             }>, "many">;
         }, "strip", z.ZodTypeAny, {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }, {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }>, "many">>;
     }, "strip", z.ZodTypeAny, {
         conditionalRules?: {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }[];
         conditions?: {
             value?: string | number | boolean;
@@ -4938,30 +4938,30 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }[];
         logic?: "and" | "or";
         onTrue?: {
-            type?: "show" | "hide" | "trigger" | "setValue";
             value?: unknown;
+            type?: "show" | "hide" | "setValue" | "trigger";
             targetElementId?: string;
         }[];
         onFalse?: {
-            type?: "show" | "hide" | "trigger" | "setValue";
             value?: unknown;
+            type?: "show" | "hide" | "setValue" | "trigger";
             targetElementId?: string;
         }[];
     }, {
         conditionalRules?: {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }[];
         conditions?: {
             value?: string | number | boolean;
@@ -4971,13 +4971,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }[];
         logic?: "and" | "or";
         onTrue?: {
-            type?: "show" | "hide" | "trigger" | "setValue";
             value?: unknown;
+            type?: "show" | "hide" | "setValue" | "trigger";
             targetElementId?: string;
         }[];
         onFalse?: {
-            type?: "show" | "hide" | "trigger" | "setValue";
             value?: unknown;
+            type?: "show" | "hide" | "setValue" | "trigger";
             targetElementId?: string;
         }[];
     }>;
@@ -4986,18 +4986,18 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
     config?: {
         conditionalRules?: {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }[];
         conditions?: {
             value?: string | number | boolean;
@@ -5007,13 +5007,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }[];
         logic?: "and" | "or";
         onTrue?: {
-            type?: "show" | "hide" | "trigger" | "setValue";
             value?: unknown;
+            type?: "show" | "hide" | "setValue" | "trigger";
             targetElementId?: string;
         }[];
         onFalse?: {
-            type?: "show" | "hide" | "trigger" | "setValue";
             value?: unknown;
+            type?: "show" | "hide" | "setValue" | "trigger";
             targetElementId?: string;
         }[];
     };
@@ -5022,18 +5022,18 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
     config?: {
         conditionalRules?: {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }[];
         conditions?: {
             value?: string | number | boolean;
@@ -5043,13 +5043,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }[];
         logic?: "and" | "or";
         onTrue?: {
-            type?: "show" | "hide" | "trigger" | "setValue";
             value?: unknown;
+            type?: "show" | "hide" | "setValue" | "trigger";
             targetElementId?: string;
         }[];
         onFalse?: {
-            type?: "show" | "hide" | "trigger" | "setValue";
             value?: unknown;
+            type?: "show" | "hide" | "setValue" | "trigger";
             targetElementId?: string;
         }[];
     };
@@ -5069,14 +5069,14 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             type?: "element" | "external" | "analytics";
             url?: string;
             data?: Record<string, unknown>;
-            event?: string;
             elementId?: string;
+            event?: string;
         }, {
             type?: "element" | "external" | "analytics";
             url?: string;
             data?: Record<string, unknown>;
-            event?: string;
             elementId?: string;
+            event?: string;
         }>;
         style: z.ZodOptional<z.ZodObject<{
             backgroundColor: z.ZodOptional<z.ZodString>;
@@ -5092,30 +5092,30 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             width: z.ZodOptional<z.ZodUnion<[z.ZodNumber, z.ZodEnum<["auto", "full"]>]>>;
             height: z.ZodOptional<z.ZodUnion<[z.ZodNumber, z.ZodEnum<["auto", "full"]>]>>;
         }, "strip", z.ZodTypeAny, {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         }, {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         }>>;
         conditionalRules: z.ZodOptional<z.ZodArray<z.ZodObject<{
@@ -5126,13 +5126,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 sourceProperty: z.ZodString;
                 value: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean]>>;
             }, "strip", z.ZodTypeAny, {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             }, {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             }>;
@@ -5142,211 +5142,211 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 targetProperty: z.ZodOptional<z.ZodString>;
                 value: z.ZodOptional<z.ZodUnknown>;
             }, "strip", z.ZodTypeAny, {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
                 targetElementId?: string;
                 targetProperty?: string;
             }, {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
                 targetElementId?: string;
                 targetProperty?: string;
             }>, "many">;
         }, "strip", z.ZodTypeAny, {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }, {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }>, "many">>;
     }, "strip", z.ZodTypeAny, {
         style?: {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         };
-        label?: string;
         target?: {
             type?: "element" | "external" | "analytics";
             url?: string;
             data?: Record<string, unknown>;
-            event?: string;
             elementId?: string;
+            event?: string;
         };
-        delay?: number;
+        label?: string;
         conditionalRules?: {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }[];
         triggerOn?: "timer" | "click" | "focus" | "hover";
+        delay?: number;
     }, {
         style?: {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         };
-        label?: string;
         target?: {
             type?: "element" | "external" | "analytics";
             url?: string;
             data?: Record<string, unknown>;
-            event?: string;
             elementId?: string;
+            event?: string;
         };
-        delay?: number;
+        label?: string;
         conditionalRules?: {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }[];
         triggerOn?: "timer" | "click" | "focus" | "hover";
+        delay?: number;
     }>;
 }, "strip", z.ZodTypeAny, {
     type?: "pingTrigger";
     config?: {
         style?: {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         };
-        label?: string;
         target?: {
             type?: "element" | "external" | "analytics";
             url?: string;
             data?: Record<string, unknown>;
-            event?: string;
             elementId?: string;
+            event?: string;
         };
-        delay?: number;
+        label?: string;
         conditionalRules?: {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }[];
         triggerOn?: "timer" | "click" | "focus" | "hover";
+        delay?: number;
     };
 }, {
     type?: "pingTrigger";
     config?: {
         style?: {
-            height?: number | "full" | "auto";
-            width?: number | "full" | "auto";
-            fontSize?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
-            fontWeight?: "bold" | "normal" | "medium" | "semibold";
-            padding?: number;
+            height?: number | "auto" | "full";
+            width?: number | "auto" | "full";
+            fontSize?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
+            fontWeight?: "bold" | "medium" | "normal" | "semibold";
             backgroundColor?: string;
-            textAlign?: "center" | "right" | "left";
+            textAlign?: "center" | "left" | "right";
             borderColor?: string;
             borderRadius?: number;
             borderWidth?: number;
             margin?: number;
+            padding?: number;
             textColor?: string;
         };
-        label?: string;
         target?: {
             type?: "element" | "external" | "analytics";
             url?: string;
             data?: Record<string, unknown>;
-            event?: string;
             elementId?: string;
+            event?: string;
         };
-        delay?: number;
+        label?: string;
         conditionalRules?: {
             id?: string;
-            actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
-                value?: unknown;
-                targetElementId?: string;
-                targetProperty?: string;
-            }[];
             condition?: {
-                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
+            actions?: {
+                value?: unknown;
+                type?: "show" | "hide" | "setValue" | "setStyle" | "trigger";
+                targetElementId?: string;
+                targetProperty?: string;
+            }[];
         }[];
         triggerOn?: "timer" | "click" | "focus" | "hover";
+        delay?: number;
     };
 }>]>;
 export declare const ElementPresetSchema: z.ZodObject<{
@@ -5358,16 +5358,16 @@ export declare const ElementPresetSchema: z.ZodObject<{
     tags: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
     popularity: z.ZodDefault<z.ZodNumber>;
 }, "strip", z.ZodTypeAny, {
-    name?: string;
     id?: string;
+    name?: string;
     description?: string;
     config?: unknown;
     elementType?: "button" | "textBlock" | "imageBlock" | "divider" | "stack" | "choiceSelect" | "textInput" | "ratingStars" | "countdownTimer" | "progressBar" | "conditionGate" | "pingTrigger";
     tags?: string[];
     popularity?: number;
 }, {
-    name?: string;
     id?: string;
+    name?: string;
     description?: string;
     config?: unknown;
     elementType?: "button" | "textBlock" | "imageBlock" | "divider" | "stack" | "choiceSelect" | "textInput" | "ratingStars" | "countdownTimer" | "progressBar" | "conditionGate" | "pingTrigger";
@@ -5393,16 +5393,16 @@ export declare const ElementSchema: z.ZodObject<{
         tags: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
         popularity: z.ZodDefault<z.ZodNumber>;
     }, "strip", z.ZodTypeAny, {
-        name?: string;
         id?: string;
+        name?: string;
         description?: string;
         config?: unknown;
         elementType?: "button" | "textBlock" | "imageBlock" | "divider" | "stack" | "choiceSelect" | "textInput" | "ratingStars" | "countdownTimer" | "progressBar" | "conditionGate" | "pingTrigger";
         tags?: string[];
         popularity?: number;
     }, {
-        name?: string;
         id?: string;
+        name?: string;
         description?: string;
         config?: unknown;
         elementType?: "button" | "textBlock" | "imageBlock" | "divider" | "stack" | "choiceSelect" | "textInput" | "ratingStars" | "countdownTimer" | "progressBar" | "conditionGate" | "pingTrigger";
@@ -5416,18 +5416,20 @@ export declare const ElementSchema: z.ZodObject<{
     createdAt: z.ZodDate;
     updatedAt: z.ZodDate;
 }, "strip", z.ZodTypeAny, {
+    id?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
     icon?: string;
     name?: string;
     type?: "button" | "textBlock" | "imageBlock" | "divider" | "stack" | "choiceSelect" | "textInput" | "ratingStars" | "countdownTimer" | "progressBar" | "conditionGate" | "pingTrigger";
-    id?: string;
     version?: number;
     description?: string;
     category?: "Display & Layout" | "Inputs & Choices" | "Logic & Dynamics";
     configSchema?: string;
     defaultConfig?: unknown;
     presets?: {
-        name?: string;
         id?: string;
+        name?: string;
         description?: string;
         config?: unknown;
         elementType?: "button" | "textBlock" | "imageBlock" | "divider" | "stack" | "choiceSelect" | "textInput" | "ratingStars" | "countdownTimer" | "progressBar" | "conditionGate" | "pingTrigger";
@@ -5438,21 +5440,21 @@ export declare const ElementSchema: z.ZodObject<{
     isDeprecated?: boolean;
     deprecationMessage?: string;
     usageCount?: number;
-    createdAt?: Date;
-    updatedAt?: Date;
 }, {
+    id?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
     icon?: string;
     name?: string;
     type?: "button" | "textBlock" | "imageBlock" | "divider" | "stack" | "choiceSelect" | "textInput" | "ratingStars" | "countdownTimer" | "progressBar" | "conditionGate" | "pingTrigger";
-    id?: string;
     version?: number;
     description?: string;
     category?: "Display & Layout" | "Inputs & Choices" | "Logic & Dynamics";
     configSchema?: string;
     defaultConfig?: unknown;
     presets?: {
-        name?: string;
         id?: string;
+        name?: string;
         description?: string;
         config?: unknown;
         elementType?: "button" | "textBlock" | "imageBlock" | "divider" | "stack" | "choiceSelect" | "textInput" | "ratingStars" | "countdownTimer" | "progressBar" | "conditionGate" | "pingTrigger";
@@ -5463,8 +5465,6 @@ export declare const ElementSchema: z.ZodObject<{
     isDeprecated?: boolean;
     deprecationMessage?: string;
     usageCount?: number;
-    createdAt?: Date;
-    updatedAt?: Date;
 }>;
 export type Element = z.infer<typeof ElementSchema>;
 export type ElementConfig = z.infer<typeof ElementConfigSchema>;
@@ -5495,32 +5495,32 @@ export declare const ElementInstanceSchema: z.ZodObject<{
     isLocked: z.ZodDefault<z.ZodBoolean>;
 }, "strip", z.ZodTypeAny, {
     id?: string;
+    order?: number;
     position?: {
         height?: number;
         width?: number;
         x?: number;
         y?: number;
     };
-    order?: number;
+    elementId?: string;
+    config?: unknown;
+    parentId?: string;
     isVisible?: boolean;
     isLocked?: boolean;
-    config?: unknown;
-    elementId?: string;
-    parentId?: string;
 }, {
     id?: string;
+    order?: number;
     position?: {
         height?: number;
         width?: number;
         x?: number;
         y?: number;
     };
-    order?: number;
+    elementId?: string;
+    config?: unknown;
+    parentId?: string;
     isVisible?: boolean;
     isLocked?: boolean;
-    config?: unknown;
-    elementId?: string;
-    parentId?: string;
 }>;
 export type ElementInstance = z.infer<typeof ElementInstanceSchema>;
 export declare const parseElementId: (elementId: ElementId) => {

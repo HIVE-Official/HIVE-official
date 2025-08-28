@@ -18,9 +18,9 @@ import {
   Target,
   Award
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Button } from '../hive-button';
-import { Badge } from '../../ui/badge';
+import { Badge } from '../../atomic/atoms/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '../../ui/avatar';
 import { Progress } from '../hive-progress';
 import { Switch } from '../hive-switch';
@@ -274,7 +274,7 @@ export function HiveDashboard({
             />
           </div>
           
-          <Button variant="outline" size="sm" onClick={onRefresh}>
+          <Button variant="secondary" size="sm" onClick={onRefresh}>
             <Activity className="h-4 w-4 mr-2" />
             Refresh
           </Button>
@@ -535,7 +535,7 @@ export function HiveDashboard({
               
               <div className="pt-2 border-t border-purple-200">
                 <Button 
-                  variant="outline" 
+                  variant="secondary" 
                   size="sm" 
                   className="w-full"
                   onClick={() => onNavigate?.('/analytics')}

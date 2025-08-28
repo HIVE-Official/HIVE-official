@@ -24,8 +24,8 @@ import {
   Trash2
 } from 'lucide-react';
 import { Button } from '../../atomic/atoms/button-enhanced';
-import { Badge } from '../../ui/badge';
-import { Card, CardContent } from '../../ui/card';
+import { Badge } from '../../atomic/atoms/badge';
+import { Card, CardContent } from '../../atomic/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '../../ui/avatar';
 import { cn } from '../lib/utils';

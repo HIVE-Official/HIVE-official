@@ -376,7 +376,7 @@ const HeadingHierarchyShowcase = () => {
             {headingHierarchy.map((heading, index) => (
               <div key={index} className="flex items-start gap-6">
                 <div className="w-20 shrink-0">
-                  <Badge variant="outline" className="text-xs">
+                  <Badge variant="secondary" className="text-xs">
                     {heading.level}
                   </Badge>
                 </div>
@@ -413,7 +413,7 @@ const TextSizeShowcase = () => {
             {textSizeScale.map((textSize, index) => (
               <div key={index} className="flex items-start gap-6">
                 <div className="w-24 shrink-0">
-                  <Badge variant="outline" className="text-xs">
+                  <Badge variant="secondary" className="text-xs">
                     {textSize.size}
                   </Badge>
                 </div>
@@ -450,7 +450,7 @@ const FontWeightShowcase = () => {
             {fontWeights.map((weight, index) => (
               <div key={index} className="space-y-2">
                 <div className="flex items-center gap-3">
-                  <Badge variant="outline" className="text-xs">
+                  <Badge variant="secondary" className="text-xs">
                     {weight.weight}
                   </Badge>
                   <span className="text-sm text-[var(--hive-text-secondary)]">

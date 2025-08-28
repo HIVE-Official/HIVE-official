@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '../button';
-import { Card, CardContent, CardHeader, CardTitle } from '../card';
+import { Card, CardContent, CardHeader } from '../card';
 import { ExternalLink, Copy, CheckCircle, AlertTriangle, Settings } from 'lucide-react';
 
 export const FirebaseSetupGuide: React.FC = () => {
@@ -35,7 +35,7 @@ NEXT_PUBLIC_FIREBASE_APP_ID=1:123456789012:web:abcdefghijklmnop`;
             <div className="mx-auto w-16 h-16 bg-surface-02 rounded-full flex items-center justify-center">
               <Settings className="w-8 h-8 text-accent" />
             </div>
-            <CardTitle className="text-2xl font-display">Email System Setup Required</CardTitle>
+            <h2 className="text-2xl font-semibold">Email System Setup Required</h2>
             <p className="text-muted-foreground">
               The magic link email system needs Firebase configuration to work in production.
             </p>
@@ -74,7 +74,7 @@ NEXT_PUBLIC_FIREBASE_APP_ID=1:123456789012:web:abcdefghijklmnop`;
                 </p>
                 <div className="pl-8">
                   <Button
-                    variant="outline"
+                    variant="secondary"
                     size="sm"
                     onClick={() => window.open('https://console.firebase.google.com', '_blank')}
                     className="text-xs"
@@ -132,7 +132,7 @@ NEXT_PUBLIC_FIREBASE_APP_ID=1:123456789012:web:abcdefghijklmnop`;
                       <code>{firebaseConfig}</code>
                     </pre>
                     <Button
-                      variant="outline"
+                      variant="secondary"
                       size="sm"
                       onClick={() => copyToClipboard(firebaseConfig, 4)}
                       className="absolute top-2 right-2 h-8 px-2"

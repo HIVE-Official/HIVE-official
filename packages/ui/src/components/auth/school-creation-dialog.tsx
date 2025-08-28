@@ -92,7 +92,7 @@ export const SchoolCreationDialog: React.FC<SchoolCreationDialogProps> = ({
         >
           <Button
             type="button"
-            variant="outline"
+            variant="secondary"
             onClick={onClose}
             className="border-gold/50 hover:border-gold"
           >

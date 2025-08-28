@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { Button } from '../../ui/button';
+import { Button } from '../../atomic/atoms/button-enhanced';
 import { Avatar } from '../index';
 import { HiveBadge as Badge } from '../index';
 import { 
@@ -406,7 +406,7 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
       {unreadCount > 0 && (
         <div className="p-3 border-b border-[var(--hive-border-subtle)]">
           <Button
-            variant="outline"
+            variant="secondary"
             size="sm"
             onClick={onMarkAllAsRead}
             className="w-full"

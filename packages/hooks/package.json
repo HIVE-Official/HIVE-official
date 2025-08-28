@@ -10,6 +10,7 @@
     "typecheck": "npx tsc --noEmit"
   },
   "dependencies": {
+    "@hive/api-client": "workspace:*",
     "@hive/auth-logic": "workspace:*",
     "@hive/core": "workspace:*"
   },

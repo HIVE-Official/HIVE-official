@@ -1,8 +1,8 @@
 import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
 declare const spacerVariants: (props?: {
-    size?: "default" | "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl";
-    direction?: "horizontal" | "vertical" | "both";
+    size?: "default" | "sm" | "md" | "lg" | "xl" | "xs" | "2xl" | "3xl";
+    direction?: "both" | "horizontal" | "vertical";
 } & import("class-variance-authority/types").ClassProp) => string;
 declare const containerVariants: (props?: {
     size?: "sm" | "md" | "lg" | "xl" | "2xl" | "full";
@@ -11,15 +11,15 @@ declare const containerVariants: (props?: {
 } & import("class-variance-authority/types").ClassProp) => string;
 declare const stackVariants: (props?: {
     direction?: "horizontal" | "vertical";
-    spacing?: "default" | "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "none" | "3xl";
-    align?: "center" | "end" | "start" | "baseline" | "stretch";
-    justify?: "center" | "end" | "start" | "between" | "around" | "evenly";
+    spacing?: "default" | "sm" | "md" | "lg" | "xl" | "none" | "xs" | "2xl" | "3xl";
+    align?: "end" | "center" | "baseline" | "start" | "stretch";
+    justify?: "end" | "center" | "start" | "between" | "around" | "evenly";
     wrap?: boolean;
 } & import("class-variance-authority/types").ClassProp) => string;
 declare const separatorVariants: (props?: {
     orientation?: "horizontal" | "vertical";
-    variant?: "default" | "muted" | "brand" | "strong";
-    size?: "default" | "thin" | "thick";
+    variant?: "default" | "strong" | "muted" | "brand";
+    size?: "default" | "thick" | "thin";
 } & import("class-variance-authority/types").ClassProp) => string;
 export interface SpacerProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof spacerVariants> {
 }

@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { NavigationHeader } from './navigation-header';
 import { NavigationSidebar } from './navigation-sidebar';
-import { cn } from '../../lib/utils';
+import { cn } from '../lib/utils';
 
 // HIVE Platform Sections
 export type HivePlatformSection = 'profile' | 'spaces' | 'feed' | 'hivelab' | 'rituals';

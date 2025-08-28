@@ -79,7 +79,7 @@ export const CheckEmailInfo = ({
           <div className="space-y-3 pt-2">
             <Button
               onClick={handleResend}
-              variant="outline"
+              variant="secondary"
               disabled={!canResend || isResending}
               className="w-full"
             >

@@ -454,7 +454,7 @@ function PersonalInformation({ state, dispatch }: {
       </Card>
 
       <div className="flex justify-between">
-        <Button variant="outline" onClick={() => dispatch({ type: 'PREVIOUS_STEP' })}>
+        <Button variant="secondary" onClick={() => dispatch({ type: 'PREVIOUS_STEP' })}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back
         </Button>
@@ -605,7 +605,7 @@ function AcademicInformation({ state, dispatch }: {
       </Card>
 
       <div className="flex justify-between">
-        <Button variant="outline" onClick={() => dispatch({ type: 'PREVIOUS_STEP' })}>
+        <Button variant="secondary" onClick={() => dispatch({ type: 'PREVIOUS_STEP' })}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back
         </Button>
@@ -743,7 +743,7 @@ function CampusLifePreferences({ state, dispatch }: {
       </Card>
 
       <div className="flex justify-between">
-        <Button variant="outline" onClick={() => dispatch({ type: 'PREVIOUS_STEP' })}>
+        <Button variant="secondary" onClick={() => dispatch({ type: 'PREVIOUS_STEP' })}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back
         </Button>
@@ -890,7 +890,7 @@ function SocialPreferencesStep({ state, dispatch }: {
       </Card>
 
       <div className="flex justify-between">
-        <Button variant="outline" onClick={() => dispatch({ type: 'PREVIOUS_STEP' })}>
+        <Button variant="secondary" onClick={() => dispatch({ type: 'PREVIOUS_STEP' })}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back
         </Button>
@@ -1022,7 +1022,7 @@ function AccessibilityNeeds({ state, dispatch }: {
       </Card>
 
       <div className="flex justify-between">
-        <Button variant="outline" onClick={() => dispatch({ type: 'PREVIOUS_STEP' })}>
+        <Button variant="secondary" onClick={() => dispatch({ type: 'PREVIOUS_STEP' })}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back
         </Button>
@@ -1151,7 +1151,7 @@ function InternationalStudentNeeds({ state, dispatch }: {
       </Card>
 
       <div className="flex justify-between">
-        <Button variant="outline" onClick={() => dispatch({ type: 'PREVIOUS_STEP' })}>
+        <Button variant="secondary" onClick={() => dispatch({ type: 'PREVIOUS_STEP' })}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back
         </Button>
@@ -1311,7 +1311,7 @@ function OnboardingCompletion({ state, dispatch }: {
       )}
 
       <div className="flex justify-between">
-        <Button variant="outline" onClick={() => dispatch({ type: 'PREVIOUS_STEP' })}>
+        <Button variant="secondary" onClick={() => dispatch({ type: 'PREVIOUS_STEP' })}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back
         </Button>
@@ -1372,7 +1372,7 @@ function OnboardingFlow() {
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center justify-between mb-3">
             <h1 className="text-lg font-semibold text-gray-900">HIVE Onboarding</h1>
-            <Badge variant="outline">
+            <Badge variant="secondary">
               Step {currentStepIndex + 1} of {steps.length}
             </Badge>
           </div>

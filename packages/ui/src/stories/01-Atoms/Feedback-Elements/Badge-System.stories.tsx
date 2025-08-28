@@ -491,7 +491,7 @@ const BadgeSizesShowcase = () => {
                 </div>
                 
                 <div className="flex items-center gap-4">
-                  <Badge variant="default" size={size.size as any}>
+                  <Badge variant="primary" size={size.size as any}>
                     {size.example}
                   </Badge>
                   <Badge variant="primary" size={size.size as any}>
@@ -1017,7 +1017,7 @@ export const AccessibilityFeatures: Story = {
 export const AllVariants: Story = {
   render: () => (
     <div className="flex flex-wrap gap-2">
-      <Badge variant="default">Default</Badge>
+      <Badge variant="primary">Default</Badge>
       <Badge variant="primary">Primary</Badge>
       <Badge variant="secondary">Secondary</Badge>
       <Badge variant="success">Success</Badge>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
 declare const hiveCardVariants: (props?: {
-    variant?: "default" | "selected" | "student" | "builder" | "online" | "minimal" | "space" | "elevated" | "announcement" | "post" | "tool" | "gold-accent" | "gold-featured" | "gold-premium" | "building" | "studying" | "clickable" | "selectable" | "featured-post";
+    variant?: "student" | "default" | "space" | "minimal" | "selected" | "builder" | "tool" | "online" | "post" | "announcement" | "elevated" | "gold-accent" | "gold-featured" | "gold-premium" | "building" | "studying" | "clickable" | "selectable" | "featured-post";
     size?: "default" | "sm" | "lg" | "xl" | "compact";
     rounded?: "default" | "sm" | "lg" | "full";
     shadow?: "default" | "sm" | "lg" | "xl" | "none";
@@ -27,5 +27,4 @@ declare const HiveCardDescription: React.ForwardRefExoticComponent<React.HTMLAtt
 declare const HiveCardContent: React.ForwardRefExoticComponent<React.HTMLAttributes<HTMLDivElement> & React.RefAttributes<HTMLDivElement>>;
 declare const HiveCardFooter: React.ForwardRefExoticComponent<React.HTMLAttributes<HTMLDivElement> & React.RefAttributes<HTMLDivElement>>;
 export { HiveCard, hiveCardVariants, HiveCardHeader, HiveCardTitle, HiveCardDescription, HiveCardContent, HiveCardFooter };
-export { HiveCard as Card, hiveCardVariants as cardVariants, HiveCardHeader as CardHeader, HiveCardTitle as CardTitle, HiveCardDescription as CardDescription, HiveCardContent as CardContent, HiveCardFooter as CardFooter };
 //# sourceMappingURL=hive-card.d.ts.map

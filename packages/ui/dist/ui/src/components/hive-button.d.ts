@@ -1,8 +1,8 @@
 import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
 declare const hiveButtonVariants: (props?: {
-    variant?: "default" | "primary" | "secondary" | "success" | "warning" | "outline" | "ghost" | "destructive" | "glow" | "link" | "minimal" | "premium" | "outline-subtle" | "ghost-gold" | "chip" | "chip-platinum" | "chip-gold" | "chip-glass";
-    size?: "default" | "xs" | "sm" | "md" | "lg" | "xl" | "icon" | "chip" | "icon-sm" | "icon-lg" | "chip-xs" | "chip-sm" | "chip-lg";
+    variant?: "link" | "primary" | "secondary" | "ghost" | "destructive" | "outline" | "default" | "success" | "minimal" | "warning" | "glow" | "premium" | "outline-subtle" | "ghost-gold" | "chip" | "chip-platinum" | "chip-gold" | "chip-glass";
+    size?: "default" | "sm" | "md" | "lg" | "xl" | "icon" | "icon-sm" | "icon-lg" | "xs" | "chip" | "chip-xs" | "chip-sm" | "chip-lg";
 } & import("class-variance-authority/types").ClassProp) => string;
 export interface HiveButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof hiveButtonVariants> {
     asChild?: boolean;

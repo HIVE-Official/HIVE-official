@@ -1,243 +1,82 @@
 import type { School } from '../domain/school';
-import { Timestamp } from 'firebase/firestore';
-
-const now = Timestamp.now();
 
 export const SCHOOLS: School[] = [
   {
     id: 'buffalo',
     name: 'University at Buffalo',
     domain: 'buffalo.edu',
-    status: 'open',
-    studentsUntilOpen: 0,
+    status: 'active',
     waitlistCount: 0,
-    city: 'Buffalo',
-    state: 'NY',
-    country: 'US',
-    timezone: 'America/New_York',
-    majors: [],
-    academicCalendar: 'semester',
-    allowsAutoJoin: true,
-    requiresVerification: false,
-    autoSpacesEnabled: true,
-    hasDormitories: true,
-    dormitoryList: [],
-    createdAt: now,
-    updatedAt: now
   },
   {
     id: 'buffalostate',
     name: 'Buffalo State University',
     domain: 'buffalostate.edu',
     status: 'waitlist',
-    studentsUntilOpen: 350,
-    waitlistCount: 0,
-    city: 'Buffalo',
-    state: 'NY',
-    country: 'US',
-    timezone: 'America/New_York',
-    majors: [],
-    academicCalendar: 'semester',
-    allowsAutoJoin: true,
-    requiresVerification: false,
-    autoSpacesEnabled: true,
-    hasDormitories: true,
-    dormitoryList: [],
-    createdAt: now,
-    updatedAt: now
+    waitlistCount: 350,
   },
   {
     id: 'binghamton',
     name: 'Binghamton University',
     domain: 'binghamton.edu',
     status: 'waitlist',
-    studentsUntilOpen: 350,
-    waitlistCount: 0,
-    city: 'Binghamton',
-    state: 'NY',
-    country: 'US',
-    timezone: 'America/New_York',
-    majors: [],
-    academicCalendar: 'semester',
-    allowsAutoJoin: true,
-    requiresVerification: false,
-    autoSpacesEnabled: true,
-    hasDormitories: true,
-    dormitoryList: [],
-    createdAt: now,
-    updatedAt: now
+    waitlistCount: 350,
   },
   {
     id: 'stonybrook',
     name: 'Stony Brook University',
     domain: 'stonybrook.edu',
     status: 'waitlist',
-    studentsUntilOpen: 350,
-    waitlistCount: 0,
-    city: 'Stony Brook',
-    state: 'NY',
-    country: 'US',
-    timezone: 'America/New_York',
-    majors: [],
-    academicCalendar: 'semester',
-    allowsAutoJoin: true,
-    requiresVerification: false,
-    autoSpacesEnabled: true,
-    hasDormitories: true,
-    dormitoryList: [],
-    createdAt: now,
-    updatedAt: now
+    waitlistCount: 350,
   },
   {
     id: 'sbu',
     name: 'St. Bonaventure University',
     domain: 'sbu.edu',
     status: 'waitlist',
-    studentsUntilOpen: 350,
-    waitlistCount: 0,
-    city: 'St. Bonaventure',
-    state: 'NY',
-    country: 'US',
-    timezone: 'America/New_York',
-    majors: [],
-    academicCalendar: 'semester',
-    allowsAutoJoin: true,
-    requiresVerification: false,
-    autoSpacesEnabled: true,
-    hasDormitories: true,
-    dormitoryList: [],
-    createdAt: now,
-    updatedAt: now
+    waitlistCount: 350,
   },
   {
     id: 'cornell',
     name: 'Cornell University',
     domain: 'cornell.edu',
     status: 'waitlist',
-    studentsUntilOpen: 350,
-    waitlistCount: 0,
-    city: 'Ithaca',
-    state: 'NY',
-    country: 'US',
-    timezone: 'America/New_York',
-    majors: [],
-    academicCalendar: 'semester',
-    allowsAutoJoin: true,
-    requiresVerification: false,
-    autoSpacesEnabled: true,
-    hasDormitories: true,
-    dormitoryList: [],
-    createdAt: now,
-    updatedAt: now
+    waitlistCount: 350,
   },
   {
     id: 'syracuse',
     name: 'Syracuse University',
     domain: 'syracuse.edu',
     status: 'waitlist',
-    studentsUntilOpen: 350,
-    waitlistCount: 0,
-    city: 'Syracuse',
-    state: 'NY',
-    country: 'US',
-    timezone: 'America/New_York',
-    majors: [],
-    academicCalendar: 'semester',
-    allowsAutoJoin: true,
-    requiresVerification: false,
-    autoSpacesEnabled: true,
-    hasDormitories: true,
-    dormitoryList: [],
-    createdAt: now,
-    updatedAt: now
+    waitlistCount: 350,
   },
   {
     id: 'rit',
     name: 'Rochester Institute of Technology',
     domain: 'rit.edu',
     status: 'waitlist',
-    studentsUntilOpen: 350,
-    waitlistCount: 0,
-    city: 'Rochester',
-    state: 'NY',
-    country: 'US',
-    timezone: 'America/New_York',
-    majors: [],
-    academicCalendar: 'semester',
-    allowsAutoJoin: true,
-    requiresVerification: false,
-    autoSpacesEnabled: true,
-    hasDormitories: true,
-    dormitoryList: [],
-    createdAt: now,
-    updatedAt: now
+    waitlistCount: 350,
   },
   {
     id: 'rochester',
     name: 'University of Rochester',
     domain: 'rochester.edu',
     status: 'waitlist',
-    studentsUntilOpen: 350,
-    waitlistCount: 0,
-    city: 'Rochester',
-    state: 'NY',
-    country: 'US',
-    timezone: 'America/New_York',
-    majors: [],
-    academicCalendar: 'semester',
-    allowsAutoJoin: true,
-    requiresVerification: false,
-    autoSpacesEnabled: true,
-    hasDormitories: true,
-    dormitoryList: [],
-    createdAt: now,
-    updatedAt: now
+    waitlistCount: 350,
   },
   {
-    id: 'albany',
-    name: 'University at Albany',
-    domain: 'albany.edu',
+    id: 'rpi',
+    name: 'Rensselaer Polytechnic Institute',
+    domain: 'rpi.edu',
     status: 'waitlist',
-    studentsUntilOpen: 350,
-    waitlistCount: 0,
-    city: 'Albany',
-    state: 'NY',
-    country: 'US',
-    timezone: 'America/New_York',
-    majors: [],
-    academicCalendar: 'semester',
-    allowsAutoJoin: true,
-    requiresVerification: false,
-    autoSpacesEnabled: true,
-    hasDormitories: true,
-    dormitoryList: [],
-    createdAt: now,
-    updatedAt: now
+    waitlistCount: 350,
   }
 ];
 
-export const ALLOWED_SCHOOL_DOMAINS = SCHOOLS.reduce((acc, school) => {
-  acc[school.domain] = school.name;
-  return acc;
-}, {} as Record<string, string>);
-
-export const getSchoolByDomain = (domain: string): School | undefined => {
+export const findSchoolByDomain = (domain: string): School | undefined => {
   return SCHOOLS.find(school => school.domain === domain);
 };
 
-export const getSchoolById = (id: string): School | undefined => {
+export const findSchoolById = (id: string): School | undefined => {
   return SCHOOLS.find(school => school.id === id);
 };
-
-export const isDomainAllowed = (email: string): boolean => {
-  const domain = email.split('@')[1];
-  return domain in ALLOWED_SCHOOL_DOMAINS;
-};
-
-export const searchSchools = (query: string): School[] => {
-  const lowerQuery = query.toLowerCase();
-  return SCHOOLS.filter(school => 
-    school.name.toLowerCase().includes(lowerQuery) ||
-    school.domain.toLowerCase().includes(lowerQuery)
-  );
-}; 

@@ -118,7 +118,7 @@ export const AllVariants: Story = {
             <p className="text-white/60">Standard header with backdrop blur and border</p>
           </div>
           
-          <AppHeader.Root variant="default">
+          <AppHeader.Root variant="primary">
             <AppHeader.Content>
               <AppHeader.Logo>
                 <h1 className="text-xl font-bold text-white">HIVE</h1>
@@ -340,7 +340,7 @@ export const NotificationStates: Story = {
 export const ResponsiveHeader: Story = {
   render: () => (
     <div className="min-h-screen bg-black">
-      <AppHeader.Root variant="default">
+      <AppHeader.Root variant="primary">
         <AppHeader.Content>
           <AppHeader.Logo>
             <h1 className="text-xl font-bold text-white">HIVE</h1>

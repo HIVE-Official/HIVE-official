@@ -1,9 +1,9 @@
 import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
 declare const enhancedCardVariants: (props?: {
-    variant?: "pulse" | "neon" | "signature" | "bulletin" | "mesh";
+    variant?: "pulse" | "signature" | "neon" | "bulletin" | "mesh";
     size?: "sm" | "md" | "lg" | "xl";
-    elevation?: "flat" | "high" | "low" | "medium" | "dramatic";
+    elevation?: "flat" | "medium" | "high" | "low" | "dramatic";
 } & import("class-variance-authority/types").ClassProp) => string;
 export interface EnhancedCardProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof enhancedCardVariants> {
     asChild?: boolean;

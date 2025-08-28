@@ -4,11 +4,13 @@ declare let authAdmin: admin.auth.Auth;
 export { dbAdmin, authAdmin };
 export declare const db: admin.firestore.Firestore;
 export declare const auth: import("firebase-admin/lib/auth/auth").Auth;
+export declare const adminFirestore: admin.firestore.Firestore;
+export declare const firebaseAuth: import("firebase-admin/lib/auth/auth").Auth;
 export declare const isFirebaseConfigured: boolean;
 export declare const getFirestoreAdmin: () => admin.firestore.Firestore;
 export declare const getAuthAdmin: () => import("firebase-admin/lib/auth/auth").Auth;
 export declare const environmentInfo: {
-    environment: "development" | "staging" | "production";
+    environment: "production" | "development" | "staging";
     firebaseConfigured: boolean;
     projectId: string;
     credentialSource: string;

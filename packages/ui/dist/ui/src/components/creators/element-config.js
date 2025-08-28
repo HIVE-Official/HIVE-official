@@ -4,7 +4,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useCallback } from 'react';
 import { Settings, Palette, Layout, Type, Eye, EyeOff, Lock, Unlock, Copy, Trash2, ChevronDown, ChevronRight, Hash } from 'lucide-react';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 import { HiveInput } from '../hive-input';
 import { HiveTextarea } from '../hive-textarea';
 import { HiveButton } from '../hive-button';

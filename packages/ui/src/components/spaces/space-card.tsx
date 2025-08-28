@@ -258,7 +258,7 @@ export const SpaceCard: React.FC<SpaceCardProps> = ({
               exit={{ opacity: 0, y: -10 }}
             >
               <Button
-                variant="outline"
+                variant="secondary"
                 size="sm"
                 onClick={handlePrimaryAction}
                 className="w-full group"

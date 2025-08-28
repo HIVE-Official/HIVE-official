@@ -3,7 +3,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useCallback, useMemo } from 'react';
 import { HiveCard, HiveButton, HiveBadge } from '../index';
 import { Play, RotateCcw, Code, Eye, Settings, Copy, Download, Save, Share, Maximize, Minimize, Palette, Sliders, Type, Hash, ToggleLeft, ToggleRight, Upload } from 'lucide-react';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 const PropertyEditor = ({ prop, value, onChange }) => {
     const renderInput = () => {
         switch (prop.type) {

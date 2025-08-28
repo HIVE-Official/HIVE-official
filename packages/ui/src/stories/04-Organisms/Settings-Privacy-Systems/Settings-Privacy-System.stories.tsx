@@ -256,7 +256,7 @@ const ProfileSettingsTab = ({
                 <Upload className="mr-2 h-4 w-4" />
                 Upload Photo
               </Button>
-              <Button size="sm" variant="outline" className="border-gray-700 text-gray-300">
+              <Button size="sm" variant="secondary" className="border-gray-700 text-gray-300">
                 <Trash2 className="mr-2 h-4 w-4" />
                 Remove
               </Button>

@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useCallback, useMemo } from 'react';
-import { Button } from '../../ui/button';
+import { Button } from '../../atomic/atoms/button-enhanced';
 import { Avatar } from '../index';
 import { HiveBadge as Badge } from '../index';
 import { 
@@ -436,7 +436,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
                 </div>
               ))}
               <Button
-                variant="outline"
+                variant="secondary"
                 size="sm"
                 onClick={addPro}
                 className="w-full border-dashed"
@@ -472,7 +472,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
                 </div>
               ))}
               <Button
-                variant="outline"
+                variant="secondary"
                 size="sm"
                 onClick={addCon}
                 className="w-full border-dashed"
@@ -547,7 +547,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
         <div className="flex items-center justify-end space-x-3 pt-4 border-t border-[var(--hive-border-subtle)]">
           {onCancel && (
             <Button
-              variant="outline"
+              variant="secondary"
               onClick={onCancel}
               disabled={isSubmitting}
             >
@@ -1034,7 +1034,7 @@ export const ToolReviewSystem: React.FC<ToolReviewSystemProps> = ({
           )}
           {userReview && (
             <Button
-              variant="outline"
+              variant="secondary"
               onClick={() => handleEditReview(userReview.id)}
             >
               Edit Your Review

@@ -137,13 +137,13 @@ export const CompleteShowcase: Story = {
                   <Text variant="body-sm" color="gold" weight="medium">Standard Links:</Text>
                   <div className="space-y-2">
                     <div>
-                      <Link variant="default" href="https://buffalo.edu">University at Buffalo Homepage</Link>
+                      <Link variant="primary" href="https://buffalo.edu">University at Buffalo Homepage</Link>
                     </div>
                     <div>
-                      <Link variant="default" href="https://registrar.buffalo.edu">Academic Records</Link>
+                      <Link variant="primary" href="https://registrar.buffalo.edu">Academic Records</Link>
                     </div>
                     <div>
-                      <Link variant="default" href="https://buffalo.edu/campus-life">Campus Life</Link>
+                      <Link variant="primary" href="https://buffalo.edu/campus-life">Campus Life</Link>
                     </div>
                   </div>
                 </div>
@@ -152,10 +152,10 @@ export const CompleteShowcase: Story = {
                   <Text variant="body-sm" color="gold" weight="medium">With External Indicators:</Text>
                   <div className="space-y-2">
                     <div>
-                      <Link variant="default" href="https://scholar.google.com" external>Google Scholar</Link>
+                      <Link variant="primary" href="https://scholar.google.com" external>Google Scholar</Link>
                     </div>
                     <div>
-                      <Link variant="default" href="https://github.com" external>GitHub</Link>
+                      <Link variant="primary" href="https://github.com" external>GitHub</Link>
                     </div>
                   </div>
                 </div>

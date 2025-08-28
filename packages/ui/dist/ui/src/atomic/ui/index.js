@@ -38,8 +38,7 @@ export * from '../../components/surfaces/hive-tools-surface';
 export * from '../../components/auth/email-gate';
 export * from '../../components/auth/school-pick';
 export * from '../../components/auth/CheckEmailInfo';
-// Export form components - use atomic FormField
-// FormField is exported from molecules through atomic index
+// Note: FormField is exported from molecules via atomic index - avoid duplicate here
 // Export loading components
 export * from '../../components/loading-spinner';
 // Export welcome components
@@ -50,4 +49,11 @@ export * from '../../components/ErrorHandling';
 export * from '../../lib/motion';
 export * from '../../motion';
 export { HiveLogo } from '../../components/HiveLogo';
+// Export layout components
+export { AppHeader } from '../../components/AppHeader';
+export { BottomNavBar } from '../../components/BottomNavBar';
+// Export dialog component
+export * from '../../components/dialog';
+// Export typography component
+export { Typography } from '../../components/Typography';
 //# sourceMappingURL=index.js.map

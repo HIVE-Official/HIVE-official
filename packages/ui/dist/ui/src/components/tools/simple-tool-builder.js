@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';
 import { Badge } from '../../ui/badge';
 import { Button } from '../../ui/button';
 import { Text } from '../../ui/typography';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 import { Eye, Share2, Settings, CheckSquare, Clock, Users, Calendar, FileText, Zap } from 'lucide-react';
 export const UB_TOOL_TEMPLATES = [
     {

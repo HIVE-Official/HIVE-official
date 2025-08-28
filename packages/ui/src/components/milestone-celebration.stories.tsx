@@ -255,9 +255,9 @@ export const CompleteShowcase: Story = {
                         Individual academic milestones: GPA achievements, course completion, skill mastery, research participation
                       </Text>
                       <div className="flex flex-wrap gap-1">
-                        <Badge variant="outline" className="text-xs">First Dean's List</Badge>
-                        <Badge variant="outline" className="text-xs">Research Assistant</Badge>
-                        <Badge variant="outline" className="text-xs">Coding Streak</Badge>
+                        <Badge variant="secondary" className="text-xs">First Dean's List</Badge>
+                        <Badge variant="secondary" className="text-xs">Research Assistant</Badge>
+                        <Badge variant="secondary" className="text-xs">Coding Streak</Badge>
                       </div>
                     </div>
                   </div>
@@ -270,9 +270,9 @@ export const CompleteShowcase: Story = {
                         Community building milestones: space creation, member coordination, peer mentoring, collaboration
                       </Text>
                       <div className="flex flex-wrap gap-1">
-                        <Badge variant="outline" className="text-xs">Space Leader</Badge>
-                        <Badge variant="outline" className="text-xs">Mentor</Badge>
-                        <Badge variant="outline" className="text-xs">Connector</Badge>
+                        <Badge variant="secondary" className="text-xs">Space Leader</Badge>
+                        <Badge variant="secondary" className="text-xs">Mentor</Badge>
+                        <Badge variant="secondary" className="text-xs">Connector</Badge>
                       </div>
                     </div>
                   </div>
@@ -285,9 +285,9 @@ export const CompleteShowcase: Story = {
                         Habit formation milestones: study streaks, event attendance, platform engagement, goal completion
                       </Text>
                       <div className="flex flex-wrap gap-1">
-                        <Badge variant="outline" className="text-xs">30-Day Streak</Badge>
-                        <Badge variant="outline" className="text-xs">Event Regular</Badge>
-                        <Badge variant="outline" className="text-xs">Goal Crusher</Badge>
+                        <Badge variant="secondary" className="text-xs">30-Day Streak</Badge>
+                        <Badge variant="secondary" className="text-xs">Event Regular</Badge>
+                        <Badge variant="secondary" className="text-xs">Goal Crusher</Badge>
                       </div>
                     </div>
                   </div>
@@ -518,9 +518,9 @@ export const CompleteShowcase: Story = {
                       Celebrations trigger immediately upon milestone completion while students are active on campus
                     </Text>
                     <div className="flex flex-wrap gap-1">
-                      <Badge variant="outline" className="text-xs">Animated Celebration</Badge>
-                      <Badge variant="outline" className="text-xs">Social Sharing</Badge>
-                      <Badge variant="outline" className="text-xs">Feature Unlocks</Badge>
+                      <Badge variant="secondary" className="text-xs">Animated Celebration</Badge>
+                      <Badge variant="secondary" className="text-xs">Social Sharing</Badge>
+                      <Badge variant="secondary" className="text-xs">Feature Unlocks</Badge>
                     </div>
                   </div>
                 </div>
@@ -533,9 +533,9 @@ export const CompleteShowcase: Story = {
                       Share achievements with study groups, spaces, and broader UB HIVE community for recognition
                     </Text>
                     <div className="flex flex-wrap gap-1">
-                      <Badge variant="outline" className="text-xs">Space Announcements</Badge>
-                      <Badge variant="outline" className="text-xs">Peer Recognition</Badge>
-                      <Badge variant="outline" className="text-xs">Inspiration</Badge>
+                      <Badge variant="secondary" className="text-xs">Space Announcements</Badge>
+                      <Badge variant="secondary" className="text-xs">Peer Recognition</Badge>
+                      <Badge variant="secondary" className="text-xs">Inspiration</Badge>
                     </div>
                   </div>
                 </div>

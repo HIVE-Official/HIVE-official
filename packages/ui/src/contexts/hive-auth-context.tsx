@@ -300,12 +300,28 @@ export const HiveAuthProvider: React.FC<HiveAuthProviderProps> = ({ children }) 
 
       const devUser = DEV_USERS[userType];
       
-      // Create mock Firebase user
+      // Create mock Firebase user with proper token generation
       const mockFirebaseUser = {
         uid: `dev_${userType}_${Date.now()}`,
         email: devUser.email,
         emailVerified: true,
-        getIdToken: async () => `dev_token_${userType}_${Date.now()}`,
+        getIdToken: async (forceRefresh?: boolean) => {
+          // Generate a mock JWT-like token for development
+          const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
+          const payload = btoa(JSON.stringify({
+            iss: 'https://securetoken.google.com/dev-project',
+            aud: 'dev-project',
+            auth_time: Math.floor(Date.now() / 1000),
+            user_id: `dev_${userType}_${Date.now()}`,
+            sub: `dev_${userType}_${Date.now()}`,
+            iat: Math.floor(Date.now() / 1000),
+            exp: Math.floor(Date.now() / 1000) + 3600,
+            email: devUser.email,
+            email_verified: true,
+          }));
+          const signature = btoa('dev-signature');
+          return `${header}.${payload}.${signature}`;
+        },
       } as FirebaseUser;
 
       const hiveUser: HiveUser = {
@@ -313,7 +329,7 @@ export const HiveAuthProvider: React.FC<HiveAuthProviderProps> = ({ children }) 
         id: mockFirebaseUser.uid,
         uid: mockFirebaseUser.uid,
         emailVerified: true,
-        schoolId: 'test-university',
+        schoolId: 'buffalo', // Use consistent buffalo ID for development
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       };

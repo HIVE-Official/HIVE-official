@@ -38,7 +38,7 @@ import {
 } from 'lucide-react';
 import { HiveCard } from '../hive-card';
 import { HiveButton } from '../hive-button';
-import { Badge } from '../../ui/badge';
+import { Badge } from '../../atomic/atoms/badge';
 import { cn } from '../lib/utils';
 
 // Builder Portfolio Types
@@ -579,10 +579,10 @@ const ToolCard: React.FC<ToolCardProps> = ({
 
           {isOwnProfile && (
             <div className="flex items-center gap-2">
-              <HiveButton variant="outline" size="sm" onClick={(e) => { e.stopPropagation(); onViewAnalytics(); }}>
+              <HiveButton variant="secondary" size="sm" onClick={(e) => { e.stopPropagation(); onViewAnalytics(); }}>
                 <TrendingUp className="h-4 w-4" />
               </HiveButton>
-              <HiveButton variant="outline" size="sm" onClick={(e) => { e.stopPropagation(); onEdit(); }}>
+              <HiveButton variant="secondary" size="sm" onClick={(e) => { e.stopPropagation(); onEdit(); }}>
                 <Edit3 className="h-4 w-4" />
               </HiveButton>
             </div>
@@ -699,7 +699,7 @@ const ToolCard: React.FC<ToolCardProps> = ({
 
         {isOwnProfile && (
           <HiveButton 
-            variant="outline" 
+            variant="secondary" 
             size="sm" 
             className="w-full mt-4"
             onClick={(e) => { e.stopPropagation(); onViewAnalytics(); }}

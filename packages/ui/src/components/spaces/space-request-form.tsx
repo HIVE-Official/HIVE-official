@@ -366,7 +366,7 @@ export const SpaceRequestForm: React.FC<SpaceRequestFormProps> = ({
                   ? "Explain your teaching experience, course authority, and plan for moderating discussions."
                   : "Explain your experience, leadership qualifications, and vision for growing this community."}
                 rows={3}
-                variant="outline"
+                variant="secondary"
                 required
               />
             </motion.div>
@@ -387,7 +387,7 @@ export const SpaceRequestForm: React.FC<SpaceRequestFormProps> = ({
             <motion.div className="space-y-4" variants={hiveVariants.item}>
               <Button
                 type="submit"
-                variant="ritual"
+                variant="primary"
                 size="lg"
                 className="w-full"
                 disabled={!isFormValid || isSubmitting}

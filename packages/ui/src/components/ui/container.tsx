@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { cn } from '../../lib/utils';
+import { cn } from '../lib/utils';
 
 export interface ContainerProps extends React.HTMLAttributes<HTMLDivElement> {
   maxWidth?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | '6xl' | '7xl' | 'full' | 'none';

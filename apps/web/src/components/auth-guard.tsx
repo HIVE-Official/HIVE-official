@@ -2,7 +2,7 @@
 
 import { useRouter, usePathname } from 'next/navigation';
 import { useEffect } from 'react';
-import { useUnifiedAuth } from '@hive/ui';
+import { useHiveAuth } from '@hive/ui';
 
 interface AuthGuardProps {
   children: React.ReactNode;
@@ -21,7 +21,7 @@ export function AuthGuard({
 }: AuthGuardProps) {
   const router = useRouter();
   const pathname = usePathname();
-  const { isAuthenticated, isLoading, requiresOnboarding } = useUnifiedAuth();
+  const { isAuthenticated, isLoading, requiresOnboarding } = useHiveAuth();
 
   useEffect(() => {
     // Don't redirect while auth is loading

@@ -324,7 +324,7 @@ export const RitualCardCelebration: React.FC<RitualCardCelebrationProps> = ({
           ) : (
             <Button
               key="participate"
-              variant="ritual"
+              variant="primary"
               size="lg"
               onClick={handleParticipate}
               disabled={!isActive || isParticipating}

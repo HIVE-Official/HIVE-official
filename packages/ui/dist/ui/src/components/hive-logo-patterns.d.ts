@@ -1,9 +1,9 @@
 import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
 declare const patternVariants: (props?: {
-    variant?: "gradient" | "glow" | "border" | "tessellation" | "watermark";
+    variant?: "border" | "glow" | "gradient" | "tessellation" | "watermark";
     density?: "normal" | "dense" | "sparse";
-    size?: "xs" | "sm" | "md" | "lg" | "xl";
+    size?: "sm" | "md" | "lg" | "xl" | "xs";
 } & import("class-variance-authority/types").ClassProp) => string;
 export interface HivePatternProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children'>, VariantProps<typeof patternVariants> {
     animated?: boolean;

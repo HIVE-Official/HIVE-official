@@ -37,8 +37,8 @@ import {
   MoreHorizontal
 } from 'lucide-react';
 import { cn } from '../lib/utils';
-import { Button } from '../../ui/button';
-import { Badge } from '../../ui/badge';
+import { Button } from '../../atomic/atoms/button-enhanced';
+import { Badge } from '../../atomic/atoms/badge';
 import { type Space } from '@hive/core';
 
 export interface EventManagerToolProps {

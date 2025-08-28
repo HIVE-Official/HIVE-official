@@ -6,7 +6,7 @@ import { HiveCard } from '../hive-card';
 import { HiveButton } from '../hive-button';
 import { HiveBadge } from '../hive-badge';
 import { TrendingUp, TrendingDown, Users, Zap, Clock, Target, BarChart3, Activity, BookOpen, Award, ChevronRight, Sparkles } from 'lucide-react';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 // Mini chart component for trends
 const MiniChart = ({ data, color, height = 40, trend }) => {
     const max = Math.max(...data);

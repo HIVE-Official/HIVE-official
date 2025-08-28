@@ -5,8 +5,8 @@
 import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
 export declare const gridVariants: (props?: {
-    cols?: 1 | 2 | 3 | 4 | 5 | 6 | 12;
-    gap?: "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "none";
+    cols?: 1 | 3 | 2 | 4 | 5 | 12 | 6;
+    gap?: "sm" | "md" | "lg" | "xl" | "none" | "xs" | "2xl";
     responsive?: boolean;
     campusLayout?: "course-grid" | "profile-grid" | "activity-grid" | "tool-grid";
 } & import("class-variance-authority/types").ClassProp) => string;

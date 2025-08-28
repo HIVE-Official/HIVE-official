@@ -2,25 +2,25 @@ import * as React from "react";
 import * as SelectPrimitive from "@radix-ui/react-select";
 import { type VariantProps } from "class-variance-authority";
 declare const selectTriggerVariants: (props?: {
-    variant?: "default" | "success" | "warning" | "error" | "brand";
+    variant?: "error" | "default" | "success" | "warning" | "brand";
     size?: "default" | "sm" | "lg" | "xl";
     radius?: "default" | "sm" | "lg" | "none" | "full";
 } & import("class-variance-authority/types").ClassProp) => string;
 declare const selectContentVariants: (props?: {
-    position?: "popper" | "item";
+    position?: "item" | "popper";
 } & import("class-variance-authority/types").ClassProp) => string;
 declare const Select: React.FC<SelectPrimitive.SelectProps>;
 declare const SelectGroup: React.ForwardRefExoticComponent<SelectPrimitive.SelectGroupProps & React.RefAttributes<HTMLDivElement>>;
 declare const SelectValue: React.ForwardRefExoticComponent<SelectPrimitive.SelectValueProps & React.RefAttributes<HTMLSpanElement>>;
 declare const SelectTrigger: React.ForwardRefExoticComponent<Omit<SelectPrimitive.SelectTriggerProps & React.RefAttributes<HTMLButtonElement>, "ref"> & VariantProps<(props?: {
-    variant?: "default" | "success" | "warning" | "error" | "brand";
+    variant?: "error" | "default" | "success" | "warning" | "brand";
     size?: "default" | "sm" | "lg" | "xl";
     radius?: "default" | "sm" | "lg" | "none" | "full";
 } & import("class-variance-authority/types").ClassProp) => string> & React.RefAttributes<HTMLButtonElement>>;
 declare const SelectScrollUpButton: React.ForwardRefExoticComponent<Omit<SelectPrimitive.SelectScrollUpButtonProps & React.RefAttributes<HTMLDivElement>, "ref"> & React.RefAttributes<HTMLDivElement>>;
 declare const SelectScrollDownButton: React.ForwardRefExoticComponent<Omit<SelectPrimitive.SelectScrollDownButtonProps & React.RefAttributes<HTMLDivElement>, "ref"> & React.RefAttributes<HTMLDivElement>>;
 declare const SelectContent: React.ForwardRefExoticComponent<Omit<SelectPrimitive.SelectContentProps & React.RefAttributes<HTMLDivElement>, "ref"> & VariantProps<(props?: {
-    position?: "popper" | "item";
+    position?: "item" | "popper";
 } & import("class-variance-authority/types").ClassProp) => string> & React.RefAttributes<HTMLDivElement>>;
 declare const SelectLabel: React.ForwardRefExoticComponent<Omit<SelectPrimitive.SelectLabelProps & React.RefAttributes<HTMLDivElement>, "ref"> & React.RefAttributes<HTMLDivElement>>;
 declare const SelectItem: React.ForwardRefExoticComponent<Omit<SelectPrimitive.SelectItemProps & React.RefAttributes<HTMLDivElement>, "ref"> & React.RefAttributes<HTMLDivElement>>;

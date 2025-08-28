@@ -9,7 +9,7 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
 import React, { useState, useCallback } from 'react';
 import { HiveCard, HiveButton } from '../index';
 import { Save, Share, ArrowLeft, ArrowRight, AlertCircle } from 'lucide-react';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 import { validateEventDefinition } from './event-system-core';
 import { TextInputElement, DatePickerElement, LocationElement, SelectElement, NumberInputElement, CheckboxElement, RadioElement, EventCardElement, ConditionalElement, } from './event-elements';
 const EVENT_CATEGORIES = [

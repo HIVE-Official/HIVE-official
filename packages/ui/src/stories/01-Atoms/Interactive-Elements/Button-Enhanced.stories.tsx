@@ -221,7 +221,7 @@ const ButtonVariantsShowcase = () => {
                     {variant.description}
                   </div>
                 </div>
-                <Badge variant="outline" className="text-xs">
+                <Badge variant="secondary" className="text-xs">
                   Campus Use
                 </Badge>
               </div>
@@ -306,7 +306,7 @@ const ButtonSizesShowcase = () => {
                       )}
                     </Button>
                     
-                    <Button variant="outline" size={size.name as any}>
+                    <Button variant="secondary" size={size.name as any}>
                       {size.name === 'icon' ? (
                         <Search className="w-4 h-4" />
                       ) : (

@@ -196,7 +196,7 @@ export const ProfileActivityWidget: React.FC<ProfileActivityWidgetProps> = ({
               Recent Activity
             </Text>
             {weeklyStreak > 0 && (
-              <Badge variant="outline" className="text-xs">
+              <Badge variant="secondary" className="text-xs">
                 <Flame className="h-3 w-3 mr-1" />
                 {weeklyStreak} day streak
               </Badge>
@@ -374,7 +374,7 @@ export const ProfileActivityWidget: React.FC<ProfileActivityWidgetProps> = ({
         <div className="flex gap-2 pt-2 border-t border-[var(--hive-border-primary)]">
           {isEditable && onCreatePost && (
             <Button
-              variant="outline"
+              variant="secondary"
               size="sm"
               onClick={onCreatePost}
               className="flex-1"
@@ -386,7 +386,7 @@ export const ProfileActivityWidget: React.FC<ProfileActivityWidgetProps> = ({
           
           {onViewAllActivities && (
             <Button
-              variant="default"
+              variant="primary"
               size="sm"
               onClick={onViewAllActivities}
               className="flex-1"
@@ -420,7 +420,7 @@ export const ProfileActivityWidget: React.FC<ProfileActivityWidgetProps> = ({
             </Text>
             {isEditable && onCreatePost && (
               <Button
-                variant="outline"
+                variant="secondary"
                 size="sm"
                 onClick={onCreatePost}
               >

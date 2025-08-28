@@ -231,7 +231,7 @@ export const OnboardingCompleteStep: React.FC<OnboardingCompleteStepProps> = ({
 
             <Button 
               onClick={onGoToFeed} 
-              variant="ritual"
+              variant="primary"
               size="lg" 
               className="w-full font-body"
             >

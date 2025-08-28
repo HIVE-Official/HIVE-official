@@ -235,7 +235,7 @@ export const SpaceCardGrid: React.FC<SpaceCardGridProps> = ({
       <div className="p-4 pt-0">
         {isJoined ? (
           <Button
-            variant="outline"
+            variant="secondary"
             size="sm"
             onClick={onViewSpace}
             className="w-full gap-2 text-xs"

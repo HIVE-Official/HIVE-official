@@ -169,7 +169,7 @@ export const ProfileToolsWidget: React.FC<ProfileToolsWidgetProps> = ({
               Personal Tools
             </Text>
             {activeTools > 0 && (
-              <Badge variant="outline" className="text-xs">
+              <Badge variant="secondary" className="text-xs">
                 <Zap className="h-3 w-3 mr-1" />
                 {activeTools} Active
               </Badge>
@@ -258,7 +258,7 @@ export const ProfileToolsWidget: React.FC<ProfileToolsWidgetProps> = ({
                         {featuredTool.name}
                       </Text>
                       {featuredTool.isPublic && (
-                        <Badge variant="outline" className="text-xs">
+                        <Badge variant="secondary" className="text-xs">
                           Public
                         </Badge>
                       )}
@@ -346,7 +346,7 @@ export const ProfileToolsWidget: React.FC<ProfileToolsWidgetProps> = ({
                       {tool.name}
                     </Text>
                     <Badge 
-                      variant="outline" 
+                      variant="secondary" 
                       className={cn('text-xs', statusConfig.color)}
                     >
                       {statusConfig.label}
@@ -391,7 +391,7 @@ export const ProfileToolsWidget: React.FC<ProfileToolsWidgetProps> = ({
         <div className="flex gap-2 pt-2 border-t border-[var(--hive-border-primary)]">
           {isEditable && onCreateTool && (
             <Button
-              variant="outline"
+              variant="secondary"
               size="sm"
               onClick={onCreateTool}
               className="flex-1"
@@ -403,7 +403,7 @@ export const ProfileToolsWidget: React.FC<ProfileToolsWidgetProps> = ({
           
           {onViewAllTools && (
             <Button
-              variant="default"
+              variant="primary"
               size="sm"
               onClick={onViewAllTools}
               className="flex-1"
@@ -437,7 +437,7 @@ export const ProfileToolsWidget: React.FC<ProfileToolsWidgetProps> = ({
             </Text>
             {isEditable && onCreateTool && (
               <Button
-                variant="outline"
+                variant="secondary"
                 size="sm"
                 onClick={onCreateTool}
               >

@@ -1,8 +1,8 @@
 import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
 declare const gridVariants: (props?: {
-    cols?: 1 | 2 | 3 | 4 | 5 | 6 | 10 | 7 | 8 | 9 | 12 | 11;
-    gap?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 10 | 8 | 12;
+    cols?: 1 | 3 | 2 | 4 | 9 | 8 | 11 | 10 | 5 | 12 | 7 | 6;
+    gap?: 0 | 1 | 3 | 2 | 4 | 8 | 10 | 5 | 12 | 6;
 } & import("class-variance-authority/types").ClassProp) => string;
 export interface GridProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof gridVariants> {
 }

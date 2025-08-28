@@ -6,7 +6,7 @@ import { GraduationCap, BookOpen, Users, Briefcase, AlertCircle } from 'lucide-r
 import { Button } from '../button';
 import { Card, CardContent } from '../card';
 import { Alert } from '../alert';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 const ROLE_OPTIONS = [
     {
         id: 'undergraduate',

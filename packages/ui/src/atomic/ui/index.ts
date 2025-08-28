@@ -73,4 +73,4 @@ export { BottomNavBar } from '../../components/BottomNavBar';
 export * from '../../components/dialog';
 
 // Export typography component
-export { Typography } from '../../components/Typography';
+export { Typography } from '../../components/typography';

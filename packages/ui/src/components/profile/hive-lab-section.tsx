@@ -84,7 +84,7 @@ export const HiveLabSection: React.FC<HiveLabSectionProps> = ({
                     <span className="text-[var(--hive-text-primary)] font-medium">{tool}</span>
                   </div>
                   <HiveButton 
-                    variant="outline" 
+                    variant="secondary" 
                     size="sm"
                     onClick={() => onViewTool?.(tool)}
                   >
@@ -117,7 +117,7 @@ export const HiveLabSection: React.FC<HiveLabSectionProps> = ({
                       <span className="text-[var(--hive-text-primary)] font-medium">{tool}</span>
                     </div>
                     <HiveButton 
-                      variant="outline" 
+                      variant="secondary" 
                       size="sm"
                       onClick={() => onViewTool?.(tool)}
                     >
@@ -157,7 +157,7 @@ export const HiveLabSection: React.FC<HiveLabSectionProps> = ({
                     </div>
                     <div className="flex gap-2">
                       <HiveButton 
-                        variant="outline" 
+                        variant="secondary" 
                         size="sm"
                         onClick={() => onViewTool?.(tool)}
                       >

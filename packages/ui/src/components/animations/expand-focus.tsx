@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from '../framer-motion-proxy';
-import { cn } from '../../lib/utils';
+import { cn } from '../lib/utils';
 import { X } from 'lucide-react';
 
 export interface ExpandFocusProps {

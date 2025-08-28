@@ -338,7 +338,7 @@ function SpacePreviewActivationFlow() {
                   </Button>
                 ) : activeDemo === 'frozen' ? (
                   <Button 
-                    variant="outline" 
+                    variant="secondary" 
                     className="border-gray-500/50 text-gray-400"
                     disabled
                   >
@@ -690,7 +690,7 @@ function FrozenSidebarInfo({ space }: { space: any }) {
           </p>
           
           <Button 
-            variant="outline" 
+            variant="secondary" 
             className="w-full border-gray-600 text-gray-400"
             disabled
           >
@@ -723,7 +723,7 @@ function UniversalSurfaceCard({ widget, space }: { widget: any; space: any }) {
             <div>
               <CardTitle className="text-white">{widget.title}</CardTitle>
               {widget.adminOnly && (
-                <Badge variant="outline" className="text-xs mt-1 border-amber-500/30 text-amber-400">
+                <Badge variant="secondary" className="text-xs mt-1 border-amber-500/30 text-amber-400">
                   Admin Only
                 </Badge>
               )}
@@ -876,7 +876,7 @@ function ActivationFlowModal({ isOpen, onClose, space, currentStep, onStepChange
           {/* Actions */}
           <div className="flex gap-3 mt-6">
             <Button 
-              variant="outline" 
+              variant="secondary" 
               className="flex-1 border-white/20 text-white"
               onClick={onClose}
             >

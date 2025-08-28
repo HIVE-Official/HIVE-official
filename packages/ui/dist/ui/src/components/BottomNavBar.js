@@ -1,6 +1,6 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from 'react';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 import { MotionDiv, MotionButton } from './motion-wrapper';
 const BottomNavBarRoot = React.forwardRef(({ className, variant = 'floating', hideOnScroll = false, ...props }, ref) => {
     const [isVisible, setIsVisible] = React.useState(true);

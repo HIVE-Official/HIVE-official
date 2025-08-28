@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { logger } from "@hive/core";
 
 export const createPostSchema = z.object({
   title: z.string().min(1).max(100),
@@ -8,24 +7,6 @@ export const createPostSchema = z.object({
 });
 
 export const validatePost = (data: unknown) => {
-  try {
-    const result = createPostSchema.parse(data);
-    logger.debug("Post validation successful", {
-      title: result.title,
-      contentLength: result.content.length,
-      tagCount: result.tags?.length,
-    });
-    return result;
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      logger.warn("Post validation failed", {
-        issues: error.issues,
-      });
-    } else {
-      logger.error("Unexpected validation error", { 
-        error: error instanceof Error ? error : new Error(String(error))
-      });
-    }
-    throw error;
-  }
+  const result = createPostSchema.parse(data);
+  return result;
 };

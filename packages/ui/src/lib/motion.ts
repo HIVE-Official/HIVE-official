@@ -4,7 +4,7 @@
  */
 
 import { Variants, Transition, type MotionProps } from 'framer-motion';
-import { motion } from '@hive/tokens';
+import { motion } from '../../../tokens/src/motion';
 
 // HIVE Transition Presets
 export const hiveTransitions = {
@@ -314,8 +314,7 @@ export const withReducedMotion = (animation: Partial<MotionProps>): Partial<Moti
   };
 };
 
-// Export motion tokens for direct access
-export { motion } from '@hive/tokens';
+// Export types and utilities
 export type { Variants, Transition, MotionProps } from 'framer-motion';
 
 // Export adaptive motion utilities

@@ -234,7 +234,7 @@ export const SpaceSelectionStep: React.FC<SpaceSelectionStepProps> = ({
                   <p>No spaces found matching your search.</p>
                   <Button
                     type="button"
-                    variant="outline"
+                    variant="secondary"
                     onClick={() => setMode("create")}
                     className="mt-2"
                   >
@@ -290,7 +290,7 @@ export const SpaceSelectionStep: React.FC<SpaceSelectionStepProps> = ({
         <div className="flex gap-3 pt-4">
           <Button
             type="button"
-            variant="outline"
+            variant="secondary"
             onClick={handleSkip}
             className="flex-1"
           >

@@ -107,7 +107,7 @@ export const AllVariants: Story = {
                 <TooltipTrigger asChild>
                   <Button variant="secondary">Default Tooltip</Button>
                 </TooltipTrigger>
-                <TooltipContent variant="default">
+                <TooltipContent variant="primary">
                   Standard campus tooltip styling
                 </TooltipContent>
               </Tooltip>
@@ -302,7 +302,7 @@ export const AllVariants: Story = {
                 <div className="flex items-center gap-3">
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <Badge variant="outline" className="cursor-help">
+                      <Badge variant="secondary" className="cursor-help">
                         Verified
                       </Badge>
                     </TooltipTrigger>
@@ -565,7 +565,7 @@ export const AllVariants: Story = {
                   <h4 className="font-semibold text-white">ML Study Group</h4>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <Badge variant="outline" className="cursor-help">
+                      <Badge variant="secondary" className="cursor-help">
                         Verified
                       </Badge>
                     </TooltipTrigger>

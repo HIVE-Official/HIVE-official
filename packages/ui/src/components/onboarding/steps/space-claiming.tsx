@@ -259,7 +259,7 @@ export function SpaceClaiming({
           >
             <Button
               onClick={handleSkip}
-              variant="outline"
+              variant="secondary"
               className="w-full"
               disabled={isLoading}
             >
@@ -269,7 +269,7 @@ export function SpaceClaiming({
             {onBack && (
               <Button
                 onClick={onBack}
-                variant="outline"
+                variant="secondary"
                 className="w-full"
                 disabled={isLoading}
               >
@@ -294,7 +294,7 @@ export function SpaceClaiming({
               </h3>
               <Button
                 onClick={() => setSelectedSpace(null)}
-                variant="outline"
+                variant="secondary"
                 size="sm"
                 disabled={isSubmitting}
               >
@@ -400,7 +400,7 @@ export function SpaceClaiming({
 
             <Button
               onClick={() => setSelectedSpace(null)}
-              variant="outline"
+              variant="secondary"
               className="w-full"
               disabled={isSubmitting || submitStatus === "success"}
             >

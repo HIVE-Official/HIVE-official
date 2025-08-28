@@ -92,7 +92,7 @@ export const InterestsStep: React.FC<InterestsStepProps> = ({
           {onBack && (
             <Button
               type="button"
-              variant="outline"
+              variant="secondary"
               onClick={onBack}
               className="flex-1"
             >
@@ -101,7 +101,7 @@ export const InterestsStep: React.FC<InterestsStepProps> = ({
           )}
           <Button
             type="button"
-            variant="default"
+            variant="primary"
             onClick={handleSubmit}
             className="flex-1"
             disabled={isLoading || selectedInterests.length === 0}

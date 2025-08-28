@@ -1,7 +1,7 @@
 // HIVE Liquid Metal Motion System - Complete Integration
 // Unified system that orchestrates all motion with premium feel
 
-import { Variants, MotionValue, useAnimation } from 'framer-motion';
+import { Variants, MotionValue, useAnimation } from '../components/framer-motion-proxy';
 
 // AnimationControls type definition
 type AnimationControls = ReturnType<typeof useAnimation>;

@@ -186,10 +186,10 @@ const RitualsDashboard = () => {
               <p className="text-gray-400">Build healthy habits with your campus community</p>
             </div>
             <div className="flex items-center space-x-2">
-              <Button size="icon" variant="outline" className="border-gray-600 text-white">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-white">
                 <Search className="w-4 h-4" />
               </Button>
-              <Button size="icon" variant="outline" className="border-gray-600 text-white">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-white">
                 <Settings className="w-4 h-4" />
               </Button>
               <Button className="hive-interactive" style={{ backgroundColor: 'var(--hive-brand-primary)', color: 'var(--hive-text-inverse)' }}>
@@ -424,7 +424,7 @@ const RitualsDashboard = () => {
                               Complete Now
                             </Button>
                           )}
-                          <Button size="icon" variant="outline" className="border-gray-600 text-white hover:bg-gray-800">
+                          <Button size="icon" variant="secondary" className="border-gray-600 text-white hover:bg-gray-800">
                             <Settings className="w-4 h-4" />
                           </Button>
                         </>
@@ -434,7 +434,7 @@ const RitualsDashboard = () => {
                             <Plus className="w-4 h-4 mr-2" />
                             Start Ritual
                           </Button>
-                          <Button size="icon" variant="outline" className="border-gray-600 text-white hover:bg-gray-800">
+                          <Button size="icon" variant="secondary" className="border-gray-600 text-white hover:bg-gray-800">
                             <Heart className="w-4 h-4" />
                           </Button>
                         </>
@@ -513,7 +513,7 @@ const RitualsDashboard = () => {
         {viewMode === 'my-rituals' && (
           <div className="text-center mt-8">
             <Button 
-              variant="outline" 
+              variant="secondary" 
               className="border-gray-600 text-white hover:bg-gray-800"
               onClick={() => setViewMode('discover')}
             >

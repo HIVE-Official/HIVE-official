@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { cn } from '../../lib/utils';
+import { cn } from '../lib/utils';
 import { X } from 'lucide-react';
 
 export interface TagProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -237,7 +237,7 @@ export const InteractiveTag: React.FC<Omit<TagProps, 'interactive'>> = (props) =
 );
 
 export const OutlineTag: React.FC<Omit<TagProps, 'variant'>> = (props) => (
-  <Tag variant="outline" {...props} />
+  <Tag variant="secondary" {...props} />
 );
 
 export const GhostTag: React.FC<Omit<TagProps, 'variant'>> = (props) => (

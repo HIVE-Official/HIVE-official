@@ -1,0 +1,105 @@
+import type { Meta, StoryObj } from '@storybook/react';
+import { Button } from '../../../components/ui/button';
+
+const meta: Meta<typeof Button> = {
+  title: '⚛️ Atomic/Atoms/Button',
+  component: Button,
+  parameters: {
+    docs: {
+      description: {
+        component: 'Primary button component with HIVE brand variants and states.',
+      },
+    },
+  },
+  argTypes: {
+    variant: {
+      control: 'select',
+      options: ['default', 'destructive', 'outline', 'secondary', 'ghost', 'link'],
+    },
+    size: {
+      control: 'select',
+      options: ['default', 'sm', 'lg', 'icon'],
+    },
+  },
+};
+
+export default meta;
+type Story = StoryObj<typeof Button>;
+
+export const Default: Story = {
+  args: {
+    children: 'Join Space',
+  },
+};
+
+export const Variants: Story = {
+  render: () => (
+    <div className="flex flex-wrap gap-4 p-4">
+      <Button variant="primary">Default</Button>
+      <Button variant="destructive">Destructive</Button>
+      <Button variant="secondary">Outline</Button>
+      <Button variant="secondary">Secondary</Button>
+      <Button variant="ghost">Ghost</Button>
+      <Button variant="link">Link</Button>
+    </div>
+  ),
+};
+
+export const Sizes: Story = {
+  render: () => (
+    <div className="flex items-center gap-4 p-4">
+      <Button size="sm">Small</Button>
+      <Button size="default">Default</Button>
+      <Button size="lg">Large</Button>
+    </div>
+  ),
+};
+
+export const States: Story = {
+  render: () => (
+    <div className="space-y-4 p-4">
+      <div className="flex gap-4">
+        <Button>Normal</Button>
+        <Button disabled>Disabled</Button>
+      </div>
+      <div className="flex gap-4">
+        <Button variant="secondary">Outline Normal</Button>
+        <Button variant="secondary" disabled>Outline Disabled</Button>
+      </div>
+    </div>
+  ),
+};
+
+export const HiveCampusActions: Story = {
+  name: 'HIVE Campus Actions',
+  render: () => (
+    <div className="space-y-6 p-4">
+      <div>
+        <h3 className="font-bold mb-3">Space Actions</h3>
+        <div className="flex gap-3">
+          <Button>Join Space</Button>
+          <Button variant="secondary">Request Access</Button>
+          <Button variant="ghost">Browse Members</Button>
+        </div>
+      </div>
+      
+      <div>
+        <h3 className="font-bold mb-3">Tool Actions</h3>
+        <div className="flex gap-3">
+          <Button>Plant Tool</Button>
+          <Button variant="secondary">Try Tool</Button>
+          <Button variant="ghost">View Source</Button>
+        </div>
+      </div>
+      
+      <div>
+        <h3 className="font-bold mb-3">Profile Actions</h3>
+        <div className="flex gap-3">
+          <Button>Follow</Button>
+          <Button variant="secondary">Message</Button>
+          <Button variant="ghost">View Profile</Button>
+        </div>
+      </div>
+    </div>
+  ),
+};

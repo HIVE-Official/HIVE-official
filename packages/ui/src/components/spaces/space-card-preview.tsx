@@ -204,7 +204,7 @@ export const SpaceCardPreview: React.FC<SpaceCardPreviewProps> = ({
         {/* Actions */}
         <div className="flex gap-3">
           <Button
-            variant="ritual"
+            variant="primary"
             size="lg"
             onClick={onRequestActivation}
             className="flex-1 gap-2 font-semibold"
@@ -214,7 +214,7 @@ export const SpaceCardPreview: React.FC<SpaceCardPreviewProps> = ({
           </Button>
           
           <Button
-            variant="outline"
+            variant="secondary"
             size="lg"
             onClick={onLearnMore}
             className="gap-2"

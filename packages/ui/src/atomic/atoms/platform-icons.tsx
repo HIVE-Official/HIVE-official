@@ -91,7 +91,7 @@ export const PlatformIcon: React.FC<PlatformIconProps> = ({
   
   return (
     <IconComponent 
-      size={iconSizes[size]}
+      size={iconSizes[size] as any}
       className={cn('shrink-0', className)}
       color={color}
       {...props}

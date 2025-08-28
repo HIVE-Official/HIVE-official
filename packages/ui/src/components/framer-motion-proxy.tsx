@@ -55,6 +55,10 @@ export const useTransform = (motionValue: any, input?: any, output?: any) => ({
   set: (value: any) => {},
   onChange: (callback: any) => () => {},
 });
+
+// Type definitions for compatibility
+export type Variants = Record<string, any>;
+export type MotionValue = ReturnType<typeof useMotionValue>;
 export const MotionSpan = motion.span;
 export const MotionSection = motion.section;
 

@@ -7,7 +7,7 @@ import { Button } from '../button';
 import { Card, CardContent } from '../card';
 import { Input } from '../input';
 import { Alert } from '../alert';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 const DEMO_SPACES = [
     // Academic
     {

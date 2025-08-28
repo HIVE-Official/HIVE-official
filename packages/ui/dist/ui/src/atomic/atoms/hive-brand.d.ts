@@ -1,8 +1,8 @@
 import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
 declare const logoVariants: (props?: {
-    size?: "default" | "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl";
-    color?: "gold" | "auto" | "black" | "white";
+    size?: "default" | "sm" | "md" | "lg" | "xl" | "xs" | "2xl" | "3xl";
+    color?: "auto" | "black" | "gold" | "white";
 } & import("class-variance-authority/types").ClassProp) => string;
 export interface HiveLogoProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'color'>, VariantProps<typeof logoVariants> {
     variant?: 'solid' | 'outline' | 'minimal' | 'gradient' | 'glass' | 'neon' | 'textured' | 'animated' | 'monochrome';
@@ -14,8 +14,8 @@ export interface HiveLogoProps extends Omit<React.HTMLAttributes<HTMLDivElement>
 export declare const HiveLogo: React.ForwardRefExoticComponent<HiveLogoProps & React.RefAttributes<HTMLDivElement>>;
 import { ArrowLeft, ArrowRight, ArrowUp, ArrowDown, ChevronLeft, ChevronRight, ChevronUp, ChevronDown, Menu, X, Home, Search, Filter, Plus, Minus, Edit, Trash2, Save, Share2, Copy, Download, Upload, RefreshCw, Settings, MoreHorizontal, MoreVertical, Check, CheckCircle, XCircle, AlertTriangle, Info, AlertCircle, Loader2, Wifi, WifiOff, Signal, User, Users, Building, Calendar, Clock, MapPin, Bell, MessageCircle, Heart, Bookmark, Flag, Eye, EyeOff, Wrench, Hammer, Code, Palette, Layers, Grid3X3, GraduationCap, Book, School, Home as House, Users2, File, FileText, Image, Video, Music, Paperclip, ThumbsUp, ThumbsDown, Star, Send, Reply, Forward, Lock, Unlock, Shield, Key, type LucideIcon } from "lucide-react";
 declare const iconVariants: (props?: {
-    size?: "default" | "xs" | "sm" | "md" | "lg" | "xl" | "2xl";
-    color?: "primary" | "secondary" | "success" | "warning" | "error" | "info" | "disabled" | "current" | "brand" | "tertiary";
+    size?: "default" | "sm" | "md" | "lg" | "xl" | "xs" | "2xl";
+    color?: "error" | "current" | "primary" | "secondary" | "disabled" | "success" | "warning" | "info" | "tertiary" | "brand";
     interactive?: boolean;
 } & import("class-variance-authority/types").ClassProp) => string;
 export interface IconProps extends Omit<React.SVGProps<SVGSVGElement>, 'color'>, VariantProps<typeof iconVariants> {

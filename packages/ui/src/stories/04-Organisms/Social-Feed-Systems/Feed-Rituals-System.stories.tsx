@@ -317,14 +317,14 @@ const CampusFeedSystem = () => {
               <p className="text-gray-400">What's happening at UB</p>
             </div>
             <div className="flex items-center space-x-2">
-              <Button size="icon" variant="outline" className="border-gray-600 text-white">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-white">
                 <Search className="w-4 h-4" />
               </Button>
-              <Button size="icon" variant="outline" className="border-gray-600 text-white relative">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-white relative">
                 <Bell className="w-4 h-4" />
                 <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></div>
               </Button>
-              <Button size="icon" variant="outline" className="border-gray-600 text-white">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-white">
                 <Settings className="w-4 h-4" />
               </Button>
             </div>
@@ -384,7 +384,7 @@ const CampusFeedSystem = () => {
                 </Button>
               ))}
             </div>
-            <Button size="icon" variant="outline" className="border-gray-600 text-white">
+            <Button size="icon" variant="secondary" className="border-gray-600 text-white">
               <Filter className="w-4 h-4" />
             </Button>
           </div>
@@ -410,15 +410,15 @@ const CampusFeedSystem = () => {
                 />
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
-                    <Button size="sm" variant="outline" className="border-gray-600 text-white">
+                    <Button size="sm" variant="secondary" className="border-gray-600 text-white">
                       <Camera className="w-4 h-4 mr-1" />
                       Photo
                     </Button>
-                    <Button size="sm" variant="outline" className="border-gray-600 text-white">
+                    <Button size="sm" variant="secondary" className="border-gray-600 text-white">
                       <Calendar className="w-4 h-4 mr-1" />
                       Event
                     </Button>
-                    <Button size="sm" variant="outline" className="border-gray-600 text-white">
+                    <Button size="sm" variant="secondary" className="border-gray-600 text-white">
                       <Target className="w-4 h-4 mr-1" />
                       Poll
                     </Button>
@@ -582,7 +582,7 @@ const CampusFeedSystem = () => {
                 {post.tags.length > 0 && (
                   <div className="flex flex-wrap gap-1 mb-4">
                     {post.tags.map((tag) => (
-                      <Badge key={tag} variant="outline" className="border-gray-600 text-gray-400 text-xs">
+                      <Badge key={tag} variant="secondary" className="border-gray-600 text-gray-400 text-xs">
                         #{tag}
                       </Badge>
                     ))}
@@ -626,7 +626,7 @@ const CampusFeedSystem = () => {
 
         {/* Load More */}
         <div className="text-center mt-8">
-          <Button variant="outline" className="border-gray-600 text-white hover:bg-gray-800">
+          <Button variant="secondary" className="border-gray-600 text-white hover:bg-gray-800">
             Load More Posts
           </Button>
         </div>
@@ -664,10 +664,10 @@ const CampusRitualsSystem = () => {
               <p className="text-gray-400">Build healthy habits with your campus community</p>
             </div>
             <div className="flex items-center space-x-2">
-              <Button size="icon" variant="outline" className="border-gray-600 text-white">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-white">
                 <Search className="w-4 h-4" />
               </Button>
-              <Button size="icon" variant="outline" className="border-gray-600 text-white">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-white">
                 <Settings className="w-4 h-4" />
               </Button>
               <Button className="hive-interactive" style={{ backgroundColor: 'var(--hive-brand-primary)', color: 'var(--hive-text-inverse)' }}>
@@ -877,7 +877,7 @@ const CampusRitualsSystem = () => {
                           Complete Now
                         </Button>
                       )}
-                      <Button size="icon" variant="outline" className="border-gray-600 text-white hover:bg-gray-800">
+                      <Button size="icon" variant="secondary" className="border-gray-600 text-white hover:bg-gray-800">
                         <Settings className="w-4 h-4" />
                       </Button>
                     </>
@@ -887,7 +887,7 @@ const CampusRitualsSystem = () => {
                         <Plus className="w-4 h-4 mr-2" />
                         Start Ritual
                       </Button>
-                      <Button size="icon" variant="outline" className="border-gray-600 text-white hover:bg-gray-800">
+                      <Button size="icon" variant="secondary" className="border-gray-600 text-white hover:bg-gray-800">
                         <Heart className="w-4 h-4" />
                       </Button>
                     </>
@@ -902,7 +902,7 @@ const CampusRitualsSystem = () => {
         {viewMode === 'my-rituals' && (
           <div className="text-center mt-8">
             <Button 
-              variant="outline" 
+              variant="secondary" 
               className="border-gray-600 text-white hover:bg-gray-800"
               onClick={() => setViewMode('discover')}
             >

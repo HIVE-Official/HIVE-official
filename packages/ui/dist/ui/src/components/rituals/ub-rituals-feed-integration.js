@@ -5,7 +5,7 @@ import { Badge } from '../../ui/badge';
 import { ButtonEnhanced as Button } from '../../atomic/atoms/button-enhanced';
 import { Text } from '../../atomic/atoms/text';
 import { Icon } from '../../ui/icon';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 import { Sparkles, Calendar, Users, Trophy, Clock, Heart, Star, Target, ArrowRight, Play, CheckCircle, MessageCircle, Share2, TrendingUp, Activity } from 'lucide-react';
 // UB-specific ritual configurations
 export const UB_RITUAL_TYPES = {

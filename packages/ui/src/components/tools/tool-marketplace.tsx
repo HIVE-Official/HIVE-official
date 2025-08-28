@@ -177,7 +177,7 @@ export function ToolMarketplace({
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <HiveBadge variant="outline">
+          <HiveBadge variant="secondary">
             {filteredTools.length} tools available
           </HiveBadge>
           {spaceId && (
@@ -273,7 +273,7 @@ export function ToolMarketplace({
             <p className="text-gray-600 mb-4">
               Try adjusting your search terms or filters
             </p>
-            <HiveButton variant="outline" onClick={() => {
+            <HiveButton variant="secondary" onClick={() => {
               setSearchQuery('');
               setSelectedCategory('all');
             }}>
@@ -323,7 +323,7 @@ function ToolCard({ tool, compact = false, onInstall, onView, installing }: Tool
             </p>
           </div>
           {tool.stats.trending && !compact && (
-            <HiveBadge variant="outline" className="text-xs">
+            <HiveBadge variant="secondary" className="text-xs">
               <TrendingUp className="w-3 h-3 mr-1" />
               Trending
             </HiveBadge>
@@ -340,7 +340,7 @@ function ToolCard({ tool, compact = false, onInstall, onView, installing }: Tool
         {/* Categories */}
         <div className="flex flex-wrap gap-1">
           {tool.categories.slice(0, compact ? 2 : 3).map(category => (
-            <HiveBadge key={category} variant="outline" className="text-xs">
+            <HiveBadge key={category} variant="secondary" className="text-xs">
               {category}
             </HiveBadge>
           ))}
@@ -381,7 +381,7 @@ function ToolCard({ tool, compact = false, onInstall, onView, installing }: Tool
             </HiveButton>
           )}
           <HiveButton
-            variant="outline"
+            variant="secondary"
             size="sm"
             onClick={onView}
           >

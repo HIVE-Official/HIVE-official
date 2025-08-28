@@ -1,11 +1,11 @@
 import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
 declare const hiveProgressVariants: (props?: {
-    variant?: "default" | "gradient" | "minimal" | "premium";
-    size?: "default" | "xs" | "sm" | "lg" | "xl";
+    variant?: "default" | "minimal" | "premium" | "gradient";
+    size?: "default" | "sm" | "lg" | "xl" | "xs";
 } & import("class-variance-authority/types").ClassProp) => string;
 declare const progressFillVariants: (props?: {
-    variant?: "default" | "success" | "warning" | "gradient" | "info" | "danger";
+    variant?: "default" | "success" | "warning" | "info" | "gradient" | "danger";
 } & import("class-variance-authority/types").ClassProp) => string;
 export interface HiveProgressBarProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'value'>, VariantProps<typeof hiveProgressVariants> {
     value: number;

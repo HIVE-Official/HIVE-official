@@ -12,11 +12,11 @@ import { type VariantProps } from 'class-variance-authority';
  * All cards inherit from this foundation
  */
 declare const hiveCardBaseVariants: (props?: {
-    variant?: "default" | "warning" | "error" | "selected" | "interactive" | "builder" | "minimal" | "active" | "academic" | "social" | "elevated" | "premium";
+    variant?: "error" | "default" | "minimal" | "warning" | "active" | "selected" | "academic" | "social" | "builder" | "premium" | "elevated" | "interactive";
     size?: "default" | "sm" | "lg" | "xl";
-    shadow?: "glow" | "none" | "strong" | "medium" | "subtle" | "dramatic";
-    border?: "default" | "gold" | "none" | "strong" | "subtle" | "gold-strong";
-    motionType?: "none" | "strong" | "medium" | "subtle" | "magnetic";
+    shadow?: "none" | "strong" | "medium" | "dramatic" | "glow" | "subtle";
+    border?: "default" | "none" | "strong" | "gold" | "subtle" | "gold-strong";
+    motionType?: "none" | "strong" | "medium" | "magnetic" | "subtle";
     glass?: "none" | "strong" | "medium" | "subtle";
 } & import("class-variance-authority/types").ClassProp) => string;
 /**
@@ -208,7 +208,7 @@ export declare const createCardVariant: (baseVariant: string, entity?: {
 export declare const createCardStyles: ({ variant, size, shadow, border, motionType, glass, goldAccent, glowEffect, className, }: HiveCardBaseProps & {
     className?: string;
     motionType?: string;
-}) => any;
+}) => string;
 /**
  * Base card component that all other cards inherit from
  */

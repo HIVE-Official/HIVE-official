@@ -161,7 +161,7 @@ const RitualCard = ({ ritual, onComplete, onStart, onToggleFavorite }: any) => {
                   {isCompleting ? 'Completing...' : 'Complete Now'}
                 </Button>
               )}
-              <Button size="icon" variant="outline" className="border-gray-600 text-white hover:bg-gray-800">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-white hover:bg-gray-800">
                 <Settings className="w-4 h-4" />
               </Button>
             </>
@@ -177,7 +177,7 @@ const RitualCard = ({ ritual, onComplete, onStart, onToggleFavorite }: any) => {
               </Button>
               <Button 
                 size="icon" 
-                variant="outline" 
+                variant="secondary" 
                 className="border-gray-600 text-white hover:bg-gray-800"
                 onClick={() => onToggleFavorite?.(ritual.id)}
               >

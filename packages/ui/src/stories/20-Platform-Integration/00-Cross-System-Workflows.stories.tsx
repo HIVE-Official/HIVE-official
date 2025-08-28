@@ -277,7 +277,7 @@ const CrossSystemWorkflowsDemo = () => {
                 />
                 <span className="text-sm text-gray-400">Show Connections</span>
               </div>
-              <Button size="icon" variant="outline" className="border-gray-600 text-white">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-white">
                 <Settings className="w-4 h-4" />
               </Button>
             </div>
@@ -518,7 +518,7 @@ const CrossSystemWorkflowsDemo = () => {
                       <p className="text-gray-400 text-sm mb-3">{workflow.type.replace('_', ' ')}</p>
                       <div className="flex flex-wrap gap-1">
                         {workflow.systems.map((system) => (
-                          <Badge key={system} variant="outline" className="border-gray-600 text-gray-400 text-xs">
+                          <Badge key={system} variant="secondary" className="border-gray-600 text-gray-400 text-xs">
                             {system}
                           </Badge>
                         ))}
@@ -798,7 +798,7 @@ export const SystemDataFlow: Story = {
                           <ArrowRight className="w-4 h-4 mr-2" style={{ color: systemConnections[activeSystem].color }} />
                           <span className="text-white font-medium capitalize">{connection.to}</span>
                         </div>
-                        <Badge variant="outline" className="border-gray-600 text-gray-400 text-xs">
+                        <Badge variant="secondary" className="border-gray-600 text-gray-400 text-xs">
                           {connection.type}
                         </Badge>
                       </div>

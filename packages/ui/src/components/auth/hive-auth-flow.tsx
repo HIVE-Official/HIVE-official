@@ -2,7 +2,7 @@
 
 import React, { useState, createContext, useContext } from 'react';
 import { cn } from '../lib/utils';
-import { Button } from '../../ui/button';
+import { Button } from '../../atomic/atoms/button-enhanced';
 import { Check, Mail, ArrowLeft, ArrowRight, Loader2, AlertCircle } from 'lucide-react';
 
 // =============================================================================
@@ -299,7 +299,7 @@ function WelcomeStep() {
       {/* Action Buttons */}
       <div className="space-y-3">
         <Button 
-          variant="premium" 
+          variant="primary" 
           size="lg"
           className="w-full"
           onClick={() => setStep('sign-up')}
@@ -308,7 +308,7 @@ function WelcomeStep() {
         </Button>
         
         <Button 
-          variant="outline" 
+          variant="secondary" 
           size="lg"
           className="w-full"
           onClick={() => setStep('sign-in')}
@@ -411,7 +411,7 @@ function SignInStep() {
 
         <Button 
           type="submit"
-          variant="premium" 
+          variant="primary" 
           size="lg"
           className="w-full"
           disabled={state.loading}
@@ -594,7 +594,7 @@ function SignUpStep() {
 
         <Button 
           type="submit"
-          variant="premium" 
+          variant="primary" 
           size="lg"
           className="w-full"
           disabled={state.loading}
@@ -679,7 +679,7 @@ function ForgotPasswordStep() {
 
         <Button 
           type="submit"
-          variant="premium" 
+          variant="primary" 
           size="lg"
           className="w-full"
           disabled={state.loading}
@@ -722,7 +722,7 @@ function VerifyEmailStep() {
         </p>
         
         <Button 
-          variant="outline" 
+          variant="secondary" 
           size="lg"
           className="w-full"
           onClick={goBack}
@@ -760,7 +760,7 @@ function MagicLinkSentStep() {
         </p>
         
         <Button 
-          variant="outline" 
+          variant="secondary" 
           size="lg"
           className="w-full"
           onClick={goBack}

@@ -402,7 +402,7 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
               viewMode === 'grid' ? "opacity-0 group-hover:opacity-100 transition-opacity" : ""
             )}>
               <HiveButton
-                variant="outline"
+                variant="secondary"
                 size="sm"
                 onClick={(e) => {
                   e.stopPropagation();
@@ -644,7 +644,7 @@ export const TemplateToolBuilder: React.FC<TemplateBuilderProps> = ({
 
             <div className="flex gap-2">
               <HiveButton
-                variant="outline"
+                variant="secondary"
                 onClick={() => onSave(tool)}
                 disabled={isLoading}
               >

@@ -12,7 +12,7 @@ import { CalendarCardProps, Event, CalendarConnection, CalendarConflict } from '
 import { HiveCard } from '../hive-card';
 import { HiveButton } from '../hive-button';
 import { HiveBadge } from '../hive-badge';
-import { cn } from '../../lib/utils';
+import { cn } from '../lib/utils';
 
 export const CalendarCard: React.FC<CalendarCardProps> = ({
   data,
@@ -189,7 +189,7 @@ export const CalendarCard: React.FC<CalendarCardProps> = ({
               <p className="text-sm text-gray-300">Connect your calendar:</p>
               <div className="flex gap-2 justify-center">
                 <HiveButton 
-                  variant="outline" 
+                  variant="secondary" 
                   size="sm" 
                   onClick={() => onConnectCalendar?.('google')}
                   className="flex items-center gap-2"
@@ -197,7 +197,7 @@ export const CalendarCard: React.FC<CalendarCardProps> = ({
                   📱 Google Calendar
                 </HiveButton>
                 <HiveButton 
-                  variant="outline" 
+                  variant="secondary" 
                   size="sm" 
                   onClick={() => onConnectCalendar?.('outlook')}
                   className="flex items-center gap-2"
@@ -247,7 +247,7 @@ export const CalendarCard: React.FC<CalendarCardProps> = ({
               
               <div className="flex gap-2">
                 <HiveButton 
-                  variant="outline" 
+                  variant="secondary" 
                   size="sm" 
                   onClick={() => onSyncCalendar?.('google')}
                   className="flex items-center gap-2"

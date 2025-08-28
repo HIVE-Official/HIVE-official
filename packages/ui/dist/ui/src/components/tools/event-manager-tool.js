@@ -3,7 +3,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar, Clock, MapPin, Users, Plus, Edit3, Trash2, Eye, Star, Search, Grid, List, BarChart3, UserCheck, Share2, Download, Activity, AlertCircle, CheckCircle, XCircle, Copy } from 'lucide-react';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 import { Button } from '../../ui/button';
 import { Badge } from '../../ui/badge';
 export function EventManagerTool({ spaceId, spaceName, isLeader = false, currentUserRole = 'member', leaderMode, onEventAction, authenticatedFetch, className }) {

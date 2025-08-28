@@ -4,7 +4,7 @@
 // Only export what actually exists to avoid build errors
 export * from './hive-space-card';
 export * from './header';
-export * from './profile-card';
+export { ProfileCard } from './profile-card';
 export * from './profile-dashboard';
 export * from './profile-system';
 // === HIVE SPACES SYSTEM ===
@@ -31,7 +31,7 @@ export * from './profile-avatar-widget';
 export * from './profile-calendar-widget';
 export * from './profile-tools-widget';
 export * from './profile-spaces-widget';
-export * from './profile-activity-widget';
+export { ProfileActivityWidget } from './profile-activity-widget';
 export * from './profile-ghost-mode-widget';
 export * from './profile-hivelab-widget';
 export * from './profile-stats-widget';

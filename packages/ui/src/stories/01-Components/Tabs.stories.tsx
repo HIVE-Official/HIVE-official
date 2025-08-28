@@ -51,7 +51,7 @@ export const Default: Story = {
     defaultValue: "dashboard",
     children: (
       <>
-        <TabsList variant="default">
+        <TabsList variant="primary">
           <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
           <TabsTrigger value="spaces">Spaces</TabsTrigger>
           <TabsTrigger value="feed">Feed</TabsTrigger>
@@ -123,7 +123,7 @@ export const AllVariants: Story = {
           </div>
           
           <Tabs defaultValue="overview" className="w-full">
-            <TabsList variant="default">
+            <TabsList variant="primary">
               <TabsTrigger value="overview">Overview</TabsTrigger>
               <TabsTrigger value="analytics">Analytics</TabsTrigger>
               <TabsTrigger value="settings">Settings</TabsTrigger>
@@ -258,7 +258,7 @@ export const AllVariants: Story = {
                               <p className="text-white/60 text-sm">Tomorrow at 7:00 PM</p>
                             </div>
                           </div>
-                          <Badge variant="outline">12 joined</Badge>
+                          <Badge variant="secondary">12 joined</Badge>
                         </div>
                       </CardContent>
                     </Card>
@@ -282,7 +282,7 @@ export const AllVariants: Story = {
                             <div className="font-medium text-white text-sm">{name}</div>
                             <div className="text-white/60 text-xs">Computer Science</div>
                           </div>
-                          <Badge variant="outline" className="text-xs">Active</Badge>
+                          <Badge variant="secondary" className="text-xs">Active</Badge>
                         </div>
                       </CardContent>
                     </Card>
@@ -333,7 +333,7 @@ export const AllVariants: Story = {
                     <CardContent className="p-4">
                       <div className="flex items-center justify-between mb-3">
                         <h4 className="font-semibold text-white">{space}</h4>
-                        <Badge variant="outline">47 members</Badge>
+                        <Badge variant="secondary">47 members</Badge>
                       </div>
                       <p className="text-white/60 text-sm mb-3">Active study community with great discussions and resources</p>
                       <Button variant="secondary" size="sm" className="w-full">Join Space</Button>
@@ -439,7 +439,7 @@ export const AllVariants: Story = {
             <div>
               <h3 className="text-sm font-medium text-white/80 mb-3">Small</h3>
               <Tabs defaultValue="tab1">
-                <TabsList variant="default" size="sm">
+                <TabsList variant="primary" size="sm">
                   <TabsTrigger value="tab1" size="sm">Tab 1</TabsTrigger>
                   <TabsTrigger value="tab2" size="sm">Tab 2</TabsTrigger>
                   <TabsTrigger value="tab3" size="sm">Tab 3</TabsTrigger>
@@ -450,7 +450,7 @@ export const AllVariants: Story = {
             <div>
               <h3 className="text-sm font-medium text-white/80 mb-3">Medium (Default)</h3>
               <Tabs defaultValue="tab1">
-                <TabsList variant="default" size="md">
+                <TabsList variant="primary" size="md">
                   <TabsTrigger value="tab1" size="md">Tab 1</TabsTrigger>
                   <TabsTrigger value="tab2" size="md">Tab 2</TabsTrigger>
                   <TabsTrigger value="tab3" size="md">Tab 3</TabsTrigger>
@@ -461,7 +461,7 @@ export const AllVariants: Story = {
             <div>
               <h3 className="text-sm font-medium text-white/80 mb-3">Large</h3>
               <Tabs defaultValue="tab1">
-                <TabsList variant="default" size="lg">
+                <TabsList variant="primary" size="lg">
                   <TabsTrigger value="tab1" size="lg">Tab 1</TabsTrigger>
                   <TabsTrigger value="tab2" size="lg">Tab 2</TabsTrigger>
                   <TabsTrigger value="tab3" size="lg">Tab 3</TabsTrigger>

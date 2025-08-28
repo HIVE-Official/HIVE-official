@@ -58,7 +58,7 @@ export const AlumniComingSoonStep: React.FC<AlumniComingSoonStepProps> = ({
                 </p>
               </div>
               
-              <Button variant="outline" onClick={onBack} className="mt-6">
+              <Button variant="secondary" onClick={onBack} className="mt-6">
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Go Back
               </Button>
@@ -155,7 +155,7 @@ export const AlumniComingSoonStep: React.FC<AlumniComingSoonStepProps> = ({
             <Button
               onClick={handleNotifyMe}
               disabled={isSubmitting}
-              variant="ritual"
+              variant="primary"
               className="w-full"
             >
               {isSubmitting ? 'Adding you to the list...' : 'Notify Me When Ready'}
@@ -171,7 +171,7 @@ export const AlumniComingSoonStep: React.FC<AlumniComingSoonStepProps> = ({
             transition={{ delay: 0.4 }}
           >
             <Button
-              variant="outline"
+              variant="secondary"
               onClick={onBack}
               className="flex-1"
             >

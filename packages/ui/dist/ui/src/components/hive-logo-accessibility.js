@@ -3,7 +3,7 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
 import { useState, useEffect, useRef, useCallback, memo, useMemo } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { cva } from 'class-variance-authority';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 // WCAG compliant color contrast ratios
 const WCAG_COLORS = {
     // AA compliance (4.5:1 ratio)

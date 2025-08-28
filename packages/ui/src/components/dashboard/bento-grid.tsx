@@ -3,9 +3,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence, useDragControls, Reorder } from 'framer-motion';
 import { GripVertical, Maximize2, Minimize2, Settings, X, Plus } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Button } from '../hive-button';
-import { Badge } from '../../ui/badge';
+import { Badge } from '../../atomic/atoms/badge';
 
 // Grid item types and sizes
 export type GridSize = 'small' | 'medium' | 'large' | 'xl';
@@ -190,14 +190,14 @@ export function BentoGrid({
           </div>
           <div className="flex items-center space-x-2">
             <Button
-              variant="outline"
+              variant="secondary"
               size="sm"
               onClick={() => setShowGridLines(!showGridLines)}
             >
               Grid Lines
             </Button>
             <Button
-              variant="outline"
+              variant="secondary"
               size="sm"
               onClick={onItemAdd}
             >
@@ -336,7 +336,7 @@ function BentoGridItemComponent({
               {item.icon}
               <span>{item.title}</span>
               {item.category && (
-                <Badge variant="outline" className="text-xs">
+                <Badge variant="secondary" className="text-xs">
                   {item.category}
                 </Badge>
               )}

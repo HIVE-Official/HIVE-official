@@ -3,7 +3,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cva } from 'class-variance-authority';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 import { liquidMetal, motionDurations, cascadeTiming } from '../motion/hive-motion-system';
 import { Search, ArrowRight, User, Settings, Folder, Code, Zap } from 'lucide-react';
 // HIVE Command Palette - Magnetic Search with Liquid Metal Motion

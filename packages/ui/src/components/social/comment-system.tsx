@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useCallback, useMemo } from 'react';
-import { Button } from '../../ui/button';
+import { Button } from '../../atomic/atoms/button-enhanced';
 import { Avatar, HiveBadge as Badge } from '../index'; // Use atomic components
 import { 
   MessageCircle, 

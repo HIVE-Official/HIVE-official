@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { logger } from '@hive/core'
 import { dbAdmin } from '@/lib/firebase-admin'
 import { verifyAuthToken } from '@/lib/auth'
 
@@ -14,28 +13,31 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    // Development mode bypass
-    if (!process.env.NEXT_PUBLIC_FIREBASE_API_KEY) {
-      logger.info('🔥 Development mode: returning mock profile')
+    // Development mode: Check mock Firestore first
+    if (process.env.NODE_ENV === 'development') {
+      console.log('🔥 Development mode: checking mock Firestore for user profile', user.uid)
       
-      const mockProfile = {
-        uid: user.uid,
-        email: user.email,
-        fullName: 'Dev User',
-        handle: 'dev_user',
-        avatarUrl: null,
-        onboardingCompleted: true,
-        role: 'verified',
-        academicLevel: 'undergraduate',
-        majors: ['Computer Science'],
-        graduationYear: new Date().getFullYear() + 2,
-        interests: ['Technology', 'Programming'],
-        isStudentLeader: false,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+      try {
+        const userDoc = await dbAdmin.collection('users').doc(user.uid).get()
+        
+        if (userDoc.exists) {
+          const profile = userDoc.data()
+          console.log('🔥 Development: Found user profile in mock Firestore')
+          return NextResponse.json({ profile })
+        } else {
+          console.log('🔥 Development: No profile found, returning 404')
+          return NextResponse.json(
+            { message: 'User profile not found' },
+            { status: 404 }
+          )
+        }
+      } catch (error) {
+        console.error('🔥 Development: Error checking mock Firestore:', error)
+        return NextResponse.json(
+          { message: 'Failed to retrieve profile. Please try again.' },
+          { status: 500 }
+        )
       }
-      
-      return NextResponse.json({ profile: mockProfile })
     }
 
     // Production mode: Get from Firestore
@@ -51,12 +53,12 @@ export async function GET(request: NextRequest) {
 
       const profile = userDoc.data()
       
-      logger.info('Profile retrieved for user:', user.uid)
+      console.log('Profile retrieved for user:', user.uid)
       
       return NextResponse.json({ profile })
 
     } catch (firestoreError) {
-      logger.error('Failed to retrieve user profile:', firestoreError)
+      console.error('Failed to retrieve user profile:', firestoreError)
       
       return NextResponse.json(
         { message: 'Failed to retrieve profile. Please try again.' },
@@ -65,7 +67,7 @@ export async function GET(request: NextRequest) {
     }
 
   } catch (error) {
-    logger.error('Error retrieving profile:', error)
+    console.error('Error retrieving profile:', error)
     
     return NextResponse.json(
       { message: 'Failed to retrieve profile. Please try again.' },
@@ -111,7 +113,7 @@ export async function PATCH(request: NextRequest) {
 
     // Development mode bypass
     if (!process.env.NEXT_PUBLIC_FIREBASE_API_KEY) {
-      logger.info('🔥 Development mode: profile update bypassed', updateData)
+      console.log('🔥 Development mode: profile update bypassed', updateData)
       
       return NextResponse.json({
         success: true,
@@ -124,7 +126,7 @@ export async function PATCH(request: NextRequest) {
     try {
       await dbAdmin.collection('users').doc(user.uid).update(updateData)
       
-      logger.info('Profile updated for user:', {
+      console.log('Profile updated for user:', {
         uid: user.uid,
         fields: Object.keys(updateData)
       })
@@ -136,7 +138,7 @@ export async function PATCH(request: NextRequest) {
       })
 
     } catch (firestoreError) {
-      logger.error('Failed to update user profile:', firestoreError)
+      console.error('Failed to update user profile:', firestoreError)
       
       return NextResponse.json(
         { message: 'Failed to update profile. Please try again.' },
@@ -145,7 +147,7 @@ export async function PATCH(request: NextRequest) {
     }
 
   } catch (error) {
-    logger.error('Error updating profile:', error)
+    console.error('Error updating profile:', error)
     
     return NextResponse.json(
       { message: 'Failed to update profile. Please try again.' },

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { Component, type ReactNode, type ErrorInfo } from 'react';
-import { cn } from '../../lib/utils';
+import { cn } from '../lib/utils';
 import { Text } from '../../atomic/atoms/text';
 import { Button } from '../button';
 

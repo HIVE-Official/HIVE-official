@@ -33,7 +33,7 @@ export const HeroFirstHomepage = () => {
           </div>
           <div className="flex items-center gap-3">
             <Button variant="ghost" className="text-white/80 hover:text-white">Sign In</Button>
-            <Button variant="default" className="bg-accent text-black hover:bg-accent/90 font-medium">
+            <Button variant="primary" className="bg-accent text-black hover:bg-accent/90 font-medium">
               Join HIVE
             </Button>
           </div>
@@ -66,7 +66,7 @@ export const HeroFirstHomepage = () => {
             </Button>
             <Button 
               size="lg" 
-              variant="outline" 
+              variant="secondary" 
               className="border-white/30 text-white hover:bg-white/10 hover:border-white/50 font-semibold px-8 py-4 text-lg h-auto"
             >
               Join Your Campus
@@ -168,7 +168,7 @@ export const FeedFirstHomepage = () => {
             </div>
             <span className="font-bold text-lg">HIVE</span>
           </div>
-          <Button size="sm" variant="outline" className="border-white/30 text-white hover:bg-white/10">
+          <Button size="sm" variant="secondary" className="border-white/30 text-white hover:bg-white/10">
             Join Campus
           </Button>
         </div>
@@ -257,7 +257,7 @@ export const FeedFirstHomepage = () => {
                 <div className="flex items-center gap-6 pt-2">
                   <Button 
                     size="sm" 
-                    variant="outline" 
+                    variant="secondary" 
                     className="border-accent/30 text-accent hover:bg-accent/10"
                   >
                     <Zap className="w-4 h-4 mr-2" />
@@ -411,15 +411,15 @@ export const DashboardFirstHomepage = () => {
           <Card className="bg-surface border-white/10 p-6">
             <h3 className="font-semibold mb-4">Quick Actions</h3>
             <div className="space-y-3">
-              <Button variant="outline" className="w-full justify-start">
+              <Button variant="secondary" className="w-full justify-start">
                 <Users className="w-4 h-4 mr-2" />
                 Find Study Group
               </Button>
-              <Button variant="outline" className="w-full justify-start">
+              <Button variant="secondary" className="w-full justify-start">
                 <Code className="w-4 h-4 mr-2" />
                 Build Tool
               </Button>
-              <Button variant="outline" className="w-full justify-start">
+              <Button variant="secondary" className="w-full justify-start">
                 <Calendar className="w-4 h-4 mr-2" />
                 Schedule Event
               </Button>
@@ -524,7 +524,7 @@ export const CampusFirstHomepage = () => {
                 <span className="text-xs text-accent">39 residents</span>
               </div>
             </div>
-            <Button variant="outline" className="w-full">
+            <Button variant="secondary" className="w-full">
               <Users className="w-4 h-4 mr-2" />
               Find My Dorm
             </Button>
@@ -555,7 +555,7 @@ export const CampusFirstHomepage = () => {
                 <span className="text-xs text-accent">167 students</span>
               </div>
             </div>
-            <Button variant="outline" className="w-full">
+            <Button variant="secondary" className="w-full">
               <BookOpen className="w-4 h-4 mr-2" />
               Join My Major
             </Button>
@@ -586,7 +586,7 @@ export const CampusFirstHomepage = () => {
                 <span className="text-xs text-accent">67 members</span>
               </div>
             </div>
-            <Button variant="outline" className="w-full">
+            <Button variant="secondary" className="w-full">
               <Star className="w-4 h-4 mr-2" />
               Explore Clubs
             </Button>
@@ -785,7 +785,7 @@ export const CommunityFirstHomepage = () => {
               <Users className="w-5 h-5 mr-2" />
               Join Your Campus
             </Button>
-            <Button size="lg" variant="outline">
+            <Button size="lg" variant="secondary">
               <Play className="w-5 h-5 mr-2" />
               Watch Demo
             </Button>

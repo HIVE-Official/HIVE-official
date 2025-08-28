@@ -36,7 +36,7 @@ import {
   Wrench,
   Loader2,
 } from "lucide-react";
-import { cn } from "../../lib/utils";
+import { cn } from "../lib/utils";
 import type { Post } from "@hive/core";
 // import { PostType } from '@hive/core'
 
@@ -226,7 +226,7 @@ export const PostCard: React.FC<PostCardProps> = ({
 
                   {post.type !== "text" && (
                     <Badge
-                      variant="outline"
+                      variant="secondary"
                       className={cn(
                         "text-xs",
                         POST_TYPE_COLORS[post.type] === "blue" &&

@@ -70,6 +70,23 @@ export function isDevBypassToken(token: string): boolean {
     return true;
   }
   
+  // Check for Firebase emulator JWT tokens (base64.base64.signature format with dev content)
+  if (token.includes('.') && token.split('.').length === 3) {
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      // Check if it's a Firebase dev token
+      if (payload.iss && (
+        payload.iss.includes('dev-project') || 
+        payload.iss.includes('securetoken.google.com/dev-project') ||
+        payload.aud === 'dev-project'
+      )) {
+        return true;
+      }
+    } catch {
+      // Not a valid JWT, continue
+    }
+  }
+  
   return false;
 }
 
@@ -81,10 +98,32 @@ export function isTestUserId(userId: string): boolean {
 }
 
 /**
- * Extract user ID from debug session token
+ * Extract user ID from debug session token or Firebase emulator JWT
  * Debug tokens format: dev_session_userId_timestamp_random
+ * Firebase emulator JWTs: base64.base64.signature with user_id in payload
  */
 function extractUserIdFromDebugToken(token: string): string | null {
+  // Handle Firebase emulator JWT tokens
+  if (token.includes('.') && token.split('.').length === 3) {
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      if (payload.user_id) {
+        return payload.user_id;
+      }
+      if (payload.sub) {
+        return payload.sub;
+      }
+      if (payload.email) {
+        return payload.email.replace('@', '_at_').replace(/[^a-zA-Z0-9_]/g, '_');
+      }
+      return 'firebase_dev_user';
+    } catch (error) {
+      console.warn('Failed to parse Firebase dev JWT:', error);
+      return 'firebase_dev_user';
+    }
+  }
+
+  // Handle legacy debug session tokens
   if (!token.startsWith('dev_session_')) {
     return null;
   }
@@ -341,6 +380,27 @@ export async function validateAuthToken(
 
   // If it's a dev token and bypass is allowed, extract user ID
   if (isDevBypassToken(token) && bypassValidation.allowed) {
+    // Handle Firebase emulator JWT tokens
+    if (token.includes('.') && token.split('.').length === 3) {
+      const userId = extractUserIdFromDebugToken(token);
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        return {
+          valid: true,
+          userId: userId || 'firebase_dev_user',
+          email: payload.email,
+          emailVerified: payload.email_verified || true,
+          reason: 'Firebase emulator token'
+        };
+      } catch {
+        return {
+          valid: true,
+          userId: userId || 'firebase_dev_user',
+          reason: 'Firebase emulator token (fallback)'
+        };
+      }
+    }
+
     // Handle debug session tokens
     if (token.startsWith('dev_session_')) {
       const userId = extractUserIdFromDebugToken(token);

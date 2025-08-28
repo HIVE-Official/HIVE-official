@@ -18,9 +18,9 @@ import {
   Timer,
   Brain
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Button } from '../hive-button';
-import { Badge } from '../../ui/badge';
+import { Badge } from '../../atomic/atoms/badge';
 import { Progress } from '../hive-progress';
 import { Input } from '../hive-input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs';
@@ -167,7 +167,7 @@ export function PersonalTools({
                 <span>Personal Tools</span>
               </div>
               <Button 
-                variant="outline" 
+                variant="secondary" 
                 size="sm"
                 onClick={onAddTool}
                 className="bg-[var(--hive-text-primary)]"
@@ -277,7 +277,7 @@ export function PersonalTools({
                     </div>
                   </div>
                   {activity.result && (
-                    <Badge variant="outline" className="text-xs">
+                    <Badge variant="secondary" className="text-xs">
                       {activity.result}
                     </Badge>
                   )}
@@ -389,7 +389,7 @@ function PersonalToolCard({
 
         {/* Open tool button */}
         <Button 
-          variant="outline" 
+          variant="secondary" 
           size="sm" 
           className="w-full"
           onClick={() => onToolAction?.(tool.id, 'open')}

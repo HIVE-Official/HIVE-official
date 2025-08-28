@@ -169,10 +169,10 @@ export const CompleteShowcase: Story = {
                 <div className="space-y-3">
                   <Text variant="body-sm" color="gold" weight="medium">Default (Card Style):</Text>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <ProfileStatistic value={156} label="Connections" icon={Users} iconColor="gold" variant="default" />
-                    <ProfileStatistic value="3.8" label="GPA" icon={GraduationCap} iconColor="success" variant="default" />
-                    <ProfileStatistic value={23} label="Tools Created" icon={Code} iconColor="secondary" variant="default" />
-                    <ProfileStatistic value="12.5k" label="Study Hours" icon={Clock} iconColor="gold" variant="default" />
+                    <ProfileStatistic value={156} label="Connections" icon={Users} iconColor="gold" variant="primary" />
+                    <ProfileStatistic value="3.8" label="GPA" icon={GraduationCap} iconColor="success" variant="primary" />
+                    <ProfileStatistic value={23} label="Tools Created" icon={Code} iconColor="secondary" variant="primary" />
+                    <ProfileStatistic value="12.5k" label="Study Hours" icon={Clock} iconColor="gold" variant="primary" />
                   </div>
                 </div>
 

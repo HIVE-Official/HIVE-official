@@ -272,7 +272,7 @@ const HiveVolumeSlider = React.forwardRef<
     max={100}
     showValue
     valueFormatter={(value) => `${value}%`}
-    variant="default"
+    variant="primary"
     {...props}
   />
 ));
@@ -337,7 +337,7 @@ const HiveTemperatureSlider = React.forwardRef<
     max={80}
     showValue
     valueFormatter={(value) => `${value}°F`}
-    variant="default"
+    variant="primary"
     {...props}
   />
 ));

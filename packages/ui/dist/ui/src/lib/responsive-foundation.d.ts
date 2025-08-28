@@ -28,14 +28,14 @@ export declare const touchTargets: {
     readonly spacious: "min-h-[56px] min-w-[56px]";
 };
 export declare const responsiveSpace: (props?: {
-    size?: "xs" | "sm" | "md" | "lg" | "xl";
-    gap?: "xs" | "sm" | "md" | "lg" | "xl";
+    size?: "sm" | "md" | "lg" | "xl" | "xs";
+    gap?: "sm" | "md" | "lg" | "xl" | "xs";
 } & import("class-variance-authority/types").ClassProp) => string;
 export declare const responsiveText: (props?: {
-    size?: "xs" | "sm" | "lg" | "xl" | "2xl" | "base" | "3xl";
+    size?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
 } & import("class-variance-authority/types").ClassProp) => string;
 export declare const responsiveContainer: (props?: {
-    size?: "full" | "content" | "feed" | "app";
+    size?: "content" | "feed" | "full" | "app";
 } & import("class-variance-authority/types").ClassProp) => string;
 export declare const mobileNavigation: {
     readonly bottomTabs: "fixed bottom-0 left-0 right-0 bg-[var(--hive-background-primary)]/95 backdrop-blur-sm border-t border-[var(--hive-border-primary)] h-16 sm:hidden";

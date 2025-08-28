@@ -12,7 +12,7 @@ import { HiveCard } from '../hive-card';
 import { HiveBadge } from '../hive-badge';
 import { GhostModeCard } from './ghost-mode-card';
 import { Grid3X3, Activity, Users, Lock, Zap, BarChart3, Crown } from 'lucide-react';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 // Coming Soon Card Component
 const ComingSoonCard = ({ title, description, icon: Icon }) => (_jsxs(HiveCard, { className: "h-full flex flex-col items-center justify-center text-center p-6", children: [_jsx("div", { className: "rounded-full bg-[var(--hive-brand-secondary)]/10 p-4 mb-4", children: _jsx(Icon, { className: "h-8 w-8 text-[var(--hive-brand-secondary)]" }) }), _jsx("h3", { className: "text-lg font-semibold text-[var(--hive-text-primary)] mb-2", children: title }), _jsx("p", { className: "text-sm text-gray-400 mb-4", children: description }), _jsxs(HiveBadge, { variant: "active-tag", className: "bg-[var(--hive-brand-secondary)]/20 text-[var(--hive-brand-secondary)] border-hive-gold/30", children: [_jsx(Lock, { className: "h-3 w-3 mr-1" }), "Coming in v1"] })] }));
 // Personal Tools Card

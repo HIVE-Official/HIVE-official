@@ -259,7 +259,7 @@ const CodeViewer = ({
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-medium text-gray-900">Generated Code</h3>
-        <HiveButton size="sm" variant="outline" onClick={handleCopy}>
+        <HiveButton size="sm" variant="secondary" onClick={handleCopy}>
           <Copy className="w-3 h-3 mr-1" />
           Copy
         </HiveButton>
@@ -354,13 +354,13 @@ export function InteractivePlayground({
         <div className="flex items-center gap-2">
           <HiveButton
             size="sm"
-            variant="outline"
+            variant="secondary"
             onClick={() => setIsMaximized(!isMaximized)}
           >
             {isMaximized ? <Minimize className="w-4 h-4" /> : <Maximize className="w-4 h-4" />}
           </HiveButton>
           
-          <HiveButton size="sm" variant="outline" onClick={handleExportCode}>
+          <HiveButton size="sm" variant="secondary" onClick={handleExportCode}>
             <Code className="w-4 h-4 mr-1" />
             Export
           </HiveButton>
@@ -373,7 +373,7 @@ export function InteractivePlayground({
           )}
           
           {onClose && (
-            <HiveButton size="sm" variant="outline" onClick={onClose}>
+            <HiveButton size="sm" variant="secondary" onClick={onClose}>
               ✕
             </HiveButton>
           )}
@@ -415,7 +415,7 @@ export function InteractivePlayground({
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <h3 className="font-medium text-gray-900">Element Properties</h3>
-                  <HiveButton size="sm" variant="outline" onClick={resetProps}>
+                  <HiveButton size="sm" variant="secondary" onClick={resetProps}>
                     <RotateCcw className="w-3 h-3 mr-1" />
                     Reset
                   </HiveButton>
@@ -476,7 +476,7 @@ export function InteractivePlayground({
                           </div>
                           <HiveButton
                             size="sm"
-                            variant="outline"
+                            variant="secondary"
                             onClick={() => setCurrentProps({ ...element.defaultProps, ...example.props })}
                           >
                             <Play className="w-3 h-3 mr-1" />
@@ -513,7 +513,7 @@ export function InteractivePlayground({
             </div>
             
             <div className="flex items-center gap-2">
-              <HiveBadge variant="outline" className="text-xs">
+              <HiveBadge variant="secondary" className="text-xs">
                 v{element.version}
               </HiveBadge>
               {element.isVerified && (
@@ -540,11 +540,11 @@ export function InteractivePlayground({
               </div>
               
               <div className="flex items-center gap-2">
-                <HiveButton size="sm" variant="outline">
+                <HiveButton size="sm" variant="secondary">
                   <Share className="w-3 h-3 mr-1" />
                   Share
                 </HiveButton>
-                <HiveButton size="sm" variant="outline">
+                <HiveButton size="sm" variant="secondary">
                   <Download className="w-3 h-3 mr-1" />
                   Export
                 </HiveButton>

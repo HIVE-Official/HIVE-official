@@ -9,7 +9,7 @@ import { type VariantProps } from 'class-variance-authority';
 import type { HiveCardBaseProps } from './hive-card-system';
 declare const cardHeaderVariants: (props?: {
     size?: "default" | "sm" | "lg" | "xl";
-    alignment?: "center" | "end" | "start";
+    alignment?: "end" | "center" | "start";
     spacing?: "default" | "sm" | "lg" | "none";
 } & import("class-variance-authority/types").ClassProp) => string;
 declare const cardTitleVariants: (props?: {
@@ -18,7 +18,7 @@ declare const cardTitleVariants: (props?: {
 } & import("class-variance-authority/types").ClassProp) => string;
 declare const cardDescriptionVariants: (props?: {
     size?: "default" | "sm" | "lg" | "xl";
-    lines?: "none" | 1 | 2 | 3;
+    lines?: 1 | 3 | 2 | "none";
 } & import("class-variance-authority/types").ClassProp) => string;
 declare const cardContentVariants: (props?: {
     size?: "default" | "sm" | "lg" | "xl";
@@ -27,11 +27,11 @@ declare const cardContentVariants: (props?: {
 } & import("class-variance-authority/types").ClassProp) => string;
 declare const cardFooterVariants: (props?: {
     size?: "default" | "sm" | "lg" | "xl";
-    justify?: "center" | "end" | "start" | "between" | "around";
+    justify?: "end" | "center" | "start" | "between" | "around";
     border?: boolean;
 } & import("class-variance-authority/types").ClassProp) => string;
 declare const cardActionsVariants: (props?: {
-    layout?: "horizontal" | "vertical" | "grid";
+    layout?: "grid" | "horizontal" | "vertical";
     size?: "default" | "sm" | "lg";
 } & import("class-variance-authority/types").ClassProp) => string;
 interface HiveCardHeaderProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof cardHeaderVariants> {

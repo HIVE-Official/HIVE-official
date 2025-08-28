@@ -3,7 +3,7 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
 import { useState, useCallback, useMemo } from 'react';
 import { HiveCard, HiveButton, HiveBadge } from '../index';
 import { Search, Filter, Code, Eye, Settings, MousePointer, Database, BarChart3, Grid, List, Download, Star, Users, Layers, Package } from 'lucide-react';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 // Mock Elements Data
 const MOCK_ELEMENTS = [
     {

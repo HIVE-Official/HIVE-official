@@ -1145,7 +1145,7 @@ const AccessibilitySystem = () => {
 
                       <div className="flex justify-end space-x-4">
                         <AccessibleButton
-                          variant="outline"
+                          variant="secondary"
                           shortcut="Esc"
                         >
                           Cancel
@@ -1182,7 +1182,7 @@ const AccessibilitySystem = () => {
                           ].map((item) => (
                             <AccessibleButton
                               key={item.name}
-                              variant="outline"
+                              variant="secondary"
                               className="h-16 justify-start"
                               ariaLabel={`Navigate to ${item.name} section`}
                               shortcut={item.shortcut}

@@ -87,7 +87,7 @@ const QRCodeDisplay = ({ qrCode, onRefresh }: { qrCode: string; onRefresh: () =>
       <p className="text-xs text-gray-500 mb-3">
         Scan this code to check attendees in quickly
       </p>
-      <HiveButton size="sm" variant="outline" onClick={onRefresh}>
+      <HiveButton size="sm" variant="secondary" onClick={onRefresh}>
         <RefreshCw className="w-3 h-3 mr-1" />
         Refresh Code
       </HiveButton>
@@ -144,7 +144,7 @@ const QRScanner = ({
       <div className="bg-white rounded-lg p-6 max-w-md w-full">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold">Scan QR Code</h3>
-          <HiveButton size="sm" variant="outline" onClick={onClose}>
+          <HiveButton size="sm" variant="secondary" onClick={onClose}>
             <EyeOff className="w-4 h-4" />
           </HiveButton>
         </div>
@@ -236,7 +236,7 @@ const ManualCheckinModal = ({
       <div className="bg-white rounded-lg p-6 max-w-md w-full max-h-[80vh] overflow-hidden flex flex-col">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold">Manual Check-in</h3>
-          <HiveButton size="sm" variant="outline" onClick={onClose}>
+          <HiveButton size="sm" variant="secondary" onClick={onClose}>
             Close
           </HiveButton>
         </div>
@@ -518,7 +518,7 @@ export function EventCheckinTool({
         </div>
         
         <div className="flex items-center gap-3">
-          <HiveButton variant="outline" onClick={() => onExportAttendance?.('csv')}>
+          <HiveButton variant="secondary" onClick={() => onExportAttendance?.('csv')}>
             <Download className="w-4 h-4 mr-2" />
             Export
           </HiveButton>

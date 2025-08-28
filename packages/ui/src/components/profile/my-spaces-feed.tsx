@@ -46,7 +46,7 @@ export const MySpacesFeed: React.FC<MySpacesFeedProps> = ({
           My Spaces
         </h2>
         <HiveButton 
-          variant="outline" 
+          variant="secondary" 
           size="sm" 
           onClick={onJoinSpace}
           className="flex items-center gap-2"

@@ -220,7 +220,7 @@ export const WelcomeRoleStep: React.FC<WelcomeRoleStepProps> = ({
             <Button
               onClick={handleContinue}
               disabled={!selectedRole}
-              variant="ritual"
+              variant="primary"
               size="lg"
               className="w-full h-14 text-lg font-semibold"
             >

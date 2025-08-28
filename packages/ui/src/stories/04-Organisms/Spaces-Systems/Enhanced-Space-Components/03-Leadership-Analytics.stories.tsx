@@ -494,13 +494,13 @@ function ConfigureMode() {
               <List className="w-8 h-8 text-gray-400 mx-auto mb-2" />
               <h4 className="text-white font-medium mb-1">Tab Layout</h4>
               <p className="text-gray-400 text-sm">Mobile-friendly tabs</p>
-              <Button size="sm" variant="outline" className="mt-2 border-gray-600 text-white">Available</Button>
+              <Button size="sm" variant="secondary" className="mt-2 border-gray-600 text-white">Available</Button>
             </div>
             <div className="text-center p-4 border border-gray-600 rounded-lg">
               <Monitor className="w-8 h-8 text-gray-400 mx-auto mb-2" />
               <h4 className="text-white font-medium mb-1">Custom Layout</h4>
               <p className="text-gray-400 text-sm">Advanced customization</p>
-              <Button size="sm" variant="outline" className="mt-2 border-yellow-600 text-yellow-400">Pro</Button>
+              <Button size="sm" variant="secondary" className="mt-2 border-yellow-600 text-yellow-400">Pro</Button>
             </div>
           </div>
         </CardContent>
@@ -533,7 +533,7 @@ function InsightsMode({ activeTab, onTabChange, isLoading }: {
           </select>
           
           <Button 
-            variant="outline"
+            variant="secondary"
             className="border-gray-600 text-white"
           >
             <Download className="w-4 h-4 mr-2" />
@@ -738,7 +738,7 @@ function OverviewAnalytics({ isLoading }: { isLoading: boolean }) {
                   <p className="text-white text-sm">{alert.message}</p>
                   <p className="text-gray-400 text-xs mt-1">{alert.timestamp}</p>
                 </div>
-                <Button size="sm" variant="outline" className="border-gray-600 text-white">
+                <Button size="sm" variant="secondary" className="border-gray-600 text-white">
                   View Details
                 </Button>
               </div>
@@ -815,7 +815,7 @@ function ContentAnalytics({ isLoading }: { isLoading: boolean }) {
               <div key={post.id} className="flex items-center justify-between p-3 bg-gray-900/50 rounded-lg">
                 <div className="flex-1">
                   <h4 className="text-white font-medium">{post.title}</h4>
-                  <Badge variant="outline" className="text-xs mt-1 border-blue-400/50 text-blue-400">
+                  <Badge variant="secondary" className="text-xs mt-1 border-blue-400/50 text-blue-400">
                     {post.type}
                   </Badge>
                 </div>
@@ -924,7 +924,7 @@ function ToolAnalytics({ isLoading }: { isLoading: boolean }) {
                     <div className="text-gray-400 text-sm">{tool.uses} uses • {tool.rating}★ rating</div>
                   </div>
                 </div>
-                <Button size="sm" variant="outline" className="border-gray-600 text-white">
+                <Button size="sm" variant="secondary" className="border-gray-600 text-white">
                   <ExternalLink className="w-3 h-3 mr-1" />
                   View
                 </Button>
@@ -971,7 +971,7 @@ function ModerationQueue() {
             <div className="flex items-start justify-between">
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-2">
-                  <Badge variant="outline" className="border-yellow-400/50 text-yellow-400 text-xs">
+                  <Badge variant="secondary" className="border-yellow-400/50 text-yellow-400 text-xs">
                     {item.type.replace('_', ' ')}
                   </Badge>
                   <span className="text-gray-400 text-sm">{item.timestamp}</span>
@@ -986,7 +986,7 @@ function ModerationQueue() {
                   <CheckCircle className="w-3 h-3 mr-1" />
                   Approve
                 </Button>
-                <Button size="sm" variant="outline" className="border-red-600 text-red-400">
+                <Button size="sm" variant="secondary" className="border-red-600 text-red-400">
                   <Ban className="w-3 h-3 mr-1" />
                   Remove
                 </Button>

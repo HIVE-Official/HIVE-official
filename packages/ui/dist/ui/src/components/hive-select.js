@@ -3,7 +3,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cva } from 'class-variance-authority';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 import { liquidMetal, motionDurations, cascadeTiming } from '../motion/hive-motion-system';
 import { ChevronDown, Check, Search, X, Plus } from 'lucide-react';
 // HIVE Select System - Magnetic Dropdowns with Search and Multi-Select

@@ -39,6 +39,8 @@ export declare const useTransform: (motionValue: any, input?: any, output?: any)
     set: (value: any) => void;
     onChange: (callback: any) => () => void;
 };
+export type Variants = Record<string, any>;
+export type MotionValue = ReturnType<typeof useMotionValue>;
 export declare const MotionSpan: (props: any) => import("react/jsx-runtime").JSX.Element;
 export declare const MotionSection: (props: any) => import("react/jsx-runtime").JSX.Element;
 export declare const Reorder: {

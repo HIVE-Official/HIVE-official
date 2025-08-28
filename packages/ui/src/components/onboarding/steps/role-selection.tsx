@@ -145,7 +145,7 @@ export function RoleSelection({
         {onBack && (
           <Button
             onClick={onBack}
-            variant="outline"
+            variant="secondary"
             className="w-full"
             disabled={isLoading}
           >

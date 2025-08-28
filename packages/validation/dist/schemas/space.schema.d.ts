@@ -11,27 +11,27 @@ export declare const spaceSchema: z.ZodObject<{
     createdAt: z.ZodDefault<z.ZodDate>;
     updatedAt: z.ZodOptional<z.ZodDate>;
 }, "strip", z.ZodTypeAny, {
-    isPublic: boolean;
     createdAt: Date;
+    memberCount: number;
     name: string;
     description: string;
     imageUrl: string;
     category: "Major" | "Residential" | "Student Life" | "Club" | "General";
-    memberCount: number;
+    isPublic: boolean;
     createdBy: string;
-    lastActivityAt?: Date | undefined;
     updatedAt?: Date | undefined;
+    lastActivityAt?: Date | undefined;
 }, {
     name: string;
     description: string;
     imageUrl: string;
     category: "Major" | "Residential" | "Student Life" | "Club" | "General";
     createdBy: string;
-    isPublic?: boolean | undefined;
     createdAt?: Date | undefined;
-    memberCount?: number | undefined;
-    lastActivityAt?: Date | undefined;
     updatedAt?: Date | undefined;
+    memberCount?: number | undefined;
+    isPublic?: boolean | undefined;
+    lastActivityAt?: Date | undefined;
 }>;
 export declare const memberSchema: z.ZodObject<{
     userId: z.ZodString;

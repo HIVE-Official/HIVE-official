@@ -1,6 +1,6 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 import { TrendingUp, User, Layers, Cpu } from 'lucide-react';
 const coreItems = [
     { id: 'feed', icon: TrendingUp, label: 'Feed', href: '/' },

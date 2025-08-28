@@ -3,7 +3,7 @@
  * Connects HIVE design tokens with Framer Motion for consistent animations
  */
 import { Transition, type MotionProps } from 'framer-motion';
-import { motion } from '@hive/tokens';
+import { motion } from '../../../tokens/src/motion';
 export declare const hiveTransitions: {
     readonly instant: {
         duration: number;
@@ -297,7 +297,6 @@ export declare const createHiveTransition: (duration?: keyof typeof motion.durat
 export declare const createHiveScale: (scale?: keyof typeof motion.transform) => Partial<MotionProps>;
 export declare const createGoldAccent: (duration?: keyof typeof motion.duration) => Partial<MotionProps>;
 export declare const withReducedMotion: (animation: Partial<MotionProps>) => Partial<MotionProps>;
-export { motion } from '@hive/tokens';
 export type { Variants, Transition, MotionProps } from 'framer-motion';
 export { useAdaptiveMotion, type StudentEnergyState, type CampusContext } from './adaptive-motion';
 //# sourceMappingURL=motion.d.ts.map

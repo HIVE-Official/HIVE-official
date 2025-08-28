@@ -1,6 +1,6 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
-import { cn } from "../lib/utils";
+import { cn } from "../../lib/utils";
 export function ToolsCard({ tools = [], className }) {
     // Generate some mock tools if none provided (for development)
     const mockTools = [

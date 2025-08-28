@@ -1,6 +1,6 @@
 import React from 'react';
 import { Badge } from '../../badge';
-import { cn } from '../../lib/utils';
+import { cn } from '../lib/utils';
 
 export interface CampusCardProps {
   id: string;
@@ -44,11 +44,11 @@ export const CampusCard = ({
         
         <div className="flex flex-col items-end gap-2">
           {status === 'coming_soon' ? (
-            <Badge variant="outline" className="border-border text-muted-foreground">
+            <Badge variant="secondary" className="border-border text-muted-foreground">
               Coming Soon
             </Badge>
           ) : remainingSpots !== undefined ? (
-            <Badge variant="outline" className="border-accent/50 text-accent">
+            <Badge variant="secondary" className="border-accent/50 text-accent">
               {remainingSpots} spots left
             </Badge>
           ) : null}

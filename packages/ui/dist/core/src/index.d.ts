@@ -24,4 +24,6 @@ export * from "./firebase";
 export * from "./feature-flags";
 export * from "./utils/privacy-utils";
 export * from "./utils/logger";
+export type { Post as FeedPost, CreatePostRequest, PostType, PostContent } from "./domain/feed/posting";
+export { CreatePostSchema } from "./domain/feed/posting";
 //# sourceMappingURL=index.d.ts.map

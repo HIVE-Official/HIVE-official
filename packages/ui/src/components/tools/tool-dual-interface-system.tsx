@@ -82,7 +82,7 @@ const PollInterface = ({ toolState, onUpdate }: { toolState: any; onUpdate: (dat
         <HiveBadge className="bg-blue-100 text-blue-800 border-blue-200">
           Interface
         </HiveBadge>
-        <HiveBadge variant="outline">
+        <HiveBadge variant="secondary">
           {toolState?.responses?.length || 0} responses
         </HiveBadge>
       </div>
@@ -122,11 +122,11 @@ const PollInterface = ({ toolState, onUpdate }: { toolState: any; onUpdate: (dat
     </div>
 
     <div className="grid grid-cols-2 gap-4">
-      <HiveButton size="sm" variant="outline">
+      <HiveButton size="sm" variant="secondary">
         <BarChart3 className="w-4 h-4 mr-2" />
         View Analytics
       </HiveButton>
-      <HiveButton size="sm" variant="outline">
+      <HiveButton size="sm" variant="secondary">
         <Download className="w-4 h-4 mr-2" />
         Export Data
       </HiveButton>
@@ -209,7 +209,7 @@ const InterfacePreviewCard = ({
         <div className="flex items-center gap-1">
           <HiveButton
             size="sm"
-            variant="outline"
+            variant="secondary"
             onClick={onConfigure}
           >
             <Settings className="w-3 h-3" />
@@ -380,7 +380,7 @@ export function ToolDualInterfaceSystem({
           </div>
           
           <HiveButton
-            variant="outline"
+            variant="secondary"
             onClick={onToggleActive}
           >
             {toolState.isActive ? <Pause className="w-4 h-4 mr-2" /> : <Play className="w-4 h-4 mr-2" />}

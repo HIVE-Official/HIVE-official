@@ -84,7 +84,7 @@ export const EmailForm = ({
         <Button 
           type="submit" 
           disabled={!isValid || isLoading}
-          variant="ritual"
+          variant="primary"
           fullWidth
         >
           {isLoading && <LoadingSpinner size="sm" className="mr-2" />}

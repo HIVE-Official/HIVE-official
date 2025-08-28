@@ -2,7 +2,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 import { darkLuxury, luxuryShadows } from '../theme/dark-luxury';
 export const HiveRipple = ({ children, className, disabled = false }) => {
     const [ripples, setRipples] = useState([]);

@@ -160,12 +160,12 @@ export const SpaceAnalyticsDashboard: React.FC<SpaceAnalyticsDashboardProps> = (
             ))}
           </div>
           
-          <HiveButton variant="outline" size="sm" onClick={onRefresh}>
+          <HiveButton variant="secondary" size="sm" onClick={onRefresh}>
             <RefreshCw className="h-4 w-4 mr-2" />
             Refresh
           </HiveButton>
           
-          <HiveButton variant="outline" size="sm" onClick={onExportData}>
+          <HiveButton variant="secondary" size="sm" onClick={onExportData}>
             <Download className="h-4 w-4 mr-2" />
             Export
           </HiveButton>

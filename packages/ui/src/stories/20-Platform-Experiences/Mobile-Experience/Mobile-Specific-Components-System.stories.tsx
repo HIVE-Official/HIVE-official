@@ -376,7 +376,7 @@ const MobileCameraCapture = () => {
                     <MessageCircle className="mr-2 h-4 w-4" />
                     Post About It
                   </Button>
-                  <Button size="sm" variant="outline" className="border-gray-700 text-gray-300">
+                  <Button size="sm" variant="secondary" className="border-gray-700 text-gray-300">
                     <Users className="mr-2 h-4 w-4" />
                     Find Study Partners
                   </Button>
@@ -396,7 +396,7 @@ const MobileCameraCapture = () => {
                 <Upload className="mr-2 h-4 w-4" />
                 Share to Feed
               </Button>
-              <Button size="sm" variant="outline" className="border-gray-700 text-gray-300">
+              <Button size="sm" variant="secondary" className="border-gray-700 text-gray-300">
                 <X className="h-4 w-4" />
               </Button>
             </div>
@@ -763,7 +763,7 @@ const MobileLocationServices = () => {
                   <Compass className="mr-2 h-4 w-4" />
                   Campus Map
                 </Button>
-                <Button size="sm" variant="outline" className="border-gray-700 text-gray-300">
+                <Button size="sm" variant="secondary" className="border-gray-700 text-gray-300">
                   <Search className="mr-2 h-4 w-4" />
                   Find Study Room
                 </Button>

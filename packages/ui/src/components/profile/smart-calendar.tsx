@@ -76,7 +76,7 @@ export const SmartCalendar: React.FC<SmartCalendarProps> = ({
           Smart Calendar
         </h2>
         <HiveButton 
-          variant="outline" 
+          variant="secondary" 
           size="sm" 
           onClick={onAddEvent}
           className="flex items-center gap-2"

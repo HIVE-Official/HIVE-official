@@ -101,9 +101,9 @@ const SpacesCommunitiesOverview = () => {
           and clubs actually get things done. Not just discussion - coordination.
         </Typography>
         <div className="flex justify-center gap-2">
-          <Badge variant="default">4 Space Types</Badge>
+          <Badge variant="primary">4 Space Types</Badge>
           <Badge variant="secondary">Campus Focused</Badge>
-          <Badge variant="outline">Problem Solving</Badge>
+          <Badge variant="secondary">Problem Solving</Badge>
         </div>
       </div>
 
@@ -180,9 +180,9 @@ const SpacesCommunitiesOverview = () => {
                 </Typography>
               </div>
               <div className="flex gap-2">
-                <Badge variant="default">Study Group</Badge>
+                <Badge variant="primary">Study Group</Badge>
                 <Badge variant="secondary">CS Major</Badge>
-                <Badge variant="outline">Active</Badge>
+                <Badge variant="secondary">Active</Badge>
               </div>
             </div>
             <Typography variant="body2">

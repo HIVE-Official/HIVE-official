@@ -115,7 +115,7 @@ export const CompleteShowcase: Story = {
               <Checkbox
                 label="Default (Gold Fill)"
                 description="Gold fill indicates selected campus features"
-                variant="default"
+                variant="primary"
                 checked={true}
               />
               <Checkbox
@@ -168,7 +168,7 @@ export const CompleteShowcase: Story = {
                   label="Small"
                   description="Compact forms"
                   size="sm"
-                  variant="default"
+                  variant="primary"
                   checked={true}
                 />
                 <p className="text-xs text-[var(--hive-text-muted)]">SM: 16px × 16px</p>
@@ -178,7 +178,7 @@ export const CompleteShowcase: Story = {
                   label="Default"
                   description="Standard use"
                   size="default"
-                  variant="default"
+                  variant="primary"
                   checked={true}
                 />
                 <p className="text-xs text-[var(--hive-text-muted)]">Default: 20px × 20px</p>
@@ -188,7 +188,7 @@ export const CompleteShowcase: Story = {
                   label="Large"
                   description="Prominent forms"
                   size="lg"
-                  variant="default"
+                  variant="primary"
                   checked={true}
                 />
                 <p className="text-xs text-[var(--hive-text-muted)]">LG: 24px × 24px</p>
@@ -198,7 +198,7 @@ export const CompleteShowcase: Story = {
                   label="Extra Large"
                   description="Hero forms"
                   size="xl"
-                  variant="default"
+                  variant="primary"
                   checked={true}
                 />
                 <p className="text-xs text-[var(--hive-text-muted)]">XL: 28px × 28px</p>
@@ -230,7 +230,7 @@ export const CompleteShowcase: Story = {
                   label="Select All Study Materials"
                   description="Master checkbox for all study materials"
                   indeterminate={true}
-                  variant="default"
+                  variant="primary"
                 />
                 <div className="ml-6 space-y-2">
                   <Checkbox label="Lecture Notes" checked={true} size="sm" />
@@ -252,14 +252,14 @@ export const CompleteShowcase: Story = {
                   label="Terms and Conditions"
                   description="You must agree to the terms to continue"
                   required
-                  variant="default"
+                  variant="primary"
                   checked={false}
                 />
                 <Checkbox
                   label="Academic Honor Code"
                   description="Required for all UB course registrations"
                   required
-                  variant="default"
+                  variant="primary"
                   checked={true}
                 />
               </div>
@@ -304,7 +304,7 @@ export const CompleteShowcase: Story = {
                   description="Receive important campus updates, emergency alerts, and academic announcements via email"
                   icon={<span className="text-lg">📧</span>}
                   badge={<Badge variant="error" size="sm">Required</Badge>}
-                  variant="default"
+                  variant="primary"
                   checked={true}
                 />
                 <CheckboxCard
@@ -312,7 +312,7 @@ export const CompleteShowcase: Story = {
                   description="Get notified when study groups form in your courses and receive collaboration invites"
                   icon={<span className="text-lg">👥</span>}
                   badge={<Badge variant="success" size="sm">Academic</Badge>}
-                  variant="default"
+                  variant="primary"
                   checked={true}
                 />
                 <CheckboxCard
@@ -320,7 +320,7 @@ export const CompleteShowcase: Story = {
                   description="Receive invitations to campus social events, club activities, and recreational programs"
                   icon={<span className="text-lg">🎉</span>}
                   badge={<Badge variant="info" size="sm">Social</Badge>}
-                  variant="default"
+                  variant="primary"
                   checked={false}
                 />
               </div>
@@ -358,7 +358,7 @@ export const CompleteShowcase: Story = {
                 <Checkbox
                   label="UB Student Verification"
                   description="Verify your UB student status for access"
-                  variant="default"
+                  variant="primary"
                   required
                   checked={true}
                 />

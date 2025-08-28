@@ -17,7 +17,7 @@ import {
   CreateTool
 } from '@hive/core';
 import { HiveCard } from '../hive-card';
-import { Button } from '../../ui/button';
+import { Button } from '../../atomic/atoms/button-enhanced';
 import { LiveToolRuntime } from '../live-tool-runtime';
 import { ElementConfigPanel } from './element-config-panel';
 import { SpaceToolDeployment } from '../community/space-tool-deployment';
@@ -603,11 +603,11 @@ export const VisualToolBuilder: React.FC<VisualToolBuilderProps> = ({
                 </button>
               </div>
               
-              <Button variant="outline" onClick={handlePreview}>
+              <Button variant="secondary" onClick={handlePreview}>
                 <Play className="w-4 h-4 mr-2" />
                 Test
               </Button>
-              <Button variant="outline" onClick={() => setShowDeployment(true)} disabled={elements.length === 0}>
+              <Button variant="secondary" onClick={() => setShowDeployment(true)} disabled={elements.length === 0}>
                 <Zap className="w-4 h-4 mr-2" />
                 Deploy
               </Button>

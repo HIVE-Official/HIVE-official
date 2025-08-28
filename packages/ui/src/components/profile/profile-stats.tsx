@@ -76,7 +76,7 @@ export const ProfileStats: React.FC<ProfileStatsProps> = ({
           <TrendingUp className="h-5 w-5 text-[var(--hive-brand-secondary)]" />
           Your Stats
         </h2>
-        <HiveButton variant="outline" size="sm">
+        <HiveButton variant="secondary" size="sm">
           View Analytics
         </HiveButton>
       </div>

@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { cn } from '../lib/utils';
 import { Text } from '../../atomic/atoms/text';
-import { Button } from '../../ui/button';
+import { Button } from '../../atomic/atoms/button-enhanced';
 import { useAdvancedViewport } from '../Layout/ResponsiveLayout';
 
 // Offline capability levels

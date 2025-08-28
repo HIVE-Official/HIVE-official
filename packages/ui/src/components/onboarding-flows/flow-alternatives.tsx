@@ -113,7 +113,7 @@ export const InstantActivationFlow = () => {
             <Button className="w-full bg-[#FFD700] text-black hover:bg-[#FFD700]/90 font-semibold">
               Open Email App
             </Button>
-            <Button variant="outline" className="w-full border-white/20 text-white hover:bg-white/5">
+            <Button variant="secondary" className="w-full border-white/20 text-white hover:bg-white/5">
               Resend Link
             </Button>
           </div>
@@ -1038,7 +1038,7 @@ export const ProgressiveWizardFlow = () => {
         <div className="flex gap-3">
           {step > 1 && (
             <Button 
-              variant="outline"
+              variant="secondary"
               onClick={() => setStep(step - 1)}
               className="border-white/20 text-white hover:bg-white/5"
             >

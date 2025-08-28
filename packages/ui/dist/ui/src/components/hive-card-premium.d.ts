@@ -1,7 +1,7 @@
 import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
 declare const hivePremiumCardVariants: (props?: {
-    variant?: "default" | "selected" | "glass" | "elevated" | "announcement" | "post" | "gold-accent" | "gold-featured" | "gold-premium" | "clickable" | "selectable" | "featured-post";
+    variant?: "default" | "selected" | "post" | "announcement" | "elevated" | "gold-accent" | "gold-featured" | "gold-premium" | "clickable" | "selectable" | "featured-post" | "glass";
     size?: "default" | "sm" | "lg" | "xl" | "compact";
     radius?: "lg" | "xl" | "2xl" | "full";
 } & import("class-variance-authority/types").ClassProp) => string;

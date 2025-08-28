@@ -1,0 +1,61 @@
+export interface PerformanceReport {
+    webVitals: WebVitalsReport;
+    loadTimes: LoadTimeReport;
+    errorRates: ErrorRateReport;
+    userExperience: UserExperienceReport;
+}
+export interface WebVitalsReport {
+    firstContentfulPaint: MetricSummary;
+    largestContentfulPaint: MetricSummary;
+    firstInputDelay: MetricSummary;
+    cumulativeLayoutShift: MetricSummary;
+    timeToInteractive: MetricSummary;
+}
+export interface MetricSummary {
+    p50: number;
+    p75: number;
+    p90: number;
+    p95: number;
+    p99: number;
+    average: number;
+    count: number;
+}
+export interface LoadTimeReport {
+    pageLoad: MetricSummary;
+    domReady: MetricSummary;
+    firstByte: MetricSummary;
+    resourceLoad: MetricSummary;
+}
+export interface ErrorRateReport {
+    javascript: number;
+    network: number;
+    rendering: number;
+    total: number;
+    byPage: Record<string, number>;
+}
+export interface UserExperienceReport {
+    bounceRate: number;
+    averageSessionDuration: number;
+    pagesPerSession: number;
+    conversionRate: number;
+    userSatisfactionScore: number;
+}
+export interface EventAggregation {
+    timeframe: "hour" | "day" | "week" | "month";
+    metrics: AggregatedMetric[];
+    dimensions: string[];
+    filters: EventFilter[];
+}
+export interface AggregatedMetric {
+    name: string;
+    value: number;
+    change: number;
+    changePercent: number;
+    previousValue: number;
+}
+export interface EventFilter {
+    field: string;
+    operator: "equals" | "not_equals" | "contains" | "greater_than" | "less_than" | "in" | "not_in";
+    value: unknown;
+}
+//# sourceMappingURL=report-types.d.ts.map

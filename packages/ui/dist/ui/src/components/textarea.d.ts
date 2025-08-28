@@ -1,7 +1,7 @@
 import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
 declare const textareaVariants: (props?: {
-    variant?: "default" | "outline" | "filled" | "ghost";
+    variant?: "ghost" | "outline" | "default" | "filled";
     size?: "default" | "sm" | "lg";
 } & import("class-variance-authority/types").ClassProp) => string;
 export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement>, VariantProps<typeof textareaVariants> {

@@ -26,7 +26,7 @@ import {
   HelpCircle
 } from 'lucide-react';
 import { Button } from '../../atomic/atoms/button-enhanced';
-import { Badge } from '../../ui/badge';
+import { Badge } from '../../atomic/atoms/badge';
 import { Separator } from '../../ui/separator';
 import { cn } from '../lib/utils';
 

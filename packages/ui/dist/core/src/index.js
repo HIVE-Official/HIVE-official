@@ -33,4 +33,5 @@ export * from "./feature-flags";
 export * from "./utils/privacy-utils";
 // Logger utilities
 export * from "./utils/logger";
+export { CreatePostSchema } from "./domain/feed/posting";
 //# sourceMappingURL=index.js.map

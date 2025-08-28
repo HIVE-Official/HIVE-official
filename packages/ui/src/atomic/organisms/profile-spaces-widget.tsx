@@ -204,7 +204,7 @@ export const ProfileSpacesWidget: React.FC<ProfileSpacesWidgetProps> = ({
               My Spaces
             </Text>
             {totalUnread > 0 && (
-              <Badge variant="outline" className="text-xs">
+              <Badge variant="secondary" className="text-xs">
                 <MessageSquare className="h-3 w-3 mr-1" />
                 {totalUnread} unread
               </Badge>
@@ -299,7 +299,7 @@ export const ProfileSpacesWidget: React.FC<ProfileSpacesWidgetProps> = ({
                         {featuredSpace.name}
                       </Text>
                       <Badge 
-                        variant="outline" 
+                        variant="secondary" 
                         className={cn('text-xs', getRoleConfig(featuredSpace.role).color)}
                       >
                         {getRoleConfig(featuredSpace.role).label}
@@ -377,7 +377,7 @@ export const ProfileSpacesWidget: React.FC<ProfileSpacesWidgetProps> = ({
                       {space.name}
                     </Text>
                     {space.unreadMessages && space.unreadMessages > 0 && (
-                      <Badge variant="outline" className="text-xs">
+                      <Badge variant="secondary" className="text-xs">
                         {space.unreadMessages}
                       </Badge>
                     )}
@@ -415,7 +415,7 @@ export const ProfileSpacesWidget: React.FC<ProfileSpacesWidgetProps> = ({
         <div className="flex gap-2 pt-2 border-t border-[var(--hive-border-primary)]">
           {isEditable && onJoinSpace && (
             <Button
-              variant="outline"
+              variant="secondary"
               size="sm"
               onClick={onJoinSpace}
               className="flex-1"
@@ -427,7 +427,7 @@ export const ProfileSpacesWidget: React.FC<ProfileSpacesWidgetProps> = ({
           
           {onViewAllSpaces && (
             <Button
-              variant="default"
+              variant="primary"
               size="sm"
               onClick={onViewAllSpaces}
               className="flex-1"
@@ -461,7 +461,7 @@ export const ProfileSpacesWidget: React.FC<ProfileSpacesWidgetProps> = ({
             </Text>
             {isEditable && onJoinSpace && (
               <Button
-                variant="outline"
+                variant="secondary"
                 size="sm"
                 onClick={onJoinSpace}
               >

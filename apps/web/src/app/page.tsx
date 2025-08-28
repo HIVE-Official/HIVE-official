@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
-import { useHiveAuth } from '@hive/ui';
+import { useUnifiedAuth } from '@hive/ui';
 
 /**
  * HIVE Root Page - Clean Firebase Authentication Router
@@ -17,7 +17,7 @@ import { useHiveAuth } from '@hive/ui';
  */
 export default function RootPage() {
   const router = useRouter();
-  const { isAuthenticated, isLoading, requiresOnboarding, devLogin } = useHiveAuth();
+  const { isAuthenticated, isLoading, requiresOnboarding, devLogin } = useUnifiedAuth();
   
   // Development mode detection
   const isDev = process.env.NODE_ENV === "development";

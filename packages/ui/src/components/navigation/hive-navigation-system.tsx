@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { cn } from '../lib/utils';
-import { colors, semantic, shadows, gradients } from '@hive/tokens';
+import { colors, semantic, shadows, gradients } from '../../../../tokens/src';
 import { motion } from '../framer-motion-proxy';
 import { getHiveMotionProps } from '../../lib/motion-utils';
 import { HiveLogo, HiveGlyphOnly } from '../hive-logo';

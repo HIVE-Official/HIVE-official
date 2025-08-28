@@ -307,7 +307,7 @@ const PurposeStep: React.FC<{ tool: Tool; onChange: (tool: Tool) => void }> = ({
           ].map((idea, index) => (
             <HiveButton
               key={index}
-              variant="outline"
+              variant="secondary"
               size="sm"
               onClick={() => onChange({ 
                 ...tool, 
@@ -767,7 +767,7 @@ const PreviewStep: React.FC<{ tool: Tool }> = ({ tool }) => {
       {/* Preview actions */}
       <div className="flex gap-4 justify-center">
         <HiveButton
-          variant="outline"
+          variant="secondary"
           onClick={() => setShowPreview(true)}
           className="flex items-center gap-2"
         >
@@ -975,7 +975,7 @@ export const WizardToolBuilder: React.FC<WizardBuilderProps> = ({
 
             <div className="flex gap-2">
               <HiveButton
-                variant="outline"
+                variant="secondary"
                 onClick={handlePrevious}
                 disabled={isFirstStep}
               >
@@ -986,7 +986,7 @@ export const WizardToolBuilder: React.FC<WizardBuilderProps> = ({
               {isLastStep ? (
                 <div className="flex gap-2">
                   <HiveButton
-                    variant="outline"
+                    variant="secondary"
                     onClick={() => onSave(tool)}
                     disabled={isLoading}
                   >

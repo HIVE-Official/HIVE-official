@@ -416,7 +416,7 @@ const CommandInterfaceDemo = () => {
                   setCommandPaletteOpen(true);
                   setSearchMode(true);
                 }}
-                variant="outline" 
+                variant="secondary" 
                 className="border-gray-600 text-white"
               >
                 <Search className="w-4 h-4 mr-2" />
@@ -437,12 +437,12 @@ const CommandInterfaceDemo = () => {
               <Button
                 key={item.label}
                 size="sm"
-                variant="outline"
+                variant="secondary"
                 className="border-gray-600 text-gray-400 hover:text-white hover:border-gray-500"
               >
                 <item.icon className="w-4 h-4 mr-2" />
                 {item.label}
-                <Badge variant="outline" className="ml-2 border-gray-500 text-gray-500 text-xs">
+                <Badge variant="secondary" className="ml-2 border-gray-500 text-gray-500 text-xs">
                   {item.shortcut}
                 </Badge>
               </Button>
@@ -469,7 +469,7 @@ const CommandInterfaceDemo = () => {
                     autoFocus
                   />
                   <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
-                    <Badge variant="outline" className="border-gray-600 text-gray-400 text-xs">
+                    <Badge variant="secondary" className="border-gray-600 text-gray-400 text-xs">
                       {searchMode ? '⌘+/' : '⌘+K'}
                     </Badge>
                     <Button
@@ -509,7 +509,7 @@ const CommandInterfaceDemo = () => {
                           <div className="ml-3 flex-1">
                             <div className="flex items-center justify-between">
                               <h4 className="text-white font-medium">{result.title}</h4>
-                              <Badge variant="outline" className="border-gray-600 text-gray-400 text-xs capitalize">
+                              <Badge variant="secondary" className="border-gray-600 text-gray-400 text-xs capitalize">
                                 {result.type}
                               </Badge>
                             </div>
@@ -548,7 +548,7 @@ const CommandInterfaceDemo = () => {
                                   <div className="flex items-center justify-between">
                                     <h4 className="text-white font-medium">{command.title}</h4>
                                     {command.shortcut && (
-                                      <Badge variant="outline" className="border-gray-600 text-gray-400 text-xs">
+                                      <Badge variant="secondary" className="border-gray-600 text-gray-400 text-xs">
                                         {command.shortcut}
                                       </Badge>
                                     )}
@@ -570,15 +570,15 @@ const CommandInterfaceDemo = () => {
                 <div className="flex items-center justify-between text-xs text-gray-400">
                   <div className="flex items-center space-x-4">
                     <span className="flex items-center">
-                      <Badge variant="outline" className="border-gray-600 text-gray-400 text-xs mr-1">↑↓</Badge>
+                      <Badge variant="secondary" className="border-gray-600 text-gray-400 text-xs mr-1">↑↓</Badge>
                       Navigate
                     </span>
                     <span className="flex items-center">
-                      <Badge variant="outline" className="border-gray-600 text-gray-400 text-xs mr-1">↵</Badge>
+                      <Badge variant="secondary" className="border-gray-600 text-gray-400 text-xs mr-1">↵</Badge>
                       Select
                     </span>
                     <span className="flex items-center">
-                      <Badge variant="outline" className="border-gray-600 text-gray-400 text-xs mr-1">ESC</Badge>
+                      <Badge variant="secondary" className="border-gray-600 text-gray-400 text-xs mr-1">ESC</Badge>
                       Close
                     </span>
                   </div>
@@ -613,7 +613,7 @@ const CommandInterfaceDemo = () => {
                     <command.icon className="w-4 h-4 mr-2 text-gray-400" />
                     <span className="text-gray-300 text-sm">{command.title}</span>
                   </div>
-                  <Badge variant="outline" className="border-gray-600 text-gray-400 text-xs">
+                  <Badge variant="secondary" className="border-gray-600 text-gray-400 text-xs">
                     {command.shortcut}
                   </Badge>
                 </div>
@@ -633,7 +633,7 @@ const CommandInterfaceDemo = () => {
               {mockCommands.filter(cmd => cmd.category === 'Actions').map((action) => (
                 <Button
                   key={action.id}
-                  variant="outline"
+                  variant="secondary"
                   size="sm"
                   className="w-full justify-start border-gray-600 text-white hover:bg-gray-700"
                 >
@@ -656,7 +656,7 @@ const CommandInterfaceDemo = () => {
               {mockCommands.filter(cmd => cmd.category === 'Campus').map((campus) => (
                 <Button
                   key={campus.id}
-                  variant="outline"
+                  variant="secondary"
                   size="sm"
                   className="w-full justify-start border-gray-600 text-white hover:bg-gray-700"
                 >
@@ -724,7 +724,7 @@ const CommandInterfaceDemo = () => {
                           <p className="text-gray-400 text-xs">{resultType.description}</p>
                         </div>
                       </div>
-                      <Badge variant="outline" className="border-gray-600 text-gray-400 text-xs">
+                      <Badge variant="secondary" className="border-gray-600 text-gray-400 text-xs">
                         {resultType.count}
                       </Badge>
                     </div>
@@ -840,7 +840,7 @@ export const KeyboardShortcuts: Story = {
                             <h4 className="text-white font-medium">{shortcut.action}</h4>
                             <div className="flex items-center space-x-1">
                               {shortcut.keys.split(' + ').map((key, keyIndex) => (
-                                <Badge key={keyIndex} variant="outline" className="border-gray-600 text-gray-300 text-xs">
+                                <Badge key={keyIndex} variant="secondary" className="border-gray-600 text-gray-300 text-xs">
                                   {key}
                                 </Badge>
                               ))}

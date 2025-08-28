@@ -3,7 +3,7 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
 import React, { useState, useRef, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cva } from 'class-variance-authority';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 import { motionDurations } from '../motion/hive-motion-system';
 import { Pin, MessageSquare, Calendar, Wrench, MessageCircle, Users, Settings, Crown, Maximize2, Minimize2, MoreHorizontal, ArrowLeft, Sparkles } from 'lucide-react';
 // Import individual surface components

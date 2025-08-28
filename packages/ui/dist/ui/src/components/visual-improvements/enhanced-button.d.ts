@@ -1,9 +1,9 @@
 import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
 declare const enhancedButtonVariants: (props?: {
-    variant?: "pulse" | "neon" | "signature" | "magnetic" | "chunky" | "sticker";
+    variant?: "pulse" | "magnetic" | "signature" | "neon" | "chunky" | "sticker";
     size?: "sm" | "md" | "lg" | "xl" | "icon" | "icon-sm" | "icon-lg";
-    intensity?: "high" | "normal" | "subtle" | "extreme";
+    intensity?: "normal" | "high" | "subtle" | "extreme";
 } & import("class-variance-authority/types").ClassProp) => string;
 export interface EnhancedButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof enhancedButtonVariants> {
     asChild?: boolean;

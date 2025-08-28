@@ -55,7 +55,7 @@ export const Default: Story = {
     variant: 'default',
     children: (
       <div className="flex items-start gap-3">
-        <AlertIcon variant="default" />
+        <AlertIcon variant="primary" />
         <div>
           <AlertTitle>Campus Update</AlertTitle>
           <AlertDescription>
@@ -98,9 +98,9 @@ export const AllVariants: Story = {
           <h2 className="text-xl font-semibold text-white">Alert Variants</h2>
           
           <div className="space-y-4">
-            <Alert variant="default">
+            <Alert variant="primary">
               <div className="flex items-start gap-3">
-                <AlertIcon variant="default" />
+                <AlertIcon variant="primary" />
                 <div>
                   <AlertTitle>Campus Notification</AlertTitle>
                   <AlertDescription>

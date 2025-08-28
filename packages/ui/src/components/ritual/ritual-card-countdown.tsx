@@ -317,7 +317,7 @@ export const RitualCardCountdown: React.FC<RitualCardCountdownProps> = ({
             </div>
           ) : !isStarted ? (
             <Button
-              variant="outline"
+              variant="secondary"
               size="lg"
               onClick={onSetReminder}
               className="w-full gap-2"
@@ -333,7 +333,7 @@ export const RitualCardCountdown: React.FC<RitualCardCountdownProps> = ({
             </div>
           ) : (
             <Button
-              variant="ritual"
+              variant="primary"
               size="lg"
               onClick={onParticipate}
               className={cn(

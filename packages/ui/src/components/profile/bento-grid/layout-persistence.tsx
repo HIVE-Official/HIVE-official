@@ -6,7 +6,7 @@ import { Cloud, CloudOff, AlertCircle, Check, RefreshCw } from 'lucide-react';
 import { LayoutConfiguration, WidgetConfiguration, LayoutPersistenceState } from './types';
 import { HiveButton } from '../../hive-button';
 import { HiveCard } from '../../hive-card';
-import { cn } from '../../lib/utils';
+import { cn } from '../lib/utils';
 
 interface LayoutPersistenceProps {
   currentLayout: WidgetConfiguration[];
@@ -363,7 +363,7 @@ export const LayoutPersistence: React.FC<LayoutPersistenceProps> = ({
                 <div className="space-y-4">
                   <div className="flex gap-3">
                     <HiveButton
-                      variant="outline"
+                      variant="secondary"
                       onClick={() => handleConflictResolution(true)}
                       className="flex-1"
                     >

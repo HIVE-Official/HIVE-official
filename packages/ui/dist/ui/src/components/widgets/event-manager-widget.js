@@ -3,7 +3,7 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar, Clock, MapPin, Users, Plus, Eye, Activity, TrendingUp, UserCheck, Share2, BarChart3, Download } from 'lucide-react';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 import { Button } from '../../ui/button';
 import { Badge } from '../../ui/badge';
 import { EventManagerTool } from '../tools/event-manager-tool';

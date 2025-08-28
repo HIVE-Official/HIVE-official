@@ -1,0 +1,427 @@
+/**
+ * HIVE Interaction State Composition System
+ * Comprehensive interaction patterns for campus-optimized UX
+ *
+ * This system defines how every interactive element behaves
+ * across different states and contexts.
+ */
+// === INTERACTION STATE PHILOSOPHY ===
+export const interactionPrinciples = {
+    philosophy: "Every interaction provides immediate, meaningful feedback",
+    priorities: [
+        "Mobile-first: Optimize for thumb interactions",
+        "Campus context: Work while walking/distracted",
+        "Accessibility: Keyboard and screen reader support",
+        "Performance: 60fps interaction response"
+    ]
+};
+// === CORE INTERACTION STATES ===
+export const coreStates = {
+    // Base interactive states that every component supports
+    idle: {
+        description: 'Default resting state',
+        properties: {
+            cursor: 'default',
+            opacity: '1',
+            transform: 'none',
+            transition: 'all var(--hive-duration-fast) var(--hive-ease-out)'
+        }
+    },
+    hover: {
+        description: 'Mouse hover or touch proximity',
+        properties: {
+            cursor: 'pointer',
+            transform: 'translateY(-1px)',
+            boxShadow: 'var(--hive-shadow-md)',
+            transition: 'all var(--hive-duration-fast) var(--hive-ease-out)'
+        },
+        mobileOverride: {
+            // No hover on mobile - use active instead
+            disabled: true,
+            fallbackToActive: true
+        }
+    },
+    focus: {
+        description: 'Keyboard focus or accessibility focus',
+        properties: {
+            outline: '2px solid var(--hive-gold-primary)',
+            outlineOffset: '2px',
+            zIndex: '10'
+        },
+        accessibility: {
+            required: true,
+            wcagCompliance: 'AA',
+            keyboardNavigation: 'Tab, Enter, Space'
+        }
+    },
+    active: {
+        description: 'Press/touch state during interaction',
+        properties: {
+            transform: 'translateY(1px) scale(0.98)',
+            opacity: '0.9',
+            transition: 'all var(--hive-duration-micro) var(--hive-ease-utility)'
+        }
+    },
+    disabled: {
+        description: 'Non-interactive disabled state',
+        properties: {
+            opacity: '0.5',
+            cursor: 'not-allowed',
+            pointerEvents: 'none',
+            filter: 'grayscale(0.5)'
+        }
+    },
+    loading: {
+        description: 'Processing state during async operations',
+        properties: {
+            cursor: 'wait',
+            opacity: '0.8',
+            pointerEvents: 'none'
+        },
+        animation: {
+            type: 'pulse',
+            duration: 'var(--hive-duration-slower)',
+            iteration: 'infinite'
+        }
+    }
+};
+// === COMPONENT-SPECIFIC INTERACTION PATTERNS ===
+export const componentInteractions = {
+    button: {
+        primary: {
+            idle: {
+                backgroundColor: 'transparent',
+                borderColor: 'var(--hive-gold-primary)',
+                color: 'var(--hive-gold-primary)'
+            },
+            hover: {
+                backgroundColor: 'var(--hive-gold-background)',
+                borderColor: 'var(--hive-gold-hover)',
+                transform: 'translateY(-1px)'
+            },
+            active: {
+                backgroundColor: 'var(--hive-bg-selected)',
+                transform: 'translateY(0) scale(0.98)'
+            },
+            focus: {
+                ringColor: 'var(--hive-gold-border)',
+                ringWidth: '2px',
+                ringOffset: '2px'
+            }
+        },
+        secondary: {
+            idle: {
+                backgroundColor: 'transparent',
+                borderColor: 'var(--hive-border-glass)',
+                color: 'var(--hive-text-primary)'
+            },
+            hover: {
+                backgroundColor: 'var(--hive-bg-subtle)',
+                borderColor: 'var(--hive-border-glass-strong)'
+            },
+            active: {
+                backgroundColor: 'var(--hive-bg-active)'
+            },
+            focus: {
+                ringColor: 'var(--hive-border-glass-strong)',
+                ringWidth: '2px'
+            }
+        },
+        ghost: {
+            idle: {
+                backgroundColor: 'transparent',
+                color: 'var(--hive-text-secondary)'
+            },
+            hover: {
+                backgroundColor: 'var(--hive-bg-subtle)',
+                color: 'var(--hive-text-primary)'
+            },
+            active: {
+                backgroundColor: 'var(--hive-bg-active)'
+            },
+            focus: {
+                ringColor: 'var(--hive-border-glass)',
+                ringWidth: '2px'
+            }
+        }
+    },
+    card: {
+        static: {
+            // Non-interactive cards
+            idle: {
+                backgroundColor: 'var(--hive-bg-secondary)',
+                borderColor: 'var(--hive-border-subtle)',
+                boxShadow: 'var(--hive-shadow-sm)'
+            }
+        },
+        interactive: {
+            idle: {
+                backgroundColor: 'var(--hive-bg-secondary)',
+                borderColor: 'var(--hive-border-subtle)',
+                boxShadow: 'var(--hive-shadow-sm)',
+                cursor: 'pointer'
+            },
+            hover: {
+                backgroundColor: 'var(--hive-bg-interactive)',
+                borderColor: 'var(--hive-border-glass)',
+                boxShadow: 'var(--hive-shadow-md)',
+                transform: 'translateY(-2px)'
+            },
+            active: {
+                transform: 'translateY(1px)',
+                boxShadow: 'var(--hive-shadow-sm)'
+            },
+            focus: {
+                ringColor: 'var(--hive-border-glass-strong)',
+                ringWidth: '2px',
+                ringOffset: '4px'
+            }
+        },
+        selected: {
+            // For selectable cards (like stat cards)
+            idle: {
+                backgroundColor: 'var(--hive-bg-tertiary)',
+                borderColor: 'var(--hive-gold-border)',
+                boxShadow: 'var(--hive-shadow-md)'
+            },
+            hover: {
+                borderColor: 'var(--hive-gold-primary)',
+                boxShadow: 'var(--hive-shadow-lg)'
+            }
+        }
+    },
+    input: {
+        text: {
+            idle: {
+                backgroundColor: 'var(--hive-bg-secondary)',
+                borderColor: 'var(--hive-border-glass)',
+                color: 'var(--hive-text-primary)'
+            },
+            focus: {
+                backgroundColor: 'var(--hive-bg-tertiary)',
+                borderColor: 'var(--hive-gold-border)',
+                ringColor: 'var(--hive-gold-background)',
+                ringWidth: '3px'
+            },
+            filled: {
+                backgroundColor: 'var(--hive-bg-tertiary)',
+                borderColor: 'var(--hive-border-glass-strong)'
+            },
+            error: {
+                borderColor: 'var(--hive-error-primary)',
+                ringColor: 'var(--hive-error-background)',
+                color: 'var(--hive-error-primary)'
+            },
+            success: {
+                borderColor: 'var(--hive-success-primary)',
+                ringColor: 'var(--hive-success-background)'
+            }
+        },
+        select: {
+            idle: {
+                backgroundColor: 'var(--hive-bg-secondary)',
+                borderColor: 'var(--hive-border-glass)'
+            },
+            open: {
+                backgroundColor: 'var(--hive-bg-tertiary)',
+                borderColor: 'var(--hive-gold-border)',
+                ringColor: 'var(--hive-gold-background)'
+            }
+        }
+    },
+    navigation: {
+        link: {
+            idle: {
+                color: 'var(--hive-text-secondary)',
+                textDecoration: 'none'
+            },
+            hover: {
+                color: 'var(--hive-text-primary)',
+                textDecoration: 'underline',
+                textUnderlineOffset: '4px'
+            },
+            active: {
+                color: 'var(--hive-gold-primary)',
+                textDecoration: 'underline'
+            },
+            focus: {
+                outline: '2px solid var(--hive-gold-primary)',
+                outlineOffset: '2px'
+            }
+        },
+        tab: {
+            idle: {
+                color: 'var(--hive-text-muted)',
+                borderBottom: '2px solid transparent'
+            },
+            hover: {
+                color: 'var(--hive-text-secondary)',
+                backgroundColor: 'var(--hive-bg-subtle)'
+            },
+            active: {
+                color: 'var(--hive-gold-primary)',
+                borderBottomColor: 'var(--hive-gold-primary)'
+            },
+            selected: {
+                color: 'var(--hive-text-primary)',
+                borderBottomColor: 'var(--hive-gold-primary)',
+                backgroundColor: 'var(--hive-bg-subtle)'
+            }
+        }
+    }
+};
+// === TOUCH/MOBILE INTERACTION OPTIMIZATIONS ===
+export const touchInteractions = {
+    // Mobile-specific interaction patterns
+    touchTarget: {
+        minimumSize: '44px', // WCAG AA compliance
+        recommendedSize: '48px',
+        spacing: '8px' // Between touch targets
+    },
+    gestures: {
+        tap: {
+            feedback: 'immediate visual + haptic',
+            duration: 'var(--hive-duration-micro)',
+            visualResponse: 'scale(0.95) + opacity(0.8)'
+        },
+        longPress: {
+            threshold: '500ms',
+            feedback: 'progressive visual indication',
+            cancelDistance: '10px'
+        },
+        swipe: {
+            threshold: '30px',
+            velocity: '0.5px/ms',
+            directions: ['left', 'right', 'up', 'down']
+        }
+    },
+    adaptiveTouch: {
+        walkingMode: {
+            // Larger touch targets when motion detected
+            targetSizeIncrease: '20%',
+            reducedPrecisionTolerance: true,
+            simplifiedGestures: true
+        },
+        precisionMode: {
+            // Normal sizes for focused interaction
+            standardTargetSize: true,
+            fullGestureSupport: true
+        }
+    }
+};
+// === CAMPUS-SPECIFIC INTERACTION CONTEXTS ===
+export const campusInteractionContexts = {
+    classroom: {
+        description: 'Quiet, focused environment',
+        adaptations: {
+            hapticFeedback: 'reduced',
+            visualFeedback: 'subtle',
+            soundFeedback: 'disabled',
+            motionFeedback: 'minimal'
+        }
+    },
+    walking: {
+        description: 'Mobile usage while moving',
+        adaptations: {
+            touchTargets: 'enlarged',
+            hoverStates: 'disabled',
+            complexGestures: 'simplified',
+            motionTolerance: 'increased'
+        }
+    },
+    social: {
+        description: 'Social spaces and interactions',
+        adaptations: {
+            hapticFeedback: 'enhanced',
+            visualFeedback: 'playful',
+            celebratory: 'enabled',
+            socialCues: 'prominent'
+        }
+    },
+    study: {
+        description: 'Focus and concentration mode',
+        adaptations: {
+            distractions: 'minimized',
+            notifications: 'gentle',
+            transitions: 'smooth',
+            colorIntensity: 'reduced'
+        }
+    }
+};
+// === ACCESSIBILITY INTERACTION SUPPORT ===
+export const accessibilityInteractions = {
+    keyboard: {
+        navigation: {
+            tab: 'Sequential focus order',
+            shiftTab: 'Reverse sequential focus',
+            arrow: 'Spatial navigation (grids, menus)',
+            enter: 'Activate primary action',
+            space: 'Activate secondary action',
+            escape: 'Cancel or close'
+        },
+        focusManagement: {
+            focusRing: {
+                style: '2px solid var(--hive-gold-primary)',
+                offset: '2px',
+                borderRadius: 'match element'
+            },
+            skipLinks: 'To main content, navigation',
+            focusTrap: 'In modals and dialogs',
+            focusReturn: 'After modal close'
+        }
+    },
+    screenReader: {
+        states: {
+            expanded: 'aria-expanded for collapsible content',
+            selected: 'aria-selected for selectable items',
+            pressed: 'aria-pressed for toggle buttons',
+            checked: 'aria-checked for checkboxes'
+        },
+        feedback: {
+            loading: 'aria-busy and live regions',
+            errors: 'aria-describedby error messages',
+            success: 'Polite announcements',
+            changes: 'Live region updates'
+        }
+    },
+    reducedMotion: {
+        respect: 'prefers-reduced-motion: reduce',
+        alternatives: {
+            animations: 'Instant state changes',
+            transitions: 'Crossfade only',
+            parallax: 'Static positioning'
+        }
+    }
+};
+// === PERFORMANCE INTERACTION OPTIMIZATION ===
+export const performanceInteractions = {
+    optimization: {
+        debouncing: {
+            hover: '16ms', // One frame
+            input: '300ms',
+            scroll: '16ms',
+            resize: '100ms'
+        },
+        throttling: {
+            mousemove: '16ms',
+            scroll: '16ms',
+            touchmove: '16ms'
+        }
+    },
+    budgets: {
+        interactionResponse: '100ms maximum',
+        stateChange: '16ms per frame',
+        complexAnimations: '3 concurrent maximum'
+    }
+};
+// === COMPREHENSIVE EXPORT ===
+export const interactionComposition = {
+    principles: interactionPrinciples,
+    coreStates,
+    components: componentInteractions,
+    touch: touchInteractions,
+    campus: campusInteractionContexts,
+    accessibility: accessibilityInteractions,
+    performance: performanceInteractions
+};
+//# sourceMappingURL=interaction-composition.js.map

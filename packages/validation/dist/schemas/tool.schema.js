@@ -1,0 +1,232 @@
+import { z } from "zod";
+// Tool Category Schema
+export const ToolCategorySchema = z.enum([
+    'productivity',
+    'social',
+    'academic',
+    'creative',
+    'utility',
+    'game',
+    'communication',
+    'organization',
+    'wellness',
+    'custom'
+]);
+// Tool Type Schema
+export const ToolTypeSchema = z.enum([
+    'iframe_embed',
+    'web_app',
+    'widget',
+    'form',
+    'calculator',
+    'poll',
+    'quiz',
+    'timer',
+    'counter',
+    'link_collection',
+    'custom'
+]);
+// Tool Status Schema
+export const ToolStatusSchema = z.enum([
+    'draft',
+    'testing',
+    'published',
+    'archived',
+    'flagged'
+]);
+// Tool Visibility Schema
+export const ToolVisibilitySchema = z.enum([
+    'public',
+    'space_only',
+    'private',
+    'members_only'
+]);
+// Tool Configuration Schema
+export const ToolConfigSchema = z.object({
+    // Display settings
+    width: z.number().min(200).max(1200).default(400),
+    height: z.number().min(100).max(800).default(300),
+    allowFullscreen: z.boolean().default(false),
+    // Behavior settings
+    autoRefresh: z.boolean().default(false),
+    refreshInterval: z.number().min(5).max(3600).optional(), // seconds
+    // Integration settings
+    requiresAuth: z.boolean().default(false),
+    allowGuests: z.boolean().default(true),
+    // Advanced settings
+    customCSS: z.string().max(10000).optional(),
+    customJS: z.string().max(10000).optional(),
+    // Data collection
+    collectUsage: z.boolean().default(true),
+    collectFeedback: z.boolean().default(true)
+});
+// Tool Metadata Schema
+export const ToolMetadataSchema = z.object({
+    // Performance
+    loadTime: z.number().min(0).optional(),
+    errorRate: z.number().min(0).max(100).optional(),
+    // Usage
+    totalViews: z.number().min(0).default(0),
+    uniqueUsers: z.number().min(0).default(0),
+    avgSessionTime: z.number().min(0).default(0),
+    // Engagement
+    likes: z.number().min(0).default(0),
+    shares: z.number().min(0).default(0),
+    comments: z.number().min(0).default(0),
+    // Quality
+    rating: z.number().min(0).max(5).default(0),
+    ratingCount: z.number().min(0).default(0),
+    // Flags
+    reportCount: z.number().min(0).default(0),
+    lastReported: z.date().optional(),
+    lastUpdated: z.date()
+});
+// Tool Permission Schema
+export const ToolPermissionSchema = z.object({
+    userId: z.string().min(1),
+    role: z.enum(['owner', 'collaborator', 'viewer']),
+    permissions: z.array(z.enum([
+        'view',
+        'edit',
+        'delete',
+        'share',
+        'manage_permissions',
+        'view_analytics'
+    ])),
+    grantedAt: z.date(),
+    grantedBy: z.string().min(1)
+});
+// Main Tool Schema
+export const ToolSchema = z.object({
+    id: z.string().min(1),
+    // Basic info
+    name: z.string().min(1).max(100),
+    description: z.string().min(1).max(500),
+    // Classification
+    category: ToolCategorySchema,
+    type: ToolTypeSchema,
+    tags: z.array(z.string()).max(10).default([]),
+    // Status
+    status: ToolStatusSchema,
+    visibility: ToolVisibilitySchema,
+    // Content
+    content: z.union([
+        z.object({
+            type: z.literal('iframe'),
+            url: z.string().url(),
+            allowedDomains: z.array(z.string()).optional()
+        }),
+        z.object({
+            type: z.literal('html'),
+            html: z.string().min(1).max(50000),
+            css: z.string().max(10000).optional(),
+            js: z.string().max(10000).optional()
+        }),
+        z.object({
+            type: z.literal('widget'),
+            widgetType: z.string().min(1),
+            config: z.record(z.string(), z.any())
+        })
+    ]),
+    // Visual
+    thumbnailUrl: z.string().url().optional(),
+    iconUrl: z.string().url().optional(),
+    // Configuration
+    config: ToolConfigSchema,
+    // Ownership
+    createdBy: z.string().min(1),
+    ownedBy: z.string().min(1),
+    spaceId: z.string().optional(), // If tool belongs to specific space
+    // Collaboration
+    collaborators: z.array(z.string()).max(10).default([]),
+    permissions: z.array(ToolPermissionSchema).default([]),
+    // Usage tracking
+    metadata: ToolMetadataSchema,
+    // Timestamps
+    createdAt: z.date(),
+    updatedAt: z.date(),
+    publishedAt: z.date().optional()
+});
+// Tool Usage Schema
+export const ToolUsageSchema = z.object({
+    toolId: z.string().min(1),
+    userId: z.string().min(1),
+    sessionId: z.string().min(1),
+    // Session details
+    startTime: z.date(),
+    endTime: z.date().optional(),
+    duration: z.number().min(0).optional(), // seconds
+    // Interaction data
+    clicks: z.number().min(0).default(0),
+    scrolls: z.number().min(0).default(0),
+    interactions: z.array(z.object({
+        type: z.string(),
+        timestamp: z.date(),
+        data: z.record(z.string(), z.any()).optional()
+    })).default([]),
+    // Context
+    referrer: z.string().optional(),
+    platform: z.enum(['web', 'mobile', 'desktop']).optional(),
+    // Outcome
+    completed: z.boolean().default(false),
+    shared: z.boolean().default(false),
+    liked: z.boolean().default(false),
+    createdAt: z.date()
+});
+// Tool Feedback Schema
+export const ToolFeedbackSchema = z.object({
+    toolId: z.string().min(1),
+    userId: z.string().min(1),
+    // Feedback details
+    rating: z.number().min(1).max(5),
+    comment: z.string().min(1).max(1000).optional(),
+    // Categorization
+    categories: z.array(z.enum([
+        'usability',
+        'design',
+        'functionality',
+        'performance',
+        'content',
+        'accessibility',
+        'other'
+    ])).default([]),
+    // Suggestions
+    suggestions: z.array(z.string()).max(5).default([]),
+    // Metadata
+    helpful: z.boolean().default(false),
+    verified: z.boolean().default(false),
+    createdAt: z.date()
+});
+// Tool Template Schema
+export const ToolTemplateSchema = z.object({
+    id: z.string().min(1),
+    // Template info
+    name: z.string().min(1).max(100),
+    description: z.string().min(1).max(500),
+    // Classification
+    category: ToolCategorySchema,
+    type: ToolTypeSchema,
+    tags: z.array(z.string()).max(10).default([]),
+    // Template content
+    template: z.object({
+        html: z.string().min(1).max(50000),
+        css: z.string().max(10000).optional(),
+        js: z.string().max(10000).optional(),
+        config: z.record(z.string(), z.any()).optional()
+    }),
+    // Customization
+    customizableFields: z.array(z.object({
+        name: z.string().min(1),
+        type: z.enum(['text', 'number', 'color', 'url', 'select', 'boolean']),
+        default: z.any().optional(),
+        options: z.array(z.any()).optional(),
+        required: z.boolean().default(false)
+    })).default([]),
+    // Usage
+    usageCount: z.number().min(0).default(0),
+    // Metadata
+    createdBy: z.string().min(1),
+    createdAt: z.date(),
+    updatedAt: z.date()
+});
+//# sourceMappingURL=tool.schema.js.map

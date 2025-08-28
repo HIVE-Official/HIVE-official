@@ -34,7 +34,7 @@ import {
 } from 'lucide-react';
 import { HiveCard } from '../hive-card';
 import { HiveButton } from '../hive-button';
-import { Badge } from '../../ui/badge';
+import { Badge } from '../../atomic/atoms/badge';
 import { Switch } from '../../atomic/atoms/switch-enhanced';
 import { cn } from '../lib/utils';
 
@@ -342,7 +342,7 @@ const OverviewSection: React.FC<{
               <Badge variant={privacyScore.score >= 70 ? 'default' : 'secondary'}>
                 {privacyScore.score >= 70 ? 'Protected' : 'Consider Adjusting'}
               </Badge>
-              <HiveButton variant="outline" size="sm">
+              <HiveButton variant="secondary" size="sm">
                 <Info className="h-4 w-4 mr-2" />
                 Privacy Tips
               </HiveButton>
@@ -712,7 +712,7 @@ const EmergencyAccessSection: React.FC<{
               <div className="text-center py-8">
                 <Users className="h-12 w-12 text-hive-text-secondary mx-auto mb-3" />
                 <p className="text-hive-text-secondary mb-4">No emergency contacts configured</p>
-                <HiveButton variant="outline" size="sm">
+                <HiveButton variant="secondary" size="sm">
                   Add Emergency Contact
                 </HiveButton>
               </div>

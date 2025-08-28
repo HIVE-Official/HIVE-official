@@ -82,7 +82,7 @@ export const AllVariants: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="default">✅ COMPLETE</Badge>
+            <Badge variant="primary">✅ COMPLETE</Badge>
             Button Variants - Perfect Semantic Token Usage
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -225,7 +225,7 @@ export const AllVariants: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="outline">📋 SPECS</Badge>
+            <Badge variant="secondary">📋 SPECS</Badge>
             Complete Technical Definition
           </CardTitle>
         </CardHeader>

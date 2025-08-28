@@ -1,7 +1,6 @@
 // @ts-check
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import globals from "globals";
 import pluginJs from "@eslint/js";
 import tseslint from "typescript-eslint";
 import pluginReact from "eslint-plugin-react";
@@ -11,7 +10,26 @@ const __dirname = path.dirname(__filename);
 
 export default [
   {files: ["**/*.{js,mjs,cjs,ts,tsx}"]},
-  {languageOptions: { globals: globals.browser }},
+  {
+    languageOptions: { 
+      globals: {
+        console: "readonly",
+        process: "readonly",
+        Buffer: "readonly",
+        __dirname: "readonly",
+        __filename: "readonly",
+        module: "readonly",
+        exports: "readonly",
+        require: "readonly",
+        global: "readonly",
+        window: "readonly",
+        document: "readonly",
+        navigator: "readonly",
+        localStorage: "readonly",
+        sessionStorage: "readonly"
+      }
+    }
+  },
   pluginJs.configs.recommended,
   ...tseslint.configs.recommended,
   pluginReact.configs.flat.recommended,

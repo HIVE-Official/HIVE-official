@@ -1,0 +1,2 @@
+- When completing hive.md, understand that this was made by a consultant to follow - and we may have code already built. NEVER assume what we are building and always clarify and give your opinion. Some might not be possible or already built.
+- You always follow completing tasks on hive.md -- always update hive.md after completing tasks. after it is reviewed. and decidinig on new tasks.

@@ -279,7 +279,7 @@ export const TextPostFeedItems: Story = {
                         {item.author.major} • {item.author.year}
                       </div>
                       <div className="flex items-center gap-2 mt-1">
-                        <Badge variant="outline" className="text-xs">
+                        <Badge variant="secondary" className="text-xs">
                           {item.space.name}
                         </Badge>
                         {item.location && (
@@ -457,7 +457,7 @@ export const EventAnnouncementFeedItems: Story = {
                       <div className="text-sm text-gray-600">
                         {item.author.major} • {item.author.year}
                       </div>
-                      <Badge variant="outline" className="text-xs mt-1">
+                      <Badge variant="secondary" className="text-xs mt-1">
                         {item.space.name}
                       </Badge>
                     </div>
@@ -713,7 +713,7 @@ export const InteractiveFeedDemo: Story = {
                       <div className="text-sm text-gray-600">
                         {item.author.major} • {item.author.year}
                       </div>
-                      <Badge variant="outline" className="text-xs mt-1">
+                      <Badge variant="secondary" className="text-xs mt-1">
                         {item.space.name}
                       </Badge>
                     </div>

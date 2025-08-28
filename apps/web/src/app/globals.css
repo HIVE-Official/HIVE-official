@@ -290,6 +290,7 @@
     50% { background-position: 100% 50%; }
   }
   
+  @layer components {
   /* HIVE Interactive States */
   .hive-interactive {
     transition: all var(--hive-duration-smooth) var(--hive-easing);
@@ -307,6 +308,7 @@
     transform: translateY(0) scale(0.98);
     transition-duration: var(--hive-duration-quick);
   }
+}
   
   /* Focus Accessibility */
   .hive-focus:focus-visible {
@@ -442,26 +444,29 @@
     border: 1px solid var(--hive-border-glass-strong, rgba(255, 255, 255, 0.12));
   }
 
-  .hive-interactive {
-    transition: all 0.25s cubic-bezier(0.23, 1, 0.32, 1);
-    will-change: transform, box-shadow;
-    transform-origin: center;
-    backface-visibility: hidden;
-    transform: translateZ(0);
+  @layer components {
+    .hive-interactive {
+      transition: all 0.25s cubic-bezier(0.23, 1, 0.32, 1);
+      will-change: transform, box-shadow;
+      transform-origin: center;
+      backface-visibility: hidden;
+      transform: translateZ(0);
+    }
+
+    .hive-interactive:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: var(--hive-shadow-hover, 0 8px 25px rgba(0, 0, 0, 0.3)), var(--hive-shadow-gold-glow, 0 0 20px rgba(255, 215, 0, 0.3));
+    }
+
+    .hive-interactive:active {
+      transform: translateY(0) scale(0.98);
+      transition-duration: 0.15s;
+    }
   }
 
-  .hive-interactive:hover {
-    transform: translateY(-2px) scale(1.02);
-    box-shadow: var(--hive-shadow-hover, 0 8px 25px rgba(0, 0, 0, 0.3)), var(--hive-shadow-gold-glow, 0 0 20px rgba(255, 215, 0, 0.3));
-  }
-
-  .hive-interactive:active {
-    transform: translateY(0) scale(0.98);
-    transition-duration: 0.15s;
-  }
-
-  .hive-button-primary {
-    @apply hive-interactive;
+  @layer components {
+    .hive-button-primary {
+      @apply hive-interactive;
     background: var(--hive-brand-primary, #FFD700);
     color: var(--hive-text-inverse, #0A0A0B);
     border-radius: var(--hive-radius-lg, 1rem);
@@ -478,7 +483,9 @@
     box-shadow: var(--hive-shadow-level3, 0 8px 15px rgba(0, 0, 0, 0.3)), var(--hive-shadow-gold-glow-strong, 0 0 30px rgba(255, 215, 0, 0.4));
     border-color: var(--hive-border-gold-strong, rgba(255, 215, 0, 0.4));
   }
+}
 
+@layer components {
   .hive-button-secondary {
     @apply hive-interactive;
     background: var(--hive-background-secondary, #111113);
@@ -646,6 +653,7 @@
   .hive-gap-4xl { gap: 6rem; }
   .hive-gap-5xl { gap: 8rem; }
 }
+}
 
 /* HIVE Responsive Breakpoints */
 @media (min-width: 768px) {
@@ -721,8 +729,10 @@
     animation: none;
   }
   
-  .hive-interactive {
-    transition: none;
+  @layer components {
+    .hive-interactive {
+      transition: none;
+    }
   }
   
   .hive-word-cycle {

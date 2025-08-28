@@ -11,7 +11,7 @@ import { BaseWidget } from '../bento-grid/base-widget';
 import { BaseWidgetProps } from '../bento-grid/types';
 import { HiveButton } from '../../hive-button';
 import { HiveBadge } from '../../hive-badge';
-import { cn } from '../../../lib/utils';
+import { cn } from '../../lib/utils';
 
 interface PersonalToolsPreviewWidgetProps extends BaseWidgetProps {
   isV1Unlocked?: boolean;
@@ -214,7 +214,7 @@ export const PersonalToolsPreviewWidget: React.FC<PersonalToolsPreviewWidgetProp
                     </span>
                     <HiveButton
                       size="sm"
-                      variant="outline"
+                      variant="secondary"
                       onClick={(e) => {
                         e.stopPropagation();
                         onViewToolCategory(tool.category);
@@ -356,7 +356,7 @@ export const PersonalToolsPreviewWidget: React.FC<PersonalToolsPreviewWidgetProp
           </HiveButton>
         ) : (
           <HiveButton
-            variant="outline"
+            variant="secondary"
             size="sm"
             onClick={onJoinWaitlist}
             className="w-full gap-2"

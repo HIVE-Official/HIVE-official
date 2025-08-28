@@ -2,12 +2,12 @@ import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
 declare const checkboxVariants: (props?: {
     size?: "default" | "sm" | "lg" | "xl";
-    variant?: "default" | "success" | "warning" | "error" | "info";
+    variant?: "error" | "default" | "success" | "warning" | "info";
     radius?: "default" | "sm" | "lg" | "none" | "full";
 } & import("class-variance-authority/types").ClassProp) => string;
 declare const checkboxLabelVariants: (props?: {
-    color?: "primary" | "secondary" | "success" | "warning" | "error" | "info" | "tertiary";
-    weight?: "normal" | "medium" | "semibold";
+    color?: "error" | "primary" | "secondary" | "success" | "warning" | "info" | "tertiary";
+    weight?: "medium" | "normal" | "semibold";
 } & import("class-variance-authority/types").ClassProp) => string;
 export interface CheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'type'>, VariantProps<typeof checkboxVariants> {
     label?: string;

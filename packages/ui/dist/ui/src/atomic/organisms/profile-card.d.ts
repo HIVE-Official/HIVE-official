@@ -4,7 +4,7 @@ import { type ProfileUser } from '../molecules/profile-header';
 import { type HiveProfileStats } from '../molecules/profile-stats';
 declare const profileCardVariants: (props?: {
     size?: "sm" | "md" | "lg";
-    variant?: "default" | "interactive" | "minimal" | "elevated";
+    variant?: "default" | "minimal" | "elevated" | "interactive";
     layout?: "horizontal" | "vertical" | "stacked";
 } & import("class-variance-authority/types").ClassProp) => string;
 export interface HiveActivityItem {

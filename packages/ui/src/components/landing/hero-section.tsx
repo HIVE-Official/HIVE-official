@@ -75,7 +75,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           </Button>
 
           <Button
-            variant="outline"
+            variant="secondary"
             size="lg"
             onClick={_onLearnMore}
             className="h-14 w-full border-border/30 hover:border-accent/30 px-8 text-lg font-medium text-foreground hover:text-accent sm:w-auto transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)]"

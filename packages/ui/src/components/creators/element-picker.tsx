@@ -193,7 +193,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
       {/* Mobile dropdown */}
       <div className="md:hidden">
         <HiveButton
-          variant="outline"
+          variant="secondary"
           onClick={() => setIsExpanded(!isExpanded)}
           className="w-full justify-between"
         >

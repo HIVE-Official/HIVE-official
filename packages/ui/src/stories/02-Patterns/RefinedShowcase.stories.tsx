@@ -217,7 +217,7 @@ export const RefinedShowcase: Story = {
                   Campus Feed
                 </RefinedTypography>
                 <div className="flex gap-2">
-                  <RefinedBadge variant="outline">Live</RefinedBadge>
+                  <RefinedBadge variant="secondary">Live</RefinedBadge>
                   <RefinedButton variant="ghost" size="sm">
                     Filter
                   </RefinedButton>
@@ -428,7 +428,7 @@ export const ComponentShowcase: Story = {
             Cards & Containers
           </RefinedTypography>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <RefinedCard variant="default" padding="md">
+            <RefinedCard variant="primary" padding="md">
               <RefinedTypography variant="subtitle" as="h3" className="mb-3">
                 Default Card
               </RefinedTypography>
@@ -530,12 +530,12 @@ export const ComponentShowcase: Story = {
                 Badges
               </RefinedTypography>
               <div className="flex flex-wrap gap-2">
-                <RefinedBadge variant="default">Default</RefinedBadge>
+                <RefinedBadge variant="primary">Default</RefinedBadge>
                 <RefinedBadge variant="accent">Campus Energy</RefinedBadge>
                 <RefinedBadge variant="success">Active</RefinedBadge>
                 <RefinedBadge variant="warning">Planning</RefinedBadge>
                 <RefinedBadge variant="destructive">Ended</RefinedBadge>
-                <RefinedBadge variant="outline">Live</RefinedBadge>
+                <RefinedBadge variant="secondary">Live</RefinedBadge>
               </div>
             </div>
           </div>

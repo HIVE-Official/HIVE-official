@@ -2,7 +2,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from '../framer-motion-proxy';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 import { HiveCard } from '../hive-card';
 import { HiveButton } from '../hive-button';
 import { HiveBadge } from '../hive-badge';

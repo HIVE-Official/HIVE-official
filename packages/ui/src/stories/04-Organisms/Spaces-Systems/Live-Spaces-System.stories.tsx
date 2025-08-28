@@ -228,10 +228,10 @@ const SpaceDiscoverySystem = () => {
               <p className="text-gray-400">Discover and join your campus communities</p>
             </div>
             <div className="flex items-center space-x-3">
-              <Button size="icon" variant="outline" className="border-gray-600 text-white">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-white">
                 <Bell className="w-4 h-4" />
               </Button>
-              <Button size="icon" variant="outline" className="border-gray-600 text-white">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-white">
                 <Settings className="w-4 h-4" />
               </Button>
               <Button className="hive-interactive" style={{ backgroundColor: 'var(--hive-brand-primary)', color: 'var(--hive-text-inverse)' }}>
@@ -280,7 +280,7 @@ const SpaceDiscoverySystem = () => {
               />
             </div>
             <div className="flex items-center space-x-2">
-              <Button size="icon" variant="outline" className="border-gray-600 text-white">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-white">
                 <Filter className="w-4 h-4" />
               </Button>
               <select 
@@ -409,12 +409,12 @@ const SpaceDiscoverySystem = () => {
                 {/* Tags */}
                 <div className="flex flex-wrap gap-1">
                   {space.tags.slice(0, 3).map((tag) => (
-                    <Badge key={tag} variant="outline" className="border-gray-600 text-gray-400 text-xs">
+                    <Badge key={tag} variant="secondary" className="border-gray-600 text-gray-400 text-xs">
                       {tag}
                     </Badge>
                   ))}
                   {space.tags.length > 3 && (
-                    <Badge variant="outline" className="border-gray-600 text-gray-400 text-xs">
+                    <Badge variant="secondary" className="border-gray-600 text-gray-400 text-xs">
                       +{space.tags.length - 3}
                     </Badge>
                   )}
@@ -445,7 +445,7 @@ const SpaceDiscoverySystem = () => {
                         <MessageSquare className="w-4 h-4 mr-2" />
                         Open Chat
                       </Button>
-                      <Button size="icon" variant="outline" className="border-gray-600 text-white hover:bg-gray-800">
+                      <Button size="icon" variant="secondary" className="border-gray-600 text-white hover:bg-gray-800">
                         <Settings className="w-4 h-4" />
                       </Button>
                     </>
@@ -455,12 +455,12 @@ const SpaceDiscoverySystem = () => {
                         <Plus className="w-4 h-4 mr-2" />
                         Join Space
                       </Button>
-                      <Button size="icon" variant="outline" className="border-gray-600 text-white hover:bg-gray-800">
+                      <Button size="icon" variant="secondary" className="border-gray-600 text-white hover:bg-gray-800">
                         <Heart className="w-4 h-4" />
                       </Button>
                     </>
                   )}
-                  <Button size="icon" variant="outline" className="border-gray-600 text-white hover:bg-gray-800">
+                  <Button size="icon" variant="secondary" className="border-gray-600 text-white hover:bg-gray-800">
                     <Share className="w-4 h-4" />
                   </Button>
                 </div>
@@ -471,7 +471,7 @@ const SpaceDiscoverySystem = () => {
 
         {/* Load More */}
         <div className="text-center mt-8">
-          <Button variant="outline" className="border-gray-600 text-white hover:bg-gray-800">
+          <Button variant="secondary" className="border-gray-600 text-white hover:bg-gray-800">
             Load More Spaces
           </Button>
         </div>
@@ -513,10 +513,10 @@ const SpaceManagementSystem = () => {
             </div>
             
             <div className="flex items-center space-x-2">
-              <Button size="icon" variant="outline" className="border-gray-600 text-white">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-white">
                 <Bell className="w-4 h-4" />
               </Button>
-              <Button size="icon" variant="outline" className="border-gray-600 text-white">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-white">
                 <Settings className="w-4 h-4" />
               </Button>
               <Button className="bg-red-600 text-white hover:bg-red-700">
@@ -586,11 +586,11 @@ const SpaceManagementSystem = () => {
                     />
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
-                        <Button size="sm" variant="outline" className="border-gray-600 text-white">
+                        <Button size="sm" variant="secondary" className="border-gray-600 text-white">
                           <Calendar className="w-4 h-4 mr-1" />
                           Event
                         </Button>
-                        <Button size="sm" variant="outline" className="border-gray-600 text-white">
+                        <Button size="sm" variant="secondary" className="border-gray-600 text-white">
                           <MapPin className="w-4 h-4 mr-1" />
                           Location
                         </Button>
@@ -818,7 +818,7 @@ const SpaceManagementSystem = () => {
                         <div className="text-gray-400 text-xs">{member.time}</div>
                       </div>
                     </div>
-                    <Button size="sm" variant="outline" className="border-gray-600 text-white text-xs">
+                    <Button size="sm" variant="secondary" className="border-gray-600 text-white text-xs">
                       Follow
                     </Button>
                   </div>
@@ -848,11 +848,11 @@ const SpaceManagementSystem = () => {
                   <Calendar className="w-4 h-4 mr-2" />
                   Create Event
                 </Button>
-                <Button variant="outline" className="w-full border-gray-600 text-white hover:bg-gray-800 justify-start">
+                <Button variant="secondary" className="w-full border-gray-600 text-white hover:bg-gray-800 justify-start">
                   <Users className="w-4 h-4 mr-2" />
                   Invite Members
                 </Button>
-                <Button variant="outline" className="w-full border-gray-600 text-white hover:bg-gray-800 justify-start">
+                <Button variant="secondary" className="w-full border-gray-600 text-white hover:bg-gray-800 justify-start">
                   <Share className="w-4 h-4 mr-2" />
                   Share Space
                 </Button>

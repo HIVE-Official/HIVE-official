@@ -1,7 +1,7 @@
 'use client';
 import { jsx as _jsx } from "react/jsx-runtime";
 import { motion } from './framer-motion-proxy';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 const cardVariants = {
     variant: {
         // PRD-Aligned: Semantic tokens only

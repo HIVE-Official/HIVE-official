@@ -144,7 +144,7 @@ export function MobileToolWrapper({
             <HiveButton className="flex-1 h-12">
               Save
             </HiveButton>
-            <HiveButton variant="outline" className="flex-1 h-12">
+            <HiveButton variant="secondary" className="flex-1 h-12">
               Submit
             </HiveButton>
           </div>

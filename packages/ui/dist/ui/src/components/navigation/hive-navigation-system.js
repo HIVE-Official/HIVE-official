@@ -1,7 +1,7 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { createContext, useContext, useState, useEffect } from 'react';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 import { motion } from '../framer-motion-proxy';
 import { getHiveMotionProps } from '../../lib/motion-utils';
 const NavigationContext = createContext(null);

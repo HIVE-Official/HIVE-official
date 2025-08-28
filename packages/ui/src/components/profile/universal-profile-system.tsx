@@ -34,8 +34,8 @@ import {
   Search
 } from 'lucide-react';
 import { Button } from '../../atomic/atoms/button-enhanced';
-import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';
-import { Badge } from '../../ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
+import { Badge } from '../../atomic/atoms/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '../../ui/avatar';
 // import { UniversalBottomNav } from '../navigation/universal-bottom-nav'; // Component doesn't exist

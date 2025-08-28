@@ -332,7 +332,7 @@ export const CompleteHIVEToolsSystem: React.FC<CompleteHIVEToolsSystemProps> = (
             {/* Create Tool Actions */}
             <div className="flex items-center justify-center gap-3 mb-6">
               <HiveButton
-                variant="outline"
+                variant="secondary"
                 onClick={() => onCreateTool?.('template')}
                 className="text-gray-300 border-gray-600 hover:border-[#FFD700] hover:text-[#FFD700]"
               >
@@ -340,7 +340,7 @@ export const CompleteHIVEToolsSystem: React.FC<CompleteHIVEToolsSystemProps> = (
                 Use Template
               </HiveButton>
               <HiveButton
-                variant="outline"
+                variant="secondary"
                 onClick={() => onCreateTool?.('wizard')}
                 className="text-gray-300 border-gray-600 hover:border-[#FFD700] hover:text-[#FFD700]"
               >
@@ -447,7 +447,7 @@ export const CompleteHIVEToolsSystem: React.FC<CompleteHIVEToolsSystemProps> = (
                     </div>
                   </div>
                   <HiveButton
-                    variant="outline"
+                    variant="secondary"
                     onClick={() => setShowFilters(!showFilters)}
                     className="flex items-center gap-2"
                   >
@@ -545,7 +545,7 @@ export const CompleteHIVEToolsSystem: React.FC<CompleteHIVEToolsSystemProps> = (
                 <HiveCard className="p-6">
                   <div className="flex items-center justify-between mb-6">
                     <h2 className="text-xl font-semibold text-white">Featured Tools</h2>
-                    <HiveButton variant="outline" size="sm">
+                    <HiveButton variant="secondary" size="sm">
                       View All <ArrowRight className="w-4 h-4 ml-1" />
                     </HiveButton>
                   </div>
@@ -636,7 +636,7 @@ export const CompleteHIVEToolsSystem: React.FC<CompleteHIVEToolsSystemProps> = (
                             )}
                             <HiveButton
                               size="sm"
-                              variant="outline"
+                              variant="secondary"
                               onClick={() => onToolPreview?.(tool.id)}
                             >
                               <Eye className="w-4 h-4" />
@@ -754,7 +754,7 @@ export const CompleteHIVEToolsSystem: React.FC<CompleteHIVEToolsSystemProps> = (
                             )}
                             <HiveButton
                               size="sm"
-                              variant="outline"
+                              variant="secondary"
                               onClick={() => onToolPreview?.(tool.id)}
                             >
                               <Eye className="w-4 h-4" />
@@ -829,7 +829,7 @@ export const CompleteHIVEToolsSystem: React.FC<CompleteHIVEToolsSystemProps> = (
                               )}
                               <HiveButton
                                 size="sm"
-                                variant="outline"
+                                variant="secondary"
                                 onClick={() => onToolPreview?.(tool.id)}
                               >
                                 <Eye className="w-4 h-4" />
@@ -901,7 +901,7 @@ export const CompleteHIVEToolsSystem: React.FC<CompleteHIVEToolsSystemProps> = (
                   <HiveCard className="p-6">
                     <div className="flex items-center justify-between mb-6">
                       <h2 className="text-xl font-semibold text-white">Quick Access</h2>
-                      <HiveButton variant="outline" size="sm">
+                      <HiveButton variant="secondary" size="sm">
                         <Settings className="w-4 h-4 mr-2" />
                         Customize
                       </HiveButton>
@@ -941,7 +941,7 @@ export const CompleteHIVEToolsSystem: React.FC<CompleteHIVEToolsSystemProps> = (
                     <div className="flex items-center justify-between mb-6">
                       <h2 className="text-xl font-semibold text-white">My Tools</h2>
                       <div className="flex items-center gap-2">
-                        <HiveButton variant="outline" size="sm">
+                        <HiveButton variant="secondary" size="sm">
                           <Share className="w-4 h-4 mr-2" />
                           Export List
                         </HiveButton>
@@ -988,7 +988,7 @@ export const CompleteHIVEToolsSystem: React.FC<CompleteHIVEToolsSystemProps> = (
                               <div className="flex items-center gap-2">
                                 <HiveButton
                                   size="sm"
-                                  variant="outline"
+                                  variant="secondary"
                                   onClick={() => onToolAction?.(tool.id, 'settings')}
                                 >
                                   <Settings className="w-4 h-4" />
@@ -1036,7 +1036,7 @@ export const CompleteHIVEToolsSystem: React.FC<CompleteHIVEToolsSystemProps> = (
                       Browse Marketplace
                     </HiveButton>
                     <HiveButton
-                      variant="outline"
+                      variant="secondary"
                       onClick={() => handleTabChange('hivelab')}
                     >
                       <Palette className="w-4 h-4 mr-2" />
@@ -1079,7 +1079,7 @@ export const CompleteHIVEToolsSystem: React.FC<CompleteHIVEToolsSystemProps> = (
                     Start Building
                   </HiveButton>
                   <HiveButton
-                    variant="outline"
+                    variant="secondary"
                     onClick={() => onCreateTool?.('template')}
                     className="border-gray-600 text-gray-300 hover:border-[#FFD700] hover:text-[#FFD700]"
                   >
@@ -1204,7 +1204,7 @@ export const CompleteHIVEToolsSystem: React.FC<CompleteHIVEToolsSystemProps> = (
               <HiveCard className="p-6">
                 <div className="flex items-center justify-between mb-6">
                   <h3 className="text-xl font-semibold text-white">Popular Templates</h3>
-                  <HiveButton variant="outline" size="sm">
+                  <HiveButton variant="secondary" size="sm">
                     View All <ArrowRight className="w-4 h-4 ml-1" />
                   </HiveButton>
                 </div>

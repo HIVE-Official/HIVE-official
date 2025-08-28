@@ -142,7 +142,7 @@ export const CompleteShowcase: Story = {
                 <div className="space-y-3">
                   <Text variant="body-sm" color="gold" weight="medium">Standard File Upload:</Text>
                   <FileInput
-                    variant="default"
+                    variant="primary"
                     label="Course Assignment"
                     accept=".pdf,.doc,.docx"
                     helperText="Upload your assignment in PDF or DOC format"
@@ -152,7 +152,7 @@ export const CompleteShowcase: Story = {
                 <div className="space-y-3">
                   <Text variant="body-sm" color="gold" weight="medium">With Multiple Files:</Text>
                   <FileInput
-                    variant="default"
+                    variant="primary"
                     label="Research Materials"
                     accept=".pdf,.txt,.docx"
                     multiple
@@ -259,7 +259,7 @@ export const CompleteShowcase: Story = {
                     />
                     <FileInput
                       size="sm"
-                      variant="default"
+                      variant="primary"
                       label="Notes"
                       accept=".txt,.md"
                     />
@@ -276,7 +276,7 @@ export const CompleteShowcase: Story = {
                   <div className="grid md:grid-cols-2 gap-4">
                     <FileInput
                       size="md"
-                      variant="default"
+                      variant="primary"
                       label="Assignment Submission"
                       accept=".pdf,.docx"
                       helperText="Standard assignment upload"
@@ -548,9 +548,9 @@ export const CompleteShowcase: Story = {
                 </div>
                 
                 <div className="flex flex-wrap gap-2">
-                  <Badge variant="outline">Due: March 15, 2024</Badge>
-                  <Badge variant="outline">Max Files: 10</Badge>
-                  <Badge variant="outline">Accepted: PDF, Python, Java, C++</Badge>
+                  <Badge variant="secondary">Due: March 15, 2024</Badge>
+                  <Badge variant="secondary">Max Files: 10</Badge>
+                  <Badge variant="secondary">Accepted: PDF, Python, Java, C++</Badge>
                 </div>
 
               </div>

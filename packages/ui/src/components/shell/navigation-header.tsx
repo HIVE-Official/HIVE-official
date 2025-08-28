@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import { AlignJustify, Search, Bell, Command, Zap, Settings, Hash } from 'lucide-react';
 import { Button } from '../../atomic/atoms/button-enhanced';
 import { UserMenu } from './user-menu';
-import { cn } from '../../lib/utils';
+import { cn } from '../lib/utils';
 
 interface NavigationHeaderProps {
   user?: {

@@ -4,7 +4,7 @@ import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { CampusCard, CampusCardProps } from './campus-card';
 import { SearchInput } from './search-input';
-import { cn } from '@/lib/utils';
+import { cn } from '../../lib/utils';
 
 export type Campus = Omit<CampusCardProps, 'selected' | 'onClick' | 'className'>;
 

@@ -19,9 +19,9 @@ import { HiveDashboard } from './hive-dashboard';
 import { PersonalTools, mockPersonalToolsData } from './personal-tools';
 import { CalendarWidget, mockCalendarData } from './calendar-widget';
 import { ActivityTracker, mockActivityTrackerData } from './activity-tracker';
-import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Button } from '../hive-button';
-import { Badge } from '../../ui/badge';
+import { Badge } from '../../atomic/atoms/badge';
 import { Progress } from '../hive-progress';
 
 interface DashboardDemoProps {
@@ -177,7 +177,7 @@ function RecentActivityWidget() {
             <span className="text-gray-900">{activity.action}</span>
           </div>
           <div className="flex items-center space-x-2">
-            <Badge variant="outline" className={`text-xs ${getActivityColor(activity.type)}`}>
+            <Badge variant="secondary" className={`text-xs ${getActivityColor(activity.type)}`}>
               {activity.type}
             </Badge>
             <span className="text-gray-500 text-xs">{activity.time}</span>

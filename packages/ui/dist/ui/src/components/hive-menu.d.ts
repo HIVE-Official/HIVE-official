@@ -1,7 +1,7 @@
 import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
 declare const hiveMenuVariants: (props?: {
-    variant?: "default" | "outline" | "ghost";
+    variant?: "ghost" | "outline" | "default";
 } & import("class-variance-authority/types").ClassProp) => string;
 export interface MenuItem {
     id: string;

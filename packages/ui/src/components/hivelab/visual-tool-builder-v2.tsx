@@ -426,7 +426,7 @@ export function VisualToolBuilderV2() {
                 className="font-semibold text-lg border-none p-0 h-auto focus:ring-0"
                 placeholder="Tool Name"
               />
-              <HiveBadge variant="outline">Draft</HiveBadge>
+              <HiveBadge variant="secondary">Draft</HiveBadge>
             </div>
             <div className="flex items-center gap-2">
               <HiveButton

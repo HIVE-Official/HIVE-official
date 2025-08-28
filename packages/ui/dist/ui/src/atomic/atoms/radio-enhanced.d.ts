@@ -3,13 +3,13 @@ import { type VariantProps } from "class-variance-authority";
 declare const radioVariants: (props?: import("class-variance-authority/types").ClassProp) => string;
 declare const radioIndicatorVariants: (props?: {
     size?: "default" | "sm" | "lg" | "xl";
-    variant?: "default" | "success" | "warning" | "error" | "info";
+    variant?: "error" | "default" | "success" | "warning" | "info";
 } & import("class-variance-authority/types").ClassProp) => string;
 declare const radioLabelVariants: (props?: {
-    color?: "primary" | "secondary" | "success" | "warning" | "error" | "info" | "tertiary";
-    weight?: "normal" | "medium" | "semibold";
+    color?: "error" | "primary" | "secondary" | "success" | "warning" | "info" | "tertiary";
+    weight?: "medium" | "normal" | "semibold";
 } & import("class-variance-authority/types").ClassProp) => string;
-export interface RadioProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'type'>, VariantProps<typeof radioVariants> {
+export interface RadioProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'type'>, VariantProps<typeof radioIndicatorVariants> {
     label?: string;
     description?: string;
     error?: string;

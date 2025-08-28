@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useCallback, useMemo } from 'react';
-import { Button } from '../../ui/button';
+import { Button } from '../../atomic/atoms/button-enhanced';
 import { Avatar } from '../index';
 import { HiveBadge as Badge } from '../index';
 import { 
@@ -223,7 +223,7 @@ const FollowButton: React.FC<FollowButtonProps> = ({
 
       {showNotificationToggle && isFollowing && (
         <Button
-          variant="outline"
+          variant="secondary"
           onClick={handleNotificationToggle}
           disabled={actionLoading}
           className={`flex items-center gap-2 ${hasNotifications ? 'border-[var(--hive-primary)] text-[var(--hive-primary)]' : ''}`}
@@ -589,12 +589,12 @@ const SpaceCard: React.FC<SpaceCardProps> = ({
       {space.tags && space.tags.length > 0 && (
         <div className="flex flex-wrap gap-1 mb-3">
           {space.tags.slice(0, 3).map((tag) => (
-            <Badge key={tag} size="xs" variant="outline">
+            <Badge key={tag} size="xs" variant="secondary">
               #{tag}
             </Badge>
           ))}
           {space.tags.length > 3 && (
-            <Badge size="xs" variant="outline">
+            <Badge size="xs" variant="secondary">
               +{space.tags.length - 3} more
             </Badge>
           )}
@@ -738,7 +738,7 @@ export const FollowSystem: React.FC<FollowSystemProps> = ({
         </div>
         
         <Button
-          variant="outline"
+          variant="secondary"
           onClick={() => setShowFilters(!showFilters)}
           className="flex items-center gap-2"
         >

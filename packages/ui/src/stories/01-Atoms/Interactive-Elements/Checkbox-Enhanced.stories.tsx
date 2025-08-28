@@ -375,7 +375,7 @@ const CheckboxPatternsShowcase = () => {
                         <group.icon className="w-4 h-4 text-[var(--hive-brand-primary)]" />
                         <span className="font-medium text-[var(--hive-text-primary)]">{group.title}</span>
                       </div>
-                      <Badge variant="outline" className="text-xs">
+                      <Badge variant="secondary" className="text-xs">
                         {getGroupProgress(group.options)}
                       </Badge>
                     </div>

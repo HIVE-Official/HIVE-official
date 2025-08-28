@@ -1,8 +1,8 @@
 import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
 declare const buttonVariants: (props?: {
-    variant?: "primary" | "secondary" | "success" | "warning" | "ghost" | "destructive" | "info" | "link" | "accent";
-    size?: "default" | "xs" | "sm" | "md" | "lg" | "xl" | "icon";
+    variant?: "link" | "primary" | "secondary" | "accent" | "ghost" | "destructive" | "success" | "warning" | "info";
+    size?: "default" | "sm" | "md" | "lg" | "xl" | "icon" | "xs";
     radius?: "default" | "sm" | "lg" | "none" | "full";
     loading?: boolean;
 } & import("class-variance-authority/types").ClassProp) => string;

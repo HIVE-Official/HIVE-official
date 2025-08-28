@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from '../framer-motion-proxy';
-import { cn } from '../../lib/utils';
+import { cn } from '../lib/utils';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader } from '../ui/card';
 import { Badge } from '../ui/badge';
@@ -221,7 +221,7 @@ function ProfileSettingsDialog({
             <h4 className="font-medium text-[var(--hive-text-primary)]">Layout</h4>
             <div className="space-y-2">
               <Button
-                variant="outline"
+                variant="secondary"
                 size="sm"
                 className="w-full justify-start"
                 onClick={onResetLayout}
@@ -231,7 +231,7 @@ function ProfileSettingsDialog({
               </Button>
               
               <Button
-                variant="outline"
+                variant="secondary"
                 size="sm"
                 className="w-full justify-start"
                 disabled
@@ -241,7 +241,7 @@ function ProfileSettingsDialog({
               </Button>
               
               <Button
-                variant="outline"
+                variant="secondary"
                 size="sm"
                 className="w-full justify-start"
                 disabled
@@ -483,7 +483,7 @@ export function ProfileDashboard({
               </h1>
               
               {profileData.user.builderStatus && (
-                <Badge variant="default" className="bg-[var(--hive-brand-gold)]">
+                <Badge variant="primary" className="bg-[var(--hive-brand-gold)]">
                   <Crown className="w-4 h-4 mr-1" />
                   Builder
                 </Badge>

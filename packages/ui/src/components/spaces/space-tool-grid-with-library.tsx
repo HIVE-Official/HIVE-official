@@ -85,7 +85,7 @@ const ToolCard = ({
                   </HiveBadge>
                 )}
                 {!tool.isActive && (
-                  <HiveBadge variant="outline">
+                  <HiveBadge variant="secondary">
                     Disabled
                   </HiveBadge>
                 )}
@@ -102,7 +102,7 @@ const ToolCard = ({
         <div className="flex items-center gap-2">
           <HiveButton
             size="sm"
-            variant="outline"
+            variant="secondary"
             onClick={() => onConfigure?.(tool.id)}
             disabled={!tool.permissions.canEdit}
           >
@@ -138,7 +138,7 @@ const ToolCard = ({
               </HiveBadge>
             )}
             {!tool.isActive && (
-              <HiveBadge variant="outline" className="text-xs">
+              <HiveBadge variant="secondary" className="text-xs">
                 Disabled
               </HiveBadge>
             )}
@@ -173,7 +173,7 @@ const ToolCard = ({
         <div className="flex gap-2 pt-2 border-t border-gray-100">
           <HiveButton 
             size="sm" 
-            variant="outline" 
+            variant="secondary" 
             className="flex-1"
             onClick={() => onConfigure?.(tool.id)}
             disabled={!tool.permissions.canEdit}
@@ -331,7 +331,7 @@ export function SpaceToolGridWithLibrary({
             <PlantNewToolButton
               space={space}
               onToolInstall={handleToolInstall}
-              variant="default"
+              variant="primary"
             />
           )}
         </div>
@@ -379,7 +379,7 @@ export function SpaceToolGridWithLibrary({
             <PlantNewToolButton
               space={space}
               onToolInstall={handleToolInstall}
-              variant="default"
+              variant="primary"
             />
           )}
         </div>

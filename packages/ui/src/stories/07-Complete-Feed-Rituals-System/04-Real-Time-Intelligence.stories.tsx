@@ -412,11 +412,11 @@ const RealTimeIntelligenceDemo = () => {
                     Live Activity Stream
                   </CardTitle>
                   <div className="flex items-center space-x-2">
-                    <Button size="sm" variant="outline" className="border-gray-600 text-white">
+                    <Button size="sm" variant="secondary" className="border-gray-600 text-white">
                       <Filter className="w-4 h-4 mr-2" />
                       Filter
                     </Button>
-                    <Button size="sm" variant="outline" className="border-gray-600 text-white">
+                    <Button size="sm" variant="secondary" className="border-gray-600 text-white">
                       <RefreshCw className="w-4 h-4" />
                     </Button>
                   </div>
@@ -460,7 +460,7 @@ const RealTimeIntelligenceDemo = () => {
                         </div>
                       </div>
                       <div className="flex items-center space-x-2 ml-4">
-                        <Button size="sm" variant="outline" className="border-gray-600 text-white">
+                        <Button size="sm" variant="secondary" className="border-gray-600 text-white">
                           <Heart className="w-3 h-3" />
                         </Button>
                         <Button size="sm" className="hive-interactive" style={{ backgroundColor: 'var(--hive-brand-primary)', color: 'var(--hive-text-inverse)' }}>

@@ -291,7 +291,7 @@ const AnimationShowcase = () => {
           </div>
           <div className="flex flex-wrap gap-2">
             {easingData.examples.map((example: string, idx: number) => (
-              <Badge key={idx} variant="outline" className="text-xs"
+              <Badge key={idx} variant="secondary" className="text-xs"
                      style={{ borderColor: easingData.color, color: easingData.color }}>
                 {example}
               </Badge>
@@ -598,7 +598,7 @@ const AnimationShowcase = () => {
                           </p>
                           <div className="flex flex-wrap gap-2">
                             {data.examples.map((example, idx) => (
-                              <Badge key={idx} variant="outline" className="text-xs"
+                              <Badge key={idx} variant="secondary" className="text-xs"
                                      style={{ borderColor: 'var(--hive-border-subtle)', color: 'var(--hive-text-muted)' }}>
                                 {example}
                               </Badge>
@@ -658,7 +658,7 @@ const AnimationShowcase = () => {
                             </span>
                             <div className="flex flex-wrap gap-1 mt-1">
                               {pattern.components.map((component, idx) => (
-                                <Badge key={idx} variant="outline" className="text-xs"
+                                <Badge key={idx} variant="secondary" className="text-xs"
                                        style={{ borderColor: 'var(--hive-border-subtle)', color: 'var(--hive-text-muted)' }}>
                                   {component}
                                 </Badge>

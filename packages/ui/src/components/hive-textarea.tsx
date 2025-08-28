@@ -319,7 +319,7 @@ const HiveToolDescriptionTextarea = React.forwardRef<HTMLTextAreaElement, Omit<H
       ref={ref}
       label="Tool Description"
       placeholder="Describe what your tool does..."
-      variant="premium"
+      variant="primary"
       showCharacterCount
       maxLength={500}
       size="lg"

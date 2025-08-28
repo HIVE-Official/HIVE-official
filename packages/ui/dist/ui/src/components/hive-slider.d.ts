@@ -2,18 +2,18 @@ import * as React from "react";
 import * as SliderPrimitive from "@radix-ui/react-slider";
 import { type VariantProps } from 'class-variance-authority';
 declare const hiveSliderVariants: (props?: {
-    variant?: "default" | "success" | "gold" | "minimal";
+    variant?: "default" | "gold" | "success" | "minimal";
     size?: "default" | "sm" | "lg" | "xl";
 } & import("class-variance-authority/types").ClassProp) => string;
 declare const hiveSliderTrackVariants: (props?: {
-    variant?: "default" | "success" | "gold" | "minimal";
+    variant?: "default" | "gold" | "success" | "minimal";
     size?: "default" | "sm" | "lg" | "xl";
 } & import("class-variance-authority/types").ClassProp) => string;
 declare const hiveSliderRangeVariants: (props?: {
-    variant?: "default" | "success" | "gold" | "minimal";
+    variant?: "default" | "gold" | "success" | "minimal";
 } & import("class-variance-authority/types").ClassProp) => string;
 declare const hiveSliderThumbVariants: (props?: {
-    variant?: "default" | "success" | "gold" | "minimal";
+    variant?: "default" | "gold" | "success" | "minimal";
     size?: "default" | "sm" | "lg" | "xl";
 } & import("class-variance-authority/types").ClassProp) => string;
 export interface HiveSliderProps extends React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root>, VariantProps<typeof hiveSliderVariants> {

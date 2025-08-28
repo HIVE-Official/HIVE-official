@@ -16,7 +16,7 @@ import {
   CheckCircle,
   AlertCircle
 } from 'lucide-react';
-import { cn } from '../../lib/utils';
+import { cn } from '../lib/utils';
 
 interface PollOption {
   id: string;
@@ -116,7 +116,7 @@ const PollInterface = ({
           
           <HiveButton
             size="sm"
-            variant="outline"
+            variant="secondary"
             onClick={onToggleActive}
           >
             {poll.isActive ? 'Deactivate' : 'Activate'}
@@ -185,7 +185,7 @@ const PollInterface = ({
               {editingOptions.length > 2 && (
                 <HiveButton
                   size="sm"
-                  variant="outline"
+                  variant="secondary"
                   onClick={() => removeOption(option.id)}
                 >
                   <Trash2 className="w-3 h-3" />
@@ -225,13 +225,13 @@ const PollInterface = ({
 
       {/* Actions */}
       <div className="flex items-center justify-between pt-4 border-t border-gray-200">
-        <HiveButton variant="outline" onClick={onDelete} className="text-red-600">
+        <HiveButton variant="secondary" onClick={onDelete} className="text-red-600">
           <Trash2 className="w-4 h-4 mr-2" />
           Delete Poll
         </HiveButton>
         
         <div className="flex gap-2">
-          <HiveButton variant="outline">
+          <HiveButton variant="secondary">
             <BarChart3 className="w-4 h-4 mr-2" />
             View Analytics
           </HiveButton>
@@ -300,7 +300,7 @@ const PollSurface = ({
         </div>
         
         {!poll.isActive && (
-          <HiveBadge variant="outline">
+          <HiveBadge variant="secondary">
             Poll Closed
           </HiveBadge>
         )}

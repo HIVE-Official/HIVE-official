@@ -18,9 +18,9 @@ import {
   Filter,
   MoreHorizontal
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Button } from '../hive-button';
-import { Badge } from '../../ui/badge';
+import { Badge } from '../../atomic/atoms/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '../../ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs';
 
@@ -398,12 +398,12 @@ function NotificationItem({
           {(notification.metadata?.spaceName || notification.metadata?.toolName) && (
             <div className="flex items-center space-x-2 text-xs">
               {notification.metadata.spaceName && (
-                <Badge variant="outline" className="text-xs">
+                <Badge variant="secondary" className="text-xs">
                   {notification.metadata.spaceName}
                 </Badge>
               )}
               {notification.metadata.toolName && (
-                <Badge variant="outline" className="text-xs">
+                <Badge variant="secondary" className="text-xs">
                   {notification.metadata.toolName}
                 </Badge>
               )}

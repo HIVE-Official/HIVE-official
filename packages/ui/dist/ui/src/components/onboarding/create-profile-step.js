@@ -6,7 +6,7 @@ import { Button } from '../button';
 import { Input } from '../input';
 import { Label } from '../label';
 import { CheckCircle, AlertCircle, Loader2, Upload, Camera, XIcon, Shuffle, Crop, } from 'lucide-react';
-import { Checkbox } from '../checkbox';
+import { Checkbox } from '../ui/checkbox';
 import { hiveVariants } from '../../lib/motion';
 import { useAdaptiveMotion } from '../../lib/adaptive-motion';
 import { ImageCropModal } from './image-crop-modal';

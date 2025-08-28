@@ -67,7 +67,7 @@ const radioLabelVariants = cva(
 
 export interface RadioProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'type'>,
-    VariantProps<typeof radioVariants> {
+    VariantProps<typeof radioIndicatorVariants> {
   label?: string;
   description?: string;
   error?: string;

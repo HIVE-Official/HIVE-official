@@ -4,7 +4,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useMemo } from 'react';
 import { Search, Filter, Grid3X3, List, ChevronDown, Star } from 'lucide-react';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 import { HiveInput } from '../hive-input';
 import { HiveButton } from '../hive-button';
 import { HiveBadge } from '../hive-badge';

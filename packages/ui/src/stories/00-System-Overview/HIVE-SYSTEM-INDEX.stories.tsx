@@ -504,7 +504,7 @@ const HIVESystemIndex = () => {
                             <div className="text-xs text-[var(--hive-text-tertiary)] font-mono">
                               {section.path}
                             </div>
-                            <Badge variant="outline" className="text-xs">
+                            <Badge variant="secondary" className="text-xs">
                               {section.components} components
                             </Badge>
                             <Badge 

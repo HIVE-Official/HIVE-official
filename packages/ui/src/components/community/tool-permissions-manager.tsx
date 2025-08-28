@@ -8,11 +8,11 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { Tool } from '@hive/core';
 import { HiveCard } from '../hive-card';
-import { Button } from '../../ui/button';
+import { Button } from '../../atomic/atoms/button-enhanced';
 import { Input } from '../../ui/input';
 import { Label } from '../../ui/label';
 import { Checkbox } from '../../ui/checkbox';
-import { Badge } from '../../ui/badge';
+import { Badge } from '../../atomic/atoms/badge';
 import { 
   Users,
   Lock,

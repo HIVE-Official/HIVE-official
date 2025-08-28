@@ -111,7 +111,7 @@ export const AllVariants: Story = {
           <div className="space-y-4">
             <h2 className="text-2xl font-semibold text-white">Card Variants</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <Card variant="default" padding="md">
+              <Card variant="primary" padding="md">
                 <CardHeader>
                   <CardTitle>Default Card</CardTitle>
                   <CardDescription>Clean card with subtle border</CardDescription>
@@ -165,7 +165,7 @@ export const AllVariants: Story = {
                         <CardDescription>Active • 47 members</CardDescription>
                       </div>
                     </div>
-                    <Badge variant="outline" className="text-accent border-accent/30">Live</Badge>
+                    <Badge variant="secondary" className="text-accent border-accent/30">Live</Badge>
                   </div>
                 </CardHeader>
                 <CardContent>
@@ -271,7 +271,7 @@ export const AllVariants: Story = {
                 </CardContent>
               </Card>
 
-              <Card variant="default" padding="md">
+              <Card variant="primary" padding="md">
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-sm font-medium">Your Impact</CardTitle>
@@ -329,24 +329,24 @@ export const AllVariants: Story = {
           <div className="space-y-4">
             <h2 className="text-2xl font-semibold text-white">Padding Options</h2>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <Card variant="default" padding="none" className="border-2 border-dashed border-white/20">
+              <Card variant="primary" padding="none" className="border-2 border-dashed border-white/20">
                 <div className="p-4">
                   <CardTitle className="text-sm">No Padding</CardTitle>
                   <CardDescription className="text-xs">padding="none"</CardDescription>
                 </div>
               </Card>
               
-              <Card variant="default" padding="sm">
+              <Card variant="primary" padding="sm">
                 <CardTitle className="text-sm">Small</CardTitle>
                 <CardDescription className="text-xs">padding="sm"</CardDescription>
               </Card>
               
-              <Card variant="default" padding="md">
+              <Card variant="primary" padding="md">
                 <CardTitle className="text-sm">Medium</CardTitle>
                 <CardDescription className="text-xs">padding="md"</CardDescription>
               </Card>
               
-              <Card variant="default" padding="lg">
+              <Card variant="primary" padding="lg">
                 <CardTitle className="text-sm">Large</CardTitle>
                 <CardDescription className="text-xs">padding="lg"</CardDescription>
               </Card>
@@ -378,7 +378,7 @@ export const CampusFeed: Story = {
                   <CardTitle className="text-base">Late Night Coding Session</CardTitle>
                   <CardDescription>CS Study Hub • 8 members joined</CardDescription>
                 </div>
-                <Badge variant="outline" className="border-accent/30 text-accent">Live</Badge>
+                <Badge variant="secondary" className="border-accent/30 text-accent">Live</Badge>
               </div>
             </CardHeader>
             <CardContent>

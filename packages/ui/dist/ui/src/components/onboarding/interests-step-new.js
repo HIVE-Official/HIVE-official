@@ -6,7 +6,7 @@ import { Code, Palette, Calculator, FlaskConical, Globe, Music, Camera, Gamepad2
 import { Button } from '../button';
 import { Card, CardContent } from '../card';
 import { Input } from '../input';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 const PREDEFINED_INTERESTS = [
     // Academic
     { id: 'computer-science', name: 'Computer Science', icon: _jsx(Code, { className: "w-4 h-4" }), category: 'academic' },

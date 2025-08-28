@@ -1,7 +1,7 @@
 import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
 declare const minimalCardVariants: (props?: {
-    variant?: "default" | "interactive" | "elevated" | "feature";
+    variant?: "default" | "feature" | "elevated" | "interactive";
     padding?: "sm" | "md" | "lg" | "none";
 } & import("class-variance-authority/types").ClassProp) => string;
 declare const glassCardVariants: (props?: {
@@ -9,15 +9,15 @@ declare const glassCardVariants: (props?: {
     padding?: "sm" | "md" | "lg" | "none";
 } & import("class-variance-authority/types").ClassProp) => string;
 declare const campusCardVariants: (props?: {
-    variant?: "sticky" | "dorm" | "study" | "bulletin";
+    variant?: "sticky" | "study" | "dorm" | "bulletin";
     padding?: "sm" | "md" | "lg" | "none";
 } & import("class-variance-authority/types").ClassProp) => string;
 declare const techCardVariants: (props?: {
-    variant?: "terminal" | "debug" | "system" | "console";
-    padding?: "xs" | "sm" | "md" | "lg" | "none";
+    variant?: "terminal" | "system" | "debug" | "console";
+    padding?: "sm" | "md" | "lg" | "none" | "xs";
 } & import("class-variance-authority/types").ClassProp) => string;
 declare const socialCardVariants: (props?: {
-    variant?: "community" | "post" | "reaction" | "chat";
+    variant?: "reaction" | "post" | "community" | "chat";
     padding?: "sm" | "md" | "lg" | "xl" | "none";
 } & import("class-variance-authority/types").ClassProp) => string;
 interface BaseCardProps extends React.HTMLAttributes<HTMLDivElement> {

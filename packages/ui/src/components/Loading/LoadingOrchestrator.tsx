@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import { cn } from '../../lib/utils';
+import { cn } from '../lib/utils';
 import { Text } from '../../atomic/atoms/text';
 import { useAdvancedViewport } from '../Layout/ResponsiveLayout';
 

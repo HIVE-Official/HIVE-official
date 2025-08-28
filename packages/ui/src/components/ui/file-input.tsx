@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { cn } from '../../lib/utils';
+import { cn } from '../lib/utils';
 import { Upload, X, File, Image as ImageIcon, FileText } from 'lucide-react';
 
 export interface FileInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {

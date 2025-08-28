@@ -548,7 +548,7 @@ export const ElementConfig: React.FC<ElementConfigProps> = ({
                           Trigger action when {event.replace('on', '').toLowerCase()} occurs
                         </div>
                       </div>
-                      <HiveButton variant="outline" size="sm">
+                      <HiveButton variant="secondary" size="sm">
                         Add Action
                       </HiveButton>
                     </div>
@@ -568,11 +568,11 @@ export const ElementConfig: React.FC<ElementConfigProps> = ({
       {/* Footer */}
       <div className="p-4 border-t border-[var(--hive-border-default)] bg-[var(--hive-background-secondary)]">
         <div className="flex gap-2">
-          <HiveButton variant="outline" size="sm" className="flex-1">
+          <HiveButton variant="secondary" size="sm" className="flex-1">
             <Copy size={16} />
             Duplicate
           </HiveButton>
-          <HiveButton variant="outline" size="sm" className="flex-1 text-red-600 border-red-600 hover:bg-red-50">
+          <HiveButton variant="secondary" size="sm" className="flex-1 text-red-600 border-red-600 hover:bg-red-50">
             <Trash2 size={16} />
             Delete
           </HiveButton>

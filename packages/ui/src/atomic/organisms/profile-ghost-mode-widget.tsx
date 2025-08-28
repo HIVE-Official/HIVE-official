@@ -199,7 +199,7 @@ export const ProfileGhostModeWidget: React.FC<ProfileGhostModeWidgetProps> = ({
               Privacy & Ghost Mode
             </Text>
             {isGhostModeActive && (
-              <Badge variant="outline" className="text-xs text-purple-500">
+              <Badge variant="secondary" className="text-xs text-purple-500">
                 <EyeOff className="h-3 w-3 mr-1" />
                 Ghost Active
               </Badge>
@@ -289,7 +289,7 @@ export const ProfileGhostModeWidget: React.FC<ProfileGhostModeWidgetProps> = ({
             <Text variant="body-sm" color="primary" weight="medium">Ghost Mode:</Text>
             {isEditable && onToggleGhostMode && (
               <Button
-                variant={isGhostModeActive ? "default" : "outline"}
+                variant={isGhostModeActive ? "primary" : "secondary"}
                 size="sm"
                 onClick={() => onToggleGhostMode(!isGhostModeActive)}
                 className={cn(
@@ -315,7 +315,7 @@ export const ProfileGhostModeWidget: React.FC<ProfileGhostModeWidgetProps> = ({
             <div className="p-3 bg-purple-500/10 border border-purple-500/20 rounded-lg space-y-2">
               <div className="flex items-center justify-between">
                 <Text variant="body-sm" color="primary">Ghost Mode Active</Text>
-                <Badge variant="outline" className="text-xs text-purple-500">
+                <Badge variant="secondary" className="text-xs text-purple-500">
                   {ghostModeConfig.visibilityLevel}
                 </Badge>
               </div>
@@ -407,7 +407,7 @@ export const ProfileGhostModeWidget: React.FC<ProfileGhostModeWidgetProps> = ({
         <div className="flex gap-2 pt-2 border-t border-[var(--hive-border-primary)]">
           {isEditable && onViewPrivacySettings && (
             <Button
-              variant="outline"
+              variant="secondary"
               size="sm"
               onClick={onViewPrivacySettings}
               className="flex-1"
@@ -419,7 +419,7 @@ export const ProfileGhostModeWidget: React.FC<ProfileGhostModeWidgetProps> = ({
           
           {isEditable && onConfigureGhostMode && (
             <Button
-              variant="default"
+              variant="primary"
               size="sm"
               onClick={onConfigureGhostMode}
               className="flex-1"

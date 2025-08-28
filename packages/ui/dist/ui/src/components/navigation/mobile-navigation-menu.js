@@ -7,7 +7,7 @@ import { Home, Compass, Zap, User, Settings, Search, Bell, Plus, X, Calendar, Us
 import { Button } from '../../atomic/atoms/button-enhanced';
 import { Badge } from '../../ui/badge';
 import { Separator } from '../../ui/separator';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 const primaryNavItems = [
     { id: 'dashboard', label: 'Dashboard', icon: Home, href: '/' },
     { id: 'spaces', label: 'Spaces', icon: Users, href: '/spaces' },

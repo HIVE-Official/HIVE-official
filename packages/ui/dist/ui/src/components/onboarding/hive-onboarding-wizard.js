@@ -1,7 +1,7 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React, { useState, createContext, useContext } from 'react';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 import { HiveButton } from '../hive-button';
 import { ArrowLeft, ArrowRight, Check, Upload, Search, Zap, BookOpen, Users, Scale, Camera, User, Hash, GraduationCap, Loader2 } from 'lucide-react';
 const OnboardingContext = createContext(null);

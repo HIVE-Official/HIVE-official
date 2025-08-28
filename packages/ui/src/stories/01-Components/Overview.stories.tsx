@@ -45,8 +45,8 @@ export const ComponentShowcase: Story = {
               <Button variant="secondary">Secondary</Button>
               <Button variant="accent">Gold Accent</Button>
               <Button variant="ghost">Ghost Button</Button>
-              <Button variant="outline">Outlined</Button>
-              <Button variant="ritual">Ritual Moment</Button>
+              <Button variant="secondary">Outlined</Button>
+              <Button variant="primary">Ritual Moment</Button>
             </div>
           </CardContent>
         </Card>
@@ -64,7 +64,7 @@ export const ComponentShowcase: Story = {
           </CardHeader>
           <CardContent>
             <div className="grid md:grid-cols-2 gap-4">
-              <Input placeholder="Default input" variant="default" />
+              <Input placeholder="Default input" variant="primary" />
               <Input placeholder="Search spaces..." variant="search" />
               <Input placeholder="Filled variant" variant="filled" />
               <Input placeholder="Minimal style" variant="minimal" />
@@ -77,7 +77,7 @@ export const ComponentShowcase: Story = {
       <section className="space-y-6">
         <h2 className="text-2xl font-semibold text-white">Cards & Containers</h2>
         <div className="grid md:grid-cols-3 gap-6">
-          <Card variant="default" padding="md">
+          <Card variant="primary" padding="md">
             <CardHeader>
               <CardTitle>Default Card</CardTitle>
               <CardDescription>Standard container for content</CardDescription>
@@ -220,7 +220,7 @@ export const ComponentShowcase: Story = {
       <section className="space-y-6">
         <h2 className="text-2xl font-semibold text-white">Design Principles</h2>
         <div className="grid md:grid-cols-2 gap-6">
-          <Card variant="default" padding="lg">
+          <Card variant="primary" padding="lg">
             <CardHeader>
               <CardTitle>Strategic Gold Usage</CardTitle>
             </CardHeader>
@@ -234,7 +234,7 @@ export const ComponentShowcase: Story = {
             </CardContent>
           </Card>
 
-          <Card variant="default" padding="lg">
+          <Card variant="primary" padding="lg">
             <CardHeader>
               <CardTitle>HIVE Motion System</CardTitle>
             </CardHeader>

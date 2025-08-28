@@ -619,7 +619,7 @@ export const QuickComparison: Story = {
         <div className="space-y-6">
           <h2 className="text-xl font-semibold text-center">Cards</h2>
           <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-            <MinimalCard variant="default" padding="sm" className="min-h-[120px] flex items-center justify-center">
+            <MinimalCard variant="primary" padding="sm" className="min-h-[120px] flex items-center justify-center">
               <div className="text-center">
                 <BookOpen className="w-6 h-6 mx-auto mb-2 text-accent" />
                 <div className="font-semibold">Study Group</div>
@@ -821,7 +821,7 @@ export const MixAndMatchDemo: Story = {
           <p className="text-white/70">Minimal cards + Apple buttons + Tech typography</p>
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <MinimalCard variant="default" padding="md">
+            <MinimalCard variant="primary" padding="md">
               <MinimalTypography variant="title" as="h3" className="mb-4">
                 System Overview
               </MinimalTypography>

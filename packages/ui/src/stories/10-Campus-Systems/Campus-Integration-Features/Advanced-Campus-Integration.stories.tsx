@@ -572,12 +572,12 @@ const CampusBuildingCard = ({ building }: { building: CampusBuilding }) => {
 
         <div className="flex flex-wrap gap-2">
           {building.amenities.slice(0, 4).map((amenity, index) => (
-            <Badge key={index} variant="outline" className="border-gray-600 text-gray-300 text-xs">
+            <Badge key={index} variant="secondary" className="border-gray-600 text-gray-300 text-xs">
               {amenity}
             </Badge>
           ))}
           {building.amenities.length > 4 && (
-            <Badge variant="outline" className="border-gray-600 text-gray-400 text-xs">
+            <Badge variant="secondary" className="border-gray-600 text-gray-400 text-xs">
               +{building.amenities.length - 4} more
             </Badge>
           )}
@@ -639,7 +639,7 @@ const DiningServicesPanel = ({ diningLocations }: { diningLocations: DiningLocat
                 <Badge className={`${getCurrentStatus(location) === 'open' ? 'bg-green-600' : 'bg-red-600'} text-white text-xs`}>
                   {getCurrentStatus(location)}
                 </Badge>
-                <Badge variant="outline" className="border-gray-600 text-gray-300 text-xs">
+                <Badge variant="secondary" className="border-gray-600 text-gray-300 text-xs">
                   {location.type.replace('_', ' ')}
                 </Badge>
               </div>
@@ -665,7 +665,7 @@ const DiningServicesPanel = ({ diningLocations }: { diningLocations: DiningLocat
               </div>
               <div className="flex flex-wrap gap-1">
                 {location.dietary.map((diet, index) => (
-                  <Badge key={index} variant="outline" className="border-green-600 text-green-300 text-xs">
+                  <Badge key={index} variant="secondary" className="border-green-600 text-green-300 text-xs">
                     {diet}
                   </Badge>
                 ))}
@@ -974,7 +974,7 @@ const CampusEventsFeed = ({ events }: { events: CampusEvent[] }) => {
             <div className="mt-3 flex items-center justify-between">
               <div className="flex flex-wrap gap-1">
                 {event.tags.slice(0, 3).map((tag, index) => (
-                  <Badge key={index} variant="outline" className="border-gray-600 text-gray-400 text-xs">
+                  <Badge key={index} variant="secondary" className="border-gray-600 text-gray-400 text-xs">
                     {tag}
                   </Badge>
                 ))}
@@ -985,7 +985,7 @@ const CampusEventsFeed = ({ events }: { events: CampusEvent[] }) => {
                     Register
                   </Button>
                 )}
-                <Button size="sm" variant="outline" className="border-gray-600 text-gray-300">
+                <Button size="sm" variant="secondary" className="border-gray-600 text-gray-300">
                   Details
                 </Button>
               </div>

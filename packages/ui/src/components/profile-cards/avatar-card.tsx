@@ -178,7 +178,7 @@ export const AvatarCard: React.FC<AvatarCardProps> = ({
                 >
                   <HiveButton
                     size="sm"
-                    variant="outline"
+                    variant="secondary"
                     onClick={triggerFileUpload}
                     className="h-6 px-2 text-xs"
                     disabled={isUploading}
@@ -188,7 +188,7 @@ export const AvatarCard: React.FC<AvatarCardProps> = ({
                   {onGenerateAvatar && (
                     <HiveButton
                       size="sm"
-                      variant="outline"
+                      variant="secondary"
                       onClick={onGenerateAvatar}
                       className="h-6 px-2 text-xs"
                       disabled={isUploading}
@@ -344,7 +344,7 @@ export const AvatarCard: React.FC<AvatarCardProps> = ({
       <div className="p-4 border-t border-white/10">
         <div className="flex gap-2">
           <HiveButton
-            variant="outline"
+            variant="secondary"
             size="sm"
             onClick={onEditProfile}
             className="flex-1"

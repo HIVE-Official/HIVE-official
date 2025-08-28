@@ -12,7 +12,7 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
 import React, { useState, useEffect } from 'react';
 import { HiveCard, HiveButton } from '../index';
 import { ChevronLeft, Menu, X, Maximize2, Minimize2 } from 'lucide-react';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 export function MobileToolWrapper({ children, toolName, onBack, showMobileMenu = false, className }) {
     const [isMobile, setIsMobile] = useState(false);
     const [isFullscreen, setIsFullscreen] = useState(false);

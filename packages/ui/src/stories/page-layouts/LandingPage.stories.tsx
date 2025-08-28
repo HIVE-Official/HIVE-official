@@ -71,7 +71,7 @@ export const CountdownTimerShowcase: Story = {
               <CountdownTimer 
                 targetDate={launchDate}
                 size="md"
-                variant="default"
+                variant="primary"
               />
             </div>
 

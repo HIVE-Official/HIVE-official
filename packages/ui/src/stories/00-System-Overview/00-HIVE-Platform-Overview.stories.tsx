@@ -108,7 +108,7 @@ const HivePlatformOverview = () => {
         </Typography>
         <div className="flex justify-center gap-2">
           <Badge variant="secondary">v1.0 Beta</Badge>
-          <Badge variant="outline">University at Buffalo</Badge>
+          <Badge variant="secondary">University at Buffalo</Badge>
           <Badge variant="destructive">@buffalo.edu Only</Badge>
         </div>
       </div>
@@ -168,7 +168,7 @@ const HivePlatformOverview = () => {
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-lg">{layer.layer}</CardTitle>
-                  <Badge variant="outline">{layer.components}</Badge>
+                  <Badge variant="secondary">{layer.components}</Badge>
                 </div>
               </CardHeader>
               <CardContent>
@@ -220,15 +220,15 @@ const HivePlatformOverview = () => {
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-3">
-            <Button variant="outline" size="sm">01 Foundation</Button>
-            <Button variant="outline" size="sm">02 Atoms</Button>
-            <Button variant="outline" size="sm">03 Molecules</Button>
-            <Button variant="outline" size="sm">04 Organisms</Button>
-            <Button variant="outline" size="sm">Profile System</Button>
-            <Button variant="outline" size="sm">Spaces System</Button>
-            <Button variant="outline" size="sm">Tools System</Button>
-            <Button variant="outline" size="sm">Feed System</Button>
-            <Button variant="outline" size="sm">Navigation System</Button>
+            <Button variant="secondary" size="sm">01 Foundation</Button>
+            <Button variant="secondary" size="sm">02 Atoms</Button>
+            <Button variant="secondary" size="sm">03 Molecules</Button>
+            <Button variant="secondary" size="sm">04 Organisms</Button>
+            <Button variant="secondary" size="sm">Profile System</Button>
+            <Button variant="secondary" size="sm">Spaces System</Button>
+            <Button variant="secondary" size="sm">Tools System</Button>
+            <Button variant="secondary" size="sm">Feed System</Button>
+            <Button variant="secondary" size="sm">Navigation System</Button>
           </div>
         </CardContent>
       </Card>
@@ -282,17 +282,17 @@ export const DesignSystemShowcase: Story = {
       </Typography>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <Button variant="default">Primary Action</Button>
+        <Button variant="primary">Primary Action</Button>
         <Button variant="secondary">Secondary Action</Button>
-        <Button variant="outline">Outline Button</Button>
+        <Button variant="secondary">Outline Button</Button>
         <Button variant="ghost">Ghost Button</Button>
       </div>
 
       <div className="flex gap-4 mb-8">
-        <Badge variant="default">Default</Badge>
+        <Badge variant="primary">Default</Badge>
         <Badge variant="secondary">Secondary</Badge>
         <Badge variant="destructive">Important</Badge>
-        <Badge variant="outline">Outline</Badge>
+        <Badge variant="secondary">Outline</Badge>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

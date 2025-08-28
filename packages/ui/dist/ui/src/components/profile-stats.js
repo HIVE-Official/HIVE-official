@@ -2,7 +2,7 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import React from 'react';
 import { cva } from 'class-variance-authority';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 import { ProfileStatistic } from '../atomic/atoms/profile-statistic';
 import { Users, Zap, BookOpen, Star, TrendingUp, Award, Calendar } from 'lucide-react';
 const profileStatsVariants = cva("flex transition-all duration-200", {

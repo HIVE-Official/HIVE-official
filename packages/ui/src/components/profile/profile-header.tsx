@@ -145,7 +145,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
         {/* Action Buttons */}
         <div className="flex gap-2">
           <HiveButton 
-            variant="outline" 
+            variant="secondary" 
             size="sm" 
             onClick={onEditProfile}
             className="flex items-center gap-2"

@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { Mail, CheckCircle, AlertCircle, Clock, RefreshCw, ExternalLink } from 'lucide-react';
 import { Button } from '../button';
 import { Alert } from '../alert';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '../card';
+import { Card, CardHeader, CardContent, CardFooter } from '../card';
 import { cn } from '../lib/utils';
 
 interface EmailVerificationProps {
@@ -102,16 +102,16 @@ export const EmailVerification: React.FC<EmailVerificationProps> = ({
           <div className="w-16 h-16 bg-accent/20 rounded-full flex items-center justify-center mx-auto mb-4">
             <Mail className="w-8 h-8 text-accent" />
           </div>
-          <CardTitle className="text-2xl">Check your email</CardTitle>
-          <CardDescription className="text-base">
+          <h2 className="text-2xl font-semibold">Check your email</h2>
+          <p className="text-base text-muted-foreground">
             We've sent a magic link to <span className="text-white font-medium">{email}</span>
-          </CardDescription>
+          </p>
         </CardHeader>
 
         <CardContent className="space-y-6">
           {/* Status Alert */}
           {timeRemaining > 0 ? (
-            <Alert variant="info">
+            <Alert variant="primary">
               <Clock className="w-4 h-4" />
               <div>
                 <p className="font-medium">Magic link sent!</p>
@@ -124,7 +124,7 @@ export const EmailVerification: React.FC<EmailVerificationProps> = ({
               </div>
             </Alert>
           ) : (
-            <Alert variant="warning">
+            <Alert variant="destructive">
               <AlertCircle className="w-4 h-4" />
               <div>
                 <p className="font-medium">Link expired</p>
@@ -138,7 +138,7 @@ export const EmailVerification: React.FC<EmailVerificationProps> = ({
           {/* Actions */}
           <div className="space-y-3">
             <Button 
-              variant="outline" 
+              variant="secondary" 
               className="w-full"
               onClick={openEmailApp}
             >

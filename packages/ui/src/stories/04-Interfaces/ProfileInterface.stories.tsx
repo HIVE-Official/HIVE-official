@@ -52,7 +52,7 @@ const ProfileLayout = ({ children }: { children: React.ReactNode }) => (
             </nav>
           </div>
           <div className="flex items-center space-x-3">
-            <Button variant="outline" size="sm">Settings</Button>
+            <Button variant="secondary" size="sm">Settings</Button>
             <div className="w-8 h-8 bg-accent rounded-full flex items-center justify-center">
               <span className="text-sm font-semibold text-accent-foreground">SK</span>
             </div>
@@ -232,7 +232,7 @@ export const UtilityFirstProfile: Story = {
             </div>
             
             <div className="text-center">
-              <Button variant="outline" size="sm">
+              <Button variant="secondary" size="sm">
                 Create New Tool
               </Button>
             </div>
@@ -258,7 +258,7 @@ export const UtilityFirstProfile: Story = {
               ))}
             </div>
             <div className="text-center">
-              <Button variant="outline" size="sm">
+              <Button variant="secondary" size="sm">
                 Explore Spaces
               </Button>
             </div>
@@ -428,7 +428,7 @@ export const ProgressiveSocialDisclosure: Story = {
                   <p className="text-muted-foreground">Faculty approval needed</p>
                 </div>
               </div>
-              <Button variant="outline" size="sm" className="w-full">
+              <Button variant="secondary" size="sm" className="w-full">
                 Apply
               </Button>
             </div>
@@ -452,7 +452,7 @@ export const ProgressiveSocialDisclosure: Story = {
                 </ul>
               </div>
               <div className="flex space-x-3">
-                <Button variant="outline" onClick={() => setShowSocialHint(false)}>
+                <Button variant="secondary" onClick={() => setShowSocialHint(false)}>
                   Maybe Later
                 </Button>
                 <Button onClick={() => setShowSocialHint(false)}>
@@ -571,7 +571,7 @@ export const CampusIntegration: Story = {
             <div className="text-xs text-muted-foreground">
               Tools created: 3
             </div>
-            <Button variant="outline" size="sm">
+            <Button variant="secondary" size="sm">
               Open Lab
             </Button>
           </div>

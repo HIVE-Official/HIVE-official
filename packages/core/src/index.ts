@@ -81,3 +81,7 @@ export * from "./utils/privacy-utils";
 
 // Logger utilities
 export * from "./utils/logger";
+
+// Feed-related exports for API clients
+export type { Post as FeedPost, CreatePostRequest, PostType, PostContent } from "./domain/feed/posting";
+export { CreatePostSchema } from "./domain/feed/posting";

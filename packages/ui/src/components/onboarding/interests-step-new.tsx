@@ -166,7 +166,7 @@ export const InterestsStepNew: React.FC<InterestsStepProps> = ({
             <h2 className="text-lg font-semibold text-white">Custom Interests</h2>
             {!showCustomInput && (
               <Button
-                variant="outline"
+                variant="secondary"
                 size="sm"
                 onClick={() => setShowCustomInput(true)}
               >

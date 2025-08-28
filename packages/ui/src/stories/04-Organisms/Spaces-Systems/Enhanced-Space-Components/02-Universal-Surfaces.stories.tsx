@@ -527,15 +527,15 @@ function PostBoardSurface({ viewMode }: { viewMode: 'view' | 'manage' }) {
               
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Button size="sm" variant="outline" className="border-gray-600 text-white">
+                  <Button size="sm" variant="secondary" className="border-gray-600 text-white">
                     <Calendar className="w-4 h-4 mr-1" />
                     Add Event
                   </Button>
-                  <Button size="sm" variant="outline" className="border-gray-600 text-white">
+                  <Button size="sm" variant="secondary" className="border-gray-600 text-white">
                     <MapPin className="w-4 h-4 mr-1" />
                     Location
                   </Button>
-                  <Button size="sm" variant="outline" className="border-gray-600 text-white">
+                  <Button size="sm" variant="secondary" className="border-gray-600 text-white">
                     <Paperclip className="w-4 h-4 mr-1" />
                     Attach
                   </Button>
@@ -543,7 +543,7 @@ function PostBoardSurface({ viewMode }: { viewMode: 'view' | 'manage' }) {
                 
                 <div className="flex gap-2">
                   <Button 
-                    variant="outline" 
+                    variant="secondary" 
                     className="border-gray-600 text-white"
                     onClick={() => setShowComposer(false)}
                   >
@@ -646,7 +646,7 @@ function MembersSurface({ viewMode }: { viewMode: 'view' | 'manage' }) {
         <div className="flex items-center gap-3">
           {viewMode === 'manage' && (
             <Button 
-              variant="outline"
+              variant="secondary"
               className="border-red-500/30 text-red-400 hover:bg-red-500/10"
             >
               <UserX className="w-4 h-4 mr-2" />
@@ -829,10 +829,10 @@ function PostCard({ post, viewMode }: { post: any; viewMode: 'view' | 'manage' }
           <div className="flex items-center gap-2">
             {viewMode === 'manage' && (
               <>
-                <Button size="icon" variant="outline" className="border-gray-600 text-white h-8 w-8">
+                <Button size="icon" variant="secondary" className="border-gray-600 text-white h-8 w-8">
                   <Edit className="w-3 h-3" />
                 </Button>
-                <Button size="icon" variant="outline" className="border-red-600 text-red-400 h-8 w-8">
+                <Button size="icon" variant="secondary" className="border-red-600 text-red-400 h-8 w-8">
                   <Trash2 className="w-3 h-3" />
                 </Button>
               </>
@@ -876,7 +876,7 @@ function PostCard({ post, viewMode }: { post: any; viewMode: 'view' | 'manage' }
                 <CheckCircle className="w-3 h-3 mr-1" />
                 Attending
               </Button>
-              <Button size="sm" variant="outline" className="border-gray-600 text-white">
+              <Button size="sm" variant="secondary" className="border-gray-600 text-white">
                 <AlertCircle className="w-3 h-3 mr-1" />
                 Maybe
               </Button>
@@ -887,7 +887,7 @@ function PostCard({ post, viewMode }: { post: any; viewMode: 'view' | 'manage' }
         {/* Post Tags */}
         <div className="flex flex-wrap gap-1 mb-4">
           {post.tags.map((tag: string) => (
-            <Badge key={tag} variant="outline" className="border-gray-600 text-gray-400 text-xs">
+            <Badge key={tag} variant="secondary" className="border-gray-600 text-gray-400 text-xs">
               #{tag}
             </Badge>
           ))}
@@ -995,10 +995,10 @@ function EventCard({ event, viewMode }: { event: any; viewMode: 'view' | 'manage
           <div className="flex flex-col items-end gap-2">
             {viewMode === 'manage' && (
               <div className="flex gap-1">
-                <Button size="icon" variant="outline" className="border-gray-600 text-white h-8 w-8">
+                <Button size="icon" variant="secondary" className="border-gray-600 text-white h-8 w-8">
                   <Edit className="w-3 h-3" />
                 </Button>
-                <Button size="icon" variant="outline" className="border-red-600 text-red-400 h-8 w-8">
+                <Button size="icon" variant="secondary" className="border-red-600 text-red-400 h-8 w-8">
                   <Trash2 className="w-3 h-3" />
                 </Button>
               </div>
@@ -1069,7 +1069,7 @@ function MemberCard({ member, viewMode }: { member: any; viewMode: 'view' | 'man
         </div>
         
         <div className="flex items-center justify-between">
-          <Badge variant="outline" className={`text-xs ${
+          <Badge variant="secondary" className={`text-xs ${
             member.activity === 'very-active' ? 'border-green-400/50 text-green-400' :
             member.activity === 'active' ? 'border-blue-400/50 text-blue-400' :
             member.activity === 'moderate' ? 'border-yellow-400/50 text-yellow-400' :
@@ -1100,7 +1100,7 @@ function ToolCard({ tool, viewMode }: { tool: any; viewMode: 'view' | 'manage' }
             </div>
             <div>
               <h3 className="text-white font-medium">{tool.name}</h3>
-              <Badge variant="outline" className="text-xs mt-1 border-cyan-400/50 text-cyan-400">
+              <Badge variant="secondary" className="text-xs mt-1 border-cyan-400/50 text-cyan-400">
                 {tool.type}
               </Badge>
             </div>
@@ -1108,10 +1108,10 @@ function ToolCard({ tool, viewMode }: { tool: any; viewMode: 'view' | 'manage' }
           
           {viewMode === 'manage' && (
             <div className="flex gap-1">
-              <Button size="icon" variant="outline" className="border-gray-600 text-white h-8 w-8">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-white h-8 w-8">
                 <Settings className="w-3 h-3" />
               </Button>
-              <Button size="icon" variant="outline" className="border-red-600 text-red-400 h-8 w-8">
+              <Button size="icon" variant="secondary" className="border-red-600 text-red-400 h-8 w-8">
                 <Trash2 className="w-3 h-3" />
               </Button>
             </div>
@@ -1170,7 +1170,7 @@ function PinnedItemCard({ item, viewMode }: { item: any; viewMode: 'view' | 'man
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-1">
                 <h3 className="text-white font-medium truncate">{item.title}</h3>
-                <Badge variant="outline" className="text-xs border-amber-400/50 text-amber-400">
+                <Badge variant="secondary" className="text-xs border-amber-400/50 text-amber-400">
                   {item.category.replace('-', ' ')}
                 </Badge>
               </div>
@@ -1187,7 +1187,7 @@ function PinnedItemCard({ item, viewMode }: { item: any; viewMode: 'view' | 'man
           
           <div className="flex items-center gap-2 flex-shrink-0 ml-4">
             {viewMode === 'manage' && (
-              <Button size="icon" variant="outline" className="border-red-600 text-red-400 h-8 w-8">
+              <Button size="icon" variant="secondary" className="border-red-600 text-red-400 h-8 w-8">
                 <Trash2 className="w-3 h-3" />
               </Button>
             )}

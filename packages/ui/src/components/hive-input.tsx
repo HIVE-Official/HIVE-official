@@ -399,7 +399,7 @@ const HiveToolNameInput = React.forwardRef<HTMLInputElement, Omit<HiveInputProps
       ref={ref}
       label="Tool Name"
       placeholder="Enter tool name..."
-      variant="premium"
+      variant="primary"
       showCharacterCount
       maxLength={50}
       {...props}

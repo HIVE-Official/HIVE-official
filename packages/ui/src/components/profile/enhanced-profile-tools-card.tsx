@@ -17,9 +17,9 @@ import {
   Grid3X3,
   List
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Button } from '../hive-button';
-import { Badge } from '../../ui/badge';
+import { Badge } from '../../atomic/atoms/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs';
 import { cn } from '../lib/utils';
 import { EventSystemContainer } from '../tools';
@@ -262,7 +262,7 @@ export const EnhancedProfileToolsCard: React.FC<EnhancedProfileToolsCardProps> =
               </div>
 
               <Button
-                variant="outline"
+                variant="secondary"
                 size="sm"
                 onClick={onBrowseMarketplace}
               >
@@ -306,7 +306,7 @@ export const EnhancedProfileToolsCard: React.FC<EnhancedProfileToolsCardProps> =
                   <Badge className="bg-[var(--hive-brand-secondary)]/20 text-[var(--hive-brand-secondary)]">Integrated</Badge>
                 </h3>
                 <Button
-                  variant="outline"
+                  variant="secondary"
                   size="sm"
                   onClick={() => setShowSystemView(!showSystemView)}
                 >
@@ -345,7 +345,7 @@ export const EnhancedProfileToolsCard: React.FC<EnhancedProfileToolsCardProps> =
                   return (
                     <Button
                       key={`${action.toolId}-${action.action}`}
-                      variant="outline"
+                      variant="secondary"
                       size="sm"
                       onClick={() => onToolAction?.(action.toolId, action.action)}
                       className="flex items-center space-x-2"
@@ -418,7 +418,7 @@ export const EnhancedProfileToolsCard: React.FC<EnhancedProfileToolsCardProps> =
                               </Button>
                               <Button
                                 size="sm"
-                                variant="outline"
+                                variant="secondary"
                                 onClick={() => onConfigureTool?.(installation.id)}
                                 className="h-7 w-7 p-0"
                               >
@@ -504,7 +504,7 @@ export const EnhancedProfileToolsCard: React.FC<EnhancedProfileToolsCardProps> =
                             </Button>
                             <Button
                               size="sm"
-                              variant="outline"
+                              variant="secondary"
                               onClick={() => onConfigureTool?.(installation.id)}
                               className="h-7 w-7 p-0"
                             >

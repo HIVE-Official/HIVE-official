@@ -181,7 +181,7 @@ export const ProfileCalendarWidget: React.FC<ProfileCalendarWidgetProps> = ({
             <Text variant="body-sm" color="gold" weight="medium">
               Calendar & Schedule
             </Text>
-            <Badge variant="outline" className={cn('text-xs', availabilityConfig.color)}>
+            <Badge variant="secondary" className={cn('text-xs', availabilityConfig.color)}>
               <availabilityConfig.icon className="h-3 w-3 mr-1" />
               {availabilityConfig.label}
             </Badge>
@@ -354,7 +354,7 @@ export const ProfileCalendarWidget: React.FC<ProfileCalendarWidgetProps> = ({
         <div className="flex gap-2 pt-2 border-t border-[var(--hive-border-primary)]">
           {isEditable && onAddEvent && (
             <Button
-              variant="outline"
+              variant="secondary"
               size="sm"
               onClick={onAddEvent}
               className="flex-1"
@@ -366,7 +366,7 @@ export const ProfileCalendarWidget: React.FC<ProfileCalendarWidgetProps> = ({
           
           {onViewCalendar && (
             <Button
-              variant="default"
+              variant="primary"
               size="sm"
               onClick={onViewCalendar}
               className="flex-1"

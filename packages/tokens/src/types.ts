@@ -13,7 +13,7 @@ export type LetterSpacingToken = keyof typeof typography.letterSpacing;
 
 // Color Types
 export type ColorToken = keyof typeof colors;
-export type AccentVariant = keyof typeof colors.accent;
+export type AccentVariant = "gold" | "champagne" | "amber" | "bronze";
 export type SurfaceVariant = "surface-01" | "surface-02" | "surface-03";
 
 // Spacing Types

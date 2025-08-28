@@ -159,6 +159,8 @@ export { dbAdmin, authAdmin };
 // Re-export for compatibility
 export const db = dbAdmin;
 export const auth = authAdmin;
+export const adminFirestore = dbAdmin;
+export const firebaseAuth = authAdmin;
 export const isFirebaseConfigured = firebaseInitialized;
 
 // Function exports for compatibility

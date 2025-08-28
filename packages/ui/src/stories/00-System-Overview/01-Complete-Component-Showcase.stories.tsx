@@ -194,9 +194,9 @@ const CompleteComponentShowcase = () => {
           Every component is campus-optimized, mobile-first, and ready for University at Buffalo students.
         </Typography>
         <div className="flex justify-center gap-2 flex-wrap">
-          <Badge variant="default">{stats.totalComponents} Components</Badge>
+          <Badge variant="primary">{stats.totalComponents} Components</Badge>
           <Badge variant="secondary">{stats.storybookStories} Stories</Badge>
-          <Badge variant="outline">{stats.productionReady} Production Ready</Badge>
+          <Badge variant="secondary">{stats.productionReady} Production Ready</Badge>
           <Badge variant="destructive">UB Campus Optimized</Badge>
         </div>
       </div>
@@ -214,9 +214,9 @@ const CompleteComponentShowcase = () => {
           <div className="space-y-4">
             <Typography variant="h4">Interactive Elements</Typography>
             <div className="flex flex-wrap gap-4 items-center">
-              <Button variant="default">Primary Action</Button>
+              <Button variant="primary">Primary Action</Button>
               <Button variant="secondary">Secondary</Button>
-              <Button variant="outline">Outline</Button>
+              <Button variant="secondary">Outline</Button>
               <Button variant="ghost">Ghost</Button>
               <Switch defaultChecked />
               <Checkbox defaultChecked />
@@ -246,9 +246,9 @@ const CompleteComponentShowcase = () => {
             <Typography variant="h4">Display Elements</Typography>
             <div className="flex flex-wrap gap-4 items-center">
               <Avatar className="w-12 h-12" />
-              <Badge variant="default">CS Major</Badge>
+              <Badge variant="primary">CS Major</Badge>
               <Badge variant="secondary">Junior</Badge>
-              <Badge variant="outline">North Campus</Badge>
+              <Badge variant="secondary">North Campus</Badge>
               <Progress value={75} className="w-32" />
             </div>
           </div>
@@ -303,7 +303,7 @@ const CompleteComponentShowcase = () => {
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <CardTitle className={`text-${category.color}`}>{category.title}</CardTitle>
-                  <Badge variant="outline" className="text-xs">{category.count}</Badge>
+                  <Badge variant="secondary" className="text-xs">{category.count}</Badge>
                 </div>
                 <CardDescription>{category.description}</CardDescription>
               </CardHeader>
@@ -485,7 +485,7 @@ export const QuickDemo: Story = {
             <Button size="default">Default</Button>
             <Button size="sm">Small</Button>
             <Button variant="secondary">Secondary</Button>
-            <Button variant="outline">Outline</Button>
+            <Button variant="secondary">Outline</Button>
             <Button variant="ghost">Ghost</Button>
             <Button variant="destructive">Delete</Button>
           </div>
@@ -527,9 +527,9 @@ export const QuickDemo: Story = {
               </div>
             </div>
             <div className="flex flex-wrap gap-2">
-              <Badge variant="default">Study Group</Badge>
+              <Badge variant="primary">Study Group</Badge>
               <Badge variant="secondary">CS Club</Badge>
-              <Badge variant="outline">Floor Rep</Badge>
+              <Badge variant="secondary">Floor Rep</Badge>
             </div>
             <div className="text-right">
               <Typography variant="body2" className="font-medium">Lockwood Library</Typography>

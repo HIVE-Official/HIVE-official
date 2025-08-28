@@ -376,7 +376,7 @@ const AdminDashboard = () => (
                   {new Date(report.reportedAt).toLocaleDateString()}
                 </p>
               </div>
-              <Button size="sm" variant="outline" className="border-gray-700 text-gray-300">
+              <Button size="sm" variant="secondary" className="border-gray-700 text-gray-300">
                 Review
               </Button>
             </div>
@@ -506,7 +506,7 @@ const ModerationQueue = ({
           </Select>
 
           <div className="flex-1"></div>
-          <Button variant="outline" size="sm" className="border-gray-700 text-gray-300">
+          <Button variant="secondary" size="sm" className="border-gray-700 text-gray-300">
             <Download className="mr-2 h-4 w-4" />
             Export
           </Button>
@@ -526,7 +526,7 @@ const ModerationQueue = ({
                   <Badge variant={report.priority === 'high' ? 'destructive' : report.priority === 'medium' ? 'default' : 'secondary'}>
                     {report.priority} priority
                   </Badge>
-                  <Badge variant="outline" className="border-gray-700 text-gray-300">
+                  <Badge variant="secondary" className="border-gray-700 text-gray-300">
                     {report.content.type}
                   </Badge>
                   <Badge variant={report.status === 'pending' ? 'destructive' : 'default'}>
@@ -578,11 +578,11 @@ const ModerationQueue = ({
                   <CheckCircle className="mr-1 h-4 w-4" />
                   Review
                 </Button>
-                <Button size="sm" variant="outline" className="border-gray-700 text-gray-300">
+                <Button size="sm" variant="secondary" className="border-gray-700 text-gray-300">
                   <Eye className="mr-1 h-4 w-4" />
                   View Full
                 </Button>
-                <Button size="sm" variant="outline" className="border-gray-700 text-gray-300">
+                <Button size="sm" variant="secondary" className="border-gray-700 text-gray-300">
                   <MoreHorizontal className="mr-1 h-4 w-4" />
                   More
                 </Button>
@@ -656,7 +656,7 @@ const ModerationQueue = ({
 
             <div className="flex justify-end gap-3">
               <Button 
-                variant="outline" 
+                variant="secondary" 
                 onClick={() => state.setSelectedReport(null)}
                 className="border-gray-700 text-gray-300"
               >
@@ -725,7 +725,7 @@ const UserManagement = ({
                     <Badge variant={user.status === 'active' ? 'default' : 'destructive'}>
                       {user.status}
                     </Badge>
-                    <Badge variant="outline" className="border-gray-700 text-gray-300">
+                    <Badge variant="secondary" className="border-gray-700 text-gray-300">
                       {user.role}
                     </Badge>
                   </div>
@@ -775,22 +775,22 @@ const UserManagement = ({
               <div className="flex flex-col gap-2">
                 <Button 
                   size="sm" 
-                  variant="outline"
+                  variant="secondary"
                   className="border-gray-700 text-gray-300"
                   onClick={() => state.setSelectedUser(user)}
                 >
                   <Eye className="mr-1 h-4 w-4" />
                   View Profile
                 </Button>
-                <Button size="sm" variant="outline" className="border-gray-700 text-gray-300">
+                <Button size="sm" variant="secondary" className="border-gray-700 text-gray-300">
                   <Mail className="mr-1 h-4 w-4" />
                   Contact
                 </Button>
-                <Button size="sm" variant="outline" className="border-yellow-700 text-yellow-300">
+                <Button size="sm" variant="secondary" className="border-yellow-700 text-yellow-300">
                   <AlertTriangle className="mr-1 h-4 w-4" />
                   Warn
                 </Button>
-                <Button size="sm" variant="outline" className="border-red-700 text-red-300">
+                <Button size="sm" variant="secondary" className="border-red-700 text-red-300">
                   <Ban className="mr-1 h-4 w-4" />
                   Suspend
                 </Button>
@@ -840,7 +840,7 @@ const SpaceManagement = () => (
               <div className="flex-1 space-y-3">
                 <div className="flex items-center gap-3">
                   <h3 className="text-lg font-semibold text-white">{space.name}</h3>
-                  <Badge variant="outline" className="border-gray-700 text-gray-300">
+                  <Badge variant="secondary" className="border-gray-700 text-gray-300">
                     {space.type}
                   </Badge>
                   <Badge variant={space.status === 'active' ? 'default' : 'destructive'}>
@@ -895,15 +895,15 @@ const SpaceManagement = () => (
               </div>
 
               <div className="flex flex-col gap-2 ml-4">
-                <Button size="sm" variant="outline" className="border-gray-700 text-gray-300">
+                <Button size="sm" variant="secondary" className="border-gray-700 text-gray-300">
                   <Eye className="mr-1 h-4 w-4" />
                   View
                 </Button>
-                <Button size="sm" variant="outline" className="border-gray-700 text-gray-300">
+                <Button size="sm" variant="secondary" className="border-gray-700 text-gray-300">
                   <Settings className="mr-1 h-4 w-4" />
                   Manage
                 </Button>
-                <Button size="sm" variant="outline" className="border-yellow-700 text-yellow-300">
+                <Button size="sm" variant="secondary" className="border-yellow-700 text-yellow-300">
                   <Flag className="mr-1 h-4 w-4" />
                   Flag
                 </Button>
@@ -926,11 +926,11 @@ const AdminSystem = () => {
       subtitle="University at Buffalo community management"
       actions={
         <div className="flex items-center gap-2">
-          <Badge variant="outline" className="border-green-700 text-green-300">
+          <Badge variant="secondary" className="border-green-700 text-green-300">
             <CheckCircle className="mr-1 h-3 w-3" />
             System Healthy
           </Badge>
-          <Button variant="outline" className="border-gray-700 text-gray-300">
+          <Button variant="secondary" className="border-gray-700 text-gray-300">
             <Download className="mr-2 h-4 w-4" />
             Export Report
           </Button>

@@ -3,7 +3,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cva } from 'class-variance-authority';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 import { liquidMetal, motionDurations, liquidFlow } from '../motion/hive-motion-system';
 // HIVE Textarea System - Builder's Toolkit with Liquid Metal Motion
 // Matte obsidian glass with floating labels and premium interactions

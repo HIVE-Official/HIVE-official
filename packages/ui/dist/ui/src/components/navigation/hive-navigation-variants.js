@@ -2,8 +2,8 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState } from 'react';
 import { Menu, Search, Bell, User, Command, ChevronDown, X, MoreHorizontal } from 'lucide-react';
-import { cn } from '../lib/utils';
-import { semantic } from '@hive/tokens';
+import { cn } from '../../lib/utils';
+import { semantic } from '../../../../tokens/src';
 import { Button } from '../../atomic/atoms/button-enhanced';
 import { useNavigation, NavigationContainer, NavigationBrand } from './hive-navigation-system';
 import { HiveLogo, HiveGlyphOnly } from '../hive-logo';

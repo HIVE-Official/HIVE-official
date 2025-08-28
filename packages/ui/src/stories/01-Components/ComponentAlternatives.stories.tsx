@@ -60,8 +60,8 @@ export const AlternativesOverview: Story = {
         </p>
         <div className="flex justify-center gap-2">
           <Badge variant="accent">A/B Testing Ready</Badge>
-          <Badge variant="outline">Context-Specific</Badge>
-          <Badge variant="ritual">User-Driven Decisions</Badge>
+          <Badge variant="secondary">Context-Specific</Badge>
+          <Badge variant="primary">User-Driven Decisions</Badge>
         </div>
       </div>
 
@@ -209,7 +209,7 @@ export const AlternativesOverview: Story = {
         <h2 className="text-2xl font-bold text-foreground">🎯 Selection Decision Framework</h2>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Card variant="outline">
+          <Card variant="secondary">
             <CardHeader>
               <CardTitle>Quick Decision Guide</CardTitle>
               <CardDescription>When to use each alternative</CardDescription>
@@ -245,7 +245,7 @@ export const AlternativesOverview: Story = {
             </CardContent>
           </Card>
 
-          <Card variant="outline">
+          <Card variant="secondary">
             <CardHeader>
               <CardTitle>A/B Testing Recommendations</CardTitle>
               <CardDescription>High-impact tests to run</CardDescription>
@@ -287,7 +287,7 @@ export const AlternativesOverview: Story = {
       <div className="space-y-6">
         <h2 className="text-2xl font-bold text-foreground">🔧 Implementation Guide</h2>
         
-        <Card variant="outline">
+        <Card variant="secondary">
           <CardHeader>
             <CardTitle>Usage in Application Code</CardTitle>
             <CardDescription>How to choose alternatives in your components</CardDescription>
@@ -352,15 +352,15 @@ const AcademicComponent = isMobile ? AcademicStep : AcademicCardStep;`}
             </CardHeader>
             <CardContent className="space-y-2">
               <div className="flex items-center gap-2">
-                <Badge variant="outline" size="sm">🧪</Badge>
+                <Badge variant="secondary" size="sm">🧪</Badge>
                 <span className="text-sm">A/B test key alternatives</span>
               </div>
               <div className="flex items-center gap-2">
-                <Badge variant="outline" size="sm">📊</Badge>
+                <Badge variant="secondary" size="sm">📊</Badge>
                 <span className="text-sm">Collect user feedback</span>
               </div>
               <div className="flex items-center gap-2">
-                <Badge variant="outline" size="sm">🎯</Badge>
+                <Badge variant="secondary" size="sm">🎯</Badge>
                 <span className="text-sm">Identify winning approaches</span>
               </div>
             </CardContent>

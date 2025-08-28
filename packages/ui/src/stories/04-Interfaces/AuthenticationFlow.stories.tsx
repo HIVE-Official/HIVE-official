@@ -490,7 +490,7 @@ export const EmailConfirmation: Story = {
                 </p>
               </div>
             ) : (
-              <Button variant="outline" className="w-full">
+              <Button variant="secondary" className="w-full">
                 Resend Magic Link
               </Button>
             )}
@@ -586,7 +586,7 @@ export const LinkVerification: Story = {
             <Button className="w-full font-semibold">
               Request New Magic Link
             </Button>
-            <Button variant="outline" className="w-full">
+            <Button variant="secondary" className="w-full">
               Return to Login
             </Button>
           </div>

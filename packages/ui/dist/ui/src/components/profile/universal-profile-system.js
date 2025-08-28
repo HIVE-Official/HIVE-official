@@ -8,7 +8,7 @@ import { Badge } from '../../ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '../../ui/avatar';
 // import { UniversalBottomNav } from '../navigation/universal-bottom-nav'; // Component doesn't exist
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 export function UniversalProfileSystem({ user, spaces, tools, recentActivity, isOwnProfile, isLoading = false, onEditProfile, onMessageUser, onFollowUser, onShareProfile, onPrivacySettings, className }) {
     const [activeTab, setActiveTab] = useState('overview');
     const [viewMode, setViewMode] = useState('grid');

@@ -300,7 +300,7 @@ const VerificationScreen = ({ auth }: { auth: ReturnType<typeof useAuth> }) => (
             </div>
 
             <Button 
-              variant="outline" 
+              variant="secondary" 
               className="w-full border-gray-700 text-gray-300 hover:text-white"
               onClick={() => auth.setAuthState('onboarding')}
             >
@@ -480,7 +480,7 @@ const Step3ProfilePhoto = ({ onboarding }: { onboarding: ReturnType<typeof useOn
 
       <div className="text-center space-y-2">
         <Button 
-          variant="outline" 
+          variant="secondary" 
           className="border-gray-700 text-gray-300 hover:text-white"
           onClick={() => onboarding.updateUserData('profilePhoto', '/api/placeholder/150/150')}
         >
@@ -747,7 +747,7 @@ const Step7Complete = ({ onboarding }: { onboarding: ReturnType<typeof useOnboar
               <Badge variant="secondary" className="bg-yellow-500/20 text-yellow-500">
                 {UB_DATA.majors.find(m => m.value === onboarding.userData.major)?.label}
               </Badge>
-              <Badge variant="outline" className="border-gray-600 text-gray-300">
+              <Badge variant="secondary" className="border-gray-600 text-gray-300">
                 Class of {onboarding.userData.graduationYear}
               </Badge>
             </div>
@@ -837,7 +837,7 @@ const OnboardingWizard = ({ onboarding }: { onboarding: ReturnType<typeof useOnb
         {/* Navigation */}
         <div className="flex justify-between">
           <Button
-            variant="outline"
+            variant="secondary"
             onClick={onboarding.prevStep}
             disabled={onboarding.currentStep === 1}
             className="border-gray-700 text-gray-300 hover:text-white"

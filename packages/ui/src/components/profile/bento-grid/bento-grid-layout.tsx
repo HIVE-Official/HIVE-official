@@ -2,9 +2,9 @@
 
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { motion, AnimatePresence, Reorder } from '../../framer-motion-proxy';
-import { cn } from '../../../lib/utils';
-import { Button } from '../../ui/button';
-import { Card } from '../../ui/card';
+import { cn } from '../../lib/utils';
+import { Button } from '../../atomic/atoms/button-enhanced';
+import { Card } from '../../atomic/ui/card';
 import { 
   Edit, 
   Save, 
@@ -315,7 +315,7 @@ export function BentoGridLayout({
               </p>
             </div>
             <div className="flex gap-2">
-              <Button variant="outline" size="sm" onClick={handleCancelEdit}>
+              <Button variant="secondary" size="sm" onClick={handleCancelEdit}>
                 <X className="w-4 h-4 mr-2" />
                 Cancel
               </Button>

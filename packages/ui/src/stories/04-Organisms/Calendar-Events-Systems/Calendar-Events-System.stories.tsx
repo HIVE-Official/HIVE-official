@@ -194,17 +194,17 @@ const CalendarSystem = () => {
                 {/* Calendar Navigation */}
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center space-x-4">
-                    <Button size="icon" variant="outline" className="border-gray-600">
+                    <Button size="icon" variant="secondary" className="border-gray-600">
                       <ChevronLeft className="w-4 h-4" />
                     </Button>
                     <h3 className="text-xl font-semibold text-white">
                       Week of November 11-17, 2024
                     </h3>
-                    <Button size="icon" variant="outline" className="border-gray-600">
+                    <Button size="icon" variant="secondary" className="border-gray-600">
                       <ChevronRight className="w-4 h-4" />
                     </Button>
                   </div>
-                  <Button size="sm" variant="outline" className="border-gray-600">
+                  <Button size="sm" variant="secondary" className="border-gray-600">
                     Today
                   </Button>
                 </div>
@@ -290,7 +290,7 @@ const CalendarSystem = () => {
                     <p className="text-red-200 text-sm mb-2">
                       Movie Night conflicts with study session end time
                     </p>
-                    <Button size="sm" variant="outline" className="border-red-600 text-red-300">
+                    <Button size="sm" variant="secondary" className="border-red-600 text-red-300">
                       Resolve Conflict
                     </Button>
                   </div>
@@ -387,11 +387,11 @@ const CalendarSystem = () => {
                     <Plus className="w-4 h-4 mr-2" />
                     Create Study Session
                   </Button>
-                  <Button variant="outline" className="w-full border-gray-600 text-white justify-start">
+                  <Button variant="secondary" className="w-full border-gray-600 text-white justify-start">
                     <Search className="w-4 h-4 mr-2" />
                     Find Campus Events
                   </Button>
-                  <Button variant="outline" className="w-full border-gray-600 text-white justify-start">
+                  <Button variant="secondary" className="w-full border-gray-600 text-white justify-start">
                     <Settings className="w-4 h-4 mr-2" />
                     Calendar Settings
                   </Button>

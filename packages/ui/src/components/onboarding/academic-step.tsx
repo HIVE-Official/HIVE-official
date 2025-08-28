@@ -313,7 +313,7 @@ export const AcademicStep: React.FC<AcademicStepProps> = ({
             variants={hiveVariants.item}
           >
             <Button
-              variant="outline"
+              variant="secondary"
               onClick={onBack}
               className="flex-1 font-body"
               disabled={isLoading}
@@ -321,7 +321,7 @@ export const AcademicStep: React.FC<AcademicStepProps> = ({
               Back
             </Button>
             <Button
-              variant="ritual"
+              variant="primary"
               onClick={onSubmit}
               disabled={isLoading}
               className="flex-1 font-body"

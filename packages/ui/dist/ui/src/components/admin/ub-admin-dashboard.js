@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';
 import { Badge } from '../../ui/badge';
 import { ButtonEnhanced as Button } from '../../atomic/atoms/button-enhanced';
 import { Text } from '../../atomic/atoms/text';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 import { Shield, Users, Home, Settings, Flag, AlertTriangle, CheckCircle, BarChart3, Database, Bell, Eye, Building2, GraduationCap, Zap, FileText, Calendar, MessageSquare, Monitor, HardDrive, Lock } from 'lucide-react';
 export function UBAdminMetricsOverview({ metrics, className }) {
     const { students, spaces, tools, rituals, content, system } = metrics;

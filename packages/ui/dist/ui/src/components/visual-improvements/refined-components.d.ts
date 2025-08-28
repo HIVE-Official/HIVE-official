@@ -1,7 +1,7 @@
 import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
 declare const refinedButtonVariants: (props?: {
-    variant?: "primary" | "secondary" | "ghost" | "destructive" | "accent";
+    variant?: "primary" | "secondary" | "accent" | "ghost" | "destructive";
     size?: "sm" | "md" | "lg" | "xl" | "icon" | "icon-sm" | "icon-lg";
 } & import("class-variance-authority/types").ClassProp) => string;
 export interface RefinedButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof refinedButtonVariants> {
@@ -10,15 +10,15 @@ export interface RefinedButtonProps extends React.ButtonHTMLAttributes<HTMLButto
 }
 declare const RefinedButton: React.ForwardRefExoticComponent<RefinedButtonProps & React.RefAttributes<HTMLButtonElement>>;
 declare const refinedCardVariants: (props?: {
-    variant?: "default" | "interactive" | "minimal" | "elevated" | "feature";
+    variant?: "default" | "minimal" | "feature" | "elevated" | "interactive";
     padding?: "sm" | "md" | "lg" | "none";
 } & import("class-variance-authority/types").ClassProp) => string;
 export interface RefinedCardProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof refinedCardVariants> {
 }
 declare const RefinedCard: React.ForwardRefExoticComponent<RefinedCardProps & React.RefAttributes<HTMLDivElement>>;
 declare const refinedTypographyVariants: (props?: {
-    variant?: "accent" | "title" | "body" | "caption" | "code" | "subtitle" | "hero";
-    align?: "center" | "right" | "left";
+    variant?: "accent" | "title" | "body" | "caption" | "code" | "hero" | "subtitle";
+    align?: "center" | "left" | "right";
 } & import("class-variance-authority/types").ClassProp) => string;
 export interface RefinedTypographyProps extends React.HTMLAttributes<HTMLElement>, VariantProps<typeof refinedTypographyVariants> {
     as?: React.ElementType;
@@ -33,7 +33,7 @@ export interface RefinedInputProps extends Omit<React.InputHTMLAttributes<HTMLIn
 }
 declare const RefinedInput: React.ForwardRefExoticComponent<RefinedInputProps & React.RefAttributes<HTMLInputElement>>;
 declare const refinedBadgeVariants: (props?: {
-    variant?: "default" | "success" | "warning" | "outline" | "destructive" | "accent";
+    variant?: "accent" | "destructive" | "outline" | "default" | "success" | "warning";
 } & import("class-variance-authority/types").ClassProp) => string;
 export interface RefinedBadgeProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof refinedBadgeVariants> {
 }

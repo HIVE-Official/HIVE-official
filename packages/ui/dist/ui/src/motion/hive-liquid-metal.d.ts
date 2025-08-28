@@ -1,4 +1,4 @@
-import { Variants, useAnimation } from 'framer-motion';
+import { Variants, useAnimation } from '../components/framer-motion-proxy';
 type AnimationControls = ReturnType<typeof useAnimation>;
 export declare const liquidMetalPhysics: {
     readonly mass: {
@@ -259,13 +259,13 @@ export declare const liquidMetalUtils: {
     getCascadeDelay(index: number, type?: keyof typeof liquidTiming.cascade): number;
     createSpringTransition(mass?: keyof typeof liquidMetalPhysics.mass, stiffness?: keyof typeof liquidMetalPhysics.stiffness, damping?: keyof typeof liquidMetalPhysics.damping): {
         type: "spring";
-        mass: 1.2 | 0.5 | 0.8 | 1.8;
+        mass: 1.2 | 0.8 | 0.5 | 1.8;
         stiffness: 200 | 400 | 600 | 800;
-        damping: 10 | 15 | 25 | 35;
+        damping: 15 | 10 | 25 | 35;
     };
     createEasedTransition(duration?: keyof typeof liquidTiming.duration, easing?: keyof typeof liquidEasing): {
-        duration: 0.2 | 0.4 | 0.1 | 0.6 | 1.2 | 0.8 | 0.15 | 1.8;
-        ease: readonly [0.23, 1, 0.32, 1] | readonly [0.34, 1.56, 0.64, 1] | readonly [0.25, 0.46, 0.45, 0.94] | readonly [0.16, 1, 0.3, 1] | readonly [0.19, 1, 0.22, 1] | readonly [0.25, 0.1, 0.25, 1];
+        duration: 0.2 | 0.4 | 1.2 | 0.8 | 0.1 | 0.6 | 0.15 | 1.8;
+        ease: readonly [0.25, 0.46, 0.45, 0.94] | readonly [0.23, 1, 0.32, 1] | readonly [0.16, 1, 0.3, 1] | readonly [0.34, 1.56, 0.64, 1] | readonly [0.19, 1, 0.22, 1] | readonly [0.25, 0.1, 0.25, 1];
     };
 };
 export declare const liquidMetalPerformance: {

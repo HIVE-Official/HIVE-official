@@ -469,7 +469,7 @@ const ElementCard = ({
                       Premium
                     </HiveBadge>
                   )}
-                  <HiveBadge variant="outline" className="text-xs">
+                  <HiveBadge variant="secondary" className="text-xs">
                     {element.complexity}
                   </HiveBadge>
                 </div>
@@ -489,7 +489,7 @@ const ElementCard = ({
           <div className="flex items-center gap-2">
             <HiveButton 
               size="sm" 
-              variant="outline" 
+              variant="secondary" 
               onClick={(e) => {
                 e.stopPropagation();
                 onPreview?.(element);
@@ -561,12 +561,12 @@ const ElementCard = ({
           {/* Tags */}
           <div className="flex flex-wrap gap-1 mb-3">
             {element.tags.slice(0, 3).map((tag) => (
-              <HiveBadge key={tag} variant="outline" className="text-xs">
+              <HiveBadge key={tag} variant="secondary" className="text-xs">
                 {tag}
               </HiveBadge>
             ))}
             {element.tags.length > 3 && (
-              <HiveBadge variant="outline" className="text-xs">
+              <HiveBadge variant="secondary" className="text-xs">
                 +{element.tags.length - 3}
               </HiveBadge>
             )}
@@ -587,7 +587,7 @@ const ElementCard = ({
             </span>
             <span>{element.downloads.toLocaleString()}</span>
           </div>
-          <HiveBadge variant="outline" className="text-xs">
+          <HiveBadge variant="secondary" className="text-xs">
             {element.complexity}
           </HiveBadge>
         </div>
@@ -596,7 +596,7 @@ const ElementCard = ({
         <div className="flex gap-2 pt-2 border-t border-gray-100">
           <HiveButton 
             size="sm" 
-            variant="outline" 
+            variant="secondary" 
             className="flex-1"
             onClick={(e) => {
               e.stopPropagation();
@@ -775,7 +775,7 @@ export function ElementBrowser({
           </select>
 
           <HiveButton
-            variant="outline"
+            variant="secondary"
             onClick={() => setShowFilters(!showFilters)}
           >
             <Filter className="w-4 h-4 mr-2" />
@@ -810,7 +810,7 @@ export function ElementBrowser({
               </label>
               <div className="flex flex-wrap gap-1">
                 {['Verified', 'Premium', 'Community'].map(type => (
-                  <HiveBadge key={type} variant="outline" className="cursor-pointer hover:bg-gray-100">
+                  <HiveBadge key={type} variant="secondary" className="cursor-pointer hover:bg-gray-100">
                     {type}
                   </HiveBadge>
                 ))}
@@ -818,7 +818,7 @@ export function ElementBrowser({
             </div>
 
             <div className="flex items-end">
-              <HiveButton size="sm" variant="outline" onClick={() => {
+              <HiveButton size="sm" variant="secondary" onClick={() => {
                 setSearchQuery('');
                 setCategoryFilter('all');
                 setComplexityFilter('all');
@@ -915,7 +915,7 @@ export function ElementBrowser({
           {/* Load More */}
           {filteredElements.length >= 20 && (
             <div className="text-center pt-8">
-              <HiveButton variant="outline">
+              <HiveButton variant="secondary">
                 Load More Elements
               </HiveButton>
             </div>

@@ -1,0 +1,7 @@
+/* Minimal test CSS to check if basic CSS compilation works */
+.test-class {
+  color: red;
+  background: blue;
+  display: flex;
+  justify-content: space-between;
+}

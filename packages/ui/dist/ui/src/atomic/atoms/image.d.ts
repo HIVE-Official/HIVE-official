@@ -15,7 +15,7 @@ export interface ImageProps extends Omit<React.ImgHTMLAttributes<HTMLImageElemen
     blur?: boolean;
 }
 export declare const Image: React.ForwardRefExoticComponent<ImageProps & React.RefAttributes<HTMLImageElement>>;
-export declare const ProfileImage: React.ForwardRefExoticComponent<Omit<ImageProps, "rounded" | "aspectRatio"> & React.RefAttributes<HTMLImageElement>>;
+export declare const ProfileImage: React.ForwardRefExoticComponent<Omit<ImageProps, "aspectRatio" | "rounded"> & React.RefAttributes<HTMLImageElement>>;
 export declare const ThumbnailImage: React.ForwardRefExoticComponent<Omit<ImageProps, "aspectRatio"> & React.RefAttributes<HTMLImageElement>>;
 export declare const HeroImage: React.ForwardRefExoticComponent<Omit<ImageProps, "aspectRatio" | "fit"> & React.RefAttributes<HTMLImageElement>>;
 //# sourceMappingURL=image.d.ts.map

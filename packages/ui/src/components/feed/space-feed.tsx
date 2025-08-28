@@ -11,7 +11,7 @@ import { Button } from "../../atomic/atoms/button-enhanced";
 import { Loader2, RefreshCw, AlertCircle } from "lucide-react";
 import { FeedComposer } from "./feed-composer";
 import { PostCard } from "./post-card";
-import { cn } from "../../lib/utils";
+import { cn } from "../lib/utils";
 import type { Post } from "@hive/core";
 
 
@@ -427,7 +427,7 @@ export const SpaceFeed: React.FC<SpaceFeedProps> = ({
       {/* Refresh Button */}
       <div className="flex justify-center">
         <Button
-          variant="outline"
+          variant="secondary"
           size="sm"
           onClick={() => void handleRefresh()}
           disabled={isRefreshing}

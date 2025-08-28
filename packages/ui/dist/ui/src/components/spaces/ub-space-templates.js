@@ -6,7 +6,7 @@ import { Badge } from '../../ui/badge';
 import { ButtonEnhanced as Button } from '../../atomic/atoms/button-enhanced';
 import { Text } from '../../atomic/atoms/text';
 import { Icon } from '../../ui/icon';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 import { Building2, GraduationCap, Users, Coffee, BookOpen, Heart, Calendar, MapPin } from 'lucide-react';
 export const UB_SPACE_TEMPLATES = [
     // Residential Spaces

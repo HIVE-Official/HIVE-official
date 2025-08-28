@@ -3,7 +3,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { AlertTriangle, RefreshCw, Wifi, WifiOff, Clock } from 'lucide-react';
-import { Card, CardContent } from '../../ui/card';
+import { Card, CardContent } from '../../atomic/ui/card';
 import { Button } from '../hive-button';
 
 // Loading state interfaces
@@ -136,7 +136,7 @@ export function ConnectionStatus({
             </span>
           </div>
           {!state.isConnected && onReconnect && (
-            <Button variant="outline" size="sm" onClick={onReconnect}>
+            <Button variant="secondary" size="sm" onClick={onReconnect}>
               Reconnect
             </Button>
           )}

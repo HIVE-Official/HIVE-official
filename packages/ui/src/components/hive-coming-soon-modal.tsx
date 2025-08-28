@@ -101,7 +101,7 @@ const HiveComingSoonModal = React.forwardRef<HTMLDivElement, HiveComingSoonModal
         isOpen={isOpen}
         onClose={onClose}
         size="full"
-        variant="default"
+        variant="primary"
         className="max-h-[90vh] overflow-hidden"
       >
         <div className="relative">

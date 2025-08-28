@@ -7,7 +7,7 @@ import { GridLayoutProps, WidgetConfiguration, GridPosition, DragDropState, Drop
 import { BaseWidget } from './base-widget';
 import { HiveButton } from '../../hive-button';
 import { HiveCard } from '../../hive-card';
-import { cn } from '../../lib/utils';
+import { cn } from '../lib/utils';
 
 export const GridLayoutEngine: React.FC<GridLayoutProps> = ({
   widgets,
@@ -270,7 +270,7 @@ export const GridLayoutEngine: React.FC<GridLayoutProps> = ({
             
             <div className="flex items-center gap-3">
               <HiveButton
-                variant="outline"
+                variant="secondary"
                 size="sm"
                 onClick={() => onAddWidget('social-avatar')}
                 className="gap-2"

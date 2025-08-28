@@ -63,7 +63,7 @@ export const ClaimSpaceStep: React.FC<ClaimSpaceStepProps> = ({
           {onBack && (
             <Button
               type="button"
-              variant="outline"
+              variant="secondary"
               onClick={onBack}
               className="flex-1"
             >
@@ -72,7 +72,7 @@ export const ClaimSpaceStep: React.FC<ClaimSpaceStepProps> = ({
           )}
           <Button
             type="button"
-            variant="default"
+            variant="primary"
             onClick={onSubmit}
             className="flex-1"
             disabled={isLoading || !spaceName || !spaceDescription}

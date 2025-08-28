@@ -53,7 +53,7 @@ export const CTASection: React.FC<CTASectionProps> = ({
           </Button>
 
           <Button
-            variant="outline"
+            variant="secondary"
             size="lg"
             className="h-16 w-full border-border/30 px-10 text-xl font-medium text-muted/50 sm:w-auto transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] cursor-not-allowed"
             disabled

@@ -535,7 +535,7 @@ const ErrorBoundaryDemo = ({ children }: { children: React.ReactNode }) => {
             </Button>
             
             <Button
-              variant="outline"
+              variant="secondary"
               className="border-gray-600 text-gray-300"
             >
               <ExternalLink className="h-4 w-4 mr-2" />
@@ -660,7 +660,7 @@ const ErrorSimulationControls = ({
       <div className="grid grid-cols-2 gap-3">
         <Button
           onClick={() => onSimulateError('network')}
-          variant="outline"
+          variant="secondary"
           size="sm"
           className="justify-start border-orange-600 text-orange-300 hover:bg-orange-900/20"
         >
@@ -670,7 +670,7 @@ const ErrorSimulationControls = ({
         
         <Button
           onClick={() => onSimulateError('api')}
-          variant="outline"
+          variant="secondary"
           size="sm"
           className="justify-start border-red-600 text-red-300 hover:bg-red-900/20"
         >
@@ -680,7 +680,7 @@ const ErrorSimulationControls = ({
         
         <Button
           onClick={() => onSimulateError('validation')}
-          variant="outline"
+          variant="secondary"
           size="sm"
           className="justify-start border-yellow-600 text-yellow-300 hover:bg-yellow-900/20"
         >
@@ -690,7 +690,7 @@ const ErrorSimulationControls = ({
         
         <Button
           onClick={() => onSimulateError('campus')}
-          variant="outline"
+          variant="secondary"
           size="sm"
           className="justify-start border-green-600 text-green-300 hover:bg-green-900/20"
         >
@@ -700,7 +700,7 @@ const ErrorSimulationControls = ({
         
         <Button
           onClick={() => onSimulateError('data')}
-          variant="outline"
+          variant="secondary"
           size="sm"
           className="justify-start border-blue-600 text-blue-300 hover:bg-blue-900/20"
         >
@@ -710,7 +710,7 @@ const ErrorSimulationControls = ({
         
         <Button
           onClick={() => onSimulateError('permission')}
-          variant="outline"
+          variant="secondary"
           size="sm"
           className="justify-start border-purple-600 text-purple-300 hover:bg-purple-900/20"
         >

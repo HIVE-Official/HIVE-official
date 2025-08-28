@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Search, ChevronRight, Lock } from 'lucide-react'
 import { Input } from '../input'
 import { Button } from '../button'
-import { cn } from '../../lib/utils'
+import { cn } from '../lib/utils'
 import { Dialog } from '../dialog'
 import { Label } from '../label'
 import { hiveVariants } from '../../lib/motion'
@@ -247,7 +247,7 @@ export const SchoolPick: React.FC<SchoolPickProps> = ({
           )}
           <Button 
             onClick={handleJoinWaitlist} 
-            variant="ritual"
+            variant="primary"
             size="lg"
             fullWidth
             disabled={isJoiningWaitlist || (!userEmail && !waitlistEmail)}

@@ -4,7 +4,7 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useState, useCallback, useRef } from 'react';
 import { Play, Save, Eye, Undo, Redo, Trash2, Move, ZoomIn, ZoomOut, Grid3X3, Layers, MousePointer, Hand } from 'lucide-react';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 import { HiveButton } from '../hive-button';
 import { HiveBadge } from '../hive-badge';
 import { HiveMotionWrapper } from '../hive-motion-wrapper';

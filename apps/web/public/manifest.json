@@ -1,0 +1,78 @@
+{
+  "name": "HIVE - University of Buffalo Community Platform",
+  "short_name": "HIVE",
+  "description": "Where UB students connect, collaborate, and build together. The social utility platform for campus community.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0A0A0A",
+  "theme_color": "#FFD700",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "en-US",
+  "categories": ["education", "social", "utilities", "productivity"],
+  "screenshots": [
+    {
+      "src": "/screenshots/desktop-wide.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+      "src": "/screenshots/mobile-narrow.png", 
+      "sizes": "375x812",
+      "type": "image/png",
+      "form_factor": "narrow"
+    }
+  ],
+  "icons": [
+    {
+      "src": "/assets/hive-logo-gold.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Profile",
+      "short_name": "Profile",
+      "description": "Your campus command center", 
+      "url": "/profile"
+    },
+    {
+      "name": "Spaces",
+      "short_name": "Spaces", 
+      "description": "Join campus communities",
+      "url": "/spaces"
+    },
+    {
+      "name": "Feed", 
+      "short_name": "Feed",
+      "description": "Campus activity and updates",
+      "url": "/feed"
+    },
+    {
+      "name": "Tools",
+      "short_name": "Tools",
+      "description": "Build and share campus solutions", 
+      "url": "/tools"
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "share_target": {
+    "action": "/",
+    "method": "GET",
+    "params": {
+      "title": "title",
+      "text": "text", 
+      "url": "url"
+    }
+  },
+  "protocol_handlers": [
+    {
+      "protocol": "web+hive",
+      "url": "/?action=%s"
+    }
+  ]
+}

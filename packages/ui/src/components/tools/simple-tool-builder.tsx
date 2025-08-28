@@ -1,9 +1,9 @@
 'use client';
 
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';
-import { Badge } from '../../ui/badge';
-import { Button } from '../../ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
+import { Badge } from '../../atomic/atoms/badge';
+import { Button } from '../../atomic/atoms/button-enhanced';
 import { Text } from '../../ui/typography';
 import { PlatformIcons } from '../../ui/platform-icons';
 import { cn } from '../lib/utils';

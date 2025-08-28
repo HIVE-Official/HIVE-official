@@ -6,7 +6,7 @@ import { HiveCard } from '../hive-card';
 import { HiveButton } from '../hive-button';
 import { HiveBadge } from '../hive-badge';
 import { Eye, EyeOff, Lock, Unlock, Shield, Users, Settings, Clock, AlertTriangle } from 'lucide-react';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 import { usePrivacyUtils } from '@hive/core';
 const levelConfig = {
     invisible: {

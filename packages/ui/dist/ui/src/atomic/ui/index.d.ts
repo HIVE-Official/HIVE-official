@@ -32,4 +32,8 @@ export * from '../../components/ErrorHandling';
 export * from '../../lib/motion';
 export * from '../../motion';
 export { HiveLogo } from '../../components/HiveLogo';
+export { AppHeader } from '../../components/AppHeader';
+export { BottomNavBar } from '../../components/BottomNavBar';
+export * from '../../components/dialog';
+export { Typography } from '../../components/Typography';
 //# sourceMappingURL=index.d.ts.map

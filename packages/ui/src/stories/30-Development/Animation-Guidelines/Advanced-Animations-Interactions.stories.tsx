@@ -880,7 +880,7 @@ const AnimationsSystem = () => {
                   <AnimatedButton 
                     animationType="scale"
                     icon={Share2}
-                    variant="outline"
+                    variant="secondary"
                   >
                     Share
                   </AnimatedButton>

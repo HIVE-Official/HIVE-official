@@ -203,12 +203,12 @@ export const CompleteShowcase: Story = {
                   <div className="grid md:grid-cols-2 gap-4 max-w-2xl">
                     <SpaceCategoryCard
                       category={createCategoryWithCount('university', 247)}
-                      variant="default"
+                      variant="primary"
                       onClick={action('default-university')}
                     />
                     <SpaceCategoryCard
                       category={createCategoryWithCount('residential', 89)}
-                      variant="default"
+                      variant="primary"
                       onClick={action('default-residential')}
                     />
                   </div>

@@ -3,7 +3,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { cn } from '../../lib/utils';
+import { cn } from '../lib/utils';
 import { liquidMetal, motionDurations } from '../../motion/hive-motion-system';
 import { type Space } from '@hive/core';
 import { 

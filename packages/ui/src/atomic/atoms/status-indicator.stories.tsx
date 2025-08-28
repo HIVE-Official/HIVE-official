@@ -339,7 +339,7 @@ export const CompleteShowcase: Story = {
               <div className="grid md:grid-cols-4 gap-6">
                 <div className="text-center space-y-3">
                   <StatusBadge status="error" count={3}>
-                    <Button variant="outline" size="lg">
+                    <Button variant="secondary" size="lg">
                       Messages
                     </Button>
                   </StatusBadge>
@@ -347,7 +347,7 @@ export const CompleteShowcase: Story = {
                 </div>
                 <div className="text-center space-y-3">
                   <StatusBadge status="warning" count={12}>
-                    <Button variant="outline" size="lg">
+                    <Button variant="secondary" size="lg">
                       Assignments
                     </Button>
                   </StatusBadge>
@@ -355,7 +355,7 @@ export const CompleteShowcase: Story = {
                 </div>
                 <div className="text-center space-y-3">
                   <StatusBadge status="success" count={150} max={99}>
-                    <Button variant="outline" size="lg">
+                    <Button variant="secondary" size="lg">
                       Achievements
                     </Button>
                   </StatusBadge>
@@ -363,7 +363,7 @@ export const CompleteShowcase: Story = {
                 </div>
                 <div className="text-center space-y-3">
                   <StatusBadge status="pending">
-                    <Button variant="outline" size="lg">
+                    <Button variant="secondary" size="lg">
                       Sync Status
                     </Button>
                   </StatusBadge>

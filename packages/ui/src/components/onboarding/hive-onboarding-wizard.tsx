@@ -331,7 +331,7 @@ function StepNavigation({ canGoBack = true, nextLabel = "Continue" }) {
       )}
 
       <HiveButton
-        variant="premium"
+        variant="primary"
         onClick={nextStep}
         disabled={!canProceed() || state.loading}
         className="flex items-center gap-2"

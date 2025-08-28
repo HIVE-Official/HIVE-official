@@ -279,7 +279,7 @@ function DeviceFrame({
               <Clock className="w-3 h-3" />
               <span>9:41</span>
               {scenario && (
-                <Badge variant="outline" className="text-xs">
+                <Badge variant="secondary" className="text-xs">
                   {scenario.icon} {scenario.name}
                 </Badge>
               )}
@@ -620,11 +620,11 @@ export const MobileFirstResponsive: StoryObj = {
                     {effectiveDevice.name} Preview - {scenario.name}
                   </div>
                   <div className="flex items-center gap-2">
-                    <Badge variant="outline">{effectiveDevice.type}</Badge>
-                    <Badge variant="outline">{scenario.networkSpeed} network</Badge>
+                    <Badge variant="secondary">{effectiveDevice.type}</Badge>
+                    <Badge variant="secondary">{scenario.networkSpeed} network</Badge>
                     <Button
                       size="sm"
-                      variant="outline"
+                      variant="secondary"
                       onClick={() => setOrientation(orientation === 'portrait' ? 'landscape' : 'portrait')}
                     >
                       <RotateCcw className="w-4 h-4 mr-2" />

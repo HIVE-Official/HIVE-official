@@ -179,7 +179,7 @@ export const PersonalAvatarShowcase: Story = {
             {/* Student Badges */}
             <div className="flex flex-wrap gap-2">
               {student.badges.map((badge, index) => (
-                <Badge key={index} variant="outline" className="text-xs">
+                <Badge key={index} variant="secondary" className="text-xs">
                   <Star className="h-3 w-3 mr-1" />
                   {badge}
                 </Badge>
@@ -254,7 +254,7 @@ export const GroupAvatarShowcase: Story = {
               </div>
             </div>
 
-            <Button variant="outline" size="sm" className="w-full mt-4">
+            <Button variant="secondary" size="sm" className="w-full mt-4">
               <Users className="h-4 w-4 mr-2" />
               View Group
             </Button>
@@ -493,11 +493,11 @@ export const InteractiveAvatarEditor: Story = {
               </div>
 
               <div className="flex gap-3 justify-center">
-                <Button variant="outline">
+                <Button variant="secondary">
                   <Upload className="h-4 w-4 mr-2" />
                   Upload Photo
                 </Button>
-                <Button variant="outline">
+                <Button variant="secondary">
                   <Camera className="h-4 w-4 mr-2" />
                   Take Photo
                 </Button>

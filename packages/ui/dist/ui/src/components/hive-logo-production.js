@@ -3,7 +3,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useEffect, useRef, useMemo, useCallback, memo } from 'react';
 import { motion, AnimatePresence, useReducedMotion, useInView, useAnimation } from 'framer-motion';
 import { cva } from 'class-variance-authority';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 // Performance-optimized variants system
 const productionLogoVariants = cva("inline-flex items-center justify-center transition-all duration-200 will-change-transform", {
     variants: {

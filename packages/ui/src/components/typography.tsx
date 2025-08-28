@@ -86,3 +86,9 @@ const Muted = React.forwardRef<
 Muted.displayName = "Muted";
 
 export { Heading, Text, Muted };
+
+export const Typography = {
+  Heading,
+  Text,
+  Muted
+};

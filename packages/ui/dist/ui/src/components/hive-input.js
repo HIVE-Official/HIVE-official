@@ -157,10 +157,9 @@ HiveToolNameInput.displayName = "HiveToolNameInput";
 HiveSpaceNameInput.displayName = "HiveSpaceNameInput";
 HiveSearchInput.displayName = "HiveSearchInput";
 HivePasswordInput.displayName = "HivePasswordInput";
-export { HiveInput, HiveToolNameInput, HiveSpaceNameInput, HiveSearchInput, HivePasswordInput, hiveInputVariants };
 // Simple Input component for basic use cases (backwards compatibility)
 const Input = React.forwardRef((props, ref) => (_jsx(HiveInput, { ref: ref, variant: "minimal", floatingLabel: false, ...props })));
 Input.displayName = "Input";
-// Export as Input for easier migration and consistency
-export { Input, HiveInput as InputAdvanced };
+// Export all HIVE input components - consolidated export
+export { HiveInput, HiveToolNameInput, HiveSpaceNameInput, HiveSearchInput, HivePasswordInput, hiveInputVariants };
 //# sourceMappingURL=hive-input.js.map

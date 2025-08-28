@@ -189,10 +189,10 @@ const ToolsCreationSystem = () => {
               <p className="text-gray-400">Build, discover, and share campus utilities</p>
             </div>
             <div className="flex items-center space-x-3">
-              <Button size="icon" variant="outline" className="border-gray-600 text-white">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-white">
                 <Bell className="w-4 h-4" />
               </Button>
-              <Button size="icon" variant="outline" className="border-gray-600 text-white">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-white">
                 <Settings className="w-4 h-4" />
               </Button>
               <Button className="hive-interactive" style={{ backgroundColor: 'var(--hive-brand-primary)', color: 'var(--hive-text-inverse)' }}>
@@ -241,7 +241,7 @@ const ToolsCreationSystem = () => {
               />
             </div>
             <div className="flex items-center space-x-2">
-              <Button size="icon" variant="outline" className="border-gray-600 text-white">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-white">
                 <Filter className="w-4 h-4" />
               </Button>
               <select 
@@ -374,7 +374,7 @@ const ToolsCreationSystem = () => {
                       {tool.stats.usageCount}
                     </span>
                   </div>
-                  <Badge variant="outline" className="border-gray-600 text-gray-400 text-xs">
+                  <Badge variant="secondary" className="border-gray-600 text-gray-400 text-xs">
                     {tool.status}
                   </Badge>
                 </div>
@@ -382,12 +382,12 @@ const ToolsCreationSystem = () => {
                 {/* Tags */}
                 <div className="flex flex-wrap gap-1">
                   {tool.tags.slice(0, 3).map((tag) => (
-                    <Badge key={tag} variant="outline" className="border-gray-600 text-gray-400 text-xs">
+                    <Badge key={tag} variant="secondary" className="border-gray-600 text-gray-400 text-xs">
                       {tag}
                     </Badge>
                   ))}
                   {tool.tags.length > 3 && (
-                    <Badge variant="outline" className="border-gray-600 text-gray-400 text-xs">
+                    <Badge variant="secondary" className="border-gray-600 text-gray-400 text-xs">
                       +{tool.tags.length - 3}
                     </Badge>
                   )}
@@ -401,7 +401,7 @@ const ToolsCreationSystem = () => {
                         <Play className="w-4 h-4 mr-2" />
                         Launch Tool
                       </Button>
-                      <Button size="icon" variant="outline" className="border-gray-600 text-white hover:bg-gray-800">
+                      <Button size="icon" variant="secondary" className="border-gray-600 text-white hover:bg-gray-800">
                         <Settings className="w-4 h-4" />
                       </Button>
                     </>
@@ -411,12 +411,12 @@ const ToolsCreationSystem = () => {
                         <Download className="w-4 h-4 mr-2" />
                         Install
                       </Button>
-                      <Button size="icon" variant="outline" className="border-gray-600 text-white hover:bg-gray-800">
+                      <Button size="icon" variant="secondary" className="border-gray-600 text-white hover:bg-gray-800">
                         <Heart className={tool.isFavorite ? "w-4 h-4 fill-current text-red-400" : "w-4 h-4"} />
                       </Button>
                     </>
                   )}
-                  <Button size="icon" variant="outline" className="border-gray-600 text-white hover:bg-gray-800">
+                  <Button size="icon" variant="secondary" className="border-gray-600 text-white hover:bg-gray-800">
                     <Share className="w-4 h-4" />
                   </Button>
                 </div>
@@ -427,7 +427,7 @@ const ToolsCreationSystem = () => {
 
         {/* Load More */}
         <div className="text-center mt-8">
-          <Button variant="outline" className="border-gray-600 text-white hover:bg-gray-800">
+          <Button variant="secondary" className="border-gray-600 text-white hover:bg-gray-800">
             Load More Tools
           </Button>
         </div>

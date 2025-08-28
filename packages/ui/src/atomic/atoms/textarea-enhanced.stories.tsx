@@ -118,7 +118,7 @@ export const CompleteShowcase: Story = {
                 placeholder="Default textarea for standard content"
                 label="Default Variant"
                 helperText="Standard textarea for general content input"
-                variant="default"
+                variant="primary"
                 size="sm"
               />
               <Textarea
@@ -251,7 +251,7 @@ export const CompleteShowcase: Story = {
                   label="Manual Resize (Vertical)"
                   helperText="Drag the corner handle to resize"
                   resize="vertical"
-                  variant="default"
+                  variant="primary"
                 />
               </div>
             </div>
@@ -315,7 +315,7 @@ export const CompleteShowcase: Story = {
                   placeholder="Detailed project description..."
                   label="Detailed Description"
                   size="lg"
-                  variant="default"
+                  variant="primary"
                   autoResize
                   showCharCount
                   maxLength={1000}
@@ -324,7 +324,7 @@ export const CompleteShowcase: Story = {
                   placeholder="Additional notes and comments..."
                   label="Additional Notes"
                   size="default"
-                  variant="default"
+                  variant="primary"
                   helperText="Optional additional information"
                 />
               </TextareaGroup>
@@ -365,7 +365,7 @@ export const CompleteShowcase: Story = {
               <h4 className="font-medium text-[var(--hive-text-primary)]">Personal Notes:</h4>
               <TextareaPresets.Notes 
                 label="Study Notes"
-                variant="default"
+                variant="primary"
               />
             </div>
             <div className="space-y-4">

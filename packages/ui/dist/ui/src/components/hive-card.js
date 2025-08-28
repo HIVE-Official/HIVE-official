@@ -140,7 +140,6 @@ HiveCardContent.displayName = "HiveCardContent";
 const HiveCardFooter = React.forwardRef(({ className, ...props }, ref) => (_jsx("div", { ref: ref, className: cn("flex items-center p-0 pt-4", className), ...props })));
 HiveCardFooter.displayName = "HiveCardFooter";
 // Export all HIVE card components
+// Export only HIVE branded components - no aliases to avoid conflicts
 export { HiveCard, hiveCardVariants, HiveCardHeader, HiveCardTitle, HiveCardDescription, HiveCardContent, HiveCardFooter };
-// Export aliases for easier migration
-export { HiveCard as Card, hiveCardVariants as cardVariants, HiveCardHeader as CardHeader, HiveCardTitle as CardTitle, HiveCardDescription as CardDescription, HiveCardContent as CardContent, HiveCardFooter as CardFooter };
 //# sourceMappingURL=hive-card.js.map

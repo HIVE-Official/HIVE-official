@@ -517,11 +517,11 @@ const FlowVisualization = ({
           <Badge variant="secondary" className="bg-blue-900 text-blue-300">
             {flow.category}
           </Badge>
-          <Badge variant="outline" className="border-gray-600 text-gray-300">
+          <Badge variant="secondary" className="border-gray-600 text-gray-300">
             <Clock className="mr-1 h-3 w-3" />
             {flow.duration}
           </Badge>
-          <Badge variant="outline" className="border-gray-600 text-gray-300">
+          <Badge variant="secondary" className="border-gray-600 text-gray-300">
             {flow.steps.length} steps
           </Badge>
         </div>
@@ -578,7 +578,7 @@ const FlowVisualization = ({
                 {step.title}
               </h3>
               <div className="flex items-center space-x-2">
-                <Badge variant="outline" className="border-gray-600 text-gray-400 text-xs">
+                <Badge variant="secondary" className="border-gray-600 text-gray-400 text-xs">
                   {step.duration}
                 </Badge>
                 <Badge className="bg-blue-900 text-blue-300 text-xs">
@@ -718,16 +718,16 @@ const FlowControls = ({
       <CardContent className="space-y-4">
         {/* Main Controls */}
         <div className="flex items-center justify-center space-x-2">
-          <Button size="sm" onClick={onPrev} disabled={currentStep === 0} variant="outline" className="border-gray-700">
+          <Button size="sm" onClick={onPrev} disabled={currentStep === 0} variant="secondary" className="border-gray-700">
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <Button size="sm" onClick={isPlaying ? onPause : onPlay} className="bg-yellow-500 hover:bg-yellow-600 text-black">
             {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
           </Button>
-          <Button size="sm" onClick={onNext} disabled={currentStep >= totalSteps - 1} variant="outline" className="border-gray-700">
+          <Button size="sm" onClick={onNext} disabled={currentStep >= totalSteps - 1} variant="secondary" className="border-gray-700">
             <ArrowRight className="h-4 w-4" />
           </Button>
-          <Button size="sm" onClick={onReset} variant="outline" className="border-gray-700">
+          <Button size="sm" onClick={onReset} variant="secondary" className="border-gray-700">
             <RotateCcw className="h-4 w-4" />
           </Button>
         </div>

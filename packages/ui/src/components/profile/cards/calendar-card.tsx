@@ -2,10 +2,10 @@
 
 import React, { useState, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from '../../framer-motion-proxy';
-import { cn } from '../../../lib/utils';
-import { Card, CardContent, CardHeader } from '../../ui/card';
-import { Button } from '../../ui/button';
-import { Badge } from '../../ui/badge';
+import { cn } from '../../lib/utils';
+import { Card, CardContent, CardHeader } from '../../atomic/ui/card';
+import { Button } from '../../atomic/atoms/button-enhanced';
+import { Badge } from '../../atomic/atoms/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '../../ui/avatar';
 import { ScrollArea } from '../../ui/scroll-area';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../../dialog';
@@ -269,7 +269,7 @@ function EventItem({
             {/* Space Info */}
             {event.spaceName && (
               <div className="flex items-center gap-1 mt-1">
-                <Badge variant="outline" className="text-xs">
+                <Badge variant="secondary" className="text-xs">
                   <Users className="w-3 h-3 mr-1" />
                   {event.spaceName}
                 </Badge>
@@ -630,7 +630,7 @@ export function CalendarCard({
         {/* Quick Add Event */}
         {!isEditMode && (
           <Button
-            variant="outline"
+            variant="secondary"
             size="sm"
             className="w-full"
             onClick={() => onEventCreate?.({ 

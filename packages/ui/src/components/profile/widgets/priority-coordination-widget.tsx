@@ -11,7 +11,7 @@ import { BaseWidget } from '../bento-grid/base-widget';
 import { BaseWidgetProps, CoordinationOpportunity, QuickAction } from '../bento-grid/types';
 import { HiveButton } from '../../hive-button';
 import { HiveBadge } from '../../hive-badge';
-import { cn } from '../../../lib/utils';
+import { cn } from '../../lib/utils';
 
 interface PriorityCoordinationWidgetProps extends BaseWidgetProps {
   priorities: CoordinationOpportunity[];
@@ -276,7 +276,7 @@ export const PriorityCoordinationWidget: React.FC<PriorityCoordinationWidgetProp
       {priorities.length > 0 && (
         <div className="pt-4 border-t border-hive-border-subtle/50">
           <HiveButton
-            variant="outline"
+            variant="secondary"
             size="sm"
             onClick={onViewAll}
             className="w-full gap-2"

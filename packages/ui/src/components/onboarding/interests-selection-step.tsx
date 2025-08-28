@@ -185,7 +185,7 @@ export const InterestsSelectionStep: React.FC<InterestsSelectionStepProps> = ({
             variants={hiveVariants.item}
           >
             <Button
-              variant="outline"
+              variant="secondary"
               onClick={onBack}
               className="flex-1 font-body"
               disabled={isLoading}
@@ -193,7 +193,7 @@ export const InterestsSelectionStep: React.FC<InterestsSelectionStepProps> = ({
               Back
             </Button>
             <Button
-              variant="ritual"
+              variant="primary"
               onClick={onSubmit}
               disabled={isSubmitDisabled}
               className="flex-1 font-body"

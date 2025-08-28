@@ -13,7 +13,7 @@ import {
   BookOpen
 } from 'lucide-react';
 import { Button } from '../../atomic/atoms/button-enhanced';
-import { cn } from '../../lib/utils';
+import { cn } from '../lib/utils';
 
 interface CommandPaletteProps {
   isOpen: boolean;

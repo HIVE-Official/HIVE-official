@@ -283,15 +283,17 @@ if (process.env.NODE_ENV === 'production' || process.env.REDIS_URL) {
   initializeRedis();
 }
 
-// Cleanup on process exit
-process.on('SIGTERM', () => {
-  if (redis) {
-    redis.disconnect();
-  }
-});
+// Cleanup on process exit (only in Node.js runtime, not Edge)
+if (typeof process !== 'undefined' && process.on) {
+  process.on('SIGTERM', () => {
+    if (redis) {
+      redis.disconnect();
+    }
+  });
 
-process.on('SIGINT', () => {
-  if (redis) {
-    redis.disconnect();
-  }
-});
+  process.on('SIGINT', () => {
+    if (redis) {
+      redis.disconnect();
+    }
+  });
+}

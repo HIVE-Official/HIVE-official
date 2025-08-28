@@ -75,14 +75,14 @@ export const WaitlistForm: React.FC<WaitlistFormProps> = ({ onSubmit }) => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={loading}
-                variant="default"
+                variant="primary"
                 size="lg"
               />
               <HiveButton 
                 className="w-full" 
                 type="submit" 
                 loading={loading}
-                variant="premium"
+                variant="primary"
                 size="lg"
               >
                 Get Early Access

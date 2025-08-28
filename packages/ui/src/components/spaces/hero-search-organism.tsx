@@ -260,7 +260,7 @@ function EnhancedSearchBar({
               <HiveButton 
                 key={tag} 
                 size="sm" 
-                variant="outline" 
+                variant="secondary" 
                 onClick={() => onFilterTag?.(tag)}
                 className="border-[var(--hive-border-hover)] text-[var(--hive-text-tertiary)] hover:text-[var(--hive-brand-secondary)] hover:border-[var(--hive-brand-secondary)]/30"
               >

@@ -8,7 +8,7 @@ import { Input } from '../input';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '../card';
 import { Alert } from '../alert';
 import { CountdownTimer } from './countdown-timer';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 export const HiveLandingPage = ({ launchDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
 onEmailSignup, className }) => {
     const [email, setEmail] = useState('');

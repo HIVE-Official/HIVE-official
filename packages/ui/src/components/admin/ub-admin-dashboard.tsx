@@ -1,11 +1,11 @@
 'use client';
 
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';
-import { Badge } from '../../ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
+import { Badge } from '../../atomic/atoms/badge';
 import { ButtonEnhanced as Button } from '../../atomic/atoms/button-enhanced';
 import { Text } from '../../atomic/atoms/text';
-import { Icon } from '../../ui/icon';
+import { Icon } from '../../atomic/atoms/icon';
 import { cn } from '../lib/utils';
 import { 
   Shield,

@@ -100,7 +100,7 @@ export const Default: Story = {
   render: (args) => (
     <div className="flex justify-center items-center h-32 p-6 bg-[var(--hive-background-primary)]">
       <Tooltip {...args}>
-        <Button variant="outline">
+        <Button variant="secondary">
           CSE 331 Prerequisites
         </Button>
       </Tooltip>
@@ -138,9 +138,9 @@ export const CompleteShowcase: Story = {
               <Tooltip 
                 content="Top placement tooltip for academic course information" 
                 placement="top" 
-                variant="default"
+                variant="primary"
               >
-                <Button size="sm" variant="outline">Top</Button>
+                <Button size="sm" variant="secondary">Top</Button>
               </Tooltip>
             </div>
 
@@ -149,9 +149,9 @@ export const CompleteShowcase: Story = {
               <Tooltip 
                 content="Bottom placement tooltip for supplementary details" 
                 placement="bottom" 
-                variant="default"
+                variant="primary"
               >
-                <Button size="sm" variant="outline">Bottom</Button>
+                <Button size="sm" variant="secondary">Bottom</Button>
               </Tooltip>
             </div>
 
@@ -160,9 +160,9 @@ export const CompleteShowcase: Story = {
               <Tooltip 
                 content="Left placement tooltip for contextual help" 
                 placement="left" 
-                variant="default"
+                variant="primary"
               >
-                <Button size="sm" variant="outline">Left</Button>
+                <Button size="sm" variant="secondary">Left</Button>
               </Tooltip>
             </div>
 
@@ -171,9 +171,9 @@ export const CompleteShowcase: Story = {
               <Tooltip 
                 content="Right placement tooltip for additional information" 
                 placement="right" 
-                variant="default"
+                variant="primary"
               >
-                <Button size="sm" variant="outline">Right</Button>
+                <Button size="sm" variant="secondary">Right</Button>
               </Tooltip>
             </div>
 
@@ -199,10 +199,10 @@ export const CompleteShowcase: Story = {
               <h4 className="font-medium text-[var(--hive-text-primary)]">Default Variant:</h4>
               <Tooltip 
                 content="Default tooltip style with secondary background and primary text. Perfect for general campus information and help text." 
-                variant="default"
+                variant="primary"
                 placement="top"
               >
-                <Button variant="default">
+                <Button variant="primary">
                   Course Info
                 </Button>
               </Tooltip>
@@ -234,7 +234,7 @@ export const CompleteShowcase: Story = {
                 variant="light"
                 placement="top"
               >
-                <Button variant="outline">
+                <Button variant="secondary">
                   Additional Info
                 </Button>
               </Tooltip>
@@ -268,7 +268,7 @@ export const CompleteShowcase: Story = {
                 trigger="hover"
                 delay={100}
               >
-                <Button variant="default">
+                <Button variant="primary">
                   Hover Me
                 </Button>
               </Tooltip>
@@ -298,7 +298,7 @@ export const CompleteShowcase: Story = {
                 content="Focus trigger shows tooltip when element receives keyboard focus. Essential for accessibility and keyboard navigation."
                 trigger="focus"
               >
-                <Button variant="outline">
+                <Button variant="secondary">
                   Focus Me
                 </Button>
               </Tooltip>
@@ -332,7 +332,7 @@ export const CompleteShowcase: Story = {
                 size="sm"
                 placement="top"
               >
-                <Button size="sm" variant="outline">
+                <Button size="sm" variant="secondary">
                   Small Tooltip
                 </Button>
               </Tooltip>
@@ -348,7 +348,7 @@ export const CompleteShowcase: Story = {
                 size="md"
                 placement="top"
               >
-                <Button variant="default">
+                <Button variant="primary">
                   Medium Tooltip
                 </Button>
               </Tooltip>
@@ -401,7 +401,7 @@ export const CompleteShowcase: Story = {
                     arrow={true}
                     placement="top"
                   >
-                    <Button variant="default">
+                    <Button variant="primary">
                       With Arrow
                     </Button>
                   </Tooltip>
@@ -415,7 +415,7 @@ export const CompleteShowcase: Story = {
                     arrow={false}
                     placement="top"
                   >
-                    <Button variant="outline">
+                    <Button variant="secondary">
                       Without Arrow
                     </Button>
                   </Tooltip>
@@ -436,7 +436,7 @@ export const CompleteShowcase: Story = {
                     delay={0}
                     placement="top"
                   >
-                    <Button variant="default">
+                    <Button variant="primary">
                       Instant
                     </Button>
                   </Tooltip>
@@ -464,7 +464,7 @@ export const CompleteShowcase: Story = {
                     delay={500}
                     placement="top"
                   >
-                    <Button variant="outline">
+                    <Button variant="secondary">
                       Slow
                     </Button>
                   </Tooltip>
@@ -484,7 +484,7 @@ export const CompleteShowcase: Story = {
                   disabled={true}
                   placement="top"
                 >
-                  <Button variant="outline" disabled>
+                  <Button variant="secondary" disabled>
                     Disabled Tooltip
                   </Button>
                 </Tooltip>
@@ -519,7 +519,7 @@ export const CompleteShowcase: Story = {
                   content="General information tooltip using default styling for campus help text and feature explanations."
                   placement="top"
                 >
-                  <Button variant="default">
+                  <Button variant="primary">
                     Campus Info
                   </Button>
                 </InfoTooltip>
@@ -547,7 +547,7 @@ export const CompleteShowcase: Story = {
                   content="Subtle light tooltip for supplementary campus information and non-critical help text."
                   placement="top"
                 >
-                  <Button variant="outline">
+                  <Button variant="secondary">
                     Extra Details
                   </Button>
                 </LightTooltip>
@@ -618,7 +618,7 @@ export const CompleteShowcase: Story = {
                       <Tooltip 
                         content="Join the waitlist to be automatically enrolled if a spot opens. You'll be notified via email and UB mobile app. Waitlist position updates daily."
                         placement="right"
-                        variant="default"
+                        variant="primary"
                       >
                         <Button size="sm" variant="ghost">⏰</Button>
                       </Tooltip>
@@ -634,7 +634,7 @@ export const CompleteShowcase: Story = {
                       placement="left"
                       size="md"
                     >
-                      <Button variant="outline" size="sm">
+                      <Button variant="secondary" size="sm">
                         Check Prerequisites
                       </Button>
                     </Tooltip>
@@ -643,7 +643,7 @@ export const CompleteShowcase: Story = {
                       placement="left"
                       size="md"
                     >
-                      <Button variant="outline" size="sm">
+                      <Button variant="secondary" size="sm">
                         View Schedule
                       </Button>
                     </Tooltip>
@@ -786,7 +786,7 @@ export const CompleteShowcase: Story = {
                         content="Michael Hall Health Center provides medical care, mental health counseling, and wellness programs. Emergency care available 24/7. Appointments recommended."
                         placement="right"
                         size="md"
-                        variant="default"
+                        variant="primary"
                       >
                         <Button size="sm" variant="ghost">🏥</Button>
                       </Tooltip>
@@ -828,7 +828,7 @@ export const Playground: Story = {
         </CardHeader>
         <CardContent className="flex justify-center">
           <Tooltip {...args}>
-            <Button variant="default">
+            <Button variant="primary">
               UB Campus Tooltip
             </Button>
           </Tooltip>

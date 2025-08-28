@@ -432,7 +432,7 @@ const SpacePreviewShowcase = () => {
               </p>
               <div className="flex flex-wrap gap-1 mb-4">
                 {space.tags.map((tag, tagIndex) => (
-                  <Badge key={tagIndex} variant="outline" className="text-xs">
+                  <Badge key={tagIndex} variant="secondary" className="text-xs">
                     {tag}
                   </Badge>
                 ))}
@@ -543,7 +543,7 @@ const InteractiveComponentsShowcase = () => {
             </Label>
             <div className="flex flex-wrap gap-2">
               {['Academic', 'Residential', 'Social', 'Athletic', 'Clubs'].map((filter) => (
-                <Button key={filter} variant="outline" size="sm" className="text-xs">
+                <Button key={filter} variant="secondary" size="sm" className="text-xs">
                   {filter}
                 </Button>
               ))}

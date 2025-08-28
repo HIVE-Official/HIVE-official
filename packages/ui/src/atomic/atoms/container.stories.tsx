@@ -211,7 +211,7 @@ export const CompleteShowcase: Story = {
             
             <div className="space-y-4">
               <h4 className="font-medium text-[var(--hive-text-primary)]">Default Container:</h4>
-              <Container variant="default" maxWidth="lg" padding="md">
+              <Container variant="primary" maxWidth="lg" padding="md">
                 <Text variant="body-sm" color="primary">
                   Clean, unstyled container for flexible content layout. Perfect for main content areas and custom styling.
                 </Text>

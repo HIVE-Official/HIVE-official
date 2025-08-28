@@ -17,9 +17,9 @@ import {
   Download,
   RefreshCw
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Button } from '../hive-button';
-import { Badge } from '../../ui/badge';
+import { Badge } from '../../atomic/atoms/badge';
 import { Progress } from '../hive-progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs';
 
@@ -224,10 +224,10 @@ export function ActivityTracker({
                     <TabsTrigger value="month">Month</TabsTrigger>
                   </TabsList>
                 </Tabs>
-                <Button variant="outline" size="sm" onClick={onRefresh}>
+                <Button variant="secondary" size="sm" onClick={onRefresh}>
                   <RefreshCw className="h-4 w-4" />
                 </Button>
-                <Button variant="outline" size="sm" onClick={onExport}>
+                <Button variant="secondary" size="sm" onClick={onExport}>
                   <Download className="h-4 w-4" />
                 </Button>
               </div>
@@ -378,7 +378,7 @@ export function ActivityTracker({
                             <h4 className="font-medium text-sm mb-1">{insight.title}</h4>
                             <p className="text-xs text-gray-600 mb-2">{insight.description}</p>
                             {insight.actionable && insight.action && (
-                              <Button variant="outline" size="sm" className="text-xs">
+                              <Button variant="secondary" size="sm" className="text-xs">
                                 {insight.action.label}
                               </Button>
                             )}
@@ -443,7 +443,7 @@ export function ActivityTracker({
                                 <div className="text-sm font-medium">
                                   {formatDuration(session.duration)}
                                 </div>
-                                <Badge variant="outline" className="text-xs">
+                                <Badge variant="secondary" className="text-xs">
                                   {session.activityType.replace('_', ' ')}
                                 </Badge>
                               </div>
@@ -473,7 +473,7 @@ export function ActivityTracker({
                           <h4 className="font-medium text-sm mb-1">{goal.title}</h4>
                           <p className="text-xs text-gray-600">{goal.description}</p>
                         </div>
-                        <Badge variant="outline" className="text-xs">
+                        <Badge variant="secondary" className="text-xs">
                           {goal.category}
                         </Badge>
                       </div>

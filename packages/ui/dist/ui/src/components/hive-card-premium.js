@@ -3,7 +3,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cva } from 'class-variance-authority';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 // HIVE Premium Card System - Luxury Hardware Feel
 // Every card feels like premium equipment with silk-smooth interactions
 const hivePremiumCardVariants = cva(

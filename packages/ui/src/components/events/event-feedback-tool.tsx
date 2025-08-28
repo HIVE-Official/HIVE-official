@@ -302,7 +302,7 @@ const FeedbackSurveyBuilder = ({
 
                   <HiveButton
                     size="sm"
-                    variant="outline"
+                    variant="secondary"
                     onClick={() => removeQuestion(question.id)}
                     className="ml-4"
                   >
@@ -344,7 +344,7 @@ const FeedbackSurveyBuilder = ({
         </label>
 
         <div className="flex gap-3">
-          <HiveButton variant="outline">Preview</HiveButton>
+          <HiveButton variant="secondary">Preview</HiveButton>
           <HiveButton onClick={handleSave}>Save Survey</HiveButton>
         </div>
       </div>
@@ -678,7 +678,7 @@ export function EventFeedbackTool({
             <h2 className="text-2xl font-bold text-gray-900">Create Feedback Survey</h2>
             <p className="text-gray-600">Design a custom feedback form for your event</p>
           </div>
-          <HiveButton variant="outline" onClick={() => setView('overview')}>
+          <HiveButton variant="secondary" onClick={() => setView('overview')}>
             Back to Overview
           </HiveButton>
         </div>
@@ -697,11 +697,11 @@ export function EventFeedbackTool({
             <p className="text-gray-600">Insights from {activeSurvey.title}</p>
           </div>
           <div className="flex gap-3">
-            <HiveButton variant="outline" onClick={() => onExportFeedback?.('csv')}>
+            <HiveButton variant="secondary" onClick={() => onExportFeedback?.('csv')}>
               <Download className="w-4 h-4 mr-2" />
               Export Data
             </HiveButton>
-            <HiveButton variant="outline" onClick={() => setView('overview')}>
+            <HiveButton variant="secondary" onClick={() => setView('overview')}>
               Back to Overview
             </HiveButton>
           </div>
@@ -723,7 +723,7 @@ export function EventFeedbackTool({
         
         {isBuilder && (
           <div className="flex items-center gap-3">
-            <HiveButton variant="outline" onClick={() => setView('create')}>
+            <HiveButton variant="secondary" onClick={() => setView('create')}>
               Create Survey
             </HiveButton>
             {activeSurvey && (
@@ -776,7 +776,7 @@ export function EventFeedbackTool({
                 <BarChart3 className="w-4 h-4 mr-2" />
                 View Analytics
               </HiveButton>
-              <HiveButton size="sm" variant="outline">
+              <HiveButton size="sm" variant="secondary">
                 <Eye className="w-4 w-4 mr-2" />
                 Preview Survey
               </HiveButton>
@@ -858,7 +858,7 @@ export function EventFeedbackTool({
           
           {responses.length > 5 && (
             <div className="text-center mt-4">
-              <HiveButton variant="outline" onClick={() => setView('analytics')}>
+              <HiveButton variant="secondary" onClick={() => setView('analytics')}>
                 View All Responses
               </HiveButton>
             </div>

@@ -6,7 +6,7 @@ import { Mail, AlertCircle, Clock, RefreshCw, ExternalLink } from 'lucide-react'
 import { Button } from '../button';
 import { Alert } from '../alert';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '../card';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 export const EmailVerification = ({ email, schoolName, onBack, onResend, className, expirationMinutes = 10 }) => {
     const [isResending, setIsResending] = useState(false);
     const [resendCooldown, setResendCooldown] = useState(0);

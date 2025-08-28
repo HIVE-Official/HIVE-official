@@ -370,10 +370,10 @@ export function EventCreatorTool({ spaceId, onEventCreated, onCancel, initialEve
           <div className="flex-1">
             <h2 className="text-2xl font-bold text-gray-900 mb-2">{eventData.title}</h2>
             <div className="flex items-center gap-4 text-sm text-gray-600 mb-4">
-              <HiveBadge variant="outline">
+              <HiveBadge variant="secondary">
                 {EVENT_CATEGORIES.find(c => c.value === eventData.category)?.label}
               </HiveBadge>
-              <HiveBadge variant="outline">
+              <HiveBadge variant="secondary">
                 {EVENT_TYPES.find(t => t.value === eventData.type)?.label}
               </HiveBadge>
             </div>
@@ -514,7 +514,7 @@ export function EventCreatorTool({ spaceId, onEventCreated, onCancel, initialEve
       <div className="flex items-center justify-between">
         <div className="flex gap-3">
           {onCancel && (
-            <HiveButton variant="outline" onClick={onCancel}>
+            <HiveButton variant="secondary" onClick={onCancel}>
               Cancel
             </HiveButton>
           )}
@@ -523,7 +523,7 @@ export function EventCreatorTool({ spaceId, onEventCreated, onCancel, initialEve
         <div className="flex gap-3">
           {currentStep !== 'basic' && (
             <HiveButton
-              variant="outline"
+              variant="secondary"
               onClick={() => {
                 const currentIndex = steps.findIndex(s => s.id === currentStep);
                 if (currentIndex > 0) {
@@ -538,7 +538,7 @@ export function EventCreatorTool({ spaceId, onEventCreated, onCancel, initialEve
           {currentStep === 'preview' ? (
             <>
               <HiveButton
-                variant="outline"
+                variant="secondary"
                 onClick={() => handleSaveEvent(false)}
                 disabled={isLoading}
               >

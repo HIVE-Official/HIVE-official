@@ -313,7 +313,7 @@ export const CampusFeedInterface: Story = {
                         <p className="font-medium text-gray-900">{category.name}</p>
                         <p className="text-sm text-gray-600">{category.active}</p>
                       </div>
-                      <Badge variant="outline" className="text-xs">
+                      <Badge variant="secondary" className="text-xs">
                         {category.count}
                       </Badge>
                     </div>
@@ -340,15 +340,15 @@ export const CampusFeedInterface: Story = {
                   </div>
                 </div>
                 <div className="flex items-center gap-3 mt-4 ml-14">
-                  <Button size="sm" variant="outline" className="gap-2">
+                  <Button size="sm" variant="secondary" className="gap-2">
                     <Calendar className="h-4 w-4" />
                     Schedule Activity
                   </Button>
-                  <Button size="sm" variant="outline" className="gap-2">
+                  <Button size="sm" variant="secondary" className="gap-2">
                     <Users className="h-4 w-4" />
                     Start Ritual
                   </Button>
-                  <Button size="sm" variant="outline" className="gap-2">
+                  <Button size="sm" variant="secondary" className="gap-2">
                     <Zap className="h-4 w-4" />
                     Use Tool
                   </Button>
@@ -374,13 +374,13 @@ export const CampusFeedInterface: Story = {
                             <p className="font-semibold text-gray-900">{post.creator.name}</p>
                             <p className="text-gray-600">{post.creator.handle}</p>
                             {post.type === 'tool-generated' && (
-                              <Badge variant="outline" className="text-xs">
+                              <Badge variant="secondary" className="text-xs">
                                 <Zap className="h-3 w-3 mr-1" />
                                 Tool
                               </Badge>
                             )}
                             {post.type === 'ritual' && (
-                              <Badge variant="outline" className="text-xs">
+                              <Badge variant="secondary" className="text-xs">
                                 <Target className="h-3 w-3 mr-1" />
                                 Ritual
                               </Badge>
@@ -920,7 +920,7 @@ export const RitualParticipationDashboard: Story = {
                           <Badge variant={ritual.role === 'organizer' ? 'default' : 'secondary'} className="text-xs">
                             {ritual.role}
                           </Badge>
-                          <Badge variant="outline" className="text-xs">
+                          <Badge variant="secondary" className="text-xs">
                             {ritual.frequency}
                           </Badge>
                         </div>
@@ -968,7 +968,7 @@ export const RitualParticipationDashboard: Story = {
                         Confirm Next Session
                       </Button>
                       {ritual.role === 'organizer' && (
-                        <Button size="sm" variant="outline">
+                        <Button size="sm" variant="secondary">
                           <Settings className="h-4 w-4" />
                         </Button>
                       )}
@@ -1000,7 +1000,7 @@ export const RitualParticipationDashboard: Story = {
                         </CardTitle>
                         <p className="text-sm text-gray-600 mt-1">by {ritual.organizer}</p>
                       </div>
-                      <Badge variant="outline" className="text-xs">
+                      <Badge variant="secondary" className="text-xs">
                         {ritual.frequency}
                       </Badge>
                     </div>
@@ -1035,7 +1035,7 @@ export const RitualParticipationDashboard: Story = {
                         <Plus className="h-4 w-4 mr-2" />
                         Join Ritual
                       </Button>
-                      <Button size="sm" variant="outline">
+                      <Button size="sm" variant="secondary">
                         <MessageCircle className="h-4 w-4 mr-2" />
                         Ask Questions
                       </Button>

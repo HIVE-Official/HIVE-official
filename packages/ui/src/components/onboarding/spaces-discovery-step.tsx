@@ -273,7 +273,7 @@ export const SpacesDiscoveryStep: React.FC<SpacesDiscoveryStepProps> = ({
             <div className="text-muted mb-4">
               No spaces found matching "{searchQuery}"
             </div>
-            <Button variant="outline" size="sm">
+            <Button variant="secondary" size="sm">
               <Plus className="w-4 h-4 mr-2" />
               Request new space
             </Button>

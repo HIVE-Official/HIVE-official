@@ -3,7 +3,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cva } from 'class-variance-authority';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 import { liquidMetal, motionDurations } from '../motion/hive-motion-system';
 import { ChevronLeft, ChevronRight, Menu, X, Users, User, Zap, Home, Plus, Settings } from 'lucide-react';
 // HIVE Sidebar System - Section-Based Navigation

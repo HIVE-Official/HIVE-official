@@ -360,11 +360,11 @@ function TemporalRitualsSystem() {
             </div>
             
             <div className="flex items-center space-x-2">
-              <Button size="icon" variant="outline" className="border-gray-600 text-white relative">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-white relative">
                 <Bell className="w-4 h-4" />
                 <div className="absolute -top-1 -right-1 w-3 h-3 bg-purple-500 rounded-full" />
               </Button>
-              <Button size="icon" variant="outline" className="border-gray-600 text-white">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-white">
                 <Settings className="w-4 h-4" />
               </Button>
             </div>
@@ -511,7 +511,7 @@ function TemporalRitualsSystem() {
                               {mission.completed && <CheckCircle className="w-4 h-4 text-green-400" />}
                             </div>
                             <div className="text-sm font-medium text-white">{mission.title}</div>
-                            <Badge variant="outline" className="text-xs mt-2">
+                            <Badge variant="secondary" className="text-xs mt-2">
                               {mission.type}
                             </Badge>
                           </div>
@@ -569,7 +569,7 @@ function TemporalRitualsSystem() {
                         Starts {currentRitual.scheduledStart?.toLocaleDateString()}
                       </Button>
                     )}
-                    <Button variant="outline" className="border-gray-600 text-white hover:bg-gray-800">
+                    <Button variant="secondary" className="border-gray-600 text-white hover:bg-gray-800">
                       <Info className="w-4 h-4" />
                     </Button>
                   </div>
@@ -792,7 +792,7 @@ function TemporalRitualsSystem() {
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-lg text-white">Recommended Connections</CardTitle>
                   <Button 
-                    variant="outline" 
+                    variant="secondary" 
                     className="border-gray-600 text-white hover:bg-gray-800"
                     onClick={() => setShowPeerDiscovery(!showPeerDiscovery)}
                   >
@@ -827,7 +827,7 @@ function TemporalRitualsSystem() {
                             <div className="text-xs text-gray-400 mb-1">Shared Communities:</div>
                             <div className="flex flex-wrap gap-1">
                               {peer.sharedCommunities.slice(0, 2).map((community) => (
-                                <Badge key={community} variant="outline" className="text-xs bg-blue-500/10 text-blue-400">
+                                <Badge key={community} variant="secondary" className="text-xs bg-blue-500/10 text-blue-400">
                                   {community.split(' ')[0]}
                                 </Badge>
                               ))}

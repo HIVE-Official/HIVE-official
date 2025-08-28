@@ -8,7 +8,7 @@ import { Badge } from '../../ui/badge';
 import { Card, CardContent } from '../../ui/card';
 import { Tabs, TabsList, TabsTrigger } from '../../ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '../../ui/avatar';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 export function NotificationSystem({ notifications, unreadCount, isOpen, onClose, onMarkAsRead, onMarkAllAsRead, onArchive, onDelete, onAction, className }) {
     const [activeTab, setActiveTab] = useState('all');
     const [selectedNotifications, setSelectedNotifications] = useState([]);

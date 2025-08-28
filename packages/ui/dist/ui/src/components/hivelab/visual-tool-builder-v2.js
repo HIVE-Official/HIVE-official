@@ -6,7 +6,7 @@ import { SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-
 import { CSS } from '@dnd-kit/utilities';
 import { HiveCard, HiveButton, HiveInput, HiveTextarea, HiveBadge } from '../index';
 import { Plus, Grip, Settings, Eye, Save, Trash2, Type, Square, Image, ToggleLeft, Hash, Calendar, Clock, Star, CheckSquare } from 'lucide-react';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 // Component Palette - Visual library students can understand
 const COMPONENT_PALETTE = [
     { type: 'heading', icon: Type, label: 'Heading', description: 'Title text for your tool' },

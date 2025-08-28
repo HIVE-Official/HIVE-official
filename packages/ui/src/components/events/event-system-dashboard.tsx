@@ -176,7 +176,7 @@ export function EventSystemDashboard({ spaceId, userId, userRole, className }: E
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <HiveButton
-              variant="outline"
+              variant="secondary"
               size="sm"
               onClick={() => {
                 setSelectedTool(null);
@@ -234,7 +234,7 @@ export function EventSystemDashboard({ spaceId, userId, userRole, className }: E
         </div>
         
         <div className="flex items-center gap-3">
-          <HiveBadge variant="outline">
+          <HiveBadge variant="secondary">
             {events.length} total events
           </HiveBadge>
           <HiveButton onClick={() => setCurrentView('create')}>
@@ -299,7 +299,7 @@ export function EventSystemDashboard({ spaceId, userId, userRole, className }: E
       <div className="space-y-4">
         <div className="flex items-center gap-2">
           <h2 className="text-xl font-semibold text-gray-900">Event Tools</h2>
-          <HiveBadge variant="outline">5 tools</HiveBadge>
+          <HiveBadge variant="secondary">5 tools</HiveBadge>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -317,7 +317,7 @@ export function EventSystemDashboard({ spaceId, userId, userRole, className }: E
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-semibold text-gray-900">Upcoming Events</h2>
-          <HiveButton variant="outline" size="sm">
+          <HiveButton variant="secondary" size="sm">
             View All Events
           </HiveButton>
         </div>
@@ -389,7 +389,7 @@ function EventToolCard({ tool, onLaunch }: EventToolCardProps) {
             </div>
             <div>
               <h3 className="font-semibold text-gray-900">{tool.name}</h3>
-              <HiveBadge variant="outline" className={cn("text-xs", categoryColors[tool.category])}>
+              <HiveBadge variant="secondary" className={cn("text-xs", categoryColors[tool.category])}>
                 {tool.category}
               </HiveBadge>
             </div>
@@ -432,7 +432,7 @@ function EventCard({ event }: EventCardProps) {
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-1">
             <h3 className="font-semibold text-gray-900">{event.title}</h3>
-            <HiveBadge variant="outline" className="text-xs">
+            <HiveBadge variant="secondary" className="text-xs">
               {event.category}
             </HiveBadge>
           </div>

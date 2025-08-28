@@ -1,13 +1,13 @@
 import type { ServiceAccount } from 'firebase-admin/app';
 export declare const isBuildTime: boolean;
 export declare const env: {
-    NODE_ENV?: "development" | "production" | "test";
     NEXT_PUBLIC_FIREBASE_API_KEY?: string;
     NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN?: string;
     NEXT_PUBLIC_FIREBASE_PROJECT_ID?: string;
     NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET?: string;
     NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID?: string;
     NEXT_PUBLIC_FIREBASE_APP_ID?: string;
+    NODE_ENV?: "production" | "development" | "test";
     NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID?: string;
     NEXT_PUBLIC_DEBUG?: string;
     FIREBASE_PROJECT_ID?: string;
@@ -41,7 +41,7 @@ export declare function getFirebaseAdminConfig(): ServiceAccount | null;
  */
 export declare const isDebugMode: boolean;
 export declare const environmentInfo: {
-    environment: "development" | "production" | "test";
+    environment: "production" | "development" | "test";
     isProduction: boolean;
     isDevelopment: boolean;
     isBuildTime: boolean;

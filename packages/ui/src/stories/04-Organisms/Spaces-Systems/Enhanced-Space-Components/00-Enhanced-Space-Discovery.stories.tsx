@@ -417,10 +417,10 @@ function EnhancedSpaceDiscovery() {
               <p className="text-gray-400">Discover and join your University at Buffalo communities</p>
             </div>
             <div className="flex items-center space-x-3">
-              <Button size="icon" variant="outline" className="border-gray-600 text-white">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-white">
                 <Bell className="w-4 h-4" />
               </Button>
-              <Button size="icon" variant="outline" className="border-gray-600 text-white">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-white">
                 <Settings className="w-4 h-4" />
               </Button>
               <Button className="hive-interactive" style={{ backgroundColor: 'var(--hive-brand-primary)', color: 'var(--hive-text-inverse)' }}>
@@ -475,7 +475,7 @@ function EnhancedSpaceDiscovery() {
             <div className="flex items-center space-x-2">
               <Button 
                 size="icon" 
-                variant="outline" 
+                variant="secondary" 
                 className="border-gray-600 text-white"
                 onClick={() => setShowFilters(!showFilters)}
               >
@@ -694,7 +694,7 @@ function EnhancedSpaceDiscovery() {
         {filteredSpaces.length > 0 && (
           <div className="text-center mt-12">
             <Button 
-              variant="outline" 
+              variant="secondary" 
               className="border-gray-600 text-white hover:bg-gray-800"
             >
               Load More Spaces
@@ -717,7 +717,7 @@ function EnhancedSpaceDiscovery() {
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Button 
                 onClick={() => setSearchQuery("")}
-                variant="outline"
+                variant="secondary"
                 className="border-white/20 text-white"
               >
                 Clear Search
@@ -822,7 +822,7 @@ function SpacePreviewCard({ space }: { space: any }) {
             </Badge>
             
             {space.status !== 'activated' && (
-              <Badge variant="outline" className="text-xs text-blue-400 border-blue-400/30">
+              <Badge variant="secondary" className="text-xs text-blue-400 border-blue-400/30">
                 {space.status === 'dormant' ? 'Preview' : 'View Only'}
               </Badge>
             )}
@@ -865,12 +865,12 @@ function SpacePreviewCard({ space }: { space: any }) {
         {/* Tags */}
         <div className="flex flex-wrap gap-1">
           {space.tags.slice(0, 3).map((tag: string) => (
-            <Badge key={tag} variant="outline" className="border-gray-600 text-gray-400 text-xs">
+            <Badge key={tag} variant="secondary" className="border-gray-600 text-gray-400 text-xs">
               {tag}
             </Badge>
           ))}
           {space.tags.length > 3 && (
-            <Badge variant="outline" className="border-gray-600 text-gray-400 text-xs">
+            <Badge variant="secondary" className="border-gray-600 text-gray-400 text-xs">
               +{space.tags.length - 3}
             </Badge>
           )}
@@ -901,7 +901,7 @@ function SpacePreviewCard({ space }: { space: any }) {
                 <MessageSquare className="w-4 h-4 mr-2" />
                 Open Space
               </Button>
-              <Button size="icon" variant="outline" className="border-gray-600 text-white hover:bg-gray-800">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-white hover:bg-gray-800">
                 <Settings className="w-4 h-4" />
               </Button>
             </>
@@ -911,7 +911,7 @@ function SpacePreviewCard({ space }: { space: any }) {
                 <Eye className="w-4 h-4 mr-2" />
                 Preview Space
               </Button>
-              <Button size="icon" variant="outline" className="border-gray-600 text-white hover:bg-gray-800">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-white hover:bg-gray-800">
                 <Heart className="w-4 h-4" />
               </Button>
             </>
@@ -921,7 +921,7 @@ function SpacePreviewCard({ space }: { space: any }) {
                 <Eye className="w-4 h-4 mr-2" />
                 View Only
               </Button>
-              <Button size="icon" variant="outline" className="border-gray-600 text-white hover:bg-gray-800">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-white hover:bg-gray-800">
                 <Heart className="w-4 h-4" />
               </Button>
             </>
@@ -931,12 +931,12 @@ function SpacePreviewCard({ space }: { space: any }) {
                 <UserPlus className="w-4 h-4 mr-2" />
                 Join Space
               </Button>
-              <Button size="icon" variant="outline" className="border-gray-600 text-white hover:bg-gray-800">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-white hover:bg-gray-800">
                 <Heart className="w-4 h-4" />
               </Button>
             </>
           )}
-          <Button size="icon" variant="outline" className="border-gray-600 text-white hover:bg-gray-800">
+          <Button size="icon" variant="secondary" className="border-gray-600 text-white hover:bg-gray-800">
             <Share className="w-4 h-4" />
           </Button>
         </div>
@@ -1031,7 +1031,7 @@ function SpaceListCard({ space }: { space: any }) {
               </Button>
             )}
             
-            <Button size="icon" variant="outline" className="border-gray-600 text-white hover:bg-gray-800">
+            <Button size="icon" variant="secondary" className="border-gray-600 text-white hover:bg-gray-800">
               <Heart className="w-4 h-4" />
             </Button>
             

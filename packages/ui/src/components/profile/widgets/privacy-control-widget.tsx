@@ -11,7 +11,7 @@ import { BaseWidget } from '../bento-grid/base-widget';
 import { BaseWidgetProps } from '../bento-grid/types';
 import { HiveButton } from '../../hive-button';
 import { HiveSwitch } from '../../hive-switch';
-import { cn } from '../../../lib/utils';
+import { cn } from '../../lib/utils';
 
 interface PrivacySettings {
   ghostMode: {
@@ -363,7 +363,7 @@ export const PrivacyControlWidget: React.FC<PrivacyControlWidgetProps> = ({
           {/* Footer */}
           <div className="pt-4 border-t border-hive-border-subtle/30">
             <HiveButton
-              variant="outline"
+              variant="secondary"
               size="sm"
               onClick={onOpenFullSettings}
               className="w-full gap-2"

@@ -83,7 +83,7 @@ export const LinearInspiredHomepage = () => {
             </Button>
             <Button 
               size="lg" 
-              variant="outline" 
+              variant="secondary" 
               className="border-white/20 text-white/90 hover:bg-white/[0.04] hover:border-white/30 font-medium px-6 py-3 text-[15px] h-auto rounded-lg"
             >
               Explore Platform
@@ -257,7 +257,7 @@ export const VercelInspiredHomepage = () => {
             <Button className="bg-[#FFD700] text-black hover:bg-[#FFD700]/90 px-6 py-2.5 text-sm font-medium">
               Start Building
             </Button>
-            <Button variant="outline" className="border-white/20 text-white hover:bg-white/5 px-6 py-2.5 text-sm">
+            <Button variant="secondary" className="border-white/20 text-white hover:bg-white/5 px-6 py-2.5 text-sm">
               View Demo
             </Button>
           </div>
@@ -388,7 +388,7 @@ export const FigmaInspiredHomepage = () => {
             </Button>
             <Button 
               size="lg" 
-              variant="outline" 
+              variant="secondary" 
               className="border-white/30 text-white hover:bg-white/5 hover:border-white/50 font-semibold px-8 py-4 text-base h-auto rounded-xl"
             >
               Watch in action

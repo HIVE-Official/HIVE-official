@@ -275,7 +275,7 @@ export const ElementLibraryBrowser: Story = {
                   <Lightbulb className="h-8 w-8 text-yellow-600 mx-auto mb-2" />
                   <p className="text-sm font-medium text-gray-900 mb-1">Need Something New?</p>
                   <p className="text-xs text-gray-600 mb-3">Suggest new elements based on real coordination challenges</p>
-                  <Button size="sm" variant="outline" className="w-full">
+                  <Button size="sm" variant="secondary" className="w-full">
                     <Plus className="h-4 w-4 mr-2" />
                     Suggest Element
                   </Button>
@@ -308,7 +308,7 @@ export const ElementLibraryBrowser: Story = {
                           <div>
                             <CardTitle className="text-lg">{element.name}</CardTitle>
                             <div className="flex items-center gap-2 mt-1">
-                              <Badge variant="outline" className="text-xs">
+                              <Badge variant="secondary" className="text-xs">
                                 {element.complexity}
                               </Badge>
                               <div className="flex items-center gap-1 text-sm text-gray-600">
@@ -318,7 +318,7 @@ export const ElementLibraryBrowser: Story = {
                             </div>
                           </div>
                         </div>
-                        <Button size="sm" variant="outline">
+                        <Button size="sm" variant="secondary">
                           <Plus className="h-4 w-4" />
                         </Button>
                       </div>
@@ -352,10 +352,10 @@ export const ElementLibraryBrowser: Story = {
                               <Play className="h-4 w-4 mr-2" />
                               Add to Tool
                             </Button>
-                            <Button size="sm" variant="outline">
+                            <Button size="sm" variant="secondary">
                               <Eye className="h-4 w-4" />
                             </Button>
-                            <Button size="sm" variant="outline">
+                            <Button size="sm" variant="secondary">
                               <Code className="h-4 w-4" />
                             </Button>
                           </div>
@@ -464,11 +464,11 @@ export const StudentCreatedTools: Story = {
                     </div>
                     
                     <div className="flex items-center gap-2">
-                      <Button size="sm" variant="outline">
+                      <Button size="sm" variant="secondary">
                         <Copy className="h-4 w-4 mr-2" />
                         Install
                       </Button>
-                      <Button size="sm" variant="outline">
+                      <Button size="sm" variant="secondary">
                         <Share2 className="h-4 w-4" />
                       </Button>
                     </div>
@@ -502,7 +502,7 @@ export const StudentCreatedTools: Story = {
                           <h4 className="font-semibold text-gray-900 mb-2">Elements Used</h4>
                           <div className="flex flex-wrap gap-2">
                             {tool.elements.map((element, index) => (
-                              <Badge key={index} variant="outline" className="text-xs">
+                              <Badge key={index} variant="secondary" className="text-xs">
                                 <Layers className="h-3 w-3 mr-1" />
                                 {element}
                               </Badge>
@@ -787,7 +787,7 @@ export const ToolCreationInterface: Story = {
                         <Play className="h-4 w-4 mr-2" />
                         Create Tool
                       </Button>
-                      <Button variant="outline">
+                      <Button variant="secondary">
                         <Settings className="h-4 w-4" />
                       </Button>
                     </div>

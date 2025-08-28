@@ -261,7 +261,7 @@ export const Step2ProfileCreation: Story = {
             <div className="w-24 h-24 bg-surface rounded-full flex items-center justify-center mx-auto border-2 border-dashed border-border hover:border-accent transition-colors cursor-pointer">
               <span className="text-3xl">📸</span>
             </div>
-            <Button variant="outline" size="sm">
+            <Button variant="secondary" size="sm">
               Upload Photo
             </Button>
           </div>
@@ -737,7 +737,7 @@ export const OnboardingComplete: Story = {
           <Button className="w-full font-semibold animate-hive-space-join">
             Enter HIVE
           </Button>
-          <Button variant="outline" className="w-full">
+          <Button variant="secondary" className="w-full">
             Customize Profile
           </Button>
         </div>

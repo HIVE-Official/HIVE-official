@@ -108,7 +108,7 @@ export const OnboardingLayout: React.FC<OnboardingLayoutProps> = ({
             <div className="flex-1">
               {showPrevButton ? (
                 <Button
-                  variant="outline"
+                  variant="secondary"
                   onClick={onPrev}
                   className="group"
                 >

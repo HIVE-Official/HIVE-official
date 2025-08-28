@@ -266,7 +266,7 @@ const TransitionSystemDemo = () => {
             </Button>
             <Button 
               size="sm" 
-              variant="outline"
+              variant="secondary"
               onClick={() => {
                 setCurrentPhase('transition');
                 setTransitionProgress(0);
@@ -405,7 +405,7 @@ const TransitionSystemDemo = () => {
                       <HiveProgress value={milestone.progress} className="h-1 mb-2" />
                       <div className="flex flex-wrap gap-1">
                         {milestone.unlocks.map((unlock) => (
-                          <Badge key={unlock} variant="outline" className="border-gray-600 text-gray-400 text-xs">
+                          <Badge key={unlock} variant="secondary" className="border-gray-600 text-gray-400 text-xs">
                             {unlock}
                           </Badge>
                         ))}
@@ -437,7 +437,7 @@ const TransitionSystemDemo = () => {
                       <Badge className="bg-purple-600 text-white text-xs">
                         New in v1
                       </Badge>
-                      <Button size="sm" variant="outline" className="border-purple-600 text-purple-400">
+                      <Button size="sm" variant="secondary" className="border-purple-600 text-purple-400">
                         <Eye className="w-3 h-3 mr-1" />
                         Explore
                       </Button>
@@ -552,7 +552,7 @@ const TransitionSystemDemo = () => {
                         </span>
                       </div>
                       <div className="flex items-center space-x-2">
-                        <Button size="sm" variant="outline" className="border-gray-600 text-white">
+                        <Button size="sm" variant="secondary" className="border-gray-600 text-white">
                           <Heart className="w-3 h-3 mr-1" />
                           Save
                         </Button>

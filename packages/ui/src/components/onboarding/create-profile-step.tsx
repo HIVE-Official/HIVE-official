@@ -15,7 +15,7 @@ import {
   Shuffle,
   Crop,
 } from 'lucide-react';
-import { Checkbox } from '../checkbox';
+import { Checkbox } from '../ui/checkbox';
 import { hiveVariants } from '../../lib/motion';
 import { useAdaptiveMotion } from '../../lib/adaptive-motion';
 import { ImageCropModal } from './image-crop-modal';
@@ -272,7 +272,7 @@ export const CreateProfileStep: React.FC<CreateProfileStepProps> = ({
             <div className="flex gap-3 justify-center">
               <Button 
                 type="button" 
-                variant="outline" 
+                variant="secondary" 
                 size="sm" 
                 onClick={handleUploadClick}
                 disabled={allPhotos.length >= maxPhotos}
@@ -281,7 +281,7 @@ export const CreateProfileStep: React.FC<CreateProfileStepProps> = ({
                 {allPhotos.length === 0 ? 'Add Photo' : 'Replace Photo'}
               </Button>
               {(allPhotos.length > 0) && (
-                <Button type="button" variant="outline" size="sm" onClick={handleCropPhoto}>
+                <Button type="button" variant="secondary" size="sm" onClick={handleCropPhoto}>
                   <Crop className="w-4 h-4 mr-2" />
                   Edit Photo
                 </Button>
@@ -443,7 +443,7 @@ export const CreateProfileStep: React.FC<CreateProfileStepProps> = ({
         <motion.div variants={hiveVariants.item}>
           <Button 
             type="submit" 
-            variant="ritual"
+            variant="primary"
             fullWidth
             disabled={isUploading || !termsAccepted}
           >

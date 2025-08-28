@@ -8,7 +8,7 @@
 import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { Tool, ElementInstance } from '@hive/core';
 import { HiveCard } from '../hive-card';
-import { Button } from '../../ui/button';
+import { Button } from '../../atomic/atoms/button-enhanced';
 import { Input } from '../../ui/input';
 import { Label } from '../../ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../ui/select';
@@ -264,7 +264,7 @@ export const SpaceToolDeployment: React.FC<SpaceToolDeploymentProps> = ({
           </div>
           
           <div className="flex items-center space-x-2">
-            <Button variant="outline" onClick={onCancel}>
+            <Button variant="secondary" onClick={onCancel}>
               Cancel
             </Button>
             <Button 
@@ -344,7 +344,7 @@ export const SpaceToolDeployment: React.FC<SpaceToolDeploymentProps> = ({
                   <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
                   <p className="text-[var(--hive-text-primary)] font-medium mb-2">Failed to load spaces</p>
                   <p className="text-[var(--hive-text-secondary)] mb-4">{spacesError}</p>
-                  <Button variant="outline" onClick={fetchAvailableSpaces}>
+                  <Button variant="secondary" onClick={fetchAvailableSpaces}>
                     Retry
                   </Button>
                 </div>

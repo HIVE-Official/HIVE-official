@@ -1,7 +1,7 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from "react";
-import { cn } from "../lib/utils";
+import { cn } from "../../lib/utils";
 export function HiveLabCard({ isBuilder, toolsCreated = 0, totalEngagement = 0, countdownDate, className }) {
     if (isBuilder) {
         return (_jsx(BuilderHiveLabCard, { toolsCreated: toolsCreated, totalEngagement: totalEngagement, className: className }));

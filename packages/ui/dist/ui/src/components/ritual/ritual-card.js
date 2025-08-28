@@ -3,7 +3,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '../button';
 import { Badge } from '../badge';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 import { Flame, Users, Clock, Sparkles, ArrowRight, CheckCircle } from 'lucide-react';
 const ritualConfig = {
     first_light: {

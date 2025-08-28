@@ -1,0 +1,195 @@
+// Firestore Security Rules for HIVE Realtime Collections
+// Add these rules to your existing firestore.rules file
+
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ===========================================
+    // REALTIME COLLECTIONS SECURITY RULES
+    // ===========================================
+    
+    // Real-time messaging channels
+    match /realtime_channels/{channelId} {
+      // Channel metadata - read if member, write by system
+      allow read: if isAuthenticated() && canAccessChannel(channelId);
+      allow write: if false; // Only system can create channels
+      
+      match /messages/{messageId} {
+        // Messages - read if channel member, write if authenticated
+        allow read: if isAuthenticated() && canAccessChannel(channelId);
+        allow create: if isAuthenticated() && canAccessChannel(channelId) && isValidMessage();
+        allow update: if isAuthenticated() && canUpdateMessage(messageId);
+        allow delete: if false; // Messages are immutable
+      }
+    }
+    
+    // Space chat messages
+    match /space_chats/{spaceId} {
+      // Chat metadata - read if space member
+      allow read: if isAuthenticated() && isSpaceMember(spaceId);
+      allow write: if isAuthenticated() && isSpaceMember(spaceId);
+      
+      match /messages/{messageId} {
+        // Chat messages - read/write if space member
+        allow read: if isAuthenticated() && isSpaceMember(spaceId);
+        allow create: if isAuthenticated() && isSpaceMember(spaceId) && isValidChatMessage();
+        allow update: if isAuthenticated() && isMessageAuthor(messageId) && isSpaceMember(spaceId);
+        allow delete: if isAuthenticated() && (isMessageAuthor(messageId) || isSpaceLeader(spaceId));
+      }
+    }
+    
+    // User presence data
+    match /user_presence/{userId} {
+      // Users can read presence of users in their spaces, update their own
+      allow read: if isAuthenticated() && (userId == request.auth.uid || shareSpacesWith(userId));
+      allow write: if isAuthenticated() && userId == request.auth.uid && isValidPresenceData();
+    }
+    
+    // Typing indicators
+    match /typing_indicators/{spaceId} {
+      // Space typing indicators - read if space member
+      allow read: if isAuthenticated() && isSpaceMember(spaceId);
+      
+      match /users/{userId} {
+        // Individual typing indicators - read if space member, write own
+        allow read: if isAuthenticated() && isSpaceMember(spaceId);
+        allow write: if isAuthenticated() && userId == request.auth.uid && isSpaceMember(spaceId);
+      }
+    }
+    
+    // Tool states for collaborative tools
+    match /tool_states/{toolId} {
+      // Tool states - read/write if can access tool
+      allow read: if isAuthenticated() && canAccessTool(toolId);
+      allow write: if isAuthenticated() && canAccessTool(toolId) && isValidToolState();
+    }
+    
+    // ===========================================
+    // HELPER FUNCTIONS
+    // ===========================================
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isCurrentUser(userId) {
+      return request.auth.uid == userId;
+    }
+    
+    // Check if user is member of a space
+    function isSpaceMember(spaceId) {
+      return exists(/databases/$(database)/documents/members/$(request.auth.uid + '_' + spaceId)) &&
+             get(/databases/$(database)/documents/members/$(request.auth.uid + '_' + spaceId)).data.status == 'active';
+    }
+    
+    // Check if user is leader of a space
+    function isSpaceLeader(spaceId) {
+      return exists(/databases/$(database)/documents/members/$(request.auth.uid + '_' + spaceId)) &&
+             get(/databases/$(database)/documents/members/$(request.auth.uid + '_' + spaceId)).data.role == 'leader';
+    }
+    
+    // Check if user can access a channel (based on space membership)
+    function canAccessChannel(channelId) {
+      // Extract spaceId from channel name (format: space:{spaceId}:{type})
+      let channelParts = channelId.split(':');
+      return channelParts.size() >= 2 && 
+             channelParts[0] == 'space' && 
+             isSpaceMember(channelParts[1]);
+    }
+    
+    // Check if users share any spaces (for presence visibility)
+    function shareSpacesWith(otherUserId) {
+      // This is a simplified check - in production, you'd implement more sophisticated logic
+      return true; // For UB students, allow seeing presence of other students
+    }
+    
+    // Check if user can access a tool
+    function canAccessTool(toolId) {
+      // Check if tool exists and user has access via space membership
+      return exists(/databases/$(database)/documents/tools/$(toolId)) &&
+             (get(/databases/$(database)/documents/tools/$(toolId)).data.isPublic == true ||
+              isSpaceMember(get(/databases/$(database)/documents/tools/$(toolId)).data.spaceId));
+    }
+    
+    // Check if user is the author of a message
+    function isMessageAuthor(messageId) {
+      return resource.data.userId == request.auth.uid;
+    }
+    
+    // Check if user can update a message (for reactions, read status)
+    function canUpdateMessage(messageId) {
+      // Allow updating delivery status (read, delivered)
+      return request.writeFields.hasOnly(['delivery']) && 
+             (
+               // Adding self to read list
+               request.resource.data.delivery.read.hasAll(resource.data.delivery.read) ||
+               // Adding self to delivered list  
+               request.resource.data.delivery.delivered.hasAll(resource.data.delivery.delivered)
+             );
+    }
+    
+    // Validate realtime message data
+    function isValidMessage() {
+      return request.resource.data.keys().hasAll(['type', 'channel', 'senderId', 'content', 'metadata']) &&
+             request.resource.data.senderId == request.auth.uid &&
+             request.resource.data.type in ['chat', 'notification', 'tool_update', 'presence', 'system'] &&
+             request.resource.data.metadata.keys().hasAll(['timestamp', 'priority', 'requiresAck', 'retryCount']);
+    }
+    
+    // Validate chat message data
+    function isValidChatMessage() {
+      return request.resource.data.keys().hasAll(['spaceId', 'userId', 'content', 'type', 'timestamp']) &&
+             request.resource.data.userId == request.auth.uid &&
+             request.resource.data.type in ['text', 'image', 'file', 'poll', 'system'] &&
+             request.resource.data.content is string &&
+             request.resource.data.content.size() <= 5000; // Max 5000 chars
+    }
+    
+    // Validate presence data
+    function isValidPresenceData() {
+      return request.resource.data.keys().hasAll(['userId', 'status', 'lastSeen']) &&
+             request.resource.data.userId == request.auth.uid &&
+             request.resource.data.status in ['online', 'offline', 'away'] &&
+             request.resource.data.lastSeen is timestamp;
+    }
+    
+    // Validate tool state data
+    function isValidToolState() {
+      return request.resource.data.keys().hasAll(['lastUpdated', 'updatedBy', 'spaceId']) &&
+             request.resource.data.updatedBy == request.auth.uid &&
+             request.resource.data.lastUpdated is timestamp;
+    }
+    
+    // ===========================================
+    // CAMPUS-SPECIFIC RULES (UB)
+    // ===========================================
+    
+    // Ensure only UB students can access realtime features
+    function isUBStudent() {
+      return request.auth.token.email.matches('.*@buffalo\\.edu$');
+    }
+    
+    // Rate limiting helper (basic)
+    function withinRateLimit() {
+      // This is a basic example - implement more sophisticated rate limiting as needed
+      return true;
+    }
+    
+    // ===========================================
+    // ADDITIONAL SECURITY MEASURES
+    // ===========================================
+    
+    // Block messages with inappropriate content (basic filter)
+    function isAppropriateContent() {
+      // Add content filtering logic here
+      return true;
+    }
+    
+    // Ensure message size limits
+    function isWithinSizeLimit() {
+      return request.resource.size() < 1000000; // 1MB limit
+    }
+  }
+}

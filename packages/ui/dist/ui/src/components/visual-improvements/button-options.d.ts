@@ -1,11 +1,11 @@
 import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
 declare const vercelButtonVariants: (props?: {
-    variant?: "primary" | "secondary" | "ghost" | "accent";
+    variant?: "primary" | "secondary" | "accent" | "ghost";
     size?: "sm" | "md" | "lg" | "icon";
 } & import("class-variance-authority/types").ClassProp) => string;
 declare const appleButtonVariants: (props?: {
-    variant?: "primary" | "secondary" | "destructive" | "accent";
+    variant?: "primary" | "secondary" | "accent" | "destructive";
     size?: "sm" | "md" | "lg" | "icon";
 } & import("class-variance-authority/types").ClassProp) => string;
 declare const campusButtonVariants: (props?: {
@@ -13,8 +13,8 @@ declare const campusButtonVariants: (props?: {
     size?: "sm" | "md" | "lg" | "xl" | "icon";
 } & import("class-variance-authority/types").ClassProp) => string;
 declare const techButtonVariants: (props?: {
-    variant?: "execute" | "terminal" | "debug" | "system";
-    size?: "xs" | "sm" | "md" | "lg" | "icon";
+    variant?: "execute" | "terminal" | "system" | "debug";
+    size?: "sm" | "md" | "lg" | "icon" | "xs";
 } & import("class-variance-authority/types").ClassProp) => string;
 declare const socialButtonVariants: (props?: {
     variant?: "share" | "connect" | "engage" | "react";

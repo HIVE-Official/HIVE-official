@@ -392,16 +392,16 @@ function EnhancedFeedDiscoverySystem() {
                 />
               </div>
               
-              <Button size="icon" variant="outline" className="border-gray-600 text-white">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-white">
                 <Search className="w-4 h-4" />
               </Button>
-              <Button size="icon" variant="outline" className="border-gray-600 text-white relative">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-white relative">
                 <Bell className="w-4 h-4" />
                 <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full text-xs flex items-center justify-center">
                   3
                 </div>
               </Button>
-              <Button size="icon" variant="outline" className="border-gray-600 text-white">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-white">
                 <Settings className="w-4 h-4" />
               </Button>
             </div>
@@ -452,7 +452,7 @@ function EnhancedFeedDiscoverySystem() {
                 </Button>
               ))}
             </div>
-            <Button size="icon" variant="outline" className="border-gray-600 text-white">
+            <Button size="icon" variant="secondary" className="border-gray-600 text-white">
               <Filter className="w-4 h-4" />
             </Button>
           </div>
@@ -512,7 +512,7 @@ function EnhancedFeedDiscoverySystem() {
                         {item.author.isVerified && (
                           <Award className="w-4 h-4 text-blue-400" />
                         )}
-                        <Badge variant="outline" className="text-xs">
+                        <Badge variant="secondary" className="text-xs">
                           {item.author.role}
                         </Badge>
                       </div>
@@ -597,7 +597,7 @@ function EnhancedFeedDiscoverySystem() {
                           <span className="text-sm text-gray-400 block mb-2">Skills Needed:</span>
                           <div className="flex flex-wrap gap-1">
                             {item.content.skillsNeeded.map((skill) => (
-                              <Badge key={skill} variant="outline" className="text-xs bg-blue-500/10 text-blue-400">
+                              <Badge key={skill} variant="secondary" className="text-xs bg-blue-500/10 text-blue-400">
                                 {skill}
                               </Badge>
                             ))}
@@ -632,7 +632,7 @@ function EnhancedFeedDiscoverySystem() {
                   {item.tags.length > 0 && (
                     <div className="flex flex-wrap gap-1 mb-3">
                       {item.tags.map((tag) => (
-                        <Badge key={tag} variant="outline" className="text-xs bg-gray-800 text-gray-400">
+                        <Badge key={tag} variant="secondary" className="text-xs bg-gray-800 text-gray-400">
                           #{tag}
                         </Badge>
                       ))}
@@ -675,11 +675,11 @@ function EnhancedFeedDiscoverySystem() {
                     </Button>
 
                     {/* Secondary Actions */}
-                    <Button variant="outline" size="sm" className="border-gray-600 text-gray-400 hover:text-white">
+                    <Button variant="secondary" size="sm" className="border-gray-600 text-gray-400 hover:text-white">
                       <MessageSquare className="w-4 h-4 mr-1" />
                       {item.engagement.responses}
                     </Button>
-                    <Button variant="outline" size="sm" className="border-gray-600 text-gray-400 hover:text-white">
+                    <Button variant="secondary" size="sm" className="border-gray-600 text-gray-400 hover:text-white">
                       <Share className="w-4 h-4 mr-1" />
                       {item.engagement.shares}
                     </Button>
@@ -708,7 +708,7 @@ function EnhancedFeedDiscoverySystem() {
 
           {/* Load More */}
           <div className="text-center mt-8">
-            <Button variant="outline" className="border-gray-600 text-white hover:bg-gray-800">
+            <Button variant="secondary" className="border-gray-600 text-white hover:bg-gray-800">
               Load More Coordination Opportunities
             </Button>
           </div>
@@ -766,7 +766,7 @@ function EnhancedFeedDiscoverySystem() {
                         <span className="text-sm text-gray-400 block mb-1">Content Types:</span>
                         <div className="flex flex-wrap gap-1">
                           {mockPersonalizationFactors.userPreferences.contentTypes.map((type) => (
-                            <Badge key={type} variant="outline" className="text-xs bg-blue-500/10 text-blue-400">
+                            <Badge key={type} variant="secondary" className="text-xs bg-blue-500/10 text-blue-400">
                               {type.replace('_', ' ')}
                             </Badge>
                           ))}

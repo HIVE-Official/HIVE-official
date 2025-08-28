@@ -3,7 +3,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cva } from 'class-variance-authority';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 import { liquidMetal, motionDurations, cascadeTiming } from '../motion/hive-motion-system';
 import { ChevronDown, ChevronRight, Check } from 'lucide-react';
 // HIVE Menu System - Magnetic Dropdown Navigation with Liquid Metal Motion

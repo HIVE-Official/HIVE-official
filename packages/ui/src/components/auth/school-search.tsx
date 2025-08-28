@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Search, MapPin, Users, GraduationCap, CheckCircle, Plus } from 'lucide-react';
 import { Button } from '../button';
 import { Input } from '../input';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '../card';
+import { Card, CardHeader, CardContent } from '../card';
 import { cn } from '../lib/utils';
 
 interface School {
@@ -141,10 +141,10 @@ export const SchoolSearch: React.FC<SchoolSearchProps> = ({
     >
       <Card variant="elevated" padding="lg">
         <CardHeader>
-          <CardTitle className="text-2xl text-center">Select your school</CardTitle>
-          <CardDescription className="text-center">
+          <h2 className="text-2xl font-semibold text-center">Select your school</h2>
+          <p className="text-center text-muted-foreground">
             Choose your university to join the HIVE campus community
-          </CardDescription>
+          </p>
         </CardHeader>
 
         <CardContent className="space-y-6">
@@ -218,7 +218,7 @@ export const SchoolSearch: React.FC<SchoolSearchProps> = ({
                     No schools found matching "{searchQuery}"
                   </div>
                   <Button
-                    variant="outline"
+                    variant="secondary"
                     size="sm"
                     onClick={() => setShowRequestForm(true)}
                   >

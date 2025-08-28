@@ -148,7 +148,7 @@ export const AllVariants: Story = {
                 <DropdownMenuTrigger asChild>
                   <Button variant="secondary">Default Menu</Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent variant="default">
+                <DropdownMenuContent variant="primary">
                   <DropdownMenuLabel>Campus Options</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem>View Profile</DropdownMenuItem>
@@ -251,7 +251,7 @@ export const AllVariants: Story = {
                     <MoreHorizontal className="w-4 h-4" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent variant="default" className="w-48">
+                <DropdownMenuContent variant="primary" className="w-48">
                   <DropdownMenuLabel>CS Study Hub</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem>
@@ -420,7 +420,7 @@ export const AllVariants: Story = {
                     Notifications
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent variant="default" className="w-64">
+                <DropdownMenuContent variant="primary" className="w-64">
                   <DropdownMenuLabel>Campus Notifications</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuCheckboxItem checked>
@@ -573,8 +573,8 @@ export const AllVariants: Story = {
               </div>
               <p className="text-white/60 text-sm">24 members • Active now</p>
               <div className="flex items-center gap-2 mt-3">
-                <Badge variant="outline">CS</Badge>
-                <Badge variant="outline">Study</Badge>
+                <Badge variant="secondary">CS</Badge>
+                <Badge variant="secondary">Study</Badge>
               </div>
             </div>
 
@@ -588,7 +588,7 @@ export const AllVariants: Story = {
                       <MoreHorizontal className="w-4 h-4" />
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent variant="default">
+                  <DropdownMenuContent variant="primary">
                     <DropdownMenuItem variant="accent">Register</DropdownMenuItem>
                     <DropdownMenuItem>Add to Calendar</DropdownMenuItem>
                     <DropdownMenuItem>Share Event</DropdownMenuItem>

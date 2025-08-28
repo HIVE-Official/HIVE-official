@@ -1,7 +1,7 @@
 import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
 declare const selectVariants: (props?: {
-    variant?: "default" | "success" | "warning" | "error" | "brand";
+    variant?: "error" | "default" | "success" | "warning" | "brand";
     size?: "default" | "sm" | "lg" | "xl";
     radius?: "default" | "sm" | "lg" | "none" | "full";
 } & import("class-variance-authority/types").ClassProp) => string;

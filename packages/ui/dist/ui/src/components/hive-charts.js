@@ -3,7 +3,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useMemo, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { cva } from 'class-variance-authority';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 import { liquidMetal, motionDurations } from '../motion/hive-motion-system';
 import { BarChart3, Zap, Users, ArrowUp, ArrowDown, Minus, Maximize2, Download, Share, Eye, EyeOff } from 'lucide-react';
 // HIVE Charts System - Data Visualization with Liquid Metal Motion

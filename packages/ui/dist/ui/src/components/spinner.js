@@ -1,6 +1,6 @@
 'use client';
 import { jsx as _jsx } from "react/jsx-runtime";
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 const spinnerSizes = {
     xs: 'h-3 w-3', // 3
     sm: 'h-4 w-4', // 16px

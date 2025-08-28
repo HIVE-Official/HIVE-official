@@ -7,14 +7,14 @@ export declare const OnboardingStartedEventSchema: z.ZodObject<{
 } & {
     type: z.ZodLiteral<"onboarding_started">;
 }, "strip", z.ZodTypeAny, {
-    timestamp: number;
     type: "onboarding_started";
     sessionId: string;
+    timestamp: number;
     metadata?: Record<string, unknown> | undefined;
 }, {
-    timestamp: number;
     type: "onboarding_started";
     sessionId: string;
+    timestamp: number;
     metadata?: Record<string, unknown> | undefined;
 }>;
 export declare const OnboardingStepStartedEventSchema: z.ZodObject<{
@@ -25,15 +25,15 @@ export declare const OnboardingStepStartedEventSchema: z.ZodObject<{
     type: z.ZodLiteral<"onboarding_step_started">;
     stepName: z.ZodEnum<["welcome", "name", "academics", "handle", "photo", "builder", "legal"]>;
 }, "strip", z.ZodTypeAny, {
-    timestamp: number;
     type: "onboarding_step_started";
     sessionId: string;
+    timestamp: number;
     stepName: "name" | "welcome" | "builder" | "handle" | "academics" | "photo" | "legal";
     metadata?: Record<string, unknown> | undefined;
 }, {
-    timestamp: number;
     type: "onboarding_step_started";
     sessionId: string;
+    timestamp: number;
     stepName: "name" | "welcome" | "builder" | "handle" | "academics" | "photo" | "legal";
     metadata?: Record<string, unknown> | undefined;
 }>;
@@ -46,16 +46,16 @@ export declare const OnboardingStepCompletedEventSchema: z.ZodObject<{
     stepName: z.ZodEnum<["welcome", "name", "academics", "handle", "photo", "builder", "legal"]>;
     stepDuration: z.ZodNumber;
 }, "strip", z.ZodTypeAny, {
-    timestamp: number;
     type: "onboarding_step_completed";
     sessionId: string;
+    timestamp: number;
     stepName: "name" | "welcome" | "builder" | "handle" | "academics" | "photo" | "legal";
     stepDuration: number;
     metadata?: Record<string, unknown> | undefined;
 }, {
-    timestamp: number;
     type: "onboarding_step_completed";
     sessionId: string;
+    timestamp: number;
     stepName: "name" | "welcome" | "builder" | "handle" | "academics" | "photo" | "legal";
     stepDuration: number;
     metadata?: Record<string, unknown> | undefined;
@@ -69,16 +69,16 @@ export declare const OnboardingStepSkippedEventSchema: z.ZodObject<{
     stepName: z.ZodEnum<["welcome", "name", "academics", "handle", "photo", "builder", "legal"]>;
     stepDuration: z.ZodNumber;
 }, "strip", z.ZodTypeAny, {
-    timestamp: number;
     type: "onboarding_step_skipped";
     sessionId: string;
+    timestamp: number;
     stepName: "name" | "welcome" | "builder" | "handle" | "academics" | "photo" | "legal";
     stepDuration: number;
     metadata?: Record<string, unknown> | undefined;
 }, {
-    timestamp: number;
     type: "onboarding_step_skipped";
     sessionId: string;
+    timestamp: number;
     stepName: "name" | "welcome" | "builder" | "handle" | "academics" | "photo" | "legal";
     stepDuration: number;
     metadata?: Record<string, unknown> | undefined;
@@ -91,15 +91,15 @@ export declare const OnboardingValidationErrorEventSchema: z.ZodObject<{
     type: z.ZodLiteral<"onboarding_validation_error">;
     stepName: z.ZodEnum<["welcome", "name", "academics", "handle", "photo", "builder", "legal"]>;
 }, "strip", z.ZodTypeAny, {
-    timestamp: number;
     type: "onboarding_validation_error";
     sessionId: string;
+    timestamp: number;
     stepName: "name" | "welcome" | "builder" | "handle" | "academics" | "photo" | "legal";
     metadata?: Record<string, unknown> | undefined;
 }, {
-    timestamp: number;
     type: "onboarding_validation_error";
     sessionId: string;
+    timestamp: number;
     stepName: "name" | "welcome" | "builder" | "handle" | "academics" | "photo" | "legal";
     metadata?: Record<string, unknown> | undefined;
 }>;
@@ -111,15 +111,15 @@ export declare const OnboardingCompletedEventSchema: z.ZodObject<{
     type: z.ZodLiteral<"onboarding_completed">;
     totalDuration: z.ZodNumber;
 }, "strip", z.ZodTypeAny, {
-    timestamp: number;
     type: "onboarding_completed";
     sessionId: string;
+    timestamp: number;
     totalDuration: number;
     metadata?: Record<string, unknown> | undefined;
 }, {
-    timestamp: number;
     type: "onboarding_completed";
     sessionId: string;
+    timestamp: number;
     totalDuration: number;
     metadata?: Record<string, unknown> | undefined;
 }>;
@@ -132,16 +132,16 @@ export declare const OnboardingAbandonedEventSchema: z.ZodObject<{
     stepName: z.ZodEnum<["welcome", "name", "academics", "handle", "photo", "builder", "legal"]>;
     totalDuration: z.ZodNumber;
 }, "strip", z.ZodTypeAny, {
-    timestamp: number;
     type: "onboarding_abandoned";
     sessionId: string;
+    timestamp: number;
     stepName: "name" | "welcome" | "builder" | "handle" | "academics" | "photo" | "legal";
     totalDuration: number;
     metadata?: Record<string, unknown> | undefined;
 }, {
-    timestamp: number;
     type: "onboarding_abandoned";
     sessionId: string;
+    timestamp: number;
     stepName: "name" | "welcome" | "builder" | "handle" | "academics" | "photo" | "legal";
     totalDuration: number;
     metadata?: Record<string, unknown> | undefined;
@@ -153,14 +153,14 @@ export declare const OnboardingFunnelEventSchema: z.ZodDiscriminatedUnion<"type"
 } & {
     type: z.ZodLiteral<"onboarding_started">;
 }, "strip", z.ZodTypeAny, {
-    timestamp: number;
     type: "onboarding_started";
     sessionId: string;
+    timestamp: number;
     metadata?: Record<string, unknown> | undefined;
 }, {
-    timestamp: number;
     type: "onboarding_started";
     sessionId: string;
+    timestamp: number;
     metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
     timestamp: z.ZodNumber;
@@ -170,15 +170,15 @@ export declare const OnboardingFunnelEventSchema: z.ZodDiscriminatedUnion<"type"
     type: z.ZodLiteral<"onboarding_step_started">;
     stepName: z.ZodEnum<["welcome", "name", "academics", "handle", "photo", "builder", "legal"]>;
 }, "strip", z.ZodTypeAny, {
-    timestamp: number;
     type: "onboarding_step_started";
     sessionId: string;
+    timestamp: number;
     stepName: "name" | "welcome" | "builder" | "handle" | "academics" | "photo" | "legal";
     metadata?: Record<string, unknown> | undefined;
 }, {
-    timestamp: number;
     type: "onboarding_step_started";
     sessionId: string;
+    timestamp: number;
     stepName: "name" | "welcome" | "builder" | "handle" | "academics" | "photo" | "legal";
     metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
@@ -190,16 +190,16 @@ export declare const OnboardingFunnelEventSchema: z.ZodDiscriminatedUnion<"type"
     stepName: z.ZodEnum<["welcome", "name", "academics", "handle", "photo", "builder", "legal"]>;
     stepDuration: z.ZodNumber;
 }, "strip", z.ZodTypeAny, {
-    timestamp: number;
     type: "onboarding_step_completed";
     sessionId: string;
+    timestamp: number;
     stepName: "name" | "welcome" | "builder" | "handle" | "academics" | "photo" | "legal";
     stepDuration: number;
     metadata?: Record<string, unknown> | undefined;
 }, {
-    timestamp: number;
     type: "onboarding_step_completed";
     sessionId: string;
+    timestamp: number;
     stepName: "name" | "welcome" | "builder" | "handle" | "academics" | "photo" | "legal";
     stepDuration: number;
     metadata?: Record<string, unknown> | undefined;
@@ -212,16 +212,16 @@ export declare const OnboardingFunnelEventSchema: z.ZodDiscriminatedUnion<"type"
     stepName: z.ZodEnum<["welcome", "name", "academics", "handle", "photo", "builder", "legal"]>;
     stepDuration: z.ZodNumber;
 }, "strip", z.ZodTypeAny, {
-    timestamp: number;
     type: "onboarding_step_skipped";
     sessionId: string;
+    timestamp: number;
     stepName: "name" | "welcome" | "builder" | "handle" | "academics" | "photo" | "legal";
     stepDuration: number;
     metadata?: Record<string, unknown> | undefined;
 }, {
-    timestamp: number;
     type: "onboarding_step_skipped";
     sessionId: string;
+    timestamp: number;
     stepName: "name" | "welcome" | "builder" | "handle" | "academics" | "photo" | "legal";
     stepDuration: number;
     metadata?: Record<string, unknown> | undefined;
@@ -233,15 +233,15 @@ export declare const OnboardingFunnelEventSchema: z.ZodDiscriminatedUnion<"type"
     type: z.ZodLiteral<"onboarding_validation_error">;
     stepName: z.ZodEnum<["welcome", "name", "academics", "handle", "photo", "builder", "legal"]>;
 }, "strip", z.ZodTypeAny, {
-    timestamp: number;
     type: "onboarding_validation_error";
     sessionId: string;
+    timestamp: number;
     stepName: "name" | "welcome" | "builder" | "handle" | "academics" | "photo" | "legal";
     metadata?: Record<string, unknown> | undefined;
 }, {
-    timestamp: number;
     type: "onboarding_validation_error";
     sessionId: string;
+    timestamp: number;
     stepName: "name" | "welcome" | "builder" | "handle" | "academics" | "photo" | "legal";
     metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
@@ -252,15 +252,15 @@ export declare const OnboardingFunnelEventSchema: z.ZodDiscriminatedUnion<"type"
     type: z.ZodLiteral<"onboarding_completed">;
     totalDuration: z.ZodNumber;
 }, "strip", z.ZodTypeAny, {
-    timestamp: number;
     type: "onboarding_completed";
     sessionId: string;
+    timestamp: number;
     totalDuration: number;
     metadata?: Record<string, unknown> | undefined;
 }, {
-    timestamp: number;
     type: "onboarding_completed";
     sessionId: string;
+    timestamp: number;
     totalDuration: number;
     metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
@@ -272,16 +272,16 @@ export declare const OnboardingFunnelEventSchema: z.ZodDiscriminatedUnion<"type"
     stepName: z.ZodEnum<["welcome", "name", "academics", "handle", "photo", "builder", "legal"]>;
     totalDuration: z.ZodNumber;
 }, "strip", z.ZodTypeAny, {
-    timestamp: number;
     type: "onboarding_abandoned";
     sessionId: string;
+    timestamp: number;
     stepName: "name" | "welcome" | "builder" | "handle" | "academics" | "photo" | "legal";
     totalDuration: number;
     metadata?: Record<string, unknown> | undefined;
 }, {
-    timestamp: number;
     type: "onboarding_abandoned";
     sessionId: string;
+    timestamp: number;
     stepName: "name" | "welcome" | "builder" | "handle" | "academics" | "photo" | "legal";
     totalDuration: number;
     metadata?: Record<string, unknown> | undefined;

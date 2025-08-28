@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 import { Button } from '../../atomic/atoms/button-enhanced';
 import { Avatar, AvatarImage, AvatarFallback } from '../ui/avatar';
-import { cn } from '../../lib/utils';
+import { cn } from '../lib/utils';
 
 interface Notification {
   id: string;

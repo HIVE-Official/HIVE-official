@@ -39,11 +39,11 @@ interface FormContextType {
 declare const FormContext: React.Context<FormContextType>;
 declare const hiveFormFieldVariants: (props?: {
     variant?: "default" | "minimal" | "premium";
-    state?: "default" | "success" | "error" | "validating";
+    state?: "error" | "default" | "success" | "validating";
 } & import("class-variance-authority/types").ClassProp) => string;
 declare const formInputVariants: (props?: {
     variant?: "default" | "minimal" | "premium";
-    state?: "default" | "success" | "error" | "validating";
+    state?: "error" | "default" | "success" | "validating";
     size?: "default" | "sm" | "lg";
 } & import("class-variance-authority/types").ClassProp) => string;
 export interface HiveFormProps {

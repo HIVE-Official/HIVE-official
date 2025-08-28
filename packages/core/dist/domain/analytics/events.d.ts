@@ -23,10 +23,10 @@ export declare const AnalyticsEventSchema: z.ZodObject<{
         ip?: string | undefined;
     }>>;
 }, "strip", z.ZodTypeAny, {
-    timestamp: Date;
     type: string;
     id: string;
     sessionId: string;
+    timestamp: Date;
     userId?: string | undefined;
     properties?: Record<string, any> | undefined;
     context?: {
@@ -36,10 +36,10 @@ export declare const AnalyticsEventSchema: z.ZodObject<{
         ip?: string | undefined;
     } | undefined;
 }, {
-    timestamp: Date;
     type: string;
     id: string;
     sessionId: string;
+    timestamp: Date;
     userId?: string | undefined;
     properties?: Record<string, any> | undefined;
     context?: {
@@ -72,11 +72,11 @@ export declare const EventContextSchema: z.ZodObject<{
         os: z.ZodOptional<z.ZodString>;
         browser: z.ZodOptional<z.ZodString>;
     }, "strip", z.ZodTypeAny, {
-        type: "mobile" | "desktop" | "tablet";
+        type: "desktop" | "tablet" | "mobile";
         os?: string | undefined;
         browser?: string | undefined;
     }, {
-        type: "mobile" | "desktop" | "tablet";
+        type: "desktop" | "tablet" | "mobile";
         os?: string | undefined;
         browser?: string | undefined;
     }>>;
@@ -90,7 +90,7 @@ export declare const EventContextSchema: z.ZodObject<{
     } | undefined;
     ip?: string | undefined;
     device?: {
-        type: "mobile" | "desktop" | "tablet";
+        type: "desktop" | "tablet" | "mobile";
         os?: string | undefined;
         browser?: string | undefined;
     } | undefined;
@@ -104,7 +104,7 @@ export declare const EventContextSchema: z.ZodObject<{
     } | undefined;
     ip?: string | undefined;
     device?: {
-        type: "mobile" | "desktop" | "tablet";
+        type: "desktop" | "tablet" | "mobile";
         os?: string | undefined;
         browser?: string | undefined;
     } | undefined;

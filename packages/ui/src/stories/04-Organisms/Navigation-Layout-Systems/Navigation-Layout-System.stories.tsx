@@ -420,15 +420,15 @@ const ProfileContent = ({ mobile = false }: { mobile?: boolean }) => (
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
-          <Button size="sm" variant="outline" className="w-full justify-start border-[var(--hive-border-default)] text-[var(--hive-text-secondary)]">
+          <Button size="sm" variant="secondary" className="w-full justify-start border-[var(--hive-border-default)] text-[var(--hive-text-secondary)]">
             <User className="w-4 h-4 mr-2" />
             Edit Profile
           </Button>
-          <Button size="sm" variant="outline" className="w-full justify-start border-[var(--hive-border-default)] text-[var(--hive-text-secondary)]">
+          <Button size="sm" variant="secondary" className="w-full justify-start border-[var(--hive-border-default)] text-[var(--hive-text-secondary)]">
             <Shield className="w-4 h-4 mr-2" />
             Privacy
           </Button>
-          <Button size="sm" variant="outline" className="w-full justify-start border-[var(--hive-border-default)] text-[var(--hive-text-secondary)]">
+          <Button size="sm" variant="secondary" className="w-full justify-start border-[var(--hive-border-default)] text-[var(--hive-text-secondary)]">
             <Bell className="w-4 h-4 mr-2" />
             Notifications
           </Button>
@@ -531,13 +531,13 @@ const NavigationLayoutSystem = () => {
                   </Badge>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <Button size="icon" variant="outline" className="border-[var(--hive-border-default)] text-[var(--hive-text-secondary)] relative">
+                  <Button size="icon" variant="secondary" className="border-[var(--hive-border-default)] text-[var(--hive-text-secondary)] relative">
                     <Bell className="w-4 h-4" />
                     <div className="absolute -top-1 -right-1 w-3 h-3 bg-[var(--hive-error)] rounded-full flex items-center justify-center">
                       <span className="text-white text-xs">{ubCampusData.notifications.unread}</span>
                     </div>
                   </Button>
-                  <Button size="icon" variant="outline" className="border-[var(--hive-border-default)] text-[var(--hive-text-secondary)]">
+                  <Button size="icon" variant="secondary" className="border-[var(--hive-border-default)] text-[var(--hive-text-secondary)]">
                     <Search className="w-4 h-4" />
                   </Button>
                   <Button 

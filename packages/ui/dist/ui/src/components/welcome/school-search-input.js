@@ -2,7 +2,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from 'react';
 import { Search } from 'lucide-react';
 import { Input } from '../../atomic/atoms/input-enhanced';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 // Mock data for schools, to be replaced by Firestore data in T1-S1A-D2-03
 const MOCK_SCHOOLS = [
     { id: '1', name: 'University at Buffalo' },

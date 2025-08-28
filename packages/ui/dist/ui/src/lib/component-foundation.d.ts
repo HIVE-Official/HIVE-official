@@ -12,10 +12,10 @@ export declare const componentBase: {
     readonly text: string;
 };
 export declare const standardSizes: (props?: {
-    size?: "default" | "xs" | "sm" | "lg" | "xl";
+    size?: "default" | "sm" | "lg" | "xl" | "xs";
 } & import("class-variance-authority/types").ClassProp) => string;
 export declare const standardVariants: (props?: {
-    variant?: "primary" | "secondary" | "success" | "warning" | "outline" | "ghost" | "destructive";
+    variant?: "primary" | "secondary" | "ghost" | "destructive" | "outline" | "success" | "warning";
 } & import("class-variance-authority/types").ClassProp) => string;
 export interface StandardComponentProps {
     className?: string;

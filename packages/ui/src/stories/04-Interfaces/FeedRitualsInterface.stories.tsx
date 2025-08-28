@@ -61,7 +61,7 @@ const FeedLayout = ({ children }: { children: React.ReactNode }) => (
             </nav>
           </div>
           <div className="flex items-center space-x-3">
-            <Button variant="outline" size="sm">Filter</Button>
+            <Button variant="secondary" size="sm">Filter</Button>
             <div className="w-8 h-8 bg-accent rounded-full flex items-center justify-center">
               <span className="text-sm font-semibold text-accent-foreground">SK</span>
             </div>
@@ -137,7 +137,7 @@ const FeedItem = ({
           <Button size="sm" onClick={onParticipate}>
             {item.participated ? 'Participated ✓' : 'Participate'}
           </Button>
-          <Button variant="outline" size="sm" onClick={onViewTool}>
+          <Button variant="secondary" size="sm" onClick={onViewTool}>
             View Tool
           </Button>
           <Button variant="surface" size="sm">
@@ -221,7 +221,7 @@ const RitualCard = ({
             {isParticipating ? '🕯️ Flame Lit!' : `🕯️ ${ritual.action}`}
           </Button>
         ) : (
-          <Button variant="outline" className="w-full" disabled>
+          <Button variant="secondary" className="w-full" disabled>
             {ritual.status}
           </Button>
         )}
@@ -378,7 +378,7 @@ export const CampusFeed: Story = {
           
           {/* Load More */}
           <div className="text-center">
-            <Button variant="outline">Load More Activities</Button>
+            <Button variant="secondary">Load More Activities</Button>
           </div>
         </div>
       </FeedLayout>
@@ -578,7 +578,7 @@ export const FeedRitualIntegration: Story = {
                         <Button size="sm" className="bg-accent text-accent-foreground hover:bg-accent/90">
                           Light Your Flame
                         </Button>
-                        <Button variant="outline" size="sm">
+                        <Button variant="secondary" size="sm">
                           View Ritual
                         </Button>
                       </div>

@@ -113,7 +113,7 @@ const AttendeeRow = ({
           <div className="flex items-center gap-2 ml-4">
             <HiveButton
               size="sm"
-              variant="outline"
+              variant="secondary"
               onClick={() => setShowDetails(!showDetails)}
             >
               <Eye className="w-4 h-4" />
@@ -122,7 +122,7 @@ const AttendeeRow = ({
             <div className="relative">
               <HiveButton
                 size="sm"
-                variant="outline"
+                variant="secondary"
               >
                 <MoreVertical className="w-4 h-4" />
               </HiveButton>
@@ -169,7 +169,7 @@ const AttendeeRow = ({
               <h4 className="font-medium text-gray-900 mb-2">Guest Names</h4>
               <div className="flex flex-wrap gap-2">
                 {rsvp.guestNames.map((name, index) => (
-                  <HiveBadge key={index} variant="outline" className="text-xs">
+                  <HiveBadge key={index} variant="secondary" className="text-xs">
                     {name}
                   </HiveBadge>
                 ))}
@@ -179,13 +179,13 @@ const AttendeeRow = ({
 
           {/* Quick Actions */}
           <div className="mt-3 pt-3 border-t border-gray-200 flex gap-2">
-            <HiveButton size="sm" variant="outline" onClick={() => onMessage(rsvp.userId)}>
+            <HiveButton size="sm" variant="secondary" onClick={() => onMessage(rsvp.userId)}>
               <MessageSquare className="w-3 h-3 mr-1" />
               Message
             </HiveButton>
             <HiveButton 
               size="sm" 
-              variant="outline"
+              variant="secondary"
               onClick={() => onToggleCheckin(rsvp.id)}
             >
               {rsvp.checkedIn ? (
@@ -401,12 +401,12 @@ export function RSVPManagerTool({ event, onUpdateEvent, onMessageAttendees, onEx
           </div>
           
           <div className="flex items-center gap-3">
-            <HiveButton variant="outline" onClick={() => handleExport('csv')}>
+            <HiveButton variant="secondary" onClick={() => handleExport('csv')}>
               <Download className="w-4 h-4 mr-2" />
               Export CSV
             </HiveButton>
             <HiveButton 
-              variant="outline" 
+              variant="secondary" 
               onClick={handleBulkMessage}
               disabled={selectedRSVPs.length === 0}
             >
@@ -531,11 +531,11 @@ export function RSVPManagerTool({ event, onUpdateEvent, onMessageAttendees, onEx
                       {selectedRSVPs.length} attendee{selectedRSVPs.length > 1 ? 's' : ''} selected
                     </p>
                     <div className="flex gap-2">
-                      <HiveButton size="sm" variant="outline" onClick={handleBulkMessage}>
+                      <HiveButton size="sm" variant="secondary" onClick={handleBulkMessage}>
                         <Mail className="w-3 h-3 mr-1" />
                         Message
                       </HiveButton>
-                      <HiveButton size="sm" variant="outline" onClick={() => setSelectedRSVPs([])}>
+                      <HiveButton size="sm" variant="secondary" onClick={() => setSelectedRSVPs([])}>
                         Clear
                       </HiveButton>
                     </div>

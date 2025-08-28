@@ -20,7 +20,7 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
         
         <div className="flex items-center space-x-4">
-          <Badge variant="outline" className="border-border text-muted font-mono text-xs">
+          <Badge variant="secondary" className="border-border text-muted font-mono text-xs">
             v1.0 BETA
           </Badge>
           

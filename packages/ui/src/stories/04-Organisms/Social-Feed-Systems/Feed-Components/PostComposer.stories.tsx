@@ -168,7 +168,7 @@ const PostComposer = ({
                 </div>
               </div>
               {onCancel && (
-                <Button variant="outline" size="sm" onClick={onCancel} className="border-gray-600 text-white">
+                <Button variant="secondary" size="sm" onClick={onCancel} className="border-gray-600 text-white">
                   <X className="h-4 w-4" />
                 </Button>
               )}
@@ -221,7 +221,7 @@ const PostComposer = ({
                         />
                         {poll.options.length > 2 && (
                           <Button
-                            variant="outline"
+                            variant="secondary"
                             size="sm"
                             onClick={() => removePollOption(index)}
                             className="text-red-400 border-red-400"
@@ -235,7 +235,7 @@ const PostComposer = ({
                   
                   <div className="flex items-center justify-between">
                     <Button
-                      variant="outline"
+                      variant="secondary"
                       size="sm"
                       onClick={addPollOption}
                       disabled={poll.options.length >= 4}
@@ -316,7 +316,7 @@ const PostComposer = ({
                   {allowedTypes.map((type: string) => (
                     <Button
                       key={type}
-                      variant="outline"
+                      variant="secondary"
                       size="sm"
                       onClick={() => setPostType(type)}
                       className={`border-gray-600 text-white ${postType === type ? 'hive-interactive' : ''}`}
@@ -338,14 +338,14 @@ const PostComposer = ({
 
                 {/* Media Upload */}
                 {allowedTypes.includes('image') && (
-                  <Button variant="outline" size="sm" className="border-gray-600 text-white">
+                  <Button variant="secondary" size="sm" className="border-gray-600 text-white">
                     <Paperclip className="h-4 w-4" />
                   </Button>
                 )}
 
                 {/* Additional Tools */}
                 <Button
-                  variant="outline"
+                  variant="secondary"
                   size="sm"
                   onClick={() => setShowAdvanced(!showAdvanced)}
                   className={`border-gray-600 text-white ${showAdvanced ? 'hive-interactive' : ''}`}
@@ -379,7 +379,7 @@ const PostComposer = ({
                     {['public', 'space', 'private'].map(vis => (
                       <Button
                         key={vis}
-                        variant="outline"
+                        variant="secondary"
                         size="sm"
                         onClick={() => setVisibility(vis)}
                         className={`border-gray-600 text-white ${visibility === vis ? 'hive-interactive' : ''}`}

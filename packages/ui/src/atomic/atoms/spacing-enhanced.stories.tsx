@@ -238,7 +238,7 @@ export const CompleteShowcase: Story = {
                   <div className="p-4 bg-[var(--hive-background-primary)] rounded-lg border border-[var(--hive-border-primary)]">
                     <HStack spacing="sm" align="center">
                       <Button size="sm">Join Space</Button>
-                      <Button variant="outline" size="sm">View Details</Button>
+                      <Button variant="secondary" size="sm">View Details</Button>
                       <Button variant="ghost" size="sm">Share</Button>
                     </HStack>
                     <Text variant="body-xs" color="secondary" className="mt-2">
@@ -433,7 +433,7 @@ export const CompleteShowcase: Story = {
                         </VStack>
                         <HStack spacing="sm">
                           <Button size="sm">Join Space</Button>
-                          <Button variant="outline" size="sm">Syllabus</Button>
+                          <Button variant="secondary" size="sm">Syllabus</Button>
                         </HStack>
                       </LayoutPresets.HeaderLayout>
                     </div>
@@ -503,7 +503,7 @@ export const CompleteShowcase: Story = {
                       <Text variant="body-sm" color="secondary">Computer Science Senior • Fall 2024</Text>
                     </VStack>
                     <HStack spacing="sm">
-                      <Button size="sm" variant="outline">Profile</Button>
+                      <Button size="sm" variant="secondary">Profile</Button>
                       <Button size="sm">Settings</Button>
                     </HStack>
                   </LayoutPresets.HeaderLayout>
@@ -614,7 +614,7 @@ export const CompleteShowcase: Story = {
                           <Text variant="body-xs" color="secondary">Due: Next Tuesday</Text>
                           <HStack spacing="xs" justify="end">
                             <Button size="xs">View</Button>
-                            <Button size="xs" variant="outline">Submit</Button>
+                            <Button size="xs" variant="secondary">Submit</Button>
                           </HStack>
                         </VStack>
                       </div>
@@ -625,7 +625,7 @@ export const CompleteShowcase: Story = {
                           <Text variant="body-xs" color="secondary">Today at 3pm</Text>
                           <HStack spacing="xs" justify="end">
                             <Button size="xs">Join</Button>
-                            <Button size="xs" variant="outline">Details</Button>
+                            <Button size="xs" variant="secondary">Details</Button>
                           </HStack>
                         </VStack>
                       </div>

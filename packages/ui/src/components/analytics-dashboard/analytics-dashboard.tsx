@@ -170,11 +170,11 @@ function AlertItem({
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-1">
-          <Badge variant="outline" className="text-xs">
+          <Badge variant="secondary" className="text-xs">
             {severity.toUpperCase()}
           </Badge>
           {component && (
-            <Badge variant="outline" className="text-xs text-gray-400">
+            <Badge variant="secondary" className="text-xs text-gray-400">
               {component}
             </Badge>
           )}
@@ -322,7 +322,7 @@ export function AnalyticsDashboard() {
           </div>
           <div className="flex items-center gap-2">
             <Badge
-              variant="outline"
+              variant="secondary"
               className="text-green-400 border-green-400"
             >
               Live
@@ -428,7 +428,7 @@ export function AnalyticsDashboard() {
                     {mockCoreWebVitals.lcp.value}s
                   </span>
                   <Badge
-                    variant="outline"
+                    variant="secondary"
                     className={`text-xs ${getWebVitalColor(mockCoreWebVitals.lcp.rating)} border-current`}
                   >
                     {mockCoreWebVitals.lcp.rating.replace("-", " ")}
@@ -446,7 +446,7 @@ export function AnalyticsDashboard() {
                     {mockCoreWebVitals.fid.value}ms
                   </span>
                   <Badge
-                    variant="outline"
+                    variant="secondary"
                     className={`text-xs ${getWebVitalColor(mockCoreWebVitals.fid.rating)} border-current`}
                   >
                     {mockCoreWebVitals.fid.rating.replace("-", " ")}
@@ -464,7 +464,7 @@ export function AnalyticsDashboard() {
                     {mockCoreWebVitals.cls.value}
                   </span>
                   <Badge
-                    variant="outline"
+                    variant="secondary"
                     className={`text-xs ${getWebVitalColor(mockCoreWebVitals.cls.rating)} border-current`}
                   >
                     {mockCoreWebVitals.cls.rating.replace("-", " ")}
@@ -481,7 +481,7 @@ export function AnalyticsDashboard() {
           <Card className="p-6">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-semibold text-[var(--hive-text-primary)]">Live Alerts</h2>
-              <Badge variant="outline" className="text-red-400 border-red-400">
+              <Badge variant="secondary" className="text-red-400 border-red-400">
                 {mockAlerts.length} Active
               </Badge>
             </div>

@@ -8,7 +8,7 @@ export * from './card';
 export * from './campus-identity-header';
 export * from './campus-spaces-card';
 export * from './campus-activity-feed';
-export * from './campus-builder-tools';
+export { CampusBuilderTools } from './campus-builder-tools';
 export * from './email-input';
 export * from './avatar-card';
 export * from './navigation-variants';

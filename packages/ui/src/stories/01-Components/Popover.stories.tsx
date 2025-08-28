@@ -102,7 +102,7 @@ export const AllVariants: Story = {
                 <PopoverTrigger asChild>
                   <Button variant="secondary">Default Popover</Button>
                 </PopoverTrigger>
-                <PopoverContent variant="default">
+                <PopoverContent variant="primary">
                   <PopoverHeader>
                     <PopoverTitle>Campus Update</PopoverTitle>
                     <PopoverDescription>Standard popover styling</PopoverDescription>
@@ -228,8 +228,8 @@ export const AllVariants: Story = {
                       <h3 className="font-semibold text-white">Alex Chen</h3>
                       <p className="text-white/60 text-sm">Computer Science • Senior</p>
                       <div className="flex items-center gap-2 mt-1">
-                        <Badge variant="outline" className="text-xs">Active</Badge>
-                        <Badge variant="outline" className="text-xs">3 Spaces</Badge>
+                        <Badge variant="secondary" className="text-xs">Active</Badge>
+                        <Badge variant="secondary" className="text-xs">3 Spaces</Badge>
                       </div>
                     </div>
                   </div>
@@ -259,7 +259,7 @@ export const AllVariants: Story = {
                   Quick Actions
                 </Button>
               </PopoverTrigger>
-              <PopoverContent variant="default" size="md">
+              <PopoverContent variant="primary" size="md">
                 <PopoverHeader>
                   <PopoverTitle>Create New</PopoverTitle>
                   <PopoverDescription>Start something on campus</PopoverDescription>
@@ -310,10 +310,10 @@ export const AllVariants: Story = {
                   <div>
                     <Label className="text-sm font-medium text-white/80">Categories</Label>
                     <div className="flex flex-wrap gap-2 mt-2">
-                      <Badge variant="outline" className="cursor-pointer hover:bg-accent hover:text-black">Study Groups</Badge>
-                      <Badge variant="outline" className="cursor-pointer hover:bg-accent hover:text-black">Social</Badge>
-                      <Badge variant="outline" className="cursor-pointer hover:bg-accent hover:text-black">Academic</Badge>
-                      <Badge variant="outline" className="cursor-pointer hover:bg-accent hover:text-black">Recreation</Badge>
+                      <Badge variant="secondary" className="cursor-pointer hover:bg-accent hover:text-black">Study Groups</Badge>
+                      <Badge variant="secondary" className="cursor-pointer hover:bg-accent hover:text-black">Social</Badge>
+                      <Badge variant="secondary" className="cursor-pointer hover:bg-accent hover:text-black">Academic</Badge>
+                      <Badge variant="secondary" className="cursor-pointer hover:bg-accent hover:text-black">Recreation</Badge>
                     </div>
                   </div>
                 </div>

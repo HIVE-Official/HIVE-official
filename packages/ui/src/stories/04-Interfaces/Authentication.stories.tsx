@@ -65,7 +65,7 @@ export const EmailEntry: Story = {
                   placeholder="yourname@university.edu"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  variant="default"
+                  variant="primary"
                 />
               </div>
               
@@ -134,7 +134,7 @@ export const EmailSent: Story = {
               <Button variant="ghost" className="w-full">
                 Open email app
               </Button>
-              <Button variant="outline" className="w-full">
+              <Button variant="secondary" className="w-full">
                 Resend magic link
               </Button>
             </div>
@@ -410,12 +410,12 @@ export const CompleteAuthFlow: Story = {
                     placeholder={`you@${selectedSchool?.domain}`}
                     value={emailAddress}
                     onChange={(e) => setEmailAddress(e.target.value)}
-                    variant="default"
+                    variant="primary"
                   />
                 </div>
                 
                 <div className="flex gap-2">
-                  <Button variant="outline" onClick={handleBackToSchool}>
+                  <Button variant="secondary" onClick={handleBackToSchool}>
                     Back
                   </Button>
                   <Button 

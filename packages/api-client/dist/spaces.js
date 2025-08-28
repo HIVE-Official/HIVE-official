@@ -16,4 +16,12 @@ export const requestBuilderRole = async (spaceId) => {
     const requestBuilderRoleCallable = httpsCallable(functions, 'requestBuilderRole');
     await requestBuilderRoleCallable({ spaceId });
 };
+/**
+ * Gets a space by ID
+ * TODO: Implement proper API call for vBETA
+ */
+export const getSpaceById = async (spaceId) => {
+    // Stub implementation for vBETA
+    throw new Error(`getSpaceById not implemented yet for space: ${spaceId}`);
+};
 //# sourceMappingURL=spaces.js.map

@@ -1,7 +1,7 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, createContext, useContext } from 'react';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 import { Button } from '../../ui/button';
 import { Check, Mail, ArrowLeft, ArrowRight, Loader2, AlertCircle } from 'lucide-react';
 const AuthContext = createContext(null);

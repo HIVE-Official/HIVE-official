@@ -512,7 +512,7 @@ export const EnhancedProfileAnalytics: React.FC<EnhancedProfileAnalyticsProps> =
               You're in the top 20% of active HIVE users this week. Your engagement and tool usage are helping build a stronger community.
             </p>
           </div>
-          <HiveButton variant="outline" size="sm">
+          <HiveButton variant="secondary" size="sm">
             View Achievements
           </HiveButton>
         </div>

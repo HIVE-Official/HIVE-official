@@ -142,8 +142,8 @@ export const ButtonVariants: Story = {
       <div className="space-y-4">
         <h3 className="text-lg font-semibold">Button Variants</h3>
         <div className="flex flex-wrap gap-4">
-          <Button variant="default">Default</Button>
-          <Button variant="outline">Outline</Button>
+          <Button variant="primary">Default</Button>
+          <Button variant="secondary">Outline</Button>
           <Button variant="surface">Surface</Button>
         </div>
       </div>
@@ -186,7 +186,7 @@ export const CampusEnergyButtons: Story = {
         <Button className="font-semibold animate-hive-gold-pulse">
           Join CS Majors
         </Button>
-        <Button variant="outline" className="font-medium border-2">
+        <Button variant="secondary" className="font-medium border-2">
           Explore Spaces
         </Button>
         <Button variant="surface" className="font-medium">
@@ -201,7 +201,7 @@ export const CampusEnergyButtons: Story = {
         <Button className="font-normal opacity-90">
           Study Tools
         </Button>
-        <Button variant="outline" className="font-normal">
+        <Button variant="secondary" className="font-normal">
           Quiet Spaces
         </Button>
         <Button variant="surface" className="font-normal">
@@ -216,7 +216,7 @@ export const CampusEnergyButtons: Story = {
         <Button className="font-bold animate-hive-gold-glow">
           🎉 Space Activated!
         </Button>
-        <Button variant="outline" className="font-semibold animate-hive-scale-in">
+        <Button variant="secondary" className="font-semibold animate-hive-scale-in">
           Share Achievement
         </Button>
         <Button variant="surface" className="font-medium">
@@ -259,7 +259,7 @@ export const SpecialHIVEButtons: Story = {
             <Button className="font-semibold">
               Request to Lead Space
             </Button>
-            <Button variant="outline" className="font-medium">
+            <Button variant="secondary" className="font-medium">
               Activate CS Majors
             </Button>
             <Button className="font-bold animate-hive-space-join">
@@ -277,7 +277,7 @@ export const SpecialHIVEButtons: Story = {
             <Button className="font-medium font-mono">
               Create Tool
             </Button>
-            <Button variant="outline" className="font-medium">
+            <Button variant="secondary" className="font-medium">
               Save Draft
             </Button>
             <Button variant="surface" className="font-medium">
@@ -295,7 +295,7 @@ export const SpecialHIVEButtons: Story = {
             <Button className="font-medium">
               Send Magic Link
             </Button>
-            <LoadingButton variant="outline">
+            <LoadingButton variant="secondary">
               Resend Email
             </LoadingButton>
             <Button variant="surface" className="font-medium">
@@ -338,10 +338,10 @@ export const CampusActionHierarchy: Story = {
             Supporting actions - learning, viewing, configuring
           </p>
           <div className="flex flex-wrap gap-4">
-            <Button variant="outline">Learn More</Button>
-            <Button variant="outline">View Details</Button>
-            <Button variant="outline">Settings</Button>
-            <Button variant="outline">Share</Button>
+            <Button variant="secondary">Learn More</Button>
+            <Button variant="secondary">View Details</Button>
+            <Button variant="secondary">Settings</Button>
+            <Button variant="secondary">Share</Button>
           </div>
         </div>
         
@@ -364,13 +364,13 @@ export const CampusActionHierarchy: Story = {
             Potentially harmful actions - but no red colors!
           </p>
           <div className="flex flex-wrap gap-4">
-            <Button variant="outline" className="border-foreground/20">
+            <Button variant="secondary" className="border-foreground/20">
               Leave Space
             </Button>
-            <Button variant="outline" className="border-foreground/20">
+            <Button variant="secondary" className="border-foreground/20">
               Delete Tool
             </Button>
-            <Button variant="outline" className="border-foreground/20">
+            <Button variant="secondary" className="border-foreground/20">
               Remove Member
             </Button>
           </div>
@@ -421,7 +421,7 @@ export const MobileAccessibility: Story = {
               </div>
               <div className="flex gap-3">
                 <Button className="flex-1">Join Space</Button>
-                <Button variant="outline" className="flex-1">Learn More</Button>
+                <Button variant="secondary" className="flex-1">Learn More</Button>
               </div>
             </div>
           </div>
@@ -436,7 +436,7 @@ export const MobileAccessibility: Story = {
             <Button className="focus:ring-2 focus:ring-accent focus:ring-offset-2">
               Keyboard Navigation
             </Button>
-            <Button variant="outline" className="focus:ring-2 focus:ring-accent focus:ring-offset-2">
+            <Button variant="secondary" className="focus:ring-2 focus:ring-accent focus:ring-offset-2">
               Screen Reader
             </Button>
           </div>
@@ -472,7 +472,7 @@ export const InteractiveDemo: Story = {
                   {activeDemo === 'space-joining' ? '✓ Joined!' : 'Join CS Majors'}
                 </Button>
                 <Button 
-                  variant="outline" 
+                  variant="secondary" 
                   className="w-full"
                   onClick={() => setActiveDemo(null)}
                 >
@@ -491,7 +491,7 @@ export const InteractiveDemo: Story = {
                   {activeDemo === 'ritual' ? '🕯️ Flame Lit!' : '🕯️ Light Your Flame'}
                 </RitualButton>
                 <Button 
-                  variant="outline" 
+                  variant="secondary" 
                   className="w-full"
                   onClick={() => setActiveDemo(null)}
                 >

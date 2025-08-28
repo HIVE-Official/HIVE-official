@@ -7,7 +7,7 @@ import {
   Home, Users, Zap, Calendar, BookOpen, MoreHorizontal
 } from 'lucide-react';
 import { cn } from '../lib/utils';
-import { colors, semantic, shadows, gradients } from '@hive/tokens';
+import { colors, semantic, shadows, gradients } from '../../../../tokens/src';
 import { Button } from '../../atomic/atoms/button-enhanced';
 import { 
   useNavigation, 

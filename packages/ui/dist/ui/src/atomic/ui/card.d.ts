@@ -1,7 +1,7 @@
 import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
 declare const cardVariants: (props?: {
-    variant?: "default" | "ghost" | "minimal" | "elevated";
+    variant?: "ghost" | "default" | "minimal" | "elevated";
     size?: "default" | "sm" | "lg" | "xl";
     radius?: "default" | "sm" | "lg" | "none" | "full";
 } & import("class-variance-authority/types").ClassProp) => string;

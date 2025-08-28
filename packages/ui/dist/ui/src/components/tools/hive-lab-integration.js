@@ -14,7 +14,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useCallback } from 'react';
 import { HiveCard, HiveButton, HiveBadge } from '../index';
 import { Zap, Users, TrendingUp, Share2, Settings, Layers, Cpu, Database } from 'lucide-react';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 import { ToolRuntimeEngine } from './tool-runtime-engine';
 import { ToolMarketplace } from './tool-marketplace';
 import { SpaceToolsTab } from './space-tools-tab';

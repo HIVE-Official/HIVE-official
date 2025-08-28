@@ -322,7 +322,7 @@ const DarkModeShowcase = () => {
             {scenario.characteristics.map((char: string, index: number) => (
               <Badge 
                 key={index}
-                variant="outline" 
+                variant="secondary" 
                 className="text-xs"
                 style={{ 
                   borderColor: currentTheme['border-secondary'],
@@ -484,7 +484,7 @@ const DarkModeShowcase = () => {
                       {post.time}
                     </span>
                   </div>
-                  <Badge variant="outline" className="text-xs mt-1" 
+                  <Badge variant="secondary" className="text-xs mt-1" 
                          style={{ borderColor: currentTheme['border-secondary'], color: currentTheme['text-muted'] }}>
                     {post.space}
                   </Badge>

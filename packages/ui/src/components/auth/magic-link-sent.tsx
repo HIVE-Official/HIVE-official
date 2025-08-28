@@ -55,7 +55,7 @@ export const MagicLinkSent: React.FC<MagicLinkSentProps> = ({
         </p>
 
         <Button 
-          variant="default"
+          variant="primary"
           size="lg"
           fullWidth
           onClick={handleResendClick}

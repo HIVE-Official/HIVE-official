@@ -259,7 +259,7 @@ export const ProfileHiveLabWidget: React.FC<ProfileHiveLabWidgetProps> = ({
             <Text variant="body-sm" color="gold" weight="medium">
               HiveLab Builder
             </Text>
-            <Badge variant="outline" className={cn('text-xs', builderLevelConfig.color)}>
+            <Badge variant="secondary" className={cn('text-xs', builderLevelConfig.color)}>
               <builderLevelConfig.icon className="h-3 w-3 mr-1" />
               {builderLevelConfig.label}
             </Badge>
@@ -371,7 +371,7 @@ export const ProfileHiveLabWidget: React.FC<ProfileHiveLabWidgetProps> = ({
                         {featuredBuild.name}
                       </Text>
                       <Badge 
-                        variant="outline" 
+                        variant="secondary" 
                         className={cn('text-xs', getBuildStatusConfig(featuredBuild.buildStatus).color)}
                       >
                         {getBuildStatusConfig(featuredBuild.buildStatus).label}
@@ -465,7 +465,7 @@ export const ProfileHiveLabWidget: React.FC<ProfileHiveLabWidgetProps> = ({
                       {tool.name}
                     </Text>
                     <Badge 
-                      variant="outline" 
+                      variant="secondary" 
                       className={cn('text-xs', statusConfig.color)}
                     >
                       {statusConfig.label}
@@ -542,7 +542,7 @@ export const ProfileHiveLabWidget: React.FC<ProfileHiveLabWidgetProps> = ({
         <div className="flex gap-2 pt-2 border-t border-[var(--hive-border-primary)]">
           {isEditable && onCreateTool && (
             <Button
-              variant="outline"
+              variant="secondary"
               size="sm"
               onClick={onCreateTool}
               className="flex-1"
@@ -554,7 +554,7 @@ export const ProfileHiveLabWidget: React.FC<ProfileHiveLabWidgetProps> = ({
           
           {onViewAllBuilds && (
             <Button
-              variant="default"
+              variant="primary"
               size="sm"
               onClick={onViewAllBuilds}
               className="flex-1"
@@ -588,7 +588,7 @@ export const ProfileHiveLabWidget: React.FC<ProfileHiveLabWidgetProps> = ({
             </Text>
             {isEditable && onCreateTool && (
               <Button
-                variant="outline"
+                variant="secondary"
                 size="sm"
                 onClick={onCreateTool}
               >

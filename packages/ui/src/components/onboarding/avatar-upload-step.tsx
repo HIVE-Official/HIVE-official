@@ -70,7 +70,7 @@ export const AvatarUploadStep: React.FC<StepProps> = ({ onSubmit, onSkip }) => {
         <div className="flex gap-2">
           <Button
             type="button"
-            variant="outline"
+            variant="secondary"
             onClick={handleSkip}
             className="flex-1"
           >
@@ -78,7 +78,7 @@ export const AvatarUploadStep: React.FC<StepProps> = ({ onSubmit, onSkip }) => {
           </Button>
             <Button
               type="button"
-              variant="default"
+              variant="primary"
               onClick={handleSubmit}
             className="flex-1"
             disabled={!selectedFile || isLoading}

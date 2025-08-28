@@ -99,7 +99,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="default">✅ MODULAR EXPANSION</Badge>
+            <Badge variant="primary">✅ MODULAR EXPANSION</Badge>
             Container Expansion - Labels, Helper Text, Error States
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -162,7 +162,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="outline">🎨 VARIANTS</Badge>
+            <Badge variant="secondary">🎨 VARIANTS</Badge>
             Input Variants - Semantic Token Perfection
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -171,7 +171,7 @@ export const CompleteShowcase: Story = {
         </CardHeader>
         <CardContent>
           <div className="grid md:grid-cols-2 gap-6">
-            <Input variant="default" placeholder="Default variant" />
+            <Input variant="primary" placeholder="Default variant" />
             <Input variant="error" placeholder="Error variant" />
             <Input variant="success" placeholder="Success variant" />
             <Input variant="warning" placeholder="Warning variant" />
@@ -426,7 +426,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="outline">🏫 CAMPUS CONTEXT</Badge>
+            <Badge variant="secondary">🏫 CAMPUS CONTEXT</Badge>
             Real UB Student Coordination Scenarios
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">

@@ -598,7 +598,7 @@ export const RegistrationFormSystem: Story = {
               {currentStep > 1 && (
                 <Button 
                   type="button" 
-                  variant="outline" 
+                  variant="secondary" 
                   onClick={() => setCurrentStep(currentStep - 1)}
                   disabled={isLoading}
                 >
@@ -683,7 +683,7 @@ export const PasswordRecoveryForm: Story = {
                 If you don't see the email, check your spam folder or contact UB IT Support.
               </p>
               <Button 
-                variant="outline" 
+                variant="secondary" 
                 onClick={() => {
                   setIsSubmitted(false);
                   setEmail('');

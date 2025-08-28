@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useCallback, useEffect, useRef, useMemo } from 'react';
-import { Button } from '../../ui/button';
+import { Button } from '../../atomic/atoms/button-enhanced';
 import { Avatar, HiveBadge as Badge } from '../index';
 import { 
   Play, 
@@ -313,7 +313,7 @@ const ExecutionControls: React.FC<ExecutionControlsProps> = ({
           <Button
             onClick={onStop}
             disabled={!permissions.canExecute}
-            variant="outline"
+            variant="secondary"
             className="border-red-500 text-red-400 hover:bg-red-500/10 flex items-center space-x-2"
           >
             <Square className="w-4 h-4" />
@@ -324,7 +324,7 @@ const ExecutionControls: React.FC<ExecutionControlsProps> = ({
         <Button
           onClick={onReset}
           disabled={!permissions.canEdit || status === 'running'}
-          variant="outline"
+          variant="secondary"
           className="flex items-center space-x-2"
         >
           <RotateCcw className="w-4 h-4" />
@@ -671,14 +671,14 @@ const LogsPanel: React.FC<LogsPanelProps> = ({
         <div className="flex items-center space-x-2">
           <Button
             size="sm"
-            variant="outline"
+            variant="secondary"
             onClick={() => onExportLogs?.('json')}
           >
             Export
           </Button>
           <Button
             size="sm"
-            variant="outline"
+            variant="secondary"
             onClick={onClearLogs}
           >
             Clear
@@ -892,7 +892,7 @@ export const LiveToolExecutor: React.FC<LiveToolExecutorProps> = ({
         <div className="flex items-center space-x-2">
           {executionState.permissions.canSave && (
             <Button
-              variant="outline"
+              variant="secondary"
               size="sm"
               onClick={handleSave}
               className="flex items-center space-x-1"
@@ -904,7 +904,7 @@ export const LiveToolExecutor: React.FC<LiveToolExecutorProps> = ({
           
           {executionState.permissions.canShare && (
             <Button
-              variant="outline"
+              variant="secondary"
               size="sm"
               onClick={() => onShare?.({ public: false, allowEdit: false, allowExecute: false })}
               className="flex items-center space-x-1"

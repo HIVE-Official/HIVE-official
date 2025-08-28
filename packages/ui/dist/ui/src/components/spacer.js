@@ -1,7 +1,7 @@
 'use client';
 import { jsxs as _jsxs, jsx as _jsx } from "react/jsx-runtime";
 import React from 'react';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 // Base spacing scale based on HIVE design tokens
 const spacingSizes = {
     xs: '0.25rem', // 1

@@ -2,9 +2,9 @@ import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
 export type InputState = 'default' | 'error' | 'success' | 'loading';
 declare const inputVariants: (props?: {
-    variant?: "default" | "filled" | "floating" | "accent" | "search" | "minimal";
+    variant?: "search" | "accent" | "default" | "filled" | "floating" | "minimal";
     inputSize?: "sm" | "md" | "lg";
-    state?: "default" | "success" | "error" | "loading";
+    state?: "error" | "default" | "loading" | "success";
 } & import("class-variance-authority/types").ClassProp) => string;
 export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size">, Omit<VariantProps<typeof inputVariants>, "state"> {
     label?: string;
@@ -18,6 +18,6 @@ export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElem
     state?: InputState;
 }
 declare const Input: React.ForwardRefExoticComponent<InputProps & React.RefAttributes<HTMLInputElement>>;
-declare const SimpleInput: React.ForwardRefExoticComponent<Omit<InputProps, "success" | "error" | "icon" | "loading" | "rightIcon" | "label" | "hint" | "showPasswordToggle"> & React.RefAttributes<HTMLInputElement>>;
+declare const SimpleInput: React.ForwardRefExoticComponent<Omit<InputProps, "error" | "icon" | "loading" | "label" | "success" | "hint" | "rightIcon" | "showPasswordToggle"> & React.RefAttributes<HTMLInputElement>>;
 export { Input, SimpleInput, inputVariants };
 //# sourceMappingURL=input.d.ts.map

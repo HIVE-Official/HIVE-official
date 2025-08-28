@@ -1,8 +1,8 @@
 import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
 declare const spinnerVariants: (props?: {
-    variant?: "default" | "muted" | "surface" | "foreground";
-    size?: "default" | "xs" | "sm" | "lg" | "xl";
+    variant?: "default" | "surface" | "muted" | "foreground";
+    size?: "default" | "sm" | "lg" | "xl" | "xs";
 } & import("class-variance-authority/types").ClassProp) => string;
 export interface LoadingSpinnerProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof spinnerVariants> {
     /** Optional loading message */

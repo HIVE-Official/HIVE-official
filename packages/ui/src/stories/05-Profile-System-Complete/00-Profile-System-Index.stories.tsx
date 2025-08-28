@@ -279,7 +279,7 @@ export const ProfileSystemIndex: StoryObj = {
                         </div>
                         
                         <CardTitle className="text-xl mb-2">{card.title}</CardTitle>
-                        <Badge variant="outline">{card.badge}</Badge>
+                        <Badge variant="secondary">{card.badge}</Badge>
                       </CardHeader>
                       
                       <CardContent className="text-center">
@@ -398,7 +398,7 @@ export const ProfileSystemIndex: StoryObj = {
                     <p className="text-sm text-[var(--hive-text-muted)] mb-2">
                       Understand how UB students will interact with profiles across different scenarios.
                     </p>
-                    <Button variant="outline" size="sm">
+                    <Button variant="secondary" size="sm">
                       <Users className="w-4 h-4 mr-2" />
                       View User Flows
                     </Button>
@@ -412,7 +412,7 @@ export const ProfileSystemIndex: StoryObj = {
                     <p className="text-sm text-[var(--hive-text-muted)] mb-2">
                       Validate individual card behavior and test different data scenarios.
                     </p>
-                    <Button variant="outline" size="sm">
+                    <Button variant="secondary" size="sm">
                       <TestTube className="w-4 h-4 mr-2" />
                       Open Testing Lab
                     </Button>
@@ -426,7 +426,7 @@ export const ProfileSystemIndex: StoryObj = {
                     <p className="text-sm text-[var(--hive-text-muted)] mb-2">
                       Ensure mobile-first performance across all campus usage scenarios.
                     </p>
-                    <Button variant="outline" size="sm">
+                    <Button variant="secondary" size="sm">
                       <Smartphone className="w-4 h-4 mr-2" />
                       Test Responsive
                     </Button>

@@ -2,9 +2,9 @@ import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
 import { type NavigationItem } from './hive-navigation-system';
 declare const hiveNavigationItemVariants: (props?: {
-    variant?: "default" | "ghost" | "disabled" | "minimal" | "active" | "premium";
+    variant?: "ghost" | "default" | "disabled" | "minimal" | "active" | "premium";
     size?: "default" | "sm" | "lg";
-    level?: 0 | 1 | 2 | 3;
+    level?: 0 | 1 | 3 | 2;
     collapsed?: boolean;
 } & import("class-variance-authority/types").ClassProp) => string;
 export interface HiveNavigationItemProps extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof hiveNavigationItemVariants> {

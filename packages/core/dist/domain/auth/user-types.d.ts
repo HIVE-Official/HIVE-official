@@ -1,0 +1,75 @@
+export interface SessionUser {
+    id: string;
+    email: string;
+    emailVerified: boolean;
+    handle?: string;
+    fullName?: string;
+    avatar?: string;
+    school?: UserSchool;
+    profile: UserProfile;
+    preferences: UserPreferences;
+}
+export interface UserSchool {
+    id: string;
+    name: string;
+    domain: string;
+    verified: boolean;
+    type: "university" | "college" | "community-college" | "trade-school";
+    location: {
+        city: string;
+        state: string;
+        country: string;
+    };
+}
+export interface UserProfile {
+    bio?: string;
+    major?: string;
+    graduationYear?: number;
+    interests: string[];
+    visibility: "public" | "campus-only" | "private";
+    onboardingCompleted: boolean;
+    profilePicture?: string;
+    coverPhoto?: string;
+}
+export interface UserPreferences {
+    theme: "light" | "dark" | "system";
+    language: string;
+    timezone: string;
+    notifications: NotificationPreferences;
+    privacy: PrivacyPreferences;
+    accessibility: AccessibilityPreferences;
+}
+export interface NotificationPreferences {
+    email: {
+        enabled: boolean;
+        frequency: "instant" | "daily" | "weekly" | "never";
+        types: NotificationType[];
+    };
+    push: {
+        enabled: boolean;
+        types: NotificationType[];
+    };
+    inApp: {
+        enabled: boolean;
+        types: NotificationType[];
+    };
+}
+export type NotificationType = "new-post" | "comment" | "mention" | "follow" | "space-invite" | "event-reminder" | "system-update" | "security-alert";
+export interface PrivacyPreferences {
+    profileVisibility: "public" | "campus-only" | "private";
+    showEmail: boolean;
+    showSchool: boolean;
+    allowDirectMessages: boolean;
+    allowSpaceInvites: boolean;
+    dataCollection: boolean;
+    analytics: boolean;
+}
+export interface AccessibilityPreferences {
+    reducedMotion: boolean;
+    highContrast: boolean;
+    fontSize: "small" | "medium" | "large" | "extra-large";
+    screenReader: boolean;
+    keyboardNavigation: boolean;
+}
+export declare function createDefaultUserPreferences(): UserPreferences;
+//# sourceMappingURL=user-types.d.ts.map

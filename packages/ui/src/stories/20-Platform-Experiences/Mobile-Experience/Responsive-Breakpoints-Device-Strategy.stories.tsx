@@ -436,7 +436,7 @@ const ResponsiveShowcase = () => {
                                   </span>
                                   <div className="flex flex-wrap gap-1 mt-1">
                                     {scenario.needs.map((need, i) => (
-                                      <Badge key={i} variant="outline" className="text-xs"
+                                      <Badge key={i} variant="secondary" className="text-xs"
                                              style={{ borderColor: 'var(--hive-border-subtle)', color: 'var(--hive-text-muted)' }}>
                                         {need}
                                       </Badge>
@@ -577,7 +577,7 @@ const ResponsiveShowcase = () => {
                           Common Devices:
                         </span>
                         {breakpoint.examples.map((device, idx) => (
-                          <Badge key={idx} variant="outline" className="text-xs"
+                          <Badge key={idx} variant="secondary" className="text-xs"
                                  style={{ borderColor: 'var(--hive-border-subtle)', color: 'var(--hive-text-muted)' }}>
                             {device}
                           </Badge>

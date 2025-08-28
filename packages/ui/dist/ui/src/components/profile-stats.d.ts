@@ -1,9 +1,9 @@
 import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
 declare const profileStatsVariants: (props?: {
-    layout?: "horizontal" | "vertical" | "grid" | "compact";
-    columns?: "2" | "3" | "4" | "5" | "auto";
-    variant?: "default" | "ghost" | "card" | "minimal";
+    layout?: "grid" | "horizontal" | "vertical" | "compact";
+    columns?: "2" | "3" | "4" | "auto" | "5";
+    variant?: "ghost" | "default" | "minimal" | "card";
     spacing?: "normal" | "loose" | "tight";
 } & import("class-variance-authority/types").ClassProp) => string;
 export interface HiveProfileStats {

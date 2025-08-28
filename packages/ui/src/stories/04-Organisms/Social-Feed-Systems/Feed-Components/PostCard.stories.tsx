@@ -233,7 +233,7 @@ const PostCard = ({ post, currentUserId, onLike, onComment, onShare, onVote, sho
         {post.tags && post.tags.length > 0 && (
           <div className="flex flex-wrap gap-1 mb-4">
             {post.tags.map((tag: string) => (
-              <Badge key={tag} variant="outline" className="border-gray-600 text-gray-400 text-xs">
+              <Badge key={tag} variant="secondary" className="border-gray-600 text-gray-400 text-xs">
                 #{tag}
               </Badge>
             ))}

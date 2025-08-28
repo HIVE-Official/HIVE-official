@@ -6,7 +6,7 @@ import { Settings, Maximize2, Minimize2, X, Move } from 'lucide-react';
 import { BaseWidgetProps } from './types';
 import { HiveCard } from '../../hive-card';
 import { HiveButton } from '../../hive-button';
-import { cn } from '../../../lib/utils';
+import { cn } from '../../lib/utils';
 
 interface BaseWidgetWrapperProps extends BaseWidgetProps {
   children: React.ReactNode;
@@ -305,7 +305,7 @@ const WidgetSettingsPanel: React.FC<WidgetSettingsPanelProps> = ({
       </div>
 
       <div className="flex gap-3 mt-6 pt-6 border-t border-hive-border-subtle">
-        <HiveButton variant="outline" onClick={onClose} className="flex-1">
+        <HiveButton variant="secondary" onClick={onClose} className="flex-1">
           Cancel
         </HiveButton>
         <HiveButton onClick={onClose} className="flex-1">

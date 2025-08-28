@@ -456,7 +456,7 @@ function CampusEngagementAnalytics() {
                 <div className="flex justify-between items-center">
                   <span className="font-medium">{period.period}</span>
                   <div className="flex items-center gap-2">
-                    <Badge variant="outline">
+                    <Badge variant="secondary">
                       {period.engagement}% engagement
                     </Badge>
                     <Badge variant={period.stress > 7 ? 'destructive' : period.stress > 5 ? 'secondary' : 'default'}>
@@ -705,7 +705,7 @@ function PrivacyComplianceCenter() {
                   {key === 'anonymizedInsights' && 'Aggregated campus trends'}
                 </p>
               </div>
-              <Badge variant="outline">{value}</Badge>
+              <Badge variant="secondary">{value}</Badge>
             </div>
           ))}
 
@@ -776,10 +776,10 @@ function AdvancedAnalyticsSystem() {
               </p>
             </div>
             <div className="flex items-center gap-2">
-              <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+              <Badge variant="secondary" className="bg-green-50 text-green-700 border-green-200">
                 FERPA Compliant
               </Badge>
-              <Badge variant="outline">Live Data</Badge>
+              <Badge variant="secondary">Live Data</Badge>
             </div>
           </div>
         </div>
@@ -925,7 +925,7 @@ function AdvancedAnalyticsSystem() {
                     <div className="space-y-4">
                       <div className="flex justify-between items-center">
                         <span>Campus WiFi</span>
-                        <Badge variant="default">Avg: 1.2s load</Badge>
+                        <Badge variant="primary">Avg: 1.2s load</Badge>
                       </div>
                       <div className="flex justify-between items-center">
                         <span>Mobile Data</span>
@@ -933,7 +933,7 @@ function AdvancedAnalyticsSystem() {
                       </div>
                       <div className="flex justify-between items-center">
                         <span>Off-Campus</span>
-                        <Badge variant="outline">Avg: 1.8s load</Badge>
+                        <Badge variant="secondary">Avg: 1.8s load</Badge>
                       </div>
                     </div>
                   </CardContent>

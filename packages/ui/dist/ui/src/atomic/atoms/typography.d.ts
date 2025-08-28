@@ -1,22 +1,22 @@
 import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
 declare const headingVariants: (props?: {
-    level?: 1 | 2 | 3 | 4 | 5 | 6;
-    color?: "primary" | "secondary" | "success" | "warning" | "error" | "info" | "brand" | "tertiary";
-    weight?: "light" | "bold" | "normal" | "medium" | "semibold";
+    level?: 1 | 3 | 2 | 4 | 5 | 6;
+    color?: "error" | "primary" | "secondary" | "success" | "warning" | "info" | "tertiary" | "brand";
+    weight?: "bold" | "medium" | "normal" | "light" | "semibold";
 } & import("class-variance-authority/types").ClassProp) => string;
 declare const textVariants: (props?: {
-    size?: "xs" | "sm" | "lg" | "xl" | "base";
-    color?: "primary" | "secondary" | "success" | "warning" | "error" | "info" | "disabled" | "brand" | "tertiary" | "inverse";
-    weight?: "light" | "bold" | "normal" | "medium" | "semibold";
+    size?: "sm" | "lg" | "xl" | "base" | "xs";
+    color?: "error" | "primary" | "secondary" | "disabled" | "success" | "warning" | "info" | "tertiary" | "brand" | "inverse";
+    weight?: "bold" | "medium" | "normal" | "light" | "semibold";
     decoration?: "none" | "line-through" | "underline";
 } & import("class-variance-authority/types").ClassProp) => string;
 declare const captionVariants: (props?: {
-    color?: "success" | "warning" | "error" | "info" | "disabled" | "brand" | "tertiary";
-    weight?: "normal" | "medium" | "semibold";
+    color?: "error" | "disabled" | "success" | "warning" | "info" | "tertiary" | "brand";
+    weight?: "medium" | "normal" | "semibold";
 } & import("class-variance-authority/types").ClassProp) => string;
 declare const linkVariants: (props?: {
-    color?: "primary" | "secondary" | "brand" | "tertiary";
+    color?: "primary" | "secondary" | "tertiary" | "brand";
     decoration?: "none" | "always" | "hover";
 } & import("class-variance-authority/types").ClassProp) => string;
 export interface HeadingProps extends Omit<React.HTMLAttributes<HTMLHeadingElement>, 'color'>, VariantProps<typeof headingVariants> {

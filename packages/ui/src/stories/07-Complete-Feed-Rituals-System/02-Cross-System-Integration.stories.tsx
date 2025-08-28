@@ -380,7 +380,7 @@ function CrossSystemIntegration() {
             
             <div className="flex items-center space-x-2">
               <Button 
-                variant="outline" 
+                variant="secondary" 
                 size="sm"
                 className="border-gray-600 text-white hover:bg-gray-800"
                 onClick={() => setShowIntegrationFlow(!showIntegrationFlow)}
@@ -388,10 +388,10 @@ function CrossSystemIntegration() {
                 <Workflow className="w-4 h-4 mr-2" />
                 {showIntegrationFlow ? 'Hide' : 'Show'} Flows
               </Button>
-              <Button size="icon" variant="outline" className="border-gray-600 text-white">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-white">
                 <RefreshCw className="w-4 h-4" />
               </Button>
-              <Button size="icon" variant="outline" className="border-gray-600 text-white">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-white">
                 <Settings className="w-4 h-4" />
               </Button>
             </div>
@@ -510,7 +510,7 @@ function CrossSystemIntegration() {
                               <span className="font-medium text-white">{activity.user.name}</span>
                               <span className="text-gray-400 text-sm">{activity.user.handle}</span>
                               {activity.creator?.isBuilder && (
-                                <Badge variant="outline" className="text-xs bg-purple-500/10 text-purple-400">
+                                <Badge variant="secondary" className="text-xs bg-purple-500/10 text-purple-400">
                                   Builder
                                 </Badge>
                               )}
@@ -679,7 +679,7 @@ function CrossSystemIntegration() {
                           </div>
                           <div className="flex flex-wrap gap-2">
                             {activity.data.tool.deploymentSpaces.map((space) => (
-                              <Badge key={space} variant="outline" className="text-xs bg-purple-500/10 text-purple-400">
+                              <Badge key={space} variant="secondary" className="text-xs bg-purple-500/10 text-purple-400">
                                 {space}
                               </Badge>
                             ))}
@@ -746,21 +746,21 @@ function CrossSystemIntegration() {
                     {/* Action Buttons */}
                     <div className="flex items-center justify-between pt-4 border-t border-gray-700">
                       <div className="flex items-center space-x-3">
-                        <Button variant="outline" size="sm" className="border-gray-600 text-gray-400 hover:text-white">
+                        <Button variant="secondary" size="sm" className="border-gray-600 text-gray-400 hover:text-white">
                           <Heart className="w-4 h-4 mr-1" />
                           Appreciate
                         </Button>
-                        <Button variant="outline" size="sm" className="border-gray-600 text-gray-400 hover:text-white">
+                        <Button variant="secondary" size="sm" className="border-gray-600 text-gray-400 hover:text-white">
                           <MessageSquare className="w-4 h-4 mr-1" />
                           Comment
                         </Button>
-                        <Button variant="outline" size="sm" className="border-gray-600 text-gray-400 hover:text-white">
+                        <Button variant="secondary" size="sm" className="border-gray-600 text-gray-400 hover:text-white">
                           <Share className="w-4 h-4 mr-1" />
                           Share
                         </Button>
                       </div>
                       <div className="flex items-center space-x-2">
-                        <Badge variant="outline" className="text-xs bg-gray-800 text-gray-400">
+                        <Badge variant="secondary" className="text-xs bg-gray-800 text-gray-400">
                           Auto-aggregated from {activity.system}
                         </Badge>
                       </div>

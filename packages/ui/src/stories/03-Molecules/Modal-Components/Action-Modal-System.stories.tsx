@@ -380,7 +380,7 @@ export const CreateSpaceModal: Story = {
                 {/* Navigation Buttons */}
                 <div className="flex justify-between mt-8 pt-4 border-t border-gray-200">
                   <Button 
-                    variant="outline" 
+                    variant="secondary" 
                     onClick={() => currentStep > 1 ? setCurrentStep(currentStep - 1) : setIsOpen(false)}
                   >
                     {currentStep > 1 ? 'Back' : 'Cancel'}
@@ -448,7 +448,7 @@ export const ConfirmationModal: Story = {
           {confirmationModals.map((modal) => (
             <Button 
               key={modal.id}
-              variant="outline" 
+              variant="secondary" 
               onClick={() => setActiveModal(modal.id)}
               className="h-auto p-4"
             >
@@ -486,7 +486,7 @@ export const ConfirmationModal: Story = {
 
                   <div className="flex gap-3">
                     <Button 
-                      variant="outline" 
+                      variant="secondary" 
                       onClick={() => setActiveModal(null)}
                       className="flex-1"
                     >
@@ -658,7 +658,7 @@ export const InteractiveModalDemo: Story = {
                 </div>
 
                 <div className="flex gap-3 pt-4">
-                  <Button variant="outline" onClick={() => setActiveModal(null)} className="flex-1">
+                  <Button variant="secondary" onClick={() => setActiveModal(null)} className="flex-1">
                     Cancel
                   </Button>
                   <Button onClick={handleSubmit} className="flex-1">
@@ -718,7 +718,7 @@ export const InteractiveModalDemo: Story = {
                           <div className="font-medium text-sm">{friend.name}</div>
                           <div className="text-xs text-gray-600">{friend.major}</div>
                         </div>
-                        <Button size="sm" variant="outline">
+                        <Button size="sm" variant="secondary">
                           <UserPlus className="h-4 w-4" />
                         </Button>
                       </div>
@@ -727,7 +727,7 @@ export const InteractiveModalDemo: Story = {
                 </div>
 
                 <div className="flex gap-3 pt-4">
-                  <Button variant="outline" onClick={() => setActiveModal(null)} className="flex-1">
+                  <Button variant="secondary" onClick={() => setActiveModal(null)} className="flex-1">
                     Cancel
                   </Button>
                   <Button onClick={() => setActiveModal(null)} className="flex-1">
@@ -762,19 +762,19 @@ export const InteractiveModalDemo: Story = {
                 <div className="space-y-2">
                   <Label>Resource Type</Label>
                   <div className="grid grid-cols-3 gap-2">
-                    <Button variant="outline" className="h-auto p-3">
+                    <Button variant="secondary" className="h-auto p-3">
                       <div className="text-center">
                         <Upload className="h-6 w-6 mx-auto mb-1" />
                         <div className="text-xs">Upload File</div>
                       </div>
                     </Button>
-                    <Button variant="outline" className="h-auto p-3">
+                    <Button variant="secondary" className="h-auto p-3">
                       <div className="text-center">
                         <Share2 className="h-6 w-6 mx-auto mb-1" />
                         <div className="text-xs">Share Link</div>
                       </div>
                     </Button>
-                    <Button variant="outline" className="h-auto p-3">
+                    <Button variant="secondary" className="h-auto p-3">
                       <div className="text-center">
                         <MessageSquare className="h-6 w-6 mx-auto mb-1" />
                         <div className="text-xs">Text Note</div>
@@ -815,7 +815,7 @@ export const InteractiveModalDemo: Story = {
                 </div>
 
                 <div className="flex gap-3 pt-4">
-                  <Button variant="outline" onClick={() => setActiveModal(null)} className="flex-1">
+                  <Button variant="secondary" onClick={() => setActiveModal(null)} className="flex-1">
                     Cancel
                   </Button>
                   <Button onClick={() => setActiveModal(null)} className="flex-1">
@@ -858,7 +858,7 @@ export const InteractiveModalDemo: Story = {
                     ].map((setting, index) => (
                       <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                         <div className="text-sm font-medium text-gray-900">{setting}</div>
-                        <Button size="sm" variant="outline">
+                        <Button size="sm" variant="secondary">
                           Configure
                         </Button>
                       </div>
@@ -884,7 +884,7 @@ export const InteractiveModalDemo: Story = {
                 </div>
 
                 <div className="flex gap-3 pt-4 border-t border-gray-200">
-                  <Button variant="outline" onClick={() => setActiveModal(null)} className="flex-1">
+                  <Button variant="secondary" onClick={() => setActiveModal(null)} className="flex-1">
                     Cancel
                   </Button>
                   <Button onClick={() => setActiveModal(null)} className="flex-1">

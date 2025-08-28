@@ -436,7 +436,7 @@ export const EnhancedProfileSystem: React.FC<EnhancedProfileSystemProps> = ({
             {isEditing ? (
               <>
                 <HiveButton
-                  variant="outline"
+                  variant="secondary"
                   onClick={handleCancelEdit}
                   className="gap-2"
                 >

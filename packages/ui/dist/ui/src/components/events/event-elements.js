@@ -47,7 +47,7 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
 import { useState, useEffect } from 'react';
 import { HiveCard, HiveButton, HiveInput, HiveTextarea, HiveBadge } from '../index';
 import { Calendar, MapPin, Users, Clock, QrCode, Star, CheckSquare, AlertCircle, TrendingUp } from 'lucide-react';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 // Mobile-responsive utilities
 const useMobileDetection = () => {
     const [isMobile, setIsMobile] = useState(false);

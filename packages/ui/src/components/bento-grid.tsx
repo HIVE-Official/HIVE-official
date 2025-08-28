@@ -292,7 +292,7 @@ export const BentoGrid: React.FC<BentoGridProps> = ({
                 .map((card) => (
                   <HiveButton
                     key={card.id}
-                    variant="outline"
+                    variant="secondary"
                     size="sm"
                     onClick={card.onToggleVisibility}
                     className="gap-2"

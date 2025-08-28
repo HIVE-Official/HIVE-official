@@ -2,10 +2,10 @@
 
 import React, { useState, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from '../../framer-motion-proxy';
-import { cn } from '../../../lib/utils';
-import { Card, CardContent, CardHeader } from '../../ui/card';
-import { Button } from '../../ui/button';
-import { Badge } from '../../ui/badge';
+import { cn } from '../../lib/utils';
+import { Card, CardContent, CardHeader } from '../../atomic/ui/card';
+import { Button } from '../../atomic/atoms/button-enhanced';
+import { Badge } from '../../atomic/atoms/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '../../ui/avatar';
 import { ScrollArea } from '../../ui/scroll-area';
 import { Input } from '../../ui/input';
@@ -271,7 +271,7 @@ function SpaceItem({
 
               {/* Tags & Category */}
               <div className="flex items-center gap-2 mt-1">
-                <Badge variant="outline" className="text-xs px-1.5 py-0.5">
+                <Badge variant="secondary" className="text-xs px-1.5 py-0.5">
                   <TypeIcon className="w-3 h-3 mr-1" />
                   {space.category}
                 </Badge>
@@ -288,7 +288,7 @@ function SpaceItem({
             {space.role && space.membershipStatus === 'member' && (
               <div className="flex-shrink-0">
                 {roleConfig[space.role] && (
-                  <Badge variant="outline" className="text-xs">
+                  <Badge variant="secondary" className="text-xs">
                     {React.createElement(roleConfig[space.role].icon, { 
                       className: `w-3 h-3 mr-1 ${roleConfig[space.role].color}` 
                     })}
@@ -345,7 +345,7 @@ function SpaceItem({
             {space.membershipStatus === 'pending' && (
               <Button
                 size="sm"
-                variant="outline"
+                variant="secondary"
                 className="h-6 px-3 text-xs"
                 disabled
               >
@@ -365,7 +365,7 @@ function SpaceItem({
                 </Button>
                 <Button
                   size="sm"
-                  variant="outline"
+                  variant="secondary"
                   className="h-6 px-3 text-xs"
                 >
                   Decline
@@ -376,7 +376,7 @@ function SpaceItem({
             {(space.membershipStatus === 'member' || space.membershipStatus === 'admin') && (
               <Button
                 size="sm"
-                variant="outline"
+                variant="secondary"
                 className="h-6 px-3 text-xs"
                 onClick={(e) => handleAction(e, 'view')}
               >
@@ -440,7 +440,7 @@ function SpaceSearch({
       </div>
       
       <Button
-        variant="outline"
+        variant="secondary"
         size="sm"
         className="w-full"
         onClick={onCreateSpace}
@@ -717,7 +717,7 @@ export function SpacesCard({
         {activeTab === 'my' && mySpaces.length > 0 && (
           <div className="flex gap-2">
             <Button
-              variant="outline"
+              variant="secondary"
               size="sm"
               className="flex-1"
               onClick={onCreateSpace}
@@ -726,7 +726,7 @@ export function SpacesCard({
               Create
             </Button>
             <Button
-              variant="outline"
+              variant="secondary"
               size="sm"
               className="flex-1"
               onClick={() => setActiveTab('recommended')}

@@ -115,7 +115,7 @@ export const AllVariants: Story = {
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-white/80">Default</label>
                   <Input 
-                    variant="default" 
+                    variant="primary" 
                     placeholder="Enter campus email..."
                     icon={<Mail className="w-4 h-4" />}
                   />

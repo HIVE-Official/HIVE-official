@@ -148,7 +148,7 @@ export const CompleteShowcase: Story = {
                   <Text variant="body-sm" color="gold" weight="medium">Default (Standard):</Text>
                   <SearchBar
                     placeholder="Search CSE 331 study groups..."
-                    variant="default"
+                    variant="primary"
                     onSearch={action('default-search')}
                     onChange={action('default-change')}
                   />
@@ -351,7 +351,7 @@ export const CompleteShowcase: Story = {
                       <SearchBar
                         placeholder="Find CSE 331 study partners..."
                         size="md"
-                        variant="default"
+                        variant="primary"
                         onSearch={action('study-partner-search')}
                         onChange={action('study-partner-change')}
                       />
@@ -457,7 +457,7 @@ export const CompleteShowcase: Story = {
                     <SearchBar
                       placeholder="GPA calculator, study scheduler..."
                       size="md"
-                      variant="default"
+                      variant="primary"
                       onSearch={action('academic-tools-search')}
                       onChange={action('academic-tools-change')}
                     />
@@ -473,7 +473,7 @@ export const CompleteShowcase: Story = {
                     <SearchBar
                       placeholder="Event planner, group chat..."
                       size="md"
-                      variant="default"
+                      variant="primary"
                       onSearch={action('social-tools-search')}
                       onChange={action('social-tools-change')}
                     />

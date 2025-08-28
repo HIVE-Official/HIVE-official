@@ -8,7 +8,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useEffect, useCallback } from 'react';
 import { HiveCard, HiveButton, HiveInput, HiveBadge } from '../index';
 import { Search, Star, Download, Users, TrendingUp, Eye } from 'lucide-react';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 export function ToolMarketplace({ spaceId, userId, onInstallTool, onViewTool, className }) {
     const [tools, setTools] = useState([]);
     const [filteredTools, setFilteredTools] = useState([]);

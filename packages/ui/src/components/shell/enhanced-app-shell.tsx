@@ -7,7 +7,7 @@ import { EnhancedHiveCommandPalette, comprehensiveSearchCategories, defaultSearc
 import { NotificationCenter } from './notification-center';
 import { NotificationProvider, useNotifications } from './notification-service';
 import { PageTransition } from '../page-transition';
-import { cn } from '../../lib/utils';
+import { cn } from '../lib/utils';
 
 interface User {
   id: string;

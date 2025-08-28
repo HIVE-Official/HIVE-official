@@ -1,0 +1,200 @@
+/**
+ * HIVE Design System - CSS Variables Layer
+ * Bridge from TypeScript tokens to component usage
+ * 
+ * This file creates the critical connection between our mathematical
+ * token foundation and actual CSS implementation.
+ */
+
+:root {
+  /* === SPACING SYSTEM === */
+  /* Base 4px mathematical scale */
+  --hive-space-0: 0px;
+  --hive-space-px: 1px;
+  --hive-space-0-5: 2px;   /* 0.5x - Icon-to-text micro spacing */
+  --hive-space-1: 4px;     /* 1x - Tight related elements */
+  --hive-space-2: 8px;     /* 2x - Component internal spacing */
+  --hive-space-3: 12px;    /* 3x - Related component groups */
+  --hive-space-4: 16px;    /* 4x - Standard element separation */
+  --hive-space-5: 20px;    /* 5x - Card internal padding */
+  --hive-space-6: 24px;    /* 6x - Component external margins */
+  --hive-space-8: 32px;    /* 8x - Section boundaries */
+  --hive-space-10: 40px;   /* 10x - Major layout divisions */
+  --hive-space-12: 48px;   /* 12x - Page section breaks */
+  --hive-space-16: 64px;   /* 16x - Distinct content areas */
+
+  /* === TYPOGRAPHY SYSTEM === */
+  /* Font sizes (1.25 scale ratio) */
+  --hive-font-size-micro: 0.625rem;    /* 10px - micro labels */
+  --hive-font-size-caption: 0.75rem;   /* 12px - captions, timestamps */
+  --hive-font-size-small: 0.875rem;    /* 14px - small body text */
+  --hive-font-size-base: 1rem;         /* 16px - base body text */
+  --hive-font-size-large: 1.125rem;    /* 18px - large body text */
+  --hive-font-size-h4: 1.25rem;        /* 20px - H4 headings */
+  --hive-font-size-h3: 1.375rem;       /* 22px - H3 headings */
+  --hive-font-size-h2: 1.625rem;       /* 26px - H2 headings */
+  --hive-font-size-h1: 2rem;           /* 32px - H1 headings */
+  --hive-font-size-display: 2.5rem;    /* 40px - Display text */
+
+  /* Line heights (4px increments) */
+  --hive-line-height-micro: 16px;
+  --hive-line-height-caption: 20px;
+  --hive-line-height-small: 20px;
+  --hive-line-height-base: 24px;
+  --hive-line-height-large: 28px;
+  --hive-line-height-h4: 32px;
+  --hive-line-height-h3: 32px;
+  --hive-line-height-h2: 40px;
+  --hive-line-height-h1: 48px;
+  --hive-line-height-display: 48px;
+
+  /* Font weights */
+  --hive-font-weight-regular: 400;
+  --hive-font-weight-medium: 500;
+  --hive-font-weight-semibold: 600;
+  --hive-font-weight-bold: 700;
+
+  /* Font families - HIVE Font Strategy */
+  --hive-font-family-display: "Space Grotesk Variable", "Space Grotesk", system-ui, sans-serif;  /* Headlines, hero, CTA */
+  --hive-font-family-primary: "Geist Sans", -apple-system, BlinkMacSystemFont, sans-serif;      /* Body text, interface */
+  --hive-font-family-secondary: "Geist Sans", system-ui, sans-serif;                           /* Secondary text */
+  --hive-font-family-mono: "Geist Mono", "SF Mono", "Monaco", "Cascadia Code", monospace;      /* Code, technical */
+
+  /* === COLOR SYSTEM === */
+  /* Base colors */
+  --hive-color-white: rgb(255, 255, 255);
+  --hive-color-gold: rgb(255, 215, 0);
+  --hive-color-emerald: rgb(16, 185, 129);
+  --hive-color-ruby: rgb(239, 68, 68);
+  --hive-color-sapphire: rgb(59, 130, 246);
+  --hive-color-amber: rgb(245, 158, 11);
+
+  /* Dark mode optimized backgrounds */
+  --hive-bg-primary: #0A0A0B;      /* Main background */
+  --hive-bg-secondary: #111113;     /* Card backgrounds */
+  --hive-bg-tertiary: #1A1A1C;     /* Elevated surfaces */
+  --hive-bg-interactive: #222225;   /* Hover states */
+
+  /* Text hierarchy (WCAG AA compliant) */
+  --hive-text-primary: #E5E5E7;     /* High contrast: 7:1 ratio */
+  --hive-text-secondary: #C1C1C4;   /* Medium contrast: 4.5:1 ratio */
+  --hive-text-muted: #9B9B9F;       /* Low contrast: 3:1 ratio */
+  --hive-text-placeholder: #6B6B70; /* Minimum readable contrast */
+
+  /* Border system */
+  --hive-border-primary: #2A2A2D;
+  --hive-border-secondary: #1A1A1C;
+  --hive-border-subtle: rgba(255, 255, 255, 0.05);
+  --hive-border-glass: rgba(255, 255, 255, 0.08);
+  --hive-border-glass-strong: rgba(255, 255, 255, 0.12);
+
+  /* Gold accent system */
+  --hive-gold-primary: #FFD700;
+  --hive-gold-hover: #FFC107;
+  --hive-gold-background: rgba(255, 215, 0, 0.08);
+  --hive-gold-border: rgba(255, 215, 0, 0.4);
+  --hive-gold-border-strong: rgba(255, 215, 0, 0.8);
+
+  /* Semantic colors */
+  --hive-success-primary: #10B981;
+  --hive-success-background: rgba(16, 185, 129, 0.08);
+  --hive-success-border: rgba(16, 185, 129, 0.4);
+
+  --hive-warning-primary: #F59E0B;
+  --hive-warning-background: rgba(245, 158, 11, 0.08);
+  --hive-warning-border: rgba(245, 158, 11, 0.4);
+
+  --hive-error-primary: #EF4444;
+  --hive-error-background: rgba(239, 68, 68, 0.08);
+  --hive-error-border: rgba(239, 68, 68, 0.4);
+
+  --hive-info-primary: #3B82F6;
+  --hive-info-background: rgba(59, 130, 246, 0.08);
+  --hive-info-border: rgba(59, 130, 246, 0.4);
+
+  /* === INTERACTION STATES === */
+  /* Background transparencies */
+  --hive-bg-subtle: rgba(255, 255, 255, 0.05);
+  --hive-bg-active: rgba(255, 255, 255, 0.08);
+  --hive-bg-selected: rgba(255, 255, 255, 0.12);
+  --hive-bg-disabled: rgba(255, 255, 255, 0.03);
+
+  /* === SIZING SYSTEM === */
+  /* Icon sizes */
+  --hive-icon-micro: 12px;    /* Micro icons in tight spaces */
+  --hive-icon-small: 16px;    /* Small icons, inline text */
+  --hive-icon-base: 20px;     /* Standard icon size */
+  --hive-icon-large: 24px;    /* Large icons, headers */
+  --hive-icon-xl: 32px;       /* XL icons, stats, features */
+
+  /* Avatar sizes */
+  --hive-avatar-sm: 32px;     /* Small avatars, inline */
+  --hive-avatar-base: 40px;   /* Standard avatar */
+  --hive-avatar-lg: 48px;     /* Large avatar, profiles */
+  --hive-avatar-xl: 64px;     /* XL avatar, headers */
+
+  /* Component heights */
+  --hive-height-button-sm: 32px;    /* Small buttons */
+  --hive-height-button-base: 40px;  /* Standard buttons */
+  --hive-height-button-lg: 48px;    /* Large buttons */
+  --hive-height-input: 40px;        /* Input fields */
+  --hive-height-select: 40px;       /* Select dropdowns */
+
+  /* === BORDER RADIUS === */
+  --hive-radius-sm: 6px;      /* Small radius, buttons, badges */
+  --hive-radius-base: 8px;    /* Standard radius, inputs, cards */
+  --hive-radius-lg: 12px;     /* Large radius, modals, major cards */
+  --hive-radius-xl: 16px;     /* XL radius, special surfaces */
+  --hive-radius-full: 9999px; /* Full radius, pills, avatars */
+
+  /* === SHADOWS === */
+  --hive-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --hive-shadow-base: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+  --hive-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+  --hive-shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+  --hive-shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1), 0 10px 10px rgba(0, 0, 0, 0.04);
+
+  /* === MOTION SYSTEM === */
+  /* Duration */
+  --hive-duration-instant: 100ms;    /* Instant feedback */
+  --hive-duration-fast: 150ms;       /* Fast transitions */
+  --hive-duration-base: 200ms;       /* Standard duration */
+  --hive-duration-slow: 300ms;       /* Slow, important changes */
+  --hive-duration-slower: 500ms;     /* Page transitions */
+
+  /* Easing */
+  --hive-ease-out: cubic-bezier(0.0, 0.0, 0.2, 1);
+  --hive-ease-in: cubic-bezier(0.4, 0.0, 1, 1);
+  --hive-ease-in-out: cubic-bezier(0.4, 0.0, 0.2, 1);
+  --hive-ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* === MOBILE RESPONSIVE ADJUSTMENTS === */
+@media (max-width: 768px) {
+  :root {
+    /* Reduce font sizes by 10% on mobile */
+    --hive-font-size-display: 2.25rem;  /* 36px down from 40px */
+    --hive-font-size-h1: 1.8rem;        /* 28.8px down from 32px */
+    --hive-font-size-h2: 1.46rem;       /* 23.4px down from 26px */
+    --hive-font-size-h3: 1.24rem;       /* 19.8px down from 22px */
+    --hive-font-size-h4: 1.125rem;      /* 18px down from 20px */
+    
+    /* Reduce spacing slightly on mobile */
+    --hive-space-8: 24px;    /* 24px down from 32px */
+    --hive-space-10: 32px;   /* 32px down from 40px */
+    --hive-space-12: 40px;   /* 40px down from 48px */
+    --hive-space-16: 56px;   /* 56px down from 64px */
+  }
+}
+
+/* === PRINT OPTIMIZATION === */
+@media print {
+  :root {
+    /* High contrast for print */
+    --hive-text-primary: #000000;
+    --hive-text-secondary: #333333;
+    --hive-text-muted: #666666;
+    --hive-bg-primary: #ffffff;
+    --hive-bg-secondary: #ffffff;
+  }
+}

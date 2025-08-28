@@ -1,5 +1,5 @@
 import { jsx as _jsx } from "react/jsx-runtime";
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 export const ResizablePanelGroup = ({ direction, children, className }) => {
     return (_jsx("div", { className: cn('flex h-full w-full', direction === 'horizontal' ? 'flex-row' : 'flex-col', className), children: children }));
 };

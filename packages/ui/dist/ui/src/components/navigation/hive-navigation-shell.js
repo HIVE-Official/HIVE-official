@@ -1,8 +1,8 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useMemo } from 'react';
-import { cn } from '../lib/utils';
-import { semantic } from '@hive/tokens';
+import { cn } from '../../lib/utils';
+import { semantic } from '../../../../tokens/src';
 import { NavigationProvider, useNavigation } from './hive-navigation-system';
 import { SidebarNavigation, TopbarNavigation, CommandNavigation, MinimalNavigation } from './hive-navigation-variants';
 // ============================================================================

@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from '../framer-motion-proxy';
-import { cn } from '../../lib/utils';
+import { cn } from '../lib/utils';
 import { 
   Settings,
   BarChart3,

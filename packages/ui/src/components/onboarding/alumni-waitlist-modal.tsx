@@ -162,7 +162,7 @@ export const AlumniWaitlistModal: React.FC<AlumniWaitlistModalProps> = ({
                   <div className="space-y-4">
                     <Button
                       type="submit"
-                      variant="ritual"
+                      variant="primary"
                       size="lg"
                       className="w-full h-12"
                       disabled={isSubmitting}
@@ -236,7 +236,7 @@ export const AlumniWaitlistModal: React.FC<AlumniWaitlistModalProps> = ({
                 </motion.div>
 
                 <motion.div variants={hiveVariants.item}>
-                  <Button onClick={handleClose} variant="outline" size="lg" className="w-full h-12">
+                  <Button onClick={handleClose} variant="secondary" size="lg" className="w-full h-12">
                     Close
                   </Button>
                 </motion.div>

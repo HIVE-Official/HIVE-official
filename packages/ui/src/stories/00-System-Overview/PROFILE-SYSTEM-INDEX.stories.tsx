@@ -311,7 +311,7 @@ function QuickStartGuide() {
                   <h4 className="font-medium text-[var(--hive-text-primary)]">{step.title}</h4>
                   <p className="text-sm text-[var(--hive-text-muted)]">{step.description}</p>
                 </div>
-                <Button size="sm" variant="outline">
+                <Button size="sm" variant="secondary">
                   {step.action}
                 </Button>
               </div>
@@ -413,7 +413,7 @@ export const ProfileSystemIndex: StoryObj = {
                   <p className="text-xs text-[var(--hive-text-muted)] mb-2">
                     {feature.description}
                   </p>
-                  <Badge variant="outline" className="text-xs">
+                  <Badge variant="secondary" className="text-xs">
                     {feature.stats}
                   </Badge>
                 </Card>
@@ -496,7 +496,7 @@ export const ProfileSystemIndex: StoryObj = {
                     <h3 className="font-semibold text-[var(--hive-text-primary)]">
                       Live Preview
                     </h3>
-                    <Badge variant="outline">Interactive</Badge>
+                    <Badge variant="secondary">Interactive</Badge>
                   </div>
                 </CardHeader>
                 <CardContent>

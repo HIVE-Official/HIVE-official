@@ -14,6 +14,7 @@ export * from './pages';
 // Design tokens are handled by @hive/tokens package
 export * from './foundations';
 // === UI COMPONENTS ===
-// Legacy UI components that haven't been migrated to atomic yet
-export * from './ui';
+// Legacy UI components - export selectively to avoid conflicts
+export { Card, CardHeader, CardContent, CardFooter, CardTitle, CardDescription } from './ui/card';
+export { Tabs, TabsList, TabsTrigger, TabsContent } from './ui/tabs';
 //# sourceMappingURL=index.js.map

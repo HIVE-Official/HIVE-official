@@ -1,6 +1,6 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
-import { cn } from "../lib/utils";
+import { cn } from "../../lib/utils";
 export function RequestAccessCard({ exclusiveSpaces = [], className }) {
     // Mock exclusive spaces for development
     const mockSpaces = [

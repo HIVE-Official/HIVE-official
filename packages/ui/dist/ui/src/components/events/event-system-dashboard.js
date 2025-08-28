@@ -9,7 +9,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useEffect, useCallback } from 'react';
 import { HiveCard, HiveButton, HiveBadge } from '../index';
 import { Calendar, Users, QrCode, BarChart3, MessageSquare, Plus, Clock } from 'lucide-react';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 import { EventCreatorToolV2 } from './event-creator-tool-v2';
 import { ToolRuntimeEngine } from '../tools/tool-runtime-engine';
 export function EventSystemDashboard({ spaceId, userId, userRole, className }) {

@@ -29,7 +29,7 @@ import {
 } from 'lucide-react';
 import { HiveCard } from '../hive-card';
 import { HiveButton } from '../hive-button';
-import { Badge } from '../../ui/badge';
+import { Badge } from '../../atomic/atoms/badge';
 import { cn } from '../lib/utils';
 
 // Types for analytics data
@@ -179,12 +179,12 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
           </div>
 
           {/* Action Buttons */}
-          <HiveButton variant="outline" size="sm" onClick={onRefresh}>
+          <HiveButton variant="secondary" size="sm" onClick={onRefresh}>
             <RefreshCw className="h-4 w-4 mr-2" />
             Refresh
           </HiveButton>
           
-          <HiveButton variant="outline" size="sm" onClick={onExport}>
+          <HiveButton variant="secondary" size="sm" onClick={onExport}>
             <Download className="h-4 w-4 mr-2" />
             Export
           </HiveButton>

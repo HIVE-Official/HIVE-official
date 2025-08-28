@@ -3,7 +3,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useEffect, useRef, useCallback, useMemo, memo } from 'react';
 import { motion, useReducedMotion, useInView } from 'framer-motion';
 import { cva } from 'class-variance-authority';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 // Performance monitoring hook
 const usePerformanceMonitor = (componentName, config, onMetrics) => {
     const [metrics, setMetrics] = useState({

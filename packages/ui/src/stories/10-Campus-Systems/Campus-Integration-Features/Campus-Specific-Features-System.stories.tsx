@@ -242,10 +242,10 @@ const CampusDirectory = () => {
                 <div className="flex-1">
                   <h3 className="text-lg font-semibold text-white mb-1">{building.name}</h3>
                   <div className="flex items-center gap-2 mb-2">
-                    <Badge variant="outline" className="border-gray-700 text-gray-300">
+                    <Badge variant="secondary" className="border-gray-700 text-gray-300">
                       {building.type}
                     </Badge>
-                    <Badge variant="outline" className="border-gray-700 text-gray-300">
+                    <Badge variant="secondary" className="border-gray-700 text-gray-300">
                       {building.location}
                     </Badge>
                   </div>
@@ -334,7 +334,7 @@ const CampusDirectory = () => {
                 <Label className="text-white text-sm font-medium">Amenities & Services</Label>
                 <div className="mt-2 flex flex-wrap gap-2">
                   {selectedBuilding.amenities.map((amenity) => (
-                    <Badge key={amenity} variant="outline" className="border-blue-700 text-blue-300">
+                    <Badge key={amenity} variant="secondary" className="border-blue-700 text-blue-300">
                       {amenity}
                     </Badge>
                   ))}
@@ -346,7 +346,7 @@ const CampusDirectory = () => {
                   <MapPin className="mr-2 h-4 w-4" />
                   Get Directions
                 </Button>
-                <Button variant="outline" className="border-gray-700 text-gray-300">
+                <Button variant="secondary" className="border-gray-700 text-gray-300">
                   <Share2 className="mr-2 h-4 w-4" />
                   Share
                 </Button>
@@ -468,7 +468,7 @@ const CampusEvents = () => {
                   <div>
                     <h4 className="text-white font-semibold">{event.title}</h4>
                     <div className="flex items-center gap-2 mt-1">
-                      <Badge variant="outline" className="border-purple-700 text-purple-300">
+                      <Badge variant="secondary" className="border-purple-700 text-purple-300">
                         {event.type}
                       </Badge>
                       <span className="text-sm text-gray-400 flex items-center">
@@ -497,7 +497,7 @@ const CampusEvents = () => {
                     ))}
                   </div>
                   <div className="flex gap-2">
-                    <Button size="sm" variant="outline" className="border-gray-700 text-gray-300">
+                    <Button size="sm" variant="secondary" className="border-gray-700 text-gray-300">
                       <Heart className="mr-1 h-3 w-3" />
                       Interested
                     </Button>
@@ -512,7 +512,7 @@ const CampusEvents = () => {
           );
         })}
         
-        <Button variant="outline" className="w-full border-gray-700 text-gray-300">
+        <Button variant="secondary" className="w-full border-gray-700 text-gray-300">
           View All Campus Events
           <ArrowRight className="ml-2 h-4 w-4" />
         </Button>
@@ -559,7 +559,7 @@ const DiningAndLocal = () => {
               <div>
                 <h4 className="text-white font-semibold">{place.name}</h4>
                 <div className="flex items-center gap-2 mt-1">
-                  <Badge variant="outline" className="border-orange-700 text-orange-300">
+                  <Badge variant="secondary" className="border-orange-700 text-orange-300">
                     {place.type}
                   </Badge>
                   <span className="text-sm text-gray-400 flex items-center">
@@ -604,11 +604,11 @@ const DiningAndLocal = () => {
                 </div>
               )}
               <div className="flex gap-2">
-                <Button size="sm" variant="outline" className="border-gray-700 text-gray-300">
+                <Button size="sm" variant="secondary" className="border-gray-700 text-gray-300">
                   <MapPin className="mr-1 h-3 w-3" />
                   Directions
                 </Button>
-                <Button size="sm" variant="outline" className="border-gray-700 text-gray-300">
+                <Button size="sm" variant="secondary" className="border-gray-700 text-gray-300">
                   <ExternalLink className="mr-1 h-3 w-3" />
                   Menu
                 </Button>
@@ -617,7 +617,7 @@ const DiningAndLocal = () => {
           </div>
         ))}
 
-        <Button variant="outline" className="w-full border-gray-700 text-gray-300">
+        <Button variant="secondary" className="w-full border-gray-700 text-gray-300">
           Explore More Local Spots
           <ArrowRight className="ml-2 h-4 w-4" />
         </Button>
@@ -683,7 +683,7 @@ const CampusTransportation = () => {
               </div>
             </div>
           ))}
-          <Button variant="outline" className="w-full border-gray-700 text-gray-300">
+          <Button variant="secondary" className="w-full border-gray-700 text-gray-300">
             <Activity className="mr-2 h-4 w-4" />
             Track Live Location
           </Button>
@@ -709,7 +709,7 @@ const CampusTransportation = () => {
                 <div className="flex items-center justify-between mb-2">
                   <div>
                     <p className="text-white font-medium">{area.name}</p>
-                    <Badge variant="outline" className="border-gray-700 text-gray-300 text-xs">
+                    <Badge variant="secondary" className="border-gray-700 text-gray-300 text-xs">
                       {area.type}
                     </Badge>
                   </div>
@@ -732,7 +732,7 @@ const CampusTransportation = () => {
               </div>
             );
           })}
-          <Button variant="outline" className="w-full border-gray-700 text-gray-300">
+          <Button variant="secondary" className="w-full border-gray-700 text-gray-300">
             <MapPin className="mr-2 h-4 w-4" />
             View Parking Map
           </Button>
@@ -785,7 +785,7 @@ const CampusQuickActions = () => {
           {quickActions.map((action, index) => (
             <Button
               key={index}
-              variant="default"
+              variant="primary"
               size="lg"
               className={`h-20 flex flex-col gap-2 ${getColorClasses(action.color)}`}
             >
@@ -812,11 +812,11 @@ const CampusFeaturesDashboard = () => {
           </h1>
           <p className="text-gray-400">Your campus community platform</p>
           <div className="flex items-center justify-center gap-2 mt-2">
-            <Badge variant="outline" className="border-blue-700 text-blue-300">
+            <Badge variant="secondary" className="border-blue-700 text-blue-300">
               <CheckCircle className="mr-1 h-3 w-3" />
               UB Verified
             </Badge>
-            <Badge variant="outline" className="border-green-700 text-green-300">
+            <Badge variant="secondary" className="border-green-700 text-green-300">
               <Users className="mr-1 h-3 w-3" />
               {2847} Active Students
             </Badge>

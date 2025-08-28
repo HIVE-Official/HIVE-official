@@ -1,11 +1,11 @@
 import React from "react";
 import { type VariantProps } from 'class-variance-authority';
 declare const hiveSwitchVariants: (props?: {
-    variant?: "default" | "success" | "gold" | "minimal";
+    variant?: "default" | "gold" | "success" | "minimal";
     size?: "default" | "sm" | "lg" | "xl";
 } & import("class-variance-authority/types").ClassProp) => string;
 declare const hiveSwitchThumbVariants: (props?: {
-    variant?: "default" | "success" | "gold" | "minimal";
+    variant?: "default" | "gold" | "success" | "minimal";
     size?: "default" | "sm" | "lg" | "xl";
 } & import("class-variance-authority/types").ClassProp) => string;
 export interface HiveSwitchProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'size'>, VariantProps<typeof hiveSwitchVariants> {

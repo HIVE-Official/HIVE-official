@@ -3,7 +3,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React, { useState } from 'react';
 import { Calendar, Users, Zap, Lightbulb, Target, ArrowRight, Clock } from "lucide-react";
 import { HiveModal } from './hive-modal';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 const upcomingFeatures = [
     {
         id: "profile-command",

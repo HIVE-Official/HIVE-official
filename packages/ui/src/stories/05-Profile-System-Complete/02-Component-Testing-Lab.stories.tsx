@@ -286,11 +286,11 @@ function TestControlPanel({
           </div>
 
           <div className="flex gap-2">
-            <Button size="sm" variant="outline">
+            <Button size="sm" variant="secondary">
               <RotateCcw className="w-4 h-4 mr-2" />
               Reset
             </Button>
-            <Button size="sm" variant="outline">
+            <Button size="sm" variant="secondary">
               <Code className="w-4 h-4 mr-2" />
               View Code
             </Button>
@@ -310,10 +310,10 @@ function TestControlPanel({
                   {selectedConfig.description}
                 </p>
                 <div className="flex items-center gap-2">
-                  <Badge variant="outline" className="text-xs">
+                  <Badge variant="secondary" className="text-xs">
                     Size: {selectedConfig.size}
                   </Badge>
-                  <Badge variant="outline" className="text-xs">
+                  <Badge variant="secondary" className="text-xs">
                     {selectedConfig.testScenarios.length} Test Scenarios
                   </Badge>
                 </div>
@@ -614,7 +614,7 @@ export const ComponentTestingLab: StoryObj = {
                   {selectedConfig?.icon && <selectedConfig.icon className="w-5 h-5" />}
                   {selectedConfig?.name} - {testScenario}
                 </div>
-                <Badge variant="outline">{deviceMode}</Badge>
+                <Badge variant="secondary">{deviceMode}</Badge>
               </CardTitle>
             </CardHeader>
             <CardContent>

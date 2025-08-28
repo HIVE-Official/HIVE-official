@@ -1,7 +1,7 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 import { Text } from '../../atomic/atoms/text';
 import { Button } from '../../ui/button';
 import { useAdvancedViewport } from '../Layout/ResponsiveLayout';

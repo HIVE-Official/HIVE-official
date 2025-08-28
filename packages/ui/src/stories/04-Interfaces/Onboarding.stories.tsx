@@ -391,7 +391,7 @@ export const OnboardingComplete: Story = {
             </Card>
           </div>
 
-          <Button variant="ritual" size="lg" className="px-8">
+          <Button variant="primary" size="lg" className="px-8">
             Enter Your Campus
           </Button>
         </div>

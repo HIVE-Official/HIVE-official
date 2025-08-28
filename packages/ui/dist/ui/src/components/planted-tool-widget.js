@@ -2,7 +2,7 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useState } from 'react';
 import { motion, AnimatePresence } from './framer-motion-proxy';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 import { Settings, Play, Pause, MoreHorizontal, AlertCircle, CheckCircle, Users, Trash2, BarChart3, Calendar, MessageSquare, Zap } from 'lucide-react';
 const CATEGORY_CONFIG = {
     productivity: {

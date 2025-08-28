@@ -355,7 +355,7 @@ export const ToolPreview: React.FC<ToolPreviewProps> = ({
                 {/* Controls */}
                 {currentMode !== 'desktop' && (
                   <HiveButton
-                    variant="outline"
+                    variant="secondary"
                     size="sm"
                     onClick={() => setIsRotated(!isRotated)}
                   >
@@ -364,7 +364,7 @@ export const ToolPreview: React.FC<ToolPreviewProps> = ({
                 )}
 
                 <HiveButton
-                  variant="outline"
+                  variant="secondary"
                   size="sm"
                   onClick={handleRefresh}
                   disabled={isLoading}
@@ -373,7 +373,7 @@ export const ToolPreview: React.FC<ToolPreviewProps> = ({
                 </HiveButton>
 
                 <HiveButton
-                  variant="outline"
+                  variant="secondary"
                   size="sm"
                   onClick={onClose}
                 >
@@ -471,11 +471,11 @@ export const ToolPreview: React.FC<ToolPreviewProps> = ({
               </div>
 
               <div className="flex gap-2">
-                <HiveButton variant="outline" size="sm">
+                <HiveButton variant="secondary" size="sm">
                   <Share2 size={16} />
                   Share Preview
                 </HiveButton>
-                <HiveButton variant="outline" size="sm">
+                <HiveButton variant="secondary" size="sm">
                   <ExternalLink size={16} />
                   Open in New Tab
                 </HiveButton>

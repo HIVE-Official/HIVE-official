@@ -275,7 +275,7 @@ const SuggestionCard = ({
             <div className="flex items-center gap-2">
               <HiveButton 
                 size="sm" 
-                variant="outline"
+                variant="secondary"
                 onClick={(e) => {
                   e.stopPropagation();
                   onPreview(element);
@@ -452,7 +452,7 @@ export function LibraryContextualAccess({
               </p>
             </div>
             
-            <HiveButton variant="outline" onClick={onClose}>
+            <HiveButton variant="secondary" onClick={onClose}>
               <X className="w-4 h-4" />
             </HiveButton>
           </div>
@@ -545,7 +545,7 @@ export function LibraryContextualAccess({
             </div>
             
             <div className="flex items-center gap-2">
-              <HiveButton variant="outline" onClick={onClose}>
+              <HiveButton variant="secondary" onClick={onClose}>
                 Cancel
               </HiveButton>
               <HiveButton onClick={() => console.log('Browse HiveLAB')}>

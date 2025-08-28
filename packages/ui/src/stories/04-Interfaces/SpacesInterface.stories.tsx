@@ -59,7 +59,7 @@ const SpaceLayout = ({ children }: { children: React.ReactNode }) => (
             </nav>
           </div>
           <div className="flex items-center space-x-3">
-            <Button variant="outline" size="sm">Search</Button>
+            <Button variant="secondary" size="sm">Search</Button>
             <div className="w-8 h-8 bg-accent rounded-full flex items-center justify-center">
               <span className="text-sm font-semibold text-accent-foreground">SK</span>
             </div>
@@ -159,7 +159,7 @@ const SpaceCard = ({
           <Button className="flex-1" onClick={onJoin}>
             Join Space
           </Button>
-          <Button variant="outline" className="flex-1">
+          <Button variant="secondary" className="flex-1">
             Preview
           </Button>
         </>
@@ -168,7 +168,7 @@ const SpaceCard = ({
           <Button className="flex-1" onClick={onActivate}>
             Request to Lead
           </Button>
-          <Button variant="outline" className="flex-1">
+          <Button variant="secondary" className="flex-1">
             Join Waitlist
           </Button>
         </>
@@ -407,8 +407,8 @@ export const ActiveSpaceView: Story = {
                 </div>
               </div>
               <div className="flex items-center space-x-3">
-                <Button variant="outline" size="sm">Share</Button>
-                <Button variant="outline" size="sm">Settings</Button>
+                <Button variant="secondary" size="sm">Share</Button>
+                <Button variant="secondary" size="sm">Settings</Button>
                 <Button size="sm">Joined ✓</Button>
               </div>
             </div>
@@ -601,7 +601,7 @@ export const SpaceActivationFlow: Story = {
                 
                 <div className="flex space-x-3">
                   <Button 
-                    variant="outline"
+                    variant="secondary"
                     className="flex-1"
                     onClick={() => setActivationStep(1)}
                   >
@@ -688,7 +688,7 @@ export const CampusEnergySpaces: Story = {
                 <Button className="flex-1 font-bold animate-hive-gold-glow">
                   Join Now!
                 </Button>
-                <Button variant="outline" className="flex-1 font-medium">
+                <Button variant="secondary" className="flex-1 font-medium">
                   Learn More
                 </Button>
               </div>
@@ -714,7 +714,7 @@ export const CampusEnergySpaces: Story = {
                 <Button className="flex-1 font-normal">
                   Join Quietly
                 </Button>
-                <Button variant="outline" className="flex-1 font-normal">
+                <Button variant="secondary" className="flex-1 font-normal">
                   Browse
                 </Button>
               </div>

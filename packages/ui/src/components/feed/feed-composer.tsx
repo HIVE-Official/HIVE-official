@@ -15,7 +15,7 @@ import {
   AlertCircle,
   SendIcon,
 } from "lucide-react";
-import { cn } from "../../lib/utils";
+import { cn } from "../lib/utils";
 import type { CreatePost } from "@hive/core";
 import type { PostType } from "@hive/core";
 
@@ -400,7 +400,7 @@ export const FeedComposer: React.FC<FeedComposerProps> = ({
 
               {/* Draft Indicator */}
               {content.trim() && (
-                <Badge variant="outline" className="text-xs">
+                <Badge variant="secondary" className="text-xs">
                   Draft saved
                 </Badge>
               )}

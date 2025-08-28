@@ -541,7 +541,7 @@ export const LiveToolRuntime: React.FC<LiveToolRuntimeProps> = ({
 
         {/* Success message */}
         {runtimeState.submitResult === 'success' && (
-          <Alert className="mb-4" variant="default">
+          <Alert className="mb-4" variant="primary">
             <CheckCircle className="h-4 w-4" />
             <AlertDescription>
               Tool submitted successfully!

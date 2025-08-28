@@ -245,7 +245,7 @@ const HiveNotificationSwitch = React.forwardRef<HTMLButtonElement, Omit<HiveSwit
   (props, ref) => (
     <HiveSwitch
       ref={ref}
-      variant="default"
+      variant="primary"
       label="Push Notifications"
       description="Receive notifications about new messages and updates"
       {...props}

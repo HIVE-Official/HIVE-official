@@ -275,11 +275,11 @@ export const CompleteShowcase: Story = {
               <h4 className="font-medium text-[var(--hive-text-primary)]">Default Variant:</h4>
               <div className="bg-[var(--hive-background-secondary)] p-6 rounded-lg space-y-4">
                 <div className="flex items-center gap-3">
-                  <Icon icon={Home} size="lg" color="primary" variant="default" />
+                  <Icon icon={Home} size="lg" color="primary" variant="primary" />
                   <Text variant="body-sm" color="secondary">Standard appearance</Text>
                 </div>
                 <div className="flex items-center gap-3">
-                  <Icon icon={Calendar} size="lg" color="gold" variant="default" />
+                  <Icon icon={Calendar} size="lg" color="gold" variant="primary" />
                   <Text variant="body-sm" color="secondary">Balanced stroke and fill</Text>
                 </div>
               </div>

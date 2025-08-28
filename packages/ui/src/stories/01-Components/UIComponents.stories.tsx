@@ -78,7 +78,7 @@ export const AllComponents: Story = {
                 <Star className="mr-2 h-4 w-4" />
                 Accent
               </Button>
-              <Button variant="ritual" className="w-full">
+              <Button variant="primary" className="w-full">
                 <Heart className="mr-2 h-4 w-4" />
                 Ritual
               </Button>
@@ -91,7 +91,7 @@ export const AllComponents: Story = {
               <CardDescription>Secondary actions</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <Button variant="outline" className="w-full">Outline</Button>
+              <Button variant="secondary" className="w-full">Outline</Button>
               <Button variant="ghost" className="w-full">Ghost</Button>
               <Button variant="surface" className="w-full">Surface</Button>
             </CardContent>
@@ -229,9 +229,9 @@ export const AllComponents: Story = {
             <CardContent className="space-y-4">
               <div className="flex flex-wrap gap-2">
                 <Badge>Default</Badge>
-                <Badge variant="outline">Outline</Badge>
+                <Badge variant="secondary">Outline</Badge>
                 <Badge variant="accent">Accent</Badge>
-                <Badge variant="ritual">
+                <Badge variant="primary">
                   <Star className="mr-1 h-3 w-3" />
                   Ritual
                 </Badge>
@@ -310,7 +310,7 @@ export const AllComponents: Story = {
           <CardContent>
             <Dialog>
               <DialogTrigger asChild>
-                <Button variant="outline">Open Dialog</Button>
+                <Button variant="secondary">Open Dialog</Button>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
@@ -330,7 +330,7 @@ export const AllComponents: Story = {
                   </div>
                 </div>
                 <div className="flex justify-end space-x-2">
-                  <Button variant="outline">Cancel</Button>
+                  <Button variant="secondary">Cancel</Button>
                   <Button variant="accent">Submit</Button>
                 </div>
               </DialogContent>
@@ -370,7 +370,7 @@ export const ComponentShowcase: Story = {
                 <Star className="mr-1 h-3 w-3" />
                 Verified
               </Badge>
-              <Button size="sm" variant="outline">
+              <Button size="sm" variant="secondary">
                 <Plus className="mr-1 h-3 w-3" />
                 Connect
               </Button>

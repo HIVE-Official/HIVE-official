@@ -2,8 +2,8 @@ import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
 import { LucideIcon } from 'lucide-react';
 declare const profileBadgeVariants: (props?: {
-    size?: "xs" | "sm" | "md" | "lg";
-    variant?: "default" | "ghost" | "builder" | "leader" | "verified" | "achievement" | "streak" | "academic" | "social";
+    size?: "sm" | "md" | "lg" | "xs";
+    variant?: "ghost" | "default" | "academic" | "social" | "builder" | "leader" | "achievement" | "verified" | "streak";
     interactive?: boolean;
     pulsing?: boolean;
 } & import("class-variance-authority/types").ClassProp) => string;

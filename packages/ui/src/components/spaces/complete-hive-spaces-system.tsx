@@ -182,7 +182,7 @@ export const CompleteHIVESpacesSystem: React.FC<CompleteHIVESpacesSystemProps> =
                   </div>
                 </div>
                 <HiveButton
-                  variant="outline"
+                  variant="secondary"
                   onClick={() => onNavigate?.('explore')}
                   className="text-gray-400 hover:text-white"
                 >
@@ -201,7 +201,7 @@ export const CompleteHIVESpacesSystem: React.FC<CompleteHIVESpacesSystemProps> =
                   />
                 </div>
                 <HiveButton
-                  variant="outline"
+                  variant="secondary"
                   onClick={() => setShowFilters(!showFilters)}
                   className="flex items-center gap-2"
                 >
@@ -441,7 +441,7 @@ export const CompleteHIVESpacesSystem: React.FC<CompleteHIVESpacesSystemProps> =
           <HiveCard className="p-6">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-semibold text-white">Featured Spaces</h2>
-              <HiveButton variant="outline" size="sm">
+              <HiveButton variant="secondary" size="sm">
                 View All <ArrowRight className="w-4 h-4 ml-1" />
               </HiveButton>
             </div>
@@ -512,7 +512,7 @@ export const CompleteHIVESpacesSystem: React.FC<CompleteHIVESpacesSystemProps> =
                     <p className="text-sm font-medium text-green-400">{space.growthRate}</p>
                     <HiveButton 
                       size="sm" 
-                      variant="outline"
+                      variant="secondary"
                       onClick={() => onNavigate?.('space-preview', { spaceId: space.id })}
                     >
                       View

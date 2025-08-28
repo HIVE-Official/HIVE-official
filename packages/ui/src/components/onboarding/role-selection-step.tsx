@@ -189,7 +189,7 @@ export const RoleSelectionStep: React.FC<RoleSelectionStepProps> = ({
             <Button
               onClick={handleContinue}
               disabled={!selectedRole}
-              variant="ritual"
+              variant="primary"
               size="lg"
               className="w-full"
             >

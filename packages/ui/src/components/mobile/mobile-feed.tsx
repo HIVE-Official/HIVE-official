@@ -328,7 +328,7 @@ function MobilePostCard({
           
           {post.space && (
             <Badge 
-              variant="outline" 
+              variant="secondary" 
               className="text-xs"
               style={{ borderColor: post.space.color, color: post.space.color }}
             >

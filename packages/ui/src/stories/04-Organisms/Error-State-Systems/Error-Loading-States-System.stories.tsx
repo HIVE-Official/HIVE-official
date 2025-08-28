@@ -269,7 +269,7 @@ const ServerError = ({ onRetry }: { onRetry: () => void }) => (
     </div>
 
     <div className="space-y-3">
-      <Button onClick={onRetry} variant="outline" className="border-gray-700 text-gray-300">
+      <Button onClick={onRetry} variant="secondary" className="border-gray-700 text-gray-300">
         <RefreshCw className="mr-2 h-4 w-4" />
         Refresh
       </Button>
@@ -300,7 +300,7 @@ const NotFoundError = () => (
         Go Home
       </Button>
       
-      <Button variant="outline" className="border-gray-700 text-gray-300">
+      <Button variant="secondary" className="border-gray-700 text-gray-300">
         <ChevronRight className="mr-2 h-4 w-4" />
         Browse Spaces
       </Button>
@@ -342,7 +342,7 @@ const EmptyFeed = () => (
         Explore Spaces
       </Button>
       
-      <Button variant="outline" className="border-gray-700 text-gray-300">
+      <Button variant="secondary" className="border-gray-700 text-gray-300">
         <Plus className="mr-2 h-4 w-4" />
         Create Post
       </Button>
@@ -387,7 +387,7 @@ const EmptySpaces = () => (
         Find Spaces
       </Button>
       
-      <Button variant="outline" className="border-gray-700 text-gray-300">
+      <Button variant="secondary" className="border-gray-700 text-gray-300">
         <Plus className="mr-2 h-4 w-4" />
         Create Space
       </Button>
@@ -396,9 +396,9 @@ const EmptySpaces = () => (
     <div className="text-gray-500 text-sm space-y-1">
       <p>Popular UB spaces to join:</p>
       <div className="flex flex-wrap justify-center gap-2 mt-2">
-        <Badge variant="outline" className="border-gray-700 text-gray-300">CS Study Group</Badge>
-        <Badge variant="outline" className="border-gray-700 text-gray-300">Ellicott Complex</Badge>
-        <Badge variant="outline" className="border-gray-700 text-gray-300">UB Gaming</Badge>
+        <Badge variant="secondary" className="border-gray-700 text-gray-300">CS Study Group</Badge>
+        <Badge variant="secondary" className="border-gray-700 text-gray-300">Ellicott Complex</Badge>
+        <Badge variant="secondary" className="border-gray-700 text-gray-300">UB Gaming</Badge>
       </div>
     </div>
   </div>
@@ -418,7 +418,7 @@ const EmptySearch = ({ query }: { query: string }) => (
     </div>
 
     <div className="space-y-3">
-      <Button variant="outline" className="border-gray-700 text-gray-300">
+      <Button variant="secondary" className="border-gray-700 text-gray-300">
         <RefreshCw className="mr-2 h-4 w-4" />
         Clear Search
       </Button>
@@ -472,7 +472,7 @@ const OfflineState = () => (
         <p className="text-white font-medium text-sm">You're offline</p>
         <p className="text-gray-400 text-sm">Some features may not work until you reconnect</p>
       </div>
-      <Badge variant="outline" className="border-orange-700 text-orange-400">
+      <Badge variant="secondary" className="border-orange-700 text-orange-400">
         Offline
       </Badge>
     </div>
@@ -503,7 +503,7 @@ const ErrorLoadingDemo = () => {
             <div className="flex space-x-2">
               <Button 
                 size="sm" 
-                variant="outline"
+                variant="secondary"
                 className="border-gray-700 text-gray-300"
                 onClick={() => setCurrentState('online')}
               >
@@ -511,7 +511,7 @@ const ErrorLoadingDemo = () => {
               </Button>
               <Button 
                 size="sm" 
-                variant="outline"
+                variant="secondary"
                 className="border-gray-700 text-gray-300"
                 onClick={() => setCurrentState('offline')}
               >
@@ -773,7 +773,7 @@ const ErrorLoadingDemo = () => {
                           <p className="text-gray-400 text-xs">124 members</p>
                         </div>
                       </div>
-                      <Button size="sm" variant="outline" className="border-gray-700 text-gray-300">
+                      <Button size="sm" variant="secondary" className="border-gray-700 text-gray-300">
                         Join
                       </Button>
                     </div>
@@ -787,7 +787,7 @@ const ErrorLoadingDemo = () => {
                           <p className="text-gray-400 text-xs">89 members</p>
                         </div>
                       </div>
-                      <Button size="sm" variant="outline" className="border-gray-700 text-gray-300">
+                      <Button size="sm" variant="secondary" className="border-gray-700 text-gray-300">
                         Join
                       </Button>
                     </div>

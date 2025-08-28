@@ -1,7 +1,7 @@
 // HIVE Motion System Foundation - Liquid Metal with Orchestrated Physics
 // Every animation feels like liquid metal with real weight and premium precision
 
-import { Variants, MotionValue, useAnimation } from 'framer-motion';
+import { Variants, MotionValue, useAnimation } from '../components/framer-motion-proxy';
 
 // 🎬 Core Motion Personality: Liquid Metal
 // Premium, weighty, but impossibly smooth

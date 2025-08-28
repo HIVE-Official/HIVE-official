@@ -2,7 +2,7 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import React from 'react';
 import { cva } from 'class-variance-authority';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 import { ProfileAvatar } from '../atomic/atoms/profile-avatar';
 import { ProfileBadge } from '../atomic/atoms/profile-badge';
 import { ProfileAction } from '../atomic/atoms/profile-action';

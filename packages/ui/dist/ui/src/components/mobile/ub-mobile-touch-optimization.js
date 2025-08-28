@@ -2,7 +2,7 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import React from 'react';
 import { Text } from '../../atomic/atoms/text';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 import { X, ChevronDown, ChevronRight } from 'lucide-react';
 // Touch Ripple Hook
 export function useTouchRipple() {

@@ -3,7 +3,7 @@ import { type VariantProps } from 'class-variance-authority';
 declare const hiveSidebarVariants: (props?: {
     variant?: "default" | "minimal" | "premium";
     size?: "default" | "sm" | "lg" | "xl";
-    position?: "right" | "left";
+    position?: "left" | "right";
 } & import("class-variance-authority/types").ClassProp) => string;
 export interface SidebarSection {
     id: 'spaces' | 'profile' | 'hivelab' | 'feed';

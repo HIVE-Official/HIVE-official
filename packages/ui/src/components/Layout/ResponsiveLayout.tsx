@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { cn } from '../../lib/utils';
+import { cn } from '../lib/utils';
 
 // Enhanced viewport detection with gesture awareness
 interface ViewportState {

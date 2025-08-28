@@ -163,7 +163,7 @@ export const RitualCard: React.FC<RitualCardProps> = ({
               exit={{ opacity: 0, y: -10 }}
             >
               <Button
-                variant="ritual"
+                variant="primary"
                 size="sm"
                 onClick={onParticipate}
                 className="w-full group"

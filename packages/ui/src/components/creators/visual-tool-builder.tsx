@@ -469,7 +469,7 @@ export const VisualToolBuilder: React.FC<VisualBuilderProps> = ({
               Preview
             </HiveButton>
             <HiveButton
-              variant="outline"
+              variant="secondary"
               size="sm"
               onClick={() => onSave(tool)}
               disabled={isLoading}

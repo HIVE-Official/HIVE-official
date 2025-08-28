@@ -216,7 +216,7 @@ export const RitualButtons: Story = {
           <div className="space-y-4">
             <h2 className="text-xl font-semibold text-white">Campus Rituals</h2>
             <div className="space-y-3">
-              <RitualButton variant="ritual" className="w-full">
+              <RitualButton variant="primary" className="w-full">
                 <Zap className="w-5 h-5 mr-3" />
                 Complete Onboarding Ritual
               </RitualButton>
@@ -233,9 +233,9 @@ export const RitualButtons: Story = {
           <div className="space-y-4">
             <h2 className="text-xl font-semibold text-white">Different Sizes</h2>
             <div className="space-y-3">
-              <RitualButton variant="ritual" size="md">Medium Ritual</RitualButton>
-              <RitualButton variant="ritual" size="lg">Large Ritual</RitualButton>
-              <RitualButton variant="ritual" size="xl">Extra Large Ritual</RitualButton>
+              <RitualButton variant="primary" size="md">Medium Ritual</RitualButton>
+              <RitualButton variant="primary" size="lg">Large Ritual</RitualButton>
+              <RitualButton variant="primary" size="xl">Extra Large Ritual</RitualButton>
             </div>
           </div>
         </div>
@@ -263,7 +263,7 @@ export const LoadingStates: Story = {
           <Button variant="accent" loading className="w-full">
             Creating Space...
           </Button>
-          <RitualButton variant="ritual" loading className="w-full">
+          <RitualButton variant="primary" loading className="w-full">
             Completing Ritual...
           </RitualButton>
         </div>

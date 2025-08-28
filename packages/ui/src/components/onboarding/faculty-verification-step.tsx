@@ -117,7 +117,7 @@ export const FacultyVerificationStep: React.FC<FacultyVerificationStepProps> = (
               <p className="text-muted font-body mb-4">
                 We couldn't verify your faculty status with the provided email. Please contact support if you believe this is an error.
               </p>
-              <Button variant="outline" onClick={onBack}>
+              <Button variant="secondary" onClick={onBack}>
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Go Back
               </Button>
@@ -231,7 +231,7 @@ export const FacultyVerificationStep: React.FC<FacultyVerificationStepProps> = (
             transition={{ delay: 0.4 }}
           >
             <Button
-              variant="outline"
+              variant="secondary"
               onClick={onBack}
               className="flex-1"
             >
@@ -241,7 +241,7 @@ export const FacultyVerificationStep: React.FC<FacultyVerificationStepProps> = (
             <Button
               onClick={handleVerifyAccess}
               disabled={!selectedSpace || isVerifying}
-              variant="ritual"
+              variant="primary"
               className="flex-2"
             >
               {isVerifying ? 'Verifying...' : 'Verify Access'}

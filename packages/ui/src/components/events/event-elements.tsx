@@ -493,7 +493,7 @@ export function EventCardElement({
             </HiveButton>
           )}
           {onEdit && (
-            <HiveButton variant="outline" size="sm" onClick={onEdit}>
+            <HiveButton variant="secondary" size="sm" onClick={onEdit}>
               Edit
             </HiveButton>
           )}
@@ -856,7 +856,7 @@ export function CalendarViewElement({
         </h3>
         <div className="flex gap-2">
           <HiveButton 
-            variant="outline" 
+            variant="secondary" 
             size={isMobile ? "default" : "sm"} 
             onClick={() => changeMonth(-1)}
             className={mobileClasses.button}
@@ -864,7 +864,7 @@ export function CalendarViewElement({
             ←
           </HiveButton>
           <HiveButton 
-            variant="outline" 
+            variant="secondary" 
             size={isMobile ? "default" : "sm"} 
             onClick={() => changeMonth(1)}
             className={mobileClasses.button}
@@ -959,7 +959,7 @@ export function NotificationElement({
           )}
         </div>
         {unreadCount > 0 && (
-          <HiveButton variant="outline" size="sm" onClick={onMarkAllRead}>
+          <HiveButton variant="secondary" size="sm" onClick={onMarkAllRead}>
             Mark All Read
           </HiveButton>
         )}
@@ -1204,7 +1204,7 @@ export function ShareElement({
         {shareOptions.map((option) => (
           <HiveButton
             key={option.platform}
-            variant="outline"
+            variant="secondary"
             size="sm"
             onClick={option.action}
             className="justify-center"
@@ -1348,7 +1348,7 @@ export function TagsElement({
               .map((tag) => (
                 <HiveBadge
                   key={tag}
-                  variant="outline"
+                  variant="secondary"
                   className="cursor-pointer hover:bg-amber-50"
                   onClick={() => addTag(tag)}
                 >
@@ -1437,7 +1437,7 @@ export function StatusElement({
               <HiveButton size="sm" onClick={submitStatusChange}>
                 Confirm
               </HiveButton>
-              <HiveButton variant="outline" size="sm" onClick={() => setShowReasonInput(false)}>
+              <HiveButton variant="secondary" size="sm" onClick={() => setShowReasonInput(false)}>
                 Cancel
               </HiveButton>
             </div>

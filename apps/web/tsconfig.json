@@ -19,7 +19,13 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@hive/ui": ["./src/__stubs__/@hive/ui"],
+      "@hive/core": ["./src/__stubs__/@hive/core"],
+      "@hive/hooks": ["./src/__stubs__/@hive/hooks"],
+      "@hive/auth-logic": ["./src/__stubs__/@hive/core"],
+      "@hive/api-client": ["./src/__stubs__/@hive/core"],
+      "@hive/validation": ["./src/__stubs__/@hive/core"]
     },
     "types": ["@testing-library/jest-dom", "vitest/globals"]
   },

@@ -112,7 +112,7 @@ export function HiveLabIntegration({
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <HiveButton
-                variant="outline"
+                variant="secondary"
                 size="sm"
                 onClick={() => {
                   setSelectedTool(null);
@@ -172,7 +172,7 @@ export function HiveLabIntegration({
           </div>
           
           <div className="flex items-center gap-3">
-            <HiveBadge variant="outline" className="bg-green-50 text-green-800">
+            <HiveBadge variant="secondary" className="bg-green-50 text-green-800">
               {labStats?.systemHealth || 'excellent'} health
             </HiveBadge>
             <HiveBadge>
@@ -347,7 +347,7 @@ export function HiveLabIntegration({
                 <p className="text-sm text-gray-600 mb-3">
                   Discover and install tools built by the community
                 </p>
-                <HiveButton size="sm" variant="outline" className="w-full">
+                <HiveButton size="sm" variant="secondary" className="w-full">
                   Browse Tools
                 </HiveButton>
               </HiveCard>
@@ -360,7 +360,7 @@ export function HiveLabIntegration({
                 <p className="text-sm text-gray-600 mb-3">
                   Track usage and performance across all tools
                 </p>
-                <HiveButton size="sm" variant="outline" className="w-full">
+                <HiveButton size="sm" variant="secondary" className="w-full">
                   View Analytics
                 </HiveButton>
               </HiveCard>

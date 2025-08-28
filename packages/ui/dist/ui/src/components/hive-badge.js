@@ -1,7 +1,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from 'react';
 import { cva } from 'class-variance-authority';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 import { getTestProps } from '../lib/accessibility-foundation';
 import { responsiveAnimations } from '../lib/responsive-foundation';
 // HIVE Badge variants - Luxury chips with standardized foundation patterns
