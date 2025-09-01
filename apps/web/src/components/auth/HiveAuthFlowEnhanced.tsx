@@ -1,14 +1,273 @@
 "use client";
 
-// Re-export from @hive/ui - this resolves to the stub for compilation
-export { 
-  HiveAuthFlowEnhanced,
-  AuthProvider,
-  useAuthFlow
-} from '@hive/ui';
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
+import { Button, Card, Input, Text } from '@hive/ui';
+import { Loader2, Mail, CheckCircle, AlertCircle } from 'lucide-react';
 
-export type {
-  AuthStep,
-  AuthState,
-  AuthContextType
-} from '@hive/ui';
+interface HiveAuthFlowEnhancedProps {
+  onAuthSuccess: (user: { id: string; email: string; name: string; isNewUser: boolean }) => void;
+  schoolId?: string;
+  schoolName?: string;
+  schoolDomain?: string;
+  initialStep?: string;
+  mockMode?: boolean;
+}
+
+type AuthStep = 'email' | 'sent' | 'error';
+
+interface AuthState {
+  step: AuthStep;
+  email: string;
+  isLoading: boolean;
+  error: string | null;
+  retryAfter?: number;
+}
+
+export function HiveAuthFlowEnhanced({
+  onAuthSuccess,
+  schoolId = 'ub-buffalo',
+  schoolName = 'University at Buffalo',
+  schoolDomain = 'buffalo.edu',
+  mockMode = false
+}: HiveAuthFlowEnhancedProps) {
+  const [state, setState] = useState<AuthState>({
+    step: 'email',
+    email: '',
+    isLoading: false,
+    error: null
+  });
+
+  const handleEmailSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!state.email) {
+      setState(prev => ({ ...prev, error: 'Email address is required' }));
+      return;
+    }
+
+    // Validate email domain
+    const emailDomain = state.email.split('@')[1]?.toLowerCase();
+    if (emailDomain !== schoolDomain.toLowerCase()) {
+      setState(prev => ({ 
+        ...prev, 
+        error: `Please use your ${schoolDomain} email address` 
+      }));
+      return;
+    }
+
+    setState(prev => ({ ...prev, isLoading: true, error: null }));
+
+    try {
+      // Mock mode for development
+      if (mockMode) {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        setState(prev => ({ ...prev, step: 'sent', isLoading: false }));
+        
+        // Simulate auth success after delay
+        setTimeout(() => {
+          onAuthSuccess({
+            id: 'mock-user-id',
+            email: state.email,
+            name: 'Mock User',
+            isNewUser: false
+          });
+        }, 2000);
+        return;
+      }
+
+      const response = await fetch('/api/auth/send-magic-link', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          email: state.email,
+          schoolId: schoolId
+        })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        if (response.status === 429) {
+          setState(prev => ({ 
+            ...prev, 
+            step: 'error',
+            error: data.error || 'Too many requests. Please try again later.',
+            retryAfter: data.retryAfter,
+            isLoading: false 
+          }));
+        } else {
+          setState(prev => ({ 
+            ...prev, 
+            step: 'error',
+            error: data.error || 'Failed to send magic link',
+            isLoading: false 
+          }));
+        }
+        return;
+      }
+
+      setState(prev => ({ ...prev, step: 'sent', isLoading: false }));
+
+    } catch (error) {
+      console.error('Magic link request failed:', error);
+      setState(prev => ({ 
+        ...prev, 
+        step: 'error',
+        error: 'Network error. Please check your connection and try again.',
+        isLoading: false 
+      }));
+    }
+  };
+
+  const handleRetry = () => {
+    setState(prev => ({ ...prev, step: 'email', error: null, retryAfter: undefined }));
+  };
+
+  return (
+    <div className="min-h-screen bg-background flex items-center justify-center p-4">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="w-full max-w-md"
+      >
+        <Card variant="elevated" className="p-8">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold text-white mb-2">
+              Welcome to HIVE
+            </h1>
+            <Text variant="body" className="text-muted">
+              {schoolName}
+            </Text>
+          </div>
+
+          {/* Email Input Step */}
+          {state.step === 'email' && (
+            <form onSubmit={handleEmailSubmit} className="space-y-6">
+              <div className="space-y-2">
+                <label htmlFor="email" className="block text-sm font-medium text-white">
+                  Email Address
+                </label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={state.email}
+                  onChange={(e) => setState(prev => ({ ...prev, email: e.target.value }))}
+                  placeholder={`your.email@${schoolDomain}`}
+                  disabled={state.isLoading}
+                  className="w-full"
+                />
+                <Text variant="caption" className="text-muted">
+                  Use your {schoolDomain} email address
+                </Text>
+              </div>
+
+              {state.error && (
+                <div className="flex items-center gap-2 p-3 bg-red-500/10 border border-red-500/20 rounded-md">
+                  <AlertCircle className="h-4 w-4 text-red-400" />
+                  <Text variant="caption" className="text-red-400">
+                    {state.error}
+                  </Text>
+                </div>
+              )}
+
+              <Button
+                type="submit"
+                disabled={state.isLoading || !state.email}
+                className="w-full"
+              >
+                {state.isLoading ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    Sending Magic Link...
+                  </>
+                ) : (
+                  <>
+                    <Mail className="h-4 w-4 mr-2" />
+                    Send Magic Link
+                  </>
+                )}
+              </Button>
+            </form>
+          )}
+
+          {/* Success Step */}
+          {state.step === 'sent' && (
+            <div className="text-center space-y-6">
+              <div className="flex justify-center">
+                <div className="rounded-full bg-green-500/20 p-3">
+                  <CheckCircle className="h-8 w-8 text-green-400" />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Text variant="h3" className="text-white font-semibold">
+                  Check Your Email
+                </Text>
+                <Text variant="body" className="text-muted">
+                  We sent a magic link to
+                </Text>
+                <Text variant="body" className="text-white font-medium">
+                  {state.email}
+                </Text>
+              </div>
+
+              <div className="space-y-4">
+                <Text variant="caption" className="text-muted">
+                  Click the link in your email to sign in. The link will expire in 15 minutes.
+                </Text>
+                
+                <Button
+                  variant="outline"
+                  onClick={handleRetry}
+                  className="w-full"
+                >
+                  Use Different Email
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {/* Error Step */}
+          {state.step === 'error' && (
+            <div className="text-center space-y-6">
+              <div className="flex justify-center">
+                <div className="rounded-full bg-red-500/20 p-3">
+                  <AlertCircle className="h-8 w-8 text-red-400" />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Text variant="h3" className="text-white font-semibold">
+                  Something went wrong
+                </Text>
+                <Text variant="body" className="text-muted">
+                  {state.error}
+                </Text>
+                {state.retryAfter && (
+                  <Text variant="caption" className="text-muted">
+                    Please wait {Math.ceil(state.retryAfter / 60)} minutes before trying again.
+                  </Text>
+                )}
+              </div>
+
+              <Button
+                onClick={handleRetry}
+                disabled={!!state.retryAfter}
+                className="w-full"
+              >
+                Try Again
+              </Button>
+            </div>
+          )}
+        </Card>
+      </motion.div>
+    </div>
+  );
+}
+
+export default HiveAuthFlowEnhanced;

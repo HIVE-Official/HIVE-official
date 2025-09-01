@@ -1,6 +1,0 @@
-{
-  "buildCommand": "cd ../.. && pnpm install --no-frozen-lockfile && pnpm run build",
-  "installCommand": "npm i -g pnpm@9.1.1",
-  "outputDirectory": ".next",
-  "framework": "nextjs"
-}

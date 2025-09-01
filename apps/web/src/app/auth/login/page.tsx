@@ -45,28 +45,13 @@ function LoginPageContent() {
   }
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center">
-      <div className="max-w-md w-full space-y-6 text-center p-6">
-        <h1 className="text-2xl font-bold">HIVE Development Mode</h1>
-        <p className="text-muted-foreground">
-          The auth component is not yet implemented. Use debug auth to test the profile slice.
-        </p>
-        <div className="space-y-4">
-          <button
-            onClick={() => router.push('/debug-auth?returnTo=/profile')}
-            className="w-full bg-accent hover:bg-accent/90 text-accent-foreground px-4 py-2 rounded-md"
-          >
-            Go to Debug Auth
-          </button>
-          <a 
-            href="/debug-auth?returnTo=/profile"
-            className="block text-accent hover:underline text-sm"
-          >
-            Or click here to test the Profile Slice directly
-          </a>
-        </div>
-      </div>
-    </div>
+    <HiveAuthFlowEnhanced
+      onAuthSuccess={handleAuthSuccess}
+      schoolId={schoolId}
+      schoolName={schoolName}
+      schoolDomain={schoolDomain}
+      mockMode={process.env.NODE_ENV === 'development'}
+    />
   );
 }
 

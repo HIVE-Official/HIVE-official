@@ -223,6 +223,13 @@ const nextConfig = {
               test: /[\\/]node_modules[\\/]@hive[\\/]ui[\\/]/,
               name: 'hive-ui',
               chunks: 'all',
+              priority: 25,
+            },
+            // TanStack React Query separate chunk
+            tanstack: {
+              test: /[\\/]node_modules[\\/]@tanstack[\\/]/,
+              name: 'tanstack',
+              chunks: 'all',
               priority: 20,
             },
             // Framer Motion separate chunk
@@ -238,6 +245,7 @@ const nextConfig = {
               name: 'vendor',
               chunks: 'all',
               priority: 10,
+              exclude: /[\\/]node_modules[\\/](@tanstack|@hive|framer-motion)[\\/]/,
             },
           },
         },

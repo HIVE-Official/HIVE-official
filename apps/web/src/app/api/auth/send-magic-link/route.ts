@@ -85,16 +85,22 @@ export async function POST(request: NextRequest) {
     // Validate school
     const school = await validateSchool(schoolId);
     if (!school.valid) {
-      return NextResponse.json(
-        { error: "School not found or inactive" },
-        { status: 404 }
-      );
+      // In development, allow UB to proceed
+      if (process.env.NODE_ENV === 'development' && schoolId === 'ub-buffalo') {
+        console.log('🚧 Development mode: bypassing school validation for UB');
+      } else {
+        return NextResponse.json(
+          { error: "School not found or inactive" },
+          { status: 404 }
+        );
+      }
     }
 
     // Validate email domain
-    if (!validateEmailDomain(email, school.domain!)) {
+    const expectedDomain = school.domain || (schoolId === 'ub-buffalo' ? 'buffalo.edu' : null);
+    if (expectedDomain && !validateEmailDomain(email, expectedDomain)) {
       return NextResponse.json(
-        { error: `Email must be from ${school.domain} domain` },
+        { error: `Email must be from ${expectedDomain} domain` },
         { status: 400 }
       );
     }
@@ -131,7 +137,7 @@ export async function POST(request: NextRequest) {
     await sendMagicLinkEmail({
       to: email,
       magicLink,
-      schoolName: school.name!
+      schoolName: school.name || (schoolId === 'ub-buffalo' ? 'University at Buffalo' : 'Unknown School')
     });
 
     console.log('Magic link sent successfully', { 
