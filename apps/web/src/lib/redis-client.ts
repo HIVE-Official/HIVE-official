@@ -284,7 +284,11 @@ if (process.env.NODE_ENV === 'production' || process.env.REDIS_URL) {
 }
 
 // Cleanup on process exit (only in Node.js runtime, not Edge)
-if (typeof process !== 'undefined' && process.on) {
+// Edge Runtime doesn't support process.on, so we check runtime type
+if (typeof process !== 'undefined' && 
+    process.on && 
+    (typeof process.env.NEXT_RUNTIME === 'undefined' || 
+     process.env.NEXT_RUNTIME === 'nodejs')) {
   process.on('SIGTERM', () => {
     if (redis) {
       redis.disconnect();
