@@ -149,7 +149,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="success">🎯 ACTION TYPES</Badge>
+            <Badge variant="emerald">🎯 ACTION TYPES</Badge>
             Predefined Profile Actions
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -264,8 +264,8 @@ export const CompleteShowcase: Story = {
                 <div className="space-y-3">
                   <Text variant="body-sm" color="gold" weight="medium">Success Actions:</Text>
                   <div className="flex flex-wrap gap-3">
-                    <ProfileAction actionType="download" variant="success" label="Download Complete" />
-                    <ProfileAction actionType="bookmark" variant="success" label="Saved" />
+                    <ProfileAction actionType="download" variant="emerald" label="Download Complete" />
+                    <ProfileAction actionType="bookmark" variant="emerald" label="Saved" />
                   </div>
                 </div>
 

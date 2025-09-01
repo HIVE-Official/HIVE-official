@@ -211,7 +211,7 @@ export function UnifiedSpaceCard({
             </div>
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-1">
-                <h3 className="font-semibold text-white">{space.name}</h3>
+                <h3 className="font-semibold text-[var(--hive-text-inverse)]">{space.name}</h3>
                 {getRoleBadge()}
                 {getGreekLifeBadge()}
               </div>

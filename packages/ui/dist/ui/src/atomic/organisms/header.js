@@ -1,11 +1,11 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { cn } from '../../lib/utils';
-import { ButtonEnhanced as Button } from '../atoms/button-enhanced';
-import { Avatar } from '../atoms/avatar';
-import { Text } from '../atoms/text';
-import { Link } from '../atoms/link';
-import { Badge } from '../atoms/badge';
+import { cn } from '../../lib/utils.js';
+import { ButtonEnhanced as Button } from '../atoms/button-enhanced.js';
+import { Avatar } from '../atoms/avatar.js';
+import { Text } from '../atoms/text.js';
+import { Link } from '../atoms/link.js';
+import { Badge } from '../atoms/badge.js';
 const headerVariants = {
     default: [
         'bg-hive-background-primary',

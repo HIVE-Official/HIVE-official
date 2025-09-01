@@ -104,7 +104,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="success">✅ TYPOGRAPHY SCALE</Badge>
+            <Badge variant="emerald">✅ TYPOGRAPHY SCALE</Badge>
             Complete Typography Scale - Display to Body
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">

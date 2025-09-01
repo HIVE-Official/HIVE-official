@@ -295,7 +295,7 @@ export function SpaceManagementDashboard({ space, userRole }: SpaceManagementDas
                   <div className="flex items-center gap-2">
                     <Badge 
                       variant="outline" 
-                      className={`${getRoleColor(member.role)} text-white`}
+                      className={`${getRoleColor(member.role)} text-[var(--hive-text-inverse)]`}
                     >
                       {getRoleIcon(member.role)}
                       {member.role}

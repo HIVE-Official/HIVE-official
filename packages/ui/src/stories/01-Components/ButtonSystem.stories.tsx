@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
 import { Button } from '../../components/button';
-import { cn } from '../../lib/utils';
+import { cn } from '../../../lib/utils';
 
 const meta = {
   title: 'Components/Button System',

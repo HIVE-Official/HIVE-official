@@ -13,6 +13,7 @@ import { hiveVariants, hiveEasing, hiveDuration } from '../../motion/hive-motion
 import '../../hive-tokens.css';
 
 const meta = {
+  component: HiveOverview,
   title: '00-HIVE-Overview/Platform Overview',
   parameters: {
     layout: 'fullscreen',

@@ -3,12 +3,12 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bell, X, Check, Users, Zap, Calendar, Award, Info, Heart, Eye, MoreHorizontal, Settings, Filter, Trash2 } from 'lucide-react';
-import { Button } from '../../atomic/atoms/button-enhanced';
-import { Badge } from '../../ui/badge';
-import { Card, CardContent } from '../../ui/card';
+import { Button } from '../../atomic/atoms/button-enhanced.js';
+import { Badge } from '../../atomic/atoms/badge.js';
+import { Card, CardContent } from '../../atomic/ui/card.js';
 import { Tabs, TabsList, TabsTrigger } from '../../ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '../../ui/avatar';
-import { cn } from '../../lib/utils';
+import { cn } from '../../lib/utils.js';
 export function NotificationSystem({ notifications, unreadCount, isOpen, onClose, onMarkAsRead, onMarkAllAsRead, onArchive, onDelete, onAction, className }) {
     const [activeTab, setActiveTab] = useState('all');
     const [selectedNotifications, setSelectedNotifications] = useState([]);

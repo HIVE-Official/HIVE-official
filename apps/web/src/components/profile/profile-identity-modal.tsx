@@ -3,7 +3,7 @@
 import React, { useState, useRef, useCallback } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Image from 'next/image';
-import { HiveInput, HiveButton, Textarea } from "@hive/ui";
+import { Input, Button, Textarea } from "@hive/ui";
 import { useSession } from '../../hooks/use-session';
 
 interface CampusProfile {
@@ -12,12 +12,13 @@ interface CampusProfile {
   profilePhoto?: string;
   avatarUrl?: string;
   academicYear: 'freshman' | 'sophomore' | 'junior' | 'senior' | 'graduate' | 'other';
-  major: string;
+  majors: string[]; // Changed from major: string to majors: string[]
   housing: string;
   pronouns?: string;
   statusMessage?: string;
   isBuilder?: boolean;
   age?: number;
+  interests?: string[]; // Added interests array
 }
 
 interface ProfileIdentityModalProps {
@@ -398,7 +399,7 @@ export function ProfileIdentityModal({ profile, isOpen, onClose }: ProfileIdenti
                 /> */}
                 
                 {/* Fallback Upload Button */}
-                <HiveButton
+                <Button
                   onClick={() => fileInputRef.current?.click()}
                   disabled={isUploading}
                   className="w-full"
@@ -414,11 +415,11 @@ export function ProfileIdentityModal({ profile, isOpen, onClose }: ProfileIdenti
                       📁 Upload Photo
                     </span>
                   )}
-                </HiveButton>
+                </Button>
 
                 {/* Take Photo (PWA) */}
                 {isCameraSupported && (
-                  <HiveButton
+                  <Button
                     onClick={showCamera ? capturePhoto : startCamera}
                     disabled={isUploading}
                     variant="outline"
@@ -427,11 +428,11 @@ export function ProfileIdentityModal({ profile, isOpen, onClose }: ProfileIdenti
                     <span className="transition-all duration-200 hover:scale-105 inline-flex items-center">
                       📱 {showCamera ? 'Capture Photo' : 'Take Photo'}
                     </span>
-                  </HiveButton>
+                  </Button>
                 )}
 
                 {/* Generate Avatar */}
-                <HiveButton
+                <Button
                   onClick={() => generateAvatarMutation.mutate()}
                   disabled={generateAvatarMutation.isPending}
                   variant="outline"
@@ -447,17 +448,17 @@ export function ProfileIdentityModal({ profile, isOpen, onClose }: ProfileIdenti
                       🎨 Generate Avatar
                     </span>
                   )}
-                </HiveButton>
+                </Button>
 
                 {/* Remove Photo */}
                 {photoPreview && (
-                  <HiveButton
+                  <Button
                     onClick={() => setPhotoPreview(null)}
                     variant="destructive"
                     className="w-full"
                   >
                     🗑️ Remove Photo
-                  </HiveButton>
+                  </Button>
                 )}
               </div>
 
@@ -492,7 +493,7 @@ export function ProfileIdentityModal({ profile, isOpen, onClose }: ProfileIdenti
                   <label className="block text-sm font-medium text-hive-text-secondary mb-2">
                     Display Name
                   </label>
-                  <HiveInput
+                  <Input
                     value={formData.fullName}
                     onChange={(e) => setFormData(prev => ({ ...prev, fullName: e.target.value }))}
                     placeholder="Your full name"
@@ -505,7 +506,7 @@ export function ProfileIdentityModal({ profile, isOpen, onClose }: ProfileIdenti
                   <label className="block text-sm font-medium text-hive-text-secondary mb-2">
                     Preferred Name (Optional)
                   </label>
-                  <HiveInput
+                  <Input
                     value={formData.preferredName}
                     onChange={(e) => setFormData(prev => ({ ...prev, preferredName: e.target.value }))}
                     placeholder="What should we call you?"
@@ -519,7 +520,7 @@ export function ProfileIdentityModal({ profile, isOpen, onClose }: ProfileIdenti
                     <label className="block text-sm font-medium text-hive-text-secondary mb-2">
                       Age
                     </label>
-                    <HiveInput
+                    <Input
                       type="number"
                       value={formData.age}
                       onChange={(e) => setFormData(prev => ({ ...prev, age: e.target.value }))}
@@ -570,7 +571,7 @@ export function ProfileIdentityModal({ profile, isOpen, onClose }: ProfileIdenti
                   <label className="block text-sm font-medium text-hive-text-secondary mb-2">
                     Dorm/Housing
                   </label>
-                  <HiveInput
+                  <Input
                     value={formData.housing}
                     onChange={(e) => setFormData(prev => ({ ...prev, housing: e.target.value }))}
                     placeholder="e.g., Smith Hall, Room 305"
@@ -583,7 +584,7 @@ export function ProfileIdentityModal({ profile, isOpen, onClose }: ProfileIdenti
                   <label className="block text-sm font-medium text-hive-text-secondary mb-2">
                     Pronouns (Optional)
                   </label>
-                  <HiveInput
+                  <Input
                     value={formData.pronouns}
                     onChange={(e) => setFormData(prev => ({ ...prev, pronouns: e.target.value }))}
                     placeholder="e.g., they/them, she/her, he/him"
@@ -631,14 +632,14 @@ export function ProfileIdentityModal({ profile, isOpen, onClose }: ProfileIdenti
 
         {/* Footer Actions */}
         <div className="p-6 border-t border-hive-border-primary flex justify-end gap-3">
-            <HiveButton
+            <Button
               onClick={onClose}
               variant="outline"
               className="px-6 py-3"
             >
               Cancel
-            </HiveButton>
-            <HiveButton
+            </Button>
+            <Button
               onClick={handleUpdateProfile}
               disabled={isUpdating}
               variant="primary"
@@ -652,7 +653,7 @@ export function ProfileIdentityModal({ profile, isOpen, onClose }: ProfileIdenti
               ) : (
                 'Save Changes'
               )}
-            </HiveButton>
+            </Button>
           </div>
       </div>
 

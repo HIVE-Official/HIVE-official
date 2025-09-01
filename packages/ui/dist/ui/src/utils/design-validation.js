@@ -2,7 +2,7 @@
  * HIVE Design System Validation Utilities
  * Tools to ensure components comply with HIVE design standards
  */
-import { HIVE_MOTION_CURVE_CSS } from './hive-motion';
+import { HIVE_MOTION_CURVE_CSS } from './hive-motion.js';
 // HIVE Brand Colors
 export const HIVE_COLORS = {
     // Core palette

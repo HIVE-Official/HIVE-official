@@ -2,7 +2,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from 'react';
 import { cva } from 'class-variance-authority';
-import { cn } from '../../lib/utils';
+import { cn } from '../../lib/utils.js';
 import { Crown, Shield, Star, Award, Zap, Users, BookOpen, EyeOff } from 'lucide-react';
 const profileBadgeVariants = cva("inline-flex items-center gap-1.5 font-medium rounded-full transition-all duration-200", {
     variants: {

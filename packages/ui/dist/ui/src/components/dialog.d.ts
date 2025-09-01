@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { type VariantProps } from 'class-variance-authority';
-declare const dialogVariants: (props?: {
-    size?: "sm" | "md" | "lg" | "xl";
-} & import("class-variance-authority/types").ClassProp) => string;
+declare const dialogVariants: (props?: ({
+    size?: "sm" | "md" | "lg" | "xl" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
 export interface DialogProps extends VariantProps<typeof dialogVariants> {
     isOpen: boolean;
     onClose: () => void;

@@ -1,8 +1,8 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from '../framer-motion-proxy';
-import { cn } from '../../lib/utils';
+import { motion, AnimatePresence } from '../framer-motion-proxy.js';
+import { cn } from '../../lib/utils.js';
 import { X } from 'lucide-react';
 export const ExpandFocus = ({ children, focusContent, isExpanded, onExpand, onCollapse, className = '', expandedClassName = '', expandFrom = 'center', animationDuration = 0.4, backdrop = true, closeOnBackdropClick = true, closeOnEscape = true, preservePosition = false }) => {
     const triggerRef = useRef(null);

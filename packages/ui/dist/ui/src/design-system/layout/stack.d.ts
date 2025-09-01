@@ -4,14 +4,14 @@
  */
 import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
-export declare const stackVariants: (props?: {
-    direction?: "row" | "column" | "column-reverse" | "row-reverse";
-    align?: "end" | "center" | "baseline" | "start" | "stretch";
-    justify?: "end" | "center" | "start" | "between" | "around" | "evenly";
-    gap?: "sm" | "md" | "lg" | "xl" | "none" | "xs" | "2xl";
-    wrap?: boolean;
-    campusLayout?: "navigation" | "course-header" | "profile-info" | "activity-row" | "tool-actions" | "form-field" | "card-content";
-} & import("class-variance-authority/types").ClassProp) => string;
+export declare const stackVariants: (props?: ({
+    direction?: "row" | "column" | "column-reverse" | "row-reverse" | null | undefined;
+    align?: "end" | "baseline" | "center" | "start" | "stretch" | null | undefined;
+    justify?: "end" | "center" | "start" | "between" | "around" | "evenly" | null | undefined;
+    gap?: "xs" | "sm" | "md" | "lg" | "xl" | "none" | "2xl" | null | undefined;
+    wrap?: boolean | null | undefined;
+    campusLayout?: "navigation" | "course-header" | "profile-info" | "activity-row" | "tool-actions" | "form-field" | "card-content" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
 export interface StackProps extends VariantProps<typeof stackVariants> {
     children: React.ReactNode;
     className?: string;

@@ -6,6 +6,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { HiveButton as Button, HiveCard as Card, CardContent, CardHeader, CardTitle, HiveBadge as Badge } from "@hive/ui";
 import { useAdminAuth } from "@/lib/auth";
 import { 
@@ -443,16 +444,6 @@ export const HiveAdminSpaceSystem: React.FC<HiveAdminSpaceSystemProps> = ({
   const [searchTerm, setSearchTerm] = useState('');
   // const [showCreateModal, setShowCreateModal] = useState(false);
 
-  // Feature flag check
-  if (!enableFeatureFlag) {
-    return (
-      <div className="text-center py-8">
-        <Database className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-        <p className="text-gray-400">Space system management is not available</p>
-      </div>
-    );
-  }
-
   const loadSpaces = useCallback(async () => {
     if (!admin) return;
 
@@ -507,6 +498,16 @@ export const HiveAdminSpaceSystem: React.FC<HiveAdminSpaceSystemProps> = ({
   };
 
   const stats = getSpaceStats();
+
+  // Feature flag check
+  if (!enableFeatureFlag) {
+    return (
+      <div className="text-center py-8">
+        <Database className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+        <p className="text-gray-400">Space system management is not available</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

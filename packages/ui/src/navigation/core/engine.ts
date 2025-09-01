@@ -9,12 +9,13 @@
  * - Performance optimization
  */
 
-import { 
+import type { 
   NavigationMode, 
   NavigationPreference, 
   NavigationState, 
   NavigationLayout,
-  ScreenSize,
+  ScreenSize} from './types';
+import {
   BREAKPOINTS 
 } from './types';
 

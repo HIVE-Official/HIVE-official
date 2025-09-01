@@ -25,7 +25,7 @@ export default function ResourcesPage() {
               <Code className="h-4 w-4 text-[var(--hive-background-primary)]" />
             </div>
             <div>
-              <h3 className="text-sm font-medium text-white group-hover:text-[var(--hive-brand-secondary)] transition-colors">API Docs</h3>
+              <h3 className="text-sm font-medium text-[var(--hive-text-inverse)] group-hover:text-[var(--hive-brand-secondary)] transition-colors">API Docs</h3>
               <p className="text-xs text-[var(--hive-text-muted)]">Technical reference</p>
             </div>
           </div>
@@ -37,10 +37,10 @@ export default function ResourcesPage() {
         >
           <div className="flex items-center space-x-3">
             <div className="w-8 h-8 bg-[rgba(255,255,255,0.1)] rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
-              <Video className="h-4 w-4 text-white" />
+              <Video className="h-4 w-4 text-[var(--hive-text-inverse)]" />
             </div>
             <div>
-              <h3 className="text-sm font-medium text-white group-hover:text-[var(--hive-brand-secondary)] transition-colors">Tutorials</h3>
+              <h3 className="text-sm font-medium text-[var(--hive-text-inverse)] group-hover:text-[var(--hive-brand-secondary)] transition-colors">Tutorials</h3>
               <p className="text-xs text-[var(--hive-text-muted)]">Step-by-step guides</p>
             </div>
           </div>
@@ -52,10 +52,10 @@ export default function ResourcesPage() {
         >
           <div className="flex items-center space-x-3">
             <div className="w-8 h-8 bg-[rgba(255,255,255,0.1)] rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
-              <Users className="h-4 w-4 text-white" />
+              <Users className="h-4 w-4 text-[var(--hive-text-inverse)]" />
             </div>
             <div>
-              <h3 className="text-sm font-medium text-white group-hover:text-[var(--hive-brand-secondary)] transition-colors">Community</h3>
+              <h3 className="text-sm font-medium text-[var(--hive-text-inverse)] group-hover:text-[var(--hive-brand-secondary)] transition-colors">Community</h3>
               <p className="text-xs text-[var(--hive-text-muted)]">Get help & share</p>
             </div>
           </div>
@@ -67,10 +67,10 @@ export default function ResourcesPage() {
         >
           <div className="flex items-center space-x-3">
             <div className="w-8 h-8 bg-[rgba(255,255,255,0.1)] rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
-              <Download className="h-4 w-4 text-white" />
+              <Download className="h-4 w-4 text-[var(--hive-text-inverse)]" />
             </div>
             <div>
-              <h3 className="text-sm font-medium text-white group-hover:text-[var(--hive-brand-secondary)] transition-colors">Templates</h3>
+              <h3 className="text-sm font-medium text-[var(--hive-text-inverse)] group-hover:text-[var(--hive-brand-secondary)] transition-colors">Templates</h3>
               <p className="text-xs text-[var(--hive-text-muted)]">Ready-to-use tools</p>
             </div>
           </div>
@@ -81,7 +81,7 @@ export default function ResourcesPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Getting Started */}
         <div>
-          <h2 className="text-xl font-semibold text-white mb-6 flex items-center">
+          <h2 className="text-xl font-semibold text-[var(--hive-text-inverse)] mb-6 flex items-center">
             <Star className="h-5 w-5 mr-2 text-[var(--hive-brand-secondary)]" />
             Getting Started
           </h2>
@@ -92,7 +92,7 @@ export default function ResourcesPage() {
             >
               <div className="flex items-start justify-between">
                 <div className="flex-1">
-                  <h3 className="text-white font-medium mb-2 group-hover:text-[var(--hive-brand-secondary)] transition-colors">Your First Tool</h3>
+                  <h3 className="text-[var(--hive-text-inverse)] font-medium mb-2 group-hover:text-[var(--hive-brand-secondary)] transition-colors">Your First Tool</h3>
                   <p className="text-[var(--hive-text-muted)] text-sm mb-3">
                     Learn how to create your first tool using HiveLab&apos;s visual builder.
                   </p>
@@ -108,7 +108,7 @@ export default function ResourcesPage() {
             <Card className="p-6 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)]">
               <div className="flex items-start justify-between">
                 <div className="flex-1">
-                  <h3 className="text-white font-medium mb-2">Space Management</h3>
+                  <h3 className="text-[var(--hive-text-inverse)] font-medium mb-2">Space Management</h3>
                   <p className="text-[var(--hive-text-muted)] text-sm mb-3">
                     Best practices for managing your space and building community.
                   </p>
@@ -124,7 +124,7 @@ export default function ResourcesPage() {
             <Card className="p-6 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)]">
               <div className="flex items-start justify-between">
                 <div className="flex-1">
-                  <h3 className="text-white font-medium mb-2">Design Guidelines</h3>
+                  <h3 className="text-[var(--hive-text-inverse)] font-medium mb-2">Design Guidelines</h3>
                   <p className="text-[var(--hive-text-muted)] text-sm mb-3">
                     Design principles to create tools that users love.
                   </p>
@@ -141,7 +141,7 @@ export default function ResourcesPage() {
 
         {/* Advanced Topics */}
         <div>
-          <h2 className="text-xl font-semibold text-white mb-6 flex items-center">
+          <h2 className="text-xl font-semibold text-[var(--hive-text-inverse)] mb-6 flex items-center">
             <Code className="h-5 w-5 mr-2" />
             Advanced Topics
           </h2>
@@ -149,7 +149,7 @@ export default function ResourcesPage() {
             <Card className="p-6 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)]">
               <div className="flex items-start justify-between">
                 <div className="flex-1">
-                  <h3 className="text-white font-medium mb-2">Custom Components</h3>
+                  <h3 className="text-[var(--hive-text-inverse)] font-medium mb-2">Custom Components</h3>
                   <p className="text-[var(--hive-text-muted)] text-sm mb-3">
                     Build custom components for advanced functionality.
                   </p>
@@ -165,7 +165,7 @@ export default function ResourcesPage() {
             <Card className="p-6 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)]">
               <div className="flex items-start justify-between">
                 <div className="flex-1">
-                  <h3 className="text-white font-medium mb-2">API Integration</h3>
+                  <h3 className="text-[var(--hive-text-inverse)] font-medium mb-2">API Integration</h3>
                   <p className="text-[var(--hive-text-muted)] text-sm mb-3">
                     Connect your tools to external services and APIs.
                   </p>
@@ -181,7 +181,7 @@ export default function ResourcesPage() {
             <Card className="p-6 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)]">
               <div className="flex items-start justify-between">
                 <div className="flex-1">
-                  <h3 className="text-white font-medium mb-2">Performance Tips</h3>
+                  <h3 className="text-[var(--hive-text-inverse)] font-medium mb-2">Performance Tips</h3>
                   <p className="text-[var(--hive-text-muted)] text-sm mb-3">
                     Optimize your tools for speed and reliability.
                   </p>
@@ -199,7 +199,7 @@ export default function ResourcesPage() {
 
       {/* Popular Templates */}
       <div className="mt-12">
-        <h2 className="text-xl font-semibold text-white mb-6 flex items-center">
+        <h2 className="text-xl font-semibold text-[var(--hive-text-inverse)] mb-6 flex items-center">
           <Download className="h-5 w-5 mr-2" />
           Popular Templates
         </h2>
@@ -233,7 +233,7 @@ export default function ResourcesPage() {
                   Use Template
                 </Button>
               </div>
-              <h3 className="text-white font-medium mb-2 group-hover:text-[var(--hive-brand-secondary)] transition-colors">{template.name}</h3>
+              <h3 className="text-[var(--hive-text-inverse)] font-medium mb-2 group-hover:text-[var(--hive-brand-secondary)] transition-colors">{template.name}</h3>
               <div className="flex items-center justify-between text-xs text-[var(--hive-text-muted)]">
                 <span>{template.category}</span>
                 <span>{template.downloads} downloads</span>
@@ -246,7 +246,7 @@ export default function ResourcesPage() {
       {/* Help Section */}
       <div className="mt-12">
         <Card className="p-8 bg-gradient-to-r from-[rgba(255,215,0,0.1)] to-[rgba(255,215,0,0.05)] border-[rgba(255,215,0,0.2)] text-center">
-          <h2 className="text-2xl font-bold text-white mb-4">Need more help?</h2>
+          <h2 className="text-2xl font-bold text-[var(--hive-text-inverse)] mb-4">Need more help?</h2>
           <p className="text-[var(--hive-text-muted)] mb-6 max-w-md mx-auto">
             Join our community Discord or schedule office hours with the HIVE team.
           </p>
@@ -260,7 +260,7 @@ export default function ResourcesPage() {
             </Button>
             <Button 
               variant="outline" 
-              className="border-[rgba(255,255,255,0.2)] text-white hover:bg-[rgba(255,255,255,0.1)]"
+              className="border-[rgba(255,255,255,0.2)] text-[var(--hive-text-inverse)] hover:bg-[rgba(255,255,255,0.1)]"
               onClick={() => window.open('https://calendly.com/hive-university/office-hours', '_blank')}
             >
               Schedule Office Hours

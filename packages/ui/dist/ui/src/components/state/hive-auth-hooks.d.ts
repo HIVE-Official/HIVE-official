@@ -12,8 +12,8 @@ export declare function useAuth(): {
     isAuthenticated: boolean;
     isOnboarding: boolean;
     isLoading: boolean;
-    error: string;
-    user: User;
+    error: string | null;
+    user: User | null;
     authStatus: AuthStatus;
     sendMagicLink: (email: string) => Promise<boolean>;
     verifyMagicLink: (token: string) => Promise<boolean>;
@@ -43,7 +43,7 @@ export declare function useOnboarding(): {
 export declare function useBuilderProgression(): {
     level: BuilderLevel;
     progress: number;
-    nextLevel: BuilderLevel;
+    nextLevel: BuilderLevel | null;
     capabilities: {
         canUsePersonalTools: boolean;
         canCreatePersonalTools: boolean;

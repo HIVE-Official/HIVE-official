@@ -359,7 +359,7 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
           <div className="flex items-center gap-3">
             <Users className="h-6 w-6 text-[var(--hive-brand-secondary)]" />
             <div>
-              <h2 className="text-xl font-semibold text-white">Member Management</h2>
+              <h2 className="text-xl font-semibold text-[var(--hive-text-inverse)]">Member Management</h2>
               <p className="text-sm text-gray-400">{spaceName} • {members.length} members</p>
             </div>
           </div>
@@ -379,7 +379,7 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
             <Button
               variant="outline"
               size="sm"
-              className="border-white/[0.2] text-white hover:bg-white/[0.1]"
+              className="border-white/[0.2] text-[var(--hive-text-inverse)] hover:bg-white/[0.1]"
               onClick={onClose}
             >
               <X className="h-4 w-4" />
@@ -398,7 +398,7 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
                 placeholder="Search members..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 bg-white/[0.02] border border-white/[0.06] rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--hive-brand-secondary)]/50 focus:border-[var(--hive-brand-secondary)]/30"
+                className="w-full pl-10 pr-4 py-2 bg-white/[0.02] border border-white/[0.06] rounded-lg text-[var(--hive-text-inverse)] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--hive-brand-secondary)]/50 focus:border-[var(--hive-brand-secondary)]/30"
               />
             </div>
 
@@ -406,7 +406,7 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
             <select
               value={selectedRole}
               onChange={(e) => setSelectedRole(e.target.value)}
-              className="px-3 py-2 bg-white/[0.02] border border-white/[0.06] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[var(--hive-brand-secondary)]/50"
+              className="px-3 py-2 bg-white/[0.02] border border-white/[0.06] rounded-lg text-[var(--hive-text-inverse)] focus:outline-none focus:ring-2 focus:ring-[var(--hive-brand-secondary)]/50"
             >
               <option value="all">All Roles</option>
               <option value="owner">Owners</option>
@@ -419,7 +419,7 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
             <select
               value={selectedStatus}
               onChange={(e) => setSelectedStatus(e.target.value)}
-              className="px-3 py-2 bg-white/[0.02] border border-white/[0.06] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[var(--hive-brand-secondary)]/50"
+              className="px-3 py-2 bg-white/[0.02] border border-white/[0.06] rounded-lg text-[var(--hive-text-inverse)] focus:outline-none focus:ring-2 focus:ring-[var(--hive-brand-secondary)]/50"
             >
               <option value="all">All Status</option>
               <option value="active">Active</option>
@@ -476,7 +476,7 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
                       />
                     ) : (
                       <div className="w-12 h-12 bg-gradient-to-br from-gray-500/20 to-gray-700/20 rounded-full flex items-center justify-center">
-                        <span className="text-sm font-medium text-white">
+                        <span className="text-sm font-medium text-[var(--hive-text-inverse)]">
                           {member.name.charAt(0).toUpperCase()}
                         </span>
                       </div>
@@ -486,7 +486,7 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
                   {/* Member Info */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
-                      <h4 className="font-medium text-white truncate">{member.name}</h4>
+                      <h4 className="font-medium text-[var(--hive-text-inverse)] truncate">{member.name}</h4>
                       <span className="text-sm text-gray-400">@{member.username}</span>
                       
                       {/* Role Badge */}
@@ -526,7 +526,7 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
                     <Button
                       variant="outline"
                       size="sm"
-                      className="border-white/[0.2] text-white hover:bg-white/[0.1]"
+                      className="border-white/[0.2] text-[var(--hive-text-inverse)] hover:bg-white/[0.1]"
                       onClick={() => {
                         setSelectedMember(member);
                         setShowMemberDetails(true);
@@ -599,7 +599,7 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
               animate={{ scale: 1 }}
               exit={{ scale: 0.9 }}
             >
-              <h3 className="text-lg font-semibold text-white mb-4">Change Member Role</h3>
+              <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4">Change Member Role</h3>
               <p className="text-sm text-gray-400 mb-6">
                 Change role for <strong>{selectedMember.name}</strong>
               </p>
@@ -616,7 +616,7 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
                         selectedMember.role === role
                           ? 'bg-blue-500/20 border-blue-500/30 text-blue-400'
                           : canAssign
-                          ? 'bg-white/[0.02] border-white/[0.06] text-white hover:border-white/[0.1]'
+                          ? 'bg-white/[0.02] border-white/[0.06] text-[var(--hive-text-inverse)] hover:border-white/[0.1]'
                           : 'bg-gray-500/10 border-gray-500/20 text-gray-500 cursor-not-allowed'
                       }`}
                       onClick={() => canAssign && handleRoleChange(selectedMember.id, role)}
@@ -635,7 +635,7 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
               <div className="flex gap-3">
                 <Button
                   variant="outline"
-                  className="flex-1 border-white/[0.2] text-white hover:bg-white/[0.1]"
+                  className="flex-1 border-white/[0.2] text-[var(--hive-text-inverse)] hover:bg-white/[0.1]"
                   onClick={() => {
                     setShowRoleChangeModal(false);
                     setSelectedMember(null);

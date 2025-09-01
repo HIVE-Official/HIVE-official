@@ -135,9 +135,9 @@ export default function PublicProfilePage() {
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
             <div className="w-12 h-12 bg-red-500 rounded-lg flex items-center justify-center mx-auto mb-4">
-              <User className="h-6 w-6 text-white" />
+              <User className="h-6 w-6 text-[var(--hive-text-inverse)]" />
             </div>
-            <p className="text-white mb-2">Profile not found</p>
+            <p className="text-[var(--hive-text-inverse)] mb-2">Profile not found</p>
             <p className="text-red-400 text-sm">{error}</p>
             <Button 
               onClick={() => router.back()} 
@@ -159,7 +159,7 @@ export default function PublicProfilePage() {
             <div className="w-12 h-12 bg-hive-gold rounded-lg animate-pulse mx-auto mb-4 flex items-center justify-center">
               <User className="h-6 w-6 text-hive-obsidian animate-pulse" />
             </div>
-            <p className="text-white mb-2">Loading profile...</p>
+            <p className="text-[var(--hive-text-inverse)] mb-2">Loading profile...</p>
             <p className="text-hive-text-mutedLight text-sm">@{handle}</p>
           </div>
         </div>
@@ -235,7 +235,7 @@ export default function PublicProfilePage() {
               </div>
               
               {/* Name & Handle */}
-              <h1 className="text-2xl font-bold text-white mb-1">{profileData.fullName}</h1>
+              <h1 className="text-2xl font-bold text-[var(--hive-text-inverse)] mb-1">{profileData.fullName}</h1>
               <p className="text-hive-text-mutedLight text-sm mb-3">@{profileData.handle}</p>
               
               {/* Status Badges */}
@@ -266,7 +266,7 @@ export default function PublicProfilePage() {
               {/* Status Message */}
               {profileData.statusMessage && (
                 <div className="bg-hive-background-tertiary rounded-lg p-3 mb-4">
-                  <p className="text-sm text-white italic">"{profileData.statusMessage}"</p>
+                  <p className="text-sm text-[var(--hive-text-inverse)] italic">"{profileData.statusMessage}"</p>
                 </div>
               )}
               
@@ -286,25 +286,25 @@ export default function PublicProfilePage() {
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
               <Card className="p-4 text-center bg-gradient-to-br from-blue-500/10 to-blue-600/10 border-blue-500/20">
                 <Users className="h-6 w-6 mx-auto mb-2 text-blue-400" />
-                <div className="text-lg font-bold text-white">12</div>
+                <div className="text-lg font-bold text-[var(--hive-text-inverse)]">12</div>
                 <div className="text-xs text-hive-text-mutedLight">Spaces</div>
               </Card>
               
               <Card className="p-4 text-center bg-gradient-to-br from-purple-500/10 to-purple-600/10 border-purple-500/20">
                 <Zap className="h-6 w-6 mx-auto mb-2 text-purple-400" />
-                <div className="text-lg font-bold text-white">8</div>
+                <div className="text-lg font-bold text-[var(--hive-text-inverse)]">8</div>
                 <div className="text-xs text-hive-text-mutedLight">Tools Built</div>
               </Card>
               
               <Card className="p-4 text-center bg-gradient-to-br from-green-500/10 to-green-600/10 border-green-500/20">
                 <Star className="h-6 w-6 mx-auto mb-2 text-green-400" />
-                <div className="text-lg font-bold text-white">2.3k</div>
+                <div className="text-lg font-bold text-[var(--hive-text-inverse)]">2.3k</div>
                 <div className="text-xs text-hive-text-mutedLight">Reputation</div>
               </Card>
               
               <Card className="p-4 text-center bg-gradient-to-br from-orange-500/10 to-orange-600/10 border-orange-500/20">
                 <Calendar className="h-6 w-6 mx-auto mb-2 text-orange-400" />
-                <div className="text-lg font-bold text-white">
+                <div className="text-lg font-bold text-[var(--hive-text-inverse)]">
                   {Math.floor((Date.now() - new Date(profileData.joinedAt).getTime()) / (1000 * 60 * 60 * 24))}d
                 </div>
                 <div className="text-xs text-hive-text-mutedLight">On HIVE</div>
@@ -313,23 +313,23 @@ export default function PublicProfilePage() {
             
             {/* Recent Activity Preview */}
             <Card className="p-6 bg-hive-background-overlay border-hive-border-default">
-              <h3 className="text-lg font-semibold text-white mb-4">Recent Activity</h3>
+              <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4">Recent Activity</h3>
               <div className="space-y-3">
                 <div className="flex items-center space-x-3 p-3 rounded-lg bg-hive-background-tertiary">
                   <div className="w-8 h-8 bg-purple-500 rounded-lg flex items-center justify-center">
-                    <Zap className="h-4 w-4 text-white" />
+                    <Zap className="h-4 w-4 text-[var(--hive-text-inverse)]" />
                   </div>
                   <div>
-                    <p className="text-sm text-white">Built a new study timer tool</p>
+                    <p className="text-sm text-[var(--hive-text-inverse)]">Built a new study timer tool</p>
                     <p className="text-xs text-hive-text-mutedLight">2 hours ago</p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-3 p-3 rounded-lg bg-hive-background-tertiary">
                   <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
-                    <Users className="h-4 w-4 text-white" />
+                    <Users className="h-4 w-4 text-[var(--hive-text-inverse)]" />
                   </div>
                   <div>
-                    <p className="text-sm text-white">Joined CS Study Group</p>
+                    <p className="text-sm text-[var(--hive-text-inverse)]">Joined CS Study Group</p>
                     <p className="text-xs text-hive-text-mutedLight">1 day ago</p>
                   </div>
                 </div>
@@ -344,7 +344,7 @@ export default function PublicProfilePage() {
             <div className="flex items-center space-x-3">
               <Shield className="h-5 w-5 text-amber-400" />
               <div>
-                <p className="text-sm text-white font-medium">Limited Profile View</p>
+                <p className="text-sm text-[var(--hive-text-inverse)] font-medium">Limited Profile View</p>
                 <p className="text-xs text-amber-200">This user has restricted their profile visibility. Connect to see more information.</p>
               </div>
             </div>

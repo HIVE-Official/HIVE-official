@@ -27,7 +27,7 @@ export declare class MobilePerformanceManager {
     destroy(): void;
 }
 export declare function useMobilePerformance(): {
-    metrics: PerformanceMetrics;
+    metrics: PerformanceMetrics | null;
     isInitialized: boolean;
     shouldReduceComplexity: () => boolean;
     getOptimalImageQuality: () => number;

@@ -237,7 +237,7 @@ export const InteractiveTag: React.FC<Omit<TagProps, 'interactive'>> = (props) =
 );
 
 export const OutlineTag: React.FC<Omit<TagProps, 'variant'>> = (props) => (
-  <Tag variant="secondary" {...props} />
+  <Tag variant="outline" {...props} />
 );
 
 export const GhostTag: React.FC<Omit<TagProps, 'variant'>> = (props) => (

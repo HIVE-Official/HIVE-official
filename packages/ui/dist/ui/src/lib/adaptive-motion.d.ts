@@ -17,10 +17,10 @@ export declare function detectEnergyState(overrideState?: StudentEnergyState): S
 export declare function getAdaptiveMotion(energyState: StudentEnergyState, context?: CampusContext): {
     duration: {
         instant: number;
-        fast: number;
-        base: number;
-        slow: number;
-        ritual: number;
+        snap: number;
+        smooth: number;
+        liquid: number;
+        dramatic: number;
     };
     scale: {
         micro: number;
@@ -33,10 +33,10 @@ export declare function getAdaptiveMotion(energyState: StudentEnergyState, conte
 } | {
     duration: {
         instant: number;
-        fast: number;
-        base: number;
-        slow: number;
-        ritual: number;
+        snap: number;
+        smooth: number;
+        liquid: number;
+        dramatic: number;
     };
     scale: {
         micro: number;
@@ -49,10 +49,10 @@ export declare function getAdaptiveMotion(energyState: StudentEnergyState, conte
 } | {
     duration: {
         instant: number;
-        fast: number;
-        base: number;
-        slow: number;
-        ritual: number;
+        snap: number;
+        smooth: number;
+        liquid: number;
+        dramatic: number;
     };
     scale: {
         micro: number;
@@ -65,10 +65,10 @@ export declare function getAdaptiveMotion(energyState: StudentEnergyState, conte
 } | {
     duration: {
         instant: number;
-        fast: number;
-        base: number;
-        slow: number;
-        ritual: number;
+        snap: number;
+        smooth: number;
+        liquid: number;
+        dramatic: number;
     };
     scale: {
         micro: number;
@@ -81,10 +81,10 @@ export declare function getAdaptiveMotion(energyState: StudentEnergyState, conte
 } | {
     duration: {
         instant: number;
-        fast: number;
-        base: number;
-        slow: number;
-        ritual: number;
+        snap: number;
+        smooth: number;
+        liquid: number;
+        dramatic: number;
     };
     scale: {
         micro: number;
@@ -111,10 +111,10 @@ export declare function useAdaptiveMotion(context?: CampusContext, overrideState
     config: {
         duration: {
             instant: number;
-            fast: number;
-            base: number;
-            slow: number;
-            ritual: number;
+            snap: number;
+            smooth: number;
+            liquid: number;
+            dramatic: number;
         };
         scale: {
             micro: number;
@@ -127,10 +127,10 @@ export declare function useAdaptiveMotion(context?: CampusContext, overrideState
     } | {
         duration: {
             instant: number;
-            fast: number;
-            base: number;
-            slow: number;
-            ritual: number;
+            snap: number;
+            smooth: number;
+            liquid: number;
+            dramatic: number;
         };
         scale: {
             micro: number;
@@ -143,10 +143,10 @@ export declare function useAdaptiveMotion(context?: CampusContext, overrideState
     } | {
         duration: {
             instant: number;
-            fast: number;
-            base: number;
-            slow: number;
-            ritual: number;
+            snap: number;
+            smooth: number;
+            liquid: number;
+            dramatic: number;
         };
         scale: {
             micro: number;
@@ -159,10 +159,10 @@ export declare function useAdaptiveMotion(context?: CampusContext, overrideState
     } | {
         duration: {
             instant: number;
-            fast: number;
-            base: number;
-            slow: number;
-            ritual: number;
+            snap: number;
+            smooth: number;
+            liquid: number;
+            dramatic: number;
         };
         scale: {
             micro: number;
@@ -175,10 +175,10 @@ export declare function useAdaptiveMotion(context?: CampusContext, overrideState
     } | {
         duration: {
             instant: number;
-            fast: number;
-            base: number;
-            slow: number;
-            ritual: number;
+            snap: number;
+            smooth: number;
+            liquid: number;
+            dramatic: number;
         };
         scale: {
             micro: number;
@@ -201,5 +201,5 @@ export declare function AdaptiveMotionProvider({ children, energyState, context,
     context?: CampusContext;
 }): import("react/jsx-runtime").JSX.Element;
 export type { Variants, Transition } from 'framer-motion';
-export { motion } from '@hive/tokens';
+export { motion } from '../../../tokens/src/motion';
 //# sourceMappingURL=adaptive-motion.d.ts.map

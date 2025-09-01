@@ -1,7 +1,7 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-// import { BreadcrumbNavigation } from './breadcrumb-navigation'; // Temporarily disabled
-import { cn } from '../../lib/utils';
+// import { BreadcrumbNavigation } from './breadcrumb-navigation.js'; // Temporarily disabled
+import { cn } from '../../lib/utils.js';
 export function PageContainer({ children, title, subtitle, breadcrumbs, actions, className, maxWidth = 'full', padding = 'lg' }) {
     const maxWidthClasses = {
         sm: 'max-w-sm',

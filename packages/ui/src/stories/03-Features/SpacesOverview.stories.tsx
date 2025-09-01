@@ -10,7 +10,16 @@ import {
   Building 
 } from 'lucide-react';
 
-const meta: Meta = {
+// Create a component wrapper for the story
+const SpacesOverview = () => (
+  <div className="p-6 space-y-8">
+    <h2 className="text-2xl font-semibold">Spaces Overview</h2>
+    <p className="text-muted-foreground">Complete overview of HIVE space ecosystem</p>
+  </div>
+);
+
+const meta: Meta<typeof SpacesOverview> = {
+  component: SpacesOverview,
   title: '03-Features/Spaces Overview',
   parameters: {
     layout: 'fullscreen',
@@ -274,7 +283,7 @@ export const AllSpacesByCategory: StoryObj = {
               </h2>
               <p className="text-sm text-muted">Greek organizations and professional fraternities</p>
             </div>
-            <Badge variant="accent" className="ml-auto">2</Badge>
+            <Badge variant="secondary" className="ml-auto">2</Badge>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <SpaceCard
@@ -316,7 +325,7 @@ export const AllSpacesByCategory: StoryObj = {
               </h2>
               <p className="text-sm text-muted">HIVE Lab and campus innovation spaces</p>
             </div>
-            <Badge variant="accent" className="ml-auto">2</Badge>
+            <Badge variant="secondary" className="ml-auto">2</Badge>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <SpaceCard

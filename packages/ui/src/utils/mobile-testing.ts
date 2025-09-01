@@ -260,7 +260,8 @@ export class MobileTester {
       result.passed = result.errors.length === 0;
       
     } catch (error) {
-      result.errors.push(`Scenario execution failed: ${error.message}`);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      result.errors.push(`Scenario execution failed: ${errorMessage}`);
       result.passed = false;
     }
 
@@ -310,7 +311,7 @@ export class MobileTester {
       stepResult.passed = true;
     } catch (error) {
       stepResult.passed = false;
-      stepResult.error = error.message;
+      stepResult.error = error instanceof Error ? error.message : String(error);
     }
 
     stepResult.endTime = performance.now();
@@ -382,8 +383,8 @@ export class MobileTester {
 
     // Simulate swipe gesture
     const rect = element.getBoundingClientRect();
-    let startX = rect.left + rect.width / 2;
-    let startY = rect.top + rect.height / 2;
+    const startX = rect.left + rect.width / 2;
+    const startY = rect.top + rect.height / 2;
     let endX = startX;
     let endY = startY;
 

@@ -4,8 +4,8 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
  * Threaded comments with real-time updates and social interactions
  */
 import { useState, useCallback, useMemo } from 'react';
-import { Button } from '../../ui/button';
-import { Avatar, HiveBadge as Badge } from '../index'; // Use atomic components
+import { Button } from '../../atomic/atoms/button-enhanced.js';
+import { Avatar, HiveBadge as Badge } from '../index.js'; // Use atomic components
 import { MessageCircle, Heart, Reply, MoreHorizontal, Flag, Edit3, Trash2, ChevronDown, ChevronUp, Send } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 const CommentItem = ({ comment, depth, maxDepth, currentUserId, onLike, onReply, onEdit, onDelete, onReport }) => {

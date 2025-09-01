@@ -8,6 +8,27 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
     icon?: React.ReactNode;
     children?: React.ReactNode;
 }
+export declare const badgeVariants: {
+    primary: string;
+    secondary: string;
+    success: string;
+    warning: string;
+    error: string;
+    info: string;
+    ghost: string;
+    builder: string;
+    verified: string;
+    leader: string;
+    'ghost-mode': string;
+    achievement: string;
+    streak: string;
+    scholar: string;
+    connector: string;
+    dean: string;
+    developer: string;
+    organizer: string;
+    helper: string;
+};
 export declare const Badge: React.FC<BadgeProps>;
 export declare const RecognitionBadges: {
     Builder: ({ children, ...props }: Omit<BadgeProps, "variant">) => import("react/jsx-runtime").JSX.Element;

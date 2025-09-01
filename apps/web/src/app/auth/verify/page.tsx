@@ -3,9 +3,9 @@
 import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Loader2, CheckCircle, XCircle } from 'lucide-react';
+import { useUnifiedAuth } from '@hive/ui';
 import { signInWithCustomToken } from 'firebase/auth';
-import { auth } from '@hive/ui/firebase/client-config';
-import { useHiveAuth } from '@hive/ui';
+import { auth } from '@/lib/firebase';
 
 /**
  * HIVE Magic Link Verification Page - Clean Firebase Implementation
@@ -23,7 +23,7 @@ interface VerificationState {
 function VerifyPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { refreshUserData } = useHiveAuth();
+  const hiveAuth = useUnifiedAuth();
   
   const [state, setState] = useState<VerificationState>({
     status: 'loading',
@@ -51,8 +51,8 @@ function VerifyPageContent() {
       });
 
       try {
-        // Step 1: Verify magic link with backend
-        const verifyResponse = await fetch('/api/auth/verify-magic-link-new', {
+        // Step 1: Verify magic link and get Firebase Custom Token
+        const verifyResponse = await fetch('/api/auth/verify-magic-link', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ token, email, schoolId })
@@ -67,35 +67,28 @@ function VerifyPageContent() {
         
         setState({
           status: 'verifying',
-          message: 'Authenticating with Firebase...'
+          message: 'Signing you in...'
         });
 
-        // Step 2: Sign in with Firebase using the custom token
+        // Step 2: Sign in with Firebase custom token
         await signInWithCustomToken(auth, verifyData.token);
 
-        setState({
-          status: 'verifying',
-          message: 'Loading your profile...'
-        });
-
-        // Step 3: Refresh user data to get latest profile info
-        await refreshUserData();
-
+        // Firebase auth context will handle profile loading automatically
         setState({
           status: 'success',
           message: verifyData.needsOnboarding 
-            ? 'Welcome to HIVE! Let\'s set up your profile.'
+            ? 'Welcome to HIVE! Setting up your profile...'
             : 'Welcome back to HIVE!'
         });
 
-        // Step 4: Redirect based on onboarding status
+        // Redirect based on onboarding status
         setTimeout(() => {
           if (verifyData.needsOnboarding) {
             router.push('/onboarding');
           } else {
             router.push('/');
           }
-        }, 2000);
+        }, 1500);
 
       } catch (error) {
         console.error('Magic link verification failed:', error);
@@ -109,17 +102,17 @@ function VerifyPageContent() {
     };
 
     verifyMagicLink();
-  }, [token, email, schoolId, router, refreshUserData]);
+  }, [token, email, schoolId, router]);
 
   const getIcon = () => {
     switch (state.status) {
       case 'loading':
       case 'verifying':
-        return <Loader2 className="h-16 w-16 text-[var(--hive-brand-primary)] animate-spin" />;
+        return <Loader2 className="h-16 w-16 text-hive-brand-primary animate-spin" />;
       case 'success':
-        return <CheckCircle className="h-16 w-16 text-[var(--hive-status-success)]" />;
+        return <CheckCircle className="h-16 w-16 text-hive-status-success" />;
       case 'error':
-        return <XCircle className="h-16 w-16 text-[var(--hive-status-error)]" />;
+        return <XCircle className="h-16 w-16 text-hive-status-error" />;
     }
   };
 
@@ -135,7 +128,7 @@ function VerifyPageContent() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--hive-background-primary)] flex items-center justify-center p-4">
+    <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <div className="max-w-md w-full text-center space-y-6">
         {/* Icon */}
         <div className="flex justify-center">
@@ -144,7 +137,7 @@ function VerifyPageContent() {
 
         {/* Title */}
         <div>
-          <h1 className="text-2xl font-bold text-[var(--hive-text-primary)] mb-2">
+          <h1 className="text-2xl font-bold text-white mb-2">
             {state.status === 'error' ? 'Verification Failed' : 'Verifying Your Account'}
           </h1>
           <p 
@@ -157,8 +150,8 @@ function VerifyPageContent() {
 
         {/* Error details */}
         {state.status === 'error' && state.error && (
-          <div className="bg-[var(--hive-status-error)]/10 border border-[var(--hive-status-error)]/20 rounded-lg p-4">
-            <p className="text-sm text-[var(--hive-status-error)]">
+          <div className="bg-hive-status-error/10 border border-hive-status-error/20 rounded-lg p-4">
+            <p className="text-sm text-hive-status-error">
               {state.error}
             </p>
           </div>
@@ -167,7 +160,7 @@ function VerifyPageContent() {
         {/* Loading progress for verification */}
         {state.status === 'verifying' && (
           <div className="space-y-2">
-            <div className="w-full bg-[var(--hive-background-tertiary)] rounded-full h-2">
+            <div className="w-full bg-hive-background-tertiary rounded-full h-2">
               <div 
                 className="h-2 rounded-full transition-all duration-1000 ease-out"
                 style={{ 
@@ -176,7 +169,7 @@ function VerifyPageContent() {
                 }}
               />
             </div>
-            <p className="text-sm text-[var(--hive-text-muted)]">
+            <p className="text-sm text-white/80">
               This may take a moment...
             </p>
           </div>
@@ -185,12 +178,12 @@ function VerifyPageContent() {
         {/* Success message */}
         {state.status === 'success' && (
           <div className="space-y-2">
-            <div className="w-full bg-[var(--hive-status-success)]/20 rounded-full h-2">
+            <div className="w-full bg-hive-status-success/20 rounded-full h-2">
               <div 
-                className="w-full h-2 bg-[var(--hive-status-success)] rounded-full"
+                className="w-full h-2 bg-hive-status-success rounded-full"
               />
             </div>
-            <p className="text-sm text-[var(--hive-text-muted)]">
+            <p className="text-sm text-white/80">
               Redirecting you to HIVE...
             </p>
           </div>
@@ -201,11 +194,11 @@ function VerifyPageContent() {
           <div className="space-y-3">
             <button
               onClick={() => router.push('/schools')}
-              className="w-full bg-[var(--hive-brand-primary)] text-white py-3 px-4 rounded-lg hover:opacity-90 transition-opacity"
+              className="w-full bg-hive-brand-primary text-hive-background-primary py-3 px-4 rounded-lg hover:opacity-90 transition-opacity font-medium"
             >
               Return to Login
             </button>
-            <p className="text-xs text-[var(--hive-text-muted)]">
+            <p className="text-xs text-white/80">
               Need help? The magic link may have expired or been already used.
             </p>
           </div>
@@ -219,8 +212,8 @@ export default function VerifyPage() {
   return (
     <Suspense 
       fallback={
-        <div className="min-h-screen bg-[var(--hive-background-primary)] flex items-center justify-center">
-          <Loader2 className="h-12 w-12 text-[var(--hive-brand-primary)] animate-spin" />
+        <div className="min-h-screen bg-background flex items-center justify-center">
+          <Loader2 className="h-12 w-12 text-hive-brand-primary animate-spin" />
         </div>
       }
     >

@@ -19,9 +19,9 @@ export const ProfileOverview = ({ user }: ProfileOverviewProps) => {
   return (
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
       {/* Now Tile - Manual Status */}
-      <Card className="border-gold/20 bg-gray-900/50">
+      <Card className="border-[var(--hive-brand-secondary)]/20 bg-[var(--hive-background-primary)]/50">
         <CardHeader className="pb-3">
-          <CardTitle className="flex items-center gap-2 text-gold">
+          <CardTitle className="flex items-center gap-2 text-[var(--hive-brand-secondary)]">
             <Activity className="h-5 w-5" />
             Now
           </CardTitle>
@@ -37,9 +37,9 @@ export const ProfileOverview = ({ user }: ProfileOverviewProps) => {
       </Card>
 
       {/* My Spaces - Placeholder for Team 2 Integration */}
-      <Card className="border-gray-700 bg-gray-900/50">
+      <Card className="border-gray-700 bg-[var(--hive-background-primary)]/50">
         <CardHeader className="pb-3">
-          <CardTitle className="flex items-center gap-2 text-white">
+          <CardTitle className="flex items-center gap-2 text-[var(--hive-text-inverse)]">
             <Users className="h-5 w-5" />
             My Spaces
           </CardTitle>
@@ -63,9 +63,9 @@ export const ProfileOverview = ({ user }: ProfileOverviewProps) => {
       </Card>
 
       {/* My Tools - Placeholder for Team 3 Integration */}
-      <Card className="border-gray-700 bg-gray-900/50">
+      <Card className="border-gray-700 bg-[var(--hive-background-primary)]/50">
         <CardHeader className="pb-3">
-          <CardTitle className="flex items-center gap-2 text-white">
+          <CardTitle className="flex items-center gap-2 text-[var(--hive-text-inverse)]">
             <Wrench className="h-5 w-5" />
             My Tools
           </CardTitle>
@@ -89,26 +89,26 @@ export const ProfileOverview = ({ user }: ProfileOverviewProps) => {
       </Card>
 
       {/* Quick Stats */}
-      <Card className="border-gray-700 bg-gray-900/50 md:col-span-2 lg:col-span-3">
+      <Card className="border-gray-700 bg-[var(--hive-background-primary)]/50 md:col-span-2 lg:col-span-3">
         <CardHeader className="pb-3">
-          <CardTitle className="text-white">Quick Stats</CardTitle>
+          <CardTitle className="text-[var(--hive-text-inverse)]">Quick Stats</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
             <div className="text-center">
-              <div className="text-2xl font-bold text-gold">0</div>
+              <div className="text-2xl font-bold text-[var(--hive-brand-secondary)]">0</div>
               <div className="text-sm text-gray-400">Spaces Joined</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-gold">0</div>
+              <div className="text-2xl font-bold text-[var(--hive-brand-secondary)]">0</div>
               <div className="text-sm text-gray-400">Tools Created</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-gold">0</div>
+              <div className="text-2xl font-bold text-[var(--hive-brand-secondary)]">0</div>
               <div className="text-sm text-gray-400">Posts Made</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-gold">
+              <div className="text-2xl font-bold text-[var(--hive-brand-secondary)]">
                 {user.isBuilder ? "Yes" : "No"}
               </div>
               <div className="text-sm text-gray-400">Builder Status</div>
@@ -118,13 +118,13 @@ export const ProfileOverview = ({ user }: ProfileOverviewProps) => {
       </Card>
 
       {/* Recent Activity - Stub */}
-      <Card className="border-gray-700 bg-gray-900/50 md:col-span-2 lg:col-span-3">
+      <Card className="border-gray-700 bg-[var(--hive-background-primary)]/50 md:col-span-2 lg:col-span-3">
         <CardHeader className="flex flex-row items-center justify-between pb-3">
-          <CardTitle className="text-white">Recent Activity</CardTitle>
+          <CardTitle className="text-[var(--hive-text-inverse)]">Recent Activity</CardTitle>
           <Button
             variant="ghost"
             size="sm"
-            className="text-gold hover:text-gold/80"
+            className="text-[var(--hive-brand-secondary)] hover:text-[var(--hive-brand-secondary)]/80"
           >
             View All
             <ArrowRight className="ml-2 h-4 w-4" />

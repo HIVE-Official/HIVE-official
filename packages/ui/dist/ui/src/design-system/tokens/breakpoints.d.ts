@@ -3,12 +3,12 @@
  * Mobile-First Scaling Rules for Campus Environments
  */
 export declare const breakpointValues: {
-    readonly mobileSmall: "320px";
-    readonly mobileLarge: "480px";
-    readonly tablet: "768px";
-    readonly desktopSmall: "1024px";
-    readonly desktopLarge: "1200px";
-    readonly desktopXL: "1600px";
+    readonly mobileSmall: 320;
+    readonly mobileLarge: 480;
+    readonly tablet: 768;
+    readonly desktopSmall: 1024;
+    readonly desktopLarge: 1200;
+    readonly desktopXL: 1600;
 };
 export declare const mediaQueries: {
     readonly mobile: "screen and (min-width: 320px)";
@@ -17,8 +17,8 @@ export declare const mediaQueries: {
     readonly desktopLarge: "screen and (min-width: 1200px)";
     readonly desktopXL: "screen and (min-width: 1600px)";
     readonly mobileOnly: `screen and (max-width: ${number}px)`;
-    readonly tabletOnly: `screen and (min-width: 768px) and (max-width: ${number}px)`;
-    readonly desktopOnly: "screen and (min-width: 1024px)";
+    readonly tabletOnly: `screen and (min-width: 768) and (max-width: ${number}px)`;
+    readonly desktopOnly: "screen and (min-width: 1024)";
     readonly retina: "screen and (-webkit-min-device-pixel-ratio: 2), screen and (min-resolution: 192dpi)";
 };
 export declare const scalingRules: {
@@ -202,12 +202,12 @@ export declare const campusOptimizations: {
 };
 export declare const breakpoints: {
     readonly breakpointValues: {
-        readonly mobileSmall: "320px";
-        readonly mobileLarge: "480px";
-        readonly tablet: "768px";
-        readonly desktopSmall: "1024px";
-        readonly desktopLarge: "1200px";
-        readonly desktopXL: "1600px";
+        readonly mobileSmall: 320;
+        readonly mobileLarge: 480;
+        readonly tablet: 768;
+        readonly desktopSmall: 1024;
+        readonly desktopLarge: 1200;
+        readonly desktopXL: 1600;
     };
     readonly mediaQueries: {
         readonly mobile: "screen and (min-width: 320px)";
@@ -216,8 +216,8 @@ export declare const breakpoints: {
         readonly desktopLarge: "screen and (min-width: 1200px)";
         readonly desktopXL: "screen and (min-width: 1600px)";
         readonly mobileOnly: `screen and (max-width: ${number}px)`;
-        readonly tabletOnly: `screen and (min-width: 768px) and (max-width: ${number}px)`;
-        readonly desktopOnly: "screen and (min-width: 1024px)";
+        readonly tabletOnly: `screen and (min-width: 768) and (max-width: ${number}px)`;
+        readonly desktopOnly: "screen and (min-width: 1024)";
         readonly retina: "screen and (-webkit-min-device-pixel-ratio: 2), screen and (min-resolution: 192dpi)";
     };
     readonly scalingRules: {

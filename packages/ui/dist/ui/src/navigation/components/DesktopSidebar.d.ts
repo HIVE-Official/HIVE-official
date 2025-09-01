@@ -6,7 +6,7 @@
  * and smooth animations optimized for desktop productivity.
  */
 import React from 'react';
-import { NavigationItem, NavigationUser } from '../core/types';
+import type { NavigationItem, NavigationUser } from '../core/types';
 interface DesktopSidebarProps {
     items: ReadonlyArray<NavigationItem>;
     user: NavigationUser;

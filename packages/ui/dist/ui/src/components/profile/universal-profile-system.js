@@ -2,13 +2,13 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useState } from 'react';
 import { Edit3, Settings, Share2, Camera, Crown, Shield, MessageSquare, UserPlus, Calendar, Activity, Award, Users, Zap, MapPin, Link, Clock, Star, Heart, Grid, List, Filter } from 'lucide-react';
-import { Button } from '../../atomic/atoms/button-enhanced';
-import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';
-import { Badge } from '../../ui/badge';
+import { Button } from '../../atomic/atoms/button-enhanced.js';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card.js';
+import { Badge } from '../../atomic/atoms/badge.js';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '../../ui/avatar';
 // import { UniversalBottomNav } from '../navigation/universal-bottom-nav'; // Component doesn't exist
-import { cn } from '../../lib/utils';
+import { cn } from '../../lib/utils.js';
 export function UniversalProfileSystem({ user, spaces, tools, recentActivity, isOwnProfile, isLoading = false, onEditProfile, onMessageUser, onFollowUser, onShareProfile, onPrivacySettings, className }) {
     const [activeTab, setActiveTab] = useState('overview');
     const [viewMode, setViewMode] = useState('grid');

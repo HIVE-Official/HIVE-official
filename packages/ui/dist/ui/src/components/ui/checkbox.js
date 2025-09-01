@@ -2,7 +2,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
 import { cva } from "class-variance-authority";
-import { cn } from "../../lib/utils";
+import { cn } from "../../lib/utils.js";
 // HIVE Checkbox System - Semantic Token Perfection
 // Zero hardcoded values - complete semantic token usage
 const checkboxVariants = cva(
@@ -101,19 +101,19 @@ const CheckboxGroup = React.forwardRef(({ className, orientation = "vertical", s
 });
 CheckboxGroup.displayName = "CheckboxGroup";
 const CheckboxCard = React.forwardRef(({ icon, badge, label, description, className, ...props }, ref) => {
-    return (_jsx("label", { className: cn("relative flex cursor-pointer rounded-lg border-2 border-[var(--hive-border-default)] bg-[var(--hive-background-secondary)] p-4 transition-all duration-200 hover:border-[var(--hive-border-hover)] hover:bg-[var(--hive-interactive-hover)] has-[:checked]:border-[var(--hive-brand-secondary)] has-[:checked]:bg-[color-mix(in_srgb,var(--hive-brand-secondary)_10%,transparent)]", className), children: _jsxs("div", { className: "flex items-start space-x-3 w-full", children: [_jsx(Checkbox, { ref: ref, className: "mt-0.5", ...props }), icon && (_jsx("div", { className: "flex-shrink-0 text-[var(--hive-text-secondary)]", children: icon })), _jsxs("div", { className: "flex-1 space-y-1", children: [label && (_jsx("div", { className: "text-sm font-medium text-[var(--hive-text-primary)]", children: label })), description && (_jsx("div", { className: "text-xs text-[var(--hive-text-tertiary)]", children: description }))] }), badge && (_jsx("div", { className: "flex-shrink-0", children: badge }))] }) }));
+    return (_jsx("label", { className: cn("relative flex cursor-pointer rounded-lg border-2 border-[var(--hive-border-default)] bg-[var(--hive-background-secondary)] p-4 transition-all duration-200 hover:border-[var(--hive-border-hover)] hover:bg-[var(--hive-interactive-hover)] has-[:checked]:border-[var(--hive-brand-secondary)] has-[:checked]:bg-[color-mix(in_srgb,var(--hive-brand-secondary)_10%,transparent)]", className), children: _jsxs("div", { className: "flex items-start space-x-3 w-full", children: [_jsx(CheckboxEnhanced, { ref: ref, className: "mt-0.5", ...props }), icon && (_jsx("div", { className: "flex-shrink-0 text-[var(--hive-text-secondary)]", children: icon })), _jsxs("div", { className: "flex-1 space-y-1", children: [label && (_jsx("div", { className: "text-sm font-medium text-[var(--hive-text-primary)]", children: label })), description && (_jsx("div", { className: "text-xs text-[var(--hive-text-tertiary)]", children: description }))] }), badge && (_jsx("div", { className: "flex-shrink-0", children: badge }))] }) }));
 });
 CheckboxCard.displayName = "CheckboxCard";
 // Checkbox presets for common patterns
 export const CheckboxPresets = {
     // Terms & Conditions
-    Terms: (props) => (_jsx(Checkbox, { label: "I agree to the Terms & Conditions", required: true, ...props })),
+    Terms: (props) => (_jsx(CheckboxEnhanced, { label: "I agree to the Terms & Conditions", required: true, ...props })),
     // Newsletter Subscription
-    Newsletter: (props) => (_jsx(Checkbox, { label: "Subscribe to newsletter", description: "Receive updates and special offers", ...props })),
+    Newsletter: (props) => (_jsx(CheckboxEnhanced, { label: "Subscribe to newsletter", description: "Receive updates and special offers", ...props })),
     // Remember Me
-    RememberMe: (props) => (_jsx(Checkbox, { label: "Remember me", size: "sm", ...props })),
+    RememberMe: (props) => (_jsx(CheckboxEnhanced, { label: "Remember me", size: "sm", ...props })),
     // Select All
-    SelectAll: (props) => (_jsx(Checkbox, { label: "Select all", ...props })),
+    SelectAll: (props) => (_jsx(CheckboxEnhanced, { label: "Select all", ...props })),
 };
 const CheckIcon = ({ size = "default" }) => {
     const iconSize = {

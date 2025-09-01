@@ -46,7 +46,7 @@ import {
 } from '@hive/ui';
 
 // Hooks
-import { useHiveAuth } from '@hive/ui';
+import { useUnifiedAuth } from '@hive/ui';
 
 // Types
 interface FormElement {
@@ -132,7 +132,7 @@ const ELEMENT_TYPES = [
 ];
 
 export default function ToolsBuilderPage() {
-  const { user } = useHiveAuth();
+  const { user } = useUnifiedAuth();
   const router = useRouter();
   
   const [tool, setTool] = useState<Tool>({
@@ -301,7 +301,7 @@ export default function ToolsBuilderPage() {
               >
                 <CardContent className="p-6 text-center">
                   <div className={`w-16 h-16 mx-auto mb-4 rounded-lg bg-gradient-to-br ${category.color} flex items-center justify-center`}>
-                    <Icon className="h-8 w-8 text-white" />
+                    <Icon className="h-8 w-8 text-[var(--hive-text-inverse)]" />
                   </div>
                   <h3 className="font-semibold text-foreground mb-2">{category.name}</h3>
                   <p className="text-sm text-muted-foreground">{category.description}</p>

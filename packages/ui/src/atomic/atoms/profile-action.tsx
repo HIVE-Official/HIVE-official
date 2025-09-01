@@ -3,6 +3,9 @@
 import React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../lib/utils';
+import type {
+  LucideIcon 
+} from 'lucide-react';
 import { 
   Edit3, 
   Settings, 
@@ -19,8 +22,7 @@ import {
   Bookmark,
   Link,
   Download,
-  Upload,
-  LucideIcon 
+  Upload 
 } from 'lucide-react';
 
 const profileActionVariants = cva(

@@ -8,11 +8,11 @@
 import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
 import { HiveCardBaseProps } from './card-system/hive-card-system';
-declare const hiveCourseCardVariants: (props?: {
-    status?: "closed" | "open" | "waitlist" | "completed" | "enrolled";
-    difficulty?: "beginner" | "intermediate" | "advanced" | "expert";
-    courseType?: "project" | "lecture" | "seminar" | "lab" | "independent";
-} & import("class-variance-authority/types").ClassProp) => string;
+declare const hiveCourseCardVariants: (props?: ({
+    status?: "closed" | "open" | "waitlist" | "completed" | "enrolled" | null | undefined;
+    difficulty?: "beginner" | "intermediate" | "advanced" | "expert" | null | undefined;
+    courseType?: "project" | "lecture" | "seminar" | "lab" | "independent" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
 export interface CourseSchedule {
     days: string[];
     startTime: string;

@@ -1,7 +1,7 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from "react";
-import { cn } from "../../lib/utils";
+import { cn } from "../../lib/utils.js";
 export function BentoGrid({ cards, className }) {
     // Sort cards by priority
     const sortedCards = [...cards].sort((a, b) => a.priority - b.priority);

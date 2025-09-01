@@ -28,7 +28,7 @@ import {
 } from '@hive/ui';
 
 // Hooks
-import { useHiveAuth } from '@hive/ui';
+import { useUnifiedAuth } from '@hive/ui';
 
 // Types
 interface FeedDisplayProps {
@@ -67,7 +67,7 @@ export function FeedDisplay({
   showPostCreator = true,
   maxPosts 
 }: FeedDisplayProps) {
-  const { user } = useHiveAuth();
+  const { user } = useUnifiedAuth();
   const [posts, setPosts] = useState<Post[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);

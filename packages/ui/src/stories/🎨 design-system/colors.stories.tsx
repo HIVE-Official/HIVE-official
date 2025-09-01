@@ -1,6 +1,16 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-const meta: Meta = {
+const HiveColorPalette = () => (
+  <div className="space-y-8 p-6">
+    <div>
+      <h2 className="text-2xl font-bold mb-4">HIVE Color Palette</h2>
+      <p className="text-muted-foreground">Black, gold, and white with semantic meanings</p>
+    </div>
+  </div>
+);
+
+const meta: Meta<typeof HiveColorPalette> = {
+  component: HiveColorPalette,
   title: '🎨 Design System/Colors',
   parameters: {
     docs: {
@@ -12,7 +22,7 @@ const meta: Meta = {
 };
 
 export default meta;
-type Story = StoryObj;
+type Story = StoryObj<typeof HiveColorPalette>;
 
 export const HiveColorPalette: Story = {
   render: () => (

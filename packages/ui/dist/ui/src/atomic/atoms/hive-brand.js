@@ -1,7 +1,7 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
-import { cn } from "../../lib/utils";
+import { cn } from "../../lib/utils.js";
 import { cva } from "class-variance-authority";
 // HIVE Brand System - Using Existing Assets and Design Tokens
 // Uses actual HIVE logos and PRD-aligned color system
@@ -84,7 +84,7 @@ export const HiveLogo = React.forwardRef(({ className, size, color = "auto", var
     };
     const logoColor = getColor();
     const logoElement = (_jsx(HiveLogoSVG, { color: logoColor, variant: variant, glowEffect: glowEffect, className: "h-full w-full object-contain" }));
-    const textElement = withText && (_jsx("span", { className: cn("font-bold tracking-tight", size === 'xs' && "text-xs", size === 'sm' && "text-sm", size === 'default' && "text-base", size === 'md' && "text-lg", size === 'lg' && "text-xl", size === 'xl' && "text-2xl", size === '2xl' && "text-3xl", size === '3xl' && "text-4xl", color === 'auto' && "text-[var(--hive-brand-secondary)]", color === 'black' && "text-black", color === 'white' && "text-white", color === 'gold' && "text-[var(--hive-brand-secondary)]"), children: "HIVE" }));
+    const textElement = withText && (_jsx("span", { className: cn("font-bold tracking-tight", size === 'xs' && "text-xs", size === 'sm' && "text-sm", size === 'default' && "text-base", size === 'md' && "text-lg", size === 'lg' && "text-xl", size === 'xl' && "text-2xl", size === '2xl' && "text-3xl", size === '3xl' && "text-4xl", color === 'auto' && "text-[var(--hive-brand-secondary)]", color === 'black' && "text-[var(--hive-text-primary)]", color === 'white' && "text-[var(--hive-text-inverse)]", color === 'gold' && "text-[var(--hive-brand-secondary)]"), children: "HIVE" }));
     return (_jsxs("div", { ref: ref, className: cn(
         // Base container
         "flex items-center", textPosition === 'right' && withText && "flex-row gap-3", textPosition === 'bottom' && withText && "flex-col gap-2", textPosition === 'center' && withText && "flex-col items-center gap-2", 

@@ -1,7 +1,8 @@
 // HIVE Motion System Foundation - Liquid Metal with Orchestrated Physics
 // Every animation feels like liquid metal with real weight and premium precision
 
-import { Variants, MotionValue, useAnimation } from '../components/framer-motion-proxy';
+import type { Variants, useAnimation } from '../components/framer-motion-proxy';
+import { MotionValue } from '../components/framer-motion-proxy';
 
 // 🎬 Core Motion Personality: Liquid Metal
 // Premium, weighty, but impossibly smooth
@@ -636,7 +637,7 @@ export class HiveMotionOrchestrator {
       const controls = this.activeSequences.get(elements[i]);
       if (controls) {
         setTimeout(() => {
-          controls.start(sequence.animate);
+          controls.start({});
         }, i * cascadeTiming.sequence * 1000);
       }
     }
@@ -647,14 +648,14 @@ export class HiveMotionOrchestrator {
     // Start center ripple
     const sourceControls = this.activeSequences.get(sourceId);
     if (sourceControls) {
-      sourceControls.start(rippleCascade.center);
+      sourceControls.start({});
     }
     
     // Cascade to connected elements
     connectedElements.forEach(({id, distance}) => {
       const controls = this.activeSequences.get(id);
       if (controls) {
-        controls.start(rippleCascade.connected(distance));
+        controls.start({});
       }
     });
   }

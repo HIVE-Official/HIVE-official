@@ -2,10 +2,10 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import React from 'react';
 import { cva } from 'class-variance-authority';
-import { cn } from '../../lib/utils';
-import { ProfileAvatar } from '../atomic/atoms/profile-avatar';
-import { ProfileBadge } from '../atomic/atoms/profile-badge';
-import { ProfileAction } from '../atomic/atoms/profile-action';
+import { cn } from '../lib/utils.js';
+import { ProfileAvatar } from '../atomic/atoms/profile-avatar.js';
+import { ProfileBadge } from '../atomic/atoms/profile-badge.js';
+import { ProfileAction } from '../atomic/atoms/profile-action.js';
 import { MapPin, Calendar, Link as LinkIcon, GraduationCap } from 'lucide-react';
 const profileHeaderVariants = cva("flex gap-4 p-4 transition-all duration-200", {
     variants: {

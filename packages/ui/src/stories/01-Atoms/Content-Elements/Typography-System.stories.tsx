@@ -35,7 +35,16 @@ import {
 } from 'lucide-react';
 import '../../../hive-tokens.css';
 
-const meta: Meta = {
+// Create a component wrapper for the story
+const TypographySystem = () => (
+  <div className="p-6 space-y-8">
+    <h2 className="text-2xl font-semibold">Typography System</h2>
+    <p className="text-muted-foreground">Campus content hierarchy and text system</p>
+  </div>
+);
+
+const meta: Meta<typeof TypographySystem> = {
+  component: TypographySystem,
   title: '02-Atoms/Content Elements/Typography System',
   parameters: {
     layout: 'fullscreen',

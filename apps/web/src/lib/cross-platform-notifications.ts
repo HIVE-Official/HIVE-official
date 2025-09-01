@@ -167,7 +167,7 @@ export const NOTIFICATION_TEMPLATES: Record<NotificationType, NotificationTempla
   tool_comment: {
     type: 'tool_comment',
     title: (data) => `Comment on ${data.toolName}`,
-    message: (data) => `${data.commenterName}: ${data.commentPreview}`,
+    message: (data) => `${data._commenterName}: ${data.commentPreview}`,
     actionUrl: (data) => `/tools/${data.toolId}#comment-${data.commentId}`,
     category: 'social',
     defaultPriority: 'medium',
@@ -198,7 +198,7 @@ export const NOTIFICATION_TEMPLATES: Record<NotificationType, NotificationTempla
   feed_comment: {
     type: 'feed_comment',
     title: (data) => `New comment on your post`,
-    message: (data) => `${data.commenterName}: ${data.commentPreview}`,
+    message: (data) => `${data._commenterName}: ${data.commentPreview}`,
     actionUrl: (data) => `/feed/posts/${data.postId}#comment-${data.commentId}`,
     category: 'social',
     defaultPriority: 'medium',
@@ -601,18 +601,12 @@ export class CrossPlatformNotificationManager {
     }
   }
 
-  private async deliverInApp(config: NotificationConfig): Promise<boolean> {
-    try {
-      // In-app notifications are handled by the unified state management
-      
-      return true;
-    } catch (error) {
-      console.error('Error delivering in-app notification:', error);
-      return false;
-    }
+  private async deliverInApp(_config: NotificationConfig): Promise<boolean> {
+    // In-app notifications are handled by the unified state management
+    return true;
   }
 
-  private async deliverPush(config: NotificationConfig): Promise<boolean> {
+  private async deliverPush(_config: NotificationConfig): Promise<boolean> {
     try {
       if ('serviceWorker' in navigator && 'PushManager' in window) {
         const registration = await navigator.serviceWorker.ready;
@@ -726,7 +720,7 @@ export class CrossPlatformNotificationManager {
   private initializeServiceWorker(): void {
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/sw-notifications.js')
-        .then(registration => {
+        .then(_registration => {
           
         })
         .catch(error => {
@@ -775,11 +769,11 @@ export async function sendToolShare(targetUserId: string, sharerName: string, to
   });
 }
 
-export async function sendFeedMention(targetUserId: string, mentionerName: string, postId: string, postPreview: string): Promise<void> {
+export async function sendFeedMention(targetUserId: string, mentionerName: string, _postId: string, postPreview: string): Promise<void> {
   const manager = getNotificationManager();
   await manager.createNotification('feed_mention', targetUserId, {
     mentionerName,
-    postId,
+    postId: _postId,
     postPreview
   });
 }

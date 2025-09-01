@@ -1,25 +1,25 @@
 import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
-declare const cardVariants: (props?: {
-    variant?: "ghost" | "default" | "minimal" | "elevated";
-    size?: "default" | "sm" | "lg" | "xl";
-    radius?: "default" | "sm" | "lg" | "none" | "full";
-} & import("class-variance-authority/types").ClassProp) => string;
-declare const cardHeaderVariants: (props?: {
-    spacing?: "default" | "sm" | "lg" | "none";
-} & import("class-variance-authority/types").ClassProp) => string;
-declare const cardTitleVariants: (props?: {
-    size?: "default" | "sm" | "lg" | "xl";
-} & import("class-variance-authority/types").ClassProp) => string;
-declare const cardDescriptionVariants: (props?: {
-    size?: "default" | "sm" | "lg";
-} & import("class-variance-authority/types").ClassProp) => string;
-declare const cardContentVariants: (props?: {
-    spacing?: "default" | "sm" | "lg" | "none";
-} & import("class-variance-authority/types").ClassProp) => string;
-declare const cardFooterVariants: (props?: {
-    spacing?: "default" | "sm" | "lg" | "none";
-} & import("class-variance-authority/types").ClassProp) => string;
+declare const cardVariants: (props?: ({
+    variant?: "ghost" | "default" | "elevated" | "minimal" | null | undefined;
+    size?: "sm" | "default" | "lg" | "xl" | null | undefined;
+    radius?: "sm" | "default" | "lg" | "none" | "full" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
+declare const cardHeaderVariants: (props?: ({
+    spacing?: "sm" | "default" | "lg" | "none" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
+declare const cardTitleVariants: (props?: ({
+    size?: "sm" | "default" | "lg" | "xl" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
+declare const cardDescriptionVariants: (props?: ({
+    size?: "sm" | "default" | "lg" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
+declare const cardContentVariants: (props?: ({
+    spacing?: "sm" | "default" | "lg" | "none" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
+declare const cardFooterVariants: (props?: ({
+    spacing?: "sm" | "default" | "lg" | "none" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
 interface CardProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof cardVariants> {
 }
 export declare const Card: React.ForwardRefExoticComponent<CardProps & React.RefAttributes<HTMLDivElement>>;

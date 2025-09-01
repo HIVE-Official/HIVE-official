@@ -2,8 +2,12 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
 import { NavigationPreferences, NavigationStyle } from '../../atomic/atoms/navigation-preferences';
 
-const meta: Meta = {
+// Mock component for Storybook CSF compliance
+const NavigationSystemOverview = () => <div>Navigation System Overview</div>;
+
+const meta: Meta<typeof NavigationSystemOverview> = {
   title: '00-Foundation/Navigation System Overview',
+  component: NavigationSystemOverview,
   parameters: {
     layout: 'fullscreen',
     docs: {

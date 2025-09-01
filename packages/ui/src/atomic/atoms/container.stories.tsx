@@ -136,7 +136,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="success">✅ MAX WIDTHS</Badge>
+            <Badge variant="emerald">✅ MAX WIDTHS</Badge>
             Container Max Widths - Responsive Breakpoints
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -383,7 +383,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="warning">🎯 PRESETS</Badge>
+            <Badge variant="gold">🎯 PRESETS</Badge>
             Container Presets - Common Campus Patterns
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">

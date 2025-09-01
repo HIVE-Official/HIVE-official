@@ -218,7 +218,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
 
 // Convenient preset components
 export const InfoTooltip: React.FC<Omit<TooltipProps, 'variant'>> = (props) => (
-  <Tooltip variant="primary" {...props} />
+  <Tooltip variant="default" {...props} />
 );
 
 export const DarkTooltip: React.FC<Omit<TooltipProps, 'variant'>> = (props) => (

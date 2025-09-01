@@ -1,33 +1,48 @@
-/**
- * Simple logger utility for HIVE UI package
- * Provides consistent logging across components
- */
-class Logger {
-    constructor() {
-        this.isDevelopment = process.env.NODE_ENV === 'development';
-    }
-    formatMessage(level, message, data) {
-        const timestamp = new Date().toISOString();
-        const prefix = `[HIVE-UI ${level.toUpperCase()}] ${timestamp}`;
-        if (data) {
-            return `${prefix} ${message} ${JSON.stringify(data, null, 2)}`;
+// Simple logger utility for development
+const isDevelopment = process.env.NODE_ENV === 'development';
+export const logger = {
+    log: (...args) => {
+        if (isDevelopment) {
+            console.log('[HIVE]', ...args);
         }
-        return `${prefix} ${message}`;
-    }
-    debug(message, data) {
-        if (this.isDevelopment) {
-            console.debug(this.formatMessage('debug', message, data));
+    },
+    error: (...args) => {
+        console.error('[HIVE ERROR]', ...args);
+    },
+    warn: (...args) => {
+        if (isDevelopment) {
+            console.warn('[HIVE WARN]', ...args);
         }
-    }
-    info(message, data) {
-        console.info(this.formatMessage('info', message, data));
-    }
-    warn(message, data) {
-        console.warn(this.formatMessage('warn', message, data));
-    }
-    error(message, data) {
-        console.error(this.formatMessage('error', message, data));
-    }
-}
-export const logger = new Logger();
+    },
+    info: (...args) => {
+        if (isDevelopment) {
+            console.info('[HIVE INFO]', ...args);
+        }
+    },
+    debug: (...args) => {
+        if (isDevelopment) {
+            console.debug('[HIVE DEBUG]', ...args);
+        }
+    },
+    group: (label) => {
+        if (isDevelopment) {
+            console.group(label);
+        }
+    },
+    groupEnd: () => {
+        if (isDevelopment) {
+            console.groupEnd();
+        }
+    },
+    time: (label) => {
+        if (isDevelopment) {
+            console.time(label);
+        }
+    },
+    timeEnd: (label) => {
+        if (isDevelopment) {
+            console.timeEnd(label);
+        }
+    },
+};
 //# sourceMappingURL=logger.js.map

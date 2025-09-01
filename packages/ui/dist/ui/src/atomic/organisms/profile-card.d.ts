@@ -2,11 +2,11 @@ import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
 import { type ProfileUser } from '../molecules/profile-header';
 import { type HiveProfileStats } from '../molecules/profile-stats';
-declare const profileCardVariants: (props?: {
-    size?: "sm" | "md" | "lg";
-    variant?: "default" | "minimal" | "elevated" | "interactive";
-    layout?: "horizontal" | "vertical" | "stacked";
-} & import("class-variance-authority/types").ClassProp) => string;
+declare const profileCardVariants: (props?: ({
+    size?: "sm" | "md" | "lg" | null | undefined;
+    variant?: "default" | "elevated" | "minimal" | "interactive" | null | undefined;
+    layout?: "horizontal" | "vertical" | "stacked" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
 export interface HiveActivityItem {
     id: string;
     type: 'space' | 'tool' | 'connection' | 'achievement' | 'builder';

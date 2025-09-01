@@ -1,7 +1,7 @@
-/**
- * Email Gate Component - DISABLED FOR vBETA
- * Re-enable in v1 when UI package issues are resolved
- */
-export declare const EmailGate: () => import("react/jsx-runtime").JSX.Element;
-export default EmailGate;
+import React from 'react';
+export interface EmailGateProps {
+    children?: React.ReactNode;
+    onEmailSubmit?: (email: string) => void;
+}
+export declare const EmailGate: React.FC<EmailGateProps>;
 //# sourceMappingURL=email-gate.d.ts.map

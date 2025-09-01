@@ -39,8 +39,8 @@ export declare function useFirebase(): FirebaseContextValue;
 export declare function useAuthGuard(redirectTo?: string): {
     isAuthenticated: boolean;
     isLoading: boolean;
-    user: FirebaseUser;
-    profile: UserProfileDocument;
+    user: FirebaseUser | null;
+    profile: UserProfileDocument | null;
 };
 export declare function useUBStudentGuard(): {
     isUBStudent: boolean;
@@ -56,7 +56,7 @@ export declare function useConnectionStatus(): {
 export declare function useProfileCompletion(): {
     completionPercentage: number;
     isComplete: boolean;
-    missingFields: any[];
+    missingFields: string[];
     canUseAdvancedFeatures: boolean;
 };
 export type { FirebaseUser, AuthState, FirebaseContextValue };

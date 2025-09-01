@@ -1,7 +1,7 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from 'react';
-import { cn } from '../../lib/utils';
+import { cn } from '../../lib/utils.js';
 import { X } from 'lucide-react';
 const tagColors = {
     default: {
@@ -132,7 +132,7 @@ export const WarningTag = (props) => (_jsx(Tag, { color: "warning", ...props }))
 export const ErrorTag = (props) => (_jsx(Tag, { color: "error", ...props }));
 export const RemovableTag = (props) => (_jsx(Tag, { removable: true, ...props }));
 export const InteractiveTag = (props) => (_jsx(Tag, { interactive: true, ...props }));
-export const OutlineTag = (props) => (_jsx(Tag, { variant: "outline", ...props }));
+export const OutlineTag = (props) => (_jsx(Tag, { variant: "secondary", ...props }));
 export const GhostTag = (props) => (_jsx(Tag, { variant: "ghost", ...props }));
 export const GradientTag = (props) => (_jsx(Tag, { variant: "gradient", ...props }));
 //# sourceMappingURL=tag.js.map

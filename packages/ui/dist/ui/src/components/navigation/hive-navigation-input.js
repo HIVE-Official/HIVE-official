@@ -3,8 +3,8 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useRef, useEffect } from 'react';
 import { cva } from 'class-variance-authority';
 import { Search, Command, X, ArrowRight } from 'lucide-react';
-import { motion } from '../framer-motion-proxy';
-import { cn } from '../../lib/utils';
+import { motion } from '../framer-motion-proxy.js';
+import { cn } from '../../lib/utils.js';
 // HIVE Navigation Input variants - Following input design patterns
 const hiveNavigationInputVariants = cva(
 // Base styles - premium search input with semantic tokens
@@ -18,7 +18,7 @@ const hiveNavigationInputVariants = cva(
             // Minimal variant
             minimal: "bg-[var(--hive-overlay-glass)] border border-[var(--hive-border-subtle)] text-[var(--hive-text-primary)] focus-within:border-[var(--hive-brand-primary)] focus-within:bg-[var(--hive-background-secondary)]",
             // Premium variant with gold accent
-            premium: "bg-[var(--hive-overlay-gold-subtle)] border border-[var(--hive-border-gold)] text-[var(--hive-text-primary)] focus-within:border-[var(--hive-brand-primary)] focus-within:shadow-lg focus-within:shadow-[var(--hive-shadow-gold-glow)]",
+            premium: "bg-[var(--hive-overlay-gold-subtle)] border border-[var(--hive-border-[var(--hive-brand-secondary)])] text-[var(--hive-text-primary)] focus-within:border-[var(--hive-brand-primary)] focus-within:shadow-lg focus-within:shadow-[var(--hive-shadow-gold-glow)]",
         },
         size: {
             sm: "h-8 text-sm rounded-xl",

@@ -1,10 +1,10 @@
 import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
-declare const profileHeaderVariants: (props?: {
-    layout?: "horizontal" | "vertical" | "compact";
-    variant?: "ghost" | "default" | "minimal" | "card";
-    spacing?: "normal" | "loose" | "tight";
-} & import("class-variance-authority/types").ClassProp) => string;
+declare const profileHeaderVariants: (props?: ({
+    layout?: "horizontal" | "vertical" | "compact" | null | undefined;
+    variant?: "ghost" | "default" | "minimal" | "card" | null | undefined;
+    spacing?: "normal" | "loose" | "tight" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
 export interface ProfileUser {
     id: string;
     name: string;

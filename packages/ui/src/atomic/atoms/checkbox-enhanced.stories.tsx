@@ -102,7 +102,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="success">✅ VARIANTS</Badge>
+            <Badge variant="emerald">✅ VARIANTS</Badge>
             Checkbox Variants - Perfect Semantic Token Usage
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -121,7 +121,7 @@ export const CompleteShowcase: Story = {
               <Checkbox
                 label="Success Selection"
                 description="Indicates completed or validated choices"
-                variant="success"
+                variant="emerald"
                 checked={true}
               />
               <Checkbox
@@ -135,7 +135,7 @@ export const CompleteShowcase: Story = {
               <Checkbox
                 label="Warning Selection"
                 description="Options that require attention or caution"
-                variant="warning"
+                variant="gold"
                 checked={true}
               />
               <Checkbox
@@ -311,7 +311,7 @@ export const CompleteShowcase: Story = {
                   label="Study Group Coordination"
                   description="Get notified when study groups form in your courses and receive collaboration invites"
                   icon={<span className="text-lg">👥</span>}
-                  badge={<Badge variant="success" size="sm">Academic</Badge>}
+                  badge={<Badge variant="emerald" size="sm">Academic</Badge>}
                   variant="primary"
                   checked={true}
                 />
@@ -365,7 +365,7 @@ export const CompleteShowcase: Story = {
                 <Checkbox
                   label="Academic Integrity Pledge"
                   description="I agree to uphold UB's academic integrity standards"
-                  variant="success"
+                  variant="emerald"
                   required
                   checked={true}
                 />
@@ -458,7 +458,7 @@ export const CompleteShowcase: Story = {
                   label="Hadley Village"
                   description="Apartment-style living, upper-class students, full kitchens and living areas"
                   icon={<span className="text-lg">🏠</span>}
-                  badge={<Badge variant="success" size="sm">Apartment</Badge>}
+                  badge={<Badge variant="emerald" size="sm">Apartment</Badge>}
                   checked={true}
                 />
                 <CheckboxCard

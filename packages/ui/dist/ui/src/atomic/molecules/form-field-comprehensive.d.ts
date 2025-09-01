@@ -14,13 +14,13 @@
  */
 import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
-declare const formFieldVariants: (props?: {
-    size?: "small" | "base" | "large";
-    variant?: "ghost" | "default" | "filled";
-} & import("class-variance-authority/types").ClassProp) => string;
-declare const inputVariants: (props?: {
-    state?: "error" | "default" | "success" | "warning";
-} & import("class-variance-authority/types").ClassProp) => string;
+declare const formFieldVariants: (props?: ({
+    size?: "small" | "base" | "large" | null | undefined;
+    variant?: "ghost" | "default" | "filled" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
+declare const inputVariants: (props?: ({
+    state?: "error" | "success" | "warning" | "default" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
 export type ValidationState = 'default' | 'error' | 'success' | 'warning';
 export type InputType = 'text' | 'email' | 'password' | 'search' | 'tel' | 'url' | 'number';
 export interface ComprehensiveFormFieldProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'onChange'>, VariantProps<typeof formFieldVariants> {

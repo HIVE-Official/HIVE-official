@@ -1,7 +1,7 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import * as React from "react";
 import { cva } from "class-variance-authority";
-import { cn } from "../lib/utils";
+import { cn } from "../../lib/utils.js";
 // OPTION A: MINIMAL CARDS - Clean, spacious, functional
 const minimalCardVariants = cva("relative bg-black border transition-all duration-200 ease-out", {
     variants: {
@@ -86,7 +86,7 @@ const campusCardVariants = cva("relative transition-all duration-300 ease-out", 
                 "before:bg-accent before:rounded-full before:shadow-sm"
             ],
             sticky: [
-                "bg-accent/90 text-black rounded-lg transform rotate-[-1deg]",
+                "bg-accent/90 text-[var(--hive-text-primary)] rounded-lg transform rotate-[-1deg]",
                 "hover:rotate-0 hover:scale-105 hover:shadow-xl hover:shadow-accent/30",
                 "border-2 border-accent/50 relative",
                 "after:absolute after:top-1 after:right-1 after:w-4 after:h-4",

@@ -334,7 +334,7 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json(ApiResponseHelper.error("User not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
-    const userData = userDoc.data();
+    const _userData = userDoc.data();
 
     // Perform the requested action
     const updateData: any = {

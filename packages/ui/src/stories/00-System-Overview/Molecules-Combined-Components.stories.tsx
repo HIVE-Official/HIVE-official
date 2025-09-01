@@ -36,6 +36,7 @@ import {
 } from 'lucide-react';
 
 const meta = {
+  component: MoleculeShowcase,
   title: '03-Molecules/Combined Components',
   parameters: {
     layout: 'fullscreen',

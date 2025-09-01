@@ -185,7 +185,7 @@ export function ProfileStats({
           onClick: interactive && onStatClick ? () => onStatClick(key, value) : undefined
         };
       })
-      .filter(Boolean);
+      .filter((stat): stat is NonNullable<typeof stat> => stat !== null);
   }, [stats, priority, maxStats, interactive, onStatClick, changes]);
 
   // Determine stat size based on layout

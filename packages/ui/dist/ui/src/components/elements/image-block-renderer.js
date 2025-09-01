@@ -7,7 +7,7 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
  */
 import { useState } from 'react';
 import { ImageIcon } from 'lucide-react';
-import { useStandardElementStyles } from '../../hooks/use-standard-element-styles';
+import { useStandardElementStyles } from '../../hooks/use-standard-element-styles.js';
 export const ImageBlockRenderer = ({ element, config, onStateChange, runtimeContext }) => {
     const [imageLoaded, setImageLoaded] = useState(false);
     const [imageError, setImageError] = useState(false);

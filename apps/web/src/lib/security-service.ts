@@ -453,7 +453,7 @@ export function secureLog(level: 'info' | 'warn' | 'error', message: string, dat
   } else if (level === 'warn') {
     console.warn(message, config.logSensitiveData ? data : '[REDACTED]');
   } else {
-    
+    // Info level logging - no output needed
   }
 }
 

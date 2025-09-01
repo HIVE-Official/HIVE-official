@@ -1,6 +1,16 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
-const meta: Meta = {
+const ColorSystem = () => (
+  <div className="bg-background p-8 space-y-8">
+    <div>
+      <h2 className="text-2xl font-bold text-white mb-4">HIVE Color System</h2>
+      <p className="text-muted mb-8">Our monochromatic foundation with strategic gold accents creates sophistication with purposeful moments of celebration.</p>
+    </div>
+  </div>
+)
+
+const meta: Meta<typeof ColorSystem> = {
+  component: ColorSystem,
   title: '🏛️ Foundation/Colors',
   parameters: {
     docs: {
@@ -12,7 +22,7 @@ const meta: Meta = {
 }
 
 export default meta
-type Story = StoryObj
+type Story = StoryObj<typeof ColorSystem>
 
 const ColorSwatch = ({ color, name, hex, usage }: { 
   color: string

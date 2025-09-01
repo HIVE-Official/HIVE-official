@@ -1,8 +1,18 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
-import { cn } from '../../lib/utils';
+import { cn } from '../../../lib/utils';
+
+const MotionSystemDemo = () => (
+  <div className="p-6 space-y-8">
+    <div className="space-y-4">
+      <h2 className="text-2xl font-semibold">HIVE Motion System</h2>
+      <p className="text-muted-foreground">Organic, campus-energy-inspired interactions</p>
+    </div>
+  </div>
+);
 
 const meta = {
+  component: MotionSystemDemo,
   title: 'Foundation/Motion System',
   parameters: {
     layout: 'fullscreen',

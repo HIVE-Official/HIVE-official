@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@hive/auth-logic";
+import { useUnifiedAuth } from "@hive/ui";
 import { env, logger, type OnboardingState, type AcademicLevel, INTEREST_CATEGORIES } from "@hive/core";
 import { Loader2 } from "lucide-react";
 import { Button } from "@hive/ui";
@@ -266,8 +266,11 @@ const initialDevData: Partial<OnboardingState> = {
 
 export function OnboardingStepClient({ step }: OnboardingStepClientProps) {
   const router = useRouter();
+  // Always call the hook to maintain consistent hook order
+  const unifiedAuthResult = useUnifiedAuth();
+  
   // In development mode, completely bypass Firebase auth
-  const authResult = isDevMode ? { user: { uid: 'dev-user', email: 'test@buffalo.edu' }, isLoading: false } : useAuth();
+  const authResult = isDevMode ? { user: { uid: 'dev-user', email: 'test@buffalo.edu' }, isLoading: false } : unifiedAuthResult;
   const { user, isLoading: isAuthLoading } = authResult;
   const { data: onboardingData, update } = useOnboardingStore();
   const [isInitialized, setIsInitialized] = useState(false);
@@ -347,6 +350,17 @@ export function OnboardingStepClient({ step }: OnboardingStepClientProps) {
       }
     }
   }, [onboardingData, update, isAuthLoading, isInitialized]);
+
+  // Validation and routing logic
+  useEffect(() => {
+    if (!isInitialized) return;
+
+    // Step-specific validation
+    if (step === "2" && !onboardingData?.schoolId) {
+      logger.warn("Missing schoolId for step 2, redirecting to step 1");
+      router.push(ROUTES.ONBOARDING.STEP_1);
+    }
+  }, [step, onboardingData, isInitialized, router]);
 
   // Handle invalid step identifiers (support steps 1-5 only)
   if (!isValidOnboardingStep(step)) {
@@ -440,17 +454,6 @@ export function OnboardingStepClient({ step }: OnboardingStepClientProps) {
     router.push(ROUTES.AUTH.SCHOOL_SELECT);
     return null;
   }
-
-  // Validation and routing logic
-  useEffect(() => {
-    if (!isInitialized) return;
-
-    // Step-specific validation
-    if (step === "2" && !onboardingData?.schoolId) {
-      logger.warn("Missing schoolId for step 2, redirecting to step 1");
-      router.push(ROUTES.ONBOARDING.STEP_1);
-    }
-  }, [step, onboardingData, isInitialized, router]);
 
   const StepComponent = STEPS[step];
 

@@ -2,8 +2,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React, { useState } from 'react';
 import { Calendar, Users, Zap, Lightbulb, Target, ArrowRight, Clock } from "lucide-react";
-import { HiveModal } from './hive-modal';
-import { cn } from '../../lib/utils';
+import { cn } from '../lib/utils.js';
 const upcomingFeatures = [
     {
         id: "profile-command",
@@ -72,7 +71,7 @@ const HiveComingSoonModal = React.forwardRef(({ isOpen, onClose, onWaitlistClick
         ? upcomingFeatures.filter(feature => feature.category === selectedCategory)
         : upcomingFeatures;
     const categories = Array.from(new Set(upcomingFeatures.map(f => f.category)));
-    return (_jsx(HiveModal, { ref: ref, isOpen: isOpen, onClose: onClose, size: "full", variant: "default", className: "max-h-[90vh] overflow-hidden", children: _jsxs("div", { className: "relative", children: [_jsxs("div", { className: "text-center mb-8", children: [_jsxs("div", { className: "flex items-center justify-center gap-2 mb-4", children: [_jsx(Clock, { className: "w-4 h-4 text-yellow-500" }), _jsx("span", { className: "text-xs font-medium uppercase tracking-wider text-yellow-500", children: "Coming in vBETA" })] }), _jsx("h1", { className: "text-4xl md:text-5xl font-black text-[var(--hive-text-primary)] mb-4", children: "What's Coming" }), _jsx("p", { className: "text-lg text-gray-400 max-w-3xl mx-auto leading-relaxed", children: "HIVE launches as programmable campus infrastructure where students build Tools, activate Spaces, and participate in collective Rituals that shape campus life." })] }), _jsxs("div", { className: "flex flex-wrap items-center justify-center gap-3 mb-8", children: [_jsx("button", { onClick: () => setSelectedCategory(null), className: cn("px-4 py-2 rounded-lg font-medium transition-all text-sm", !selectedCategory
+    return (_jsx(Modal, { ref: ref, isOpen: isOpen, onClose: onClose, size: "full", variant: "primary", className: "max-h-[90vh] overflow-hidden", children: _jsxs("div", { className: "relative", children: [_jsxs("div", { className: "text-center mb-8", children: [_jsxs("div", { className: "flex items-center justify-center gap-2 mb-4", children: [_jsx(Clock, { className: "w-4 h-4 text-yellow-500" }), _jsx("span", { className: "text-xs font-medium uppercase tracking-wider text-yellow-500", children: "Coming in vBETA" })] }), _jsx("h1", { className: "text-4xl md:text-5xl font-black text-[var(--hive-text-primary)] mb-4", children: "What's Coming" }), _jsx("p", { className: "text-lg text-gray-400 max-w-3xl mx-auto leading-relaxed", children: "HIVE launches as programmable campus infrastructure where students build Tools, activate Spaces, and participate in collective Rituals that shape campus life." })] }), _jsxs("div", { className: "flex flex-wrap items-center justify-center gap-3 mb-8", children: [_jsx("button", { onClick: () => setSelectedCategory(null), className: cn("px-4 py-2 rounded-lg font-medium transition-all text-sm", !selectedCategory
                                 ? 'bg-[var(--hive-text-primary)]/10 text-[var(--hive-text-primary)] border border-yellow-500/30'
                                 : 'bg-[var(--hive-text-primary)]/5 text-gray-400 hover:text-[var(--hive-text-primary)] border border-white/10'), children: "All Features" }), categories.map((category) => (_jsx("button", { onClick: () => setSelectedCategory(category), className: cn("px-4 py-2 rounded-lg font-medium transition-all text-sm border", selectedCategory === category
                                 ? 'bg-[var(--hive-text-primary)]/10 text-[var(--hive-text-primary)]'

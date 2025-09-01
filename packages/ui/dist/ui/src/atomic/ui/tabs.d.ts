@@ -1,13 +1,13 @@
 import React from "react";
 import { type VariantProps } from "class-variance-authority";
-declare const tabsListVariants: (props?: {
-    variant?: "ghost" | "default" | "underline" | "pills";
-    size?: "default" | "sm" | "lg";
-} & import("class-variance-authority/types").ClassProp) => string;
-declare const tabsTriggerVariants: (props?: {
-    variant?: "ghost" | "default" | "underline" | "pills";
-    size?: "default" | "sm" | "lg";
-} & import("class-variance-authority/types").ClassProp) => string;
+declare const tabsListVariants: (props?: ({
+    variant?: "ghost" | "default" | "underline" | "pills" | null | undefined;
+    size?: "sm" | "default" | "lg" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
+declare const tabsTriggerVariants: (props?: ({
+    variant?: "ghost" | "default" | "underline" | "pills" | null | undefined;
+    size?: "sm" | "default" | "lg" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
 interface TabsProps extends VariantProps<typeof tabsListVariants> {
     defaultValue?: string;
     value?: string;

@@ -87,30 +87,30 @@ export function MobileFirstLayout({ children }: MobileFirstLayoutProps) {
   return (
     <div className="min-h-screen bg-gray-950">
       {/* Top Bar - Only on mobile for essential actions */}
-      <div className="lg:hidden sticky top-0 z-40 bg-gray-900/95 backdrop-blur border-b border-gray-800">
+      <div className="lg:hidden sticky top-0 z-40 bg-[var(--hive-background-primary)]/95 backdrop-blur border-b border-gray-800">
         <div className="flex items-center justify-between px-4 h-14">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-gradient-to-r from-yellow-400 to-amber-500 rounded-lg flex items-center justify-center">
-              <span className="text-black font-bold text-sm">H</span>
+              <span className="text-[var(--hive-text-primary)] font-bold text-sm">H</span>
             </div>
-            <span className="font-bold text-white">HIVE</span>
+            <span className="font-bold text-[var(--hive-text-inverse)]">HIVE</span>
           </div>
           
           <div className="flex items-center gap-2">
             <button 
               onClick={() => router.push('/search')}
-              className="p-2 text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg"
+              className="p-2 text-gray-400 hover:text-[var(--hive-text-inverse)] hover:bg-gray-800 rounded-lg"
             >
               <Search className="w-5 h-5" />
             </button>
             
             <button 
               onClick={() => router.push('/notifications')}
-              className="relative p-2 text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg"
+              className="relative p-2 text-gray-400 hover:text-[var(--hive-text-inverse)] hover:bg-gray-800 rounded-lg"
             >
               <Bell className="w-5 h-5" />
               {unreadNotifications > 0 && (
-                <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center text-xs font-medium text-white">
+                <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center text-xs font-medium text-[var(--hive-text-inverse)]">
                   {unreadNotifications}
                 </div>
               )}
@@ -125,7 +125,7 @@ export function MobileFirstLayout({ children }: MobileFirstLayoutProps) {
       </main>
 
       {/* Mobile Bottom Navigation - Thumb-reachable */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-gray-900/95 backdrop-blur border-t border-gray-800 safe-bottom">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-[var(--hive-background-primary)]/95 backdrop-blur border-t border-gray-800 safe-bottom">
         <div className="grid grid-cols-4 h-16">
           {primaryTabs.map((tab) => {
             const Icon = tab.icon;
@@ -155,7 +155,7 @@ export function MobileFirstLayout({ children }: MobileFirstLayoutProps) {
       </div>
 
       {/* Desktop Navigation - Simple top bar, no sidebar */}
-      <div className="hidden lg:block fixed top-0 left-0 right-0 z-40 bg-gray-900/95 backdrop-blur border-b border-gray-800">
+      <div className="hidden lg:block fixed top-0 left-0 right-0 z-40 bg-[var(--hive-background-primary)]/95 backdrop-blur border-b border-gray-800">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
@@ -164,9 +164,9 @@ export function MobileFirstLayout({ children }: MobileFirstLayoutProps) {
               className="flex items-center gap-3 cursor-pointer"
             >
               <div className="w-10 h-10 bg-gradient-to-r from-yellow-400 to-amber-500 rounded-lg flex items-center justify-center">
-                <span className="text-black font-bold">H</span>
+                <span className="text-[var(--hive-text-primary)] font-bold">H</span>
               </div>
-              <span className="text-xl font-bold text-white">HIVE</span>
+              <span className="text-xl font-bold text-[var(--hive-text-inverse)]">HIVE</span>
             </div>
             
             {/* Primary Navigation */}
@@ -183,7 +183,7 @@ export function MobileFirstLayout({ children }: MobileFirstLayoutProps) {
                       flex items-center gap-2 px-4 py-2 rounded-lg transition-colors relative
                       ${isActive 
                         ? 'text-amber-400 bg-amber-400/10' 
-                        : 'text-gray-400 hover:text-white hover:bg-gray-800'
+                        : 'text-gray-400 hover:text-[var(--hive-text-inverse)] hover:bg-gray-800'
                       }
                     `}
                   >
@@ -198,18 +198,18 @@ export function MobileFirstLayout({ children }: MobileFirstLayoutProps) {
             <div className="flex items-center space-x-2">
               <button 
                 onClick={() => router.push('/search')}
-                className="p-2 text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg"
+                className="p-2 text-gray-400 hover:text-[var(--hive-text-inverse)] hover:bg-gray-800 rounded-lg"
               >
                 <Search className="w-5 h-5" />
               </button>
               
               <button 
                 onClick={() => router.push('/notifications')}
-                className="relative p-2 text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg"
+                className="relative p-2 text-gray-400 hover:text-[var(--hive-text-inverse)] hover:bg-gray-800 rounded-lg"
               >
                 <Bell className="w-5 h-5" />
                 {unreadNotifications > 0 && (
-                  <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center text-xs font-medium text-white">
+                  <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center text-xs font-medium text-[var(--hive-text-inverse)]">
                     {unreadNotifications}
                   </div>
                 )}
@@ -217,14 +217,14 @@ export function MobileFirstLayout({ children }: MobileFirstLayoutProps) {
               
               <button 
                 onClick={() => router.push('/messages')}
-                className="p-2 text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg"
+                className="p-2 text-gray-400 hover:text-[var(--hive-text-inverse)] hover:bg-gray-800 rounded-lg"
               >
                 <MessageCircle className="w-5 h-5" />
               </button>
               
               <button 
                 onClick={() => router.push('/spaces/create')}
-                className="ml-2 flex items-center gap-2 px-4 py-2 bg-amber-500 hover:bg-amber-400 text-black font-medium rounded-lg transition-colors"
+                className="ml-2 flex items-center gap-2 px-4 py-2 bg-amber-500 hover:bg-amber-400 text-[var(--hive-text-primary)] font-medium rounded-lg transition-colors"
               >
                 <Plus className="w-4 h-4" />
                 <span>Create</span>
@@ -234,14 +234,7 @@ export function MobileFirstLayout({ children }: MobileFirstLayoutProps) {
         </div>
       </div>
 
-      {/* Desktop content padding */}
-      <style jsx global>{`
-        @media (min-width: 1024px) {
-          main {
-            padding-top: 4rem;
-          }
-        }
-      `}</style>
+      {/* Desktop content padding handled by CSS classes */}
     </div>
   );
 }

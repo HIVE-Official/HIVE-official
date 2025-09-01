@@ -12,7 +12,8 @@ export interface OnboardingData {
   userType: 'student' | 'alumni' | 'faculty';
   firstName?: string;
   lastName?: string;
-  major: string;
+  major?: string;      // Legacy field for backward compatibility
+  majors: string[];    // New field for multiple majors
   academicLevel?: string;
   graduationYear: number;
   handle: string;
@@ -127,7 +128,7 @@ export function useOnboardingBridge() {
     onboardingData: OnboardingData
   ) => {
     try {
-      if (!unifiedAuth.hasValidSession()) {
+      if (!unifiedAuth.isAuthenticated || !unifiedAuth.user) {
         throw new Error('Valid session required for space creation');
       }
 
@@ -216,7 +217,7 @@ export function useOnboardingBridge() {
     error: unifiedAuth.error,
     
     // Utility functions
-    canAccessFeature: unifiedAuth.canAccessFeature,
-    hasValidSession: unifiedAuth.hasValidSession,
+    canAccessFeature: (_feature: string) => unifiedAuth.isAuthenticated && !!unifiedAuth.user,
+    hasValidSession: () => unifiedAuth.isAuthenticated && !!unifiedAuth.user,
   };
 }

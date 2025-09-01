@@ -204,13 +204,13 @@ function Toast({
   const getVariantStyles = (variant: AlertVariant) => {
     switch (variant) {
       case 'success':
-        return 'bg-[var(--hive-status-success)] text-white';
+        return 'bg-[var(--hive-status-success)] text-[var(--hive-text-inverse)]';
       case 'warning':
-        return 'bg-[var(--hive-status-warning)] text-white';
+        return 'bg-[var(--hive-status-warning)] text-[var(--hive-text-inverse)]';
       case 'error':
-        return 'bg-[var(--hive-status-error)] text-white';
+        return 'bg-[var(--hive-status-error)] text-[var(--hive-text-inverse)]';
       case 'info':
-        return 'bg-[var(--hive-brand-primary)] text-white';
+        return 'bg-[var(--hive-brand-primary)] text-[var(--hive-text-inverse)]';
       default:
         return 'bg-[var(--hive-background-primary)] text-[var(--hive-text-primary)] border border-[var(--hive-border-default)]';
     }

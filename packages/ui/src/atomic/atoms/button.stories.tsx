@@ -124,7 +124,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="success">🔘 BUTTON VARIANTS</Badge>
+            <Badge variant="emerald">🔘 BUTTON VARIANTS</Badge>
             Semantic Button Types
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -213,13 +213,13 @@ export const CompleteShowcase: Story = {
                 <div className="space-y-3">
                   <Text variant="body-sm" color="gold" weight="medium">Accent (Special) Actions:</Text>
                   <div className="flex flex-wrap gap-3">
-                    <Button variant="accent" icon={<Zap className="h-4 w-4" />}>
+                    <Button variant="secondary" icon={<Zap className="h-4 w-4" />}>
                       Activate Space
                     </Button>
-                    <Button variant="accent">
+                    <Button variant="secondary">
                       Premium Feature
                     </Button>
-                    <Button variant="accent">
+                    <Button variant="secondary">
                       Special Access
                     </Button>
                   </div>
@@ -302,7 +302,7 @@ export const CompleteShowcase: Story = {
                   <div className="flex flex-wrap gap-3 items-center">
                     <Button size="lg" variant="primary">Get Started</Button>
                     <Button size="lg" variant="secondary">Browse Spaces</Button>
-                    <Button size="lg" variant="accent">Activate Account</Button>
+                    <Button size="lg" variant="secondary">Activate Account</Button>
                   </div>
                   <Text variant="body-xs" color="secondary">
                     48px height - Large buttons for hero sections, call-to-action, and primary navigation
@@ -364,7 +364,7 @@ export const CompleteShowcase: Story = {
                     <Button variant="secondary" loading>
                       Submitting...
                     </Button>
-                    <Button variant="accent" loading>
+                    <Button variant="secondary" loading>
                       Activating...
                     </Button>
                   </div>
@@ -480,7 +480,7 @@ export const CompleteShowcase: Story = {
                     <Text variant="body-sm" color="gold" weight="medium">Assignment Workflow:</Text>
                     <div className="p-4 bg-[var(--hive-background-primary)] rounded-lg border border-[var(--hive-border-primary)] space-y-3">
                       <div className="space-y-2">
-                        <Button variant="accent" fullWidth icon={<Zap className="h-4 w-4" />}>
+                        <Button variant="secondary" fullWidth icon={<Zap className="h-4 w-4" />}>
                           Submit Algorithm Project
                         </Button>
                         <Button variant="secondary" fullWidth icon={<Download className="h-4 w-4" />}>
@@ -554,7 +554,7 @@ export const CompleteShowcase: Story = {
                   <Text variant="body-sm" color="gold" weight="medium">Tool Building:</Text>
                   <div className="p-4 bg-[var(--hive-background-primary)] rounded-lg border border-[var(--hive-border-primary)] space-y-3">
                     <div className="space-y-2">
-                      <Button variant="accent" size="sm" icon={<Zap className="h-4 w-4" />}>
+                      <Button variant="secondary" size="sm" icon={<Zap className="h-4 w-4" />}>
                         Deploy Tool
                       </Button>
                       <Button variant="secondary" size="sm">
@@ -606,7 +606,7 @@ export const CompleteShowcase: Story = {
                   <Text variant="body-sm" color="gold" weight="medium">Campus Events:</Text>
                   <div className="p-4 bg-[var(--hive-background-primary)] rounded-lg border border-[var(--hive-border-primary)] space-y-3">
                     <div className="space-y-2">
-                      <Button variant="accent" fullWidth icon={<Plus className="h-4 w-4" />}>
+                      <Button variant="secondary" fullWidth icon={<Plus className="h-4 w-4" />}>
                         Create Study Session
                       </Button>
                       <Button variant="primary" fullWidth icon={<Calendar className="h-4 w-4" />}>
@@ -670,7 +670,7 @@ export const CompleteShowcase: Story = {
                   <Text variant="body-sm" color="gold" weight="medium">Library Study Time:</Text>
                   <div className="p-4 bg-[var(--hive-background-primary)] rounded-lg border border-[var(--hive-border-primary)] space-y-3">
                     <div className="space-y-2">
-                      <Button variant="accent" fullWidth icon={<Users className="h-4 w-4" />}>
+                      <Button variant="secondary" fullWidth icon={<Users className="h-4 w-4" />}>
                         Find Study Group in Lockwood
                       </Button>
                       <Button variant="primary" fullWidth icon={<Plus className="h-4 w-4" />}>

@@ -3,8 +3,8 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from "react";
 import { cva } from 'class-variance-authority';
 import { motion } from 'framer-motion';
-import { cn } from "../lib/utils";
-import { motionDurations } from '../motion/hive-motion-system';
+import { cn } from "../lib/utils.js";
+import { motionDurations } from '../motion/hive-motion-system.js';
 // HIVE Switch variants - Luxury toggle with glass morphism and gold states
 const hiveSwitchVariants = cva(
 // Base styles - matte obsidian glass with heavy radius
@@ -117,11 +117,11 @@ const HiveSwitch = React.forwardRef(({ className, variant = "default", size = "d
 });
 HiveSwitch.displayName = "HiveSwitch";
 // Pre-built Switch variants for common use cases
-const HiveGoldSwitch = React.forwardRef((props, ref) => (_jsx(HiveSwitch, { ref: ref, variant: "gold", ...props })));
-const HiveSuccessSwitch = React.forwardRef((props, ref) => (_jsx(HiveSwitch, { ref: ref, variant: "success", ...props })));
-const HiveMinimalSwitch = React.forwardRef((props, ref) => (_jsx(HiveSwitch, { ref: ref, variant: "minimal", ...props })));
-const HiveNotificationSwitch = React.forwardRef((props, ref) => (_jsx(HiveSwitch, { ref: ref, variant: "default", label: "Push Notifications", description: "Receive notifications about new messages and updates", ...props })));
-const HivePrivacySwitch = React.forwardRef((props, ref) => (_jsx(HiveSwitch, { ref: ref, variant: "minimal", label: "Public Profile", description: "Make your profile visible to other HIVE users", ...props })));
+const HiveGoldSwitch = React.forwardRef((props, ref) => (_jsx(Switch, { ref: ref, variant: "gold", ...props })));
+const HiveSuccessSwitch = React.forwardRef((props, ref) => (_jsx(Switch, { ref: ref, variant: "emerald", ...props })));
+const HiveMinimalSwitch = React.forwardRef((props, ref) => (_jsx(Switch, { ref: ref, variant: "minimal", ...props })));
+const HiveNotificationSwitch = React.forwardRef((props, ref) => (_jsx(Switch, { ref: ref, variant: "primary", label: "Push Notifications", description: "Receive notifications about new messages and updates", ...props })));
+const HivePrivacySwitch = React.forwardRef((props, ref) => (_jsx(Switch, { ref: ref, variant: "minimal", label: "Public Profile", description: "Make your profile visible to other HIVE users", ...props })));
 HiveGoldSwitch.displayName = "HiveGoldSwitch";
 HiveSuccessSwitch.displayName = "HiveSuccessSwitch";
 HiveMinimalSwitch.displayName = "HiveMinimalSwitch";
@@ -129,7 +129,7 @@ HiveNotificationSwitch.displayName = "HiveNotificationSwitch";
 HivePrivacySwitch.displayName = "HivePrivacySwitch";
 export { HiveSwitch, HiveGoldSwitch, HiveSuccessSwitch, HiveMinimalSwitch, HiveNotificationSwitch, HivePrivacySwitch, hiveSwitchVariants, hiveSwitchThumbVariants };
 // Simple Switch component for basic use cases (backwards compatibility)
-const Switch = React.forwardRef((props, ref) => (_jsx(HiveSwitch, { ref: ref, variant: "minimal", ...props })));
+const Switch = React.forwardRef((props, ref) => (_jsx(Switch, { ref: ref, variant: "minimal", ...props })));
 Switch.displayName = "Switch";
 // Export as Switch for easier migration and consistency
 export { Switch, HiveSwitch as SwitchAdvanced };

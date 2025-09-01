@@ -1,10 +1,10 @@
 import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
-declare const enhancedCardVariants: (props?: {
-    variant?: "pulse" | "signature" | "neon" | "bulletin" | "mesh";
-    size?: "sm" | "md" | "lg" | "xl";
-    elevation?: "flat" | "medium" | "high" | "low" | "dramatic";
-} & import("class-variance-authority/types").ClassProp) => string;
+declare const enhancedCardVariants: (props?: ({
+    variant?: "pulse" | "signature" | "neon" | "bulletin" | "mesh" | null | undefined;
+    size?: "sm" | "md" | "lg" | "xl" | null | undefined;
+    elevation?: "medium" | "flat" | "high" | "low" | "dramatic" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
 export interface EnhancedCardProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof enhancedCardVariants> {
     asChild?: boolean;
 }

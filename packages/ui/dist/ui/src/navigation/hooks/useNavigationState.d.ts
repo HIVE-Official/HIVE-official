@@ -1,4 +1,4 @@
-import { NavigationState, NavigationLayout, NavigationPreference, NavigationUser, NavigationItem, NavigationContext } from '../core/types';
+import type { NavigationState, NavigationLayout, NavigationPreference, NavigationUser, NavigationItem, NavigationContext } from '../core/types';
 interface UseNavigationStateOptions {
     user: NavigationUser;
     initialPreference?: NavigationPreference;
@@ -25,7 +25,7 @@ export declare const useNavigationState: ({ user, initialPreference, enableAnaly
 /**
  * Hook for accessing current navigation section
  */
-export declare const useCurrentNavigationSection: () => "feed" | "spaces" | "profile" | "hivelab";
+export declare const useCurrentNavigationSection: () => "feed" | "spaces" | "profile" | "hivelab" | null;
 /**
  * Hook for checking if navigation is in mobile mode
  */

@@ -1,7 +1,17 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { cn } from '../../lib/utils';
+import { cn } from '../../../lib/utils';
+
+const ColorSystemDemo = () => (
+  <div className="p-6 space-y-8">
+    <div className="space-y-4">
+      <h2 className="text-2xl font-semibold">HIVE Color System</h2>
+      <p className="text-muted-foreground">Minimal Surface. Maximal Spark.</p>
+    </div>
+  </div>
+);
 
 const meta = {
+  component: ColorSystemDemo,
   title: 'Foundation/Color System',
   parameters: {
     layout: 'fullscreen',

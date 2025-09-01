@@ -282,7 +282,7 @@ export function CommandNavLayout({ children }: CommandNavLayoutProps) {
                   className="w-6 h-6"
                 />
               </div>
-              <span className="text-white font-bold">HIVE</span>
+              <span className="text-[var(--hive-text-inverse)] font-bold">HIVE</span>
             </Link>
 
             {/* Global Search Bar */}
@@ -307,7 +307,7 @@ export function CommandNavLayout({ children }: CommandNavLayoutProps) {
 
             {/* User Menu */}
             <div className="flex items-center space-x-1 sm:space-x-3">
-              <Button variant="ghost" size="sm" className="relative text-zinc-400 hover:text-white p-2">
+              <Button variant="ghost" size="sm" className="relative text-zinc-400 hover:text-[var(--hive-text-inverse)] p-2">
                 <Bell className="w-4 h-4" />
                 <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full text-xs"></span>
               </Button>
@@ -405,7 +405,7 @@ export function CommandNavLayout({ children }: CommandNavLayoutProps) {
                     setSearchQuery(e.target.value);
                     setSelectedIndex(0);
                   }}
-                  className="w-full py-4 bg-transparent text-white placeholder-zinc-500 focus:outline-none"
+                  className="w-full py-4 bg-transparent text-[var(--hive-text-inverse)] placeholder-zinc-500 focus:outline-none"
                   autoFocus
                 />
               </div>
@@ -435,7 +435,7 @@ export function CommandNavLayout({ children }: CommandNavLayoutProps) {
                             className={`w-full flex items-center px-3 py-2 rounded-md text-left transition-colors ${
                               isSelected 
                                 ? 'bg-hive-brand-primary text-hive-background-primary' 
-                                : 'text-zinc-300 hover:bg-zinc-800 hover:text-white'
+                                : 'text-zinc-300 hover:bg-zinc-800 hover:text-[var(--hive-text-inverse)]'
                             }`}
                           >
                             <Icon className="w-4 h-4 mr-3 flex-shrink-0" />

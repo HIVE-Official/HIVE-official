@@ -1,7 +1,7 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { cn } from '../../lib/utils';
-import { HiveBentoGrid, HiveBentoCard, HiveStack } from '../../layout/hive-layout';
+import { cn } from '../../lib/utils.js';
+import { HiveBentoGrid, HiveBentoCard, HiveStack } from '../../layout/hive-layout.js';
 export function ProfileLayout({ children, header, quickActions, calendar, personalTools, spaceMemberships, activityFeed, className }) {
     return (_jsxs("div", { className: cn("w-full", className), children: [header && (_jsx("div", { className: "mb-8", children: header })), quickActions && (_jsx("div", { className: "mb-6", children: quickActions })), _jsxs(HiveBentoGrid, { cols: 4, gap: "lg", cascade: true, children: [calendar && (_jsx(HiveBentoCard, { span: 2, aspect: "wide", elevated: true, interactive: true, children: calendar })), personalTools && (_jsx(HiveBentoCard, { span: 2, elevated: true, interactive: true, children: personalTools })), spaceMemberships && (_jsx(HiveBentoCard, { span: 2, aspect: "tall", elevated: true, interactive: true, children: spaceMemberships })), activityFeed && (_jsx(HiveBentoCard, { span: 2, aspect: "tall", elevated: true, children: activityFeed })), children] })] }));
 }

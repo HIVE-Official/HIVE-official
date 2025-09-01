@@ -108,7 +108,7 @@ export const RefinedShowcase: Story = {
                 <RefinedButton variant="ghost" size="icon" className="relative">
                   <Bell className="w-4 h-4" />
                   {notifications > 0 && (
-                    <RefinedBadge variant="accent" className="absolute -top-1 -right-1 w-5 h-5 p-0 text-xs flex items-center justify-center">
+                    <RefinedBadge variant="secondary" className="absolute -top-1 -right-1 w-5 h-5 p-0 text-xs flex items-center justify-center">
                       {notifications}
                     </RefinedBadge>
                   )}
@@ -134,7 +134,7 @@ export const RefinedShowcase: Story = {
             </RefinedTypography>
             
             <div className="flex flex-wrap gap-3">
-              <RefinedButton variant="accent" size="lg">
+              <RefinedButton variant="secondary" size="lg">
                 <Zap className="w-4 h-4 mr-2" />
                 Join Study Session
               </RefinedButton>
@@ -156,7 +156,7 @@ export const RefinedShowcase: Story = {
                 <RefinedTypography variant="subtitle" as="h3">
                   Campus Energy
                 </RefinedTypography>
-                <RefinedBadge variant="accent">High</RefinedBadge>
+                <RefinedBadge variant="secondary">High</RefinedBadge>
               </div>
               <RefinedTypography variant="hero" as="div" className="text-3xl mb-2">
                 87%
@@ -383,7 +383,7 @@ export const ComponentShowcase: Story = {
                 <RefinedButton variant="primary" size="lg" className="w-full">
                   Join Campus Community
                 </RefinedButton>
-                <RefinedButton variant="accent" className="w-full">
+                <RefinedButton variant="secondary" className="w-full">
                   <Zap className="w-4 h-4 mr-2" />
                   Create Study Group
                 </RefinedButton>
@@ -495,7 +495,7 @@ export const ComponentShowcase: Story = {
             </div>
             
             <div className="flex flex-wrap gap-3">
-              <RefinedTypography variant="accent">
+              <RefinedTypography variant="secondary">
                 Accent text for highlights
               </RefinedTypography>
               <RefinedTypography variant="code">
@@ -531,7 +531,7 @@ export const ComponentShowcase: Story = {
               </RefinedTypography>
               <div className="flex flex-wrap gap-2">
                 <RefinedBadge variant="primary">Default</RefinedBadge>
-                <RefinedBadge variant="accent">Campus Energy</RefinedBadge>
+                <RefinedBadge variant="secondary">Campus Energy</RefinedBadge>
                 <RefinedBadge variant="success">Active</RefinedBadge>
                 <RefinedBadge variant="warning">Planning</RefinedBadge>
                 <RefinedBadge variant="destructive">Ended</RefinedBadge>
@@ -624,7 +624,7 @@ export const BeforeAfterComparison: Story = {
               </div>
               
               <div className="flex gap-3">
-                <RefinedButton variant="accent" size="sm">
+                <RefinedButton variant="secondary" size="sm">
                   <Zap className="w-4 h-4 mr-2" />
                   Join Now
                 </RefinedButton>

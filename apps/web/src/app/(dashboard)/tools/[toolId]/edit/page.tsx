@@ -115,7 +115,7 @@ const ElementCard = ({ element, onSelect, isSelected }: {
           <IconComponent className={`h-4 w-4 ${isSelected ? 'text-[var(--hive-brand-secondary)]' : 'text-[var(--hive-text-muted)] group-hover:text-[var(--hive-brand-secondary)]'}`} />
         </div>
         <div className="flex-1 min-w-0">
-          <div className={`font-medium text-sm truncate ${isSelected ? 'text-[var(--hive-brand-secondary)]' : 'text-white'}`}>
+          <div className={`font-medium text-sm truncate ${isSelected ? 'text-[var(--hive-brand-secondary)]' : 'text-[var(--hive-text-inverse)]'}`}>
             {element.label}
           </div>
           <div className="text-xs text-[var(--hive-text-muted)] capitalize">
@@ -142,7 +142,7 @@ const PropertyPanel = ({ element }: { element: ToolElement | null }) => {
 
   return (
     <Card className="p-6 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)]">
-      <h3 className="text-lg font-semibold text-white mb-4">Element Properties</h3>
+      <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4">Element Properties</h3>
       
       <div className="space-y-4">
         <div>
@@ -150,7 +150,7 @@ const PropertyPanel = ({ element }: { element: ToolElement | null }) => {
           <input
             type="text"
             value={element.label}
-            className="w-full p-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-lg text-white focus:border-[var(--hive-brand-secondary)]/50 focus:outline-none"
+            className="w-full p-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-lg text-[var(--hive-text-inverse)] focus:border-[var(--hive-brand-secondary)]/50 focus:outline-none"
           />
         </div>
         
@@ -161,7 +161,7 @@ const PropertyPanel = ({ element }: { element: ToolElement | null }) => {
               <input
                 type="text"
                 value={element.properties.placeholder || ''}
-                className="w-full p-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-lg text-white focus:border-[var(--hive-brand-secondary)]/50 focus:outline-none"
+                className="w-full p-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-lg text-[var(--hive-text-inverse)] focus:border-[var(--hive-brand-secondary)]/50 focus:outline-none"
               />
             </div>
             <div className="flex items-center gap-2">
@@ -174,7 +174,7 @@ const PropertyPanel = ({ element }: { element: ToolElement | null }) => {
         {element.type === 'button' && (
           <div>
             <label className="block text-sm font-medium text-[var(--hive-text-muted)] mb-2">Button Style</label>
-            <select className="w-full p-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-lg text-white focus:border-[var(--hive-brand-secondary)]/50 focus:outline-none">
+            <select className="w-full p-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-lg text-[var(--hive-text-inverse)] focus:border-[var(--hive-brand-secondary)]/50 focus:outline-none">
               <option value="primary">Primary</option>
               <option value="secondary">Secondary</option>
               <option value="outline">Outline</option>
@@ -183,14 +183,14 @@ const PropertyPanel = ({ element }: { element: ToolElement | null }) => {
         )}
         
         <div className="pt-4 border-t border-[rgba(255,255,255,0.1)]">
-          <h4 className="text-sm font-medium text-white mb-3">Position & Size</h4>
+          <h4 className="text-sm font-medium text-[var(--hive-text-inverse)] mb-3">Position & Size</h4>
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block text-xs text-[var(--hive-text-muted)] mb-1">X Position</label>
               <input
                 type="number"
                 value={element.position.x}
-                className="w-full p-2 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded text-white text-sm focus:border-[var(--hive-brand-secondary)]/50 focus:outline-none"
+                className="w-full p-2 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded text-[var(--hive-text-inverse)] text-sm focus:border-[var(--hive-brand-secondary)]/50 focus:outline-none"
               />
             </div>
             <div>
@@ -198,7 +198,7 @@ const PropertyPanel = ({ element }: { element: ToolElement | null }) => {
               <input
                 type="number"
                 value={element.position.y}
-                className="w-full p-2 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded text-white text-sm focus:border-[var(--hive-brand-secondary)]/50 focus:outline-none"
+                className="w-full p-2 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded text-[var(--hive-text-inverse)] text-sm focus:border-[var(--hive-brand-secondary)]/50 focus:outline-none"
               />
             </div>
             <div>
@@ -206,7 +206,7 @@ const PropertyPanel = ({ element }: { element: ToolElement | null }) => {
               <input
                 type="number"
                 value={element.size.width}
-                className="w-full p-2 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded text-white text-sm focus:border-[var(--hive-brand-secondary)]/50 focus:outline-none"
+                className="w-full p-2 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded text-[var(--hive-text-inverse)] text-sm focus:border-[var(--hive-brand-secondary)]/50 focus:outline-none"
               />
             </div>
             <div>
@@ -214,7 +214,7 @@ const PropertyPanel = ({ element }: { element: ToolElement | null }) => {
               <input
                 type="number"
                 value={element.size.height}
-                className="w-full p-2 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded text-white text-sm focus:border-[var(--hive-brand-secondary)]/50 focus:outline-none"
+                className="w-full p-2 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded text-[var(--hive-text-inverse)] text-sm focus:border-[var(--hive-brand-secondary)]/50 focus:outline-none"
               />
             </div>
           </div>
@@ -265,13 +265,13 @@ export default function ToolEditPage() {
                 size="sm"
                 variant="ghost"
                 onClick={() => router.back()}
-                className="text-[var(--hive-text-muted)] hover:text-white"
+                className="text-[var(--hive-text-muted)] hover:text-[var(--hive-text-inverse)]"
               >
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Back
               </Button>
               <div>
-                <h1 className="text-xl font-semibold text-white">
+                <h1 className="text-xl font-semibold text-[var(--hive-text-inverse)]">
                   Editing: {tool.name}
                 </h1>
                 <p className="text-sm text-[var(--hive-text-muted)]">
@@ -285,7 +285,7 @@ export default function ToolEditPage() {
                 size="sm"
                 variant="outline"
                 onClick={handleTest}
-                className="border-[rgba(255,255,255,0.2)] text-[var(--hive-text-muted)] hover:text-white"
+                className="border-[rgba(255,255,255,0.2)] text-[var(--hive-text-muted)] hover:text-[var(--hive-text-inverse)]"
               >
                 <Play className="h-4 w-4 mr-2" />
                 Test
@@ -294,7 +294,7 @@ export default function ToolEditPage() {
                 size="sm"
                 variant="outline"
                 onClick={handlePreview}
-                className="border-[rgba(255,255,255,0.2)] text-[var(--hive-text-muted)] hover:text-white"
+                className="border-[rgba(255,255,255,0.2)] text-[var(--hive-text-muted)] hover:text-[var(--hive-text-inverse)]"
               >
                 <Eye className="h-4 w-4 mr-2" />
                 Preview
@@ -319,7 +319,7 @@ export default function ToolEditPage() {
           <div className="col-span-3 space-y-6">
             {/* Tool Info */}
             <Card className="p-4 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)]">
-              <h3 className="text-sm font-semibold text-white mb-3">Tool Settings</h3>
+              <h3 className="text-sm font-semibold text-[var(--hive-text-inverse)] mb-3">Tool Settings</h3>
               <div className="space-y-3">
                 <div>
                   <label className="block text-xs text-[var(--hive-text-muted)] mb-1">Tool Name</label>
@@ -330,7 +330,7 @@ export default function ToolEditPage() {
                       setTool({ ...tool, name: e.target.value });
                       setHasChanges(true);
                     }}
-                    className="w-full p-2 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded text-white text-sm focus:border-[var(--hive-brand-secondary)]/50 focus:outline-none"
+                    className="w-full p-2 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded text-[var(--hive-text-inverse)] text-sm focus:border-[var(--hive-brand-secondary)]/50 focus:outline-none"
                   />
                 </div>
                 <div>
@@ -341,7 +341,7 @@ export default function ToolEditPage() {
                       setTool({ ...tool, privacy: e.target.value as any });
                       setHasChanges(true);
                     }}
-                    className="w-full p-2 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded text-white text-sm focus:border-[var(--hive-brand-secondary)]/50 focus:outline-none"
+                    className="w-full p-2 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded text-[var(--hive-text-inverse)] text-sm focus:border-[var(--hive-brand-secondary)]/50 focus:outline-none"
                   >
                     <option value="personal">Personal</option>
                     <option value="space">Space</option>
@@ -354,7 +354,7 @@ export default function ToolEditPage() {
             {/* Elements List */}
             <Card className="p-4 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)] flex-1">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-sm font-semibold text-white">Elements</h3>
+                <h3 className="text-sm font-semibold text-[var(--hive-text-inverse)]">Elements</h3>
                 <Button size="sm" variant="ghost" className="h-6 w-6 p-0">
                   <MoreHorizontal className="h-3 w-3 text-[var(--hive-text-muted)]" />
                 </Button>
@@ -380,7 +380,7 @@ export default function ToolEditPage() {
                         key={elementType.type}
                         size="sm"
                         variant="outline"
-                        className="border-[rgba(255,255,255,0.1)] text-[var(--hive-text-muted)] hover:text-white hover:border-[var(--hive-brand-secondary)]/30 p-2 h-auto"
+                        className="border-[rgba(255,255,255,0.1)] text-[var(--hive-text-muted)] hover:text-[var(--hive-text-inverse)] hover:border-[var(--hive-brand-secondary)]/30 p-2 h-auto"
                         onClick={() => {
                           const newElement: ToolElement = {
                             id: `element-${Date.now()}`,
@@ -436,7 +436,7 @@ export default function ToolEditPage() {
                         <input
                           type="text"
                           placeholder={element.properties.placeholder}
-                          className="w-full h-full p-2 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded text-white text-sm pointer-events-none"
+                          className="w-full h-full p-2 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded text-[var(--hive-text-inverse)] text-sm pointer-events-none"
                           readOnly
                         />
                       )}
@@ -446,7 +446,7 @@ export default function ToolEditPage() {
                         </button>
                       )}
                       {element.type === 'text' && (
-                        <div className="w-full h-full text-white text-sm flex items-center pointer-events-none">
+                        <div className="w-full h-full text-[var(--hive-text-inverse)] text-sm flex items-center pointer-events-none">
                           {element.label}
                         </div>
                       )}

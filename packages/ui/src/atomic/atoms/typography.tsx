@@ -248,7 +248,7 @@ export const Code = React.forwardRef<HTMLElement, CodeProps>(
 Code.displayName = "Code";
 
 // Blockquote Component
-export interface BlockquoteProps extends React.HTMLAttributes<HTMLQuoteElement> {}
+export type BlockquoteProps = React.HTMLAttributes<HTMLQuoteElement>;
 
 export const Blockquote = React.forwardRef<HTMLQuoteElement, BlockquoteProps>(
   ({ className, ...props }, ref) => {
@@ -289,7 +289,7 @@ export const List = React.forwardRef<HTMLUListElement | HTMLOListElement, ListPr
 );
 List.displayName = "List";
 
-export interface ListItemProps extends React.HTMLAttributes<HTMLLIElement> {}
+export type ListItemProps = React.HTMLAttributes<HTMLLIElement>;
 
 export const ListItem = React.forwardRef<HTMLLIElement, ListItemProps>(
   ({ className, ...props }, ref) => {

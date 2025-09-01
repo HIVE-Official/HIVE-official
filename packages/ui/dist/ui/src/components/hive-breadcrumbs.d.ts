@@ -1,9 +1,9 @@
 import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
-declare const hiveBreadcrumbsVariants: (props?: {
-    variant?: "default" | "minimal" | "prominent";
-    separator?: "dot" | "arrow" | "chevron" | "slash";
-} & import("class-variance-authority/types").ClassProp) => string;
+declare const hiveBreadcrumbsVariants: (props?: ({
+    variant?: "default" | "minimal" | "prominent" | null | undefined;
+    separator?: "dot" | "arrow" | "chevron" | "slash" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
 export interface BreadcrumbItem {
     id: string;
     label: string;

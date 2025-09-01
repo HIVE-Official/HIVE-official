@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import { AtSign, Check, X, Loader2, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { HiveInput } from "@hive/ui";
+import { Input } from "@hive/ui";
 import type { HiveOnboardingData } from "../hive-onboarding-wizard";
 
 interface HiveHandleStepProps {
@@ -142,12 +142,12 @@ export function HiveHandleStep({ data, updateData, onNext }: HiveHandleStepProps
   const getValidationIcon = () => {
     switch (validationState) {
       case "checking":
-        return <Loader2 className="w-4 h-4 animate-spin text-[var(--hive-brand-primary)]" />;
+        return <Loader2 className="w-4 h-4 animate-spin text-accent" />;
       case "available":
-        return <Check className="w-4 h-4 text-[var(--hive-status-success)]" />;
+        return <Check className="w-4 h-4 text-success" />;
       case "taken":
       case "invalid":
-        return <X className="w-4 h-4 text-[var(--hive-status-error)]" />;
+        return <X className="w-4 h-4 text-error" />;
       default:
         return null;
     }
@@ -168,19 +168,6 @@ export function HiveHandleStep({ data, updateData, onNext }: HiveHandleStepProps
     }
   };
 
-  const getValidationColor = () => {
-    switch (validationState) {
-      case "checking":
-        return "text-[var(--hive-brand-primary)]";
-      case "available":
-        return "text-[var(--hive-status-success)]";
-      case "taken":
-      case "invalid":
-        return "text-[var(--hive-status-error)]";
-      default:
-        return "text-[var(--hive-text-tertiary)]";
-    }
-  };
 
   return (
     <motion.div
@@ -204,10 +191,10 @@ export function HiveHandleStep({ data, updateData, onNext }: HiveHandleStepProps
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.2 }}
         >
-          <h2 className="text-2xl font-bold text-[var(--hive-text-primary)]">
+          <h2 className="text-2xl font-bold text-foreground">
             Choose your unique handle
           </h2>
-          <p className="text-[var(--hive-text-tertiary)] mt-2">
+          <p className="text-muted mt-2">
             Your @handle is how others will find and mention you on HIVE.
           </p>
         </motion.div>
@@ -222,7 +209,7 @@ export function HiveHandleStep({ data, updateData, onNext }: HiveHandleStepProps
         transition={{ delay: 0.3 }}
       >
         <div className="space-y-3">
-          <HiveInput
+          <Input
             id="handle"
             type="text"
             label="Handle"
@@ -232,9 +219,9 @@ export function HiveHandleStep({ data, updateData, onNext }: HiveHandleStepProps
             variant={
               validationState === "available" ? "success" :
               validationState === "taken" || validationState === "invalid" ? "error" :
-              "premium"
+              "accent"
             }
-            size="lg"
+            size="md"
             floatingLabel={false}
             leftIcon={<AtSign className="w-4 h-4" />}
             rightIcon={getValidationIcon()}
@@ -251,10 +238,10 @@ export function HiveHandleStep({ data, updateData, onNext }: HiveHandleStepProps
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-[var(--hive-background-secondary)]/30 backdrop-blur-xl border border-[var(--hive-border-primary)] rounded-xl p-4"
+            className="bg-secondary/30 backdrop-blur-xl border border-border rounded-xl p-4"
           >
-            <h4 className="text-sm font-medium text-[var(--hive-text-secondary)] mb-3 flex items-center">
-              <Zap className="w-4 h-4 mr-2 text-[var(--hive-brand-primary)]" />
+            <h4 className="text-sm font-medium text-muted-foreground mb-3 flex items-center">
+              <Zap className="w-4 h-4 mr-2 text-accent" />
               Try these instead
             </h4>
             <div className="flex flex-wrap gap-2">
@@ -263,7 +250,7 @@ export function HiveHandleStep({ data, updateData, onNext }: HiveHandleStepProps
                   key={suggestion}
                   type="button"
                   onClick={() => selectSuggestion(suggestion)}
-                  className="px-3 py-1.5 bg-[var(--hive-background-secondary)]/20 hover:bg-[var(--hive-background-secondary)]/30 border border-[var(--hive-border-subtle)] rounded-lg text-sm text-[var(--hive-text-primary)] transition-all duration-200 hover:scale-105 hover:-translate-y-0.5 active:scale-95"
+                  className="px-3 py-1.5 bg-secondary/20 hover:bg-secondary/30 border border-border/50 rounded-lg text-sm text-foreground transition-all duration-200 hover:scale-105 hover:-translate-y-0.5 active:scale-95"
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: index * 0.1 }}
@@ -281,17 +268,17 @@ export function HiveHandleStep({ data, updateData, onNext }: HiveHandleStepProps
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-[var(--hive-background-secondary)]/30 backdrop-blur-xl border border-[var(--hive-status-success)]/30 rounded-xl p-4"
+            className="bg-secondary/30 backdrop-blur-xl border border-success/30 rounded-xl p-4"
           >
-            <h4 className="text-sm font-medium text-[var(--hive-text-secondary)] mb-3 flex items-center">
-              <Check className="w-4 h-4 mr-2 text-[var(--hive-status-success)]" />
+            <h4 className="text-sm font-medium text-muted-foreground mb-3 flex items-center">
+              <Check className="w-4 h-4 mr-2 text-success" />
               Looking good!
             </h4>
             <div className="space-y-2 text-sm">
-              <div className="text-[var(--hive-text-secondary)]">
-                Your profile: <span className="text-[var(--hive-brand-primary)] font-medium">@{data.handle}</span>
+              <div className="text-muted-foreground">
+                Your profile: <span className="text-accent font-medium">@{data.handle}</span>
               </div>
-              <div className="text-xs text-[var(--hive-text-tertiary)]">
+              <div className="text-xs text-muted">
                 Others can find you by searching for @{data.handle}
               </div>
             </div>
@@ -303,31 +290,31 @@ export function HiveHandleStep({ data, updateData, onNext }: HiveHandleStepProps
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="bg-[var(--hive-background-secondary)]/20 backdrop-blur-sm border border-[var(--hive-border-subtle)] rounded-xl p-4"
+          className="bg-secondary/20 backdrop-blur-sm border border-border/50 rounded-xl p-4"
         >
-          <h4 className="text-sm font-medium text-[var(--hive-text-secondary)] mb-3 flex items-center">
+          <h4 className="text-sm font-medium text-muted-foreground mb-3 flex items-center">
             <div className="w-2 h-2 bg-purple-400 rounded-full mr-2" />
             Handle Requirements
           </h4>
-          <div className="space-y-1 text-xs text-[var(--hive-text-tertiary)]">
+          <div className="space-y-1 text-xs text-muted">
             <div className="flex items-center space-x-2">
               <div className={cn(
                 "w-1.5 h-1.5 rounded-full",
-                data.handle.length >= 3 ? "bg-[var(--hive-status-success)]" : "bg-[var(--hive-background-tertiary)]"
+                data.handle.length >= 3 ? "bg-success" : "bg-muted"
               )} />
               <span>At least 3 characters long</span>
             </div>
             <div className="flex items-center space-x-2">
               <div className={cn(
                 "w-1.5 h-1.5 rounded-full",
-                /^[a-zA-Z0-9._-]*$/.test(data.handle) ? "bg-[var(--hive-status-success)]" : "bg-[var(--hive-background-tertiary)]"
+                /^[a-zA-Z0-9._-]*$/.test(data.handle) ? "bg-success" : "bg-muted"
               )} />
               <span>Only letters, numbers, dots, underscores, and hyphens</span>
             </div>
             <div className="flex items-center space-x-2">
               <div className={cn(
                 "w-1.5 h-1.5 rounded-full",
-                validationState === "available" ? "bg-[var(--hive-status-success)]" : "bg-[var(--hive-background-tertiary)]"
+                validationState === "available" ? "bg-success" : "bg-muted"
               )} />
               <span>Not already taken by another user</span>
             </div>

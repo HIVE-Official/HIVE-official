@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { User, Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
-import { HiveInput } from "@hive/ui";
+import { Input } from "@hive/ui";
 import type { HiveOnboardingData } from "../hive-onboarding-wizard";
 
 interface HiveNameStepProps {
@@ -57,9 +57,9 @@ export function HiveNameStep({ data, updateData, onNext }: HiveNameStepProps) {
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ delay: 0.1, type: "spring", stiffness: 200 }}
-          className="mx-auto w-16 h-16 bg-[var(--hive-overlay-gold-subtle)] backdrop-blur-xl rounded-full flex items-center justify-center border border-[var(--hive-border-gold)]"
+          className="mx-auto w-16 h-16 bg-accent/10 backdrop-blur-xl rounded-full flex items-center justify-center border border-accent/20"
         >
-          <User className="w-8 h-8 text-[var(--hive-brand-primary)]" />
+          <User className="w-8 h-8 text-accent" />
         </motion.div>
         
         <motion.div
@@ -67,10 +67,10 @@ export function HiveNameStep({ data, updateData, onNext }: HiveNameStepProps) {
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.2 }}
         >
-          <h2 className="text-2xl font-bold text-[var(--hive-text-primary)]">
+          <h2 className="text-2xl font-bold text-foreground">
             What's your name?
           </h2>
-          <p className="text-[var(--hive-text-tertiary)] mt-2">
+          <p className="text-muted mt-2">
             This is how you'll appear to other students on HIVE.
           </p>
         </motion.div>
@@ -85,15 +85,15 @@ export function HiveNameStep({ data, updateData, onNext }: HiveNameStepProps) {
         transition={{ delay: 0.3 }}
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <HiveInput
+          <Input
             id="firstName"
             type="text"
             label="First Name"
             placeholder="First name"
             value={firstName}
             onChange={handleFirstNameChange}
-            variant="premium"
-            size="lg"
+            variant="accent"
+            size="md"
             floatingLabel={false}
             showCharacterCount={true}
             maxLength={50}
@@ -102,15 +102,15 @@ export function HiveNameStep({ data, updateData, onNext }: HiveNameStepProps) {
             className="w-full"
           />
           
-          <HiveInput
+          <Input
             id="lastName"
             type="text"
             label="Last Name"
             placeholder="Last name"
             value={lastName}
             onChange={handleLastNameChange}
-            variant="premium"
-            size="lg"
+            variant="accent"
+            size="md"
             floatingLabel={false}
             showCharacterCount={true}
             maxLength={50}
@@ -124,14 +124,14 @@ export function HiveNameStep({ data, updateData, onNext }: HiveNameStepProps) {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-[var(--hive-background-secondary)]/30 backdrop-blur-xl border border-[var(--hive-border-primary)] rounded-xl p-4"
+            className="bg-secondary/30 backdrop-blur-xl border border-border rounded-xl p-4"
           >
             <div className="flex items-center justify-between mb-3">
-              <h4 className="text-sm font-medium text-[var(--hive-text-primary)]">Preview</h4>
+              <h4 className="text-sm font-medium text-foreground">Preview</h4>
               <button
                 type="button"
                 onClick={() => setShowPreview(!showPreview)}
-                className="text-[var(--hive-text-tertiary)] hover:text-[var(--hive-text-primary)] transition-colors"
+                className="text-muted hover:text-foreground transition-colors"
               >
                 {showPreview ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
               </button>
@@ -144,15 +144,15 @@ export function HiveNameStep({ data, updateData, onNext }: HiveNameStepProps) {
                 exit={{ opacity: 0, height: 0 }}
                 className="space-y-2"
               >
-                <div className="text-sm text-[var(--hive-text-secondary)]">
-                  Hi there, <span className="text-[var(--hive-brand-primary)] font-medium">{firstName}</span>! 👋
+                <div className="text-sm text-muted-foreground">
+                  Hi there, <span className="text-accent font-medium">{firstName}</span>! 👋
                 </div>
                 {firstName && lastName && (
-                  <div className="text-xs text-[var(--hive-text-tertiary)]">
+                  <div className="text-xs text-muted">
                     Full name: {firstName} {lastName}
                   </div>
                 )}
-                <div className="text-xs text-[var(--hive-text-tertiary)]">
+                <div className="text-xs text-muted">
                   This is how you'll be greeted around HIVE.
                 </div>
               </motion.div>
@@ -165,13 +165,13 @@ export function HiveNameStep({ data, updateData, onNext }: HiveNameStepProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="bg-[var(--hive-background-secondary)]/20 backdrop-blur-sm border border-[var(--hive-border-subtle)] rounded-xl p-4"
+          className="bg-secondary/20 backdrop-blur-sm border border-border/50 rounded-xl p-4"
         >
-          <h4 className="text-sm font-medium text-[var(--hive-text-secondary)] mb-2 flex items-center">
-            <div className="w-2 h-2 bg-[var(--hive-brand-primary)] rounded-full mr-2" />
+          <h4 className="text-sm font-medium text-muted-foreground mb-2 flex items-center">
+            <div className="w-2 h-2 bg-accent rounded-full mr-2" />
             Privacy Note
           </h4>
-          <p className="text-xs text-[var(--hive-text-tertiary)]">
+          <p className="text-xs text-muted">
             Your name will be visible to other students in your Spaces. You can
             always update this later in your profile settings.
           </p>

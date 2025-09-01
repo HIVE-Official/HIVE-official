@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
-import { Button, Card } from "@hive/ui";
+import { Card } from "@hive/ui";
 import { logger } from '../lib/logger';
 
 interface ErrorBoundaryState {
@@ -66,7 +66,7 @@ function DefaultErrorFallback({ error, retry }: { error?: Error; retry: () => vo
           <AlertTriangle className="w-8 h-8 text-red-400" />
         </div>
         
-        <h1 className="text-xl font-bold text-white mb-2">Something went wrong</h1>
+        <h1 className="text-xl font-bold text-[var(--hive-text-inverse)] mb-2">Something went wrong</h1>
         <p className="text-zinc-400 mb-6">
           We encountered an unexpected error. Please try refreshing the page or return to the home page.
         </p>
@@ -81,21 +81,20 @@ function DefaultErrorFallback({ error, retry }: { error?: Error; retry: () => vo
         )}
 
         <div className="flex gap-3 justify-center">
-          <Button
+          <button
             onClick={retry}
-            className="bg-[var(--hive-brand-secondary)] text-[var(--hive-background-primary)] hover:bg-[#FFE255]"
+            className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
           >
             <RefreshCw className="w-4 h-4 mr-2" />
             Try Again
-          </Button>
-          <Button
-            variant="outline"
+          </button>
+          <button
             onClick={() => window.location.href = '/'}
-            className="border-zinc-600 text-zinc-300"
+            className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2"
           >
             <Home className="w-4 h-4 mr-2" />
             Go Home
-          </Button>
+          </button>
         </div>
       </Card>
     </div>

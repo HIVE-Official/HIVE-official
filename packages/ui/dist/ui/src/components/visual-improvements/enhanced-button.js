@@ -3,7 +3,7 @@ import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva } from "class-variance-authority";
 import { Loader2 } from "lucide-react";
-import { cn } from "../lib/utils";
+import { cn } from "../../lib/utils.js";
 const enhancedButtonVariants = cva(
 // Base with REAL presence
 "inline-flex items-center justify-center whitespace-nowrap font-medium relative overflow-hidden transition-all duration-200 ease-out focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 select-none group", {
@@ -14,7 +14,7 @@ const enhancedButtonVariants = cva(
                 "border-3 border-accent bg-transparent text-accent font-semibold",
                 "relative before:absolute before:inset-0 before:bg-accent before:translate-y-full",
                 "before:transition-transform before:duration-300 before:ease-out",
-                "hover:before:translate-y-0 hover:text-black hover:border-accent",
+                "hover:before:translate-y-0 hover:text-[var(--hive-text-primary)] hover:border-accent",
                 "hover:shadow-lg hover:shadow-accent/30",
                 "active:scale-95 active:before:bg-accent/90",
                 "focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:ring-offset-2"
@@ -26,7 +26,7 @@ const enhancedButtonVariants = cva(
                 "relative before:absolute before:inset-0 before:bg-accent/10",
                 "before:blur-sm before:transition-all before:duration-300",
                 "hover:shadow-[0_0_30px_rgba(255,215,0,0.5)] hover:before:bg-accent/20",
-                "hover:text-white hover:border-accent hover:scale-105",
+                "hover:text-[var(--hive-text-inverse)] hover:border-accent hover:scale-105",
                 "active:scale-95"
             ],
             // ENERGY PULSE: Living button
@@ -41,7 +41,7 @@ const enhancedButtonVariants = cva(
             ],
             // CHUNKY: Bold, thick, impossible to miss
             chunky: [
-                "bg-accent text-black font-black border-4 border-accent",
+                "bg-accent text-[var(--hive-text-primary)] font-black border-4 border-accent",
                 "transform hover:translate-y-[-2px] hover:shadow-[0_6px_0_rgba(255,215,0,0.8)]",
                 "active:translate-y-0 active:shadow-[0_2px_0_rgba(255,215,0,0.8)]",
                 "transition-all duration-150 ease-out",
@@ -59,7 +59,7 @@ const enhancedButtonVariants = cva(
             ],
             // CAMPUS STICKER: Like laptop stickers
             sticker: [
-                "bg-accent text-black font-bold border-3 border-black/20",
+                "bg-accent text-[var(--hive-text-primary)] font-bold border-3 border-black/20",
                 "transform rotate-[-1deg] hover:rotate-0",
                 "shadow-md hover:shadow-lg",
                 "relative after:absolute after:top-1 after:right-1 after:w-2 after:h-2",

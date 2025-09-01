@@ -1,12 +1,12 @@
 import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
 import { type NavigationItem } from './hive-navigation-system';
-declare const hiveNavigationItemVariants: (props?: {
-    variant?: "ghost" | "default" | "disabled" | "minimal" | "active" | "premium";
-    size?: "default" | "sm" | "lg";
-    level?: 0 | 1 | 3 | 2;
-    collapsed?: boolean;
-} & import("class-variance-authority/types").ClassProp) => string;
+declare const hiveNavigationItemVariants: (props?: ({
+    variant?: "ghost" | "default" | "disabled" | "active" | "minimal" | "premium" | null | undefined;
+    size?: "sm" | "default" | "lg" | null | undefined;
+    level?: 0 | 1 | 3 | 2 | null | undefined;
+    collapsed?: boolean | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
 export interface HiveNavigationItemProps extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof hiveNavigationItemVariants> {
     item: NavigationItem;
     isActive?: boolean;
@@ -20,7 +20,7 @@ export interface HiveNavigationSectionProps {
     collapsed?: boolean;
     className?: string;
 }
-export declare function HiveNavigationSection({ label, collapsed, className }: HiveNavigationSectionProps): import("react/jsx-runtime").JSX.Element;
+export declare function HiveNavigationSection({ label, collapsed, className }: HiveNavigationSectionProps): import("react/jsx-runtime").JSX.Element | null;
 export interface HiveNavigationCreateButtonProps {
     collapsed?: boolean;
     onClick?: () => void;

@@ -24,7 +24,7 @@ export * from './tool-configuration-panel';
 export * from './post-creation-modal';
 
 // === HIVE FEED COMPONENTS ===
-export * from '../../components/feed';
+// Note: Feed components deleted in nuclear rebuild
 
 // === HIVE FEED & RITUALS SYSTEM ===
 export * from './rituals-hub';

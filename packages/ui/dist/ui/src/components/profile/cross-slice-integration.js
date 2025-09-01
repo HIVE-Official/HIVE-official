@@ -10,12 +10,12 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
  * - Mobile-first responsive design
  */
 import React, { useState, useCallback } from 'react';
-import { cn } from '../../lib/utils';
+import { cn } from '../../lib/utils.js';
 // Molecule imports
-import { UserIdentity } from '../../atomic/molecules/user-identity';
-import { ComprehensiveCard } from '../../atomic/molecules/comprehensive-card';
-import { iconComposition, Users, Hammer, Calendar, Activity, MapPin, Clock, Star, MessageSquare, Plus, ExternalLink, Zap, Filter, RefreshCw, ChevronRight, Home } from '../../atomic/foundations/icon-composition';
-import { motionComposition } from '../../atomic/foundations/motion-composition';
+import { UserIdentity } from '../../atomic/molecules/user-identity.js';
+import { ComprehensiveCard } from '../../atomic/molecules/comprehensive-card.js';
+import { iconComposition, Users, Hammer, Calendar, Activity, MapPin, Clock, Star, MessageSquare, Plus, ExternalLink, Zap, Filter, RefreshCw, ChevronRight, Home } from '../../atomic/foundations/icon-composition.js';
+import { motionComposition } from '../../atomic/foundations/motion-composition.js';
 export const SpacesIntegration = React.forwardRef(({ spaces, onSpaceClick, onViewAll, className }, ref) => {
     const prioritySpaces = spaces
         .filter(space => space.isActive)

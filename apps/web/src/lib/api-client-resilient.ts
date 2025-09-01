@@ -191,23 +191,23 @@ export class ResilientHiveApiClient {
     });
   }
 
-  async createPost(postData: any): Promise<any> {
+  async createPost(_postData: any): Promise<any> {
     return this.request('/feed/posts', {
       method: 'POST',
-      body: JSON.stringify(postData)
+      body: JSON.stringify(_postData)
     });
   }
 
-  async likePost(postId: string): Promise<any> {
-    return this.request(`/feed/posts/${postId}/like`, {
+  async likePost(_postId: string): Promise<any> {
+    return this.request(`/feed/posts/${_postId}/like`, {
       method: 'POST'
     });
   }
 
-  async commentOnPost(postId: string, comment: string): Promise<any> {
-    return this.request(`/feed/posts/${postId}/comments`, {
+  async commentOnPost(_postId: string, _comment: string): Promise<any> {
+    return this.request(`/feed/posts/${_postId}/comments`, {
       method: 'POST',
-      body: JSON.stringify({ content: comment })
+      body: JSON.stringify({ content: _comment })
     });
   }
 

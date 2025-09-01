@@ -52,12 +52,13 @@ export async function GET(request: NextRequest) {
     const user = await requireAuth(request);
 
     // Get user profile for personalization
-    // TODO: Implement proper user profile fetching
+    // TODO: Implement proper user profile fetching from Firestore user document
     const userProfile = {
-      major: "Computer Science",
+      major: "Computer Science", // Legacy field for backward compatibility
+      majors: ["Computer Science"], // New array format - should fetch from user document
       dorm: "North Campus",
       graduationYear: 2025,
-      interests: [],
+      interests: [], // Should fetch user's selected interests
       isBuilder: false,
       isGreekMember: false,
     };
@@ -110,7 +111,7 @@ export async function GET(request: NextRequest) {
     // Build user context for personalization
     const userContext: UserDiscoveryContext = {
       userId: user.uid,
-      major: userProfile.major,
+      major: userProfile.majors?.[0] || userProfile.major, // Use first major from array, fallback to legacy single major
       dorm: userProfile.dorm,
       graduationYear: String(userProfile.graduationYear),
       joinedSpaces,

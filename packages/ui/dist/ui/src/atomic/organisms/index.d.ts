@@ -11,7 +11,6 @@ export * from './space-category-browser';
 export * from './tool-library-modal';
 export * from './tool-configuration-panel';
 export * from './post-creation-modal';
-export * from '../../components/feed';
 export * from './rituals-hub';
 export * from './locked-feed-skeleton';
 export * from './ritual-initialize-workflow';

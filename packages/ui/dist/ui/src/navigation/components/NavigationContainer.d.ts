@@ -6,7 +6,7 @@
  * navigation modes based on screen size and user preferences.
  */
 import React from 'react';
-import { NavigationUser } from '../core/types';
+import type { NavigationUser } from '../core/types';
 import { MobileNavigation } from './MobileNavigation';
 import { DesktopSidebar, SidebarOverlay } from './DesktopSidebar';
 import { DesktopTopbar } from './DesktopTopbar';

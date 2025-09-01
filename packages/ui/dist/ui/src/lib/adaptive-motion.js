@@ -1,4 +1,5 @@
 import { Fragment as _Fragment, jsx as _jsx } from "react/jsx-runtime";
+import { motion } from '../../../tokens/src/motion.js';
 /**
  * Detect current student energy state based on time and context
  */
@@ -36,10 +37,10 @@ export function getAdaptiveMotion(energyState, context = 'navigation') {
             // Fast, confident animations during peak focus
             duration: {
                 instant: 30,
-                fast: 90,
-                base: 140,
-                slow: 200,
-                ritual: 300,
+                snap: 90,
+                smooth: 140,
+                liquid: 200,
+                dramatic: 300,
             },
             scale: {
                 micro: 1.015,
@@ -54,10 +55,10 @@ export function getAdaptiveMotion(energyState, context = 'navigation') {
             // Welcoming, smooth animations during breaks
             duration: {
                 instant: 40,
-                fast: 110,
-                base: 160,
-                slow: 240,
-                ritual: 350,
+                snap: 110,
+                smooth: 160,
+                liquid: 240,
+                dramatic: 350,
             },
             scale: {
                 micro: 1.01,
@@ -72,10 +73,10 @@ export function getAdaptiveMotion(energyState, context = 'navigation') {
             // Standard HIVE animations for social time
             duration: {
                 instant: 50,
-                fast: 120,
-                base: 180,
-                slow: 280,
-                ritual: 400,
+                snap: 120,
+                smooth: 180,
+                liquid: 280,
+                dramatic: 400,
             },
             scale: {
                 micro: 1.01,
@@ -90,10 +91,10 @@ export function getAdaptiveMotion(energyState, context = 'navigation') {
             // Gentle, minimal animations for low energy
             duration: {
                 instant: 60,
-                fast: 140,
-                base: 220,
-                slow: 320,
-                ritual: 450,
+                snap: 140,
+                smooth: 220,
+                liquid: 320,
+                dramatic: 450,
             },
             scale: {
                 micro: 1.005,
@@ -108,10 +109,10 @@ export function getAdaptiveMotion(energyState, context = 'navigation') {
             // Minimal animations for accessibility
             duration: {
                 instant: 10,
-                fast: 10,
-                base: 10,
-                slow: 10,
-                ritual: 10,
+                snap: 10,
+                smooth: 10,
+                liquid: 10,
+                dramatic: 10,
             },
             scale: {
                 micro: 1,
@@ -128,7 +129,7 @@ export function getAdaptiveMotion(energyState, context = 'navigation') {
 /**
  * Create adaptive transition based on current energy state
  */
-export function createAdaptiveTransition(energyState, duration = 'fast', context = 'navigation') {
+export function createAdaptiveTransition(energyState, duration = 'quick', context = 'navigation') {
     const config = getAdaptiveMotion(energyState, context);
     const easingMap = {
         hive: [0.33, 0.65, 0, 1],
@@ -138,7 +139,7 @@ export function createAdaptiveTransition(energyState, duration = 'fast', context
         linear: [0, 0, 1, 1],
     };
     return {
-        duration: config.duration[duration] / 1000,
+        duration: motion.duration[duration],
         ease: easingMap[config.easing],
     };
 }
@@ -152,7 +153,7 @@ export function createAdaptiveVariants(energyState, context = 'navigation') {
             hidden: { opacity: 0 },
             visible: {
                 opacity: 1,
-                transition: createAdaptiveTransition(energyState, 'base', context),
+                transition: createAdaptiveTransition(energyState, 'smooth', context),
             },
         },
         slideUp: {
@@ -160,7 +161,7 @@ export function createAdaptiveVariants(energyState, context = 'navigation') {
             visible: {
                 opacity: 1,
                 y: 0,
-                transition: createAdaptiveTransition(energyState, 'base', context),
+                transition: createAdaptiveTransition(energyState, 'smooth', context),
             },
         },
         scaleIn: {
@@ -168,14 +169,14 @@ export function createAdaptiveVariants(energyState, context = 'navigation') {
             visible: {
                 opacity: 1,
                 scale: 1,
-                transition: createAdaptiveTransition(energyState, 'base', context),
+                transition: createAdaptiveTransition(energyState, 'smooth', context),
             },
         },
         hover: {
             rest: { scale: 1 },
             hover: {
                 scale: config.scale.micro,
-                transition: createAdaptiveTransition(energyState, 'fast', context),
+                transition: createAdaptiveTransition(energyState, 'snap', context),
             },
         },
         ritual: {
@@ -183,7 +184,7 @@ export function createAdaptiveVariants(energyState, context = 'navigation') {
             active: {
                 scale: config.scale.ritual,
                 filter: 'brightness(1.2) drop-shadow(0 0 15px rgba(255, 215, 0, 0.4))',
-                transition: createAdaptiveTransition(energyState, 'ritual', 'ritual'),
+                transition: createAdaptiveTransition(energyState, 'dramatic', 'ritual'),
             },
         },
     };
@@ -199,7 +200,7 @@ export function useAdaptiveMotion(context = 'navigation', overrideState) {
         energyState,
         config,
         variants,
-        createTransition: (duration = 'fast') => createAdaptiveTransition(energyState, duration, context),
+        createTransition: (duration = 'snap') => createAdaptiveTransition(energyState, duration, context),
     };
 }
 /**
@@ -210,5 +211,5 @@ export function AdaptiveMotionProvider({ children, energyState, context = 'navig
     // For now, components can call useAdaptiveMotion directly
     return _jsx(_Fragment, { children: children });
 }
-export { motion } from '@hive/tokens';
+export { motion } from '../../../tokens/src/motion.js';
 //# sourceMappingURL=adaptive-motion.js.map

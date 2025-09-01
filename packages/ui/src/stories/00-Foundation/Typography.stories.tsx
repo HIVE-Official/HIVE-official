@@ -1,6 +1,16 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
-const meta: Meta = {
+const TypographySystem = () => (
+  <div className="bg-background p-8 space-y-8">
+    <div>
+      <h2 className="text-2xl font-bold text-white mb-4">HIVE Typography System</h2>
+      <p className="text-muted mb-8">Clear, readable typography with careful attention to hierarchy and spacing.</p>
+    </div>
+  </div>
+)
+
+const meta: Meta<typeof TypographySystem> = {
+  component: TypographySystem,
   title: '🏛️ Foundation/Typography',
   parameters: {
     docs: {
@@ -12,7 +22,7 @@ const meta: Meta = {
 }
 
 export default meta
-type Story = StoryObj
+type Story = StoryObj<typeof TypographySystem>
 
 const TypeScale = ({ 
   size, 

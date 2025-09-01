@@ -1,44 +1,56 @@
-/**
- * Simple logger utility for HIVE UI package
- * Provides consistent logging across components
- */
+// Simple logger utility for development
+const isDevelopment = process.env.NODE_ENV === 'development';
 
-type LogLevel = 'debug' | 'info' | 'warn' | 'error';
-
-interface LogData {
-  [key: string]: any;
-}
-
-class Logger {
-  private isDevelopment = process.env.NODE_ENV === 'development';
-
-  private formatMessage(level: LogLevel, message: string, data?: LogData): string {
-    const timestamp = new Date().toISOString();
-    const prefix = `[HIVE-UI ${level.toUpperCase()}] ${timestamp}`;
-    
-    if (data) {
-      return `${prefix} ${message} ${JSON.stringify(data, null, 2)}`;
+export const logger = {
+  log: (...args: any[]) => {
+    if (isDevelopment) {
+      console.log('[HIVE]', ...args);
     }
-    return `${prefix} ${message}`;
-  }
-
-  debug(message: string, data?: LogData): void {
-    if (this.isDevelopment) {
-      console.debug(this.formatMessage('debug', message, data));
+  },
+  
+  error: (...args: any[]) => {
+    console.error('[HIVE ERROR]', ...args);
+  },
+  
+  warn: (...args: any[]) => {
+    if (isDevelopment) {
+      console.warn('[HIVE WARN]', ...args);
     }
-  }
-
-  info(message: string, data?: LogData): void {
-    console.info(this.formatMessage('info', message, data));
-  }
-
-  warn(message: string, data?: LogData): void {
-    console.warn(this.formatMessage('warn', message, data));
-  }
-
-  error(message: string, data?: LogData): void {
-    console.error(this.formatMessage('error', message, data));
-  }
-}
-
-export const logger = new Logger();
+  },
+  
+  info: (...args: any[]) => {
+    if (isDevelopment) {
+      console.info('[HIVE INFO]', ...args);
+    }
+  },
+  
+  debug: (...args: any[]) => {
+    if (isDevelopment) {
+      console.debug('[HIVE DEBUG]', ...args);
+    }
+  },
+  
+  group: (label: string) => {
+    if (isDevelopment) {
+      console.group(label);
+    }
+  },
+  
+  groupEnd: () => {
+    if (isDevelopment) {
+      console.groupEnd();
+    }
+  },
+  
+  time: (label: string) => {
+    if (isDevelopment) {
+      console.time(label);
+    }
+  },
+  
+  timeEnd: (label: string) => {
+    if (isDevelopment) {
+      console.timeEnd(label);
+    }
+  },
+};

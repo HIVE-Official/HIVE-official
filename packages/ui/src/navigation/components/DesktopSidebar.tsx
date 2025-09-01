@@ -11,7 +11,7 @@
 import React, { memo, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Hash } from 'lucide-react';
-import { NavigationItem, NavigationUser } from '../core/types';
+import type { NavigationItem, NavigationUser } from '../core/types';
 import { NAVIGATION_SIZING, NAVIGATION_MOTION, NAVIGATION_A11Y } from '../core/data';
 import { cn } from '../../lib/utils';
 

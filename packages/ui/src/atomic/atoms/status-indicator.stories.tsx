@@ -114,7 +114,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="success">✅ STATUS TYPES</Badge>
+            <Badge variant="emerald">✅ STATUS TYPES</Badge>
             Status Types - Perfect Semantic Token Usage
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -431,7 +431,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="warning">🎯 PRESETS</Badge>
+            <Badge variant="gold">🎯 PRESETS</Badge>
             Status Indicator Presets - Common Campus Patterns
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">

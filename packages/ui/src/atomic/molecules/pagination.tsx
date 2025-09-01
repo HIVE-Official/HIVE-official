@@ -249,7 +249,7 @@ export function PaginationInfo({
 export const PaginationPresets = {
   // Default table pagination
   Table: (props: Omit<PaginationProps, 'variant' | 'size'>) => (
-    <Pagination variant="primary" size="md" {...props} />
+    <Pagination variant="default" size="md" {...props} />
   ),
   
   // Feed/list pagination
@@ -264,7 +264,7 @@ export const PaginationPresets = {
   
   // Search results pagination
   Search: (props: Omit<PaginationProps, 'variant' | 'showFirstLast'>) => (
-    <Pagination variant="primary" showFirstLast={false} {...props} />
+    <Pagination variant="default" showFirstLast={false} {...props} />
   )
 };
 

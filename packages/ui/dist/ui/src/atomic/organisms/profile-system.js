@@ -2,11 +2,11 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState } from 'react';
 import { cva } from 'class-variance-authority';
-import { cn } from '../../lib/utils';
-import { ProfileHeader } from '../molecules/profile-header';
-import { ProfileStats } from '../molecules/profile-stats';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { cn } from '../../lib/utils.js';
+import { ProfileHeader } from '../molecules/profile-header.js';
+import { ProfileStats } from '../molecules/profile-stats.js';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs.js';
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card.js';
 import { LayoutGrid, List, Filter, Users, Zap, Activity } from 'lucide-react';
 const profileSystemVariants = cva("min-h-screen bg-hive-background-primary", {
     variants: {

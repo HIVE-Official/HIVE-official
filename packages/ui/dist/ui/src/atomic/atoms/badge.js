@@ -1,7 +1,7 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { cn } from '../../lib/utils';
-const badgeVariants = {
+import { cn } from '../../lib/utils.js';
+export const badgeVariants = {
     // === CORE SYSTEM VARIANTS ===
     // GOLD OUTLINE ONLY (never fill) - Primary brand badge
     primary: 'bg-transparent text-[var(--hive-brand-secondary)] border-[var(--hive-brand-secondary)]',

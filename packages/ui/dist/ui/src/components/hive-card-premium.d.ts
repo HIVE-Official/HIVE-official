@@ -1,10 +1,10 @@
 import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
-declare const hivePremiumCardVariants: (props?: {
-    variant?: "default" | "selected" | "post" | "announcement" | "elevated" | "gold-accent" | "gold-featured" | "gold-premium" | "clickable" | "selectable" | "featured-post" | "glass";
-    size?: "default" | "sm" | "lg" | "xl" | "compact";
-    radius?: "lg" | "xl" | "2xl" | "full";
-} & import("class-variance-authority/types").ClassProp) => string;
+declare const hivePremiumCardVariants: (props?: ({
+    variant?: "default" | "selected" | "post" | "elevated" | "glass" | "announcement" | "gold-accent" | "gold-featured" | "gold-premium" | "clickable" | "selectable" | "featured-post" | null | undefined;
+    size?: "sm" | "default" | "lg" | "xl" | "compact" | null | undefined;
+    radius?: "lg" | "xl" | "full" | "2xl" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
 export interface HivePremiumCardProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onDrag' | 'onDragEnd' | 'onDragStart'>, VariantProps<typeof hivePremiumCardVariants> {
     magneticHover?: boolean;
     rippleEffect?: boolean;

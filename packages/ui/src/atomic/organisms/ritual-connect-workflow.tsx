@@ -92,7 +92,7 @@ const InvitationMethodStep = ({ onComplete, userProfile }: any) => {
     <div className="space-y-6">
       <div className="text-center mb-8">
         <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
-          <UserPlus className="h-10 w-10 text-white" />
+          <UserPlus className="h-10 w-10 text-[var(--hive-text-inverse)]" />
         </div>
         <h3 className="text-2xl font-bold text-hive-text-primary mb-2">
           Invite Your Friends
@@ -184,7 +184,7 @@ const InvitationMethodStep = ({ onComplete, userProfile }: any) => {
                     size="sm"
                     onClick={() => handleSendInvite(method.id)}
                     disabled={invitesSent >= maxInvites}
-                    className="bg-purple-500 text-white hover:bg-purple-600"
+                    className="bg-purple-500 text-[var(--hive-text-inverse)] hover:bg-purple-600"
                   >
                     {method.action}
                     <ChevronRight className="h-3 w-3 ml-1" />
@@ -261,7 +261,7 @@ export function RitualConnectWorkflow({
       <div className={`space-y-8 ${className}`}>
         <Card className="p-8 text-center bg-gradient-to-br from-purple-500/10 to-pink-500/10 border-purple-500/30">
           <div className="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
-            <CheckCircle className="h-12 w-12 text-white" />
+            <CheckCircle className="h-12 w-12 text-[var(--hive-text-inverse)]" />
           </div>
           
           <h2 className="text-3xl font-bold text-hive-text-primary mb-4">

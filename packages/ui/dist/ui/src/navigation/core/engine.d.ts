@@ -8,7 +8,7 @@
  * - Layout mode calculation
  * - Performance optimization
  */
-import { NavigationMode, NavigationPreference, NavigationState, NavigationLayout, ScreenSize } from './types';
+import type { NavigationMode, NavigationPreference, NavigationState, NavigationLayout, ScreenSize } from './types';
 /**
  * Determines screen size category from viewport width
  * Uses exact breakpoints from HIVE specification
@@ -58,7 +58,7 @@ export declare const createNavigationStateChangeEvent: (previousState: Navigatio
     type: "navigation_state_change";
     timestamp: number;
     data: {
-        from: NavigationMode;
+        from: NavigationMode | null;
         to: NavigationMode;
         screenSize: ScreenSize;
         screenWidth: number;

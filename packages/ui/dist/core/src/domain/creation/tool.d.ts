@@ -10,15 +10,15 @@ export declare const ToolCollaboratorSchema: z.ZodObject<{
     addedAt: z.ZodDate;
     addedBy: z.ZodString;
 }, "strip", z.ZodTypeAny, {
-    userId?: string;
-    permission?: "view" | "comment" | "edit";
-    addedAt?: Date;
-    addedBy?: string;
+    permission: "view" | "edit" | "comment";
+    userId: string;
+    addedAt: Date;
+    addedBy: string;
 }, {
-    userId?: string;
-    permission?: "view" | "comment" | "edit";
-    addedAt?: Date;
-    addedBy?: string;
+    permission: "view" | "edit" | "comment";
+    userId: string;
+    addedAt: Date;
+    addedBy: string;
 }>;
 export declare const ToolMetadataSchema: z.ZodObject<{
     tags: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
@@ -27,17 +27,17 @@ export declare const ToolMetadataSchema: z.ZodObject<{
     category: z.ZodOptional<z.ZodString>;
     language: z.ZodDefault<z.ZodString>;
 }, "strip", z.ZodTypeAny, {
-    tags?: string[];
-    category?: string;
-    difficulty?: "beginner" | "intermediate" | "advanced";
-    estimatedTime?: number;
-    language?: string;
+    language: string;
+    category?: string | undefined;
+    estimatedTime?: number | undefined;
+    tags?: string[] | undefined;
+    difficulty?: "beginner" | "intermediate" | "advanced" | undefined;
 }, {
-    tags?: string[];
-    category?: string;
-    difficulty?: "beginner" | "intermediate" | "advanced";
-    estimatedTime?: number;
-    language?: string;
+    language?: string | undefined;
+    category?: string | undefined;
+    estimatedTime?: number | undefined;
+    tags?: string[] | undefined;
+    difficulty?: "beginner" | "intermediate" | "advanced" | undefined;
 }>;
 export declare const ToolDataSchemaSchema: z.ZodObject<{
     fields: z.ZodArray<z.ZodObject<{
@@ -50,67 +50,67 @@ export declare const ToolDataSchemaSchema: z.ZodObject<{
             pattern: z.ZodOptional<z.ZodString>;
             enum: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
         }, "strip", z.ZodTypeAny, {
-            max?: number;
-            min?: number;
-            pattern?: string;
-            enum?: string[];
+            max?: number | undefined;
+            min?: number | undefined;
+            pattern?: string | undefined;
+            enum?: string[] | undefined;
         }, {
-            max?: number;
-            min?: number;
-            pattern?: string;
-            enum?: string[];
+            max?: number | undefined;
+            min?: number | undefined;
+            pattern?: string | undefined;
+            enum?: string[] | undefined;
         }>>;
     }, "strip", z.ZodTypeAny, {
-        name?: string;
-        type?: "string" | "number" | "boolean" | "object" | "date" | "array";
-        required?: boolean;
+        name: string;
+        type: "string" | "number" | "boolean" | "object" | "date" | "array";
+        required: boolean;
         validation?: {
-            max?: number;
-            min?: number;
-            pattern?: string;
-            enum?: string[];
-        };
+            max?: number | undefined;
+            min?: number | undefined;
+            pattern?: string | undefined;
+            enum?: string[] | undefined;
+        } | undefined;
     }, {
-        name?: string;
-        type?: "string" | "number" | "boolean" | "object" | "date" | "array";
-        required?: boolean;
+        name: string;
+        type: "string" | "number" | "boolean" | "object" | "date" | "array";
+        required?: boolean | undefined;
         validation?: {
-            max?: number;
-            min?: number;
-            pattern?: string;
-            enum?: string[];
-        };
+            max?: number | undefined;
+            min?: number | undefined;
+            pattern?: string | undefined;
+            enum?: string[] | undefined;
+        } | undefined;
     }>, "many">;
     maxRecords: z.ZodDefault<z.ZodNumber>;
     allowAnonymous: z.ZodDefault<z.ZodBoolean>;
 }, "strip", z.ZodTypeAny, {
-    fields?: {
-        name?: string;
-        type?: "string" | "number" | "boolean" | "object" | "date" | "array";
-        required?: boolean;
+    fields: {
+        name: string;
+        type: "string" | "number" | "boolean" | "object" | "date" | "array";
+        required: boolean;
         validation?: {
-            max?: number;
-            min?: number;
-            pattern?: string;
-            enum?: string[];
-        };
+            max?: number | undefined;
+            min?: number | undefined;
+            pattern?: string | undefined;
+            enum?: string[] | undefined;
+        } | undefined;
     }[];
-    maxRecords?: number;
-    allowAnonymous?: boolean;
+    maxRecords: number;
+    allowAnonymous: boolean;
 }, {
-    fields?: {
-        name?: string;
-        type?: "string" | "number" | "boolean" | "object" | "date" | "array";
-        required?: boolean;
+    fields: {
+        name: string;
+        type: "string" | "number" | "boolean" | "object" | "date" | "array";
+        required?: boolean | undefined;
         validation?: {
-            max?: number;
-            min?: number;
-            pattern?: string;
-            enum?: string[];
-        };
+            max?: number | undefined;
+            min?: number | undefined;
+            pattern?: string | undefined;
+            enum?: string[] | undefined;
+        } | undefined;
     }[];
-    maxRecords?: number;
-    allowAnonymous?: boolean;
+    maxRecords?: number | undefined;
+    allowAnonymous?: boolean | undefined;
 }>;
 export declare const ToolConfigSchema: z.ZodObject<{
     theme: z.ZodDefault<z.ZodEnum<["light", "dark", "auto"]>>;
@@ -136,67 +136,67 @@ export declare const ToolConfigSchema: z.ZodObject<{
                 pattern: z.ZodOptional<z.ZodString>;
                 enum: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
             }, "strip", z.ZodTypeAny, {
-                max?: number;
-                min?: number;
-                pattern?: string;
-                enum?: string[];
+                max?: number | undefined;
+                min?: number | undefined;
+                pattern?: string | undefined;
+                enum?: string[] | undefined;
             }, {
-                max?: number;
-                min?: number;
-                pattern?: string;
-                enum?: string[];
+                max?: number | undefined;
+                min?: number | undefined;
+                pattern?: string | undefined;
+                enum?: string[] | undefined;
             }>>;
         }, "strip", z.ZodTypeAny, {
-            name?: string;
-            type?: "string" | "number" | "boolean" | "object" | "date" | "array";
-            required?: boolean;
+            name: string;
+            type: "string" | "number" | "boolean" | "object" | "date" | "array";
+            required: boolean;
             validation?: {
-                max?: number;
-                min?: number;
-                pattern?: string;
-                enum?: string[];
-            };
+                max?: number | undefined;
+                min?: number | undefined;
+                pattern?: string | undefined;
+                enum?: string[] | undefined;
+            } | undefined;
         }, {
-            name?: string;
-            type?: "string" | "number" | "boolean" | "object" | "date" | "array";
-            required?: boolean;
+            name: string;
+            type: "string" | "number" | "boolean" | "object" | "date" | "array";
+            required?: boolean | undefined;
             validation?: {
-                max?: number;
-                min?: number;
-                pattern?: string;
-                enum?: string[];
-            };
+                max?: number | undefined;
+                min?: number | undefined;
+                pattern?: string | undefined;
+                enum?: string[] | undefined;
+            } | undefined;
         }>, "many">;
         maxRecords: z.ZodDefault<z.ZodNumber>;
         allowAnonymous: z.ZodDefault<z.ZodBoolean>;
     }, "strip", z.ZodTypeAny, {
-        fields?: {
-            name?: string;
-            type?: "string" | "number" | "boolean" | "object" | "date" | "array";
-            required?: boolean;
+        fields: {
+            name: string;
+            type: "string" | "number" | "boolean" | "object" | "date" | "array";
+            required: boolean;
             validation?: {
-                max?: number;
-                min?: number;
-                pattern?: string;
-                enum?: string[];
-            };
+                max?: number | undefined;
+                min?: number | undefined;
+                pattern?: string | undefined;
+                enum?: string[] | undefined;
+            } | undefined;
         }[];
-        maxRecords?: number;
-        allowAnonymous?: boolean;
+        maxRecords: number;
+        allowAnonymous: boolean;
     }, {
-        fields?: {
-            name?: string;
-            type?: "string" | "number" | "boolean" | "object" | "date" | "array";
-            required?: boolean;
+        fields: {
+            name: string;
+            type: "string" | "number" | "boolean" | "object" | "date" | "array";
+            required?: boolean | undefined;
             validation?: {
-                max?: number;
-                min?: number;
-                pattern?: string;
-                enum?: string[];
-            };
+                max?: number | undefined;
+                min?: number | undefined;
+                pattern?: string | undefined;
+                enum?: string[] | undefined;
+            } | undefined;
         }[];
-        maxRecords?: number;
-        allowAnonymous?: boolean;
+        maxRecords?: number | undefined;
+        allowAnonymous?: boolean | undefined;
     }>>;
     dataRetentionDays: z.ZodDefault<z.ZodNumber>;
     notifyOnSubmission: z.ZodDefault<z.ZodBoolean>;
@@ -204,71 +204,71 @@ export declare const ToolConfigSchema: z.ZodObject<{
     trackingEnabled: z.ZodDefault<z.ZodBoolean>;
     allowAnalyticsOptOut: z.ZodDefault<z.ZodBoolean>;
 }, "strip", z.ZodTypeAny, {
-    autoSave?: boolean;
-    backgroundColor?: string;
-    theme?: "auto" | "dark" | "light";
-    primaryColor?: string;
-    allowMultipleSubmissions?: boolean;
-    requireAuthentication?: boolean;
-    showProgressBar?: boolean;
-    enableRealTimeUpdates?: boolean;
-    maxResponseLength?: number;
-    customCSS?: string;
-    headerText?: string;
-    footerText?: string;
+    autoSave: boolean;
+    backgroundColor: string;
+    theme: "auto" | "light" | "dark";
+    primaryColor: string;
+    allowMultipleSubmissions: boolean;
+    requireAuthentication: boolean;
+    showProgressBar: boolean;
+    enableRealTimeUpdates: boolean;
+    maxResponseLength: number;
+    customCSS: string;
+    headerText: string;
+    footerText: string;
+    dataRetentionDays: number;
+    notifyOnSubmission: boolean;
+    trackingEnabled: boolean;
+    allowAnalyticsOptOut: boolean;
     dataSchema?: {
-        fields?: {
-            name?: string;
-            type?: "string" | "number" | "boolean" | "object" | "date" | "array";
-            required?: boolean;
+        fields: {
+            name: string;
+            type: "string" | "number" | "boolean" | "object" | "date" | "array";
+            required: boolean;
             validation?: {
-                max?: number;
-                min?: number;
-                pattern?: string;
-                enum?: string[];
-            };
+                max?: number | undefined;
+                min?: number | undefined;
+                pattern?: string | undefined;
+                enum?: string[] | undefined;
+            } | undefined;
         }[];
-        maxRecords?: number;
-        allowAnonymous?: boolean;
-    };
-    dataRetentionDays?: number;
-    notifyOnSubmission?: boolean;
-    notificationEmail?: string;
-    trackingEnabled?: boolean;
-    allowAnalyticsOptOut?: boolean;
+        maxRecords: number;
+        allowAnonymous: boolean;
+    } | undefined;
+    notificationEmail?: string | undefined;
 }, {
-    autoSave?: boolean;
-    backgroundColor?: string;
-    theme?: "auto" | "dark" | "light";
-    primaryColor?: string;
-    allowMultipleSubmissions?: boolean;
-    requireAuthentication?: boolean;
-    showProgressBar?: boolean;
-    enableRealTimeUpdates?: boolean;
-    maxResponseLength?: number;
-    customCSS?: string;
-    headerText?: string;
-    footerText?: string;
+    autoSave?: boolean | undefined;
+    backgroundColor?: string | undefined;
+    theme?: "auto" | "light" | "dark" | undefined;
+    primaryColor?: string | undefined;
+    allowMultipleSubmissions?: boolean | undefined;
+    requireAuthentication?: boolean | undefined;
+    showProgressBar?: boolean | undefined;
+    enableRealTimeUpdates?: boolean | undefined;
+    maxResponseLength?: number | undefined;
+    customCSS?: string | undefined;
+    headerText?: string | undefined;
+    footerText?: string | undefined;
     dataSchema?: {
-        fields?: {
-            name?: string;
-            type?: "string" | "number" | "boolean" | "object" | "date" | "array";
-            required?: boolean;
+        fields: {
+            name: string;
+            type: "string" | "number" | "boolean" | "object" | "date" | "array";
+            required?: boolean | undefined;
             validation?: {
-                max?: number;
-                min?: number;
-                pattern?: string;
-                enum?: string[];
-            };
+                max?: number | undefined;
+                min?: number | undefined;
+                pattern?: string | undefined;
+                enum?: string[] | undefined;
+            } | undefined;
         }[];
-        maxRecords?: number;
-        allowAnonymous?: boolean;
-    };
-    dataRetentionDays?: number;
-    notifyOnSubmission?: boolean;
-    notificationEmail?: string;
-    trackingEnabled?: boolean;
-    allowAnalyticsOptOut?: boolean;
+        maxRecords?: number | undefined;
+        allowAnonymous?: boolean | undefined;
+    } | undefined;
+    dataRetentionDays?: number | undefined;
+    notifyOnSubmission?: boolean | undefined;
+    notificationEmail?: string | undefined;
+    trackingEnabled?: boolean | undefined;
+    allowAnalyticsOptOut?: boolean | undefined;
 }>;
 export declare const ToolVersionSchema: z.ZodObject<{
     version: z.ZodString;
@@ -278,19 +278,19 @@ export declare const ToolVersionSchema: z.ZodObject<{
     isStable: z.ZodDefault<z.ZodBoolean>;
     deprecatedAt: z.ZodOptional<z.ZodDate>;
 }, "strip", z.ZodTypeAny, {
-    createdAt?: Date;
-    version?: string;
-    changelog?: string;
-    createdBy?: string;
-    isStable?: boolean;
-    deprecatedAt?: Date;
+    version: string;
+    createdAt: Date;
+    createdBy: string;
+    isStable: boolean;
+    changelog?: string | undefined;
+    deprecatedAt?: Date | undefined;
 }, {
-    createdAt?: Date;
-    version?: string;
-    changelog?: string;
-    createdBy?: string;
-    isStable?: boolean;
-    deprecatedAt?: Date;
+    version: string;
+    createdAt: Date;
+    createdBy: string;
+    changelog?: string | undefined;
+    isStable?: boolean | undefined;
+    deprecatedAt?: Date | undefined;
 }>;
 export declare const ToolSchema: z.ZodObject<{
     id: z.ZodString;
@@ -303,15 +303,15 @@ export declare const ToolSchema: z.ZodObject<{
         addedAt: z.ZodDate;
         addedBy: z.ZodString;
     }, "strip", z.ZodTypeAny, {
-        userId?: string;
-        permission?: "view" | "comment" | "edit";
-        addedAt?: Date;
-        addedBy?: string;
+        permission: "view" | "edit" | "comment";
+        userId: string;
+        addedAt: Date;
+        addedBy: string;
     }, {
-        userId?: string;
-        permission?: "view" | "comment" | "edit";
-        addedAt?: Date;
-        addedBy?: string;
+        permission: "view" | "edit" | "comment";
+        userId: string;
+        addedAt: Date;
+        addedBy: string;
     }>, "many">>;
     status: z.ZodDefault<z.ZodEnum<["draft", "preview", "published"]>>;
     currentVersion: z.ZodDefault<z.ZodString>;
@@ -323,19 +323,19 @@ export declare const ToolSchema: z.ZodObject<{
         isStable: z.ZodDefault<z.ZodBoolean>;
         deprecatedAt: z.ZodOptional<z.ZodDate>;
     }, "strip", z.ZodTypeAny, {
-        createdAt?: Date;
-        version?: string;
-        changelog?: string;
-        createdBy?: string;
-        isStable?: boolean;
-        deprecatedAt?: Date;
+        version: string;
+        createdAt: Date;
+        createdBy: string;
+        isStable: boolean;
+        changelog?: string | undefined;
+        deprecatedAt?: Date | undefined;
     }, {
-        createdAt?: Date;
-        version?: string;
-        changelog?: string;
-        createdBy?: string;
-        isStable?: boolean;
-        deprecatedAt?: Date;
+        version: string;
+        createdAt: Date;
+        createdBy: string;
+        changelog?: string | undefined;
+        isStable?: boolean | undefined;
+        deprecatedAt?: Date | undefined;
     }>, "many">>;
     elements: z.ZodArray<z.ZodObject<{
         id: z.ZodString;
@@ -347,48 +347,48 @@ export declare const ToolSchema: z.ZodObject<{
             width: z.ZodOptional<z.ZodNumber>;
             height: z.ZodOptional<z.ZodNumber>;
         }, "strip", z.ZodTypeAny, {
-            height?: number;
-            width?: number;
-            x?: number;
-            y?: number;
+            x: number;
+            y: number;
+            height?: number | undefined;
+            width?: number | undefined;
         }, {
-            height?: number;
-            width?: number;
-            x?: number;
-            y?: number;
+            x: number;
+            y: number;
+            height?: number | undefined;
+            width?: number | undefined;
         }>;
         parentId: z.ZodOptional<z.ZodString>;
         order: z.ZodNumber;
         isVisible: z.ZodDefault<z.ZodBoolean>;
         isLocked: z.ZodDefault<z.ZodBoolean>;
     }, "strip", z.ZodTypeAny, {
-        id?: string;
-        order?: number;
-        position?: {
-            height?: number;
-            width?: number;
-            x?: number;
-            y?: number;
+        id: string;
+        order: number;
+        position: {
+            x: number;
+            y: number;
+            height?: number | undefined;
+            width?: number | undefined;
         };
-        elementId?: string;
+        isVisible: boolean;
+        isLocked: boolean;
+        elementId: string;
         config?: unknown;
-        parentId?: string;
-        isVisible?: boolean;
-        isLocked?: boolean;
+        parentId?: string | undefined;
     }, {
-        id?: string;
-        order?: number;
-        position?: {
-            height?: number;
-            width?: number;
-            x?: number;
-            y?: number;
+        id: string;
+        order: number;
+        position: {
+            x: number;
+            y: number;
+            height?: number | undefined;
+            width?: number | undefined;
         };
-        elementId?: string;
+        elementId: string;
+        isVisible?: boolean | undefined;
+        isLocked?: boolean | undefined;
         config?: unknown;
-        parentId?: string;
-        isVisible?: boolean;
-        isLocked?: boolean;
+        parentId?: string | undefined;
     }>, "many">;
     config: z.ZodDefault<z.ZodObject<{
         theme: z.ZodDefault<z.ZodEnum<["light", "dark", "auto"]>>;
@@ -414,67 +414,67 @@ export declare const ToolSchema: z.ZodObject<{
                     pattern: z.ZodOptional<z.ZodString>;
                     enum: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
                 }, "strip", z.ZodTypeAny, {
-                    max?: number;
-                    min?: number;
-                    pattern?: string;
-                    enum?: string[];
+                    max?: number | undefined;
+                    min?: number | undefined;
+                    pattern?: string | undefined;
+                    enum?: string[] | undefined;
                 }, {
-                    max?: number;
-                    min?: number;
-                    pattern?: string;
-                    enum?: string[];
+                    max?: number | undefined;
+                    min?: number | undefined;
+                    pattern?: string | undefined;
+                    enum?: string[] | undefined;
                 }>>;
             }, "strip", z.ZodTypeAny, {
-                name?: string;
-                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
-                required?: boolean;
+                name: string;
+                type: "string" | "number" | "boolean" | "object" | "date" | "array";
+                required: boolean;
                 validation?: {
-                    max?: number;
-                    min?: number;
-                    pattern?: string;
-                    enum?: string[];
-                };
+                    max?: number | undefined;
+                    min?: number | undefined;
+                    pattern?: string | undefined;
+                    enum?: string[] | undefined;
+                } | undefined;
             }, {
-                name?: string;
-                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
-                required?: boolean;
+                name: string;
+                type: "string" | "number" | "boolean" | "object" | "date" | "array";
+                required?: boolean | undefined;
                 validation?: {
-                    max?: number;
-                    min?: number;
-                    pattern?: string;
-                    enum?: string[];
-                };
+                    max?: number | undefined;
+                    min?: number | undefined;
+                    pattern?: string | undefined;
+                    enum?: string[] | undefined;
+                } | undefined;
             }>, "many">;
             maxRecords: z.ZodDefault<z.ZodNumber>;
             allowAnonymous: z.ZodDefault<z.ZodBoolean>;
         }, "strip", z.ZodTypeAny, {
-            fields?: {
-                name?: string;
-                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
-                required?: boolean;
+            fields: {
+                name: string;
+                type: "string" | "number" | "boolean" | "object" | "date" | "array";
+                required: boolean;
                 validation?: {
-                    max?: number;
-                    min?: number;
-                    pattern?: string;
-                    enum?: string[];
-                };
+                    max?: number | undefined;
+                    min?: number | undefined;
+                    pattern?: string | undefined;
+                    enum?: string[] | undefined;
+                } | undefined;
             }[];
-            maxRecords?: number;
-            allowAnonymous?: boolean;
+            maxRecords: number;
+            allowAnonymous: boolean;
         }, {
-            fields?: {
-                name?: string;
-                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
-                required?: boolean;
+            fields: {
+                name: string;
+                type: "string" | "number" | "boolean" | "object" | "date" | "array";
+                required?: boolean | undefined;
                 validation?: {
-                    max?: number;
-                    min?: number;
-                    pattern?: string;
-                    enum?: string[];
-                };
+                    max?: number | undefined;
+                    min?: number | undefined;
+                    pattern?: string | undefined;
+                    enum?: string[] | undefined;
+                } | undefined;
             }[];
-            maxRecords?: number;
-            allowAnonymous?: boolean;
+            maxRecords?: number | undefined;
+            allowAnonymous?: boolean | undefined;
         }>>;
         dataRetentionDays: z.ZodDefault<z.ZodNumber>;
         notifyOnSubmission: z.ZodDefault<z.ZodBoolean>;
@@ -482,71 +482,71 @@ export declare const ToolSchema: z.ZodObject<{
         trackingEnabled: z.ZodDefault<z.ZodBoolean>;
         allowAnalyticsOptOut: z.ZodDefault<z.ZodBoolean>;
     }, "strip", z.ZodTypeAny, {
-        autoSave?: boolean;
-        backgroundColor?: string;
-        theme?: "auto" | "dark" | "light";
-        primaryColor?: string;
-        allowMultipleSubmissions?: boolean;
-        requireAuthentication?: boolean;
-        showProgressBar?: boolean;
-        enableRealTimeUpdates?: boolean;
-        maxResponseLength?: number;
-        customCSS?: string;
-        headerText?: string;
-        footerText?: string;
+        autoSave: boolean;
+        backgroundColor: string;
+        theme: "auto" | "light" | "dark";
+        primaryColor: string;
+        allowMultipleSubmissions: boolean;
+        requireAuthentication: boolean;
+        showProgressBar: boolean;
+        enableRealTimeUpdates: boolean;
+        maxResponseLength: number;
+        customCSS: string;
+        headerText: string;
+        footerText: string;
+        dataRetentionDays: number;
+        notifyOnSubmission: boolean;
+        trackingEnabled: boolean;
+        allowAnalyticsOptOut: boolean;
         dataSchema?: {
-            fields?: {
-                name?: string;
-                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
-                required?: boolean;
+            fields: {
+                name: string;
+                type: "string" | "number" | "boolean" | "object" | "date" | "array";
+                required: boolean;
                 validation?: {
-                    max?: number;
-                    min?: number;
-                    pattern?: string;
-                    enum?: string[];
-                };
+                    max?: number | undefined;
+                    min?: number | undefined;
+                    pattern?: string | undefined;
+                    enum?: string[] | undefined;
+                } | undefined;
             }[];
-            maxRecords?: number;
-            allowAnonymous?: boolean;
-        };
-        dataRetentionDays?: number;
-        notifyOnSubmission?: boolean;
-        notificationEmail?: string;
-        trackingEnabled?: boolean;
-        allowAnalyticsOptOut?: boolean;
+            maxRecords: number;
+            allowAnonymous: boolean;
+        } | undefined;
+        notificationEmail?: string | undefined;
     }, {
-        autoSave?: boolean;
-        backgroundColor?: string;
-        theme?: "auto" | "dark" | "light";
-        primaryColor?: string;
-        allowMultipleSubmissions?: boolean;
-        requireAuthentication?: boolean;
-        showProgressBar?: boolean;
-        enableRealTimeUpdates?: boolean;
-        maxResponseLength?: number;
-        customCSS?: string;
-        headerText?: string;
-        footerText?: string;
+        autoSave?: boolean | undefined;
+        backgroundColor?: string | undefined;
+        theme?: "auto" | "light" | "dark" | undefined;
+        primaryColor?: string | undefined;
+        allowMultipleSubmissions?: boolean | undefined;
+        requireAuthentication?: boolean | undefined;
+        showProgressBar?: boolean | undefined;
+        enableRealTimeUpdates?: boolean | undefined;
+        maxResponseLength?: number | undefined;
+        customCSS?: string | undefined;
+        headerText?: string | undefined;
+        footerText?: string | undefined;
         dataSchema?: {
-            fields?: {
-                name?: string;
-                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
-                required?: boolean;
+            fields: {
+                name: string;
+                type: "string" | "number" | "boolean" | "object" | "date" | "array";
+                required?: boolean | undefined;
                 validation?: {
-                    max?: number;
-                    min?: number;
-                    pattern?: string;
-                    enum?: string[];
-                };
+                    max?: number | undefined;
+                    min?: number | undefined;
+                    pattern?: string | undefined;
+                    enum?: string[] | undefined;
+                } | undefined;
             }[];
-            maxRecords?: number;
-            allowAnonymous?: boolean;
-        };
-        dataRetentionDays?: number;
-        notifyOnSubmission?: boolean;
-        notificationEmail?: string;
-        trackingEnabled?: boolean;
-        allowAnalyticsOptOut?: boolean;
+            maxRecords?: number | undefined;
+            allowAnonymous?: boolean | undefined;
+        } | undefined;
+        dataRetentionDays?: number | undefined;
+        notifyOnSubmission?: boolean | undefined;
+        notificationEmail?: string | undefined;
+        trackingEnabled?: boolean | undefined;
+        allowAnalyticsOptOut?: boolean | undefined;
     }>>;
     metadata: z.ZodDefault<z.ZodObject<{
         tags: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
@@ -555,17 +555,17 @@ export declare const ToolSchema: z.ZodObject<{
         category: z.ZodOptional<z.ZodString>;
         language: z.ZodDefault<z.ZodString>;
     }, "strip", z.ZodTypeAny, {
-        tags?: string[];
-        category?: string;
-        difficulty?: "beginner" | "intermediate" | "advanced";
-        estimatedTime?: number;
-        language?: string;
+        language: string;
+        category?: string | undefined;
+        estimatedTime?: number | undefined;
+        tags?: string[] | undefined;
+        difficulty?: "beginner" | "intermediate" | "advanced" | undefined;
     }, {
-        tags?: string[];
-        category?: string;
-        difficulty?: "beginner" | "intermediate" | "advanced";
-        estimatedTime?: number;
-        language?: string;
+        language?: string | undefined;
+        category?: string | undefined;
+        estimatedTime?: number | undefined;
+        tags?: string[] | undefined;
+        difficulty?: "beginner" | "intermediate" | "advanced" | undefined;
     }>>;
     isPublic: z.ZodDefault<z.ZodBoolean>;
     shareToken: z.ZodOptional<z.ZodString>;
@@ -582,187 +582,187 @@ export declare const ToolSchema: z.ZodObject<{
     publishedAt: z.ZodOptional<z.ZodDate>;
     lastUsedAt: z.ZodOptional<z.ZodDate>;
 }, "strip", z.ZodTypeAny, {
-    metadata?: {
-        tags?: string[];
-        category?: string;
-        difficulty?: "beginner" | "intermediate" | "advanced";
-        estimatedTime?: number;
-        language?: string;
+    id: string;
+    name: string;
+    status: "preview" | "draft" | "published";
+    description: string;
+    metadata: {
+        language: string;
+        category?: string | undefined;
+        estimatedTime?: number | undefined;
+        tags?: string[] | undefined;
+        difficulty?: "beginner" | "intermediate" | "advanced" | undefined;
     };
-    id?: string;
-    createdAt?: Date;
-    updatedAt?: Date;
-    name?: string;
-    status?: "draft" | "preview" | "published";
-    description?: string;
-    config?: {
-        autoSave?: boolean;
-        backgroundColor?: string;
-        theme?: "auto" | "dark" | "light";
-        primaryColor?: string;
-        allowMultipleSubmissions?: boolean;
-        requireAuthentication?: boolean;
-        showProgressBar?: boolean;
-        enableRealTimeUpdates?: boolean;
-        maxResponseLength?: number;
-        customCSS?: string;
-        headerText?: string;
-        footerText?: string;
+    config: {
+        autoSave: boolean;
+        backgroundColor: string;
+        theme: "auto" | "light" | "dark";
+        primaryColor: string;
+        allowMultipleSubmissions: boolean;
+        requireAuthentication: boolean;
+        showProgressBar: boolean;
+        enableRealTimeUpdates: boolean;
+        maxResponseLength: number;
+        customCSS: string;
+        headerText: string;
+        footerText: string;
+        dataRetentionDays: number;
+        notifyOnSubmission: boolean;
+        trackingEnabled: boolean;
+        allowAnalyticsOptOut: boolean;
         dataSchema?: {
-            fields?: {
-                name?: string;
-                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
-                required?: boolean;
+            fields: {
+                name: string;
+                type: "string" | "number" | "boolean" | "object" | "date" | "array";
+                required: boolean;
                 validation?: {
-                    max?: number;
-                    min?: number;
-                    pattern?: string;
-                    enum?: string[];
-                };
+                    max?: number | undefined;
+                    min?: number | undefined;
+                    pattern?: string | undefined;
+                    enum?: string[] | undefined;
+                } | undefined;
             }[];
-            maxRecords?: number;
-            allowAnonymous?: boolean;
-        };
-        dataRetentionDays?: number;
-        notifyOnSubmission?: boolean;
-        notificationEmail?: string;
-        trackingEnabled?: boolean;
-        allowAnalyticsOptOut?: boolean;
+            maxRecords: number;
+            allowAnonymous: boolean;
+        } | undefined;
+        notificationEmail?: string | undefined;
     };
-    ownerId?: string;
-    collaborators?: {
-        userId?: string;
-        permission?: "view" | "comment" | "edit";
-        addedAt?: Date;
-        addedBy?: string;
+    collaborators: {
+        permission: "view" | "edit" | "comment";
+        userId: string;
+        addedAt: Date;
+        addedBy: string;
     }[];
-    currentVersion?: string;
-    versions?: {
-        createdAt?: Date;
-        version?: string;
-        changelog?: string;
-        createdBy?: string;
-        isStable?: boolean;
-        deprecatedAt?: Date;
+    updatedAt: Date;
+    createdAt: Date;
+    ownerId: string;
+    currentVersion: string;
+    versions: {
+        version: string;
+        createdAt: Date;
+        createdBy: string;
+        isStable: boolean;
+        changelog?: string | undefined;
+        deprecatedAt?: Date | undefined;
     }[];
-    elements?: {
-        id?: string;
-        order?: number;
-        position?: {
-            height?: number;
-            width?: number;
-            x?: number;
-            y?: number;
+    elements: {
+        id: string;
+        order: number;
+        position: {
+            x: number;
+            y: number;
+            height?: number | undefined;
+            width?: number | undefined;
         };
-        elementId?: string;
+        isVisible: boolean;
+        isLocked: boolean;
+        elementId: string;
         config?: unknown;
-        parentId?: string;
-        isVisible?: boolean;
-        isLocked?: boolean;
+        parentId?: string | undefined;
     }[];
-    isPublic?: boolean;
-    shareToken?: string;
-    forkCount?: number;
-    originalToolId?: string;
-    viewCount?: number;
-    useCount?: number;
-    rating?: number;
-    ratingCount?: number;
-    spaceId?: string;
-    isSpaceTool?: boolean;
-    publishedAt?: Date;
-    lastUsedAt?: Date;
+    isPublic: boolean;
+    forkCount: number;
+    viewCount: number;
+    useCount: number;
+    ratingCount: number;
+    isSpaceTool: boolean;
+    spaceId?: string | undefined;
+    shareToken?: string | undefined;
+    originalToolId?: string | undefined;
+    rating?: number | undefined;
+    publishedAt?: Date | undefined;
+    lastUsedAt?: Date | undefined;
 }, {
-    metadata?: {
-        tags?: string[];
-        category?: string;
-        difficulty?: "beginner" | "intermediate" | "advanced";
-        estimatedTime?: number;
-        language?: string;
-    };
-    id?: string;
-    createdAt?: Date;
-    updatedAt?: Date;
-    name?: string;
-    status?: "draft" | "preview" | "published";
-    description?: string;
-    config?: {
-        autoSave?: boolean;
-        backgroundColor?: string;
-        theme?: "auto" | "dark" | "light";
-        primaryColor?: string;
-        allowMultipleSubmissions?: boolean;
-        requireAuthentication?: boolean;
-        showProgressBar?: boolean;
-        enableRealTimeUpdates?: boolean;
-        maxResponseLength?: number;
-        customCSS?: string;
-        headerText?: string;
-        footerText?: string;
-        dataSchema?: {
-            fields?: {
-                name?: string;
-                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
-                required?: boolean;
-                validation?: {
-                    max?: number;
-                    min?: number;
-                    pattern?: string;
-                    enum?: string[];
-                };
-            }[];
-            maxRecords?: number;
-            allowAnonymous?: boolean;
+    id: string;
+    name: string;
+    description: string;
+    updatedAt: Date;
+    createdAt: Date;
+    ownerId: string;
+    elements: {
+        id: string;
+        order: number;
+        position: {
+            x: number;
+            y: number;
+            height?: number | undefined;
+            width?: number | undefined;
         };
-        dataRetentionDays?: number;
-        notifyOnSubmission?: boolean;
-        notificationEmail?: string;
-        trackingEnabled?: boolean;
-        allowAnalyticsOptOut?: boolean;
-    };
-    ownerId?: string;
-    collaborators?: {
-        userId?: string;
-        permission?: "view" | "comment" | "edit";
-        addedAt?: Date;
-        addedBy?: string;
-    }[];
-    currentVersion?: string;
-    versions?: {
-        createdAt?: Date;
-        version?: string;
-        changelog?: string;
-        createdBy?: string;
-        isStable?: boolean;
-        deprecatedAt?: Date;
-    }[];
-    elements?: {
-        id?: string;
-        order?: number;
-        position?: {
-            height?: number;
-            width?: number;
-            x?: number;
-            y?: number;
-        };
-        elementId?: string;
+        elementId: string;
+        isVisible?: boolean | undefined;
+        isLocked?: boolean | undefined;
         config?: unknown;
-        parentId?: string;
-        isVisible?: boolean;
-        isLocked?: boolean;
+        parentId?: string | undefined;
     }[];
-    isPublic?: boolean;
-    shareToken?: string;
-    forkCount?: number;
-    originalToolId?: string;
-    viewCount?: number;
-    useCount?: number;
-    rating?: number;
-    ratingCount?: number;
-    spaceId?: string;
-    isSpaceTool?: boolean;
-    publishedAt?: Date;
-    lastUsedAt?: Date;
+    status?: "preview" | "draft" | "published" | undefined;
+    metadata?: {
+        language?: string | undefined;
+        category?: string | undefined;
+        estimatedTime?: number | undefined;
+        tags?: string[] | undefined;
+        difficulty?: "beginner" | "intermediate" | "advanced" | undefined;
+    } | undefined;
+    config?: {
+        autoSave?: boolean | undefined;
+        backgroundColor?: string | undefined;
+        theme?: "auto" | "light" | "dark" | undefined;
+        primaryColor?: string | undefined;
+        allowMultipleSubmissions?: boolean | undefined;
+        requireAuthentication?: boolean | undefined;
+        showProgressBar?: boolean | undefined;
+        enableRealTimeUpdates?: boolean | undefined;
+        maxResponseLength?: number | undefined;
+        customCSS?: string | undefined;
+        headerText?: string | undefined;
+        footerText?: string | undefined;
+        dataSchema?: {
+            fields: {
+                name: string;
+                type: "string" | "number" | "boolean" | "object" | "date" | "array";
+                required?: boolean | undefined;
+                validation?: {
+                    max?: number | undefined;
+                    min?: number | undefined;
+                    pattern?: string | undefined;
+                    enum?: string[] | undefined;
+                } | undefined;
+            }[];
+            maxRecords?: number | undefined;
+            allowAnonymous?: boolean | undefined;
+        } | undefined;
+        dataRetentionDays?: number | undefined;
+        notifyOnSubmission?: boolean | undefined;
+        notificationEmail?: string | undefined;
+        trackingEnabled?: boolean | undefined;
+        allowAnalyticsOptOut?: boolean | undefined;
+    } | undefined;
+    spaceId?: string | undefined;
+    collaborators?: {
+        permission: "view" | "edit" | "comment";
+        userId: string;
+        addedAt: Date;
+        addedBy: string;
+    }[] | undefined;
+    currentVersion?: string | undefined;
+    versions?: {
+        version: string;
+        createdAt: Date;
+        createdBy: string;
+        changelog?: string | undefined;
+        isStable?: boolean | undefined;
+        deprecatedAt?: Date | undefined;
+    }[] | undefined;
+    isPublic?: boolean | undefined;
+    shareToken?: string | undefined;
+    forkCount?: number | undefined;
+    originalToolId?: string | undefined;
+    viewCount?: number | undefined;
+    useCount?: number | undefined;
+    rating?: number | undefined;
+    ratingCount?: number | undefined;
+    isSpaceTool?: boolean | undefined;
+    publishedAt?: Date | undefined;
+    lastUsedAt?: Date | undefined;
 }>;
 export type Tool = z.infer<typeof ToolSchema>;
 export type ToolCollaborator = z.infer<typeof ToolCollaboratorSchema>;
@@ -798,67 +798,67 @@ export declare const CreateToolSchema: z.ZodObject<{
                     pattern: z.ZodOptional<z.ZodString>;
                     enum: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
                 }, "strip", z.ZodTypeAny, {
-                    max?: number;
-                    min?: number;
-                    pattern?: string;
-                    enum?: string[];
+                    max?: number | undefined;
+                    min?: number | undefined;
+                    pattern?: string | undefined;
+                    enum?: string[] | undefined;
                 }, {
-                    max?: number;
-                    min?: number;
-                    pattern?: string;
-                    enum?: string[];
+                    max?: number | undefined;
+                    min?: number | undefined;
+                    pattern?: string | undefined;
+                    enum?: string[] | undefined;
                 }>>;
             }, "strip", z.ZodTypeAny, {
-                name?: string;
-                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
-                required?: boolean;
+                name: string;
+                type: "string" | "number" | "boolean" | "object" | "date" | "array";
+                required: boolean;
                 validation?: {
-                    max?: number;
-                    min?: number;
-                    pattern?: string;
-                    enum?: string[];
-                };
+                    max?: number | undefined;
+                    min?: number | undefined;
+                    pattern?: string | undefined;
+                    enum?: string[] | undefined;
+                } | undefined;
             }, {
-                name?: string;
-                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
-                required?: boolean;
+                name: string;
+                type: "string" | "number" | "boolean" | "object" | "date" | "array";
+                required?: boolean | undefined;
                 validation?: {
-                    max?: number;
-                    min?: number;
-                    pattern?: string;
-                    enum?: string[];
-                };
+                    max?: number | undefined;
+                    min?: number | undefined;
+                    pattern?: string | undefined;
+                    enum?: string[] | undefined;
+                } | undefined;
             }>, "many">;
             maxRecords: z.ZodDefault<z.ZodNumber>;
             allowAnonymous: z.ZodDefault<z.ZodBoolean>;
         }, "strip", z.ZodTypeAny, {
-            fields?: {
-                name?: string;
-                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
-                required?: boolean;
+            fields: {
+                name: string;
+                type: "string" | "number" | "boolean" | "object" | "date" | "array";
+                required: boolean;
                 validation?: {
-                    max?: number;
-                    min?: number;
-                    pattern?: string;
-                    enum?: string[];
-                };
+                    max?: number | undefined;
+                    min?: number | undefined;
+                    pattern?: string | undefined;
+                    enum?: string[] | undefined;
+                } | undefined;
             }[];
-            maxRecords?: number;
-            allowAnonymous?: boolean;
+            maxRecords: number;
+            allowAnonymous: boolean;
         }, {
-            fields?: {
-                name?: string;
-                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
-                required?: boolean;
+            fields: {
+                name: string;
+                type: "string" | "number" | "boolean" | "object" | "date" | "array";
+                required?: boolean | undefined;
                 validation?: {
-                    max?: number;
-                    min?: number;
-                    pattern?: string;
-                    enum?: string[];
-                };
+                    max?: number | undefined;
+                    min?: number | undefined;
+                    pattern?: string | undefined;
+                    enum?: string[] | undefined;
+                } | undefined;
             }[];
-            maxRecords?: number;
-            allowAnonymous?: boolean;
+            maxRecords?: number | undefined;
+            allowAnonymous?: boolean | undefined;
         }>>>;
         dataRetentionDays: z.ZodOptional<z.ZodDefault<z.ZodNumber>>;
         notifyOnSubmission: z.ZodOptional<z.ZodDefault<z.ZodBoolean>>;
@@ -866,71 +866,71 @@ export declare const CreateToolSchema: z.ZodObject<{
         trackingEnabled: z.ZodOptional<z.ZodDefault<z.ZodBoolean>>;
         allowAnalyticsOptOut: z.ZodOptional<z.ZodDefault<z.ZodBoolean>>;
     }, "strip", z.ZodTypeAny, {
-        autoSave?: boolean;
-        backgroundColor?: string;
-        theme?: "auto" | "dark" | "light";
-        primaryColor?: string;
-        allowMultipleSubmissions?: boolean;
-        requireAuthentication?: boolean;
-        showProgressBar?: boolean;
-        enableRealTimeUpdates?: boolean;
-        maxResponseLength?: number;
-        customCSS?: string;
-        headerText?: string;
-        footerText?: string;
+        autoSave?: boolean | undefined;
+        backgroundColor?: string | undefined;
+        theme?: "auto" | "light" | "dark" | undefined;
+        primaryColor?: string | undefined;
+        allowMultipleSubmissions?: boolean | undefined;
+        requireAuthentication?: boolean | undefined;
+        showProgressBar?: boolean | undefined;
+        enableRealTimeUpdates?: boolean | undefined;
+        maxResponseLength?: number | undefined;
+        customCSS?: string | undefined;
+        headerText?: string | undefined;
+        footerText?: string | undefined;
         dataSchema?: {
-            fields?: {
-                name?: string;
-                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
-                required?: boolean;
+            fields: {
+                name: string;
+                type: "string" | "number" | "boolean" | "object" | "date" | "array";
+                required: boolean;
                 validation?: {
-                    max?: number;
-                    min?: number;
-                    pattern?: string;
-                    enum?: string[];
-                };
+                    max?: number | undefined;
+                    min?: number | undefined;
+                    pattern?: string | undefined;
+                    enum?: string[] | undefined;
+                } | undefined;
             }[];
-            maxRecords?: number;
-            allowAnonymous?: boolean;
-        };
-        dataRetentionDays?: number;
-        notifyOnSubmission?: boolean;
-        notificationEmail?: string;
-        trackingEnabled?: boolean;
-        allowAnalyticsOptOut?: boolean;
+            maxRecords: number;
+            allowAnonymous: boolean;
+        } | undefined;
+        dataRetentionDays?: number | undefined;
+        notifyOnSubmission?: boolean | undefined;
+        notificationEmail?: string | undefined;
+        trackingEnabled?: boolean | undefined;
+        allowAnalyticsOptOut?: boolean | undefined;
     }, {
-        autoSave?: boolean;
-        backgroundColor?: string;
-        theme?: "auto" | "dark" | "light";
-        primaryColor?: string;
-        allowMultipleSubmissions?: boolean;
-        requireAuthentication?: boolean;
-        showProgressBar?: boolean;
-        enableRealTimeUpdates?: boolean;
-        maxResponseLength?: number;
-        customCSS?: string;
-        headerText?: string;
-        footerText?: string;
+        autoSave?: boolean | undefined;
+        backgroundColor?: string | undefined;
+        theme?: "auto" | "light" | "dark" | undefined;
+        primaryColor?: string | undefined;
+        allowMultipleSubmissions?: boolean | undefined;
+        requireAuthentication?: boolean | undefined;
+        showProgressBar?: boolean | undefined;
+        enableRealTimeUpdates?: boolean | undefined;
+        maxResponseLength?: number | undefined;
+        customCSS?: string | undefined;
+        headerText?: string | undefined;
+        footerText?: string | undefined;
         dataSchema?: {
-            fields?: {
-                name?: string;
-                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
-                required?: boolean;
+            fields: {
+                name: string;
+                type: "string" | "number" | "boolean" | "object" | "date" | "array";
+                required?: boolean | undefined;
                 validation?: {
-                    max?: number;
-                    min?: number;
-                    pattern?: string;
-                    enum?: string[];
-                };
+                    max?: number | undefined;
+                    min?: number | undefined;
+                    pattern?: string | undefined;
+                    enum?: string[] | undefined;
+                } | undefined;
             }[];
-            maxRecords?: number;
-            allowAnonymous?: boolean;
-        };
-        dataRetentionDays?: number;
-        notifyOnSubmission?: boolean;
-        notificationEmail?: string;
-        trackingEnabled?: boolean;
-        allowAnalyticsOptOut?: boolean;
+            maxRecords?: number | undefined;
+            allowAnonymous?: boolean | undefined;
+        } | undefined;
+        dataRetentionDays?: number | undefined;
+        notifyOnSubmission?: boolean | undefined;
+        notificationEmail?: string | undefined;
+        trackingEnabled?: boolean | undefined;
+        allowAnalyticsOptOut?: boolean | undefined;
     }>>;
     metadata: z.ZodOptional<z.ZodObject<{
         tags: z.ZodOptional<z.ZodOptional<z.ZodArray<z.ZodString, "many">>>;
@@ -939,110 +939,110 @@ export declare const CreateToolSchema: z.ZodObject<{
         category: z.ZodOptional<z.ZodOptional<z.ZodString>>;
         language: z.ZodOptional<z.ZodDefault<z.ZodString>>;
     }, "strip", z.ZodTypeAny, {
-        tags?: string[];
-        category?: string;
-        difficulty?: "beginner" | "intermediate" | "advanced";
-        estimatedTime?: number;
-        language?: string;
+        language?: string | undefined;
+        category?: string | undefined;
+        estimatedTime?: number | undefined;
+        tags?: string[] | undefined;
+        difficulty?: "beginner" | "intermediate" | "advanced" | undefined;
     }, {
-        tags?: string[];
-        category?: string;
-        difficulty?: "beginner" | "intermediate" | "advanced";
-        estimatedTime?: number;
-        language?: string;
+        language?: string | undefined;
+        category?: string | undefined;
+        estimatedTime?: number | undefined;
+        tags?: string[] | undefined;
+        difficulty?: "beginner" | "intermediate" | "advanced" | undefined;
     }>>;
 }, "strip", z.ZodTypeAny, {
+    name: string;
+    description: string;
+    isSpaceTool: boolean;
     metadata?: {
-        tags?: string[];
-        category?: string;
-        difficulty?: "beginner" | "intermediate" | "advanced";
-        estimatedTime?: number;
-        language?: string;
-    };
-    name?: string;
-    description?: string;
+        language?: string | undefined;
+        category?: string | undefined;
+        estimatedTime?: number | undefined;
+        tags?: string[] | undefined;
+        difficulty?: "beginner" | "intermediate" | "advanced" | undefined;
+    } | undefined;
     config?: {
-        autoSave?: boolean;
-        backgroundColor?: string;
-        theme?: "auto" | "dark" | "light";
-        primaryColor?: string;
-        allowMultipleSubmissions?: boolean;
-        requireAuthentication?: boolean;
-        showProgressBar?: boolean;
-        enableRealTimeUpdates?: boolean;
-        maxResponseLength?: number;
-        customCSS?: string;
-        headerText?: string;
-        footerText?: string;
+        autoSave?: boolean | undefined;
+        backgroundColor?: string | undefined;
+        theme?: "auto" | "light" | "dark" | undefined;
+        primaryColor?: string | undefined;
+        allowMultipleSubmissions?: boolean | undefined;
+        requireAuthentication?: boolean | undefined;
+        showProgressBar?: boolean | undefined;
+        enableRealTimeUpdates?: boolean | undefined;
+        maxResponseLength?: number | undefined;
+        customCSS?: string | undefined;
+        headerText?: string | undefined;
+        footerText?: string | undefined;
         dataSchema?: {
-            fields?: {
-                name?: string;
-                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
-                required?: boolean;
+            fields: {
+                name: string;
+                type: "string" | "number" | "boolean" | "object" | "date" | "array";
+                required: boolean;
                 validation?: {
-                    max?: number;
-                    min?: number;
-                    pattern?: string;
-                    enum?: string[];
-                };
+                    max?: number | undefined;
+                    min?: number | undefined;
+                    pattern?: string | undefined;
+                    enum?: string[] | undefined;
+                } | undefined;
             }[];
-            maxRecords?: number;
-            allowAnonymous?: boolean;
-        };
-        dataRetentionDays?: number;
-        notifyOnSubmission?: boolean;
-        notificationEmail?: string;
-        trackingEnabled?: boolean;
-        allowAnalyticsOptOut?: boolean;
-    };
-    spaceId?: string;
-    isSpaceTool?: boolean;
+            maxRecords: number;
+            allowAnonymous: boolean;
+        } | undefined;
+        dataRetentionDays?: number | undefined;
+        notifyOnSubmission?: boolean | undefined;
+        notificationEmail?: string | undefined;
+        trackingEnabled?: boolean | undefined;
+        allowAnalyticsOptOut?: boolean | undefined;
+    } | undefined;
+    spaceId?: string | undefined;
 }, {
+    name: string;
+    description: string;
     metadata?: {
-        tags?: string[];
-        category?: string;
-        difficulty?: "beginner" | "intermediate" | "advanced";
-        estimatedTime?: number;
-        language?: string;
-    };
-    name?: string;
-    description?: string;
+        language?: string | undefined;
+        category?: string | undefined;
+        estimatedTime?: number | undefined;
+        tags?: string[] | undefined;
+        difficulty?: "beginner" | "intermediate" | "advanced" | undefined;
+    } | undefined;
     config?: {
-        autoSave?: boolean;
-        backgroundColor?: string;
-        theme?: "auto" | "dark" | "light";
-        primaryColor?: string;
-        allowMultipleSubmissions?: boolean;
-        requireAuthentication?: boolean;
-        showProgressBar?: boolean;
-        enableRealTimeUpdates?: boolean;
-        maxResponseLength?: number;
-        customCSS?: string;
-        headerText?: string;
-        footerText?: string;
+        autoSave?: boolean | undefined;
+        backgroundColor?: string | undefined;
+        theme?: "auto" | "light" | "dark" | undefined;
+        primaryColor?: string | undefined;
+        allowMultipleSubmissions?: boolean | undefined;
+        requireAuthentication?: boolean | undefined;
+        showProgressBar?: boolean | undefined;
+        enableRealTimeUpdates?: boolean | undefined;
+        maxResponseLength?: number | undefined;
+        customCSS?: string | undefined;
+        headerText?: string | undefined;
+        footerText?: string | undefined;
         dataSchema?: {
-            fields?: {
-                name?: string;
-                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
-                required?: boolean;
+            fields: {
+                name: string;
+                type: "string" | "number" | "boolean" | "object" | "date" | "array";
+                required?: boolean | undefined;
                 validation?: {
-                    max?: number;
-                    min?: number;
-                    pattern?: string;
-                    enum?: string[];
-                };
+                    max?: number | undefined;
+                    min?: number | undefined;
+                    pattern?: string | undefined;
+                    enum?: string[] | undefined;
+                } | undefined;
             }[];
-            maxRecords?: number;
-            allowAnonymous?: boolean;
-        };
-        dataRetentionDays?: number;
-        notifyOnSubmission?: boolean;
-        notificationEmail?: string;
-        trackingEnabled?: boolean;
-        allowAnalyticsOptOut?: boolean;
-    };
-    spaceId?: string;
-    isSpaceTool?: boolean;
+            maxRecords?: number | undefined;
+            allowAnonymous?: boolean | undefined;
+        } | undefined;
+        dataRetentionDays?: number | undefined;
+        notifyOnSubmission?: boolean | undefined;
+        notificationEmail?: string | undefined;
+        trackingEnabled?: boolean | undefined;
+        allowAnalyticsOptOut?: boolean | undefined;
+    } | undefined;
+    spaceId?: string | undefined;
+    isSpaceTool?: boolean | undefined;
 }>;
 export type CreateTool = z.infer<typeof CreateToolSchema>;
 export declare const UpdateToolSchema: z.ZodObject<{
@@ -1058,48 +1058,48 @@ export declare const UpdateToolSchema: z.ZodObject<{
             width: z.ZodOptional<z.ZodNumber>;
             height: z.ZodOptional<z.ZodNumber>;
         }, "strip", z.ZodTypeAny, {
-            height?: number;
-            width?: number;
-            x?: number;
-            y?: number;
+            x: number;
+            y: number;
+            height?: number | undefined;
+            width?: number | undefined;
         }, {
-            height?: number;
-            width?: number;
-            x?: number;
-            y?: number;
+            x: number;
+            y: number;
+            height?: number | undefined;
+            width?: number | undefined;
         }>;
         parentId: z.ZodOptional<z.ZodString>;
         order: z.ZodNumber;
         isVisible: z.ZodDefault<z.ZodBoolean>;
         isLocked: z.ZodDefault<z.ZodBoolean>;
     }, "strip", z.ZodTypeAny, {
-        id?: string;
-        order?: number;
-        position?: {
-            height?: number;
-            width?: number;
-            x?: number;
-            y?: number;
+        id: string;
+        order: number;
+        position: {
+            x: number;
+            y: number;
+            height?: number | undefined;
+            width?: number | undefined;
         };
-        elementId?: string;
+        isVisible: boolean;
+        isLocked: boolean;
+        elementId: string;
         config?: unknown;
-        parentId?: string;
-        isVisible?: boolean;
-        isLocked?: boolean;
+        parentId?: string | undefined;
     }, {
-        id?: string;
-        order?: number;
-        position?: {
-            height?: number;
-            width?: number;
-            x?: number;
-            y?: number;
+        id: string;
+        order: number;
+        position: {
+            x: number;
+            y: number;
+            height?: number | undefined;
+            width?: number | undefined;
         };
-        elementId?: string;
+        elementId: string;
+        isVisible?: boolean | undefined;
+        isLocked?: boolean | undefined;
         config?: unknown;
-        parentId?: string;
-        isVisible?: boolean;
-        isLocked?: boolean;
+        parentId?: string | undefined;
     }>, "many">>;
     config: z.ZodOptional<z.ZodObject<{
         theme: z.ZodOptional<z.ZodDefault<z.ZodEnum<["light", "dark", "auto"]>>>;
@@ -1125,67 +1125,67 @@ export declare const UpdateToolSchema: z.ZodObject<{
                     pattern: z.ZodOptional<z.ZodString>;
                     enum: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
                 }, "strip", z.ZodTypeAny, {
-                    max?: number;
-                    min?: number;
-                    pattern?: string;
-                    enum?: string[];
+                    max?: number | undefined;
+                    min?: number | undefined;
+                    pattern?: string | undefined;
+                    enum?: string[] | undefined;
                 }, {
-                    max?: number;
-                    min?: number;
-                    pattern?: string;
-                    enum?: string[];
+                    max?: number | undefined;
+                    min?: number | undefined;
+                    pattern?: string | undefined;
+                    enum?: string[] | undefined;
                 }>>;
             }, "strip", z.ZodTypeAny, {
-                name?: string;
-                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
-                required?: boolean;
+                name: string;
+                type: "string" | "number" | "boolean" | "object" | "date" | "array";
+                required: boolean;
                 validation?: {
-                    max?: number;
-                    min?: number;
-                    pattern?: string;
-                    enum?: string[];
-                };
+                    max?: number | undefined;
+                    min?: number | undefined;
+                    pattern?: string | undefined;
+                    enum?: string[] | undefined;
+                } | undefined;
             }, {
-                name?: string;
-                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
-                required?: boolean;
+                name: string;
+                type: "string" | "number" | "boolean" | "object" | "date" | "array";
+                required?: boolean | undefined;
                 validation?: {
-                    max?: number;
-                    min?: number;
-                    pattern?: string;
-                    enum?: string[];
-                };
+                    max?: number | undefined;
+                    min?: number | undefined;
+                    pattern?: string | undefined;
+                    enum?: string[] | undefined;
+                } | undefined;
             }>, "many">;
             maxRecords: z.ZodDefault<z.ZodNumber>;
             allowAnonymous: z.ZodDefault<z.ZodBoolean>;
         }, "strip", z.ZodTypeAny, {
-            fields?: {
-                name?: string;
-                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
-                required?: boolean;
+            fields: {
+                name: string;
+                type: "string" | "number" | "boolean" | "object" | "date" | "array";
+                required: boolean;
                 validation?: {
-                    max?: number;
-                    min?: number;
-                    pattern?: string;
-                    enum?: string[];
-                };
+                    max?: number | undefined;
+                    min?: number | undefined;
+                    pattern?: string | undefined;
+                    enum?: string[] | undefined;
+                } | undefined;
             }[];
-            maxRecords?: number;
-            allowAnonymous?: boolean;
+            maxRecords: number;
+            allowAnonymous: boolean;
         }, {
-            fields?: {
-                name?: string;
-                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
-                required?: boolean;
+            fields: {
+                name: string;
+                type: "string" | "number" | "boolean" | "object" | "date" | "array";
+                required?: boolean | undefined;
                 validation?: {
-                    max?: number;
-                    min?: number;
-                    pattern?: string;
-                    enum?: string[];
-                };
+                    max?: number | undefined;
+                    min?: number | undefined;
+                    pattern?: string | undefined;
+                    enum?: string[] | undefined;
+                } | undefined;
             }[];
-            maxRecords?: number;
-            allowAnonymous?: boolean;
+            maxRecords?: number | undefined;
+            allowAnonymous?: boolean | undefined;
         }>>>;
         dataRetentionDays: z.ZodOptional<z.ZodDefault<z.ZodNumber>>;
         notifyOnSubmission: z.ZodOptional<z.ZodDefault<z.ZodBoolean>>;
@@ -1193,71 +1193,71 @@ export declare const UpdateToolSchema: z.ZodObject<{
         trackingEnabled: z.ZodOptional<z.ZodDefault<z.ZodBoolean>>;
         allowAnalyticsOptOut: z.ZodOptional<z.ZodDefault<z.ZodBoolean>>;
     }, "strip", z.ZodTypeAny, {
-        autoSave?: boolean;
-        backgroundColor?: string;
-        theme?: "auto" | "dark" | "light";
-        primaryColor?: string;
-        allowMultipleSubmissions?: boolean;
-        requireAuthentication?: boolean;
-        showProgressBar?: boolean;
-        enableRealTimeUpdates?: boolean;
-        maxResponseLength?: number;
-        customCSS?: string;
-        headerText?: string;
-        footerText?: string;
+        autoSave?: boolean | undefined;
+        backgroundColor?: string | undefined;
+        theme?: "auto" | "light" | "dark" | undefined;
+        primaryColor?: string | undefined;
+        allowMultipleSubmissions?: boolean | undefined;
+        requireAuthentication?: boolean | undefined;
+        showProgressBar?: boolean | undefined;
+        enableRealTimeUpdates?: boolean | undefined;
+        maxResponseLength?: number | undefined;
+        customCSS?: string | undefined;
+        headerText?: string | undefined;
+        footerText?: string | undefined;
         dataSchema?: {
-            fields?: {
-                name?: string;
-                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
-                required?: boolean;
+            fields: {
+                name: string;
+                type: "string" | "number" | "boolean" | "object" | "date" | "array";
+                required: boolean;
                 validation?: {
-                    max?: number;
-                    min?: number;
-                    pattern?: string;
-                    enum?: string[];
-                };
+                    max?: number | undefined;
+                    min?: number | undefined;
+                    pattern?: string | undefined;
+                    enum?: string[] | undefined;
+                } | undefined;
             }[];
-            maxRecords?: number;
-            allowAnonymous?: boolean;
-        };
-        dataRetentionDays?: number;
-        notifyOnSubmission?: boolean;
-        notificationEmail?: string;
-        trackingEnabled?: boolean;
-        allowAnalyticsOptOut?: boolean;
+            maxRecords: number;
+            allowAnonymous: boolean;
+        } | undefined;
+        dataRetentionDays?: number | undefined;
+        notifyOnSubmission?: boolean | undefined;
+        notificationEmail?: string | undefined;
+        trackingEnabled?: boolean | undefined;
+        allowAnalyticsOptOut?: boolean | undefined;
     }, {
-        autoSave?: boolean;
-        backgroundColor?: string;
-        theme?: "auto" | "dark" | "light";
-        primaryColor?: string;
-        allowMultipleSubmissions?: boolean;
-        requireAuthentication?: boolean;
-        showProgressBar?: boolean;
-        enableRealTimeUpdates?: boolean;
-        maxResponseLength?: number;
-        customCSS?: string;
-        headerText?: string;
-        footerText?: string;
+        autoSave?: boolean | undefined;
+        backgroundColor?: string | undefined;
+        theme?: "auto" | "light" | "dark" | undefined;
+        primaryColor?: string | undefined;
+        allowMultipleSubmissions?: boolean | undefined;
+        requireAuthentication?: boolean | undefined;
+        showProgressBar?: boolean | undefined;
+        enableRealTimeUpdates?: boolean | undefined;
+        maxResponseLength?: number | undefined;
+        customCSS?: string | undefined;
+        headerText?: string | undefined;
+        footerText?: string | undefined;
         dataSchema?: {
-            fields?: {
-                name?: string;
-                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
-                required?: boolean;
+            fields: {
+                name: string;
+                type: "string" | "number" | "boolean" | "object" | "date" | "array";
+                required?: boolean | undefined;
                 validation?: {
-                    max?: number;
-                    min?: number;
-                    pattern?: string;
-                    enum?: string[];
-                };
+                    max?: number | undefined;
+                    min?: number | undefined;
+                    pattern?: string | undefined;
+                    enum?: string[] | undefined;
+                } | undefined;
             }[];
-            maxRecords?: number;
-            allowAnonymous?: boolean;
-        };
-        dataRetentionDays?: number;
-        notifyOnSubmission?: boolean;
-        notificationEmail?: string;
-        trackingEnabled?: boolean;
-        allowAnalyticsOptOut?: boolean;
+            maxRecords?: number | undefined;
+            allowAnonymous?: boolean | undefined;
+        } | undefined;
+        dataRetentionDays?: number | undefined;
+        notifyOnSubmission?: boolean | undefined;
+        notificationEmail?: string | undefined;
+        trackingEnabled?: boolean | undefined;
+        allowAnalyticsOptOut?: boolean | undefined;
     }>>;
     metadata: z.ZodOptional<z.ZodObject<{
         tags: z.ZodOptional<z.ZodOptional<z.ZodArray<z.ZodString, "many">>>;
@@ -1266,139 +1266,139 @@ export declare const UpdateToolSchema: z.ZodObject<{
         category: z.ZodOptional<z.ZodOptional<z.ZodString>>;
         language: z.ZodOptional<z.ZodDefault<z.ZodString>>;
     }, "strip", z.ZodTypeAny, {
-        tags?: string[];
-        category?: string;
-        difficulty?: "beginner" | "intermediate" | "advanced";
-        estimatedTime?: number;
-        language?: string;
+        language?: string | undefined;
+        category?: string | undefined;
+        estimatedTime?: number | undefined;
+        tags?: string[] | undefined;
+        difficulty?: "beginner" | "intermediate" | "advanced" | undefined;
     }, {
-        tags?: string[];
-        category?: string;
-        difficulty?: "beginner" | "intermediate" | "advanced";
-        estimatedTime?: number;
-        language?: string;
+        language?: string | undefined;
+        category?: string | undefined;
+        estimatedTime?: number | undefined;
+        tags?: string[] | undefined;
+        difficulty?: "beginner" | "intermediate" | "advanced" | undefined;
     }>>;
     changelog: z.ZodOptional<z.ZodString>;
 }, "strip", z.ZodTypeAny, {
+    name?: string | undefined;
+    description?: string | undefined;
     metadata?: {
-        tags?: string[];
-        category?: string;
-        difficulty?: "beginner" | "intermediate" | "advanced";
-        estimatedTime?: number;
-        language?: string;
-    };
-    name?: string;
-    description?: string;
+        language?: string | undefined;
+        category?: string | undefined;
+        estimatedTime?: number | undefined;
+        tags?: string[] | undefined;
+        difficulty?: "beginner" | "intermediate" | "advanced" | undefined;
+    } | undefined;
     config?: {
-        autoSave?: boolean;
-        backgroundColor?: string;
-        theme?: "auto" | "dark" | "light";
-        primaryColor?: string;
-        allowMultipleSubmissions?: boolean;
-        requireAuthentication?: boolean;
-        showProgressBar?: boolean;
-        enableRealTimeUpdates?: boolean;
-        maxResponseLength?: number;
-        customCSS?: string;
-        headerText?: string;
-        footerText?: string;
+        autoSave?: boolean | undefined;
+        backgroundColor?: string | undefined;
+        theme?: "auto" | "light" | "dark" | undefined;
+        primaryColor?: string | undefined;
+        allowMultipleSubmissions?: boolean | undefined;
+        requireAuthentication?: boolean | undefined;
+        showProgressBar?: boolean | undefined;
+        enableRealTimeUpdates?: boolean | undefined;
+        maxResponseLength?: number | undefined;
+        customCSS?: string | undefined;
+        headerText?: string | undefined;
+        footerText?: string | undefined;
         dataSchema?: {
-            fields?: {
-                name?: string;
-                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
-                required?: boolean;
+            fields: {
+                name: string;
+                type: "string" | "number" | "boolean" | "object" | "date" | "array";
+                required: boolean;
                 validation?: {
-                    max?: number;
-                    min?: number;
-                    pattern?: string;
-                    enum?: string[];
-                };
+                    max?: number | undefined;
+                    min?: number | undefined;
+                    pattern?: string | undefined;
+                    enum?: string[] | undefined;
+                } | undefined;
             }[];
-            maxRecords?: number;
-            allowAnonymous?: boolean;
-        };
-        dataRetentionDays?: number;
-        notifyOnSubmission?: boolean;
-        notificationEmail?: string;
-        trackingEnabled?: boolean;
-        allowAnalyticsOptOut?: boolean;
-    };
-    changelog?: string;
+            maxRecords: number;
+            allowAnonymous: boolean;
+        } | undefined;
+        dataRetentionDays?: number | undefined;
+        notifyOnSubmission?: boolean | undefined;
+        notificationEmail?: string | undefined;
+        trackingEnabled?: boolean | undefined;
+        allowAnalyticsOptOut?: boolean | undefined;
+    } | undefined;
+    changelog?: string | undefined;
     elements?: {
-        id?: string;
-        order?: number;
-        position?: {
-            height?: number;
-            width?: number;
-            x?: number;
-            y?: number;
+        id: string;
+        order: number;
+        position: {
+            x: number;
+            y: number;
+            height?: number | undefined;
+            width?: number | undefined;
         };
-        elementId?: string;
+        isVisible: boolean;
+        isLocked: boolean;
+        elementId: string;
         config?: unknown;
-        parentId?: string;
-        isVisible?: boolean;
-        isLocked?: boolean;
-    }[];
+        parentId?: string | undefined;
+    }[] | undefined;
 }, {
+    name?: string | undefined;
+    description?: string | undefined;
     metadata?: {
-        tags?: string[];
-        category?: string;
-        difficulty?: "beginner" | "intermediate" | "advanced";
-        estimatedTime?: number;
-        language?: string;
-    };
-    name?: string;
-    description?: string;
+        language?: string | undefined;
+        category?: string | undefined;
+        estimatedTime?: number | undefined;
+        tags?: string[] | undefined;
+        difficulty?: "beginner" | "intermediate" | "advanced" | undefined;
+    } | undefined;
     config?: {
-        autoSave?: boolean;
-        backgroundColor?: string;
-        theme?: "auto" | "dark" | "light";
-        primaryColor?: string;
-        allowMultipleSubmissions?: boolean;
-        requireAuthentication?: boolean;
-        showProgressBar?: boolean;
-        enableRealTimeUpdates?: boolean;
-        maxResponseLength?: number;
-        customCSS?: string;
-        headerText?: string;
-        footerText?: string;
+        autoSave?: boolean | undefined;
+        backgroundColor?: string | undefined;
+        theme?: "auto" | "light" | "dark" | undefined;
+        primaryColor?: string | undefined;
+        allowMultipleSubmissions?: boolean | undefined;
+        requireAuthentication?: boolean | undefined;
+        showProgressBar?: boolean | undefined;
+        enableRealTimeUpdates?: boolean | undefined;
+        maxResponseLength?: number | undefined;
+        customCSS?: string | undefined;
+        headerText?: string | undefined;
+        footerText?: string | undefined;
         dataSchema?: {
-            fields?: {
-                name?: string;
-                type?: "string" | "number" | "boolean" | "object" | "date" | "array";
-                required?: boolean;
+            fields: {
+                name: string;
+                type: "string" | "number" | "boolean" | "object" | "date" | "array";
+                required?: boolean | undefined;
                 validation?: {
-                    max?: number;
-                    min?: number;
-                    pattern?: string;
-                    enum?: string[];
-                };
+                    max?: number | undefined;
+                    min?: number | undefined;
+                    pattern?: string | undefined;
+                    enum?: string[] | undefined;
+                } | undefined;
             }[];
-            maxRecords?: number;
-            allowAnonymous?: boolean;
-        };
-        dataRetentionDays?: number;
-        notifyOnSubmission?: boolean;
-        notificationEmail?: string;
-        trackingEnabled?: boolean;
-        allowAnalyticsOptOut?: boolean;
-    };
-    changelog?: string;
+            maxRecords?: number | undefined;
+            allowAnonymous?: boolean | undefined;
+        } | undefined;
+        dataRetentionDays?: number | undefined;
+        notifyOnSubmission?: boolean | undefined;
+        notificationEmail?: string | undefined;
+        trackingEnabled?: boolean | undefined;
+        allowAnalyticsOptOut?: boolean | undefined;
+    } | undefined;
+    changelog?: string | undefined;
     elements?: {
-        id?: string;
-        order?: number;
-        position?: {
-            height?: number;
-            width?: number;
-            x?: number;
-            y?: number;
+        id: string;
+        order: number;
+        position: {
+            x: number;
+            y: number;
+            height?: number | undefined;
+            width?: number | undefined;
         };
-        elementId?: string;
+        elementId: string;
+        isVisible?: boolean | undefined;
+        isLocked?: boolean | undefined;
         config?: unknown;
-        parentId?: string;
-        isVisible?: boolean;
-        isLocked?: boolean;
-    }[];
+        parentId?: string | undefined;
+    }[] | undefined;
 }>;
 export type UpdateTool = z.infer<typeof UpdateToolSchema>;
 export declare const ShareToolSchema: z.ZodObject<{
@@ -1406,13 +1406,13 @@ export declare const ShareToolSchema: z.ZodObject<{
     expiresAt: z.ZodOptional<z.ZodDate>;
     requiresApproval: z.ZodDefault<z.ZodBoolean>;
 }, "strip", z.ZodTypeAny, {
-    permission?: "view" | "comment" | "edit";
-    expiresAt?: Date;
-    requiresApproval?: boolean;
+    permission: "view" | "edit" | "comment";
+    requiresApproval: boolean;
+    expiresAt?: Date | undefined;
 }, {
-    permission?: "view" | "comment" | "edit";
-    expiresAt?: Date;
-    requiresApproval?: boolean;
+    permission?: "view" | "edit" | "comment" | undefined;
+    expiresAt?: Date | undefined;
+    requiresApproval?: boolean | undefined;
 }>;
 export type ShareTool = z.infer<typeof ShareToolSchema>;
 export declare const ToolDataRecordSchema: z.ZodObject<{
@@ -1431,35 +1431,35 @@ export declare const ToolDataRecordSchema: z.ZodObject<{
     deviceType: z.ZodOptional<z.ZodEnum<["desktop", "tablet", "mobile"]>>;
     referrer: z.ZodOptional<z.ZodString>;
 }, "strip", z.ZodTypeAny, {
-    isAnonymous?: boolean;
-    id?: string;
-    data?: Record<string, any>;
-    toolId?: string;
-    submittedBy?: string;
-    submittedAt?: Date;
-    ipAddress?: string;
-    userAgent?: string;
-    sessionId?: string;
-    isValid?: boolean;
-    validationErrors?: string[];
-    completionTime?: number;
-    deviceType?: "mobile" | "desktop" | "tablet";
-    referrer?: string;
+    id: string;
+    data: Record<string, any>;
+    isAnonymous: boolean;
+    toolId: string;
+    submittedAt: Date;
+    isValid: boolean;
+    submittedBy?: string | undefined;
+    ipAddress?: string | undefined;
+    userAgent?: string | undefined;
+    sessionId?: string | undefined;
+    validationErrors?: string[] | undefined;
+    completionTime?: number | undefined;
+    deviceType?: "mobile" | "desktop" | "tablet" | undefined;
+    referrer?: string | undefined;
 }, {
-    isAnonymous?: boolean;
-    id?: string;
-    data?: Record<string, any>;
-    toolId?: string;
-    submittedBy?: string;
-    submittedAt?: Date;
-    ipAddress?: string;
-    userAgent?: string;
-    sessionId?: string;
-    isValid?: boolean;
-    validationErrors?: string[];
-    completionTime?: number;
-    deviceType?: "mobile" | "desktop" | "tablet";
-    referrer?: string;
+    id: string;
+    data: Record<string, any>;
+    toolId: string;
+    submittedAt: Date;
+    isAnonymous?: boolean | undefined;
+    submittedBy?: string | undefined;
+    ipAddress?: string | undefined;
+    userAgent?: string | undefined;
+    sessionId?: string | undefined;
+    isValid?: boolean | undefined;
+    validationErrors?: string[] | undefined;
+    completionTime?: number | undefined;
+    deviceType?: "mobile" | "desktop" | "tablet" | undefined;
+    referrer?: string | undefined;
 }>;
 export type ToolDataRecord = z.infer<typeof ToolDataRecordSchema>;
 export declare const ToolUsageEventSchema: z.ZodObject<{
@@ -1471,21 +1471,21 @@ export declare const ToolUsageEventSchema: z.ZodObject<{
     sessionId: z.ZodString;
     metadata: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodAny>>;
 }, "strip", z.ZodTypeAny, {
-    metadata?: Record<string, any>;
-    id?: string;
-    userId?: string;
-    toolId?: string;
-    sessionId?: string;
-    eventType?: "view" | "start" | "complete" | "abandon" | "share" | "fork";
-    timestamp?: Date;
+    id: string;
+    timestamp: Date;
+    toolId: string;
+    sessionId: string;
+    eventType: "view" | "start" | "share" | "complete" | "abandon" | "fork";
+    metadata?: Record<string, any> | undefined;
+    userId?: string | undefined;
 }, {
-    metadata?: Record<string, any>;
-    id?: string;
-    userId?: string;
-    toolId?: string;
-    sessionId?: string;
-    eventType?: "view" | "start" | "complete" | "abandon" | "share" | "fork";
-    timestamp?: Date;
+    id: string;
+    timestamp: Date;
+    toolId: string;
+    sessionId: string;
+    eventType: "view" | "start" | "share" | "complete" | "abandon" | "fork";
+    metadata?: Record<string, any> | undefined;
+    userId?: string | undefined;
 }>;
 export type ToolUsageEvent = z.infer<typeof ToolUsageEventSchema>;
 export declare const createToolDefaults: (ownerId: string, data: CreateTool) => Omit<Tool, "id" | "createdAt" | "updatedAt">;

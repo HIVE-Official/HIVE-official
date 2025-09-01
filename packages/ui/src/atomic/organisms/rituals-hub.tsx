@@ -148,7 +148,7 @@ export function RitualsHub({
                     : 'bg-hive-surface-elevated'
                 }`}>
                   {status === 'completed' ? (
-                    <CheckCircle className="h-6 w-6 text-white" />
+                    <CheckCircle className="h-6 w-6 text-[var(--hive-text-inverse)]" />
                   ) : (
                     <IconComponent className={`h-6 w-6 ${
                       status === 'active' ? 'text-hive-obsidian' : 'text-hive-text-secondary'

@@ -105,7 +105,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="success">📏 SIZES</Badge>
+            <Badge variant="emerald">📏 SIZES</Badge>
             Spinner Sizes - Loading Context Flexibility
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">

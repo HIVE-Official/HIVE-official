@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { cn } from '../../lib/utils';
 import { Home, Compass, Zap, Calendar, BookOpen, User, Settings, ChevronRight, ChevronDown } from 'lucide-react';
-import { Button } from './button';
+import { Button } from './button-enhanced';
 import { Avatar } from './avatar';
 
 export interface SidebarProps {

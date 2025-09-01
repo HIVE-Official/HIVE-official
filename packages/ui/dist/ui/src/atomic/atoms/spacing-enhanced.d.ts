@@ -1,26 +1,26 @@
 import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
-declare const spacerVariants: (props?: {
-    size?: "default" | "sm" | "md" | "lg" | "xl" | "xs" | "2xl" | "3xl";
-    direction?: "both" | "horizontal" | "vertical";
-} & import("class-variance-authority/types").ClassProp) => string;
-declare const containerVariants: (props?: {
-    size?: "sm" | "md" | "lg" | "xl" | "2xl" | "full";
-    padding?: "default" | "sm" | "lg" | "xl" | "none";
-    center?: boolean;
-} & import("class-variance-authority/types").ClassProp) => string;
-declare const stackVariants: (props?: {
-    direction?: "horizontal" | "vertical";
-    spacing?: "default" | "sm" | "md" | "lg" | "xl" | "none" | "xs" | "2xl" | "3xl";
-    align?: "end" | "center" | "baseline" | "start" | "stretch";
-    justify?: "end" | "center" | "start" | "between" | "around" | "evenly";
-    wrap?: boolean;
-} & import("class-variance-authority/types").ClassProp) => string;
-declare const separatorVariants: (props?: {
-    orientation?: "horizontal" | "vertical";
-    variant?: "default" | "strong" | "muted" | "brand";
-    size?: "default" | "thick" | "thin";
-} & import("class-variance-authority/types").ClassProp) => string;
+declare const spacerVariants: (props?: ({
+    size?: "xs" | "sm" | "default" | "md" | "lg" | "xl" | "2xl" | "3xl" | null | undefined;
+    direction?: "horizontal" | "vertical" | "both" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
+declare const containerVariants: (props?: ({
+    size?: "sm" | "md" | "lg" | "xl" | "full" | "2xl" | null | undefined;
+    padding?: "sm" | "default" | "lg" | "xl" | "none" | null | undefined;
+    center?: boolean | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
+declare const stackVariants: (props?: ({
+    direction?: "horizontal" | "vertical" | null | undefined;
+    spacing?: "xs" | "sm" | "default" | "md" | "lg" | "xl" | "none" | "2xl" | "3xl" | null | undefined;
+    align?: "end" | "baseline" | "center" | "start" | "stretch" | null | undefined;
+    justify?: "end" | "center" | "start" | "between" | "around" | "evenly" | null | undefined;
+    wrap?: boolean | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
+declare const separatorVariants: (props?: ({
+    orientation?: "horizontal" | "vertical" | null | undefined;
+    variant?: "default" | "brand" | "muted" | "strong" | null | undefined;
+    size?: "default" | "thick" | "thin" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
 export interface SpacerProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof spacerVariants> {
 }
 export declare const Spacer: React.ForwardRefExoticComponent<SpacerProps & React.RefAttributes<HTMLDivElement>>;
@@ -30,11 +30,9 @@ export declare const Container: React.ForwardRefExoticComponent<ContainerProps &
 export interface StackProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof stackVariants> {
 }
 export declare const Stack: React.ForwardRefExoticComponent<StackProps & React.RefAttributes<HTMLDivElement>>;
-export interface HStackProps extends Omit<StackProps, 'direction'> {
-}
+export type HStackProps = Omit<StackProps, 'direction'>;
 export declare const HStack: React.ForwardRefExoticComponent<HStackProps & React.RefAttributes<HTMLDivElement>>;
-export interface VStackProps extends Omit<StackProps, 'direction'> {
-}
+export type VStackProps = Omit<StackProps, 'direction'>;
 export declare const VStack: React.ForwardRefExoticComponent<VStackProps & React.RefAttributes<HTMLDivElement>>;
 export interface SeparatorProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof separatorVariants> {
     decorative?: boolean;

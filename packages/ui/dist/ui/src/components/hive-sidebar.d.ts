@@ -1,10 +1,10 @@
 import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
-declare const hiveSidebarVariants: (props?: {
-    variant?: "default" | "minimal" | "premium";
-    size?: "default" | "sm" | "lg" | "xl";
-    position?: "left" | "right";
-} & import("class-variance-authority/types").ClassProp) => string;
+declare const hiveSidebarVariants: (props?: ({
+    variant?: "default" | "minimal" | "premium" | null | undefined;
+    size?: "sm" | "default" | "lg" | "xl" | null | undefined;
+    position?: "left" | "right" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
 export interface SidebarSection {
     id: 'spaces' | 'profile' | 'hivelab' | 'feed';
     title: string;
@@ -58,7 +58,7 @@ export interface HiveSidebarProps extends Omit<React.HTMLAttributes<HTMLDivEleme
 declare const HiveSidebar: React.ForwardRefExoticComponent<HiveSidebarProps & React.RefAttributes<HTMLDivElement>>;
 export declare function useHiveSidebar(initialCollapsed?: boolean, initialSections?: SidebarSection[]): {
     isCollapsed: boolean;
-    activeItemId: string;
+    activeItemId: string | undefined;
     sections: SidebarSection[];
     toggleCollapse: () => void;
     setCollapsed: (collapsed: boolean) => void;

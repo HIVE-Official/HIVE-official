@@ -11,7 +11,7 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
  * - Real-time performance monitoring
  */
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { cn } from '../../lib/utils';
+import { cn } from '../../lib/utils.js';
 // Performance monitoring hook
 export function usePerformanceMonitor(componentName) {
     const renderCount = useRef(0);
@@ -177,7 +177,7 @@ export function DebouncedInput({ value, onChange, delay = 300, placeholder, clas
             }
         };
     }, []);
-    return (_jsx("input", { value: localValue, onChange: (e) => handleChange(e.target.value), placeholder: placeholder, className: cn("w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-amber-500", className) }));
+    return (_jsx("input", { value: localValue, onChange: (e) => handleChange(e.target.value), placeholder: placeholder, className: cn("w-full p-2 border border-[var(--hive-border-default)] rounded-md focus:ring-2 focus:ring-amber-500 focus:border-amber-500", className) }));
 }
 // Memoized component wrapper
 export function memoize(Component, compareProps) {
@@ -233,7 +233,7 @@ export function PerformanceMonitor({ children, onMetrics }) {
         onMetrics?.(metrics);
     }, [metrics, onMetrics]);
     if (process.env.NODE_ENV === 'development') {
-        return (_jsxs(_Fragment, { children: [children, _jsxs("div", { className: "fixed bottom-4 right-4 bg-black text-white text-xs p-2 rounded font-mono", children: [_jsxs("div", { children: ["Renders: ", metrics.renderCount] }), _jsxs("div", { children: ["Avg Time: ", metrics.averageRenderTime.toFixed(2), "ms"] }), _jsxs("div", { children: ["Memory: ", metrics.memoryUsage.toFixed(2), "MB"] }), _jsxs("div", { children: ["Cache Hit: ", metrics.cacheHitRate.toFixed(1), "%"] })] })] }));
+        return (_jsxs(_Fragment, { children: [children, _jsxs("div", { className: "fixed bottom-4 right-4 bg-black text-[var(--hive-text-inverse)] text-xs p-2 rounded font-mono", children: [_jsxs("div", { children: ["Renders: ", metrics.renderCount] }), _jsxs("div", { children: ["Avg Time: ", metrics.averageRenderTime.toFixed(2), "ms"] }), _jsxs("div", { children: ["Memory: ", metrics.memoryUsage.toFixed(2), "MB"] }), _jsxs("div", { children: ["Cache Hit: ", metrics.cacheHitRate.toFixed(1), "%"] })] })] }));
     }
     return _jsx(_Fragment, { children: children });
 }

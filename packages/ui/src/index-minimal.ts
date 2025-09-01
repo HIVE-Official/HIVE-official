@@ -16,62 +16,60 @@ export { CheckEmailInfo } from './components/auth/CheckEmailInfo';
 export { SchoolPick } from './components/auth/school-pick';
 
 // === LOADING COMPONENTS ===
-export { LoadingOrchestrator as PageLoader } from './components/loading/LoadingOrchestrator';
+export { LoadingOrchestrator as PageLoader } from './components/Loading/LoadingOrchestrator';
 
-// === ONBOARDING COMPONENTS (verified working) ===
-export { CreateProfileStep } from './components/onboarding/create-profile-step';
-export { AcademicStep } from './components/onboarding/academic-step';
-export { InterestsSelectionStep } from './components/onboarding/interests-selection-step';
-export { WelcomeRoleStep } from './components/onboarding/welcome-role-step';
-export { AlumniComingSoonStep } from './components/onboarding/alumni-coming-soon-step';
-export { OnboardingCompleteStep } from './components/onboarding/onboarding-complete-step';
+// === ONBOARDING COMPONENTS (temporarily commented - components need to be created) ===
+// export { CreateProfileStep } from './components/onboarding/create-profile-step';
+// export { AcademicStep } from './components/onboarding/academic-step';
+// export { InterestsStep } from './components/onboarding/interests-step';
+// export { WelcomeRoleStep } from './components/onboarding/welcome-role-step';
+// export { AlumniComingSoonStep } from './components/onboarding/alumni-coming-soon-step';
+// export { OnboardingCompleteStep } from './components/onboarding/onboarding-complete-step';
 
-// === PROFILE COMPONENTS ===
-export { BentoProfileDashboard } from './components/profile/bento-profile-dashboard';
+// === PROFILE COMPONENTS (temporarily commented - components need to be created) ===
+// export { BentoProfileDashboard } from './components/profile/bento-profile-dashboard';
+// export { EnhancedProfileHeader } from './components/profile/enhanced-profile-header';
+// export { EnhancedProfileNavigation, ProfileSectionHeader } from './components/profile/enhanced-profile-navigation';
+// export { EnhancedProfileSettings } from './components/profile/enhanced-profile-settings';
+// export { CampusActivityFeed } from './components/profile/campus-activity-feed';
+// export { EnhancedUserIdentity } from './components/profile/enhanced-user-identity';
+// export { WorkingProfileHeader } from './components/profile/working-profile-header';
+// export { 
+//   MySpacesCard, 
+//   MyToolsCard, 
+//   UpcomingEventsCard, 
+//   CampusConnectionsCard, 
+//   ProfileStatsCard, 
+//   QuickActionsCard 
+// } from './components/profile/profile-dashboard-cards';
 
-// === ENHANCED PROFILE COMPONENTS ===
-export { EnhancedProfileHeader } from './components/profile/enhanced-profile-header';
-export { EnhancedProfileNavigation, ProfileSectionHeader } from './components/profile/enhanced-profile-navigation';
-export { EnhancedProfileSettings } from './components/profile/enhanced-profile-settings';
-export { CampusActivityFeed } from './components/profile/campus-activity-feed';
-export { EnhancedUserIdentity } from './components/profile/enhanced-user-identity';
-export { WorkingProfileHeader } from './components/profile/working-profile-header';
-export { 
-  MySpacesCard, 
-  MyToolsCard, 
-  UpcomingEventsCard, 
-  CampusConnectionsCard, 
-  ProfileStatsCard, 
-  QuickActionsCard 
-} from './components/profile/profile-dashboard-cards';
+// === PROFILE LAYOUT SYSTEM (temporarily commented - components need to be created) ===
+// export { 
+//   ProfileLayout,
+//   ProfileContent, 
+//   ProfileActions,
+//   ProfileGrid,
+//   ProfileSection,
+//   ResponsiveProfileWrapper,
+//   ProfileIdentityLayout,
+//   ProfileStatsLayout
+// } from './components/profile/profile-layout-system';
 
-// === PROFILE LAYOUT SYSTEM ===
-export { 
-  ProfileLayout,
-  ProfileContent, 
-  ProfileActions,
-  ProfileGrid,
-  ProfileSection,
-  ResponsiveProfileWrapper,
-  ProfileIdentityLayout,
-  ProfileStatsLayout
-} from './components/profile/profile-layout-system';
+// === CROSS-SLICE INTEGRATION (temporarily commented - components need to be created) ===
+// export { 
+//   CrossSliceIntegration,
+//   SpacesIntegration,
+//   ToolsIntegration,
+//   EventsIntegration,
+//   ActivityIntegration,
+//   QuickActions
+// } from './components/profile/cross-slice-integration';
 
-// === CROSS-SLICE INTEGRATION ===
-export { 
-  CrossSliceIntegration,
-  SpacesIntegration,
-  ToolsIntegration,
-  EventsIntegration,
-  ActivityIntegration,
-  QuickActions
-} from './components/profile/cross-slice-integration';
-
-// === SPACES COMPONENTS ===
-export { SpaceRequestForm } from './components/spaces/space-request-form';
+// === SPACES COMPONENTS (temporarily commented - components need to be created) ===
+// export { SpaceRequestForm } from './components/spaces/space-request-form';
 
 // === BASIC UI COMPONENTS (from existing system) ===
-export { Button } from './components/ui/button';
+export { ButtonEnhanced as Button } from './atomic/atoms/button-enhanced';
 export { HiveInput as Input } from './components/hive-input';
 export { HiveCard as Card, HiveCard } from './components/hive-card';
 export { HiveBadge as Badge, HiveBadge } from './components/hive-badge';

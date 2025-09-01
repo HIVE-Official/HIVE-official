@@ -4,9 +4,9 @@
  */
 import { type UserProfileDocument, type NotificationDocument, type SpaceMembershipDocument, type GhostModeDocument, type ToolDocument } from '../lib/firebase/profile-service';
 export declare function useUserProfile(uid: string): {
-    profile: UserProfileDocument;
+    profile: UserProfileDocument | null;
     loading: boolean;
-    error: string;
+    error: string | null;
     updateProfile: (updates: Partial<UserProfileDocument>) => Promise<void>;
     uploadPhoto: (file: File) => Promise<string>;
     clearError: () => void;
@@ -15,7 +15,7 @@ export declare function useNotifications(uid: string): {
     notifications: NotificationDocument[];
     unreadCount: number;
     loading: boolean;
-    error: string;
+    error: string | null;
     markAsRead: (notificationId: string) => Promise<void>;
     markAllAsRead: () => Promise<void>;
     clearError: () => void;
@@ -23,13 +23,13 @@ export declare function useNotifications(uid: string): {
 export declare function useUserSpaces(uid: string): {
     spaces: SpaceMembershipDocument[];
     loading: boolean;
-    error: string;
+    error: string | null;
     clearError: () => void;
 };
 export declare function useGhostMode(uid: string): {
-    ghostMode: GhostModeDocument;
+    ghostMode: GhostModeDocument | null;
     loading: boolean;
-    error: string;
+    error: string | null;
     updateGhostMode: (settings: Partial<GhostModeDocument>) => Promise<void>;
     toggleGhostMode: (enabled: boolean) => Promise<void>;
     clearError: () => void;
@@ -37,7 +37,7 @@ export declare function useGhostMode(uid: string): {
 export declare function useUserTools(uid: string): {
     tools: ToolDocument[];
     loading: boolean;
-    error: string;
+    error: string | null;
     clearError: () => void;
 };
 export declare function useProfileAnalytics(uid: string): {
@@ -47,14 +47,14 @@ export declare function useProfileAnalytics(uid: string): {
     trackLayoutChange: (layoutData: any) => void;
 };
 export declare function useProfileData(uid: string): {
-    profile: UserProfileDocument;
+    profile: UserProfileDocument | null;
     notifications: NotificationDocument[];
     unreadNotifications: number;
     spaces: SpaceMembershipDocument[];
-    ghostMode: GhostModeDocument;
+    ghostMode: GhostModeDocument | null;
     tools: ToolDocument[];
     loading: boolean;
-    error: string;
+    error: string | null;
     actions: {
         updateProfile: (updates: Partial<UserProfileDocument>) => Promise<void>;
         uploadPhoto: (file: File) => Promise<string>;

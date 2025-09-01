@@ -496,16 +496,6 @@ export const HiveAdminNotificationManagement: React.FC<HiveAdminNotificationMana
   const [statusFilter, setStatusFilter] = useState<NotificationStatus | 'all'>('all');
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Feature flag check
-  if (!enableFeatureFlag) {
-    return (
-      <div className="text-center py-8">
-        <Bell className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-        <p className="text-gray-400">Notification management system is not available</p>
-      </div>
-    );
-  }
-
   const loadNotifications = useCallback(async () => {
     if (!admin) return;
 
@@ -564,6 +554,16 @@ export const HiveAdminNotificationManagement: React.FC<HiveAdminNotificationMana
   };
 
   const stats = getNotificationStats();
+
+  // Feature flag check - moved after hooks
+  if (!enableFeatureFlag) {
+    return (
+      <div className="text-center py-8">
+        <Bell className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+        <p className="text-gray-400">Notification management system is not available</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

@@ -9,8 +9,8 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from 'react';
 import { motion } from 'framer-motion';
 import { cva } from 'class-variance-authority';
-import { cn } from '../../lib/utils';
-import { liquidMetal, motionDurations } from '../../motion/hive-motion-system';
+import { cn } from '../../lib/utils.js';
+import { liquidMetal, motionDurations } from '../../motion/hive-motion-system.js';
 // ============================================================================
 // UNIFIED CARD SYSTEM ARCHITECTURE
 // ============================================================================
@@ -25,18 +25,18 @@ const hiveCardBaseVariants = cva("relative overflow-hidden transition-all durati
             default: "bg-[var(--hive-background-secondary)] border-[var(--hive-border-subtle)] hover:border-[var(--hive-border-primary)]",
             elevated: "bg-[var(--hive-background-tertiary)] border-[var(--hive-border-primary)] hover:border-[var(--hive-border-secondary)]",
             minimal: "bg-transparent border-[var(--hive-border-subtle)] hover:border-[var(--hive-border-primary)]",
-            premium: "bg-gradient-to-br from-[var(--hive-overlay-gold-subtle)] to-[var(--hive-background-secondary)] border-[var(--hive-border-gold)] hover:border-[var(--hive-border-gold-strong)]",
+            premium: "bg-gradient-to-br from-[var(--hive-overlay-gold-subtle)] to-[var(--hive-background-secondary)] border-[var(--hive-border-[var(--hive-brand-secondary)])] hover:border-[var(--hive-border-[var(--hive-brand-secondary)]-strong)]",
             // Status variants
             active: "bg-[var(--hive-background-secondary)] border-[var(--hive-status-success)] hover:border-[var(--hive-status-success)]",
             warning: "bg-[var(--hive-background-secondary)] border-[var(--hive-status-warning)] hover:border-[var(--hive-status-warning)]",
             error: "bg-[var(--hive-background-secondary)] border-[var(--hive-status-error)] hover:border-[var(--hive-status-error)]",
             // Interactive variants
-            interactive: "bg-[var(--hive-background-secondary)] border-[var(--hive-border-subtle)] hover:border-[var(--hive-border-gold)] hover:bg-[var(--hive-overlay-gold-subtle)] cursor-pointer",
-            selected: "bg-[var(--hive-overlay-gold-subtle)] border-[var(--hive-border-gold)] shadow-[var(--hive-shadow-gold-glow)]",
+            interactive: "bg-[var(--hive-background-secondary)] border-[var(--hive-border-subtle)] hover:border-[var(--hive-border-[var(--hive-brand-secondary)])] hover:bg-[var(--hive-overlay-gold-subtle)] cursor-pointer",
+            selected: "bg-[var(--hive-overlay-gold-subtle)] border-[var(--hive-border-[var(--hive-brand-secondary)])] shadow-[var(--hive-shadow-gold-glow)]",
             // Content-specific variants
             academic: "bg-[var(--hive-background-secondary)] border-[var(--hive-border-subtle)] hover:border-[var(--hive-status-info)]",
             social: "bg-[var(--hive-background-secondary)] border-[var(--hive-border-subtle)] hover:border-[var(--hive-status-success)]",
-            builder: "bg-gradient-to-br from-[var(--hive-overlay-gold-subtle)] to-[var(--hive-background-secondary)] border-[var(--hive-border-gold)]",
+            builder: "bg-gradient-to-br from-[var(--hive-overlay-gold-subtle)] to-[var(--hive-background-secondary)] border-[var(--hive-border-[var(--hive-brand-secondary)])]",
         },
         // Size variants
         size: {
@@ -60,8 +60,8 @@ const hiveCardBaseVariants = cva("relative overflow-hidden transition-all durati
             subtle: "border border-[var(--hive-border-subtle)]",
             default: "border border-[var(--hive-border-primary)]",
             strong: "border-2 border-[var(--hive-border-primary)]",
-            gold: "border border-[var(--hive-border-gold)]",
-            "gold-strong": "border-2 border-[var(--hive-border-gold-strong)]",
+            gold: "border border-[var(--hive-border-[var(--hive-brand-secondary)])]",
+            "gold-strong": "border-2 border-[var(--hive-border-[var(--hive-brand-secondary)]-strong)]",
         },
         // Motion variants
         motionType: {
@@ -192,7 +192,7 @@ export const createCardVariant = (baseVariant, entity, interactive, selected) =>
  * Utility to generate consistent card styles
  */
 export const createCardStyles = ({ variant, size, shadow, border, motionType, glass, goldAccent, glowEffect, className, }) => {
-    return cn(hiveCardBaseVariants({ variant, size, shadow, border, motionType, glass }), goldAccent && "ring-1 ring-[var(--hive-border-gold)]/30", glowEffect && "shadow-[var(--hive-shadow-gold-glow)]", className);
+    return cn(hiveCardBaseVariants({ variant, size, shadow, border, motionType, glass }), goldAccent && "ring-1 ring-[var(--hive-border-[var(--hive-brand-secondary)])]/30", glowEffect && "shadow-[var(--hive-shadow-gold-glow)]", className);
 };
 // ============================================================================
 // UNIFIED CARD COMPONENTS

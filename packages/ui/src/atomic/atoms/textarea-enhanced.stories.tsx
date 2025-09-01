@@ -104,7 +104,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="success">✅ VARIANTS</Badge>
+            <Badge variant="emerald">✅ VARIANTS</Badge>
             Textarea Variants - Perfect Semantic Token Usage
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -132,7 +132,7 @@ export const CompleteShowcase: Story = {
                 placeholder="Success textarea for validated content"
                 label="Success"
                 success="Content validated successfully"
-                variant="success"
+                variant="emerald"
                 size="sm"
               />
             </div>
@@ -141,7 +141,7 @@ export const CompleteShowcase: Story = {
                 placeholder="Warning textarea requiring attention"
                 label="Warning"
                 helperText="Content needs review or attention"
-                variant="warning"
+                variant="gold"
                 size="sm"
               />
               <Textarea
@@ -274,7 +274,7 @@ export const CompleteShowcase: Story = {
                   helperText="Input blocked after reaching limit"
                   showCharCount
                   maxLength={100}
-                  variant="warning"
+                  variant="gold"
                 />
               </div>
             </div>
@@ -614,7 +614,7 @@ class BinarySearchTree:
                 placeholder="I'm struggling with the insert method for my BST implementation. The logic for finding the correct position seems off, and I'm getting stack overflow errors..."
                 label="Specific Questions/Issues"
                 helperText="What specific help do you need with this code?"
-                variant="warning"
+                variant="gold"
                 size="lg"
                 autoResize
                 showCharCount

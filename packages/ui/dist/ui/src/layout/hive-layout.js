@@ -1,9 +1,9 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from 'react';
 import { motion } from 'framer-motion';
-import { cn } from '../lib/utils';
-import { darkLuxury, luxuryShadows, luxuryRadius, luxurySpacing } from '../theme/dark-luxury';
-import { HiveMagneticHover, HiveCascade } from '../components/hive-motion-wrapper';
+import { cn } from '../lib/utils.js';
+import { darkLuxury, luxuryShadows, luxuryRadius, luxurySpacing } from '../theme/dark-luxury.js';
+import { HiveMagneticHover, HiveCascade } from '../components/hive-motion-wrapper.js';
 // Main Layout Container - Refined Density
 export const HiveLayout = ({ children, className }) => {
     return (_jsx("div", { className: cn('min-h-screen', className), style: {
@@ -40,7 +40,7 @@ export const HiveBentoCard = ({ children, className, span = 1, aspect = 'auto', 
         ...(glow && { boxShadow: luxuryShadows.goldGlow }),
     };
     const card = (_jsx("div", { className: cn('p-6 transition-all duration-300', spanClass, aspectClasses[aspect], className), style: cardStyles, children: children }));
-    return interactive ? (_jsx(HiveMagneticHover, { intensity: "medium", children: card })) : (card);
+    return interactive ? (_jsx(HiveMagneticHover, { children: card })) : (card);
 };
 export const HiveSidebarLayout = ({ children, sidebar, className, sidebarWidth = '240px', collapsible = false, }) => {
     const [collapsed, setCollapsed] = React.useState(false);

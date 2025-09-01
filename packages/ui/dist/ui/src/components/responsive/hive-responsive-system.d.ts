@@ -90,7 +90,7 @@ interface ResponsiveShowProps {
     children: React.ReactNode;
     className?: string;
 }
-export declare function ResponsiveShow({ on, above, below, children, className }: ResponsiveShowProps): import("react/jsx-runtime").JSX.Element;
+export declare function ResponsiveShow({ on, above, below, children, className }: ResponsiveShowProps): import("react/jsx-runtime").JSX.Element | null;
 /**
  * Responsive container with breakpoint-specific styling
  */
@@ -129,7 +129,7 @@ interface MobileBottomTabsProps {
     onTabClick?: (tabId: string) => void;
     className?: string;
 }
-export declare function MobileBottomTabs({ tabs, onTabClick, className }: MobileBottomTabsProps): import("react/jsx-runtime").JSX.Element;
+export declare function MobileBottomTabs({ tabs, onTabClick, className }: MobileBottomTabsProps): import("react/jsx-runtime").JSX.Element | null;
 /**
  * Hook for responsive values
  */

@@ -1,6 +1,6 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { CalendarCard } from './calendar-card';
+import { CalendarCard } from './calendar-card.js';
 const mockEvents = [
     {
         id: '1',

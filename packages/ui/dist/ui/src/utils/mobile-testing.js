@@ -4,7 +4,7 @@
  * Comprehensive testing tools for mobile experience validation
  */
 import { useState } from 'react';
-import { mobilePerformanceManager } from './mobile-performance';
+import { mobilePerformanceManager } from './mobile-performance.js';
 // Common mobile device profiles for testing
 export const DEVICE_PROFILES = {
     'iPhone SE': {
@@ -203,7 +203,8 @@ export class MobileTester {
             result.passed = result.errors.length === 0;
         }
         catch (error) {
-            result.errors.push(`Scenario execution failed: ${error.message}`);
+            const errorMessage = error instanceof Error ? error.message : String(error);
+            result.errors.push(`Scenario execution failed: ${errorMessage}`);
             result.passed = false;
         }
         result.endTime = performance.now();
@@ -249,7 +250,7 @@ export class MobileTester {
         }
         catch (error) {
             stepResult.passed = false;
-            stepResult.error = error.message;
+            stepResult.error = error instanceof Error ? error.message : String(error);
         }
         stepResult.endTime = performance.now();
         stepResult.duration = stepResult.endTime - stepResult.startTime;
@@ -309,8 +310,8 @@ export class MobileTester {
         }
         // Simulate swipe gesture
         const rect = element.getBoundingClientRect();
-        let startX = rect.left + rect.width / 2;
-        let startY = rect.top + rect.height / 2;
+        const startX = rect.left + rect.width / 2;
+        const startY = rect.top + rect.height / 2;
         let endX = startX;
         let endY = startY;
         switch (direction) {

@@ -11,7 +11,37 @@ export interface CohortSpaceConfig {
 /**
  * Generate cohort space identifiers and metadata
  */
-export declare function generateCohortSpaces(config: CohortSpaceConfig): {
+export declare function generateCohortSpaces(config: CohortSpaceConfig): ({
+    id: string;
+    name: string;
+    description: string;
+    type: "hive_exclusive";
+    tags: {
+        type: "hive_exclusive";
+        sub_type: string;
+    }[];
+    cohortData: {
+        major: string;
+        graduationYear: null;
+        cohortType: string;
+        university: string;
+    };
+} | {
+    id: string;
+    name: string;
+    description: string;
+    type: "hive_exclusive";
+    tags: {
+        type: "hive_exclusive";
+        sub_type: string;
+    }[];
+    cohortData: {
+        major: null;
+        graduationYear: number;
+        cohortType: string;
+        university: string;
+    };
+} | {
     id: string;
     name: string;
     description: string;
@@ -26,7 +56,7 @@ export declare function generateCohortSpaces(config: CohortSpaceConfig): {
         cohortType: string;
         university: string;
     };
-}[];
+})[];
 /**
  * Create a major abbreviation from the full major name
  */

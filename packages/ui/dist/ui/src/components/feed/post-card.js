@@ -2,14 +2,14 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useState } from "react";
 import { formatDistanceToNow } from "date-fns";
-import { Card, CardContent } from "../../atomic/molecules/card";
-import { Button } from "../../atomic/atoms/button-enhanced";
-import { Avatar, AvatarFallback, AvatarImage } from "../../atomic/atoms/avatar";
-import { Badge } from "../../atomic/atoms/badge";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger, } from "../ui/dropdown-menu";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, } from "../ui/alert-dialog";
+import { Card, CardContent } from "../../atomic/molecules/card.js";
+import { Button } from "../../atomic/atoms/button-enhanced.js";
+import { Avatar, AvatarFallback, AvatarImage } from "../../atomic/atoms/avatar.js";
+import { Badge } from "../../atomic/atoms/badge.js";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger, } from "../ui/dropdown-menu.js";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, } from "../ui/alert-dialog.js";
 import { Heart, MoreHorizontal, Edit3, Trash2, Pin, Flag, Image as ImageIcon, BarChart3, Calendar, Wrench, Loader2, } from "lucide-react";
-import { cn } from "../../lib/utils";
+import { cn } from "../../lib/utils.js";
 const POST_TYPE_ICONS = {
     text: null,
     image: ImageIcon,
@@ -99,7 +99,7 @@ export const PostCard = ({ post, currentUser, onReact, onEdit, onDelete, onPin, 
                                                         .split(" ")
                                                         .map((n) => n[0])
                                                         .join("")
-                                                        .toUpperCase() })] }), _jsxs("div", { className: "flex-1 min-w-0", children: [_jsxs("div", { className: "flex items-center gap-2 flex-wrap", children: [_jsx("span", { className: "font-semibold text-sm", children: post.author.fullName }), _jsxs("span", { className: "text-muted-foreground text-sm", children: ["@", post.author.handle] }), post.author.role && post.author.role !== "member" && (_jsx(Badge, { variant: "secondary", className: "text-xs capitalize", children: post.author.role })), post.type !== "text" && (_jsxs(Badge, { variant: "outline", className: cn("text-xs", POST_TYPE_COLORS[post.type] === "blue" &&
+                                                        .toUpperCase() })] }), _jsxs("div", { className: "flex-1 min-w-0", children: [_jsxs("div", { className: "flex items-center gap-2 flex-wrap", children: [_jsx("span", { className: "font-semibold text-sm", children: post.author.fullName }), _jsxs("span", { className: "text-muted-foreground text-sm", children: ["@", post.author.handle] }), post.author.role && post.author.role !== "member" && (_jsx(Badge, { variant: "secondary", className: "text-xs capitalize", children: post.author.role })), post.type !== "text" && (_jsxs(Badge, { variant: "secondary", className: cn("text-xs", POST_TYPE_COLORS[post.type] === "blue" &&
                                                                 "border-blue-200 text-blue-700", POST_TYPE_COLORS[post.type] === "green" &&
                                                                 "border-green-200 text-green-700", POST_TYPE_COLORS[post.type] === "purple" &&
                                                                 "border-purple-200 text-purple-700", POST_TYPE_COLORS[post.type] === "orange" &&

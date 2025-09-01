@@ -6,6 +6,6 @@ interface CommandPaletteProps {
     isOpen: boolean;
     onClose: () => void;
 }
-export declare function CommandPalette({ isOpen, onClose }: CommandPaletteProps): import("react/jsx-runtime").JSX.Element;
+export declare function CommandPalette({ isOpen, onClose }: CommandPaletteProps): import("react/jsx-runtime").JSX.Element | null;
 export {};
 //# sourceMappingURL=command-palette.d.ts.map

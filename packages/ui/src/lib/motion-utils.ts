@@ -1,7 +1,7 @@
 // Unified HIVE Motion System Utilities
 // Consolidates all motion patterns into a single, comprehensive system
 
-import { Variants } from 'framer-motion';
+import type { Variants } from 'framer-motion';
 
 // Utility to separate conflicting props for Framer Motion components
 export function separateMotionProps<T extends Record<string, any>>(props: T) {

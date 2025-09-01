@@ -2,9 +2,9 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Button } from '../button';
+import { Button } from '../../atomic/atoms/button-enhanced.js';
 import { Users, CheckCircle, AlertCircle, ArrowLeft } from 'lucide-react';
-import { hiveVariants } from '../../lib/motion';
+import { hiveVariants } from '../../lib/motion.js';
 // Mock pre-seeded spaces for UB faculty
 const UB_FACULTY_SPACES = [
     {
@@ -63,7 +63,7 @@ export const FacultyVerificationStep = ({ onBack, onVerificationComplete, school
             case 'success':
                 return (_jsxs(motion.div, { className: "text-center space-y-4", initial: { opacity: 0, scale: 0.9 }, animate: { opacity: 1, scale: 1 }, children: [_jsx("div", { className: "w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto", children: _jsx(CheckCircle, { className: "w-8 h-8 text-accent" }) }), _jsxs("div", { children: [_jsx("h3", { className: "text-lg font-display font-medium text-foreground mb-2", children: "Verification Successful!" }), _jsx("p", { className: "text-muted font-body", children: "Welcome to the faculty community. Setting up your profile..." })] })] }));
             case 'failed':
-                return (_jsxs(motion.div, { className: "text-center space-y-4", initial: { opacity: 0, scale: 0.9 }, animate: { opacity: 1, scale: 1 }, children: [_jsx("div", { className: "w-16 h-16 bg-surface-02 rounded-full flex items-center justify-center mx-auto", children: _jsx(AlertCircle, { className: "w-8 h-8 text-muted" }) }), _jsxs("div", { children: [_jsx("h3", { className: "text-lg font-display font-medium text-foreground mb-2", children: "Verification Failed" }), _jsx("p", { className: "text-muted font-body mb-4", children: "We couldn't verify your faculty status with the provided email. Please contact support if you believe this is an error." }), _jsxs(Button, { variant: "outline", onClick: onBack, children: [_jsx(ArrowLeft, { className: "w-4 h-4 mr-2" }), "Go Back"] })] })] }));
+                return (_jsxs(motion.div, { className: "text-center space-y-4", initial: { opacity: 0, scale: 0.9 }, animate: { opacity: 1, scale: 1 }, children: [_jsx("div", { className: "w-16 h-16 bg-surface-02 rounded-full flex items-center justify-center mx-auto", children: _jsx(AlertCircle, { className: "w-8 h-8 text-muted" }) }), _jsxs("div", { children: [_jsx("h3", { className: "text-lg font-display font-medium text-foreground mb-2", children: "Verification Failed" }), _jsx("p", { className: "text-muted font-body mb-4", children: "We couldn't verify your faculty status with the provided email. Please contact support if you believe this is an error." }), _jsxs(Button, { variant: "secondary", onClick: onBack, children: [_jsx(ArrowLeft, { className: "w-4 h-4 mr-2" }), "Go Back"] })] })] }));
             default:
                 return null;
         }
@@ -76,6 +76,6 @@ export const FacultyVerificationStep = ({ onBack, onVerificationComplete, school
                                 return (_jsx(motion.button, { onClick: () => handleSpaceSelect(space.id), className: `w-full p-4 rounded-lg border-2 transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] text-left ${isSelected
                                         ? 'border-accent bg-accent/10'
                                         : 'border-border bg-surface-01 hover:border-accent/30 hover:bg-surface-02'}`, variants: hiveVariants.item, whileHover: { scale: 1.01 }, whileTap: { scale: 0.99 }, transition: { delay: index * 0.1 }, children: _jsxs("div", { className: "flex items-center justify-between", children: [_jsxs("div", { children: [_jsx("h3", { className: `font-medium font-body mb-1 ${isSelected ? 'text-accent' : 'text-foreground'}`, children: space.name }), _jsx("p", { className: "text-sm text-muted font-body", children: space.description })] }), _jsx("div", { className: "text-right", children: _jsxs("p", { className: "text-xs text-muted", children: [space.memberCount, " members"] }) })] }) }, space.id));
-                            }) }), _jsxs(motion.div, { className: "flex gap-3 pt-4", variants: hiveVariants.item, initial: "hidden", animate: "visible", transition: { delay: 0.4 }, children: [_jsxs(Button, { variant: "outline", onClick: onBack, className: "flex-1", children: [_jsx(ArrowLeft, { className: "w-4 h-4 mr-2" }), "Back"] }), _jsx(Button, { onClick: handleVerifyAccess, disabled: !selectedSpace || isVerifying, variant: "ritual", className: "flex-2", children: isVerifying ? 'Verifying...' : 'Verify Access' })] }), _jsx("div", { className: "text-center pt-4 border-t border-border", children: _jsxs("p", { className: "text-xs text-muted font-body", children: ["Verification is based on your ", userEmail, " email address"] }) })] }) })] }));
+                            }) }), _jsxs(motion.div, { className: "flex gap-3 pt-4", variants: hiveVariants.item, initial: "hidden", animate: "visible", transition: { delay: 0.4 }, children: [_jsxs(Button, { variant: "secondary", onClick: onBack, className: "flex-1", children: [_jsx(ArrowLeft, { className: "w-4 h-4 mr-2" }), "Back"] }), _jsx(Button, { onClick: handleVerifyAccess, disabled: !selectedSpace || isVerifying, variant: "primary", className: "flex-2", children: isVerifying ? 'Verifying...' : 'Verify Access' })] }), _jsx("div", { className: "text-center pt-4 border-t border-border", children: _jsxs("p", { className: "text-xs text-muted font-body", children: ["Verification is based on your ", userEmail, " email address"] }) })] }) })] }));
 };
 //# sourceMappingURL=faculty-verification-step.js.map

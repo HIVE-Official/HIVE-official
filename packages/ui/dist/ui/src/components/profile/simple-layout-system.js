@@ -5,7 +5,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
  * Built for University at Buffalo students
  */
 import * as React from 'react';
-import { cn } from '../../lib/utils';
+import { cn } from '../../lib/utils.js';
 // === HIVE PROFILE LAYOUT ===
 export const SimpleProfileLayout = React.forwardRef(({ variant = 'header', children, className }, ref) => {
     const variantClasses = {

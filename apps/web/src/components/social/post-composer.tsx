@@ -300,7 +300,7 @@ export function PostComposer({
             )}
           </div>
           <div className="flex-1">
-            <p className="font-medium text-white">{user.name}</p>
+            <p className="font-medium text-[var(--hive-text-inverse)]">{user.name}</p>
             <div className="flex items-center space-x-2 text-sm text-hive-text-mutedLight">
               {getVisibilityIcon()}
               <span>{getVisibilityLabel()}</span>
@@ -324,7 +324,7 @@ export function PostComposer({
             value={content}
             onChange={(e) => handleContentChange(e.target.value)}
             placeholder={placeholder}
-            className={`min-h-[80px] resize-none border-none bg-transparent text-white placeholder:text-hive-text-mutedLight focus:outline-none ${
+            className={`min-h-[80px] resize-none border-none bg-transparent text-[var(--hive-text-inverse)] placeholder:text-hive-text-mutedLight focus:outline-none ${
               isOverLimit ? 'text-red-400' : ''
             }`}
             maxLength={maxLength + 50} // Allow slightly over for better UX
@@ -349,7 +349,7 @@ export function PostComposer({
                 value={poll.question}
                 onChange={(e) => setPoll(prev => ({ ...prev, question: e.target.value }))}
                 placeholder="Ask a question..."
-                className="w-full bg-transparent text-white placeholder:text-hive-text-mutedLight border-none outline-none"
+                className="w-full bg-transparent text-[var(--hive-text-inverse)] placeholder:text-hive-text-mutedLight border-none outline-none"
               />
               
               <div className="space-y-2">
@@ -361,7 +361,7 @@ export function PostComposer({
                       value={option}
                       onChange={(e) => updatePollOption(index, e.target.value)}
                       placeholder={`Option ${index + 1}`}
-                      className="flex-1 bg-transparent text-white placeholder:text-hive-text-mutedLight border-none outline-none"
+                      className="flex-1 bg-transparent text-[var(--hive-text-inverse)] placeholder:text-hive-text-mutedLight border-none outline-none"
                     />
                     {poll.options.length > 2 && (
                       <Button
@@ -408,7 +408,7 @@ export function PostComposer({
                 value={event.title}
                 onChange={(e) => setEvent(prev => ({ ...prev, title: e.target.value }))}
                 placeholder="Event title"
-                className="w-full bg-transparent text-white placeholder:text-hive-text-mutedLight border-none outline-none font-medium"
+                className="w-full bg-transparent text-[var(--hive-text-inverse)] placeholder:text-hive-text-mutedLight border-none outline-none font-medium"
               />
               
               <textarea
@@ -416,7 +416,7 @@ export function PostComposer({
                 onChange={(e) => setEvent(prev => ({ ...prev, description: e.target.value }))}
                 placeholder="Event description"
                 rows={2}
-                className="w-full bg-transparent text-white placeholder:text-hive-text-mutedLight border-none outline-none resize-none"
+                className="w-full bg-transparent text-[var(--hive-text-inverse)] placeholder:text-hive-text-mutedLight border-none outline-none resize-none"
               />
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -426,7 +426,7 @@ export function PostComposer({
                     type="datetime-local"
                     value={event.startTime}
                     onChange={(e) => setEvent(prev => ({ ...prev, startTime: e.target.value }))}
-                    className="w-full mt-1 bg-transparent text-white border border-hive-border-default rounded px-2 py-1"
+                    className="w-full mt-1 bg-transparent text-[var(--hive-text-inverse)] border border-hive-border-default rounded px-2 py-1"
                   />
                 </div>
                 <div>
@@ -435,7 +435,7 @@ export function PostComposer({
                     type="datetime-local"
                     value={event.endTime || ''}
                     onChange={(e) => setEvent(prev => ({ ...prev, endTime: e.target.value }))}
-                    className="w-full mt-1 bg-transparent text-white border border-hive-border-default rounded px-2 py-1"
+                    className="w-full mt-1 bg-transparent text-[var(--hive-text-inverse)] border border-hive-border-default rounded px-2 py-1"
                   />
                 </div>
               </div>
@@ -451,7 +451,7 @@ export function PostComposer({
                     {attachment.type === 'image' ? <Image className="h-4 w-4" alt="" /> :
                      attachment.type === 'video' ? <Image className="h-4 w-4" alt="" /> :
                      <Paperclip className="h-4 w-4" />}
-                    <span className="text-sm text-white">{attachment.name}</span>
+                    <span className="text-sm text-[var(--hive-text-inverse)]">{attachment.name}</span>
                     {attachment.size && (
                       <span className="text-xs text-hive-text-mutedLight">
                         ({(attachment.size / 1024).toFixed(1)}KB)
@@ -553,7 +553,7 @@ export function PostComposer({
         {showAdvanced && (
           <div className="pt-3 border-t border-hive-border-default space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-sm text-white">Visibility</span>
+              <span className="text-sm text-[var(--hive-text-inverse)]">Visibility</span>
               <div className="flex items-center space-x-2">
                 {['public', 'space', 'private'].map(vis => (
                   <Button

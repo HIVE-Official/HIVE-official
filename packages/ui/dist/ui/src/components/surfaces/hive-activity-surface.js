@@ -3,8 +3,8 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
 import React, { useState, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cva } from 'class-variance-authority';
-import { cn } from '../../lib/utils';
-import { motionDurations } from '../../motion/hive-motion-system';
+import { cn } from '../../lib/utils.js';
+import { motionDurations } from '../../motion/hive-motion-system.js';
 import { Activity, MessageSquare, Calendar, Users, Wrench, UserPlus, UserMinus, CheckCircle, Settings, Clock, Heart, Reply, MapPin, Star, Crown, Pin, ArrowRight, RefreshCw } from 'lucide-react';
 // HIVE Activity Surface - Unified Space Activity Feed
 // Real-time activity stream showing all space interactions

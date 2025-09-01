@@ -1,4 +1,4 @@
-import React from 'react';
+import type React from 'react';
 interface NavigationContextType {
     currentPath: string;
     isActive: (path: string, matchPaths?: string[]) => boolean;
@@ -30,7 +30,7 @@ export declare function useKeyboardNavigation(): {
 };
 export declare function useRouteTransitions(): {
     isNavigating: boolean;
-    navigationError: string;
+    navigationError: string | null;
     navigate: (path: string) => Promise<void>;
 };
 export {};

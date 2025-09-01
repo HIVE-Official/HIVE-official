@@ -18,7 +18,7 @@ export interface OnboardingData {
 export declare function useOnboardingFlow(): {
     data: OnboardingData;
     isLoading: boolean;
-    error: string;
+    error: string | null;
     updateData: (updates: Partial<OnboardingData>) => void;
     submitOnboarding: () => Promise<void>;
     progress: {

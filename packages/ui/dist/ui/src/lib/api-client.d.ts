@@ -2,7 +2,7 @@
  * HIVE API Client
  * Centralized API client for connecting frontend to backend services
  */
-import { Tool, CreateTool } from '@hive/core';
+import type { Tool, CreateTool } from '@hive/core';
 interface ApiResponse<T> {
     success?: boolean;
     error?: string;
@@ -302,10 +302,10 @@ export declare const apiUtils: {
         settings: {
             autoLaunch: boolean;
             requirePermission: boolean;
-            maxConcurrentUsers: any;
-            customConfig: Record<string, any>;
+            maxConcurrentUsers: undefined;
+            customConfig: Record<string, any> | undefined;
         };
-        integrations: any[];
+        integrations: never[];
         createdBy: string;
         createdAt: string;
         updatedAt: string;
@@ -318,7 +318,7 @@ export declare const apiUtils: {
             id: string;
             name: string;
             description: string;
-            elements: any[];
+            elements: never[];
             config: {};
             metadata: {};
             status: "published";
@@ -348,7 +348,7 @@ export declare const apiUtils: {
             verified: boolean;
         };
         preview: {
-            images: any[];
+            images: never[];
             demoUrl: string;
         };
     }[];

@@ -75,7 +75,7 @@ export const Default: Story = {
           </div>
         </div>
         <PopoverFooter>
-          <Button variant="accent" size="sm">Save Changes</Button>
+          <Button variant="secondary" size="sm">Save Changes</Button>
         </PopoverFooter>
       </PopoverContent>
     </Popover>
@@ -148,9 +148,9 @@ export const AllVariants: Story = {
               {/* Accent */}
               <Popover>
                 <PopoverTrigger asChild>
-                  <Button variant="accent">Accent Popover</Button>
+                  <Button variant="secondary">Accent Popover</Button>
                 </PopoverTrigger>
-                <PopoverContent variant="accent">
+                <PopoverContent variant="secondary">
                   <PopoverHeader>
                     <PopoverTitle>Special Action</PopoverTitle>
                     <PopoverDescription>Gold accent styling</PopoverDescription>
@@ -244,7 +244,7 @@ export const AllVariants: Story = {
                     </div>
                   </div>
                   <div className="flex gap-2">
-                    <Button variant="accent" size="sm" className="flex-1">Connect</Button>
+                    <Button variant="secondary" size="sm" className="flex-1">Connect</Button>
                     <Button variant="ghost" size="sm" className="flex-1">Message</Button>
                   </div>
                 </div>
@@ -319,7 +319,7 @@ export const AllVariants: Story = {
                 </div>
                 <PopoverFooter>
                   <Button variant="ghost" size="sm">Clear</Button>
-                  <Button variant="accent" size="sm">Apply Filters</Button>
+                  <Button variant="secondary" size="sm">Apply Filters</Button>
                 </PopoverFooter>
               </PopoverContent>
             </Popover>
@@ -332,7 +332,7 @@ export const AllVariants: Story = {
                   <div className="absolute -top-1 -right-1 w-3 h-3 bg-accent rounded-full"></div>
                 </Button>
               </PopoverTrigger>
-              <PopoverContent variant="accent" size="lg">
+              <PopoverContent variant="secondary" size="lg">
                 <PopoverHeader>
                   <PopoverTitle>Notification Center</PopoverTitle>
                   <PopoverDescription>3 new campus updates</PopoverDescription>
@@ -363,7 +363,7 @@ export const AllVariants: Story = {
                 </div>
                 <PopoverFooter>
                   <Button variant="ghost" size="sm">Mark All Read</Button>
-                  <Button variant="accent" size="sm">View All</Button>
+                  <Button variant="secondary" size="sm">View All</Button>
                 </PopoverFooter>
               </PopoverContent>
             </Popover>
@@ -403,7 +403,7 @@ export const AllVariants: Story = {
                     <p className="text-white/80 text-sm">Recent activity: Neural network workshop scheduled for Friday</p>
                   </div>
                   <div className="flex gap-2">
-                    <Button variant="accent" size="sm" className="flex-1">Join Space</Button>
+                    <Button variant="secondary" size="sm" className="flex-1">Join Space</Button>
                     <Button variant="ghost" size="sm" className="flex-1">Preview</Button>
                   </div>
                 </div>

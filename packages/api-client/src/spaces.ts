@@ -1,4 +1,5 @@
 import { getFunctions, httpsCallable } from 'firebase/functions';
+import type { Space } from '@hive/core';
 
 const functions = getFunctions();
 
@@ -24,7 +25,7 @@ export const requestBuilderRole = async (spaceId: string): Promise<void> => {
  * Gets a space by ID
  * TODO: Implement proper API call for vBETA
  */
-export const getSpaceById = async (spaceId: string): Promise<any> => {
+export const getSpaceById = async (spaceId: string): Promise<Space> => {
   // Stub implementation for vBETA
   throw new Error(`getSpaceById not implemented yet for space: ${spaceId}`);
 }; 

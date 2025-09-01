@@ -59,25 +59,25 @@ export declare const PostSchema: z.ZodObject<{
             displayName: z.ZodString;
             position: z.ZodTuple<[z.ZodNumber, z.ZodNumber], null>;
         }, "strip", z.ZodTypeAny, {
-            displayName?: string;
-            handle?: string;
-            position?: [number, number, ...unknown[]];
-            userId?: string;
+            handle: string;
+            displayName: string;
+            position: [number, number];
+            userId: string;
         }, {
-            displayName?: string;
-            handle?: string;
-            position?: [number, number, ...unknown[]];
-            userId?: string;
+            handle: string;
+            displayName: string;
+            position: [number, number];
+            userId: string;
         }>, "many">>;
         hashtags: z.ZodOptional<z.ZodArray<z.ZodObject<{
             tag: z.ZodString;
             position: z.ZodTuple<[z.ZodNumber, z.ZodNumber], null>;
         }, "strip", z.ZodTypeAny, {
-            position?: [number, number, ...unknown[]];
-            tag?: string;
+            position: [number, number];
+            tag: string;
         }, {
-            position?: [number, number, ...unknown[]];
-            tag?: string;
+            position: [number, number];
+            tag: string;
         }>, "many">>;
         links: z.ZodOptional<z.ZodArray<z.ZodObject<{
             url: z.ZodString;
@@ -86,17 +86,17 @@ export declare const PostSchema: z.ZodObject<{
             image: z.ZodOptional<z.ZodString>;
             position: z.ZodTuple<[z.ZodNumber, z.ZodNumber], null>;
         }, "strip", z.ZodTypeAny, {
-            title?: string;
-            url?: string;
-            image?: string;
-            position?: [number, number, ...unknown[]];
-            description?: string;
+            url: string;
+            position: [number, number];
+            title?: string | undefined;
+            image?: string | undefined;
+            description?: string | undefined;
         }, {
-            title?: string;
-            url?: string;
-            image?: string;
-            position?: [number, number, ...unknown[]];
-            description?: string;
+            url: string;
+            position: [number, number];
+            title?: string | undefined;
+            image?: string | undefined;
+            description?: string | undefined;
         }>, "many">>;
         media: z.ZodOptional<z.ZodArray<z.ZodObject<{
             type: z.ZodEnum<["image", "video", "audio"]>;
@@ -107,89 +107,89 @@ export declare const PostSchema: z.ZodObject<{
                 width: z.ZodNumber;
                 height: z.ZodNumber;
             }, "strip", z.ZodTypeAny, {
-                height?: number;
-                width?: number;
+                height: number;
+                width: number;
             }, {
-                height?: number;
-                width?: number;
+                height: number;
+                width: number;
             }>>;
         }, "strip", z.ZodTypeAny, {
-            type?: "audio" | "video" | "image";
-            url?: string;
-            alt?: string;
-            thumbnail?: string;
+            type: "image" | "audio" | "video";
+            url: string;
+            alt?: string | undefined;
+            thumbnail?: string | undefined;
             dimensions?: {
-                height?: number;
-                width?: number;
-            };
+                height: number;
+                width: number;
+            } | undefined;
         }, {
-            type?: "audio" | "video" | "image";
-            url?: string;
-            alt?: string;
-            thumbnail?: string;
+            type: "image" | "audio" | "video";
+            url: string;
+            alt?: string | undefined;
+            thumbnail?: string | undefined;
             dimensions?: {
-                height?: number;
-                width?: number;
-            };
+                height: number;
+                width: number;
+            } | undefined;
         }>, "many">>;
     }, "strip", z.ZodTypeAny, {
-        text?: string;
+        text?: string | undefined;
         media?: {
-            type?: "audio" | "video" | "image";
-            url?: string;
-            alt?: string;
-            thumbnail?: string;
+            type: "image" | "audio" | "video";
+            url: string;
+            alt?: string | undefined;
+            thumbnail?: string | undefined;
             dimensions?: {
-                height?: number;
-                width?: number;
-            };
-        }[];
+                height: number;
+                width: number;
+            } | undefined;
+        }[] | undefined;
         mentions?: {
-            displayName?: string;
-            handle?: string;
-            position?: [number, number, ...unknown[]];
-            userId?: string;
-        }[];
+            handle: string;
+            displayName: string;
+            position: [number, number];
+            userId: string;
+        }[] | undefined;
         hashtags?: {
-            position?: [number, number, ...unknown[]];
-            tag?: string;
-        }[];
+            position: [number, number];
+            tag: string;
+        }[] | undefined;
         links?: {
-            title?: string;
-            url?: string;
-            image?: string;
-            position?: [number, number, ...unknown[]];
-            description?: string;
-        }[];
+            url: string;
+            position: [number, number];
+            title?: string | undefined;
+            image?: string | undefined;
+            description?: string | undefined;
+        }[] | undefined;
     }, {
-        text?: string;
+        text?: string | undefined;
         media?: {
-            type?: "audio" | "video" | "image";
-            url?: string;
-            alt?: string;
-            thumbnail?: string;
+            type: "image" | "audio" | "video";
+            url: string;
+            alt?: string | undefined;
+            thumbnail?: string | undefined;
             dimensions?: {
-                height?: number;
-                width?: number;
-            };
-        }[];
+                height: number;
+                width: number;
+            } | undefined;
+        }[] | undefined;
         mentions?: {
-            displayName?: string;
-            handle?: string;
-            position?: [number, number, ...unknown[]];
-            userId?: string;
-        }[];
+            handle: string;
+            displayName: string;
+            position: [number, number];
+            userId: string;
+        }[] | undefined;
         hashtags?: {
-            position?: [number, number, ...unknown[]];
-            tag?: string;
-        }[];
+            position: [number, number];
+            tag: string;
+        }[] | undefined;
         links?: {
-            title?: string;
-            url?: string;
-            image?: string;
-            position?: [number, number, ...unknown[]];
-            description?: string;
-        }[];
+            url: string;
+            position: [number, number];
+            title?: string | undefined;
+            image?: string | undefined;
+            description?: string | undefined;
+        }[] | undefined;
     }>;
     spaceId: z.ZodOptional<z.ZodString>;
     spaceName: z.ZodOptional<z.ZodString>;
@@ -206,105 +206,105 @@ export declare const PostSchema: z.ZodObject<{
     viewCount: z.ZodDefault<z.ZodNumber>;
     toolData: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnknown>>;
 }, "strip", z.ZodTypeAny, {
-    id?: string;
-    createdAt?: Date;
-    updatedAt?: Date;
-    type?: "pulse" | "poll" | "prompt-post" | "event-card" | "join-form" | "media-post";
-    content?: {
-        text?: string;
+    id: string;
+    type: "pulse" | "poll" | "prompt-post" | "event-card" | "join-form" | "media-post";
+    content: {
+        text?: string | undefined;
         media?: {
-            type?: "audio" | "video" | "image";
-            url?: string;
-            alt?: string;
-            thumbnail?: string;
+            type: "image" | "audio" | "video";
+            url: string;
+            alt?: string | undefined;
+            thumbnail?: string | undefined;
             dimensions?: {
-                height?: number;
-                width?: number;
-            };
-        }[];
+                height: number;
+                width: number;
+            } | undefined;
+        }[] | undefined;
         mentions?: {
-            displayName?: string;
-            handle?: string;
-            position?: [number, number, ...unknown[]];
-            userId?: string;
-        }[];
+            handle: string;
+            displayName: string;
+            position: [number, number];
+            userId: string;
+        }[] | undefined;
         hashtags?: {
-            position?: [number, number, ...unknown[]];
-            tag?: string;
-        }[];
+            position: [number, number];
+            tag: string;
+        }[] | undefined;
         links?: {
-            title?: string;
-            url?: string;
-            image?: string;
-            position?: [number, number, ...unknown[]];
-            description?: string;
-        }[];
+            url: string;
+            position: [number, number];
+            title?: string | undefined;
+            image?: string | undefined;
+            description?: string | undefined;
+        }[] | undefined;
     };
-    status?: "draft" | "published" | "flagged" | "archived";
-    visibility?: "public" | "space-only" | "followers-only";
-    viewCount?: number;
-    spaceId?: string;
-    publishedAt?: Date;
-    authorId?: string;
-    reactions?: Record<string, number>;
-    reactionCount?: number;
-    authorHandle?: string;
-    authorDisplayName?: string;
-    spaceName?: string;
-    scheduledAt?: Date;
-    commentCount?: number;
-    shareCount?: number;
-    toolData?: Record<string, unknown>;
+    status: "archived" | "draft" | "published" | "flagged";
+    visibility: "public" | "space-only" | "followers-only";
+    reactions: Record<string, number>;
+    updatedAt: Date;
+    createdAt: Date;
+    viewCount: number;
+    authorId: string;
+    reactionCount: number;
+    authorHandle: string;
+    authorDisplayName: string;
+    commentCount: number;
+    shareCount: number;
+    spaceId?: string | undefined;
+    spaceName?: string | undefined;
+    publishedAt?: Date | undefined;
+    scheduledAt?: Date | undefined;
+    toolData?: Record<string, unknown> | undefined;
 }, {
-    id?: string;
-    createdAt?: Date;
-    updatedAt?: Date;
-    type?: "pulse" | "poll" | "prompt-post" | "event-card" | "join-form" | "media-post";
-    content?: {
-        text?: string;
+    id: string;
+    type: "pulse" | "poll" | "prompt-post" | "event-card" | "join-form" | "media-post";
+    content: {
+        text?: string | undefined;
         media?: {
-            type?: "audio" | "video" | "image";
-            url?: string;
-            alt?: string;
-            thumbnail?: string;
+            type: "image" | "audio" | "video";
+            url: string;
+            alt?: string | undefined;
+            thumbnail?: string | undefined;
             dimensions?: {
-                height?: number;
-                width?: number;
-            };
-        }[];
+                height: number;
+                width: number;
+            } | undefined;
+        }[] | undefined;
         mentions?: {
-            displayName?: string;
-            handle?: string;
-            position?: [number, number, ...unknown[]];
-            userId?: string;
-        }[];
+            handle: string;
+            displayName: string;
+            position: [number, number];
+            userId: string;
+        }[] | undefined;
         hashtags?: {
-            position?: [number, number, ...unknown[]];
-            tag?: string;
-        }[];
+            position: [number, number];
+            tag: string;
+        }[] | undefined;
         links?: {
-            title?: string;
-            url?: string;
-            image?: string;
-            position?: [number, number, ...unknown[]];
-            description?: string;
-        }[];
+            url: string;
+            position: [number, number];
+            title?: string | undefined;
+            image?: string | undefined;
+            description?: string | undefined;
+        }[] | undefined;
     };
-    status?: "draft" | "published" | "flagged" | "archived";
-    visibility?: "public" | "space-only" | "followers-only";
-    viewCount?: number;
-    spaceId?: string;
-    publishedAt?: Date;
-    authorId?: string;
-    reactions?: Record<string, number>;
-    reactionCount?: number;
-    authorHandle?: string;
-    authorDisplayName?: string;
-    spaceName?: string;
-    scheduledAt?: Date;
-    commentCount?: number;
-    shareCount?: number;
-    toolData?: Record<string, unknown>;
+    status: "archived" | "draft" | "published" | "flagged";
+    visibility: "public" | "space-only" | "followers-only";
+    updatedAt: Date;
+    createdAt: Date;
+    authorId: string;
+    authorHandle: string;
+    authorDisplayName: string;
+    reactions?: Record<string, number> | undefined;
+    spaceId?: string | undefined;
+    spaceName?: string | undefined;
+    viewCount?: number | undefined;
+    publishedAt?: Date | undefined;
+    reactionCount?: number | undefined;
+    scheduledAt?: Date | undefined;
+    commentCount?: number | undefined;
+    shareCount?: number | undefined;
+    toolData?: Record<string, unknown> | undefined;
 }>;
 export type Post = z.infer<typeof PostSchema>;
 /**
@@ -324,25 +324,25 @@ export declare const MinimalPostSchema: z.ZodObject<Pick<{
             displayName: z.ZodString;
             position: z.ZodTuple<[z.ZodNumber, z.ZodNumber], null>;
         }, "strip", z.ZodTypeAny, {
-            displayName?: string;
-            handle?: string;
-            position?: [number, number, ...unknown[]];
-            userId?: string;
+            handle: string;
+            displayName: string;
+            position: [number, number];
+            userId: string;
         }, {
-            displayName?: string;
-            handle?: string;
-            position?: [number, number, ...unknown[]];
-            userId?: string;
+            handle: string;
+            displayName: string;
+            position: [number, number];
+            userId: string;
         }>, "many">>;
         hashtags: z.ZodOptional<z.ZodArray<z.ZodObject<{
             tag: z.ZodString;
             position: z.ZodTuple<[z.ZodNumber, z.ZodNumber], null>;
         }, "strip", z.ZodTypeAny, {
-            position?: [number, number, ...unknown[]];
-            tag?: string;
+            position: [number, number];
+            tag: string;
         }, {
-            position?: [number, number, ...unknown[]];
-            tag?: string;
+            position: [number, number];
+            tag: string;
         }>, "many">>;
         links: z.ZodOptional<z.ZodArray<z.ZodObject<{
             url: z.ZodString;
@@ -351,17 +351,17 @@ export declare const MinimalPostSchema: z.ZodObject<Pick<{
             image: z.ZodOptional<z.ZodString>;
             position: z.ZodTuple<[z.ZodNumber, z.ZodNumber], null>;
         }, "strip", z.ZodTypeAny, {
-            title?: string;
-            url?: string;
-            image?: string;
-            position?: [number, number, ...unknown[]];
-            description?: string;
+            url: string;
+            position: [number, number];
+            title?: string | undefined;
+            image?: string | undefined;
+            description?: string | undefined;
         }, {
-            title?: string;
-            url?: string;
-            image?: string;
-            position?: [number, number, ...unknown[]];
-            description?: string;
+            url: string;
+            position: [number, number];
+            title?: string | undefined;
+            image?: string | undefined;
+            description?: string | undefined;
         }>, "many">>;
         media: z.ZodOptional<z.ZodArray<z.ZodObject<{
             type: z.ZodEnum<["image", "video", "audio"]>;
@@ -372,89 +372,89 @@ export declare const MinimalPostSchema: z.ZodObject<Pick<{
                 width: z.ZodNumber;
                 height: z.ZodNumber;
             }, "strip", z.ZodTypeAny, {
-                height?: number;
-                width?: number;
+                height: number;
+                width: number;
             }, {
-                height?: number;
-                width?: number;
+                height: number;
+                width: number;
             }>>;
         }, "strip", z.ZodTypeAny, {
-            type?: "audio" | "video" | "image";
-            url?: string;
-            alt?: string;
-            thumbnail?: string;
+            type: "image" | "audio" | "video";
+            url: string;
+            alt?: string | undefined;
+            thumbnail?: string | undefined;
             dimensions?: {
-                height?: number;
-                width?: number;
-            };
+                height: number;
+                width: number;
+            } | undefined;
         }, {
-            type?: "audio" | "video" | "image";
-            url?: string;
-            alt?: string;
-            thumbnail?: string;
+            type: "image" | "audio" | "video";
+            url: string;
+            alt?: string | undefined;
+            thumbnail?: string | undefined;
             dimensions?: {
-                height?: number;
-                width?: number;
-            };
+                height: number;
+                width: number;
+            } | undefined;
         }>, "many">>;
     }, "strip", z.ZodTypeAny, {
-        text?: string;
+        text?: string | undefined;
         media?: {
-            type?: "audio" | "video" | "image";
-            url?: string;
-            alt?: string;
-            thumbnail?: string;
+            type: "image" | "audio" | "video";
+            url: string;
+            alt?: string | undefined;
+            thumbnail?: string | undefined;
             dimensions?: {
-                height?: number;
-                width?: number;
-            };
-        }[];
+                height: number;
+                width: number;
+            } | undefined;
+        }[] | undefined;
         mentions?: {
-            displayName?: string;
-            handle?: string;
-            position?: [number, number, ...unknown[]];
-            userId?: string;
-        }[];
+            handle: string;
+            displayName: string;
+            position: [number, number];
+            userId: string;
+        }[] | undefined;
         hashtags?: {
-            position?: [number, number, ...unknown[]];
-            tag?: string;
-        }[];
+            position: [number, number];
+            tag: string;
+        }[] | undefined;
         links?: {
-            title?: string;
-            url?: string;
-            image?: string;
-            position?: [number, number, ...unknown[]];
-            description?: string;
-        }[];
+            url: string;
+            position: [number, number];
+            title?: string | undefined;
+            image?: string | undefined;
+            description?: string | undefined;
+        }[] | undefined;
     }, {
-        text?: string;
+        text?: string | undefined;
         media?: {
-            type?: "audio" | "video" | "image";
-            url?: string;
-            alt?: string;
-            thumbnail?: string;
+            type: "image" | "audio" | "video";
+            url: string;
+            alt?: string | undefined;
+            thumbnail?: string | undefined;
             dimensions?: {
-                height?: number;
-                width?: number;
-            };
-        }[];
+                height: number;
+                width: number;
+            } | undefined;
+        }[] | undefined;
         mentions?: {
-            displayName?: string;
-            handle?: string;
-            position?: [number, number, ...unknown[]];
-            userId?: string;
-        }[];
+            handle: string;
+            displayName: string;
+            position: [number, number];
+            userId: string;
+        }[] | undefined;
         hashtags?: {
-            position?: [number, number, ...unknown[]];
-            tag?: string;
-        }[];
+            position: [number, number];
+            tag: string;
+        }[] | undefined;
         links?: {
-            title?: string;
-            url?: string;
-            image?: string;
-            position?: [number, number, ...unknown[]];
-            description?: string;
-        }[];
+            url: string;
+            position: [number, number];
+            title?: string | undefined;
+            image?: string | undefined;
+            description?: string | undefined;
+        }[] | undefined;
     }>;
     spaceId: z.ZodOptional<z.ZodString>;
     spaceName: z.ZodOptional<z.ZodString>;
@@ -471,87 +471,87 @@ export declare const MinimalPostSchema: z.ZodObject<Pick<{
     viewCount: z.ZodDefault<z.ZodNumber>;
     toolData: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnknown>>;
 }, "id" | "type" | "content" | "visibility" | "spaceId" | "publishedAt" | "authorId" | "reactionCount" | "authorHandle" | "authorDisplayName" | "commentCount">, "strip", z.ZodTypeAny, {
-    id?: string;
-    type?: "pulse" | "poll" | "prompt-post" | "event-card" | "join-form" | "media-post";
-    content?: {
-        text?: string;
+    id: string;
+    type: "pulse" | "poll" | "prompt-post" | "event-card" | "join-form" | "media-post";
+    content: {
+        text?: string | undefined;
         media?: {
-            type?: "audio" | "video" | "image";
-            url?: string;
-            alt?: string;
-            thumbnail?: string;
+            type: "image" | "audio" | "video";
+            url: string;
+            alt?: string | undefined;
+            thumbnail?: string | undefined;
             dimensions?: {
-                height?: number;
-                width?: number;
-            };
-        }[];
+                height: number;
+                width: number;
+            } | undefined;
+        }[] | undefined;
         mentions?: {
-            displayName?: string;
-            handle?: string;
-            position?: [number, number, ...unknown[]];
-            userId?: string;
-        }[];
+            handle: string;
+            displayName: string;
+            position: [number, number];
+            userId: string;
+        }[] | undefined;
         hashtags?: {
-            position?: [number, number, ...unknown[]];
-            tag?: string;
-        }[];
+            position: [number, number];
+            tag: string;
+        }[] | undefined;
         links?: {
-            title?: string;
-            url?: string;
-            image?: string;
-            position?: [number, number, ...unknown[]];
-            description?: string;
-        }[];
+            url: string;
+            position: [number, number];
+            title?: string | undefined;
+            image?: string | undefined;
+            description?: string | undefined;
+        }[] | undefined;
     };
-    visibility?: "public" | "space-only" | "followers-only";
-    spaceId?: string;
-    publishedAt?: Date;
-    authorId?: string;
-    reactionCount?: number;
-    authorHandle?: string;
-    authorDisplayName?: string;
-    commentCount?: number;
+    visibility: "public" | "space-only" | "followers-only";
+    authorId: string;
+    reactionCount: number;
+    authorHandle: string;
+    authorDisplayName: string;
+    commentCount: number;
+    spaceId?: string | undefined;
+    publishedAt?: Date | undefined;
 }, {
-    id?: string;
-    type?: "pulse" | "poll" | "prompt-post" | "event-card" | "join-form" | "media-post";
-    content?: {
-        text?: string;
+    id: string;
+    type: "pulse" | "poll" | "prompt-post" | "event-card" | "join-form" | "media-post";
+    content: {
+        text?: string | undefined;
         media?: {
-            type?: "audio" | "video" | "image";
-            url?: string;
-            alt?: string;
-            thumbnail?: string;
+            type: "image" | "audio" | "video";
+            url: string;
+            alt?: string | undefined;
+            thumbnail?: string | undefined;
             dimensions?: {
-                height?: number;
-                width?: number;
-            };
-        }[];
+                height: number;
+                width: number;
+            } | undefined;
+        }[] | undefined;
         mentions?: {
-            displayName?: string;
-            handle?: string;
-            position?: [number, number, ...unknown[]];
-            userId?: string;
-        }[];
+            handle: string;
+            displayName: string;
+            position: [number, number];
+            userId: string;
+        }[] | undefined;
         hashtags?: {
-            position?: [number, number, ...unknown[]];
-            tag?: string;
-        }[];
+            position: [number, number];
+            tag: string;
+        }[] | undefined;
         links?: {
-            title?: string;
-            url?: string;
-            image?: string;
-            position?: [number, number, ...unknown[]];
-            description?: string;
-        }[];
+            url: string;
+            position: [number, number];
+            title?: string | undefined;
+            image?: string | undefined;
+            description?: string | undefined;
+        }[] | undefined;
     };
-    visibility?: "public" | "space-only" | "followers-only";
-    spaceId?: string;
-    publishedAt?: Date;
-    authorId?: string;
-    reactionCount?: number;
-    authorHandle?: string;
-    authorDisplayName?: string;
-    commentCount?: number;
+    visibility: "public" | "space-only" | "followers-only";
+    authorId: string;
+    authorHandle: string;
+    authorDisplayName: string;
+    spaceId?: string | undefined;
+    publishedAt?: Date | undefined;
+    reactionCount?: number | undefined;
+    commentCount?: number | undefined;
 }>;
 export type MinimalPost = z.infer<typeof MinimalPostSchema>;
 /**
@@ -570,122 +570,122 @@ export declare const CreatePostSchema: z.ZodObject<{
                 width: z.ZodNumber;
                 height: z.ZodNumber;
             }, "strip", z.ZodTypeAny, {
-                height?: number;
-                width?: number;
+                height: number;
+                width: number;
             }, {
-                height?: number;
-                width?: number;
+                height: number;
+                width: number;
             }>>;
         }, "strip", z.ZodTypeAny, {
-            type?: "audio" | "video" | "image";
-            url?: string;
-            alt?: string;
-            thumbnail?: string;
+            type: "image" | "audio" | "video";
+            url: string;
+            alt?: string | undefined;
+            thumbnail?: string | undefined;
             dimensions?: {
-                height?: number;
-                width?: number;
-            };
+                height: number;
+                width: number;
+            } | undefined;
         }, {
-            type?: "audio" | "video" | "image";
-            url?: string;
-            alt?: string;
-            thumbnail?: string;
+            type: "image" | "audio" | "video";
+            url: string;
+            alt?: string | undefined;
+            thumbnail?: string | undefined;
             dimensions?: {
-                height?: number;
-                width?: number;
-            };
+                height: number;
+                width: number;
+            } | undefined;
         }>, "many">>;
     }, "strip", z.ZodTypeAny, {
-        text?: string;
+        text?: string | undefined;
         media?: {
-            type?: "audio" | "video" | "image";
-            url?: string;
-            alt?: string;
-            thumbnail?: string;
+            type: "image" | "audio" | "video";
+            url: string;
+            alt?: string | undefined;
+            thumbnail?: string | undefined;
             dimensions?: {
-                height?: number;
-                width?: number;
-            };
-        }[];
+                height: number;
+                width: number;
+            } | undefined;
+        }[] | undefined;
     }, {
-        text?: string;
+        text?: string | undefined;
         media?: {
-            type?: "audio" | "video" | "image";
-            url?: string;
-            alt?: string;
-            thumbnail?: string;
+            type: "image" | "audio" | "video";
+            url: string;
+            alt?: string | undefined;
+            thumbnail?: string | undefined;
             dimensions?: {
-                height?: number;
-                width?: number;
-            };
-        }[];
+                height: number;
+                width: number;
+            } | undefined;
+        }[] | undefined;
     }>, {
-        text?: string;
+        text?: string | undefined;
         media?: {
-            type?: "audio" | "video" | "image";
-            url?: string;
-            alt?: string;
-            thumbnail?: string;
+            type: "image" | "audio" | "video";
+            url: string;
+            alt?: string | undefined;
+            thumbnail?: string | undefined;
             dimensions?: {
-                height?: number;
-                width?: number;
-            };
-        }[];
+                height: number;
+                width: number;
+            } | undefined;
+        }[] | undefined;
     }, {
-        text?: string;
+        text?: string | undefined;
         media?: {
-            type?: "audio" | "video" | "image";
-            url?: string;
-            alt?: string;
-            thumbnail?: string;
+            type: "image" | "audio" | "video";
+            url: string;
+            alt?: string | undefined;
+            thumbnail?: string | undefined;
             dimensions?: {
-                height?: number;
-                width?: number;
-            };
-        }[];
+                height: number;
+                width: number;
+            } | undefined;
+        }[] | undefined;
     }>;
     spaceId: z.ZodOptional<z.ZodString>;
     visibility: z.ZodDefault<z.ZodEnum<["public", "space-only", "followers-only"]>>;
     scheduledAt: z.ZodOptional<z.ZodDate>;
     toolData: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnknown>>;
 }, "strip", z.ZodTypeAny, {
-    type?: "pulse" | "poll" | "prompt-post" | "event-card" | "join-form" | "media-post";
-    content?: {
-        text?: string;
+    type: "pulse" | "poll" | "prompt-post" | "event-card" | "join-form" | "media-post";
+    content: {
+        text?: string | undefined;
         media?: {
-            type?: "audio" | "video" | "image";
-            url?: string;
-            alt?: string;
-            thumbnail?: string;
+            type: "image" | "audio" | "video";
+            url: string;
+            alt?: string | undefined;
+            thumbnail?: string | undefined;
             dimensions?: {
-                height?: number;
-                width?: number;
-            };
-        }[];
+                height: number;
+                width: number;
+            } | undefined;
+        }[] | undefined;
     };
-    visibility?: "public" | "space-only" | "followers-only";
-    spaceId?: string;
-    scheduledAt?: Date;
-    toolData?: Record<string, unknown>;
+    visibility: "public" | "space-only" | "followers-only";
+    spaceId?: string | undefined;
+    scheduledAt?: Date | undefined;
+    toolData?: Record<string, unknown> | undefined;
 }, {
-    type?: "pulse" | "poll" | "prompt-post" | "event-card" | "join-form" | "media-post";
-    content?: {
-        text?: string;
+    type: "pulse" | "poll" | "prompt-post" | "event-card" | "join-form" | "media-post";
+    content: {
+        text?: string | undefined;
         media?: {
-            type?: "audio" | "video" | "image";
-            url?: string;
-            alt?: string;
-            thumbnail?: string;
+            type: "image" | "audio" | "video";
+            url: string;
+            alt?: string | undefined;
+            thumbnail?: string | undefined;
             dimensions?: {
-                height?: number;
-                width?: number;
-            };
-        }[];
+                height: number;
+                width: number;
+            } | undefined;
+        }[] | undefined;
     };
-    visibility?: "public" | "space-only" | "followers-only";
-    spaceId?: string;
-    scheduledAt?: Date;
-    toolData?: Record<string, unknown>;
+    visibility?: "public" | "space-only" | "followers-only" | undefined;
+    spaceId?: string | undefined;
+    scheduledAt?: Date | undefined;
+    toolData?: Record<string, unknown> | undefined;
 }>;
 export type CreatePostRequest = z.infer<typeof CreatePostSchema>;
 /**

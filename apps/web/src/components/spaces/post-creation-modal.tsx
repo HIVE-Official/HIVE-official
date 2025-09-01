@@ -232,7 +232,7 @@ export function PostCreationModal({
             <div className="flex items-center gap-3">
               <Icon className={`h-6 w-6 ${currentTypeConfig.color}`} />
               <div>
-                <h2 className="text-xl font-semibold text-white">
+                <h2 className="text-xl font-semibold text-[var(--hive-text-inverse)]">
                   Create {currentTypeConfig.label}
                 </h2>
                 <p className="text-sm text-neutral-400">
@@ -245,7 +245,7 @@ export function PostCreationModal({
               variant="outline"
               size="sm"
               onClick={handleClose}
-              className="border-white/[0.2] text-white hover:bg-white/[0.1]"
+              className="border-white/[0.2] text-[var(--hive-text-inverse)] hover:bg-white/[0.1]"
             >
               <X className="h-4 w-4" />
             </Button>
@@ -256,7 +256,7 @@ export function PostCreationModal({
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Post Type Selector */}
               <div>
-                <label className="block text-sm font-medium text-white mb-3">
+                <label className="block text-sm font-medium text-[var(--hive-text-inverse)] mb-3">
                   Post Type
                 </label>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
@@ -271,7 +271,7 @@ export function PostCreationModal({
                         className={`p-3 rounded-lg border transition-all ${
                           isSelected
                             ? 'bg-[var(--hive-brand-secondary)]/10 border-[var(--hive-brand-secondary)]/30 text-[var(--hive-brand-secondary)]'
-                            : 'bg-white/[0.02] border-white/[0.06] text-neutral-400 hover:border-white/[0.1] hover:text-white'
+                            : 'bg-white/[0.02] border-white/[0.06] text-neutral-400 hover:border-white/[0.1] hover:text-[var(--hive-text-inverse)]'
                         }`}
                         onClick={() => setSelectedType(type as keyof typeof postTypes)}
                         whileHover={{ scale: 1.02 }}
@@ -287,7 +287,7 @@ export function PostCreationModal({
 
               {/* Title (optional) */}
               <div>
-                <label className="block text-sm font-medium text-white mb-2">
+                <label className="block text-sm font-medium text-[var(--hive-text-inverse)] mb-2">
                   Title (optional)
                 </label>
                 <input
@@ -295,14 +295,14 @@ export function PostCreationModal({
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="Give your post a title..."
-                  className="w-full px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.06] text-white placeholder-neutral-400 focus:outline-none focus:border-[var(--hive-brand-secondary)]/30"
+                  className="w-full px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.06] text-[var(--hive-text-inverse)] placeholder-neutral-400 focus:outline-none focus:border-[var(--hive-brand-secondary)]/30"
                   maxLength={200}
                 />
               </div>
 
               {/* Content */}
               <div>
-                <label className="block text-sm font-medium text-white mb-2">
+                <label className="block text-sm font-medium text-[var(--hive-text-inverse)] mb-2">
                   Content
                 </label>
                 <textarea
@@ -310,7 +310,7 @@ export function PostCreationModal({
                   value={content}
                   onChange={handleContentChange}
                   placeholder={currentTypeConfig.placeholder}
-                  className="w-full px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.06] text-white placeholder-neutral-400 resize-none focus:outline-none focus:border-[var(--hive-brand-secondary)]/30 min-h-[120px]"
+                  className="w-full px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.06] text-[var(--hive-text-inverse)] placeholder-neutral-400 resize-none focus:outline-none focus:border-[var(--hive-brand-secondary)]/30 min-h-[120px]"
                   maxLength={2000}
                   required
                 />
@@ -327,7 +327,7 @@ export function PostCreationModal({
               {/* Link URL (for link posts) */}
               {selectedType === 'link' && (
                 <div>
-                  <label className="block text-sm font-medium text-white mb-2">
+                  <label className="block text-sm font-medium text-[var(--hive-text-inverse)] mb-2">
                     Link URL
                   </label>
                   <input
@@ -335,7 +335,7 @@ export function PostCreationModal({
                     value={linkUrl}
                     onChange={(e) => setLinkUrl(e.target.value)}
                     placeholder="https://example.com"
-                    className="w-full px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.06] text-white placeholder-neutral-400 focus:outline-none focus:border-[var(--hive-brand-secondary)]/30"
+                    className="w-full px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.06] text-[var(--hive-text-inverse)] placeholder-neutral-400 focus:outline-none focus:border-[var(--hive-brand-secondary)]/30"
                     required={selectedType === 'link'}
                   />
                 </div>
@@ -344,7 +344,7 @@ export function PostCreationModal({
               {/* Poll Options (for polls) */}
               {selectedType === 'poll' && (
                 <div>
-                  <label className="block text-sm font-medium text-white mb-2">
+                  <label className="block text-sm font-medium text-[var(--hive-text-inverse)] mb-2">
                     Poll Options
                   </label>
                   <div className="space-y-3">
@@ -355,7 +355,7 @@ export function PostCreationModal({
                           value={option}
                           onChange={(e) => updatePollOption(index, e.target.value)}
                           placeholder={`Option ${index + 1}`}
-                          className="flex-1 px-4 py-2 rounded-lg bg-white/[0.02] border border-white/[0.06] text-white placeholder-neutral-400 focus:outline-none focus:border-[var(--hive-brand-secondary)]/30"
+                          className="flex-1 px-4 py-2 rounded-lg bg-white/[0.02] border border-white/[0.06] text-[var(--hive-text-inverse)] placeholder-neutral-400 focus:outline-none focus:border-[var(--hive-brand-secondary)]/30"
                           maxLength={100}
                         />
                         {pollOptions.length > 2 && (
@@ -378,7 +378,7 @@ export function PostCreationModal({
                         variant="outline"
                         size="sm"
                         onClick={addPollOption}
-                        className="border-white/[0.2] text-white hover:bg-white/[0.1]"
+                        className="border-white/[0.2] text-[var(--hive-text-inverse)] hover:bg-white/[0.1]"
                       >
                         <Plus className="h-4 w-4 mr-2" />
                         Add Option

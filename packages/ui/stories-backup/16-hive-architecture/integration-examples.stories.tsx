@@ -7,8 +7,12 @@ import { OfflineHandler, Preloader } from '../../components/Performance';
 import { Text } from '../../atomic/atoms/text';
 import { Button } from '../../atomic/atoms/button';
 
-const meta: Meta = {
+// Mock component for Storybook CSF compliance
+const IntegrationExamples = () => <div>Integration Examples</div>;
+
+const meta: Meta<typeof IntegrationExamples> = {
   title: '16-HIVE Architecture/Integration Examples',
+  component: IntegrationExamples,
   parameters: {
     layout: 'fullscreen',
     docs: {

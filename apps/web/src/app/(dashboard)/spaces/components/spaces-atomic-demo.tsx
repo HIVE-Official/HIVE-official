@@ -275,7 +275,7 @@ export function SpacesAtomicDemo() {
                   <Typography size="small" color="brand">
                     {space.memberCount} members
                   </Typography>
-                  <span className="text-white/30">•</span>
+                  <span className="text-[var(--hive-text-inverse)]/30">•</span>
                   <Typography size="small" color="medium">
                     {space.type}
                   </Typography>

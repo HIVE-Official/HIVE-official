@@ -40,7 +40,7 @@ import {
 } from '@hive/ui';
 
 // Hooks
-import { useHiveAuth } from '@hive/ui';
+import { useUnifiedAuth } from '@hive/ui';
 
 // Types
 interface Space {
@@ -118,7 +118,7 @@ function formatLastActivity(timestamp: string | Date): string {
 
 export function SpacesDashboardClient() {
   const router = useRouter();
-  const { user } = useHiveAuth();
+  const { user } = useUnifiedAuth();
   const [spacesData, setSpacesData] = useState<SpacesData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -332,7 +332,7 @@ export function SpacesDashboardClient() {
                   >
                     <div className="flex items-start space-x-3">
                       <div className="h-10 w-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <span className="text-white font-semibold text-sm">
+                        <span className="text-[var(--hive-text-inverse)] font-semibold text-sm">
                           {space.name.charAt(0)}
                         </span>
                       </div>
@@ -404,7 +404,7 @@ export function SpacesDashboardClient() {
                   >
                     <div className="flex items-start space-x-3">
                       <div className="h-10 w-10 bg-gradient-to-br from-green-500 to-blue-500 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <span className="text-white font-semibold text-sm">
+                        <span className="text-[var(--hive-text-inverse)] font-semibold text-sm">
                           {space.name.charAt(0)}
                         </span>
                       </div>
@@ -461,7 +461,7 @@ export function SpacesDashboardClient() {
             <div className="space-y-4">
               <div className="flex items-start space-x-3">
                 <div className="h-12 w-12 bg-gradient-to-br from-green-500 to-blue-500 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <span className="text-white font-semibold">
+                  <span className="text-[var(--hive-text-inverse)] font-semibold">
                     {showJoinModal.name.charAt(0)}
                   </span>
                 </div>

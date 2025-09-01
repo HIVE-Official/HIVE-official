@@ -122,7 +122,7 @@ export function EnhancedSpacesSystem({
   };
 
   // Queries
-  const { data: mySpacesData, isLoading: mySpacesLoading, error: mySpacesError } = useQuery({
+  const { data: mySpacesData } = useQuery({
     queryKey: ['my-spaces'],
     queryFn: fetchMySpaces,
     enabled: activeView === 'my-spaces' && !!user,
@@ -333,7 +333,7 @@ export function EnhancedSpacesSystem({
                     variant={viewMode === 'grid' ? 'primary' : 'ghost'}
                     size="sm"
                     onClick={() => setViewMode('grid')}
-                    className={viewMode === 'grid' ? 'bg-[var(--hive-brand-primary)] text-white' : 'text-[var(--hive-text-primary)]'}
+                    className={viewMode === 'grid' ? 'bg-[var(--hive-brand-primary)] text-[var(--hive-text-inverse)]' : 'text-[var(--hive-text-primary)]'}
                   >
                     <Grid className="h-4 w-4" />
                   </Button>
@@ -341,7 +341,7 @@ export function EnhancedSpacesSystem({
                     variant={viewMode === 'list' ? 'primary' : 'ghost'}
                     size="sm"
                     onClick={() => setViewMode('list')}
-                    className={viewMode === 'list' ? 'bg-[var(--hive-brand-primary)] text-white' : 'text-[var(--hive-text-primary)]'}
+                    className={viewMode === 'list' ? 'bg-[var(--hive-brand-primary)] text-[var(--hive-text-inverse)]' : 'text-[var(--hive-text-primary)]'}
                   >
                     <List className="h-4 w-4" />
                   </Button>

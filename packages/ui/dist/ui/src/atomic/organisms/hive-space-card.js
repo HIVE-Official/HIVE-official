@@ -2,7 +2,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { cn } from '../../lib/utils';
+import { cn } from '../../lib/utils.js';
 import { Users, Sparkles, ChevronRight } from 'lucide-react';
 export const HiveSpaceCard = ({ space, currentUser, mutualConnections = [], onJoin, onView, showSocialProof = true, variant = 'default', className }) => {
     const [isHovered, setIsHovered] = useState(false);
@@ -23,7 +23,7 @@ export const HiveSpaceCard = ({ space, currentUser, mutualConnections = [], onJo
     // Get primary action based on space type
     const getPrimaryAction = () => {
         switch (space.type) {
-            case 'university':
+            case 'university': {
                 const univSpace = space;
                 switch (univSpace.enrollment.status) {
                     case 'open': return { text: 'Join Class', variant: 'primary' };
@@ -32,11 +32,13 @@ export const HiveSpaceCard = ({ space, currentUser, mutualConnections = [], onJo
                     case 'closed': return { text: 'View Details', variant: 'ghost' };
                 }
                 break;
-            case 'greek':
+            }
+            case 'greek': {
                 const greekSpace = space;
                 return greekSpace.rush.isActive
                     ? { text: 'Show Interest', variant: 'primary' }
                     : { text: 'Learn More', variant: 'ghost' };
+            }
             case 'residential':
                 return { text: 'Join Floor', variant: 'primary' };
             case 'student':
@@ -68,34 +70,38 @@ export const HiveSpaceCard = ({ space, currentUser, mutualConnections = [], onJo
     };
     const getSpaceMetadata = () => {
         switch (space.type) {
-            case 'university':
+            case 'university': {
                 const univSpace = space;
                 return [
                     univSpace.academic.department,
                     univSpace.academic.credits ? `${univSpace.academic.credits} credits` : null,
                     univSpace.academic.schedule
                 ].filter(Boolean);
-            case 'greek':
+            }
+            case 'greek': {
                 const greekSpace = space;
                 return [
                     greekSpace.organization.council,
                     greekSpace.community.averageGPA ? `${greekSpace.community.averageGPA} GPA` : null,
                     greekSpace.organization.founded ? `Est. ${greekSpace.organization.founded}` : null
                 ].filter(Boolean);
-            case 'residential':
+            }
+            case 'residential': {
                 const resSpace = space;
                 return [
                     resSpace.housing.buildingName,
                     resSpace.housing.floor ? `Floor ${resSpace.housing.floor}` : null,
                     resSpace.housing.buildingType
                 ].filter(Boolean);
-            case 'student':
+            }
+            case 'student': {
                 const studentSpace = space;
                 return [
                     studentSpace.category,
                     studentSpace.creator.name,
                     studentSpace.creator.major
                 ].filter(Boolean);
+            }
         }
     };
     const metadata = getSpaceMetadata();

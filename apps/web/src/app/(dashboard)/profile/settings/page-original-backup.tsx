@@ -212,9 +212,9 @@ export default function ProfileSettingsPage() {
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
             <div className="w-12 h-12 bg-red-500 rounded-lg flex items-center justify-center mx-auto mb-4">
-              <SettingsIcon className="h-6 w-6 text-white" />
+              <SettingsIcon className="h-6 w-6 text-[var(--hive-text-inverse)]" />
             </div>
-            <p className="text-white mb-2">Failed to load settings</p>
+            <p className="text-[var(--hive-text-inverse)] mb-2">Failed to load settings</p>
             <p className="text-red-400 text-sm">{error}</p>
             <Button 
               onClick={() => router.back()} 
@@ -236,7 +236,7 @@ export default function ProfileSettingsPage() {
             <div className="w-12 h-12 bg-hive-gold rounded-lg animate-pulse mx-auto mb-4 flex items-center justify-center">
               <SettingsIcon className="h-6 w-6 text-hive-obsidian animate-pulse" />
             </div>
-            <p className="text-white mb-2">Loading your settings...</p>
+            <p className="text-[var(--hive-text-inverse)] mb-2">Loading your settings...</p>
           </div>
         </div>
       </PageContainer>
@@ -297,14 +297,14 @@ export default function ProfileSettingsPage() {
           {/* Privacy Settings */}
           <TabsContent value="privacy" className="space-y-6">
             <Card className="p-6 bg-hive-background-overlay border-hive-border-default">
-              <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
+              <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4 flex items-center">
                 <Eye className="h-5 w-5 mr-2" />
                 Profile Visibility
               </h3>
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <Label className="text-white">Public Profile</Label>
+                    <Label className="text-[var(--hive-text-inverse)]">Public Profile</Label>
                     <p className="text-sm text-hive-text-mutedLight">Allow others to find and view your profile</p>
                   </div>
                   <Switch
@@ -315,7 +315,7 @@ export default function ProfileSettingsPage() {
                 
                 <div className="flex items-center justify-between">
                   <div>
-                    <Label className="text-white">Show Email</Label>
+                    <Label className="text-[var(--hive-text-inverse)]">Show Email</Label>
                     <p className="text-sm text-hive-text-mutedLight">Display your email on your profile</p>
                   </div>
                   <Switch
@@ -326,7 +326,7 @@ export default function ProfileSettingsPage() {
                 
                 <div className="flex items-center justify-between">
                   <div>
-                    <Label className="text-white">Show Academic Info</Label>
+                    <Label className="text-[var(--hive-text-inverse)]">Show Academic Info</Label>
                     <p className="text-sm text-hive-text-mutedLight">Display your major and graduation year</p>
                   </div>
                   <Switch
@@ -341,14 +341,14 @@ export default function ProfileSettingsPage() {
             </Card>
 
             <Card className="p-6 bg-hive-background-overlay border-hive-border-default">
-              <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
+              <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4 flex items-center">
                 <Users className="h-5 w-5 mr-2" />
                 Activity & Social
               </h3>
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <Label className="text-white">Show Activity</Label>
+                    <Label className="text-[var(--hive-text-inverse)]">Show Activity</Label>
                     <p className="text-sm text-hive-text-mutedLight">Let others see your recent activity</p>
                   </div>
                   <Switch
@@ -359,7 +359,7 @@ export default function ProfileSettingsPage() {
                 
                 <div className="flex items-center justify-between">
                   <div>
-                    <Label className="text-white">Show Online Status</Label>
+                    <Label className="text-[var(--hive-text-inverse)]">Show Online Status</Label>
                     <p className="text-sm text-hive-text-mutedLight">Display when you&apos;re online</p>
                   </div>
                   <Switch
@@ -370,7 +370,7 @@ export default function ProfileSettingsPage() {
                 
                 <div className="flex items-center justify-between">
                   <div>
-                    <Label className="text-white">Show Spaces</Label>
+                    <Label className="text-[var(--hive-text-inverse)]">Show Spaces</Label>
                     <p className="text-sm text-hive-text-mutedLight">Display the spaces you&apos;re in</p>
                   </div>
                   <Switch
@@ -383,14 +383,14 @@ export default function ProfileSettingsPage() {
 
             {/* Ghost Mode */}
             <Card className="p-6 bg-gradient-to-br from-purple-500/10 to-purple-600/10 border-purple-500/20">
-              <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
+              <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4 flex items-center">
                 <Moon className="h-5 w-5 mr-2 text-purple-400" />
                 Ghost Mode
               </h3>
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <Label className="text-white">Enable Ghost Mode</Label>
+                    <Label className="text-[var(--hive-text-inverse)]">Enable Ghost Mode</Label>
                     <p className="text-sm text-hive-text-mutedLight">Hide your presence and activity</p>
                   </div>
                   <Switch
@@ -410,7 +410,7 @@ export default function ProfileSettingsPage() {
                 
                 {privacySettings.ghostMode.enabled && (
                   <div>
-                    <Label className="text-white">Ghost Level</Label>
+                    <Label className="text-[var(--hive-text-inverse)]">Ghost Level</Label>
                     <Select
                       value={privacySettings.ghostMode.level}
                       onValueChange={(value) => handlePrivacyChange('ghostMode', {
@@ -436,14 +436,14 @@ export default function ProfileSettingsPage() {
           {/* Notification Settings */}
           <TabsContent value="notifications" className="space-y-6">
             <Card className="p-6 bg-hive-background-overlay border-hive-border-default">
-              <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
+              <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4 flex items-center">
                 <Mail className="h-5 w-5 mr-2" />
                 Email Notifications
               </h3>
               <div className="space-y-4">
                 {Object.entries(notificationSettings.email).map(([key, value]) => (
                   <div key={key} className="flex items-center justify-between">
-                    <Label className="text-white capitalize">
+                    <Label className="text-[var(--hive-text-inverse)] capitalize">
                       {key.replace(/([A-Z])/g, ' $1').toLowerCase()}
                     </Label>
                     <Switch
@@ -456,14 +456,14 @@ export default function ProfileSettingsPage() {
             </Card>
 
             <Card className="p-6 bg-hive-background-overlay border-hive-border-default">
-              <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
+              <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4 flex items-center">
                 <Smartphone className="h-5 w-5 mr-2" />
                 Push Notifications
               </h3>
               <div className="space-y-4">
                 {Object.entries(notificationSettings.push).map(([key, value]) => (
                   <div key={key} className="flex items-center justify-between">
-                    <Label className="text-white capitalize">
+                    <Label className="text-[var(--hive-text-inverse)] capitalize">
                       {key.replace(/([A-Z])/g, ' $1').toLowerCase()}
                     </Label>
                     <Switch
@@ -479,13 +479,13 @@ export default function ProfileSettingsPage() {
           {/* Account Settings */}
           <TabsContent value="account" className="space-y-6">
             <Card className="p-6 bg-hive-background-overlay border-hive-border-default">
-              <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
+              <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4 flex items-center">
                 <Globe className="h-5 w-5 mr-2" />
                 Preferences
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <Label className="text-white">Theme</Label>
+                  <Label className="text-[var(--hive-text-inverse)]">Theme</Label>
                   <Select
                     value={accountSettings.theme}
                     onValueChange={(value) => handleAccountChange('theme', value)}
@@ -502,7 +502,7 @@ export default function ProfileSettingsPage() {
                 </div>
                 
                 <div>
-                  <Label className="text-white">Language</Label>
+                  <Label className="text-[var(--hive-text-inverse)]">Language</Label>
                   <Select
                     value={accountSettings.language}
                     onValueChange={(value) => handleAccountChange('language', value)}
@@ -522,7 +522,7 @@ export default function ProfileSettingsPage() {
               <div className="space-y-4 mt-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <Label className="text-white">Sound Effects</Label>
+                    <Label className="text-[var(--hive-text-inverse)]">Sound Effects</Label>
                     <p className="text-sm text-hive-text-mutedLight">Play sounds for notifications and interactions</p>
                   </div>
                   <Switch
@@ -533,7 +533,7 @@ export default function ProfileSettingsPage() {
                 
                 <div className="flex items-center justify-between">
                   <div>
-                    <Label className="text-white">Auto-save</Label>
+                    <Label className="text-[var(--hive-text-inverse)]">Auto-save</Label>
                     <p className="text-sm text-hive-text-mutedLight">Automatically save your work</p>
                   </div>
                   <Switch
@@ -548,7 +548,7 @@ export default function ProfileSettingsPage() {
           {/* Security Settings */}
           <TabsContent value="security" className="space-y-6">
             <Card className="p-6 bg-hive-background-overlay border-hive-border-default">
-              <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
+              <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4 flex items-center">
                 <Lock className="h-5 w-5 mr-2" />
                 Account Security
               </h3>
@@ -571,7 +571,7 @@ export default function ProfileSettingsPage() {
             </Card>
 
             <Card className="p-6 bg-gradient-to-br from-red-500/10 to-red-600/10 border-red-500/20">
-              <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
+              <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4 flex items-center">
                 <AlertTriangle className="h-5 w-5 mr-2 text-red-400" />
                 Danger Zone
               </h3>

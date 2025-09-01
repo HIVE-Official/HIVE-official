@@ -78,7 +78,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="success">✅ HIVE LOGO</Badge>
+            <Badge variant="emerald">✅ HIVE LOGO</Badge>
             HIVE Logo Icon - Brand Identity with Smart Fallback
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -244,7 +244,7 @@ export const CompleteShowcase: Story = {
                   <div className="space-y-1">
                     <p className="font-medium text-[var(--hive-text-primary)]">Lab</p>
                     <p className="text-xs text-[var(--hive-text-tertiary)]">Experimental features, testing</p>
-                    <Badge variant="warning" size="sm">Experimental</Badge>
+                    <Badge variant="gold" size="sm">Experimental</Badge>
                   </div>
                 </div>
                 
@@ -494,7 +494,7 @@ export const CompleteShowcase: Story = {
                   HUB Student Center, and academic department resources.
                 </p>
                 <div className="flex items-center gap-2">
-                  <Badge variant="success" size="sm">Official</Badge>
+                  <Badge variant="emerald" size="sm">Official</Badge>
                   <Badge variant="info" size="sm">Verified</Badge>
                 </div>
               </div>
@@ -509,7 +509,7 @@ export const CompleteShowcase: Story = {
                   Test cutting-edge functionality before official release.
                 </p>
                 <div className="flex items-center gap-2">
-                  <Badge variant="warning" size="sm">Experimental</Badge>
+                  <Badge variant="gold" size="sm">Experimental</Badge>
                   <Badge variant="secondary" size="sm">Student Built</Badge>
                 </div>
               </div>

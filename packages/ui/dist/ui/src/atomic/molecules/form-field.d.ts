@@ -1,5 +1,5 @@
 import React from 'react';
-import { InputEnhanced as Input } from '../atoms/input-enhanced';
+import { Input as Input } from '../atoms/input-enhanced';
 export interface FormFieldProps {
     label?: string;
     description?: string;

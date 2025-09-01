@@ -61,7 +61,16 @@ import {
  * - **Campus Integration**: UB-specific administrative features and policies
  */
 
-const meta: Meta = {
+// Create a component wrapper for the story
+const AdminModerationSystem = () => (
+  <div className="p-6 space-y-8">
+    <h2 className="text-2xl font-semibold">Admin & Moderation System</h2>
+    <p className="text-muted-foreground">Campus administration and content moderation tools</p>
+  </div>
+);
+
+const meta: Meta<typeof AdminModerationSystem> = {
+  component: AdminModerationSystem,
   title: '12-Live Frontend/Admin & Moderation System',
   parameters: {
     layout: 'fullscreen',

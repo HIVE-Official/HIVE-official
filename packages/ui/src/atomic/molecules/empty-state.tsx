@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { cn } from '../../lib/utils';
-import { Button } from '../../components/ui/button';
+import { Button } from '../atoms/button-enhanced';
 import { Card } from '../../components/ui/card';
 import { Text } from '../atoms/text';
 import { Inbox, Search, Users, FileX, Wifi, RefreshCw } from 'lucide-react';

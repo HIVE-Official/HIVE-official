@@ -26,7 +26,7 @@ const nextConfig = {
 
   // Performance optimizations
   experimental: {
-    // optimizePackageImports: ['lucide-react'],
+    optimizePackageImports: ['lucide-react'],
   },
 
   // Disable error overlays in development
@@ -173,10 +173,6 @@ const nextConfig = {
     VERCEL_ENV: process.env.VERCEL_ENV,
   },
 
-  // Ensure sensitive environment variables are not exposed to client
-  experimental: {
-    // optimizePackageImports: ['lucide-react'],
-  },
 
   // SVG handling and workspace resolution
   webpack: (config, { isServer, dev, webpack }) => {

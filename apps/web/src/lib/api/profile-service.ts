@@ -10,7 +10,8 @@ export interface ProfileData {
   email: string;
   profilePhoto?: string;
   avatarUrl?: string;
-  major?: string;
+  major?: string; // Legacy field for backward compatibility
+  majors?: string[]; // New field for multiple majors
   academicYear?: string;
   bio?: string;
   interests: string[];

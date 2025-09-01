@@ -3,8 +3,12 @@ import { HiveButton } from '../../components/hive-button';
 import { HiveCard } from '../../components/hive-card';
 import { HiveBadge } from '../../components/hive-badge';
 
-const meta: Meta = {
+// Mock component for Storybook CSF compliance
+const HiveComponentsAtoms = () => <div>HIVE Components Atoms</div>;
+
+const meta: Meta<typeof HiveComponentsAtoms> = {
   title: '01-Atoms/HIVE Components',
+  component: HiveComponentsAtoms,
   parameters: {
     layout: 'padded',
     docs: {

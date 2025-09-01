@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { GraduationCap, Search, ChevronDown, Check, BookOpen } from "lucide-react";
+import { GraduationCap, Search, ChevronDown, Check, BookOpen, X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { HiveInput, HiveSelect, HiveCard } from "@hive/ui";
-import { UB_MAJORS } from "@hive/core";
+import { Input, Select, Card, Badge } from "@hive/ui";
+import { MAJOR_CATEGORIES, UB_MAJORS, type MajorCategory } from "@/constants/majors";
 import type { HiveOnboardingData } from "../hive-onboarding-wizard";
 
 interface HiveAcademicsStepProps {
@@ -44,18 +44,28 @@ export function HiveAcademicsStep({
       setShowValidationError(true);
       return;
     }
-    if (data.major && academicLevel) {
+    if ((data.majors && data.majors.length > 0) && academicLevel) {
       onNext();
     }
   };
 
-  const selectMajor = (major: string) => {
-    updateData({ major });
+  const selectMajor = (majorName: string) => {
+    const currentMajors = data.majors || [];
+    if (!currentMajors.includes(majorName)) {
+      updateData({ majors: [...currentMajors, majorName] });
+    }
     setShowDropdown(false);
     setSearchQuery("");
   };
 
-  const selectedMajorInfo = UB_MAJORS.find((m) => m.name === data.major);
+  const removeMajor = (majorName: string) => {
+    const currentMajors = data.majors || [];
+    updateData({ majors: currentMajors.filter(m => m !== majorName) });
+  };
+
+  const selectedMajors = data.majors || [];
+  const primaryMajor = selectedMajors[0];
+  const selectedMajorInfo = primaryMajor ? UB_MAJORS.find((m) => m.name === primaryMajor) : null;
 
   return (
     <motion.div
@@ -130,7 +140,7 @@ export function HiveAcademicsStep({
                     animate={{ scale: 1 }}
                     className="absolute -top-1 -right-1 w-5 h-5 bg-[var(--hive-brand-primary)] rounded-full flex items-center justify-center"
                   >
-                    <Check className="w-3 h-3 text-white" />
+                    <Check className="w-3 h-3 text-[var(--hive-text-inverse)]" />
                   </motion.div>
                 )}
               </motion.button>
@@ -153,26 +163,39 @@ export function HiveAcademicsStep({
           </AnimatePresence>
         </div>
 
-        {/* Major Selection using HiveInput */}
+        {/* Major Selection using HiveInput with Multiple Selection */}
         <div className="space-y-[var(--hive-spacing-3)]">
-          <HiveInput
-            label="Major *"
-            placeholder="Search for your major..."
-            value={data.major || searchQuery}
+          <label className="block text-sm font-medium text-[var(--hive-text-primary)]">
+            Majors * <span className="text-xs text-[var(--hive-text-secondary)]">(You can select multiple)</span>
+          </label>
+          
+          {/* Selected Majors Display */}
+          {selectedMajors.length > 0 && (
+            <div className="flex flex-wrap gap-2 mb-3">
+              {selectedMajors.map((majorName) => (
+                <Badge
+                  key={majorName}
+                  variant="accent"
+                  className="flex items-center gap-1 cursor-pointer hover:bg-[var(--hive-brand-primary)]/20"
+                  onClick={() => removeMajor(majorName)}
+                >
+                  {majorName}
+                  <X className="w-3 h-3" />
+                </Badge>
+              ))}
+            </div>
+          )}
+
+          <Input
+            placeholder="Search to add majors..."
+            value={searchQuery}
             onChange={(e) => {
-              const value = e.target.value;
-              if (data.major) {
-                // If they start typing, clear the selected major
-                updateData({ major: "" });
-                setSearchQuery(value);
-              } else {
-                setSearchQuery(value);
-              }
-              setShowDropdown(value.length > 0);
+              setSearchQuery(e.target.value);
+              setShowDropdown(e.target.value.length > 0);
             }}
             onFocus={() => {
               setFocusedField("major");
-              if (!data.major && searchQuery.length > 0) setShowDropdown(true);
+              if (searchQuery.length > 0) setShowDropdown(true);
             }}
             onBlur={() => {
               setFocusedField(null);
@@ -183,7 +206,6 @@ export function HiveAcademicsStep({
             floatingLabel={false}
             leftIcon={<Search className="w-4 h-4" />}
             onClear={() => {
-              updateData({ major: "" });
               setSearchQuery("");
               setShowDropdown(false);
             }}
@@ -201,21 +223,35 @@ export function HiveAcademicsStep({
                 className="relative z-50"
               >
                 <div className="absolute w-full mt-2 max-h-60 overflow-y-auto bg-[var(--hive-background-primary)] border-2 border-[var(--hive-brand-primary)]/30 rounded-xl shadow-2xl backdrop-blur-md">
-                  {filteredMajors.map((major, index) => (
-                    <motion.button
-                      key={major.name}
-                      type="button"
-                      onClick={() => selectMajor(major.name)}
-                      className="w-full text-left px-4 py-3 hover:bg-[var(--hive-brand-primary)]/10 text-[var(--hive-text-primary)] transition-all duration-200 border-b border-[var(--hive-border-primary)]/20 last:border-b-0 hover:border-[var(--hive-brand-primary)]/30"
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.05 }}
-                      whileHover={{ x: 4, backgroundColor: "var(--hive-brand-primary, #D4AF37)/10" }}
-                    >
-                      <div className="font-medium text-sm text-[var(--hive-text-primary)]">{major.name}</div>
-                      <div className="text-xs text-[var(--hive-brand-primary)]">{major.school}</div>
-                    </motion.button>
-                  ))}
+                  {filteredMajors.map((major, index) => {
+                    const isSelected = selectedMajors.includes(major.name);
+                    return (
+                      <motion.button
+                        key={major.name}
+                        type="button"
+                        onClick={() => selectMajor(major.name)}
+                        disabled={isSelected}
+                        className={cn(
+                          "w-full text-left px-4 py-3 transition-all duration-200 border-b border-[var(--hive-border-primary)]/20 last:border-b-0",
+                          isSelected 
+                            ? "bg-[var(--hive-brand-primary)]/20 text-[var(--hive-text-muted)] cursor-not-allowed"
+                            : "hover:bg-[var(--hive-brand-primary)]/10 text-[var(--hive-text-primary)] hover:border-[var(--hive-brand-primary)]/30"
+                        )}
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.05 }}
+                        whileHover={!isSelected ? { x: 4, backgroundColor: "var(--hive-brand-primary, #D4AF37)/10" } : {}}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <div className="font-medium text-sm">{major.name}</div>
+                            <div className="text-xs text-[var(--hive-brand-primary)]">{major.school}</div>
+                          </div>
+                          {isSelected && <Check className="w-4 h-4 text-[var(--hive-status-success)]" />}
+                        </div>
+                      </motion.button>
+                    );
+                  })}
                 </div>
               </motion.div>
             )}
@@ -229,7 +265,7 @@ export function HiveAcademicsStep({
               className="text-sm text-[var(--hive-text-secondary)] flex items-center gap-[var(--hive-spacing-2)]"
             >
               <Check className="w-4 h-4 text-[var(--hive-status-success)]" />
-              <span>{selectedMajorInfo.school}</span>
+              <span>Primary: {selectedMajorInfo.school}</span>
             </motion.div>
           )}
         </div>
@@ -261,12 +297,12 @@ export function HiveAcademicsStep({
         </div>
 
         {/* Academic Insights */}
-        {data.major && (
+        {selectedMajors.length > 0 && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            <HiveCard 
+            <Card 
               variant="elevated"
               className="p-[var(--hive-spacing-4)]"
             >
@@ -277,7 +313,7 @@ export function HiveAcademicsStep({
               <div className="space-y-[var(--hive-spacing-2)] text-xs text-[var(--hive-text-muted)]">
                 <div className="flex items-center gap-[var(--hive-spacing-2)]">
                   <div className="w-1.5 h-1.5 bg-[var(--hive-brand-primary)] rounded-full" />
-                  <span>Connect with {data.major} students</span>
+                  <span>Connect with students in {selectedMajors.length === 1 ? selectedMajors[0] : `${selectedMajors.length} different programs`}</span>
                 </div>
                 <div className="flex items-center gap-[var(--hive-spacing-2)]">
                   <div className="w-1.5 h-1.5 bg-[var(--hive-brand-primary)] rounded-full" />
@@ -285,10 +321,16 @@ export function HiveAcademicsStep({
                 </div>
                 <div className="flex items-center gap-[var(--hive-spacing-2)]">
                   <div className="w-1.5 h-1.5 bg-[var(--hive-brand-primary)] rounded-full" />
-                  <span>Discover career-focused communities</span>
+                  <span>Discover career-focused communities across your fields</span>
                 </div>
+                {selectedMajors.length > 1 && (
+                  <div className="flex items-center gap-[var(--hive-spacing-2)]">
+                    <div className="w-1.5 h-1.5 bg-[var(--hive-brand-primary)] rounded-full" />
+                    <span>Explore interdisciplinary opportunities with your double/triple major</span>
+                  </div>
+                )}
               </div>
-            </HiveCard>
+            </Card>
           </motion.div>
         )}
       </motion.form>

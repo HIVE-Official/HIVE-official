@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { HiveModal, Button, Card, Badge, HiveInput } from "@hive/ui";
+import { Modal, Button, Card, Badge, Input } from "@hive/ui";
 import { Alert } from "@/components/temp-stubs";
 import { 
   ArrowRight, 
@@ -244,7 +244,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
         return (
           <div className="space-y-6">
             <div className="text-center">
-              <h3 className="text-xl font-semibold text-white mb-2">What type of space are you creating?</h3>
+              <h3 className="text-xl font-semibold text-[var(--hive-text-inverse)] mb-2">What type of space are you creating?</h3>
               <p className="text-zinc-400">Choose the category that best fits your community's purpose</p>
             </div>
 
@@ -269,7 +269,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                       </div>
                       <div className="flex-1">
                         <div className="flex items-center justify-between mb-2">
-                          <h4 className="font-semibold text-white">{config.name}</h4>
+                          <h4 className="font-semibold text-[var(--hive-text-inverse)]">{config.name}</h4>
                           {isSelected && <Check className="h-5 w-5 text-hive-gold" />}
                         </div>
                         <p className="text-sm text-zinc-400 mb-3 leading-tight">{config.description}</p>
@@ -306,14 +306,14 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
               <div className={`w-16 h-16 ${SPACE_TYPES[spaceData.type].color} rounded-xl flex items-center justify-center text-2xl mx-auto mb-3`}>
                 {SPACE_TYPES[spaceData.type].emoji}
               </div>
-              <h3 className="text-xl font-semibold text-white mb-2">Space Identity</h3>
+              <h3 className="text-xl font-semibold text-[var(--hive-text-inverse)] mb-2">Space Identity</h3>
               <p className="text-zinc-400">Give your {SPACE_TYPES[spaceData.type].name.toLowerCase()} space a name and description</p>
             </div>
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-white mb-2">Space Name *</label>
-                <HiveInput
+                <label className="block text-sm font-medium text-[var(--hive-text-inverse)] mb-2">Space Name *</label>
+                <Input
                   value={spaceData.name}
                   onChange={(e) => updateSpaceData({ name: e.target.value })}
                   placeholder="Enter a clear, descriptive name..."
@@ -324,14 +324,14 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-white mb-2">Description *</label>
+                <label className="block text-sm font-medium text-[var(--hive-text-inverse)] mb-2">Description *</label>
                 <textarea
                   value={spaceData.description}
                   onChange={(e) => updateSpaceData({ description: e.target.value })}
                   placeholder="Describe the purpose and goals of your space..."
                   maxLength={200}
                   rows={4}
-                  className={`w-full p-3 bg-zinc-800 border rounded-lg text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-hive-gold/50 resize-none ${
+                  className={`w-full p-3 bg-zinc-800 border rounded-lg text-[var(--hive-text-inverse)] placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-hive-gold/50 resize-none ${
                     errors.description ? 'border-red-500' : 'border-zinc-700 focus:border-hive-gold'
                   }`}
                 />
@@ -345,7 +345,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
 
               {/* Category Tags */}
               <div>
-                <label className="block text-sm font-medium text-white mb-2">Category Tags (Optional)</label>
+                <label className="block text-sm font-medium text-[var(--hive-text-inverse)] mb-2">Category Tags (Optional)</label>
                 <div className="flex flex-wrap gap-2">
                   {['study-group', 'social', 'academic', 'project', 'community', 'networking'].map((tag) => (
                     <Badge
@@ -377,13 +377,13 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
         return (
           <div className="space-y-6">
             <div className="text-center">
-              <h3 className="text-xl font-semibold text-white mb-2">Privacy & Access Settings</h3>
+              <h3 className="text-xl font-semibold text-[var(--hive-text-inverse)] mb-2">Privacy & Access Settings</h3>
               <p className="text-zinc-400">Configure who can see and join your space</p>
             </div>
 
             {/* Visibility Settings */}
             <div>
-              <h4 className="font-medium text-white mb-3">Space Visibility</h4>
+              <h4 className="font-medium text-[var(--hive-text-inverse)] mb-3">Space Visibility</h4>
               <div className="space-y-3">
                 {[
                   {
@@ -421,7 +421,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                       <div className="flex items-center space-x-3">
                         <Icon className={`h-5 w-5 ${isSelected ? 'text-hive-gold' : 'text-zinc-400'}`} />
                         <div className="flex-1">
-                          <div className="font-medium text-white">{option.title}</div>
+                          <div className="font-medium text-[var(--hive-text-inverse)]">{option.title}</div>
                           <div className="text-sm text-zinc-400">{option.description}</div>
                         </div>
                         {isSelected && <Check className="h-5 w-5 text-hive-gold" />}
@@ -434,7 +434,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
 
             {/* Join Process */}
             <div>
-              <h4 className="font-medium text-white mb-3">Join Process</h4>
+              <h4 className="font-medium text-[var(--hive-text-inverse)] mb-3">Join Process</h4>
               <div className="space-y-3">
                 {[
                   {
@@ -472,7 +472,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                       <div className="flex items-center space-x-3">
                         <Icon className={`h-5 w-5 ${isSelected ? 'text-hive-gold' : 'text-zinc-400'}`} />
                         <div className="flex-1">
-                          <div className="font-medium text-white">{option.title}</div>
+                          <div className="font-medium text-[var(--hive-text-inverse)]">{option.title}</div>
                           <div className="text-sm text-zinc-400">{option.description}</div>
                         </div>
                         {isSelected && <Check className="h-5 w-5 text-hive-gold" />}
@@ -496,20 +496,20 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
         return (
           <div className="space-y-6">
             <div className="text-center">
-              <h3 className="text-xl font-semibold text-white mb-2">Community Guidelines</h3>
+              <h3 className="text-xl font-semibold text-[var(--hive-text-inverse)] mb-2">Community Guidelines</h3>
               <p className="text-zinc-400">Set clear expectations for your space members</p>
             </div>
 
             {/* Add Rule Input */}
             <div>
-              <label className="block text-sm font-medium text-white mb-2">Add Custom Rule</label>
+              <label className="block text-sm font-medium text-[var(--hive-text-inverse)] mb-2">Add Custom Rule</label>
               <div className="flex space-x-2">
                 <input
                   type="text"
                   value={newRule}
                   onChange={(e) => setNewRule(e.target.value)}
                   placeholder="Enter a community guideline..."
-                  className="flex-1 p-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-400 focus:border-hive-gold focus:outline-none"
+                  className="flex-1 p-3 bg-zinc-800 border border-zinc-700 rounded-lg text-[var(--hive-text-inverse)] placeholder-zinc-400 focus:border-hive-gold focus:outline-none"
                   onKeyPress={(e) => {
                     if (e.key === 'Enter') {
                       addRule(newRule);
@@ -532,14 +532,14 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
 
             {/* Suggested Rules */}
             <div>
-              <h4 className="font-medium text-white mb-3">Suggested Guidelines</h4>
+              <h4 className="font-medium text-[var(--hive-text-inverse)] mb-3">Suggested Guidelines</h4>
               <div className="space-y-2">
                 {defaultRules.map((rule, index) => (
                   <div
                     key={index}
                     className={`p-3 rounded-lg border cursor-pointer transition-colors ${
                       spaceData.rules.includes(rule)
-                        ? 'bg-hive-gold/10 border-hive-gold text-white'
+                        ? 'bg-hive-gold/10 border-hive-gold text-[var(--hive-text-inverse)]'
                         : 'bg-zinc-800/50 border-zinc-700 text-zinc-300 hover:bg-zinc-800'
                     }`}
                     onClick={() => {
@@ -566,11 +566,11 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
             {/* Current Rules */}
             {spaceData.rules.length > 0 && (
               <div>
-                <h4 className="font-medium text-white mb-3">Your Community Guidelines ({spaceData.rules.length})</h4>
+                <h4 className="font-medium text-[var(--hive-text-inverse)] mb-3">Your Community Guidelines ({spaceData.rules.length})</h4>
                 <div className="space-y-2">
                   {spaceData.rules.map((rule, index) => (
                     <div key={index} className="flex items-center justify-between p-3 bg-hive-gold/10 border border-hive-gold rounded-lg">
-                      <span className="text-sm text-white">{rule}</span>
+                      <span className="text-sm text-[var(--hive-text-inverse)]">{rule}</span>
                       <Button
                         variant="ghost"
                         size="sm"
@@ -601,13 +601,13 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
         return (
           <div className="space-y-6">
             <div className="text-center">
-              <h3 className="text-xl font-semibold text-white mb-2">Tools & Features</h3>
+              <h3 className="text-xl font-semibold text-[var(--hive-text-inverse)] mb-2">Tools & Features</h3>
               <p className="text-zinc-400">Choose tools that will help your {SPACE_TYPES[spaceData.type].name.toLowerCase()} space coordinate effectively</p>
             </div>
 
             {/* Recommended Tools */}
             <div>
-              <h4 className="font-medium text-white mb-3">Recommended for {SPACE_TYPES[spaceData.type].name} Spaces</h4>
+              <h4 className="font-medium text-[var(--hive-text-inverse)] mb-3">Recommended for {SPACE_TYPES[spaceData.type].name} Spaces</h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {suggestedTools.map((toolId) => {
                   const tool = SUGGESTED_TOOLS[toolId as keyof typeof SUGGESTED_TOOLS];
@@ -626,7 +626,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                       <div className="flex items-center space-x-3">
                         <div className="text-2xl">{tool.icon}</div>
                         <div className="flex-1">
-                          <div className="font-medium text-white">{tool.name}</div>
+                          <div className="font-medium text-[var(--hive-text-inverse)]">{tool.name}</div>
                           <div className="text-sm text-zinc-400">{tool.description}</div>
                         </div>
                         {isSelected && <Check className="h-5 w-5 text-hive-gold" />}
@@ -639,7 +639,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
 
             {/* Other Available Tools */}
             <div>
-              <h4 className="font-medium text-white mb-3">Other Available Tools</h4>
+              <h4 className="font-medium text-[var(--hive-text-inverse)] mb-3">Other Available Tools</h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {Object.entries(SUGGESTED_TOOLS)
                   .filter(([toolId]) => !suggestedTools.includes(toolId))
@@ -659,7 +659,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                         <div className="flex items-center space-x-3">
                           <div className="text-2xl">{tool.icon}</div>
                           <div className="flex-1">
-                            <div className="font-medium text-white">{tool.name}</div>
+                            <div className="font-medium text-[var(--hive-text-inverse)]">{tool.name}</div>
                             <div className="text-sm text-zinc-400">{tool.description}</div>
                           </div>
                           {isSelected && <Check className="h-5 w-5 text-hive-gold" />}
@@ -691,17 +691,17 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
         return (
           <div className="space-y-6">
             <div className="text-center">
-              <h3 className="text-xl font-semibold text-white mb-2">Founding Members</h3>
+              <h3 className="text-xl font-semibold text-[var(--hive-text-inverse)] mb-2">Founding Members</h3>
               <p className="text-zinc-400">Invite initial members to help establish your space (optional)</p>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-white mb-2">Invite by Handle or Email</label>
+              <label className="block text-sm font-medium text-[var(--hive-text-inverse)] mb-2">Invite by Handle or Email</label>
               <div className="flex space-x-2">
                 <input
                   type="text"
                   placeholder="@handle or email@university.edu"
-                  className="flex-1 p-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-400 focus:border-hive-gold focus:outline-none"
+                  className="flex-1 p-3 bg-zinc-800 border border-zinc-700 rounded-lg text-[var(--hive-text-inverse)] placeholder-zinc-400 focus:border-hive-gold focus:outline-none"
                 />
                 <Button className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne">
                   <Plus className="h-4 w-4 mr-2" />
@@ -729,14 +729,14 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
               <div className={`w-16 h-16 ${SPACE_TYPES[spaceData.type].color} rounded-xl flex items-center justify-center text-2xl mx-auto mb-3`}>
                 {SPACE_TYPES[spaceData.type].emoji}
               </div>
-              <h3 className="text-xl font-semibold text-white mb-2">Ready to Launch!</h3>
+              <h3 className="text-xl font-semibold text-[var(--hive-text-inverse)] mb-2">Ready to Launch!</h3>
               <p className="text-zinc-400">Review your space details before creating</p>
             </div>
 
             <div className="space-y-4">
               {/* Basic Info */}
               <Card className="p-4 bg-zinc-800/50 border-zinc-700">
-                <h4 className="font-medium text-white mb-3">Basic Information</h4>
+                <h4 className="font-medium text-[var(--hive-text-inverse)] mb-3">Basic Information</h4>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span className="text-zinc-400">Type:</span>
@@ -744,28 +744,28 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                   </div>
                   <div className="flex justify-between">
                     <span className="text-zinc-400">Name:</span>
-                    <span className="text-white font-medium">{spaceData.name}</span>
+                    <span className="text-[var(--hive-text-inverse)] font-medium">{spaceData.name}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-zinc-400">Visibility:</span>
-                    <span className="text-white capitalize">{spaceData.visibility.replace('_', ' ')}</span>
+                    <span className="text-[var(--hive-text-inverse)] capitalize">{spaceData.visibility.replace('_', ' ')}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-zinc-400">Join Process:</span>
-                    <span className="text-white capitalize">{spaceData.joinProcess.replace('_', ' ')}</span>
+                    <span className="text-[var(--hive-text-inverse)] capitalize">{spaceData.joinProcess.replace('_', ' ')}</span>
                   </div>
                 </div>
               </Card>
 
               {/* Description */}
               <Card className="p-4 bg-zinc-800/50 border-zinc-700">
-                <h4 className="font-medium text-white mb-2">Description</h4>
+                <h4 className="font-medium text-[var(--hive-text-inverse)] mb-2">Description</h4>
                 <p className="text-zinc-300 text-sm leading-relaxed">{spaceData.description}</p>
               </Card>
 
               {/* Guidelines */}
               <Card className="p-4 bg-zinc-800/50 border-zinc-700">
-                <h4 className="font-medium text-white mb-3">Community Guidelines ({spaceData.rules.length})</h4>
+                <h4 className="font-medium text-[var(--hive-text-inverse)] mb-3">Community Guidelines ({spaceData.rules.length})</h4>
                 <div className="space-y-2">
                   {spaceData.rules.map((rule, index) => (
                     <div key={index} className="flex items-start space-x-2 text-sm">
@@ -779,7 +779,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
               {/* Tools */}
               {spaceData.tools.length > 0 && (
                 <Card className="p-4 bg-zinc-800/50 border-zinc-700">
-                  <h4 className="font-medium text-white mb-3">Enabled Tools ({spaceData.tools.length})</h4>
+                  <h4 className="font-medium text-[var(--hive-text-inverse)] mb-3">Enabled Tools ({spaceData.tools.length})</h4>
                   <div className="flex flex-wrap gap-2">
                     {spaceData.tools.map((toolId) => (
                       <Badge key={toolId} variant="building-tools" className="flex items-center space-x-1">
@@ -800,7 +800,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
   };
 
   return (
-    <HiveModal
+    <Modal
       isOpen={isOpen}
       onClose={handleClose}
       title=""
@@ -811,7 +811,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
         {/* Header with Progress */}
         <div className="p-6 border-b border-zinc-800">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-2xl font-bold text-white">Create New Space</h2>
+            <h2 className="text-2xl font-bold text-[var(--hive-text-inverse)]">Create New Space</h2>
             <div className="text-sm text-zinc-400">
               Step {currentStepIndex + 1} of {steps.length}
             </div>
@@ -829,7 +829,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
           </div>
           
           <div className="mt-3">
-            <h3 className="text-lg font-semibold text-white">{getStepTitle(currentStep)}</h3>
+            <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)]">{getStepTitle(currentStep)}</h3>
           </div>
         </div>
 
@@ -878,6 +878,6 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
           </div>
         </div>
       </div>
-    </HiveModal>
+    </Modal>
   );
 }

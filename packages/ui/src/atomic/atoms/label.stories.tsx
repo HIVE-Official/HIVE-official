@@ -115,7 +115,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="success">🎭 VARIANTS</Badge>
+            <Badge variant="emerald">🎭 VARIANTS</Badge>
             Label Variants - Form Layout Options
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -451,7 +451,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="warning">⚡ STATES</Badge>
+            <Badge variant="gold">⚡ STATES</Badge>
             Label States - Form Context
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">

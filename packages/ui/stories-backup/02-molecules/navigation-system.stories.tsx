@@ -2,8 +2,12 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
 import { HiveButton } from '../../components/hive-button';
 
-const meta: Meta = {
+// Mock component for Storybook CSF compliance
+const NavigationSystemMolecules = () => <div>Navigation System Molecules</div>;
+
+const meta: Meta<typeof NavigationSystemMolecules> = {
   title: '02-Molecules/Navigation System',
+  component: NavigationSystemMolecules,
   parameters: {
     layout: 'fullscreen',
     docs: {

@@ -87,7 +87,7 @@ const requiredPublicVars = [
   'NEXT_PUBLIC_FIREBASE_APP_ID'
 ];
 
-let missingVars = [];
+const missingVars = [];
 requiredPublicVars.forEach(varName => {
   if (process.env[varName]) {
     log(`✅ ${varName}`, 'green');

@@ -1,4 +1,2 @@
-export { HiveAuthProvider, useHiveAuth, type HiveUser } from './hive-auth-context';
-export { UnifiedAuthProvider } from './unified-auth-context';
-export { ShellProvider } from '../components/shell/shell-provider';
+export { FirebaseAuthProvider, FirebaseAuthProvider as UnifiedAuthProvider, useFirebaseAuth, useUnifiedAuth, useUnifiedAuth as useAuth, type HiveUser, type FirebaseAuthContextType } from './unified-auth-context';
 //# sourceMappingURL=index.d.ts.map

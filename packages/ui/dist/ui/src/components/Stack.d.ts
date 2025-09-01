@@ -1,13 +1,10 @@
-import * as React from 'react';
-import { type VariantProps } from 'class-variance-authority';
-declare const stackVariants: (props?: {
-    direction?: "row" | "col";
-    align?: "end" | "center" | "start" | "stretch";
-    justify?: "end" | "center" | "start" | "between" | "around";
-    gap?: 0 | 1 | 3 | 2 | 4 | 8 | 10 | 5 | 12 | 6;
-} & import("class-variance-authority/types").ClassProp) => string;
-export interface StackProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof stackVariants> {
+import React from 'react';
+interface StackProps extends React.HTMLAttributes<HTMLDivElement> {
+    direction?: 'horizontal' | 'vertical';
+    spacing?: number | string;
+    align?: 'start' | 'center' | 'end' | 'stretch';
+    justify?: 'start' | 'center' | 'end' | 'between' | 'around' | 'evenly';
 }
-declare const Stack: React.ForwardRefExoticComponent<StackProps & React.RefAttributes<HTMLDivElement>>;
-export { Stack, stackVariants };
+export declare const Stack: React.FC<StackProps>;
+export {};
 //# sourceMappingURL=Stack.d.ts.map

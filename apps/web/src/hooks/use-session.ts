@@ -12,7 +12,8 @@ interface SessionData {
   profileData?: {
     fullName: string;
     handle: string;
-    major: string;
+    major?: string;      // Legacy field for backward compatibility
+    majors?: string[];   // New field for multiple majors
     avatarUrl: string;
     builderOptIn: boolean;
   };
@@ -23,7 +24,8 @@ export interface User {
   email: string;
   fullName?: string;
   handle?: string;
-  major?: string;
+  major?: string;      // Legacy field for backward compatibility
+  majors?: string[];   // New field for multiple majors
   avatarUrl?: string;
   schoolId: string;
   builderOptIn?: boolean;
@@ -43,7 +45,8 @@ export function useSession() {
     email: hiveAuth.user.email,
     fullName: hiveAuth.user.fullName,
     handle: hiveAuth.user.handle,
-    major: hiveAuth.user.major,
+    major: hiveAuth.user.major,        // Legacy field
+    majors: hiveAuth.user.majors,      // New array field
     avatarUrl: hiveAuth.user.avatarUrl,
     schoolId: hiveAuth.user.schoolId || '',
     builderOptIn: hiveAuth.user.builderOptIn,
@@ -60,7 +63,8 @@ export function useSession() {
     profileData: {
       fullName: hiveAuth.user.fullName || '',
       handle: hiveAuth.user.handle || '',
-      major: hiveAuth.user.major || '',
+      major: hiveAuth.user.major,           // Legacy field
+      majors: hiveAuth.user.majors,         // New array field
       avatarUrl: hiveAuth.user.avatarUrl || '',
       builderOptIn: hiveAuth.user.builderOptIn || false,
     },
@@ -70,9 +74,10 @@ export function useSession() {
     isLoading: hiveAuth.isLoading,
     isAuthenticated: hiveAuth.isAuthenticated,
     user,
+    session: sessionData,  // Use 'session' for better compatibility
     sessionData,
     // Legacy logout method
-    logout: hiveAuth.logout,
+    logout: hiveAuth.signOut,
     // Add getIdToken for API compatibility
     getIdToken: hiveAuth.getAuthToken,
   };

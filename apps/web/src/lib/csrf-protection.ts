@@ -539,7 +539,7 @@ export class CSRFProtection {
     }
 
     if (cleanedCount > 0) {
-      
+      console.log(`Cleaned ${cleanedCount} expired CSRF tokens`);
     }
   }
 

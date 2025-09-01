@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageCircle, X, Send, Loader2, Hexagon } from "lucide-react";
-import { HiveButton } from "@hive/ui";
+import { HiveButton } from "../../../../packages/ui/src/components/hive-button";
 
 export function FeedbackToast() {
   const [isOpen, setIsOpen] = useState(false);

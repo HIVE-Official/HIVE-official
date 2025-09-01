@@ -2,9 +2,9 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { CampusCard } from './campus-card';
-import { SearchInput } from './search-input';
-import { cn } from '../../../lib/utils';
+import { CampusCard } from './campus-card.js';
+import { SearchInput } from './search-input.js';
+import { cn } from '../../../lib/utils.js';
 export const CampusSelector = ({ campuses, selectedCampusId, onSelect, className }) => {
     const [searchQuery, setSearchQuery] = useState('');
     const filteredCampuses = useMemo(() => {

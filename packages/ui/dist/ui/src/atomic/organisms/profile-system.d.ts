@@ -3,10 +3,10 @@ import { type VariantProps } from 'class-variance-authority';
 import { type ActivityItem } from './profile-card';
 import { type ProfileUser } from '../molecules/profile-header';
 import { type HiveProfileStats as ProfileStatsType } from '../molecules/profile-stats';
-declare const profileSystemVariants: (props?: {
-    layout?: "mobile" | "desktop";
-    spacing?: "normal" | "loose" | "tight";
-} & import("class-variance-authority/types").ClassProp) => string;
+declare const profileSystemVariants: (props?: ({
+    layout?: "mobile" | "desktop" | null | undefined;
+    spacing?: "normal" | "loose" | "tight" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
 export interface ProfileSpace {
     id: string;
     name: string;

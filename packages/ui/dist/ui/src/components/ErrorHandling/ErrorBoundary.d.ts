@@ -65,7 +65,7 @@ export declare class HiveErrorBoundary extends Component<Props, State> {
     private reportError;
     handleRetry: () => void;
     handleAction: (action: HiveError["recovery"]["action"], actionUrl?: string) => void;
-    render(): string | number | bigint | boolean | Iterable<React.ReactNode> | Promise<React.AwaitedReactNode> | import("react/jsx-runtime").JSX.Element;
+    render(): string | number | bigint | boolean | Iterable<React.ReactNode> | Promise<React.AwaitedReactNode> | import("react/jsx-runtime").JSX.Element | null | undefined;
 }
 export declare function useHiveErrorBoundary(): {
     ErrorBoundary: typeof HiveErrorBoundary;

@@ -39,7 +39,7 @@ export declare function ToastProvider({ children }: {
 }): import("react/jsx-runtime").JSX.Element;
 export declare const toast: {
     success: (title: string, description?: string, options?: Partial<ToastProps>) => {
-        id?: string;
+        id?: string | undefined;
         variant: AlertVariant;
         title: string;
         description: string;
@@ -52,7 +52,7 @@ export declare const toast: {
         };
     };
     error: (title: string, description?: string, options?: Partial<ToastProps>) => {
-        id?: string;
+        id?: string | undefined;
         variant: AlertVariant;
         title: string;
         description: string;
@@ -65,7 +65,7 @@ export declare const toast: {
         };
     };
     warning: (title: string, description?: string, options?: Partial<ToastProps>) => {
-        id?: string;
+        id?: string | undefined;
         variant: AlertVariant;
         title: string;
         description: string;
@@ -78,7 +78,7 @@ export declare const toast: {
         };
     };
     info: (title: string, description?: string, options?: Partial<ToastProps>) => {
-        id?: string;
+        id?: string | undefined;
         variant: AlertVariant;
         title: string;
         description: string;
@@ -91,7 +91,7 @@ export declare const toast: {
         };
     };
     default: (title: string, description?: string, options?: Partial<ToastProps>) => {
-        id?: string;
+        id?: string | undefined;
         variant: AlertVariant;
         title: string;
         description: string;

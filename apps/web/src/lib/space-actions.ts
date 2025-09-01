@@ -6,39 +6,15 @@ export interface SpaceActionResult {
   error?: string;
 }
 
-/**
- * Get auth token from session (utility for space actions)
- * WARNING: This is a temporary utility - should use useUnifiedAuth in components
- */
-async function getAuthTokenFromSession(): Promise<string> {
-  // This is a temporary utility function for non-component contexts
-  // Components should use useUnifiedAuth().getAuthToken() instead
-  try {
-    const sessionJson = window.localStorage.getItem('hive_session');
-    if (sessionJson) {
-      const session = JSON.parse(sessionJson);
-      if (!session.token) {
-        throw new Error('No valid authentication token found');
-      }
-      return session.token;
-    }
-    throw new Error('No session found');
-  } catch (error) {
-    throw new Error('Authentication required');
-  }
-}
+// Import centralized auth utilities
+import { getAuthHeaders } from './auth-utils';
 
 /**
  * Join a space
  */
 export async function joinSpace(spaceId: string): Promise<SpaceActionResult> {
   try {
-    const authToken = await getAuthTokenFromSession();
-    
-    const headers: Record<string, string> = {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${authToken}`
-    };
+    const headers = getAuthHeaders(true);
 
     const response = await fetch('/api/spaces/join', {
       method: 'POST',
@@ -74,12 +50,7 @@ export async function joinSpace(spaceId: string): Promise<SpaceActionResult> {
  */
 export async function leaveSpace(spaceId: string): Promise<SpaceActionResult> {
   try {
-    const authToken = await getAuthTokenFromSession();
-    
-    const headers: Record<string, string> = {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${authToken}`
-    };
+    const headers = getAuthHeaders(true);
 
     const response = await fetch('/api/spaces/leave', {
       method: 'POST',
@@ -115,12 +86,7 @@ export async function leaveSpace(spaceId: string): Promise<SpaceActionResult> {
  */
 export async function toggleSpacePin(spaceId: string, currentlyPinned: boolean): Promise<SpaceActionResult> {
   try {
-    const headers: Record<string, string> = {
-      'Content-Type': 'application/json'
-    };
-    
-    const authToken = await getAuthTokenFromSession();
-    headers.Authorization = `Bearer ${authToken}`;
+    const headers = getAuthHeaders(true);
 
     const response = await fetch('/api/spaces/my', {
       method: 'PATCH',
@@ -159,12 +125,7 @@ export async function toggleSpacePin(spaceId: string, currentlyPinned: boolean):
  */
 export async function markSpaceVisited(spaceId: string): Promise<SpaceActionResult> {
   try {
-    const headers: Record<string, string> = {
-      'Content-Type': 'application/json'
-    };
-    
-    const authToken = await getAuthTokenFromSession();
-    headers.Authorization = `Bearer ${authToken}`;
+    const headers = getAuthHeaders(true);
 
     const response = await fetch('/api/spaces/my', {
       method: 'PATCH',

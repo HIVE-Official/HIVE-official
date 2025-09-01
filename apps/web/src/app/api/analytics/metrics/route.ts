@@ -22,7 +22,7 @@ const MetricSchema = z.object({
 const MetricsBatchSchema = z.object({
   metrics: z.array(MetricSchema) });
 
-const db = dbAdmin;
+const _db = dbAdmin;
 
 // POST /api/analytics/metrics - Store performance metrics
 export async function POST(request: NextRequest) {

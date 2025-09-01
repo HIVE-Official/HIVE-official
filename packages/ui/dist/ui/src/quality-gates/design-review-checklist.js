@@ -36,7 +36,7 @@ export const designQualityGates = [
                 rule: "Functional Color",
                 description: "Color communicates function and state, not decoration",
                 examples: {
-                    good: "bg-gray-900 (neutral), text-amber-400 (interactive), border-red-500 (error)",
+                    good: "bg-[var(--hive-background-primary)] (neutral), text-amber-400 (interactive), border-red-500 (error)",
                     bad: "bg-gradient-to-r from-blue-500/10 to-purple-500/10, decorative gradients"
                 }
             }
@@ -242,7 +242,7 @@ export function checkMobileOptimization(componentCode) {
 }
 // Usage example for component reviews
 export const exampleUsage = `
-import { checkAIPatterns, checkMobileOptimization, componentQualityGates } from './design-review-checklist';
+import { checkAIPatterns, checkMobileOptimization, componentQualityGates } from './design-review-checklist.js';
 
 // Before merging any component
 const componentCode = readFileSync('./Button.tsx', 'utf8');

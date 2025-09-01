@@ -34,12 +34,12 @@ export interface SessionData {
  * Maps UnifiedAuth to the old useAuth interface
  */
 export declare function useAuth(): {
-    user: User;
+    user: User | null;
     loading: boolean;
-    error: string;
-    signIn: (email: string, password?: string) => Promise<void>;
+    error: string | null;
+    signIn: (customToken: string) => Promise<void>;
     signOut: () => Promise<void>;
-    signUp: (email: string, password: string, displayName?: string) => Promise<void>;
+    signUp: (email: string, _password: string, _displayName?: string) => Promise<never>;
     getAuthToken: () => Promise<string | null>;
 };
 /**
@@ -49,8 +49,8 @@ export declare function useAuth(): {
 export declare function useSession(): {
     isLoading: boolean;
     isAuthenticated: boolean;
-    user: User;
-    sessionData: SessionData;
+    user: User | null;
+    sessionData: SessionData | null;
     logout: () => Promise<void>;
 };
 /**

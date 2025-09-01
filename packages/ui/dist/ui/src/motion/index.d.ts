@@ -2,7 +2,6 @@ export { hiveMotionCore, liquidMetalMotion, hiveMotionVariants, गति, // Le
 separateMotionProps, getMotionProps, getLogoMotionProps, getHiveMotionProps, getCascadeProps, getStaggerProps, magneticSystem } from '../lib/motion-utils';
 export { liquidMetal, motionDurations, cascadeTiming, magneticSnap, liquidFlow, butteryInteractions } from './hive-motion-system';
 export { magneticInteractions, liquidMetalPerformance, liquidMetalUtils } from './hive-liquid-metal';
-export { HiveMotionWrapper } from '../components/hive-motion-wrapper';
 export { motion, AnimatePresence, useAnimation, useInView, useTransform, useSpring, useMotionValue } from 'framer-motion';
 export type { Variants, Transition, MotionProps, MotionValue } from 'framer-motion';
 //# sourceMappingURL=index.d.ts.map

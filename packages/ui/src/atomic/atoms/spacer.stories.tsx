@@ -125,7 +125,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="success">📏 SIZES</Badge>
+            <Badge variant="emerald">📏 SIZES</Badge>
             Spacer Sizes - Precise Spacing Control
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -390,7 +390,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="warning">🎯 PRESETS</Badge>
+            <Badge variant="gold">🎯 PRESETS</Badge>
             Spacer Presets - Common Campus Patterns
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">

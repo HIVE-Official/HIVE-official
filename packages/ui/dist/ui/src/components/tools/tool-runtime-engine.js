@@ -7,12 +7,11 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
  * Takes a tool definition (composed of elements) and renders a working, interactive tool.
  */
 import { useState, useCallback, useEffect } from 'react';
-import { HiveButton } from '../index';
 import { Play, RefreshCw, AlertCircle, CheckCircle } from 'lucide-react';
-import { cn } from '../../lib/utils';
-import { MobileToolWrapper } from './mobile-tool-wrapper';
+import { cn } from '../../lib/utils.js';
+import { MobileToolWrapper } from './mobile-tool-wrapper.js';
 // Event Elements (complete 24-element library)
-import { TextInputElement, DatePickerElement, SelectElement, NumberInputElement, CheckboxElement, RadioElement, EventCardElement, CounterElement, QRCodeElement, RSVPElement, FilterElement, AttendeeListElement, CalendarViewElement, NotificationElement, AnalyticsChartElement, FeedbackFormElement, ShareElement, RecurrenceElement, TagsElement, StatusElement, } from '../events/event-elements';
+import { TextInputElement, DatePickerElement, SelectElement, NumberInputElement, CheckboxElement, RadioElement, EventCardElement, CounterElement, QRCodeElement, RSVPElement, FilterElement, AttendeeListElement, CalendarViewElement, NotificationElement, AnalyticsChartElement, FeedbackFormElement, ShareElement, RecurrenceElement, TagsElement, StatusElement, } from '../events/event-elements.js';
 export function ToolRuntimeEngine({ tool, userId = 'current_user', spaceId, mode = 'production', onSave, onSubmit, className }) {
     // Runtime state management
     const [state, setState] = useState({
@@ -132,7 +131,7 @@ export function ToolRuntimeEngine({ tool, userId = 'current_user', spaceId, mode
                 elementComponent = (_jsx(TextInputElement, { ...commonProps, placeholder: element.properties.placeholder, maxLength: element.properties.maxLength, required: element.validation?.required }));
                 break;
             case 'textarea':
-                elementComponent = (_jsxs("div", { className: "space-y-2", children: [element.label && (_jsxs("label", { className: "block text-sm font-medium text-gray-900", children: [element.label, " ", element.validation?.required && _jsx("span", { className: "text-red-500", children: "*" })] })), _jsx("textarea", { value: value || '', onChange: (e) => onChange(e.target.value), placeholder: element.properties.placeholder, rows: element.properties.rows || 3, disabled: state.loading, className: cn("w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-amber-500", error && "border-red-300 ring-red-500") })] }));
+                elementComponent = (_jsxs("div", { className: "space-y-2", children: [element.label && (_jsxs("label", { className: "block text-sm font-medium text-gray-900", children: [element.label, " ", element.validation?.required && _jsx("span", { className: "text-red-500", children: "*" })] })), _jsx("textarea", { value: value || '', onChange: (e) => onChange(e.target.value), placeholder: element.properties.placeholder, rows: element.properties.rows || 3, disabled: state.loading, className: cn("w-full p-2 border border-[var(--hive-border-default)] rounded-md focus:ring-2 focus:ring-amber-500 focus:border-amber-500", error && "border-red-300 ring-red-500") })] }));
                 break;
             case 'date_picker':
                 elementComponent = (_jsx(DatePickerElement, { ...commonProps, includeTime: element.properties.includeTime, minDate: element.properties.minDate ? new Date(element.properties.minDate) : undefined, maxDate: element.properties.maxDate ? new Date(element.properties.maxDate) : undefined, required: element.validation?.required }));
@@ -150,7 +149,7 @@ export function ToolRuntimeEngine({ tool, userId = 'current_user', spaceId, mode
                 elementComponent = (_jsx(RadioElement, { ...commonProps, options: element.properties.options || [] }));
                 break;
             case 'button':
-                elementComponent = (_jsxs(HiveButton, { onClick: () => {
+                elementComponent = (_jsxs(Button, { onClick: () => {
                         elementActions.forEach(action => executeAction(action));
                     }, disabled: state.loading || elementActions.some(a => state.actions[a.id]), variant: element.properties.variant || 'default', size: element.properties.size || 'md', children: [elementActions.some(a => state.actions[a.id]) && (_jsx(RefreshCw, { className: "w-4 h-4 mr-2 animate-spin" })), element.label || 'Button'] }));
                 break;
@@ -158,7 +157,7 @@ export function ToolRuntimeEngine({ tool, userId = 'current_user', spaceId, mode
                 elementComponent = (_jsxs("div", { className: "space-y-1", children: [element.label && (_jsx("label", { className: "block text-sm font-medium text-gray-900", children: element.label })), _jsx("p", { className: cn("text-gray-700", element.properties.size === 'lg' && "text-lg", element.properties.size === 'xl' && "text-xl", element.properties.weight === 'bold' && "font-bold", element.properties.weight === 'semibold' && "font-semibold"), children: element.properties.text || 'Display text' })] }));
                 break;
             case 'divider':
-                elementComponent = _jsx("hr", { className: "border-gray-300 my-4" });
+                elementComponent = _jsx("hr", { className: "border-[var(--hive-border-default)] my-4" });
                 break;
             case 'event_card':
                 elementComponent = (_jsx(EventCardElement, { id: element.id, event: element.properties.event || {
@@ -232,11 +231,11 @@ export function ToolRuntimeEngine({ tool, userId = 'current_user', spaceId, mode
             return () => clearTimeout(autoSave);
         }
     }, [state.values, mode, onSave]);
-    const toolContent = (_jsxs("div", { className: "space-y-6", children: [_jsxs("div", { className: "border-b border-gray-200 pb-4", children: [_jsxs("div", { className: "flex items-start justify-between", children: [_jsxs("div", { children: [_jsx("h2", { className: "text-2xl font-bold text-gray-900", children: tool.name }), tool.description && (_jsx("p", { className: "text-gray-600 mt-1", children: tool.description }))] }), mode === 'preview' && (_jsx("div", { className: "flex items-center gap-2", children: _jsxs("div", { className: "flex items-center gap-1 text-sm text-blue-600", children: [_jsx(Play, { className: "w-4 h-4" }), _jsx("span", { children: "Preview Mode" })] }) }))] }), state.lastSaved && (_jsxs("div", { className: "flex items-center gap-1 text-sm text-green-600 mt-2", children: [_jsx(CheckCircle, { className: "w-4 h-4" }), _jsxs("span", { children: ["Last saved: ", new Date(state.lastSaved).toLocaleTimeString()] })] }))] }), _jsx("div", { className: "space-y-6", children: tool.elements
+    const toolContent = (_jsxs("div", { className: "space-y-6", children: [_jsxs("div", { className: "border-b border-gray-200 pb-4", children: [_jsxs("div", { className: "flex items-start justify-between", children: [_jsxs("div", { children: [_jsx("h2", { className: "text-2xl font-bold text-gray-900", children: tool.name }), tool.description && (_jsx("p", { className: "text-[var(--hive-text-muted)] mt-1", children: tool.description }))] }), mode === 'preview' && (_jsx("div", { className: "flex items-center gap-2", children: _jsxs("div", { className: "flex items-center gap-1 text-sm text-blue-600", children: [_jsx(Play, { className: "w-4 h-4" }), _jsx("span", { children: "Preview Mode" })] }) }))] }), state.lastSaved && (_jsxs("div", { className: "flex items-center gap-1 text-sm text-green-600 mt-2", children: [_jsx(CheckCircle, { className: "w-4 h-4" }), _jsxs("span", { children: ["Last saved: ", new Date(state.lastSaved).toLocaleTimeString()] })] }))] }), _jsx("div", { className: "space-y-6", children: tool.elements
                     .sort((a, b) => a.position.y - b.position.y) // Sort by vertical position
                     .map(renderElement) }), tool.actions.filter(action => !action.trigger || action.trigger === 'global').length > 0 && (_jsx("div", { className: "border-t border-gray-200 pt-4", children: _jsx("div", { className: "flex gap-3 flex-wrap", children: tool.actions
                         .filter(action => !action.trigger || action.trigger === 'global')
-                        .map(action => (_jsxs(HiveButton, { onClick: () => executeAction(action), disabled: state.loading || state.actions[action.id], variant: action.type === 'submit' ? 'primary' : 'outline', className: "flex-1 md:flex-none", children: [state.actions[action.id] && (_jsx(RefreshCw, { className: "w-4 h-4 mr-2 animate-spin" })), action.config.label || action.type] }, action.id))) }) })), mode === 'preview' && (_jsxs("div", { className: "bg-blue-50 border border-blue-200 rounded-lg p-4", children: [_jsx("h4", { className: "font-medium text-blue-800 mb-2", children: "\uD83D\uDD27 Runtime Information" }), _jsxs("div", { className: "text-sm text-blue-700 space-y-1", children: [_jsxs("p", { children: ["\u2022 Tool ID: ", tool.id] }), _jsxs("p", { children: ["\u2022 Elements: ", tool.elements.length] }), _jsxs("p", { children: ["\u2022 Actions: ", tool.actions.length] }), _jsxs("p", { children: ["\u2022 Current Values: ", JSON.stringify(state.values, null, 2)] })] })] }))] }));
+                        .map(action => (_jsxs(Button, { onClick: () => executeAction(action), disabled: state.loading || state.actions[action.id], variant: action.type === 'submit' ? 'primary' : 'outline', className: "flex-1 md:flex-none", children: [state.actions[action.id] && (_jsx(RefreshCw, { className: "w-4 h-4 mr-2 animate-spin" })), action.config.label || action.type] }, action.id))) }) })), mode === 'preview' && (_jsxs("div", { className: "bg-blue-50 border border-blue-200 rounded-lg p-4", children: [_jsx("h4", { className: "font-medium text-blue-800 mb-2", children: "\uD83D\uDD27 Runtime Information" }), _jsxs("div", { className: "text-sm text-blue-700 space-y-1", children: [_jsxs("p", { children: ["\u2022 Tool ID: ", tool.id] }), _jsxs("p", { children: ["\u2022 Elements: ", tool.elements.length] }), _jsxs("p", { children: ["\u2022 Actions: ", tool.actions.length] }), _jsxs("p", { children: ["\u2022 Current Values: ", JSON.stringify(state.values, null, 2)] })] })] }))] }));
     return (_jsx(MobileToolWrapper, { toolName: tool.name, showMobileMenu: mode === 'production', className: className, children: toolContent }));
 }
 // Helper function to create a simple tool for testing

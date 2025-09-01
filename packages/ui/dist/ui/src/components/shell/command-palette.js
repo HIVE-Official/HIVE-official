@@ -2,8 +2,8 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useEffect } from 'react';
 import { Search, Zap, Users, User, Settings, Compass, Home, Calendar, BookOpen } from 'lucide-react';
-import { Button } from '../../atomic/atoms/button-enhanced';
-import { cn } from '../../lib/utils';
+import { Button } from '../../atomic/atoms/button-enhanced.js';
+import { cn } from '../../lib/utils.js';
 export function CommandPalette({ isOpen, onClose }) {
     const [query, setQuery] = useState('');
     const [selectedIndex, setSelectedIndex] = useState(0);

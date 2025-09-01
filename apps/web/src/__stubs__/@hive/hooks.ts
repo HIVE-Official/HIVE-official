@@ -1,5 +1,4 @@
 // Temporary stub for @hive/hooks to enable compilation testing
-import { useState } from 'react';
 
 export const useAuth = () => ({
   user: null,
@@ -43,7 +42,7 @@ export const useOnboardingAnalytics = () => ({
   loading: false,
 });
 
-export const useFeatureFlag = (flag: string) => ({
+export const useFeatureFlag = (_flag: string) => ({
   isEnabled: false,
   loading: false,
 });

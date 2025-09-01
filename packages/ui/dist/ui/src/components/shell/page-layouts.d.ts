@@ -57,6 +57,6 @@ interface ModalLayoutProps extends BaseLayoutProps {
     size?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
     backdrop?: 'blur' | 'dark' | 'none';
 }
-export declare function ModalLayout({ children, isOpen, onClose, size, backdrop, className }: ModalLayoutProps): import("react/jsx-runtime").JSX.Element;
+export declare function ModalLayout({ children, isOpen, onClose, size, backdrop, className }: ModalLayoutProps): import("react/jsx-runtime").JSX.Element | null;
 export {};
 //# sourceMappingURL=page-layouts.d.ts.map

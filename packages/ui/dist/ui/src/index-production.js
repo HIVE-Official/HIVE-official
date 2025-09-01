@@ -2,52 +2,52 @@
 // Minimal working version with stubs for complex components
 import React from 'react';
 // === CORE UTILITIES ===
-export { cn } from './lib/utils';
+export { cn } from './lib/utils.js';
 // === AUTH CONTEXT (working) ===
-export { HiveAuthProvider, useHiveAuth } from './contexts/hive-auth-context';
-export { useHiveAuth as useAuth } from './contexts/hive-auth-context';
+export { HiveAuthProvider, useHiveAuth } from './contexts/hive-auth-context.js';
+export { useHiveAuth as useAuth } from './contexts/hive-auth-context.js';
 // === AUTH COMPONENTS (working) ===
-export { EmailGate } from './components/auth/email-gate';
-export { CheckEmailInfo } from './components/auth/CheckEmailInfo';
-export { SchoolPick } from './components/auth/school-pick';
+export { EmailGate } from './components/auth/email-gate.js';
+export { CheckEmailInfo } from './components/auth/CheckEmailInfo.js';
+export { SchoolPick } from './components/auth/school-pick.js';
 // === LOADING COMPONENTS (working) ===
-export { LoadingOrchestrator as PageLoader } from './components/loading/LoadingOrchestrator';
+export { LoadingOrchestrator as PageLoader } from './components/Loading/LoadingOrchestrator.js';
 // === BASIC UI COMPONENTS (working) ===
-export { Button } from './components/ui/button';
-export { Input } from './components/ui/input';
-export { HiveCard as Card, HiveCard } from './components/hive-card';
-export { HiveBadge as Badge, HiveBadge } from './components/hive-badge';
-export { HiveModal } from './components/hive-modal';
-export { HiveLogo } from './components/hive-logo';
+export { ButtonEnhanced as Button } from './atomic/atoms/button-enhanced.js';
+export { InputEnhanced as Input } from './atomic/atoms/input-enhanced.js';
+export { HiveCard as Card, HiveCard } from './components/hive-card.js';
+export { HiveBadge as Badge, HiveBadge } from './components/hive-badge.js';
+export { HiveModal } from './components/hive-modal.js';
+export { HiveLogo } from './components/hive-logo.js';
 // === MOTION SYSTEM (working) ===
-export { hiveVariants } from './lib/motion';
+export { hiveVariants } from './lib/motion.js';
 // === STUB COMPONENTS (for complex ones that have deep dependencies) ===
 // Onboarding Components (stubs - to be replaced with working versions)
 export const CreateProfileStep = (props) => {
-    return React.createElement('div', { className: 'p-8 text-center' }, React.createElement('h2', { className: 'text-2xl font-bold mb-4' }, 'Create Profile'), React.createElement('p', { className: 'text-gray-600' }, 'Complete your profile to get started with HIVE.'));
+    return React.createElement('div', { className: 'p-8 text-center' }, React.createElement('h2', { className: 'text-2xl font-bold mb-4' }, 'Create Profile'), React.createElement('p', { className: 'text-[var(--hive-text-muted)]' }, 'Complete your profile to get started with HIVE.'));
 };
 export const AcademicStep = (props) => {
-    return React.createElement('div', { className: 'p-8 text-center' }, React.createElement('h2', { className: 'text-2xl font-bold mb-4' }, 'Academic Information'), React.createElement('p', { className: 'text-gray-600' }, 'Tell us about your academic journey.'));
+    return React.createElement('div', { className: 'p-8 text-center' }, React.createElement('h2', { className: 'text-2xl font-bold mb-4' }, 'Academic Information'), React.createElement('p', { className: 'text-[var(--hive-text-muted)]' }, 'Tell us about your academic journey.'));
 };
 export const InterestsSelectionStep = (props) => {
-    return React.createElement('div', { className: 'p-8 text-center' }, React.createElement('h2', { className: 'text-2xl font-bold mb-4' }, 'Select Your Interests'), React.createElement('p', { className: 'text-gray-600' }, 'Choose topics that interest you most.'));
+    return React.createElement('div', { className: 'p-8 text-center' }, React.createElement('h2', { className: 'text-2xl font-bold mb-4' }, 'Select Your Interests'), React.createElement('p', { className: 'text-[var(--hive-text-muted)]' }, 'Choose topics that interest you most.'));
 };
 export const WelcomeRoleStep = (props) => {
-    return React.createElement('div', { className: 'p-8 text-center' }, React.createElement('h2', { className: 'text-2xl font-bold mb-4' }, 'Welcome to HIVE'), React.createElement('p', { className: 'text-gray-600' }, 'Select your role to personalize your experience.'));
+    return React.createElement('div', { className: 'p-8 text-center' }, React.createElement('h2', { className: 'text-2xl font-bold mb-4' }, 'Welcome to HIVE'), React.createElement('p', { className: 'text-[var(--hive-text-muted)]' }, 'Select your role to personalize your experience.'));
 };
 export const AlumniComingSoonStep = (props) => {
-    return React.createElement('div', { className: 'p-8 text-center' }, React.createElement('h2', { className: 'text-2xl font-bold mb-4' }, 'Alumni Access Coming Soon'), React.createElement('p', { className: 'text-gray-600' }, 'Alumni features will be available soon!'));
+    return React.createElement('div', { className: 'p-8 text-center' }, React.createElement('h2', { className: 'text-2xl font-bold mb-4' }, 'Alumni Access Coming Soon'), React.createElement('p', { className: 'text-[var(--hive-text-muted)]' }, 'Alumni features will be available soon!'));
 };
 export const OnboardingCompleteStep = (props) => {
-    return React.createElement('div', { className: 'p-8 text-center' }, React.createElement('h2', { className: 'text-2xl font-bold mb-4' }, 'Welcome to HIVE!'), React.createElement('p', { className: 'text-gray-600' }, 'Your profile is complete. Start exploring!'));
+    return React.createElement('div', { className: 'p-8 text-center' }, React.createElement('h2', { className: 'text-2xl font-bold mb-4' }, 'Welcome to HIVE!'), React.createElement('p', { className: 'text-[var(--hive-text-muted)]' }, 'Your profile is complete. Start exploring!'));
 };
 // Profile Components (stubs)
 export const BentoProfileDashboard = (props) => {
-    return React.createElement('div', { className: 'p-8' }, React.createElement('h2', { className: 'text-2xl font-bold mb-4' }, 'Profile Dashboard'), React.createElement('p', { className: 'text-gray-600' }, 'Your personalized dashboard will appear here.'));
+    return React.createElement('div', { className: 'p-8' }, React.createElement('h2', { className: 'text-2xl font-bold mb-4' }, 'Profile Dashboard'), React.createElement('p', { className: 'text-[var(--hive-text-muted)]' }, 'Your personalized dashboard will appear here.'));
 };
 // Spaces Components (stubs)
 export const SpaceRequestForm = (props) => {
-    return React.createElement('div', { className: 'p-8' }, React.createElement('h2', { className: 'text-2xl font-bold mb-4' }, 'Request a Space'), React.createElement('p', { className: 'text-gray-600' }, 'Space request form will appear here.'));
+    return React.createElement('div', { className: 'p-8' }, React.createElement('h2', { className: 'text-2xl font-bold mb-4' }, 'Request a Space'), React.createElement('p', { className: 'text-[var(--hive-text-muted)]' }, 'Space request form will appear here.'));
 };
 // Form Components (stubs)
 export const FormField = (props) => {
@@ -55,7 +55,7 @@ export const FormField = (props) => {
 };
 // Basic UI Stubs
 export const Checkbox = (props) => {
-    return React.createElement('input', { type: 'checkbox', className: 'rounded border-gray-300', ...props });
+    return React.createElement('input', { type: 'checkbox', className: 'rounded border-[var(--hive-border-default)]', ...props });
 };
 export const PageContainer = ({ children, className }) => {
     return React.createElement('div', { className: `container mx-auto px-4 ${className || ''}` }, children);

@@ -112,7 +112,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="success">🏆 ACHIEVEMENT RARITIES</Badge>
+            <Badge variant="emerald">🏆 ACHIEVEMENT RARITIES</Badge>
             Progressive Milestone Recognition
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">

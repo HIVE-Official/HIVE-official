@@ -1,6 +1,6 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { Card } from "../card";
+import { Card } from "../card.js";
 import { Wrench } from "lucide-react";
 export function DevModePanel({ userEmail }) {
     // Only render in development

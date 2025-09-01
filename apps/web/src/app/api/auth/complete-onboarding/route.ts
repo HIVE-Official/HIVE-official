@@ -1,7 +1,6 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { dbAdmin } from "@/lib/firebase-admin";
 import { getAuth } from "firebase-admin/auth";
 import { type Timestamp } from "firebase-admin/firestore";
 import { validateHandleFormat } from "@/lib/handle-service";
@@ -12,7 +11,8 @@ import {
 } from "@/lib/transaction-manager";
 import { createRequestLogger } from "@/lib/structured-logger";
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { ApiResponseHelper, HttpStatus } from "@/lib/api-response-types";
+import { authRateLimiter, RATE_LIMITS } from "@/lib/auth-rate-limiter";
 
 
 const completeOnboardingSchema = z.object({
@@ -23,7 +23,8 @@ const completeOnboardingSchema = z.object({
   userType: z.enum(["student", "alumni", "faculty"]),
   firstName: z.string().optional(),
   lastName: z.string().optional(),
-  major: z.string().min(1, "Major is required"),
+  major: z.string().min(1, "Major is required"), // Single major field for now
+  majors: z.array(z.string()).optional(), // Optional array for future expansion
   academicLevel: z.string().optional(),
   graduationYear: z.number().int().min(1900).max(2040),
   handle: z
@@ -36,21 +37,23 @@ const completeOnboardingSchema = z.object({
     ),
   avatarUrl: z.string().url().optional().or(z.literal("")),
   builderRequestSpaces: z.array(z.string()).default([]),
+  interests: z.array(z.string()).default([]), // Added interests array
   consentGiven: z
     .boolean()
     .refine((val) => val === true, "Consent must be given") });
 
-interface UserData {
+interface _UserData {
   handle?: string;
   fullName?: string;
   userType?: "student" | "alumni" | "faculty";
   firstName?: string;
   lastName?: string;
-  major?: string;
+  majors?: string[]; // Changed from major?: string
   academicLevel?: string;
   graduationYear?: number;
   avatarUrl?: string;
   builderRequestSpaces?: string[];
+  interests?: string[]; // Added interests array
   consentGiven?: boolean;
   consentGivenAt?: Timestamp;
   onboardingCompletedAt?: Timestamp;
@@ -59,6 +62,31 @@ interface UserData {
 
 export async function POST(request: NextRequest) {
   try {
+    // Rate limiting - prevent onboarding spam
+    const clientKey = authRateLimiter.getClientKey(request);
+    const rateLimit = authRateLimiter.checkLimit(
+      `complete-onboarding:${clientKey}`,
+      RATE_LIMITS.ONBOARDING_COMPLETE.maxRequests,
+      RATE_LIMITS.ONBOARDING_COMPLETE.windowMs
+    );
+
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        { 
+          error: "Too many onboarding attempts. Please try again later.",
+          retryAfter: rateLimit.retryAfter 
+        },
+        { 
+          status: 429,
+          headers: {
+            'Retry-After': rateLimit.retryAfter?.toString() || '600',
+            'X-RateLimit-Remaining': '0',
+            'X-RateLimit-Reset': rateLimit.resetTime?.toString() || ''
+          }
+        }
+      );
+    }
+
     // Get the authorization header
     const authHeader = request.headers.get("authorization");
     if (!authHeader?.startsWith("Bearer ")) {
@@ -212,6 +240,7 @@ export async function POST(request: NextRequest) {
       await requestLogger.info('Creating cohort spaces', {
         operation: 'create_cohort_spaces',
         major: onboardingData.major,
+        majors: onboardingData.majors || [onboardingData.major], // Ensure majors array exists
         graduationYear: onboardingData.graduationYear
       });
 
@@ -225,6 +254,7 @@ export async function POST(request: NextRequest) {
           },
           body: JSON.stringify({
             major: onboardingData.major,
+        majors: onboardingData.majors || [onboardingData.major], // Ensure majors array exists // Send array instead of single major
             graduationYear: onboardingData.graduationYear
           }),
         }
@@ -298,8 +328,10 @@ export async function POST(request: NextRequest) {
         userType: result.updatedUserData.userType,
         handle: result.normalizedHandle,
         major: result.updatedUserData.major,
+        majors: result.updatedUserData.majors || [result.updatedUserData.major],
         academicLevel: result.updatedUserData.academicLevel,
         graduationYear: result.updatedUserData.graduationYear,
+        interests: result.updatedUserData.interests,
         builderRequestSpaces: result.updatedUserData.builderRequestSpaces,
       },
       builderRequestsCreated: onboardingData.builderRequestSpaces?.length || 0 });

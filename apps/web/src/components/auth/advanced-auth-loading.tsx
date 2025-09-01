@@ -77,10 +77,10 @@ export function AdvancedAuthLoading({
 
   const getStageColor = () => {
     switch (stage) {
-      case 'complete': return 'text-green-400';
-      case 'error': return 'text-red-400';
-      case 'securing': return 'text-yellow-400';
-      default: return 'text-[var(--hive-brand-primary)]';
+      case 'complete': return 'text-white';
+      case 'error': return 'text-white';
+      case 'securing': return 'text-white';
+      default: return 'text-white';
     }
   };
 
@@ -131,7 +131,7 @@ export function AdvancedAuthLoading({
               </h2>
               
               {error && (
-                <p className="text-sm text-red-400 mb-4">
+                <p className="text-sm text-white mb-4">
                   {error}
                 </p>
               )}
@@ -187,7 +187,7 @@ export function AdvancedAuthLoading({
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.2 }}
-              className="text-green-400 text-sm"
+              className="text-white text-sm"
             >
               Redirecting to your dashboard...
             </motion.div>

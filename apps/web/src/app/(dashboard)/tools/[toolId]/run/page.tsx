@@ -279,7 +279,7 @@ export default function ToolRunPage() {
       <div className="min-h-screen bg-gradient-to-br from-[var(--hive-background-primary)] via-[#0F0F0F] to-[#1A1A1A] flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--hive-brand-secondary)] mx-auto mb-4"></div>
-          <p className="text-white">Loading tool...</p>
+          <p className="text-[var(--hive-text-inverse)]">Loading tool...</p>
         </div>
       </div>
     );
@@ -290,7 +290,7 @@ export default function ToolRunPage() {
       <div className="min-h-screen bg-gradient-to-br from-[var(--hive-background-primary)] via-[#0F0F0F] to-[#1A1A1A] flex items-center justify-center">
         <div className="text-center">
           <AlertCircle className="h-8 w-8 text-red-400 mx-auto mb-4" />
-          <p className="text-white mb-2">Failed to load tool</p>
+          <p className="text-[var(--hive-text-inverse)] mb-2">Failed to load tool</p>
           <p className="text-[var(--hive-text-muted)] text-sm">{error}</p>
           <Button 
             onClick={() => router.back()} 
@@ -317,13 +317,13 @@ export default function ToolRunPage() {
                 size="sm"
                 variant="ghost"
                 onClick={() => router.back()}
-                className="text-[var(--hive-text-muted)] hover:text-white"
+                className="text-[var(--hive-text-muted)] hover:text-[var(--hive-text-inverse)]"
               >
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Back
               </Button>
               <div>
-                <h1 className="text-xl font-semibold text-white">
+                <h1 className="text-xl font-semibold text-[var(--hive-text-inverse)]">
                   {tool.name} - Live Tool
                 </h1>
                 <p className="text-sm text-[var(--hive-text-muted)]">
@@ -337,7 +337,7 @@ export default function ToolRunPage() {
                 size="sm"
                 variant="outline"
                 onClick={() => router.push(`/tools/${tool.id}/settings`)}
-                className="border-[rgba(255,255,255,0.2)] text-[var(--hive-text-muted)] hover:text-white"
+                className="border-[rgba(255,255,255,0.2)] text-[var(--hive-text-muted)] hover:text-[var(--hive-text-inverse)]"
               >
                 <Settings className="h-4 w-4 mr-2" />
                 Settings
@@ -346,7 +346,7 @@ export default function ToolRunPage() {
               <Button
                 size="sm"
                 variant="outline"
-                className="border-[rgba(255,255,255,0.2)] text-[var(--hive-text-muted)] hover:text-white"
+                className="border-[rgba(255,255,255,0.2)] text-[var(--hive-text-muted)] hover:text-[var(--hive-text-inverse)]"
               >
                 <Share className="h-4 w-4 mr-2" />
                 Share
@@ -366,7 +366,7 @@ export default function ToolRunPage() {
                   <div className="w-16 h-16 bg-hive-gold rounded-lg flex items-center justify-center mx-auto mb-4">
                     <Zap className="h-8 w-8 text-hive-obsidian" />
                   </div>
-                  <h3 className="text-xl font-semibold text-white mb-2">Tool Runtime</h3>
+                  <h3 className="text-xl font-semibold text-[var(--hive-text-inverse)] mb-2">Tool Runtime</h3>
                   <p className="text-[var(--hive-text-muted)] mb-4">
                     Live tool runtime is coming soon. This will provide an interactive environment 
                     for running and testing your tools.
@@ -385,47 +385,47 @@ export default function ToolRunPage() {
           <div className="space-y-6">
             {/* Tool Info */}
             <Card className="p-4 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)]">
-              <h3 className="font-semibold text-white mb-3">Tool Information</h3>
+              <h3 className="font-semibold text-[var(--hive-text-inverse)] mb-3">Tool Information</h3>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
                   <span className="text-[var(--hive-text-muted)]">Version:</span>
-                  <span className="text-white">{tool.currentVersion}</span>
+                  <span className="text-[var(--hive-text-inverse)]">{tool.currentVersion}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-[var(--hive-text-muted)]">Elements:</span>
-                  <span className="text-white">{instances.length}</span>
+                  <span className="text-[var(--hive-text-inverse)]">{instances.length}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-[var(--hive-text-muted)]">Rating:</span>
-                  <span className="text-white">{tool.rating || 0}/5</span>
+                  <span className="text-[var(--hive-text-inverse)]">{tool.rating || 0}/5</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-[var(--hive-text-muted)]">Usage:</span>
-                  <span className="text-white">{tool.useCount || 0} times</span>
+                  <span className="text-[var(--hive-text-inverse)]">{tool.useCount || 0} times</span>
                 </div>
               </div>
             </Card>
 
             {/* Status */}
             <Card className="p-4 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)]">
-              <h3 className="font-semibold text-white mb-3">Runtime Status</h3>
+              <h3 className="font-semibold text-[var(--hive-text-inverse)] mb-3">Runtime Status</h3>
               <div className="space-y-3">
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                  <span className="text-sm text-white">Live Runtime Active</span>
+                  <span className="text-sm text-[var(--hive-text-inverse)]">Live Runtime Active</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-                  <span className="text-sm text-white">State Persistence On</span>
+                  <span className="text-sm text-[var(--hive-text-inverse)]">State Persistence On</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
-                  <span className="text-sm text-white">Real-time Sync</span>
+                  <span className="text-sm text-[var(--hive-text-inverse)]">Real-time Sync</span>
                 </div>
                 {permissions.canUse && (
                   <div className="flex items-center gap-2">
                     <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
-                    <span className="text-sm text-white">Full Access</span>
+                    <span className="text-sm text-[var(--hive-text-inverse)]">Full Access</span>
                   </div>
                 )}
               </div>
@@ -433,7 +433,7 @@ export default function ToolRunPage() {
             
             {/* Action Log */}
             <Card className="p-4 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)]">
-              <h3 className="font-semibold text-white mb-3 flex items-center gap-2">
+              <h3 className="font-semibold text-[var(--hive-text-inverse)] mb-3 flex items-center gap-2">
                 <Activity className="h-4 w-4" />
                 Action Log
               </h3>
@@ -446,7 +446,7 @@ export default function ToolRunPage() {
                   actionLog.map((log, index) => (
                     <div key={index} className="text-xs border-l-2 border-[var(--hive-brand-secondary)]/30 pl-2">
                       <div className="text-[var(--hive-text-muted)]">{log.time}</div>
-                      <div className="text-white font-mono">{log.action}</div>
+                      <div className="text-[var(--hive-text-inverse)] font-mono">{log.action}</div>
                       {log.data && (
                         <div className="text-[var(--hive-text-muted)] mt-1">
                           {JSON.stringify(log.data, null, 2)}
@@ -460,12 +460,12 @@ export default function ToolRunPage() {
 
             {/* Quick Actions */}
             <Card className="p-4 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)]">
-              <h3 className="font-semibold text-white mb-3">Actions</h3>
+              <h3 className="font-semibold text-[var(--hive-text-inverse)] mb-3">Actions</h3>
               <div className="space-y-2">
                 <Button
                   size="sm"
                   onClick={() => router.push(`/tools/${tool.id}/edit`)}
-                  className="w-full bg-[rgba(255,255,255,0.05)] text-white hover:bg-[rgba(255,255,255,0.1)] justify-start"
+                  className="w-full bg-[rgba(255,255,255,0.05)] text-[var(--hive-text-inverse)] hover:bg-[rgba(255,255,255,0.1)] justify-start"
                 >
                   <Settings className="h-4 w-4 mr-2" />
                   Edit Tool
@@ -473,7 +473,7 @@ export default function ToolRunPage() {
                 <Button
                   size="sm"
                   onClick={() => router.push(`/tools/${tool.id}/analytics`)}
-                  className="w-full bg-[rgba(255,255,255,0.05)] text-white hover:bg-[rgba(255,255,255,0.1)] justify-start"
+                  className="w-full bg-[rgba(255,255,255,0.05)] text-[var(--hive-text-inverse)] hover:bg-[rgba(255,255,255,0.1)] justify-start"
                   disabled={!permissions.canViewAnalytics}
                 >
                   <Activity className="h-4 w-4 mr-2" />
@@ -481,7 +481,7 @@ export default function ToolRunPage() {
                 </Button>
                 <Button
                   size="sm"
-                  className="w-full bg-[rgba(255,255,255,0.05)] text-white hover:bg-[rgba(255,255,255,0.1)] justify-start"
+                  className="w-full bg-[rgba(255,255,255,0.05)] text-[var(--hive-text-inverse)] hover:bg-[rgba(255,255,255,0.1)] justify-start"
                 >
                   <Download className="h-4 w-4 mr-2" />
                   Export Data
@@ -491,7 +491,7 @@ export default function ToolRunPage() {
 
             {/* Usage Help */}
             <Card className="p-4 bg-gradient-to-r from-[rgba(255,215,0,0.05)] to-[rgba(255,215,0,0.02)] border-[rgba(255,215,0,0.1)]">
-              <h3 className="font-semibold text-white mb-2 flex items-center gap-2">
+              <h3 className="font-semibold text-[var(--hive-text-inverse)] mb-2 flex items-center gap-2">
                 <Zap className="h-4 w-4" />
                 Live Tool Features
               </h3>

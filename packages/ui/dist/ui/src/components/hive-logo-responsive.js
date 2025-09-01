@@ -3,8 +3,8 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cva } from 'class-variance-authority';
-import { cn } from '../../lib/utils';
-import { getLogoMotionProps } from '../lib/motion-utils';
+import { cn } from '../lib/utils.js';
+import { getLogoMotionProps } from '../lib/motion-utils.js';
 // HIVE Responsive & Contextual Logo System
 // Adapts to screen size, user preferences, and application context
 const responsiveVariants = cva("transition-all duration-300 ease-in-out", {

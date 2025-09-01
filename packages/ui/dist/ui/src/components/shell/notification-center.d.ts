@@ -17,6 +17,6 @@ interface NotificationCenterProps {
     onClose: () => void;
     notifications?: Notification[];
 }
-export declare function NotificationCenter({ isOpen, onClose, notifications }: NotificationCenterProps): import("react/jsx-runtime").JSX.Element;
+export declare function NotificationCenter({ isOpen, onClose, notifications }: NotificationCenterProps): import("react/jsx-runtime").JSX.Element | null;
 export {};
 //# sourceMappingURL=notification-center.d.ts.map

@@ -2,9 +2,9 @@ import * as z from 'zod';
 declare const emailFormSchema: z.ZodObject<{
     email: z.ZodString;
 }, "strip", z.ZodTypeAny, {
-    email?: string;
+    email: string;
 }, {
-    email?: string;
+    email: string;
 }>;
 type EmailFormValues = z.infer<typeof emailFormSchema>;
 interface EmailFormProps {

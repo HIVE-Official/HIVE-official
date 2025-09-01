@@ -3,7 +3,16 @@ import React from 'react';
 import { ChevronDown, Users, BookOpen, MapPin, Clock, GraduationCap, Home, Building, Calendar } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../components/ui/select';
 
-const meta: Meta = {
+// Create a component wrapper for the story
+const SelectDropdownSystem = () => (
+  <div className="p-6 space-y-8">
+    <h2 className="text-2xl font-semibold">Select & Dropdown System</h2>
+    <p className="text-muted-foreground">Campus selection interface system</p>
+  </div>
+);
+
+const meta: Meta<typeof SelectDropdownSystem> = {
+  component: SelectDropdownSystem,
   title: '02-Atoms/Interactive-Elements/Select & Dropdown System',
   parameters: {
     docs: {

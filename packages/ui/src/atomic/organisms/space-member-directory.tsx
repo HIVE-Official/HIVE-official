@@ -137,7 +137,7 @@ export const SpaceMemberDirectory: React.FC<SpaceMemberDirectoryProps> = ({
   const canManageMembers = currentUserRole === 'leader' || currentUserRole === 'co_leader';
 
   const filteredMembers = useMemo(() => {
-    let filtered = members.filter(member => {
+    const filtered = members.filter(member => {
       // Search filter
       if (searchQuery) {
         const query = searchQuery.toLowerCase();
@@ -165,15 +165,17 @@ export const SpaceMemberDirectory: React.FC<SpaceMemberDirectoryProps> = ({
     // Sort
     filtered.sort((a, b) => {
       switch (sortBy) {
-        case 'role':
+        case 'role': {
           const roleOrder = { leader: 0, co_leader: 1, member: 2, pending: 3 };
           return roleOrder[a.role] - roleOrder[b.role];
+        }
         case 'joined':
           return new Date(b.joinedAt).getTime() - new Date(a.joinedAt).getTime();
-        case 'activity':
+        case 'activity': {
           const aActivity = a.lastActive ? new Date(a.lastActive).getTime() : 0;
           const bActivity = b.lastActive ? new Date(b.lastActive).getTime() : 0;
           return bActivity - aActivity;
+        }
         default:
           return a.displayName.localeCompare(b.displayName);
       }

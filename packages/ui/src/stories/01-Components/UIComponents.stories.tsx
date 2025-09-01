@@ -74,7 +74,7 @@ export const AllComponents: Story = {
             </CardHeader>
             <CardContent className="space-y-4">
               <Button className="w-full">Default</Button>
-              <Button variant="accent" className="w-full">
+              <Button variant="secondary" className="w-full">
                 <Star className="mr-2 h-4 w-4" />
                 Accent
               </Button>
@@ -129,7 +129,7 @@ export const AllComponents: Story = {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="input-accent">Accent Input</Label>
-                <Input id="input-accent" variant="accent" placeholder="Accent style" />
+                <Input id="input-accent" variant="secondary" placeholder="Accent style" />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="input-icon">With Icon</Label>
@@ -230,7 +230,7 @@ export const AllComponents: Story = {
               <div className="flex flex-wrap gap-2">
                 <Badge>Default</Badge>
                 <Badge variant="secondary">Outline</Badge>
-                <Badge variant="accent">Accent</Badge>
+                <Badge variant="secondary">Accent</Badge>
                 <Badge variant="primary">
                   <Star className="mr-1 h-3 w-3" />
                   Ritual
@@ -331,7 +331,7 @@ export const AllComponents: Story = {
                 </div>
                 <div className="flex justify-end space-x-2">
                   <Button variant="secondary">Cancel</Button>
-                  <Button variant="accent">Submit</Button>
+                  <Button variant="secondary">Submit</Button>
                 </div>
               </DialogContent>
             </Dialog>
@@ -366,7 +366,7 @@ export const ComponentShowcase: Story = {
           </CardHeader>
           <CardContent>
             <div className="flex items-center justify-between">
-              <Badge variant="accent">
+              <Badge variant="secondary">
                 <Star className="mr-1 h-3 w-3" />
                 Verified
               </Badge>
@@ -393,7 +393,7 @@ export const ComponentShowcase: Story = {
             <Progress value={75} />
             <div className="flex justify-between items-center">
               <span className="text-sm text-muted-foreground">6/8 spots filled</span>
-              <Button variant="accent" size="sm">Join Group</Button>
+              <Button variant="secondary" size="sm">Join Group</Button>
             </div>
           </CardContent>
         </Card>

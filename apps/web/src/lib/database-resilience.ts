@@ -9,6 +9,7 @@ import { dbAdmin } from '@/lib/firebase-admin';
 import { logger } from '@/lib/logger';
 import { StandardizedApiResponse } from '@/lib/api-error-standardizer';
 import { ErrorCodes } from '@/lib/api-response-types';
+import type { FirebaseFirestore } from 'firebase-admin/firestore';
 
 /**
  * Database operation types for specific error handling

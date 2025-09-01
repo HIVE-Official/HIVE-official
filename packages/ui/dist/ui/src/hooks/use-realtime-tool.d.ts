@@ -2,7 +2,7 @@
  * HIVE Real-time Tool Hook
  * Real-time state synchronization and updates for tools
  */
-import { ToolUpdateEvent } from '../lib/api-client';
+import type { ToolUpdateEvent } from '../lib/api-client';
 interface RealtimeToolState {
     toolState: any;
     isLoading: boolean;
@@ -44,7 +44,7 @@ export declare function useToolState(toolId: string, initialState?: any): {
     state: any;
     setState: (newState: any, optimistic?: boolean) => Promise<void>;
     isLoading: boolean;
-    error: string;
+    error: string | null;
     isConnected: boolean;
     sync: (force?: boolean) => Promise<void>;
 };

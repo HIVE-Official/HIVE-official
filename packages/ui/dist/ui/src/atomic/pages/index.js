@@ -3,7 +3,7 @@
 // Note: Page examples will be implemented as the atomic design system evolves
 // For now, commenting out to prevent build errors
 // === CURRENT PAGES ===
-export * from './dashboard-page';
+export * from './dashboard-page.js';
 // === PLANNED PAGES ===
 // export * from './profile-page';
 // export * from './spaces-page';

@@ -117,7 +117,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="success">✅ PLACEMENT</Badge>
+            <Badge variant="emerald">✅ PLACEMENT</Badge>
             Tooltip Placement - Smart Positioning
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -381,7 +381,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="warning">🛠️ FEATURES</Badge>
+            <Badge variant="gold">🛠️ FEATURES</Badge>
             Advanced Features - Arrows, Delays, States
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">

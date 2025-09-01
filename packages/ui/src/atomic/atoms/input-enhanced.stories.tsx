@@ -173,8 +173,8 @@ export const CompleteShowcase: Story = {
           <div className="grid md:grid-cols-2 gap-6">
             <Input variant="primary" placeholder="Default variant" />
             <Input variant="error" placeholder="Error variant" />
-            <Input variant="success" placeholder="Success variant" />
-            <Input variant="warning" placeholder="Warning variant" />
+            <Input variant="emerald" placeholder="Success variant" />
+            <Input variant="gold" placeholder="Warning variant" />
             <Input variant="brand" placeholder="Brand variant (gold focus)" />
             <Input variant="ghost" placeholder="Ghost variant" />
             <Input variant="filled" placeholder="Filled variant" />
@@ -568,7 +568,7 @@ export const ModernFloatingLabels: Story = {
                 <FloatingLabelInput 
                   label="Success Example"
                   success="Looks good!"
-                  variant="success"
+                  variant="emerald"
                   defaultValue="Valid input"
                 />
               </div>

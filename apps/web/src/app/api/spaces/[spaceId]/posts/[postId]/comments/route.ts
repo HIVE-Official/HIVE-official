@@ -121,8 +121,8 @@ export async function GET(
     }));
 
   } catch (error: any) {
-    logger.error("Error fetching comments:", error);
-    return NextResponse.json(ApiResponseHelper.error("Failed to fetch comments", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
+    logger.error("Error fetching _comments:", error);
+    return NextResponse.json(ApiResponseHelper.error("Failed to fetch _comments", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -183,7 +183,7 @@ export async function POST(
         .get();
 
       if (!parentCommentDoc.exists) {
-        return NextResponse.json(ApiResponseHelper.error("Parent comment not found", "NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
+        return NextResponse.json(ApiResponseHelper.error("Parent _comment not found", "NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
       }
     }
 
@@ -246,10 +246,10 @@ export async function POST(
 
   } catch (error: any) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json(ApiResponseHelper.error("Invalid comment data", "VALIDATION_ERROR", error.errors), { status: HttpStatus.BAD_REQUEST });
+      return NextResponse.json(ApiResponseHelper.error("Invalid _comment data", "VALIDATION_ERROR", error.errors), { status: HttpStatus.BAD_REQUEST });
     }
 
     logger.error("Error creating comment:", error);
-    return NextResponse.json(ApiResponseHelper.error("Failed to create comment", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
+    return NextResponse.json(ApiResponseHelper.error("Failed to create _comment", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

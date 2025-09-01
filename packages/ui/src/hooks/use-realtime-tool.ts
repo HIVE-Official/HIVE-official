@@ -4,7 +4,8 @@
  */
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { apiClient, ToolUpdateEvent, ToolUpdatesResponse } from '../lib/api-client';
+import type { ToolUpdateEvent} from '../lib/api-client';
+import { apiClient, ToolUpdatesResponse } from '../lib/api-client';
 import { Tool } from '@hive/core';
 
 interface RealtimeToolState {

@@ -126,7 +126,7 @@ export function PostDisplay({
                   <img src={post.author.avatar} alt={post.author.name} className="rounded-full" />
                 ) : (
                   <div className="h-10 w-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
-                    <span className="text-white font-medium">
+                    <span className="text-[var(--hive-text-inverse)] font-medium">
                       {post.author.name.charAt(0)}
                     </span>
                   </div>

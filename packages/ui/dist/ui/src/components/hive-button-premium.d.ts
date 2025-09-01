@@ -1,10 +1,10 @@
 import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
-declare const hivePremiumButtonVariants: (props?: {
-    variant?: "primary" | "secondary" | "ghost" | "outline" | "success" | "chip-gold" | "chip-glass" | "danger" | "gold-glow";
-    size?: "default" | "sm" | "lg" | "xl" | "icon" | "icon-sm" | "icon-lg" | "xs";
-    radius?: "xl" | "large" | "medium" | "pill" | "soft";
-} & import("class-variance-authority/types").ClassProp) => string;
+declare const hivePremiumButtonVariants: (props?: ({
+    variant?: "primary" | "secondary" | "ghost" | "success" | "outline" | "chip-gold" | "chip-glass" | "gold-glow" | "danger" | null | undefined;
+    size?: "xs" | "sm" | "default" | "lg" | "xl" | "icon" | "icon-sm" | "icon-lg" | null | undefined;
+    radius?: "xl" | "large" | "medium" | "pill" | "soft" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
 export interface HivePremiumButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'onDrag' | 'onDragEnd' | 'onDragStart'>, VariantProps<typeof hivePremiumButtonVariants> {
     magneticHover?: boolean;
     rippleEffect?: boolean;

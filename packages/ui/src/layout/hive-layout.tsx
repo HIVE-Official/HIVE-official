@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { cn } from '../../lib/utils';
+import { cn } from '../lib/utils';
 import { darkLuxury, luxuryShadows, luxuryRadius, luxurySpacing } from '../theme/dark-luxury';
 import { HiveMagneticHover, HiveCascade } from '../components/hive-motion-wrapper';
 
@@ -118,7 +118,7 @@ export const HiveBentoCard: React.FC<BentoCardProps> = ({
   );
 
   return interactive ? (
-    <HiveMagneticHover intensity="medium">{card}</HiveMagneticHover>
+    <HiveMagneticHover>{card}</HiveMagneticHover>
   ) : (
     card
   );

@@ -1,10 +1,10 @@
 import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
-declare const selectVariants: (props?: {
-    variant?: "error" | "default" | "success" | "warning" | "brand";
-    size?: "default" | "sm" | "lg" | "xl";
-    radius?: "default" | "sm" | "lg" | "none" | "full";
-} & import("class-variance-authority/types").ClassProp) => string;
+declare const selectVariants: (props?: ({
+    variant?: "error" | "success" | "warning" | "default" | "brand" | null | undefined;
+    size?: "sm" | "default" | "lg" | "xl" | null | undefined;
+    radius?: "sm" | "default" | "lg" | "none" | "full" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
 export interface SelectOption {
     value: string;
     label: string;

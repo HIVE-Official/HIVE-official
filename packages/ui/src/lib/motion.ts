@@ -3,7 +3,8 @@
  * Connects HIVE design tokens with Framer Motion for consistent animations
  */
 
-import { Variants, Transition, type MotionProps } from 'framer-motion';
+import type { Variants, Transition} from 'framer-motion';
+import { type MotionProps } from 'framer-motion';
 import { motion } from '../../../tokens/src/motion';
 
 // HIVE Transition Presets

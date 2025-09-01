@@ -1,10 +1,10 @@
 import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
-declare const hiveLogoVariants: (props?: {
-    variant?: "primary" | "gold" | "glass" | "inverted" | "monochrome" | "gradient" | "neon" | "holographic";
-    size?: "sm" | "md" | "lg" | "xl" | "xs" | "2xl" | "3xl" | "4xl";
-    effect?: "none" | "ping" | "pulse" | "glow" | "bounce" | "spin";
-} & import("class-variance-authority/types").ClassProp) => string;
+declare const hiveLogoVariants: (props?: ({
+    variant?: "primary" | "gold" | "glass" | "inverted" | "monochrome" | "gradient" | "neon" | "holographic" | null | undefined;
+    size?: "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | null | undefined;
+    effect?: "none" | "ping" | "pulse" | "glow" | "bounce" | "spin" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
 export interface HiveLogoVariantProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children'>, VariantProps<typeof hiveLogoVariants> {
     animated?: boolean;
 }

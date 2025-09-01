@@ -21,7 +21,7 @@ export declare class FirebaseErrorBoundary extends Component<Props, State> {
     static getDerivedStateFromError(error: Error): State;
     componentDidCatch(error: Error, errorInfo: ErrorInfo): void;
     handleRetry: () => void;
-    render(): string | number | bigint | boolean | Iterable<React.ReactNode> | Promise<React.AwaitedReactNode> | import("react/jsx-runtime").JSX.Element;
+    render(): string | number | bigint | boolean | Iterable<React.ReactNode> | Promise<React.AwaitedReactNode> | import("react/jsx-runtime").JSX.Element | null | undefined;
 }
 export declare function useFirebaseErrorBoundary(): {
     ErrorBoundary: typeof FirebaseErrorBoundary;

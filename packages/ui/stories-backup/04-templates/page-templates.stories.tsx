@@ -3,8 +3,12 @@ import { useState } from 'react';
 import { HiveButton } from '../../components/hive-button';
 import { HiveCard } from '../../components/hive-card';
 
-const meta: Meta = {
+// Mock component for Storybook CSF compliance
+const PageTemplates = () => <div>Page Templates</div>;
+
+const meta: Meta<typeof PageTemplates> = {
   title: '04-Templates/Page Templates',
+  component: PageTemplates,
   parameters: {
     layout: 'fullscreen',
     docs: {

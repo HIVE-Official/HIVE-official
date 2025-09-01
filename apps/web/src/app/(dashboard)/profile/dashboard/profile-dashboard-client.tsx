@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Button, Card } from '@hive/ui';
+import { Card } from '@hive/ui';
 import { 
   Edit3, 
   Settings, 
@@ -157,10 +157,13 @@ export function ProfileDashboardClient() {
           )}
 
           {/* Edit Mode Toggle */}
-          <Button
-            variant={isEditMode ? "default" : "outline"}
+          <button
             onClick={() => handleEditModeChange(!isEditMode)}
-            className="flex items-center gap-2"
+            className={`px-4 py-2 rounded-md transition-colors flex items-center gap-2 ${
+              isEditMode 
+                ? 'bg-accent text-accent-foreground hover:bg-accent/80' 
+                : 'border border-border bg-background text-foreground hover:bg-muted'
+            }`}
           >
             {isEditMode ? (
               <>
@@ -173,7 +176,7 @@ export function ProfileDashboardClient() {
                 Customize Dashboard
               </>
             )}
-          </Button>
+          </button>
         </div>
       </div>
 
@@ -215,10 +218,13 @@ export function ProfileDashboardClient() {
           <p className="text-sm text-muted-foreground mb-4">
             We're preparing your personalized campus command center.
           </p>
-          <Button onClick={fetchLayout}>
+          <button 
+            onClick={fetchLayout}
+            className="px-4 py-2 bg-accent text-accent-foreground rounded-md hover:bg-accent/80 transition-colors flex items-center"
+          >
             <RotateCcw className="h-4 w-4 mr-2" />
             Retry Setup
-          </Button>
+          </button>
         </Card>
       )}
 
@@ -236,15 +242,18 @@ export function ProfileDashboardClient() {
                 customize your layout, join spaces, build tools, and stay connected with your campus community.
               </p>
               <div className="flex flex-wrap gap-2">
-                <Button size="sm" variant="outline">
+                <button className="px-3 py-2 border border-border bg-background text-foreground rounded-md hover:bg-muted transition-colors text-sm">
                   Take Tour
-                </Button>
-                <Button size="sm" variant="outline" onClick={() => setIsEditMode(true)}>
+                </button>
+                <button 
+                  onClick={() => setIsEditMode(true)}
+                  className="px-3 py-2 border border-border bg-background text-foreground rounded-md hover:bg-muted transition-colors text-sm"
+                >
                   Customize Layout
-                </Button>
-                <Button size="sm" variant="outline">
+                </button>
+                <button className="px-3 py-2 border border-border bg-background text-foreground rounded-md hover:bg-muted transition-colors text-sm">
                   Connect Calendar
-                </Button>
+                </button>
               </div>
             </div>
           </div>

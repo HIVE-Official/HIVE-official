@@ -142,6 +142,7 @@ export default function AdminDashboard() {
           <div className="space-y-3">
             <div className="flex items-center gap-3 p-3 bg-surface-01 rounded-lg">
               <div className="p-2 bg-accent/10 text-accent rounded-lg">
+                {/* eslint-disable-next-line jsx-a11y/alt-text */}
                 <Image className="w-4 h-4" />
               </div>
               <div className="flex-1">
@@ -204,6 +205,7 @@ export default function AdminDashboard() {
               className="flex items-center gap-3 p-3 bg-surface-01 hover:bg-surface-02 rounded-lg transition-colors"
             >
               <div className="p-2 bg-accent/10 text-accent rounded-lg">
+                {/* eslint-disable-next-line jsx-a11y/alt-text */}
                 <Image className="w-4 h-4" />
               </div>
               <div>

@@ -98,7 +98,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="success">✅ VARIANTS</Badge>
+            <Badge variant="emerald">✅ VARIANTS</Badge>
             Switch Variants - Perfect Semantic Token Usage
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -117,7 +117,7 @@ export const CompleteShowcase: Story = {
               <Switch
                 label="Success Toggle"
                 description="Indicates successful or completed states"
-                variant="success"
+                variant="emerald"
                 checked={true}
               />
               <Switch
@@ -131,7 +131,7 @@ export const CompleteShowcase: Story = {
               <Switch
                 label="Warning Toggle"
                 description="Settings that require attention or caution"
-                variant="warning"
+                variant="gold"
                 checked={true}
               />
               <Switch
@@ -234,7 +234,7 @@ export const CompleteShowcase: Story = {
                     label="Auto-save"
                     description="Automatically save your work"
                     showIcons
-                    variant="success"
+                    variant="emerald"
                     checked={true}
                     size="sm"
                   />
@@ -251,7 +251,7 @@ export const CompleteShowcase: Story = {
                     label="Location Sharing"
                     description="Share your location with friends"
                     showIcons
-                    variant="warning"
+                    variant="gold"
                     checked={false}
                   />
                 </div>
@@ -317,7 +317,7 @@ export const CompleteShowcase: Story = {
                   label="Campus Notifications"
                   description="Receive updates about campus events, announcements, and important information"
                   icon={<span className="text-lg">🔔</span>}
-                  badge={<Badge variant="success" size="sm">Essential</Badge>}
+                  badge={<Badge variant="emerald" size="sm">Essential</Badge>}
                   variant="primary"
                   checked={true}
                 />
@@ -333,7 +333,7 @@ export const CompleteShowcase: Story = {
                   label="Location Sharing"
                   description="Share your campus location with friends for easy meetups and coordination"
                   icon={<span className="text-lg">📍</span>}
-                  badge={<Badge variant="warning" size="sm">Privacy</Badge>}
+                  badge={<Badge variant="gold" size="sm">Privacy</Badge>}
                   variant="primary"
                   checked={false}
                 />
@@ -384,7 +384,7 @@ export const CompleteShowcase: Story = {
                 <Switch
                   label="Floor Notifications"
                   description="Receive updates from your residence hall floor"
-                  variant="success"
+                  variant="emerald"
                   checked={true}
                 />
               </div>
@@ -462,8 +462,8 @@ export const CompleteShowcase: Story = {
                 label="Study Group Formation"
                 description="Notify when study groups form for CSE 331, MTH 241, and other enrolled courses"
                 icon={<span className="text-lg">👥</span>}
-                badge={<Badge variant="success" size="sm">Academic</Badge>}
-                variant="success"
+                badge={<Badge variant="emerald" size="sm">Academic</Badge>}
+                variant="emerald"
                 checked={true}
               />
               <SwitchCard
@@ -478,8 +478,8 @@ export const CompleteShowcase: Story = {
                 label="Grade Updates"
                 description="Immediate notifications when grades are posted on UBLearns"
                 icon={<span className="text-lg">📊</span>}
-                badge={<Badge variant="warning" size="sm">Academic</Badge>}
-                variant="warning"
+                badge={<Badge variant="gold" size="sm">Academic</Badge>}
+                variant="gold"
                 checked={true}
               />
             </div>
@@ -519,7 +519,7 @@ export const CompleteShowcase: Story = {
                 <Switch
                   label="Shared Resource Coordination"
                   description="Coordinate laundry times, kitchen usage, and common area booking"
-                  variant="success"
+                  variant="emerald"
                   checked={true}
                   size="sm"
                 />
@@ -547,14 +547,14 @@ export const CompleteShowcase: Story = {
                   <Switch
                     label="Homework Collaboration"
                     description="Get paired for homework discussion (within academic honesty)"
-                    variant="success"
+                    variant="emerald"
                     checked={true}
                     size="sm"
                   />
                   <Switch
                     label="Exam Prep Sessions"
                     description="Join group exam preparation and review sessions"
-                    variant="warning"
+                    variant="gold"
                     checked={true}
                     size="sm"
                   />
@@ -582,7 +582,7 @@ export const CompleteShowcase: Story = {
                   <Switch
                     label="Schedule Changes"
                     description="Updates about lecture cancellations or room changes"
-                    variant="warning"
+                    variant="gold"
                     checked={true}
                     size="sm"
                   />
@@ -615,8 +615,8 @@ export const CompleteShowcase: Story = {
                 label="Intramural Sports"
                 description="Get updates about intramural league registration and team formation"
                 icon={<span className="text-lg">⚽</span>}
-                badge={<Badge variant="success" size="sm">Fitness</Badge>}
-                variant="success"
+                badge={<Badge variant="emerald" size="sm">Fitness</Badge>}
+                variant="emerald"
                 checked={false}
               />
             </div>

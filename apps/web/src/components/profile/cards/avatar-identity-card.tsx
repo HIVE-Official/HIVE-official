@@ -130,10 +130,28 @@ export function AvatarIdentityCard({ settings: _settings, isEditMode, className 
 
         {/* Academic Info Badges */}
         <div className="flex flex-wrap justify-center gap-2 mb-3">
-          {profile.major && (
-            <Badge variant="secondary" className="text-xs">
-              <BookOpen className="h-3 w-3 mr-1" />
-              {profile.major}
+          {/* Handle both legacy major (string) and new majors (array) */}
+          {(profile.majors && profile.majors.length > 0) ? (
+            // New majors array format
+            profile.majors.slice(0, 2).map((major, index) => (
+              <Badge key={major} variant="secondary" className="text-xs">
+                <BookOpen className="h-3 w-3 mr-1" />
+                {major}
+              </Badge>
+            ))
+          ) : (
+            // Legacy single major format for backward compatibility
+            profile.major && (
+              <Badge variant="secondary" className="text-xs">
+                <BookOpen className="h-3 w-3 mr-1" />
+                {profile.major}
+              </Badge>
+            )
+          )}
+          {/* Show +N indicator if there are more than 2 majors */}
+          {profile.majors && profile.majors.length > 2 && (
+            <Badge variant="outline" className="text-xs">
+              +{profile.majors.length - 2} more
             </Badge>
           )}
           

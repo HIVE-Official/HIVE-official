@@ -4,8 +4,8 @@ import * as React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import { cva } from 'class-variance-authority';
-import { ErrorBoundary } from './error-boundary';
-import { cn } from '../../lib/utils';
+import { ErrorBoundary } from './error-boundary.js';
+import { cn } from '../lib/utils.js';
 const dialogVariants = cva('relative bg-surface rounded-xl shadow-2xl border-2 border-accent/20 overflow-hidden ring-1 ring-white/10', {
     variants: {
         size: {

@@ -39,7 +39,7 @@ export function SpaceFilterPills({
             "rounded-full px-4 py-1.5 text-sm font-medium transition-all duration-200 whitespace-nowrap",
             activeFilter === filterItem.type
               ? "bg-accent/10 text-accent hover:bg-accent/20 border border-accent/20"
-              : "text-neutral-400 hover:bg-white/5 hover:text-white border border-transparent"
+              : "text-neutral-400 hover:bg-white/5 hover:text-[var(--hive-text-inverse)] border border-transparent"
           )}
         >
           {filterItem.name}

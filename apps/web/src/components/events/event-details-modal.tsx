@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { HiveModal, Button, Badge, Card } from "@hive/ui";
-import { Alert } from "@/components/temp-stubs";
+import { Button, Badge, Card } from "@hive/ui";
+import { Alert, Modal } from "@/components/temp-stubs";
 import { 
   Calendar, 
   MapPin, 
@@ -170,7 +170,7 @@ export function EventDetailsModal({
   };
 
   return (
-    <HiveModal
+    <Modal
       isOpen={isOpen}
       onClose={onClose}
       title=""
@@ -187,7 +187,7 @@ export function EventDetailsModal({
             
             <div className="flex-1 min-w-0">
               <div className="flex items-start justify-between mb-2">
-                <h2 className="text-2xl font-bold text-white leading-tight pr-4">
+                <h2 className="text-2xl font-bold text-[var(--hive-text-inverse)] leading-tight pr-4">
                   {event.title}
                 </h2>
                 <div className="flex items-center space-x-2 flex-shrink-0">
@@ -203,7 +203,7 @@ export function EventDetailsModal({
                     variant="ghost"
                     size="sm"
                     onClick={handleCopyLink}
-                    className="text-zinc-400 hover:text-white"
+                    className="text-zinc-400 hover:text-[var(--hive-text-inverse)]"
                   >
                     {copiedLink ? (
                       <CheckCircle className="h-5 w-5 text-green-400" />
@@ -238,7 +238,7 @@ export function EventDetailsModal({
                 <div className="flex items-center space-x-2">
                   <Clock className="h-4 w-4 text-zinc-400" />
                   <div>
-                    <div className="text-white font-medium">{dayText}</div>
+                    <div className="text-[var(--hive-text-inverse)] font-medium">{dayText}</div>
                     <div className="text-zinc-400">{timeText}</div>
                   </div>
                 </div>
@@ -246,7 +246,7 @@ export function EventDetailsModal({
                 <div className="flex items-center space-x-2">
                   <MapPin className="h-4 w-4 text-zinc-400" />
                   <div>
-                    <div className="text-white font-medium">{event.location.type === 'virtual' ? 'Virtual' : 'In-Person'}</div>
+                    <div className="text-[var(--hive-text-inverse)] font-medium">{event.location.type === 'virtual' ? 'Virtual' : 'In-Person'}</div>
                     <div className="text-zinc-400 truncate">{event.location.name}</div>
                   </div>
                 </div>
@@ -254,7 +254,7 @@ export function EventDetailsModal({
                 <div className="flex items-center space-x-2">
                   <Users className="h-4 w-4 text-zinc-400" />
                   <div>
-                    <div className="text-white font-medium">{event.capacity.current}/{event.capacity.max}</div>
+                    <div className="text-[var(--hive-text-inverse)] font-medium">{event.capacity.current}/{event.capacity.max}</div>
                     <div className="text-zinc-400">attending</div>
                   </div>
                 </div>
@@ -262,7 +262,7 @@ export function EventDetailsModal({
                 <div className="flex items-center space-x-2">
                   <Zap className="h-4 w-4 text-zinc-400" />
                   <div>
-                    <div className="text-white font-medium">{event.tools.length}</div>
+                    <div className="text-[var(--hive-text-inverse)] font-medium">{event.tools.length}</div>
                     <div className="text-zinc-400">tools</div>
                   </div>
                 </div>
@@ -334,7 +334,7 @@ export function EventDetailsModal({
                 className={`flex items-center space-x-2 px-4 py-2 rounded-t-lg transition-colors ${
                   activeTab === tab.id
                     ? 'bg-hive-gold text-hive-obsidian font-medium'
-                    : 'text-zinc-400 hover:text-white hover:bg-zinc-800/50'
+                    : 'text-zinc-400 hover:text-[var(--hive-text-inverse)] hover:bg-zinc-800/50'
                 }`}
               >
                 <Icon className="h-4 w-4" />
@@ -359,18 +359,18 @@ export function EventDetailsModal({
             <div className="space-y-6">
               {/* Description */}
               <div>
-                <h3 className="text-lg font-semibold text-white mb-3">About this event</h3>
+                <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-3">About this event</h3>
                 <p className="text-zinc-300 leading-relaxed">{event.description}</p>
               </div>
 
               {/* Location Details */}
               <div>
-                <h3 className="text-lg font-semibold text-white mb-3">Location</h3>
+                <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-3">Location</h3>
                 <Card className="p-4 bg-zinc-800/50 border-zinc-700">
                   <div className="flex items-start space-x-3">
                     <MapPin className="h-5 w-5 text-zinc-400 mt-0.5" />
                     <div>
-                      <div className="font-medium text-white">{event.location.name}</div>
+                      <div className="font-medium text-[var(--hive-text-inverse)]">{event.location.name}</div>
                       {event.location.address && (
                         <div className="text-sm text-zinc-400 mt-1">{event.location.address}</div>
                       )}
@@ -395,7 +395,7 @@ export function EventDetailsModal({
               {/* Requirements */}
               {event.requirements && event.requirements.length > 0 && (
                 <div>
-                  <h3 className="text-lg font-semibold text-white mb-3">Requirements</h3>
+                  <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-3">Requirements</h3>
                   <div className="space-y-2">
                     {event.requirements.map((req, index) => (
                       <div key={index} className="flex items-center space-x-2 text-sm">
@@ -410,7 +410,7 @@ export function EventDetailsModal({
               {/* Tags */}
               {event.tags.length > 0 && (
                 <div>
-                  <h3 className="text-lg font-semibold text-white mb-3">Tags</h3>
+                  <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-3">Tags</h3>
                   <div className="flex flex-wrap gap-2">
                     {event.tags.map((tag) => (
                       <Badge key={tag} variant="skill-tag">
@@ -438,7 +438,7 @@ export function EventDetailsModal({
           {activeTab === 'attendees' && (
             <div className="space-y-6">
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold text-white">
+                <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)]">
                   Attendees ({event.capacity.current})
                 </h3>
                 <div className="flex items-center space-x-2">
@@ -471,7 +471,7 @@ export function EventDetailsModal({
                       </div>
                       <div className="flex-1">
                         <div className="flex items-center space-x-2">
-                          <span className="font-medium text-white">{event.organizer.name}</span>
+                          <span className="font-medium text-[var(--hive-text-inverse)]">{event.organizer.name}</span>
                           {event.organizer.verified && (
                             <Star className="h-3 w-3 text-hive-gold fill-current" />
                           )}
@@ -487,12 +487,12 @@ export function EventDetailsModal({
                     {Array.from({ length: Math.min(event.engagement.going - 1, 5) }, (_, i) => (
                       <div key={i} className="flex items-center space-x-3 p-3 bg-zinc-800/50 rounded-lg">
                         <div className="w-10 h-10 bg-zinc-600 rounded-full flex items-center justify-center">
-                          <span className="text-white font-semibold text-sm">
+                          <span className="text-[var(--hive-text-inverse)] font-semibold text-sm">
                             {String.fromCharCode(65 + i)}{String.fromCharCode(65 + ((i + 3) % 26))}
                           </span>
                         </div>
                         <div className="flex-1">
-                          <div className="font-medium text-white">
+                          <div className="font-medium text-[var(--hive-text-inverse)]">
                             {['Alex Chen', 'Maria Rodriguez', 'David Kim', 'Sarah Johnson', 'Mike Wilson'][i]}
                           </div>
                           <div className="text-sm text-zinc-400">
@@ -530,7 +530,7 @@ export function EventDetailsModal({
                             <Star className="h-4 w-4 text-yellow-400" />
                           </div>
                           <div className="flex-1">
-                            <div className="font-medium text-white">
+                            <div className="font-medium text-[var(--hive-text-inverse)]">
                               {['Emma Davis', 'John Smith', 'Lisa Wang', 'Tom Brown'][i]}
                             </div>
                             <div className="text-sm text-zinc-400">
@@ -573,7 +573,7 @@ export function EventDetailsModal({
           {activeTab === 'discussion' && (
             <div className="space-y-6">
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold text-white">
+                <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)]">
                   Discussion ({event.engagement.comments})
                 </h3>
                 {event.organizer.id === currentUserId && (
@@ -587,12 +587,12 @@ export function EventDetailsModal({
               {/* Comment Input */}
               <div className="flex items-start space-x-3 p-4 bg-zinc-800/30 rounded-lg">
                 <div className="w-10 h-10 bg-zinc-600 rounded-full flex items-center justify-center flex-shrink-0">
-                  <span className="text-white font-semibold text-sm">You</span>
+                  <span className="text-[var(--hive-text-inverse)] font-semibold text-sm">You</span>
                 </div>
                 <div className="flex-1">
                   <textarea
                     placeholder="Ask a question or share a comment..."
-                    className="w-full p-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-400 focus:border-hive-gold focus:outline-none resize-none"
+                    className="w-full p-3 bg-zinc-800 border border-zinc-700 rounded-lg text-[var(--hive-text-inverse)] placeholder-zinc-400 focus:border-hive-gold focus:outline-none resize-none"
                     rows={3}
                   />
                   <div className="flex items-center justify-between mt-2">
@@ -614,22 +614,22 @@ export function EventDetailsModal({
                     <div className="space-y-4">
                       <div className="flex items-start space-x-3 p-4 bg-zinc-800/20 rounded-lg">
                         <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
-                          <span className="text-white font-semibold text-sm">AC</span>
+                          <span className="text-[var(--hive-text-inverse)] font-semibold text-sm">AC</span>
                         </div>
                         <div className="flex-1">
                           <div className="flex items-center space-x-2 mb-1">
-                            <span className="font-medium text-white">Alex Chen</span>
+                            <span className="font-medium text-[var(--hive-text-inverse)]">Alex Chen</span>
                             <span className="text-xs text-zinc-400">2 hours ago</span>
                           </div>
                           <p className="text-zinc-300 text-sm leading-relaxed">
                             Should I bring my own laptop or will there be computers available? Also, is there a specific IDE we should use for the coding exercises?
                           </p>
                           <div className="flex items-center space-x-4 mt-2">
-                            <Button variant="ghost" size="sm" className="text-zinc-400 hover:text-white text-xs">
+                            <Button variant="ghost" size="sm" className="text-zinc-400 hover:text-[var(--hive-text-inverse)] text-xs">
                               <Heart className="h-3 w-3 mr-1" />
                               3
                             </Button>
-                            <Button variant="ghost" size="sm" className="text-zinc-400 hover:text-white text-xs">
+                            <Button variant="ghost" size="sm" className="text-zinc-400 hover:text-[var(--hive-text-inverse)] text-xs">
                               Reply
                             </Button>
                           </div>
@@ -643,7 +643,7 @@ export function EventDetailsModal({
                         </div>
                         <div className="flex-1">
                           <div className="flex items-center space-x-2 mb-1">
-                            <span className="font-medium text-white">{event.organizer.name}</span>
+                            <span className="font-medium text-[var(--hive-text-inverse)]">{event.organizer.name}</span>
                             <Badge variant="building-tools" className="text-xs">
                               Organizer
                             </Badge>
@@ -653,11 +653,11 @@ export function EventDetailsModal({
                             Great question! Please bring your own laptop with your preferred IDE installed. We'll be using various languages so having your familiar setup will help. I've also added "Laptop" to the requirements list above.
                           </p>
                           <div className="flex items-center space-x-4 mt-2">
-                            <Button variant="ghost" size="sm" className="text-zinc-400 hover:text-white text-xs">
+                            <Button variant="ghost" size="sm" className="text-zinc-400 hover:text-[var(--hive-text-inverse)] text-xs">
                               <Heart className="h-3 w-3 mr-1" />
                               5
                             </Button>
-                            <Button variant="ghost" size="sm" className="text-zinc-400 hover:text-white text-xs">
+                            <Button variant="ghost" size="sm" className="text-zinc-400 hover:text-[var(--hive-text-inverse)] text-xs">
                               Reply
                             </Button>
                           </div>
@@ -666,22 +666,22 @@ export function EventDetailsModal({
                       
                       <div className="flex items-start space-x-3 p-4 bg-zinc-800/20 rounded-lg">
                         <div className="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0">
-                          <span className="text-white font-semibold text-sm">MR</span>
+                          <span className="text-[var(--hive-text-inverse)] font-semibold text-sm">MR</span>
                         </div>
                         <div className="flex-1">
                           <div className="flex items-center space-x-2 mb-1">
-                            <span className="font-medium text-white">Maria Rodriguez</span>
+                            <span className="font-medium text-[var(--hive-text-inverse)]">Maria Rodriguez</span>
                             <span className="text-xs text-zinc-400">45 minutes ago</span>
                           </div>
                           <p className="text-zinc-300 text-sm leading-relaxed">
                             Looking forward to this! I've been working through CLRS chapters 15-16. Are we focusing on any specific algorithms or should I review everything?
                           </p>
                           <div className="flex items-center space-x-4 mt-2">
-                            <Button variant="ghost" size="sm" className="text-zinc-400 hover:text-white text-xs">
+                            <Button variant="ghost" size="sm" className="text-zinc-400 hover:text-[var(--hive-text-inverse)] text-xs">
                               <Heart className="h-3 w-3 mr-1" />
                               2
                             </Button>
-                            <Button variant="ghost" size="sm" className="text-zinc-400 hover:text-white text-xs">
+                            <Button variant="ghost" size="sm" className="text-zinc-400 hover:text-[var(--hive-text-inverse)] text-xs">
                               Reply
                             </Button>
                           </div>
@@ -711,6 +711,6 @@ export function EventDetailsModal({
           )}
         </div>
       </div>
-    </HiveModal>
+    </Modal>
   );
 }

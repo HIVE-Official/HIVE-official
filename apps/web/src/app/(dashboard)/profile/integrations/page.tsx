@@ -16,7 +16,7 @@ import {
   TabsContent,
   TabsList,
   TabsTrigger,
-  HiveModal,
+  Modal,
   FormField,
   Switch
 } from "@hive/ui";
@@ -367,25 +367,25 @@ export default function ProfileIntegrationsPage() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <Card className="p-4 text-center bg-gradient-to-br from-blue-500/10 to-blue-600/10 border-blue-500/20">
               <Link className="h-6 w-6 mx-auto mb-2 text-blue-400" />
-              <div className="text-lg font-bold text-white">{health.connectedIntegrations}/{health.totalIntegrations}</div>
+              <div className="text-lg font-bold text-[var(--hive-text-inverse)]">{health.connectedIntegrations}/{health.totalIntegrations}</div>
               <div className="text-xs text-hive-text-mutedLight">Connected</div>
             </Card>
             
             <Card className="p-4 text-center bg-gradient-to-br from-green-500/10 to-green-600/10 border-green-500/20">
               <Activity className="h-6 w-6 mx-auto mb-2 text-green-400" />
-              <div className="text-lg font-bold text-white">{health.healthyIntegrations}</div>
+              <div className="text-lg font-bold text-[var(--hive-text-inverse)]">{health.healthyIntegrations}</div>
               <div className="text-xs text-hive-text-mutedLight">Healthy</div>
             </Card>
             
             <Card className="p-4 text-center bg-gradient-to-br from-red-500/10 to-red-600/10 border-red-500/20">
               <AlertTriangle className="h-6 w-6 mx-auto mb-2 text-red-400" />
-              <div className="text-lg font-bold text-white">{health.lastSyncErrors}</div>
+              <div className="text-lg font-bold text-[var(--hive-text-inverse)]">{health.lastSyncErrors}</div>
               <div className="text-xs text-hive-text-mutedLight">Sync Errors</div>
             </Card>
             
             <Card className="p-4 text-center bg-gradient-to-br from-purple-500/10 to-purple-600/10 border-purple-500/20">
               <RefreshCw className="h-6 w-6 mx-auto mb-2 text-purple-400" />
-              <div className="text-lg font-bold text-white">{health.dataFreshness}%</div>
+              <div className="text-lg font-bold text-[var(--hive-text-inverse)]">{health.dataFreshness}%</div>
               <div className="text-xs text-hive-text-mutedLight">Data Freshness</div>
             </Card>
           </div>
@@ -396,7 +396,7 @@ export default function ProfileIntegrationsPage() {
               <div className="flex items-center space-x-3">
                 <AlertTriangle className="h-5 w-5 text-red-400" />
                 <div>
-                  <p className="text-white font-medium">Integration Issues Detected</p>
+                  <p className="text-[var(--hive-text-inverse)] font-medium">Integration Issues Detected</p>
                   <p className="text-sm text-red-200">
                     {errorIntegrations.length} integration{errorIntegrations.length > 1 ? 's' : ''} need{errorIntegrations.length === 1 ? 's' : ''} attention
                   </p>
@@ -430,10 +430,10 @@ export default function ProfileIntegrationsPage() {
                       <div className="flex items-start justify-between mb-4">
                         <div className="flex items-center space-x-3">
                           <div className="w-12 h-12 bg-gray-500 rounded-lg flex items-center justify-center">
-                            <IconComponent className="h-6 w-6 text-white" />
+                            <IconComponent className="h-6 w-6 text-[var(--hive-text-inverse)]" />
                           </div>
                           <div>
-                            <h3 className="font-semibold text-white flex items-center space-x-2">
+                            <h3 className="font-semibold text-[var(--hive-text-inverse)] flex items-center space-x-2">
                               <span>{integration.name}</span>
                               {integration.isRequired && (
                                 <Badge variant="secondary" className="text-xs">Required</Badge>
@@ -479,7 +479,7 @@ export default function ProfileIntegrationsPage() {
                       
                       {integration.status === 'error' && integration.troubleshooting && (
                         <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 mb-4">
-                          <p className="text-sm text-white font-medium">{integration.troubleshooting.commonIssue}</p>
+                          <p className="text-sm text-[var(--hive-text-inverse)] font-medium">{integration.troubleshooting.commonIssue}</p>
                           <p className="text-xs text-red-200">{integration.troubleshooting.solution}</p>
                         </div>
                       )}
@@ -546,10 +546,10 @@ export default function ProfileIntegrationsPage() {
                           <div className="flex items-start justify-between mb-4">
                             <div className="flex items-center space-x-3">
                               <div className="w-12 h-12 bg-gray-500 rounded-lg flex items-center justify-center">
-                                <IconComponent className="h-6 w-6 text-white" />
+                                <IconComponent className="h-6 w-6 text-[var(--hive-text-inverse)]" />
                               </div>
                               <div>
-                                <h3 className="font-semibold text-white">{integration.name}</h3>
+                                <h3 className="font-semibold text-[var(--hive-text-inverse)]">{integration.name}</h3>
                                 <p className="text-sm text-hive-text-mutedLight">by {integration.provider}</p>
                               </div>
                             </div>
@@ -559,7 +559,7 @@ export default function ProfileIntegrationsPage() {
                           <p className="text-sm text-hive-text-mutedLight mb-4">{integration.description}</p>
                           
                           <div className="space-y-2 mb-4">
-                            <div className="text-xs text-white font-medium">Features:</div>
+                            <div className="text-xs text-[var(--hive-text-inverse)] font-medium">Features:</div>
                             <div className="flex flex-wrap gap-1">
                               {integration.features.slice(0, 3).map((feature) => (
                                 <Badge key={feature} variant="outline" className="text-xs">
@@ -604,13 +604,13 @@ export default function ProfileIntegrationsPage() {
 
           {/* Privacy & Data Information */}
           <Card className="p-6 bg-gradient-to-br from-purple-500/10 to-purple-600/10 border-purple-500/20">
-            <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
+            <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4 flex items-center">
               <Shield className="h-5 w-5 mr-2" />
               Privacy & Data Control
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <h4 className="font-medium text-white mb-2">Data You Control</h4>
+                <h4 className="font-medium text-[var(--hive-text-inverse)] mb-2">Data You Control</h4>
                 <ul className="text-sm text-hive-text-mutedLight space-y-1">
                   <li>• You can disconnect any non-required integration at any time</li>
                   <li>• Data is only shared with your explicit permission</li>
@@ -619,7 +619,7 @@ export default function ProfileIntegrationsPage() {
                 </ul>
               </div>
               <div>
-                <h4 className="font-medium text-white mb-2">Integration Benefits</h4>
+                <h4 className="font-medium text-[var(--hive-text-inverse)] mb-2">Integration Benefits</h4>
                 <ul className="text-sm text-hive-text-mutedLight space-y-1">
                   <li>• Unified view of your campus digital life</li>
                   <li>• Smart recommendations based on your data</li>
@@ -632,7 +632,7 @@ export default function ProfileIntegrationsPage() {
         </div>
 
         {/* 🚨 **SOPHISTICATED INTEGRATION MANAGEMENT MODAL** */}
-        <HiveModal
+        <Modal
           open={showManageModal}
           onClose={() => {
             setShowManageModal(false);
@@ -648,7 +648,7 @@ export default function ProfileIntegrationsPage() {
                 <div className="flex items-center gap-3 mb-3">
                   <selectedIntegration.icon className="h-6 w-6 text-hive-gold" />
                   <div>
-                    <h4 className="font-semibold text-white">{selectedIntegration.name}</h4>
+                    <h4 className="font-semibold text-[var(--hive-text-inverse)]">{selectedIntegration.name}</h4>
                     <p className="text-sm text-gray-400">by {selectedIntegration.provider}</p>
                   </div>
                   <div className="ml-auto">
@@ -661,7 +661,7 @@ export default function ProfileIntegrationsPage() {
               {/* Permissions & Data */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <h5 className="font-medium text-white mb-2 flex items-center gap-2">
+                  <h5 className="font-medium text-[var(--hive-text-inverse)] mb-2 flex items-center gap-2">
                     <Shield className="h-4 w-4 text-hive-gold" />
                     Permissions
                   </h5>
@@ -683,7 +683,7 @@ export default function ProfileIntegrationsPage() {
                 </div>
 
                 <div>
-                  <h5 className="font-medium text-white mb-2 flex items-center gap-2">
+                  <h5 className="font-medium text-[var(--hive-text-inverse)] mb-2 flex items-center gap-2">
                     <Activity className="h-4 w-4 text-hive-gold" />
                     Data Shared
                   </h5>
@@ -700,7 +700,7 @@ export default function ProfileIntegrationsPage() {
 
               {/* Sync Settings */}
               <div>
-                <h5 className="font-medium text-white mb-3 flex items-center gap-2">
+                <h5 className="font-medium text-[var(--hive-text-inverse)] mb-3 flex items-center gap-2">
                   <RefreshCw className="h-4 w-4 text-hive-gold" />
                   Sync Settings
                 </h5>
@@ -710,7 +710,7 @@ export default function ProfileIntegrationsPage() {
                     description="How often HIVE updates data from this service"
                   >
                     <div className="p-2 bg-hive-background-overlay rounded border">
-                      <span className="text-sm text-white capitalize">{selectedIntegration.syncFrequency}</span>
+                      <span className="text-sm text-[var(--hive-text-inverse)] capitalize">{selectedIntegration.syncFrequency}</span>
                     </div>
                   </FormField>
                   
@@ -720,7 +720,7 @@ export default function ProfileIntegrationsPage() {
                       description="When data was last updated"
                     >
                       <div className="p-2 bg-hive-background-overlay rounded border">
-                        <span className="text-sm text-white">{formatTimeAgo(selectedIntegration.lastSync)}</span>
+                        <span className="text-sm text-[var(--hive-text-inverse)]">{formatTimeAgo(selectedIntegration.lastSync)}</span>
                       </div>
                     </FormField>
                   )}
@@ -729,7 +729,7 @@ export default function ProfileIntegrationsPage() {
 
               {/* Features */}
               <div>
-                <h5 className="font-medium text-white mb-2 flex items-center gap-2">
+                <h5 className="font-medium text-[var(--hive-text-inverse)] mb-2 flex items-center gap-2">
                   <Zap className="h-4 w-4 text-hive-gold" />
                   Available Features
                 </h5>
@@ -745,11 +745,11 @@ export default function ProfileIntegrationsPage() {
               {/* Troubleshooting */}
               {selectedIntegration.troubleshooting && selectedIntegration.status === 'error' && (
                 <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-lg">
-                  <h5 className="font-medium text-white mb-2 flex items-center gap-2">
+                  <h5 className="font-medium text-[var(--hive-text-inverse)] mb-2 flex items-center gap-2">
                     <AlertTriangle className="h-4 w-4 text-red-400" />
                     Troubleshooting
                   </h5>
-                  <p className="text-sm text-white font-medium mb-1">{selectedIntegration.troubleshooting.commonIssue}</p>
+                  <p className="text-sm text-[var(--hive-text-inverse)] font-medium mb-1">{selectedIntegration.troubleshooting.commonIssue}</p>
                   <p className="text-sm text-red-200">{selectedIntegration.troubleshooting.solution}</p>
                 </div>
               )}
@@ -803,7 +803,7 @@ export default function ProfileIntegrationsPage() {
               </div>
             </div>
           )}
-        </HiveModal>
+        </Modal>
       </PageContainer>
     </ErrorBoundary>
   );
@@ -824,7 +824,7 @@ export default function ProfileIntegrationsPage() {
  * 
  * AFTER (@hive/ui components):
  * - Sophisticated PageContainer with enhanced breadcrumbs and dynamic actions
- * - HiveModal with comprehensive integration management interface
+ * - Modal with comprehensive integration management interface
  * - FormField components for consistent settings display
  * - Enhanced Card, Button, Badge, and Switch components throughout
  * - Real-time status tracking and health metrics

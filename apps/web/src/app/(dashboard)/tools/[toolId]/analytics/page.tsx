@@ -103,7 +103,7 @@ const MetricCard = ({ title, value, change, icon: Icon, format = 'number' }: {
         )}
       </div>
       
-      <div className="text-2xl font-bold text-white mb-1">
+      <div className="text-2xl font-bold text-[var(--hive-text-inverse)] mb-1">
         {formatValue(value)}
       </div>
       <div className="text-sm text-[var(--hive-text-muted)]">
@@ -122,13 +122,13 @@ const SimpleChart = ({ data, title, type: _type = 'bar' }: { // TODO: type param
   
   return (
     <Card className="p-6 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)]">
-      <h3 className="text-lg font-semibold text-white mb-4">{title}</h3>
+      <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4">{title}</h3>
       <div className="space-y-4">
         {data.map((item, index) => (
           <div key={index} className="space-y-2">
             <div className="flex items-center justify-between text-sm">
               <span className="text-[var(--hive-text-muted)]">{item.label}</span>
-              <span className="text-white font-medium">{item.value}</span>
+              <span className="text-[var(--hive-text-inverse)] font-medium">{item.value}</span>
             </div>
             <div className="w-full bg-[rgba(255,255,255,0.05)] rounded-full h-2">
               <div 
@@ -143,22 +143,22 @@ const SimpleChart = ({ data, title, type: _type = 'bar' }: { // TODO: type param
   );
 };
 
-const FeedbackCard = ({ comment }: { comment: typeof MOCK_ANALYTICS.feedback.comments[0] }) => (
+const FeedbackCard = ({ _comment }: { _comment: typeof MOCK_ANALYTICS.feedback.comments[0] }) => (
   <Card className="p-4 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)]">
     <div className="flex items-center justify-between mb-3">
       <div className="flex items-center gap-2">
         <div className="w-8 h-8 bg-gradient-to-br from-[var(--hive-brand-secondary)] to-[#FFE255] rounded-lg flex items-center justify-center text-[var(--hive-background-primary)] font-semibold text-xs">
-          {comment.user.charAt(0)}
+          {_comment.user.charAt(0)}
         </div>
-        <span className="text-white font-medium text-sm">{comment.user}</span>
+        <span className="text-[var(--hive-text-inverse)] font-medium text-sm">{_comment.user}</span>
       </div>
       <div className="flex items-center gap-1">
         <Star className="h-3 w-3 fill-[var(--hive-brand-secondary)] text-[var(--hive-brand-secondary)]" />
-        <span className="text-xs text-[var(--hive-text-muted)]">{comment.rating}</span>
+        <span className="text-xs text-[var(--hive-text-muted)]">{_comment.rating}</span>
       </div>
     </div>
-    <p className="text-sm text-[var(--hive-text-muted)] mb-2">"{comment.comment}"</p>
-    <div className="text-xs text-[#666] opacity-60">{comment.date}</div>
+    <p className="text-sm text-[var(--hive-text-muted)] mb-2">"{_comment.comment}"</p>
+    <div className="text-xs text-[#666] opacity-60">{_comment.date}</div>
   </Card>
 );
 
@@ -199,13 +199,13 @@ export default function ToolAnalyticsPage() {
                 size="sm"
                 variant="ghost"
                 onClick={() => router.back()}
-                className="text-[var(--hive-text-muted)] hover:text-white"
+                className="text-[var(--hive-text-muted)] hover:text-[var(--hive-text-inverse)]"
               >
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Back
               </Button>
               <div>
-                <h1 className="text-xl font-semibold text-white">
+                <h1 className="text-xl font-semibold text-[var(--hive-text-inverse)]">
                   Poll Maker Analytics
                 </h1>
                 <p className="text-sm text-[var(--hive-text-muted)]">
@@ -218,7 +218,7 @@ export default function ToolAnalyticsPage() {
               <select
                 value={timeRange}
                 onChange={(e) => setTimeRange(e.target.value)}
-                className="p-2 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded text-white text-sm focus:border-[var(--hive-brand-secondary)]/50 focus:outline-none"
+                className="p-2 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded text-[var(--hive-text-inverse)] text-sm focus:border-[var(--hive-brand-secondary)]/50 focus:outline-none"
               >
                 <option value="7d">Last 7 days</option>
                 <option value="30d">Last 30 days</option>
@@ -227,7 +227,7 @@ export default function ToolAnalyticsPage() {
               <Button
                 size="sm"
                 variant="outline"
-                className="border-[rgba(255,255,255,0.2)] text-[var(--hive-text-muted)] hover:text-white"
+                className="border-[rgba(255,255,255,0.2)] text-[var(--hive-text-muted)] hover:text-[var(--hive-text-inverse)]"
               >
                 <Share className="h-4 w-4 mr-2" />
                 Export
@@ -240,7 +240,7 @@ export default function ToolAnalyticsPage() {
       <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
         {/* Overview Metrics */}
         <div>
-          <h2 className="text-2xl font-bold text-white mb-6">Overview</h2>
+          <h2 className="text-2xl font-bold text-[var(--hive-text-inverse)] mb-6">Overview</h2>
           <Grid cols={4} gap="lg">
             <MetricCard
               title="Total Usage"
@@ -272,7 +272,7 @@ export default function ToolAnalyticsPage() {
 
         {/* Usage Charts */}
         <div>
-          <h2 className="text-2xl font-bold text-white mb-6">Usage Analytics</h2>
+          <h2 className="text-2xl font-bold text-[var(--hive-text-inverse)] mb-6">Usage Analytics</h2>
           <Grid cols={2} gap="lg">
             <SimpleChart
               data={dailyUsageData}
@@ -290,7 +290,7 @@ export default function ToolAnalyticsPage() {
         <Grid cols={2} gap="xl">
           {/* Feature Usage */}
           <div>
-            <h2 className="text-2xl font-bold text-white mb-6">Feature Usage</h2>
+            <h2 className="text-2xl font-bold text-[var(--hive-text-inverse)] mb-6">Feature Usage</h2>
             <SimpleChart
               data={featureUsageData}
               title="Most Used Features"
@@ -299,11 +299,11 @@ export default function ToolAnalyticsPage() {
 
           {/* User Feedback */}
           <div>
-            <h2 className="text-2xl font-bold text-white mb-6">User Feedback</h2>
+            <h2 className="text-2xl font-bold text-[var(--hive-text-inverse)] mb-6">User Feedback</h2>
             
             {/* Rating Distribution */}
             <Card className="p-6 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)] mb-6">
-              <h3 className="text-lg font-semibold text-white mb-4">Rating Distribution</h3>
+              <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4">Rating Distribution</h3>
               <div className="space-y-3">
                 {analytics.feedback.ratings.map((rating, index) => (
                   <div key={index} className="flex items-center gap-3">
@@ -325,7 +325,7 @@ export default function ToolAnalyticsPage() {
 
             {/* Recent Comments */}
             <div>
-              <h3 className="text-lg font-semibold text-white mb-4">Recent Comments</h3>
+              <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4">Recent Comments</h3>
               <div className="space-y-4">
                 {analytics.feedback.comments.map((comment, index) => (
                   <FeedbackCard key={index} comment={comment} />
@@ -333,7 +333,7 @@ export default function ToolAnalyticsPage() {
               </div>
               <Button
                 variant="outline"
-                className="w-full mt-4 border-[rgba(255,255,255,0.2)] text-[var(--hive-text-muted)] hover:text-white"
+                className="w-full mt-4 border-[rgba(255,255,255,0.2)] text-[var(--hive-text-muted)] hover:text-[var(--hive-text-inverse)]"
               >
                 <MessageSquare className="h-4 w-4 mr-2" />
                 View All Feedback
@@ -349,7 +349,7 @@ export default function ToolAnalyticsPage() {
               <TrendingUp className="h-6 w-6 text-[var(--hive-brand-secondary)]" />
             </div>
             <div>
-              <h3 className="text-xl font-semibold text-white mb-2">Performance Insights</h3>
+              <h3 className="text-xl font-semibold text-[var(--hive-text-inverse)] mb-2">Performance Insights</h3>
               <div className="text-[var(--hive-text-muted)] mb-4">
                 Your tool is performing well with strong user engagement and positive feedback.
               </div>

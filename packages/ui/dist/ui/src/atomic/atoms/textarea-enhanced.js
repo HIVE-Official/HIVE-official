@@ -2,7 +2,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
 import { cva } from "class-variance-authority";
-import { cn } from "../../lib/utils";
+import { cn } from "../../lib/utils.js";
 // HIVE Textarea System - Semantic Token Perfection
 // Zero hardcoded values - complete semantic token usage
 const textareaVariants = cva(
@@ -134,5 +134,5 @@ export const TextareaPresets = {
     // Feedback Input
     Feedback: (props) => (_jsx(Textarea, { placeholder: "Share your feedback...", size: "lg", autoResize: true, showCharCount: true, maxLength: 2000, ...props })),
 };
-export { Textarea, CodeTextarea, TextareaGroup, textareaVariants };
+export { Textarea, Textarea as TextareaEnhanced, CodeTextarea, TextareaGroup, textareaVariants };
 //# sourceMappingURL=textarea-enhanced.js.map

@@ -182,7 +182,7 @@ export function RealtimePerformanceDashboard() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white">Real-time Performance</h1>
+          <h1 className="text-2xl font-bold text-[var(--hive-text-inverse)]">Real-time Performance</h1>
           <p className="text-gray-400">Monitor and optimize real-time system performance</p>
         </div>
         
@@ -231,7 +231,7 @@ export function RealtimePerformanceDashboard() {
       {/* System Overview */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {/* Connection Status */}
-        <Card className="bg-gray-900 border-gray-800">
+        <Card className="bg-[var(--hive-background-primary)] border-gray-800">
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center space-x-2 text-sm font-medium">
               {getStatusIcon(connectionHealth.status)}
@@ -248,7 +248,7 @@ export function RealtimePerformanceDashboard() {
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-sm text-gray-400">Uptime</span>
-                <span className="text-sm text-white">
+                <span className="text-sm text-[var(--hive-text-inverse)]">
                   {Math.round(connectionHealth.uptime / 1000 / 60)}m
                 </span>
               </div>
@@ -257,7 +257,7 @@ export function RealtimePerformanceDashboard() {
         </Card>
 
         {/* Active Connections */}
-        <Card className="bg-gray-900 border-gray-800">
+        <Card className="bg-[var(--hive-background-primary)] border-gray-800">
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center space-x-2 text-sm font-medium">
               <Users className="h-5 w-5 text-blue-500" />
@@ -266,7 +266,7 @@ export function RealtimePerformanceDashboard() {
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
-              <div className="text-2xl font-bold text-white">
+              <div className="text-2xl font-bold text-[var(--hive-text-inverse)]">
                 {systemMetrics?.activeConnections || 0}
               </div>
               <div className="text-sm text-gray-400">
@@ -281,7 +281,7 @@ export function RealtimePerformanceDashboard() {
         </Card>
 
         {/* Message Throughput */}
-        <Card className="bg-gray-900 border-gray-800">
+        <Card className="bg-[var(--hive-background-primary)] border-gray-800">
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center space-x-2 text-sm font-medium">
               <MessageSquare className="h-5 w-5 text-green-500" />
@@ -290,7 +290,7 @@ export function RealtimePerformanceDashboard() {
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
-              <div className="text-2xl font-bold text-white">
+              <div className="text-2xl font-bold text-[var(--hive-text-inverse)]">
                 {Math.round(systemMetrics?.messagesPerSecond || 0)}
               </div>
               <div className="flex items-center space-x-1 text-sm">
@@ -302,7 +302,7 @@ export function RealtimePerformanceDashboard() {
         </Card>
 
         {/* Latency */}
-        <Card className="bg-gray-900 border-gray-800">
+        <Card className="bg-[var(--hive-background-primary)] border-gray-800">
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center space-x-2 text-sm font-medium">
               <Clock className="h-5 w-5 text-yellow-500" />
@@ -311,7 +311,7 @@ export function RealtimePerformanceDashboard() {
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
-              <div className="text-2xl font-bold text-white">
+              <div className="text-2xl font-bold text-[var(--hive-text-inverse)]">
                 {formatLatency(systemMetrics?.averageLatency || performanceMetrics.connectionLatency)}
               </div>
               <div className="flex items-center space-x-1 text-sm">
@@ -335,7 +335,7 @@ export function RealtimePerformanceDashboard() {
       {/* Detailed Performance Metrics */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Performance Breakdown */}
-        <Card className="bg-gray-900 border-gray-800">
+        <Card className="bg-[var(--hive-background-primary)] border-gray-800">
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
               <Activity className="h-5 w-5 text-purple-500" />
@@ -346,7 +346,7 @@ export function RealtimePerformanceDashboard() {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <div className="text-sm text-gray-400 mb-1">Error Rate</div>
-                <div className="text-lg font-semibold text-white">
+                <div className="text-lg font-semibold text-[var(--hive-text-inverse)]">
                   {((systemMetrics?.errorRate || 0) * 100).toFixed(2)}%
                 </div>
                 <Progress 
@@ -357,7 +357,7 @@ export function RealtimePerformanceDashboard() {
               
               <div>
                 <div className="text-sm text-gray-400 mb-1">Memory Usage</div>
-                <div className="text-lg font-semibold text-white">
+                <div className="text-lg font-semibold text-[var(--hive-text-inverse)]">
                   {Math.round(systemMetrics?.memoryUsage || performanceMetrics.memoryUsage)}MB
                 </div>
                 <Progress 
@@ -368,7 +368,7 @@ export function RealtimePerformanceDashboard() {
               
               <div>
                 <div className="text-sm text-gray-400 mb-1">Bandwidth</div>
-                <div className="text-lg font-semibold text-white">
+                <div className="text-lg font-semibold text-[var(--hive-text-inverse)]">
                   {formatBytes(performanceMetrics.bandwidthUsage)}/s
                 </div>
                 <Progress 
@@ -379,7 +379,7 @@ export function RealtimePerformanceDashboard() {
               
               <div>
                 <div className="text-sm text-gray-400 mb-1">Messages</div>
-                <div className="text-lg font-semibold text-white">
+                <div className="text-lg font-semibold text-[var(--hive-text-inverse)]">
                   {performanceMetrics.messagesReceived + performanceMetrics.messagesSent}
                 </div>
                 <div className="text-xs text-gray-500">
@@ -391,7 +391,7 @@ export function RealtimePerformanceDashboard() {
         </Card>
 
         {/* Connection Health */}
-        <Card className="bg-gray-900 border-gray-800">
+        <Card className="bg-[var(--hive-background-primary)] border-gray-800">
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
               <Wifi className="h-5 w-5 text-blue-500" />
@@ -401,7 +401,7 @@ export function RealtimePerformanceDashboard() {
           <CardContent className="space-y-4">
             {/* Issues */}
             <div>
-              <div className="text-sm font-medium text-white mb-2">Current Issues</div>
+              <div className="text-sm font-medium text-[var(--hive-text-inverse)] mb-2">Current Issues</div>
               {connectionHealth.issues.length === 0 ? (
                 <div className="flex items-center space-x-2 text-green-400">
                   <CheckCircle className="h-4 w-4" />
@@ -421,7 +421,7 @@ export function RealtimePerformanceDashboard() {
 
             {/* Recommendations */}
             <div>
-              <div className="text-sm font-medium text-white mb-2">Recommendations</div>
+              <div className="text-sm font-medium text-[var(--hive-text-inverse)] mb-2">Recommendations</div>
               {connectionHealth.recommendations.length === 0 ? (
                 <div className="text-sm text-gray-400">System operating optimally</div>
               ) : (
@@ -461,7 +461,7 @@ export function RealtimePerformanceDashboard() {
 
       {/* Recent Alerts History */}
       {alerts.length > 0 && (
-        <Card className="bg-gray-900 border-gray-800">
+        <Card className="bg-[var(--hive-background-primary)] border-gray-800">
           <CardHeader className="flex items-center justify-between">
             <CardTitle className="flex items-center space-x-2">
               <AlertTriangle className="h-5 w-5 text-yellow-500" />
@@ -486,7 +486,7 @@ export function RealtimePerformanceDashboard() {
                     >
                       {alert.severity}
                     </Badge>
-                    <span className="text-sm text-white">{alert.message}</span>
+                    <span className="text-sm text-[var(--hive-text-inverse)]">{alert.message}</span>
                     <span className="text-xs text-gray-400">
                       {new Date(alert.timestamp).toLocaleTimeString()}
                     </span>

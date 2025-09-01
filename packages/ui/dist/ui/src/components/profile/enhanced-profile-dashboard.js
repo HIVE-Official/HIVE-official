@@ -1,16 +1,16 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { motion } from '../framer-motion-proxy';
-import { cn } from '../../lib/utils';
+import { motion } from '../framer-motion-proxy.js';
+import { cn } from '../../lib/utils.js';
 import { Settings, BarChart3, Shield, Wrench, Calendar, Bell } from 'lucide-react';
 // Import the expand-focus system
-import { ExpandFocus, useExpandFocus } from '../animations/expand-focus';
+import { ExpandFocus, useExpandFocus } from '../animations/expand-focus.js';
 // Import profile widgets
-import { ProfileSettingsWidget } from './widgets/profile-settings-widget';
-import { ProfileAnalyticsWidget } from './widgets/profile-analytics-widget';
-import { PrivacyControlWidget } from './widgets/privacy-control-widget';
+import { ProfileSettingsWidget } from './widgets/profile-settings-widget.js';
+import { ProfileAnalyticsWidget } from './widgets/profile-analytics-widget.js';
+import { PrivacyControlWidget } from './widgets/privacy-control-widget.js';
 // Import existing profile components
-import { ProfileDashboard } from '../profile/profile-dashboard';
+import { ProfileDashboard } from '../profile/profile-dashboard.js';
 export const EnhancedProfileDashboard = ({ enableExpandFocus = true, ...profileDashboardProps }) => {
     // Expand-focus states for different widgets
     const settingsModal = useExpandFocus();

@@ -1,5 +1,5 @@
 import { jsxs as _jsxs, jsx as _jsx } from "react/jsx-runtime";
-import { useStandardElementStyles } from '../../hooks/use-standard-element-styles';
+import { useStandardElementStyles } from '../../hooks/use-standard-element-styles.js';
 export const StackRenderer = ({ element, config, tool, renderElement }) => {
     // Use standard style system (flexible input, consistent output)
     const { classes, styles } = useStandardElementStyles(config.style);

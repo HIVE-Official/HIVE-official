@@ -1,8 +1,8 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
-import { cn } from '../../lib/utils';
-import { Avatar } from '../atomic/atoms/avatar';
-import { ButtonEnhanced as Button } from '../atomic/atoms/button-enhanced';
+import { cn } from '../lib/utils.js';
+import { Avatar } from '../atomic/atoms/avatar.js';
+import { ButtonEnhanced as Button } from '../atomic/atoms/button-enhanced.js';
 import { User, UserPlus, UserCheck, MessageCircle, Mail, MoreHorizontal, GraduationCap, Home, Users, MapPin, Calendar, Link } from 'lucide-react';
 const roleData = {
     student: { color: 'text-[var(--hive-status-info)]', label: 'Student' },

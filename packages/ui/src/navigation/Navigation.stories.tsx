@@ -51,7 +51,8 @@ const createMockItems = (activeSection = 'feed') => {
 // STORYBOOK META
 // ============================================================================
 
-const meta: Meta = {
+const meta: Meta<typeof ResponsiveShowcase> = {
+  component: ResponsiveShowcase,
   title: 'Navigation/System Overview',
   parameters: {
     layout: 'fullscreen',

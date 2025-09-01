@@ -1,10 +1,10 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { createContext, useContext, useState, useCallback } from 'react';
-import { cn } from '../../lib/utils';
-import { Button } from '../atoms/button-enhanced';
+import { cn } from '../../lib/utils.js';
+import { Button } from '../atoms/button-enhanced.js';
 import { X, CheckCircle, AlertCircle, AlertTriangle, Info } from 'lucide-react';
-import { Card } from '../ui/card';
+import { Card } from '../ui/card.js';
 // Alert Component
 export function Alert({ variant = 'default', size = 'md', title, description, icon, dismissible = false, onDismiss, actions, className, children }) {
     const getVariantStyles = (variant) => {
@@ -79,13 +79,13 @@ function Toast({ id, variant = 'default', title, description, icon, dismissible 
     const getVariantStyles = (variant) => {
         switch (variant) {
             case 'success':
-                return 'bg-[var(--hive-status-success)] text-white';
+                return 'bg-[var(--hive-status-success)] text-[var(--hive-text-inverse)]';
             case 'warning':
-                return 'bg-[var(--hive-status-warning)] text-white';
+                return 'bg-[var(--hive-status-warning)] text-[var(--hive-text-inverse)]';
             case 'error':
-                return 'bg-[var(--hive-status-error)] text-white';
+                return 'bg-[var(--hive-status-error)] text-[var(--hive-text-inverse)]';
             case 'info':
-                return 'bg-[var(--hive-brand-primary)] text-white';
+                return 'bg-[var(--hive-brand-primary)] text-[var(--hive-text-inverse)]';
             default:
                 return 'bg-[var(--hive-background-primary)] text-[var(--hive-text-primary)] border border-[var(--hive-border-default)]';
         }

@@ -4,15 +4,13 @@
  * Minimal slice exports for production use.
  */
 // Basic exports for immediate use
-export { Button } from '../atomic/atoms/button';
-export { Avatar } from '../atomic/atoms/avatar';
-export { Badge } from '../atomic/atoms/badge';
-export { Card } from '../atomic/molecules/card';
-export { HiveOnboardingWizard } from '../components/onboarding/hive-onboarding-wizard';
-export { HiveAuthFlow } from '../components/auth/hive-auth-flow';
+export { ButtonEnhanced as Button } from '../atomic/atoms/button-enhanced.js';
+export { Avatar } from '../atomic/atoms/avatar.js';
+export { Badge } from '../atomic/atoms/badge.js';
+export { Card } from '../atomic/molecules/card.js';
 // Core hooks
-export { useOnboardingFlow } from './hooks/use-onboarding-flow';
-export { useAuthProvider } from './hooks/use-auth';
+export { useOnboardingFlow } from './hooks/use-onboarding-flow.js';
+export { useAuthProvider } from './hooks/use-auth.js';
 // Re-export commonly used utilities
-export { ONBOARDING_STEPS, MAGIC_LINK_CONFIG } from './constants';
+export { ONBOARDING_STEPS, MAGIC_LINK_CONFIG } from './constants.js';
 //# sourceMappingURL=index.js.map

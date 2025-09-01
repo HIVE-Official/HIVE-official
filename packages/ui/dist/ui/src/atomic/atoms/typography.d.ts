@@ -1,24 +1,24 @@
 import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
-declare const headingVariants: (props?: {
-    level?: 1 | 3 | 2 | 4 | 5 | 6;
-    color?: "error" | "primary" | "secondary" | "success" | "warning" | "info" | "tertiary" | "brand";
-    weight?: "bold" | "medium" | "normal" | "light" | "semibold";
-} & import("class-variance-authority/types").ClassProp) => string;
-declare const textVariants: (props?: {
-    size?: "sm" | "lg" | "xl" | "base" | "xs";
-    color?: "error" | "primary" | "secondary" | "disabled" | "success" | "warning" | "info" | "tertiary" | "brand" | "inverse";
-    weight?: "bold" | "medium" | "normal" | "light" | "semibold";
-    decoration?: "none" | "line-through" | "underline";
-} & import("class-variance-authority/types").ClassProp) => string;
-declare const captionVariants: (props?: {
-    color?: "error" | "disabled" | "success" | "warning" | "info" | "tertiary" | "brand";
-    weight?: "medium" | "normal" | "semibold";
-} & import("class-variance-authority/types").ClassProp) => string;
-declare const linkVariants: (props?: {
-    color?: "primary" | "secondary" | "tertiary" | "brand";
-    decoration?: "none" | "always" | "hover";
-} & import("class-variance-authority/types").ClassProp) => string;
+declare const headingVariants: (props?: ({
+    level?: 2 | 1 | 3 | 4 | 5 | 6 | null | undefined;
+    color?: "error" | "primary" | "secondary" | "success" | "warning" | "info" | "brand" | "tertiary" | null | undefined;
+    weight?: "bold" | "light" | "normal" | "medium" | "semibold" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
+declare const textVariants: (props?: ({
+    size?: "xs" | "sm" | "lg" | "xl" | "base" | null | undefined;
+    color?: "error" | "primary" | "secondary" | "success" | "warning" | "info" | "disabled" | "brand" | "tertiary" | "inverse" | null | undefined;
+    weight?: "bold" | "light" | "normal" | "medium" | "semibold" | null | undefined;
+    decoration?: "none" | "line-through" | "underline" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
+declare const captionVariants: (props?: ({
+    color?: "error" | "success" | "warning" | "info" | "disabled" | "brand" | "tertiary" | null | undefined;
+    weight?: "normal" | "medium" | "semibold" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
+declare const linkVariants: (props?: ({
+    color?: "primary" | "secondary" | "brand" | "tertiary" | null | undefined;
+    decoration?: "none" | "always" | "hover" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
 export interface HeadingProps extends Omit<React.HTMLAttributes<HTMLHeadingElement>, 'color'>, VariantProps<typeof headingVariants> {
     as?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 }
@@ -38,15 +38,13 @@ export interface CodeProps extends React.HTMLAttributes<HTMLElement> {
     variant?: "inline" | "block";
 }
 export declare const Code: React.ForwardRefExoticComponent<CodeProps & React.RefAttributes<HTMLElement>>;
-export interface BlockquoteProps extends React.HTMLAttributes<HTMLQuoteElement> {
-}
+export type BlockquoteProps = React.HTMLAttributes<HTMLQuoteElement>;
 export declare const Blockquote: React.ForwardRefExoticComponent<BlockquoteProps & React.RefAttributes<HTMLQuoteElement>>;
 export interface ListProps extends React.HTMLAttributes<HTMLUListElement | HTMLOListElement> {
     variant?: "unordered" | "ordered";
 }
 export declare const List: React.ForwardRefExoticComponent<ListProps & React.RefAttributes<HTMLOListElement | HTMLUListElement>>;
-export interface ListItemProps extends React.HTMLAttributes<HTMLLIElement> {
-}
+export type ListItemProps = React.HTMLAttributes<HTMLLIElement>;
 export declare const ListItem: React.ForwardRefExoticComponent<ListItemProps & React.RefAttributes<HTMLLIElement>>;
 export declare const TypographyPresets: {
     PageTitle: (props: Omit<HeadingProps, "level">) => import("react/jsx-runtime").JSX.Element;

@@ -6,6 +6,6 @@ interface LibraryContextualAccessProps {
     isOpen?: boolean;
     triggerRef?: React.RefObject<HTMLElement>;
 }
-export declare function LibraryContextualAccess({ space, onToolInstall, onClose, isOpen, triggerRef }: LibraryContextualAccessProps): import("react/jsx-runtime").JSX.Element;
+export declare function LibraryContextualAccess({ space, onToolInstall, onClose, isOpen, triggerRef }: LibraryContextualAccessProps): import("react/jsx-runtime").JSX.Element | null;
 export default LibraryContextualAccess;
 //# sourceMappingURL=library-contextual-access.d.ts.map

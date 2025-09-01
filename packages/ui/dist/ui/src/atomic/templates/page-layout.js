@@ -1,8 +1,8 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { cn } from '../../lib/utils';
-import { Text } from '../atoms/text';
-import { Button } from '../atoms/button';
+import { cn } from '../../lib/utils.js';
+import { Text } from '../atoms/text.js';
+import { Button } from '../atoms/button-enhanced.js';
 const maxWidthClasses = {
     sm: 'max-w-sm',
     md: 'max-w-3xl',

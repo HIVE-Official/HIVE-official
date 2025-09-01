@@ -227,7 +227,7 @@ export const InteractiveShowcase: Story = {
                           <Zap className="w-4 h-4 mr-2" />
                           Join Study Group
                         </ButtonComponent>
-                        <ButtonComponent variant="accent" className="w-full">
+                        <ButtonComponent variant="secondary" className="w-full">
                           <Users className="w-4 h-4 mr-2" />
                           Browse Spaces
                         </ButtonComponent>
@@ -240,7 +240,7 @@ export const InteractiveShowcase: Story = {
                           <Star className="w-4 h-4 mr-2" />
                           Premium Experience
                         </ButtonComponent>
-                        <ButtonComponent variant="accent" className="w-full">
+                        <ButtonComponent variant="secondary" className="w-full">
                           <Zap className="w-4 h-4 mr-2" />
                           Unlock Features
                         </ButtonComponent>
@@ -806,7 +806,7 @@ export const MixAndMatchDemo: Story = {
                 <DisplayTypography variant="subhead" as="p">
                   Study Streak Champion
                 </DisplayTypography>
-                <AppleButton variant="accent" size="sm">
+                <AppleButton variant="secondary" size="sm">
                   <Star className="w-4 h-4 mr-2" />
                   Celebrate
                 </AppleButton>
@@ -869,7 +869,7 @@ export const MixAndMatchDemo: Story = {
                 Quick Actions
               </MinimalTypography>
               <div className="space-y-3">
-                <AppleButton variant="accent" size="sm" className="w-full">
+                <AppleButton variant="secondary" size="sm" className="w-full">
                   <Users className="w-4 h-4 mr-2" />
                   Send Announcement
                 </AppleButton>

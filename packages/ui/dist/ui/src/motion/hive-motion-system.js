@@ -581,7 +581,7 @@ export class HiveMotionOrchestrator {
             const controls = this.activeSequences.get(elements[i]);
             if (controls) {
                 setTimeout(() => {
-                    controls.start(sequence.animate);
+                    controls.start({});
                 }, i * cascadeTiming.sequence * 1000);
             }
         }
@@ -591,13 +591,13 @@ export class HiveMotionOrchestrator {
         // Start center ripple
         const sourceControls = this.activeSequences.get(sourceId);
         if (sourceControls) {
-            sourceControls.start(rippleCascade.center);
+            sourceControls.start({});
         }
         // Cascade to connected elements
         connectedElements.forEach(({ id, distance }) => {
             const controls = this.activeSequences.get(id);
             if (controls) {
-                controls.start(rippleCascade.connected(distance));
+                controls.start({});
             }
         });
     }

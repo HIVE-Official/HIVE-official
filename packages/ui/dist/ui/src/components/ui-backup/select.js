@@ -4,7 +4,7 @@ import { jsx as _jsx, Fragment as _Fragment } from "react/jsx-runtime";
  * Creates a basic select using standard HTML select element with HIVE styling
  */
 import React from 'react';
-import { cn } from '../../lib/utils';
+import { cn } from '../../lib/utils.js';
 export const Select = React.forwardRef(({ className, onValueChange, onChange, children, ...props }, ref) => {
     const handleChange = (e) => {
         if (onValueChange) {

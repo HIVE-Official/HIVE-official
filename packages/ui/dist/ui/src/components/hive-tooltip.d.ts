@@ -1,10 +1,10 @@
 import * as React from "react";
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 import { type VariantProps } from 'class-variance-authority';
-declare const hiveTooltipVariants: (props?: {
-    variant?: "error" | "default" | "gold" | "solid" | "success" | "minimal" | "warning" | "info" | "glass";
-    size?: "default" | "sm" | "lg" | "xl";
-} & import("class-variance-authority/types").ClassProp) => string;
+declare const hiveTooltipVariants: (props?: ({
+    variant?: "error" | "success" | "warning" | "info" | "default" | "gold" | "solid" | "minimal" | "glass" | null | undefined;
+    size?: "sm" | "default" | "lg" | "xl" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
 declare const HiveTooltipProvider: React.FC<TooltipPrimitive.TooltipProviderProps>;
 declare const HiveTooltip: React.FC<TooltipPrimitive.TooltipProps>;
 declare const HiveTooltipTrigger: React.ForwardRefExoticComponent<TooltipPrimitive.TooltipTriggerProps & React.RefAttributes<HTMLButtonElement>>;

@@ -8,5 +8,46 @@ export interface TextProps extends React.HTMLAttributes<HTMLElement> {
     truncate?: boolean;
     children: React.ReactNode;
 }
+export declare const textVariants: {
+    variant: {
+        'display-2xl': string;
+        'display-xl': string;
+        'display-lg': string;
+        'display-md': string;
+        'display-sm': string;
+        'heading-xl': string;
+        'heading-lg': string;
+        'heading-md': string;
+        'heading-sm': string;
+        'body-lg': string;
+        'body-md': string;
+        'body-sm': string;
+        'body-xs': string;
+        'body-2xs': string;
+    };
+    color: {
+        primary: string;
+        secondary: string;
+        muted: string;
+        mutedLight: string;
+        mutedDark: string;
+        subtle: string;
+        gold: string;
+        ruby: string;
+        emerald: string;
+    };
+    weight: {
+        light: string;
+        normal: string;
+        medium: string;
+        semibold: string;
+        bold: string;
+    };
+    align: {
+        left: string;
+        center: string;
+        right: string;
+    };
+};
 export declare const Text: React.FC<TextProps>;
 //# sourceMappingURL=text.d.ts.map

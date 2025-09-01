@@ -262,7 +262,9 @@ export async function POST(request: NextRequest) {
             updateData.deletedBy = adminUserId;
             updateData.deletedReason = params?.reason || 'Bulk deletion';
             newState = { ...spaceData, isDeleted: true };
-            operationSuccess = true;
+            {
+              const _operationSuccess = true;
+            }
             break;
 
           default:

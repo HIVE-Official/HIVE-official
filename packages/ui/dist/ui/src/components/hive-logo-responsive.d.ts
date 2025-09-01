@@ -1,10 +1,10 @@
 import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
-declare const responsiveVariants: (props?: {
-    breakpoint?: "mobile" | "desktop" | "tablet" | "wide";
-    layout?: "icon" | "horizontal" | "vertical";
-    theme?: "auto" | "gold" | "dark" | "light" | "brand";
-} & import("class-variance-authority/types").ClassProp) => string;
+declare const responsiveVariants: (props?: ({
+    breakpoint?: "mobile" | "desktop" | "tablet" | "wide" | null | undefined;
+    layout?: "icon" | "horizontal" | "vertical" | null | undefined;
+    theme?: "auto" | "gold" | "brand" | "dark" | "light" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
 export interface HiveResponsiveProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children' | 'onDrag' | 'onDragStart' | 'onDragEnd' | 'onAnimationStart' | 'onAnimationEnd'>, VariantProps<typeof responsiveVariants> {
     size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
     showWordmark?: boolean;

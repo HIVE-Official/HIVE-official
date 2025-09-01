@@ -135,7 +135,7 @@ export const AllVariants: Story = {
                 </CardContent>
               </Card>
 
-              <Card variant="accent" padding="md">
+              <Card variant="secondary" padding="md">
                 <CardHeader>
                   <CardTitle>Accent Card</CardTitle>
                   <CardDescription>Minimal gold highlighting</CardDescription>
@@ -241,7 +241,7 @@ export const AllVariants: Story = {
           <div className="space-y-4">
             <h2 className="text-2xl font-semibold text-white">Stats & Metrics</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <Card variant="accent" padding="md">
+              <Card variant="secondary" padding="md">
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-sm font-medium">Campus Energy</CardTitle>
@@ -304,7 +304,7 @@ export const AllVariants: Story = {
                 icon={<CheckCircle className="w-8 h-8" />}
                 title="Connected!"
                 description="Successfully joined campus network"
-                action={<Button variant="accent" size="sm">Explore Spaces</Button>}
+                action={<Button variant="secondary" size="sm">Explore Spaces</Button>}
               />
               
               <CardStatus
@@ -401,7 +401,7 @@ export const CampusFeed: Story = {
                     <MessageCircle className="w-4 h-4" />
                   </Button>
                 </div>
-                <Button variant="accent" size="sm">Join Session</Button>
+                <Button variant="secondary" size="sm">Join Session</Button>
               </div>
             </CardFooter>
           </Card>
@@ -435,7 +435,7 @@ export const CampusFeed: Story = {
             </CardFooter>
           </Card>
 
-          <Card variant="accent" padding="md">
+          <Card variant="secondary" padding="md">
             <CardHeader>
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-accent rounded-lg flex items-center justify-center">
@@ -453,7 +453,7 @@ export const CampusFeed: Story = {
               </p>
             </CardContent>
             <CardFooter>
-              <Button variant="accent" className="w-full">
+              <Button variant="secondary" className="w-full">
                 <Zap className="w-4 h-4 mr-2" />
                 Join Ritual
               </Button>

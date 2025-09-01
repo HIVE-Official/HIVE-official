@@ -9,41 +9,39 @@ import {
   Zap, 
   Calendar, 
   Bell, 
-  TrendingUp, 
-  MessageCircle,
   ArrowRight,
-  Star,
-  Clock,
   BookOpen,
   MapPin,
   Activity,
-  GraduationCap
+  GraduationCap,
+  Star,
+  Clock
 } from 'lucide-react';
 
 // HIVE Atomic Design System
+// import { 
+//   Display,
+//   Heading,
+//   Text as Typography,
+//   Button,
+// } from '@hive/ui';
+
+// Temporary imports from temp-stubs until @hive/ui export resolution is fixed
 import { 
-  // Level 1 Atoms
   Display,
   Heading,
   Typography,
   Button,
-  Avatar,
-  HiveText,
-  
-  // Level 2 Molecules  
-  SearchBar,
-  UserItem,
-  
-  // Legacy UI Components (will migrate to organisms)
   Card, 
   CardHeader, 
   CardTitle, 
   CardContent,
   Badge
-} from '@hive/ui';
+} from '@/components/temp-stubs';
 
 // Hooks and API
-import { useHiveAuth } from '@hive/ui';
+// import { useUnifiedAuth } from '@hive/ui';
+import { useUnifiedAuth } from '@/components/temp-stubs';
 
 // Components
 import { FeedDisplay } from '../../../components/social/feed-display';
@@ -96,7 +94,7 @@ interface DashboardData {
 
 export function DashboardMain() {
   const router = useRouter();
-  const { user } = useHiveAuth();
+  const { user } = useUnifiedAuth();
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -394,7 +392,7 @@ export function DashboardMain() {
                     >
                       <div className="flex items-center space-x-3">
                         <div className="h-10 w-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
-                          <span className="text-white font-semibold text-sm">
+                          <span className="text-[var(--hive-text-inverse)] font-semibold text-sm">
                             {space.name.charAt(0)}
                           </span>
                         </div>

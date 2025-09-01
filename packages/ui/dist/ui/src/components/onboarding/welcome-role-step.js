@@ -2,12 +2,12 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Button } from '../button';
+import { Button } from '../../atomic/atoms/button-enhanced.js';
 import { GraduationCap, Users, BookOpen, ArrowRight, Zap } from 'lucide-react';
-import { hiveVariants } from '../../lib/motion';
-import { useAdaptiveMotion } from '../../lib/adaptive-motion';
-import { AlumniWaitlistModal } from './alumni-waitlist-modal';
-import { FacultyModal } from './faculty-modal';
+import { hiveVariants } from '../../lib/motion.js';
+import { useAdaptiveMotion } from '../../lib/adaptive-motion.js';
+import { AlumniWaitlistModal } from './alumni-waitlist-modal.js';
+import { FacultyModal } from './faculty-modal.js';
 export const WelcomeRoleStep = ({ onRoleSelect, schoolName, userEmail, }) => {
     useAdaptiveMotion('academic'); // For consistency with motion system
     const [selectedRole, setSelectedRole] = useState(null);
@@ -73,6 +73,6 @@ export const WelcomeRoleStep = ({ onRoleSelect, schoolName, userEmail, }) => {
                                                             : isDisabled
                                                                 ? 'bg-surface-03 text-muted'
                                                                 : 'bg-surface-03 text-foreground'}`, children: _jsx(Icon, { className: "w-6 h-6" }) }), _jsxs("div", { className: "flex-1", children: [_jsxs("div", { className: "flex items-center gap-3 mb-2", children: [_jsx("h3", { className: `font-semibold font-body text-lg ${isSelected ? 'text-accent' : 'text-foreground'}`, children: option.label }), option.comingSoon && (_jsx("span", { className: "text-xs px-2 py-1 bg-surface-03 text-muted rounded-full", children: "Coming Soon" }))] }), _jsx("p", { className: "text-muted-foreground font-body leading-relaxed", children: option.description })] }), isSelected && (_jsx(motion.div, { initial: { scale: 0 }, animate: { scale: 1 }, className: "text-accent flex-shrink-0", children: _jsx(ArrowRight, { className: "w-5 h-5" }) }))] }) }, option.value));
-                                    }) }) }), _jsxs(motion.div, { variants: hiveVariants.item, initial: "hidden", animate: "visible", transition: { delay: 0.4 }, children: [_jsxs(Button, { onClick: handleContinue, disabled: !selectedRole, variant: "ritual", size: "lg", className: "w-full h-14 text-lg font-semibold", children: ["Continue Setup", _jsx(ArrowRight, { className: "w-5 h-5 ml-2" })] }), selectedRole && (_jsx(motion.p, { className: "text-center text-sm text-muted-foreground font-body mt-4", initial: { opacity: 0 }, animate: { opacity: 1 }, children: "Next: Create your profile" }))] })] }), _jsx(motion.div, { className: "text-center mt-8", variants: hiveVariants.item, children: _jsx("p", { className: "text-sm text-muted-foreground font-body", children: "Step 1 of 4" }) })] }), _jsx(AlumniWaitlistModal, { isOpen: showAlumniModal, onClose: () => setShowAlumniModal(false), schoolName: schoolName, userEmail: userEmail }), _jsx(FacultyModal, { isOpen: showFacultyModal, onClose: () => setShowFacultyModal(false), onContinue: handleFacultyContinue, schoolName: schoolName, userEmail: userEmail })] }));
+                                    }) }) }), _jsxs(motion.div, { variants: hiveVariants.item, initial: "hidden", animate: "visible", transition: { delay: 0.4 }, children: [_jsxs(Button, { onClick: handleContinue, disabled: !selectedRole, variant: "primary", size: "lg", className: "w-full h-14 text-lg font-semibold", children: ["Continue Setup", _jsx(ArrowRight, { className: "w-5 h-5 ml-2" })] }), selectedRole && (_jsx(motion.p, { className: "text-center text-sm text-muted-foreground font-body mt-4", initial: { opacity: 0 }, animate: { opacity: 1 }, children: "Next: Create your profile" }))] })] }), _jsx(motion.div, { className: "text-center mt-8", variants: hiveVariants.item, children: _jsx("p", { className: "text-sm text-muted-foreground font-body", children: "Step 1 of 4" }) })] }), _jsx(AlumniWaitlistModal, { isOpen: showAlumniModal, onClose: () => setShowAlumniModal(false), schoolName: schoolName, userEmail: userEmail }), _jsx(FacultyModal, { isOpen: showFacultyModal, onClose: () => setShowFacultyModal(false), onContinue: handleFacultyContinue, schoolName: schoolName, userEmail: userEmail })] }));
 };
 //# sourceMappingURL=welcome-role-step.js.map

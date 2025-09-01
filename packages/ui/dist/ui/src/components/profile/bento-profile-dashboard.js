@@ -1,13 +1,13 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from "react";
-import { BentoGrid } from "./bento-grid";
-import { ProfileHeaderCard } from "./profile-header-card";
-import { HiveLabCard } from "./hivelab-card";
-import { ToolsCard } from "./tools-card";
-import { CalendarCard } from "./calendar-card";
-import { GhostModeCard } from "./ghost-mode-card";
-import { RequestAccessCard } from "./request-access-card";
+import { BentoGrid } from "./bento-grid/index.js";
+import { ProfileHeaderCard } from "./profile-header-card.js";
+import { HiveLabCard } from "./hivelab-card.js";
+import { ToolsCard } from "./tools-card.js";
+import { CalendarCard } from "./calendar-card.js";
+import { GhostModeCard } from "./ghost-mode-card.js";
+import { RequestAccessCard } from "./request-access-card.js";
 // Define static components outside of render
 const SocialPreviewCard = React.memo(() => (_jsxs("div", { className: "h-full flex flex-col items-center justify-center text-center", children: [_jsx("div", { className: "w-8 h-8 bg-[#2A2A2A] rounded-lg flex items-center justify-center mb-3", children: _jsx("svg", { className: "w-5 h-5 text-[#FFD700]", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", children: _jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 2, d: "M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" }) }) }), _jsx("h4", { className: "text-sm font-semibold text-foreground mb-1", children: "Social Features" }), _jsx("p", { className: "text-xs text-muted", children: "Build privately, share when ready" })] })));
 SocialPreviewCard.displayName = 'SocialPreviewCard';

@@ -23,6 +23,6 @@ export declare function ContextFloatingActionButton({ isVisible, position, onClo
     };
     onClose: () => void;
     actions?: FloatingAction[];
-}): import("react/jsx-runtime").JSX.Element;
+}): import("react/jsx-runtime").JSX.Element | null;
 export type { FloatingAction };
 //# sourceMappingURL=floating-action-button.d.ts.map

@@ -16,7 +16,7 @@ import {
   SelectTrigger,
   SelectValue
 } from '@hive/ui';
-import { HiveModal, HiveModalContent, HiveModalHeader, HiveModalTitle, HiveModalFooter } from '@/components/temp-stubs';
+import { Modal, ModalContent, ModalHeader, ModalTitle, ModalFooter } from '@/components/temp-stubs';
 import { 
   Layout, 
   Palette, 
@@ -133,12 +133,12 @@ export function CardCustomizationModal({
   };
 
   return (
-    <HiveModal open={isOpen} onOpenChange={onClose} size="lg">
-      <HiveModalContent className="max-w-2xl">
-        <HiveModalHeader>
-          <HiveModalTitle className="flex items-center space-x-3">
+    <Modal open={isOpen} onOpenChange={onClose} size="lg">
+      <ModalContent className="max-w-2xl">
+        <ModalHeader>
+          <ModalTitle className="flex items-center space-x-3">
             <div className={`w-8 h-8 ${getCategoryColor(card.category)} rounded-lg flex items-center justify-center`}>
-              <IconComponent className="h-5 w-5 text-white" />
+              <IconComponent className="h-5 w-5 text-[var(--hive-text-inverse)]" />
             </div>
             <div>
               <span>Customize {card.name}</span>
@@ -146,8 +146,8 @@ export function CardCustomizationModal({
                 {card.category} Card • {getSizeLabel(config.size)}
               </div>
             </div>
-          </HiveModalTitle>
-        </HiveModalHeader>
+          </ModalTitle>
+        </ModalHeader>
 
         <div className="p-6">
           <Tabs defaultValue="layout" className="space-y-6">
@@ -169,7 +169,7 @@ export function CardCustomizationModal({
             {/* Layout Tab */}
             <TabsContent value="layout" className="space-y-6">
               <Card className="p-4 bg-hive-background-overlay border-hive-border-default">
-                <h3 className="font-medium text-white mb-4 flex items-center space-x-2">
+                <h3 className="font-medium text-[var(--hive-text-inverse)] mb-4 flex items-center space-x-2">
                   <Maximize className="h-4 w-4" />
                   <span>Card Size</span>
                 </h3>
@@ -187,7 +187,7 @@ export function CardCustomizationModal({
                       `}
                     >
                       <div className="flex items-center justify-between mb-2">
-                        <span className="font-medium text-white">{getSizeLabel(size)}</span>
+                        <span className="font-medium text-[var(--hive-text-inverse)]">{getSizeLabel(size)}</span>
                         {config.size === size && <Check className="h-4 w-4 text-hive-gold" />}
                       </div>
                       <div className="grid grid-cols-2 gap-1 w-8 h-8">
@@ -210,13 +210,13 @@ export function CardCustomizationModal({
               </Card>
 
               <Card className="p-4 bg-hive-background-overlay border-hive-border-default">
-                <h3 className="font-medium text-white mb-4 flex items-center space-x-2">
+                <h3 className="font-medium text-[var(--hive-text-inverse)] mb-4 flex items-center space-x-2">
                   <Eye className="h-4 w-4" />
                   <span>Visibility</span>
                 </h3>
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="font-medium text-white">Show on Dashboard</div>
+                    <div className="font-medium text-[var(--hive-text-inverse)]">Show on Dashboard</div>
                     <div className="text-sm text-hive-text-mutedLight">
                       {card.isRequired ? 'This card is required and cannot be hidden' : 'Toggle card visibility on your profile'}
                     </div>
@@ -233,7 +233,7 @@ export function CardCustomizationModal({
             {/* Appearance Tab */}
             <TabsContent value="appearance" className="space-y-6">
               <Card className="p-4 bg-hive-background-overlay border-hive-border-default">
-                <h3 className="font-medium text-white mb-4 flex items-center space-x-2">
+                <h3 className="font-medium text-[var(--hive-text-inverse)] mb-4 flex items-center space-x-2">
                   <Palette className="h-4 w-4" />
                   <span>Theme Style</span>
                 </h3>
@@ -253,11 +253,11 @@ export function CardCustomizationModal({
               </Card>
 
               <Card className="p-4 bg-hive-background-overlay border-hive-border-default">
-                <h3 className="font-medium text-white mb-4">Display Options</h3>
+                <h3 className="font-medium text-[var(--hive-text-inverse)] mb-4">Display Options</h3>
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <div className="font-medium text-white">Show Icon</div>
+                      <div className="font-medium text-[var(--hive-text-inverse)]">Show Icon</div>
                       <div className="text-sm text-hive-text-mutedLight">Display card icon in header</div>
                     </div>
                     <Switch
@@ -267,7 +267,7 @@ export function CardCustomizationModal({
                   </div>
                   <div className="flex items-center justify-between">
                     <div>
-                      <div className="font-medium text-white">Show Badges</div>
+                      <div className="font-medium text-[var(--hive-text-inverse)]">Show Badges</div>
                       <div className="text-sm text-hive-text-mutedLight">Display status badges and indicators</div>
                     </div>
                     <Switch
@@ -282,14 +282,14 @@ export function CardCustomizationModal({
             {/* Behavior Tab */}
             <TabsContent value="behavior" className="space-y-6">
               <Card className="p-4 bg-hive-background-overlay border-hive-border-default">
-                <h3 className="font-medium text-white mb-4 flex items-center space-x-2">
+                <h3 className="font-medium text-[var(--hive-text-inverse)] mb-4 flex items-center space-x-2">
                   <Settings className="h-4 w-4" />
                   <span>Card Behavior</span>
                 </h3>
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <div className="font-medium text-white">Show Header</div>
+                      <div className="font-medium text-[var(--hive-text-inverse)]">Show Header</div>
                       <div className="text-sm text-hive-text-mutedLight">Display card title and actions</div>
                     </div>
                     <Switch
@@ -299,7 +299,7 @@ export function CardCustomizationModal({
                   </div>
                   <div className="flex items-center justify-between">
                     <div>
-                      <div className="font-medium text-white">Show Footer</div>
+                      <div className="font-medium text-[var(--hive-text-inverse)]">Show Footer</div>
                       <div className="text-sm text-hive-text-mutedLight">Display card footer with additional actions</div>
                     </div>
                     <Switch
@@ -309,7 +309,7 @@ export function CardCustomizationModal({
                   </div>
                   <div className="flex items-center justify-between">
                     <div>
-                      <div className="font-medium text-white">Compact Mode</div>
+                      <div className="font-medium text-[var(--hive-text-inverse)]">Compact Mode</div>
                       <div className="text-sm text-hive-text-mutedLight">Use condensed layout to fit more content</div>
                     </div>
                     <Switch
@@ -321,14 +321,14 @@ export function CardCustomizationModal({
               </Card>
 
               <Card className="p-4 bg-hive-background-overlay border-hive-border-default">
-                <h3 className="font-medium text-white mb-4 flex items-center space-x-2">
+                <h3 className="font-medium text-[var(--hive-text-inverse)] mb-4 flex items-center space-x-2">
                   <Zap className="h-4 w-4" />
                   <span>Data Refresh</span>
                 </h3>
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <div className="font-medium text-white">Auto Refresh</div>
+                      <div className="font-medium text-[var(--hive-text-inverse)]">Auto Refresh</div>
                       <div className="text-sm text-hive-text-mutedLight">Automatically update card data</div>
                     </div>
                     <Switch
@@ -338,7 +338,7 @@ export function CardCustomizationModal({
                   </div>
                   {config.settings.autoRefresh && (
                     <div>
-                      <div className="font-medium text-white mb-2">Refresh Interval</div>
+                      <div className="font-medium text-[var(--hive-text-inverse)] mb-2">Refresh Interval</div>
                       <Select
                         value={config.settings.refreshInterval.toString()}
                         onValueChange={(value) => handleSettingChange('refreshInterval', parseInt(value))}
@@ -363,7 +363,7 @@ export function CardCustomizationModal({
 
           {/* Preview */}
           <Card className="p-4 bg-gradient-to-br from-hive-gold/5 to-hive-champagne/5 border-hive-gold/20">
-            <h3 className="font-medium text-white mb-3 flex items-center space-x-2">
+            <h3 className="font-medium text-[var(--hive-text-inverse)] mb-3 flex items-center space-x-2">
               <Eye className="h-4 w-4" />
               <span>Preview</span>
             </h3>
@@ -371,11 +371,11 @@ export function CardCustomizationModal({
               <div className="flex items-center space-x-3">
                 {config.appearance.showIcon && (
                   <div className={`w-6 h-6 ${getCategoryColor(card.category)} rounded flex items-center justify-center`}>
-                    <IconComponent className="h-4 w-4 text-white" />
+                    <IconComponent className="h-4 w-4 text-[var(--hive-text-inverse)]" />
                   </div>
                 )}
                 <div className="flex-1">
-                  <div className="font-medium text-white text-sm">{card.name}</div>
+                  <div className="font-medium text-[var(--hive-text-inverse)] text-sm">{card.name}</div>
                   {config.settings.showHeader && (
                     <div className="text-xs text-hive-text-mutedLight">
                       {config.appearance.theme} theme • {getSizeLabel(config.size)}
@@ -392,7 +392,7 @@ export function CardCustomizationModal({
           </Card>
         </div>
 
-        <HiveModalFooter>
+        <ModalFooter>
           <div className="flex items-center justify-between w-full">
             <Button
               variant="outline"
@@ -432,8 +432,8 @@ export function CardCustomizationModal({
               </Button>
             </div>
           </div>
-        </HiveModalFooter>
-      </HiveModalContent>
-    </HiveModal>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
   );
 }

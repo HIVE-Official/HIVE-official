@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { ApiResponseHelper as _ApiResponseHelper, HttpStatus as _HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { ApiResponseHelper as _ApiResponseHelper, HttpStatus as _HttpStatus } from "@/lib/api-response-types";
 
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
     // Simple debug endpoint for calendar functionality
     return NextResponse.json({

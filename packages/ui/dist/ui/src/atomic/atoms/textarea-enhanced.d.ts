@@ -1,11 +1,11 @@
 import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
-declare const textareaVariants: (props?: {
-    variant?: "error" | "default" | "success" | "warning" | "brand";
-    size?: "default" | "sm" | "lg" | "xl";
-    radius?: "default" | "sm" | "lg" | "none" | "full";
-    resize?: "none" | "both" | "horizontal" | "vertical";
-} & import("class-variance-authority/types").ClassProp) => string;
+declare const textareaVariants: (props?: ({
+    variant?: "error" | "success" | "warning" | "default" | "brand" | null | undefined;
+    size?: "sm" | "default" | "lg" | "xl" | null | undefined;
+    radius?: "sm" | "default" | "lg" | "none" | "full" | null | undefined;
+    resize?: "none" | "horizontal" | "vertical" | "both" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
 export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement>, VariantProps<typeof textareaVariants> {
     error?: string;
     success?: string;
@@ -36,5 +36,5 @@ export declare const TextareaPresets: {
     Code: (props: Omit<CodeTextareaProps, "placeholder">) => import("react/jsx-runtime").JSX.Element;
     Feedback: (props: Omit<TextareaProps, "placeholder" | "size">) => import("react/jsx-runtime").JSX.Element;
 };
-export { Textarea, CodeTextarea, TextareaGroup, textareaVariants };
+export { Textarea, Textarea as TextareaEnhanced, CodeTextarea, TextareaGroup, textareaVariants };
 //# sourceMappingURL=textarea-enhanced.d.ts.map

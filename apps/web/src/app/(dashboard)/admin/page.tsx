@@ -1,12 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@hive/ui';
-import { Button } from '@hive/ui';
-import { Badge } from '@hive/ui';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@hive/ui';
-import { Alert, AlertDescription } from '@hive/ui';
-import { Switch } from '@hive/ui';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, Badge, Tabs, TabsContent, TabsList, TabsTrigger, Alert, AlertDescription } from '@hive/ui';
 import { 
   Users, 
   Home, 
@@ -194,9 +189,12 @@ export default function AdminDashboard() {
             Failed to load admin dashboard: {error}
           </AlertDescription>
         </Alert>
-        <Button onClick={loadDashboardData} className="mt-4">
+        <button 
+          onClick={loadDashboardData} 
+          className="mt-4 px-4 py-2 bg-accent text-accent-foreground rounded-md hover:bg-accent/80 transition-colors"
+        >
           Retry
-        </Button>
+        </button>
       </div>
     );
   }
@@ -439,18 +437,18 @@ export default function AdminDashboard() {
             </CardHeader>
             <CardContent>
               <div className="flex space-x-4">
-                <Button>
+                <button className="px-4 py-2 bg-accent text-accent-foreground rounded-md hover:bg-accent/80 transition-colors flex items-center">
                   <CheckCircle className="h-4 w-4 mr-2" />
                   Review Pending
-                </Button>
-                <Button variant="outline">
+                </button>
+                <button className="px-4 py-2 border border-border bg-background text-foreground rounded-md hover:bg-muted transition-colors flex items-center">
                   <BarChart3 className="h-4 w-4 mr-2" />
                   View Analytics
-                </Button>
-                <Button variant="outline">
+                </button>
+                <button className="px-4 py-2 border border-border bg-background text-foreground rounded-md hover:bg-muted transition-colors flex items-center">
                   <Activity className="h-4 w-4 mr-2" />
                   Export Data
-                </Button>
+                </button>
               </div>
             </CardContent>
           </Card>
@@ -464,18 +462,22 @@ export default function AdminDashboard() {
             </CardHeader>
             <CardContent>
               <div className="flex space-x-4 mb-6">
-                <Button onClick={loadFeatureFlags} disabled={flagsLoading}>
+                <button 
+                  onClick={loadFeatureFlags} 
+                  disabled={flagsLoading}
+                  className="px-4 py-2 bg-accent text-accent-foreground rounded-md hover:bg-accent/80 transition-colors flex items-center disabled:opacity-50"
+                >
                   <Flag className="h-4 w-4 mr-2" />
                   {flagsLoading ? 'Loading...' : 'Refresh Flags'}
-                </Button>
-                <Button variant="outline">
+                </button>
+                <button className="px-4 py-2 border border-border bg-background text-foreground rounded-md hover:bg-muted transition-colors flex items-center">
                   <TrendingUp className="h-4 w-4 mr-2" />
                   View Analytics
-                </Button>
-                <Button variant="outline">
+                </button>
+                <button className="px-4 py-2 border border-border bg-background text-foreground rounded-md hover:bg-muted transition-colors flex items-center">
                   <Settings className="h-4 w-4 mr-2" />
                   Create Flag
-                </Button>
+                </button>
               </div>
 
               {flagsLoading ? (
@@ -517,9 +519,11 @@ export default function AdminDashboard() {
                                 </div>
                               </div>
                               <div className="flex items-center space-x-4">
-                                <Switch
+                                <input
+                                  type="checkbox"
                                   checked={flag.enabled}
-                                  onCheckedChange={(enabled) => toggleFeatureFlag(flag.id, enabled)}
+                                  onChange={(e) => toggleFeatureFlag(flag.id, e.target.checked)}
+                                  className="w-4 h-4 text-accent bg-background border-2 rounded border-border focus:ring-accent focus:ring-2"
                                 />
                               </div>
                             </div>

@@ -179,7 +179,7 @@ export function SpaceTransferInterface({
       {/* Current Space */}
       <div className="rounded-xl bg-white/[0.02] border border-white/[0.06] p-6">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-white">Current Space</h3>
+          <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)]">Current Space</h3>
           <Badge variant="outline" className="border-[var(--hive-brand-secondary)]/30 text-[var(--hive-brand-secondary)]">
             {getSpaceTypeName(spaceType)}
           </Badge>
@@ -188,7 +188,7 @@ export function SpaceTransferInterface({
         <div className="flex items-center gap-4 p-4 rounded-lg bg-white/[0.02] border border-white/[0.06]">
           {getSpaceTypeIcon(spaceType)}
           <div className="flex-1">
-            <h4 className="font-medium text-white">{currentSpace.name}</h4>
+            <h4 className="font-medium text-[var(--hive-text-inverse)]">{currentSpace.name}</h4>
             <p className="text-sm text-neutral-400">
               {currentSpace.memberCount.toLocaleString()} members
             </p>
@@ -200,17 +200,17 @@ export function SpaceTransferInterface({
       <div className="rounded-xl bg-white/[0.02] border border-white/[0.06] p-6">
         <div className="flex items-center gap-3 mb-4">
           <Shield className="h-5 w-5 text-[var(--hive-brand-secondary)]" />
-          <h3 className="text-lg font-semibold text-white">Movement Restrictions</h3>
+          <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)]">Movement Restrictions</h3>
         </div>
         
         <div className="space-y-3">
           <div className="flex items-center justify-between text-sm">
             <span className="text-neutral-400">Cooldown Period:</span>
-            <span className="text-white">{restrictionInfo.cooldown}</span>
+            <span className="text-[var(--hive-text-inverse)]">{restrictionInfo.cooldown}</span>
           </div>
           <div className="flex items-center justify-between text-sm">
             <span className="text-neutral-400">Transfer Limit:</span>
-            <span className="text-white">{restrictionInfo.limit}</span>
+            <span className="text-[var(--hive-text-inverse)]">{restrictionInfo.limit}</span>
           </div>
           <p className="text-xs text-neutral-400 leading-relaxed">
             {restrictionInfo.description}
@@ -241,7 +241,7 @@ export function SpaceTransferInterface({
       {/* Available Spaces */}
       {(!currentRestriction || currentRestriction.canMove) && (
         <div className="rounded-xl bg-white/[0.02] border border-white/[0.06] p-6">
-          <h3 className="text-lg font-semibold text-white mb-4">Transfer to</h3>
+          <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4">Transfer to</h3>
           
           <div className="grid gap-3">
             {availableSpaces.filter(space => space.id !== currentSpace.id).map((space) => (
@@ -260,7 +260,7 @@ export function SpaceTransferInterface({
                   <div className="flex items-center gap-3">
                     {getSpaceTypeIcon(space.type)}
                     <div>
-                      <h4 className="font-medium text-white">{space.name}</h4>
+                      <h4 className="font-medium text-[var(--hive-text-inverse)]">{space.name}</h4>
                       <p className="text-sm text-neutral-400">
                         {space.memberCount.toLocaleString()} members
                       </p>
@@ -284,12 +284,12 @@ export function SpaceTransferInterface({
           animate={{ opacity: 1, y: 0 }}
           className="rounded-xl bg-white/[0.02] border border-white/[0.06] p-6"
         >
-          <h3 className="text-lg font-semibold text-white mb-4">Transfer Reason</h3>
+          <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4">Transfer Reason</h3>
           <textarea
             value={transferReason}
             onChange={(e) => setTransferReason(e.target.value)}
             placeholder="Why are you transferring? (optional)"
-            className="w-full h-24 px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.06] text-white placeholder-neutral-400 resize-none focus:outline-none focus:border-[var(--hive-brand-secondary)]/30"
+            className="w-full h-24 px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.06] text-[var(--hive-text-inverse)] placeholder-neutral-400 resize-none focus:outline-none focus:border-[var(--hive-brand-secondary)]/30"
             maxLength={200}
           />
           <p className="text-xs text-neutral-400 mt-2">
@@ -305,19 +305,19 @@ export function SpaceTransferInterface({
           animate={{ opacity: 1, y: 0 }}
           className="rounded-xl bg-white/[0.02] border border-white/[0.06] p-6"
         >
-          <h3 className="text-lg font-semibold text-white mb-4">Transfer Preview</h3>
+          <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4">Transfer Preview</h3>
           
           <div className="flex items-center justify-between p-4 rounded-lg bg-white/[0.02] border border-white/[0.06]">
             <div className="flex items-center gap-4">
               <div className="text-center">
-                <div className="font-medium text-white">{currentSpace.name}</div>
+                <div className="font-medium text-[var(--hive-text-inverse)]">{currentSpace.name}</div>
                 <div className="text-xs text-neutral-400">Current</div>
               </div>
               
               <ArrowRight className="h-5 w-5 text-[var(--hive-brand-secondary)]" />
               
               <div className="text-center">
-                <div className="font-medium text-white">{selectedTargetSpace.name}</div>
+                <div className="font-medium text-[var(--hive-text-inverse)]">{selectedTargetSpace.name}</div>
                 <div className="text-xs text-neutral-400">New</div>
               </div>
             </div>
@@ -382,17 +382,17 @@ export function SpaceTransferInterface({
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
             >
-              <h3 className="text-xl font-semibold text-white mb-4">Confirm Transfer</h3>
+              <h3 className="text-xl font-semibold text-[var(--hive-text-inverse)] mb-4">Confirm Transfer</h3>
               
               <div className="space-y-4 mb-6">
                 <div className="p-4 rounded-lg bg-white/[0.02] border border-white/[0.06]">
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-neutral-400">From:</span>
-                    <span className="text-white">{currentSpace.name}</span>
+                    <span className="text-[var(--hive-text-inverse)]">{currentSpace.name}</span>
                   </div>
                   <div className="flex items-center justify-between text-sm mt-2">
                     <span className="text-neutral-400">To:</span>
-                    <span className="text-white">{selectedTargetSpace.name}</span>
+                    <span className="text-[var(--hive-text-inverse)]">{selectedTargetSpace.name}</span>
                   </div>
                 </div>
                 
@@ -453,7 +453,7 @@ export function SpaceTransferInterface({
       {/* Recent Movement History */}
       {movementInfo?.movementHistory && movementInfo.movementHistory.length > 0 && (
         <div className="rounded-xl bg-white/[0.02] border border-white/[0.06] p-6">
-          <h3 className="text-lg font-semibold text-white mb-4">Recent Transfers</h3>
+          <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4">Recent Transfers</h3>
           
           <div className="space-y-3">
             {movementInfo.movementHistory.slice(0, 5).map((record: MovementRecord, index: number) => (
@@ -461,7 +461,7 @@ export function SpaceTransferInterface({
                 <div className="flex items-center gap-3">
                   {getSpaceTypeIcon(record.spaceType)}
                   <div>
-                    <div className="text-sm text-white">
+                    <div className="text-sm text-[var(--hive-text-inverse)]">
                       {record.movementType === 'transfer' ? 'Transferred' : 'Left'} space
                     </div>
                     <div className="text-xs text-neutral-400">

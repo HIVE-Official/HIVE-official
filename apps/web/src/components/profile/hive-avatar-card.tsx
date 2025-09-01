@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { HiveCard } from "@hive/ui";
+import { Card } from "@hive/ui";
 import Image from 'next/image';
 
 interface CampusProfile {
@@ -10,12 +10,13 @@ interface CampusProfile {
   profilePhoto?: string;
   avatarUrl?: string;
   academicYear: 'freshman' | 'sophomore' | 'junior' | 'senior' | 'graduate' | 'other';
-  major: string;
+  majors: string[]; // Changed from major: string to majors: string[]
   housing: string;
   pronouns?: string;
   statusMessage?: string;
   isBuilder?: boolean;
   age?: number;
+  interests?: string[]; // Added interests array
 }
 
 interface HiveAvatarCardProps {
@@ -34,7 +35,7 @@ export function HiveAvatarCard({ profile, onEditProfile, className = "" }: HiveA
   
   return (
     <div className={`h-full ${className}`}>
-      <HiveCard 
+      <Card 
         className="h-full p-0 bg-hive-background-tertiary border border-hive-brand-primary/20 overflow-hidden cursor-pointer hover:border-hive-brand-primary/40 hover:shadow-lg hover:shadow-hive-brand-primary/10 transition-all duration-300 ease-out group relative transform hover:scale-[1.02]"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
@@ -81,7 +82,7 @@ export function HiveAvatarCard({ profile, onEditProfile, className = "" }: HiveA
               <div className="flex-1 min-w-0">
                 {/* Name + Age + Builder Badge */}
                 <div className="flex items-center gap-2 mb-1">
-                  <h3 className="text-lg font-bold text-white truncate transition-all duration-300 group-hover:text-white group-hover:scale-105">
+                  <h3 className="text-lg font-bold text-[var(--hive-text-inverse)] truncate transition-all duration-300 group-hover:text-[var(--hive-text-inverse)] group-hover:scale-105">
                     {displayName}
                     {profile.age && <span className="font-normal">, {profile.age}</span>}
                   </h3>
@@ -94,13 +95,13 @@ export function HiveAvatarCard({ profile, onEditProfile, className = "" }: HiveA
                 </div>
                 
                 {/* Academic Info */}
-                <p className="text-sm text-white/90 capitalize mb-1 truncate">
+                <p className="text-sm text-[var(--hive-text-inverse)]/90 capitalize mb-1 truncate">
                   {profile.academicYear} • {profile.major}
                 </p>
                 
                 {/* Housing Info (smaller) */}
                 {profile.housing && (
-                  <p className="text-xs text-white/70 truncate">
+                  <p className="text-xs text-[var(--hive-text-inverse)]/70 truncate">
                     {profile.housing}
                   </p>
                 )}
@@ -111,14 +112,14 @@ export function HiveAvatarCard({ profile, onEditProfile, className = "" }: HiveA
           {/* Settings Gear - Top Right (Hover State) */}
           <div className={`absolute top-4 right-4 transition-all duration-300 ease-out ${isHovered ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-90 -translate-y-2'}`}>
             <div className="w-10 h-10 bg-black/50 backdrop-blur-md rounded-full flex items-center justify-center hover:bg-black/60 hover:scale-110 transition-all duration-200">
-              <span className="text-white text-lg">⚙️</span>
+              <span className="text-[var(--hive-text-inverse)] text-lg">⚙️</span>
             </div>
           </div>
           
           {/* Center Photo Action (Hover State) */}
           <div className={`absolute inset-0 flex items-center justify-center transition-all duration-300 ease-out ${isHovered ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
             <div className="bg-black/40 backdrop-blur-md rounded-2xl px-6 py-3 transition-all duration-300 hover:bg-black/50 hover:scale-105">
-              <div className="text-center text-white">
+              <div className="text-center text-[var(--hive-text-inverse)]">
                 {displayPhoto ? (
                   <>
                     <div className="text-2xl mb-2 transition-transform duration-200 hover:scale-110">📷</div>
@@ -137,7 +138,7 @@ export function HiveAvatarCard({ profile, onEditProfile, className = "" }: HiveA
           
           {/* Click to Edit Hint - Bottom Right */}
           <div className={`absolute bottom-20 right-4 transition-all duration-300 ease-out ${isHovered ? 'opacity-100 translate-x-0 scale-100' : 'opacity-0 translate-x-4 scale-95'}`}>
-            <div className="bg-black/70 backdrop-blur-md text-white text-xs px-3 py-2 rounded-lg font-medium transition-all duration-200 hover:bg-black/80 hover:scale-105">
+            <div className="bg-black/70 backdrop-blur-md text-[var(--hive-text-inverse)] text-xs px-3 py-2 rounded-lg font-medium transition-all duration-200 hover:bg-black/80 hover:scale-105">
               {displayPhoto ? 'Edit Profile ↗' : 'Complete Profile ↗'}
             </div>
           </div>
@@ -147,7 +148,7 @@ export function HiveAvatarCard({ profile, onEditProfile, className = "" }: HiveA
             <div className="w-12 h-1 bg-white/30 rounded-full" />
           </div>
         </div>
-      </HiveCard>
+      </Card>
     </div>
   );
 }

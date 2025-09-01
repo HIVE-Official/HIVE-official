@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Button, Card, Badge, HiveModal } from "@hive/ui";
+import { Button, Card, Badge, Modal } from "@hive/ui";
 import { 
   Zap, 
   Play, 
@@ -195,7 +195,7 @@ export function EventToolIntegration({
       {/* Active Sessions */}
       {activeSessions.length > 0 && (
         <div>
-          <h3 className="text-lg font-semibold text-white mb-4">Active Tools</h3>
+          <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4">Active Tools</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {activeSessions.map((session) => {
               const toolDef = getToolDefinition(session.toolId);
@@ -205,7 +205,7 @@ export function EventToolIntegration({
                     <div className="flex items-center space-x-3">
                       <div className="text-2xl">{toolDef.icon}</div>
                       <div>
-                        <div className="font-medium text-white">{session.name}</div>
+                        <div className="font-medium text-[var(--hive-text-inverse)]">{session.name}</div>
                         <div className="text-sm text-zinc-400">
                           {session.participants} participants • {formatTimeAgo(session.lastActivity)}
                         </div>
@@ -256,7 +256,7 @@ export function EventToolIntegration({
       {/* Available Tools */}
       <div>
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-white">Available Tools</h3>
+          <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)]">Available Tools</h3>
           {userRole === 'organizer' && (
             <Badge variant="skill-tag" className="text-xs">
               Organizer Controls
@@ -277,7 +277,7 @@ export function EventToolIntegration({
                       {toolDef.icon}
                     </div>
                     <div className="flex-1">
-                      <div className="font-medium text-white">{toolDef.name}</div>
+                      <div className="font-medium text-[var(--hive-text-inverse)]">{toolDef.name}</div>
                       <div className="text-sm text-zinc-400 mt-1 leading-tight">
                         {toolDef.description}
                       </div>
@@ -347,7 +347,7 @@ export function EventToolIntegration({
       </div>
 
       {/* Tool Setup Modal */}
-      <HiveModal
+      <Modal
         isOpen={showSetupModal}
         onClose={() => setShowSetupModal(false)}
         title={`Setup ${selectedTool ? getToolDefinition(selectedTool).name : 'Tool'}`}
@@ -357,7 +357,7 @@ export function EventToolIntegration({
           <div className="space-y-6">
             <div className="text-center">
               <div className="text-4xl mb-3">{getToolDefinition(selectedTool).icon}</div>
-              <h3 className="text-xl font-semibold text-white mb-2">
+              <h3 className="text-xl font-semibold text-[var(--hive-text-inverse)] mb-2">
                 {getToolDefinition(selectedTool).name}
               </h3>
               <p className="text-zinc-400">
@@ -367,14 +367,14 @@ export function EventToolIntegration({
 
             {/* Tool-specific setup UI would go here */}
             <div className="bg-zinc-800/50 rounded-lg p-4">
-              <h4 className="font-medium text-white mb-3">Configuration Options</h4>
+              <h4 className="font-medium text-[var(--hive-text-inverse)] mb-3">Configuration Options</h4>
               
               {selectedTool === 'study-timer' && (
                 <div className="space-y-3">
                   <div>
                     <label className="block text-sm text-zinc-400 mb-1">Session Duration</label>
                     <select 
-                      className="w-full p-2 bg-zinc-800 border border-zinc-700 rounded text-white"
+                      className="w-full p-2 bg-zinc-800 border border-zinc-700 rounded text-[var(--hive-text-inverse)]"
                       value={toolConfig.duration || '25'}
                       onChange={(e) => setToolConfig((prev: any) => ({...prev, duration: e.target.value}))}
                     >
@@ -403,7 +403,7 @@ export function EventToolIntegration({
                     <label className="block text-sm text-zinc-400 mb-1">Poll Title</label>
                     <input 
                       type="text"
-                      className="w-full p-2 bg-zinc-800 border border-zinc-700 rounded text-white"
+                      className="w-full p-2 bg-zinc-800 border border-zinc-700 rounded text-[var(--hive-text-inverse)]"
                       placeholder="Enter poll question..."
                       value={toolConfig.title || ''}
                       onChange={(e) => setToolConfig((prev: any) => ({...prev, title: e.target.value}))}
@@ -427,7 +427,7 @@ export function EventToolIntegration({
                   <div>
                     <label className="block text-sm text-zinc-400 mb-1">Check-in Method</label>
                     <select 
-                      className="w-full p-2 bg-zinc-800 border border-zinc-700 rounded text-white"
+                      className="w-full p-2 bg-zinc-800 border border-zinc-700 rounded text-[var(--hive-text-inverse)]"
                       value={toolConfig.method || 'code'}
                       onChange={(e) => setToolConfig((prev: any) => ({...prev, method: e.target.value}))}
                     >
@@ -463,7 +463,7 @@ export function EventToolIntegration({
             </div>
           </div>
         )}
-      </HiveModal>
+      </Modal>
     </div>
   );
 }

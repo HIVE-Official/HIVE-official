@@ -65,7 +65,7 @@ export async function middleware(request: NextRequest) {
     '/landing',
     '/waitlist',
     // Development routes (only in development)
-    ...(process.env.NODE_ENV === 'development' ? ['/debug-auth', '/dev-login'] : [])
+    ...(process.env.NODE_ENV === 'development' ? ['/debug-auth', '/dev-login', '/profile-dev'] : [])
   ];
   
   if (publicRoutes.some(route => pathname.startsWith(route))) {
@@ -75,7 +75,7 @@ export async function middleware(request: NextRequest) {
   // API routes authentication
   if (pathname.startsWith('/api/')) {
     // Public API endpoints
-    const publicApiRoutes = ['/api/health', '/api/auth/', '/api/schools'];
+    const publicApiRoutes = ['/api/health', '/api/auth/', '/api/schools', '/api/campus/detect'];
     
     if (publicApiRoutes.some(route => pathname.startsWith(route))) {
       return NextResponse.next();

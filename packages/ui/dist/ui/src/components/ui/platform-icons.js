@@ -1,6 +1,6 @@
 'use client';
 import { jsx as _jsx } from "react/jsx-runtime";
-import { cn } from '../../lib/utils';
+import { cn } from '../../lib/utils.js';
 import { HiveLogo } from './hive-brand';
 import { User, Grid3X3, Wrench, Activity, FlaskConical, Calendar, Eye, GraduationCap, Star, TestTube } from 'lucide-react';
 // Map platform icon sizes to HiveLogo sizes

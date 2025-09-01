@@ -187,7 +187,7 @@ export const HiveSpaceCard: React.FC<HiveSpaceCardProps> = ({
   // Get primary action based on space type
   const getPrimaryAction = () => {
     switch (space.type) {
-      case 'university':
+      case 'university': {
         const univSpace = space as UniversitySpace;
         switch (univSpace.enrollment.status) {
           case 'open': return { text: 'Join Class', variant: 'primary' as const };
@@ -196,11 +196,13 @@ export const HiveSpaceCard: React.FC<HiveSpaceCardProps> = ({
           case 'closed': return { text: 'View Details', variant: 'ghost' as const };
         }
         break;
-      case 'greek':
+      }
+      case 'greek': {
         const greekSpace = space as GreekSpace;
         return greekSpace.rush.isActive 
           ? { text: 'Show Interest', variant: 'primary' as const }
           : { text: 'Learn More', variant: 'ghost' as const };
+      }
       case 'residential':
         return { text: 'Join Floor', variant: 'primary' as const };
       case 'student':
@@ -236,34 +238,38 @@ export const HiveSpaceCard: React.FC<HiveSpaceCardProps> = ({
 
   const getSpaceMetadata = () => {
     switch (space.type) {
-      case 'university':
+      case 'university': {
         const univSpace = space as UniversitySpace;
         return [
           univSpace.academic.department,
           univSpace.academic.credits ? `${univSpace.academic.credits} credits` : null,
           univSpace.academic.schedule
         ].filter(Boolean);
-      case 'greek':
+      }
+      case 'greek': {
         const greekSpace = space as GreekSpace;
         return [
           greekSpace.organization.council,
           greekSpace.community.averageGPA ? `${greekSpace.community.averageGPA} GPA` : null,
           greekSpace.organization.founded ? `Est. ${greekSpace.organization.founded}` : null
         ].filter(Boolean);
-      case 'residential':
+      }
+      case 'residential': {
         const resSpace = space as ResidentialSpace;
         return [
           resSpace.housing.buildingName,
           resSpace.housing.floor ? `Floor ${resSpace.housing.floor}` : null,
           resSpace.housing.buildingType
         ].filter(Boolean);
-      case 'student':
+      }
+      case 'student': {
         const studentSpace = space as StudentSpace;
         return [
           studentSpace.category,
           studentSpace.creator.name,
           studentSpace.creator.major
         ].filter(Boolean);
+      }
     }
   };
 

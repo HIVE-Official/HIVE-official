@@ -119,7 +119,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="success">🎭 VARIANTS</Badge>
+            <Badge variant="emerald">🎭 VARIANTS</Badge>
             Link Variants - Navigation Styles
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -399,7 +399,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="warning">⚡ STATES</Badge>
+            <Badge variant="gold">⚡ STATES</Badge>
             Link States - Interactive Feedback
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">

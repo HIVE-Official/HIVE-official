@@ -9,11 +9,11 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
  * - Cross-slice integration for Profile as Campus Command Center
  */
 import React from 'react';
-import { cn } from '../../lib/utils';
+import { cn } from '../../lib/utils.js';
 // Molecule imports
-import { NavigationMenu } from '../../atomic/molecules/navigation-menu';
+import { NavigationMenu } from '../../atomic/molecules/navigation-menu.js';
 // Foundation system imports
-import { iconComposition, User, Activity, Settings, Users, Hammer, Calendar, Bell, Shield, Eye, EyeOff, BarChart3, MessageSquare, Link, Zap, TrendingUp, Home, Search } from '../../atomic/foundations/icon-composition';
+import { iconComposition, User, Activity, Settings, Users, Hammer, Calendar, Bell, Shield, Eye, EyeOff, BarChart3, MessageSquare, Link, Zap, TrendingUp, Home, Search } from '../../atomic/foundations/icon-composition.js';
 // === PROFILE NAVIGATION PRESETS ===
 const profileNavigationPresets = {
     // Main profile tabs (horizontal)

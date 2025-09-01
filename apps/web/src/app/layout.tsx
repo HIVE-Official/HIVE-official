@@ -31,7 +31,11 @@ export default function RootLayout({
       className={`${spaceGrotesk.variable} dark`}
       style={{ colorScheme: "dark" }}
     >
-      <body className="antialiased bg-hive-background-primary text-hive-text-primary" style={{ backgroundColor: '#0A0A0B' }}>
+      <body 
+        className="antialiased bg-hive-background-primary text-hive-text-primary" 
+        style={{ backgroundColor: '#0A0A0B' }}
+        suppressHydrationWarning={true}
+      >
         <ErrorBoundary>
           <Providers>
             <WelcomeMatProvider>{children}</WelcomeMatProvider>

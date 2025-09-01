@@ -1,8 +1,8 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { forwardRef } from 'react';
-import { motion } from '../../components/framer-motion-proxy';
-import { cn } from '../../lib/utils';
+import { motion } from '../../components/framer-motion-proxy.js';
+import { cn } from '../../lib/utils.js';
 import { Loader2 } from 'lucide-react';
 const buttonVariants = {
     variant: {

@@ -81,7 +81,7 @@ const ProfileBasicsStep = ({ onComplete, initialData }: any) => {
           </label>
           <Input
             value={formData.displayName}
-            onChange={(e) => setFormData(prev => ({ ...prev, displayName: e.target.value }))}
+            onChange={(e) => setFormData((prev: any) => ({ ...prev, displayName: e.target.value }))}
             placeholder="How should others see your name?"
             className="w-full"
           />
@@ -93,7 +93,7 @@ const ProfileBasicsStep = ({ onComplete, initialData }: any) => {
           </label>
           <Textarea
             value={formData.bio}
-            onChange={(e) => setFormData(prev => ({ ...prev, bio: e.target.value }))}
+            onChange={(e) => setFormData((prev: any) => ({ ...prev, bio: e.target.value }))}
             placeholder="Tell us a bit about yourself..."
             className="w-full h-24"
           />
@@ -106,7 +106,7 @@ const ProfileBasicsStep = ({ onComplete, initialData }: any) => {
             </label>
             <select
               value={formData.major}
-              onChange={(e) => setFormData(prev => ({ ...prev, major: e.target.value }))}
+              onChange={(e) => setFormData((prev: any) => ({ ...prev, major: e.target.value }))}
               className="w-full p-3 bg-hive-surface-elevated border border-hive-border-subtle rounded-lg text-hive-text-primary"
             >
               <option value="">Select your major</option>
@@ -122,7 +122,7 @@ const ProfileBasicsStep = ({ onComplete, initialData }: any) => {
             </label>
             <select
               value={formData.graduationYear}
-              onChange={(e) => setFormData(prev => ({ ...prev, graduationYear: e.target.value }))}
+              onChange={(e) => setFormData((prev: any) => ({ ...prev, graduationYear: e.target.value }))}
               className="w-full p-3 bg-hive-surface-elevated border border-hive-border-subtle rounded-lg text-hive-text-primary"
             >
               <option value="">Select year</option>
@@ -172,7 +172,7 @@ const InterestsStep = ({ onComplete, initialData }: any) => {
     <div className="space-y-6">
       <div className="text-center mb-8">
         <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-hive-brand-secondary to-purple-500 rounded-full flex items-center justify-center">
-          <Heart className="h-10 w-10 text-white" />
+          <Heart className="h-10 w-10 text-[var(--hive-text-inverse)]" />
         </div>
         <h3 className="text-2xl font-bold text-hive-text-primary mb-2">
           What Interests You?
@@ -268,7 +268,7 @@ const GoalsStep = ({ onComplete, initialData }: any) => {
     <div className="space-y-6">
       <div className="text-center mb-8">
         <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-green-500 to-blue-500 rounded-full flex items-center justify-center">
-          <Target className="h-10 w-10 text-white" />
+          <Target className="h-10 w-10 text-[var(--hive-text-inverse)]" />
         </div>
         <h3 className="text-2xl font-bold text-hive-text-primary mb-2">
           What Are Your Campus Goals?
@@ -405,7 +405,7 @@ export function RitualInitializeWorkflow({
       <div className={`space-y-8 ${className}`}>
         <Card className="p-8 text-center bg-gradient-to-br from-hive-gold/10 to-green-500/10 border-hive-gold/30">
           <div className="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-hive-gold to-green-500 rounded-full flex items-center justify-center">
-            <CheckCircle className="h-12 w-12 text-white" />
+            <CheckCircle className="h-12 w-12 text-[var(--hive-text-inverse)]" />
           </div>
           
           <h2 className="text-3xl font-bold text-hive-text-primary mb-4">
@@ -497,7 +497,7 @@ export function RitualInitializeWorkflow({
                     : 'bg-hive-surface-elevated border border-hive-border-subtle'
                 }`}>
                   {isCompleted ? (
-                    <CheckCircle className="h-5 w-5 text-white" />
+                    <CheckCircle className="h-5 w-5 text-[var(--hive-text-inverse)]" />
                   ) : (
                     <Icon className={`h-5 w-5 ${
                       isActive ? 'text-hive-obsidian' : 'text-hive-text-secondary'

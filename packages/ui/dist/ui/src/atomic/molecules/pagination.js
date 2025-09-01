@@ -1,7 +1,7 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { cn } from '../../lib/utils';
-import { Button } from '../atoms/button-enhanced';
+import { cn } from '../../lib/utils.js';
+import { Button } from '../atoms/button-enhanced.js';
 import { ChevronLeft, ChevronRight, MoreHorizontal } from 'lucide-react';
 export function Pagination({ currentPage, totalPages, onPageChange, showPageNumbers = true, maxVisiblePages = 5, size = 'md', variant = 'default', className, showFirstLast = true, showPrevNext = true }) {
     const getVisiblePages = () => {

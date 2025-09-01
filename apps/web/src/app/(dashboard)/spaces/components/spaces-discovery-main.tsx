@@ -274,7 +274,7 @@ export function SpacesDiscoveryMain() {
                       <CardContent className="p-4">
                         <div className="flex items-center gap-3 mb-3">
                           <div className={`h-10 w-10 rounded-lg bg-gradient-to-br ${category.color} flex items-center justify-center`}>
-                            <IconComponent className="h-5 w-5 text-white" />
+                            <IconComponent className="h-5 w-5 text-[var(--hive-text-inverse)]" />
                           </div>
                           <div>
                             <div className="font-bold text-foreground">{category.name}</div>

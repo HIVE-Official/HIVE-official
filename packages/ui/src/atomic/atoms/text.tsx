@@ -16,7 +16,7 @@ export interface TextProps extends React.HTMLAttributes<HTMLElement> {
   children: React.ReactNode;
 }
 
-const textVariants = {
+export const textVariants = {
   variant: {
     // Display Scale
     'display-2xl': 'text-display-2xl font-display font-bold leading-tight tracking-tight',

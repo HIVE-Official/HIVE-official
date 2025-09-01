@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 // Common unused variable patterns to fix
-function fixUnusedVariables(content) {
+function _fixUnusedVariables(content) {
   // Fix unused function parameters by prefixing with underscore
   content = content.replace(/\b(\w+) is defined but never used\./g, '_$1');
   

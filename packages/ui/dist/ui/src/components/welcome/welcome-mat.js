@@ -3,7 +3,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ArrowRight, Users } from "lucide-react";
-import { cn } from "../../lib/utils";
+import { cn } from "../../lib/utils.js";
 export const WelcomeMat = ({ isVisible, onDismiss, userName, className, }) => {
     const [isAnimating, setIsAnimating] = useState(false);
     const handleDismiss = () => {

@@ -1,8 +1,8 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from '../../components/framer-motion-proxy';
-import { cn } from '../../lib/utils';
+import { motion, AnimatePresence } from '../../components/framer-motion-proxy.js';
+import { cn } from '../../lib/utils.js';
 import { X, Search, Filter, Calendar, Users, BarChart3, MessageSquare, CheckCircle, Settings, Zap, Star, Download } from 'lucide-react';
 const CATEGORY_INFO = {
     productivity: {

@@ -2,12 +2,12 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useState, useCallback, useRef } from "react";
 import { useInfiniteQuery, useMutation, useQueryClient, } from "@tanstack/react-query";
-import { Card, CardContent } from "../../atomic/molecules/card";
-import { Button } from "../../atomic/atoms/button-enhanced";
+import { Card, CardContent } from "../../atomic/molecules/card.js";
+import { Button } from "../../atomic/atoms/button-enhanced.js";
 import { Loader2, RefreshCw, AlertCircle } from "lucide-react";
-import { FeedComposer } from "./feed-composer";
-import { PostCard } from "./post-card";
-import { cn } from "../../lib/utils";
+import { FeedComposer } from "./feed-composer.js";
+import { PostCard } from "./post-card.js";
+import { cn } from "../../lib/utils.js";
 export const SpaceFeed = ({ spaceId, currentUser, className,
 // posts: _posts = [], // Not currently used - relying on API fetch instead
  }) => {
@@ -251,7 +251,7 @@ export const SpaceFeed = ({ spaceId, currentUser, className,
     if (error) {
         return (_jsxs("div", { className: cn("space-y-4", className), children: [_jsx(FeedComposer, { spaceId: spaceId, currentUser: currentUser, onPostCreated: handlePostCreated }), _jsx(Card, { children: _jsxs(CardContent, { className: "p-8 text-center", children: [_jsx(AlertCircle, { className: "h-12 w-12 text-muted-foreground mx-auto mb-4" }), _jsx("h3", { className: "text-lg font-semibold mb-2", children: "Failed to load posts" }), _jsx("p", { className: "text-muted-foreground mb-4", children: error || "Something went wrong" }), _jsx(Button, { onClick: () => void handleRefresh(), disabled: isRefreshing, children: isRefreshing ? (_jsxs(_Fragment, { children: [_jsx(Loader2, { className: "h-4 w-4 mr-2 animate-spin" }), "Retrying..."] })) : (_jsxs(_Fragment, { children: [_jsx(RefreshCw, { className: "h-4 w-4 mr-2" }), "Try Again"] })) })] }) })] }));
     }
-    return (_jsxs("div", { className: cn("space-y-4", className), children: [_jsx(FeedComposer, { spaceId: spaceId, currentUser: currentUser, onPostCreated: handlePostCreated }), _jsx("div", { className: "flex justify-center", children: _jsxs(Button, { variant: "outline", size: "sm", onClick: () => void handleRefresh(), disabled: isRefreshing, className: "gap-2", children: [_jsx(RefreshCw, { className: cn("h-4 w-4", isRefreshing && "animate-spin") }), isRefreshing ? "Refreshing..." : "Refresh"] }) }), allPosts.length === 0 ? (_jsx(Card, { children: _jsx(CardContent, { className: "p-8 text-center", children: _jsxs("div", { className: "text-muted-foreground", children: [_jsx("h3", { className: "text-lg font-semibold mb-2", children: "No posts yet" }), _jsx("p", { children: "Be the first to share something in this space!" })] }) }) })) : (_jsxs("div", { className: "space-y-4", children: [allPosts.map((post, index) => (_jsx("div", { ref: index === allPosts.length - 1 ? lastPostRef : undefined, children: _jsx(PostCard, { post: post, currentUser: currentUser, onReact: async (postId, reaction, action) => {
+    return (_jsxs("div", { className: cn("space-y-4", className), children: [_jsx(FeedComposer, { spaceId: spaceId, currentUser: currentUser, onPostCreated: handlePostCreated }), _jsx("div", { className: "flex justify-center", children: _jsxs(Button, { variant: "secondary", size: "sm", onClick: () => void handleRefresh(), disabled: isRefreshing, className: "gap-2", children: [_jsx(RefreshCw, { className: cn("h-4 w-4", isRefreshing && "animate-spin") }), isRefreshing ? "Refreshing..." : "Refresh"] }) }), allPosts.length === 0 ? (_jsx(Card, { children: _jsx(CardContent, { className: "p-8 text-center", children: _jsxs("div", { className: "text-muted-foreground", children: [_jsx("h3", { className: "text-lg font-semibold mb-2", children: "No posts yet" }), _jsx("p", { children: "Be the first to share something in this space!" })] }) }) })) : (_jsxs("div", { className: "space-y-4", children: [allPosts.map((post, index) => (_jsx("div", { ref: index === allPosts.length - 1 ? lastPostRef : undefined, children: _jsx(PostCard, { post: post, currentUser: currentUser, onReact: async (postId, reaction, action) => {
                                 return new Promise((resolve, reject) => {
                                     reactMutation.mutate({ postId, reaction, action }, {
                                         onSuccess: () => resolve(),

@@ -1,7 +1,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { motion } from 'framer-motion';
-import { HiveLogo } from '../HiveLogo';
-import { cn } from '../../lib/utils';
+import { HiveLogo } from '../HiveLogo.js';
+import { cn } from '../../lib/utils.js';
 const SplashScreen = ({ tagline = 'Finally, Your Campus.', className, }) => {
     const containerVariants = {
         hidden: { opacity: 0 },
@@ -39,7 +39,7 @@ const SplashScreen = ({ tagline = 'Finally, Your Campus.', className, }) => {
             },
         },
     };
-    return (_jsxs(motion.div, { className: cn('flex h-screen w-screen flex-col items-center justify-center bg-[#0A0A0A] text-white', className), variants: containerVariants, initial: "hidden", animate: "visible", "aria-label": "Loading Hive", role: "status", children: [_jsx(motion.div, { variants: logoVariants, className: "w-24 h-24", children: _jsx(HiveLogo, {}) }), _jsx(motion.p, { variants: taglineVariants, className: "mt-4 text-lg font-medium text-muted-foreground", children: tagline })] }));
+    return (_jsxs(motion.div, { className: cn('flex h-screen w-screen flex-col items-center justify-center bg-[#0A0A0A] text-[var(--hive-text-inverse)]', className), variants: containerVariants, initial: "hidden", animate: "visible", "aria-label": "Loading Hive", role: "status", children: [_jsx(motion.div, { variants: logoVariants, className: "w-24 h-24", children: _jsx(HiveLogo, {}) }), _jsx(motion.p, { variants: taglineVariants, className: "mt-4 text-lg font-medium text-muted-foreground", children: tagline })] }));
 };
 export { SplashScreen };
 //# sourceMappingURL=splash-screen.js.map

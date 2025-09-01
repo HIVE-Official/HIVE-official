@@ -1,7 +1,7 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import React from 'react';
 import { cva } from 'class-variance-authority';
-import { cn } from '../../lib/utils';
+import { cn } from '../../lib/utils.js';
 // HIVE Card System - Atomic Design with Semantic Tokens
 // Simplified version for atomic UI system
 const cardVariants = cva("relative overflow-hidden transition-all duration-300 ease-out", {

@@ -133,7 +133,7 @@ const comprehensiveCardVariants = cva(
         spacious: [
           // Padding
           'p-6',
-          layoutComposition.utils.gap[5], // 20px internal gap
+          layoutComposition.utils.gap[4], // 16px internal gap
           // Header sizing
           '[&_.hive-card-header]:gap-4',
           // Content sizing

@@ -4,10 +4,10 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter, usePathname } from 'next/navigation';
 import { Home, Compass, Zap, User, Settings, Search, Bell, Plus, X, Calendar, Users, Building, LogOut, Crown, Shield, Activity, BookOpen, HelpCircle } from 'lucide-react';
-import { Button } from '../../atomic/atoms/button-enhanced';
-import { Badge } from '../../ui/badge';
+import { Button } from '../../atomic/atoms/button-enhanced.js';
+import { Badge } from '../../atomic/atoms/badge.js';
 import { Separator } from '../../ui/separator';
-import { cn } from '../../lib/utils';
+import { cn } from '../../lib/utils.js';
 const primaryNavItems = [
     { id: 'dashboard', label: 'Dashboard', icon: Home, href: '/' },
     { id: 'spaces', label: 'Spaces', icon: Users, href: '/spaces' },

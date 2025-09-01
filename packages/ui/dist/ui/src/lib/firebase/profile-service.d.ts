@@ -161,5 +161,5 @@ export declare const CLOUD_FUNCTIONS: {
     evaluateBuilderStatus: (uid: string) => Promise<boolean>;
 };
 export declare const profileFirebaseService: ProfileFirebaseService;
-export type { UserProfileDocument, SpaceMembershipDocument, NotificationDocument, GhostModeDocument, ToolDocument };
+export {};
 //# sourceMappingURL=profile-service.d.ts.map

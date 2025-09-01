@@ -149,20 +149,20 @@ export function RitualActionButton({
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center space-x-3">
               <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
-                <RitualIcon className="h-6 w-6 text-white" />
+                <RitualIcon className="h-6 w-6 text-[var(--hive-text-inverse)]" />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-white">
+                <h3 className="text-lg font-bold text-[var(--hive-text-inverse)]">
                   {ritualConfig.title}
                 </h3>
-                <p className="text-white/80 text-sm">
+                <p className="text-[var(--hive-text-inverse)]/80 text-sm">
                   {ritualConfig.description}
                 </p>
               </div>
             </div>
             
             <div className="flex items-center space-x-2">
-              <ActionIcon className="h-5 w-5 text-white" />
+              <ActionIcon className="h-5 w-5 text-[var(--hive-text-inverse)]" />
               {isLoading && (
                 <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent" />
               )}
@@ -172,7 +172,7 @@ export function RitualActionButton({
           {/* Progress bar for continue/complete actions */}
           {(actionType === 'continue' || actionType === 'complete') && (
             <div className="mb-4">
-              <div className="flex items-center justify-between text-white/80 text-xs mb-2">
+              <div className="flex items-center justify-between text-[var(--hive-text-inverse)]/80 text-xs mb-2">
                 <span>Progress</span>
                 <span>{progress}% complete</span>
               </div>
@@ -188,23 +188,23 @@ export function RitualActionButton({
           {/* Action label and meta info */}
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-white font-semibold">
+              <div className="text-[var(--hive-text-inverse)] font-semibold">
                 {actionConfig.label}
               </div>
-              <div className="text-white/70 text-xs">
+              <div className="text-[var(--hive-text-inverse)]/70 text-xs">
                 {actionConfig.description}
               </div>
             </div>
             
             <div className="text-right">
               {estimatedTime && (
-                <div className="flex items-center space-x-1 text-white/70 text-xs mb-1">
+                <div className="flex items-center space-x-1 text-[var(--hive-text-inverse)]/70 text-xs mb-1">
                   <Clock className="h-3 w-3" />
                   <span>~{estimatedTime}m</span>
                 </div>
               )}
               {participantCount && (
-                <div className="flex items-center space-x-1 text-white/70 text-xs">
+                <div className="flex items-center space-x-1 text-[var(--hive-text-inverse)]/70 text-xs">
                   <Users className="h-3 w-3" />
                   <span>{participantCount.toLocaleString()} active</span>
                 </div>

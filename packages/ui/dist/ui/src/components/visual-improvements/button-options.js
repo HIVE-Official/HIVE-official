@@ -3,31 +3,31 @@ import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva } from "class-variance-authority";
 import { Loader2 } from "lucide-react";
-import { cn } from "../lib/utils";
+import { cn } from "../../lib/utils.js";
 // OPTION A: VERCEL-INSPIRED - Clean, technical, sophisticated
 const vercelButtonVariants = cva("inline-flex items-center justify-center whitespace-nowrap font-medium relative overflow-hidden transition-all duration-150 ease-out focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 select-none", {
     variants: {
         variant: {
             primary: [
-                "bg-white text-black border border-white/20",
+                "bg-white text-[var(--hive-text-primary)] border border-white/20",
                 "hover:bg-white/90 hover:scale-[1.02]",
                 "active:scale-[0.98]",
                 "focus-visible:ring-1 focus-visible:ring-accent"
             ],
             secondary: [
-                "bg-transparent border border-white/30 text-white",
+                "bg-transparent border border-white/30 text-[var(--hive-text-inverse)]",
                 "hover:bg-white/10 hover:border-white/50",
                 "active:bg-white/5",
                 "focus-visible:ring-1 focus-visible:ring-accent"
             ],
             accent: [
-                "bg-accent text-black font-semibold",
+                "bg-accent text-[var(--hive-text-primary)] font-semibold",
                 "hover:bg-accent/90 hover:shadow-lg hover:shadow-accent/20",
                 "active:bg-accent/80",
                 "focus-visible:ring-1 focus-visible:ring-accent/50"
             ],
             ghost: [
-                "text-white/80 hover:text-white hover:bg-white/5",
+                "text-[var(--hive-text-inverse)]/80 hover:text-[var(--hive-text-inverse)] hover:bg-white/5",
                 "active:bg-white/10",
                 "focus-visible:ring-1 focus-visible:ring-accent"
             ]
@@ -49,19 +49,19 @@ const appleButtonVariants = cva("inline-flex items-center justify-center whitesp
     variants: {
         variant: {
             primary: [
-                "bg-white text-black rounded-xl shadow-sm",
+                "bg-white text-[var(--hive-text-primary)] rounded-xl shadow-sm",
                 "hover:shadow-md hover:bg-white/95 hover:scale-[1.02]",
                 "active:scale-[0.98] active:shadow-sm",
                 "focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
             ],
             secondary: [
-                "bg-white/10 backdrop-blur-sm border border-white/20 text-white rounded-xl",
+                "bg-white/10 backdrop-blur-sm border border-white/20 text-[var(--hive-text-inverse)] rounded-xl",
                 "hover:bg-white/20 hover:border-white/30",
                 "active:bg-white/5",
                 "focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
             ],
             accent: [
-                "bg-gradient-to-b from-accent to-accent/90 text-black font-semibold rounded-xl shadow-lg shadow-accent/20",
+                "bg-gradient-to-b from-accent to-accent/90 text-[var(--hive-text-primary)] font-semibold rounded-xl shadow-lg shadow-accent/20",
                 "hover:from-accent/95 hover:to-accent/85 hover:shadow-xl hover:shadow-accent/30",
                 "active:from-accent/90 active:to-accent/80",
                 "focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:ring-offset-2"
@@ -90,27 +90,27 @@ const campusButtonVariants = cva("inline-flex items-center justify-center whites
     variants: {
         variant: {
             energy: [
-                "bg-accent text-black font-bold border-2 border-accent rounded-lg",
+                "bg-accent text-[var(--hive-text-primary)] font-bold border-2 border-accent rounded-lg",
                 "hover:bg-accent/90 hover:scale-105 hover:shadow-lg hover:shadow-accent/30",
                 "active:scale-95",
                 "relative before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent",
                 "before:translate-x-[-100%] hover:before:translate-x-[100%] before:transition-transform before:duration-700"
             ],
             chill: [
-                "bg-surface border border-white/30 text-white rounded-lg",
+                "bg-surface border border-white/30 text-[var(--hive-text-inverse)] rounded-lg",
                 "hover:bg-surface-01 hover:border-accent/50 hover:text-accent",
                 "active:bg-surface-02",
                 "focus-visible:ring-1 focus-visible:ring-accent"
             ],
             hype: [
-                "bg-gradient-to-r from-accent via-accent to-accent/80 text-black font-black rounded-lg",
+                "bg-gradient-to-r from-accent via-accent to-accent/80 text-[var(--hive-text-primary)] font-black rounded-lg",
                 "hover:from-accent/95 hover:via-accent/95 hover:to-accent/75 hover:scale-110",
                 "active:scale-95",
                 "animate-pulse hover:animate-none",
                 "shadow-lg shadow-accent/40"
             ],
             subtle: [
-                "text-white/70 hover:text-accent hover:bg-accent/10 rounded-lg",
+                "text-[var(--hive-text-inverse)]/70 hover:text-accent hover:bg-accent/10 rounded-lg",
                 "active:bg-accent/20",
                 "transition-all duration-300"
             ]
@@ -139,13 +139,13 @@ const techButtonVariants = cva("inline-flex items-center justify-center whitespa
                 "focus-visible:ring-1 focus-visible:ring-accent"
             ],
             system: [
-                "bg-surface-02 border border-white/20 text-white/90",
-                "hover:bg-surface-03 hover:border-white/40 hover:text-white",
+                "bg-surface-02 border border-white/20 text-[var(--hive-text-inverse)]/90",
+                "hover:bg-surface-03 hover:border-white/40 hover:text-[var(--hive-text-inverse)]",
                 "active:bg-surface-01",
                 "focus-visible:ring-1 focus-visible:ring-accent"
             ],
             execute: [
-                "bg-accent text-black font-bold",
+                "bg-accent text-[var(--hive-text-primary)] font-bold",
                 "hover:bg-accent/90 hover:shadow-md",
                 "active:bg-accent/80",
                 "focus-visible:ring-1 focus-visible:ring-accent/50"
@@ -175,7 +175,7 @@ const socialButtonVariants = cva("inline-flex items-center justify-center whites
     variants: {
         variant: {
             connect: [
-                "bg-accent text-black font-semibold rounded-full",
+                "bg-accent text-[var(--hive-text-primary)] font-semibold rounded-full",
                 "hover:bg-accent/90 hover:scale-105 hover:shadow-xl hover:shadow-accent/20",
                 "active:scale-95",
                 "relative overflow-hidden",
@@ -183,13 +183,13 @@ const socialButtonVariants = cva("inline-flex items-center justify-center whites
                 "before:translate-x-[-100%] hover:before:translate-x-[100%] before:transition-transform before:duration-1000"
             ],
             engage: [
-                "bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-full",
+                "bg-white/10 backdrop-blur-md border border-white/20 text-[var(--hive-text-inverse)] rounded-full",
                 "hover:bg-white/20 hover:border-accent/50 hover:text-accent hover:scale-105",
                 "active:scale-95",
                 "focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
             ],
             react: [
-                "bg-transparent text-white/80 rounded-full hover:bg-accent/20 hover:text-accent",
+                "bg-transparent text-[var(--hive-text-inverse)]/80 rounded-full hover:bg-accent/20 hover:text-accent",
                 "active:bg-accent/30 active:scale-90",
                 "group-hover:animate-bounce"
             ],

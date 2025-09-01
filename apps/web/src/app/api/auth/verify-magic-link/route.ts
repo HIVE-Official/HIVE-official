@@ -3,178 +3,223 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getAuth } from "firebase-admin/auth";
 import { dbAdmin } from "@/lib/firebase-admin";
-// import { logger } from "@/lib/logger";
+import { redisService } from "@/lib/redis-client";
+import { authRateLimiter, RATE_LIMITS } from "@/lib/auth-rate-limiter";
 
 /**
- * HIVE Magic Link Verifier - Clean Firebase Implementation
+ * HIVE Magic Link Verifier - FIXED IMPLEMENTATION
  * 
- * Verifies Firebase Custom Tokens and creates/updates user accounts
- * Returns Firebase ID token for client authentication
+ * CRITICAL FIX: This endpoint creates Firebase Custom Tokens for client-side authentication
+ * It does NOT verify ID tokens - that's the client's job after signInWithCustomToken
  */
 
 const verifyMagicLinkSchema = z.object({
-  token: z.string().min(1, "Token is required"),
-  email: z.string().email("Invalid email format"),
-  schoolId: z.string().min(1, "School ID is required")
+  token: z.string().min(1, "Magic link token required"),
+  email: z.string().email("Valid email required"),
+  schoolId: z.string().min(1, "School ID required")
 });
 
 export async function POST(request: NextRequest) {
   try {
-    // Parse and validate request
+    // Rate limiting - prevent verification brute force
+    const clientKey = authRateLimiter.getClientKey(request);
+    const rateLimit = authRateLimiter.checkLimit(
+      `verify-magic-link:${clientKey}`,
+      RATE_LIMITS.MAGIC_LINK_VERIFY.maxRequests,
+      RATE_LIMITS.MAGIC_LINK_VERIFY.windowMs
+    );
+
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        { 
+          error: "Too many verification attempts. Please try again later.",
+          retryAfter: rateLimit.retryAfter 
+        },
+        { 
+          status: 429,
+          headers: {
+            'Retry-After': rateLimit.retryAfter?.toString() || '300',
+            'X-RateLimit-Remaining': '0',
+            'X-RateLimit-Reset': rateLimit.resetTime?.toString() || ''
+          }
+        }
+      );
+    }
+
     const body = await request.json();
     const { token, email, schoolId } = verifyMagicLinkSchema.parse(body);
 
-    // Handle development tokens
-    if (process.env.NODE_ENV === 'development' && token.startsWith('dev_magic_')) {
-      console.log('🔧 Development magic link verification', { email });
-      
-      // Create development user ID based on email
-      const userUid = `dev_${email.replace('@', '_').replace(/[^a-zA-Z0-9]/g, '_')}`;
-      
-      // Check if user has completed onboarding (mock check)
-      const userDoc = await dbAdmin.collection("users").doc(userUid).get();
-      const needsOnboarding = !userDoc.exists || !userDoc.data()?.onboardingCompleted;
+    console.log('🔗 Magic link verification started', { email, schoolId });
 
-      if (needsOnboarding && !userDoc.exists) {
-        // Create basic user document for new users
-        await dbAdmin.collection("users").doc(userUid).set({
-          id: userUid,
-          email,
-          schoolId,
-          emailVerified: true,
-          onboardingCompleted: false,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        });
-        console.log('🔧 Development: Created user document for', email);
-      }
-
-      // Create a simple JWT-like development token
-      const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
-      const payload = btoa(JSON.stringify({
-        iss: 'https://securetoken.google.com/dev-project',
-        aud: 'dev-project',
-        user_id: userUid,
-        sub: userUid,
-        iat: Math.floor(Date.now() / 1000),
-        exp: Math.floor(Date.now() / 1000) + 3600,
-        email: email,
-        email_verified: true,
-      }));
-      const signature = btoa('dev-signature');
-      const clientToken = `${header}.${payload}.${signature}`;
-
-      return NextResponse.json({
-        success: true,
-        needsOnboarding,
-        userId: userUid,
-        token: clientToken,
-        dev: true
-      });
-    }
-
-    // Production flow requires Firebase Admin
-    const auth = getAuth();
-
-    // Production: Verify Firebase Custom Token
-    let decodedToken;
-    try {
-      decodedToken = await auth.verifyIdToken(token);
-    } catch (error) {
-      console.error('Invalid magic link token', { error });
+    // Validate magic link token
+    const magicLinkData = await validateMagicLinkToken(token, email);
+    if (!magicLinkData) {
       return NextResponse.json(
         { error: "Invalid or expired magic link" },
-        { status: 400 }
+        { status: 401 }
       );
     }
 
-    // Validate token was created for magic link authentication
-    if (!decodedToken.magicLinkAuth || decodedToken.email !== email) {
-      return NextResponse.json(
-        { error: "Invalid magic link token" },
-        { status: 400 }
-      );
-    }
+    // Get Firebase Admin Auth
+    const auth = getAuth();
 
-    // Get or create Firebase user
-    let userRecord;
+    // Find or create Firebase user
+    let firebaseUser;
     try {
-      userRecord = await auth.getUserByEmail(email);
-    } catch {
-      // Create new Firebase user
-      userRecord = await auth.createUser({
-        email,
-        emailVerified: true
+      firebaseUser = await auth.getUserByEmail(email);
+      console.log('📧 Found existing Firebase user', { uid: firebaseUser.uid });
+    } catch (error) {
+      // User doesn't exist, create them
+      firebaseUser = await auth.createUser({
+        email: email,
+        emailVerified: true,
       });
+      console.log('🆕 Created new Firebase user', { uid: firebaseUser.uid });
     }
 
-    // Ensure email is verified
-    if (!userRecord.emailVerified) {
-      await auth.updateUser(userRecord.uid, {
-        emailVerified: true
-      });
-    }
+    // Check if user has HIVE profile
+    const userDoc = await dbAdmin.collection("users").doc(firebaseUser.uid).get();
+    const needsOnboarding = !userDoc.exists || !userDoc.data()?.onboardingCompleted;
 
-    // Check if user exists in Firestore
-    const userDoc = await dbAdmin.collection("users").doc(userRecord.uid).get();
-    
     if (!userDoc.exists) {
-      // New user - create basic profile
-      await dbAdmin.collection("users").doc(userRecord.uid).set({
-        id: userRecord.uid,
-        email,
-        schoolId,
+      // Create basic HIVE user document
+      await dbAdmin.collection("users").doc(firebaseUser.uid).set({
+        id: firebaseUser.uid,
+        email: email,
+        schoolId: schoolId,
         emailVerified: true,
         onboardingCompleted: false,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        fullName: "",
-        handle: "",
-        major: "",
-        isPublic: false
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
       });
-
-      console.log('New user created', { userId: userRecord.uid, email: email.replace(/(.{2}).*@/, '$1***@') });
-
-      // Create Firebase ID token for client
-      const clientToken = await auth.createCustomToken(userRecord.uid);
-
-      return NextResponse.json({
-        success: true,
-        needsOnboarding: true,
-        userId: userRecord.uid,
-        token: clientToken
-      });
-    } else {
-      // Existing user
-      const userData = userDoc.data()!;
-      
-      console.log('Existing user login', { userId: userRecord.uid, email: email.replace(/(.{2}).*@/, '$1***@') });
-
-      // Create Firebase ID token for client
-      const clientToken = await auth.createCustomToken(userRecord.uid);
-
-      return NextResponse.json({
-        success: true,
-        needsOnboarding: !userData.onboardingCompleted,
-        userId: userRecord.uid,
-        token: clientToken
-      });
+      console.log('👤 Created HIVE user profile', { uid: firebaseUser.uid });
     }
 
-  } catch (error) {
-    console.error('Magic link verification failed', { error });
+    // Create Firebase Custom Token for client authentication
+    const customToken = await auth.createCustomToken(firebaseUser.uid, {
+      email: email,
+      schoolId: schoolId,
+      magicLinkAuth: true,
+      verified: Date.now(),
+    });
 
+    console.log('✅ Magic link verification successful', { 
+      uid: firebaseUser.uid, 
+      needsOnboarding 
+    });
+
+    return NextResponse.json({
+      success: true,
+      token: customToken, // This is a Firebase Custom Token
+      needsOnboarding: needsOnboarding,
+      userId: firebaseUser.uid,
+    });
+
+  } catch (error) {
+    console.error('🚨 Magic link verification failed', { error });
+    
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: "Invalid request data", details: error.errors },
+        { error: "Invalid request format", details: error.errors },
         { status: 400 }
       );
     }
 
     return NextResponse.json(
-      { error: "Failed to verify magic link" },
+      { error: "Magic link verification failed" },
       { status: 500 }
     );
+  }
+}
+
+
+/**
+ * SECURE TOKEN VALIDATION - PRODUCTION IMPLEMENTATION
+ * Validates magic link tokens using Redis storage with proper security checks
+ */
+async function validateMagicLinkToken(token: string, email: string): Promise<any> {
+  try {
+    // Validate token format
+    if (!token || token.length !== 64) {
+      console.log('❌ Invalid token format', { tokenLength: token?.length });
+      return null;
+    }
+
+    // Get token data from Redis
+    const tokenKey = `magic_link:${token}`;
+    console.log('🔍 Looking for token', { tokenKey: `magic_link:${token.substring(0, 8)}...` });
+    const tokenDataStr = await redisService.get(tokenKey);
+    
+    if (!tokenDataStr) {
+      const redisStatus = redisService.getStatus();
+      console.log('❌ Magic link token not found or expired', { 
+        tokenKey: `${token.substring(0, 8)}...`,
+        tokenKeyPrefix: 'magic_link:***',
+        redisStatus: redisStatus
+      });
+      
+      // SECURITY: No development bypasses allowed - all tokens must be valid
+      
+      return null;
+    }
+
+    // Parse token data
+    let tokenData;
+    try {
+      tokenData = JSON.parse(tokenDataStr);
+    } catch (error) {
+      console.error('❌ Invalid token data format', { error });
+      return null;
+    }
+
+    // Validate email matches
+    if (tokenData.email !== email) {
+      console.log('❌ Token email mismatch', { 
+        tokenEmail: tokenData.email?.replace(/(.{2}).*@/, '$1***@'),
+        requestEmail: email?.replace(/(.{2}).*@/, '$1***@')
+      });
+      return null;
+    }
+
+    // Check if token was already used
+    if (tokenData.used) {
+      console.log('❌ Magic link token already used', { email: email.replace(/(.{2}).*@/, '$1***@') });
+      return null;
+    }
+
+    // Check token age (additional safety check beyond Redis TTL)
+    const tokenAge = Date.now() - tokenData.createdAt;
+    const maxAge = process.env.NODE_ENV === 'development' ? 3600000 : 900000; // 1 hour in dev, 15 min in prod
+    if (tokenAge > maxAge) {
+      console.log('❌ Magic link token too old', { 
+        ageMinutes: Math.round(tokenAge / 60000),
+        maxAgeMinutes: Math.round(maxAge / 60000),
+        email: email.replace(/(.{2}).*@/, '$1***@')
+      });
+      return null;
+    }
+
+    // Mark token as used to prevent reuse
+    tokenData.used = true;
+    tokenData.usedAt = Date.now();
+    await redisService.set(tokenKey, JSON.stringify(tokenData), 300); // Keep for 5 more minutes for logging
+
+    console.log('✅ Magic link token validated successfully', { 
+      email: email.replace(/(.{2}).*@/, '$1***@'),
+      schoolId: tokenData.schoolId,
+      tokenAge: Math.round(tokenAge / 1000) + 's'
+    });
+
+    return {
+      email: tokenData.email,
+      schoolId: tokenData.schoolId,
+      valid: true,
+      verifiedAt: Date.now(),
+      createdAt: tokenData.createdAt
+    };
+
+  } catch (error) {
+    console.error('❌ Magic link token validation error', { error });
+    return null;
   }
 }

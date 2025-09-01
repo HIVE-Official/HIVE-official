@@ -122,7 +122,7 @@ export const ProfileAvatarWidget: React.FC<ProfileAvatarWidgetProps> = ({
                   )}
                   onClick={onUploadPhoto}
                 >
-                  <Camera className="h-5 w-5 text-white" />
+                  <Camera className="h-5 w-5 text-[var(--hive-text-inverse)]" />
                 </div>
               )}
             </div>

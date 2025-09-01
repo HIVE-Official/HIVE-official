@@ -1,6 +1,7 @@
 "use client";
 
-import React, { createContext, useContext, useCallback, useMemo, useState } from 'react';
+import type React from 'react';
+import { createContext, useContext, useCallback, useMemo, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 
 interface NavigationContextType {

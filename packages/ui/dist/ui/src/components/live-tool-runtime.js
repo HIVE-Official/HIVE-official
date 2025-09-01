@@ -5,23 +5,22 @@ import { jsxs as _jsxs, jsx as _jsx, Fragment as _Fragment } from "react/jsx-run
  * The core system for executing HIVE tools in real-time
  */
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { HiveCard } from './hive-card';
-import { Button } from './ui/button';
-import { Alert, AlertDescription } from './ui/alert';
+import { Button } from './ui/button.js';
+import { Alert, AlertDescription } from './ui/alert.js';
 import { Loader2, AlertCircle, CheckCircle } from 'lucide-react';
-import { useRealtimeTool } from '../hooks/use-realtime-tool';
-import { apiClient } from '../lib/api-client';
+import { useRealtimeTool } from '../hooks/use-realtime-tool.js';
+import { apiClient } from '../lib/api-client.js';
 // Import element renderers
-import { TextBlockRenderer } from './elements/text-block-renderer';
-import { ButtonRenderer } from './elements/button-renderer';
-import { TextInputRenderer } from './elements/text-input-renderer';
-import { ImageBlockRenderer } from './elements/image-block-renderer';
-import { DividerRenderer } from './elements/divider-renderer';
-import { StackRenderer } from './elements/stack-renderer';
-import { ChoiceSelectRenderer } from './elements/choice-select-renderer';
-import { RatingStarsRenderer } from './elements/rating-stars-renderer';
-import { CountdownTimerRenderer } from './elements/countdown-timer-renderer';
-import { ProgressBarRenderer } from './elements/progress-bar-renderer';
+import { TextBlockRenderer } from './elements/text-block-renderer.js';
+import { ButtonRenderer } from './elements/button-renderer.js';
+import { TextInputRenderer } from './elements/text-input-renderer.js';
+import { ImageBlockRenderer } from './elements/image-block-renderer.js';
+import { DividerRenderer } from './elements/divider-renderer.js';
+import { StackRenderer } from './elements/stack-renderer.js';
+import { ChoiceSelectRenderer } from './elements/choice-select-renderer.js';
+import { RatingStarsRenderer } from './elements/rating-stars-renderer.js';
+import { CountdownTimerRenderer } from './elements/countdown-timer-renderer.js';
+import { ProgressBarRenderer } from './elements/progress-bar-renderer.js';
 export const LiveToolRuntime = ({ tool, toolId, deploymentId, spaceId, className, onToolLoad, onDataSubmit, onError, readOnly = false, showDebugInfo = false, enableRealtime = true, collectUsageData = true }) => {
     const [loading, setLoading] = useState(false);
     const [sessionStartTime] = useState(new Date());
@@ -382,17 +381,17 @@ export const LiveToolRuntime = ({ tool, toolId, deploymentId, spaceId, className
     ]);
     // Loading state
     if (loading) {
-        return (_jsx(HiveCard, { className: className, variant: "elevated", children: _jsxs("div", { className: "p-6 text-center", children: [_jsx(Loader2, { className: "w-6 h-6 animate-spin mx-auto mb-2" }), _jsx("p", { className: "text-sm text-[var(--hive-text-secondary)]", children: "Loading tool..." })] }) }));
+        return (_jsx(Card, { className: className, variant: "elevated", children: _jsxs("div", { className: "p-6 text-center", children: [_jsx(Loader2, { className: "w-6 h-6 animate-spin mx-auto mb-2" }), _jsx("p", { className: "text-sm text-[var(--hive-text-secondary)]", children: "Loading tool..." })] }) }));
     }
     // No tool state
     if (!loadedTool) {
-        return (_jsx(HiveCard, { className: className, variant: "elevated", children: _jsxs("div", { className: "p-6 text-center", children: [_jsx(AlertCircle, { className: "w-6 h-6 text-[var(--hive-text-secondary)] mx-auto mb-2" }), _jsx("p", { className: "text-sm text-[var(--hive-text-secondary)]", children: toolId ? `Tool ${toolId} not found` : 'No tool provided' })] }) }));
+        return (_jsx(Card, { className: className, variant: "elevated", children: _jsxs("div", { className: "p-6 text-center", children: [_jsx(AlertCircle, { className: "w-6 h-6 text-[var(--hive-text-secondary)] mx-auto mb-2" }), _jsx("p", { className: "text-sm text-[var(--hive-text-secondary)]", children: toolId ? `Tool ${toolId} not found` : 'No tool provided' })] }) }));
     }
     // Sort elements by order and filter root elements (no parent)
     const rootElements = loadedTool.elements
         .filter(el => !el.parentId)
         .sort((a, b) => a.order - b.order);
-    return (_jsx(HiveCard, { className: className, variant: "elevated", children: _jsxs("div", { className: "p-6", children: [_jsxs("div", { className: "mb-6", children: [_jsx("h3", { className: "text-lg font-semibold text-[var(--hive-text-primary)] mb-2", children: loadedTool.name }), loadedTool.description && (_jsx("p", { className: "text-sm text-[var(--hive-text-secondary)]", children: loadedTool.description }))] }), runtimeState.errors.length > 0 && (_jsxs(Alert, { className: "mb-4", variant: "destructive", children: [_jsx(AlertCircle, { className: "h-4 w-4" }), _jsx(AlertDescription, { children: _jsx("ul", { className: "list-disc list-inside", children: runtimeState.errors.map((error, index) => (_jsx("li", { children: error }, index))) }) })] })), runtimeState.submitResult === 'success' && (_jsxs(Alert, { className: "mb-4", variant: "default", children: [_jsx(CheckCircle, { className: "h-4 w-4" }), _jsx(AlertDescription, { children: "Tool submitted successfully!" })] })), _jsx("div", { className: "space-y-4 mb-6", children: rootElements.map(renderElement) }), !readOnly && loadedTool.elements.some(el => ['textInput', 'choiceSelect', 'ratingStars'].includes(el.elementId.split('-')[0])) && (_jsx("div", { className: "flex justify-end", children: _jsx(Button, { onClick: handleSubmit, disabled: runtimeState.isSubmitting, className: "bg-[var(--hive-primary)] text-white hover:bg-[var(--hive-primary-dark)]", children: runtimeState.isSubmitting ? (_jsxs(_Fragment, { children: [_jsx(Loader2, { className: "w-4 h-4 animate-spin mr-2" }), "Submitting..."] })) : ('Submit') }) })), showDebugInfo && (_jsxs("details", { className: "mt-6 p-4 bg-gray-50 rounded-lg", children: [_jsx("summary", { className: "cursor-pointer text-sm font-medium", children: "Debug Information" }), _jsx("pre", { className: "mt-2 text-xs overflow-auto", children: JSON.stringify({
+    return (_jsx(Card, { className: className, variant: "elevated", children: _jsxs("div", { className: "p-6", children: [_jsxs("div", { className: "mb-6", children: [_jsx("h3", { className: "text-lg font-semibold text-[var(--hive-text-primary)] mb-2", children: loadedTool.name }), loadedTool.description && (_jsx("p", { className: "text-sm text-[var(--hive-text-secondary)]", children: loadedTool.description }))] }), runtimeState.errors.length > 0 && (_jsxs(Alert, { className: "mb-4", variant: "destructive", children: [_jsx(AlertCircle, { className: "h-4 w-4" }), _jsx(AlertDescription, { children: _jsx("ul", { className: "list-disc list-inside", children: runtimeState.errors.map((error, index) => (_jsx("li", { children: error }, index))) }) })] })), runtimeState.submitResult === 'success' && (_jsxs(Alert, { className: "mb-4", variant: "primary", children: [_jsx(CheckCircle, { className: "h-4 w-4" }), _jsx(AlertDescription, { children: "Tool submitted successfully!" })] })), _jsx("div", { className: "space-y-4 mb-6", children: rootElements.map(renderElement) }), !readOnly && loadedTool.elements.some(el => ['textInput', 'choiceSelect', 'ratingStars'].includes(el.elementId.split('-')[0])) && (_jsx("div", { className: "flex justify-end", children: _jsx(Button, { onClick: handleSubmit, disabled: runtimeState.isSubmitting, className: "bg-[var(--hive-primary)] text-[var(--hive-text-inverse)] hover:bg-[var(--hive-primary-dark)]", children: runtimeState.isSubmitting ? (_jsxs(_Fragment, { children: [_jsx(Loader2, { className: "w-4 h-4 animate-spin mr-2" }), "Submitting..."] })) : ('Submit') }) })), showDebugInfo && (_jsxs("details", { className: "mt-6 p-4 bg-gray-50 rounded-lg", children: [_jsx("summary", { className: "cursor-pointer text-sm font-medium", children: "Debug Information" }), _jsx("pre", { className: "mt-2 text-xs overflow-auto", children: JSON.stringify({
                                 toolId: loadedTool.id,
                                 elementsCount: loadedTool.elements.length,
                                 formData: runtimeState.formData,

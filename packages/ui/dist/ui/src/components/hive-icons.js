@@ -1,6 +1,6 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import React from 'react';
-import { cn } from '../../lib/utils';
+import { cn } from '../lib/utils.js';
 // HIVE Brand Logo Component
 export const HiveLogo = ({ size = 24, className, variant = 'white', alt = 'HIVE', ...props }) => {
     // Dynamic import based on variant

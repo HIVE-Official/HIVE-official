@@ -103,7 +103,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="success">✅ VARIANTS</Badge>
+            <Badge variant="emerald">✅ VARIANTS</Badge>
             Select Variants - Perfect Semantic Token Usage
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -137,7 +137,7 @@ export const CompleteShowcase: Story = {
               ]}
               placeholder="Success variant"
               label="Success"
-              variant="success"
+              variant="emerald"
               success="Selection validated successfully"
             />
             <Select
@@ -147,7 +147,7 @@ export const CompleteShowcase: Story = {
               ]}
               placeholder="Warning variant"
               label="Warning"
-              variant="warning"
+              variant="gold"
               helperText="Please review your selection"
             />
             <Select

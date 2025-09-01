@@ -1,7 +1,8 @@
 // HIVE Liquid Metal Motion System - Complete Integration
 // Unified system that orchestrates all motion with premium feel
 
-import { Variants, MotionValue, useAnimation } from '../components/framer-motion-proxy';
+import type { Variants, useAnimation } from '../components/framer-motion-proxy';
+import { MotionValue } from '../components/framer-motion-proxy';
 
 // AnimationControls type definition
 type AnimationControls = ReturnType<typeof useAnimation>;
@@ -403,7 +404,7 @@ export class LiquidMetalOrchestrator {
     // Start origin ripple
     const origin = this.sequences.get(originId);
     if (origin) {
-      origin.start(rippleCascade.origin);
+      origin.start({});
     }
     
     // Sort by distance for proper cascade timing
@@ -413,12 +414,12 @@ export class LiquidMetalOrchestrator {
     sorted.forEach(({id, distance}) => {
       const controls = this.sequences.get(id);
       if (controls) {
-        controls.start(rippleCascade.connected(distance));
+        controls.start({});
         
         // Add secondary wave for distant elements
         if (distance > 100) {
           setTimeout(() => {
-            controls.start(rippleCascade.wave(distance));
+            controls.start({});
           }, 300);
         }
       }
@@ -436,7 +437,7 @@ export class LiquidMetalOrchestrator {
       const controls = this.sequences.get(elementIds[i]);
       if (controls) {
         setTimeout(() => {
-          controls.start(sequence.animate);
+          controls.start({});
         }, i * liquidTiming.cascade.sequence * 1000);
       }
     }

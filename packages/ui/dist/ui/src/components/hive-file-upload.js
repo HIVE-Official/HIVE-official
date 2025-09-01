@@ -3,8 +3,8 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React, { useState, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cva } from 'class-variance-authority';
-import { cn } from '../../lib/utils';
-import { liquidMetal, motionDurations } from '../motion/hive-motion-system';
+import { cn } from '../lib/utils.js';
+import { liquidMetal, motionDurations } from '../motion/hive-motion-system.js';
 import { Upload, X, File, Image, Video, Music, FileText, Archive, Code, Check, AlertCircle, RefreshCw, Eye } from 'lucide-react';
 // HIVE File Upload - Magnetic Drag & Drop with Liquid Metal Motion
 // Sophisticated file upload with drag & drop, progress tracking, and visual feedback

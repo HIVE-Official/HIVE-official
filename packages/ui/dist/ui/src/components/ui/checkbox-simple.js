@@ -4,7 +4,7 @@ import { jsx as _jsx } from "react/jsx-runtime";
  * Uses standard HTML checkbox with HIVE styling
  */
 import React from 'react';
-import { cn } from '../../lib/utils';
+import { cn } from '../../lib/utils.js';
 export const Checkbox = React.forwardRef(({ className, onCheckedChange, onChange, ...props }, ref) => {
     const handleChange = (e) => {
         if (onCheckedChange) {

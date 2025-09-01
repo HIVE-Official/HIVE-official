@@ -419,9 +419,9 @@ export function ActivityFeed({
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
           <div className="w-12 h-12 bg-red-500 rounded-lg flex items-center justify-center mx-auto mb-4">
-            <User className="h-6 w-6 text-white" />
+            <User className="h-6 w-6 text-[var(--hive-text-inverse)]" />
           </div>
-          <p className="text-white mb-2">Failed to load activity feed</p>
+          <p className="text-[var(--hive-text-inverse)] mb-2">Failed to load activity feed</p>
           <p className="text-red-400 text-sm">{feedState.error}</p>
           <Button 
             onClick={refreshFeed} 
@@ -578,7 +578,7 @@ export function ActivityFeed({
                       </h3>
                       {post.author.isVerified && (
                         <div className="w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center">
-                          <User className="h-2 w-2 text-white" />
+                          <User className="h-2 w-2 text-[var(--hive-text-inverse)]" />
                         </div>
                       )}
                       <PostIcon className={`h-4 w-4 ${typeColor}`} />

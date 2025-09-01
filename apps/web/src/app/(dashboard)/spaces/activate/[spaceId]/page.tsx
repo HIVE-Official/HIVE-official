@@ -96,7 +96,7 @@ const FeatureCard = ({
             {icon}
           </div>
           <div>
-            <h3 className={`font-semibold text-sm ${isSelected ? 'text-hive-gold' : 'text-white'}`}>
+            <h3 className={`font-semibold text-sm ${isSelected ? 'text-hive-gold' : 'text-[var(--hive-text-inverse)]'}`}>
               {feature.name}
             </h3>
             {isRecommended && (
@@ -221,7 +221,7 @@ export default function SpaceActivationPage() {
       <div className="min-h-screen bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-800 flex items-center justify-center">
         <div className="text-center">
           <div className="w-8 h-8 bg-hive-gold rounded-lg animate-pulse mx-auto mb-4" />
-          <p className="text-white">Loading space activation...</p>
+          <p className="text-[var(--hive-text-inverse)]">Loading space activation...</p>
         </div>
       </div>
     );
@@ -231,7 +231,7 @@ export default function SpaceActivationPage() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-800 flex items-center justify-center">
         <Card className="p-8 text-center border-red-500/20 bg-red-500/5">
-          <h2 className="text-lg font-semibold text-white mb-2">Activation Error</h2>
+          <h2 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-2">Activation Error</h2>
           <p className="text-neutral-400 mb-4">{error}</p>
           <Button onClick={() => router.back()} className="bg-hive-gold text-hive-obsidian">
             Go Back
@@ -250,7 +250,7 @@ export default function SpaceActivationPage() {
           <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
             <CheckCircle className="h-8 w-8 text-green-400" />
           </div>
-          <h2 className="text-2xl font-bold text-white mb-4">Space Activated!</h2>
+          <h2 className="text-2xl font-bold text-[var(--hive-text-inverse)] mb-4">Space Activated!</h2>
           <p className="text-neutral-400 mb-6">
             {activationData.space.name} has been successfully activated with {selectedFeatures.length} features.
           </p>
@@ -290,13 +290,13 @@ export default function SpaceActivationPage() {
                 size="sm"
                 variant="ghost"
                 onClick={() => router.back()}
-                className="text-neutral-400 hover:text-white"
+                className="text-neutral-400 hover:text-[var(--hive-text-inverse)]"
               >
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Back
               </Button>
               <div>
-                <h1 className="text-xl font-semibold text-white">
+                <h1 className="text-xl font-semibold text-[var(--hive-text-inverse)]">
                   Activate {activationData.space.name}
                 </h1>
                 <p className="text-sm text-neutral-400">
@@ -318,7 +318,7 @@ export default function SpaceActivationPage() {
         {/* Progress Indicator */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-2xl font-bold text-white">Choose Features</h2>
+            <h2 className="text-2xl font-bold text-[var(--hive-text-inverse)]">Choose Features</h2>
             <span className="text-sm text-neutral-400">
               {selectedFeatures.length} features selected
             </span>
@@ -335,7 +335,7 @@ export default function SpaceActivationPage() {
         <div className="space-y-8">
           {Object.entries(groupedFeatures).map(([category, features]) => (
             <div key={category}>
-              <h3 className="text-lg font-semibold text-white mb-4">
+              <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4">
                 {categoryLabels[category as keyof typeof categoryLabels]}
               </h3>
               <Grid cols={2} gap="md">
@@ -357,7 +357,7 @@ export default function SpaceActivationPage() {
         {/* Activation Summary */}
         {selectedFeatures.length > 0 && (
           <Card className="mt-8 p-6 bg-gradient-to-r from-hive-gold/[0.05] to-hive-gold/[0.02] border-hive-gold/10">
-            <h3 className="text-lg font-semibold text-white mb-4">Activation Summary</h3>
+            <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4">Activation Summary</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <h4 className="text-sm font-medium text-neutral-400 mb-2">Selected Features</h4>
@@ -367,7 +367,7 @@ export default function SpaceActivationPage() {
                     return feature ? (
                       <div key={featureId} className="flex items-center gap-2 text-sm">
                         <CheckCircle className="h-4 w-4 text-hive-gold" />
-                        <span className="text-white">{feature.name}</span>
+                        <span className="text-[var(--hive-text-inverse)]">{feature.name}</span>
                       </div>
                     ) : null;
                   })}
@@ -375,7 +375,7 @@ export default function SpaceActivationPage() {
               </div>
               <div>
                 <h4 className="text-sm font-medium text-neutral-400 mb-2">What happens next?</h4>
-                <ul className="text-sm text-white space-y-1">
+                <ul className="text-sm text-[var(--hive-text-inverse)] space-y-1">
                   <li>• Features will be configured automatically</li>
                   <li>• Members can start using the space immediately</li>
                   <li>• You can modify settings anytime</li>
@@ -391,7 +391,7 @@ export default function SpaceActivationPage() {
           <Button
             variant="outline"
             onClick={() => router.back()}
-            className="border-white/20 text-white hover:bg-white/10"
+            className="border-white/20 text-[var(--hive-text-inverse)] hover:bg-white/10"
             disabled={isActivating}
           >
             Cancel

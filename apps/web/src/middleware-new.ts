@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { getAuth } from 'firebase-admin/auth';
-import { authAdmin } from '@/lib/firebase-admin';
+import { authAdmin as _authAdmin } from '@/lib/firebase-admin';
 
 /**
  * HIVE Production Middleware - Real Firebase Token Validation
@@ -93,7 +93,7 @@ export async function middleware(request: NextRequest) {
   // API routes authentication
   if (pathname.startsWith('/api/')) {
     // Public API endpoints
-    const publicApiRoutes = ['/api/health', '/api/auth/', '/api/schools'];
+    const publicApiRoutes = ['/api/health', '/api/auth/', '/api/schools', '/api/campus/detect'];
     
     if (publicApiRoutes.some(route => pathname.startsWith(route))) {
       return NextResponse.next();

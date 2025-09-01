@@ -2,8 +2,8 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { cn } from '../../lib/utils';
-import { SchoolPick, EmailGate, MagicLinkSent } from ".";
+import { cn } from '../../lib/utils.js';
+import { SchoolPick, EmailGate, MagicLinkSent } from "./index.js";
 export const AuthFlow = ({ schools, onSchoolSelect, onEmailSubmit, onCreateSchool: _onCreateSchool, className, }) => {
     const [currentStep, setCurrentStep] = useState("school-pick");
     const [selectedSchool, setSelectedSchool] = useState(null);

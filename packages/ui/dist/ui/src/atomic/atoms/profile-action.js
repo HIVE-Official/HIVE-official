@@ -2,7 +2,7 @@
 import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-runtime";
 import React from 'react';
 import { cva } from 'class-variance-authority';
-import { cn } from '../../lib/utils';
+import { cn } from '../../lib/utils.js';
 import { Edit3, Settings, Share2, MessageSquare, UserPlus, MoreHorizontal, Camera, Bell, Shield, Eye, EyeOff, Heart, Bookmark, Link, Download, Upload } from 'lucide-react';
 const profileActionVariants = cva("inline-flex items-center justify-center gap-2 font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed", {
     variants: {

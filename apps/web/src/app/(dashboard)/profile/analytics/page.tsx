@@ -4,15 +4,14 @@
 // Replacing custom analytics preview with sophisticated @hive/ui components
 // Following the successful profile edit, settings, and privacy page patterns
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { 
-  PageContainer,
   Card,
   Button,
   Badge,
-  HiveModal
 } from "@hive/ui";
+import { PageContainer, Modal } from "@/components/temp-stubs";
 import { useHiveProfile } from '../../../../hooks/use-hive-profile';
 import { ErrorBoundary } from '../../../../components/error-boundary';
 import { 
@@ -26,9 +25,7 @@ import {
   Sparkles,
   Star,
   MessageSquare,
-  Calendar,
   Target,
-  Award,
   Clock,
   Zap,
   Brain,
@@ -136,7 +133,7 @@ export default function ProfileAnalyticsStorybook() {
   };
 
   // Current user context for components
-  const currentUser = useMemo(() => {
+  const _currentUser = useMemo(() => {
     if (!profile) return null;
     return {
       id: profile.identity.id,
@@ -155,7 +152,7 @@ export default function ProfileAnalyticsStorybook() {
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
             <div className="w-8 h-8 bg-hive-gold rounded-lg animate-pulse mx-auto mb-4" />
-            <p className="text-white">Loading your analytics...</p>
+            <p className="text-[var(--hive-text-inverse)]">Loading your analytics...</p>
           </div>
         </div>
       </PageContainer>
@@ -197,7 +194,7 @@ export default function ProfileAnalyticsStorybook() {
               <span className="text-sm font-medium text-hive-gold">Coming in v1 Release</span>
             </div>
             
-            <h2 className="text-3xl font-bold text-white mb-4">
+            <h2 className="text-3xl font-bold text-[var(--hive-text-inverse)] mb-4">
               Your UB Experience, Quantified
             </h2>
             <p className="text-gray-400 max-w-2xl mx-auto mb-8">
@@ -236,7 +233,7 @@ export default function ProfileAnalyticsStorybook() {
 
         {/* 📊 **ANALYTICS FEATURES GRID** */}
         <div className="mb-8">
-          <h3 className="text-xl font-semibold text-white mb-6 text-center">
+          <h3 className="text-xl font-semibold text-[var(--hive-text-inverse)] mb-6 text-center">
             Analytics Features Coming to HIVE
           </h3>
           
@@ -253,7 +250,7 @@ export default function ProfileAnalyticsStorybook() {
                   }}
                 >
                   {/* Coming Soon Overlay */}
-                  <div className="absolute inset-0 bg-gray-900/80 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-lg">
+                  <div className="absolute inset-0 bg-[var(--hive-background-primary)]/80 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-lg">
                     <div className="text-center">
                       <Lock className="h-6 w-6 text-hive-gold mx-auto mb-2" />
                       <p className="text-sm font-medium text-hive-gold">Preview Available</p>
@@ -264,7 +261,7 @@ export default function ProfileAnalyticsStorybook() {
                     <div className={`inline-flex items-center justify-center w-12 h-12 rounded-lg ${getFeatureColorClasses(feature.color)} mb-3`}>
                       <IconComponent className="h-6 w-6" />
                     </div>
-                    <h4 className="font-semibold text-white mb-2">{feature.name}</h4>
+                    <h4 className="font-semibold text-[var(--hive-text-inverse)] mb-2">{feature.name}</h4>
                     <p className="text-sm text-gray-400 mb-4">{feature.description}</p>
                   </div>
 
@@ -285,7 +282,7 @@ export default function ProfileAnalyticsStorybook() {
 
         {/* 🏆 **PREVIEW ANALYTICS DASHBOARD** */}
         <Card className="p-6 mb-8">
-          <h3 className="text-xl font-semibold text-white mb-6 text-center">
+          <h3 className="text-xl font-semibold text-[var(--hive-text-inverse)] mb-6 text-center">
             Preview: Your Analytics Dashboard
           </h3>
           
@@ -311,7 +308,7 @@ export default function ProfileAnalyticsStorybook() {
 
         {/* 🎯 **UB STUDENT SUCCESS BENEFITS** */}
         <Card className="p-8 border-hive-gold/20 bg-gradient-to-br from-hive-gold/5 to-blue-500/5">
-          <h3 className="text-xl font-semibold text-white mb-6 text-center">
+          <h3 className="text-xl font-semibold text-[var(--hive-text-inverse)] mb-6 text-center">
             Why Analytics Matter for UB Students
           </h3>
           
@@ -320,7 +317,7 @@ export default function ProfileAnalyticsStorybook() {
               <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-500/10 rounded-xl mb-4">
                 <Clock className="h-8 w-8 text-blue-400" />
               </div>
-              <h4 className="font-semibold text-white mb-2">Optimize Study Time</h4>
+              <h4 className="font-semibold text-[var(--hive-text-inverse)] mb-2">Optimize Study Time</h4>
               <p className="text-sm text-gray-400">
                 Identify your peak productivity hours and optimize your study schedule around UB's academic calendar
               </p>
@@ -330,7 +327,7 @@ export default function ProfileAnalyticsStorybook() {
               <div className="inline-flex items-center justify-center w-16 h-16 bg-green-500/10 rounded-xl mb-4">
                 <Users className="h-8 w-8 text-green-400" />
               </div>
-              <h4 className="font-semibold text-white mb-2">Campus Networking</h4>
+              <h4 className="font-semibold text-[var(--hive-text-inverse)] mb-2">Campus Networking</h4>
               <p className="text-sm text-gray-400">
                 Track your social engagement and discover networking opportunities within the UB community
               </p>
@@ -340,7 +337,7 @@ export default function ProfileAnalyticsStorybook() {
               <div className="inline-flex items-center justify-center w-16 h-16 bg-purple-500/10 rounded-xl mb-4">
                 <TrendingUp className="h-8 w-8 text-purple-400" />
               </div>
-              <h4 className="font-semibold text-white mb-2">Academic Progress</h4>
+              <h4 className="font-semibold text-[var(--hive-text-inverse)] mb-2">Academic Progress</h4>
               <p className="text-sm text-gray-400">
                 Set semester goals and track your academic and extracurricular development at UB
               </p>
@@ -350,7 +347,7 @@ export default function ProfileAnalyticsStorybook() {
 
         {/* 📧 **WAITLIST CALL TO ACTION** */}
         <Card className="p-8 text-center border-hive-gold/20 bg-gradient-to-r from-hive-gold/5 to-purple-500/5">
-          <h3 className="text-xl font-semibold text-white mb-4">
+          <h3 className="text-xl font-semibold text-[var(--hive-text-inverse)] mb-4">
             Ready to Unlock Your UB Analytics?
           </h3>
           <p className="text-gray-400 mb-6 max-w-2xl mx-auto">
@@ -391,7 +388,7 @@ export default function ProfileAnalyticsStorybook() {
         </Card>
 
         {/* 🚨 **PREVIEW MODAL** */}
-        <HiveModal
+        <Modal
           open={showPreviewModal}
           onClose={() => {
             setShowPreviewModal(false);
@@ -403,7 +400,7 @@ export default function ProfileAnalyticsStorybook() {
           <div className="space-y-6">
             {selectedFeature ? (
               <div>
-                <h4 className="font-semibold text-white mb-4">{selectedFeature.name}</h4>
+                <h4 className="font-semibold text-[var(--hive-text-inverse)] mb-4">{selectedFeature.name}</h4>
                 <div className="space-y-3">
                   {selectedFeature.metrics.map((metric, index) => (
                     <div key={index} className="flex items-center justify-between p-3 bg-gray-800 rounded-lg">
@@ -415,7 +412,7 @@ export default function ProfileAnalyticsStorybook() {
               </div>
             ) : (
               <div>
-                <h4 className="font-semibold text-white mb-4">Sample Weekly Achievement</h4>
+                <h4 className="font-semibold text-[var(--hive-text-inverse)] mb-4">Sample Weekly Achievement</h4>
                 <div className="space-y-3">
                   {mockAnalyticsData.achievements.map((achievement, index) => (
                     <div key={index} className="flex items-start gap-3 p-4 bg-gray-800 rounded-lg">
@@ -423,7 +420,7 @@ export default function ProfileAnalyticsStorybook() {
                         <achievement.icon className="h-4 w-4" />
                       </div>
                       <div>
-                        <h5 className="font-medium text-white">{achievement.title}</h5>
+                        <h5 className="font-medium text-[var(--hive-text-inverse)]">{achievement.title}</h5>
                         <p className="text-sm text-gray-400">{achievement.description}</p>
                         <p className="text-xs text-gray-500 mt-1">{achievement.date}</p>
                       </div>
@@ -446,7 +443,7 @@ export default function ProfileAnalyticsStorybook() {
               </Button>
             </div>
           </div>
-        </HiveModal>
+        </Modal>
       </PageContainer>
     </ErrorBoundary>
   );
@@ -470,7 +467,7 @@ export default function ProfileAnalyticsStorybook() {
  * - Sophisticated PageContainer with breadcrumbs and actions
  * - Card components with consistent styling and hover effects
  * - Enhanced Button components with variants and states
- * - HiveModal with sophisticated preview functionality
+ * - Modal with sophisticated preview functionality
  * - UB-specific analytics context and messaging
  * 
  * 🎓 **ENHANCED UB STUDENT CONTEXT**:

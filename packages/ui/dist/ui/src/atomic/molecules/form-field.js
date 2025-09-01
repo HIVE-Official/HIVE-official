@@ -1,9 +1,9 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from 'react';
-import { cn } from '../../lib/utils';
-import { InputEnhanced as Input } from '../atoms/input-enhanced';
-import { Text } from '../atoms/text';
+import { cn } from '../../lib/utils.js';
+import { Input as Input } from '../atoms/input-enhanced.js';
+import { Text } from '../atoms/text.js';
 export const FormField = ({ label, description, error, required = false, children, className }) => {
     // Generate unique ID for accessibility
     const fieldId = React.useId();

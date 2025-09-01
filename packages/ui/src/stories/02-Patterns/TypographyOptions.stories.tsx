@@ -115,7 +115,7 @@ export const AllTypographyOptions: Story = {
               </div>
               
               <div>
-                <MinimalTypography variant="accent" as="span">
+                <MinimalTypography variant="secondary" as="span">
                   Accent text for highlights and important information
                 </MinimalTypography>
                 <p className="text-sm text-white/60 mt-1">Accent text for emphasis</p>
@@ -133,7 +133,7 @@ export const AllTypographyOptions: Story = {
               <MinimalTypography variant="caption" as="span">
                 Posted 2 hours ago • CS Building
               </MinimalTypography>
-              <MinimalTypography variant="accent" as="span">
+              <MinimalTypography variant="secondary" as="span">
                 12 members joined
               </MinimalTypography>
             </div>

@@ -11,8 +11,12 @@ import {
 import { Button } from '../../atomic/atoms/button-enhanced';
 import { Card } from '../../atomic/molecules/card';
 
-const meta: Meta = {
+// Mock component for Storybook CSF compliance
+const PageLayoutsShell = () => <div>Page Layouts Shell</div>;
+
+const meta: Meta<typeof PageLayoutsShell> = {
   title: '05-Shell/Page Layouts',
+  component: PageLayoutsShell,
   parameters: {
     layout: 'fullscreen',
     docs: {

@@ -1,8 +1,4 @@
 'use client';
-/**
- * Mobile Interaction Hooks
- * Provides touch gestures, pull-to-refresh, and mobile-specific interactions
- */
 import { useState, useEffect, useRef, useCallback } from 'react';
 // Haptic feedback hook
 export function useHapticFeedback() {

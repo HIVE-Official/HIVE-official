@@ -14,6 +14,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/ta
 import { ProfileDashboard, defaultProfileDashboardProps } from '../../components/profile/profile-dashboard';
 import { FirebaseProvider } from '../../contexts/firebase-context';
 
+const ProfileSystemIndexDemo = () => (
+  <div className="p-6 space-y-8">
+    <h2 className="text-2xl font-semibold">HIVE Profile System Index</h2>
+    <p className="text-muted-foreground">Complete profile system components and features</p>
+  </div>
+);
+
 import { 
   Users, 
   Calendar, 
@@ -57,7 +64,8 @@ import {
   Sparkles
 } from 'lucide-react';
 
-const meta: Meta = {
+const meta: Meta<typeof ProfileSystemIndexDemo> = {
+  component: ProfileSystemIndexDemo,
   title: '00-Profile System/🏠 Profile System Index',
   parameters: {
     layout: 'fullscreen',

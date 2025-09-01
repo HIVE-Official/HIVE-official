@@ -112,7 +112,7 @@ export const AllVariants: Story = {
                     <Plus className="w-4 h-4 mr-2" />
                     Join Campus
                   </Button>
-                  <Button variant="accent" className="w-full">
+                  <Button variant="secondary" className="w-full">
                     <Zap className="w-4 h-4 mr-2" />
                     Create Space
                   </Button>
@@ -167,7 +167,7 @@ export const AllVariants: Story = {
               <Button variant="secondary" size="icon">
                 <Search className="w-4 h-4" />
               </Button>
-              <Button variant="accent" size="icon-lg">
+              <Button variant="secondary" size="icon-lg">
                 <Star className="w-5 h-5" />
               </Button>
             </div>
@@ -260,7 +260,7 @@ export const LoadingStates: Story = {
           <Button variant="secondary" loading className="w-full">
             Loading Spaces...
           </Button>
-          <Button variant="accent" loading className="w-full">
+          <Button variant="secondary" loading className="w-full">
             Creating Space...
           </Button>
           <RitualButton variant="primary" loading className="w-full">

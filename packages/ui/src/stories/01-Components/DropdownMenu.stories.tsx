@@ -167,7 +167,7 @@ export const AllVariants: Story = {
                   <DropdownMenuSeparator />
                   <DropdownMenuItem>Critical Action</DropdownMenuItem>
                   <DropdownMenuItem>Important Task</DropdownMenuItem>
-                  <DropdownMenuItem variant="accent">Special Feature</DropdownMenuItem>
+                  <DropdownMenuItem variant="secondary">Special Feature</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
 
@@ -323,7 +323,7 @@ export const AllVariants: Story = {
               <h3 className="text-lg font-medium text-white">Create New</h3>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="accent">
+                  <Button variant="secondary">
                     <Plus className="w-4 h-4 mr-2" />
                     Create
                   </Button>
@@ -331,7 +331,7 @@ export const AllVariants: Story = {
                 <DropdownMenuContent variant="elevated" className="w-48">
                   <DropdownMenuLabel>Campus Content</DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem variant="accent">
+                  <DropdownMenuItem variant="secondary">
                     <MessageCircle className="mr-2 h-4 w-4" />
                     <span>Discussion Post</span>
                   </DropdownMenuItem>
@@ -589,7 +589,7 @@ export const AllVariants: Story = {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent variant="primary">
-                    <DropdownMenuItem variant="accent">Register</DropdownMenuItem>
+                    <DropdownMenuItem variant="secondary">Register</DropdownMenuItem>
                     <DropdownMenuItem>Add to Calendar</DropdownMenuItem>
                     <DropdownMenuItem>Share Event</DropdownMenuItem>
                     <DropdownMenuSeparator />

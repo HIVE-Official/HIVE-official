@@ -1,6 +1,16 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-const meta: Meta = {
+const HiveTypography = () => (
+  <div className="space-y-6 p-6">
+    <div>
+      <h2 className="text-2xl font-bold mb-4">HIVE Typography</h2>
+      <p className="text-muted-foreground">Space Grotesk and Geist fonts</p>
+    </div>
+  </div>
+);
+
+const meta: Meta<typeof HiveTypography> = {
+  component: HiveTypography,
   title: '🎨 Design System/Typography',
   parameters: {
     docs: {
@@ -12,7 +22,7 @@ const meta: Meta = {
 };
 
 export default meta;
-type Story = StoryObj;
+type Story = StoryObj<typeof HiveTypography>;
 
 export const TypographyScale: Story = {
   render: () => (

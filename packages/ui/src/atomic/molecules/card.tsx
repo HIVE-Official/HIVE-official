@@ -76,6 +76,7 @@ export const Card: React.FC<CardProps> = ({
   ].join(' ');
 
   if (hoverable || variant === 'interactive') {
+    const { onDrag, onDragStart, onDragEnd, onAnimationStart, ...filteredProps } = props;
     return (
       <motion.div
         className={cn(baseClasses, className)}
@@ -88,7 +89,7 @@ export const Card: React.FC<CardProps> = ({
           duration: 0.2, 
           ease: 'easeOut' 
         }}
-        {...props}
+        {...filteredProps}
       >
         {children}
       </motion.div>

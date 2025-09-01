@@ -3,14 +3,14 @@ import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva } from "class-variance-authority";
 import { Loader2 } from "lucide-react";
-import { cn } from "../lib/utils";
+import { cn } from "../../lib/utils.js";
 // REFINED BUTTON: Vercel-inspired precision with HIVE energy
 const refinedButtonVariants = cva("inline-flex items-center justify-center whitespace-nowrap font-medium relative overflow-hidden transition-all duration-200 ease-out focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 select-none group", {
     variants: {
         variant: {
             // TECH PRIMARY: Clean, confident, with subtle gold accent
             primary: [
-                "bg-black border border-white/10 text-white",
+                "bg-black border border-white/10 text-[var(--hive-text-inverse)]",
                 "hover:bg-black/90 hover:border-accent/30",
                 "focus-visible:ring-1 focus-visible:ring-accent",
                 "active:scale-[0.98] active:bg-black/80",
@@ -18,14 +18,14 @@ const refinedButtonVariants = cva("inline-flex items-center justify-center white
             ],
             // TECH SECONDARY: Sophisticated border treatment
             secondary: [
-                "bg-transparent border border-white/20 text-white",
+                "bg-transparent border border-white/20 text-[var(--hive-text-inverse)]",
                 "hover:bg-white/5 hover:border-accent/50",
                 "focus-visible:ring-1 focus-visible:ring-accent",
                 "active:scale-[0.98]"
             ],
             // CAMPUS ACCENT: Gold highlight for key actions
             accent: [
-                "bg-accent text-black border border-accent",
+                "bg-accent text-[var(--hive-text-primary)] border border-accent",
                 "hover:bg-accent/90 hover:shadow-lg hover:shadow-accent/20",
                 "focus-visible:ring-1 focus-visible:ring-accent/50 focus-visible:ring-offset-1",
                 "active:scale-[0.98]",
@@ -33,7 +33,7 @@ const refinedButtonVariants = cva("inline-flex items-center justify-center white
             ],
             // GHOST: Minimal, clean hover states
             ghost: [
-                "text-white/80 hover:text-white hover:bg-white/5",
+                "text-[var(--hive-text-inverse)]/80 hover:text-[var(--hive-text-inverse)] hover:bg-white/5",
                 "focus-visible:ring-1 focus-visible:ring-accent",
                 "active:scale-[0.98]"
             ],
@@ -127,23 +127,23 @@ const refinedTypographyVariants = cva("transition-all duration-200 ease-out", {
             // CAMPUS TITLE: Energy with sophistication
             title: [
                 "text-2xl md:text-3xl font-semibold tracking-tight",
-                "text-white",
+                "text-[var(--hive-text-inverse)]",
                 "hover:text-accent transition-colors duration-300"
             ],
             // TECH SUBTITLE: Clean hierarchy
             subtitle: [
                 "text-lg md:text-xl font-medium",
-                "text-white/70"
+                "text-[var(--hive-text-inverse)]/70"
             ],
             // BODY: Readable, clean
             body: [
                 "text-base leading-relaxed",
-                "text-white/80"
+                "text-[var(--hive-text-inverse)]/80"
             ],
             // CAPTION: Supporting text
             caption: [
                 "text-sm",
-                "text-white/60"
+                "text-[var(--hive-text-inverse)]/60"
             ],
             // ACCENT: Gold highlights for key info
             accent: [
@@ -176,16 +176,16 @@ const RefinedTypography = React.forwardRef(({ className, variant, align, as: Com
 });
 RefinedTypography.displayName = "RefinedTypography";
 // REFINED INPUT: Clean, functional, accessible
-const refinedInputVariants = cva("flex w-full rounded-lg border bg-transparent transition-all duration-200 file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-white/40 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50", {
+const refinedInputVariants = cva("flex w-full rounded-lg border bg-transparent transition-all duration-200 file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-[var(--hive-text-inverse)]/40 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50", {
     variants: {
         variant: {
             default: [
-                "border-white/20 text-white px-3 py-2",
+                "border-white/20 text-[var(--hive-text-inverse)] px-3 py-2",
                 "focus-visible:border-accent focus-visible:ring-1 focus-visible:ring-accent/20",
                 "hover:border-white/30"
             ],
             filled: [
-                "border-white/10 bg-white/5 text-white px-3 py-2",
+                "border-white/10 bg-white/5 text-[var(--hive-text-inverse)] px-3 py-2",
                 "focus-visible:border-accent focus-visible:bg-white/10",
                 "hover:bg-white/10"
             ]
@@ -209,12 +209,12 @@ RefinedInput.displayName = "RefinedInput";
 const refinedBadgeVariants = cva("inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2", {
     variants: {
         variant: {
-            default: "bg-white/10 text-white/80 hover:bg-white/20",
+            default: "bg-white/10 text-[var(--hive-text-inverse)]/80 hover:bg-white/20",
             accent: "bg-accent/20 text-accent border border-accent/30",
             success: "bg-surface/50 text-foreground border border-border",
             warning: "bg-surface/50 text-foreground border border-border",
             destructive: "bg-surface/50 text-muted-foreground border border-border",
-            outline: "border border-white/20 text-white/80 hover:bg-white/5"
+            outline: "border border-white/20 text-[var(--hive-text-inverse)]/80 hover:bg-white/5"
         }
     },
     defaultVariants: {

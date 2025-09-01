@@ -234,7 +234,7 @@ export function ModerationQueue() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white">Moderation Queue</h1>
+          <h1 className="text-2xl font-bold text-[var(--hive-text-inverse)]">Moderation Queue</h1>
           <p className="text-gray-400">Review and moderate reported content</p>
         </div>
         
@@ -252,7 +252,7 @@ export function ModerationQueue() {
       {/* Statistics */}
       {stats && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card className="bg-gray-900 border-gray-800">
+          <Card className="bg-[var(--hive-background-primary)] border-gray-800">
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center space-x-2 text-sm font-medium">
                 <Clock className="h-5 w-5 text-yellow-500" />
@@ -260,12 +260,12 @@ export function ModerationQueue() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-white">{stats.pendingReports}</div>
+              <div className="text-2xl font-bold text-[var(--hive-text-inverse)]">{stats.pendingReports}</div>
               <p className="text-sm text-gray-400">Awaiting review</p>
             </CardContent>
           </Card>
 
-          <Card className="bg-gray-900 border-gray-800">
+          <Card className="bg-[var(--hive-background-primary)] border-gray-800">
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center space-x-2 text-sm font-medium">
                 <Calendar className="h-5 w-5 text-blue-500" />
@@ -273,12 +273,12 @@ export function ModerationQueue() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-white">{stats.todayReports}</div>
+              <div className="text-2xl font-bold text-[var(--hive-text-inverse)]">{stats.todayReports}</div>
               <p className="text-sm text-gray-400">New today</p>
             </CardContent>
           </Card>
 
-          <Card className="bg-gray-900 border-gray-800">
+          <Card className="bg-[var(--hive-background-primary)] border-gray-800">
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center space-x-2 text-sm font-medium">
                 <CheckCircle className="h-5 w-5 text-green-500" />
@@ -286,7 +286,7 @@ export function ModerationQueue() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-white">{stats.resolvedToday}</div>
+              <div className="text-2xl font-bold text-[var(--hive-text-inverse)]">{stats.resolvedToday}</div>
               <p className="text-sm text-gray-400">Processed</p>
             </CardContent>
           </Card>
@@ -294,7 +294,7 @@ export function ModerationQueue() {
       )}
 
       {/* Filters */}
-      <Card className="bg-gray-900 border-gray-800">
+      <Card className="bg-[var(--hive-background-primary)] border-gray-800">
         <CardContent className="pt-6">
           <div className="flex items-center space-x-4">
             <Filter className="h-5 w-5 text-gray-400" />
@@ -359,18 +359,18 @@ export function ModerationQueue() {
       {/* Reports List */}
       <div className="space-y-4">
         {reports.length === 0 ? (
-          <Card className="bg-gray-900 border-gray-800">
+          <Card className="bg-[var(--hive-background-primary)] border-gray-800">
             <CardContent className="pt-6">
               <div className="text-center py-12">
                 <CheckCircle className="h-12 w-12 text-green-500 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-white mb-2">Queue is Clear!</h3>
+                <h3 className="text-lg font-medium text-[var(--hive-text-inverse)] mb-2">Queue is Clear!</h3>
                 <p className="text-gray-400">No reports match the current filters.</p>
               </div>
             </CardContent>
           </Card>
         ) : (
           reports.map((report) => (
-            <Card key={report.id} className="bg-gray-900 border-gray-800 hover:border-gray-700 transition-colors">
+            <Card key={report.id} className="bg-[var(--hive-background-primary)] border-gray-800 hover:border-gray-700 transition-colors">
               <CardContent className="pt-6">
                 <div className="flex items-start justify-between">
                   <div className="flex-1 space-y-3">
@@ -396,7 +396,7 @@ export function ModerationQueue() {
 
                     {/* Content */}
                     <div>
-                      <p className="text-white font-medium mb-1">
+                      <p className="text-[var(--hive-text-inverse)] font-medium mb-1">
                         Report #{report.id.slice(-8)}
                       </p>
                       <p className="text-gray-300 text-sm line-clamp-2">
@@ -527,7 +527,7 @@ export function ModerationQueue() {
             </Alert>
 
             <div>
-              <label className="text-sm font-medium text-white mb-2 block">
+              <label className="text-sm font-medium text-[var(--hive-text-inverse)] mb-2 block">
                 Reason (required)
               </label>
               <Textarea
@@ -539,7 +539,7 @@ export function ModerationQueue() {
             </div>
 
             <div>
-              <label className="text-sm font-medium text-white mb-2 block">
+              <label className="text-sm font-medium text-[var(--hive-text-inverse)] mb-2 block">
                 Additional Notes (optional)
               </label>
               <Textarea
@@ -607,11 +607,11 @@ function ReportDetailsPanel({
         <TabsContent value="details" className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <h4 className="font-medium text-white mb-2">Report Information</h4>
+              <h4 className="font-medium text-[var(--hive-text-inverse)] mb-2">Report Information</h4>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
                   <span className="text-gray-400">ID:</span>
-                  <span className="text-white">{report.id}</span>
+                  <span className="text-[var(--hive-text-inverse)]">{report.id}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-400">Category:</span>
@@ -623,32 +623,32 @@ function ReportDetailsPanel({
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-400">Content Type:</span>
-                  <span className="text-white">{report.contentType}</span>
+                  <span className="text-[var(--hive-text-inverse)]">{report.contentType}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-400">Created:</span>
-                  <span className="text-white">{new Date(report.createdAt).toLocaleString()}</span>
+                  <span className="text-[var(--hive-text-inverse)]">{new Date(report.createdAt).toLocaleString()}</span>
                 </div>
               </div>
             </div>
             
             <div>
-              <h4 className="font-medium text-white mb-2">Reporter</h4>
+              <h4 className="font-medium text-[var(--hive-text-inverse)] mb-2">Reporter</h4>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
                   <span className="text-gray-400">Name:</span>
-                  <span className="text-white">{report.reporterInfo.name}</span>
+                  <span className="text-[var(--hive-text-inverse)]">{report.reporterInfo.name}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-400">Trust Score:</span>
-                  <span className="text-white">{Math.round(report.reporterInfo.trustScore * 100)}%</span>
+                  <span className="text-[var(--hive-text-inverse)]">{Math.round(report.reporterInfo.trustScore * 100)}%</span>
                 </div>
               </div>
             </div>
           </div>
           
           <div>
-            <h4 className="font-medium text-white mb-2">Description</h4>
+            <h4 className="font-medium text-[var(--hive-text-inverse)] mb-2">Description</h4>
             <p className="text-gray-300 bg-gray-800 p-3 rounded border">
               {report.description}
             </p>
@@ -656,7 +656,7 @@ function ReportDetailsPanel({
 
           {report.evidence && (
             <div>
-              <h4 className="font-medium text-white mb-2">Evidence</h4>
+              <h4 className="font-medium text-[var(--hive-text-inverse)] mb-2">Evidence</h4>
               <div className="bg-gray-800 p-3 rounded border">
                 {report.evidence.additionalContext && (
                   <p className="text-gray-300 mb-2">{report.evidence.additionalContext}</p>
@@ -695,13 +695,13 @@ function ReportDetailsPanel({
           {report.aiAnalysis ? (
             <div className="space-y-4">
               <div>
-                <h4 className="font-medium text-white mb-2">AI Assessment</h4>
+                <h4 className="font-medium text-[var(--hive-text-inverse)] mb-2">AI Assessment</h4>
                 <div className="bg-gray-800 p-4 rounded border space-y-3">
                   <div className="flex items-center justify-between">
                     <span className="text-gray-400">Confidence:</span>
                     <div className="flex items-center space-x-2">
                       <Progress value={report.aiAnalysis.confidence * 100} className="w-20" />
-                      <span className="text-white">{Math.round(report.aiAnalysis.confidence * 100)}%</span>
+                      <span className="text-[var(--hive-text-inverse)]">{Math.round(report.aiAnalysis.confidence * 100)}%</span>
                     </div>
                   </div>
                   <div className="flex justify-between">
@@ -712,7 +712,7 @@ function ReportDetailsPanel({
                     <span className="text-gray-400">Risk Score:</span>
                     <div className="flex items-center space-x-2">
                       <Progress value={report.aiAnalysis.riskScore * 100} className="w-20" />
-                      <span className="text-white">{Math.round(report.aiAnalysis.riskScore * 100)}%</span>
+                      <span className="text-[var(--hive-text-inverse)]">{Math.round(report.aiAnalysis.riskScore * 100)}%</span>
                     </div>
                   </div>
                   <div>

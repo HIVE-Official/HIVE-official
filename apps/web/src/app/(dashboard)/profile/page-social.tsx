@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation';
 import { useSession } from '@/hooks/use-session';
 import { useProfile } from '@/hooks/use-profile';
 import { SocialProfileLayout } from '@hive/ui/components/profile/social-profile-layout';
-import { Skeleton } from '@hive/ui';
+import { Skeleton, Button } from '@hive/ui';
 import '@hive/ui/styles/test-minimal.css';
 
 // Mock data generator for demo purposes

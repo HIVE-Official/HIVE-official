@@ -10,8 +10,8 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from 'react';
 import { motion } from 'framer-motion';
 import { cva } from 'class-variance-authority';
-import { cn } from '../../lib/utils';
-import { HiveStructuredCard } from './card-system/hive-card-composition';
+import { cn } from '../lib/utils.js';
+import { HiveStructuredCard } from './card-system/hive-card-composition.js';
 import { BookOpen, Users, Clock, MapPin, Calendar, Award, CheckCircle, AlertCircle, XCircle, Plus, Minus, ExternalLink, Heart, Share2, Bookmark, User } from 'lucide-react';
 // ============================================================================
 // COURSE CARD SYSTEM
@@ -22,7 +22,7 @@ const hiveCourseCardVariants = cva("group transition-all duration-300", {
             open: "border-[var(--hive-status-success)] hover:shadow-[var(--hive-shadow-emerald-glow)]",
             waitlist: "border-[var(--hive-status-warning)] hover:shadow-[var(--hive-shadow-gold-glow)]",
             closed: "border-[var(--hive-status-error)] hover:shadow-[var(--hive-shadow-ruby-glow)]",
-            enrolled: "border-[var(--hive-border-gold)] shadow-[var(--hive-shadow-gold-glow)]/50",
+            enrolled: "border-[var(--hive-border-[var(--hive-brand-secondary)])] shadow-[var(--hive-shadow-gold-glow)]/50",
             completed: "border-[var(--hive-status-success)] bg-[var(--hive-overlay-glass)]",
         },
         difficulty: {

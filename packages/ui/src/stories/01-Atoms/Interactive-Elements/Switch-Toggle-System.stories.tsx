@@ -4,7 +4,16 @@ import { Bell, Eye, EyeOff, Shield, Users, Calendar, MapPin, Smartphone, Mail, M
 import { Switch } from '../../../components/ui/switch';
 import { Label } from '../../../components/ui/label';
 
-const meta: Meta = {
+// Create a component wrapper for the story
+const SwitchToggleSystem = () => (
+  <div className="p-6 space-y-8">
+    <h2 className="text-2xl font-semibold">Switch & Toggle System</h2>
+    <p className="text-muted-foreground">Campus preference and privacy control system</p>
+  </div>
+);
+
+const meta: Meta<typeof SwitchToggleSystem> = {
+  component: SwitchToggleSystem,
   title: '02-Atoms/Interactive-Elements/Switch & Toggle System',
   parameters: {
     docs: {

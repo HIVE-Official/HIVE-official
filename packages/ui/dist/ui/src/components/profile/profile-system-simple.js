@@ -1,14 +1,12 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { ProfileHeader } from './profile-header';
-import { MySpacesFeed } from './my-spaces-feed';
-import { CalendarCard } from './calendar-card';
-import { adaptSmartCalendarProps } from './calendar-data-adapter';
-import { CampusConnections } from './campus-connections';
-import { HiveLabSection } from './hive-lab-section';
-import { ProfileStats } from './profile-stats';
-import { HiveCard } from '../hive-card';
-import { HiveButton } from '../hive-button';
+import { ProfileHeader } from './profile-header.js';
+import { MySpacesFeed } from './my-spaces-feed.js';
+import { CalendarCard } from './calendar-card.js';
+import { adaptSmartCalendarProps } from './calendar-data-adapter.js';
+import { CampusConnections } from './campus-connections.js';
+import { HiveLabSection } from './hive-lab-section.js';
+import { ProfileStats } from './profile-stats.js';
 import { Loader2, WifiOff } from 'lucide-react';
 export const ProfileSystem = ({ user, spaces = [], events = [], connections = [], hiveLab, isLoading = false, isMobile = false, isTablet = false, showOnboarding = false, showPrivacyBanner = false, showGraduationBanner = false, showErrors = false, completionStatus, errors, loadingStates, onSpaceClick, onEventClick, onConnectionClick, onEditProfile, onPrivacySettings, onJoinSpace, onCreateTool }) => {
     // Loading state
@@ -17,7 +15,7 @@ export const ProfileSystem = ({ user, spaces = [], events = [], connections = []
     }
     // Error state
     if (showErrors && errors?.apiError) {
-        return (_jsx("div", { className: "min-h-screen bg-hive-background-primary p-4", children: _jsx("div", { className: "max-w-7xl mx-auto", children: _jsx("div", { className: "flex items-center justify-center py-16", children: _jsxs(HiveCard, { className: "p-4 text-center", children: [_jsx(WifiOff, { className: "h-12 w-12 text-hive-ruby mx-auto mb-4" }), _jsx("h2", { className: "text-xl font-semibold text-hive-text-primary mb-2", children: "Connection Error" }), _jsx("p", { className: "text-hive-text-secondary mb-4", children: errors.apiError }), _jsx(HiveButton, { onClick: () => window.location.reload(), children: "Try Again" })] }) }) }) }));
+        return (_jsx("div", { className: "min-h-screen bg-hive-background-primary p-4", children: _jsx("div", { className: "max-w-7xl mx-auto", children: _jsx("div", { className: "flex items-center justify-center py-16", children: _jsxs(Card, { className: "p-4 text-center", children: [_jsx(WifiOff, { className: "h-12 w-12 text-hive-ruby mx-auto mb-4" }), _jsx("h2", { className: "text-xl font-semibold text-hive-text-primary mb-2", children: "Connection Error" }), _jsx("p", { className: "text-hive-text-secondary mb-4", children: errors.apiError }), _jsx(Button, { onClick: () => window.location.reload(), children: "Try Again" })] }) }) }) }));
     }
     // Mobile layout
     if (isMobile) {

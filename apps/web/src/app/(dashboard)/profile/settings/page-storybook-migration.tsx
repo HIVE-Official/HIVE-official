@@ -12,7 +12,7 @@ import {
   Button,
   Switch,
   FormField,
-  HiveModal,
+  Modal,
   HiveConfirmModal,
   Badge,
   Tabs,
@@ -274,7 +274,7 @@ export default function ProfileSettingsStorybook() {
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
             <div className="w-8 h-8 bg-hive-gold rounded-lg animate-pulse mx-auto mb-4" />
-            <p className="text-white">Loading your settings...</p>
+            <p className="text-[var(--hive-text-inverse)]">Loading your settings...</p>
           </div>
         </div>
       </PageContainer>
@@ -349,7 +349,7 @@ export default function ProfileSettingsStorybook() {
           <TabsContent value="notifications" className="space-y-6">
             {/* Email Notifications */}
             <Card className="p-6">
-              <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+              <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4 flex items-center gap-2">
                 <Mail className="h-5 w-5 text-hive-gold" />
                 Email Notifications
               </h3>
@@ -409,7 +409,7 @@ export default function ProfileSettingsStorybook() {
 
             {/* Push Notifications */}
             <Card className="p-6">
-              <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+              <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4 flex items-center gap-2">
                 <Smartphone className="h-5 w-5 text-hive-gold" />
                 Push Notifications
               </h3>
@@ -452,7 +452,7 @@ export default function ProfileSettingsStorybook() {
           <TabsContent value="privacy" className="space-y-6">
             {/* Profile Visibility */}
             <Card className="p-6">
-              <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+              <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4 flex items-center gap-2">
                 <Eye className="h-5 w-5 text-hive-gold" />
                 Profile Visibility
               </h3>
@@ -512,7 +512,7 @@ export default function ProfileSettingsStorybook() {
 
             {/* 👻 **UB GHOST MODE** */}
             <Card className="p-6 border-purple-500/20 bg-purple-500/5">
-              <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+              <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4 flex items-center gap-2">
                 <Moon className="h-5 w-5 text-purple-400" />
                 Ghost Mode
                 <Badge variant="secondary" className="text-xs">UB Exclusive</Badge>
@@ -549,7 +549,7 @@ export default function ProfileSettingsStorybook() {
           {/* ⚙️ **ACCOUNT SETTINGS** */}
           <TabsContent value="account" className="space-y-6">
             <Card className="p-6">
-              <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+              <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4 flex items-center gap-2">
                 <SettingsIcon className="h-5 w-5 text-hive-gold" />
                 Account Preferences
               </h3>
@@ -589,7 +589,7 @@ export default function ProfileSettingsStorybook() {
 
             {/* 🏫 **UB STUDENT ACCOUNT INFO** */}
             <Card className="p-6">
-              <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+              <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4 flex items-center gap-2">
                 <Users className="h-5 w-5 text-hive-gold" />
                 UB Student Account
               </h3>
@@ -598,7 +598,7 @@ export default function ProfileSettingsStorybook() {
                 <div className="flex items-center justify-between py-2">
                   <span className="text-sm text-gray-300">Email</span>
                   <div className="flex items-center gap-2">
-                    <span className="text-sm text-white">{currentUser?.email}</span>
+                    <span className="text-sm text-[var(--hive-text-inverse)]">{currentUser?.email}</span>
                     {currentUser?.isVerified && (
                       <Badge variant="success" className="text-xs">Verified</Badge>
                     )}
@@ -607,7 +607,7 @@ export default function ProfileSettingsStorybook() {
                 
                 <div className="flex items-center justify-between py-2">
                   <span className="text-sm text-gray-300">Campus</span>
-                  <span className="text-sm text-white">University at Buffalo</span>
+                  <span className="text-sm text-[var(--hive-text-inverse)]">University at Buffalo</span>
                 </div>
                 
                 <div className="flex items-center justify-between py-2">
@@ -621,7 +621,7 @@ export default function ProfileSettingsStorybook() {
           {/* 🔒 **SECURITY SETTINGS** */}
           <TabsContent value="security" className="space-y-6">
             <Card className="p-6">
-              <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+              <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4 flex items-center gap-2">
                 <Shield className="h-5 w-5 text-hive-gold" />
                 Account Security
               </h3>
@@ -641,7 +641,7 @@ export default function ProfileSettingsStorybook() {
 
             {/* ⚠️ **DANGER ZONE** */}
             <Card className="p-6 border-red-500/20 bg-red-500/5">
-              <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+              <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4 flex items-center gap-2">
                 <AlertTriangle className="h-5 w-5 text-red-400" />
                 Danger Zone
               </h3>
@@ -721,7 +721,7 @@ export default function ProfileSettingsStorybook() {
  * - Sophisticated PageContainer with breadcrumbs and actions
  * - FormField components with consistent labeling and descriptions
  * - Enhanced Switch components with better UX
- * - HiveModal and HiveConfirmModal with sophisticated animations
+ * - Modal and HiveConfirmModal with sophisticated animations
  * - UB Ghost Mode feature with campus context
  * 
  * 🎓 **ENHANCED UB STUDENT CONTEXT**:

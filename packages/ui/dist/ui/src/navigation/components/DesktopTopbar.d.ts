@@ -6,7 +6,7 @@
  * with integrated search, notifications, and user menu.
  */
 import React from 'react';
-import { NavigationItem, NavigationUser } from '../core/types';
+import type { NavigationItem, NavigationUser } from '../core/types';
 interface DesktopTopbarProps {
     items: ReadonlyArray<NavigationItem>;
     user: NavigationUser;

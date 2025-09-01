@@ -2,9 +2,9 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState } from 'react';
 import { Bell, X, Check, User, Zap, MessageSquare, Heart, Calendar, Settings } from 'lucide-react';
-import { Button } from '../../atomic/atoms/button-enhanced';
-import { Avatar, AvatarImage, AvatarFallback } from '../ui/avatar';
-import { cn } from '../../lib/utils';
+import { Button } from '../../atomic/atoms/button-enhanced.js';
+import { Avatar, AvatarImage, AvatarFallback } from '../ui/avatar.js';
+import { cn } from '../../lib/utils.js';
 // Mock notifications for demo
 const mockNotifications = [
     {

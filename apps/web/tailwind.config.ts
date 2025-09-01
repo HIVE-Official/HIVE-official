@@ -21,41 +21,47 @@ const config: Config = {
       },
     },
     extend: {
+      // Font families
+      fontFamily: {
+        sans: ['Geist Sans', 'system-ui', 'sans-serif'],
+        mono: ['Geist Mono', 'ui-monospace', 'monospace'],
+        display: ['Space Grotesk', 'system-ui', 'sans-serif'],
+      },
       // Updated color names to fix Tailwind v3 warnings
       colors: {
-        // Use modern color names instead of deprecated ones
-        border: 'hsl(var(--border))',
-        input: 'hsl(var(--input))',
-        ring: 'hsl(var(--ring))',
-        background: 'hsl(var(--background))',
-        foreground: 'hsl(var(--foreground))',
+        // Use CSS custom properties directly (no hsl wrapper since our vars are already in the right format)
+        border: 'var(--border)',
+        input: 'var(--input)',
+        ring: 'var(--ring)',
+        background: 'var(--background)',
+        foreground: 'var(--foreground)',
         primary: {
-          DEFAULT: 'hsl(var(--primary))',
-          foreground: 'hsl(var(--primary-foreground))',
+          DEFAULT: 'var(--primary)',
+          foreground: 'var(--primary-foreground)',
         },
         secondary: {
-          DEFAULT: 'hsl(var(--secondary))',
-          foreground: 'hsl(var(--secondary-foreground))',
+          DEFAULT: 'var(--secondary)',
+          foreground: 'var(--secondary-foreground)',
         },
         destructive: {
-          DEFAULT: 'hsl(var(--destructive))',
-          foreground: 'hsl(var(--destructive-foreground))',
+          DEFAULT: 'var(--destructive)',
+          foreground: 'var(--destructive-foreground)',
         },
         muted: {
-          DEFAULT: 'hsl(var(--muted))',
-          foreground: 'hsl(var(--muted-foreground))',
+          DEFAULT: 'var(--muted)',
+          foreground: 'var(--muted-foreground)',
         },
         accent: {
-          DEFAULT: 'hsl(var(--accent))',
-          foreground: 'hsl(var(--accent-foreground))',
+          DEFAULT: 'var(--accent)',
+          foreground: 'var(--accent-foreground)',
         },
         popover: {
-          DEFAULT: 'hsl(var(--popover))',
-          foreground: 'hsl(var(--popover-foreground))',
+          DEFAULT: 'var(--popover)',
+          foreground: 'var(--popover-foreground)',
         },
         card: {
-          DEFAULT: 'hsl(var(--card))',
-          foreground: 'hsl(var(--card-foreground))',
+          DEFAULT: 'var(--card)',
+          foreground: 'var(--card-foreground)',
         },
         // Use modern color names (v3 compatible)
         slate: {
@@ -139,22 +145,26 @@ const config: Config = {
   plugins: [require("tailwindcss-animate")],
 };
 
-// Apply HIVE design tokens manually to avoid build issues
+// Apply HIVE design tokens using CSS custom properties
 config.theme!.extend = {
   ...config.theme!.extend,
   colors: {
     ...config.theme!.extend!.colors,
-    'hive-brand-primary': '#FFD700',
-    'hive-brand-secondary': '#1a1a1a',
-    'hive-background': '#000000',
-    'hive-background-overlay': '#111111',
-    'hive-surface': '#1a1a1a',
-    'hive-text-primary': '#ffffff',
-    'hive-text-secondary': '#cccccc',
-    'hive-text-mutedLight': '#888888',
-    'hive-border-default': '#333333',
-    'hive-gold': '#FFD700',
-    'hive-obsidian': '#0c0c0c'
+    // HIVE Design System Colors
+    'hive-background-primary': 'var(--hive-background-primary)',
+    'hive-background-secondary': 'var(--hive-background-secondary)',
+    'hive-background-tertiary': 'var(--hive-background-tertiary)',
+    'hive-text-primary': 'var(--hive-text-primary)',
+    'hive-text-secondary': 'var(--hive-text-secondary)',
+    'hive-text-muted': 'var(--hive-text-muted)',
+    'hive-brand-primary': 'var(--hive-brand-primary)',
+    'hive-brand-secondary': 'var(--hive-brand-secondary)',
+    'hive-border-primary': 'var(--hive-border-primary)',
+    'hive-border-secondary': 'var(--hive-border-secondary)',
+    'hive-status-success': 'var(--hive-status-success)',
+    'hive-status-error': 'var(--hive-status-error)',
+    'hive-status-warning': 'var(--hive-status-warning)',
+    'hive-status-info': 'var(--hive-status-info)',
   }
 };
 

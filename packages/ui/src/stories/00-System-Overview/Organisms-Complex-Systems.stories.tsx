@@ -54,7 +54,8 @@ import {
 } from 'lucide-react';
 import '../../hive-tokens.css';
 
-const meta: Meta = {
+const meta: Meta<typeof OrganismSystemsLibrary> = {
+  component: OrganismSystemsLibrary,
   title: '🦠 04-Organisms/Complex Systems',
   parameters: {
     layout: 'fullscreen',

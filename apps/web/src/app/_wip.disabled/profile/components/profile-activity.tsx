@@ -59,9 +59,9 @@ export const ProfileActivity = ({ user }: ProfileActivityProps) => {
   return (
     <div className="space-y-6">
       {/* Activity Summary */}
-      <Card className="border-gray-700 bg-gray-900/50">
+      <Card className="border-gray-700 bg-[var(--hive-background-primary)]/50">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-white">
+          <CardTitle className="flex items-center gap-2 text-[var(--hive-text-inverse)]">
             <TrendingUp className="h-5 w-5" />
             Activity Summary (Last 90 Days)
           </CardTitle>
@@ -69,19 +69,19 @@ export const ProfileActivity = ({ user }: ProfileActivityProps) => {
         <CardContent>
           <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
             <div className="text-center">
-              <div className="text-2xl font-bold text-gold">12</div>
+              <div className="text-2xl font-bold text-[var(--hive-brand-secondary)]">12</div>
               <div className="text-sm text-gray-400">Logins</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-gold">3</div>
+              <div className="text-2xl font-bold text-[var(--hive-brand-secondary)]">3</div>
               <div className="text-sm text-gray-400">Spaces Joined</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-gold">8</div>
+              <div className="text-2xl font-bold text-[var(--hive-brand-secondary)]">8</div>
               <div className="text-sm text-gray-400">Posts Made</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-gold">2</div>
+              <div className="text-2xl font-bold text-[var(--hive-brand-secondary)]">2</div>
               <div className="text-sm text-gray-400">Tools Created</div>
             </div>
           </div>
@@ -89,9 +89,9 @@ export const ProfileActivity = ({ user }: ProfileActivityProps) => {
       </Card>
 
       {/* Motion Log - Stub Implementation */}
-      <Card className="border-gray-700 bg-gray-900/50">
+      <Card className="border-gray-700 bg-[var(--hive-background-primary)]/50">
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle className="flex items-center gap-2 text-white">
+          <CardTitle className="flex items-center gap-2 text-[var(--hive-text-inverse)]">
             <Calendar className="h-5 w-5" />
             Motion Log
           </CardTitle>
@@ -108,8 +108,8 @@ export const ProfileActivity = ({ user }: ProfileActivityProps) => {
                   key={activity.id}
                   className="flex items-center gap-3 rounded-lg border border-gray-700 p-3"
                 >
-                  <div className="rounded-full bg-gold/10 p-2">
-                    <IconComponent className="h-4 w-4 text-gold" />
+                  <div className="rounded-full bg-[var(--hive-brand-secondary)]/10 p-2">
+                    <IconComponent className="h-4 w-4 text-[var(--hive-brand-secondary)]" />
                   </div>
                   <div className="flex-1">
                     <p className="text-sm text-gray-300">
@@ -138,9 +138,9 @@ export const ProfileActivity = ({ user }: ProfileActivityProps) => {
       </Card>
 
       {/* 7-Day Events Strip - Placeholder */}
-      <Card className="border-gray-700 bg-gray-900/50">
+      <Card className="border-gray-700 bg-[var(--hive-background-primary)]/50">
         <CardHeader>
-          <CardTitle className="text-white">This Week</CardTitle>
+          <CardTitle className="text-[var(--hive-text-inverse)]">This Week</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-7 gap-2">
@@ -158,12 +158,12 @@ export const ProfileActivity = ({ user }: ProfileActivityProps) => {
                   className="rounded-lg border border-gray-700 p-3 text-center"
                 >
                   <div className="text-xs text-gray-400">{dayName}</div>
-                  <div className="text-lg font-semibold text-white">
+                  <div className="text-lg font-semibold text-[var(--hive-text-inverse)]">
                     {dayNumber}
                   </div>
                   <div className="mt-1 h-2 w-full rounded-full bg-gray-700">
                     <div
-                      className="h-full rounded-full bg-gold"
+                      className="h-full rounded-full bg-[var(--hive-brand-secondary)]"
                       style={{ width: `${Math.random() * 100}%` }}
                     />
                   </div>

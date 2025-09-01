@@ -12,8 +12,8 @@ export const ProgressIndicator = ({ currentStep, totalSteps, stepLabels = [], cl
                             const isUpcoming = step > currentStep;
                             return (_jsxs(motion.div, { className: "flex flex-col items-center", initial: { scale: 0.8, opacity: 0 }, animate: { scale: 1, opacity: 1 }, transition: { delay: index * 0.1, duration: 0.3 }, children: [_jsxs(motion.div, { className: `
                     relative w-8 h-8 rounded-full border-2 flex items-center justify-center font-medium text-sm
-                    ${isCompleted ? 'bg-accent border-accent text-black' : ''}
-                    ${isCurrent ? 'bg-accent border-accent text-black shadow-lg shadow-accent/25' : ''}
+                    ${isCompleted ? 'bg-accent border-accent text-[var(--hive-text-primary)]' : ''}
+                    ${isCurrent ? 'bg-accent border-accent text-[var(--hive-text-primary)] shadow-lg shadow-accent/25' : ''}
                     ${isUpcoming ? 'bg-background border-border text-muted-foreground' : ''}
                   `, initial: { scale: 0.8 }, animate: {
                                             scale: isCurrent ? 1.1 : 1,

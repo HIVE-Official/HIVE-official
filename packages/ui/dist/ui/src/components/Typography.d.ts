@@ -9,4 +9,9 @@ declare const Heading: React.ForwardRefExoticComponent<HeadingProps & React.RefA
 declare const Text: React.ForwardRefExoticComponent<React.HTMLAttributes<HTMLParagraphElement> & React.RefAttributes<HTMLParagraphElement>>;
 declare const Muted: React.ForwardRefExoticComponent<React.HTMLAttributes<HTMLParagraphElement> & React.RefAttributes<HTMLParagraphElement>>;
 export { Heading, Text, Muted };
-//# sourceMappingURL=Typography.d.ts.map
+export declare const Typography: {
+    Heading: React.ForwardRefExoticComponent<HeadingProps & React.RefAttributes<HTMLHeadingElement>>;
+    Text: React.ForwardRefExoticComponent<React.HTMLAttributes<HTMLParagraphElement> & React.RefAttributes<HTMLParagraphElement>>;
+    Muted: React.ForwardRefExoticComponent<React.HTMLAttributes<HTMLParagraphElement> & React.RefAttributes<HTMLParagraphElement>>;
+};
+//# sourceMappingURL=typography.d.ts.map

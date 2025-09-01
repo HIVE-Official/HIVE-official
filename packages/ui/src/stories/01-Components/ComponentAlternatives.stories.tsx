@@ -59,7 +59,7 @@ export const AlternativesOverview: Story = {
           Multiple subjective approaches maintained in parallel for A/B testing and context-specific solutions
         </p>
         <div className="flex justify-center gap-2">
-          <Badge variant="accent">A/B Testing Ready</Badge>
+          <Badge variant="secondary">A/B Testing Ready</Badge>
           <Badge variant="secondary">Context-Specific</Badge>
           <Badge variant="primary">User-Driven Decisions</Badge>
         </div>
@@ -331,15 +331,15 @@ const AcademicComponent = isMobile ? AcademicStep : AcademicCardStep;`}
             </CardHeader>
             <CardContent className="space-y-2">
               <div className="flex items-center gap-2">
-                <Badge variant="accent" size="sm">✅</Badge>
+                <Badge variant="secondary" size="sm">✅</Badge>
                 <span className="text-sm">Document all alternatives</span>
               </div>
               <div className="flex items-center gap-2">
-                <Badge variant="accent" size="sm">✅</Badge>
+                <Badge variant="secondary" size="sm">✅</Badge>
                 <span className="text-sm">Create selection guidelines</span>
               </div>
               <div className="flex items-center gap-2">
-                <Badge variant="accent" size="sm">✅</Badge>
+                <Badge variant="secondary" size="sm">✅</Badge>
                 <span className="text-sm">Set up A/B testing framework</span>
               </div>
             </CardContent>
@@ -397,7 +397,7 @@ const AcademicComponent = isMobile ? AcademicStep : AcademicCardStep;`}
         <p className="text-sm text-muted-foreground">
           🎯 <strong>Philosophy:</strong> Multiple subjective options enable user-driven decisions through A/B testing
         </p>
-        <Button variant="accent">
+        <Button variant="secondary">
           View Complete Documentation
         </Button>
       </div>

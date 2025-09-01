@@ -125,7 +125,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="success">📏 SIZES</Badge>
+            <Badge variant="emerald">📏 SIZES</Badge>
             Icon Sizes - From UI Details to Touch Targets
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -321,7 +321,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="warning">🎓 UB CAMPUS</Badge>
+            <Badge variant="gold">🎓 UB CAMPUS</Badge>
             Common University at Buffalo Icon Patterns
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">

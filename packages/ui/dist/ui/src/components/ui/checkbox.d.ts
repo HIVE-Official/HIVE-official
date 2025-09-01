@@ -1,14 +1,14 @@
 import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
-declare const checkboxVariants: (props?: {
-    size?: "default" | "sm" | "lg" | "xl";
-    variant?: "error" | "default" | "success" | "warning" | "info";
-    radius?: "default" | "sm" | "lg" | "none" | "full";
-} & import("class-variance-authority/types").ClassProp) => string;
-declare const checkboxLabelVariants: (props?: {
-    color?: "error" | "primary" | "secondary" | "success" | "warning" | "info" | "tertiary";
-    weight?: "medium" | "normal" | "semibold";
-} & import("class-variance-authority/types").ClassProp) => string;
+declare const checkboxVariants: (props?: ({
+    size?: "sm" | "default" | "lg" | "xl" | null | undefined;
+    variant?: "error" | "success" | "warning" | "info" | "default" | null | undefined;
+    radius?: "sm" | "default" | "lg" | "none" | "full" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
+declare const checkboxLabelVariants: (props?: ({
+    color?: "error" | "primary" | "secondary" | "success" | "warning" | "info" | "tertiary" | null | undefined;
+    weight?: "medium" | "normal" | "semibold" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
 export interface CheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'type'>, VariantProps<typeof checkboxVariants> {
     label?: string;
     description?: string;

@@ -14,15 +14,15 @@
  */
 import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
-declare const navigationItemVariants: (props?: {
-    size?: "small" | "base" | "large";
-    variant?: "ghost" | "default" | "tab" | "sidebar" | "pill";
-    state?: "default" | "disabled" | "active";
-} & import("class-variance-authority/types").ClassProp) => string;
-declare const navigationContainerVariants: (props?: {
-    orientation?: "horizontal" | "vertical";
-    layout?: "floating" | "basic" | "sidebar" | "tabs";
-} & import("class-variance-authority/types").ClassProp) => string;
+declare const navigationItemVariants: (props?: ({
+    size?: "small" | "base" | "large" | null | undefined;
+    variant?: "ghost" | "default" | "tab" | "sidebar" | "pill" | null | undefined;
+    state?: "default" | "disabled" | "active" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
+declare const navigationContainerVariants: (props?: ({
+    orientation?: "horizontal" | "vertical" | null | undefined;
+    layout?: "floating" | "sidebar" | "tabs" | "basic" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
 export interface NavigationItem {
     id: string;
     label: string;

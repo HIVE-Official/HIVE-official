@@ -115,9 +115,9 @@ export const AllVariants: Story = {
               {/* Accent */}
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button variant="accent">Accent Tooltip</Button>
+                  <Button variant="secondary">Accent Tooltip</Button>
                 </TooltipTrigger>
-                <TooltipContent variant="accent">
+                <TooltipContent variant="secondary">
                   Gold highlight for special features
                 </TooltipContent>
               </Tooltip>
@@ -229,7 +229,7 @@ export const AllVariants: Story = {
                       <Star className="w-4 h-4" />
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent variant="accent">
+                  <TooltipContent variant="secondary">
                     Add to favorites
                   </TooltipContent>
                 </Tooltip>
@@ -268,7 +268,7 @@ export const AllVariants: Story = {
                     <TooltipTrigger asChild>
                       <div className="w-3 h-3 bg-accent rounded-full cursor-help"></div>
                     </TooltipTrigger>
-                    <TooltipContent variant="accent">
+                    <TooltipContent variant="secondary">
                       High campus energy (87%)
                     </TooltipContent>
                   </Tooltip>
@@ -306,7 +306,7 @@ export const AllVariants: Story = {
                         Verified
                       </Badge>
                     </TooltipTrigger>
-                    <TooltipContent variant="accent">
+                    <TooltipContent variant="secondary">
                       Verified student account
                     </TooltipContent>
                   </Tooltip>
@@ -360,12 +360,12 @@ export const AllVariants: Story = {
                 
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Button variant="accent" size="sm">
+                    <Button variant="secondary" size="sm">
                       <Plus className="w-4 h-4 mr-2" />
                       Create
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent variant="accent">
+                  <TooltipContent variant="secondary">
                     Start a new study group or post
                   </TooltipContent>
                 </Tooltip>
@@ -478,7 +478,7 @@ export const AllVariants: Story = {
                     <TooltipTrigger asChild>
                       <Shield className="w-4 h-4 text-accent cursor-help" />
                     </TooltipTrigger>
-                    <TooltipContent variant="accent">
+                    <TooltipContent variant="secondary">
                       This space is verified by campus administration
                     </TooltipContent>
                   </Tooltip>
@@ -569,7 +569,7 @@ export const AllVariants: Story = {
                         Verified
                       </Badge>
                     </TooltipTrigger>
-                    <TooltipContent variant="accent">
+                    <TooltipContent variant="secondary">
                       Verified by CS Department
                     </TooltipContent>
                   </Tooltip>
@@ -634,7 +634,7 @@ export const AllVariants: Story = {
                   <TooltipTrigger asChild>
                     <div className="w-3 h-3 bg-accent rounded-full cursor-help"></div>
                   </TooltipTrigger>
-                  <TooltipContent variant="accent">
+                  <TooltipContent variant="secondary">
                     Event starts in 2 hours
                   </TooltipContent>
                 </Tooltip>

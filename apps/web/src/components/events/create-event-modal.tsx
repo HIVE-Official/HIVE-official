@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { HiveModal, Button, HiveInput, Badge } from "@hive/ui";
+import { Modal, Button, Input, Badge } from "@hive/ui";
 import { 
   MapPin, 
   Users, 
@@ -210,7 +210,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
   };
 
   return (
-    <HiveModal
+    <Modal
       isOpen={isOpen}
       onClose={onClose}
       title={`Create Event - ${getStepTitle(step)}`}
@@ -226,7 +226,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
                 stepNumber === step
                   ? 'bg-hive-gold text-hive-obsidian'
                   : stepNumber < step
-                  ? 'bg-green-500 text-white'
+                  ? 'bg-green-500 text-[var(--hive-text-inverse)]'
                   : 'bg-zinc-700 text-zinc-400'
               }`}
             >
@@ -239,11 +239,11 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
         {step === 1 && (
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-white mb-2">
+              <label className="block text-sm font-medium text-[var(--hive-text-inverse)] mb-2">
                 <Type className="inline h-4 w-4 mr-1" />
                 Event Title
               </label>
-              <HiveInput
+              <Input
                 value={formData.title}
                 onChange={(e) => handleInputChange('title', e.target.value)}
                 placeholder="Enter event title..."
@@ -253,7 +253,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-white mb-2">
+              <label className="block text-sm font-medium text-[var(--hive-text-inverse)] mb-2">
                 <FileText className="inline h-4 w-4 mr-1" />
                 Description
               </label>
@@ -261,7 +261,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
                 value={formData.description}
                 onChange={(e) => handleInputChange('description', e.target.value)}
                 placeholder="Describe your event, what to expect, and any important details..."
-                className="w-full p-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-400 focus:border-hive-gold focus:outline-none resize-none"
+                className="w-full p-3 bg-zinc-800 border border-zinc-700 rounded-lg text-[var(--hive-text-inverse)] placeholder-zinc-400 focus:border-hive-gold focus:outline-none resize-none"
                 rows={4}
                 maxLength={500}
               />
@@ -271,7 +271,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-white mb-2">Event Type</label>
+              <label className="block text-sm font-medium text-[var(--hive-text-inverse)] mb-2">Event Type</label>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                 {EVENT_TYPES.map((type) => (
                   <button
@@ -285,7 +285,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
                   >
                     <div className="text-center">
                       <div className="text-2xl mb-1">{type.icon}</div>
-                      <div className="text-sm font-medium text-white">{type.label}</div>
+                      <div className="text-sm font-medium text-[var(--hive-text-inverse)]">{type.label}</div>
                     </div>
                   </button>
                 ))}
@@ -299,7 +299,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
           <div className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-white mb-2">
+                <label className="block text-sm font-medium text-[var(--hive-text-inverse)] mb-2">
                   <Clock className="inline h-4 w-4 mr-1" />
                   Start Date & Time
                 </label>
@@ -307,13 +307,13 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
                   type="datetime-local"
                   value={formData.datetime.start}
                   onChange={(e) => handleNestedInputChange('datetime', 'start', e.target.value)}
-                  className="w-full p-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:border-hive-gold focus:outline-none"
+                  className="w-full p-3 bg-zinc-800 border border-zinc-700 rounded-lg text-[var(--hive-text-inverse)] focus:border-hive-gold focus:outline-none"
                   min={new Date().toISOString().slice(0, 16)}
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-white mb-2">
+                <label className="block text-sm font-medium text-[var(--hive-text-inverse)] mb-2">
                   <Clock className="inline h-4 w-4 mr-1" />
                   End Date & Time
                 </label>
@@ -321,18 +321,18 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
                   type="datetime-local"
                   value={formData.datetime.end}
                   onChange={(e) => handleNestedInputChange('datetime', 'end', e.target.value)}
-                  className="w-full p-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:border-hive-gold focus:outline-none"
+                  className="w-full p-3 bg-zinc-800 border border-zinc-700 rounded-lg text-[var(--hive-text-inverse)] focus:border-hive-gold focus:outline-none"
                   min={formData.datetime.start || new Date().toISOString().slice(0, 16)}
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-white mb-2">Timezone</label>
+              <label className="block text-sm font-medium text-[var(--hive-text-inverse)] mb-2">Timezone</label>
               <select
                 value={formData.datetime.timezone}
                 onChange={(e) => handleNestedInputChange('datetime', 'timezone', e.target.value)}
-                className="w-full p-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:border-hive-gold focus:outline-none"
+                className="w-full p-3 bg-zinc-800 border border-zinc-700 rounded-lg text-[var(--hive-text-inverse)] focus:border-hive-gold focus:outline-none"
               >
                 <option value="America/New_York">Eastern Time (ET)</option>
                 <option value="America/Chicago">Central Time (CT)</option>
@@ -347,7 +347,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
         {step === 3 && (
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-white mb-2">Location Type</label>
+              <label className="block text-sm font-medium text-[var(--hive-text-inverse)] mb-2">Location Type</label>
               <div className="grid grid-cols-3 gap-3">
                 {[
                   { id: 'physical', label: 'In-Person', icon: '📍' },
@@ -365,7 +365,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
                   >
                     <div className="text-center">
                       <div className="text-xl mb-1">{locType.icon}</div>
-                      <div className="text-sm font-medium text-white">{locType.label}</div>
+                      <div className="text-sm font-medium text-[var(--hive-text-inverse)]">{locType.label}</div>
                     </div>
                   </button>
                 ))}
@@ -373,11 +373,11 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-white mb-2">
+              <label className="block text-sm font-medium text-[var(--hive-text-inverse)] mb-2">
                 <MapPin className="inline h-4 w-4 mr-1" />
                 Location Name
               </label>
-              <HiveInput
+              <Input
                 value={formData.location.name}
                 onChange={(e) => handleNestedInputChange('location', 'name', e.target.value)}
                 placeholder={
@@ -391,8 +391,8 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
 
             {formData.location.type === 'physical' && (
               <div>
-                <label className="block text-sm font-medium text-white mb-2">Full Address</label>
-                <HiveInput
+                <label className="block text-sm font-medium text-[var(--hive-text-inverse)] mb-2">Full Address</label>
+                <Input
                   value={formData.location.address || ''}
                   onChange={(e) => handleNestedInputChange('location', 'address', e.target.value)}
                   placeholder="Enter full address with building and room number..."
@@ -403,8 +403,8 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
 
             {(formData.location.type === 'virtual' || formData.location.type === 'hybrid') && (
               <div>
-                <label className="block text-sm font-medium text-white mb-2">Virtual Link</label>
-                <HiveInput
+                <label className="block text-sm font-medium text-[var(--hive-text-inverse)] mb-2">Virtual Link</label>
+                <Input
                   value={formData.location.virtualLink || ''}
                   onChange={(e) => handleNestedInputChange('location', 'virtualLink', e.target.value)}
                   placeholder="https://zoom.us/j/... or Discord invite link"
@@ -419,12 +419,12 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
         {step === 4 && (
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-white mb-2">
+              <label className="block text-sm font-medium text-[var(--hive-text-inverse)] mb-2">
                 <Users className="inline h-4 w-4 mr-1" />
                 Event Capacity
               </label>
               <div className="flex items-center space-x-4">
-                <HiveInput
+                <Input
                   type="number"
                   value={formData.capacity.toString()}
                   onChange={(e) => handleInputChange('capacity', parseInt(e.target.value) || 0)}
@@ -438,7 +438,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-white mb-2">
+              <label className="block text-sm font-medium text-[var(--hive-text-inverse)] mb-2">
                 <Eye className="inline h-4 w-4 mr-1" />
                 Event Visibility
               </label>
@@ -467,7 +467,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
                     <div>
                       <div className="flex items-center space-x-2">
                         <span className="text-lg">{vis.icon}</span>
-                        <span className="font-medium text-white">{vis.label}</span>
+                        <span className="font-medium text-[var(--hive-text-inverse)]">{vis.label}</span>
                       </div>
                       <p className="text-sm text-zinc-400 mt-1">{vis.desc}</p>
                     </div>
@@ -482,7 +482,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
         {step === 5 && (
           <div className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-white mb-2">
+              <label className="block text-sm font-medium text-[var(--hive-text-inverse)] mb-2">
                 <Zap className="inline h-4 w-4 mr-1" />
                 Available Tools
               </label>
@@ -505,7 +505,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
                       onChange={() => toggleTool(tool.id)}
                     />
                     <div>
-                      <div className="font-medium text-white">{tool.name}</div>
+                      <div className="font-medium text-[var(--hive-text-inverse)]">{tool.name}</div>
                       <div className="text-xs text-zinc-400 capitalize">{tool.category}</div>
                     </div>
                   </label>
@@ -514,12 +514,12 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-white mb-2">
+              <label className="block text-sm font-medium text-[var(--hive-text-inverse)] mb-2">
                 <Tag className="inline h-4 w-4 mr-1" />
                 Tags
               </label>
               <div className="flex items-center space-x-2 mb-3">
-                <HiveInput
+                <Input
                   value={newTag}
                   onChange={(e) => setNewTag(e.target.value)}
                   placeholder="Add a tag..."
@@ -543,9 +543,9 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-white mb-2">Requirements</label>
+              <label className="block text-sm font-medium text-[var(--hive-text-inverse)] mb-2">Requirements</label>
               <div className="flex items-center space-x-2 mb-3">
-                <HiveInput
+                <Input
                   value={newRequirement}
                   onChange={(e) => setNewRequirement(e.target.value)}
                   placeholder="e.g., Laptop, Professional attire..."
@@ -559,9 +559,9 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
               <div className="space-y-2">
                 {formData.requirements?.map((req) => (
                   <div key={req} className="flex items-center justify-between p-2 bg-zinc-800 rounded">
-                    <span className="text-white text-sm">{req}</span>
+                    <span className="text-[var(--hive-text-inverse)] text-sm">{req}</span>
                     <button onClick={() => removeRequirement(req)}>
-                      <X className="h-4 w-4 text-zinc-400 hover:text-white" />
+                      <X className="h-4 w-4 text-zinc-400 hover:text-[var(--hive-text-inverse)]" />
                     </button>
                   </div>
                 ))}
@@ -574,37 +574,37 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
         {step === 6 && (
           <div className="space-y-6">
             <div className="bg-zinc-800/50 rounded-lg p-4">
-              <h3 className="text-lg font-semibold text-white mb-4">Event Summary</h3>
+              <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4">Event Summary</h3>
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
                   <span className="text-zinc-400">Title:</span>
-                  <span className="text-white">{formData.title}</span>
+                  <span className="text-[var(--hive-text-inverse)]">{formData.title}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-zinc-400">Type:</span>
-                  <span className="text-white capitalize">{formData.type}</span>
+                  <span className="text-[var(--hive-text-inverse)] capitalize">{formData.type}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-zinc-400">Date:</span>
-                  <span className="text-white">
+                  <span className="text-[var(--hive-text-inverse)]">
                     {new Date(formData.datetime.start).toLocaleDateString()} - {new Date(formData.datetime.end).toLocaleDateString()}
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-zinc-400">Location:</span>
-                  <span className="text-white">{formData.location.name}</span>
+                  <span className="text-[var(--hive-text-inverse)]">{formData.location.name}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-zinc-400">Capacity:</span>
-                  <span className="text-white">{formData.capacity} people</span>
+                  <span className="text-[var(--hive-text-inverse)]">{formData.capacity} people</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-zinc-400">Tools:</span>
-                  <span className="text-white">{formData.tools.length} selected</span>
+                  <span className="text-[var(--hive-text-inverse)]">{formData.tools.length} selected</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-zinc-400">Visibility:</span>
-                  <span className="text-white capitalize">{formData.visibility.replace('_', ' ')}</span>
+                  <span className="text-[var(--hive-text-inverse)] capitalize">{formData.visibility.replace('_', ' ')}</span>
                 </div>
               </div>
             </div>
@@ -640,6 +640,6 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
           </div>
         </div>
       </div>
-    </HiveModal>
+    </Modal>
   );
 }

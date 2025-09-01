@@ -1,7 +1,17 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { cn } from '../../lib/utils';
+import { cn } from '../../../lib/utils';
+
+const TypographySystemDemo = () => (
+  <div className="p-6 space-y-8">
+    <div className="space-y-4">
+      <h2 className="text-2xl font-semibold">HIVE Typography System</h2>
+      <p className="text-muted-foreground">Clear hierarchy with Space Grotesk and Geist Sans</p>
+    </div>
+  </div>
+);
 
 const meta = {
+  component: TypographySystemDemo,
   title: 'Foundation/Typography System',
   parameters: {
     layout: 'fullscreen',

@@ -7,7 +7,8 @@ export interface OnboardingData {
     userType: 'student' | 'alumni' | 'faculty';
     firstName?: string;
     lastName?: string;
-    major: string;
+    major?: string;
+    majors: string[];
     academicLevel?: string;
     graduationYear: number;
     handle: string;
@@ -32,23 +33,23 @@ export declare function useOnboardingBridge(): {
         totalSteps: number;
         percentage: number;
         isComplete: boolean;
-    };
+    } | null;
     createPostOnboardingSpaces: (onboardingData: OnboardingData) => Promise<{
-        cohortSpaces: any[];
-        joinedSpaces: any[];
-        totalSpaces: number;
+        cohortSpaces: any;
+        joinedSpaces: any;
+        totalSpaces: any;
         error?: undefined;
     } | {
-        cohortSpaces: any[];
-        joinedSpaces: any[];
+        cohortSpaces: never[];
+        joinedSpaces: never[];
         totalSpaces: number;
         error: string;
     }>;
     isAuthenticated: boolean;
-    user: import("../..").HiveUser;
+    user: import("../contexts").HiveUser | null;
     isLoading: boolean;
-    error: string;
-    canAccessFeature: (feature: string) => boolean;
+    error: string | null;
+    canAccessFeature: (_feature: string) => boolean;
     hasValidSession: () => boolean;
 };
 //# sourceMappingURL=use-onboarding-bridge.d.ts.map

@@ -1,6 +1,6 @@
 import { jsx as _jsx } from "react/jsx-runtime";
-import { Button } from '../../ui/button';
-import { useStandardElementStyles, useStandardElementBehavior } from '../../hooks/use-standard-element-styles';
+import { Button } from '../../atomic/atoms/button-enhanced.js';
+import { useStandardElementStyles, useStandardElementBehavior } from '../../hooks/use-standard-element-styles.js';
 export const ButtonRenderer = ({ element, config, onChange, onStateChange, readOnly = false, runtimeContext }) => {
     // Use standard style system (flexible input, consistent output)
     const { classes, styles } = useStandardElementStyles(config.style);
@@ -72,6 +72,6 @@ export const ButtonRenderer = ({ element, config, onChange, onStateChange, readO
             default: return 'default';
         }
     };
-    return (_jsx("div", { className: `${classes.container} ${classes.spacing}`, children: _jsx(Button, { variant: getButtonVariant(config.variant), size: getButtonSize(config.size), onClick: handleClick, disabled: behavior.isDisabled, style: styles, className: `${classes.element} ${config.variant === 'primary' ? 'bg-[var(--hive-primary)] hover:bg-[var(--hive-primary-dark)] text-white' : ''}`, ...behavior.ariaAttributes, children: config.text }) }));
+    return (_jsx("div", { className: `${classes.container} ${classes.spacing}`, children: _jsx(Button, { variant: getButtonVariant(config.variant), size: getButtonSize(config.size), onClick: handleClick, disabled: behavior.isDisabled, style: styles, className: `${classes.element} ${config.variant === 'primary' ? 'bg-[var(--hive-primary)] hover:bg-[var(--hive-primary-dark)] text-[var(--hive-text-inverse)]' : ''}`, ...behavior.ariaAttributes, children: config.text }) }));
 };
 //# sourceMappingURL=button-renderer.js.map

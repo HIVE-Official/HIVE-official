@@ -138,7 +138,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="success">📐 SPACING COMPONENTS</Badge>
+            <Badge variant="emerald">📐 SPACING COMPONENTS</Badge>
             Layout Component System
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">

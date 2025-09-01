@@ -10,7 +10,7 @@
 
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { 
+import type { 
   NavigationState, 
   NavigationLayout, 
   NavigationPreference, 
@@ -146,7 +146,7 @@ export const useNavigationState = ({
   }, [enableAnalytics]);
   
   const toggleSidebar = useCallback(() => {
-    setSidebarCollapsed(prev => {
+    setSidebarCollapsed((prev: boolean) => {
       const newValue = !prev;
       
       // Persist to localStorage

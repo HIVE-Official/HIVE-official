@@ -14,11 +14,11 @@
  */
 import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
-declare const comprehensiveCardVariants: (props?: {
-    variant?: "default" | "announcement" | "elevated" | "interactive" | "glass" | "notification";
-    size?: "compact" | "comfortable" | "spacious";
-    campus?: "default" | "space" | "event" | "profile" | "tool";
-} & import("class-variance-authority/types").ClassProp) => string;
+declare const comprehensiveCardVariants: (props?: ({
+    variant?: "default" | "elevated" | "interactive" | "glass" | "announcement" | "notification" | null | undefined;
+    size?: "compact" | "comfortable" | "spacious" | null | undefined;
+    campus?: "default" | "space" | "profile" | "event" | "tool" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
 export interface ComprehensiveCardProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'content'>, VariantProps<typeof comprehensiveCardVariants> {
     header?: React.ReactNode;
     content?: React.ReactNode;

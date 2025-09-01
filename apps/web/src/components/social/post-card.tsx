@@ -36,11 +36,11 @@ interface PostCardProps {
   post: Post;
   currentUserId: string;
   onLike: (_postId: string) => Promise<void>;
-  onComment: (_postId: string, _content: string) => Promise<void>;
+  onComment: (__postId: string, _content: string) => Promise<void>;
   onShare: (_postId: string) => Promise<void>;
   onEdit?: (_postId: string) => void;
   onDelete?: (_postId: string) => Promise<void>;
-  onVote?: (_postId: string, _optionId: string) => Promise<void>;
+  onVote?: (__postId: string, _optionId: string) => Promise<void>;
   showComments?: boolean;
   isCompact?: boolean;
 }
@@ -228,7 +228,7 @@ export function PostCard({
     ? post.content.slice(0, 300) + '...' 
     : post.content;
 
-  const visibleComments = showAllComments ? (post.comments || []) : (post.comments || []).slice(0, 3);
+  const visibleComments = showAllComments ? (post._comments || []) : (post.comments || []).slice(0, 3);
 
   const renderAttachments = () => {
     if (!post.attachments?.length) return null;
@@ -265,7 +265,7 @@ export function PostCard({
               <div className="p-3 bg-hive-background-tertiary flex items-center justify-between">
                 <div className="flex items-center space-x-2">
                   <Download className="h-4 w-4 text-hive-text-mutedLight" />
-                  <span className="text-sm text-white">{attachment.name}</span>
+                  <span className="text-sm text-[var(--hive-text-inverse)]">{attachment.name}</span>
                   {attachment.size && (
                     <span className="text-xs text-hive-text-mutedLight">
                       ({(attachment.size / 1024).toFixed(1)}KB)
@@ -290,7 +290,7 @@ export function PostCard({
 
     return (
       <div className="mt-3 p-4 bg-hive-background-tertiary rounded-lg">
-        <h4 className="font-medium text-white mb-3">{post.poll.question}</h4>
+        <h4 className="font-medium text-[var(--hive-text-inverse)] mb-3">{post.poll.question}</h4>
         
         <div className="space-y-2">
           {post.poll.options.map(option => (
@@ -309,7 +309,7 @@ export function PostCard({
                 }`}
               >
                 <div className="flex items-center justify-between">
-                  <span className="text-white">{option.text}</span>
+                  <span className="text-[var(--hive-text-inverse)]">{option.text}</span>
                   <span className="text-sm text-hive-text-mutedLight">
                     {option.percentage}% ({option.votes})
                   </span>
@@ -342,7 +342,7 @@ export function PostCard({
 
     return (
       <div className="mt-3 p-4 bg-hive-background-tertiary rounded-lg">
-        <h4 className="font-medium text-white mb-2">{post.event.title}</h4>
+        <h4 className="font-medium text-[var(--hive-text-inverse)] mb-2">{post.event.title}</h4>
         {post.event.description && (
           <p className="text-hive-text-mutedLight text-sm mb-3">{post.event.description}</p>
         )}
@@ -350,7 +350,7 @@ export function PostCard({
         <div className="space-y-2 text-sm">
           <div className="flex items-center space-x-2">
             <Calendar className="h-4 w-4 text-hive-text-mutedLight" />
-            <span className="text-white">
+            <span className="text-[var(--hive-text-inverse)]">
               {new Date(post.event.startTime).toLocaleString()}
               {post.event.endTime && ` - ${new Date(post.event.endTime).toLocaleString()}`}
             </span>
@@ -359,14 +359,14 @@ export function PostCard({
           {post.event.location && (
             <div className="flex items-center space-x-2">
               <MapPin className="h-4 w-4 text-hive-text-mutedLight" />
-              <span className="text-white">{post.event.location}</span>
+              <span className="text-[var(--hive-text-inverse)]">{post.event.location}</span>
             </div>
           )}
           
           {post.event.attendees !== undefined && (
             <div className="flex items-center space-x-2">
               <Users className="h-4 w-4 text-hive-text-mutedLight" />
-              <span className="text-white">{post.event.attendees} attending</span>
+              <span className="text-[var(--hive-text-inverse)]">{post.event.attendees} attending</span>
             </div>
           )}
         </div>
@@ -407,7 +407,7 @@ export function PostCard({
             <div className="flex-1 min-w-0">
               <div className="bg-hive-background-tertiary rounded-lg p-3">
                 <div className="flex items-center space-x-2 mb-1">
-                  <span className="font-medium text-white text-sm">{comment.author.name}</span>
+                  <span className="font-medium text-[var(--hive-text-inverse)] text-sm">{comment.author.name}</span>
                   <span className="text-xs text-hive-text-mutedLight">
                     @{comment.author.handle}
                   </span>
@@ -415,7 +415,7 @@ export function PostCard({
                     {formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true })}
                   </span>
                 </div>
-                <p className="text-white text-sm">{comment.content}</p>
+                <p className="text-[var(--hive-text-inverse)] text-sm">{comment.content}</p>
               </div>
               
               <div className="flex items-center space-x-4 mt-1">
@@ -430,7 +430,7 @@ export function PostCard({
                 
                 <button
                   onClick={() => setReplyingTo(comment.id)}
-                  className="text-xs text-hive-text-mutedLight hover:text-white"
+                  className="text-xs text-hive-text-mutedLight hover:text-[var(--hive-text-inverse)]"
                 >
                   <Reply className="h-3 w-3 mr-1 inline" />
                   Reply
@@ -449,12 +449,12 @@ export function PostCard({
                   
                   <div className="flex-1 bg-hive-background-overlay rounded-lg p-2">
                     <div className="flex items-center space-x-2 mb-1">
-                      <span className="font-medium text-white text-xs">{reply.author.name}</span>
+                      <span className="font-medium text-[var(--hive-text-inverse)] text-xs">{reply.author.name}</span>
                       <span className="text-xs text-hive-text-mutedLight">
                         {formatDistanceToNow(new Date(reply.createdAt), { addSuffix: true })}
                       </span>
                     </div>
-                    <p className="text-white text-xs">{reply.content}</p>
+                    <p className="text-[var(--hive-text-inverse)] text-xs">{reply.content}</p>
                   </div>
                 </div>
               ))}
@@ -490,7 +490,7 @@ export function PostCard({
             
             <div>
               <div className="flex items-center space-x-2">
-                <span className="font-medium text-white">{post.author.name}</span>
+                <span className="font-medium text-[var(--hive-text-inverse)]">{post.author.name}</span>
                 {post.author.isVerified && (
                   <CheckCircle className="h-4 w-4 text-blue-400" />
                 )}
@@ -533,7 +533,7 @@ export function PostCard({
 
         {/* Content */}
         <div className="space-y-2">
-          <div className="text-white whitespace-pre-wrap">
+          <div className="text-[var(--hive-text-inverse)] whitespace-pre-wrap">
             {displayContent}
             {shouldTruncateContent && (
               <button
@@ -604,7 +604,7 @@ export function PostCard({
               <Bookmark className={`h-4 w-4 ${post.engagement.hasBookmarked ? 'fill-current' : ''}`} />
             </button>
             
-            <button onClick={handleCopyLink} className="p-2 rounded text-hive-text-mutedLight hover:text-white">
+            <button onClick={handleCopyLink} className="p-2 rounded text-hive-text-mutedLight hover:text-[var(--hive-text-inverse)]">
               <Copy className="h-4 w-4" />
             </button>
             

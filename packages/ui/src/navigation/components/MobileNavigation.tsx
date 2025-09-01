@@ -8,7 +8,7 @@
 
 import React, { memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { NavigationItem } from '../core/types';
+import type { NavigationItem } from '../core/types';
 import { NAVIGATION_THEME, NAVIGATION_SIZING, NAVIGATION_MOTION, NAVIGATION_A11Y } from '../core/data';
 import { cn } from '../../lib/utils';
 import { useHapticFeedback, useTouchRipple } from '../../hooks/use-mobile-interactions';

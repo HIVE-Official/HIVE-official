@@ -1,7 +1,7 @@
 import React from 'react';
-import { AnySpace } from './hive-space-card';
-import { SpacePost } from '../molecules/post-board';
-import { PlantedTool } from '../molecules/planted-tool-widget';
+import type { AnySpace } from './hive-space-card';
+import type { SpacePost } from '../molecules/post-board';
+import type { PlantedTool } from '../molecules/planted-tool-widget';
 export interface SpaceDashboardProps {
     space: AnySpace;
     posts: SpacePost[];

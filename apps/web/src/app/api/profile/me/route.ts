@@ -13,32 +13,6 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    // Development mode: Check mock Firestore first
-    if (process.env.NODE_ENV === 'development') {
-      console.log('🔥 Development mode: checking mock Firestore for user profile', user.uid)
-      
-      try {
-        const userDoc = await dbAdmin.collection('users').doc(user.uid).get()
-        
-        if (userDoc.exists) {
-          const profile = userDoc.data()
-          console.log('🔥 Development: Found user profile in mock Firestore')
-          return NextResponse.json({ profile })
-        } else {
-          console.log('🔥 Development: No profile found, returning 404')
-          return NextResponse.json(
-            { message: 'User profile not found' },
-            { status: 404 }
-          )
-        }
-      } catch (error) {
-        console.error('🔥 Development: Error checking mock Firestore:', error)
-        return NextResponse.json(
-          { message: 'Failed to retrieve profile. Please try again.' },
-          { status: 500 }
-        )
-      }
-    }
 
     // Production mode: Get from Firestore
     try {
@@ -92,6 +66,9 @@ export async function PATCH(request: NextRequest) {
     // Validate allowed fields for update
     const allowedFields = [
       'fullName',
+      'handle',
+      'bio',
+      'major',
       'avatarUrl',
       'interests',
       'academicLevel',

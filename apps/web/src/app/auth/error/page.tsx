@@ -99,7 +99,7 @@ function AuthErrorContent() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.18, delay: 0.1, ease: [0.33, 0.65, 0, 1] }}
         >
-          <h1 className="text-4xl font-bold font-display mb-4 text-foreground">
+          <h1 className="text-4xl font-bold font-sans mb-4 text-foreground">
             Oops!
           </h1>
           <p className="text-lg text-foreground/80 font-sans mb-2">

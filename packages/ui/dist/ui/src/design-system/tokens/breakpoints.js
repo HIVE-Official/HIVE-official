@@ -5,30 +5,30 @@
 // Breakpoint Definitions - Campus device considerations
 export const breakpointValues = {
     // Mobile Small: 320px - 479px (small phones)
-    mobileSmall: '320px',
+    mobileSmall: 320,
     // Mobile Large: 480px - 767px (large phones)  
-    mobileLarge: '480px',
+    mobileLarge: 480,
     // Tablet: 768px - 1023px (tablets, small laptops)
-    tablet: '768px',
+    tablet: 768,
     // Desktop Small: 1024px - 1199px (laptops)
-    desktopSmall: '1024px',
+    desktopSmall: 1024,
     // Desktop Large: 1200px - 1599px (desktops)
-    desktopLarge: '1200px',
+    desktopLarge: 1200,
     // Desktop XL: 1600px+ (large monitors, max-width: 1400px content)
-    desktopXL: '1600px'
+    desktopXL: 1600
 };
 // Media Query Helpers - Mobile-first approach
 export const mediaQueries = {
     // Mobile first (default styles)
-    mobile: `screen and (min-width: ${breakpointValues.mobileSmall})`,
+    mobile: `screen and (min-width: ${breakpointValues.mobileSmall}px)`,
     // Tablet and up
-    tablet: `screen and (min-width: ${breakpointValues.tablet})`,
+    tablet: `screen and (min-width: ${breakpointValues.tablet}px)`,
     // Desktop and up
-    desktop: `screen and (min-width: ${breakpointValues.desktopSmall})`,
+    desktop: `screen and (min-width: ${breakpointValues.desktopSmall}px)`,
     // Large desktop and up
-    desktopLarge: `screen and (min-width: ${breakpointValues.desktopLarge})`,
+    desktopLarge: `screen and (min-width: ${breakpointValues.desktopLarge}px)`,
     // Extra large screens
-    desktopXL: `screen and (min-width: ${breakpointValues.desktopXL})`,
+    desktopXL: `screen and (min-width: ${breakpointValues.desktopXL}px)`,
     // Mobile only (max-width queries)
     mobileOnly: `screen and (max-width: ${breakpointValues.tablet - 1}px)`,
     // Tablet only

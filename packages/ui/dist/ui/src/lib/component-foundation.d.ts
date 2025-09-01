@@ -11,12 +11,12 @@ export declare const componentBase: {
     readonly input: string;
     readonly text: string;
 };
-export declare const standardSizes: (props?: {
-    size?: "default" | "sm" | "lg" | "xl" | "xs";
-} & import("class-variance-authority/types").ClassProp) => string;
-export declare const standardVariants: (props?: {
-    variant?: "primary" | "secondary" | "ghost" | "destructive" | "outline" | "success" | "warning";
-} & import("class-variance-authority/types").ClassProp) => string;
+export declare const standardSizes: (props?: ({
+    size?: "xs" | "sm" | "default" | "lg" | "xl" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
+export declare const standardVariants: (props?: ({
+    variant?: "primary" | "secondary" | "ghost" | "destructive" | "success" | "warning" | "outline" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
 export interface StandardComponentProps {
     className?: string;
     children?: React.ReactNode;
@@ -79,14 +79,14 @@ export declare function getStandardMotionProps(disabled?: boolean, variant?: str
 export declare function createLoadingIndicator(loading?: boolean, size?: 'sm' | 'md' | 'lg'): React.DetailedReactHTMLElement<{
     className: string;
     'aria-label': string;
-}, HTMLElement>;
+}, HTMLElement> | null;
 /**
  * Icon Integration Pattern
  */
 export declare function createIconSlot(icon?: React.ReactNode, position?: 'left' | 'right', loading?: boolean): React.DetailedReactHTMLElement<{
     className: string;
     children: string | number | bigint | true | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode>;
-}, HTMLElement>;
+}, HTMLElement> | null;
 /**
  * Validation State Factory
  */

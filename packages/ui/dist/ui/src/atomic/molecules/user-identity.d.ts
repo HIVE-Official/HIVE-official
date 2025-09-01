@@ -14,11 +14,11 @@
  */
 import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
-declare const userIdentityVariants: (props?: {
-    size?: "small" | "base" | "large" | "micro";
-    layout?: "horizontal" | "vertical" | "compact";
-    interactive?: "none" | "social" | "subtle";
-} & import("class-variance-authority/types").ClassProp) => string;
+declare const userIdentityVariants: (props?: ({
+    size?: "small" | "base" | "large" | "micro" | null | undefined;
+    layout?: "horizontal" | "vertical" | "compact" | null | undefined;
+    interactive?: "none" | "subtle" | "social" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
 export interface UserIdentityProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof userIdentityVariants> {
     name: string;
     handle?: string;

@@ -42,7 +42,8 @@ import {
 } from 'lucide-react';
 import '../../hive-tokens.css';
 
-const meta: Meta = {
+const meta: Meta<typeof MolecularComponentsLibrary> = {
+  component: MolecularComponentsLibrary,
   title: '🧬 03-Molecules/Component Library',
   parameters: {
     layout: 'fullscreen',
@@ -133,7 +134,7 @@ Every molecular component designed for authentic campus usage:
 };
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof MolecularComponentsLibrary>;
 
 // =============================================================================
 // MOLECULAR COMPONENT CATEGORIES

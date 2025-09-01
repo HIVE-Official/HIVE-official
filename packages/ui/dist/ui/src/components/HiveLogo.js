@@ -1,7 +1,7 @@
 "use client";
 import { jsx as _jsx } from "react/jsx-runtime";
-import { cn } from "../lib/utils";
-import { MotionDiv } from "./motion-wrapper";
+import { cn } from "../lib/utils.js";
+import { MotionDiv } from "./motion-wrapper.js";
 const sizeClasses = {
     sm: "h-5 w-5",
     md: "h-6 w-6",

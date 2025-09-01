@@ -8,8 +8,8 @@
  */
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { calculateNavigationLayout, createResizeHandler, createNavigationStateMemo, safeCalculateNavigationState, debugNavigationState } from '../core/engine';
-import { getNavigationItemsWithActiveState } from '../core/data';
+import { calculateNavigationLayout, createResizeHandler, createNavigationStateMemo, safeCalculateNavigationState, debugNavigationState } from '../core/engine.js';
+import { getNavigationItemsWithActiveState } from '../core/data.js';
 /**
  * Primary navigation state hook
  * Manages all aspects of HIVE's adaptive navigation system
@@ -79,7 +79,7 @@ export const useNavigationState = ({ user, initialPreference = 'auto', enableAna
         }
     }, [enableAnalytics]);
     const toggleSidebar = useCallback(() => {
-        setSidebarCollapsed(prev => {
+        setSidebarCollapsed((prev) => {
             const newValue = !prev;
             // Persist to localStorage
             if (typeof window !== 'undefined') {

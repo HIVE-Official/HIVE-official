@@ -1,7 +1,7 @@
 // HIVE Template Components - Page Layouts
 // Mobile-first, responsive page structures using organisms, molecules, and atoms
 // === IMPLEMENTED TEMPLATES ===
-export * from './page-layout';
+export * from './page-layout.js';
 // export * from './profile-page-template'; // Temporarily disabled due to type conflicts
 // === PLANNED TEMPLATES ===
 // These will be implemented as part of the atomic design system completion

@@ -334,16 +334,6 @@ export const HiveSpaceSurfaceManager: React.FC<HiveSpaceSurfaceManagerProps> = (
 }) => {
   const [activeTab, setActiveTab] = useState<'surfaces' | 'tools'>('surfaces');
 
-  // Feature flag check
-  if (!enableFeatureFlag) {
-    return (
-      <div className="text-center py-8">
-        <Settings className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-        <p className="text-gray-400">Space surface management is not available</p>
-      </div>
-    );
-  }
-
   const handleSurfaceToggle = useCallback(async (surface: SpaceSurface) => {
     await onUpdateSurface(surface.id, { isEnabled: !surface.isEnabled });
   }, [onUpdateSurface]);
@@ -385,6 +375,16 @@ export const HiveSpaceSurfaceManager: React.FC<HiveSpaceSurfaceManagerProps> = (
   };
 
   const typeInfo = getSpaceTypeInfo();
+
+  // Feature flag check
+  if (!enableFeatureFlag) {
+    return (
+      <div className="text-center py-8">
+        <Settings className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+        <p className="text-gray-400">Space surface management is not available</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

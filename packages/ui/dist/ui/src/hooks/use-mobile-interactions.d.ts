@@ -2,7 +2,7 @@
  * Mobile Interaction Hooks
  * Provides touch gestures, pull-to-refresh, and mobile-specific interactions
  */
-import React from 'react';
+import type React from 'react';
 export type HapticFeedbackType = 'light' | 'medium' | 'heavy' | 'selection' | 'success' | 'warning' | 'error';
 export type SwipeDirection = 'left' | 'right' | 'up' | 'down';
 interface SwipeConfig {
@@ -39,13 +39,13 @@ export declare function usePullToRefresh(config: PullToRefreshConfig): {
         onTouchMove: (e: React.TouchEvent) => void;
         onTouchEnd: () => Promise<void>;
         onTouchCancel: () => Promise<void>;
-        ref: React.MutableRefObject<HTMLDivElement>;
+        ref: React.MutableRefObject<HTMLDivElement | null>;
     };
     isPulling: boolean;
     isRefreshing: boolean;
     pullDistance: number;
     canRefresh: boolean;
-    containerRef: React.MutableRefObject<HTMLDivElement>;
+    containerRef: React.MutableRefObject<HTMLDivElement | null>;
 };
 export declare function useLongPress(onLongPress: () => void, options?: {
     threshold?: number;

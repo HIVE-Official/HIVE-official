@@ -14,6 +14,6 @@ interface MobileNavigationMenuProps {
     unreadNotifications?: number;
     className?: string;
 }
-export declare function MobileNavigationMenu({ user, isOpen, onClose, unreadNotifications, className }: MobileNavigationMenuProps): import("react/jsx-runtime").JSX.Element;
+export declare function MobileNavigationMenu({ user, isOpen, onClose, unreadNotifications, className }: MobileNavigationMenuProps): import("react/jsx-runtime").JSX.Element | null;
 export {};
 //# sourceMappingURL=mobile-navigation-menu.d.ts.map

@@ -3,7 +3,8 @@
 import React from 'react';
 import { motion } from '../../components/framer-motion-proxy';
 import { cn } from '../../lib/utils';
-import { SpaceCategoryCard, SpaceCategoryType, SPACE_CATEGORIES } from '../atoms/space-category-card';
+import type { SpaceCategoryType} from '../atoms/space-category-card';
+import { SpaceCategoryCard, SPACE_CATEGORIES } from '../atoms/space-category-card';
 import { Search, Filter, TrendingUp, Clock } from 'lucide-react';
 
 export interface SpaceExploreStats {

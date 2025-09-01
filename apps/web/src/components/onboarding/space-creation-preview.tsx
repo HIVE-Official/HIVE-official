@@ -37,10 +37,10 @@ const typeIcons = {
 };
 
 const typeColors = {
-  academic: 'text-blue-600 bg-blue-50',
-  social: 'text-green-600 bg-green-50',
-  career: 'text-purple-600 bg-purple-50',
-  general: 'text-gray-600 bg-gray-50'
+  academic: 'text-white bg-blue-600/20',
+  social: 'text-white bg-green-600/20',
+  career: 'text-white bg-purple-600/20',
+  general: 'text-white bg-gray-600/20'
 };
 
 export function SpaceCreationPreview({ 
@@ -100,7 +100,7 @@ export function SpaceCreationPreview({
           <div className="h-6 bg-gray-200 rounded w-3/4 mb-4"></div>
           <div className="space-y-3">
             {[1, 2, 3].map(i => (
-              <div key={i} className="h-16 bg-gray-100 rounded"></div>
+              <div key={i} className="h-16 bg-[var(--hive-background-secondary)] rounded"></div>
             ))}
           </div>
         </div>
@@ -111,11 +111,11 @@ export function SpaceCreationPreview({
   if (error) {
     return (
       <div className="max-w-2xl mx-auto p-6 bg-white rounded-xl shadow-sm border">
-        <div className="text-center text-red-600">
+        <div className="text-center text-white">
           <p>Error loading space preview: {error}</p>
           <button 
             onClick={onSkip}
-            className="mt-4 px-4 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
+            className="mt-4 px-4 py-2 text-sm bg-[var(--hive-background-secondary)] hover:bg-gray-200 rounded-md transition-colors"
           >
             Continue without spaces
           </button>
@@ -128,7 +128,7 @@ export function SpaceCreationPreview({
     <div className="max-w-2xl mx-auto p-6 bg-white rounded-xl shadow-sm border">
       <div className="text-center mb-6">
         <div className="inline-flex items-center justify-center w-12 h-12 bg-[var(--hive-brand-primary)] rounded-full mb-4">
-          <Sparkles className="w-6 h-6 text-white" />
+          <Sparkles className="w-6 h-6 text-[var(--hive-text-inverse)]" />
         </div>
         <h2 className="text-2xl font-bold text-[var(--hive-text-primary)] mb-2">
           Your Campus Communities
@@ -160,7 +160,7 @@ export function SpaceCreationPreview({
                       <h4 className="font-medium text-[var(--hive-text-primary)]">
                         {space.name}
                       </h4>
-                      <span className="text-xs px-2 py-1 bg-green-100 text-green-700 rounded-full font-medium">
+                      <span className="text-xs px-2 py-1 bg-green-100 text-white rounded-full font-medium">
                         Auto-join
                       </span>
                     </div>
@@ -195,7 +195,7 @@ export function SpaceCreationPreview({
               const colorClass = typeColors[space.type];
               
               return (
-                <div key={space.id} className="flex items-start p-4 border border-dashed border-gray-300 rounded-lg">
+                <div key={space.id} className="flex items-start p-4 border border-dashed border-[var(--hive-border-default)] rounded-lg">
                   <div className={`p-2 rounded-lg ${colorClass} mr-3 mt-1`}>
                     <IconComponent className="w-4 h-4" />
                   </div>
@@ -204,7 +204,7 @@ export function SpaceCreationPreview({
                       <h4 className="font-medium text-[var(--hive-text-primary)]">
                         {space.name}
                       </h4>
-                      <span className="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded-full font-medium">
+                      <span className="text-xs px-2 py-1 bg-blue-100 text-white rounded-full font-medium">
                         Recommended
                       </span>
                     </div>
@@ -222,7 +222,7 @@ export function SpaceCreationPreview({
             })}
           </div>
           <div className="mt-3 p-3 bg-blue-50 rounded-lg">
-            <p className="text-sm text-blue-700">
+            <p className="text-sm text-white">
               💡 You can join these spaces later from your dashboard or discovery page
             </p>
           </div>
@@ -231,8 +231,8 @@ export function SpaceCreationPreview({
 
       {spaces.length === 0 && (
         <div className="text-center py-8">
-          <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Building2 className="w-8 h-8 text-gray-400" />
+          <div className="w-16 h-16 bg-[var(--hive-background-secondary)] rounded-full flex items-center justify-center mx-auto mb-4">
+            <Building2 className="w-8 h-8 text-white/60" />
           </div>
           <h3 className="text-lg font-medium text-[var(--hive-text-primary)] mb-2">
             No automatic spaces found
@@ -256,7 +256,7 @@ export function SpaceCreationPreview({
         <button
           onClick={onConfirm}
           disabled={isLoading || spaces.length === 0}
-          className="px-6 py-3 bg-[var(--hive-brand-primary)] text-white rounded-lg font-medium hover:bg-[var(--hive-brand-primary-dark)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+          className="px-6 py-3 bg-[var(--hive-brand-primary)] text-[var(--hive-text-inverse)] rounded-lg font-medium hover:bg-[var(--hive-brand-primary-dark)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
         >
           {isLoading ? (
             <>

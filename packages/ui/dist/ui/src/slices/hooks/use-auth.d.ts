@@ -8,10 +8,10 @@ export interface AuthUser {
     sessionToken?: string;
 }
 export declare function useAuthProvider(): {
-    user: AuthUser;
+    user: AuthUser | null;
     isAuthenticated: boolean;
     isLoading: boolean;
-    error: string;
+    error: string | null;
     login: (credentials: any) => Promise<void>;
     logout: () => Promise<void>;
     sendMagicLink: () => Promise<void>;
@@ -21,10 +21,10 @@ export declare function useAuthProvider(): {
     devLogin: () => Promise<void>;
 };
 export declare const AuthContext: import("react").Context<{
-    user: AuthUser;
+    user: AuthUser | null;
     isAuthenticated: boolean;
     isLoading: boolean;
-    error: string;
+    error: string | null;
     login: (credentials: any) => Promise<void>;
     logout: () => Promise<void>;
     sendMagicLink: () => Promise<void>;
@@ -32,5 +32,5 @@ export declare const AuthContext: import("react").Context<{
     refreshSession: () => Promise<void>;
     updateProfile: () => Promise<void>;
     devLogin: () => Promise<void>;
-}>;
+} | null>;
 //# sourceMappingURL=use-auth.d.ts.map

@@ -4,9 +4,9 @@
 export const dynamic = 'force-dynamic';
 
 import { useState, useEffect, useMemo } from "react";
-import { Button, Card, Badge } from "@hive/ui";
-import { HiveModal } from "@/components/temp-stubs";
-import { PageContainer } from "@/components/temp-stubs";
+// import dynamic from "next/dynamic"; // Not used in this component
+import { Card, Badge, Button } from "@hive/ui";
+import { Modal, PageContainer } from "@/components/temp-stubs";
 import { 
   Calendar, 
   Plus, 
@@ -25,8 +25,37 @@ import {
 import { useSession } from "../../../hooks/use-session";
 // import { useCalendarData } from "../../../hooks/use-calendar-data";
 import { ErrorBoundary } from "../../../components/error-boundary";
-import { EventDetailsModal } from "../../../components/events/event-details-modal";
-import { CreateEventModal } from "../../../components/events/create-event-modal";
+
+// Dynamic imports for heavy modal components
+const EventDetailsModal = dynamic(
+  async () => {
+    const mod = await import("../../../components/events/event-details-modal");
+    return { default: mod.EventDetailsModal };
+  },
+  { 
+    ssr: false,
+    loading: () => (
+      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-hive-gold"></div>
+      </div>
+    )
+  }
+);
+
+const CreateEventModal = dynamic(
+  async () => {
+    const mod = await import("../../../components/events/create-event-modal");
+    return { default: mod.CreateEventModal };
+  },
+  { 
+    ssr: false,
+    loading: () => (
+      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-hive-gold"></div>
+      </div>
+    )
+  }
+);
 
 // Calendar interfaces
 interface CalendarEvent {
@@ -326,7 +355,7 @@ export default function CalendarPage() {
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
             <div className="w-8 h-8 bg-hive-gold rounded-lg animate-pulse mx-auto mb-4" />
-            <p className="text-white">Loading your calendar...</p>
+            <p className="text-[var(--hive-text-inverse)]">Loading your calendar...</p>
           </div>
         </div>
       </PageContainer>
@@ -405,7 +434,7 @@ export default function CalendarPage() {
                 <ChevronLeft className="h-4 w-4" />
               </Button>
               
-              <h2 className="text-2xl font-bold text-white min-w-[200px] text-center">
+              <h2 className="text-2xl font-bold text-[var(--hive-text-inverse)] min-w-[200px] text-center">
                 {viewMode === 'month' && currentDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
                 {viewMode === 'week' && `Week of ${currentDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`}
                 {viewMode === 'day' && currentDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
@@ -435,7 +464,7 @@ export default function CalendarPage() {
             <select
               value={eventTypeFilter}
               onChange={(e) => setEventTypeFilter(e.target.value as CalendarEvent['type'] | 'all')}
-              className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-1 text-white text-sm focus:border-hive-gold focus:outline-none"
+              className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-1 text-[var(--hive-text-inverse)] text-sm focus:border-hive-gold focus:outline-none"
             >
               <option value="all">All Events</option>
               <option value="event">Campus Events</option>
@@ -455,7 +484,7 @@ export default function CalendarPage() {
                 <div className="flex items-center space-x-3">
                   <div className="w-2 h-2 bg-green-400 rounded-full"></div>
                   <div>
-                    <div className="font-medium text-white text-sm">{integration.name}</div>
+                    <div className="font-medium text-[var(--hive-text-inverse)] text-sm">{integration.name}</div>
                     <div className="text-xs text-zinc-400">
                       {integration.eventCount} events • Last sync: {integration.lastSync && new Date(integration.lastSync).toLocaleTimeString()}
                     </div>
@@ -472,7 +501,7 @@ export default function CalendarPage() {
           {viewEvents.length === 0 ? (
             <div className="text-center py-12">
               <Calendar className="h-16 w-16 text-zinc-600 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-white mb-2">No events scheduled</h3>
+              <h3 className="text-xl font-semibold text-[var(--hive-text-inverse)] mb-2">No events scheduled</h3>
               <p className="text-zinc-400 mb-6">
                 {eventTypeFilter !== 'all' 
                   ? `No ${eventTypeFilter} events found for this ${viewMode}`
@@ -509,7 +538,7 @@ export default function CalendarPage() {
                     )}
                   </div>
 
-                  <h3 className="font-semibold text-white mb-2 leading-tight">
+                  <h3 className="font-semibold text-[var(--hive-text-inverse)] mb-2 leading-tight">
                     {event.title}
                   </h3>
 
@@ -595,7 +624,7 @@ export default function CalendarPage() {
         />
 
         {/* Calendar Integrations Modal */}
-        <HiveModal
+        <Modal
           isOpen={showIntegrations}
           onClose={() => setShowIntegrations(false)}
           title="Calendar Sync & Integrations"
@@ -608,7 +637,7 @@ export default function CalendarPage() {
                   <div className="flex items-center space-x-3">
                     <div className={`w-3 h-3 rounded-full ${integration.isConnected ? 'bg-green-400' : 'bg-zinc-500'}`}></div>
                     <div>
-                      <div className="font-medium text-white">{integration.name}</div>
+                      <div className="font-medium text-[var(--hive-text-inverse)]">{integration.name}</div>
                       <div className="text-sm text-zinc-400">
                         {integration.isConnected 
                           ? `${integration.eventCount} events synced`
@@ -634,10 +663,10 @@ export default function CalendarPage() {
               </Button>
             </div>
           </div>
-        </HiveModal>
+        </Modal>
 
         {/* Conflicts Modal */}
-        <HiveModal
+        <Modal
           isOpen={showConflicts}
           onClose={() => setShowConflicts(false)}
           title="Schedule Conflicts"
@@ -647,7 +676,7 @@ export default function CalendarPage() {
             {conflictEvents.map((event) => (
               <div key={event.id} className="p-4 bg-red-500/10 border border-red-500/30 rounded-lg">
                 <div className="flex items-start justify-between mb-2">
-                  <h3 className="font-semibold text-white">{event.title}</h3>
+                  <h3 className="font-semibold text-[var(--hive-text-inverse)]">{event.title}</h3>
                   <AlertTriangle className="h-5 w-5 text-red-400" />
                 </div>
                 <p className="text-sm text-zinc-400 mb-3">
@@ -668,7 +697,7 @@ export default function CalendarPage() {
               </div>
             ))}
           </div>
-        </HiveModal>
+        </Modal>
 
         {/* Event Details Modal */}
         <EventDetailsModal
@@ -685,7 +714,7 @@ export default function CalendarPage() {
               )
             );
           }}
-          onBookmark={(eventId) => {
+          onBookmark={(_eventId) => {
             
           }}
         />

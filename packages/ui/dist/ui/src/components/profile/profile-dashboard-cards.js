@@ -10,11 +10,11 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
  * - Campus-specific dashboard widgets and cross-slice integration
  */
 import React from 'react';
-import { cn } from '../../lib/utils';
+import { cn } from '../../lib/utils.js';
 // Molecule imports
-import { ComprehensiveCard } from '../../atomic/molecules/comprehensive-card';
-import { UserIdentity } from '../../atomic/molecules/user-identity';
-import { iconComposition, Users, Hammer, Calendar, Activity, Star, Zap, Clock, MapPin, BarChart3, Plus, ChevronRight } from '../../atomic/foundations/icon-composition';
+import { ComprehensiveCard } from '../../atomic/molecules/comprehensive-card.js';
+import { UserIdentity } from '../../atomic/molecules/user-identity.js';
+import { iconComposition, Users, Hammer, Calendar, Activity, Star, Zap, Clock, MapPin, BarChart3, Plus, ChevronRight } from '../../atomic/foundations/icon-composition.js';
 // === MY SPACES CARD ===
 export const MySpacesCard = React.forwardRef(({ spaces, onSpaceClick, onViewAll, className }, ref) => {
     const totalUnread = spaces.reduce((sum, space) => sum + space.unreadCount, 0);

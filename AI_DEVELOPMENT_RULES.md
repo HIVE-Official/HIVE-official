@@ -2,10 +2,11 @@
 
 **AI-Powered Vibe-Coding Guidelines for HIVE Platform Development**
 
-**Date:** August 7, 2025  
+**Date:** August 29, 2025  
 **Status:** ACTIVE DEVELOPMENT GUIDELINES  
 **Scope:** All AI assistants working on HIVE platform  
 **Philosophy:** Vibe-coded excellence with systematic rigor  
+**Current Phase:** Post-design-system implementation, preparing for vBETA launch  
 
 ---
 
@@ -40,6 +41,8 @@ interface RequiredTechStack {
     ui: '@hive/ui design system';
     stateManagement: 'React hooks + Context';
     typeSystem: 'TypeScript (strict mode)';
+    monorepo: 'Turborepo with pnpm';
+    storybook: 'Comprehensive component documentation';
   };
   
   // Backend - FIREBASE ONLY
@@ -60,6 +63,13 @@ interface RequiredTechStack {
   };
 }
 ```
+
+### **DESIGN SYSTEM STATUS**
+- **✅ COMPLETE**: Full @hive/ui design system with strategic gold borders
+- **✅ STORYBOOK**: 16 comprehensive stories covering all component use cases
+- **✅ SEMANTIC TOKENS**: All components use proper design tokens (bg-background, border-accent)
+- **✅ MOBILE-FIRST**: Responsive design across all breakpoints
+- **✅ ATOMIC STRUCTURE**: Atoms, molecules, organisms hierarchy implemented
 
 ### **CODE QUALITY STANDARDS**
 - **Zero TypeScript Errors**: Build must pass without warnings
@@ -156,10 +166,11 @@ interface UBCampusData {
 
 ### **BEFORE WRITING ANY CODE**
 1. **Read Current Implementation**: Always check existing code patterns
-2. **Check @hive/ui Components**: Use existing components first
+2. **Check @hive/ui Components**: Use existing components first - reference Storybook
 3. **Validate Against Rules**: Ensure approach follows these guidelines
 4. **Consider Mobile Impact**: How does this work on phones?
 5. **Think Social Utility**: Does this serve campus community building?
+6. **Check Monorepo Structure**: Understand workspace dependencies and build processes
 
 ### **CODE WRITING STANDARDS**
 ```typescript
@@ -416,3 +427,14 @@ As an AI assistant working on HIVE:
 ---
 
 **FINAL RULE**: When in doubt, ask Jacob. But lean toward action - it's better to ship something students love and iterate than to perfect something they'll never use.
+
+---
+
+## **📚 RELATED DOCUMENTATION**
+
+- **`CLAUDE.md`** - Project vision, collaboration approach, and design system evolution rule
+- **`HIVE_DESIGN_SYSTEM_STATUS.md`** - Complete design system implementation status
+- **`apps/web/CLAUDE.md`** - Next.js specific patterns and deployment guidelines
+- **Storybook** - Interactive component documentation at `/packages/ui/.storybook/`
+
+**Last Updated**: August 29, 2025

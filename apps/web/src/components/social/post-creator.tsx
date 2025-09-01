@@ -33,7 +33,7 @@ import {
 } from '@hive/ui';
 
 // Hooks
-import { useHiveAuth } from '@hive/ui';
+import { useUnifiedAuth } from '@hive/ui';
 
 // Types
 interface PostCreatorProps {
@@ -69,7 +69,7 @@ export function PostCreator({
   placeholder = "What's happening on campus?",
   compact = false 
 }: PostCreatorProps) {
-  const { user } = useHiveAuth();
+  const { user } = useUnifiedAuth();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   
   const [isExpanded, setIsExpanded] = useState(false);
@@ -195,7 +195,7 @@ export function PostCreator({
           >
             <Avatar className="h-10 w-10">
               <div className="h-10 w-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
-                <span className="text-white font-medium">
+                <span className="text-[var(--hive-text-inverse)] font-medium">
                   {user?.displayName?.charAt(0) || 'U'}
                 </span>
               </div>
@@ -219,7 +219,7 @@ export function PostCreator({
             <div className="flex items-center space-x-3">
               <Avatar className="h-10 w-10">
                 <div className="h-10 w-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
-                  <span className="text-white font-medium">
+                  <span className="text-[var(--hive-text-inverse)] font-medium">
                     {user?.displayName?.charAt(0) || 'U'}
                   </span>
                 </div>

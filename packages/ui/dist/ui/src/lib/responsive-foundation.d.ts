@@ -27,16 +27,16 @@ export declare const touchTargets: {
     readonly comfortable: "min-h-[48px] min-w-[48px]";
     readonly spacious: "min-h-[56px] min-w-[56px]";
 };
-export declare const responsiveSpace: (props?: {
-    size?: "sm" | "md" | "lg" | "xl" | "xs";
-    gap?: "sm" | "md" | "lg" | "xl" | "xs";
-} & import("class-variance-authority/types").ClassProp) => string;
-export declare const responsiveText: (props?: {
-    size?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl";
-} & import("class-variance-authority/types").ClassProp) => string;
-export declare const responsiveContainer: (props?: {
-    size?: "content" | "feed" | "full" | "app";
-} & import("class-variance-authority/types").ClassProp) => string;
+export declare const responsiveSpace: (props?: ({
+    size?: "xs" | "sm" | "md" | "lg" | "xl" | null | undefined;
+    gap?: "xs" | "sm" | "md" | "lg" | "xl" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
+export declare const responsiveText: (props?: ({
+    size?: "xs" | "sm" | "lg" | "xl" | "base" | "2xl" | "3xl" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
+export declare const responsiveContainer: (props?: ({
+    size?: "full" | "content" | "feed" | "app" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
 export declare const mobileNavigation: {
     readonly bottomTabs: "fixed bottom-0 left-0 right-0 bg-[var(--hive-background-primary)]/95 backdrop-blur-sm border-t border-[var(--hive-border-primary)] h-16 sm:hidden";
     readonly drawer: "fixed inset-y-0 left-0 z-50 w-64 bg-[var(--hive-background-primary)] transform transition-transform sm:translate-x-0 sm:static sm:w-auto";
@@ -48,9 +48,9 @@ export declare const touchInteractions: {
     readonly pullZone: "overscroll-y-contain";
     readonly scrollContainer: "overflow-auto -webkit-overflow-scrolling-touch";
 };
-export declare const socialGrid: (props?: {
-    type?: "feed" | "profile" | "cards" | "dashboard";
-} & import("class-variance-authority/types").ClassProp) => string;
+export declare const socialGrid: (props?: ({
+    type?: "feed" | "profile" | "cards" | "dashboard" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
 export declare const visibility: {
     readonly mobileOnly: "block sm:hidden";
     readonly desktopOnly: "hidden sm:block";

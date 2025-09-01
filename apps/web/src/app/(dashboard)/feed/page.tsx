@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useCallback } from 'react';
-import { Button, Card, Badge, useAuth } from "@hive/ui";
+import { Button, Card, Badge, useUnifiedAuth as useAuth } from "@hive/ui";
 import { 
   Activity, 
   Plus, 
@@ -28,7 +28,7 @@ export default function FeedPage() {
   const [feedFilter, setFeedFilter] = useState<'all' | 'following' | 'spaces' | 'academic'>('all');
   const [sortBy, setSortBy] = useState<'recent' | 'popular' | 'trending'>('recent');
   const [showComposer, setShowComposer] = useState(false);
-  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+  const [_lastUpdated, _setLastUpdated] = useState<Date | null>(null);
 
   // Use the integrated feed hook
   const {
@@ -46,22 +46,22 @@ export default function FeedPage() {
   });
 
   // Placeholder functions for post actions
-  const createPost = useCallback(async (postData: any) => {
+  const createPost = useCallback(async (_postData: any) => {
     // TODO: Implement post creation API call
     
   }, []);
 
-  const likePost = useCallback(async (postId: string) => {
+  const likePost = useCallback(async (_postId: string) => {
     // TODO: Implement like API call
     
   }, []);
 
-  const commentOnPost = useCallback(async (postId: string, comment: string) => {
+  const commentOnPost = useCallback(async (_postId: string, _comment: string) => {
     // TODO: Implement comment API call
     
   }, []);
 
-  const sharePost = useCallback(async (postId: string) => {
+  const sharePost = useCallback(async (_postId: string) => {
     // TODO: Implement share API call
     
   }, []);
@@ -96,9 +96,9 @@ export default function FeedPage() {
     }
   }, [likePost]);
 
-  const handleComment = useCallback(async (postId: string, content: string) => {
+  const handleComment = useCallback(async (_postId: string, content: string) => {
     try {
-      await commentOnPost(postId, content);
+      await commentOnPost(_postId, content);
     } catch (error) {
       console.error('Failed to comment on post:', error);
     }
@@ -198,7 +198,7 @@ export default function FeedPage() {
                 </h1>
                 <p className="text-hive-text-secondary text-sm">
                   Your personalized campus pulse and coordination center
-                  {lastUpdated && ` • Last updated ${lastUpdated.toLocaleTimeString()}`}
+                  {_lastUpdated && ` • Last updated ${_lastUpdated.toLocaleTimeString()}`}
                 </p>
               </div>
             </div>
@@ -289,25 +289,25 @@ export default function FeedPage() {
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           <Card className="p-4 text-center bg-gradient-to-br from-blue-500/10 to-blue-600/10 border-blue-500/20">
             <Activity className="h-6 w-6 mx-auto mb-2 text-blue-400" />
-            <div className="text-lg font-bold text-white">24</div>
+            <div className="text-lg font-bold text-[var(--hive-text-inverse)]">24</div>
             <div className="text-xs text-hive-text-mutedLight">Posts Today</div>
           </Card>
           
           <Card className="p-4 text-center bg-gradient-to-br from-green-500/10 to-green-600/10 border-green-500/20">
             <Users className="h-6 w-6 mx-auto mb-2 text-green-400" />
-            <div className="text-lg font-bold text-white">12</div>
+            <div className="text-lg font-bold text-[var(--hive-text-inverse)]">12</div>
             <div className="text-xs text-hive-text-mutedLight">Active Spaces</div>
           </Card>
           
           <Card className="p-4 text-center bg-gradient-to-br from-purple-500/10 to-purple-600/10 border-purple-500/20">
             <Calendar className="h-6 w-6 mx-auto mb-2 text-purple-400" />
-            <div className="text-lg font-bold text-white">8</div>
+            <div className="text-lg font-bold text-[var(--hive-text-inverse)]">8</div>
             <div className="text-xs text-hive-text-mutedLight">Events Today</div>
           </Card>
           
           <Card className="p-4 text-center bg-gradient-to-br from-orange-500/10 to-orange-600/10 border-orange-500/20">
             <Zap className="h-6 w-6 mx-auto mb-2 text-orange-400" />
-            <div className="text-lg font-bold text-white">5</div>
+            <div className="text-lg font-bold text-[var(--hive-text-inverse)]">5</div>
             <div className="text-xs text-hive-text-mutedLight">New Tools</div>
           </Card>
         </div>
@@ -339,7 +339,7 @@ export default function FeedPage() {
                 <div className="w-16 h-16 bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Activity className="h-8 w-8 text-gray-400" />
                 </div>
-                <h3 className="text-lg font-semibold text-white mb-2">No Posts Yet</h3>
+                <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-2">No Posts Yet</h3>
                 <p className="text-hive-text-mutedLight mb-6">
                   {feedFilter === 'all' 
                     ? 'Your campus feed will show activity from your spaces, tools, and community. Join some spaces to get started!'

@@ -2,7 +2,8 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { HiveLandingPage } from '../../components/landing/hive-landing-page'
 import { CountdownTimer } from '../../components/landing/countdown-timer'
 
-const meta: Meta = {
+const meta: Meta<typeof HiveLandingPage> = {
+  component: HiveLandingPage,
   title: '📄 Page Layouts/Landing Page',
   parameters: {
     docs: {
@@ -15,7 +16,7 @@ const meta: Meta = {
 }
 
 export default meta
-type Story = StoryObj
+type Story = StoryObj<typeof HiveLandingPage>
 
 export const CompleteLandingPage: Story = {
   render: () => {
@@ -62,7 +63,7 @@ export const CountdownTimerShowcase: Story = {
               <CountdownTimer 
                 targetDate={launchDate}
                 size="lg"
-                variant="accent"
+                variant="secondary"
               />
             </div>
 
@@ -91,7 +92,7 @@ export const CountdownTimerShowcase: Story = {
             <CountdownTimer 
               targetDate={new Date(Date.now() - 1000)} // Past date
               size="lg"
-              variant="accent"
+              variant="secondary"
               onComplete={() => console.log('Timer completed!')}
             />
           </div>
@@ -149,7 +150,7 @@ export const HeroSection: Story = {
             <CountdownTimer 
               targetDate={new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)}
               size="lg"
-              variant="accent"
+              variant="secondary"
             />
           </div>
         </div>
@@ -187,7 +188,7 @@ export const WaitlistSection: Story = {
             <CountdownTimer 
               targetDate={new Date(Date.now() + 21 * 24 * 60 * 60 * 1000)}
               size="md"
-              variant="accent"
+              variant="secondary"
             />
           </div>
 
@@ -268,7 +269,7 @@ export const FeatureShowcase: Story = {
             <CountdownTimer 
               targetDate={new Date(Date.now() + 25 * 24 * 60 * 60 * 1000)}
               size="md"
-              variant="accent"
+              variant="secondary"
             />
           </div>
         </div>

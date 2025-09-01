@@ -190,7 +190,7 @@ export const SpaceCategoryBrowser: React.FC<SpaceCategoryBrowserProps> = ({
   const [activeCategory, setActiveCategory] = useState<SpaceCategory | undefined>(selectedCategory);
 
   const filteredSpaces = useMemo(() => {
-    let filtered = spaces.filter(space => {
+    const filtered = spaces.filter(space => {
       // Category filter
       if (activeCategory && space.category !== activeCategory) return false;
       
@@ -224,10 +224,11 @@ export const SpaceCategoryBrowser: React.FC<SpaceCategoryBrowserProps> = ({
       switch (sortBy) {
         case 'members':
           return b.memberCount - a.memberCount;
-        case 'activity':
+        case 'activity': {
           const aActivity = a.lastActivity ? new Date(a.lastActivity).getTime() : 0;
           const bActivity = b.lastActivity ? new Date(b.lastActivity).getTime() : 0;
           return bActivity - aActivity;
+        }
         case 'created':
           return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
         case 'trending':
@@ -334,7 +335,7 @@ export const SpaceCategoryBrowser: React.FC<SpaceCategoryBrowserProps> = ({
             viewMode === 'list' ? 'flex-shrink-0' : ''
           )}>
             <div className={cn(
-              'rounded-2xl flex items-center justify-center font-bold text-white relative overflow-hidden',
+              'rounded-2xl flex items-center justify-center font-bold text-[var(--hive-text-inverse)] relative overflow-hidden',
               viewMode === 'list' ? 'w-16 h-16 text-xl' : 'w-20 h-20 text-2xl',
               `bg-gradient-to-br ${categoryConfig.gradient}`
             )}>
@@ -347,7 +348,7 @@ export const SpaceCategoryBrowser: React.FC<SpaceCategoryBrowserProps> = ({
             
             {space.isJoined && (
               <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-400 rounded-full border-2 border-[var(--hive-background-secondary)] flex items-center justify-center">
-                <UserCheck className="w-3 h-3 text-white" />
+                <UserCheck className="w-3 h-3 text-[var(--hive-text-inverse)]" />
               </div>
             )}
           </div>

@@ -7,7 +7,16 @@ import { Alert } from '../../components/alert'
 import { EmailVerification } from '../../components/auth/email-verification'
 import { SchoolSearch } from '../../components/auth/school-search'
 
-const meta: Meta = {
+// Create a component wrapper for the story
+const AuthenticationInterface = () => (
+  <div className="p-6 space-y-8">
+    <h2 className="text-2xl font-semibold">Authentication Interface</h2>
+    <p className="text-muted-foreground">Complete authentication flows for HIVE campus platform</p>
+  </div>
+);
+
+const meta: Meta<typeof AuthenticationInterface> = {
+  component: AuthenticationInterface,
   title: '🎭 Interfaces/Authentication',
   parameters: {
     docs: {

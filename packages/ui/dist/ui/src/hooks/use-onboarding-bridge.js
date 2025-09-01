@@ -3,8 +3,8 @@
  * Bridges onboarding completion to UnifiedAuth and Profile hydration
  */
 import { useCallback } from 'react';
-import { useUnifiedAuth } from '../contexts/unified-auth-context';
-import { logger } from '../lib/logger';
+import { useUnifiedAuth } from '../contexts/unified-auth-context.js';
+import { logger } from '../lib/logger.js';
 /**
  * Hook for managing onboarding completion and profile hydration
  */
@@ -92,7 +92,7 @@ export function useOnboardingBridge() {
     // Create spaces after onboarding (called automatically by completeOnboarding)
     const createPostOnboardingSpaces = useCallback(async (onboardingData) => {
         try {
-            if (!unifiedAuth.hasValidSession()) {
+            if (!unifiedAuth.isAuthenticated || !unifiedAuth.user) {
                 throw new Error('Valid session required for space creation');
             }
             const token = await unifiedAuth.getAuthToken();
@@ -171,8 +171,8 @@ export function useOnboardingBridge() {
         isLoading: unifiedAuth.isLoading,
         error: unifiedAuth.error,
         // Utility functions
-        canAccessFeature: unifiedAuth.canAccessFeature,
-        hasValidSession: unifiedAuth.hasValidSession,
+        canAccessFeature: (_feature) => unifiedAuth.isAuthenticated && !!unifiedAuth.user,
+        hasValidSession: () => unifiedAuth.isAuthenticated && !!unifiedAuth.user,
     };
 }
 //# sourceMappingURL=use-onboarding-bridge.js.map

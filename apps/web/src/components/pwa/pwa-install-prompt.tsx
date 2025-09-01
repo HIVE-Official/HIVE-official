@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Button } from '@hive/ui';
-import { HiveCard } from '@hive/ui';
+import { Card } from '@hive/ui';
 import { Download, X, Smartphone } from 'lucide-react';
 import { usePWA } from '@/hooks/use-pwa';
 
@@ -79,7 +79,7 @@ export function PWAInstallPrompt({
   // Card variant for dedicated sections
   if (variant === 'card') {
     return (
-      <HiveCard className={`bg-accent/10 border-accent/20 p-6 ${className}`}>
+      <Card className={`bg-accent/10 border-accent/20 p-6 ${className}`}>
           <div className="flex items-start gap-4">
             <div className="flex-shrink-0 p-2 bg-accent/20 rounded-lg">
               <Smartphone className="w-6 h-6 text-accent" />
@@ -107,7 +107,7 @@ export function PWAInstallPrompt({
               </div>
             </div>
           </div>
-      </HiveCard>
+      </Card>
     );
   }
 

@@ -60,7 +60,7 @@ export function TopNavLayout({ children }: TopNavLayoutProps) {
                     className="w-8 h-8"
                   />
                 </div>
-                <span className="text-white font-bold text-xl">HIVE</span>
+                <span className="text-[var(--hive-text-inverse)] font-bold text-xl">HIVE</span>
               </Link>
 
               {/* Desktop Navigation */}
@@ -76,7 +76,7 @@ export function TopNavLayout({ children }: TopNavLayoutProps) {
                       className={`flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                         isActive
                           ? 'bg-[var(--hive-brand-secondary)] text-[var(--hive-background-primary)]'
-                          : 'text-zinc-300 hover:text-white hover:bg-zinc-800'
+                          : 'text-zinc-300 hover:text-[var(--hive-text-inverse)] hover:bg-zinc-800'
                       }`}
                     >
                       <Icon className="w-4 h-4 mr-2" />
@@ -96,7 +96,7 @@ export function TopNavLayout({ children }: TopNavLayoutProps) {
                 <input
                   type="text"
                   placeholder="Search tools, spaces, or people..."
-                  className="w-full pl-10 pr-4 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:border-[var(--hive-brand-secondary)] focus:outline-none focus:ring-1 focus:ring-[var(--hive-brand-secondary)]"
+                  className="w-full pl-10 pr-4 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-[var(--hive-text-inverse)] placeholder-zinc-400 focus:border-[var(--hive-brand-secondary)] focus:outline-none focus:ring-1 focus:ring-[var(--hive-brand-secondary)]"
                 />
                 <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
                   <kbd className="inline-flex items-center px-2 py-1 border border-zinc-600 rounded text-xs text-zinc-400">
@@ -110,9 +110,9 @@ export function TopNavLayout({ children }: TopNavLayoutProps) {
             {/* Right side - User actions */}
             <div className="flex items-center space-x-4">
               {/* Notifications */}
-              <Button variant="ghost" size="sm" className="relative text-zinc-400 hover:text-white">
+              <Button variant="ghost" size="sm" className="relative text-zinc-400 hover:text-[var(--hive-text-inverse)]">
                 <Bell className="w-5 h-5" />
-                <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full text-xs text-white flex items-center justify-center">
+                <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full text-xs text-[var(--hive-text-inverse)] flex items-center justify-center">
                   3
                 </span>
               </Button>
@@ -123,7 +123,7 @@ export function TopNavLayout({ children }: TopNavLayoutProps) {
                   variant="ghost"
                   size="sm"
                   onClick={() => setIsProfileOpen(!isProfileOpen)}
-                  className="flex items-center space-x-2 text-zinc-300 hover:text-white"
+                  className="flex items-center space-x-2 text-zinc-300 hover:text-[var(--hive-text-inverse)]"
                 >
                   <div className="w-8 h-8 bg-zinc-700 rounded-full flex items-center justify-center">
                     {user?.avatarUrl ? (
@@ -148,25 +148,25 @@ export function TopNavLayout({ children }: TopNavLayoutProps) {
                 {isProfileOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-zinc-800 border border-zinc-700 rounded-md shadow-lg z-50">
                     <div className="p-3 border-b border-zinc-700">
-                      <p className="text-sm font-medium text-white">{user?.fullName}</p>
+                      <p className="text-sm font-medium text-[var(--hive-text-inverse)]">{user?.fullName}</p>
                       <p className="text-sm text-zinc-400">@{user?.handle}</p>
                     </div>
                     <div className="py-1">
                       <Link
                         href="/dashboard/profile"
-                        className="flex items-center px-4 py-2 text-sm text-zinc-300 hover:bg-zinc-700 hover:text-white"
+                        className="flex items-center px-4 py-2 text-sm text-zinc-300 hover:bg-zinc-700 hover:text-[var(--hive-text-inverse)]"
                       >
                         <User className="w-4 h-4 mr-3" />
                         Profile
                       </Link>
                       <Link
                         href="/settings"
-                        className="flex items-center px-4 py-2 text-sm text-zinc-300 hover:bg-zinc-700 hover:text-white"
+                        className="flex items-center px-4 py-2 text-sm text-zinc-300 hover:bg-zinc-700 hover:text-[var(--hive-text-inverse)]"
                       >
                         <Settings className="w-4 h-4 mr-3" />
                         Settings
                       </Link>
-                      <button className="flex items-center w-full px-4 py-2 text-sm text-zinc-300 hover:bg-zinc-700 hover:text-white">
+                      <button className="flex items-center w-full px-4 py-2 text-sm text-zinc-300 hover:bg-zinc-700 hover:text-[var(--hive-text-inverse)]">
                         <LogOut className="w-4 h-4 mr-3" />
                         Sign Out
                       </button>
@@ -203,7 +203,7 @@ export function TopNavLayout({ children }: TopNavLayoutProps) {
                     className={`flex items-center px-3 py-2 rounded-md text-sm font-medium ${
                       isActive
                         ? 'bg-[var(--hive-brand-secondary)] text-[var(--hive-background-primary)]'
-                        : 'text-zinc-300 hover:text-white hover:bg-zinc-800'
+                        : 'text-zinc-300 hover:text-[var(--hive-text-inverse)] hover:bg-zinc-800'
                     }`}
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
@@ -223,7 +223,7 @@ export function TopNavLayout({ children }: TopNavLayoutProps) {
                 <input
                   type="text"
                   placeholder="Search..."
-                  className="w-full pl-10 pr-4 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:border-[var(--hive-brand-secondary)] focus:outline-none"
+                  className="w-full pl-10 pr-4 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-[var(--hive-text-inverse)] placeholder-zinc-400 focus:border-[var(--hive-brand-secondary)] focus:outline-none"
                 />
               </div>
             </div>

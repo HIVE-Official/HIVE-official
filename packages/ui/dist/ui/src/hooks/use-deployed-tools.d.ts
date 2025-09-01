@@ -41,6 +41,6 @@ export interface DeployedToolsResponse {
 export declare function useDeployedTools(spaceId: string | null): {
     tools: DeployedTool[];
     loading: boolean;
-    error: string;
+    error: string | null;
 };
 //# sourceMappingURL=use-deployed-tools.d.ts.map

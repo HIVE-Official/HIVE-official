@@ -2,8 +2,8 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
 import { cva } from "class-variance-authority";
 import { Loader2 } from "lucide-react";
-import { cn } from "../lib/utils";
-import { MotionDiv } from "./motion-wrapper";
+import { cn } from "../lib/utils.js";
+import { MotionDiv } from "./motion-wrapper.js";
 const spinnerVariants = cva("animate-spin", {
     variants: {
         variant: {

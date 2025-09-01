@@ -123,7 +123,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="success">☑️ CHECKBOX VARIANTS</Badge>
+            <Badge variant="emerald">☑️ CHECKBOX VARIANTS</Badge>
             Layout Variant Options
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">

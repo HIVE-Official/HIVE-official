@@ -1,5 +1,5 @@
 export declare const auth: {
-    currentUser: any;
+    currentUser: null;
     onAuthStateChanged: () => () => void;
     signOut: () => Promise<void>;
     sendSignInLinkToEmail: () => Promise<void>;
@@ -22,7 +22,7 @@ export declare const analytics: {
 };
 export declare const initializeApp: () => {};
 export declare const getAuth: () => {
-    currentUser: any;
+    currentUser: null;
     onAuthStateChanged: () => () => void;
     signOut: () => Promise<void>;
     sendSignInLinkToEmail: () => Promise<void>;

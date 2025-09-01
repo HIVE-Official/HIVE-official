@@ -3,7 +3,7 @@
  * Provides clean interface for components to interact with Firebase data
  */
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { profileFirebaseService } from '../lib/firebase/profile-service';
+import { profileFirebaseService } from '../lib/firebase/profile-service.js';
 // Custom hook for user profile management
 export function useUserProfile(uid) {
     const [profile, setProfile] = useState(null);
@@ -331,6 +331,12 @@ export function useProfileLayout(uid) {
         try {
             await actions.updateProfile({
                 preferences: {
+                    theme: "auto",
+                    notifications: {
+                        email: true,
+                        push: true,
+                        inApp: true
+                    },
                     ...profile?.preferences,
                     profileLayout: JSON.stringify(layoutData)
                 }

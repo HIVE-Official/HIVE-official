@@ -1,65 +1,19 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-echo "🏆 HIVE Design System - PERFECTION ENFORCEMENT"
-echo "=============================================="
-echo "🎯 Maintaining 100% compliance | Zero errors | 10/10 maturity"
-echo ""
+# HIVE Workflow Enforcement - Pre-commit Hook
+echo "🔒 Running HIVE workflow checks..."
 
-# Check for hardcoded values in staged files
-echo "🔍 Validating design system perfection..."
+# Run the workflow enforcement system
+pnpm workflow-check "commit validation"
 
-# Get staged files
-STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(tsx?|jsx?)$' || true)
-
-if [ -z "$STAGED_FILES" ]; then
-    echo "✅ No TypeScript/JavaScript files staged"
-    echo "🏆 Design system perfection maintained"
-    exit 0
+# Exit with error code if workflow check fails
+if [ $? -ne 0 ]; then
+  echo "❌ Commit blocked by workflow enforcement"
+  echo "Fix the issues above before committing"
+  exit 1
 fi
 
-# Run hardcoded value detection on staged files only
-if ! node scripts/check-staged-hardcoded.js; then
-    echo ""
-    echo "🚨 COMMIT BLOCKED: DESIGN SYSTEM VIOLATION!"
-    echo "❌ Hardcoded values detected - breaking 100% compliance"
-    echo ""
-    echo "🛠️  REQUIRED FIXES:"
-    echo "   • Use semantic tokens: var(--hive-brand-secondary)"
-    echo "   • Use color-mix for opacity: color-mix(in_srgb,var(--hive-brand-secondary)_30%,transparent)"
-    echo "   • Use Tailwind spacing: p-4, m-6, gap-8"
-    echo ""
-    echo "🔧 Migration tools available:"
-    echo "   node migrate-final-hex-colors.js"
-    echo "   node migrate-remaining-rgba.js"
-    echo "   node migrate-absolute-final.js"
-    echo ""
-    echo "📚 See DESIGN_SYSTEM_STANDARDS.md for guidelines"
-    echo "🏆 MAINTAIN PERFECTION - NO COMPROMISES!"
-    echo ""
-    exit 1
-fi
-
-echo "✅ Design system perfection validated!"
-
-# Type checking
-echo "🔍 Running TypeScript checks..."
-if ! npm run type-check --silent; then
-    echo "❌ COMMIT BLOCKED: TypeScript errors found"
-    exit 1
-else
-    echo "✅ TypeScript checks passed"
-fi
-
-# Linting
-echo "🔍 Running ESLint..."
-if ! npm run lint --silent; then
-    echo "❌ COMMIT BLOCKED: ESLint errors found"
-    exit 1
-else
-    echo "✅ ESLint checks passed"
-fi
-
-echo ""
-echo "🎉 All checks passed! Proceeding with commit..."
-echo ""
+# Run standard pre-commit checks
+pnpm lint
+pnpm typecheck

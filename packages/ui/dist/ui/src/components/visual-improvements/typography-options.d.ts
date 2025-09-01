@@ -1,25 +1,25 @@
 import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
-declare const minimalTypographyVariants: (props?: {
-    variant?: "accent" | "title" | "body" | "caption" | "hero" | "subtitle";
-    align?: "center" | "left" | "right";
-} & import("class-variance-authority/types").ClassProp) => string;
-declare const displayTypographyVariants: (props?: {
-    variant?: "hero" | "brand" | "emphasis" | "impact" | "headline" | "subhead";
-    align?: "center" | "left" | "right";
-} & import("class-variance-authority/types").ClassProp) => string;
-declare const campusTypographyVariants: (props?: {
-    variant?: "campus" | "energy" | "bulletin" | "sticker" | "handwritten" | "chalk";
-    align?: "center" | "left" | "right";
-} & import("class-variance-authority/types").ClassProp) => string;
-declare const techTypographyVariants: (props?: {
-    variant?: "error" | "code" | "output" | "success" | "terminal" | "command" | "debug";
-    align?: "center" | "left" | "right";
-} & import("class-variance-authority/types").ClassProp) => string;
-declare const socialTypographyVariants: (props?: {
-    variant?: "username" | "emoji" | "timestamp" | "reaction" | "mention" | "chat" | "friendly" | "hashtag";
-    align?: "center" | "left" | "right";
-} & import("class-variance-authority/types").ClassProp) => string;
+declare const minimalTypographyVariants: (props?: ({
+    variant?: "accent" | "title" | "body" | "caption" | "hero" | "subtitle" | null | undefined;
+    align?: "center" | "left" | "right" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
+declare const displayTypographyVariants: (props?: ({
+    variant?: "brand" | "hero" | "impact" | "emphasis" | "headline" | "subhead" | null | undefined;
+    align?: "center" | "left" | "right" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
+declare const campusTypographyVariants: (props?: ({
+    variant?: "campus" | "energy" | "bulletin" | "sticker" | "handwritten" | "chalk" | null | undefined;
+    align?: "center" | "left" | "right" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
+declare const techTypographyVariants: (props?: ({
+    variant?: "error" | "success" | "code" | "output" | "terminal" | "command" | "debug" | null | undefined;
+    align?: "center" | "left" | "right" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
+declare const socialTypographyVariants: (props?: ({
+    variant?: "username" | "emoji" | "timestamp" | "reaction" | "mention" | "chat" | "friendly" | "hashtag" | null | undefined;
+    align?: "center" | "left" | "right" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
 interface BaseTypographyProps extends React.HTMLAttributes<HTMLElement> {
     as?: React.ElementType;
     children: React.ReactNode;

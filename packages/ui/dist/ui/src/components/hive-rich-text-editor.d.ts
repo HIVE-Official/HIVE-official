@@ -1,10 +1,10 @@
 import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
-declare const hiveRichTextEditorVariants: (props?: {
-    variant?: "default" | "minimal" | "premium" | "elevated";
-    size?: "default" | "sm" | "lg" | "xl";
-    mode?: "split" | "preview" | "edit";
-} & import("class-variance-authority/types").ClassProp) => string;
+declare const hiveRichTextEditorVariants: (props?: ({
+    variant?: "default" | "minimal" | "elevated" | "premium" | null | undefined;
+    size?: "sm" | "default" | "lg" | "xl" | null | undefined;
+    mode?: "split" | "preview" | "edit" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
 export interface CampusLink {
     type: 'space' | 'student' | 'course' | 'tool';
     id: string;

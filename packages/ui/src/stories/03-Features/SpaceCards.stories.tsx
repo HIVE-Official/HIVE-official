@@ -2,7 +2,16 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { SpaceCard } from '../../components/spaces/space-card';
 import { SpaceCardPreview } from '../../components/spaces/space-card-preview';
 
-const meta: Meta = {
+// Create a component wrapper for the story
+const SpaceCards = () => (
+  <div className="p-6 space-y-8">
+    <h2 className="text-2xl font-semibold">Space Cards</h2>
+    <p className="text-muted-foreground">Space display cards for discovery interface</p>
+  </div>
+);
+
+const meta: Meta<typeof SpaceCards> = {
+  component: SpaceCards,
   title: '03-Features/Space Cards',
   parameters: {
     layout: 'padded',

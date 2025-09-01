@@ -2,10 +2,10 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Button } from '../button';
+import { Button } from '../../atomic/atoms/button-enhanced.js';
 import { Heart, Loader2, Sparkles } from 'lucide-react';
-import { hiveVariants } from '../../lib/motion';
-import { useAdaptiveMotion } from '../../lib/adaptive-motion';
+import { hiveVariants } from '../../lib/motion.js';
+import { useAdaptiveMotion } from '../../lib/adaptive-motion.js';
 export const InterestsSelectionStep = ({ selectedInterests, onInterestToggle, onSubmit, onBack, isLoading, interestCategories, minInterests = 3 }) => {
     useAdaptiveMotion('academic'); // For consistency with motion system
     const [expandedCategories, setExpandedCategories] = useState(new Set(Object.keys(interestCategories)));
@@ -31,6 +31,6 @@ export const InterestsSelectionStep = ({ selectedInterests, onInterestToggle, on
                                                     return (_jsxs(motion.button, { onClick: () => onInterestToggle(interest), className: `px-3 py-2 rounded-lg text-sm font-body transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] ${isSelected
                                                             ? 'border-2 border-accent bg-accent/10 text-accent hover:bg-accent/20'
                                                             : 'border-2 border-border bg-surface-01 text-muted hover:bg-surface-02 hover:border-accent/30 hover:text-accent'}`, whileHover: { scale: 1.02 }, whileTap: { scale: 0.98 }, children: [interest, isSelected && (_jsx(motion.span, { initial: { scale: 0 }, animate: { scale: 1 }, className: "ml-1", children: "\u2713" }))] }, interest));
-                                                }) }) })] }, category))) }), _jsxs(motion.div, { className: "flex gap-3 pt-4", variants: hiveVariants.item, children: [_jsx(Button, { variant: "outline", onClick: onBack, className: "flex-1 font-body", disabled: isLoading, children: "Back" }), _jsx(Button, { variant: "ritual", onClick: onSubmit, disabled: isSubmitDisabled, className: "flex-1 font-body", children: isLoading ? (_jsxs(_Fragment, { children: [_jsx(Loader2, { className: "h-4 w-4 animate-spin mr-2" }), "Completing..."] })) : ('Complete Setup') })] })] }), _jsx(motion.div, { className: "text-center mt-6", variants: hiveVariants.item, children: _jsx("p", { className: "text-sm text-muted font-body", children: "Step 4 of 4" }) })] })] }));
+                                                }) }) })] }, category))) }), _jsxs(motion.div, { className: "flex gap-3 pt-4", variants: hiveVariants.item, children: [_jsx(Button, { variant: "secondary", onClick: onBack, className: "flex-1 font-body", disabled: isLoading, children: "Back" }), _jsx(Button, { variant: "primary", onClick: onSubmit, disabled: isSubmitDisabled, className: "flex-1 font-body", children: isLoading ? (_jsxs(_Fragment, { children: [_jsx(Loader2, { className: "h-4 w-4 animate-spin mr-2" }), "Completing..."] })) : ('Complete Setup') })] })] }), _jsx(motion.div, { className: "text-center mt-6", variants: hiveVariants.item, children: _jsx("p", { className: "text-sm text-muted font-body", children: "Step 4 of 4" }) })] })] }));
 };
 //# sourceMappingURL=interests-selection-step.js.map

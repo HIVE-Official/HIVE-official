@@ -7,8 +7,12 @@ import { LazyRoutes, Preloader, OfflineHandler } from '../../components/Performa
 import { Text } from '../../atomic/atoms/text';
 import { Button } from '../../atomic/atoms/button';
 
-const meta: Meta = {
+// Mock component for Storybook CSF compliance
+const CompleteSystemShowcase = () => <div>Complete System Showcase</div>;
+
+const meta: Meta<typeof CompleteSystemShowcase> = {
   title: '16-HIVE Architecture/Complete System Showcase',
+  component: CompleteSystemShowcase,
   parameters: {
     layout: 'fullscreen',
     docs: {

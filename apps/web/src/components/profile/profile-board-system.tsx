@@ -203,8 +203,8 @@ export function ProfileBoardSystem({
           const data = await response.json() as { currentRitual?: RitualData };
           setCurrentRitual(data.currentRitual || null);
         }
-      } catch {
-        
+      } catch (error) {
+        console.error('API error:', error);
       } finally {
         setIsLoadingRitual(false);
       }
@@ -226,8 +226,8 @@ export function ProfileBoardSystem({
           const data = await response.json() as { connections?: ConnectionData[] };
           setConnections(data.connections || []);
         }
-      } catch {
-        
+      } catch (error) {
+        console.error('API error:', error);
       } finally {
         setIsLoadingConnections(false);
       }
@@ -249,8 +249,8 @@ export function ProfileBoardSystem({
           const data = await response.json() as { spaces?: SpaceData[] };
           setMySpaces(data.spaces || []);
         }
-      } catch {
-        
+      } catch (error) {
+        console.error('API error:', error);
       } finally {
         setIsLoadingSpaces(false);
       }
@@ -289,8 +289,8 @@ export function ProfileBoardSystem({
 
           setTodayEvents(sortedEvents);
         }
-      } catch {
-        
+      } catch (error) {
+        console.error('API error:', error);
       } finally {
         setIsLoadingEvents(false);
       }
@@ -640,7 +640,7 @@ export function ProfileBoardSystem({
               </>
             ) : (
               <div className="w-full h-full bg-hive-brand-secondary flex items-center justify-center">
-                <div className="text-white text-4xl font-bold">
+                <div className="text-[var(--hive-text-inverse)] text-4xl font-bold">
                   {user.name?.charAt(0).toUpperCase() || 'U'}
                 </div>
               </div>
@@ -662,7 +662,7 @@ export function ProfileBoardSystem({
                 e.stopPropagation();
                 onConfigure && onConfigure('avatar');
               }}
-              className="absolute bottom-hive-2 right-hive-2 p-hive-2 bg-hive-background-overlay/60 rounded-full text-white hover:bg-hive-background-overlay/80 transition-all duration-200 backdrop-blur-sm"
+              className="absolute bottom-hive-2 right-hive-2 p-hive-2 bg-hive-background-overlay/60 rounded-full text-[var(--hive-text-inverse)] hover:bg-hive-background-overlay/80 transition-all duration-200 backdrop-blur-sm"
             >
               <Camera size={14} />
             </button>
@@ -745,7 +745,7 @@ export function ProfileBoardSystem({
                 setErrorMessage('');
                 window.location.reload();
               }}
-              className="px-hive-md py-hive-sm bg-hive-status-error text-white rounded-hive-lg text-xs font-medium hover:bg-red-600 transition-colors"
+              className="px-hive-md py-hive-sm bg-hive-status-error text-[var(--hive-text-inverse)] rounded-hive-lg text-xs font-medium hover:bg-red-600 transition-colors"
             >
               Reload
             </button>
@@ -985,8 +985,8 @@ export function ProfileBoardSystem({
           // Reload ritual data - no navigation needed
           loadData();
         }
-      } catch {
-        
+      } catch (error) {
+        console.error('Failed to handle ritual selection:', error);
       }
     };
 
@@ -1113,7 +1113,7 @@ export function ProfileBoardSystem({
                 }}
                 className="flex items-center gap-2 p-2 bg-hive-background-primary rounded-lg hover:bg-hive-interactive-hover transition-colors w-full text-left"
               >
-                <div className={`w-6 h-6 rounded-lg flex items-center justify-center text-body-xs font-bold text-white`}
+                <div className={`w-6 h-6 rounded-lg flex items-center justify-center text-body-xs font-bold text-[var(--hive-text-inverse)]`}
                      style={{ backgroundColor: space.color || '#3B82F6' }}>
                   {space.name?.charAt(0).toUpperCase() || 'S'}
                 </div>
@@ -1182,7 +1182,7 @@ export function ProfileBoardSystem({
               {connections.slice(0, 4).map((connection, index) => (
                 <div
                   key={connection.id || index}
-                  className="w-6 h-6 rounded-full border-2 border-hive-background-secondary flex items-center justify-center bg-hive-brand-secondary text-white text-xs font-bold"
+                  className="w-6 h-6 rounded-full border-2 border-hive-background-secondary flex items-center justify-center bg-hive-brand-secondary text-[var(--hive-text-inverse)] text-xs font-bold"
                   title={connection.fullName || connection.name}
                 >
                   {connection.avatarUrl ? (
@@ -1389,7 +1389,7 @@ export function ProfileBoardSystem({
                       <Image src={user.avatar} alt={user.name} width={128} height={128} className="rounded-full object-cover" />
                     ) : (
                       <div className="w-full h-full bg-hive-brand-secondary rounded-full flex items-center justify-center">
-                        <span className="text-white text-4xl font-bold">{user.name?.charAt(0).toUpperCase()}</span>
+                        <span className="text-[var(--hive-text-inverse)] text-4xl font-bold">{user.name?.charAt(0).toUpperCase()}</span>
                       </div>
                     )}
                   </div>
@@ -1544,7 +1544,7 @@ export function ProfileBoardSystem({
                               <div key={milestone.id} className="flex items-center gap-3 p-3 bg-hive-background-elevated rounded-lg">
                                 <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
                                   milestone.isReached 
-                                    ? 'bg-hive-status-success text-white' 
+                                    ? 'bg-hive-status-success text-[var(--hive-text-inverse)]' 
                                     : 'bg-hive-background-secondary text-hive-text-tertiary'
                                 }`}>
                                   {milestone.isReached ? (
@@ -1666,7 +1666,7 @@ export function ProfileBoardSystem({
                         mySpaces.map((space: SpaceData, index: number) => (
                           <div key={space.id || index} className="p-4 bg-hive-background-elevated rounded-lg border border-hive-border-default">
                             <div className="flex items-start gap-3 mb-3">
-                              <div className={`w-10 h-10 rounded-lg flex items-center justify-center text-body-md font-bold text-white`}
+                              <div className={`w-10 h-10 rounded-lg flex items-center justify-center text-body-md font-bold text-[var(--hive-text-inverse)]`}
                                    style={{ backgroundColor: space.color || '#3B82F6' }}>
                                 {space.name?.charAt(0).toUpperCase() || 'S'}
                               </div>
@@ -1680,7 +1680,7 @@ export function ProfileBoardSystem({
                                 <div className="flex items-center gap-2 text-body-xs text-hive-text-tertiary">
                                   <span>{space.memberCount || 0} members</span>
                                   {space.unreadCount > 0 && (
-                                    <span className="px-2 py-1 bg-hive-brand-secondary text-white rounded-full text-xs">
+                                    <span className="px-2 py-1 bg-hive-brand-secondary text-[var(--hive-text-inverse)] rounded-full text-xs">
                                       {space.unreadCount} new
                                     </span>
                                   )}
@@ -1702,7 +1702,7 @@ export function ProfileBoardSystem({
                                   onClick={() => {
                                     closeExpandedView();
                                   }}
-                                  className="px-3 py-2 text-body-xs text-hive-brand-secondary border border-hive-brand-secondary rounded-lg hover:bg-hive-brand-secondary hover:text-white transition-colors"
+                                  className="px-3 py-2 text-body-xs text-hive-brand-secondary border border-hive-brand-secondary rounded-lg hover:bg-hive-brand-secondary hover:text-[var(--hive-text-inverse)] transition-colors"
                                 >
                                   Manage
                                 </button>
@@ -1761,7 +1761,7 @@ export function ProfileBoardSystem({
                                   />
                                 ) : (
                                   <div className="w-12 h-12 bg-hive-brand-secondary rounded-full flex items-center justify-center">
-                                    <span className="text-white text-body-md font-bold">
+                                    <span className="text-[var(--hive-text-inverse)] text-body-md font-bold">
                                       {(connection.fullName || connection.name || 'U').charAt(0).toUpperCase()}
                                     </span>
                                   </div>
@@ -1813,7 +1813,7 @@ export function ProfileBoardSystem({
                                   // Message functionality would go here
                                   closeExpandedView();
                                 }}
-                                className="px-3 py-2 text-body-xs text-hive-brand-secondary border border-hive-brand-secondary rounded-lg hover:bg-hive-brand-secondary hover:text-white transition-colors"
+                                className="px-3 py-2 text-body-xs text-hive-brand-secondary border border-hive-brand-secondary rounded-lg hover:bg-hive-brand-secondary hover:text-[var(--hive-text-inverse)] transition-colors"
                               >
                                 Message
                               </button>

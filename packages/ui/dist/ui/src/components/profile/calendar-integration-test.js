@@ -1,7 +1,7 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { CalendarCard } from './calendar-card';
-import { adaptSmartCalendarProps } from './calendar-data-adapter';
+import { CalendarCard } from './calendar-card.js';
+import { adaptSmartCalendarProps } from './calendar-data-adapter.js';
 // Test component to verify the calendar integration works
 const mockEvents = [
     {

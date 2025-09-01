@@ -323,7 +323,7 @@ export function ToolBuilder({
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-white">
+          <h2 className="text-2xl font-bold text-[var(--hive-text-inverse)]">
             {isEditing ? 'Edit Tool' : 'Create New Tool'}
           </h2>
           <p className="text-hive-text-mutedLight">
@@ -369,7 +369,7 @@ export function ToolBuilder({
         <div className="space-y-6">
           {/* Templates */}
           <Card className="p-4 bg-hive-background-overlay border-hive-border-default">
-            <h3 className="font-medium text-white mb-3">Quick Start Templates</h3>
+            <h3 className="font-medium text-[var(--hive-text-inverse)] mb-3">Quick Start Templates</h3>
             <div className="flex flex-wrap gap-2">
               {Object.keys(toolTemplates).map(template => (
                 <Button
@@ -408,7 +408,7 @@ export function ToolBuilder({
             <TabsContent value="editor" className="space-y-4 mt-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <Label className="text-white">Tool Name</Label>
+                  <Label className="text-[var(--hive-text-inverse)]">Tool Name</Label>
                   <Input
                     value={formData.name}
                     onChange={(e) => handleInputChange('name', e.target.value)}
@@ -422,7 +422,7 @@ export function ToolBuilder({
                 </div>
                 
                 <div>
-                  <Label className="text-white">Language</Label>
+                  <Label className="text-[var(--hive-text-inverse)]">Language</Label>
                   <Select
                     value={formData.language}
                     onValueChange={(value) => handleInputChange('language', value)}
@@ -440,7 +440,7 @@ export function ToolBuilder({
               </div>
 
               <div>
-                <Label className="text-white">Description</Label>
+                <Label className="text-[var(--hive-text-inverse)]">Description</Label>
                 <Textarea
                   value={formData.description}
                   onChange={(e) => handleInputChange('description', e.target.value)}
@@ -455,7 +455,7 @@ export function ToolBuilder({
               </div>
 
               <div>
-                <Label className="text-white">Code</Label>
+                <Label className="text-[var(--hive-text-inverse)]">Code</Label>
                 <Textarea
                   value={formData.code}
                   onChange={(e) => handleInputChange('code', e.target.value)}
@@ -475,7 +475,7 @@ export function ToolBuilder({
               {/* Input Fields */}
               <div>
                 <div className="flex items-center justify-between mb-3">
-                  <Label className="text-white">Input Fields</Label>
+                  <Label className="text-[var(--hive-text-inverse)]">Input Fields</Label>
                   <Button
                     variant="outline"
                     size="sm"
@@ -551,7 +551,7 @@ export function ToolBuilder({
               {/* Output Fields */}
               <div>
                 <div className="flex items-center justify-between mb-3">
-                  <Label className="text-white">Output Fields</Label>
+                  <Label className="text-[var(--hive-text-inverse)]">Output Fields</Label>
                   <Button
                     variant="outline"
                     size="sm"
@@ -633,7 +633,7 @@ export function ToolBuilder({
                   <Card key={perm.id} className="p-4 bg-hive-background-tertiary">
                     <div className="flex items-center justify-between">
                       <div>
-                        <h4 className="font-medium text-white">{perm.name}</h4>
+                        <h4 className="font-medium text-[var(--hive-text-inverse)]">{perm.name}</h4>
                         <p className="text-sm text-hive-text-mutedLight">{perm.description}</p>
                       </div>
                       <Switch
@@ -650,7 +650,7 @@ export function ToolBuilder({
             <TabsContent value="settings" className="space-y-4 mt-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <Label className="text-white">Category</Label>
+                  <Label className="text-[var(--hive-text-inverse)]">Category</Label>
                   <Select
                     value={formData.category}
                     onValueChange={(value) => handleInputChange('category', value)}
@@ -670,7 +670,7 @@ export function ToolBuilder({
                 </div>
                 
                 <div>
-                  <Label className="text-white">Version</Label>
+                  <Label className="text-[var(--hive-text-inverse)]">Version</Label>
                   <Input
                     value={formData.version}
                     onChange={(e) => handleInputChange('version', e.target.value)}
@@ -682,7 +682,7 @@ export function ToolBuilder({
 
               <div className="flex items-center justify-between">
                 <div>
-                  <Label className="text-white">Public Tool</Label>
+                  <Label className="text-[var(--hive-text-inverse)]">Public Tool</Label>
                   <p className="text-sm text-hive-text-mutedLight">
                     Make this tool discoverable by other HIVE users
                   </p>
@@ -720,7 +720,7 @@ export function ToolBuilder({
         {/* Preview */}
         {showPreview && (
           <div>
-            <h3 className="text-lg font-semibold text-white mb-4">Live Preview</h3>
+            <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4">Live Preview</h3>
             {formData.name && formData.code ? (
               <ToolExecutionPanel
                 tool={buildToolDefinition()}

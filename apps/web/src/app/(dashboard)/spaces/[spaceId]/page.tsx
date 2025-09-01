@@ -45,7 +45,7 @@ function ErrorState({ error }: { error: Error }) {
     <div className="min-h-screen flex items-center justify-center">
       <div className="text-center max-w-md px-4">
         <AlertTriangle className="h-16 w-16 text-red-400 mx-auto mb-6" />
-        <h1 className="text-2xl font-bold text-white mb-4">
+        <h1 className="text-2xl font-bold text-[var(--hive-text-inverse)] mb-4">
           {isNotFound ? "Space Not Found" : "Something Went Wrong"}
         </h1>
         <p className="text-neutral-400 mb-8">
@@ -290,8 +290,8 @@ export default function SpaceDetailPage({
     setShowPostCreation(true);
   };
 
-  const handleCreateComment = async (postId: string, content: string, parentCommentId?: string): Promise<Comment> => {
-    const response = await authenticatedFetch(`/api/spaces/${spaceId}/posts/${postId}/comments`, {
+  const handleCreateComment = async (_postId: string, content: string, parentCommentId?: string): Promise<Comment> => {
+    const response = await authenticatedFetch(`/api/spaces/${spaceId}/posts/${_postId}/comments`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -308,15 +308,15 @@ export default function SpaceDetailPage({
     return result.data;
   };
 
-  const handleLoadComments = async (postId: string): Promise<Comment[]> => {
-    const response = await authenticatedFetch(`/api/spaces/${spaceId}/posts/${postId}/comments`);
+  const handleLoadComments = async (_postId: string): Promise<Comment[]> => {
+    const response = await authenticatedFetch(`/api/spaces/${spaceId}/posts/${_postId}/comments`);
     
     if (!response.ok) {
       const errorData = await response.json() as { error?: string };
       throw new Error(errorData.error || 'Failed to load comments');
     }
 
-    const result = await response.json() as { data: { comments: Comment[] } };
+    const result = await response.json() as { data: { _comments: Comment[] } };
     return result.data.comments;
   };
 
@@ -493,7 +493,7 @@ export default function SpaceDetailPage({
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-12">
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-3 mb-3">
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white truncate font-['Space_Grotesk']">
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[var(--hive-text-inverse)] truncate font-['Space_Grotesk']">
                 {space.name}
               </h1>
               <SpaceStatusBadge status={space.status} />
@@ -592,7 +592,7 @@ export default function SpaceDetailPage({
                     className={`flex items-center gap-2 px-4 py-2 rounded-xl whitespace-nowrap transition-all ${
                       isActive
                         ? 'bg-[var(--hive-brand-secondary)]/20 text-[var(--hive-brand-secondary)] border border-[var(--hive-brand-secondary)]/30'
-                        : 'bg-white/[0.02] text-neutral-400 border border-white/[0.06] hover:text-white'
+                        : 'bg-white/[0.02] text-neutral-400 border border-white/[0.06] hover:text-[var(--hive-text-inverse)]'
                     }`}
                     onClick={() => setCurrentTab(widget.id)}
                     whileHover={{ scale: 1.02 }}
@@ -615,11 +615,11 @@ export default function SpaceDetailPage({
                 return (
                   <div>
                     <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-lg font-semibold text-white">{activeWidget.title}</h3>
+                      <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)]">{activeWidget.title}</h3>
                       <Button
                         variant="outline"
                         size="sm"
-                        className="border-white/[0.2] text-white hover:bg-white/[0.1]"
+                        className="border-white/[0.2] text-[var(--hive-text-inverse)] hover:bg-white/[0.1]"
                         onClick={() => openModal(activeWidget.id)}
                       >
                         <Maximize2 className="h-4 w-4 mr-2" />
@@ -656,7 +656,7 @@ export default function SpaceDetailPage({
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-3">
                     <MessageSquare className="h-5 w-5 text-[var(--hive-brand-secondary)]" />
-                    <h3 className="text-lg font-semibold text-white">Post Board</h3>
+                    <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)]">Post Board</h3>
                     {currentMode === 'insights' && (
                       <motion.div
                         className="px-2 py-1 bg-purple-500/20 border border-purple-500/30 rounded text-xs text-purple-400"
@@ -794,7 +794,7 @@ export default function SpaceDetailPage({
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-2">
                         <Icon className="h-4 w-4 text-[var(--hive-brand-secondary)]" />
-                        <h4 className="text-sm font-semibold text-white">{widget.title}</h4>
+                        <h4 className="text-sm font-semibold text-[var(--hive-text-inverse)]">{widget.title}</h4>
                         {widget.adminOnly && (
                           <Badge variant="prof-favorite" className="text-xs border-[var(--hive-brand-secondary)]/30 text-[var(--hive-brand-secondary)]">
                             Admin
@@ -871,7 +871,7 @@ export default function SpaceDetailPage({
                               </div>
                             </div>
                             <div className="text-xs text-neutral-400 text-center">
-                              Total events: <span className="text-white">{analyticsData.eventsData?.totalEvents || 0}</span>
+                              Total events: <span className="text-[var(--hive-text-inverse)]">{analyticsData.eventsData?.totalEvents || 0}</span>
                             </div>
                           </>
                         ) : (
@@ -903,7 +903,7 @@ export default function SpaceDetailPage({
                               </div>
                             </div>
                             <div className="text-xs text-neutral-400 text-center">
-                              Top: <span className="text-white">{analyticsData.toolsData?.topTools?.[0] || 'N/A'}</span>
+                              Top: <span className="text-[var(--hive-text-inverse)]">{analyticsData.toolsData?.topTools?.[0] || 'N/A'}</span>
                             </div>
                           </>
                         ) : (
@@ -935,7 +935,7 @@ export default function SpaceDetailPage({
                               </div>
                             </div>
                             <div className="text-xs text-neutral-400 text-center">
-                              Most viewed: <span className="text-white">{analyticsData.resourcesData?.mostViewed || 'N/A'}</span>
+                              Most viewed: <span className="text-[var(--hive-text-inverse)]">{analyticsData.resourcesData?.mostViewed || 'N/A'}</span>
                             </div>
                           </>
                         ) : (
@@ -987,7 +987,7 @@ export default function SpaceDetailPage({
               )}>
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
-                    <h4 className="text-sm font-semibold text-white">About</h4>
+                    <h4 className="text-sm font-semibold text-[var(--hive-text-inverse)]">About</h4>
                     {currentMode === 'insights' && (
                       <motion.div
                         className="w-2 h-2 bg-purple-400 rounded-full"
@@ -1037,7 +1037,7 @@ export default function SpaceDetailPage({
                               style={{ width: `${((analyticsData as any).membershipData?.healthScore || (analyticsData.membershipData?.activeMembers ? Math.min(analyticsData.membershipData.activeMembers / 10, 10) : 0)) * 10}%` }}
                             ></div>
                           </div>
-                          <span className="text-sm font-bold text-white">{(analyticsData as any).membershipData?.healthScore || Math.floor((analyticsData.membershipData?.activeMembers || 0) / 10)}/10</span>
+                          <span className="text-sm font-bold text-[var(--hive-text-inverse)]">{(analyticsData as any).membershipData?.healthScore || Math.floor((analyticsData.membershipData?.activeMembers || 0) / 10)}/10</span>
                         </div>
                         <div className="grid grid-cols-2 gap-2 text-xs">
                           <div className="flex justify-between">
@@ -1098,7 +1098,7 @@ export default function SpaceDetailPage({
                 {isEditingDescription && currentMode === 'configure' ? (
                   <div className="space-y-3">
                     <textarea
-                      className="w-full bg-white/5 border border-green-500/30 rounded-lg px-3 py-2 text-xs text-white placeholder-gray-400 resize-none focus:outline-none focus:border-green-400/50 transition-colors"
+                      className="w-full bg-white/5 border border-green-500/30 rounded-lg px-3 py-2 text-xs text-[var(--hive-text-inverse)] placeholder-gray-400 resize-none focus:outline-none focus:border-green-400/50 transition-colors"
                       placeholder="Describe your space..."
                       rows={4}
                       value={editedDescription}
@@ -1106,7 +1106,7 @@ export default function SpaceDetailPage({
                     />
                     <div className="flex justify-end gap-2">
                       <motion.button
-                        className="px-3 py-1 bg-gray-600 hover:bg-gray-700 text-white text-xs rounded-md transition-colors"
+                        className="px-3 py-1 bg-gray-600 hover:bg-gray-700 text-[var(--hive-text-inverse)] text-xs rounded-md transition-colors"
                         onClick={() => {
                           setIsEditingDescription(false);
                           setEditedDescription('');
@@ -1117,7 +1117,7 @@ export default function SpaceDetailPage({
                         Cancel
                       </motion.button>
                       <motion.button
-                        className="px-3 py-1 bg-green-500 hover:bg-green-600 text-white text-xs rounded-md transition-colors"
+                        className="px-3 py-1 bg-green-500 hover:bg-green-600 text-[var(--hive-text-inverse)] text-xs rounded-md transition-colors"
                         onClick={async () => {
                           try {
                             const response = await authenticatedFetch(`/api/spaces/${spaceId}`, {
@@ -1165,11 +1165,11 @@ export default function SpaceDetailPage({
                 <div className="mt-3 pt-3 border-t border-white/[0.06] space-y-2 text-xs">
                   <div className="flex justify-between">
                     <span className="text-neutral-400">Type</span>
-                    <span className="text-white capitalize">{space.type}</span>
+                    <span className="text-[var(--hive-text-inverse)] capitalize">{space.type}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-neutral-400">Members</span>
-                    <span className="text-white">{(space.memberCount || 0).toLocaleString()}</span>
+                    <span className="text-[var(--hive-text-inverse)]">{(space.memberCount || 0).toLocaleString()}</span>
                   </div>
                 </div>
               </div>
@@ -1205,7 +1205,7 @@ export default function SpaceDetailPage({
                       return (
                         <>
                           <Icon className="h-6 w-6 text-[var(--hive-brand-secondary)]" />
-                          <h2 className="text-xl font-semibold text-white">{widget.title}</h2>
+                          <h2 className="text-xl font-semibold text-[var(--hive-text-inverse)]">{widget.title}</h2>
                           {widget.adminOnly && (
                             <Badge variant="prof-favorite" className="border-[var(--hive-brand-secondary)]/30 text-[var(--hive-brand-secondary)]">
                               Admin Only
@@ -1231,7 +1231,7 @@ export default function SpaceDetailPage({
                               variant={widgetViews[activeModal] === view ? 'primary' : 'outline'}
                               className={widgetViews[activeModal] === view 
                                 ? 'bg-[var(--hive-brand-secondary)]/20 text-[var(--hive-brand-secondary)] border-[var(--hive-brand-secondary)]/30'
-                                : 'border-white/[0.2] text-neutral-400 hover:text-white'
+                                : 'border-white/[0.2] text-neutral-400 hover:text-[var(--hive-text-inverse)]'
                               }
                               onClick={() => changeWidgetView(activeModal, view)}
                             >
@@ -1248,7 +1248,7 @@ export default function SpaceDetailPage({
                     <Button
                       variant="outline"
                       size="sm"
-                      className="border-white/[0.2] text-white hover:bg-white/[0.1]"
+                      className="border-white/[0.2] text-[var(--hive-text-inverse)] hover:bg-white/[0.1]"
                       onClick={closeModal}
                     >
                       <X className="h-4 w-4" />

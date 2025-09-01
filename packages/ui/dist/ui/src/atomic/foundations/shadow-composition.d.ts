@@ -521,7 +521,7 @@ export declare const shadowComposition: {
         readonly maximum: 9999;
     };
 };
-export declare const createShadowClass: (elevation: keyof typeof elevationScale) => "shadow" | "shadow-sm" | "shadow-md" | "shadow-lg" | "shadow-none" | "shadow-xl";
+export declare const createShadowClass: (elevation: keyof typeof elevationScale) => "shadow" | "shadow-sm" | "shadow-lg" | "shadow-xl" | "shadow-md" | "shadow-none";
 export declare const createInteractiveShadowClass: (component: "buttons" | "cards", variant: string) => string;
 export declare const createCampusShadowClass: (category: keyof typeof campusShadowPatterns, variant: string) => string;
 export type ShadowComposition = typeof shadowComposition;

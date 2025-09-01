@@ -4,8 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { ROUTES } from "@/lib/routes";
-import { EmailGate, Button } from "@hive/ui";
-import { logger } from "@hive/core";
+import { HiveAuthFlowEnhanced } from "@/components/auth/HiveAuthFlowEnhanced";
 
 export default function AuthPageClient() {
   const router = useRouter();
@@ -37,13 +36,20 @@ export default function AuthPageClient() {
     }
   }, [router]);
 
-  const handleEmailSuccess = (email: string) => {
-    logger.info("Magic link sent successfully", { email, schoolDomain });
-    router.push(`${ROUTES.AUTH.CHECK_EMAIL}?email=${encodeURIComponent(email)}`);
-  };
-
-  const handleBack = () => {
-    router.push(ROUTES.AUTH.SCHOOL_SELECT);
+  const handleAuthSuccess = (user: { id: string; email: string; name: string; isNewUser: boolean }) => {
+    console.log("Auth completed successfully", { 
+      email: user.email, 
+      isNewUser: user.isNewUser,
+      schoolDomain 
+    });
+    
+    if (user.isNewUser) {
+      // New user needs onboarding
+      router.push(ROUTES.ONBOARDING.STEP_1);
+    } else {
+      // Existing user goes to dashboard
+      router.push("/");
+    }
   };
 
   // Show loading state while checking school selection
@@ -52,7 +58,7 @@ export default function AuthPageClient() {
       <div className="flex min-h-screen items-center justify-center bg-background">
         <div className="flex flex-col items-center gap-4">
           <div className="h-8 w-8 animate-spin rounded-full border-2 border-accent border-t-transparent"></div>
-          <p className="text-muted font-sans">Loading...</p>
+          <p className="text-white/80 font-sans">Loading...</p>
         </div>
       </div>
     );
@@ -76,17 +82,17 @@ export default function AuthPageClient() {
           >
             {/* HIVE Logo/Brand */}
             <div className="space-y-2">
-              <h1 className="text-4xl font-sans font-bold text-foreground">
+              <h1 className="text-4xl font-sans font-bold text-white">
                 HIVE
               </h1>
-              <p className="text-muted text-lg font-sans">
+              <p className="text-white/80 text-lg font-sans">
                 The programmable campus layer
               </p>
             </div>
 
             {/* Description */}
             <div className="space-y-4">
-              <p className="text-muted leading-relaxed font-sans">
+              <p className="text-white/80 leading-relaxed font-sans">
                 Find your people, make decisions together, and build tools that spread across campus.
               </p>
             </div>
@@ -95,7 +101,7 @@ export default function AuthPageClient() {
             <div className="pt-4">
               <button
                 onClick={() => router.push(ROUTES.AUTH.SCHOOL_SELECT)}
-                className="w-full px-6 py-3 font-sans font-bold rounded-xl transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] hover:scale-[1.02] focus:outline-none text-foreground"
+                className="w-full px-6 py-3 font-sans font-bold rounded-xl transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] hover:scale-[1.02] focus:outline-none text-white"
                 style={{
                   border: '1px solid rgba(255, 215, 0, 0.15)',
                 }}
@@ -111,7 +117,7 @@ export default function AuthPageClient() {
             </div>
 
             {/* Additional Info */}
-            <div className="text-xs text-muted font-sans">
+            <div className="text-xs text-white/80 font-sans">
               Available at select universities
             </div>
           </div>
@@ -120,23 +126,12 @@ export default function AuthPageClient() {
     );
   }
 
-  const selectedSchoolId = typeof window !== "undefined" ? localStorage.getItem("hive-selected-school-id") : null;
-
-  if (!selectedSchoolId) {
-    return null; // Should not happen with new logic
-  }
-
+  // Use the enhanced @hive/ui auth flow
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <EmailGate
-        schoolName={schoolName}
-        schoolDomain={schoolDomain}
-        schoolId={selectedSchoolId}
-        onSuccess={handleEmailSuccess}
-        onBack={handleBack}
-        showTermsAndPrivacy={true}
-        backLinkHref="/auth/school-select"
-      />
-    </div>
+    <HiveAuthFlowEnhanced
+      onAuthSuccess={handleAuthSuccess}
+      initialStep="welcome"
+      mockMode={process.env.NODE_ENV === 'development'}
+    />
   );
 } 

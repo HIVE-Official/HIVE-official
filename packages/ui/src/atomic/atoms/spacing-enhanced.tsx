@@ -245,7 +245,7 @@ export const Stack = React.forwardRef<HTMLDivElement, StackProps>(
 Stack.displayName = "Stack";
 
 // Horizontal Stack (HStack)
-export interface HStackProps extends Omit<StackProps, 'direction'> {}
+export type HStackProps = Omit<StackProps, 'direction'>;
 
 export const HStack = React.forwardRef<HTMLDivElement, HStackProps>(
   ({ align = "center", ...props }, ref) => {
@@ -262,7 +262,7 @@ export const HStack = React.forwardRef<HTMLDivElement, HStackProps>(
 HStack.displayName = "HStack";
 
 // Vertical Stack (VStack)
-export interface VStackProps extends Omit<StackProps, 'direction'> {}
+export type VStackProps = Omit<StackProps, 'direction'>;
 
 export const VStack = React.forwardRef<HTMLDivElement, VStackProps>(
   (props, ref) => {
@@ -291,7 +291,7 @@ export const Separator = React.forwardRef<HTMLDivElement, SeparatorProps>(
         ref={ref}
         className={cn(separatorVariants({ orientation, variant, size }), className)}
         role={decorative ? "none" : "separator"}
-        aria-orientation={orientation}
+        aria-orientation={orientation || undefined}
         {...props}
       />
     );

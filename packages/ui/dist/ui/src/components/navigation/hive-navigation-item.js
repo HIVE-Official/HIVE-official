@@ -3,8 +3,8 @@ import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-run
 import { useState } from 'react';
 import { cva } from 'class-variance-authority';
 import { ChevronRight } from 'lucide-react';
-import { motion } from '../framer-motion-proxy';
-import { cn } from '../../lib/utils';
+import { motion } from '../framer-motion-proxy.js';
+import { cn } from '../../lib/utils.js';
 // HIVE Navigation Item variants - Following button design patterns
 const hiveNavigationItemVariants = cva(
 // Base styles - premium navigation item with semantic tokens
@@ -20,7 +20,7 @@ const hiveNavigationItemVariants = cva(
             // Minimal variant for compact layouts
             minimal: "bg-transparent text-[var(--hive-text-primary)] hover:bg-[var(--hive-overlay-glass)] hover:text-[var(--hive-text-primary)]",
             // Premium variant with gold accent
-            premium: "bg-[var(--hive-background-primary)]/80 backdrop-blur-sm border border-[var(--hive-border-gold)] text-[var(--hive-brand-primary)] hover:bg-[var(--hive-overlay-gold-subtle)] hover:shadow-lg hover:shadow-[var(--hive-shadow-gold-glow)]",
+            premium: "bg-[var(--hive-background-primary)]/80 backdrop-blur-sm border border-[var(--hive-border-[var(--hive-brand-secondary)])] text-[var(--hive-brand-primary)] hover:bg-[var(--hive-overlay-gold-subtle)] hover:shadow-lg hover:shadow-[var(--hive-shadow-gold-glow)]",
             // Disabled state
             disabled: "bg-transparent text-[var(--hive-text-disabled)] cursor-not-allowed opacity-50",
         },

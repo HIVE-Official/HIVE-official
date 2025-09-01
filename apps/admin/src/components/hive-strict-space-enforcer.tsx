@@ -291,16 +291,6 @@ export const HiveStrictSpaceEnforcer: React.FC<HiveStrictSpaceEnforcerProps> = (
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<'violations' | 'compliant' | 'forbidden'>('violations');
 
-  // Feature flag check
-  if (!enableFeatureFlag) {
-    return (
-      <div className="text-center py-8">
-        <Shield className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-        <p className="text-gray-400">Space enforcement system is not available</p>
-      </div>
-    );
-  }
-
   const runSpaceAudit = useCallback(async () => {
     if (!admin) return;
 
@@ -343,6 +333,16 @@ export const HiveStrictSpaceEnforcer: React.FC<HiveStrictSpaceEnforcerProps> = (
   useEffect(() => {
     runSpaceAudit();
   }, [runSpaceAudit]);
+
+  // Feature flag check
+  if (!enableFeatureFlag) {
+    return (
+      <div className="text-center py-8">
+        <Shield className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+        <p className="text-gray-400">Space enforcement system is not available</p>
+      </div>
+    );
+  }
 
   const getTabCounts = () => {
     return {

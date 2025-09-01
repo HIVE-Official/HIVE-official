@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
-import { HiveButton, HiveLogo } from "@hive/ui";
+import { Button, HiveLogo } from "@hive/ui";
 import type { HiveOnboardingData } from "../hive-onboarding-wizard";
 
 interface HiveWelcomeStepProps {
@@ -15,7 +15,7 @@ export function HiveWelcomeStep({ onNext }: HiveWelcomeStepProps) {
     <motion.div
       initial={{ y: 20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      className="text-center space-y-[var(--hive-spacing-8)] py-[var(--hive-spacing-6)]"
+      className="text-center space-y-8 py-6"
       data-testid="welcome-step"
       role="main"
       aria-labelledby="welcome-heading"
@@ -25,13 +25,13 @@ export function HiveWelcomeStep({ onNext }: HiveWelcomeStepProps) {
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
         transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-        className="mx-auto w-32 h-32 bg-[var(--hive-brand-primary)]/20 backdrop-blur-xl rounded-full flex items-center justify-center relative overflow-hidden"
+        className="mx-auto w-32 h-32 bg-accent/20 backdrop-blur-xl rounded-full flex items-center justify-center relative overflow-hidden"
       >
-        <HiveLogo size="xl" variant="gold" showWordmark={false} />
+        <HiveLogo size="lg" variant="gold" showWordmark={false} />
         
         {/* Pulse animation */}
         <motion.div
-          className="absolute inset-0 rounded-full bg-[var(--hive-brand-primary)]/20"
+          className="absolute inset-0 rounded-full bg-accent/20"
           animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0, 0.5] }}
           transition={{ duration: 2, repeat: Infinity }}
         />
@@ -41,12 +41,12 @@ export function HiveWelcomeStep({ onNext }: HiveWelcomeStepProps) {
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.4 }}
-        className="space-y-[var(--hive-spacing-4)]"
+        className="space-y-4"
       >
-        <h2 id="welcome-heading" className="text-4xl font-bold text-[var(--hive-text-primary)]">
-          Welcome to <span className="text-[var(--hive-brand-primary)]">HIVE</span>
+        <h2 id="welcome-heading" className="text-4xl font-bold text-foreground">
+          Welcome to <span className="text-accent">HIVE</span>
         </h2>
-        <p className="text-lg text-[var(--hive-text-secondary)] max-w-md mx-auto">
+        <p className="text-lg text-muted-foreground max-w-md mx-auto">
           Your digital campus awaits
         </p>
       </motion.div>
@@ -56,9 +56,9 @@ export function HiveWelcomeStep({ onNext }: HiveWelcomeStepProps) {
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.6 }}
-        className="space-y-[var(--hive-spacing-6)]"
+        className="space-y-6"
       >
-        <p className="text-[var(--hive-text-muted)] max-w-lg mx-auto">
+        <p className="text-muted max-w-lg mx-auto">
           We'll walk you through a few quick steps to set up your profile. 
           This should only take a couple of minutes.
         </p>
@@ -69,17 +69,17 @@ export function HiveWelcomeStep({ onNext }: HiveWelcomeStepProps) {
           transition={{ delay: 0.8, type: "spring", stiffness: 200 }}
           className="flex justify-center"
         >
-          <HiveButton
-            variant="premium"
-            size="xl"
+          <Button
+            variant="accent"
+            size="lg"
             onClick={onNext}
             rightIcon={<ArrowRight className="w-4 h-4" />}
-            className="px-[var(--hive-spacing-8)]"
+            className="px-8"
             data-testid="get-started"
             aria-label="Start the onboarding process"
           >
             Get Started
-          </HiveButton>
+          </Button>
         </motion.div>
       </motion.div>
     </motion.div>

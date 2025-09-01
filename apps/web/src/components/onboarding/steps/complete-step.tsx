@@ -4,14 +4,14 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { ROUTES } from '@/lib/routes';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, Button, OnboardingCompleteStep as OnboardingCompleteStepUI } from '@hive/ui';
-import { useAuth } from '@hive/auth-logic';
+import { useUnifiedAuth } from '@hive/ui';
 import { useOnboardingStore } from '@/lib/stores/onboarding';
 import { AlertCircle, Loader2 } from 'lucide-react';
 import { logger } from '@hive/core';
 
 export function OnboardingCompleteStep() {
   const router = useRouter();
-  const { user, isLoading } = useAuth();
+  const { user, isLoading } = useUnifiedAuth();
   const { data: onboardingData, reset } = useOnboardingStore();
   const [completionState, setCompletionState] = useState<'loading' | 'success' | 'error'>('loading');
   const [errorMessage, setErrorMessage] = useState('');

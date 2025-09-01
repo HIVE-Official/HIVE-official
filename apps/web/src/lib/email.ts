@@ -27,10 +27,9 @@ export async function sendMagicLinkEmail({
 }: MagicLinkEmailOptions): Promise<void> {
   // In development, log the magic link instead of sending email
   if (process.env.NODE_ENV === 'development') {
-    
-    
-    
-    
+    console.log('\n🔗 DEVELOPMENT: Magic link (check console):');
+    console.log(magicLink);
+    console.log(`\n🎯 Click this link to continue to onboarding for ${schoolName}\n`);
     return;
   }
 

@@ -5,7 +5,7 @@
  * This file defines the exact navigation structure as specified in HIVE's
  * product requirements with pixel-perfect brand consistency.
  */
-import { NavigationItem } from './types';
+import type { NavigationItem } from './types';
 /**
  * Core HIVE navigation items following the four-pillar structure
  * Each item includes exact copy, descriptions, and routing from the spec

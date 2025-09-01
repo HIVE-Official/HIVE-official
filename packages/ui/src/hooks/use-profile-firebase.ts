@@ -387,6 +387,12 @@ export function useProfileLayout(uid: string) {
     try {
       await actions.updateProfile({
         preferences: {
+          theme: "auto" as const,
+          notifications: {
+            email: true,
+            push: true,
+            inApp: true
+          },
           ...profile?.preferences,
           profileLayout: JSON.stringify(layoutData)
         }

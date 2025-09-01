@@ -43,7 +43,7 @@ import {
 } from '@hive/ui';
 
 // Hooks
-import { useHiveAuth } from '@hive/ui';
+import { useUnifiedAuth } from '@hive/ui';
 
 // Types
 interface Tool {
@@ -105,7 +105,7 @@ const TOOL_CATEGORIES = {
 };
 
 export default function BrowseToolsPage() {
-  const { user } = useHiveAuth();
+  const { user } = useUnifiedAuth();
   const router = useRouter();
   
   const [tools, setTools] = useState<Tool[]>([]);
@@ -309,7 +309,7 @@ export default function BrowseToolsPage() {
           <CardHeader className="pb-3">
             <div className="flex items-start gap-3">
               <div className={`p-3 rounded-xl bg-gradient-to-br ${category.color} flex-shrink-0`}>
-                <CategoryIcon className="h-5 w-5 text-white" />
+                <CategoryIcon className="h-5 w-5 text-[var(--hive-text-inverse)]" />
               </div>
               
               <div className="flex-1 min-w-0">

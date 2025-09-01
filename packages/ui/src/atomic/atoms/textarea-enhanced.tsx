@@ -336,6 +336,7 @@ export const TextareaPresets = {
 
 export { 
   Textarea, 
+  Textarea as TextareaEnhanced,
   CodeTextarea,
   TextareaGroup, 
   textareaVariants 

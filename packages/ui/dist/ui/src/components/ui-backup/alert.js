@@ -1,6 +1,6 @@
 "use client";
 import { jsx as _jsx } from "react/jsx-runtime";
-import { cn } from '../../lib/utils';
+import { cn } from '../../lib/utils.js';
 export const Alert = ({ children, variant = 'default', className }) => {
     return (_jsx("div", { className: cn('relative w-full rounded-lg border p-4', variant === 'default' && 'bg-[var(--hive-background-secondary)] border-[var(--hive-border-default)] text-[var(--hive-text-primary)]', variant === 'destructive' && 'bg-[var(--hive-status-error)]/10 border-[var(--hive-status-error)]/20 text-[var(--hive-status-error)]', className), children: children }));
 };

@@ -30,14 +30,14 @@ export const ProfileHeader = ({ user }: ProfileHeaderProps) => {
                 src={user.avatarUrl || undefined}
                 alt={user.fullName}
               />
-              <AvatarFallback className="bg-gold text-black text-2xl font-bold">
+              <AvatarFallback className="bg-[var(--hive-brand-secondary)] text-[var(--hive-text-primary)] text-2xl font-bold">
                 {initials}
               </AvatarFallback>
             </Avatar>
             <Button
               size="sm"
               variant="outline"
-              className="absolute -bottom-2 -right-2 h-8 w-8 rounded-full border-black bg-gray-900 p-0 hover:bg-gray-800"
+              className="absolute -bottom-2 -right-2 h-8 w-8 rounded-full border-black bg-[var(--hive-background-primary)] p-0 hover:bg-gray-800"
             >
               <Camera className="h-4 w-4" />
             </Button>
@@ -46,8 +46,8 @@ export const ProfileHeader = ({ user }: ProfileHeaderProps) => {
           {/* User Info */}
           <div className="flex-1 space-y-2">
             <div>
-              <h1 className="text-3xl font-bold text-white">{user.fullName}</h1>
-              <p className="text-lg text-gold">@{user.handle}</p>
+              <h1 className="text-3xl font-bold text-[var(--hive-text-inverse)]">{user.fullName}</h1>
+              <p className="text-lg text-[var(--hive-brand-secondary)]">@{user.handle}</p>
             </div>
 
             <div className="mt-4 flex items-center space-x-4 text-sm text-gray-400">
@@ -80,7 +80,7 @@ export const ProfileHeader = ({ user }: ProfileHeaderProps) => {
             <Button
               variant="default"
               size="sm"
-              className="bg-gold text-black hover:bg-gold/90"
+              className="bg-[var(--hive-brand-secondary)] text-[var(--hive-text-primary)] hover:bg-[var(--hive-brand-secondary)]/90"
             >
               Edit Profile
             </Button>

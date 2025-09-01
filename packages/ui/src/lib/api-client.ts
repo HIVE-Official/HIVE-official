@@ -3,7 +3,7 @@
  * Centralized API client for connecting frontend to backend services
  */
 
-import { Tool, CreateTool } from '@hive/core';
+import type { Tool, CreateTool } from '@hive/core';
 
 // API Response Types
 interface ApiResponse<T> {

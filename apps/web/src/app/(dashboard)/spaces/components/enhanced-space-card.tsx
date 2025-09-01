@@ -121,7 +121,7 @@ export function EnhancedSpaceCard({
                     onLoad={() => _setImageLoaded(true)}
                   />
                 ) : (
-                  <span className="text-xl font-bold text-white">
+                  <span className="text-xl font-bold text-[var(--hive-text-inverse)]">
                     {space.name.charAt(0)}
                   </span>
                 )}
@@ -136,7 +136,7 @@ export function EnhancedSpaceCard({
             {/* Content */}
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-1">
-                <h3 className="font-semibold text-white truncate">
+                <h3 className="font-semibold text-[var(--hive-text-inverse)] truncate">
                   {space.name}
                 </h3>
                 {space.trendingRank && space.trendingRank <= 10 && (
@@ -176,7 +176,7 @@ export function EnhancedSpaceCard({
                   size="sm"
                   variant="ghost"
                   onClick={() => onPreview?.(space.id)}
-                  className="text-neutral-400 hover:text-white"
+                  className="text-neutral-400 hover:text-[var(--hive-text-inverse)]"
                 >
                   <Eye className="h-4 w-4" />
                 </Button>
@@ -247,7 +247,7 @@ export function EnhancedSpaceCard({
                     onLoad={() => _setImageLoaded(true)}
                   />
                 ) : (
-                  <span className="text-lg font-bold text-white">
+                  <span className="text-lg font-bold text-[var(--hive-text-inverse)]">
                     {space.name.charAt(0)}
                   </span>
                 )}
@@ -261,7 +261,7 @@ export function EnhancedSpaceCard({
 
             {/* Basic info */}
             <div className="flex-1 min-w-0">
-              <h3 className="font-semibold text-white truncate text-sm">
+              <h3 className="font-semibold text-[var(--hive-text-inverse)] truncate text-sm">
                 {space.name}
               </h3>
               <div className="flex items-center gap-2 text-xs text-neutral-400">
@@ -332,19 +332,19 @@ export function EnhancedSpaceCard({
               <div className="py-2">
                 <div className="grid grid-cols-3 gap-2 text-center">
                   <div>
-                    <div className="text-xs font-medium text-white">
+                    <div className="text-xs font-medium text-[var(--hive-text-inverse)]">
                       {space.recentActivity?.posts || 0}
                     </div>
                     <div className="text-xs text-neutral-400">Posts</div>
                   </div>
                   <div>
-                    <div className="text-xs font-medium text-white">
+                    <div className="text-xs font-medium text-[var(--hive-text-inverse)]">
                       {space.recentActivity?.events || 0}
                     </div>
                     <div className="text-xs text-neutral-400">Events</div>
                   </div>
                   <div>
-                    <div className="text-xs font-medium text-white">
+                    <div className="text-xs font-medium text-[var(--hive-text-inverse)]">
                       {space.recentActivity?.activeMembers || 0}
                     </div>
                     <div className="text-xs text-neutral-400">Active</div>
@@ -362,7 +362,7 @@ export function EnhancedSpaceCard({
               size="sm"
               variant="outline"
               onClick={() => onPreview?.(space.id)}
-              className="flex-1 text-xs border-white/20 text-neutral-300 hover:text-white"
+              className="flex-1 text-xs border-white/20 text-neutral-300 hover:text-[var(--hive-text-inverse)]"
             >
               <Eye className="h-3 w-3 mr-1" />
               Preview

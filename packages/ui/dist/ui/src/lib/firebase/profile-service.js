@@ -110,8 +110,8 @@ export class ProfileFirebaseService {
             //     }
             //   });
         };
-        const unsubscribe = mockListener();
-        this.listeners.set(listenerId, unsubscribe || (() => { }));
+        mockListener();
+        this.listeners.set(listenerId, () => { });
         return () => {
             this.listeners.get(listenerId)?.();
             this.listeners.delete(listenerId);
@@ -305,4 +305,5 @@ export const CLOUD_FUNCTIONS = {
 };
 // Export singleton instance
 export const profileFirebaseService = new ProfileFirebaseService();
+// Types are already exported as interfaces above
 //# sourceMappingURL=profile-service.js.map

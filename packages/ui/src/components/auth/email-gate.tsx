@@ -1,10 +1,10 @@
-/**
- * Email Gate Component - DISABLED FOR vBETA
- * Re-enable in v1 when UI package issues are resolved
- */
+import React from 'react';
 
-export const EmailGate = () => {
-  return <div>Email Gate - Coming Soon</div>;
+export interface EmailGateProps {
+  children?: React.ReactNode;
+  onEmailSubmit?: (email: string) => void;
+}
+
+export const EmailGate: React.FC<EmailGateProps> = ({ children }) => {
+  return <div>{children}</div>;
 };
-
-export default EmailGate;

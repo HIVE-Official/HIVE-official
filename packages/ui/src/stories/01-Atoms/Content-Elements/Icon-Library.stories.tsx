@@ -139,7 +139,16 @@ import {
 } from 'lucide-react';
 import '../../../hive-tokens.css';
 
-const meta: Meta = {
+// Create a simple component wrapper for the story
+const IconLibrary = () => (
+  <div className="p-6 space-y-8">
+    <h2 className="text-2xl font-semibold">Icon Library System</h2>
+    <p className="text-muted-foreground">Complete iconography system for campus visual communication</p>
+  </div>
+);
+
+const meta: Meta<typeof IconLibrary> = {
+  component: IconLibrary,
   title: '02-Atoms/Content Elements/Icon Library',
   parameters: {
     layout: 'fullscreen',

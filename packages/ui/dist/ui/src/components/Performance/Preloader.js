@@ -1,7 +1,7 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useEffect, useRef, useState } from 'react';
-import { useAdvancedViewport } from '../Layout/ResponsiveLayout';
+import { useAdvancedViewport } from '../Layout/ResponsiveLayout.js';
 // Advanced preload manager with campus intelligence
 class CampusPreloadManager {
     constructor() {
@@ -340,7 +340,7 @@ onResourceLoaded, onResourceFailed, onLoadingComplete, onBudgetExceeded, enableA
     if (!enableAnalytics && process.env.NODE_ENV !== 'development') {
         return null;
     }
-    return (_jsx(_Fragment, { children: process.env.NODE_ENV === 'development' && (_jsxs("div", { className: "fixed top-4 right-4 bg-black/90 text-white text-xs p-3 rounded-lg font-mono z-50 max-w-sm", children: [_jsx("div", { className: "font-semibold mb-2", children: "Preloader Debug" }), _jsxs("div", { children: ["Status: ", isLoading ? 'Loading...' : 'Complete'] }), loadingStats && (_jsxs(_Fragment, { children: [_jsxs("div", { children: ["Loaded: ", loadingStats.loadedSuccessfully, "/", loadingStats.totalResources] }), _jsxs("div", { children: ["Failed: ", loadingStats.failedLoads] }), _jsxs("div", { children: ["Size: ", Math.round(loadingStats.totalSizeLoaded), "KB"] }), _jsxs("div", { children: ["Avg Time: ", Math.round(loadingStats.averageLoadTime), "ms"] }), _jsxs("div", { children: ["Cache Hit: ", Math.round(loadingStats.cacheHitRate), "%"] })] })), _jsxs("div", { children: ["Bandwidth: ", Math.round(preloadManager.getBandwidthEstimate()), "Kbps"] }), _jsxs("div", { children: ["Network: ", campusContext?.networkQuality || 'unknown'] }), _jsxs("div", { children: ["Campus Load: ", campusContext?.campusLoad || 'unknown'] })] })) }));
+    return (_jsx(_Fragment, { children: process.env.NODE_ENV === 'development' && (_jsxs("div", { className: "fixed top-4 right-4 bg-black/90 text-[var(--hive-text-inverse)] text-xs p-3 rounded-lg font-mono z-50 max-w-sm", children: [_jsx("div", { className: "font-semibold mb-2", children: "Preloader Debug" }), _jsxs("div", { children: ["Status: ", isLoading ? 'Loading...' : 'Complete'] }), loadingStats && (_jsxs(_Fragment, { children: [_jsxs("div", { children: ["Loaded: ", loadingStats.loadedSuccessfully, "/", loadingStats.totalResources] }), _jsxs("div", { children: ["Failed: ", loadingStats.failedLoads] }), _jsxs("div", { children: ["Size: ", Math.round(loadingStats.totalSizeLoaded), "KB"] }), _jsxs("div", { children: ["Avg Time: ", Math.round(loadingStats.averageLoadTime), "ms"] }), _jsxs("div", { children: ["Cache Hit: ", Math.round(loadingStats.cacheHitRate), "%"] })] })), _jsxs("div", { children: ["Bandwidth: ", Math.round(preloadManager.getBandwidthEstimate()), "Kbps"] }), _jsxs("div", { children: ["Network: ", campusContext?.networkQuality || 'unknown'] }), _jsxs("div", { children: ["Campus Load: ", campusContext?.campusLoad || 'unknown'] })] })) }));
 };
 // Utility function to create preload resources
 export function createPreloadResource(id, type, options) {

@@ -238,7 +238,7 @@ function secureCleanup() {
     
     const cleaned = beforeSize - clients.size;
     if (cleaned > 0) {
-      
+      // Cleanup completed successfully
     }
   } catch (error) {
     console.error('Rate limiter cleanup failed:', error);

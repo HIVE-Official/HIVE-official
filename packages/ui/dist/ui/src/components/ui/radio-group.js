@@ -2,7 +2,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
 import { cva } from "class-variance-authority";
-import { cn } from "../../lib/utils";
+import { cn } from "../../lib/utils.js";
 // HIVE Radio System - Semantic Token Perfection
 // Zero hardcoded values - complete semantic token usage
 const radioVariants = cva(
@@ -98,7 +98,7 @@ const RadioGroup = React.forwardRef(({ className, name, value, onChange, orienta
 RadioGroup.displayName = "RadioGroup";
 const RadioCard = React.forwardRef(({ icon, badge, label, description, value, className, ...props }, ref) => {
     const radioId = React.useId();
-    return (_jsx("label", { htmlFor: radioId, className: cn("relative flex cursor-pointer rounded-lg border-2 border-[var(--hive-border-default)] bg-[var(--hive-background-secondary)] p-4 transition-all duration-200 hover:border-[var(--hive-border-hover)] hover:bg-[var(--hive-interactive-hover)] has-[:checked]:border-[var(--hive-brand-secondary)] has-[:checked]:bg-[color-mix(in_srgb,var(--hive-brand-secondary)_10%,transparent)]", className), children: _jsxs("div", { className: "flex items-start space-x-3 w-full", children: [_jsx(Radio, { ref: ref, id: radioId, className: "mt-0.5", value: value, ...props }), icon && (_jsx("div", { className: "flex-shrink-0 text-[var(--hive-text-secondary)]", children: icon })), _jsxs("div", { className: "flex-1 space-y-1", children: [label && (_jsx("div", { className: "text-sm font-medium text-[var(--hive-text-primary)]", children: label })), description && (_jsx("div", { className: "text-xs text-[var(--hive-text-tertiary)]", children: description }))] }), badge && (_jsx("div", { className: "flex-shrink-0", children: badge }))] }) }));
+    return (_jsx("label", { htmlFor: radioId, className: cn("relative flex cursor-pointer rounded-lg border-2 border-[var(--hive-border-default)] bg-[var(--hive-background-secondary)] p-4 transition-all duration-200 hover:border-[var(--hive-border-hover)] hover:bg-[var(--hive-interactive-hover)] has-[:checked]:border-[var(--hive-brand-secondary)] has-[:checked]:bg-[color-mix(in_srgb,var(--hive-brand-secondary)_10%,transparent)]", className), children: _jsxs("div", { className: "flex items-start space-x-3 w-full", children: [_jsx(RadioEnhanced, { ref: ref, id: radioId, className: "mt-0.5", value: value, ...props }), icon && (_jsx("div", { className: "flex-shrink-0 text-[var(--hive-text-secondary)]", children: icon })), _jsxs("div", { className: "flex-1 space-y-1", children: [label && (_jsx("div", { className: "text-sm font-medium text-[var(--hive-text-primary)]", children: label })), description && (_jsx("div", { className: "text-xs text-[var(--hive-text-tertiary)]", children: description }))] }), badge && (_jsx("div", { className: "flex-shrink-0", children: badge }))] }) }));
 });
 RadioCard.displayName = "RadioCard";
 // Radio presets for common patterns
@@ -106,11 +106,11 @@ export const RadioPresets = {
     // Payment Method
     PaymentMethod: ({ options, ...props }) => (_jsx(RadioGroup, { ...props, children: options.map((option) => (_jsx(RadioCard, { value: option.value, label: option.label, icon: option.icon }, option.value))) })),
     // Priority Level
-    Priority: (props) => (_jsxs(RadioGroup, { ...props, children: [_jsx(Radio, { value: "low", label: "Low Priority" }), _jsx(Radio, { value: "medium", label: "Medium Priority" }), _jsx(Radio, { value: "high", label: "High Priority" }), _jsx(Radio, { value: "urgent", label: "Urgent" })] })),
+    Priority: (props) => (_jsxs(RadioGroup, { ...props, children: [_jsx(RadioEnhanced, { value: "low", label: "Low Priority" }), _jsx(RadioEnhanced, { value: "medium", label: "Medium Priority" }), _jsx(RadioEnhanced, { value: "high", label: "High Priority" }), _jsx(RadioEnhanced, { value: "urgent", label: "Urgent" })] })),
     // Size Selection
-    Size: (props) => (_jsxs(RadioGroup, { orientation: "horizontal", ...props, children: [_jsx(Radio, { value: "xs", label: "XS" }), _jsx(Radio, { value: "sm", label: "SM" }), _jsx(Radio, { value: "md", label: "MD" }), _jsx(Radio, { value: "lg", label: "LG" }), _jsx(Radio, { value: "xl", label: "XL" })] })),
+    Size: (props) => (_jsxs(RadioGroup, { orientation: "horizontal", ...props, children: [_jsx(RadioEnhanced, { value: "xs", label: "XS" }), _jsx(RadioEnhanced, { value: "sm", label: "SM" }), _jsx(RadioEnhanced, { value: "md", label: "MD" }), _jsx(RadioEnhanced, { value: "lg", label: "LG" }), _jsx(RadioEnhanced, { value: "xl", label: "XL" })] })),
     // Theme Selection
-    Theme: (props) => (_jsxs(RadioGroup, { ...props, children: [_jsx(Radio, { value: "light", label: "Light Theme", description: "Clean and bright interface" }), _jsx(Radio, { value: "dark", label: "Dark Theme", description: "Easy on the eyes" }), _jsx(Radio, { value: "auto", label: "Auto", description: "Matches system preference" })] })),
+    Theme: (props) => (_jsxs(RadioGroup, { ...props, children: [_jsx(RadioEnhanced, { value: "light", label: "Light Theme", description: "Clean and bright interface" }), _jsx(RadioEnhanced, { value: "dark", label: "Dark Theme", description: "Easy on the eyes" }), _jsx(RadioEnhanced, { value: "auto", label: "Auto", description: "Matches system preference" })] })),
 };
 export { Radio, RadioGroup, RadioCard, radioVariants, radioIndicatorVariants };
 //# sourceMappingURL=radio-group.js.map

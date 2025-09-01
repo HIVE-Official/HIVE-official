@@ -1,5 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
-import { cn } from "../lib/utils";
+import { cn } from "../../lib/utils.js";
 // GOLD PARTICLE SYSTEM
 export const GoldParticles = ({ density = 20, className }) => {
     const particles = Array.from({ length: density }, (_, i) => i);

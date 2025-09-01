@@ -9,7 +9,7 @@ export interface FormFieldProps extends Omit<InputProps, 'id'> {
     showOptional?: boolean;
     success?: boolean;
 }
-export declare const FormField: React.ForwardRefExoticComponent<FormFieldProps & React.RefAttributes<HTMLInputElement>>;
+export declare const FormField: React.ForwardRefExoticComponent<Omit<FormFieldProps, "ref"> & React.RefAttributes<HTMLInputElement>>;
 export declare const FormFieldPresets: {
     EmailField: (props: Omit<FormFieldProps, "type" | "placeholder" | "label">) => import("react/jsx-runtime").JSX.Element;
     PasswordField: (props: Omit<FormFieldProps, "type" | "label">) => import("react/jsx-runtime").JSX.Element;

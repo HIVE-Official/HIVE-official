@@ -16,11 +16,11 @@ export { CheckEmailInfo } from './components/auth/CheckEmailInfo';
 export { SchoolPick } from './components/auth/school-pick';
 
 // === LOADING COMPONENTS (working) ===
-export { LoadingOrchestrator as PageLoader } from './components/loading/LoadingOrchestrator';
+export { LoadingOrchestrator as PageLoader } from './components/Loading/LoadingOrchestrator';
 
 // === BASIC UI COMPONENTS (working) ===
-export { Button } from './components/ui/button';
-export { Input } from './components/ui/input';
+export { ButtonEnhanced as Button } from './atomic/atoms/button-enhanced';
+export { InputEnhanced as Input } from './atomic/atoms/input-enhanced';
 export { HiveCard as Card, HiveCard } from './components/hive-card';
 export { HiveBadge as Badge, HiveBadge } from './components/hive-badge';
 export { HiveModal } from './components/hive-modal';
@@ -35,42 +35,42 @@ export { hiveVariants } from './lib/motion';
 export const CreateProfileStep: React.FC<any> = (props) => {
   return React.createElement('div', { className: 'p-8 text-center' }, 
     React.createElement('h2', { className: 'text-2xl font-bold mb-4' }, 'Create Profile'),
-    React.createElement('p', { className: 'text-gray-600' }, 'Complete your profile to get started with HIVE.')
+    React.createElement('p', { className: 'text-[var(--hive-text-muted)]' }, 'Complete your profile to get started with HIVE.')
   );
 };
 
 export const AcademicStep: React.FC<any> = (props) => {
   return React.createElement('div', { className: 'p-8 text-center' }, 
     React.createElement('h2', { className: 'text-2xl font-bold mb-4' }, 'Academic Information'),
-    React.createElement('p', { className: 'text-gray-600' }, 'Tell us about your academic journey.')
+    React.createElement('p', { className: 'text-[var(--hive-text-muted)]' }, 'Tell us about your academic journey.')
   );
 };
 
 export const InterestsSelectionStep: React.FC<any> = (props) => {
   return React.createElement('div', { className: 'p-8 text-center' }, 
     React.createElement('h2', { className: 'text-2xl font-bold mb-4' }, 'Select Your Interests'),
-    React.createElement('p', { className: 'text-gray-600' }, 'Choose topics that interest you most.')
+    React.createElement('p', { className: 'text-[var(--hive-text-muted)]' }, 'Choose topics that interest you most.')
   );
 };
 
 export const WelcomeRoleStep: React.FC<any> = (props) => {
   return React.createElement('div', { className: 'p-8 text-center' }, 
     React.createElement('h2', { className: 'text-2xl font-bold mb-4' }, 'Welcome to HIVE'),
-    React.createElement('p', { className: 'text-gray-600' }, 'Select your role to personalize your experience.')
+    React.createElement('p', { className: 'text-[var(--hive-text-muted)]' }, 'Select your role to personalize your experience.')
   );
 };
 
 export const AlumniComingSoonStep: React.FC<any> = (props) => {
   return React.createElement('div', { className: 'p-8 text-center' }, 
     React.createElement('h2', { className: 'text-2xl font-bold mb-4' }, 'Alumni Access Coming Soon'),
-    React.createElement('p', { className: 'text-gray-600' }, 'Alumni features will be available soon!')
+    React.createElement('p', { className: 'text-[var(--hive-text-muted)]' }, 'Alumni features will be available soon!')
   );
 };
 
 export const OnboardingCompleteStep: React.FC<any> = (props) => {
   return React.createElement('div', { className: 'p-8 text-center' }, 
     React.createElement('h2', { className: 'text-2xl font-bold mb-4' }, 'Welcome to HIVE!'),
-    React.createElement('p', { className: 'text-gray-600' }, 'Your profile is complete. Start exploring!')
+    React.createElement('p', { className: 'text-[var(--hive-text-muted)]' }, 'Your profile is complete. Start exploring!')
   );
 };
 
@@ -78,7 +78,7 @@ export const OnboardingCompleteStep: React.FC<any> = (props) => {
 export const BentoProfileDashboard: React.FC<any> = (props) => {
   return React.createElement('div', { className: 'p-8' }, 
     React.createElement('h2', { className: 'text-2xl font-bold mb-4' }, 'Profile Dashboard'),
-    React.createElement('p', { className: 'text-gray-600' }, 'Your personalized dashboard will appear here.')
+    React.createElement('p', { className: 'text-[var(--hive-text-muted)]' }, 'Your personalized dashboard will appear here.')
   );
 };
 
@@ -86,7 +86,7 @@ export const BentoProfileDashboard: React.FC<any> = (props) => {
 export const SpaceRequestForm: React.FC<any> = (props) => {
   return React.createElement('div', { className: 'p-8' }, 
     React.createElement('h2', { className: 'text-2xl font-bold mb-4' }, 'Request a Space'),
-    React.createElement('p', { className: 'text-gray-600' }, 'Space request form will appear here.')
+    React.createElement('p', { className: 'text-[var(--hive-text-muted)]' }, 'Space request form will appear here.')
   );
 };
 
@@ -97,7 +97,7 @@ export const FormField: React.FC<any> = (props) => {
 
 // Basic UI Stubs
 export const Checkbox: React.FC<any> = (props) => {
-  return React.createElement('input', { type: 'checkbox', className: 'rounded border-gray-300', ...props });
+  return React.createElement('input', { type: 'checkbox', className: 'rounded border-[var(--hive-border-default)]', ...props });
 };
 
 export const PageContainer: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className }) => {

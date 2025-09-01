@@ -67,7 +67,7 @@ export declare class GlobalErrorBoundary extends Component<GlobalErrorBoundaryPr
     private reportCriticalError;
     handleRetry: () => void;
     componentWillUnmount(): void;
-    render(): string | number | bigint | boolean | Iterable<React.ReactNode> | Promise<React.AwaitedReactNode> | import("react/jsx-runtime").JSX.Element;
+    render(): string | number | bigint | boolean | Iterable<React.ReactNode> | Promise<React.AwaitedReactNode> | import("react/jsx-runtime").JSX.Element | null | undefined;
 }
 export declare function useGlobalErrorBoundary(): {
     trackError: (error: Error, context?: any) => void;

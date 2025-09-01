@@ -5,7 +5,16 @@ import { Avatar, AvatarFallback, AvatarImage } from '../../../components/ui/avat
 import { Badge } from '../../../components/ui/badge';
 import { Button } from '../../atomic/atoms/button-enhanced';
 
-const meta: Meta = {
+// Create a component wrapper for the story
+const AvatarImageSystem = () => (
+  <div className="p-6 space-y-8">
+    <h2 className="text-2xl font-semibold">Avatar & Image System</h2>
+    <p className="text-muted-foreground">Campus visual identity system for student and group representation</p>
+  </div>
+);
+
+const meta: Meta<typeof AvatarImageSystem> = {
+  component: AvatarImageSystem,
   title: '02-Atoms/Content-Elements/Avatar & Image System',
   parameters: {
     docs: {

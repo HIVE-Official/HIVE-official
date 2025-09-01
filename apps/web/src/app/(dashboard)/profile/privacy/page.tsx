@@ -14,7 +14,6 @@ import {
   FormField,
   HiveConfirmModal,
   Badge,
-  HiveModal
 } from "@hive/ui";
 import { useHiveProfile } from '../../../../hooks/use-hive-profile';
 import { ErrorBoundary } from '../../../../components/error-boundary';
@@ -24,15 +23,10 @@ import {
   Globe,
   Eye,
   EyeOff,
-  Ghost,
   MessageCircle,
   Save,
   UserX,
   Check,
-  AlertTriangle,
-  Users,
-  Lock,
-  Settings as SettingsIcon,
   Moon
 } from 'lucide-react';
 
@@ -290,7 +284,7 @@ export default function ProfilePrivacyStorybook() {
   };
 
   // Current user context for components
-  const currentUser = useMemo(() => {
+  const _currentUser = useMemo(() => {
     if (!profile) return null;
     return {
       id: profile.identity.id,
@@ -309,7 +303,7 @@ export default function ProfilePrivacyStorybook() {
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
             <div className="w-8 h-8 bg-hive-gold rounded-lg animate-pulse mx-auto mb-4" />
-            <p className="text-white">Loading your privacy settings...</p>
+            <p className="text-[var(--hive-text-inverse)]">Loading your privacy settings...</p>
           </div>
         </div>
       </PageContainer>
@@ -371,7 +365,7 @@ export default function ProfilePrivacyStorybook() {
                 <EyeOff className="h-6 w-6 text-red-400" />
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-white mb-2">Go Private</h3>
+                <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-2">Go Private</h3>
                 <p className="text-sm text-gray-400">
                   Instantly hide your profile, enable ghost mode, and minimize your campus presence. 
                   Perfect for finals week or when you need focused study time.
@@ -395,7 +389,7 @@ export default function ProfilePrivacyStorybook() {
                 <Globe className="h-6 w-6 text-green-400" />
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-white mb-2">Go Public</h3>
+                <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-2">Go Public</h3>
                 <p className="text-sm text-gray-400">
                   Open your profile to campus connections, enable collaboration, and maximize 
                   your networking opportunities within the UB community.
@@ -415,7 +409,7 @@ export default function ProfilePrivacyStorybook() {
 
         {/* 👁️ **PROFILE VISIBILITY SETTINGS** */}
         <Card className="p-6 mb-6">
-          <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+          <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4 flex items-center gap-2">
             <Globe className="h-5 w-5 text-hive-gold" />
             Profile Visibility
           </h3>
@@ -475,7 +469,7 @@ export default function ProfilePrivacyStorybook() {
 
         {/* 💬 **COMMUNICATION SETTINGS** */}
         <Card className="p-6 mb-6">
-          <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+          <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4 flex items-center gap-2">
             <MessageCircle className="h-5 w-5 text-hive-gold" />
             Communication & Invitations
           </h3>
@@ -515,7 +509,7 @@ export default function ProfilePrivacyStorybook() {
 
         {/* 👻 **UB GHOST MODE** */}
         <Card className="p-6 border-purple-500/20 bg-purple-500/5 mb-6">
-          <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+          <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4 flex items-center gap-2">
             <Moon className="h-5 w-5 text-purple-400" />
             Ghost Mode
             <Badge variant="secondary" className="text-xs">UB Exclusive</Badge>
@@ -574,7 +568,7 @@ export default function ProfilePrivacyStorybook() {
 
         {/* 🛡️ **DATA & ANALYTICS** */}
         <Card className="p-6">
-          <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+          <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4 flex items-center gap-2">
             <Shield className="h-5 w-5 text-hive-gold" />
             Data & Analytics
           </h3>

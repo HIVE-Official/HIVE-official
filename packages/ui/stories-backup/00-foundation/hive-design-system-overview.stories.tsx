@@ -318,8 +318,9 @@ const DesignSystemOverview = () => (
   </div>
 );
 
-const meta: Meta = {
+const meta: Meta<typeof DesignSystemOverview> = {
   title: '00-Foundation/HIVE Design System Overview',
+  component: DesignSystemOverview,
   parameters: {
     layout: 'fullscreen',
     docs: {

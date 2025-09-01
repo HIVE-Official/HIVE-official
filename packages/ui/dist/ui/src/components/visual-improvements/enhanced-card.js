@@ -1,7 +1,7 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import * as React from "react";
 import { cva } from "class-variance-authority";
-import { cn } from "../lib/utils";
+import { cn } from "../../lib/utils.js";
 const enhancedCardVariants = cva(
 // Base styles with REAL visual presence
 "relative overflow-hidden text-foreground transition-all duration-300 ease-out group", {

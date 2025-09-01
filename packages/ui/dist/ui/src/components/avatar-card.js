@@ -1,8 +1,8 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from 'react';
-import { cn } from '../../lib/utils';
-import { Avatar } from './ui/avatar';
+import { cn } from '../lib/utils.js';
+import { Avatar } from './ui/avatar.js';
 import { Check, Star, Crown, GraduationCap } from 'lucide-react';
 const roleBadges = {
     student: { icon: GraduationCap, color: 'text-[var(--hive-status-info)]' },

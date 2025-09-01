@@ -7,33 +7,33 @@
 import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
 import type { HiveCardBaseProps } from './hive-card-system';
-declare const cardHeaderVariants: (props?: {
-    size?: "default" | "sm" | "lg" | "xl";
-    alignment?: "end" | "center" | "start";
-    spacing?: "default" | "sm" | "lg" | "none";
-} & import("class-variance-authority/types").ClassProp) => string;
-declare const cardTitleVariants: (props?: {
-    size?: "default" | "sm" | "lg" | "xl";
-    truncate?: boolean;
-} & import("class-variance-authority/types").ClassProp) => string;
-declare const cardDescriptionVariants: (props?: {
-    size?: "default" | "sm" | "lg" | "xl";
-    lines?: 1 | 3 | 2 | "none";
-} & import("class-variance-authority/types").ClassProp) => string;
-declare const cardContentVariants: (props?: {
-    size?: "default" | "sm" | "lg" | "xl";
-    padding?: "default" | "sm" | "lg" | "none";
-    scroll?: boolean;
-} & import("class-variance-authority/types").ClassProp) => string;
-declare const cardFooterVariants: (props?: {
-    size?: "default" | "sm" | "lg" | "xl";
-    justify?: "end" | "center" | "start" | "between" | "around";
-    border?: boolean;
-} & import("class-variance-authority/types").ClassProp) => string;
-declare const cardActionsVariants: (props?: {
-    layout?: "grid" | "horizontal" | "vertical";
-    size?: "default" | "sm" | "lg";
-} & import("class-variance-authority/types").ClassProp) => string;
+declare const cardHeaderVariants: (props?: ({
+    size?: "sm" | "default" | "lg" | "xl" | null | undefined;
+    alignment?: "center" | "end" | "start" | null | undefined;
+    spacing?: "sm" | "default" | "lg" | "none" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
+declare const cardTitleVariants: (props?: ({
+    size?: "sm" | "default" | "lg" | "xl" | null | undefined;
+    truncate?: boolean | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
+declare const cardDescriptionVariants: (props?: ({
+    size?: "sm" | "default" | "lg" | "xl" | null | undefined;
+    lines?: 1 | 3 | 2 | "none" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
+declare const cardContentVariants: (props?: ({
+    size?: "sm" | "default" | "lg" | "xl" | null | undefined;
+    padding?: "sm" | "default" | "lg" | "none" | null | undefined;
+    scroll?: boolean | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
+declare const cardFooterVariants: (props?: ({
+    size?: "sm" | "default" | "lg" | "xl" | null | undefined;
+    justify?: "center" | "end" | "start" | "between" | "around" | null | undefined;
+    border?: boolean | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
+declare const cardActionsVariants: (props?: ({
+    layout?: "horizontal" | "vertical" | "grid" | null | undefined;
+    size?: "sm" | "default" | "lg" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
 interface HiveCardHeaderProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof cardHeaderVariants> {
     actions?: React.ReactNode;
 }

@@ -3,10 +3,11 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import React, { useState } from 'react';
-import { UnifiedAuthProvider, ShellProvider } from "@hive/ui";
+// import { FirebaseAuthProvider } from "../../../../packages/ui/src/contexts/unified-auth-context";
+// import { ShellProvider } from "../../../../packages/ui/src/components/shell/shell-provider";
 import { ModalProvider } from '../components/ui/modal-system';
 import ErrorProvider from '../components/error-provider';
-import createFirebaseAuthIntegration from '../lib/firebase-auth-integration';
+import { AuthErrorBoundary } from '../components/auth/auth-error-boundary';
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(() => new QueryClient({
@@ -18,29 +19,18 @@ export function Providers({ children }: { children: React.ReactNode }) {
     },
   }));
 
-  const [firebaseIntegration] = useState(() => {
-    // Only create Firebase integration on client-side
-    if (typeof window !== 'undefined') {
-      try {
-        return createFirebaseAuthIntegration();
-      } catch (error) {
-        console.warn('Firebase auth integration failed to initialize:', error);
-        return undefined;
-      }
-    }
-    return undefined;
-  });
-
   return (
     <QueryClientProvider client={queryClient}>
       <ErrorProvider>
         <ModalProvider>
-          <UnifiedAuthProvider firebaseIntegration={firebaseIntegration}>
-            <ShellProvider>
-              {children}
-              <ReactQueryDevtools initialIsOpen={false} />
-            </ShellProvider>
-          </UnifiedAuthProvider>
+          <AuthErrorBoundary>
+            {/* <FirebaseAuthProvider>
+              <ShellProvider> */}
+                {children}
+                <ReactQueryDevtools initialIsOpen={false} />
+              {/* </ShellProvider>
+            </FirebaseAuthProvider> */}
+          </AuthErrorBoundary>
         </ModalProvider>
       </ErrorProvider>
     </QueryClientProvider>

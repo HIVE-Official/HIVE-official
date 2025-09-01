@@ -127,7 +127,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="success">✅ COLORS</Badge>
+            <Badge variant="emerald">✅ COLORS</Badge>
             Slider Colors - Perfect Semantic Token Usage
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">

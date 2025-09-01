@@ -16,7 +16,13 @@
     "test:e2e": "turbo run test:e2e",
     "clean": "turbo run clean",
     "storybook": "turbo run storybook",
-    "build-storybook": "turbo run build-storybook"
+    "build-storybook": "turbo run build-storybook",
+    "workflow-check": "node scripts/workflow-check.js",
+    "design-check": "node scripts/design-system-check.js",
+    "pre-work": "pnpm workflow-check",
+    "safe-start": "pnpm workflow-check && pnpm dev",
+    "component-check": "node scripts/design-system-check.js",
+    "ai-prompt": "node scripts/ai-workflow-prompt.js"
   },
   "devDependencies": {
     "@vitest/coverage-v8": "^3.2.4",
@@ -38,10 +44,14 @@
       "esbuild@<=0.24.2": ">=0.25.0",
       "form-data@>=4.0.0 <4.0.4": ">=4.0.4",
       "form-data@<2.5.4": ">=2.5.4",
-      "@eslint/plugin-kit@<0.3.4": ">=0.3.4"
+      "form-data": ">=4.0.4",
+      "@eslint/plugin-kit@<0.3.4": ">=0.3.4",
+      "next@>=15.0.0 <=15.4.4": ">=15.4.5",
+      "next@>=15.0.0-canary.0 <15.4.7": ">=15.4.7"
     }
   },
   "dependencies": {
+    "chalk": "^5.3.0",
     "glob": "^11.0.3",
     "lucide-react": "^0.411.0",
     "recharts": "^3.1.0",

@@ -21,59 +21,59 @@ const spacingSizes = {
   '2xl': '3rem',   // 48px
   '3xl': '4rem',   // 64px
   '4xl': '6rem'    // 96px
-};
+} as const;
 
 // Responsive spacing utilities
 const responsiveSpacing = {
   xs: {
-    base: 'xs',
-    sm: 'sm',
-    md: 'md',
-    lg: 'lg'
+    base: 'xs' as keyof typeof spacingSizes,
+    sm: 'sm' as keyof typeof spacingSizes,
+    md: 'md' as keyof typeof spacingSizes,
+    lg: 'lg' as keyof typeof spacingSizes
   },
   sm: {
-    base: 'sm',
-    sm: 'md',
-    md: 'lg',
-    lg: 'xl'
+    base: 'sm' as keyof typeof spacingSizes,
+    sm: 'md' as keyof typeof spacingSizes,
+    md: 'lg' as keyof typeof spacingSizes,
+    lg: 'xl' as keyof typeof spacingSizes
   },
   md: {
-    base: 'md',
-    sm: 'lg',
-    md: 'xl',
-    lg: '2xl'
+    base: 'md' as keyof typeof spacingSizes,
+    sm: 'lg' as keyof typeof spacingSizes,
+    md: 'xl' as keyof typeof spacingSizes,
+    lg: '2xl' as keyof typeof spacingSizes
   },
   lg: {
-    base: 'lg',
-    sm: 'xl',
-    md: '2xl',
-    lg: '3xl'
+    base: 'lg' as keyof typeof spacingSizes,
+    sm: 'xl' as keyof typeof spacingSizes,
+    md: '2xl' as keyof typeof spacingSizes,
+    lg: '3xl' as keyof typeof spacingSizes
   },
   xl: {
-    base: 'xl',
-    sm: '2xl',
-    md: '3xl',
-    lg: '4xl'
+    base: 'xl' as keyof typeof spacingSizes,
+    sm: '2xl' as keyof typeof spacingSizes,
+    md: '3xl' as keyof typeof spacingSizes,
+    lg: '4xl' as keyof typeof spacingSizes
   },
   '2xl': {
-    base: '2xl',
-    sm: '3xl',
-    md: '4xl',
-    lg: '4xl'
+    base: '2xl' as keyof typeof spacingSizes,
+    sm: '3xl' as keyof typeof spacingSizes,
+    md: '4xl' as keyof typeof spacingSizes,
+    lg: '4xl' as keyof typeof spacingSizes
   },
   '3xl': {
-    base: '3xl',
-    sm: '4xl',
-    md: '4xl',
-    lg: '4xl'
+    base: '3xl' as keyof typeof spacingSizes,
+    sm: '4xl' as keyof typeof spacingSizes,
+    md: '4xl' as keyof typeof spacingSizes,
+    lg: '4xl' as keyof typeof spacingSizes
   },
   '4xl': {
-    base: '4xl',
-    sm: '4xl',
-    md: '4xl',
-    lg: '4xl'
+    base: '4xl' as keyof typeof spacingSizes,
+    sm: '4xl' as keyof typeof spacingSizes,
+    md: '4xl' as keyof typeof spacingSizes,
+    lg: '4xl' as keyof typeof spacingSizes
   }
-};
+} as const;
 
 export const Spacer = React.forwardRef<HTMLDivElement, SpacerProps>(({
   size = 'md',

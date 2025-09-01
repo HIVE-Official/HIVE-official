@@ -1,5 +1,5 @@
 import React from 'react';
-import { LucideIcon } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 export interface IconProps extends React.SVGProps<SVGSVGElement> {
     icon: LucideIcon | React.ComponentType<any>;
     size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';

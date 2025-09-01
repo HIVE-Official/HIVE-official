@@ -53,10 +53,10 @@ declare const surfaceConfig: {
         readonly order: 6;
     };
 };
-declare const hiveSpaceLayoutVariants: (props?: {
-    mode?: "view" | "edit" | "builder";
-    layout?: "expanded" | "compact" | "standard";
-} & import("class-variance-authority/types").ClassProp) => string;
+declare const hiveSpaceLayoutVariants: (props?: ({
+    mode?: "view" | "edit" | "builder" | null | undefined;
+    layout?: "expanded" | "compact" | "standard" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
 export interface SpaceSurface {
     type: SurfaceType;
     visible: boolean;

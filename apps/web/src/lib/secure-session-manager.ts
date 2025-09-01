@@ -596,7 +596,7 @@ export class SecureSessionManager {
     }
 
     if (cleanedCount > 0) {
-      
+      // Sessions cleaned successfully
     }
   }
 

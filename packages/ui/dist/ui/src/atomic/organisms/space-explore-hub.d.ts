@@ -1,5 +1,5 @@
 import React from 'react';
-import { SpaceCategoryType } from '../atoms/space-category-card';
+import type { SpaceCategoryType } from '../atoms/space-category-card';
 export interface SpaceExploreStats {
     totalSpaces: number;
     totalMembers: number;

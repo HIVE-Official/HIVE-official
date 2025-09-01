@@ -34,7 +34,7 @@ export const ProfileSidebar = ({ user }: ProfileSidebarProps) => {
 
       {/* Name */}
       <div className="text-center mb-4">
-        <h2 className="font-display text-2xl font-semibold text-white mb-2">
+        <h2 className="font-display text-2xl font-semibold text-[var(--hive-text-inverse)] mb-2">
           {user.fullName}
         </h2>
 
@@ -68,7 +68,7 @@ export const ProfileSidebar = ({ user }: ProfileSidebarProps) => {
         <Button
           variant="outline"
           size="sm"
-          className="flex-1 border-zinc-700 text-white hover:bg-zinc-800"
+          className="flex-1 border-zinc-700 text-[var(--hive-text-inverse)] hover:bg-zinc-800"
           onClick={() => {
             // TODO: Navigate to profile edit
           }}
@@ -80,7 +80,7 @@ export const ProfileSidebar = ({ user }: ProfileSidebarProps) => {
         <Button
           variant="outline"
           size="sm"
-          className="flex-1 border-zinc-700 text-white hover:bg-zinc-800"
+          className="flex-1 border-zinc-700 text-[var(--hive-text-inverse)] hover:bg-zinc-800"
           onClick={() => {
             // TODO: Open share modal
           }}

@@ -5,7 +5,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
  * Built for University at Buffalo campus social platform
  */
 import * as React from 'react';
-import { cn } from '../../lib/utils';
+import { cn } from '../../lib/utils.js';
 // === CARD LAYOUT SYSTEM ===
 export const HiveCard = React.forwardRef(({ children, className, variant = 'comfortable', padding = true }, ref) => {
     const variantClasses = {

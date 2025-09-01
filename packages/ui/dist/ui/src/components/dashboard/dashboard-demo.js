@@ -3,13 +3,13 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Activity, Brain, BarChart3, Users, Zap, Target, Clock, TrendingUp } from 'lucide-react';
-import { BentoGrid, createGridItem, defaultLayouts } from './bento-grid';
-import { PersonalTools, mockPersonalToolsData } from './personal-tools';
-import { CalendarWidget, mockCalendarData } from './calendar-widget';
-import { ActivityTracker, mockActivityTrackerData } from './activity-tracker';
-import { Button } from '../hive-button';
-import { Badge } from '../../ui/badge';
-import { Progress } from '../hive-progress';
+import { BentoGrid, createGridItem, defaultLayouts } from './bento-grid.js';
+import { PersonalTools, mockPersonalToolsData } from './personal-tools.js';
+import { CalendarWidget, mockCalendarData } from './calendar-widget.js';
+import { ActivityTracker, mockActivityTrackerData } from './activity-tracker.js';
+import { Button } from '../hive-button.js';
+import { Badge } from '../../atomic/atoms/badge.js';
+import { Progress } from '../hive-progress.js';
 // Quick Stats Widget
 function QuickStatsWidget() {
     const stats = [
@@ -18,7 +18,7 @@ function QuickStatsWidget() {
         { label: 'Active Spaces', value: '8', icon: _jsx(Users, { className: "h-4 w-4" }), color: 'text-purple-600' },
         { label: 'Tools Used', value: '15', icon: _jsx(Zap, { className: "h-4 w-4" }), color: 'text-orange-600' }
     ];
-    return (_jsx("div", { className: "grid grid-cols-2 gap-4 h-full", children: stats.map((stat, index) => (_jsxs(motion.div, { className: "flex flex-col items-center justify-center text-center p-4 bg-gray-50 rounded-lg", initial: { opacity: 0, y: 20 }, animate: { opacity: 1, y: 0 }, transition: { delay: index * 0.1 }, children: [_jsx("div", { className: `mb-2 ${stat.color}`, children: stat.icon }), _jsx("div", { className: "text-2xl font-bold text-gray-900", children: stat.value }), _jsx("div", { className: "text-xs text-gray-600", children: stat.label })] }, stat.label))) }));
+    return (_jsx("div", { className: "grid grid-cols-2 gap-4 h-full", children: stats.map((stat, index) => (_jsxs(motion.div, { className: "flex flex-col items-center justify-center text-center p-4 bg-gray-50 rounded-lg", initial: { opacity: 0, y: 20 }, animate: { opacity: 1, y: 0 }, transition: { delay: index * 0.1 }, children: [_jsx("div", { className: `mb-2 ${stat.color}`, children: stat.icon }), _jsx("div", { className: "text-2xl font-bold text-gray-900", children: stat.value }), _jsx("div", { className: "text-xs text-[var(--hive-text-muted)]", children: stat.label })] }, stat.label))) }));
 }
 // Mini Calendar Widget
 function MiniCalendarWidget() {
@@ -35,7 +35,7 @@ function MiniCalendarWidget() {
                                 ? 'bg-blue-600 text-[var(--hive-text-primary)]'
                                 : hasEvent
                                     ? 'bg-blue-50 text-blue-700 hover:bg-blue-100'
-                                    : 'hover:bg-gray-100'}
+                                    : 'hover:bg-[var(--hive-background-secondary)]'}
               `, children: [date, hasEvent && !isToday && (_jsx("div", { className: "absolute bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-blue-500 rounded-full" }))] }, date));
                     })] })] }));
 }
@@ -62,10 +62,10 @@ function RecentActivityWidget() {
             case 'tool': return 'bg-blue-100 text-blue-700';
             case 'social': return 'bg-green-100 text-green-700';
             case 'academic': return 'bg-orange-100 text-orange-700';
-            default: return 'bg-gray-100 text-gray-700';
+            default: return 'bg-[var(--hive-background-secondary)] text-gray-700';
         }
     };
-    return (_jsxs("div", { className: "space-y-3 p-4", children: [_jsx("h3", { className: "font-semibold text-gray-900 text-sm", children: "Recent Activity" }), activities.map((activity, index) => (_jsxs(motion.div, { className: "flex items-center justify-between text-sm", initial: { opacity: 0, x: -20 }, animate: { opacity: 1, x: 0 }, transition: { delay: index * 0.1 }, children: [_jsxs("div", { className: "flex items-center space-x-3", children: [_jsx("div", { className: "w-2 h-2 bg-blue-500 rounded-full" }), _jsx("span", { className: "text-gray-900", children: activity.action })] }), _jsxs("div", { className: "flex items-center space-x-2", children: [_jsx(Badge, { variant: "outline", className: `text-xs ${getActivityColor(activity.type)}`, children: activity.type }), _jsx("span", { className: "text-gray-500 text-xs", children: activity.time })] })] }, index)))] }));
+    return (_jsxs("div", { className: "space-y-3 p-4", children: [_jsx("h3", { className: "font-semibold text-gray-900 text-sm", children: "Recent Activity" }), activities.map((activity, index) => (_jsxs(motion.div, { className: "flex items-center justify-between text-sm", initial: { opacity: 0, x: -20 }, animate: { opacity: 1, x: 0 }, transition: { delay: index * 0.1 }, children: [_jsxs("div", { className: "flex items-center space-x-3", children: [_jsx("div", { className: "w-2 h-2 bg-blue-500 rounded-full" }), _jsx("span", { className: "text-gray-900", children: activity.action })] }), _jsxs("div", { className: "flex items-center space-x-2", children: [_jsx(Badge, { variant: "secondary", className: `text-xs ${getActivityColor(activity.type)}`, children: activity.type }), _jsx("span", { className: "text-gray-500 text-xs", children: activity.time })] })] }, index)))] }));
 }
 export function DashboardDemo({ variant = 'academic', editable = true, showControls = true, className = "" }) {
     const [currentVariant, setCurrentVariant] = useState(variant);
@@ -157,7 +157,7 @@ export function DashboardDemo({ variant = 'academic', editable = true, showContr
         const baseLayout = defaultLayouts[newVariant];
         // Add items logic here similar to useState initialization
     };
-    return (_jsxs(motion.div, { className: `dashboard-demo space-y-6 ${className}`, initial: { opacity: 0 }, animate: { opacity: 1 }, transition: { duration: 0.5 }, children: [showControls && (_jsxs(motion.div, { className: "flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200", initial: { y: -20, opacity: 0 }, animate: { y: 0, opacity: 1 }, transition: { delay: 0.2 }, children: [_jsxs("div", { children: [_jsx("h2", { className: "text-lg font-semibold text-gray-900", children: "HIVE Dashboard Demo" }), _jsx("p", { className: "text-sm text-gray-600", children: "Interactive dashboard components with customizable layouts" })] }), _jsx("div", { className: "flex items-center space-x-2", children: ['academic', 'productivity', 'social'].map((layoutVariant) => (_jsx(Button, { variant: currentVariant === layoutVariant ? "primary" : "outline", size: "sm", onClick: () => handleVariantChange(layoutVariant), className: "capitalize", children: layoutVariant }, layoutVariant))) })] })), _jsx(motion.div, { initial: { y: 20, opacity: 0 }, animate: { y: 0, opacity: 1 }, transition: { delay: 0.4 }, children: _jsx(BentoGrid, { layout: layout, onLayoutChange: setLayout, onItemResize: (itemId, newSize) => {
+    return (_jsxs(motion.div, { className: `dashboard-demo space-y-6 ${className}`, initial: { opacity: 0 }, animate: { opacity: 1 }, transition: { duration: 0.5 }, children: [showControls && (_jsxs(motion.div, { className: "flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200", initial: { y: -20, opacity: 0 }, animate: { y: 0, opacity: 1 }, transition: { delay: 0.2 }, children: [_jsxs("div", { children: [_jsx("h2", { className: "text-lg font-semibold text-gray-900", children: "HIVE Dashboard Demo" }), _jsx("p", { className: "text-sm text-[var(--hive-text-muted)]", children: "Interactive dashboard components with customizable layouts" })] }), _jsx("div", { className: "flex items-center space-x-2", children: ['academic', 'productivity', 'social'].map((layoutVariant) => (_jsx(Button, { variant: currentVariant === layoutVariant ? "primary" : "outline", size: "sm", onClick: () => handleVariantChange(layoutVariant), className: "capitalize", children: layoutVariant }, layoutVariant))) })] })), _jsx(motion.div, { initial: { y: 20, opacity: 0 }, animate: { y: 0, opacity: 1 }, transition: { delay: 0.4 }, children: _jsx(BentoGrid, { layout: layout, onLayoutChange: setLayout, onItemResize: (itemId, newSize) => {
                         console.log(`Item ${itemId} resized to ${newSize}`);
                     }, onItemRemove: (itemId) => {
                         console.log(`Item ${itemId} removed`);
@@ -165,7 +165,7 @@ export function DashboardDemo({ variant = 'academic', editable = true, showContr
                         console.log('Add new item requested');
                     }, onItemConfigure: (itemId) => {
                         console.log(`Configure item ${itemId}`);
-                    }, editable: editable }) }), editable && showControls && (_jsxs(motion.div, { className: "p-4 bg-gray-50 rounded-lg", initial: { y: 20, opacity: 0 }, animate: { y: 0, opacity: 1 }, transition: { delay: 0.6 }, children: [_jsx("h3", { className: "font-medium text-gray-900 mb-2", children: "Interactive Features" }), _jsxs("div", { className: "grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-600", children: [_jsxs("div", { children: [_jsx("strong", { children: "Drag & Drop:" }), " Hover over widgets and use the grip handle to reorder"] }), _jsxs("div", { children: [_jsx("strong", { children: "Resize:" }), " Use the expand icon to change widget sizes"] }), _jsxs("div", { children: [_jsx("strong", { children: "Configure:" }), " Access widget settings and removal options"] })] })] }))] }));
+                    }, editable: editable }) }), editable && showControls && (_jsxs(motion.div, { className: "p-4 bg-gray-50 rounded-lg", initial: { y: 20, opacity: 0 }, animate: { y: 0, opacity: 1 }, transition: { delay: 0.6 }, children: [_jsx("h3", { className: "font-medium text-gray-900 mb-2", children: "Interactive Features" }), _jsxs("div", { className: "grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-[var(--hive-text-muted)]", children: [_jsxs("div", { children: [_jsx("strong", { children: "Drag & Drop:" }), " Hover over widgets and use the grip handle to reorder"] }), _jsxs("div", { children: [_jsx("strong", { children: "Resize:" }), " Use the expand icon to change widget sizes"] }), _jsxs("div", { children: [_jsx("strong", { children: "Configure:" }), " Access widget settings and removal options"] })] })] }))] }));
 }
 export default DashboardDemo;
 //# sourceMappingURL=dashboard-demo.js.map

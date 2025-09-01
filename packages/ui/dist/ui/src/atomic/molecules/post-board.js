@@ -1,8 +1,8 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React, { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from '../../components/framer-motion-proxy';
-import { cn } from '../../lib/utils';
+import { motion, AnimatePresence } from '../../components/framer-motion-proxy.js';
+import { cn } from '../../lib/utils.js';
 import { MessageCircle, Share2, MoreHorizontal, Crown, Calendar, MapPin, Users, CheckCircle, Clock, Bookmark, Pin, Eye } from 'lucide-react';
 const PostReactionBar = ({ reactions, onReaction }) => {
     const popularReactions = ['👍', '❤️', '😊', '🎉', '👏'];

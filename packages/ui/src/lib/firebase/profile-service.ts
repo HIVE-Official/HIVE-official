@@ -287,8 +287,8 @@ export class ProfileFirebaseService {
       //   });
     };
 
-    const unsubscribe = mockListener();
-    this.listeners.set(listenerId, unsubscribe || (() => {}));
+    mockListener();
+    this.listeners.set(listenerId, () => {});
     
     return () => {
       this.listeners.get(listenerId)?.();
@@ -500,11 +500,4 @@ export const CLOUD_FUNCTIONS = {
 // Export singleton instance
 export const profileFirebaseService = new ProfileFirebaseService();
 
-// Export types for use in components
-export type {
-  UserProfileDocument,
-  SpaceMembershipDocument,
-  NotificationDocument,
-  GhostModeDocument,
-  ToolDocument
-};
+// Types are already exported as interfaces above

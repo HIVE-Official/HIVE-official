@@ -43,6 +43,6 @@ export interface ActivationRequestData {
     commitmentLevel: string;
     contactInfo: string;
 }
-export declare function SpaceActivationModal({ spaceId, spaceName, isOpen, onClose, onSubmit }: SpaceActivationModalProps): import("react/jsx-runtime").JSX.Element;
+export declare function SpaceActivationModal({ spaceId, spaceName, isOpen, onClose, onSubmit }: SpaceActivationModalProps): import("react/jsx-runtime").JSX.Element | null;
 export {};
 //# sourceMappingURL=ub-space-templates.d.ts.map

@@ -1,6 +1,6 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import * as React from "react";
-import { cn } from "../lib/utils";
+import { cn } from "../../lib/utils";
 import { cva } from "class-variance-authority";
 const headingVariants = cva("font-display font-semibold tracking-tight", {
     variants: {
@@ -38,4 +38,9 @@ const Muted = React.forwardRef(({ className, ...props }, ref) => {
 });
 Muted.displayName = "Muted";
 export { Heading, Text, Muted };
-//# sourceMappingURL=Typography.js.map
+export const Typography = {
+    Heading,
+    Text,
+    Muted
+};
+//# sourceMappingURL=typography.js.map

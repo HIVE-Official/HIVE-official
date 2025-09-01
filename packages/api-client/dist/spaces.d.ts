@@ -1,3 +1,4 @@
+import type { Space } from '@hive/core';
 /**
  * Calls the `leaveSpace` Cloud Function.
  * @param {string} spaceId The ID of the space to leave.
@@ -12,5 +13,5 @@ export declare const requestBuilderRole: (spaceId: string) => Promise<void>;
  * Gets a space by ID
  * TODO: Implement proper API call for vBETA
  */
-export declare const getSpaceById: (spaceId: string) => Promise<any>;
+export declare const getSpaceById: (spaceId: string) => Promise<Space>;
 //# sourceMappingURL=spaces.d.ts.map

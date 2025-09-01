@@ -1,8 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { EnhancedAppShell } from '../../components/shell/enhanced-app-shell';
 
-const meta: Meta = {
+// Mock component for Storybook CSF compliance
+const ShellOverview = () => <div>Shell Overview</div>;
+
+const meta: Meta<typeof ShellOverview> = {
   title: '05-Shell/Shell System Overview',
+  component: ShellOverview,
   parameters: {
     layout: 'fullscreen',
     docs: {

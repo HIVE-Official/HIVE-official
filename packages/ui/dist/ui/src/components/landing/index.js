@@ -1,8 +1,8 @@
-export { HeroSection } from './hero-section';
-export { FeaturesSection } from './features-section';
-export { StatsSection } from './stats-section';
-export { CTASection } from './cta-section';
-export { Header } from './header';
-export { HiveLandingPage } from './hive-landing-page';
-export { CountdownTimer } from './countdown-timer';
+export { HeroSection } from './hero-section.js';
+export { FeaturesSection } from './features-section.js';
+export { StatsSection } from './stats-section.js';
+export { CTASection } from './cta-section.js';
+export { Header } from './header.js';
+export { HiveLandingPage } from './hive-landing-page.js';
+export { CountdownTimer } from './countdown-timer.js';
 //# sourceMappingURL=index.js.map

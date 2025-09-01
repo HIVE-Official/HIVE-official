@@ -1,5 +1,5 @@
 import { jsx as _jsx } from "react/jsx-runtime";
-import { useStandardElementStyles } from '../../hooks/use-standard-element-styles';
+import { useStandardElementStyles } from '../../hooks/use-standard-element-styles.js';
 export const TextBlockRenderer = ({ element, config, runtimeContext }) => {
     // Use standard style system (flexible input, consistent output)
     const { classes, styles } = useStandardElementStyles(config.style);

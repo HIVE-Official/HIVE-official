@@ -2,7 +2,7 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import * as React from "react";
 import { cva } from "class-variance-authority";
-import { cn } from "../../lib/utils";
+import { cn } from "../../lib/utils.js";
 // HIVE Spacing System - Semantic Token Perfection
 // Zero hardcoded values - complete semantic token usage
 const spacerVariants = cva("flex-shrink-0", {
@@ -178,7 +178,7 @@ export const VStack = React.forwardRef((props, ref) => {
 });
 VStack.displayName = "VStack";
 export const Separator = React.forwardRef(({ className, orientation, variant, size, decorative = true, ...props }, ref) => {
-    return (_jsx("div", { ref: ref, className: cn(separatorVariants({ orientation, variant, size }), className), role: decorative ? "none" : "separator", "aria-orientation": orientation, ...props }));
+    return (_jsx("div", { ref: ref, className: cn(separatorVariants({ orientation, variant, size }), className), role: decorative ? "none" : "separator", "aria-orientation": orientation || undefined, ...props }));
 });
 Separator.displayName = "Separator";
 export const Grid = React.forwardRef(({ className, cols = 1, gap = "default", responsive = true, ...props }, ref) => {

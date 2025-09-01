@@ -1,8 +1,8 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import React from 'react';
-import { Text } from '../../atomic/atoms/text';
-import { cn } from '../../lib/utils';
+import { Text } from '../../atomic/atoms/text.js';
+import { cn } from '../../lib/utils.js';
 import { X, ChevronDown, ChevronRight } from 'lucide-react';
 // Touch Ripple Hook
 export function useTouchRipple() {
@@ -96,7 +96,7 @@ function UBMobileNavItem({ item, onNavigate }) {
                     ? "bg-[var(--hive-brand-secondary)]/15"
                     : "bg-transparent"), children: [_jsx(IconComponent, { className: cn("w-5 h-5 transition-colors duration-200", item.isActive
                             ? "text-[var(--hive-brand-secondary)]"
-                            : "text-[var(--hive-text-secondary)]") }), item.badge && (_jsx("div", { className: cn("absolute -top-1 -right-1 min-w-[16px] h-4 px-1", "flex items-center justify-center text-xs font-medium rounded-full", "border-2 border-[var(--hive-background-primary)]", item.badge.color === 'error' && "bg-red-500 text-white", item.badge.color === 'warning' && "bg-yellow-500 text-black", item.badge.color === 'primary' && "bg-[var(--hive-brand-secondary)] text-white", !item.badge.color && "bg-red-500 text-white", item.badge.pulse && "animate-pulse"), children: item.badge.count && item.badge.count > 99 ? '99+' : item.badge.count }))] }), _jsx(Text, { variant: "body-xs", className: cn("mt-1 transition-colors duration-200 truncate max-w-full", item.isActive
+                            : "text-[var(--hive-text-secondary)]") }), item.badge && (_jsx("div", { className: cn("absolute -top-1 -right-1 min-w-[16px] h-4 px-1", "flex items-center justify-center text-xs font-medium rounded-full", "border-2 border-[var(--hive-background-primary)]", item.badge.color === 'error' && "bg-red-500 text-[var(--hive-text-inverse)]", item.badge.color === 'warning' && "bg-yellow-500 text-[var(--hive-text-primary)]", item.badge.color === 'primary' && "bg-[var(--hive-brand-secondary)] text-[var(--hive-text-inverse)]", !item.badge.color && "bg-red-500 text-[var(--hive-text-inverse)]", item.badge.pulse && "animate-pulse"), children: item.badge.count && item.badge.count > 99 ? '99+' : item.badge.count }))] }), _jsx(Text, { variant: "body-xs", className: cn("mt-1 transition-colors duration-200 truncate max-w-full", item.isActive
                     ? "text-[var(--hive-brand-secondary)]"
                     : "text-[var(--hive-text-tertiary)]"), children: item.label }), ripples.map((ripple) => (_jsx("div", { className: "absolute inset-0 pointer-events-none rounded-lg overflow-hidden", style: {
                     background: `radial-gradient(circle at ${ripple.x}px ${ripple.y}px, rgba(255,255,255,0.2) 0%, transparent 50%)`
@@ -122,11 +122,11 @@ export function UBMobileTouchButton({ icon, label, onPress, variant = 'ghost', s
         lg: 'w-12 h-12 p-3'
     };
     const variantClasses = {
-        primary: 'bg-[var(--hive-brand-secondary)] text-white',
+        primary: 'bg-[var(--hive-brand-secondary)] text-[var(--hive-text-inverse)]',
         secondary: 'bg-[var(--hive-background-secondary)] text-[var(--hive-text-primary)]',
         ghost: 'bg-transparent text-[var(--hive-text-secondary)]'
     };
-    return (_jsxs("button", { type: "button", onClick: onPress, disabled: disabled, ...rippleHandlers, ...gestureHandlers, className: cn("relative flex items-center justify-center rounded-lg", "transition-all duration-200 ease-out", "focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--hive-brand-secondary)]", "active:scale-95", sizeClasses[size], variantClasses[variant], disabled && "opacity-50 cursor-not-allowed", className), "aria-label": label, children: [_jsx(IconComponent, { className: "w-5 h-5" }), badge && (_jsx("div", { className: cn("absolute -top-1 -right-1 min-w-[16px] h-4 px-1", "flex items-center justify-center text-xs font-medium rounded-full", "bg-red-500 text-white border-2 border-[var(--hive-background-primary)]", badge.pulse && "animate-pulse"), children: badge.count && badge.count > 99 ? '99+' : badge.count })), ripples.map((ripple) => (_jsx("div", { className: "absolute inset-0 pointer-events-none rounded-lg overflow-hidden", style: {
+    return (_jsxs("button", { type: "button", onClick: onPress, disabled: disabled, ...rippleHandlers, ...gestureHandlers, className: cn("relative flex items-center justify-center rounded-lg", "transition-all duration-200 ease-out", "focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--hive-brand-secondary)]", "active:scale-95", sizeClasses[size], variantClasses[variant], disabled && "opacity-50 cursor-not-allowed", className), "aria-label": label, children: [_jsx(IconComponent, { className: "w-5 h-5" }), badge && (_jsx("div", { className: cn("absolute -top-1 -right-1 min-w-[16px] h-4 px-1", "flex items-center justify-center text-xs font-medium rounded-full", "bg-red-500 text-[var(--hive-text-inverse)] border-2 border-[var(--hive-background-primary)]", badge.pulse && "animate-pulse"), children: badge.count && badge.count > 99 ? '99+' : badge.count })), ripples.map((ripple) => (_jsx("div", { className: "absolute inset-0 pointer-events-none rounded-lg overflow-hidden", style: {
                     background: `radial-gradient(circle at ${ripple.x}px ${ripple.y}px, rgba(255,255,255,0.2) 0%, transparent 50%)`
                 } }, ripple.id)))] }));
 }

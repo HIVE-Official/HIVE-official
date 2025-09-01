@@ -4,9 +4,9 @@
  */
 import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
-declare const statCardVariants: (props?: {
-    semantic?: "default" | "spaces" | "tools" | "activity" | "reputation";
-} & import("class-variance-authority/types").ClassProp) => string;
+declare const statCardVariants: (props?: ({
+    semantic?: "default" | "spaces" | "tools" | "reputation" | "activity" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
 export interface StatCardProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof statCardVariants> {
     icon: React.ComponentType<{
         className?: string;

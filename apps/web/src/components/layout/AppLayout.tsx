@@ -4,12 +4,12 @@ import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { AppHeader, BottomNavBar, HiveLogo, Button, Avatar, AvatarFallback } from '@hive/ui'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
-import { useAuth } from '@hive/auth-logic'
+import { useUnifiedAuth } from '@hive/ui'
 import { Home, Compass, User } from 'lucide-react'
 
 function DesktopNav() {
 	const pathname = usePathname()
-	const { user } = useAuth()
+	const { user } = useUnifiedAuth()
 	return (
 		<AppHeader.Root className="border-b border-border bg-background/80 backdrop-blur-md">
 			<AppHeader.Content className="max-w-7xl mx-auto px-4">
@@ -64,7 +64,7 @@ function DesktopNav() {
 					<Button 
 						variant='outline'
 						size="sm"
-						className="border-[var(--hive-brand-secondary)] text-[var(--hive-brand-secondary)] hover:bg-[var(--hive-brand-secondary)] hover:text-black transition-colors duration-[180ms]"
+						className="border-[var(--hive-brand-secondary)] text-[var(--hive-brand-secondary)] hover:bg-[var(--hive-brand-secondary)] hover:text-[var(--hive-text-primary)] transition-colors duration-[180ms]"
 					>
 						Create
 					</Button>

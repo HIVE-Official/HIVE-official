@@ -1,7 +1,7 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import * as React from "react";
 import { cva } from "class-variance-authority";
-import { cn } from "../lib/utils";
+import { cn } from "../../lib/utils.js";
 const enhancedTypographyVariants = cva("transition-all duration-300 ease-out", {
     variants: {
         variant: {
@@ -47,7 +47,7 @@ const enhancedTypographyVariants = cva("transition-all duration-300 ease-out", {
             ],
             // STICKER BOMB: Playful, layered
             sticker: [
-                "text-lg md:text-xl font-black text-black bg-accent",
+                "text-lg md:text-xl font-black text-[var(--hive-text-primary)] bg-accent",
                 "px-3 py-1 transform rotate-[-2deg] inline-block",
                 "shadow-md hover:shadow-lg hover:rotate-0 hover:scale-110",
                 "border-2 border-black/20 relative",

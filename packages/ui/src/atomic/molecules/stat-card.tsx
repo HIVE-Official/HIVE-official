@@ -132,7 +132,7 @@ export function StatCard({
 export const StatCardPresets = {
   // User engagement stats
   UserStats: (props: Omit<StatCardProps, 'variant'>) => (
-    <StatCard variant="primary" {...props} />
+    <StatCard variant="detailed" {...props} />
   ),
   
   // Compact dashboard metrics

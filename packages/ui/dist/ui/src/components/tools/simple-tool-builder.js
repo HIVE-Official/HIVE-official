@@ -1,11 +1,11 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';
-import { Badge } from '../../ui/badge';
-import { Button } from '../../ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card.js';
+import { Badge } from '../../atomic/atoms/badge.js';
+import { Button } from '../../atomic/atoms/button-enhanced.js';
 import { Text } from '../../ui/typography';
-import { cn } from '../../lib/utils';
+import { cn } from '../../lib/utils.js';
 import { Eye, Share2, Settings, CheckSquare, Clock, Users, Calendar, FileText, Zap } from 'lucide-react';
 export const UB_TOOL_TEMPLATES = [
     {
@@ -95,9 +95,9 @@ export function SimpleToolBuilder({ selectedTemplate, onTemplateSelect, onBuildT
         }
     }, [selectedTemplate]);
     return (_jsxs("div", { className: cn("max-w-4xl mx-auto space-y-6", className), children: [_jsxs("div", { className: "text-center", children: [_jsxs("div", { className: "flex items-center justify-center gap-2 mb-4", children: [_jsx(Zap, { className: "h-6 w-6 text-[var(--hive-brand-secondary)]" }), _jsx(Text, { variant: "h1", weight: "bold", children: "UB Campus Tool Builder" })] }), _jsx(Text, { variant: "body-lg", color: "secondary", children: "Build coordination tools for your campus community in minutes" })] }), _jsx("div", { className: "flex items-center justify-center gap-4 mb-8", children: ['select', 'configure', 'preview'].map((step, index) => (_jsxs("div", { className: "flex items-center gap-2", children: [_jsx("div", { className: cn("w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium", activeStep === step
-                                ? "bg-[var(--hive-brand-secondary)] text-white"
+                                ? "bg-[var(--hive-brand-secondary)] text-[var(--hive-text-inverse)]"
                                 : index < ['select', 'configure', 'preview'].indexOf(activeStep)
-                                    ? "bg-[var(--hive-status-success)] text-white"
+                                    ? "bg-[var(--hive-status-success)] text-[var(--hive-text-inverse)]"
                                     : "bg-[var(--hive-background-tertiary)] text-[var(--hive-text-secondary)]"), children: index + 1 }), _jsx(Text, { variant: "body-sm", weight: "medium", color: activeStep === step ? 'primary' : 'secondary', children: step === 'select' ? 'Choose Template' :
                                 step === 'configure' ? 'Configure Tool' : 'Preview & Build' }), index < 2 && (_jsx("div", { className: "w-8 h-px bg-[var(--hive-border-default)]" }))] }, step))) }), activeStep === 'select' && (_jsx(ToolTemplateSelection, { templates: UB_TOOL_TEMPLATES, onSelectTemplate: (template) => {
                     onTemplateSelect?.(template);

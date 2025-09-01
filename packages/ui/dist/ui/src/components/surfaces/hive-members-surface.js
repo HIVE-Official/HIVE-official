@@ -3,8 +3,8 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cva } from 'class-variance-authority';
-import { cn } from '../../lib/utils';
-import { motionDurations } from '../../motion/hive-motion-system';
+import { cn } from '../../lib/utils.js';
+import { motionDurations } from '../../motion/hive-motion-system.js';
 import { Users, Search, MoreHorizontal, UserPlus, UserMinus, Crown, Shield, Star, MessageCircle, Settings, Eye, Calendar, Heart, Grid, List, UserCheck, UserX, Globe, Github, Twitter, Instagram, Linkedin } from 'lucide-react';
 // HIVE Members Surface - Community Member Management
 // Member directory with profiles, roles, and social features
@@ -300,7 +300,7 @@ export const HiveMembersSurface = React.forwardRef(({ className, mode, space, me
                                                                                     const isCurrentRole = member.role === role;
                                                                                     return (_jsxs(motion.button, { className: cn("w-full flex items-center gap-3 p-2 text-left rounded-lg transition-all duration-200 text-sm", isCurrentRole
                                                                                             ? "bg-blue-500/20 text-blue-400 border border-blue-500/30"
-                                                                                            : "hover:bg-blue-500/10 text-white hover:text-blue-400"), onClick: () => {
+                                                                                            : "hover:bg-blue-500/10 text-[var(--hive-text-inverse)] hover:text-blue-400"), onClick: () => {
                                                                                             if (!isCurrentRole) {
                                                                                                 onChangeRole?.(member.id, role);
                                                                                             }

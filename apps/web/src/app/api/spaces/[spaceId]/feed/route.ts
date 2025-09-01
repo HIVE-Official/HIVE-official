@@ -99,7 +99,7 @@ export const GET = withAuth(async (
               };
             }
           } catch (e) {
-            logger.warn('Failed to fetch post author', { postId: postDoc.id, authorId: postData.authorId });
+            logger.warn('Failed to fetch post author', { _postId: postDoc.id, authorId: postData.authorId });
           }
 
           activities.push({

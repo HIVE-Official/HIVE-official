@@ -2,7 +2,8 @@
  * HIVE Motion Utilities - Framer Motion Bridge
  * Connects HIVE design tokens with Framer Motion for consistent animations
  */
-import { Transition, type MotionProps } from 'framer-motion';
+import type { Transition } from 'framer-motion';
+import { type MotionProps } from 'framer-motion';
 import { motion } from '../../../tokens/src/motion';
 export declare const hiveTransitions: {
     readonly instant: {

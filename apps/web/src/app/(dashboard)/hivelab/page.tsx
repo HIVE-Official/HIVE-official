@@ -37,7 +37,7 @@ export default function HiveLabPage() {
   }, []);
 
   // Handle tool preview
-  const handleToolPreview = useCallback((tool: Tool) => {
+  const handleToolPreview = useCallback((_tool: Tool) => {
     
     // Preview is handled within the VisualToolBuilder
   }, []);
@@ -258,7 +258,7 @@ export default function HiveLabPage() {
         <div className="space-y-4">
           <div className="p-8 rounded-xl border border-[var(--hive-border-default)] bg-gradient-to-br from-[var(--hive-bg-secondary)] to-[var(--hive-background-primary)] text-center">
             <div className="w-12 h-12 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-xl flex items-center justify-center mx-auto mb-6">
-              <Rocket className="w-6 h-6 text-white" />
+              <Rocket className="w-6 h-6 text-[var(--hive-text-inverse)]" />
             </div>
             <h3 className="text-xl font-semibold text-[var(--hive-text-primary)] mb-2">Build Your First Tool</h3>
             <p className="text-[var(--hive-text-secondary)] mb-6 max-w-md mx-auto">
@@ -266,7 +266,7 @@ export default function HiveLabPage() {
             </p>
             <button
               onClick={() => handleModeSelect('visual')}
-              className="px-6 py-3 bg-gradient-to-r from-yellow-400 to-yellow-600 text-white rounded-lg font-medium hover:opacity-90 transition-opacity"
+              className="px-6 py-3 bg-gradient-to-r from-yellow-400 to-yellow-600 text-[var(--hive-text-inverse)] rounded-lg font-medium hover:opacity-90 transition-opacity"
             >
               Start Building →
             </button>

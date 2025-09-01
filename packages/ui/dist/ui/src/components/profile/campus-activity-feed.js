@@ -10,15 +10,15 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
  * - Campus-specific activity types and cross-slice integration
  */
 import React, { useCallback } from 'react';
-import { cn } from '../../lib/utils';
+import { cn } from '../../lib/utils.js';
 // Molecule imports
-import { SocialInteraction } from '../../atomic/molecules/social-interaction';
-import { UserIdentity } from '../../atomic/molecules/user-identity';
-import { ComprehensiveCard } from '../../atomic/molecules/comprehensive-card';
+import { SocialInteraction } from '../../atomic/molecules/social-interaction.js';
+import { UserIdentity } from '../../atomic/molecules/user-identity.js';
+import { ComprehensiveCard } from '../../atomic/molecules/comprehensive-card.js';
 // Foundation system imports
-import { typographyComposition } from '../../atomic/foundations/typography-composition';
-import { iconComposition, Users, Hammer, Calendar, MessageSquare, Star, MapPin, Clock, TrendingUp, Zap, BookOpen, Heart, ExternalLink } from '../../atomic/foundations/icon-composition';
-import { motionComposition } from '../../atomic/foundations/motion-composition';
+import { typographyComposition } from '../../atomic/foundations/typography-composition.js';
+import { iconComposition, Users, Hammer, Calendar, MessageSquare, Star, MapPin, Clock, TrendingUp, Zap, BookOpen, Heart, ExternalLink } from '../../atomic/foundations/icon-composition.js';
+import { motionComposition } from '../../atomic/foundations/motion-composition.js';
 // === ACTIVITY TYPE METADATA ===
 const activityTypeConfig = {
     space_join: {

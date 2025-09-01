@@ -12,42 +12,42 @@ export declare const AnalyticsEventSchema: z.ZodObject<{
         referrer: z.ZodOptional<z.ZodString>;
         url: z.ZodOptional<z.ZodString>;
     }, "strip", z.ZodTypeAny, {
-        url?: string;
-        userAgent?: string;
-        referrer?: string;
-        ip?: string;
+        url?: string | undefined;
+        userAgent?: string | undefined;
+        referrer?: string | undefined;
+        ip?: string | undefined;
     }, {
-        url?: string;
-        userAgent?: string;
-        referrer?: string;
-        ip?: string;
+        url?: string | undefined;
+        userAgent?: string | undefined;
+        referrer?: string | undefined;
+        ip?: string | undefined;
     }>>;
 }, "strip", z.ZodTypeAny, {
-    id?: string;
-    type?: string;
+    id: string;
+    type: string;
+    timestamp: Date;
+    sessionId: string;
     context?: {
-        url?: string;
-        userAgent?: string;
-        referrer?: string;
-        ip?: string;
-    };
-    userId?: string;
-    sessionId?: string;
-    timestamp?: Date;
-    properties?: Record<string, any>;
+        url?: string | undefined;
+        userAgent?: string | undefined;
+        referrer?: string | undefined;
+        ip?: string | undefined;
+    } | undefined;
+    userId?: string | undefined;
+    properties?: Record<string, any> | undefined;
 }, {
-    id?: string;
-    type?: string;
+    id: string;
+    type: string;
+    timestamp: Date;
+    sessionId: string;
     context?: {
-        url?: string;
-        userAgent?: string;
-        referrer?: string;
-        ip?: string;
-    };
-    userId?: string;
-    sessionId?: string;
-    timestamp?: Date;
-    properties?: Record<string, any>;
+        url?: string | undefined;
+        userAgent?: string | undefined;
+        referrer?: string | undefined;
+        ip?: string | undefined;
+    } | undefined;
+    userId?: string | undefined;
+    properties?: Record<string, any> | undefined;
 }>;
 export type AnalyticsEvent = z.infer<typeof AnalyticsEventSchema>;
 export declare const AnalyticsEventType: z.ZodEnum<["user_signup", "user_login", "user_logout", "user_profile_updated", "page_view", "navigation", "feature_used", "button_clicked", "form_submitted", "error_occurred", "api_error", "performance_metric", "load_time"]>;
@@ -61,53 +61,53 @@ export declare const EventContextSchema: z.ZodObject<{
         width: z.ZodNumber;
         height: z.ZodNumber;
     }, "strip", z.ZodTypeAny, {
-        height?: number;
-        width?: number;
+        height: number;
+        width: number;
     }, {
-        height?: number;
-        width?: number;
+        height: number;
+        width: number;
     }>>;
     device: z.ZodOptional<z.ZodObject<{
         type: z.ZodEnum<["desktop", "tablet", "mobile"]>;
         os: z.ZodOptional<z.ZodString>;
         browser: z.ZodOptional<z.ZodString>;
     }, "strip", z.ZodTypeAny, {
-        type?: "mobile" | "desktop" | "tablet";
-        os?: string;
-        browser?: string;
+        type: "mobile" | "desktop" | "tablet";
+        os?: string | undefined;
+        browser?: string | undefined;
     }, {
-        type?: "mobile" | "desktop" | "tablet";
-        os?: string;
-        browser?: string;
+        type: "mobile" | "desktop" | "tablet";
+        os?: string | undefined;
+        browser?: string | undefined;
     }>>;
 }, "strip", z.ZodTypeAny, {
-    url?: string;
+    url?: string | undefined;
     viewport?: {
-        height?: number;
-        width?: number;
-    };
-    userAgent?: string;
-    referrer?: string;
-    ip?: string;
+        height: number;
+        width: number;
+    } | undefined;
+    userAgent?: string | undefined;
+    referrer?: string | undefined;
+    ip?: string | undefined;
     device?: {
-        type?: "mobile" | "desktop" | "tablet";
-        os?: string;
-        browser?: string;
-    };
+        type: "mobile" | "desktop" | "tablet";
+        os?: string | undefined;
+        browser?: string | undefined;
+    } | undefined;
 }, {
-    url?: string;
+    url?: string | undefined;
     viewport?: {
-        height?: number;
-        width?: number;
-    };
-    userAgent?: string;
-    referrer?: string;
-    ip?: string;
+        height: number;
+        width: number;
+    } | undefined;
+    userAgent?: string | undefined;
+    referrer?: string | undefined;
+    ip?: string | undefined;
     device?: {
-        type?: "mobile" | "desktop" | "tablet";
-        os?: string;
-        browser?: string;
-    };
+        type: "mobile" | "desktop" | "tablet";
+        os?: string | undefined;
+        browser?: string | undefined;
+    } | undefined;
 }>;
 export type EventContext = z.infer<typeof EventContextSchema>;
 export declare const BaseEventPropertiesSchema: z.ZodObject<{
@@ -117,17 +117,17 @@ export declare const BaseEventPropertiesSchema: z.ZodObject<{
     content: z.ZodOptional<z.ZodString>;
     term: z.ZodOptional<z.ZodString>;
 }, "strip", z.ZodTypeAny, {
-    content?: string;
-    term?: string;
-    source?: string;
-    medium?: string;
-    campaign?: string;
+    content?: string | undefined;
+    term?: string | undefined;
+    medium?: string | undefined;
+    source?: string | undefined;
+    campaign?: string | undefined;
 }, {
-    content?: string;
-    term?: string;
-    source?: string;
-    medium?: string;
-    campaign?: string;
+    content?: string | undefined;
+    term?: string | undefined;
+    medium?: string | undefined;
+    source?: string | undefined;
+    campaign?: string | undefined;
 }>;
 export type BaseEventProperties = z.infer<typeof BaseEventPropertiesSchema>;
 //# sourceMappingURL=events.d.ts.map

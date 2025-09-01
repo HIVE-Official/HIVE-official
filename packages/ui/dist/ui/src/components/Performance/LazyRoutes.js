@@ -1,9 +1,9 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React, { Suspense, lazy, useEffect, useState, useRef, useCallback } from 'react';
-import { cn } from '../../lib/utils';
-import { LoadingOrchestrator } from '../Loading/LoadingOrchestrator';
-import { useAdvancedViewport } from '../Layout/ResponsiveLayout';
+import { cn } from '../../lib/utils.js';
+import { LoadingOrchestrator } from '../Loading/LoadingOrchestrator.js';
+import { useAdvancedViewport } from '../Layout/ResponsiveLayout.js';
 // Custom hook for navigation analytics and pattern recognition
 function useNavigationAnalytics(routes) {
     const [analytics, setAnalytics] = useState({
@@ -247,7 +247,7 @@ export const LazyRoutes = ({ routes, campusContext, enablePredictiveLoading = tr
             setPreloadedRoutes(prev => new Set([...prev, route.id]));
         }
     }, [enableHoverPreloading, campusContext]);
-    return (_jsxs("div", { className: cn('w-full', className), children: [children, process.env.NODE_ENV === 'development' && (_jsxs("div", { className: "fixed bottom-4 left-4 bg-black/90 text-white text-xs p-3 rounded-lg font-mono z-50 max-w-xs", children: [_jsx("div", { className: "font-semibold mb-2", children: "LazyRoutes Debug" }), _jsxs("div", { children: ["Preloaded: ", preloadedRoutes.size] }), _jsxs("div", { children: ["User Pattern: ", analytics.userPattern] }), _jsxs("div", { children: ["Budget Used: ", preloader.getStats().budgetUsed, "KB"] }), _jsxs("div", { children: ["Predicted Next: ", analytics.predictedNextRoutes.slice(0, 2).join(', ')] }), _jsxs("div", { children: ["Network: ", campusContext?.networkQuality || 'unknown'] }), _jsxs("div", { children: ["Campus Load: ", campusContext?.campusLoad || 'unknown'] })] }))] }));
+    return (_jsxs("div", { className: cn('w-full', className), children: [children, process.env.NODE_ENV === 'development' && (_jsxs("div", { className: "fixed bottom-4 left-4 bg-black/90 text-[var(--hive-text-inverse)] text-xs p-3 rounded-lg font-mono z-50 max-w-xs", children: [_jsx("div", { className: "font-semibold mb-2", children: "LazyRoutes Debug" }), _jsxs("div", { children: ["Preloaded: ", preloadedRoutes.size] }), _jsxs("div", { children: ["User Pattern: ", analytics.userPattern] }), _jsxs("div", { children: ["Budget Used: ", preloader.getStats().budgetUsed, "KB"] }), _jsxs("div", { children: ["Predicted Next: ", analytics.predictedNextRoutes.slice(0, 2).join(', ')] }), _jsxs("div", { children: ["Network: ", campusContext?.networkQuality || 'unknown'] }), _jsxs("div", { children: ["Campus Load: ", campusContext?.campusLoad || 'unknown'] })] }))] }));
 };
 // Utility function to create route configurations
 export function createLazyRoute(id, path, component, options = {}) {

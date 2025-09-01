@@ -1,7 +1,3 @@
-interface CheckEmailInfoProps {
-    email: string | null;
-    backLinkHref: string;
-}
-export declare const CheckEmailInfo: ({ email, backLinkHref, }: CheckEmailInfoProps) => import("react/jsx-runtime").JSX.Element;
-export {};
+import React from 'react';
+export declare const CheckEmailInfo: React.FC;
 //# sourceMappingURL=CheckEmailInfo.d.ts.map

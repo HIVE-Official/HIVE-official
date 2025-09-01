@@ -1,8 +1,7 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React, { useState, createContext, useContext } from 'react';
-import { cn } from '../../lib/utils';
-import { HiveButton } from '../hive-button';
+import { cn } from '../../lib/utils.js';
 import { ArrowLeft, ArrowRight, Check, Upload, Search, Zap, BookOpen, Users, Scale, Camera, User, Hash, GraduationCap, Loader2 } from 'lucide-react';
 const OnboardingContext = createContext(null);
 export function useOnboarding() {
@@ -174,7 +173,7 @@ function ProgressBar() {
 }
 function StepNavigation({ canGoBack = true, nextLabel = "Continue" }) {
     const { state, prevStep, nextStep, canProceed } = useOnboarding();
-    return (_jsxs("div", { className: "flex justify-between items-center pt-6", children: [canGoBack && state.currentStepIndex > 0 ? (_jsxs(HiveButton, { variant: "ghost", onClick: prevStep, disabled: state.loading, className: "flex items-center gap-2", children: [_jsx(ArrowLeft, { className: "h-4 w-4" }), "Back"] })) : (_jsx("div", {})), _jsxs(HiveButton, { variant: "premium", onClick: nextStep, disabled: !canProceed() || state.loading, className: "flex items-center gap-2", children: [state.loading && _jsx(Loader2, { className: "h-4 w-4 animate-spin" }), nextLabel, _jsx(ArrowRight, { className: "h-4 w-4" })] })] }));
+    return (_jsxs("div", { className: "flex justify-between items-center pt-6", children: [canGoBack && state.currentStepIndex > 0 ? (_jsxs(Button, { variant: "ghost", onClick: prevStep, disabled: state.loading, className: "flex items-center gap-2", children: [_jsx(ArrowLeft, { className: "h-4 w-4" }), "Back"] })) : (_jsx("div", {})), _jsxs(Button, { variant: "primary", onClick: nextStep, disabled: !canProceed() || state.loading, className: "flex items-center gap-2", children: [state.loading && _jsx(Loader2, { className: "h-4 w-4 animate-spin" }), nextLabel, _jsx(ArrowRight, { className: "h-4 w-4" })] })] }));
 }
 // =============================================================================
 // ONBOARDING STEPS

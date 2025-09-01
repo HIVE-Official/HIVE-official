@@ -5,7 +5,16 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '../..
 import { Alert } from '../../components/alert'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '../../components/tabs'
 
-const meta: Meta = {
+// Create a component wrapper for the story
+const ComponentsOverview = () => (
+  <div className="p-6 space-y-8">
+    <h2 className="text-2xl font-semibold">Components Overview</h2>
+    <p className="text-muted-foreground">Complete HIVE component library showcase</p>
+  </div>
+);
+
+const meta: Meta<typeof ComponentsOverview> = {
+  component: ComponentsOverview,
   title: '🧱 Components/Overview',
   parameters: {
     docs: {
@@ -43,7 +52,7 @@ export const ComponentShowcase: Story = {
             <div className="flex flex-wrap gap-4">
               <Button variant="primary">Primary Action</Button>
               <Button variant="secondary">Secondary</Button>
-              <Button variant="accent">Gold Accent</Button>
+              <Button variant="secondary">Gold Accent</Button>
               <Button variant="ghost">Ghost Button</Button>
               <Button variant="secondary">Outlined</Button>
               <Button variant="primary">Ritual Moment</Button>
@@ -101,7 +110,7 @@ export const ComponentShowcase: Story = {
             </CardContent>
           </Card>
 
-          <Card variant="accent" padding="md">
+          <Card variant="secondary" padding="md">
             <CardHeader>
               <CardTitle>Accent Card</CardTitle>
               <CardDescription>Special content with gold border</CardDescription>
@@ -197,7 +206,7 @@ export const ComponentShowcase: Story = {
               <TabsContent value="tools" className="mt-6">
                 <div className="text-center py-8">
                   <p className="text-muted">No tools created yet</p>
-                  <Button variant="accent" size="sm" className="mt-4">
+                  <Button variant="secondary" size="sm" className="mt-4">
                     Create Your First Tool
                   </Button>
                 </div>

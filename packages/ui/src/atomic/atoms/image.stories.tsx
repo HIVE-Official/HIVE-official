@@ -142,7 +142,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="success">📐 ASPECT RATIOS</Badge>
+            <Badge variant="emerald">📐 ASPECT RATIOS</Badge>
             Image Aspect Ratios - Content Presentation
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -458,7 +458,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="warning">⏳ LOADING</Badge>
+            <Badge variant="gold">⏳ LOADING</Badge>
             Loading States - Progressive Enhancement
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">

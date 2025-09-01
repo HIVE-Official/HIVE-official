@@ -4,8 +4,8 @@ import * as React from "react";
 import * as SliderPrimitive from "@radix-ui/react-slider";
 import { cva } from 'class-variance-authority';
 import { motion } from 'framer-motion';
-import { cn } from "../lib/utils";
-import { motionDurations } from '../motion/hive-motion-system';
+import { cn } from "../lib/utils.js";
+import { motionDurations } from '../motion/hive-motion-system.js';
 // HIVE Slider variants - Luxury range input with glass morphism and liquid metal motion
 const hiveSliderVariants = cva(
 // Base styles - touch-friendly with proper accessibility
@@ -40,7 +40,7 @@ const hiveSliderTrackVariants = cva(
     variants: {
         variant: {
             default: "bg-[var(--hive-background-secondary)]/60 border-[var(--hive-border-subtle)]",
-            gold: "bg-[var(--hive-background-secondary)]/60 border-[var(--hive-border-gold)]",
+            gold: "bg-[var(--hive-background-secondary)]/60 border-[var(--hive-border-[var(--hive-brand-secondary)])]",
             success: "bg-[var(--hive-background-secondary)]/60 border-[var(--hive-status-success)]/30",
             minimal: "bg-[var(--hive-background-secondary)]/40 border-[var(--hive-border-subtle)]",
         },
@@ -139,11 +139,11 @@ const HiveSlider = React.forwardRef(({ className, variant = "default", size = "d
 });
 HiveSlider.displayName = "HiveSlider";
 // Pre-built Slider variants for common use cases
-const HiveVolumeSlider = React.forwardRef(({ ...props }, ref) => (_jsx(HiveSlider, { ref: ref, label: "Volume", min: 0, max: 100, showValue: true, valueFormatter: (value) => `${value}%`, variant: "default", ...props })));
-const HiveBrightnessSlider = React.forwardRef(({ ...props }, ref) => (_jsx(HiveSlider, { ref: ref, label: "Brightness", min: 0, max: 100, showValue: true, valueFormatter: (value) => `${value}%`, variant: "gold", ...props })));
-const HiveProgressSlider = React.forwardRef(({ ...props }, ref) => (_jsx(HiveSlider, { ref: ref, label: "Progress", min: 0, max: 100, showValue: true, valueFormatter: (value) => `${value}%`, variant: "success", disabled: true, ...props })));
-const HivePriceRangeSlider = React.forwardRef(({ ...props }, ref) => (_jsx(HiveSlider, { ref: ref, label: "Price Range", min: 0, max: 1000, showValue: true, valueFormatter: (value) => `$${value}`, variant: "minimal", ...props })));
-const HiveTemperatureSlider = React.forwardRef(({ ...props }, ref) => (_jsx(HiveSlider, { ref: ref, label: "Temperature", min: 60, max: 80, showValue: true, valueFormatter: (value) => `${value}°F`, variant: "default", ...props })));
+const HiveVolumeSlider = React.forwardRef(({ ...props }, ref) => (_jsx(Slider, { ref: ref, label: "Volume", min: 0, max: 100, showValue: true, valueFormatter: (value) => `${value}%`, variant: "primary", ...props })));
+const HiveBrightnessSlider = React.forwardRef(({ ...props }, ref) => (_jsx(Slider, { ref: ref, label: "Brightness", min: 0, max: 100, showValue: true, valueFormatter: (value) => `${value}%`, variant: "gold", ...props })));
+const HiveProgressSlider = React.forwardRef(({ ...props }, ref) => (_jsx(Slider, { ref: ref, label: "Progress", min: 0, max: 100, showValue: true, valueFormatter: (value) => `${value}%`, variant: "emerald", disabled: true, ...props })));
+const HivePriceRangeSlider = React.forwardRef(({ ...props }, ref) => (_jsx(Slider, { ref: ref, label: "Price Range", min: 0, max: 1000, showValue: true, valueFormatter: (value) => `$${value}`, variant: "minimal", ...props })));
+const HiveTemperatureSlider = React.forwardRef(({ ...props }, ref) => (_jsx(Slider, { ref: ref, label: "Temperature", min: 60, max: 80, showValue: true, valueFormatter: (value) => `${value}°F`, variant: "primary", ...props })));
 HiveVolumeSlider.displayName = "HiveVolumeSlider";
 HiveBrightnessSlider.displayName = "HiveBrightnessSlider";
 HiveProgressSlider.displayName = "HiveProgressSlider";
@@ -151,7 +151,7 @@ HivePriceRangeSlider.displayName = "HivePriceRangeSlider";
 HiveTemperatureSlider.displayName = "HiveTemperatureSlider";
 export { HiveSlider, HiveVolumeSlider, HiveBrightnessSlider, HiveProgressSlider, HivePriceRangeSlider, HiveTemperatureSlider, hiveSliderVariants, hiveSliderTrackVariants, hiveSliderRangeVariants, hiveSliderThumbVariants };
 // Simple Slider component for basic use cases (backwards compatibility)
-const Slider = React.forwardRef(({ ...props }, ref) => (_jsx(HiveSlider, { ref: ref, variant: "minimal", liquidMotion: false, ...props })));
+const Slider = React.forwardRef(({ ...props }, ref) => (_jsx(Slider, { ref: ref, variant: "minimal", liquidMotion: false, ...props })));
 Slider.displayName = "Slider";
 // Export as Slider for easier migration and consistency
 export { Slider, HiveSlider as SliderAdvanced };

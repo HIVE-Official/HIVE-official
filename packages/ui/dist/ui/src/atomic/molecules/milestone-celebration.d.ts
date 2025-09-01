@@ -17,5 +17,5 @@ export interface MilestoneCelebrationProps {
     onShare?: () => void;
     className?: string;
 }
-export declare function MilestoneCelebration({ milestone, isVisible, onClose, onShare, className }: MilestoneCelebrationProps): import("react/jsx-runtime").JSX.Element;
+export declare function MilestoneCelebration({ milestone, isVisible, onClose, onShare, className }: MilestoneCelebrationProps): import("react/jsx-runtime").JSX.Element | null;
 //# sourceMappingURL=milestone-celebration.d.ts.map

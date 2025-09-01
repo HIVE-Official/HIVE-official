@@ -1,10 +1,10 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useCallback, useRef, useEffect } from 'react';
-import { motion, AnimatePresence, Reorder } from '../../framer-motion-proxy';
-import { cn } from '../../../lib/utils';
-import { Button } from '../../ui/button';
-import { Card } from '../../ui/card';
+import { motion, AnimatePresence, Reorder } from '../../framer-motion-proxy.js';
+import { cn } from '../../../lib/utils.js';
+import { Button } from '../../atomic/atoms/button-enhanced';
+import { Card } from '../../atomic/ui/card';
 import { Save, X, GripVertical, Plus, Settings, Maximize, Minimize } from 'lucide-react';
 // Grid Layout Hook for responsive behavior
 function useGridLayout(maxColumns = 4) {
@@ -140,7 +140,7 @@ export function BentoGridLayout({ items, isEditMode, onItemsChange, onEditModeCh
         : columns === 2
             ? 'grid-cols-2'
             : `grid-cols-${columns}`;
-    return (_jsxs("div", { ref: containerRef, className: cn('w-full', className), children: [_jsx(AnimatePresence, { children: isEditMode && (_jsxs(motion.div, { initial: { opacity: 0, y: -20 }, animate: { opacity: 1, y: 0 }, exit: { opacity: 0, y: -20 }, className: "flex items-center justify-between p-4 mb-6 bg-[var(--hive-background-secondary)] rounded-lg border border-[var(--hive-border-primary)]", children: [_jsxs("div", { children: [_jsx("h3", { className: "font-medium text-[var(--hive-text-primary)]", children: "Customize Your Profile" }), _jsx("p", { className: "text-sm text-[var(--hive-text-muted)]", children: "Drag cards to reorder, resize with the controls, or adjust settings" })] }), _jsxs("div", { className: "flex gap-2", children: [_jsxs(Button, { variant: "outline", size: "sm", onClick: handleCancelEdit, children: [_jsx(X, { className: "w-4 h-4 mr-2" }), "Cancel"] }), _jsxs(Button, { size: "sm", onClick: handleSaveLayout, children: [_jsx(Save, { className: "w-4 h-4 mr-2" }), "Save Layout"] })] })] })) }), _jsx("div", { className: "relative", children: isEditMode ? (_jsx(Reorder.Group, { axis: "y", values: items, onReorder: handleDragEnd, className: cn('grid gap-4 auto-rows-min', gridTemplateColumns), children: _jsx(AnimatePresence, { children: items
+    return (_jsxs("div", { ref: containerRef, className: cn('w-full', className), children: [_jsx(AnimatePresence, { children: isEditMode && (_jsxs(motion.div, { initial: { opacity: 0, y: -20 }, animate: { opacity: 1, y: 0 }, exit: { opacity: 0, y: -20 }, className: "flex items-center justify-between p-4 mb-6 bg-[var(--hive-background-secondary)] rounded-lg border border-[var(--hive-border-primary)]", children: [_jsxs("div", { children: [_jsx("h3", { className: "font-medium text-[var(--hive-text-primary)]", children: "Customize Your Profile" }), _jsx("p", { className: "text-sm text-[var(--hive-text-muted)]", children: "Drag cards to reorder, resize with the controls, or adjust settings" })] }), _jsxs("div", { className: "flex gap-2", children: [_jsxs(Button, { variant: "secondary", size: "sm", onClick: handleCancelEdit, children: [_jsx(X, { className: "w-4 h-4 mr-2" }), "Cancel"] }), _jsxs(Button, { size: "sm", onClick: handleSaveLayout, children: [_jsx(Save, { className: "w-4 h-4 mr-2" }), "Save Layout"] })] })] })) }), _jsx("div", { className: "relative", children: isEditMode ? (_jsx(Reorder.Group, { axis: "y", values: items, onReorder: handleDragEnd, className: cn('grid gap-4 auto-rows-min', gridTemplateColumns), children: _jsx(AnimatePresence, { children: items
                             .filter(item => item.isVisible)
                             .map((item) => (_jsx(Reorder.Item, { value: item, onDragStart: () => setDraggedItem(item.id), onDragEnd: () => setDraggedItem(null), className: cn(columns === 1
                                 ? 'col-span-1'

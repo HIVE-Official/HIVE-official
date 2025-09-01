@@ -349,7 +349,7 @@ export const ResponsiveHeader: Story = {
           {/* Desktop Navigation */}
           <AppHeader.Nav className="hidden md:flex">
             <Button variant="ghost" size="sm">Dashboard</Button>
-            <Button variant="accent" size="sm">Spaces</Button>
+            <Button variant="secondary" size="sm">Spaces</Button>
             <Button variant="ghost" size="sm">Feed</Button>
             <Button variant="ghost" size="sm">Tools</Button>
           </AppHeader.Nav>

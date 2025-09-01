@@ -75,7 +75,7 @@ const SettingsSection = ({ title, description, children }: {
 }) => (
   <Card className="p-6 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)]">
     <div className="mb-4">
-      <h3 className="text-lg font-semibold text-white">{title}</h3>
+      <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)]">{title}</h3>
       {description && (
         <p className="text-sm text-[var(--hive-text-muted)] mt-1">{description}</p>
       )}
@@ -92,7 +92,7 @@ const ToggleSwitch = ({ enabled, onToggle, label, description }: {
 }) => (
   <div className="flex items-center justify-between py-3">
     <div className="flex-1">
-      <div className="text-white font-medium text-sm">{label}</div>
+      <div className="text-[var(--hive-text-inverse)] font-medium text-sm">{label}</div>
       {description && (
         <div className="text-xs text-[var(--hive-text-muted)] mt-1">{description}</div>
       )}
@@ -162,13 +162,13 @@ export default function ToolSettingsPage() {
                 size="sm"
                 variant="ghost"
                 onClick={() => router.back()}
-                className="text-[var(--hive-text-muted)] hover:text-white"
+                className="text-[var(--hive-text-muted)] hover:text-[var(--hive-text-inverse)]"
               >
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Back
               </Button>
               <div>
-                <h1 className="text-xl font-semibold text-white">
+                <h1 className="text-xl font-semibold text-[var(--hive-text-inverse)]">
                   {settings.name} Settings
                 </h1>
                 <p className="text-sm text-[var(--hive-text-muted)]">
@@ -205,7 +205,7 @@ export default function ToolSettingsPage() {
                 type="text"
                 value={settings.name}
                 onChange={(e) => updateSettings({ name: e.target.value })}
-                className="w-full p-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-lg text-white focus:border-[var(--hive-brand-secondary)]/50 focus:outline-none"
+                className="w-full p-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-lg text-[var(--hive-text-inverse)] focus:border-[var(--hive-brand-secondary)]/50 focus:outline-none"
               />
             </div>
             
@@ -215,7 +215,7 @@ export default function ToolSettingsPage() {
                 value={settings.description}
                 onChange={(e) => updateSettings({ description: e.target.value })}
                 rows={3}
-                className="w-full p-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-lg text-white focus:border-[var(--hive-brand-secondary)]/50 focus:outline-none resize-none"
+                className="w-full p-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-lg text-[var(--hive-text-inverse)] focus:border-[var(--hive-brand-secondary)]/50 focus:outline-none resize-none"
               />
             </div>
             
@@ -227,7 +227,7 @@ export default function ToolSettingsPage() {
                   onChange={(e) => updateSettings({ 
                     metadata: { ...settings.metadata, category: e.target.value }
                   })}
-                  className="w-full p-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-lg text-white focus:border-[var(--hive-brand-secondary)]/50 focus:outline-none"
+                  className="w-full p-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-lg text-[var(--hive-text-inverse)] focus:border-[var(--hive-brand-secondary)]/50 focus:outline-none"
                 >
                   <option value="communication">Communication</option>
                   <option value="productivity">Productivity</option>
@@ -246,7 +246,7 @@ export default function ToolSettingsPage() {
                   onChange={(e) => updateSettings({
                     metadata: { ...settings.metadata, version: e.target.value }
                   })}
-                  className="w-full p-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-lg text-white focus:border-[var(--hive-brand-secondary)]/50 focus:outline-none"
+                  className="w-full p-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-lg text-[var(--hive-text-inverse)] focus:border-[var(--hive-brand-secondary)]/50 focus:outline-none"
                 />
               </div>
             </div>
@@ -260,7 +260,7 @@ export default function ToolSettingsPage() {
                   metadata: { ...settings.metadata, tags: e.target.value.split(', ').filter(tag => tag.trim()) }
                 })}
                 placeholder="polling, engagement, voting"
-                className="w-full p-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-lg text-white focus:border-[var(--hive-brand-secondary)]/50 focus:outline-none"
+                className="w-full p-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-lg text-[var(--hive-text-inverse)] focus:border-[var(--hive-brand-secondary)]/50 focus:outline-none"
               />
               <p className="text-xs text-[var(--hive-text-muted)] mt-1">Separate tags with commas</p>
             </div>
@@ -289,7 +289,7 @@ export default function ToolSettingsPage() {
                       className={`p-4 rounded-lg border text-left transition-all ${
                         settings.privacy === option.value
                           ? 'bg-[var(--hive-brand-secondary)]/10 border-[var(--hive-brand-secondary)]/30 text-[var(--hive-brand-secondary)]'
-                          : 'bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)] text-white hover:bg-[rgba(255,255,255,0.04)]'
+                          : 'bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)] text-[var(--hive-text-inverse)] hover:bg-[rgba(255,255,255,0.04)]'
                       }`}
                     >
                       <div className="flex items-center gap-3 mb-2">
@@ -422,7 +422,7 @@ export default function ToolSettingsPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Button
               onClick={handleDuplicate}
-              className="bg-[rgba(255,255,255,0.05)] text-white hover:bg-[rgba(255,255,255,0.1)] justify-start"
+              className="bg-[rgba(255,255,255,0.05)] text-[var(--hive-text-inverse)] hover:bg-[rgba(255,255,255,0.1)] justify-start"
             >
               <Copy className="h-4 w-4 mr-3" />
               Duplicate Tool
@@ -430,7 +430,7 @@ export default function ToolSettingsPage() {
             
             <Button
               onClick={handleExport}
-              className="bg-[rgba(255,255,255,0.05)] text-white hover:bg-[rgba(255,255,255,0.1)] justify-start"
+              className="bg-[rgba(255,255,255,0.05)] text-[var(--hive-text-inverse)] hover:bg-[rgba(255,255,255,0.1)] justify-start"
             >
               <Download className="h-4 w-4 mr-3" />
               Export Configuration
@@ -438,7 +438,7 @@ export default function ToolSettingsPage() {
             
             <Button
               onClick={() => router.push(`/tools/${settings.id}`)}
-              className="bg-[rgba(255,255,255,0.05)] text-white hover:bg-[rgba(255,255,255,0.1)] justify-start"
+              className="bg-[rgba(255,255,255,0.05)] text-[var(--hive-text-inverse)] hover:bg-[rgba(255,255,255,0.1)] justify-start"
             >
               <Share2 className="h-4 w-4 mr-3" />
               View Public Page
@@ -446,7 +446,7 @@ export default function ToolSettingsPage() {
             
             <Button
               onClick={() => router.push(`/tools/${settings.id}/analytics`)}
-              className="bg-[rgba(255,255,255,0.05)] text-white hover:bg-[rgba(255,255,255,0.1)] justify-start"
+              className="bg-[rgba(255,255,255,0.05)] text-[var(--hive-text-inverse)] hover:bg-[rgba(255,255,255,0.1)] justify-start"
             >
               <Bell className="h-4 w-4 mr-3" />
               View Analytics
@@ -463,14 +463,14 @@ export default function ToolSettingsPage() {
             <div className="flex items-start gap-4">
               <AlertTriangle className="h-6 w-6 text-red-400 flex-shrink-0 mt-1" />
               <div className="flex-1">
-                <h4 className="text-white font-semibold mb-2">Delete Tool</h4>
+                <h4 className="text-[var(--hive-text-inverse)] font-semibold mb-2">Delete Tool</h4>
                 <p className="text-sm text-[var(--hive-text-muted)] mb-4">
                   Once you delete this tool, there is no going back. This will permanently remove the tool from all spaces and users who have installed it.
                 </p>
                 {!showDeleteConfirm ? (
                   <Button
                     onClick={() => setShowDeleteConfirm(true)}
-                    className="bg-red-600 hover:bg-red-700 text-white"
+                    className="bg-red-600 hover:bg-red-700 text-[var(--hive-text-inverse)]"
                   >
                     <Trash2 className="h-4 w-4 mr-2" />
                     Delete Tool
@@ -479,7 +479,7 @@ export default function ToolSettingsPage() {
                   <div className="flex gap-3">
                     <Button
                       onClick={handleDelete}
-                      className="bg-red-600 hover:bg-red-700 text-white"
+                      className="bg-red-600 hover:bg-red-700 text-[var(--hive-text-inverse)]"
                     >
                       Yes, Delete Forever
                     </Button>

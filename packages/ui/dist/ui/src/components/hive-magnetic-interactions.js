@@ -1,9 +1,9 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useRef, useEffect, useState } from 'react';
-import { motion, useAnimation, useMotionValue, useTransform } from './framer-motion-proxy';
-import { cn } from '../lib/utils';
-import { liquidMetalOrchestrator, magneticInteractions, liquidFlow, liquidMetalUtils, liquidMetalPerformance } from '../motion/hive-liquid-metal';
+import { motion, useAnimation, useMotionValue, useTransform } from './framer-motion-proxy.js';
+import { cn } from '../lib/utils.js';
+import { liquidMetalOrchestrator, magneticInteractions, liquidFlow, liquidMetalUtils, liquidMetalPerformance } from '../motion/hive-liquid-metal.js';
 export const HiveMagneticHover = ({ children, className, intensity = 'medium', disabled = false, onMagneticEnter, onMagneticLeave, magneticId }) => {
     const ref = useRef(null);
     const controls = useAnimation();

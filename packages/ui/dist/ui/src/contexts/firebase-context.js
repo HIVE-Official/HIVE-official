@@ -5,8 +5,8 @@
 'use client';
 import { jsx as _jsx } from "react/jsx-runtime";
 import { createContext, useContext, useEffect, useState, useCallback } from 'react';
-import { profileFirebaseService } from '../lib/firebase/profile-service';
-import { useProfileData } from '../hooks/use-profile-firebase';
+import { profileFirebaseService } from '../lib/firebase/profile-service.js';
+import { useProfileData } from '../hooks/use-profile-firebase.js';
 // Create Context
 const FirebaseContext = createContext(undefined);
 // Firebase Provider Component

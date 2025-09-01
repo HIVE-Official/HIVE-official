@@ -260,7 +260,7 @@ export function ReportContentModal({
           {currentStep === 'category' && (
             <div className="space-y-4">
               <div>
-                <h3 className="text-lg font-medium text-white mb-2">Why are you reporting this content?</h3>
+                <h3 className="text-lg font-medium text-[var(--hive-text-inverse)] mb-2">Why are you reporting this content?</h3>
                 <p className="text-gray-400 text-sm mb-4">
                   Select the category that best describes the issue with this content.
                 </p>
@@ -279,7 +279,7 @@ export function ReportContentModal({
                   >
                     <div className="flex justify-between items-start">
                       <div>
-                        <h4 className="font-medium text-white">{category.label}</h4>
+                        <h4 className="font-medium text-[var(--hive-text-inverse)]">{category.label}</h4>
                         <p className="text-sm text-gray-400 mt-1">{category.description}</p>
                       </div>
                       {formData.category === category.value && (
@@ -296,7 +296,7 @@ export function ReportContentModal({
           {currentStep === 'details' && (
             <div className="space-y-4">
               <div>
-                <h3 className="text-lg font-medium text-white mb-2">Provide details</h3>
+                <h3 className="text-lg font-medium text-[var(--hive-text-inverse)] mb-2">Provide details</h3>
                 <p className="text-gray-400 text-sm mb-4">
                   Help us understand the issue by providing specific details.
                 </p>
@@ -305,7 +305,7 @@ export function ReportContentModal({
               {/* Sub-category */}
               {subCategories[formData.category as keyof typeof subCategories] && (
                 <div>
-                  <label className="block text-sm font-medium text-white mb-2">
+                  <label className="block text-sm font-medium text-[var(--hive-text-inverse)] mb-2">
                     Specific issue (optional)
                   </label>
                   <Select value={formData.subCategory} onValueChange={(value) => 
@@ -325,7 +325,7 @@ export function ReportContentModal({
 
               {/* Description */}
               <div>
-                <label className="block text-sm font-medium text-white mb-2">
+                <label className="block text-sm font-medium text-[var(--hive-text-inverse)] mb-2">
                   Description <span className="text-red-400">*</span>
                 </label>
                 <Textarea
@@ -356,7 +356,7 @@ export function ReportContentModal({
           {currentStep === 'evidence' && (
             <div className="space-y-4">
               <div>
-                <h3 className="text-lg font-medium text-white mb-2">Add evidence (optional)</h3>
+                <h3 className="text-lg font-medium text-[var(--hive-text-inverse)] mb-2">Add evidence (optional)</h3>
                 <p className="text-gray-400 text-sm mb-4">
                   Provide any additional context or evidence to support your report.
                 </p>
@@ -364,7 +364,7 @@ export function ReportContentModal({
 
               {/* URLs */}
               <div>
-                <label className="block text-sm font-medium text-white mb-2">
+                <label className="block text-sm font-medium text-[var(--hive-text-inverse)] mb-2">
                   Related URLs
                 </label>
                 <div className="flex space-x-2 mb-2">
@@ -405,7 +405,7 @@ export function ReportContentModal({
 
               {/* Additional Context */}
               <div>
-                <label className="block text-sm font-medium text-white mb-2">
+                <label className="block text-sm font-medium text-[var(--hive-text-inverse)] mb-2">
                   Additional context
                 </label>
                 <Textarea
@@ -433,7 +433,7 @@ export function ReportContentModal({
           {currentStep === 'review' && (
             <div className="space-y-4">
               <div>
-                <h3 className="text-lg font-medium text-white mb-2">Review your report</h3>
+                <h3 className="text-lg font-medium text-[var(--hive-text-inverse)] mb-2">Review your report</h3>
                 <p className="text-gray-400 text-sm mb-4">
                   Please review the information before submitting your report.
                 </p>
@@ -442,19 +442,19 @@ export function ReportContentModal({
               <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 space-y-3">
                 <div className="flex justify-between">
                   <span className="text-gray-400">Category:</span>
-                  <span className="text-white capitalize">{formData.category.replace('_', ' ')}</span>
+                  <span className="text-[var(--hive-text-inverse)] capitalize">{formData.category.replace('_', ' ')}</span>
                 </div>
                 
                 {formData.subCategory && (
                   <div className="flex justify-between">
                     <span className="text-gray-400">Specific issue:</span>
-                    <span className="text-white">{formData.subCategory}</span>
+                    <span className="text-[var(--hive-text-inverse)]">{formData.subCategory}</span>
                   </div>
                 )}
 
                 <div className="pt-2 border-t border-gray-700">
                   <span className="text-gray-400 block mb-1">Description:</span>
-                  <p className="text-white text-sm">{formData.description}</p>
+                  <p className="text-[var(--hive-text-inverse)] text-sm">{formData.description}</p>
                 </div>
 
                 {formData.evidenceUrls.length > 0 && (
@@ -471,7 +471,7 @@ export function ReportContentModal({
                 {formData.additionalContext && (
                   <div className="pt-2 border-t border-gray-700">
                     <span className="text-gray-400 block mb-1">Additional context:</span>
-                    <p className="text-white text-sm">{formData.additionalContext}</p>
+                    <p className="text-[var(--hive-text-inverse)] text-sm">{formData.additionalContext}</p>
                   </div>
                 )}
               </div>
@@ -490,14 +490,14 @@ export function ReportContentModal({
             <div className="text-center space-y-4 py-8">
               <CheckCircle className="h-16 w-16 text-green-500 mx-auto" />
               <div>
-                <h3 className="text-xl font-medium text-white mb-2">Report Submitted</h3>
+                <h3 className="text-xl font-medium text-[var(--hive-text-inverse)] mb-2">Report Submitted</h3>
                 <p className="text-gray-400 mb-4">
                   Thank you for helping keep our community safe. Your report has been submitted successfully.
                 </p>
                 {reportId && (
                   <div className="bg-gray-800 border border-gray-700 rounded-lg p-3 inline-block">
                     <span className="text-sm text-gray-400">Report ID: </span>
-                    <span className="text-white font-mono">{reportId}</span>
+                    <span className="text-[var(--hive-text-inverse)] font-mono">{reportId}</span>
                   </div>
                 )}
               </div>

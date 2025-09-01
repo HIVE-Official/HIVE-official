@@ -177,7 +177,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="success">✅ CORE SYSTEM</Badge>
+            <Badge variant="emerald">✅ CORE SYSTEM</Badge>
             Core Badge Variants - Perfect Semantic Token Usage
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -188,8 +188,8 @@ export const CompleteShowcase: Story = {
           <div className="flex flex-wrap gap-4">
             <Badge variant="primary">Gold Outline (Primary)</Badge>
             <Badge variant="secondary">Secondary</Badge>
-            <Badge variant="success">Success</Badge>
-            <Badge variant="warning">Warning</Badge>
+            <Badge variant="emerald">Success</Badge>
+            <Badge variant="gold">Warning</Badge>
             <Badge variant="error">Error</Badge>
             <Badge variant="info">Info</Badge>
             <Badge variant="ghost">Ghost</Badge>
@@ -335,7 +335,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge dot variant="success">Dot Indicators</Badge>
+            <Badge dot variant="emerald">Dot Indicators</Badge>
             Status Dots with Text
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -345,9 +345,9 @@ export const CompleteShowcase: Story = {
         <CardContent>
           <div className="space-y-4">
             <div className="flex flex-wrap gap-6">
-              <Badge dot variant="success" size="sm">Study session active</Badge>
+              <Badge dot variant="emerald" size="sm">Study session active</Badge>
               <Badge dot variant="primary" size="md">Group coordination</Badge>
-              <Badge dot variant="warning" size="lg">Review required</Badge>
+              <Badge dot variant="gold" size="lg">Review required</Badge>
             </div>
             <div className="flex flex-wrap gap-6">
               <Badge dot variant="error">Space full</Badge>
@@ -377,7 +377,7 @@ export const CompleteShowcase: Story = {
               <h4 className="font-medium text-[var(--hive-text-primary)]">Notification Counts:</h4>
               <div className="flex flex-wrap gap-4">
                 <Badge count={3} variant="error" size="sm" />
-                <Badge count={12} variant="warning" size="md" />
+                <Badge count={12} variant="gold" size="md" />
                 <Badge count={156} variant="info" size="lg" />
                 <Badge count={999} variant="primary" maxCount={99} />
               </div>
@@ -387,7 +387,7 @@ export const CompleteShowcase: Story = {
             <div className="space-y-3">
               <h4 className="font-medium text-[var(--hive-text-primary)]">Member Counts:</h4>
               <div className="flex flex-wrap gap-4">
-                <Badge count={5} variant="success">Online</Badge>
+                <Badge count={5} variant="emerald">Online</Badge>
                 <Badge count={23} variant="secondary">Total Members</Badge>
                 <Badge count={7} variant="primary">Active Now</Badge>
               </div>
@@ -416,9 +416,9 @@ export const CompleteShowcase: Story = {
             <div className="bg-[var(--hive-background-secondary)] p-4 rounded-lg space-y-3">
               <div className="flex flex-wrap gap-3">
                 <Badge variant="primary">Group Leader</Badge>
-                <Badge variant="success">Study Buddy</Badge>
+                <Badge variant="emerald">Study Buddy</Badge>
                 <Badge variant="info">Tutor Available</Badge>
-                <Badge variant="warning">RA on Duty</Badge>
+                <Badge variant="gold">RA on Duty</Badge>
               </div>
               <div className="flex flex-wrap gap-3">
                 <Badge variant="secondary">CSE Major</Badge>
@@ -459,15 +459,15 @@ export const CompleteShowcase: Story = {
             <h4 className="font-semibold text-[var(--hive-text-primary)]">Space & Activity Status:</h4>
             <div className="bg-[var(--hive-background-secondary)] p-4 rounded-lg space-y-3">
               <div className="flex flex-wrap gap-3">
-                <Badge dot variant="success">Study session active</Badge>
-                <Badge dot variant="warning">Event starting soon</Badge>
+                <Badge dot variant="emerald">Study session active</Badge>
+                <Badge dot variant="gold">Event starting soon</Badge>
                 <Badge dot variant="error">Space full</Badge>
                 <Badge dot variant="info">New announcements</Badge>
               </div>
               <div className="flex flex-wrap gap-3">
                 <Badge variant="primary">Featured Space</Badge>
-                <Badge variant="success">Verified</Badge>
-                <Badge variant="warning">Requires Permission</Badge>
+                <Badge variant="emerald">Verified</Badge>
+                <Badge variant="gold">Requires Permission</Badge>
                 <Badge variant="error">Private</Badge>
               </div>
             </div>
@@ -483,9 +483,9 @@ export const CompleteShowcase: Story = {
                 <div className="text-center space-y-2">
                   <h5 className="font-medium text-[var(--hive-text-primary)]">CSE 331 Study Group</h5>
                   <div className="space-y-2">
-                    <Badge count={8} variant="success">Online</Badge>
+                    <Badge count={8} variant="emerald">Online</Badge>
                     <Badge count={23} variant="secondary">Members</Badge>
-                    <Badge count={3} variant="warning">Notifications</Badge>
+                    <Badge count={3} variant="gold">Notifications</Badge>
                   </div>
                 </div>
 
@@ -494,7 +494,7 @@ export const CompleteShowcase: Story = {
                   <h5 className="font-medium text-[var(--hive-text-primary)]">Hadley 2nd Floor</h5>
                   <div className="space-y-2">
                     <Badge count={12} variant="info">Residents</Badge>
-                    <Badge count={5} variant="success">Available</Badge>
+                    <Badge count={5} variant="emerald">Available</Badge>
                     <Badge count={1} variant="error">Urgent</Badge>
                   </div>
                 </div>
@@ -504,8 +504,8 @@ export const CompleteShowcase: Story = {
                   <h5 className="font-medium text-[var(--hive-text-primary)]">Capstone Project</h5>
                   <div className="space-y-2">
                     <Badge count={4} variant="primary">Team Size</Badge>
-                    <Badge count={7} variant="warning">Tasks Due</Badge>
-                    <Badge count={2} variant="success">Completed</Badge>
+                    <Badge count={7} variant="gold">Tasks Due</Badge>
+                    <Badge count={2} variant="emerald">Completed</Badge>
                   </div>
                 </div>
 
@@ -534,8 +534,8 @@ export const CompleteShowcase: Story = {
                   <h5 className="font-medium text-[var(--hive-text-primary)]">CSE 331 - Algorithm Analysis:</h5>
                   <div className="flex flex-wrap gap-2">
                     <Badge variant="primary">Spring 2024</Badge>
-                    <Badge variant="success">Dr. Smith Section</Badge>
-                    <Badge dot variant="warning">Exam Next Week</Badge>
+                    <Badge variant="emerald">Dr. Smith Section</Badge>
+                    <Badge dot variant="gold">Exam Next Week</Badge>
                     <Badge count={15} variant="info">Study Partners</Badge>
                   </div>
                 </div>
@@ -545,8 +545,8 @@ export const CompleteShowcase: Story = {
                   <h5 className="font-medium text-[var(--hive-text-primary)]">Group Project Status:</h5>
                   <div className="flex flex-wrap gap-2">
                     <Badge variant="error">Due Tomorrow</Badge>
-                    <Badge variant="warning">Review Needed</Badge>
-                    <Badge variant="success">Code Complete</Badge>
+                    <Badge variant="gold">Review Needed</Badge>
+                    <Badge variant="emerald">Code Complete</Badge>
                     <Badge dot variant="primary">Team Meeting Tonight</Badge>
                   </div>
                 </div>
@@ -555,10 +555,10 @@ export const CompleteShowcase: Story = {
                 <div className="space-y-2">
                   <h5 className="font-medium text-[var(--hive-text-primary)]">Office Hours & Help:</h5>
                   <div className="flex flex-wrap gap-2">
-                    <Badge dot variant="success">TA Available Now</Badge>
+                    <Badge dot variant="emerald">TA Available Now</Badge>
                     <Badge variant="info">Prof Office Hours 2-4pm</Badge>
                     <Badge variant="primary">Peer Tutoring</Badge>
-                    <Badge count={8} variant="warning">Queue Position</Badge>
+                    <Badge count={8} variant="gold">Queue Position</Badge>
                   </div>
                 </div>
 

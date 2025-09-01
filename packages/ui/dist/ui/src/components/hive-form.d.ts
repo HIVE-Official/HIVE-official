@@ -36,16 +36,16 @@ interface FormContextType {
     submitForm: () => Promise<void>;
     getFieldState: (name: string) => FormFieldState;
 }
-declare const FormContext: React.Context<FormContextType>;
-declare const hiveFormFieldVariants: (props?: {
-    variant?: "default" | "minimal" | "premium";
-    state?: "error" | "default" | "success" | "validating";
-} & import("class-variance-authority/types").ClassProp) => string;
-declare const formInputVariants: (props?: {
-    variant?: "default" | "minimal" | "premium";
-    state?: "error" | "default" | "success" | "validating";
-    size?: "default" | "sm" | "lg";
-} & import("class-variance-authority/types").ClassProp) => string;
+declare const FormContext: React.Context<FormContextType | null>;
+declare const hiveFormFieldVariants: (props?: ({
+    variant?: "default" | "minimal" | "premium" | null | undefined;
+    state?: "error" | "success" | "default" | "validating" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
+declare const formInputVariants: (props?: ({
+    variant?: "default" | "minimal" | "premium" | null | undefined;
+    state?: "error" | "success" | "default" | "validating" | null | undefined;
+    size?: "sm" | "default" | "lg" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
 export interface HiveFormProps {
     children: React.ReactNode;
     initialValues?: Record<string, any>;

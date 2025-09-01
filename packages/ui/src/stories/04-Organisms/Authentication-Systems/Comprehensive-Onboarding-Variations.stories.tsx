@@ -53,7 +53,16 @@ import {
   UserPlus
 } from 'lucide-react';
 
-const meta: Meta = {
+// Create a component wrapper for the story
+const ComprehensiveOnboardingVariations = () => (
+  <div className="p-6 space-y-8">
+    <h2 className="text-2xl font-semibold">Comprehensive Onboarding Variations</h2>
+    <p className="text-muted-foreground">Complete onboarding system variations and flows</p>
+  </div>
+);
+
+const meta: Meta<typeof ComprehensiveOnboardingVariations> = {
+  component: ComprehensiveOnboardingVariations,
   title: '29-Comprehensive-Onboarding-Variations/Onboarding-System',
   parameters: {
     layout: 'fullscreen',

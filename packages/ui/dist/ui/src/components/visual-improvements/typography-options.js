@@ -1,30 +1,30 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import * as React from "react";
 import { cva } from "class-variance-authority";
-import { cn } from "../lib/utils";
+import { cn } from "../../lib/utils.js";
 // OPTION A: MINIMAL TYPOGRAPHY - Clean, readable, professional
 const minimalTypographyVariants = cva("transition-colors duration-200 ease-out", {
     variants: {
         variant: {
             hero: [
                 "text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight",
-                "text-white leading-tight"
+                "text-[var(--hive-text-inverse)] leading-tight"
             ],
             title: [
                 "text-2xl md:text-3xl font-semibold tracking-tight",
-                "text-white"
+                "text-[var(--hive-text-inverse)]"
             ],
             subtitle: [
                 "text-lg md:text-xl font-medium",
-                "text-white/80"
+                "text-[var(--hive-text-inverse)]/80"
             ],
             body: [
                 "text-base leading-relaxed",
-                "text-white/90"
+                "text-[var(--hive-text-inverse)]/90"
             ],
             caption: [
                 "text-sm",
-                "text-white/60"
+                "text-[var(--hive-text-inverse)]/60"
             ],
             accent: [
                 "text-accent font-medium",
@@ -58,11 +58,11 @@ const displayTypographyVariants = cva("font-display transition-all duration-300 
             ],
             headline: [
                 "text-2xl md:text-3xl font-bold tracking-tight",
-                "text-white hover:text-accent transition-colors duration-300"
+                "text-[var(--hive-text-inverse)] hover:text-accent transition-colors duration-300"
             ],
             subhead: [
                 "text-xl md:text-2xl font-semibold",
-                "text-white/90 hover:text-white transition-colors"
+                "text-[var(--hive-text-inverse)]/90 hover:text-[var(--hive-text-inverse)] transition-colors"
             ],
             emphasis: [
                 "text-lg font-bold tracking-wide",
@@ -96,20 +96,20 @@ const campusTypographyVariants = cva("transition-all duration-300 ease-out", {
                 "text-shadow-lg hover:text-shadow-xl transition-all duration-300"
             ],
             handwritten: [
-                "text-xl md:text-2xl text-white font-handwriting",
+                "text-xl md:text-2xl text-[var(--hive-text-inverse)] font-handwriting",
                 "transform rotate-[-0.5deg] hover:rotate-0",
                 "relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5",
                 "after:bg-accent after:scale-x-0 hover:after:scale-x-100",
                 "after:transition-transform after:duration-300"
             ],
             sticker: [
-                "text-lg md:text-xl font-black text-black bg-accent",
+                "text-lg md:text-xl font-black text-[var(--hive-text-primary)] bg-accent",
                 "px-3 py-1 transform rotate-[-1deg] inline-block",
                 "hover:rotate-0 hover:scale-110 transition-all duration-300",
                 "shadow-md hover:shadow-lg rounded-sm"
             ],
             bulletin: [
-                "text-lg font-semibold text-white",
+                "text-lg font-semibold text-[var(--hive-text-inverse)]",
                 "relative pl-6",
                 "before:absolute before:left-0 before:top-1 before:w-3 before:h-3",
                 "before:bg-accent before:rounded-full",
@@ -156,12 +156,12 @@ const techTypographyVariants = cva("font-mono transition-all duration-150 ease-o
                 "hover:bg-accent/20 transition-colors"
             ],
             command: [
-                "text-white/90 font-medium",
+                "text-[var(--hive-text-inverse)]/90 font-medium",
                 "hover:text-accent transition-colors",
                 "cursor-pointer"
             ],
             output: [
-                "text-white/70 text-sm",
+                "text-[var(--hive-text-inverse)]/70 text-sm",
                 "leading-relaxed font-light"
             ],
             error: [
@@ -196,13 +196,13 @@ const socialTypographyVariants = cva("transition-all duration-300 ease-out", {
     variants: {
         variant: {
             friendly: [
-                "text-lg md:text-xl text-white font-medium",
+                "text-lg md:text-xl text-[var(--hive-text-inverse)] font-medium",
                 "hover:text-accent hover:scale-105",
                 "transition-all duration-300"
             ],
             chat: [
-                "text-base text-white/90 leading-relaxed",
-                "hover:text-white transition-colors"
+                "text-base text-[var(--hive-text-inverse)]/90 leading-relaxed",
+                "hover:text-[var(--hive-text-inverse)] transition-colors"
             ],
             reaction: [
                 "text-2xl md:text-3xl",
@@ -215,8 +215,8 @@ const socialTypographyVariants = cva("transition-all duration-300 ease-out", {
                 "cursor-pointer"
             ],
             timestamp: [
-                "text-xs text-white/50",
-                "hover:text-white/70 transition-colors"
+                "text-xs text-[var(--hive-text-inverse)]/50",
+                "hover:text-[var(--hive-text-inverse)]/70 transition-colors"
             ],
             hashtag: [
                 "text-accent font-medium",

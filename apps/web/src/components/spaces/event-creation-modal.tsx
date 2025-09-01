@@ -228,7 +228,7 @@ export function EventCreationModal({
             <div className="flex items-center gap-3">
               <Calendar className="h-6 w-6 text-[var(--hive-brand-secondary)]" />
               <div>
-                <h2 className="text-xl font-semibold text-white">Create Event</h2>
+                <h2 className="text-xl font-semibold text-[var(--hive-text-inverse)]">Create Event</h2>
                 <p className="text-sm text-neutral-400">in {spaceName}</p>
               </div>
             </div>
@@ -237,7 +237,7 @@ export function EventCreationModal({
               variant="outline"
               size="sm"
               onClick={handleClose}
-              className="border-white/[0.2] text-white hover:bg-white/[0.1]"
+              className="border-white/[0.2] text-[var(--hive-text-inverse)] hover:bg-white/[0.1]"
             >
               <X className="h-4 w-4" />
             </Button>
@@ -248,7 +248,7 @@ export function EventCreationModal({
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Title */}
               <div>
-                <label className="block text-sm font-medium text-white mb-2">
+                <label className="block text-sm font-medium text-[var(--hive-text-inverse)] mb-2">
                   Event Title *
                 </label>
                 <input
@@ -256,7 +256,7 @@ export function EventCreationModal({
                   value={formData.title}
                   onChange={(e) => handleInputChange('title', e.target.value)}
                   placeholder="What's happening?"
-                  className="w-full px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.06] text-white placeholder-neutral-400 focus:outline-none focus:border-[var(--hive-brand-secondary)]/30"
+                  className="w-full px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.06] text-[var(--hive-text-inverse)] placeholder-neutral-400 focus:outline-none focus:border-[var(--hive-brand-secondary)]/30"
                   maxLength={200}
                 />
                 {errors.title && <p className="text-red-400 text-xs mt-1">{errors.title}</p>}
@@ -264,7 +264,7 @@ export function EventCreationModal({
 
               {/* Event Type */}
               <div>
-                <label className="block text-sm font-medium text-white mb-2">
+                <label className="block text-sm font-medium text-[var(--hive-text-inverse)] mb-2">
                   Event Type *
                 </label>
                 <div className="grid grid-cols-3 gap-2">
@@ -275,7 +275,7 @@ export function EventCreationModal({
                       className={`p-3 rounded-lg border transition-all ${
                         formData.type === type.value
                           ? 'bg-[var(--hive-brand-secondary)]/10 border-[var(--hive-brand-secondary)]/30 text-[var(--hive-brand-secondary)]'
-                          : 'bg-white/[0.02] border-white/[0.06] text-neutral-400 hover:border-white/[0.1] hover:text-white'
+                          : 'bg-white/[0.02] border-white/[0.06] text-neutral-400 hover:border-white/[0.1] hover:text-[var(--hive-text-inverse)]'
                       }`}
                       onClick={() => handleInputChange('type', type.value)}
                     >
@@ -287,14 +287,14 @@ export function EventCreationModal({
 
               {/* Description */}
               <div>
-                <label className="block text-sm font-medium text-white mb-2">
+                <label className="block text-sm font-medium text-[var(--hive-text-inverse)] mb-2">
                   Description *
                 </label>
                 <textarea
                   value={formData.description}
                   onChange={(e) => handleInputChange('description', e.target.value)}
                   placeholder="Tell people more about this event..."
-                  className="w-full px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.06] text-white placeholder-neutral-400 resize-none focus:outline-none focus:border-[var(--hive-brand-secondary)]/30 h-24"
+                  className="w-full px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.06] text-[var(--hive-text-inverse)] placeholder-neutral-400 resize-none focus:outline-none focus:border-[var(--hive-brand-secondary)]/30 h-24"
                   maxLength={2000}
                 />
                 {errors.description && <p className="text-red-400 text-xs mt-1">{errors.description}</p>}
@@ -303,53 +303,53 @@ export function EventCreationModal({
               {/* Date and Time */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-white mb-2">
+                  <label className="block text-sm font-medium text-[var(--hive-text-inverse)] mb-2">
                     Start Date *
                   </label>
                   <input
                     type="date"
                     value={formData.startDate}
                     onChange={(e) => handleInputChange('startDate', e.target.value)}
-                    className="w-full px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.06] text-white focus:outline-none focus:border-[var(--hive-brand-secondary)]/30"
+                    className="w-full px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.06] text-[var(--hive-text-inverse)] focus:outline-none focus:border-[var(--hive-brand-secondary)]/30"
                   />
                   {errors.startDate && <p className="text-red-400 text-xs mt-1">{errors.startDate}</p>}
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium text-white mb-2">
+                  <label className="block text-sm font-medium text-[var(--hive-text-inverse)] mb-2">
                     Start Time *
                   </label>
                   <input
                     type="time"
                     value={formData.startTime}
                     onChange={(e) => handleInputChange('startTime', e.target.value)}
-                    className="w-full px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.06] text-white focus:outline-none focus:border-[var(--hive-brand-secondary)]/30"
+                    className="w-full px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.06] text-[var(--hive-text-inverse)] focus:outline-none focus:border-[var(--hive-brand-secondary)]/30"
                   />
                   {errors.startTime && <p className="text-red-400 text-xs mt-1">{errors.startTime}</p>}
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium text-white mb-2">
+                  <label className="block text-sm font-medium text-[var(--hive-text-inverse)] mb-2">
                     End Date *
                   </label>
                   <input
                     type="date"
                     value={formData.endDate}
                     onChange={(e) => handleInputChange('endDate', e.target.value)}
-                    className="w-full px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.06] text-white focus:outline-none focus:border-[var(--hive-brand-secondary)]/30"
+                    className="w-full px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.06] text-[var(--hive-text-inverse)] focus:outline-none focus:border-[var(--hive-brand-secondary)]/30"
                   />
                   {errors.endDate && <p className="text-red-400 text-xs mt-1">{errors.endDate}</p>}
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium text-white mb-2">
+                  <label className="block text-sm font-medium text-[var(--hive-text-inverse)] mb-2">
                     End Time *
                   </label>
                   <input
                     type="time"
                     value={formData.endTime}
                     onChange={(e) => handleInputChange('endTime', e.target.value)}
-                    className="w-full px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.06] text-white focus:outline-none focus:border-[var(--hive-brand-secondary)]/30"
+                    className="w-full px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.06] text-[var(--hive-text-inverse)] focus:outline-none focus:border-[var(--hive-brand-secondary)]/30"
                   />
                   {errors.endTime && <p className="text-red-400 text-xs mt-1">{errors.endTime}</p>}
                 </div>
@@ -357,7 +357,7 @@ export function EventCreationModal({
 
               {/* Location */}
               <div>
-                <label className="block text-sm font-medium text-white mb-2">
+                <label className="block text-sm font-medium text-[var(--hive-text-inverse)] mb-2">
                   <MapPin className="inline h-4 w-4 mr-1" />
                   Location {formData.type !== 'virtual' ? '(optional)' : ''}
                 </label>
@@ -366,14 +366,14 @@ export function EventCreationModal({
                   value={formData.location}
                   onChange={(e) => handleInputChange('location', e.target.value)}
                   placeholder="Where is this happening?"
-                  className="w-full px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.06] text-white placeholder-neutral-400 focus:outline-none focus:border-[var(--hive-brand-secondary)]/30"
+                  className="w-full px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.06] text-[var(--hive-text-inverse)] placeholder-neutral-400 focus:outline-none focus:border-[var(--hive-brand-secondary)]/30"
                 />
               </div>
 
               {/* Virtual Link */}
               {formData.type === 'virtual' && (
                 <div>
-                  <label className="block text-sm font-medium text-white mb-2">
+                  <label className="block text-sm font-medium text-[var(--hive-text-inverse)] mb-2">
                     <Globe className="inline h-4 w-4 mr-1" />
                     Virtual Link *
                   </label>
@@ -382,7 +382,7 @@ export function EventCreationModal({
                     value={formData.virtualLink}
                     onChange={(e) => handleInputChange('virtualLink', e.target.value)}
                     placeholder="https://zoom.us/j/..."
-                    className="w-full px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.06] text-white placeholder-neutral-400 focus:outline-none focus:border-[var(--hive-brand-secondary)]/30"
+                    className="w-full px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.06] text-[var(--hive-text-inverse)] placeholder-neutral-400 focus:outline-none focus:border-[var(--hive-brand-secondary)]/30"
                   />
                   {errors.virtualLink && <p className="text-red-400 text-xs mt-1">{errors.virtualLink}</p>}
                 </div>
@@ -391,7 +391,7 @@ export function EventCreationModal({
               {/* Max Attendees and Cost */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-white mb-2">
+                  <label className="block text-sm font-medium text-[var(--hive-text-inverse)] mb-2">
                     <Users className="inline h-4 w-4 mr-1" />
                     Max Attendees (optional)
                   </label>
@@ -401,13 +401,13 @@ export function EventCreationModal({
                     onChange={(e) => handleInputChange('maxAttendees', e.target.value)}
                     placeholder="Unlimited"
                     min="1"
-                    className="w-full px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.06] text-white placeholder-neutral-400 focus:outline-none focus:border-[var(--hive-brand-secondary)]/30"
+                    className="w-full px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.06] text-[var(--hive-text-inverse)] placeholder-neutral-400 focus:outline-none focus:border-[var(--hive-brand-secondary)]/30"
                   />
                   {errors.maxAttendees && <p className="text-red-400 text-xs mt-1">{errors.maxAttendees}</p>}
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium text-white mb-2">
+                  <label className="block text-sm font-medium text-[var(--hive-text-inverse)] mb-2">
                     <DollarSign className="inline h-4 w-4 mr-1" />
                     Cost (optional)
                   </label>
@@ -415,7 +415,7 @@ export function EventCreationModal({
                     <select
                       value={formData.currency}
                       onChange={(e) => handleInputChange('currency', e.target.value)}
-                      className="px-3 py-3 rounded-l-lg bg-white/[0.02] border border-r-0 border-white/[0.06] text-white focus:outline-none focus:border-[var(--hive-brand-secondary)]/30"
+                      className="px-3 py-3 rounded-l-lg bg-white/[0.02] border border-r-0 border-white/[0.06] text-[var(--hive-text-inverse)] focus:outline-none focus:border-[var(--hive-brand-secondary)]/30"
                     >
                       <option value="USD">$</option>
                       <option value="EUR">€</option>
@@ -428,7 +428,7 @@ export function EventCreationModal({
                       placeholder="0.00"
                       min="0"
                       step="0.01"
-                      className="flex-1 px-4 py-3 rounded-r-lg bg-white/[0.02] border border-white/[0.06] text-white placeholder-neutral-400 focus:outline-none focus:border-[var(--hive-brand-secondary)]/30"
+                      className="flex-1 px-4 py-3 rounded-r-lg bg-white/[0.02] border border-white/[0.06] text-[var(--hive-text-inverse)] placeholder-neutral-400 focus:outline-none focus:border-[var(--hive-brand-secondary)]/30"
                     />
                   </div>
                   {errors.cost && <p className="text-red-400 text-xs mt-1">{errors.cost}</p>}
@@ -444,7 +444,7 @@ export function EventCreationModal({
                     onChange={(e) => handleInputChange('requiredRSVP', e.target.checked)}
                     className="w-4 h-4 rounded border-white/[0.06] bg-white/[0.02] text-[var(--hive-brand-secondary)] focus:ring-[var(--hive-brand-secondary)]/50"
                   />
-                  <span className="text-sm text-white">Require RSVP</span>
+                  <span className="text-sm text-[var(--hive-text-inverse)]">Require RSVP</span>
                 </label>
                 
                 <label className="flex items-center gap-3">
@@ -454,7 +454,7 @@ export function EventCreationModal({
                     onChange={(e) => handleInputChange('isPrivate', e.target.checked)}
                     className="w-4 h-4 rounded border-white/[0.06] bg-white/[0.02] text-[var(--hive-brand-secondary)] focus:ring-[var(--hive-brand-secondary)]/50"
                   />
-                  <span className="text-sm text-white">Private event</span>
+                  <span className="text-sm text-[var(--hive-text-inverse)]">Private event</span>
                 </label>
               </div>
 

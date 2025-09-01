@@ -36,7 +36,8 @@ import {
 } from 'lucide-react';
 import '../../hive-tokens.css';
 
-const meta: Meta = {
+const meta: Meta<typeof AtomicComponentsLibrary> = {
+  component: AtomicComponentsLibrary,
   title: '02-Atoms/Component Library',
   parameters: {
     layout: 'fullscreen',
@@ -125,7 +126,7 @@ Each atom includes mobile-optimized variants and touch interaction patterns.
 };
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof AtomicComponentsLibrary>;
 
 // =============================================================================
 // ATOMIC COMPONENT CATEGORIES

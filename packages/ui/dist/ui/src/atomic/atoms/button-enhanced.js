@@ -3,22 +3,22 @@ import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-run
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva } from "class-variance-authority";
-import { cn } from "../../lib/utils";
+import { cn } from "../../lib/utils.js";
 // HIVE Button System - Semantic Token Perfection
 // Zero hardcoded values - complete semantic token usage
 const buttonVariants = cva(
 // Base styles using semantic tokens only
-"inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color-mix(in_srgb,var(--hive-brand-secondary)_30%,transparent)] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50", {
+"inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--hive-border-focus)] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50", {
     variants: {
         variant: {
-            // Primary brand button - GOLD OUTLINE ONLY (never fill)
+            // Primary button - neutral white/gray, not gold
             primary: [
-                "border-2 border-[var(--hive-brand-secondary)]",
-                "bg-transparent",
-                "text-[var(--hive-brand-secondary)]",
-                "hover:bg-[color-mix(in_srgb,var(--hive-brand-secondary)_10%,transparent)]",
-                "hover:border-[var(--hive-brand-secondary)]",
-                "active:bg-[color-mix(in_srgb,var(--hive-brand-secondary)_20%,transparent)]",
+                "border border-[var(--hive-border-default)]",
+                "bg-[var(--hive-text-primary)]",
+                "text-[var(--hive-background-primary)]",
+                "hover:bg-[var(--hive-text-secondary)]",
+                "hover:border-[var(--hive-border-hover)]",
+                "active:bg-[var(--hive-text-tertiary)]",
                 "shadow-sm hover:shadow-md",
             ],
             // Secondary outline button
@@ -124,6 +124,7 @@ const LoadingSpinner = ({ size = "default" }) => {
         xs: "h-3 w-3",
         sm: "h-3 w-3",
         default: "h-4 w-4",
+        md: "h-4 w-4",
         lg: "h-5 w-5",
         xl: "h-5 w-5",
         icon: "h-4 w-4",

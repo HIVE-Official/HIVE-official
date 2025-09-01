@@ -11,14 +11,14 @@ import { type VariantProps } from 'class-variance-authority';
  * Base card variants following HIVE design system
  * All cards inherit from this foundation
  */
-declare const hiveCardBaseVariants: (props?: {
-    variant?: "error" | "default" | "minimal" | "warning" | "active" | "selected" | "academic" | "social" | "builder" | "premium" | "elevated" | "interactive";
-    size?: "default" | "sm" | "lg" | "xl";
-    shadow?: "none" | "strong" | "medium" | "dramatic" | "glow" | "subtle";
-    border?: "default" | "none" | "strong" | "gold" | "subtle" | "gold-strong";
-    motionType?: "none" | "strong" | "medium" | "magnetic" | "subtle";
-    glass?: "none" | "strong" | "medium" | "subtle";
-} & import("class-variance-authority/types").ClassProp) => string;
+declare const hiveCardBaseVariants: (props?: ({
+    variant?: "error" | "warning" | "default" | "selected" | "academic" | "social" | "active" | "builder" | "minimal" | "elevated" | "interactive" | "premium" | null | undefined;
+    size?: "sm" | "default" | "lg" | "xl" | null | undefined;
+    shadow?: "none" | "strong" | "medium" | "dramatic" | "glow" | "subtle" | null | undefined;
+    border?: "default" | "none" | "strong" | "gold" | "subtle" | "gold-strong" | null | undefined;
+    motionType?: "none" | "strong" | "medium" | "magnetic" | "subtle" | null | undefined;
+    glass?: "none" | "strong" | "medium" | "subtle" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
 /**
  * Unified motion configurations for all cards
  */

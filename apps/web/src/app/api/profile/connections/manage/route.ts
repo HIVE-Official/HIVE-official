@@ -445,15 +445,10 @@ export const DELETE = withAuth(async (request: NextRequest, { userId }) => {
 });
 
 // Helper functions
-async function getMutualSpaces(userId1: string, userId2: string): Promise<string[]> {
-  try {
-    // This would integrate with the Spaces system
-    // For now, return empty array
-    return [];
-  } catch (error) {
-    logger.error('Error getting mutual spaces', { error, userId1, userId2 });
-    return [];
-  }
+async function getMutualSpaces(_userId1: string, _userId2: string): Promise<string[]> {
+  // This would integrate with the Spaces system
+  // For now, return empty array
+  return [];
 }
 
 function getSharedInterests(interests1: string[], interests2: string[]): string[] {

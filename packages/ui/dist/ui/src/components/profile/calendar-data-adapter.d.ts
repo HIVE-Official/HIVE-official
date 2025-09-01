@@ -11,11 +11,11 @@ export declare const adaptEventsToCalendarCardData: (events: Event[], isLoading?
  * Props adapter to convert SmartCalendar props to CalendarCard props
  */
 export declare const adaptSmartCalendarProps: (events: Event[], isLoading?: boolean, error?: string, onEventClick?: (eventId: string) => void, onAddEvent?: () => void, variant?: "desktop" | "mobile") => {
-    data: CalendarCardData;
+    data: CalendarCardData | undefined;
     state: CalendarCardState;
     variant: "mobile" | "desktop";
-    onEventClick: (event: Event) => void;
-    onAddEvent: () => void;
+    onEventClick: (event: Event) => void | undefined;
+    onAddEvent: (() => void) | undefined;
     onViewCalendar: () => void;
     onConnectCalendar: (type: "google" | "outlook") => void;
     onResolveConflict: (conflictId: string) => void;

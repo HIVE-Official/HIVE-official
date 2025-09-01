@@ -373,16 +373,6 @@ export const HiveAdminAnalyticsDashboard: React.FC<HiveAdminAnalyticsDashboardPr
   const [geographicData, setGeographicData] = useState<GeographicData[]>([]);
   const [realTimeMetrics, setRealTimeMetrics] = useState<RealTimeMetrics | null>(null);
 
-  // Feature flag check
-  if (!enableFeatureFlag) {
-    return (
-      <div className="text-center py-8">
-        <BarChart3 className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-        <p className="text-gray-400">Analytics dashboard is not available</p>
-      </div>
-    );
-  }
-
   const loadAnalyticsData = useCallback(async () => {
     if (!admin) return;
 
@@ -461,6 +451,16 @@ export const HiveAdminAnalyticsDashboard: React.FC<HiveAdminAnalyticsDashboardPr
     }
     await loadAnalyticsData();
   };
+
+  // Feature flag check
+  if (!enableFeatureFlag) {
+    return (
+      <div className="text-center py-8">
+        <BarChart3 className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+        <p className="text-gray-400">Analytics dashboard is not available</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -630,7 +630,7 @@ export const HiveAdminAnalyticsDashboard: React.FC<HiveAdminAnalyticsDashboardPr
       {violationData && (
         <ViolationAlert 
           violations={violationData} 
-          onViewDetails={() => console.log('View violation details')} 
+          onViewDetails={() => { /* TODO: Implement violation details view */ }} 
         />
       )}
 
@@ -648,7 +648,7 @@ export const HiveAdminAnalyticsDashboard: React.FC<HiveAdminAnalyticsDashboardPr
             <SpaceCategoryCard
               key={category.category}
               category={category}
-              onViewDetails={() => console.log('View category details:', category.category)}
+              onViewDetails={() => { /* TODO: Implement category details view */ }}
             />
           ))}
         </div>

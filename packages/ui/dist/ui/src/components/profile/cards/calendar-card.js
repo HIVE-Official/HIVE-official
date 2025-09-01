@@ -1,13 +1,13 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useCallback, useMemo } from 'react';
-import { motion, AnimatePresence } from '../../framer-motion-proxy';
-import { cn } from '../../../lib/utils';
-import { Card, CardContent, CardHeader } from '../../ui/card';
-import { Button } from '../../ui/button';
-import { Badge } from '../../ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '../../ui/avatar';
-import { ScrollArea } from '../../ui/scroll-area';
+import { motion, AnimatePresence } from '../../framer-motion-proxy.js';
+import { cn } from '../../../lib/utils.js';
+import { Card, CardContent, CardHeader } from '../../atomic/ui/card';
+import { Button } from '../../atomic/atoms/button-enhanced';
+import { Badge } from '../../atomic/atoms/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '../../ui/avatar.js';
+import { ScrollArea } from '../../ui/scroll-area.js';
 import { Calendar, Clock, MapPin, Users, Plus, ChevronLeft, ChevronRight, Settings, Bell, CheckCircle, XCircle, Circle, BookOpen, Coffee, Presentation, Eye, MoreHorizontal } from 'lucide-react';
 // Event Type Configuration
 const eventTypeConfig = {
@@ -59,7 +59,7 @@ const rsvpStatusConfig = {
     going: { icon: CheckCircle, color: 'text-green-600', label: 'Going' },
     maybe: { icon: Circle, color: 'text-yellow-600', label: 'Maybe' },
     'not-going': { icon: XCircle, color: 'text-red-600', label: 'Not Going' },
-    pending: { icon: Clock, color: 'text-gray-600', label: 'Pending' }
+    pending: { icon: Clock, color: 'text-[var(--hive-text-muted)]', label: 'Pending' }
 };
 // Time formatting utilities
 function formatTime(date) {
@@ -120,7 +120,7 @@ function EventItem({ event, onRSVP, isCompact = false }) {
     const handleRSVP = useCallback((status) => {
         onRSVP?.(event.id, status);
     }, [event.id, onRSVP]);
-    return (_jsxs(motion.div, { layout: true, initial: { opacity: 0, y: 10 }, animate: { opacity: 1, y: 0 }, className: cn('group relative p-3 rounded-lg border transition-all hover:shadow-md', config.bgColor, event.isConflicting && 'ring-2 ring-red-200', event.priority === 'high' && 'ring-1 ring-orange-300'), children: [_jsxs("div", { className: "flex items-start justify-between", children: [_jsxs("div", { className: "flex items-start gap-2 min-w-0 flex-1", children: [_jsx("div", { className: cn('w-2 h-2 rounded-full mt-2', config.color) }), _jsxs("div", { className: "min-w-0 flex-1", children: [_jsx("h4", { className: cn('font-medium truncate', config.textColor, isCompact ? 'text-sm' : 'text-base'), children: event.title }), _jsxs("div", { className: "flex items-center gap-2 mt-1", children: [_jsxs("div", { className: "flex items-center gap-1 text-xs text-[var(--hive-text-muted)]", children: [_jsx(Clock, { className: "w-3 h-3" }), formatTime(event.startTime), event.endTime && ` - ${formatTime(event.endTime)}`] }), timeUntil !== 'Started' && (_jsx(Badge, { variant: "secondary", className: "text-xs px-1.5 py-0.5", children: timeUntil }))] }), event.location && !isCompact && (_jsxs("div", { className: "flex items-center gap-1 mt-1 text-xs text-[var(--hive-text-muted)]", children: [_jsx(MapPin, { className: "w-3 h-3" }), event.location] })), event.spaceName && (_jsx("div", { className: "flex items-center gap-1 mt-1", children: _jsxs(Badge, { variant: "outline", className: "text-xs", children: [_jsx(Users, { className: "w-3 h-3 mr-1" }), event.spaceName] }) }))] })] }), event.priority === 'high' && (_jsx("div", { className: "w-2 h-2 bg-red-500 rounded-full" }))] }), event.isRSVPRequired && !isCompact && (_jsx(EventQuickActions, { event: event, onRSVP: handleRSVP })), event.attendees && event.attendees.length > 0 && !isCompact && (_jsxs("div", { className: "flex items-center gap-2 mt-2", children: [_jsx("div", { className: "flex -space-x-1", children: event.attendees.slice(0, 3).map((attendee) => (_jsxs(Avatar, { className: "w-6 h-6 border-2 border-white", children: [_jsx(AvatarImage, { src: attendee.avatar }), _jsx(AvatarFallback, { className: "text-xs", children: attendee.name.split(' ').map(n => n[0]).join('') })] }, attendee.id))) }), event.attendees.length > 3 && (_jsxs("span", { className: "text-xs text-[var(--hive-text-muted)]", children: ["+", event.attendees.length - 3, " more"] }))] })), _jsx("div", { className: "absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity", children: _jsx(Button, { size: "sm", variant: "ghost", className: "h-6 w-6 p-0", children: _jsx(MoreHorizontal, { className: "w-3 h-3" }) }) })] }));
+    return (_jsxs(motion.div, { layout: true, initial: { opacity: 0, y: 10 }, animate: { opacity: 1, y: 0 }, className: cn('group relative p-3 rounded-lg border transition-all hover:shadow-md', config.bgColor, event.isConflicting && 'ring-2 ring-red-200', event.priority === 'high' && 'ring-1 ring-orange-300'), children: [_jsxs("div", { className: "flex items-start justify-between", children: [_jsxs("div", { className: "flex items-start gap-2 min-w-0 flex-1", children: [_jsx("div", { className: cn('w-2 h-2 rounded-full mt-2', config.color) }), _jsxs("div", { className: "min-w-0 flex-1", children: [_jsx("h4", { className: cn('font-medium truncate', config.textColor, isCompact ? 'text-sm' : 'text-base'), children: event.title }), _jsxs("div", { className: "flex items-center gap-2 mt-1", children: [_jsxs("div", { className: "flex items-center gap-1 text-xs text-[var(--hive-text-muted)]", children: [_jsx(Clock, { className: "w-3 h-3" }), formatTime(event.startTime), event.endTime && ` - ${formatTime(event.endTime)}`] }), timeUntil !== 'Started' && (_jsx(Badge, { variant: "secondary", className: "text-xs px-1.5 py-0.5", children: timeUntil }))] }), event.location && !isCompact && (_jsxs("div", { className: "flex items-center gap-1 mt-1 text-xs text-[var(--hive-text-muted)]", children: [_jsx(MapPin, { className: "w-3 h-3" }), event.location] })), event.spaceName && (_jsx("div", { className: "flex items-center gap-1 mt-1", children: _jsxs(Badge, { variant: "secondary", className: "text-xs", children: [_jsx(Users, { className: "w-3 h-3 mr-1" }), event.spaceName] }) }))] })] }), event.priority === 'high' && (_jsx("div", { className: "w-2 h-2 bg-red-500 rounded-full" }))] }), event.isRSVPRequired && !isCompact && (_jsx(EventQuickActions, { event: event, onRSVP: handleRSVP })), event.attendees && event.attendees.length > 0 && !isCompact && (_jsxs("div", { className: "flex items-center gap-2 mt-2", children: [_jsx("div", { className: "flex -space-x-1", children: event.attendees.slice(0, 3).map((attendee) => (_jsxs(Avatar, { className: "w-6 h-6 border-2 border-white", children: [_jsx(AvatarImage, { src: attendee.avatar }), _jsx(AvatarFallback, { className: "text-xs", children: attendee.name.split(' ').map(n => n[0]).join('') })] }, attendee.id))) }), event.attendees.length > 3 && (_jsxs("span", { className: "text-xs text-[var(--hive-text-muted)]", children: ["+", event.attendees.length - 3, " more"] }))] })), _jsx("div", { className: "absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity", children: _jsx(Button, { size: "sm", variant: "ghost", className: "h-6 w-6 p-0", children: _jsx(MoreHorizontal, { className: "w-3 h-3" }) }) })] }));
 }
 // Calendar Mini View Component
 function CalendarMiniView({ events, selectedDate, onDateSelect }) {
@@ -157,7 +157,7 @@ function CalendarMiniView({ events, selectedDate, onDateSelect }) {
     }, []);
     return (_jsxs("div", { className: "space-y-3", children: [_jsxs("div", { className: "flex items-center justify-between", children: [_jsx("h3", { className: "font-medium text-[var(--hive-text-primary)]", children: currentMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) }), _jsxs("div", { className: "flex gap-1", children: [_jsx(Button, { size: "sm", variant: "ghost", className: "h-6 w-6 p-0", onClick: () => navigateMonth('prev'), children: _jsx(ChevronLeft, { className: "w-3 h-3" }) }), _jsx(Button, { size: "sm", variant: "ghost", className: "h-6 w-6 p-0", onClick: () => navigateMonth('next'), children: _jsx(ChevronRight, { className: "w-3 h-3" }) })] })] }), _jsxs("div", { className: "grid grid-cols-7 gap-1 text-xs", children: [['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (_jsx("div", { className: "text-center font-medium text-[var(--hive-text-muted)] py-1", children: day }, day))), daysInMonth.map((day, index) => (_jsxs("button", { className: cn('aspect-square flex items-center justify-center rounded text-xs relative transition-colors', day.isCurrentMonth
                             ? 'text-[var(--hive-text-primary)]'
-                            : 'text-[var(--hive-text-muted)]', day.isToday && 'bg-[var(--hive-brand-primary)] text-white font-medium', day.isSelected && !day.isToday && 'bg-[var(--hive-background-secondary)] ring-1 ring-[var(--hive-brand-primary)]', 'hover:bg-[var(--hive-background-secondary)]'), onClick: () => onDateSelect(day.date), children: [day.date.getDate(), day.hasEvents && !day.isToday && (_jsx("div", { className: "absolute bottom-0.5 right-0.5 w-1 h-1 bg-[var(--hive-brand-primary)] rounded-full" }))] }, index)))] })] }));
+                            : 'text-[var(--hive-text-muted)]', day.isToday && 'bg-[var(--hive-brand-primary)] text-[var(--hive-text-inverse)] font-medium', day.isSelected && !day.isToday && 'bg-[var(--hive-background-secondary)] ring-1 ring-[var(--hive-brand-primary)]', 'hover:bg-[var(--hive-background-secondary)]'), onClick: () => onDateSelect(day.date), children: [day.date.getDate(), day.hasEvents && !day.isToday && (_jsx("div", { className: "absolute bottom-0.5 right-0.5 w-1 h-1 bg-[var(--hive-brand-primary)] rounded-full" }))] }, index)))] })] }));
 }
 // Main Calendar Card Component
 export function CalendarCard({ events, isEditMode, onEventCreate, onEventUpdate, onRSVP, onSettingsClick, className }) {
@@ -210,7 +210,7 @@ export function CalendarCard({ events, isEditMode, onEventCreate, onEventUpdate,
                                                         ? 'No events today'
                                                         : viewMode === 'calendar'
                                                             ? `No events on ${formatDate(selectedDate)}`
-                                                            : 'No upcoming events' })] })) }) }) })] }), !isEditMode && (_jsxs(Button, { variant: "outline", size: "sm", className: "w-full", onClick: () => onEventCreate?.({
+                                                            : 'No upcoming events' })] })) }) }) })] }), !isEditMode && (_jsxs(Button, { variant: "secondary", size: "sm", className: "w-full", onClick: () => onEventCreate?.({
                             type: 'personal',
                             startTime: new Date(),
                             endTime: new Date(Date.now() + 60 * 60 * 1000),

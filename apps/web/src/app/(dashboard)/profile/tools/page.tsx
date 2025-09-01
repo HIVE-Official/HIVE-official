@@ -12,7 +12,7 @@ import {
   Button, 
   Card, 
   Badge,
-  HiveModal,
+  Modal,
   FormField
 } from "@hive/ui";
 import { ErrorBoundary } from '../../../../components/error-boundary';
@@ -174,7 +174,7 @@ export default function ProfileToolsPage() {
                 Coming in v1
               </Badge>
               
-              <h2 className="text-3xl font-bold text-white mb-4">
+              <h2 className="text-3xl font-bold text-[var(--hive-text-inverse)] mb-4">
                 Build Tools That Matter at UB
               </h2>
               <p className="text-lg text-gray-300 max-w-2xl mx-auto mb-6">
@@ -214,7 +214,7 @@ export default function ProfileToolsPage() {
 
           {/* Tool Categories Preview */}
           <div>
-            <h3 className="text-2xl font-semibold text-white mb-6 text-center">
+            <h3 className="text-2xl font-semibold text-[var(--hive-text-inverse)] mb-6 text-center">
               What You&apos;ll Be Able to Build for UB
             </h3>
             
@@ -238,7 +238,7 @@ export default function ProfileToolsPage() {
                       <div className={`inline-flex items-center justify-center w-12 h-12 rounded-lg ${getColorClasses(category.color)} mb-3`}>
                         <IconComponent className="h-6 w-6" />
                       </div>
-                      <h4 className="font-semibold text-white mb-2">{category.name}</h4>
+                      <h4 className="font-semibold text-[var(--hive-text-inverse)] mb-2">{category.name}</h4>
                       <p className="text-sm text-gray-300 mb-4">{category.description}</p>
                     </div>
 
@@ -261,7 +261,7 @@ export default function ProfileToolsPage() {
 
           {/* Builder Benefits */}
           <Card className="p-8">
-            <h3 className="text-2xl font-semibold text-white mb-6 text-center">
+            <h3 className="text-2xl font-semibold text-[var(--hive-text-inverse)] mb-6 text-center">
               Why Build on HIVE at UB?
             </h3>
             
@@ -270,7 +270,7 @@ export default function ProfileToolsPage() {
                 <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-500/10 rounded-xl mb-4 mx-auto">
                   <Users className="h-7 w-7 text-blue-400" />
                 </div>
-                <h4 className="font-semibold text-white mb-2">Built-in UB Community</h4>
+                <h4 className="font-semibold text-[var(--hive-text-inverse)] mb-2">Built-in UB Community</h4>
                 <p className="text-sm text-gray-300">
                   Your tools automatically reach 30,000+ UB students through HIVE spaces and dorms
                 </p>
@@ -280,7 +280,7 @@ export default function ProfileToolsPage() {
                 <div className="inline-flex items-center justify-center w-16 h-16 bg-green-500/10 rounded-xl mb-4 mx-auto">
                   <Zap className="h-7 w-7 text-green-400" />
                 </div>
-                <h4 className="font-semibold text-white mb-2">No-Code Builder</h4>
+                <h4 className="font-semibold text-[var(--hive-text-inverse)] mb-2">No-Code Builder</h4>
                 <p className="text-sm text-gray-300">
                   Create powerful campus tools without programming using our drag-and-drop builder
                 </p>
@@ -290,7 +290,7 @@ export default function ProfileToolsPage() {
                 <div className="inline-flex items-center justify-center w-16 h-16 bg-purple-500/10 rounded-xl mb-4 mx-auto">
                   <Building className="h-7 w-7 text-purple-400" />
                 </div>
-                <h4 className="font-semibold text-white mb-2">UB Campus Integration</h4>
+                <h4 className="font-semibold text-[var(--hive-text-inverse)] mb-2">UB Campus Integration</h4>
                 <p className="text-sm text-gray-300">
                   Tools integrate with UB email, HUB, dining services, and shuttle schedules seamlessly
                 </p>
@@ -300,7 +300,7 @@ export default function ProfileToolsPage() {
 
           {/* Call to Action */}
           <Card className="p-8 text-center bg-gradient-to-br from-hive-gold/5 to-hive-champagne/5 border-hive-gold/20">
-            <h3 className="text-2xl font-semibold text-white mb-4">
+            <h3 className="text-2xl font-semibold text-[var(--hive-text-inverse)] mb-4">
               Ready to Build the Future of UB Campus Life?
             </h3>
             <p className="text-gray-300 mb-6 max-w-2xl mx-auto">
@@ -343,7 +343,7 @@ export default function ProfileToolsPage() {
         </div>
 
         {/* 🚨 **SOPHISTICATED WAITLIST MODAL** */}
-        <HiveModal
+        <Modal
           open={showWaitlistModal}
           onClose={() => setShowWaitlistModal(false)}
           title="Join the UB Builder Tools Waitlist"
@@ -354,7 +354,7 @@ export default function ProfileToolsPage() {
               <div className="inline-flex items-center justify-center w-16 h-16 bg-hive-gold/10 rounded-full mb-4">
                 <Wrench className="h-8 w-8 text-hive-gold" />
               </div>
-              <h4 className="text-lg font-semibold text-white mb-2">Build for Your UB Community</h4>
+              <h4 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-2">Build for Your UB Community</h4>
               <p className="text-gray-300">
                 Create tools that solve real problems for UB students - from Stampede shuttle tracking to 
                 Lockwood study room booking to dorm floor coordination.
@@ -370,7 +370,7 @@ export default function ProfileToolsPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="your.name@buffalo.edu"
-                className="w-full p-3 bg-hive-background-overlay border border-hive-border-default rounded-lg text-white placeholder-gray-400 focus:border-hive-gold focus:outline-none"
+                className="w-full p-3 bg-hive-background-overlay border border-hive-border-default rounded-lg text-[var(--hive-text-inverse)] placeholder-gray-400 focus:border-hive-gold focus:outline-none"
               />
             </FormField>
 
@@ -378,7 +378,7 @@ export default function ProfileToolsPage() {
               <div className="p-3 bg-hive-background-tertiary rounded-lg">
                 <div className="flex items-center gap-2 mb-2">
                   <Clock className="h-4 w-4 text-hive-gold" />
-                  <span className="font-medium text-white">Launch Timeline</span>
+                  <span className="font-medium text-[var(--hive-text-inverse)]">Launch Timeline</span>
                 </div>
                 <p className="text-gray-300">Spring 2025 semester</p>
               </div>
@@ -386,7 +386,7 @@ export default function ProfileToolsPage() {
               <div className="p-3 bg-hive-background-tertiary rounded-lg">
                 <div className="flex items-center gap-2 mb-2">
                   <Building className="h-4 w-4 text-hive-gold" />
-                  <span className="font-medium text-white">UB Integration</span>
+                  <span className="font-medium text-[var(--hive-text-inverse)]">UB Integration</span>
                 </div>
                 <p className="text-gray-300">Works with campus systems</p>
               </div>
@@ -410,7 +410,7 @@ export default function ProfileToolsPage() {
               </Button>
             </div>
           </div>
-        </HiveModal>
+        </Modal>
       </PageContainer>
     </ErrorBoundary>
   );
@@ -432,7 +432,7 @@ export default function ProfileToolsPage() {
  * 
  * AFTER (@hive/ui components):
  * - Sophisticated PageContainer with breadcrumbs and enhanced actions
- * - HiveModal with comprehensive waitlist signup interface
+ * - Modal with comprehensive waitlist signup interface
  * - FormField components for consistent form handling
  * - Enhanced Card, Button, and Badge components throughout
  * - Real-time email validation and UB-specific constraints

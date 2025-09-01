@@ -1,0 +1,3 @@
+export declare const UB_MAJORS: readonly ["Computer Science", "Computer Engineering", "Electrical Engineering", "Mechanical Engineering", "Civil Engineering", "Biomedical Engineering", "Business Administration", "Psychology", "Biology", "Chemistry", "Physics", "Mathematics", "English", "History", "Political Science", "Sociology", "Economics", "Communication", "Architecture", "Nursing", "Pharmacy", "Medicine", "Law", "Education", "Music", "Art", "Theatre", "Dance", "Public Health", "Social Work"];
+export type UBMajor = typeof UB_MAJORS[number];
+//# sourceMappingURL=academics.d.ts.map

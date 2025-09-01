@@ -1,10 +1,10 @@
 import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
-declare const inputVariants: (props?: {
-    variant?: "error" | "ghost" | "default" | "success" | "filled" | "warning" | "brand";
-    size?: "default" | "sm" | "md" | "lg" | "xl";
-    radius?: "default" | "sm" | "lg" | "none" | "full";
-} & import("class-variance-authority/types").ClassProp) => string;
+declare const inputVariants: (props?: ({
+    variant?: "error" | "ghost" | "success" | "warning" | "default" | "filled" | "brand" | null | undefined;
+    size?: "sm" | "default" | "md" | "lg" | "xl" | null | undefined;
+    radius?: "sm" | "default" | "lg" | "none" | "full" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
 export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'>, VariantProps<typeof inputVariants> {
     leftIcon?: React.ReactNode;
     rightIcon?: React.ReactNode;
@@ -22,8 +22,7 @@ export interface SearchInputProps extends Omit<InputProps, 'leftIcon' | 'type'> 
     showClearButton?: boolean;
 }
 declare const SearchInput: React.ForwardRefExoticComponent<SearchInputProps & React.RefAttributes<HTMLInputElement>>;
-export interface PasswordInputProps extends Omit<InputProps, 'type' | 'rightIcon'> {
-}
+export type PasswordInputProps = Omit<InputProps, 'type' | 'rightIcon'>;
 declare const PasswordInput: React.ForwardRefExoticComponent<PasswordInputProps & React.RefAttributes<HTMLInputElement>>;
 export interface NumberInputProps extends Omit<InputProps, 'type'> {
     min?: number;

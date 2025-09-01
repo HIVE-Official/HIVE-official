@@ -6,11 +6,11 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
  * Built using existing HIVE components for guaranteed compatibility
  */
 import React from 'react';
-import { cn } from '../../lib/utils';
+import { cn } from '../../lib/utils.js';
 // Foundation system imports
-import { typographyComposition } from '../../atomic/foundations/typography-composition';
-import { iconComposition, Settings, Share2, UserPlus, MessageCircle, MapPin, GraduationCap, Users, Hammer, Activity, Eye, EyeOff, Zap, Star } from '../../atomic/foundations/icon-composition';
-import { motionComposition } from '../../atomic/foundations/motion-composition';
+import { typographyComposition } from '../../atomic/foundations/typography-composition.js';
+import { iconComposition, Settings, Share2, UserPlus, MessageCircle, MapPin, GraduationCap, Users, Hammer, Activity, Eye, EyeOff, Zap, Star } from '../../atomic/foundations/icon-composition.js';
+import { motionComposition } from '../../atomic/foundations/motion-composition.js';
 const CompletionPrompt = React.forwardRef(({ percentage, onComplete, className }, ref) => {
     if (percentage >= 90)
         return null; // Hide if mostly complete

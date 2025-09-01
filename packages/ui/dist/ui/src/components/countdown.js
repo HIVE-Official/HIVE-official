@@ -1,7 +1,7 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useEffect } from "react";
-import { MotionDiv, MotionSpan } from "./motion-wrapper";
+import { MotionDiv, MotionSpan } from "./motion-wrapper.js";
 const calculateTimeLeft = (targetDate) => {
     const difference = +new Date(targetDate) - +new Date();
     if (difference <= 0) {

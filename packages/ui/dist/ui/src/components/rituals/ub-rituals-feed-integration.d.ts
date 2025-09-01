@@ -156,7 +156,7 @@ interface UBRitualsFeedIntegrationProps {
     maxPosts?: number;
     className?: string;
 }
-export declare function UBRitualsFeedIntegration({ ritualPosts, onLike, onComment, onShare, onJoinRitual, onViewRitual, showHeader, maxPosts, className }: UBRitualsFeedIntegrationProps): import("react/jsx-runtime").JSX.Element;
+export declare function UBRitualsFeedIntegration({ ritualPosts, onLike, onComment, onShare, onJoinRitual, onViewRitual, showHeader, maxPosts, className }: UBRitualsFeedIntegrationProps): import("react/jsx-runtime").JSX.Element | null;
 interface UBRitualFeedFiltersProps {
     selectedTypes: string[];
     selectedParticipation: string[];

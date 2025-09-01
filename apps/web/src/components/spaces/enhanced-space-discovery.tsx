@@ -263,7 +263,7 @@ export function EnhancedSpaceDiscovery() {
             >
               <CardContent className="p-4">
                 <div className="flex items-center gap-3 mb-2">
-                  <div className={`p-2 rounded-lg ${category.color} text-white`}>
+                  <div className={`p-2 rounded-lg ${category.color} text-[var(--hive-text-inverse)]`}>
                     <IconComponent className="h-5 w-5" />
                   </div>
                   <div>
@@ -339,7 +339,7 @@ export function EnhancedSpaceDiscovery() {
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-2">
-                      <div className={`p-2 rounded-lg ${getSpaceColor(space.type)} text-white`}>
+                      <div className={`p-2 rounded-lg ${getSpaceColor(space.type)} text-[var(--hive-text-inverse)]`}>
                         {getSpaceIcon(space.type)}
                       </div>
                       <div>
@@ -476,7 +476,7 @@ export function EnhancedSpaceDiscovery() {
           </DialogHeader>
           <div className="py-4">
             <div className="flex items-center gap-3 mb-4">
-              <div className={`p-3 rounded-lg ${getSpaceColor(showJoinModal?.type || '')} text-white`}>
+              <div className={`p-3 rounded-lg ${getSpaceColor(showJoinModal?.type || '')} text-[var(--hive-text-inverse)]`}>
                 {getSpaceIcon(showJoinModal?.type || '')}
               </div>
               <div>

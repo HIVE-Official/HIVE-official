@@ -293,7 +293,7 @@ export const ProfileGhostModeWidget: React.FC<ProfileGhostModeWidgetProps> = ({
                 size="sm"
                 onClick={() => onToggleGhostMode(!isGhostModeActive)}
                 className={cn(
-                  isGhostModeActive && 'bg-purple-500 hover:bg-purple-600 text-white'
+                  isGhostModeActive && 'bg-purple-500 hover:bg-purple-600 text-[var(--hive-text-inverse)]'
                 )}
               >
                 {isGhostModeActive ? (

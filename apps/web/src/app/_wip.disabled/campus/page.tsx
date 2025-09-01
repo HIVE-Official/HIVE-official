@@ -99,13 +99,13 @@ export default function CampusSelectionPage() {
             <Button
               variant="ghost"
               size="sm"
-              className="p-2 text-zinc-400 hover:text-white mr-4"
+              className="p-2 text-zinc-400 hover:text-[var(--hive-text-inverse)] mr-4"
             >
               <ArrowLeft className="w-4 h-4" />
             </Button>
           </Link>
           <div>
-            <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
+            <h1 className="text-4xl md:text-6xl font-bold text-[var(--hive-text-inverse)] mb-6">
               Welcome to your campus&apos;s HIVE
             </h1>
             <p className="text-xl text-zinc-400 mb-8 max-w-3xl">
@@ -122,7 +122,7 @@ export default function CampusSelectionPage() {
             placeholder="Verify you're a UB student..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 bg-zinc-900 border-zinc-700 text-white placeholder:text-zinc-500 text-lg py-3 font-sans"
+            className="pl-10 bg-zinc-900 border-zinc-700 text-[var(--hive-text-inverse)] placeholder:text-zinc-500 text-lg py-3 font-sans"
             autoFocus
           />
         </div>

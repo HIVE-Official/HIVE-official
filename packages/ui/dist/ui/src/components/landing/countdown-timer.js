@@ -2,7 +2,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { cn } from '../../lib/utils';
+import { cn } from '../../lib/utils.js';
 export const CountdownTimer = ({ targetDate, onComplete, className, size = 'md', variant = 'default' }) => {
     const [timeLeft, setTimeLeft] = useState([]);
     const [isComplete, setIsComplete] = useState(false);
@@ -76,13 +76,13 @@ export const CountdownTimer = ({ targetDate, onComplete, className, size = 'md',
             case 'minimal':
                 return {
                     timeBox: 'bg-transparent border-2 border-border/30 hover:border-accent/50 transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)]',
-                    value: 'text-white font-bold',
+                    value: 'text-[var(--hive-text-inverse)] font-bold',
                     label: 'text-muted'
                 };
             default:
                 return {
                     timeBox: 'bg-surface border-2 border-border hover:border-accent/50 transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)]',
-                    value: 'text-white font-bold',
+                    value: 'text-[var(--hive-text-inverse)] font-bold',
                     label: 'text-muted'
                 };
         }

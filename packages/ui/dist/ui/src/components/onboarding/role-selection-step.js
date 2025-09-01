@@ -2,9 +2,9 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Button } from '../button';
+import { Button } from '../../atomic/atoms/button-enhanced.js';
 import { GraduationCap, Users, BookOpen, ArrowRight } from 'lucide-react';
-import { hiveVariants } from '../../lib/motion';
+import { hiveVariants } from '../../lib/motion.js';
 export const RoleSelectionStep = ({ onRoleSelect, schoolName, }) => {
     const [selectedRole, setSelectedRole] = useState(null);
     const roleOptions = [
@@ -55,6 +55,6 @@ export const RoleSelectionStep = ({ onRoleSelect, schoolName, }) => {
                                                         : isDisabled
                                                             ? 'bg-surface-02 text-muted'
                                                             : 'bg-surface-02 text-foreground'}`, children: _jsx(Icon, { className: "w-6 h-6" }) }), _jsxs("div", { className: "flex-1", children: [_jsxs("div", { className: "flex items-center gap-2 mb-1", children: [_jsx("h3", { className: `font-medium font-body ${isSelected ? 'text-accent' : 'text-foreground'}`, children: option.label }), option.comingSoon && (_jsx("span", { className: "text-xs px-2 py-1 bg-surface-03 text-muted rounded-full", children: "Coming Soon" }))] }), _jsx("p", { className: "text-sm text-muted font-body", children: option.description })] }), isSelected && (_jsx(motion.div, { initial: { scale: 0 }, animate: { scale: 1 }, className: "text-accent", children: _jsx(ArrowRight, { className: "w-5 h-5" }) }))] }) }, option.value));
-                                }) }), _jsx(motion.div, { variants: hiveVariants.item, initial: "hidden", animate: "visible", transition: { delay: 0.4 }, children: _jsxs(Button, { onClick: handleContinue, disabled: !selectedRole, variant: "ritual", size: "lg", className: "w-full", children: ["Continue", _jsx(ArrowRight, { className: "w-4 h-4 ml-2" })] }) })] }), _jsx("div", { className: "text-center mt-6", children: _jsx("p", { className: "text-sm text-muted font-body", children: "Step 1 of 5" }) })] })] }));
+                                }) }), _jsx(motion.div, { variants: hiveVariants.item, initial: "hidden", animate: "visible", transition: { delay: 0.4 }, children: _jsxs(Button, { onClick: handleContinue, disabled: !selectedRole, variant: "primary", size: "lg", className: "w-full", children: ["Continue", _jsx(ArrowRight, { className: "w-4 h-4 ml-2" })] }) })] }), _jsx("div", { className: "text-center mt-6", children: _jsx("p", { className: "text-sm text-muted font-body", children: "Step 1 of 5" }) })] })] }));
 };
 //# sourceMappingURL=role-selection-step.js.map

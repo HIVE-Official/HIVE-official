@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 import { 
   Users, 
   ArrowLeft, 
@@ -11,12 +12,9 @@ import {
   Share, 
   Calendar,
   MessageSquare,
-  Pin,
   Crown,
-  UserPlus,
   MoreHorizontal,
   Activity,
-  MapPin,
   Clock,
   Hash
 } from 'lucide-react';
@@ -45,7 +43,7 @@ import {
 import { FeedDisplay } from '../../../../../components/social/feed-display';
 
 // Hooks
-import { useHiveAuth } from '@hive/ui';
+import { useUnifiedAuth } from '@hive/ui';
 
 // Types
 interface SpaceData {
@@ -165,7 +163,7 @@ function formatLastActivity(timestamp: string | Date): string {
 
 export function SpaceDashboardView({ spaceId }: SpaceDashboardViewProps) {
   const router = useRouter();
-  const { user } = useHiveAuth();
+  const { user } = useUnifiedAuth();
   const [spaceData, setSpaceData] = useState<SpaceData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isJoining, setIsJoining] = useState(false);
@@ -305,7 +303,7 @@ export function SpaceDashboardView({ spaceId }: SpaceDashboardViewProps) {
           </Button>
           <Separator orientation="vertical" className="h-6" />
           <div className="h-8 w-8 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
-            <span className="text-white font-semibold text-sm">
+            <span className="text-[var(--hive-text-inverse)] font-semibold text-sm">
               {spaceData.name.charAt(0)}
             </span>
           </div>
@@ -450,10 +448,10 @@ export function SpaceDashboardView({ spaceId }: SpaceDashboardViewProps) {
                       <div key={member.id} className="flex items-center space-x-3">
                         <Avatar className="h-10 w-10">
                           {member.avatar ? (
-                            <img src={member.avatar} alt={member.name} className="rounded-full" />
+                            <Image src={member.avatar} alt={member.name} width={40} height={40} className="rounded-full" />
                           ) : (
                             <div className="h-10 w-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
-                              <span className="text-white font-medium text-sm">
+                              <span className="text-[var(--hive-text-inverse)] font-medium text-sm">
                                 {member.name.charAt(0)}
                               </span>
                             </div>
@@ -485,10 +483,10 @@ export function SpaceDashboardView({ spaceId }: SpaceDashboardViewProps) {
                       <div key={leader.id} className="flex items-center space-x-3">
                         <Avatar className="h-8 w-8">
                           {leader.avatar ? (
-                            <img src={leader.avatar} alt={leader.name} className="rounded-full" />
+                            <Image src={leader.avatar} alt={leader.name} width={40} height={40} className="rounded-full" />
                           ) : (
                             <div className="h-8 w-8 bg-gradient-to-br from-amber-500 to-orange-500 rounded-full flex items-center justify-center">
-                              <span className="text-white font-medium text-xs">
+                              <span className="text-[var(--hive-text-inverse)] font-medium text-xs">
                                 {leader.name.charAt(0)}
                               </span>
                             </div>
@@ -592,7 +590,7 @@ export function SpaceDashboardView({ spaceId }: SpaceDashboardViewProps) {
 }
 
 // Mock data generator for development
-function generateMockSpaceData(spaceId: string, currentUserId?: string): SpaceData {
+function _generateMockSpaceData(spaceId: string, _currentUserId?: string): SpaceData {
   const spaceMap: Record<string, Partial<SpaceData>> = {
     'cs250-study': {
       name: 'CS 250 Study Group',

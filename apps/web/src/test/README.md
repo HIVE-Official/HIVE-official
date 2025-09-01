@@ -1,257 +1,241 @@
-# HIVE Authentication & Onboarding Tests
+# HIVE E2E Testing Guide
 
-This directory contains comprehensive tests for the HIVE authentication and onboarding flow, including unit tests, integration tests, and end-to-end tests.
+## Overview
+
+This directory contains end-to-end tests for the HIVE authentication and onboarding flows using Playwright. These tests ensure critical user journeys work correctly across different browsers and devices.
 
 ## Test Structure
 
 ```
-src/test/
-├── unit/                          # Unit tests for components and utilities
-│   ├── auth/                      # Authentication component tests
-│   └── onboarding/                # Onboarding component tests
-├── integration/                   # API route integration tests
-│   └── auth/                      # Authentication API tests
-├── e2e/                          # End-to-end tests
-│   ├── auth-flow-complete.spec.ts # Complete user flow tests
-│   └── auth-edge-cases.spec.ts    # Error handling and edge cases
-├── setup.ts                      # Test configuration and mocks
-├── test-utils.tsx                # Custom testing utilities
-├── global-setup.ts               # Playwright global setup
-└── global-teardown.ts            # Playwright global teardown
+src/test/e2e/
+├── auth-flow.spec.ts          # Authentication flow tests
+├── onboarding-flow.spec.ts    # Onboarding wizard tests  
+├── smoke-tests.spec.ts        # Critical path smoke tests
+├── helpers/
+│   └── test-helpers.ts        # Shared test utilities
+├── global-setup.ts            # Global test setup
+└── global-teardown.ts         # Global test cleanup
 ```
 
 ## Running Tests
 
-### Unit Tests
+### Basic Commands
+
 ```bash
-npm run test:unit          # Run unit tests once
-npm run test:watch         # Run tests in watch mode
-npm run test:coverage      # Run with coverage report
-```
+# Run all E2E tests
+npm run test:e2e
 
-### Integration Tests
-```bash
-npm run test:integration   # Run API integration tests
-```
-
-### End-to-End Tests
-```bash
-npm run test:e2e          # Run E2E tests headless
-npm run test:e2e:headed   # Run E2E tests with browser UI
-npm run test:e2e:debug    # Debug E2E tests
-npm run test:e2e:ui       # Run with Playwright UI
-```
-
-### All Tests
-```bash
-npm run test:all          # Run all test suites
-npm run test:ci           # Run tests for CI (with coverage)
-```
-
-## Test Coverage
-
-### Unit Tests (86 tests)
-
-**Authentication Components:**
-- LoginPage: Email validation, magic link sending, error handling, development mode
-- VerifyPage: Token verification, session management, error states, redirects
-- OnboardingWizard: Step navigation, form validation, progress tracking, submission
-
-**Key Test Areas:**
-- ✅ Form validation and real-time feedback
-- ✅ Development vs production mode handling
-- ✅ Error boundary and graceful degradation
-- ✅ Accessibility compliance (ARIA labels, keyboard nav)
-- ✅ Loading states and user feedback
-- ✅ State persistence during navigation
-
-### Integration Tests (43 tests)
-
-**API Routes:**
-- `/api/auth/send-magic-link`: Rate limiting, school validation, email sending
-- `/api/auth/verify-magic-link`: Token verification, user creation, session management
-- `/api/auth/complete-onboarding`: Transaction processing, validation, post-onboarding flows
-
-**Key Test Areas:**
-- ✅ Request validation and security checks
-- ✅ Database transactions and rollback scenarios
-- ✅ External service integration (email, cohort creation)
-- ✅ Error handling and audit logging
-- ✅ Development mode bypasses and fallbacks
-
-### End-to-End Tests (15 tests)
-
-**Complete User Flows:**
-- Happy path: School selection → Login → Onboarding → Dashboard
-- Faculty-specific simplified onboarding flow
-- Error handling and recovery scenarios
-- Edge cases and browser compatibility
-
-**Key Test Areas:**
-- ✅ Complete authentication flow end-to-end
-- ✅ Cross-browser compatibility (Chrome, Firefox, Safari)
-- ✅ Mobile responsiveness testing
-- ✅ Network failure recovery
-- ✅ Session persistence and state management
-- ✅ Handle validation and conflicts
-
-## Test Environment
-
-### Development Setup
-- **Authentication**: Uses development mode with `test.edu` domain
-- **Database**: Mocked Firestore operations
-- **Email**: Mocked SendGrid integration
-- **Sessions**: Uses localStorage for development testing
-
-### CI/CD Integration
-- **Browsers**: Chromium, Firefox, WebKit
-- **Mobile**: Pixel 5, iPhone 12 simulation
-- **Reporting**: HTML, JSON, and JUnit formats
-- **Artifacts**: Screenshots and videos on failure
-
-## Mock Strategy
-
-### Component Level
-- Next.js navigation (useRouter, useSearchParams)
-- Framer Motion animations (simplified for testing)
-- External APIs and services
-- Browser APIs (localStorage, window.location)
-
-### API Level
-- Firebase Admin SDK operations
-- Email sending services
-- Rate limiting and security checks
-- Database transactions
-
-### E2E Level
-- API responses for consistent test data
-- Development mode authentication
-- External service calls (cohort creation, auto-join)
-
-## Test Data Factories
-
-```typescript
-// User data
-const testUser = createTestUser({
-  fullName: 'Jane Doe',
-  handle: 'janedoe2024',
-  userType: 'student'
-});
-
-// Session data
-const testSession = createTestSession({
-  needsOnboarding: true,
-  schoolId: 'test-university'
-});
-
-// School data
-const testSchool = createTestSchool({
-  name: 'Test University',
-  domain: 'test.edu'
-});
-```
-
-## Debugging Tests
-
-### Unit/Integration Tests
-```bash
-# Run specific test file
-npm run test -- login-page.test.tsx
-
-# Run tests matching pattern
-npm run test -- --grep "handles validation"
-
-# Debug with breakpoints
-npm run test:watch
-```
-
-### E2E Tests
-```bash
-# Debug mode with browser
-npm run test:e2e:debug
-
-# Visual test runner
+# Run with browser UI (great for debugging)
 npm run test:e2e:ui
 
-# Specific test file
-npx playwright test auth-flow-complete.spec.ts
+# Run in headed mode (see browser window)
+npm run test:e2e:headed
+
+# Debug specific test
+npm run test:e2e:debug
+
+# Run smoke tests only
+npm run test:smoke
 ```
 
-## Writing New Tests
+### Cross-Browser Testing
 
-### Unit Test Example
+```bash
+# Run on all browsers (Chromium, Firefox, WebKit)
+npm run test:e2e:cross-browser
+
+# Run on mobile devices
+npm run test:e2e:mobile
+```
+
+### CI/CD Commands
+
+```bash
+# CI-optimized run with retries and reporting
+npm run test:ci
+
+# Generate test reports
+npm run test:e2e -- --reporter=html
+```
+
+## Test Categories
+
+### 1. Authentication Flow Tests (`auth-flow.spec.ts`)
+
+Tests the complete authentication journey:
+- School selection → Login → Magic link → Verification
+- Invalid email domains
+- Expired magic links  
+- Rate limiting
+- Network error handling
+- Mobile responsiveness
+- Auth state persistence
+- Logout functionality
+
+### 2. Onboarding Flow Tests (`onboarding-flow.spec.ts`)
+
+Tests the complete onboarding wizard:
+- **Student Flow**: All 9 steps (Welcome → User Type → Name → Academics → Handle → Photo → Interests → Builder → Legal)
+- **Faculty Flow**: Simplified 5 steps (Welcome → User Type → Faculty Info → Builder → Legal)
+- Field validation (names, graduation years, handle format)
+- Handle availability checking
+- Optional step skipping
+- Progress tracking
+- Back navigation with data persistence
+- Mobile responsiveness
+- Network error handling
+
+### 3. Smoke Tests (`smoke-tests.spec.ts`)
+
+Critical path verification:
+- App loads and health checks
+- Complete happy path journey
+- Error boundaries on failures
+- Mobile responsiveness
+- JavaScript disabled graceful degradation  
+- Data persistence across refreshes
+- Concurrent user sessions
+- Network connectivity issues
+- Accessibility standards
+
+## Test Helpers
+
+The `TestHelpers` class provides utilities for:
+
+### Authentication Mocking
 ```typescript
-import { render, screen, fireEvent } from '@/test/test-utils';
-import { createMockRouter } from '@/test/setup';
-
-test('validates email format', async () => {
-  const mockRouter = createMockRouter();
-  render(<LoginPage />, { routerMock: mockRouter });
-  
-  const emailInput = screen.getByLabelText(/email/i);
-  fireEvent.change(emailInput, { target: { value: 'invalid' } });
-  
-  expect(screen.getByText(/valid email/i)).toBeInTheDocument();
+await testHelpers.mockAuthenticatedUser({
+  id: 'user123',
+  email: 'test@buffalo.edu', 
+  onboardingCompleted: false
 });
 ```
 
-### E2E Test Example
+### Magic Link Testing
 ```typescript
-test('completes onboarding flow', async ({ page }) => {
-  await page.goto('/schools');
-  await page.click('text=Test University');
-  await page.fill('input[type="email"]', 'test@test.edu');
-  await page.click('button:has-text("Send magic link")');
-  
-  await expect(page).toHaveURL('/onboarding');
-});
+const token = await testHelpers.getMockMagicLinkToken('test@buffalo.edu');
+await page.goto(`/auth/verify?token=${token}&email=test@buffalo.edu`);
 ```
 
-## Performance Testing
+### Onboarding Shortcuts
+```typescript
+// Complete onboarding up to specific step
+await testHelpers.completeOnboardingToStep('handle');
+```
 
-Tests include performance considerations:
-- Component render times
-- API response times
-- Page load speeds
-- Form submission efficiency
+### Error Simulation  
+```typescript
+// Mock API errors
+await testHelpers.mockApiError('/api/auth/send-magic-link', {
+  status: 500,
+  message: 'Server error'
+});
 
-## Security Testing
+// Simulate slow network
+await testHelpers.simulateSlowNetwork();
+```
 
-Comprehensive security test coverage:
-- Input validation and sanitization
-- Rate limiting enforcement
-- Session management security
-- CSRF protection verification
-- XSS prevention testing
+## Configuration
 
-## Accessibility Testing
+### Playwright Config (`playwright.config.ts`)
 
-Automated accessibility checks:
-- ARIA label compliance
-- Keyboard navigation support
-- Screen reader compatibility
-- Color contrast validation
-- Focus management testing
+- **Base URL**: `http://localhost:3003` (dedicated test server)
+- **Retries**: 2 in CI, 0 locally
+- **Timeouts**: Extended for slow compilation (60s test, 45s navigation)
+- **Screenshots**: On failure only
+- **Videos**: Retain on failure
+- **Browsers**: Chrome, Firefox, Safari + mobile variants
 
-## Maintenance
+### Global Setup
 
-### Adding New Tests
-1. Follow existing naming conventions
-2. Use test data factories for consistency
-3. Mock external dependencies appropriately
-4. Add both happy path and error scenarios
+- Waits for dev server to be ready
+- Sets up test data and mock endpoints
+- Creates screenshot directories
+- Validates auth endpoints accessibility
 
-### Updating Tests
-1. Update mocks when APIs change
-2. Refresh test data when schemas evolve
-3. Add tests for new features
-4. Remove obsolete test cases
+### Global Teardown
 
-### CI/CD Pipeline
-Tests are automatically run on:
-- Pull request creation
-- Merge to main branch
-- Release deployments
-- Scheduled regression testing
+- Cleans up test data
+- Removes old screenshots (7+ days)
+- Generates test summary report
 
-The test suite ensures high confidence in the authentication and onboarding system's reliability, security, and user experience.
+## Best Practices
+
+### Writing Tests
+
+1. **Use TestHelpers**: Leverage shared utilities for common tasks
+2. **Mock External APIs**: Don't rely on real Firebase/email services
+3. **Test Data Isolation**: Clear auth state between tests  
+4. **Progressive Enhancement**: Test with and without JavaScript
+5. **Mobile First**: Include mobile viewport tests
+6. **Error Scenarios**: Test both happy path and edge cases
+
+### Debugging Tests
+
+1. **Use UI Mode**: `npm run test:e2e:ui` for interactive debugging
+2. **Screenshots**: Automatic on failures, manual via `testHelpers.takeScreenshot()`
+3. **Console Logs**: Check for JavaScript errors with `testHelpers.checkForConsoleErrors()`
+4. **Slow Motion**: Add `page.waitForTimeout()` to observe interactions
+
+### Performance
+
+1. **Parallel Execution**: Tests run in parallel by default
+2. **Efficient Selectors**: Use `data-testid` attributes for reliable selection
+3. **Wait Strategies**: Use `waitForSelector()` instead of fixed timeouts
+4. **Resource Cleanup**: Always clean up in `afterEach` hooks
+
+## CI/CD Integration
+
+Tests are configured for CI environments with:
+- Retry logic for flaky tests
+- JSON and JUnit reporting formats  
+- HTML reports for debugging failures
+- Screenshot and video artifacts on failure
+- Extended timeouts for slower CI machines
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Dev server not ready**: Increase timeout in global setup
+2. **Element not found**: Add `data-testid` attributes to components
+3. **Timing issues**: Use `waitForSelector()` instead of `waitForTimeout()`
+4. **Mock not working**: Verify route matching patterns
+5. **Mobile tests failing**: Check viewport size and touch events
+
+### Debug Commands
+
+```bash
+# Run specific test file
+npx playwright test auth-flow.spec.ts
+
+# Run with debug inspector
+npx playwright test --debug
+
+# Generate and open HTML report
+npx playwright show-report
+
+# List all available tests
+npx playwright test --list
+```
+
+## Environment Variables
+
+Required for testing:
+```bash
+# Firebase configuration
+NEXT_PUBLIC_FIREBASE_API_KEY=
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=  
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=
+
+# App configuration  
+NEXT_PUBLIC_APP_URL=http://localhost:3003
+```
+
+## Future Enhancements
+
+- Visual regression testing with screenshot comparison
+- Performance testing with Lighthouse integration
+- Accessibility testing with axe-core
+- API contract testing with network request validation
+- Multi-language testing for internationalization

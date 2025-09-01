@@ -105,7 +105,7 @@ export function DiscoveryModes({ onModeSelect, userProfile }: DiscoveryModesProp
     <div className="space-y-6">
       {/* Header */}
       <div className="text-center">
-        <h2 className="text-2xl font-bold text-white mb-2">
+        <h2 className="text-2xl font-bold text-[var(--hive-text-inverse)] mb-2">
           How would you like to discover spaces?
         </h2>
         <p className="text-neutral-400">
@@ -167,7 +167,7 @@ export function DiscoveryModes({ onModeSelect, userProfile }: DiscoveryModesProp
                   {/* Content */}
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
-                      <h3 className="text-lg font-semibold text-white">
+                      <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)]">
                         {mode.title}
                       </h3>
                       <span className="text-sm text-neutral-400">
@@ -196,15 +196,15 @@ export function DiscoveryModes({ onModeSelect, userProfile }: DiscoveryModesProp
       {/* Quick Stats */}
       <div className="grid grid-cols-3 gap-4 pt-4 border-t border-white/10">
         <div className="text-center">
-          <div className="text-xl font-bold text-white">200+</div>
+          <div className="text-xl font-bold text-[var(--hive-text-inverse)]">200+</div>
           <div className="text-xs text-neutral-400">Active Spaces</div>
         </div>
         <div className="text-center">
-          <div className="text-xl font-bold text-white">15K+</div>
+          <div className="text-xl font-bold text-[var(--hive-text-inverse)]">15K+</div>
           <div className="text-xs text-neutral-400">Students</div>
         </div>
         <div className="text-center">
-          <div className="text-xl font-bold text-white">95%</div>
+          <div className="text-xl font-bold text-[var(--hive-text-inverse)]">95%</div>
           <div className="text-xs text-neutral-400">Find Match</div>
         </div>
       </div>
@@ -309,7 +309,7 @@ export function QuickStartSurvey({ onComplete, onSkip }: QuickStartSurveyProps) 
           </span>
           <button
             onClick={onSkip}
-            className="text-sm text-neutral-400 hover:text-white"
+            className="text-sm text-neutral-400 hover:text-[var(--hive-text-inverse)]"
           >
             Skip survey
           </button>
@@ -325,7 +325,7 @@ export function QuickStartSurvey({ onComplete, onSkip }: QuickStartSurveyProps) 
       {/* Question */}
       <Card className="p-8">
         <div className="text-center mb-8">
-          <h2 className="text-2xl font-bold text-white mb-2">
+          <h2 className="text-2xl font-bold text-[var(--hive-text-inverse)] mb-2">
             {currentQuestion.title}
           </h2>
           <p className="text-neutral-400">
@@ -349,7 +349,7 @@ export function QuickStartSurvey({ onComplete, onSkip }: QuickStartSurveyProps) 
                   flex items-center gap-3
                   ${isSelected 
                     ? 'bg-hive-gold/20 border-hive-gold text-hive-gold' 
-                    : 'bg-white/5 border-white/10 text-white hover:bg-white/10'
+                    : 'bg-white/5 border-white/10 text-[var(--hive-text-inverse)] hover:bg-white/10'
                   }
                   border-2
                 `}

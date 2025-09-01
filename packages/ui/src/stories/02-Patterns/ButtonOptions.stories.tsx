@@ -76,7 +76,7 @@ export const AllButtonVariants: Story = {
                 <Plus className="w-4 h-4 mr-2" />
                 Primary Button
               </Button>
-              <Button variant="accent" className="w-full">
+              <Button variant="secondary" className="w-full">
                 <Zap className="w-4 h-4 mr-2" />
                 Accent Button
               </Button>
@@ -179,7 +179,7 @@ export const AllButtonVariants: Story = {
               <Button variant="secondary" size="icon-sm">
                 <Share className="w-3 h-3" />
               </Button>
-              <Button variant="accent" size="icon-sm">
+              <Button variant="secondary" size="icon-sm">
                 <Star className="w-3 h-3" />
               </Button>
             </div>
@@ -194,7 +194,7 @@ export const AllButtonVariants: Story = {
               <Button variant="secondary" size="icon">
                 <Share className="w-4 h-4" />
               </Button>
-              <Button variant="accent" size="icon">
+              <Button variant="secondary" size="icon">
                 <Star className="w-4 h-4" />
               </Button>
             </div>
@@ -209,7 +209,7 @@ export const AllButtonVariants: Story = {
               <Button variant="secondary" size="icon-lg">
                 <Share className="w-5 h-5" />
               </Button>
-              <Button variant="accent" size="icon-lg">
+              <Button variant="secondary" size="icon-lg">
                 <Star className="w-5 h-5" />
               </Button>
             </div>
@@ -231,7 +231,7 @@ export const AllButtonVariants: Story = {
               <Button variant="primary" className="w-full">
                 Normal Button
               </Button>
-              <Button variant="accent" className="w-full">
+              <Button variant="secondary" className="w-full">
                 Normal Accent
               </Button>
             </div>
@@ -243,7 +243,7 @@ export const AllButtonVariants: Story = {
               <Button variant="primary" loading className="w-full">
                 Loading...
               </Button>
-              <Button variant="accent" loading className="w-full">
+              <Button variant="secondary" loading className="w-full">
                 Processing...
               </Button>
             </div>
@@ -255,7 +255,7 @@ export const AllButtonVariants: Story = {
               <Button variant="primary" disabled className="w-full">
                 Disabled Button
               </Button>
-              <Button variant="accent" disabled className="w-full">
+              <Button variant="secondary" disabled className="w-full">
                 Disabled Accent
               </Button>
             </div>
@@ -289,7 +289,7 @@ export const LoadingStates: Story = {
         
         <div className="space-y-4">
           <h3 className="text-lg font-semibold text-center">Accent</h3>
-          <Button variant="accent" loading className="w-full">
+          <Button variant="secondary" loading className="w-full">
             Deploying...
           </Button>
         </div>

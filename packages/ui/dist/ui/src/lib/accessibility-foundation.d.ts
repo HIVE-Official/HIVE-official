@@ -47,9 +47,9 @@ export declare const ariaPatterns: {
         readonly status: "status";
     };
 };
-export declare const focusStyles: (props?: {
-    type?: "default" | "strong" | "subtle" | "skipLink";
-} & import("class-variance-authority/types").ClassProp) => string;
+export declare const focusStyles: (props?: ({
+    type?: "default" | "subtle" | "strong" | "skipLink" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
 export declare const screenReader: {
     readonly only: "sr-only";
     readonly focusable: "sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-[var(--hive-background-primary)] focus:text-[var(--hive-text-primary)]";
@@ -71,7 +71,7 @@ export declare const reducedMotion: {
 };
 export declare const colorContrast: {
     readonly textOnLight: "text-gray-900";
-    readonly textOnDark: "text-white";
+    readonly textOnDark: "text-[var(--hive-text-inverse)]";
     readonly interactive: "text-[var(--hive-brand-primary)]";
     readonly success: "text-green-700 dark:text-green-300";
     readonly warning: "text-amber-700 dark:text-amber-300";
@@ -147,7 +147,7 @@ export declare function createSkipLink(target: string, label: string): {
  * Component Testing Utilities
  */
 export declare function getTestProps(testId?: string, componentName?: string): {
-    'data-testid': string;
-    'data-component': string;
+    'data-testid': string | undefined;
+    'data-component': string | undefined;
 };
 //# sourceMappingURL=accessibility-foundation.d.ts.map

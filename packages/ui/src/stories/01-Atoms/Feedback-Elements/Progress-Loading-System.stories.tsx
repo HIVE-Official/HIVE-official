@@ -4,7 +4,16 @@ import { Progress } from '../../../components/ui/progress';
 import { Spinner } from '../../../components/ui/spinner';
 import { Skeleton } from '../../../components/ui/skeleton';
 
-const meta: Meta = {
+// Create a component wrapper for the story
+const ProgressLoadingSystem = () => (
+  <div className="p-6 space-y-8">
+    <h2 className="text-2xl font-semibold">Progress & Loading System</h2>
+    <p className="text-muted-foreground">Comprehensive feedback system for campus operations</p>
+  </div>
+);
+
+const meta: Meta<typeof ProgressLoadingSystem> = {
+  component: ProgressLoadingSystem,
   title: '02-Atoms/Feedback-Elements/Progress & Loading System',
   parameters: {
     docs: {

@@ -100,7 +100,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="success">✅ HEADINGS</Badge>
+            <Badge variant="emerald">✅ HEADINGS</Badge>
             Heading Hierarchy - Semantic Levels & Visual Scale
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -598,7 +598,7 @@ function fibonacci(n) {
               </TypographyPresets.PageTitle>
               
               <div className="flex items-center gap-4 text-sm">
-                <Badge variant="success">Registration Open</Badge>
+                <Badge variant="emerald">Registration Open</Badge>
                 <TypographyPresets.Small>March 22, 2025 • Student Union Ballrooms</TypographyPresets.Small>
               </div>
               

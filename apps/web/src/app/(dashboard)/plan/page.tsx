@@ -7,14 +7,11 @@ import {
   Circle, 
   Clock, 
   AlertTriangle, 
-  Users, 
   Sparkles, 
   Calendar,
   Target,
   TrendingUp,
-  Settings,
   Layers,
-  GitBranch,
   Zap,
   Shield,
   Code,
@@ -22,7 +19,7 @@ import {
   ChevronRight,
   ChevronDown
 } from 'lucide-react';
-import { HiveButton, HiveCard, HiveBadge } from "@hive/ui";
+import { Button, Card, Badge } from "@hive/ui";
 
 // Types for the plan system
 interface PlanItem {
@@ -303,8 +300,8 @@ export default function PlanPage() {
     return true;
   });
 
-  const currentPhase = roadmapPhases.find(phase => phase.status === 'active');
-  const upcomingPhases = roadmapPhases.filter(phase => phase.status === 'upcoming');
+  const _currentPhase = roadmapPhases.find(phase => phase.status === 'active');
+  const _upcomingPhases = roadmapPhases.filter(phase => phase.status === 'upcoming');
 
   return (
     <div className="min-h-screen bg-[var(--hive-background-primary)] text-[var(--hive-text-primary)]">
@@ -326,12 +323,12 @@ export default function PlanPage() {
               </p>
             </div>
             <div className="flex items-center gap-4">
-              <HiveBadge variant="secondary" size="lg">
+              <Badge variant="secondary" size="lg">
                 vBETA
-              </HiveBadge>
-              <HiveButton variant="secondary" size="md" onClick={() => setShowDesignUpdates(!showDesignUpdates)}>
+              </Badge>
+              <Button variant="secondary" size="md" onClick={() => setShowDesignUpdates(!showDesignUpdates)}>
                 {showDesignUpdates ? 'Hide' : 'Show'} Design Updates
-              </HiveButton>
+              </Button>
             </div>
           </div>
         </div>
@@ -355,27 +352,27 @@ export default function PlanPage() {
               </p>
             </div>
             <div className="flex gap-2">
-              <HiveButton
+              <Button
                 variant={filter === 'all' ? 'premium' : 'ghost'}
                 size="sm"
                 onClick={() => setFilter('all')}
               >
                 All
-              </HiveButton>
-              <HiveButton
+              </Button>
+              <Button
                 variant={filter === 'critical' ? 'premium' : 'ghost'}
                 size="sm"
                 onClick={() => setFilter('critical')}
               >
                 Critical
-              </HiveButton>
-              <HiveButton
+              </Button>
+              <Button
                 variant={filter === 'blocked' ? 'premium' : 'ghost'}
                 size="sm"
                 onClick={() => setFilter('blocked')}
               >
                 Blocked
-              </HiveButton>
+              </Button>
             </div>
           </div>
 
@@ -387,7 +384,7 @@ export default function PlanPage() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.4, delay: index * 0.1 }}
               >
-                <HiveCard variant="elevated" className="p-6">
+                <Card variant="elevated" className="p-6">
                   <div className="flex items-start justify-between">
                     <div className="flex items-start gap-4 flex-1">
                       {getStatusIcon(item.status)}
@@ -398,12 +395,12 @@ export default function PlanPage() {
                           </h3>
                           <div className="flex items-center gap-2">
                             {getCategoryIcon(item.category)}
-                            <HiveBadge variant={getPriorityColor(item.priority)} size="sm">
+                            <Badge variant={getPriorityColor(item.priority)} size="sm">
                               {item.priority}
-                            </HiveBadge>
-                            <HiveBadge variant="secondary" size="sm">
+                            </Badge>
+                            <Badge variant="secondary" size="sm">
                               {item.effort}
-                            </HiveBadge>
+                            </Badge>
                           </div>
                         </div>
                         <p className="text-[var(--hive-text-secondary)] mb-3">
@@ -429,7 +426,7 @@ export default function PlanPage() {
                       </div>
                     </div>
                   </div>
-                </HiveCard>
+                </Card>
               </motion.div>
             ))}
           </div>
@@ -455,19 +452,19 @@ export default function PlanPage() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4, delay: index * 0.1 }}
                   >
-                    <HiveCard variant="default" className="p-6">
+                    <Card variant="default" className="p-6">
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
                           <div className="flex items-center gap-3 mb-2">
                             <h3 className="text-lg font-semibold text-[var(--hive-text-primary)]">
                               {update.title}
                             </h3>
-                            <HiveBadge 
+                            <Badge 
                               variant={update.status === 'in-progress' ? 'warning' : 'secondary'} 
                               size="sm"
                             >
                               {update.status.replace('-', ' ')}
-                            </HiveBadge>
+                            </Badge>
                           </div>
                           <p className="text-[var(--hive-text-secondary)] mb-2">
                             {update.description}
@@ -477,7 +474,7 @@ export default function PlanPage() {
                           </div>
                         </div>
                       </div>
-                    </HiveCard>
+                    </Card>
                   </motion.div>
                 ))}
               </div>
@@ -503,7 +500,7 @@ export default function PlanPage() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.4, delay: index * 0.1 }}
               >
-                <HiveCard 
+                <Card 
                   variant={phase.status === 'active' ? 'gold-accent' : 'elevated'} 
                   className="p-6"
                 >
@@ -538,7 +535,7 @@ export default function PlanPage() {
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
-                      <HiveBadge 
+                      <Badge 
                         variant={
                           phase.status === 'completed' ? 'success' :
                           phase.status === 'active' ? 'warning' : 'secondary'
@@ -546,7 +543,7 @@ export default function PlanPage() {
                         size="lg"
                       >
                         {phase.status}
-                      </HiveBadge>
+                      </Badge>
                       {activePhase === phase.id ? (
                         <ChevronDown className="w-5 h-5 text-[var(--hive-text-muted)]" />
                       ) : (
@@ -602,7 +599,7 @@ export default function PlanPage() {
                       </motion.div>
                     )}
                   </AnimatePresence>
-                </HiveCard>
+                </Card>
               </motion.div>
             ))}
           </div>
@@ -615,7 +612,7 @@ export default function PlanPage() {
           transition={{ duration: 0.6, delay: 0.3 }}
           className="grid md:grid-cols-3 gap-6"
         >
-          <HiveCard variant="elevated" className="p-6 text-center">
+          <Card variant="elevated" className="p-6 text-center">
             <div className="w-12 h-12 bg-[var(--hive-status-success)]/20 rounded-full flex items-center justify-center mx-auto mb-4">
               <CheckCircle className="w-6 h-6 text-[var(--hive-status-success)]" />
             </div>
@@ -623,9 +620,9 @@ export default function PlanPage() {
               {currentSprintItems.filter(item => item.status === 'completed').length}
             </div>
             <div className="text-[var(--hive-text-secondary)]">Completed</div>
-          </HiveCard>
+          </Card>
 
-          <HiveCard variant="elevated" className="p-6 text-center">
+          <Card variant="elevated" className="p-6 text-center">
             <div className="w-12 h-12 bg-[var(--hive-brand-primary)]/20 rounded-full flex items-center justify-center mx-auto mb-4">
               <Clock className="w-6 h-6 text-[var(--hive-brand-primary)]" />
             </div>
@@ -633,9 +630,9 @@ export default function PlanPage() {
               {currentSprintItems.filter(item => item.status === 'in-progress').length}
             </div>
             <div className="text-[var(--hive-text-secondary)]">In Progress</div>
-          </HiveCard>
+          </Card>
 
-          <HiveCard variant="elevated" className="p-6 text-center">
+          <Card variant="elevated" className="p-6 text-center">
             <div className="w-12 h-12 bg-[var(--hive-status-error)]/20 rounded-full flex items-center justify-center mx-auto mb-4">
               <AlertTriangle className="w-6 h-6 text-[var(--hive-status-error)]" />
             </div>
@@ -643,7 +640,7 @@ export default function PlanPage() {
               {currentSprintItems.filter(item => item.status === 'blocked').length}
             </div>
             <div className="text-[var(--hive-text-secondary)]">Blocked</div>
-          </HiveCard>
+          </Card>
         </motion.section>
 
         {/* Next Actions */}
@@ -652,7 +649,7 @@ export default function PlanPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
         >
-          <HiveCard variant="announcement" className="p-6">
+          <Card variant="announcement" className="p-6">
             <div className="flex items-start gap-4">
               <div className="w-10 h-10 bg-[var(--hive-brand-primary)]/20 rounded-full flex items-center justify-center">
                 <Zap className="w-5 h-5 text-[var(--hive-brand-primary)]" />
@@ -668,13 +665,13 @@ export default function PlanPage() {
                   <li>• Run end-to-end testing of complete user journey</li>
                 </ul>
                 <div className="mt-4">
-                  <HiveButton variant="premium" size="md">
+                  <Button variant="premium" size="md">
                     Start Next Sprint Planning
-                  </HiveButton>
+                  </Button>
                 </div>
               </div>
             </div>
-          </HiveCard>
+          </Card>
         </motion.section>
       </div>
     </div>

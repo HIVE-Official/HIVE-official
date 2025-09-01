@@ -1,11 +1,11 @@
 import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
-declare const enhancedTypographyVariants: (props?: {
-    variant?: "hero" | "gradient" | "neon" | "energy" | "sticker" | "handwritten" | "chalk";
-    size?: "sm" | "lg" | "xl" | "base" | "xs" | "2xl" | "3xl" | "4xl";
-    weight?: "bold" | "black" | "medium" | "normal" | "semibold";
-    spacing?: "normal" | "tight" | "wide" | "wider" | "widest";
-} & import("class-variance-authority/types").ClassProp) => string;
+declare const enhancedTypographyVariants: (props?: ({
+    variant?: "hero" | "gradient" | "neon" | "energy" | "sticker" | "handwritten" | "chalk" | null | undefined;
+    size?: "xs" | "sm" | "lg" | "xl" | "base" | "2xl" | "3xl" | "4xl" | null | undefined;
+    weight?: "bold" | "black" | "medium" | "normal" | "semibold" | null | undefined;
+    spacing?: "normal" | "tight" | "wide" | "wider" | "widest" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
 export interface EnhancedTypographyProps extends React.HTMLAttributes<HTMLElement>, VariantProps<typeof enhancedTypographyVariants> {
     as?: React.ElementType;
     children: React.ReactNode;

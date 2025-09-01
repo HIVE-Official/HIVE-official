@@ -241,7 +241,7 @@ export const AllVariants: Story = {
 
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <Button variant="accent">
+                <Button variant="secondary">
                   <Settings className="w-4 h-4 mr-2" />
                   Reset Settings
                 </Button>
@@ -256,7 +256,7 @@ export const AllVariants: Story = {
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                   <AlertDialogCancel>Keep Settings</AlertDialogCancel>
-                  <AlertDialogAction variant="accent">
+                  <AlertDialogAction variant="secondary">
                     Reset to Defaults
                   </AlertDialogAction>
                 </AlertDialogFooter>
@@ -372,7 +372,7 @@ export const AlertDialogVariants: Story = {
           {/* Success Dialog */}
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button variant="accent" className="w-full">
+              <Button variant="secondary" className="w-full">
                 Success Dialog
               </Button>
             </AlertDialogTrigger>
@@ -385,7 +385,7 @@ export const AlertDialogVariants: Story = {
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Maybe Later</AlertDialogCancel>
-                <AlertDialogAction variant="accent">
+                <AlertDialogAction variant="secondary">
                   Complete Action
                 </AlertDialogAction>
               </AlertDialogFooter>

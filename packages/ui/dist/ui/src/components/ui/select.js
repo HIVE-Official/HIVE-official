@@ -2,7 +2,7 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import * as React from "react";
 import { cva } from "class-variance-authority";
-import { cn } from "../../lib/utils";
+import { cn } from "../../lib/utils.js";
 // HIVE Select System - Semantic Token Perfection
 // Zero hardcoded values - complete semantic token usage
 const selectVariants = cva(
@@ -110,5 +110,5 @@ export const SelectTrigger = Select;
 export const SelectContent = ({ children }) => _jsx(_Fragment, { children: children });
 export const SelectValue = ({ placeholder }) => _jsx("option", { value: "", disabled: true, children: placeholder });
 export const SelectItem = ({ value, children, disabled }) => (_jsx("option", { value: value, disabled: disabled, children: children }));
-export { Select, Select as SelectEnhanced, MultiSelect, SelectGroup, selectVariants };
+export { Select, Select as Select, MultiSelect, SelectGroup, selectVariants };
 //# sourceMappingURL=select.js.map

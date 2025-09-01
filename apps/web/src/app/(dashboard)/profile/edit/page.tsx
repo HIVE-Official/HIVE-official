@@ -6,21 +6,19 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import { 
-  PageContainer
-} from "@hive/ui";
+// PageContainer not available from @hive/ui";
 
 // Temporary components until @hive/ui exports are fixed
 const Input = ({ className, ...props }: React.InputHTMLAttributes<HTMLInputElement>) => (
   <input 
-    className={`w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${className || ''}`} 
+    className={`w-full px-3 py-2 border border-[var(--hive-border-default)] rounded-md bg-white text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${className || ''}`} 
     {...props} 
   />
 );
 
 const Textarea = ({ className, ...props }: React.TextareaHTMLAttributes<HTMLTextAreaElement>) => (
   <textarea 
-    className={`w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none ${className || ''}`} 
+    className={`w-full px-3 py-2 border border-[var(--hive-border-default)] rounded-md bg-white text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none ${className || ''}`} 
     {...props} 
   />
 );
@@ -32,8 +30,8 @@ const Button = ({ className, children, variant = 'default', ...props }: {
 } & React.ButtonHTMLAttributes<HTMLButtonElement>) => (
   <button 
     className={`px-4 py-2 rounded-md font-medium transition-colors ${
-      variant === 'primary' ? 'bg-blue-600 text-white hover:bg-blue-700' :
-      variant === 'ghost' ? 'bg-transparent text-gray-600 hover:bg-gray-100' :
+      variant === 'primary' ? 'bg-blue-600 text-[var(--hive-text-inverse)] hover:bg-blue-700' :
+      variant === 'ghost' ? 'bg-transparent text-[var(--hive-text-muted)] hover:bg-[var(--hive-background-secondary)]' :
       'bg-gray-200 text-gray-900 hover:bg-gray-300'
     } ${className || ''}`} 
     {...props} 
@@ -55,12 +53,12 @@ const Avatar = ({ className, children }: { className?: string; children?: React.
 );
 
 const Badge = ({ className, children }: { className?: string; children: React.ReactNode }) => (
-  <span className={`px-2 py-1 bg-gray-100 text-gray-800 rounded-full text-xs ${className || ''}`}>
+  <span className={`px-2 py-1 bg-[var(--hive-background-secondary)] text-gray-800 rounded-full text-xs ${className || ''}`}>
     {children}
   </span>
 );
 
-const HiveModal = ({ isOpen, children }: { isOpen: boolean; children: React.ReactNode }) => {
+const Modal = ({ isOpen, children }: { isOpen: boolean; children: React.ReactNode }) => {
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -324,28 +322,25 @@ export default function ProfileEditPageStorybook() {
 
   if (isLoading || !profile) {
     return (
-      <PageContainer title="Loading..." maxWidth="lg">
+      <div className="max-w-4xl mx-auto p-6">
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
             <div className="w-8 h-8 bg-hive-gold rounded-lg animate-pulse mx-auto mb-4" />
-            <p className="text-white">Loading your profile...</p>
+            <p className="text-[var(--hive-text-inverse)]">Loading your profile...</p>
           </div>
         </div>
-      </PageContainer>
+      </div>
     );
   }
 
   return (
     <ErrorBoundary>
-      {/* 🚀 **SOPHISTICATED PAGE CONTAINER** - From @hive/ui */}
-      <PageContainer
-        title="Edit Profile"
-        subtitle="Update your HIVE profile information"
-        breadcrumbs={[
-          { label: "Profile", href: "/profile" },
-          { label: "Edit Profile" }
-        ]}
-        actions={
+      <div className="max-w-6xl mx-auto p-6 pb-8">
+        <div className="mb-8 flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-foreground">Edit Profile</h1>
+            <p className="text-muted-foreground">Update your HIVE profile information</p>
+          </div>
           <div className="flex items-center gap-3">
             <Button
               variant="outline"
@@ -363,14 +358,12 @@ export default function ProfileEditPageStorybook() {
               {isUpdating ? 'Saving...' : saveSuccess ? 'Saved!' : 'Save Changes'}
             </Button>
           </div>
-        }
-        maxWidth="4xl"
-      >
+        </div>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* 📷 **SOPHISTICATED AVATAR SECTION** */}
           <div className="lg:col-span-1">
             <Card className="p-6">
-              <h2 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
+              <h2 className="text-xl font-semibold text-[var(--hive-text-inverse)] mb-4 flex items-center gap-2">
                 <Camera className="h-5 w-5 text-hive-gold" />
                 Profile Photo
               </h2>
@@ -417,7 +410,7 @@ export default function ProfileEditPageStorybook() {
             
             {/* Basic Information */}
             <Card className="p-6">
-              <h2 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
+              <h2 className="text-xl font-semibold text-[var(--hive-text-inverse)] mb-4 flex items-center gap-2">
                 <User className="h-5 w-5 text-hive-gold" />
                 Basic Information
               </h2>
@@ -486,7 +479,7 @@ export default function ProfileEditPageStorybook() {
 
             {/* 🎓 **UB ACADEMIC INFORMATION** */}
             <Card className="p-6">
-              <h2 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
+              <h2 className="text-xl font-semibold text-[var(--hive-text-inverse)] mb-4 flex items-center gap-2">
                 <GraduationCap className="h-5 w-5 text-hive-gold" />
                 Academic Information
               </h2>
@@ -532,7 +525,7 @@ export default function ProfileEditPageStorybook() {
 
             {/* 🏠 **UB HOUSING INFORMATION** */}
             <Card className="p-6">
-              <h2 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
+              <h2 className="text-xl font-semibold text-[var(--hive-text-inverse)] mb-4 flex items-center gap-2">
                 <MapPin className="h-5 w-5 text-hive-gold" />
                 Housing & Location
               </h2>
@@ -563,7 +556,7 @@ export default function ProfileEditPageStorybook() {
         </div>
 
         {/* 📷 **SOPHISTICATED AVATAR UPLOAD MODAL** */}
-        <HiveModal
+        <Modal
           open={showAvatarModal}
           onClose={() => setShowAvatarModal(false)}
           title="Update Profile Photo"
@@ -577,13 +570,13 @@ export default function ProfileEditPageStorybook() {
                 const file = e.target.files?.[0];
                 if (file) handleAvatarUpload(file);
               }}
-              className="w-full p-3 border border-gray-600 rounded-lg bg-gray-800 text-white"
+              className="w-full p-3 border border-gray-600 rounded-lg bg-gray-800 text-[var(--hive-text-inverse)]"
             />
             <p className="text-sm text-gray-400">
               Recommended: Square image, at least 400x400 pixels
             </p>
           </div>
-        </HiveModal>
+        </Modal>
 
         {/* 🗂️ **DATA LISTS FOR ENHANCED UX** */}
         <datalist id="majors-list">
@@ -609,7 +602,7 @@ export default function ProfileEditPageStorybook() {
             <option key={pronoun} value={pronoun} />
           ))}
         </datalist>
-      </PageContainer>
+      </div>
     </ErrorBoundary>
   );
 }
@@ -630,8 +623,8 @@ export default function ProfileEditPageStorybook() {
  * 
  * AFTER (@hive/ui components):
  * - FormField component with automatic accessibility
- * - InputEnhanced with sophisticated interactions
- * - HiveModal with liquid motion animations
+ * - Input with sophisticated interactions
+ * - Modal with liquid motion animations
  * - Consistent design tokens throughout
  * - Built-in validation and error states
  * 

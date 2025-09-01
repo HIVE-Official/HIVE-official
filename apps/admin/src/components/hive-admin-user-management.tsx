@@ -513,16 +513,6 @@ export const HiveAdminUserManagement: React.FC<HiveAdminUserManagementProps> = (
   const [statusFilter, setStatusFilter] = useState<UserStatus | 'all'>('all');
   // const [showBulkActions, setShowBulkActions] = useState(false);
 
-  // Feature flag check
-  if (!enableFeatureFlag) {
-    return (
-      <div className="text-center py-8">
-        <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-        <p className="text-gray-400">User management system is not available</p>
-      </div>
-    );
-  }
-
   const loadUsers = useCallback(async () => {
     if (!admin) return;
 
@@ -551,6 +541,16 @@ export const HiveAdminUserManagement: React.FC<HiveAdminUserManagementProps> = (
   useEffect(() => {
     loadUsers();
   }, [loadUsers]);
+
+  // Feature flag check
+  if (!enableFeatureFlag) {
+    return (
+      <div className="text-center py-8">
+        <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+        <p className="text-gray-400">User management system is not available</p>
+      </div>
+    );
+  }
 
   const filteredUsers = users.filter(user => {
     const matchesSearch = searchTerm === '' || 

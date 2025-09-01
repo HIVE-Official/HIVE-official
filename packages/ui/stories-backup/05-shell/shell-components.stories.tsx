@@ -12,8 +12,12 @@ import {
 } from '../../components/shell';
 import { Button } from '../../atomic/atoms/button-enhanced';
 
-const meta: Meta = {
+// Mock component for Storybook CSF compliance
+const ShellComponents = () => <div>Shell Components</div>;
+
+const meta: Meta<typeof ShellComponents> = {
   title: '05-Shell/Shell Components',
+  component: ShellComponents,
   parameters: {
     layout: 'fullscreen',
     docs: {

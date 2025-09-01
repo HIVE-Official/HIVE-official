@@ -61,7 +61,7 @@ export default function ModerationPage() {
     
   };
 
-  const handleReject = async (photoId: string, reason: string = 'Violates community guidelines') => {
+  const handleReject = async (photoId: string, _reason: string = 'Violates community guidelines') => {
     setReviewingId(photoId);
     
     // Simulate API call

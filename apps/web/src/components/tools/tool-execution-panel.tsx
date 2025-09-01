@@ -11,6 +11,7 @@ import {
   Settings,
   Clock,
   Cpu,
+  Memory,
   CheckCircle,
   XCircle,
   AlertTriangle,
@@ -284,7 +285,7 @@ export function ToolExecutionPanel({
               <Code className="h-5 w-5 text-hive-obsidian" />
             </div>
             <div>
-              <h3 className="font-semibold text-white">{tool.name}</h3>
+              <h3 className="font-semibold text-[var(--hive-text-inverse)]">{tool.name}</h3>
               <p className="text-sm text-hive-text-mutedLight">
                 {tool.language} • v{tool.version}
               </p>
@@ -338,7 +339,7 @@ export function ToolExecutionPanel({
         {isExecuting && (
           <div className="space-y-2">
             <div className="flex items-center justify-between text-sm">
-              <span className="text-white">Executing...</span>
+              <span className="text-[var(--hive-text-inverse)]">Executing...</span>
               <span className="text-hive-text-mutedLight">
                 {executionId}
               </span>
@@ -378,7 +379,7 @@ export function ToolExecutionPanel({
               <div className="space-y-4">
                 {Object.entries(tool.schema.inputs).map(([key, definition]) => (
                   <div key={key}>
-                    <Label className="text-white flex items-center space-x-2">
+                    <Label className="text-[var(--hive-text-inverse)] flex items-center space-x-2">
                       <span>{key}</span>
                       {definition.required && (
                         <Badge variant="secondary" className="text-xs">Required</Badge>
@@ -418,14 +419,14 @@ export function ToolExecutionPanel({
                       <Clock className="h-4 w-4 text-blue-400" />
                       <span className="text-sm text-hive-text-mutedLight">Execution Time</span>
                     </div>
-                    <p className="text-lg font-semibold text-white">{result.executionTime}ms</p>
+                    <p className="text-lg font-semibold text-[var(--hive-text-inverse)]">{result.executionTime}ms</p>
                   </div>
                   <div className="bg-hive-background-tertiary rounded-lg p-3">
                     <div className="flex items-center space-x-2">
                       <Memory className="h-4 w-4 text-purple-400" />
                       <span className="text-sm text-hive-text-mutedLight">Memory Used</span>
                     </div>
-                    <p className="text-lg font-semibold text-white">
+                    <p className="text-lg font-semibold text-[var(--hive-text-inverse)]">
                       {(result.memoryUsed / 1024).toFixed(1)}KB
                     </p>
                   </div>
@@ -434,9 +435,9 @@ export function ToolExecutionPanel({
                 {/* Result Data */}
                 {result.success && result.result && (
                   <div>
-                    <Label className="text-white">Result</Label>
+                    <Label className="text-[var(--hive-text-inverse)]">Result</Label>
                     <div className="mt-1 bg-hive-background-tertiary rounded-lg p-4">
-                      <pre className="text-sm text-white overflow-x-auto">
+                      <pre className="text-sm text-[var(--hive-text-inverse)] overflow-x-auto">
                         {JSON.stringify(result.result, null, 2)}
                       </pre>
                     </div>
@@ -493,7 +494,7 @@ export function ToolExecutionPanel({
                         <XCircle className="h-4 w-4 text-red-400" />
                       }
                       <div>
-                        <p className="text-sm text-white">
+                        <p className="text-sm text-[var(--hive-text-inverse)]">
                           {exec.success ? 'Success' : 'Failed'}
                         </p>
                         <p className="text-xs text-hive-text-mutedLight">

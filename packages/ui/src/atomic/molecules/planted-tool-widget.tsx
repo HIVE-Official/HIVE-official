@@ -468,7 +468,7 @@ export const PlantedToolWidget: React.FC<PlantedToolWidgetProps> = ({
         <motion.button
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
-          onClick={(e) => {
+          onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
             e.stopPropagation();
             primaryAction.action();
           }}

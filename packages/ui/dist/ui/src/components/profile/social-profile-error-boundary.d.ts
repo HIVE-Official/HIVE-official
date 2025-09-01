@@ -24,7 +24,7 @@ export declare class SocialProfileErrorBoundary extends Component<Props, State> 
     componentDidCatch(error: Error, errorInfo: ErrorInfo): void;
     handleRetry: () => void;
     handleReset: () => void;
-    render(): string | number | bigint | boolean | Iterable<React.ReactNode> | Promise<React.AwaitedReactNode> | import("react/jsx-runtime").JSX.Element;
+    render(): string | number | bigint | boolean | Iterable<React.ReactNode> | Promise<React.AwaitedReactNode> | import("react/jsx-runtime").JSX.Element | null | undefined;
 }
 export declare function withSocialProfileErrorBoundary<P extends object>(Component: React.ComponentType<P>, context?: string, fallback?: ReactNode): {
     (props: P): import("react/jsx-runtime").JSX.Element;

@@ -1,7 +1,7 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useEffect, useRef } from 'react';
-import { cn } from '../../lib/utils';
+import { cn } from '../../lib/utils.js';
 // Custom hook for advanced viewport detection
 function useAdvancedViewport() {
     const [viewport, setViewport] = useState({
@@ -211,7 +211,7 @@ export const ResponsiveLayout = ({ children, strategy = 'mobile-first', contentD
             ...(enableLayoutShiftPrevention && {
                 containIntrinsicSize: 'auto 100vh'
             })
-        }, children: [_jsx("div", { className: contentClasses, children: children }), process.env.NODE_ENV === 'development' && (_jsxs("div", { className: "fixed bottom-4 right-4 bg-black/80 text-white text-xs p-2 rounded font-mono z-50", children: [_jsxs("div", { children: ["VP: ", viewport.width, "\u00D7", viewport.height] }), _jsxs("div", { children: ["Device: ", viewport.isMobile ? 'Mobile' : viewport.isTablet ? 'Tablet' : 'Desktop'] }), _jsxs("div", { children: ["Orientation: ", viewport.orientation] }), _jsxs("div", { children: ["Touch: ", viewport.touchCapable ? 'Yes' : 'No'] }), _jsxs("div", { children: ["Notch: ", viewport.hasNotch ? 'Yes' : 'No'] }), _jsxs("div", { children: ["Shifts: ", layoutShifts.toFixed(3)] }), campusContext && (_jsxs("div", { children: ["Network: ", campusContext.networkQuality] }))] }))] }));
+        }, children: [_jsx("div", { className: contentClasses, children: children }), process.env.NODE_ENV === 'development' && (_jsxs("div", { className: "fixed bottom-4 right-4 bg-black/80 text-[var(--hive-text-inverse)] text-xs p-2 rounded font-mono z-50", children: [_jsxs("div", { children: ["VP: ", viewport.width, "\u00D7", viewport.height] }), _jsxs("div", { children: ["Device: ", viewport.isMobile ? 'Mobile' : viewport.isTablet ? 'Tablet' : 'Desktop'] }), _jsxs("div", { children: ["Orientation: ", viewport.orientation] }), _jsxs("div", { children: ["Touch: ", viewport.touchCapable ? 'Yes' : 'No'] }), _jsxs("div", { children: ["Notch: ", viewport.hasNotch ? 'Yes' : 'No'] }), _jsxs("div", { children: ["Shifts: ", layoutShifts.toFixed(3)] }), campusContext && (_jsxs("div", { children: ["Network: ", campusContext.networkQuality] }))] }))] }));
 };
 // Export utilities for other components
 export { useAdvancedViewport, calculateDynamicSpacing, calculateMaxWidth };

@@ -2,8 +2,8 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import React from 'react';
 import { cva } from 'class-variance-authority';
-import { cn } from '../../lib/utils';
-import { ProfileStatistic } from '../atoms/profile-statistic';
+import { cn } from '../../lib/utils.js';
+import { ProfileStatistic } from '../atoms/profile-statistic.js';
 import { Users, Zap, BookOpen, Star, TrendingUp, Award, Calendar } from 'lucide-react';
 const profileStatsVariants = cva("flex transition-all duration-200", {
     variants: {
@@ -136,7 +136,7 @@ export function ProfileStats({ stats, priority = ['spacesJoined', 'spacesActive'
                 onClick: interactive && onStatClick ? () => onStatClick(key, value) : undefined
             };
         })
-            .filter(Boolean);
+            .filter((stat) => stat !== null);
     }, [stats, priority, maxStats, interactive, onStatClick, changes]);
     // Determine stat size based on layout
     const statSize = React.useMemo(() => {

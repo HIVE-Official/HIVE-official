@@ -1,7 +1,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { Input } from '../../ui/input';
 import { Label } from '../../ui/label';
-import { useStandardElementStyles, useStandardElementBehavior } from '../../hooks/use-standard-element-styles';
+import { useStandardElementStyles, useStandardElementBehavior } from '../../hooks/use-standard-element-styles.js';
 export const TextInputRenderer = ({ element, config, value = '', onChange, readOnly = false, runtimeContext }) => {
     // Use standard style system (flexible input, consistent output)
     const { classes, styles } = useStandardElementStyles(config.style);

@@ -7,7 +7,16 @@ import { SpacesDiscoveryStep } from '../../components/onboarding/spaces-discover
 import { Button } from '../../components/button'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '../../components/card'
 
-const meta: Meta = {
+// Create a component wrapper for the story
+const OnboardingInterface = () => (
+  <div className="p-6 space-y-8">
+    <h2 className="text-2xl font-semibold">Onboarding Interface</h2>
+    <p className="text-muted-foreground">Complete onboarding flow for new HIVE users</p>
+  </div>
+);
+
+const meta: Meta<typeof OnboardingInterface> = {
+  component: OnboardingInterface,
   title: '🎭 Interfaces/Onboarding',
   parameters: {
     docs: {
@@ -278,7 +287,7 @@ export const CompleteFlow: Story = {
                 </p>
               </div>
 
-              <Card variant="accent" padding="lg" className="max-w-md mx-auto">
+              <Card variant="secondary" padding="lg" className="max-w-md mx-auto">
                 <CardHeader>
                   <CardTitle>Your Setup Complete</CardTitle>
                   <CardDescription>

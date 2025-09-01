@@ -1,145 +1,39 @@
-import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { jsx as _jsx } from "react/jsx-runtime";
 import React from 'react';
+import { cn } from '../lib/utils.js';
 import { cva } from 'class-variance-authority';
-import { motion } from './framer-motion-proxy';
-import { cn } from '../lib/utils';
-import { getMotionProps } from '../lib/motion-utils';
-import { HiveMagneticHover } from './hive-magnetic-interactions';
-import { liquidFlow, liquidMetalPerformance, liquidMetalUtils } from '../motion/hive-liquid-metal';
-import { getInteractiveA11yProps, getTestProps } from '../lib/accessibility-foundation';
-import { responsiveSpace, touchTargets } from '../lib/responsive-foundation';
-import { componentBase } from '../lib/component-foundation';
-// HIVE Card variants - Premium black/white/gold aesthetics with standardized foundation
-const hiveCardVariants = cva(
-// Base styles - sophisticated card design with accessibility and mobile support
-cn(componentBase.container, "relative overflow-hidden", touchTargets.comfortable, "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--hive-brand-primary)]/30 focus-visible:ring-offset-2"), {
+const hiveCardVariants = cva('rounded-lg border bg-card text-card-foreground shadow-sm', {
     variants: {
         variant: {
-            // Standard cards using semantic tokens - subtle borders, emphasis on background
-            "default": "bg-[var(--hive-background-elevated)] border border-[var(--hive-border-subtle)]/30 hover:border-[var(--hive-border-subtle)]/50 hover:bg-[var(--hive-background-elevated-hover)] hover:shadow-lg",
-            "elevated": "bg-[var(--hive-background-elevated-strong)] border border-[var(--hive-border-subtle)]/40 hover:border-[var(--hive-border-subtle)]/60 hover:bg-[var(--hive-background-elevated-strong-hover)] hover:shadow-xl shadow-lg",
-            "minimal": "bg-[var(--hive-background-elevated)] border border-[var(--hive-border-subtle)]/20 hover:border-[var(--hive-border-subtle)]/40 hover:bg-[var(--hive-background-elevated-hover)]",
-            // Gold accent cards - subtle borders with background emphasis
-            "gold-accent": "bg-[var(--hive-background-elevated)] border border-[var(--hive-brand-secondary)]/20 hover:border-[var(--hive-brand-secondary)]/30 hover:bg-[var(--hive-background-elevated-hover)] hover:shadow-lg",
-            "gold-featured": "bg-[var(--hive-background-elevated-strong)] border border-[var(--hive-brand-secondary)]/30 hover:border-[var(--hive-brand-secondary)]/40 hover:bg-[var(--hive-background-elevated-strong-hover)] hover:shadow-xl",
-            "gold-premium": "bg-[var(--hive-background-elevated-strong)] border border-[var(--hive-brand-secondary)]/30 hover:border-[var(--hive-brand-secondary)]/40 hover:bg-[var(--hive-background-elevated-strong-hover)] hover:shadow-xl",
-            // Special variants - subtle borders with background emphasis
-            "builder": "bg-[var(--hive-background-elevated-strong)] border border-[var(--hive-brand-secondary)]/25 hover:border-[var(--hive-brand-secondary)]/35 hover:bg-[var(--hive-background-elevated-strong-hover)] hover:shadow-lg relative before:absolute before:top-0 before:left-0 before:w-1 before:h-full before:bg-[var(--hive-brand-primary)]",
-            "student": "bg-[var(--hive-background-elevated)] border border-[var(--hive-border-subtle)]/25 hover:border-[var(--hive-border-subtle)]/45 hover:bg-[var(--hive-background-elevated-hover)] hover:shadow-lg",
-            "space": "bg-[var(--hive-background-elevated-strong)] border border-[var(--hive-border-subtle)]/30 hover:border-[var(--hive-border-subtle)]/50 hover:bg-[var(--hive-background-elevated-strong-hover)] hover:shadow-xl backdrop-blur-sm",
-            "tool": "bg-[var(--hive-background-elevated)] border border-[var(--hive-border-subtle)]/25 hover:border-[var(--hive-brand-secondary)]/30 hover:bg-[var(--hive-background-elevated-hover)] hover:shadow-lg",
-            // Status cards using semantic status tokens - subtle borders
-            "online": "bg-[var(--hive-background-elevated)] border border-[var(--hive-status-success)]/15 hover:border-[var(--hive-status-success)]/25 hover:bg-[var(--hive-background-elevated-hover)] hover:shadow-lg hover:shadow-[var(--hive-shadow-emerald-glow)]",
-            "building": "bg-[var(--hive-background-elevated)] border border-[var(--hive-status-info)]/15 hover:border-[var(--hive-status-info)]/25 hover:bg-[var(--hive-background-elevated-hover)] hover:shadow-lg hover:shadow-[var(--hive-status-info)]/20",
-            "studying": "bg-[var(--hive-background-elevated)] border border-[var(--hive-status-info)]/15 hover:border-[var(--hive-status-info)]/25 hover:bg-[var(--hive-background-elevated-hover)] hover:shadow-lg hover:shadow-[var(--hive-status-info)]/20",
-            // Interactive cards using semantic tokens - subtle borders, background emphasis
-            "clickable": "bg-[var(--hive-background-elevated)] border border-[var(--hive-border-subtle)]/25 hover:border-[var(--hive-border-subtle)]/45 hover:bg-[var(--hive-background-elevated-hover)] hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] cursor-pointer",
-            "selectable": "bg-[var(--hive-background-elevated)] border border-[var(--hive-border-subtle)]/25 hover:border-[var(--hive-brand-secondary)]/30 hover:bg-[var(--hive-background-elevated-hover)] hover:shadow-lg cursor-pointer transition-all",
-            "selected": "bg-[var(--hive-background-elevated-strong)] border border-[var(--hive-brand-secondary)]/40 shadow-lg",
-            // Content cards using semantic tokens - subtle borders, background emphasis  
-            "post": "bg-[var(--hive-background-elevated)] border border-[var(--hive-border-subtle)]/20 hover:border-[var(--hive-border-subtle)]/40 hover:bg-[var(--hive-background-elevated-hover)] hover:shadow-md",
-            "announcement": "bg-[var(--hive-background-elevated-strong)] border border-[var(--hive-brand-secondary)]/30 shadow-lg",
-            "featured-post": "bg-[var(--hive-background-elevated-strong)] border border-[var(--hive-brand-secondary)]/30 hover:border-[var(--hive-brand-secondary)]/40 hover:bg-[var(--hive-background-elevated-strong-hover)] hover:shadow-lg",
+            default: 'border-border',
+            ghost: 'border-transparent shadow-none',
+            outline: 'border-border bg-transparent shadow-none',
+            elevated: 'border-transparent shadow-md hover:shadow-lg transition-shadow',
         },
         size: {
-            "compact": responsiveSpace({ size: 'xs' }),
-            "sm": responsiveSpace({ size: 'sm' }),
-            "default": responsiveSpace({ size: 'md' }),
-            "lg": responsiveSpace({ size: 'lg' }),
-            "xl": responsiveSpace({ size: 'xl' }),
-        },
-        rounded: {
-            "sm": "rounded-[var(--hive-radius-xl)]", // Heavy radius even on small
-            "default": "rounded-[var(--hive-radius-2xl)]", // Premium heavy radius 
-            "lg": "rounded-[var(--hive-radius-3xl)]", // Ultra heavy for luxury
-            "full": "rounded-[var(--hive-radius-3xl)]", // Maximum luxury radius
-        },
-        shadow: {
-            "none": "",
-            "sm": "shadow-sm",
-            "default": "shadow-md",
-            "lg": "shadow-lg",
-            "xl": "shadow-xl shadow-black/25",
+            sm: 'p-4',
+            md: 'p-6',
+            lg: 'p-8',
         },
     },
     defaultVariants: {
-        variant: "default",
-        size: "sm",
-        rounded: "default",
-        shadow: "none",
+        variant: 'default',
+        size: 'md',
     },
 });
-const HiveCard = React.forwardRef(({ className, variant, size, rounded, shadow, interactive = false, selected = false, goldAccent = false, magneticHover = true, magneticIntensity = 'subtle', animateEntrance = false, cascadeIndex, loading = false, children, onClick, 'aria-label': ariaLabel, 'aria-describedby': ariaDescribedby, 'data-testid': testId, ...props }, ref) => {
-    // Auto-adjust variant based on props
-    let finalVariant = variant;
-    if (selected && !variant)
-        finalVariant = "selected";
-    if (interactive && !variant)
-        finalVariant = "clickable";
-    if (goldAccent && !variant)
-        finalVariant = "gold-accent";
-    // Determine if card should have enhanced interactions
-    const isPremiumCard = finalVariant?.includes('gold') || finalVariant === 'builder' || finalVariant === 'selected';
-    const shouldUseMagneticHover = magneticHover && (interactive || isPremiumCard);
-    // Enhanced motion with accessibility considerations
-    const cardMotionProps = shouldUseMagneticHover ? {
-        whileHover: loading ? {} : {
-            y: -2,
-            scale: 1.01,
-            transition: liquidMetalUtils.createSpringTransition('light', 'balanced', 'balanced')
-        },
-        whileTap: (interactive && !loading) ? {
-            scale: 0.99,
-            transition: liquidMetalUtils.createSpringTransition('standard', 'firm', 'tight')
-        } : undefined
-    } : {};
-    // Accessibility props
-    const a11yProps = interactive ? getInteractiveA11yProps('button', ariaLabel) : {};
-    const testingProps = getTestProps(testId, 'HiveCard');
-    // Entrance animation for cascade effects
-    const entranceProps = animateEntrance ? {
-        variants: liquidFlow,
-        initial: "hidden",
-        animate: "visible",
-        custom: cascadeIndex || 0
-    } : {};
-    // Loading overlay component
-    const LoadingOverlay = loading ? (_jsx("div", { className: "absolute inset-0 bg-[var(--hive-background-primary)]/50 backdrop-blur-sm flex items-center justify-center z-10", children: _jsx("div", { className: "h-4 w-4 animate-spin border-2 border-[var(--hive-brand-primary)] border-t-transparent rounded-full" }) })) : null;
-    const CardComponent = (_jsxs(motion.div, { className: cn(hiveCardVariants({
-            variant: finalVariant,
-            size,
-            rounded,
-            shadow,
-            className
-        }), loading && 'pointer-events-none', interactive && 'cursor-pointer'), ref: ref, onClick: loading ? undefined : onClick, style: liquidMetalPerformance.gpuLayer, tabIndex: interactive ? 0 : undefined, onKeyDown: interactive ? (e) => {
-            if ((e.key === 'Enter' || e.key === ' ') && onClick && !loading) {
-                e.preventDefault();
-                onClick(e);
-            }
-        } : undefined, ...cardMotionProps, ...entranceProps, ...a11yProps, ...testingProps, ...getMotionProps(props), children: [LoadingOverlay, children] }));
-    // Enhanced magnetic hover for premium cards
-    if (shouldUseMagneticHover && isPremiumCard) {
-        return (_jsx(HiveMagneticHover, { intensity: magneticIntensity, disabled: !interactive, children: CardComponent }));
-    }
-    return CardComponent;
+const HiveCard = React.forwardRef(({ className, variant, size, ...props }, ref) => {
+    return (_jsx("div", { ref: ref, className: cn(hiveCardVariants({ variant, size }), className), ...props }));
 });
-HiveCard.displayName = "HiveCard";
-// HIVE Card Header Component
-const HiveCardHeader = React.forwardRef(({ className, ...props }, ref) => (_jsx("div", { ref: ref, className: cn("flex flex-col space-y-1.5 p-0 pb-4", className), ...props })));
-HiveCardHeader.displayName = "HiveCardHeader";
-// HIVE Card Title Component  
-const HiveCardTitle = React.forwardRef(({ className, ...props }, ref) => (_jsx("h3", { ref: ref, className: cn("text-lg font-semibold leading-none tracking-tight text-[var(--hive-text-primary)]", className), ...props })));
-HiveCardTitle.displayName = "HiveCardTitle";
-// HIVE Card Description Component
-const HiveCardDescription = React.forwardRef(({ className, ...props }, ref) => (_jsx("p", { ref: ref, className: cn("text-sm text-[var(--hive-text-secondary)]", className), ...props })));
-HiveCardDescription.displayName = "HiveCardDescription";
-// HIVE Card Content Component
-const HiveCardContent = React.forwardRef(({ className, ...props }, ref) => (_jsx("div", { ref: ref, className: cn("p-0", className), ...props })));
-HiveCardContent.displayName = "HiveCardContent";
-// HIVE Card Footer Component
-const HiveCardFooter = React.forwardRef(({ className, ...props }, ref) => (_jsx("div", { ref: ref, className: cn("flex items-center p-0 pt-4", className), ...props })));
-HiveCardFooter.displayName = "HiveCardFooter";
-// Export all HIVE card components
-// Export only HIVE branded components - no aliases to avoid conflicts
-export { HiveCard, hiveCardVariants, HiveCardHeader, HiveCardTitle, HiveCardDescription, HiveCardContent, HiveCardFooter };
+HiveCard.displayName = 'HiveCard';
+const HiveCardHeader = React.forwardRef(({ className, ...props }, ref) => (_jsx("div", { ref: ref, className: cn('flex flex-col space-y-1.5', className), ...props })));
+HiveCardHeader.displayName = 'HiveCardHeader';
+const HiveCardTitle = React.forwardRef(({ className, ...props }, ref) => (_jsx("h3", { ref: ref, className: cn('text-2xl font-semibold leading-none tracking-tight', className), ...props })));
+HiveCardTitle.displayName = 'HiveCardTitle';
+const HiveCardDescription = React.forwardRef(({ className, ...props }, ref) => (_jsx("p", { ref: ref, className: cn('text-sm text-muted-foreground', className), ...props })));
+HiveCardDescription.displayName = 'HiveCardDescription';
+const HiveCardContent = React.forwardRef(({ className, ...props }, ref) => (_jsx("div", { ref: ref, className: cn('pt-0', className), ...props })));
+HiveCardContent.displayName = 'HiveCardContent';
+const HiveCardFooter = React.forwardRef(({ className, ...props }, ref) => (_jsx("div", { ref: ref, className: cn('flex items-center pt-0', className), ...props })));
+HiveCardFooter.displayName = 'HiveCardFooter';
+export { HiveCard, HiveCardHeader, HiveCardFooter, HiveCardTitle, HiveCardDescription, HiveCardContent, hiveCardVariants, };
 //# sourceMappingURL=hive-card.js.map

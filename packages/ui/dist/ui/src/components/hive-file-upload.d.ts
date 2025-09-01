@@ -1,10 +1,10 @@
 import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
-declare const hiveFileUploadVariants: (props?: {
-    variant?: "default" | "minimal" | "premium";
-    state?: "error" | "success" | "idle" | "dragOver" | "uploading";
-    size?: "default" | "sm" | "lg";
-} & import("class-variance-authority/types").ClassProp) => string;
+declare const hiveFileUploadVariants: (props?: ({
+    variant?: "default" | "minimal" | "premium" | null | undefined;
+    state?: "error" | "success" | "idle" | "dragOver" | "uploading" | null | undefined;
+    size?: "sm" | "default" | "lg" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
 export interface FileUploadItem {
     id: string;
     file: File;

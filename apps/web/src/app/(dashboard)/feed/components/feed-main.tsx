@@ -6,11 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Plus,
   Search, 
-  Filter, 
   Settings,
-  TrendingUp,
-  Clock,
-  Star,
   MessageSquare,
   Zap,
   Calendar,
@@ -22,37 +18,24 @@ import {
   Eye,
   Pin,
   Bookmark,
-  Flag,
-  ExternalLink,
   MapPin,
   Bell,
   Activity,
   Target,
   Award,
-  ChevronRight
+  ChevronRight,
+  TrendingUp
 } from 'lucide-react';
 
 // HIVE UI Components
 import { 
-  Button,
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
+  Button, 
+  Card, CardContent, CardHeader, CardTitle,
   Badge,
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
   Input,
-  Separator,
-  Avatar,
-  AvatarFallback,
-  AvatarImage
+  Avatar, AvatarFallback, AvatarImage,
+  useUnifiedAuth
 } from '@hive/ui';
-
-// Hooks
-import { useHiveAuth } from '@hive/ui';
 import { useFeedSync, useRealtimeNotifications } from '@/hooks/use-cross-slice-sync';
 
 // Types
@@ -128,28 +111,28 @@ interface FeedStats {
 }
 
 export function FeedMain() {
-  const { user } = useHiveAuth();
+  const { user } = useUnifiedAuth();
   const router = useRouter();
   
   // Real-time feed synchronization
   const { 
     isInitialized: feedSyncInitialized,
     feedUpdates,
-    socialActivity,
+    socialActivity: _socialActivity,
     announceSocialActivity
   } = useFeedSync();
   
-  const { notifications, unreadCount } = useRealtimeNotifications();
+  const { notifications: _notifications, unreadCount } = useRealtimeNotifications();
   
   const [isLoading, setIsLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'all' | 'following' | 'spaces' | 'events'>('all');
+  const [_activeTab, _setActiveTab] = useState<'all' | 'following' | 'spaces' | 'events'>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState<string>('all');
   
   // State for feed content
   const [feedPosts, setFeedPosts] = useState<FeedPost[]>([]);
-  const [campusEvents, setCampusEvents] = useState<CampusEvent[]>([]);
-  const [trendingTools, setTrendingTools] = useState<TrendingTool[]>([]);
+  const [campusEvents, _setCampusEvents] = useState<CampusEvent[]>([]);
+  const [trendingTools, _setTrendingTools] = useState<TrendingTool[]>([]);
   const [feedStats, setFeedStats] = useState<FeedStats>({
     todayPosts: 0,
     activeSpaces: 0,
@@ -161,6 +144,49 @@ export function FeedMain() {
 
   // Load feed data on component mount
   useEffect(() => {
+    const loadFeedData = async () => {
+      try {
+        setIsLoading(true);
+
+        // Mock feed data - would be fetched from APIs in production
+        const mockPosts: FeedPost[] = [
+          {
+            id: 'post-1',
+            type: 'post',
+            userId: 'user-123',
+            userName: 'Sarah Chen',
+            userHandle: '@sarahc_cs',
+            userAvatar: '/avatars/sarah.jpg',
+            spaceId: 'cs-major-lounge',
+            spaceName: 'CS Major Lounge',
+            spaceCategory: 'Academic',
+            content: {
+              text: 'Just finished my Operating Systems project! Built a custom shell with process management. The threading concepts finally clicked 🧠⚡',
+              title: 'OS Project Complete!'
+            },
+            stats: { likes: 24, comments: 8, shares: 3, views: 127 },
+            interactions: { liked: false, bookmarked: true, shared: false },
+            timestamp: '2 hours ago',
+            tags: ['CS', 'Operating Systems', 'Project']
+          },
+          // ... more mock posts
+        ];
+
+        setFeedPosts(mockPosts);
+        setFeedStats(prev => ({ 
+          ...prev, 
+          todayPosts: mockPosts.length,
+          activeSpaces: 12,
+          toolsShared: 8,
+          upcomingEvents: 5
+        }));
+      } catch (error) {
+        console.error('Error loading feed:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
     if (user) {
       loadFeedData();
     }
@@ -176,180 +202,6 @@ export function FeedMain() {
       }));
     }
   }, [feedSyncInitialized, feedUpdates, unreadCount]);
-
-  const loadFeedData = async () => {
-    try {
-      setIsLoading(true);
-
-      // Mock feed data - would be fetched from APIs in production
-      const mockPosts: FeedPost[] = [
-        {
-          id: 'post-1',
-          type: 'tool_share',
-          userId: 'user-123',
-          userName: 'Sarah Chen',
-          userHandle: 'sarahc',
-          spaceId: 'cs-major',
-          spaceName: 'Computer Science',
-          spaceCategory: 'UNI',
-          content: {
-            title: 'Just deployed Study Group Sign-up tool!',
-            text: 'Perfect for organizing our weekly Data Structures study sessions. Already got 15 sign-ups! 🚀',
-            toolId: 'tool-123',
-            toolName: 'Study Group Sign-up'
-          },
-          stats: { likes: 23, comments: 8, shares: 12, views: 127 },
-          interactions: { liked: false, bookmarked: true, shared: false },
-          timestamp: '2024-01-20T14:30:00Z',
-          tags: ['study', 'tools', 'collaboration']
-        },
-        {
-          id: 'post-2',
-          type: 'event',
-          userId: 'user-456',
-          userName: 'UB Robotics Club',
-          userHandle: 'ub_robotics',
-          spaceId: 'robotics-club',
-          spaceName: 'UB Robotics Club',
-          spaceCategory: 'STUDENT',
-          content: {
-            title: 'Robot Demo Day - This Friday!',
-            text: 'Come see what we\'ve been building this semester. Pizza and prizes!',
-            eventId: 'event-123',
-            eventName: 'Robot Demo Day',
-            eventDate: '2024-01-26T18:00:00Z'
-          },
-          stats: { likes: 45, comments: 12, shares: 22, views: 234 },
-          interactions: { liked: true, bookmarked: false, shared: false },
-          timestamp: '2024-01-20T10:15:00Z',
-          isPinned: true,
-          tags: ['robotics', 'demo', 'community']
-        },
-        {
-          id: 'post-3',
-          type: 'space_update',
-          userId: 'user-789',
-          userName: 'Mike Rodriguez',
-          userHandle: 'mikerod',
-          spaceId: 'ellicott-red-3',
-          spaceName: 'Ellicott Red 3rd Floor',
-          spaceCategory: 'REZ',
-          content: {
-            text: 'Successfully activated our floor space! 🎉 Now we can coordinate laundry schedules and plan our end-of-semester party.',
-            achievement: 'Space Activation'
-          },
-          stats: { likes: 18, comments: 6, shares: 4, views: 89 },
-          interactions: { liked: false, bookmarked: false, shared: false },
-          timestamp: '2024-01-19T20:45:00Z',
-          tags: ['dorm', 'community', 'activation']
-        },
-        {
-          id: 'post-4',
-          type: 'collaboration',
-          userId: 'user-101',
-          userName: 'Prof. Johnson',
-          userHandle: 'prof_johnson',
-          spaceId: 'cs-major',
-          spaceName: 'Computer Science',
-          spaceCategory: 'UNI',
-          content: {
-            title: 'Looking for project partners',
-            text: 'Senior capstone project on AI ethics. Need 2 more team members with strong writing skills.',
-            toolId: 'tool-456',
-            toolName: 'Project Team Matcher'
-          },
-          stats: { likes: 8, comments: 15, shares: 3, views: 67 },
-          interactions: { liked: false, bookmarked: true, shared: false },
-          timestamp: '2024-01-19T16:20:00Z',
-          tags: ['capstone', 'AI', 'teamwork']
-        },
-        {
-          id: 'post-5',
-          type: 'achievement',
-          userId: 'user-202',
-          userName: 'Alex Kim',
-          userHandle: 'alexk',
-          content: {
-            text: 'Just hit 500 total tool uses across campus! Thanks to everyone using the Course Rating Survey 📊',
-            achievement: 'Tool Impact Milestone',
-            toolName: 'Course Rating Survey'
-          },
-          stats: { likes: 34, comments: 9, shares: 7, views: 156 },
-          interactions: { liked: true, bookmarked: false, shared: false },
-          timestamp: '2024-01-19T14:10:00Z',
-          isPromoted: true,
-          tags: ['milestone', 'impact', 'community']
-        }
-      ];
-
-      const mockEvents: CampusEvent[] = [
-        {
-          id: 'event-1',
-          title: 'CS Career Fair Prep Workshop',
-          description: 'Resume review, interview tips, and networking strategies',
-          date: '2024-01-24',
-          time: '18:00',
-          location: 'Student Union 330',
-          spaceId: 'cs-major',
-          spaceName: 'Computer Science',
-          attendeeCount: 47,
-          isUserAttending: true,
-          category: 'career'
-        },
-        {
-          id: 'event-2',
-          title: 'Floor Game Night',
-          description: 'Board games, snacks, and floor bonding',
-          date: '2024-01-25',
-          time: '20:00',
-          location: 'Ellicott Red Common Room',
-          spaceId: 'ellicott-red-3',
-          spaceName: 'Ellicott Red 3rd Floor',
-          attendeeCount: 12,
-          isUserAttending: false,
-          category: 'social'
-        },
-        {
-          id: 'event-3',
-          title: 'Mental Health Workshop',
-          description: 'Stress management during finals season',
-          date: '2024-01-26',
-          time: '15:00',
-          location: 'Wellness Center',
-          spaceId: 'ub-wellness',
-          spaceName: 'UB Wellness Community',
-          attendeeCount: 23,
-          isUserAttending: false,
-          category: 'wellness'
-        }
-      ];
-
-      const mockTrendingTools: TrendingTool[] = [
-        { id: 'tool-t1', name: 'Study Buddy Finder', category: 'coordination', deployments: 22, rating: 4.8, recentUse: '2 min ago' },
-        { id: 'tool-t2', name: 'Course Rating Poll', category: 'polls', deployments: 18, rating: 4.6, recentUse: '5 min ago' },
-        { id: 'tool-t3', name: 'Event RSVP System', category: 'signups', deployments: 15, rating: 4.7, recentUse: '12 min ago' }
-      ];
-
-      const mockStats: FeedStats = {
-        todayPosts: 28,
-        activeSpaces: 12,
-        toolsShared: 8,
-        upcomingEvents: 5,
-        campusActivity: 47,
-        unreadNotifications: unreadCount
-      };
-
-      setFeedPosts(mockPosts);
-      setCampusEvents(mockEvents);
-      setTrendingTools(mockTrendingTools);
-      setFeedStats(mockStats);
-
-    } catch (error) {
-      console.error('Error loading feed data:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const handleLikePost = async (postId: string) => {
     setFeedPosts(prev => 
@@ -852,7 +704,7 @@ export function FeedMain() {
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                {trendingTools.map((tool, index) => (
+                {trendingTools.map((tool, _index) => (
                   <div
                     key={tool.id}
                     className="flex items-center justify-between p-2 rounded-lg hover:bg-muted/50 cursor-pointer transition-colors"

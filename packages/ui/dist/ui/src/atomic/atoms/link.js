@@ -1,7 +1,7 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from 'react';
-import { cn } from '../../lib/utils';
+import { cn } from '../../lib/utils.js';
 const linkVariants = {
     default: [
         'text-[var(--hive-brand-primary)]',
@@ -23,7 +23,7 @@ const linkVariants = {
     button: [
         'inline-flex items-center justify-center gap-2',
         'px-4 py-2 rounded-lg',
-        'bg-[var(--hive-brand-primary)] text-white font-medium',
+        'bg-[var(--hive-brand-primary)] text-[var(--hive-text-inverse)] font-medium',
         'hover:bg-[var(--hive-brand-secondary)]',
         'active:bg-[var(--hive-brand-primary)]',
         'transition-all duration-200 ease-out'

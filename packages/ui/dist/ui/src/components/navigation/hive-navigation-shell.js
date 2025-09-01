@@ -1,10 +1,10 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useMemo } from 'react';
-import { cn } from '../../lib/utils';
-import { semantic } from '../../../../tokens/src';
-import { NavigationProvider, useNavigation } from './hive-navigation-system';
-import { SidebarNavigation, TopbarNavigation, CommandNavigation, MinimalNavigation } from './hive-navigation-variants';
+import { cn } from '../../lib/utils.js';
+import { semantic } from '../../../../tokens/src/index.js';
+import { NavigationProvider, useNavigation } from './hive-navigation-system.js';
+import { SidebarNavigation, TopbarNavigation, CommandNavigation, MinimalNavigation } from './hive-navigation-variants.js';
 // ============================================================================
 // NAVIGATION RENDERER
 // ============================================================================
@@ -206,5 +206,5 @@ export const navigationPresets = {
 // ============================================================================
 // EXPORT EVERYTHING
 // ============================================================================
-export { NavigationProvider, useNavigation } from './hive-navigation-system';
+export { NavigationProvider, useNavigation } from './hive-navigation-system.js';
 //# sourceMappingURL=hive-navigation-shell.js.map

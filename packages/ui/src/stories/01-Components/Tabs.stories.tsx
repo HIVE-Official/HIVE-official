@@ -207,7 +207,7 @@ export const AllVariants: Story = {
                       <Filter className="w-4 h-4 mr-2" />
                       Filter
                     </Button>
-                    <Button variant="accent" size="sm">
+                    <Button variant="secondary" size="sm">
                       <Plus className="w-4 h-4 mr-2" />
                       New Post
                     </Button>
@@ -302,7 +302,7 @@ export const AllVariants: Story = {
                         </div>
                         <h4 className="font-medium text-white mb-1">{tool}</h4>
                         <p className="text-white/60 text-xs mb-3">Collaborative tool for study groups</p>
-                        <Button variant="accent" size="sm" className="w-full">Open Tool</Button>
+                        <Button variant="secondary" size="sm" className="w-full">Open Tool</Button>
                       </CardContent>
                     </Card>
                   ))}

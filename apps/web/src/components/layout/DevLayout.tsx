@@ -78,7 +78,7 @@ function DesktopDevNav() {
 						<Button 
 							variant='outline'
 							size="sm"
-							className="border-[var(--hive-brand-secondary)] text-[var(--hive-brand-secondary)] hover:bg-[var(--hive-brand-secondary)] hover:text-black transition-colors duration-[180ms]"
+							className="border-[var(--hive-brand-secondary)] text-[var(--hive-brand-secondary)] hover:bg-[var(--hive-brand-secondary)] hover:text-[var(--hive-text-primary)] transition-colors duration-[180ms]"
 						>
 							Create
 						</Button>

@@ -1,9 +1,9 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { cn } from '../../lib/utils';
-import { Card } from '../../components/ui/card';
-import { Text } from '../atoms/text';
-import { Badge } from '../atoms/badge';
+import { cn } from '../../lib/utils.js';
+import { Card } from '../../components/ui/card.js';
+import { Text } from '../atoms/text.js';
+import { Badge } from '../atoms/badge.js';
 export function StatCard({ title, value, description, trend, icon, variant = 'default', className }) {
     const getTrendColor = (direction) => {
         switch (direction) {
@@ -33,7 +33,7 @@ export function StatCard({ title, value, description, trend, icon, variant = 'de
 // Preset configurations for common use cases
 export const StatCardPresets = {
     // User engagement stats
-    UserStats: (props) => (_jsx(StatCard, { variant: "default", ...props })),
+    UserStats: (props) => (_jsx(StatCard, { variant: "detailed", ...props })),
     // Compact dashboard metrics
     Metric: (props) => (_jsx(StatCard, { variant: "compact", ...props })),
     // Analytics dashboard

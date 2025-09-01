@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState } from 'react';
-import { useAuth } from '@hive/ui';
+import { useQuery } from '@tanstack/react-query';
+import { useAuth, Badge } from '@hive/ui';
 import { ErrorBoundary } from '../../../components/error-boundary';
 import { 
   Sparkles, 
@@ -242,7 +243,7 @@ export default function RitualsPage() {
       <div className="min-h-screen bg-hive-background flex items-center justify-center p-6">
         <div className="text-center">
           <div className="w-12 h-12 bg-red-500 rounded-lg flex items-center justify-center mx-auto mb-4">
-            <Sparkles className="h-6 w-6 text-white" />
+            <Sparkles className="h-6 w-6 text-[var(--hive-text-inverse)]" />
           </div>
           <p className="text-hive-text-primary mb-2">Failed to load rituals</p>
           <p className="text-red-400 text-sm mb-4">{error.message}</p>
@@ -265,7 +266,7 @@ export default function RitualsPage() {
           <div className="max-w-7xl mx-auto px-6 py-8">
             <div className="flex items-center space-x-3 mb-4">
               <div className="w-10 h-10 bg-gradient-to-br from-purple-400 to-pink-400 rounded-xl flex items-center justify-center">
-                <Sparkles className="h-5 w-5 text-white" />
+                <Sparkles className="h-5 w-5 text-[var(--hive-text-inverse)]" />
               </div>
               <div>
                 <h1 className="text-2xl font-bold text-hive-text-primary">Campus Rituals</h1>
@@ -431,7 +432,7 @@ export default function RitualsPage() {
                       ) : ritual.status === 'active' ? (
                         <button 
                           onClick={() => handleJoinRitual(ritual.id)}
-                          className="w-full flex items-center justify-center space-x-2 px-4 py-2 bg-gradient-to-r from-hive-brand-secondary to-hive-brand-primary text-white rounded-lg hover:opacity-90 transition-opacity"
+                          className="w-full flex items-center justify-center space-x-2 px-4 py-2 bg-gradient-to-r from-hive-brand-secondary to-hive-brand-primary text-[var(--hive-text-inverse)] rounded-lg hover:opacity-90 transition-opacity"
                         >
                           <ArrowRight className="h-4 w-4" />
                           <span>Join Ritual</span>

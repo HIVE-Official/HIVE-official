@@ -75,3 +75,44 @@ export const HiveText = ({ children, className }: any) => React.createElement('d
 export const LoadingSpinner = ({ className }: any) => React.createElement('div', { className }, 'Loading...');
 export const ErrorBoundary = ({ children }: any) => children;
 export const useUnifiedAuth = () => ({ user: null, loading: false });
+
+// Auth components
+export const HiveAuthFlowEnhanced = ({ children, onAuthSuccess, initialStep, mockMode, ...props }: any) => 
+  React.createElement('div', props, 'Auth Flow Component');
+export const AuthProvider = ({ children }: any) => children;
+export const useAuthFlow = () => ({
+  state: { step: 'sign-in', email: '', loading: false, error: null, isNewUser: false },
+  setStep: () => {},
+  setEmail: () => {},
+  setLoading: () => {},
+  setError: () => {},
+  setIsNewUser: () => {},
+  goBack: () => {},
+  handleSignIn: async () => {},
+  handleSignUp: async () => {},
+  handleMagicLink: async () => {},
+  handleForgotPassword: async () => {}
+});
+
+// Auth types
+export type AuthStep = 'welcome' | 'sign-in' | 'sign-up' | 'forgot-password' | 'verify-email' | 'magic-link-sent' | 'onboarding';
+export interface AuthState {
+  step: AuthStep;
+  email: string;
+  loading: boolean;
+  error: string | null;
+  isNewUser: boolean;
+}
+export interface AuthContextType {
+  state: AuthState;
+  setStep: (step: AuthStep) => void;
+  setEmail: (email: string) => void;
+  setLoading: (loading: boolean) => void;
+  setError: (error: string | null) => void;
+  setIsNewUser: (isNewUser: boolean) => void;
+  goBack: () => void;
+  handleSignIn: (email: string, password?: string) => Promise<void>;
+  handleSignUp: (email: string, password: string, name: string) => Promise<void>;
+  handleMagicLink: (email: string) => Promise<void>;
+  handleForgotPassword: (email: string) => Promise<void>;
+}

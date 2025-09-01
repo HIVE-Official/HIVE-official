@@ -21,7 +21,7 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
   children?: React.ReactNode;
 }
 
-const badgeVariants = {
+export const badgeVariants = {
   // === CORE SYSTEM VARIANTS ===
   // GOLD OUTLINE ONLY (never fill) - Primary brand badge
   primary: 'bg-transparent text-[var(--hive-brand-secondary)] border-[var(--hive-brand-secondary)]',

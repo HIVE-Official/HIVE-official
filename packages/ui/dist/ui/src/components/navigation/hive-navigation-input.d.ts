@@ -1,9 +1,9 @@
 import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
-declare const hiveNavigationInputVariants: (props?: {
-    variant?: "default" | "minimal" | "command" | "premium";
-    size?: "default" | "sm" | "lg";
-} & import("class-variance-authority/types").ClassProp) => string;
+declare const hiveNavigationInputVariants: (props?: ({
+    variant?: "default" | "minimal" | "command" | "premium" | null | undefined;
+    size?: "sm" | "default" | "lg" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
 export interface HiveNavigationInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'>, VariantProps<typeof hiveNavigationInputVariants> {
     onSearch?: (query: string) => void;
     onClear?: () => void;

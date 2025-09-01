@@ -1,25 +1,25 @@
 import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
-declare const vercelButtonVariants: (props?: {
-    variant?: "primary" | "secondary" | "accent" | "ghost";
-    size?: "sm" | "md" | "lg" | "icon";
-} & import("class-variance-authority/types").ClassProp) => string;
-declare const appleButtonVariants: (props?: {
-    variant?: "primary" | "secondary" | "accent" | "destructive";
-    size?: "sm" | "md" | "lg" | "icon";
-} & import("class-variance-authority/types").ClassProp) => string;
-declare const campusButtonVariants: (props?: {
-    variant?: "subtle" | "energy" | "chill" | "hype";
-    size?: "sm" | "md" | "lg" | "xl" | "icon";
-} & import("class-variance-authority/types").ClassProp) => string;
-declare const techButtonVariants: (props?: {
-    variant?: "execute" | "terminal" | "system" | "debug";
-    size?: "sm" | "md" | "lg" | "icon" | "xs";
-} & import("class-variance-authority/types").ClassProp) => string;
-declare const socialButtonVariants: (props?: {
-    variant?: "share" | "connect" | "engage" | "react";
-    size?: "sm" | "md" | "lg" | "icon";
-} & import("class-variance-authority/types").ClassProp) => string;
+declare const vercelButtonVariants: (props?: ({
+    variant?: "primary" | "secondary" | "ghost" | "accent" | null | undefined;
+    size?: "sm" | "md" | "lg" | "icon" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
+declare const appleButtonVariants: (props?: ({
+    variant?: "primary" | "secondary" | "destructive" | "accent" | null | undefined;
+    size?: "sm" | "md" | "lg" | "icon" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
+declare const campusButtonVariants: (props?: ({
+    variant?: "subtle" | "energy" | "chill" | "hype" | null | undefined;
+    size?: "sm" | "md" | "lg" | "xl" | "icon" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
+declare const techButtonVariants: (props?: ({
+    variant?: "execute" | "terminal" | "system" | "debug" | null | undefined;
+    size?: "xs" | "sm" | "md" | "lg" | "icon" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
+declare const socialButtonVariants: (props?: ({
+    variant?: "share" | "connect" | "engage" | "react" | null | undefined;
+    size?: "sm" | "md" | "lg" | "icon" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
 interface BaseButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     asChild?: boolean;
     loading?: boolean;

@@ -48,7 +48,7 @@ function ErrorState({ error }: { error: Error }) {
     <div className="min-h-screen bg-black flex items-center justify-center">
       <div className="text-center max-w-md px-4">
         <AlertTriangle className="h-16 w-16 text-red-400 mx-auto mb-6" />
-        <h1 className="text-2xl font-bold text-white mb-4">
+        <h1 className="text-2xl font-bold text-[var(--hive-text-inverse)] mb-4">
           {isNotFound ? "Space Not Found" : "Something Went Wrong"}
         </h1>
         <p className="text-neutral-400 mb-8">
@@ -135,7 +135,7 @@ export default function SpaceDetailPage({
         <div className="container mx-auto max-w-7xl px-4 py-3 sm:px-6 lg:px-8">
           <Link
             href="/spaces"
-            className="inline-flex items-center text-neutral-400 hover:text-white transition-colors"
+            className="inline-flex items-center text-neutral-400 hover:text-[var(--hive-text-inverse)] transition-colors"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Spaces
@@ -165,7 +165,7 @@ export default function SpaceDetailPage({
           <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6">
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-3 mb-3">
-                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white truncate">
+                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[var(--hive-text-inverse)] truncate">
                   {space.name}
                 </h1>
                 <SpaceStatusBadge status={space.status} />
@@ -200,7 +200,7 @@ export default function SpaceDetailPage({
           {/* Sidebar */}
           <div className="space-y-6 lg:col-span-1">
             <div className="rounded-xl bg-white/[0.02] border border-white/[0.06] p-6">
-              <h2 className="text-lg font-semibold text-white mb-4">About</h2>
+              <h2 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4">About</h2>
               <p className="text-neutral-300 leading-relaxed">
                 {space.description || "No description available."}
               </p>
@@ -214,12 +214,12 @@ export default function SpaceDetailPage({
               <div className="space-y-3 text-sm">
                 <div className="flex items-center justify-between">
                   <span className="text-neutral-400">Type</span>
-                  <span className="text-white capitalize">{space.type}</span>
+                  <span className="text-[var(--hive-text-inverse)] capitalize">{space.type}</span>
                 </div>
                 {space.tags.length > 0 && (
                   <div className="flex items-center justify-between">
                     <span className="text-neutral-400">Category</span>
-                    <span className="text-white capitalize">
+                    <span className="text-[var(--hive-text-inverse)] capitalize">
                       {space.tags[0].sub_type}
                     </span>
                   </div>

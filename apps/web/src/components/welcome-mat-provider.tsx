@@ -1,7 +1,15 @@
 "use client";
 
 import { useSession } from "../hooks/use-session";
-import { WelcomeMat, useWelcomeMat } from "@hive/ui";
+// import { WelcomeMat, useWelcomeMat } from "../../../../packages/ui/src/components/welcome/welcome-mat";
+
+// Temporary stub implementation
+const WelcomeMat = ({ children }: { children: React.ReactNode }) => <>{children}</>;
+const useWelcomeMat = () => ({ 
+  isVisible: false, 
+  dismissWelcomeMat: () => {}, 
+  hasCheckedStorage: true 
+});
 
 interface WelcomeMatProviderProps {
   children: React.ReactNode;

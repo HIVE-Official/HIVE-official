@@ -2,7 +2,7 @@
  * Backward-compatible auth hook
  * Provides the same interface as existing hooks while using UnifiedAuthContext
  */
-import { useUnifiedAuth } from '../contexts/unified-auth-context';
+import { useUnifiedAuth } from '../contexts/unified-auth-context.js';
 // Helper function for converting HiveUser to legacy User interface
 const convertToLegacyUser = (hiveUser) => {
     if (!hiveUser)
@@ -29,11 +29,11 @@ export function useAuth() {
         user: convertToLegacyUser(unifiedAuth.user),
         loading: unifiedAuth.isLoading,
         error: unifiedAuth.error,
-        signIn: unifiedAuth.login,
+        signIn: unifiedAuth.signInWithMagicLink,
         signOut: unifiedAuth.logout,
-        signUp: async (email, password, displayName) => {
-            // For now, just do a regular login
-            await unifiedAuth.login(email, password);
+        signUp: async (email, _password, _displayName) => {
+            // For now, signUp isn't implemented - would need magic link flow
+            throw new Error('SignUp not implemented - use magic link authentication');
         },
         getAuthToken: unifiedAuth.getAuthToken,
     };

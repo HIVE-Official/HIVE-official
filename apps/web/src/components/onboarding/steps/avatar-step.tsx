@@ -57,9 +57,9 @@ export function OnboardingAvatarStep() {
 
   const uploadFile = async (file: File): Promise<string> => {
     const formData = new FormData();
-    formData.append('file', file);
+    formData.append('photo', file); // Changed from 'file' to 'photo' to match profile endpoint
 
-    const response = await fetch('/api/auth/upload-avatar', {
+    const response = await fetch('/api/profile/upload-photo', {
       method: 'POST',
       body: formData,
     });

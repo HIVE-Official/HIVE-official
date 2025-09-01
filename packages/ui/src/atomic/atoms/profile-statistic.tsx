@@ -3,7 +3,8 @@
 import React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../lib/utils';
-import { TrendingUp, TrendingDown, Minus, LucideIcon } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
+import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 
 const profileStatisticVariants = cva(
   "flex flex-col items-center justify-center text-center transition-all duration-200",

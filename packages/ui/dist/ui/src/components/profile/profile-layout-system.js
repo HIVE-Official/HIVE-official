@@ -4,7 +4,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
  * Prevents overlapping and ensures proper component positioning
  */
 import * as React from 'react';
-import { cn } from '../../lib/utils';
+import { cn } from '../../lib/utils.js';
 // === LAYOUT VARIANTS ===
 const layoutVariants = {
     header: {
@@ -88,7 +88,7 @@ ProfileGrid.displayName = 'ProfileGrid';
 // === PROFILE SECTION ===  
 export const ProfileSection = React.forwardRef(({ title, description, actions, collapsible = false, defaultExpanded = true, children, className }, ref) => {
     const [expanded, setExpanded] = React.useState(defaultExpanded);
-    return (_jsxs("div", { ref: ref, className: cn('space-y-3', className), children: [(title || description || actions) && (_jsxs("div", { className: "flex items-start justify-between", children: [_jsxs("div", { className: "flex-1 min-w-0", children: [title && (_jsxs("div", { className: "flex items-center gap-2", children: [_jsx("h3", { className: "text-lg font-semibold text-gray-900 truncate", children: title }), collapsible && (_jsx("button", { onClick: () => setExpanded(!expanded), className: "p-1 hover:bg-gray-100 rounded transition-colors", "aria-label": expanded ? 'Collapse section' : 'Expand section', children: _jsx("svg", { className: cn('w-4 h-4 transition-transform', expanded ? 'rotate-180' : ''), fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", children: _jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 2, d: "M19 9l-7 7-7-7" }) }) }))] })), description && (_jsx("p", { className: "text-sm text-gray-600 mt-1", children: description }))] }), actions && (_jsx("div", { className: "flex-shrink-0 ml-4", children: actions }))] })), (!collapsible || expanded) && (_jsx("div", { className: "space-y-4", children: children }))] }));
+    return (_jsxs("div", { ref: ref, className: cn('space-y-3', className), children: [(title || description || actions) && (_jsxs("div", { className: "flex items-start justify-between", children: [_jsxs("div", { className: "flex-1 min-w-0", children: [title && (_jsxs("div", { className: "flex items-center gap-2", children: [_jsx("h3", { className: "text-lg font-semibold text-gray-900 truncate", children: title }), collapsible && (_jsx("button", { onClick: () => setExpanded(!expanded), className: "p-1 hover:bg-[var(--hive-background-secondary)] rounded transition-colors", "aria-label": expanded ? 'Collapse section' : 'Expand section', children: _jsx("svg", { className: cn('w-4 h-4 transition-transform', expanded ? 'rotate-180' : ''), fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", children: _jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 2, d: "M19 9l-7 7-7-7" }) }) }))] })), description && (_jsx("p", { className: "text-sm text-[var(--hive-text-muted)] mt-1", children: description }))] }), actions && (_jsx("div", { className: "flex-shrink-0 ml-4", children: actions }))] })), (!collapsible || expanded) && (_jsx("div", { className: "space-y-4", children: children }))] }));
 });
 ProfileSection.displayName = 'ProfileSection';
 // === RESPONSIVE PROFILE WRAPPER ===

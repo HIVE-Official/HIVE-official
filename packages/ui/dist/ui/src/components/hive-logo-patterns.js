@@ -2,7 +2,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { motion } from 'framer-motion';
 import { cva } from 'class-variance-authority';
-import { cn } from '../../lib/utils';
+import { cn } from '../lib/utils.js';
 // HIVE Logo Pattern & Texture System
 // Creates backgrounds, borders, and decorative elements using the HIVE hexagon
 const patternVariants = cva("relative overflow-hidden", {

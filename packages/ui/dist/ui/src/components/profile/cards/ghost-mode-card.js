@@ -1,13 +1,13 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useState, useCallback, useMemo } from 'react';
-import { motion, AnimatePresence } from '../../framer-motion-proxy';
-import { cn } from '../../../lib/utils';
-import { Card, CardContent, CardHeader } from '../../ui/card';
-import { Button } from '../../ui/button';
-import { Badge } from '../../ui/badge';
-import { Switch } from '../../ui/switch';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../../dialog';
+import { motion, AnimatePresence } from '../../framer-motion-proxy.js';
+import { cn } from '../../../lib/utils.js';
+import { Card, CardContent, CardHeader } from '../../atomic/ui/card';
+import { Button } from '../../atomic/atoms/button-enhanced';
+import { Badge } from '../../atomic/atoms/badge';
+import { Switch } from '../../ui/switch.js';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../../dialog.js';
 import { Eye, EyeOff, Settings, Clock, Users, MapPin, Bell, Activity, Timer, UserX, Info, Moon, Zap } from 'lucide-react';
 // Ghost Mode Level Configuration
 const ghostModeConfig = {
@@ -87,8 +87,8 @@ function QuickPreset({ preset, isActive, onClick }) {
     const config = presetConfig[preset];
     const Icon = config.icon;
     return (_jsx(motion.button, { whileHover: { scale: 1.02 }, whileTap: { scale: 0.98 }, className: cn('p-2 rounded-lg border transition-all text-left', isActive
-            ? `${config.color} text-white border-transparent shadow-md`
-            : 'bg-white border-[var(--hive-border-primary)] hover:border-[var(--hive-brand-primary)]'), onClick: onClick, children: _jsxs("div", { className: "flex items-center gap-2", children: [_jsx(Icon, { className: cn('w-4 h-4', isActive ? 'text-white' : config.textColor) }), _jsx("span", { className: cn('text-sm font-medium', isActive ? 'text-white' : 'text-[var(--hive-text-primary)]'), children: config.label })] }) }));
+            ? `${config.color} text-[var(--hive-text-inverse)] border-transparent shadow-md`
+            : 'bg-white border-[var(--hive-border-primary)] hover:border-[var(--hive-brand-primary)]'), onClick: onClick, children: _jsxs("div", { className: "flex items-center gap-2", children: [_jsx(Icon, { className: cn('w-4 h-4', isActive ? 'text-[var(--hive-text-inverse)]' : config.textColor) }), _jsx("span", { className: cn('text-sm font-medium', isActive ? 'text-[var(--hive-text-inverse)]' : 'text-[var(--hive-text-primary)]'), children: config.label })] }) }));
 }
 // Privacy Status Indicator
 function PrivacyStatusIndicator({ settings }) {
@@ -131,7 +131,7 @@ function GhostModeSettingsDialog({ settings, isOpen, onOpenChange, onSettingsCha
                                         const Icon = config.icon;
                                         return (_jsx("button", { className: cn('w-full p-3 rounded-lg border text-left transition-all', settings.level === level
                                                 ? 'border-[var(--hive-brand-primary)] bg-[var(--hive-background-tertiary)]'
-                                                : 'border-[var(--hive-border-primary)] hover:border-[var(--hive-brand-primary)]'), onClick: () => handleSettingChange('level', level), children: _jsxs("div", { className: "flex items-center gap-3", children: [_jsx("div", { className: cn('w-8 h-8 rounded-full flex items-center justify-center', config.color), children: _jsx(Icon, { className: "w-4 h-4 text-white" }) }), _jsxs("div", { children: [_jsx("div", { className: "font-medium text-[var(--hive-text-primary)]", children: config.label }), _jsx("div", { className: "text-sm text-[var(--hive-text-muted)]", children: config.description })] })] }) }, level));
+                                                : 'border-[var(--hive-border-primary)] hover:border-[var(--hive-brand-primary)]'), onClick: () => handleSettingChange('level', level), children: _jsxs("div", { className: "flex items-center gap-3", children: [_jsx("div", { className: cn('w-8 h-8 rounded-full flex items-center justify-center', config.color), children: _jsx(Icon, { className: "w-4 h-4 text-[var(--hive-text-inverse)]" }) }), _jsxs("div", { children: [_jsx("div", { className: "font-medium text-[var(--hive-text-primary)]", children: config.label }), _jsx("div", { className: "text-sm text-[var(--hive-text-muted)]", children: config.description })] })] }) }, level));
                                     }) })] }), _jsxs("div", { className: "space-y-3", children: [_jsx("h4", { className: "font-medium text-[var(--hive-text-primary)]", children: "What to Hide" }), _jsx("div", { className: "space-y-2", children: [
                                         { key: 'hideOnlineStatus', label: 'Online Status', icon: Activity },
                                         { key: 'hideActivity', label: 'Recent Activity', icon: Clock },

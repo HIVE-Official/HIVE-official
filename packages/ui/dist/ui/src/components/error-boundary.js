@@ -88,7 +88,7 @@ function DefaultErrorFallback({ error, onRetry, errorId, }) {
             case "info":
                 return "text-blue-600 border-blue-200 bg-blue-50";
             default:
-                return "text-gray-600 border-gray-200 bg-gray-50";
+                return "text-[var(--hive-text-muted)] border-gray-200 bg-gray-50";
         }
     };
     return (_jsx("div", { className: "min-h-50 flex items-center justify-center p-4", children: _jsxs("div", { className: "max-w-md w-full bg-[var(--hive-background-primary)]/20 backdrop-blur-xl border border-red-500/20 rounded-xl p-6 text-center space-y-4", children: [_jsx("div", { className: "mx-auto w-16 h-16 bg-red-500/20 backdrop-blur-xl rounded-full flex items-center justify-center border border-red-500/30 mb-4", children: _jsx("span", { className: "text-2xl", children: getIconForSeverity(error.severity) }) }), _jsx("h3", { className: "text-lg font-semibold text-[var(--hive-text-primary)]", children: "Something went wrong" }), _jsx("p", { className: "text-sm leading-relaxed text-[var(--hive-text-primary)]/70", children: error.message }), _jsxs("div", { className: "space-y-2 pt-2", children: [error.action === "retry" && error.isRetryable && (_jsx("button", { onClick: onRetry, className: "w-full px-4 py-2 bg-red-500/20 border border-red-500/30 rounded-lg hover:bg-red-500/30 transition-colors font-medium text-[var(--hive-text-primary)]", children: SimpleErrorHandler.getActionButtonText(error) })), error.action === "contact-support" && (_jsx("button", { onClick: () => {

@@ -91,7 +91,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="success">✅ VARIANTS</Badge>
+            <Badge variant="emerald">✅ VARIANTS</Badge>
             Radio Variants - Perfect Semantic Token Usage
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -112,7 +112,7 @@ export const CompleteShowcase: Story = {
               <Radio
                 label="Success Selection"
                 description="Indicates confirmed or validated choices"
-                variant="success"
+                variant="emerald"
                 checked={true}
                 name="variant-demo-2"
                 value="success"
@@ -130,7 +130,7 @@ export const CompleteShowcase: Story = {
               <Radio
                 label="Warning Selection"
                 description="Options that require attention or caution"
-                variant="warning"
+                variant="gold"
                 checked={true}
                 name="variant-demo-4"
                 value="warning"
@@ -318,7 +318,7 @@ export const CompleteShowcase: Story = {
                   label="Hadley Village"
                   description="Apartment-style living with full kitchens and living areas. Perfect for upper-class students seeking independence."
                   icon={<span className="text-lg">🏠</span>}
-                  badge={<Badge variant="success" size="sm">Apartment</Badge>}
+                  badge={<Badge variant="emerald" size="sm">Apartment</Badge>}
                 />
                 <RadioCard
                   value="governors"
@@ -445,21 +445,21 @@ export const CompleteShowcase: Story = {
                   label="Section A1 - Dr. Smith"
                   description="MWF 10:00am - 10:50am • Davis Hall 101 • Available spots: 5/35"
                   icon={<span className="text-lg">👨‍🏫</span>}
-                  badge={<Badge variant="warning" size="sm">Almost Full</Badge>}
+                  badge={<Badge variant="gold" size="sm">Almost Full</Badge>}
                 />
                 <RadioCard
                   value="section-a2"
                   label="Section A2 - Dr. Smith"
                   description="TTh 2:00pm - 3:20pm • Knox Hall 20 • Available spots: 12/35"
                   icon={<span className="text-lg">👨‍🏫</span>}
-                  badge={<Badge variant="success" size="sm">Available</Badge>}
+                  badge={<Badge variant="emerald" size="sm">Available</Badge>}
                 />
                 <RadioCard
                   value="section-b1"
                   label="Section B1 - Prof. Johnson"
                   description="MWF 1:00pm - 1:50pm • Capen Hall 134 • Available spots: 8/35"
                   icon={<span className="text-lg">👩‍🏫</span>}
-                  badge={<Badge variant="success" size="sm">Available</Badge>}
+                  badge={<Badge variant="emerald" size="sm">Available</Badge>}
                 />
                 <RadioCard
                   value="section-b2"
@@ -498,7 +498,7 @@ export const CompleteShowcase: Story = {
                   label="14 Meals Per Week"
                   description="14 meals per week plus 300 dining dollars. Good balance for students who occasionally eat off-campus."
                   icon={<span className="text-lg">📅</span>}
-                  badge={<Badge variant="success" size="sm">Balanced</Badge>}
+                  badge={<Badge variant="emerald" size="sm">Balanced</Badge>}
                 />
                 <RadioCard
                   value="10-meals"
@@ -573,7 +573,7 @@ export const CompleteShowcase: Story = {
                   label="Yes, I will attend"
                   description="Participate in the full graduation ceremony with cap and gown. Includes professional photos and diploma presentation."
                   icon={<span className="text-lg">🎓</span>}
-                  badge={<Badge variant="success" size="sm">Traditional</Badge>}
+                  badge={<Badge variant="emerald" size="sm">Traditional</Badge>}
                 />
                 <RadioCard
                   value="virtual"

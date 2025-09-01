@@ -307,7 +307,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="success">🎯 HIVELAB WIDGET SYSTEM</Badge>
+            <Badge variant="emerald">🎯 HIVELAB WIDGET SYSTEM</Badge>
             Builder Tools & Innovation
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">

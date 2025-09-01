@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Button, Card, Badge, HiveModal, HiveInput } from "@hive/ui";
+import { Button, Card, Badge, Modal, Input } from "@hive/ui";
 import { 
   Search, 
   Filter, 
@@ -399,7 +399,7 @@ export function SmartSpaceDiscovery({
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
           <div className="w-8 h-8 bg-hive-gold rounded-lg animate-pulse mx-auto mb-4" />
-          <p className="text-white">Discovering spaces for you...</p>
+          <p className="text-[var(--hive-text-inverse)]">Discovering spaces for you...</p>
         </div>
       </div>
     );
@@ -410,7 +410,7 @@ export function SmartSpaceDiscovery({
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-white mb-2 flex items-center">
+          <h2 className="text-2xl font-bold text-[var(--hive-text-inverse)] mb-2 flex items-center">
             <Brain className="h-8 w-8 text-hive-gold mr-3" />
             Smart Space Discovery
           </h2>
@@ -454,7 +454,7 @@ export function SmartSpaceDiscovery({
               className={`flex items-center space-x-2 px-4 py-2 rounded-md transition-colors whitespace-nowrap ${
                 discoveryMode === mode.id
                   ? 'bg-hive-gold text-hive-obsidian font-medium'
-                  : 'text-zinc-400 hover:text-white'
+                  : 'text-zinc-400 hover:text-[var(--hive-text-inverse)]'
               }`}
             >
               <Icon className="h-4 w-4" />
@@ -479,7 +479,7 @@ export function SmartSpaceDiscovery({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search spaces by name, description, or tags..."
-              className="pl-10 pr-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-400 focus:border-hive-gold focus:outline-none w-full"
+              className="pl-10 pr-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-[var(--hive-text-inverse)] placeholder-zinc-400 focus:border-hive-gold focus:outline-none w-full"
             />
           </div>
           
@@ -490,7 +490,7 @@ export function SmartSpaceDiscovery({
               // Randomize the order for discovery
               setFilteredSpaces(prev => [...prev].sort(() => Math.random() - 0.5));
             }}
-            className="text-zinc-400 hover:text-white"
+            className="text-zinc-400 hover:text-[var(--hive-text-inverse)]"
           >
             <Shuffle className="h-4 w-4 mr-2" />
             Shuffle
@@ -501,11 +501,11 @@ export function SmartSpaceDiscovery({
           <Card className="p-4 bg-zinc-800/30 border-zinc-700">
             <div className="flex items-center space-x-4">
               <div>
-                <label className="text-sm font-medium text-white mb-2 block">Category</label>
+                <label className="text-sm font-medium text-[var(--hive-text-inverse)] mb-2 block">Category</label>
                 <select
                   value={categoryFilter}
                   onChange={(e) => setCategoryFilter(e.target.value as FilterCategory)}
-                  className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-white text-sm focus:border-hive-gold focus:outline-none"
+                  className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-[var(--hive-text-inverse)] text-sm focus:border-hive-gold focus:outline-none"
                 >
                   <option value="all">All Categories</option>
                   <option value="academic">Academic</option>
@@ -525,7 +525,7 @@ export function SmartSpaceDiscovery({
           <div className="flex items-center space-x-3">
             <Lightbulb className="h-8 w-8 text-hive-gold" />
             <div>
-              <h3 className="font-semibold text-white">AI Recommendations</h3>
+              <h3 className="font-semibold text-[var(--hive-text-inverse)]">AI Recommendations</h3>
               <p className="text-sm text-zinc-300">
                 Based on your {userMajor} major{userInterests.length > 0 && `, interests: ${userInterests.slice(0, 3).join(', ')}`}, 
                 and activity patterns, we found {filteredSpaces.length} spaces that match your profile.
@@ -556,7 +556,7 @@ export function SmartSpaceDiscovery({
                     <CategoryIcon className="h-6 w-6 text-hive-gold" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-white mb-1 line-clamp-1">{space.name}</h3>
+                    <h3 className="font-semibold text-[var(--hive-text-inverse)] mb-1 line-clamp-1">{space.name}</h3>
                     <p className="text-sm text-zinc-400 line-clamp-2 mb-2">{space.description}</p>
                     <div className="flex items-center space-x-2">
                       <Badge variant="skill-tag" className="text-xs capitalize">
@@ -581,12 +581,12 @@ export function SmartSpaceDiscovery({
               <div className="grid grid-cols-2 gap-3 mb-4 text-sm">
                 <div className="flex items-center space-x-2">
                   <Users className="h-4 w-4 text-zinc-400" />
-                  <span className="text-white">{space.memberCount}</span>
+                  <span className="text-[var(--hive-text-inverse)]">{space.memberCount}</span>
                   <span className="text-zinc-400">members</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Activity className="h-4 w-4 text-zinc-400" />
-                  <span className="text-white">{space.stats.weeklyActivity}%</span>
+                  <span className="text-[var(--hive-text-inverse)]">{space.stats.weeklyActivity}%</span>
                   <span className="text-zinc-400">active</span>
                 </div>
               </div>
@@ -663,7 +663,7 @@ export function SmartSpaceDiscovery({
                   
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center space-x-3 mb-2">
-                      <h3 className="text-lg font-semibold text-white">{space.name}</h3>
+                      <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)]">{space.name}</h3>
                       {discoveryMode === 'ai-recommended' && space.matchScore && (
                         <div className="flex items-center space-x-1">
                           <Sparkles className="h-4 w-4 text-hive-gold" />
@@ -741,7 +741,7 @@ export function SmartSpaceDiscovery({
       {filteredSpaces.length === 0 && (
         <Card className="p-12 bg-zinc-800/50 border-zinc-700 text-center">
           <Search className="h-16 w-16 text-zinc-600 mx-auto mb-4" />
-          <h3 className="text-xl font-semibold text-white mb-2">No spaces found</h3>
+          <h3 className="text-xl font-semibold text-[var(--hive-text-inverse)] mb-2">No spaces found</h3>
           <p className="text-zinc-400 mb-6">
             Try adjusting your search terms or filters to discover more spaces.
           </p>
@@ -759,7 +759,7 @@ export function SmartSpaceDiscovery({
       )}
 
       {/* Space Preview Modal */}
-      <HiveModal
+      <Modal
         isOpen={showSpacePreview}
         onClose={() => setShowSpacePreview(false)}
         title={selectedSpace?.name || ''}
@@ -778,7 +778,7 @@ export function SmartSpaceDiscovery({
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center space-x-3 mb-2">
-                    <h2 className="text-xl font-bold text-white">{selectedSpace.name}</h2>
+                    <h2 className="text-xl font-bold text-[var(--hive-text-inverse)]">{selectedSpace.name}</h2>
                     {selectedSpace.matchScore && (
                       <div className="flex items-center space-x-1">
                         <Sparkles className="h-4 w-4 text-hive-gold" />
@@ -808,7 +808,7 @@ export function SmartSpaceDiscovery({
                 <div className="flex items-start space-x-3">
                   <Brain className="h-5 w-5 text-hive-gold mt-0.5" />
                   <div>
-                    <h4 className="font-medium text-white mb-1">Why we recommend this space</h4>
+                    <h4 className="font-medium text-[var(--hive-text-inverse)] mb-1">Why we recommend this space</h4>
                     <p className="text-sm text-zinc-300">{selectedSpace.recommendationReason}</p>
                   </div>
                 </div>
@@ -818,36 +818,36 @@ export function SmartSpaceDiscovery({
             {/* Stats Grid */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div className="text-center p-3 bg-zinc-800/30 rounded-lg">
-                <div className="text-2xl font-bold text-white">{selectedSpace.memberCount}</div>
+                <div className="text-2xl font-bold text-[var(--hive-text-inverse)]">{selectedSpace.memberCount}</div>
                 <div className="text-sm text-zinc-400">Members</div>
               </div>
               <div className="text-center p-3 bg-zinc-800/30 rounded-lg">
-                <div className="text-2xl font-bold text-white">{selectedSpace.stats.weeklyActivity}%</div>
+                <div className="text-2xl font-bold text-[var(--hive-text-inverse)]">{selectedSpace.stats.weeklyActivity}%</div>
                 <div className="text-sm text-zinc-400">Active</div>
               </div>
               <div className="text-center p-3 bg-zinc-800/30 rounded-lg">
-                <div className="text-2xl font-bold text-white">{selectedSpace.stats.upcomingEvents}</div>
+                <div className="text-2xl font-bold text-[var(--hive-text-inverse)]">{selectedSpace.stats.upcomingEvents}</div>
                 <div className="text-sm text-zinc-400">Events</div>
               </div>
               <div className="text-center p-3 bg-zinc-800/30 rounded-lg">
-                <div className="text-2xl font-bold text-white">{selectedSpace.stats.activeTools}</div>
+                <div className="text-2xl font-bold text-[var(--hive-text-inverse)]">{selectedSpace.stats.activeTools}</div>
                 <div className="text-sm text-zinc-400">Tools</div>
               </div>
             </div>
             
             {/* Leadership */}
             <div>
-              <h4 className="font-medium text-white mb-3">Leadership</h4>
+              <h4 className="font-medium text-[var(--hive-text-inverse)] mb-3">Leadership</h4>
               <div className="space-y-2">
                 {selectedSpace.leadership.map((leader) => (
                   <div key={leader.id} className="flex items-center space-x-3 p-2 bg-zinc-800/30 rounded-lg">
                     <div className="w-8 h-8 bg-zinc-600 rounded-full flex items-center justify-center">
-                      <span className="text-white text-xs font-medium">
+                      <span className="text-[var(--hive-text-inverse)] text-xs font-medium">
                         {leader.name.split(' ').map(n => n[0]).join('')}
                       </span>
                     </div>
                     <div className="flex-1">
-                      <div className="text-white text-sm font-medium">{leader.name}</div>
+                      <div className="text-[var(--hive-text-inverse)] text-sm font-medium">{leader.name}</div>
                       <div className="text-zinc-400 text-xs">@{leader.handle} • {leader.role}</div>
                     </div>
                     {leader.verified && <Star className="h-4 w-4 text-hive-gold fill-current" />}
@@ -858,7 +858,7 @@ export function SmartSpaceDiscovery({
             
             {/* Tags */}
             <div>
-              <h4 className="font-medium text-white mb-3">Topics & Interests</h4>
+              <h4 className="font-medium text-[var(--hive-text-inverse)] mb-3">Topics & Interests</h4>
               <div className="flex flex-wrap gap-2">
                 {selectedSpace.tags.map((tag) => (
                   <Badge key={tag.id} variant="skill-tag" className="text-xs">
@@ -870,13 +870,13 @@ export function SmartSpaceDiscovery({
             
             {/* Recent Activity */}
             <div>
-              <h4 className="font-medium text-white mb-3">Recent Activity</h4>
+              <h4 className="font-medium text-[var(--hive-text-inverse)] mb-3">Recent Activity</h4>
               <div className="space-y-2">
                 {selectedSpace.recentActivity.slice(0, 3).map((activity, index) => (
                   <div key={index} className="flex items-center space-x-3 p-2 bg-zinc-800/30 rounded-lg">
                     <Activity className="h-4 w-4 text-hive-gold" />
                     <div className="flex-1">
-                      <div className="text-white text-sm">{activity.description}</div>
+                      <div className="text-[var(--hive-text-inverse)] text-sm">{activity.description}</div>
                       <div className="text-zinc-400 text-xs">{formatTimeAgo(activity.timestamp)}</div>
                     </div>
                   </div>
@@ -916,7 +916,7 @@ export function SmartSpaceDiscovery({
             </div>
           </div>
         )}
-      </HiveModal>
+      </Modal>
     </div>
   );
 }

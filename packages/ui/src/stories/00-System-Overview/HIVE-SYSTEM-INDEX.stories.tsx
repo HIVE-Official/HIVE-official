@@ -42,7 +42,8 @@ import {
 } from 'lucide-react';
 import '../../hive-tokens.css';
 
-const meta: Meta = {
+const meta: Meta<typeof HIVESystemIndex> = {
+  component: HIVESystemIndex,
   title: '🏠 HIVE SYSTEM INDEX',
   parameters: {
     layout: 'fullscreen',
@@ -115,7 +116,7 @@ Explore the system that will transform university community building.
 };
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof HIVESystemIndex>;
 
 // =============================================================================
 // SYSTEM ARCHITECTURE DATA

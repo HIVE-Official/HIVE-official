@@ -182,7 +182,7 @@ export function MilestoneCelebration({
             ${animationPhase === 'celebrate' ? 'animate-pulse shadow-2xl' : ''}
             transition-all duration-500
           `}>
-            <IconComponent className="h-10 w-10 text-white" />
+            <IconComponent className="h-10 w-10 text-[var(--hive-text-inverse)]" />
             
             {/* Sparkle effects */}
             {animationPhase === 'celebrate' && (

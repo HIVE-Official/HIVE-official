@@ -2,10 +2,10 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useState } from "react";
 import { Button } from "../button";
-import { Card, CardContent, CardHeader, CardTitle } from "../card";
+import { Card, CardContent, CardHeader, CardTitle } from "../card.js";
 import { Input } from "../input";
-import { Label } from "../label";
-import { Textarea } from "../textarea";
+import { Label } from "../label.js";
+import { Textarea } from "../textarea.js";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../select";
 import { Crown, Users, Calendar, CheckCircle, AlertCircle, ArrowLeft, Loader2 } from "lucide-react";
 // Connection options based on space category
@@ -83,7 +83,7 @@ export const SpaceActivationRequestForm = ({ space, onSubmit, onCancel, }) => {
                                             ? "border-accent bg-accent/5"
                                             : "border-border hover:border-accent/50 hover:bg-accent/5"}`, children: _jsxs("div", { className: "flex items-center gap-3", children: [_jsx("div", { className: `w-4 h-4 rounded-full border-2 ${firstTool === tool.value
                                                         ? "border-accent bg-accent"
-                                                        : "border-border"}`, children: firstTool === tool.value && (_jsx("div", { className: "w-full h-full bg-accent rounded-full" })) }), _jsxs("div", { className: "flex-1", children: [_jsx("h4", { className: "font-medium text-foreground", children: tool.label }), _jsx("p", { className: "text-sm text-muted-foreground", children: tool.description })] })] }) }, tool.value))) })] }), _jsxs("div", { className: "p-4 bg-background rounded-lg border border-border", children: [_jsxs("div", { className: "flex items-center gap-2 mb-2", children: [_jsx(AlertCircle, { className: "w-4 h-4 text-accent" }), _jsx("h4", { className: "font-medium text-foreground", children: "What happens next?" })] }), _jsxs("ul", { className: "text-sm text-muted-foreground space-y-1", children: [_jsx("li", { children: "\u2022 We'll review your request within 24 hours" }), _jsx("li", { children: "\u2022 You'll receive an email with our decision" }), _jsx("li", { children: "\u2022 If approved, you'll get a welcome checklist to get started" }), _jsx("li", { children: "\u2022 The space will be activated and potential members notified" })] })] }), _jsxs("div", { className: "flex gap-3 pt-4", children: [_jsx(Button, { type: "button", variant: "outline", onClick: onCancel, className: "flex-1", disabled: isSubmitting, children: "Cancel" }), _jsx(Button, { type: "submit", className: "flex-1 bg-accent hover:bg-accent/90 text-background font-medium", disabled: isSubmitting ||
+                                                        : "border-border"}`, children: firstTool === tool.value && (_jsx("div", { className: "w-full h-full bg-accent rounded-full" })) }), _jsxs("div", { className: "flex-1", children: [_jsx("h4", { className: "font-medium text-foreground", children: tool.label }), _jsx("p", { className: "text-sm text-muted-foreground", children: tool.description })] })] }) }, tool.value))) })] }), _jsxs("div", { className: "p-4 bg-background rounded-lg border border-border", children: [_jsxs("div", { className: "flex items-center gap-2 mb-2", children: [_jsx(AlertCircle, { className: "w-4 h-4 text-accent" }), _jsx("h4", { className: "font-medium text-foreground", children: "What happens next?" })] }), _jsxs("ul", { className: "text-sm text-muted-foreground space-y-1", children: [_jsx("li", { children: "\u2022 We'll review your request within 24 hours" }), _jsx("li", { children: "\u2022 You'll receive an email with our decision" }), _jsx("li", { children: "\u2022 If approved, you'll get a welcome checklist to get started" }), _jsx("li", { children: "\u2022 The space will be activated and potential members notified" })] })] }), _jsxs("div", { className: "flex gap-3 pt-4", children: [_jsx(Button, { type: "button", variant: "secondary", onClick: onCancel, className: "flex-1", disabled: isSubmitting, children: "Cancel" }), _jsx(Button, { type: "submit", className: "flex-1 bg-accent hover:bg-accent/90 text-background font-medium", disabled: isSubmitting ||
                                         !connection ||
                                         !reason ||
                                         !firstTool ||

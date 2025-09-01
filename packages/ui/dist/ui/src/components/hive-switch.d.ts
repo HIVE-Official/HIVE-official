@@ -1,13 +1,13 @@
 import React from "react";
 import { type VariantProps } from 'class-variance-authority';
-declare const hiveSwitchVariants: (props?: {
-    variant?: "default" | "gold" | "success" | "minimal";
-    size?: "default" | "sm" | "lg" | "xl";
-} & import("class-variance-authority/types").ClassProp) => string;
-declare const hiveSwitchThumbVariants: (props?: {
-    variant?: "default" | "gold" | "success" | "minimal";
-    size?: "default" | "sm" | "lg" | "xl";
-} & import("class-variance-authority/types").ClassProp) => string;
+declare const hiveSwitchVariants: (props?: ({
+    variant?: "success" | "default" | "gold" | "minimal" | null | undefined;
+    size?: "sm" | "default" | "lg" | "xl" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
+declare const hiveSwitchThumbVariants: (props?: ({
+    variant?: "success" | "default" | "gold" | "minimal" | null | undefined;
+    size?: "sm" | "default" | "lg" | "xl" | null | undefined;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string;
 export interface HiveSwitchProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'size'>, VariantProps<typeof hiveSwitchVariants> {
     checked?: boolean;
     onCheckedChange?: (checked: boolean) => void;

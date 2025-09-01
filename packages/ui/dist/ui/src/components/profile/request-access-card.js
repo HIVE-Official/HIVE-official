@@ -1,6 +1,6 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
-import { cn } from "../../lib/utils";
+import { cn } from "../../lib/utils.js";
 export function RequestAccessCard({ exclusiveSpaces = [], className }) {
     // Mock exclusive spaces for development
     const mockSpaces = [
@@ -39,7 +39,7 @@ export function RequestAccessCard({ exclusiveSpaces = [], className }) {
             case "pending":
                 return (_jsx("div", { className: "w-5 h-5 bg-[#FFD700]/20 rounded-full flex items-center justify-center", children: _jsx("svg", { className: "w-3 h-3 text-[#FFD700]", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", children: _jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 2, d: "M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" }) }) }));
             case "approved":
-                return (_jsx("div", { className: "w-5 h-5 bg-[#FFD700] rounded-full flex items-center justify-center", children: _jsx("svg", { className: "w-3 h-3 text-black", fill: "currentColor", viewBox: "0 0 20 20", children: _jsx("path", { fillRule: "evenodd", d: "M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z", clipRule: "evenodd" }) }) }));
+                return (_jsx("div", { className: "w-5 h-5 bg-[#FFD700] rounded-full flex items-center justify-center", children: _jsx("svg", { className: "w-3 h-3 text-[var(--hive-text-primary)]", fill: "currentColor", viewBox: "0 0 20 20", children: _jsx("path", { fillRule: "evenodd", d: "M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z", clipRule: "evenodd" }) }) }));
             case "rejected":
                 return (_jsx("div", { className: "w-5 h-5 bg-red-500/20 rounded-full flex items-center justify-center", children: _jsx("svg", { className: "w-3 h-3 text-red-400", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", children: _jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 2, d: "M6 18L18 6M6 6l12 12" }) }) }));
             default:

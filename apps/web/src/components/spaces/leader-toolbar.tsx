@@ -134,7 +134,7 @@ export function LeaderToolbar({
                     <div className="flex-1 min-w-0">
                       <div className={cn(
                         "font-medium text-sm",
-                        isActive ? "text-white" : "text-neutral-300"
+                        isActive ? "text-[var(--hive-text-inverse)]" : "text-neutral-300"
                       )}>
                         {modeConfig.label}
                       </div>
@@ -181,7 +181,7 @@ export function LeaderToolbar({
                 className: cn("w-5 h-5", LEADER_MODES[currentMode].color)
               })}
               <div className="flex items-center gap-2">
-                <span className="text-white font-medium text-sm">
+                <span className="text-[var(--hive-text-inverse)] font-medium text-sm">
                   {LEADER_MODES[currentMode].label} Mode
                 </span>
                 <Badge variant="leadership" className="text-xs px-2 py-0.5 bg-[var(--hive-brand-secondary)]/20 text-[var(--hive-brand-secondary)] border-[var(--hive-brand-secondary)]/30">
@@ -198,7 +198,7 @@ export function LeaderToolbar({
             // Default Leadership Button
             <>
               <Crown className="w-5 h-5 text-[var(--hive-brand-secondary)]" />
-              <span className="text-white font-medium text-sm">Leadership</span>
+              <span className="text-[var(--hive-text-inverse)] font-medium text-sm">Leadership</span>
               <motion.div
                 animate={{ rotate: isExpanded ? 180 : 0 }}
                 transition={{ duration: 0.2 }}

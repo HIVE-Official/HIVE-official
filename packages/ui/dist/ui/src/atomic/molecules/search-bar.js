@@ -1,10 +1,10 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from 'react';
-import { cn } from '../../lib/utils';
-import { InputEnhanced as Input } from '../atoms/input-enhanced';
-import { ButtonEnhanced as Button } from '../atoms/button-enhanced';
-import { Spinner } from '../atoms/spinner';
+import { cn } from '../../lib/utils.js';
+import { Input as Input } from '../atoms/input-enhanced.js';
+import { ButtonEnhanced as Button } from '../atoms/button-enhanced.js';
+import { Spinner } from '../atoms/spinner.js';
 import { Search, X } from 'lucide-react';
 export const SearchBar = ({ placeholder = 'Search...', value = '', loading = false, clearable = true, size = 'md', variant = 'default', className, onSearch, onChange, onClear, ...props }) => {
     const [internalValue, setInternalValue] = React.useState(value);

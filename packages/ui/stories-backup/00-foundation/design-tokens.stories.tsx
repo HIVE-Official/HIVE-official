@@ -1,7 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-const meta: Meta = {
+// Mock component for Storybook CSF compliance
+const DesignTokensFoundation = () => <div>Design Tokens Foundation</div>;
+
+const meta: Meta<typeof DesignTokensFoundation> = {
   title: '00-Foundation/Design Tokens',
+  component: DesignTokensFoundation,
   parameters: {
     layout: 'padded',
     docs: {

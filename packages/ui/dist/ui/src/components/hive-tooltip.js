@@ -3,8 +3,8 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 import { cva } from 'class-variance-authority';
-import { cn } from "../lib/utils";
-import { liquidMetal, motionDurations } from '../motion/hive-motion-system';
+import { cn } from "../lib/utils.js";
+import { liquidMetal, motionDurations } from '../motion/hive-motion-system.js';
 // HIVE Tooltip variants - Luxury glass morphism with semantic tokens
 const hiveTooltipVariants = cva(
 // Base styles - matte obsidian glass with heavy radius and backdrop blur
@@ -16,7 +16,7 @@ const hiveTooltipVariants = cva(
             // Glass strong variant with enhanced opacity
             glass: "bg-[var(--hive-overlay-glass-strong)] text-[var(--hive-text-primary)] border-[var(--hive-border-glass-strong)] rounded-[var(--hive-radius-lg)]",
             // Gold accent variant
-            gold: "bg-[var(--hive-background-secondary)]/80 text-[var(--hive-brand-primary)] border-[var(--hive-border-gold)] rounded-[var(--hive-radius-lg)] shadow-[var(--hive-shadow-gold-glow)]",
+            gold: "bg-[var(--hive-background-secondary)]/80 text-[var(--hive-brand-primary)] border-[var(--hive-border-[var(--hive-brand-secondary)])] rounded-[var(--hive-radius-lg)] shadow-[var(--hive-shadow-gold-glow)]",
             // Success state
             success: "bg-[var(--hive-status-success)]/20 text-[var(--hive-status-success)] border-[var(--hive-status-success)]/30 rounded-[var(--hive-radius-lg)] backdrop-blur-xl",
             // Warning state
@@ -76,12 +76,12 @@ const HiveTooltip = TooltipPrimitive.Root;
 const HiveTooltipTrigger = TooltipPrimitive.Trigger;
 const HiveTooltipContent = React.forwardRef(({ className, sideOffset = 4, variant, size, withArrow = true, animated = true, children, ...props }, ref) => (_jsxs(TooltipPrimitive.Content, { ref: ref, sideOffset: sideOffset, className: cn(hiveTooltipVariants({ variant, size }), animated && "animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2", className), ...props, children: [children, withArrow && (_jsx(TooltipPrimitive.Arrow, { className: cn("fill-current", variant === 'gold' && "text-[var(--hive-background-secondary)]", variant === 'success' && "text-[var(--hive-status-success)]", variant === 'warning' && "text-[var(--hive-status-warning)]", variant === 'error' && "text-[var(--hive-status-error)]", variant === 'info' && "text-[var(--hive-status-info)]", !variant && "text-[var(--hive-background-secondary)]") }))] })));
 HiveTooltipContent.displayName = TooltipPrimitive.Content.displayName;
-const HiveMotionTooltip = React.forwardRef(({ children, content, variant = "default", size = "default", side = "top", delayDuration = 200, withArrow = true, ...props }, ref) => (_jsx(HiveTooltipProvider, { delayDuration: delayDuration, children: _jsxs(HiveTooltip, { children: [_jsx(HiveTooltipTrigger, { asChild: true, children: children }), _jsx(HiveTooltipContent, { side: side, variant: variant, size: size, withArrow: withArrow, ...props, children: content })] }) })));
+const HiveMotionTooltip = React.forwardRef(({ children, content, variant = "default", size = "default", side = "top", delayDuration = 200, withArrow = true, ...props }, ref) => (_jsx(HiveTooltipProvider, { delayDuration: delayDuration, children: _jsxs(Tooltip, { children: [_jsx(HiveTooltipTrigger, { asChild: true, children: children }), _jsx(HiveTooltipContent, { side: side, variant: variant, size: size, withArrow: withArrow, ...props, children: content })] }) })));
 HiveMotionTooltip.displayName = "HiveMotionTooltip";
 // Pre-built Tooltip variants for common use cases
 const HiveHelpTooltip = React.forwardRef(({ ...props }, ref) => (_jsx(HiveMotionTooltip, { ref: ref, variant: "glass", size: "default", ...props })));
 const HiveErrorTooltip = React.forwardRef(({ ...props }, ref) => (_jsx(HiveMotionTooltip, { ref: ref, variant: "error", ...props })));
-const HiveSuccessTooltip = React.forwardRef(({ ...props }, ref) => (_jsx(HiveMotionTooltip, { ref: ref, variant: "success", ...props })));
+const HiveSuccessTooltip = React.forwardRef(({ ...props }, ref) => (_jsx(HiveMotionTooltip, { ref: ref, variant: "emerald", ...props })));
 const HiveGoldTooltip = React.forwardRef(({ ...props }, ref) => (_jsx(HiveMotionTooltip, { ref: ref, variant: "gold", ...props })));
 const HiveMinimalTooltip = React.forwardRef(({ ...props }, ref) => (_jsx(HiveMotionTooltip, { ref: ref, variant: "minimal", withArrow: false, ...props })));
 HiveHelpTooltip.displayName = "HiveHelpTooltip";

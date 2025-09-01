@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Button, Card, Badge, HiveModal } from "@hive/ui";
+import { Button, Card, Badge, Modal } from "@hive/ui";
 import { PageContainer } from "@/components/temp-stubs";
 import { 
   Zap, 
@@ -359,7 +359,7 @@ export default function SpaceToolsPage({ params }: SpaceToolsPageProps) {
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
             <div className="w-8 h-8 bg-hive-gold rounded-lg animate-pulse mx-auto mb-4" />
-            <p className="text-white">Loading tools...</p>
+            <p className="text-[var(--hive-text-inverse)]">Loading tools...</p>
           </div>
         </div>
       </PageContainer>
@@ -415,7 +415,7 @@ export default function SpaceToolsPage({ params }: SpaceToolsPageProps) {
           <Card className="p-4 bg-zinc-800/50 border-zinc-700">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-2xl font-bold text-white">{tools.length}</div>
+                <div className="text-2xl font-bold text-[var(--hive-text-inverse)]">{tools.length}</div>
                 <div className="text-sm text-zinc-400">Total Tools</div>
               </div>
               <Zap className="h-8 w-8 text-blue-400" />
@@ -425,7 +425,7 @@ export default function SpaceToolsPage({ params }: SpaceToolsPageProps) {
           <Card className="p-4 bg-zinc-800/50 border-zinc-700">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-2xl font-bold text-white">{activeTools}</div>
+                <div className="text-2xl font-bold text-[var(--hive-text-inverse)]">{activeTools}</div>
                 <div className="text-sm text-zinc-400">Active Tools</div>
               </div>
               <Play className="h-8 w-8 text-green-400" />
@@ -435,7 +435,7 @@ export default function SpaceToolsPage({ params }: SpaceToolsPageProps) {
           <Card className="p-4 bg-zinc-800/50 border-zinc-700">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-2xl font-bold text-white">{totalSessions}</div>
+                <div className="text-2xl font-bold text-[var(--hive-text-inverse)]">{totalSessions}</div>
                 <div className="text-sm text-zinc-400">Total Sessions</div>
               </div>
               <Activity className="h-8 w-8 text-purple-400" />
@@ -445,7 +445,7 @@ export default function SpaceToolsPage({ params }: SpaceToolsPageProps) {
           <Card className="p-4 bg-zinc-800/50 border-zinc-700">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-2xl font-bold text-white">{totalActiveUsers}</div>
+                <div className="text-2xl font-bold text-[var(--hive-text-inverse)]">{totalActiveUsers}</div>
                 <div className="text-sm text-zinc-400">Active Users</div>
               </div>
               <Users className="h-8 w-8 text-orange-400" />
@@ -463,14 +463,14 @@ export default function SpaceToolsPage({ params }: SpaceToolsPageProps) {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search tools..."
-                className="pl-10 pr-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-400 focus:border-hive-gold focus:outline-none w-64"
+                className="pl-10 pr-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-[var(--hive-text-inverse)] placeholder-zinc-400 focus:border-hive-gold focus:outline-none w-64"
               />
             </div>
             
             <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value as 'all' | 'academic' | 'engagement' | 'productivity' | 'communication' | 'collaboration' | 'organization')}
-              className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-white text-sm focus:border-hive-gold focus:outline-none"
+              className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-[var(--hive-text-inverse)] text-sm focus:border-hive-gold focus:outline-none"
             >
               <option value="all">All Categories</option>
               <option value="productivity">Productivity</option>
@@ -484,7 +484,7 @@ export default function SpaceToolsPage({ params }: SpaceToolsPageProps) {
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value as 'all' | 'active' | 'inactive')}
-              className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-white text-sm focus:border-hive-gold focus:outline-none"
+              className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-[var(--hive-text-inverse)] text-sm focus:border-hive-gold focus:outline-none"
             >
               <option value="all">All Status</option>
               <option value="active">Active</option>
@@ -516,7 +516,7 @@ export default function SpaceToolsPage({ params }: SpaceToolsPageProps) {
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center space-x-2 mb-1">
-                      <h3 className="font-semibold text-white">{tool.name}</h3>
+                      <h3 className="font-semibold text-[var(--hive-text-inverse)]">{tool.name}</h3>
                       <Badge 
                         variant={tool.type === 'built-in' ? 'skill-tag' : tool.type === 'custom' ? 'building-tools' : 'destructive'} 
                         className="text-xs"
@@ -543,11 +543,11 @@ export default function SpaceToolsPage({ params }: SpaceToolsPageProps) {
               {/* Usage Stats */}
               <div className="grid grid-cols-2 gap-4 mb-4 text-sm">
                 <div>
-                  <div className="text-white font-medium">{tool.usage.totalSessions}</div>
+                  <div className="text-[var(--hive-text-inverse)] font-medium">{tool.usage.totalSessions}</div>
                   <div className="text-zinc-500">Sessions</div>
                 </div>
                 <div>
-                  <div className="text-white font-medium">{tool.usage.activeUsers}</div>
+                  <div className="text-[var(--hive-text-inverse)] font-medium">{tool.usage.activeUsers}</div>
                   <div className="text-zinc-500">Active Users</div>
                 </div>
               </div>
@@ -589,7 +589,7 @@ export default function SpaceToolsPage({ params }: SpaceToolsPageProps) {
                       variant="ghost"
                       size="sm"
                       onClick={() => handleToolToggle(tool.id)}
-                      className="text-zinc-400 hover:text-white"
+                      className="text-zinc-400 hover:text-[var(--hive-text-inverse)]"
                     >
                       {tool.isActive ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </Button>
@@ -598,7 +598,7 @@ export default function SpaceToolsPage({ params }: SpaceToolsPageProps) {
                       variant="ghost"
                       size="sm"
                       onClick={() => setShowToolSettings(tool)}
-                      className="text-zinc-400 hover:text-white"
+                      className="text-zinc-400 hover:text-[var(--hive-text-inverse)]"
                     >
                       <Settings className="h-4 w-4" />
                     </Button>
@@ -624,7 +624,7 @@ export default function SpaceToolsPage({ params }: SpaceToolsPageProps) {
         {filteredTools.length === 0 && (
           <div className="text-center py-12">
             <Zap className="h-16 w-16 text-zinc-600 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-white mb-2">No tools found</h3>
+            <h3 className="text-xl font-semibold text-[var(--hive-text-inverse)] mb-2">No tools found</h3>
             <p className="text-zinc-400 mb-6">
               {searchQuery || categoryFilter !== 'all' || statusFilter !== 'all'
                 ? 'Try adjusting your search or filters.'
@@ -644,7 +644,7 @@ export default function SpaceToolsPage({ params }: SpaceToolsPageProps) {
         )}
 
         {/* Add Tool Modal */}
-        <HiveModal
+        <Modal
           isOpen={showAddTool}
           onClose={() => setShowAddTool(false)}
           title="Add Tool to Space"
@@ -666,7 +666,7 @@ export default function SpaceToolsPage({ params }: SpaceToolsPageProps) {
                     <div className="text-2xl">{template.icon}</div>
                     <div className="flex-1">
                       <div className="flex items-center space-x-2 mb-1">
-                        <h4 className="font-medium text-white">{template.name}</h4>
+                        <h4 className="font-medium text-[var(--hive-text-inverse)]">{template.name}</h4>
                         <Badge 
                           variant={template.difficulty === 'easy' ? 'building-tools' : template.difficulty === 'medium' ? 'skill-tag' : 'destructive'} 
                           className="text-xs"
@@ -696,10 +696,10 @@ export default function SpaceToolsPage({ params }: SpaceToolsPageProps) {
               ))}
             </div>
           </div>
-        </HiveModal>
+        </Modal>
 
         {/* Tool Settings Modal */}
-        <HiveModal
+        <Modal
           isOpen={!!showToolSettings}
           onClose={() => setShowToolSettings(null)}
           title={showToolSettings ? `${showToolSettings.name} Settings` : ''}
@@ -709,11 +709,11 @@ export default function SpaceToolsPage({ params }: SpaceToolsPageProps) {
             <div className="space-y-6">
               {/* Basic Settings */}
               <div>
-                <h4 className="font-medium text-white mb-3">Basic Settings</h4>
+                <h4 className="font-medium text-[var(--hive-text-inverse)] mb-3">Basic Settings</h4>
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <div>
-                      <div className="font-medium text-white">Tool Status</div>
+                      <div className="font-medium text-[var(--hive-text-inverse)]">Tool Status</div>
                       <div className="text-sm text-zinc-400">Enable or disable this tool for space members</div>
                     </div>
                     <Button
@@ -728,7 +728,7 @@ export default function SpaceToolsPage({ params }: SpaceToolsPageProps) {
                   
                   <div className="flex items-center justify-between">
                     <div>
-                      <div className="font-medium text-white">Auto Launch</div>
+                      <div className="font-medium text-[var(--hive-text-inverse)]">Auto Launch</div>
                       <div className="text-sm text-zinc-400">Automatically start tool in events</div>
                     </div>
                     <input 
@@ -741,7 +741,7 @@ export default function SpaceToolsPage({ params }: SpaceToolsPageProps) {
                   
                   <div className="flex items-center justify-between">
                     <div>
-                      <div className="font-medium text-white">Require Permission</div>
+                      <div className="font-medium text-[var(--hive-text-inverse)]">Require Permission</div>
                       <div className="text-sm text-zinc-400">Members need approval to use this tool</div>
                     </div>
                     <input 
@@ -756,14 +756,14 @@ export default function SpaceToolsPage({ params }: SpaceToolsPageProps) {
 
               {/* Usage Stats */}
               <div>
-                <h4 className="font-medium text-white mb-3">Usage Statistics</h4>
+                <h4 className="font-medium text-[var(--hive-text-inverse)] mb-3">Usage Statistics</h4>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="p-3 bg-zinc-800/50 rounded-lg">
-                    <div className="text-xl font-bold text-white">{showToolSettings.usage.totalSessions}</div>
+                    <div className="text-xl font-bold text-[var(--hive-text-inverse)]">{showToolSettings.usage.totalSessions}</div>
                     <div className="text-sm text-zinc-400">Total Sessions</div>
                   </div>
                   <div className="p-3 bg-zinc-800/50 rounded-lg">
-                    <div className="text-xl font-bold text-white">{showToolSettings.usage.averageSessionTime}m</div>
+                    <div className="text-xl font-bold text-[var(--hive-text-inverse)]">{showToolSettings.usage.averageSessionTime}m</div>
                     <div className="text-sm text-zinc-400">Avg Session</div>
                   </div>
                 </div>
@@ -771,25 +771,25 @@ export default function SpaceToolsPage({ params }: SpaceToolsPageProps) {
 
               {/* Permissions */}
               <div>
-                <h4 className="font-medium text-white mb-3">Permissions</h4>
+                <h4 className="font-medium text-[var(--hive-text-inverse)] mb-3">Permissions</h4>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span className="text-zinc-400">Can View:</span>
-                    <span className="text-white">{showToolSettings.permissions.view.join(', ')}</span>
+                    <span className="text-[var(--hive-text-inverse)]">{showToolSettings.permissions.view.join(', ')}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-zinc-400">Can Use:</span>
-                    <span className="text-white">{showToolSettings.permissions.use.join(', ')}</span>
+                    <span className="text-[var(--hive-text-inverse)]">{showToolSettings.permissions.use.join(', ')}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-zinc-400">Can Manage:</span>
-                    <span className="text-white">{showToolSettings.permissions.manage.join(', ')}</span>
+                    <span className="text-[var(--hive-text-inverse)]">{showToolSettings.permissions.manage.join(', ')}</span>
                   </div>
                 </div>
               </div>
             </div>
           )}
-        </HiveModal>
+        </Modal>
       </PageContainer>
     </ErrorBoundary>
   );

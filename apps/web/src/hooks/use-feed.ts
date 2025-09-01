@@ -323,9 +323,9 @@ export function useFeed(options: FeedOptions = {}) {
     });
   }, [interactWithPost]);
 
-  const commentOnPost = useCallback(async (postId: string, content: string) => {
+  const commentOnPost = useCallback(async (_postId: string, content: string) => {
     await interactWithPost({
-      postId,
+      postId: _postId,
       action: 'comment',
       content,
     });

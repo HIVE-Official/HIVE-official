@@ -107,15 +107,15 @@ export const DisplayNameStep: React.FC<StepProps> = ({
   return (
     <Card className="w-full max-w-lg bg-zinc-900 border-zinc-800">
       <CardHeader>
-        <CardTitle className="text-white">Welcome to HIVE</CardTitle>
-        <CardDescription className="text-zinc-400">
+        <CardTitle className="text-[var(--hive-text-inverse)]">Welcome to HIVE</CardTitle>
+        <CardDescription className="text-white/80">
           Let&apos;s set up your profile. How should we address you?
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
-            <Label htmlFor="fullName" className="text-zinc-300">
+            <Label htmlFor="fullName" className="text-white">
               Full Name
             </Label>
             <Input
@@ -130,7 +130,7 @@ export const DisplayNameStep: React.FC<StepProps> = ({
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="handle" className="text-zinc-300">
+            <Label htmlFor="handle" className="text-white">
               Username (@handle)
             </Label>
             <div className="relative">
@@ -141,7 +141,7 @@ export const DisplayNameStep: React.FC<StepProps> = ({
                 className="bg-zinc-800 border-zinc-700 pl-8"
                 required
               />
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-white/60">
                 @
               </span>
               {isCheckingHandle && (
@@ -149,7 +149,7 @@ export const DisplayNameStep: React.FC<StepProps> = ({
               )}
             </div>
             {handleError && (
-              <p className="text-xs text-red-500 pt-1">{handleError}</p>
+              <p className="text-xs text-white pt-1">{handleError}</p>
             )}
           </div>
           <div className="flex gap-2">
@@ -160,7 +160,7 @@ export const DisplayNameStep: React.FC<StepProps> = ({
             )}
             <Button
               type="submit"
-              className="w-full bg-yellow-500 text-black hover:bg-yellow-600"
+              className="w-full bg-yellow-500 text-[var(--hive-text-primary)] hover:bg-yellow-600"
               disabled={!!handleError || isCheckingHandle || isLoading}
             >
               {isLoading ? (
@@ -199,8 +199,8 @@ export const LeaderQuestionStep: React.FC<StepProps> = ({
   return (
     <Card className="w-full max-w-lg bg-zinc-900 border-zinc-800">
       <CardHeader>
-        <CardTitle className="text-white">Leadership Role</CardTitle>
-        <CardDescription className="text-zinc-400">
+        <CardTitle className="text-[var(--hive-text-inverse)]">Leadership Role</CardTitle>
+        <CardDescription className="text-white/80">
           Would you like to take on a leadership role in your campus community?
         </CardDescription>
       </CardHeader>
@@ -211,8 +211,8 @@ export const LeaderQuestionStep: React.FC<StepProps> = ({
             onClick={() => setChoice(true)}
             className={`w-full ${
               choice === true
-                ? "bg-yellow-500 text-black hover:bg-yellow-600"
-                : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
+                ? "bg-yellow-500 text-[var(--hive-text-primary)] hover:bg-yellow-600"
+                : "bg-zinc-800 text-white hover:bg-zinc-700"
             }`}
           >
             Yes, I&apos;d like to lead
@@ -222,8 +222,8 @@ export const LeaderQuestionStep: React.FC<StepProps> = ({
             onClick={() => setChoice(false)}
             className={`w-full ${
               choice === false
-                ? "bg-yellow-500 text-black hover:bg-yellow-600"
-                : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
+                ? "bg-yellow-500 text-[var(--hive-text-primary)] hover:bg-yellow-600"
+                : "bg-zinc-800 text-white hover:bg-zinc-700"
             }`}
           >
             No, I&apos;ll pass for now
@@ -238,7 +238,7 @@ export const LeaderQuestionStep: React.FC<StepProps> = ({
           <Button
             type="button"
             onClick={handleSubmit}
-            className="w-full bg-zinc-700 text-white hover:bg-zinc-600"
+            className="w-full bg-zinc-700 text-[var(--hive-text-inverse)] hover:bg-zinc-600"
             disabled={choice === null}
           >
             Continue
@@ -272,8 +272,8 @@ export const ClaimSpaceStep: React.FC<StepProps> = ({
   return (
     <Card className="w-full max-w-lg bg-zinc-900 border-zinc-800">
       <CardHeader>
-        <CardTitle className="text-white">Claim Your Space</CardTitle>
-        <CardDescription className="text-zinc-400">
+        <CardTitle className="text-[var(--hive-text-inverse)]">Claim Your Space</CardTitle>
+        <CardDescription className="text-white/80">
           Select the spaces you&apos;d like to lead
         </CardDescription>
       </CardHeader>
@@ -290,7 +290,7 @@ export const ClaimSpaceStep: React.FC<StepProps> = ({
             )}
             <Button
               type="submit"
-              className="w-full bg-yellow-500 text-black hover:bg-yellow-600"
+              className="w-full bg-yellow-500 text-[var(--hive-text-primary)] hover:bg-yellow-600"
             >
               Continue
             </Button>
@@ -322,15 +322,15 @@ export const PendingNoticeStep: React.FC<StepProps> = ({
   return (
     <Card className="w-full max-w-lg bg-zinc-900 border-zinc-800">
       <CardHeader>
-        <CardTitle className="text-white">Request Pending</CardTitle>
-        <CardDescription className="text-zinc-400">
+        <CardTitle className="text-[var(--hive-text-inverse)]">Request Pending</CardTitle>
+        <CardDescription className="text-white/80">
           Your space leadership request is being reviewed
         </CardDescription>
       </CardHeader>
       <CardContent>
         <Button
           onClick={handleSubmit}
-          className="w-full bg-yellow-500 text-black hover:bg-yellow-600"
+          className="w-full bg-yellow-500 text-[var(--hive-text-primary)] hover:bg-yellow-600"
         >
           Continue
         </Button>

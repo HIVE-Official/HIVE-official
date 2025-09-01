@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, useCallback } from 'react';
 import { X, AlertTriangle, CheckCircle, Info, AlertCircle } from 'lucide-react';
-import { Button } from "@hive/ui";
+// Using native button element instead of UI package button due to import issues
 
 // Modal types and interfaces
 interface BaseModalProps {
@@ -131,14 +131,12 @@ function ModalRenderer({ modal, onClose }: { modal: ModalData & { id: string }; 
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-hive-border-subtle">
           <h2 className="text-xl font-semibold text-hive-text-primary">{modal.title}</h2>
-          <Button
-            variant="ghost"
-            size="sm"
+          <button
             onClick={onClose}
-            className="text-hive-text-secondary hover:text-hive-text-primary"
+            className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9 text-hive-text-secondary hover:text-hive-text-primary"
           >
             <X className="w-4 h-4" />
-          </Button>
+          </button>
         </div>
 
         {/* Content */}
@@ -193,10 +191,10 @@ function ConfirmModalContent({
     }
   };
 
-  const getConfirmButtonClass = () => {
+  const getConfirmbuttonClass = () => {
     switch (modal.variant) {
-      case 'destructive': return 'bg-red-600 hover:bg-red-700 text-white';
-      case 'warning': return 'bg-yellow-600 hover:bg-yellow-700 text-white';
+      case 'destructive': return 'bg-red-600 hover:bg-red-700 text-[var(--hive-text-inverse)]';
+      case 'warning': return 'bg-yellow-600 hover:bg-yellow-700 text-[var(--hive-text-inverse)]';
       default: return 'bg-hive-brand-primary hover:bg-hive-interactive-hover text-hive-background-primary';
     }
   };
@@ -212,22 +210,21 @@ function ConfirmModalContent({
       </p>
       
       <div className="flex gap-3 justify-center">
-        <Button
+        <button
           onClick={onCancel}
-          variant="outline"
-          className="border-hive-border-secondary text-hive-text-secondary hover:bg-hive-background-elevated"
+          className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 border-hive-border-secondary text-hive-text-secondary hover:bg-hive-background-elevated"
           disabled={isLoading}
         >
           {modal.cancelText || 'Cancel'}
-        </Button>
+        </button>
         
-        <Button
+        <button
           onClick={onConfirm}
-          className={getConfirmButtonClass()}
+          className={getConfirmbuttonClass()}
           disabled={isLoading}
         >
           {isLoading ? 'Loading...' : (modal.confirmText || 'Confirm')}
-        </Button>
+        </button>
       </div>
     </div>
   );

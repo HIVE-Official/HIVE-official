@@ -1,7 +1,17 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { cn } from '../../lib/utils';
+import { cn } from '../../../lib/utils';
+
+const SpacingSystemDemo = () => (
+  <div className="p-6 space-y-8">
+    <div className="space-y-4">
+      <h2 className="text-2xl font-semibold">HIVE Spacing System</h2>
+      <p className="text-muted-foreground">8px base grid with generous whitespace</p>
+    </div>
+  </div>
+);
 
 const meta = {
+  component: SpacingSystemDemo,
   title: 'Foundation/Spacing System',
   parameters: {
     layout: 'fullscreen',

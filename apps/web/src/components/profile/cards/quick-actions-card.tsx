@@ -282,7 +282,7 @@ export function QuickActionsCard({ settings, isEditMode, className }: QuickActio
               }`}
             >
               {action.badge && (
-                <div className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+                <div className="absolute -top-1 -right-1 bg-red-500 text-[var(--hive-text-inverse)] text-xs rounded-full w-4 h-4 flex items-center justify-center">
                   {action.badge}
                 </div>
               )}

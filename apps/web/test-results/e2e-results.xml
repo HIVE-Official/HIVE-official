@@ -1,2070 +1,650 @@
-<testsuites id="" name="" tests="475" failures="0" skipped="475" errors="0" time="0.066377">
-<testsuite name="auth-edge-cases.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="chromium" tests="15" failures="0" skipped="15" time="0" errors="0">
-<testcase name="Authentication Edge Cases and Error Handling › handles missing school parameters gracefully" classname="auth-edge-cases.spec.ts" time="0">
+<testsuites id="" name="" tests="155" failures="0" skipped="155" errors="0" time="0.1933119999999999">
+<testsuite name="auth-flow.spec.ts" timestamp="2025-08-30T04:17:40.881Z" hostname="chromium" tests="9" failures="0" skipped="9" time="0" errors="0">
+<testcase name="Authentication Flow › should complete full auth flow: school selection → login → magic link" classname="auth-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles expired or invalid magic links" classname="auth-edge-cases.spec.ts" time="0">
+<testcase name="Authentication Flow › should handle invalid school domain" classname="auth-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles malformed email addresses" classname="auth-edge-cases.spec.ts" time="0">
+<testcase name="Authentication Flow › should handle expired magic links" classname="auth-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles domain validation for non-dev schools" classname="auth-edge-cases.spec.ts" time="0">
+<testcase name="Authentication Flow › should prevent rapid magic link requests (rate limiting)" classname="auth-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles session expiration during onboarding" classname="auth-edge-cases.spec.ts" time="0">
+<testcase name="Authentication Flow › should redirect authenticated users away from auth pages" classname="auth-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles corrupted session data" classname="auth-edge-cases.spec.ts" time="0">
+<testcase name="Authentication Flow › should handle network errors gracefully" classname="auth-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles network timeouts during magic link sending" classname="auth-edge-cases.spec.ts" time="0">
+<testcase name="Authentication Flow › should work on mobile devices" classname="auth-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles duplicate onboarding completion" classname="auth-edge-cases.spec.ts" time="0">
+<testcase name="Authentication Flow › should persist auth state across page reloads" classname="auth-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles handle conflicts during onboarding" classname="auth-edge-cases.spec.ts" time="0">
+<testcase name="Authentication Flow › should handle logout correctly" classname="auth-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles invalid graduation years" classname="auth-edge-cases.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles concurrent onboarding sessions" classname="auth-edge-cases.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles browser back/forward during onboarding" classname="auth-edge-cases.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles page refresh during onboarding" classname="auth-edge-cases.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles localStorage quota exceeded" classname="auth-edge-cases.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles authentication with disabled JavaScript" classname="auth-edge-cases.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="auth-flow-complete.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="chromium" tests="8" failures="0" skipped="8" time="0" errors="0">
-<testcase name="Complete Authentication and Onboarding Flow › complete happy path: school selection → login → onboarding → dashboard" classname="auth-flow-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Complete Authentication and Onboarding Flow › handles validation errors during onboarding" classname="auth-flow-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Complete Authentication and Onboarding Flow › handles handle availability checking" classname="auth-flow-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Complete Authentication and Onboarding Flow › handles API failures gracefully" classname="auth-flow-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Complete Authentication and Onboarding Flow › supports faculty onboarding flow" classname="auth-flow-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Complete Authentication and Onboarding Flow › maintains state during navigation" classname="auth-flow-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Complete Authentication and Onboarding Flow › shows progress correctly throughout flow" classname="auth-flow-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Complete Authentication and Onboarding Flow › handles network errors during onboarding submission" classname="auth-flow-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="auth-onboarding-flow.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="chromium" tests="10" failures="0" skipped="10" time="0" errors="0">
-<testcase name="Authentication and Onboarding E2E Flow › completes full new user flow: landing → auth → onboarding → dashboard" classname="auth-onboarding-flow.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication and Onboarding E2E Flow › handles existing user login flow" classname="auth-onboarding-flow.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication and Onboarding E2E Flow › validates email domain restrictions" classname="auth-onboarding-flow.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication and Onboarding E2E Flow › handles onboarding form validation" classname="auth-onboarding-flow.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication and Onboarding E2E Flow › allows onboarding step navigation" classname="auth-onboarding-flow.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication and Onboarding E2E Flow › handles onboarding progress tracking" classname="auth-onboarding-flow.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication and Onboarding E2E Flow › supports keyboard navigation throughout onboarding" classname="auth-onboarding-flow.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication and Onboarding E2E Flow › handles session management during onboarding" classname="auth-onboarding-flow.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication and Onboarding E2E Flow › handles onboarding interruption and resumption" classname="auth-onboarding-flow.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication and Onboarding E2E Flow › provides accessibility features throughout auth flow" classname="auth-onboarding-flow.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="complete-user-journey.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="chromium" tests="7" failures="0" skipped="7" time="0" errors="0">
-<testcase name="Complete HIVE User Journey › complete new user onboarding to active platform usage" classname="complete-user-journey.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Complete HIVE User Journey › faculty user gets simplified onboarding flow" classname="complete-user-journey.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Complete HIVE User Journey › handles network failures gracefully" classname="complete-user-journey.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Complete HIVE User Journey › maintains state during browser refresh" classname="complete-user-journey.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Complete HIVE User Journey › cross-browser compatibility" classname="complete-user-journey.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Complete HIVE User Journey › accessibility compliance throughout journey" classname="complete-user-journey.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Complete HIVE User Journey › performance under load" classname="complete-user-journey.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="debug-hooks.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="chromium" tests="1" failures="0" skipped="1" time="0" errors="0">
-<testcase name="Debug Hooks Error › simple page load test" classname="debug-hooks.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="debug-providers.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="chromium" tests="1" failures="0" skipped="1" time="0" errors="0">
-<testcase name="Debug Providers › test HiveLogo specifically" classname="debug-providers.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="feed-social-interactions.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="chromium" tests="8" failures="0" skipped="8" time="0" errors="0">
-<testcase name="Feed and Social Interactions E2E Flow › completes full social interaction flow: post → like → comment → share → follow" classname="feed-social-interactions.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Feed and Social Interactions E2E Flow › handles feed personalization and algorithm preferences" classname="feed-social-interactions.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Feed and Social Interactions E2E Flow › manages social connections and network building" classname="feed-social-interactions.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Feed and Social Interactions E2E Flow › handles content creation with rich media and formatting" classname="feed-social-interactions.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Feed and Social Interactions E2E Flow › handles content moderation and reporting" classname="feed-social-interactions.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Feed and Social Interactions E2E Flow › supports real-time notifications and activity updates" classname="feed-social-interactions.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Feed and Social Interactions E2E Flow › handles feed filtering and content discovery" classname="feed-social-interactions.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Feed and Social Interactions E2E Flow › provides accessibility features for social interactions" classname="feed-social-interactions.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="onboarding-complete.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="chromium" tests="5" failures="0" skipped="5" time="0" errors="0">
-<testcase name="Complete Onboarding E2E Flow › completes full new user onboarding with all features" classname="onboarding-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Complete Onboarding E2E Flow › handles onboarding interruption and resumption" classname="onboarding-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Complete Onboarding E2E Flow › validates comprehensive form validation during onboarding" classname="onboarding-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Complete Onboarding E2E Flow › supports accessibility throughout onboarding" classname="onboarding-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Complete Onboarding E2E Flow › handles error recovery and retry mechanisms" classname="onboarding-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="profile-management.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="chromium" tests="7" failures="0" skipped="7" time="0" errors="0">
-<testcase name="Profile Management E2E Flow › completes comprehensive profile setup and customization" classname="profile-management.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Profile Management E2E Flow › manages profile connections and networking" classname="profile-management.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Profile Management E2E Flow › handles profile analytics and insights" classname="profile-management.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Profile Management E2E Flow › manages profile content and digital presence" classname="profile-management.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Profile Management E2E Flow › handles profile customization and themes" classname="profile-management.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Profile Management E2E Flow › handles profile verification and credibility" classname="profile-management.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Profile Management E2E Flow › provides accessibility features for profile management" classname="profile-management.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="profile-networking-complete.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="chromium" tests="3" failures="0" skipped="3" time="0" errors="0">
-<testcase name="Profile and Networking Complete E2E Flow › completes comprehensive profile management workflow" classname="profile-networking-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Profile and Networking Complete E2E Flow › handles advanced networking features and relationship management" classname="profile-networking-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Profile and Networking Complete E2E Flow › handles profile accessibility and inclusive networking" classname="profile-networking-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="simple-navigation.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="chromium" tests="3" failures="0" skipped="3" time="0" errors="0">
-<testcase name="Simple Navigation Tests › can navigate to homepage" classname="simple-navigation.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Simple Navigation Tests › can navigate to profile page" classname="simple-navigation.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Simple Navigation Tests › can navigate to schools page" classname="simple-navigation.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="social-feed-engagement.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="chromium" tests="3" failures="0" skipped="3" time="0" errors="0">
-<testcase name="Social Feed Engagement E2E Flow › completes comprehensive social feed interaction workflow" classname="social-feed-engagement.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Social Feed Engagement E2E Flow › handles feed performance with infinite scroll and content loading" classname="social-feed-engagement.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Social Feed Engagement E2E Flow › handles social feed accessibility and screen reader support" classname="social-feed-engagement.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="space-collaboration-complete.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="chromium" tests="4" failures="0" skipped="4" time="0" errors="0">
-<testcase name="Space Collaboration Complete E2E Flow › completes comprehensive space creation and management workflow" classname="space-collaboration-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Space Collaboration Complete E2E Flow › handles space member interactions and collaborative workflows" classname="space-collaboration-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Space Collaboration Complete E2E Flow › handles space moderation and community management" classname="space-collaboration-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Space Collaboration Complete E2E Flow › handles space accessibility and inclusive design" classname="space-collaboration-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="spaces-lifecycle.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="chromium" tests="8" failures="0" skipped="8" time="0" errors="0">
-<testcase name="Spaces Lifecycle E2E Flow › completes full space lifecycle: create → customize → invite → manage → archive" classname="spaces-lifecycle.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Spaces Lifecycle E2E Flow › handles space discovery and joining flow" classname="spaces-lifecycle.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Spaces Lifecycle E2E Flow › validates space creation form and handles errors" classname="spaces-lifecycle.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Spaces Lifecycle E2E Flow › handles space member management and permissions" classname="spaces-lifecycle.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Spaces Lifecycle E2E Flow › supports space content creation and moderation" classname="spaces-lifecycle.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Spaces Lifecycle E2E Flow › handles space privacy settings and visibility" classname="spaces-lifecycle.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Spaces Lifecycle E2E Flow › supports real-time space activity and notifications" classname="spaces-lifecycle.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Spaces Lifecycle E2E Flow › provides accessibility features throughout spaces" classname="spaces-lifecycle.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="tool-development-complete.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="chromium" tests="4" failures="0" skipped="4" time="0" errors="0">
-<testcase name="Tool Development Complete E2E Flow › completes full tool creation and development workflow" classname="tool-development-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Tool Development Complete E2E Flow › handles tool development with collaboration features" classname="tool-development-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Tool Development Complete E2E Flow › handles tool development error recovery and validation" classname="tool-development-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Tool Development Complete E2E Flow › handles tool deployment and marketplace submission" classname="tool-development-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="tools-development.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="chromium" tests="7" failures="0" skipped="7" time="0" errors="0">
-<testcase name="Tools Development E2E Flow › completes full tool development lifecycle: create → develop → test → deploy → share" classname="tools-development.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Tools Development E2E Flow › handles collaborative tool development" classname="tools-development.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Tools Development E2E Flow › validates tool code and provides development assistance" classname="tools-development.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Tools Development E2E Flow › handles tool marketplace and discovery" classname="tools-development.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Tools Development E2E Flow › supports tool analytics and performance monitoring" classname="tools-development.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Tools Development E2E Flow › handles tool versioning and deployment management" classname="tools-development.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Tools Development E2E Flow › provides accessibility features for tool development" classname="tools-development.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="waitlist.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="chromium" tests="1" failures="0" skipped="1" time="0" errors="0">
-<testcase name="Waitlist Flow › a user can join the waitlist for a non-active school" classname="waitlist.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="auth-edge-cases.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="firefox" tests="15" failures="0" skipped="15" time="0" errors="0">
-<testcase name="Authentication Edge Cases and Error Handling › handles missing school parameters gracefully" classname="auth-edge-cases.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles expired or invalid magic links" classname="auth-edge-cases.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles malformed email addresses" classname="auth-edge-cases.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles domain validation for non-dev schools" classname="auth-edge-cases.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles session expiration during onboarding" classname="auth-edge-cases.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles corrupted session data" classname="auth-edge-cases.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles network timeouts during magic link sending" classname="auth-edge-cases.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles duplicate onboarding completion" classname="auth-edge-cases.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles handle conflicts during onboarding" classname="auth-edge-cases.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles invalid graduation years" classname="auth-edge-cases.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles concurrent onboarding sessions" classname="auth-edge-cases.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles browser back/forward during onboarding" classname="auth-edge-cases.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles page refresh during onboarding" classname="auth-edge-cases.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles localStorage quota exceeded" classname="auth-edge-cases.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles authentication with disabled JavaScript" classname="auth-edge-cases.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="auth-flow-complete.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="firefox" tests="8" failures="0" skipped="8" time="0" errors="0">
-<testcase name="Complete Authentication and Onboarding Flow › complete happy path: school selection → login → onboarding → dashboard" classname="auth-flow-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Complete Authentication and Onboarding Flow › handles validation errors during onboarding" classname="auth-flow-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Complete Authentication and Onboarding Flow › handles handle availability checking" classname="auth-flow-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Complete Authentication and Onboarding Flow › handles API failures gracefully" classname="auth-flow-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Complete Authentication and Onboarding Flow › supports faculty onboarding flow" classname="auth-flow-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Complete Authentication and Onboarding Flow › maintains state during navigation" classname="auth-flow-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Complete Authentication and Onboarding Flow › shows progress correctly throughout flow" classname="auth-flow-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Complete Authentication and Onboarding Flow › handles network errors during onboarding submission" classname="auth-flow-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="auth-onboarding-flow.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="firefox" tests="10" failures="0" skipped="10" time="0" errors="0">
-<testcase name="Authentication and Onboarding E2E Flow › completes full new user flow: landing → auth → onboarding → dashboard" classname="auth-onboarding-flow.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication and Onboarding E2E Flow › handles existing user login flow" classname="auth-onboarding-flow.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication and Onboarding E2E Flow › validates email domain restrictions" classname="auth-onboarding-flow.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication and Onboarding E2E Flow › handles onboarding form validation" classname="auth-onboarding-flow.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication and Onboarding E2E Flow › allows onboarding step navigation" classname="auth-onboarding-flow.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication and Onboarding E2E Flow › handles onboarding progress tracking" classname="auth-onboarding-flow.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication and Onboarding E2E Flow › supports keyboard navigation throughout onboarding" classname="auth-onboarding-flow.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication and Onboarding E2E Flow › handles session management during onboarding" classname="auth-onboarding-flow.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication and Onboarding E2E Flow › handles onboarding interruption and resumption" classname="auth-onboarding-flow.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication and Onboarding E2E Flow › provides accessibility features throughout auth flow" classname="auth-onboarding-flow.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="complete-user-journey.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="firefox" tests="7" failures="0" skipped="7" time="0" errors="0">
-<testcase name="Complete HIVE User Journey › complete new user onboarding to active platform usage" classname="complete-user-journey.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Complete HIVE User Journey › faculty user gets simplified onboarding flow" classname="complete-user-journey.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Complete HIVE User Journey › handles network failures gracefully" classname="complete-user-journey.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Complete HIVE User Journey › maintains state during browser refresh" classname="complete-user-journey.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Complete HIVE User Journey › cross-browser compatibility" classname="complete-user-journey.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Complete HIVE User Journey › accessibility compliance throughout journey" classname="complete-user-journey.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Complete HIVE User Journey › performance under load" classname="complete-user-journey.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="debug-hooks.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="firefox" tests="1" failures="0" skipped="1" time="0" errors="0">
-<testcase name="Debug Hooks Error › simple page load test" classname="debug-hooks.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="debug-providers.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="firefox" tests="1" failures="0" skipped="1" time="0" errors="0">
-<testcase name="Debug Providers › test HiveLogo specifically" classname="debug-providers.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="feed-social-interactions.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="firefox" tests="8" failures="0" skipped="8" time="0" errors="0">
-<testcase name="Feed and Social Interactions E2E Flow › completes full social interaction flow: post → like → comment → share → follow" classname="feed-social-interactions.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Feed and Social Interactions E2E Flow › handles feed personalization and algorithm preferences" classname="feed-social-interactions.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Feed and Social Interactions E2E Flow › manages social connections and network building" classname="feed-social-interactions.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Feed and Social Interactions E2E Flow › handles content creation with rich media and formatting" classname="feed-social-interactions.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Feed and Social Interactions E2E Flow › handles content moderation and reporting" classname="feed-social-interactions.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Feed and Social Interactions E2E Flow › supports real-time notifications and activity updates" classname="feed-social-interactions.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Feed and Social Interactions E2E Flow › handles feed filtering and content discovery" classname="feed-social-interactions.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Feed and Social Interactions E2E Flow › provides accessibility features for social interactions" classname="feed-social-interactions.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="onboarding-complete.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="firefox" tests="5" failures="0" skipped="5" time="0" errors="0">
-<testcase name="Complete Onboarding E2E Flow › completes full new user onboarding with all features" classname="onboarding-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Complete Onboarding E2E Flow › handles onboarding interruption and resumption" classname="onboarding-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Complete Onboarding E2E Flow › validates comprehensive form validation during onboarding" classname="onboarding-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Complete Onboarding E2E Flow › supports accessibility throughout onboarding" classname="onboarding-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Complete Onboarding E2E Flow › handles error recovery and retry mechanisms" classname="onboarding-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="profile-management.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="firefox" tests="7" failures="0" skipped="7" time="0" errors="0">
-<testcase name="Profile Management E2E Flow › completes comprehensive profile setup and customization" classname="profile-management.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Profile Management E2E Flow › manages profile connections and networking" classname="profile-management.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Profile Management E2E Flow › handles profile analytics and insights" classname="profile-management.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Profile Management E2E Flow › manages profile content and digital presence" classname="profile-management.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Profile Management E2E Flow › handles profile customization and themes" classname="profile-management.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Profile Management E2E Flow › handles profile verification and credibility" classname="profile-management.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Profile Management E2E Flow › provides accessibility features for profile management" classname="profile-management.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="profile-networking-complete.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="firefox" tests="3" failures="0" skipped="3" time="0" errors="0">
-<testcase name="Profile and Networking Complete E2E Flow › completes comprehensive profile management workflow" classname="profile-networking-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Profile and Networking Complete E2E Flow › handles advanced networking features and relationship management" classname="profile-networking-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Profile and Networking Complete E2E Flow › handles profile accessibility and inclusive networking" classname="profile-networking-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="simple-navigation.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="firefox" tests="3" failures="0" skipped="3" time="0" errors="0">
-<testcase name="Simple Navigation Tests › can navigate to homepage" classname="simple-navigation.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Simple Navigation Tests › can navigate to profile page" classname="simple-navigation.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Simple Navigation Tests › can navigate to schools page" classname="simple-navigation.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="social-feed-engagement.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="firefox" tests="3" failures="0" skipped="3" time="0" errors="0">
-<testcase name="Social Feed Engagement E2E Flow › completes comprehensive social feed interaction workflow" classname="social-feed-engagement.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Social Feed Engagement E2E Flow › handles feed performance with infinite scroll and content loading" classname="social-feed-engagement.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Social Feed Engagement E2E Flow › handles social feed accessibility and screen reader support" classname="social-feed-engagement.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="space-collaboration-complete.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="firefox" tests="4" failures="0" skipped="4" time="0" errors="0">
-<testcase name="Space Collaboration Complete E2E Flow › completes comprehensive space creation and management workflow" classname="space-collaboration-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Space Collaboration Complete E2E Flow › handles space member interactions and collaborative workflows" classname="space-collaboration-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Space Collaboration Complete E2E Flow › handles space moderation and community management" classname="space-collaboration-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Space Collaboration Complete E2E Flow › handles space accessibility and inclusive design" classname="space-collaboration-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="spaces-lifecycle.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="firefox" tests="8" failures="0" skipped="8" time="0" errors="0">
-<testcase name="Spaces Lifecycle E2E Flow › completes full space lifecycle: create → customize → invite → manage → archive" classname="spaces-lifecycle.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Spaces Lifecycle E2E Flow › handles space discovery and joining flow" classname="spaces-lifecycle.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Spaces Lifecycle E2E Flow › validates space creation form and handles errors" classname="spaces-lifecycle.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Spaces Lifecycle E2E Flow › handles space member management and permissions" classname="spaces-lifecycle.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Spaces Lifecycle E2E Flow › supports space content creation and moderation" classname="spaces-lifecycle.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Spaces Lifecycle E2E Flow › handles space privacy settings and visibility" classname="spaces-lifecycle.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Spaces Lifecycle E2E Flow › supports real-time space activity and notifications" classname="spaces-lifecycle.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Spaces Lifecycle E2E Flow › provides accessibility features throughout spaces" classname="spaces-lifecycle.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="tool-development-complete.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="firefox" tests="4" failures="0" skipped="4" time="0" errors="0">
-<testcase name="Tool Development Complete E2E Flow › completes full tool creation and development workflow" classname="tool-development-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Tool Development Complete E2E Flow › handles tool development with collaboration features" classname="tool-development-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Tool Development Complete E2E Flow › handles tool development error recovery and validation" classname="tool-development-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Tool Development Complete E2E Flow › handles tool deployment and marketplace submission" classname="tool-development-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="tools-development.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="firefox" tests="7" failures="0" skipped="7" time="0" errors="0">
-<testcase name="Tools Development E2E Flow › completes full tool development lifecycle: create → develop → test → deploy → share" classname="tools-development.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Tools Development E2E Flow › handles collaborative tool development" classname="tools-development.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Tools Development E2E Flow › validates tool code and provides development assistance" classname="tools-development.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Tools Development E2E Flow › handles tool marketplace and discovery" classname="tools-development.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Tools Development E2E Flow › supports tool analytics and performance monitoring" classname="tools-development.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Tools Development E2E Flow › handles tool versioning and deployment management" classname="tools-development.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Tools Development E2E Flow › provides accessibility features for tool development" classname="tools-development.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="waitlist.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="firefox" tests="1" failures="0" skipped="1" time="0" errors="0">
-<testcase name="Waitlist Flow › a user can join the waitlist for a non-active school" classname="waitlist.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="auth-edge-cases.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="webkit" tests="15" failures="0" skipped="15" time="0" errors="0">
-<testcase name="Authentication Edge Cases and Error Handling › handles missing school parameters gracefully" classname="auth-edge-cases.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles expired or invalid magic links" classname="auth-edge-cases.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles malformed email addresses" classname="auth-edge-cases.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles domain validation for non-dev schools" classname="auth-edge-cases.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles session expiration during onboarding" classname="auth-edge-cases.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles corrupted session data" classname="auth-edge-cases.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles network timeouts during magic link sending" classname="auth-edge-cases.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles duplicate onboarding completion" classname="auth-edge-cases.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles handle conflicts during onboarding" classname="auth-edge-cases.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles invalid graduation years" classname="auth-edge-cases.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles concurrent onboarding sessions" classname="auth-edge-cases.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles browser back/forward during onboarding" classname="auth-edge-cases.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles page refresh during onboarding" classname="auth-edge-cases.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles localStorage quota exceeded" classname="auth-edge-cases.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles authentication with disabled JavaScript" classname="auth-edge-cases.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="auth-flow-complete.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="webkit" tests="8" failures="0" skipped="8" time="0" errors="0">
-<testcase name="Complete Authentication and Onboarding Flow › complete happy path: school selection → login → onboarding → dashboard" classname="auth-flow-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Complete Authentication and Onboarding Flow › handles validation errors during onboarding" classname="auth-flow-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Complete Authentication and Onboarding Flow › handles handle availability checking" classname="auth-flow-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Complete Authentication and Onboarding Flow › handles API failures gracefully" classname="auth-flow-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Complete Authentication and Onboarding Flow › supports faculty onboarding flow" classname="auth-flow-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Complete Authentication and Onboarding Flow › maintains state during navigation" classname="auth-flow-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Complete Authentication and Onboarding Flow › shows progress correctly throughout flow" classname="auth-flow-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Complete Authentication and Onboarding Flow › handles network errors during onboarding submission" classname="auth-flow-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="auth-onboarding-flow.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="webkit" tests="10" failures="0" skipped="10" time="0" errors="0">
-<testcase name="Authentication and Onboarding E2E Flow › completes full new user flow: landing → auth → onboarding → dashboard" classname="auth-onboarding-flow.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication and Onboarding E2E Flow › handles existing user login flow" classname="auth-onboarding-flow.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication and Onboarding E2E Flow › validates email domain restrictions" classname="auth-onboarding-flow.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication and Onboarding E2E Flow › handles onboarding form validation" classname="auth-onboarding-flow.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication and Onboarding E2E Flow › allows onboarding step navigation" classname="auth-onboarding-flow.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication and Onboarding E2E Flow › handles onboarding progress tracking" classname="auth-onboarding-flow.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication and Onboarding E2E Flow › supports keyboard navigation throughout onboarding" classname="auth-onboarding-flow.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication and Onboarding E2E Flow › handles session management during onboarding" classname="auth-onboarding-flow.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication and Onboarding E2E Flow › handles onboarding interruption and resumption" classname="auth-onboarding-flow.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication and Onboarding E2E Flow › provides accessibility features throughout auth flow" classname="auth-onboarding-flow.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="complete-user-journey.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="webkit" tests="7" failures="0" skipped="7" time="0" errors="0">
-<testcase name="Complete HIVE User Journey › complete new user onboarding to active platform usage" classname="complete-user-journey.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Complete HIVE User Journey › faculty user gets simplified onboarding flow" classname="complete-user-journey.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Complete HIVE User Journey › handles network failures gracefully" classname="complete-user-journey.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Complete HIVE User Journey › maintains state during browser refresh" classname="complete-user-journey.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Complete HIVE User Journey › cross-browser compatibility" classname="complete-user-journey.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Complete HIVE User Journey › accessibility compliance throughout journey" classname="complete-user-journey.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Complete HIVE User Journey › performance under load" classname="complete-user-journey.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="debug-hooks.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="webkit" tests="1" failures="0" skipped="1" time="0" errors="0">
-<testcase name="Debug Hooks Error › simple page load test" classname="debug-hooks.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="debug-providers.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="webkit" tests="1" failures="0" skipped="1" time="0" errors="0">
-<testcase name="Debug Providers › test HiveLogo specifically" classname="debug-providers.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="feed-social-interactions.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="webkit" tests="8" failures="0" skipped="8" time="0" errors="0">
-<testcase name="Feed and Social Interactions E2E Flow › completes full social interaction flow: post → like → comment → share → follow" classname="feed-social-interactions.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Feed and Social Interactions E2E Flow › handles feed personalization and algorithm preferences" classname="feed-social-interactions.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Feed and Social Interactions E2E Flow › manages social connections and network building" classname="feed-social-interactions.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Feed and Social Interactions E2E Flow › handles content creation with rich media and formatting" classname="feed-social-interactions.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Feed and Social Interactions E2E Flow › handles content moderation and reporting" classname="feed-social-interactions.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Feed and Social Interactions E2E Flow › supports real-time notifications and activity updates" classname="feed-social-interactions.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Feed and Social Interactions E2E Flow › handles feed filtering and content discovery" classname="feed-social-interactions.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Feed and Social Interactions E2E Flow › provides accessibility features for social interactions" classname="feed-social-interactions.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="onboarding-complete.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="webkit" tests="5" failures="0" skipped="5" time="0" errors="0">
-<testcase name="Complete Onboarding E2E Flow › completes full new user onboarding with all features" classname="onboarding-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Complete Onboarding E2E Flow › handles onboarding interruption and resumption" classname="onboarding-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Complete Onboarding E2E Flow › validates comprehensive form validation during onboarding" classname="onboarding-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Complete Onboarding E2E Flow › supports accessibility throughout onboarding" classname="onboarding-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Complete Onboarding E2E Flow › handles error recovery and retry mechanisms" classname="onboarding-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="profile-management.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="webkit" tests="7" failures="0" skipped="7" time="0" errors="0">
-<testcase name="Profile Management E2E Flow › completes comprehensive profile setup and customization" classname="profile-management.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Profile Management E2E Flow › manages profile connections and networking" classname="profile-management.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Profile Management E2E Flow › handles profile analytics and insights" classname="profile-management.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Profile Management E2E Flow › manages profile content and digital presence" classname="profile-management.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Profile Management E2E Flow › handles profile customization and themes" classname="profile-management.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Profile Management E2E Flow › handles profile verification and credibility" classname="profile-management.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Profile Management E2E Flow › provides accessibility features for profile management" classname="profile-management.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="profile-networking-complete.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="webkit" tests="3" failures="0" skipped="3" time="0" errors="0">
-<testcase name="Profile and Networking Complete E2E Flow › completes comprehensive profile management workflow" classname="profile-networking-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Profile and Networking Complete E2E Flow › handles advanced networking features and relationship management" classname="profile-networking-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Profile and Networking Complete E2E Flow › handles profile accessibility and inclusive networking" classname="profile-networking-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="simple-navigation.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="webkit" tests="3" failures="0" skipped="3" time="0" errors="0">
-<testcase name="Simple Navigation Tests › can navigate to homepage" classname="simple-navigation.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Simple Navigation Tests › can navigate to profile page" classname="simple-navigation.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Simple Navigation Tests › can navigate to schools page" classname="simple-navigation.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="social-feed-engagement.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="webkit" tests="3" failures="0" skipped="3" time="0" errors="0">
-<testcase name="Social Feed Engagement E2E Flow › completes comprehensive social feed interaction workflow" classname="social-feed-engagement.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Social Feed Engagement E2E Flow › handles feed performance with infinite scroll and content loading" classname="social-feed-engagement.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Social Feed Engagement E2E Flow › handles social feed accessibility and screen reader support" classname="social-feed-engagement.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="space-collaboration-complete.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="webkit" tests="4" failures="0" skipped="4" time="0" errors="0">
-<testcase name="Space Collaboration Complete E2E Flow › completes comprehensive space creation and management workflow" classname="space-collaboration-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Space Collaboration Complete E2E Flow › handles space member interactions and collaborative workflows" classname="space-collaboration-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Space Collaboration Complete E2E Flow › handles space moderation and community management" classname="space-collaboration-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Space Collaboration Complete E2E Flow › handles space accessibility and inclusive design" classname="space-collaboration-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="spaces-lifecycle.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="webkit" tests="8" failures="0" skipped="8" time="0" errors="0">
-<testcase name="Spaces Lifecycle E2E Flow › completes full space lifecycle: create → customize → invite → manage → archive" classname="spaces-lifecycle.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Spaces Lifecycle E2E Flow › handles space discovery and joining flow" classname="spaces-lifecycle.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Spaces Lifecycle E2E Flow › validates space creation form and handles errors" classname="spaces-lifecycle.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Spaces Lifecycle E2E Flow › handles space member management and permissions" classname="spaces-lifecycle.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Spaces Lifecycle E2E Flow › supports space content creation and moderation" classname="spaces-lifecycle.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Spaces Lifecycle E2E Flow › handles space privacy settings and visibility" classname="spaces-lifecycle.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Spaces Lifecycle E2E Flow › supports real-time space activity and notifications" classname="spaces-lifecycle.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Spaces Lifecycle E2E Flow › provides accessibility features throughout spaces" classname="spaces-lifecycle.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="tool-development-complete.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="webkit" tests="4" failures="0" skipped="4" time="0" errors="0">
-<testcase name="Tool Development Complete E2E Flow › completes full tool creation and development workflow" classname="tool-development-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Tool Development Complete E2E Flow › handles tool development with collaboration features" classname="tool-development-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Tool Development Complete E2E Flow › handles tool development error recovery and validation" classname="tool-development-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Tool Development Complete E2E Flow › handles tool deployment and marketplace submission" classname="tool-development-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="tools-development.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="webkit" tests="7" failures="0" skipped="7" time="0" errors="0">
-<testcase name="Tools Development E2E Flow › completes full tool development lifecycle: create → develop → test → deploy → share" classname="tools-development.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Tools Development E2E Flow › handles collaborative tool development" classname="tools-development.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Tools Development E2E Flow › validates tool code and provides development assistance" classname="tools-development.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Tools Development E2E Flow › handles tool marketplace and discovery" classname="tools-development.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Tools Development E2E Flow › supports tool analytics and performance monitoring" classname="tools-development.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Tools Development E2E Flow › handles tool versioning and deployment management" classname="tools-development.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Tools Development E2E Flow › provides accessibility features for tool development" classname="tools-development.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="waitlist.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="webkit" tests="1" failures="0" skipped="1" time="0" errors="0">
-<testcase name="Waitlist Flow › a user can join the waitlist for a non-active school" classname="waitlist.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
 </testsuite>
-<testsuite name="auth-edge-cases.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="Mobile Chrome" tests="15" failures="0" skipped="15" time="0" errors="0">
-<testcase name="Authentication Edge Cases and Error Handling › handles missing school parameters gracefully" classname="auth-edge-cases.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles expired or invalid magic links" classname="auth-edge-cases.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles malformed email addresses" classname="auth-edge-cases.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles domain validation for non-dev schools" classname="auth-edge-cases.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles session expiration during onboarding" classname="auth-edge-cases.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles corrupted session data" classname="auth-edge-cases.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles network timeouts during magic link sending" classname="auth-edge-cases.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles duplicate onboarding completion" classname="auth-edge-cases.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles handle conflicts during onboarding" classname="auth-edge-cases.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles invalid graduation years" classname="auth-edge-cases.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles concurrent onboarding sessions" classname="auth-edge-cases.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles browser back/forward during onboarding" classname="auth-edge-cases.spec.ts" time="0">
+<testsuite name="onboarding-flow.spec.ts" timestamp="2025-08-30T04:17:40.881Z" hostname="chromium" tests="12" failures="0" skipped="12" time="0" errors="0">
+<testcase name="Onboarding Flow › should complete full student onboarding flow" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles page refresh during onboarding" classname="auth-edge-cases.spec.ts" time="0">
+<testcase name="Onboarding Flow › should complete faculty onboarding flow (simplified)" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles localStorage quota exceeded" classname="auth-edge-cases.spec.ts" time="0">
+<testcase name="Onboarding Flow › should validate required fields" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles authentication with disabled JavaScript" classname="auth-edge-cases.spec.ts" time="0">
+<testcase name="Onboarding Flow › should handle invalid graduation years" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-</testsuite>
-<testsuite name="auth-flow-complete.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="Mobile Chrome" tests="8" failures="0" skipped="8" time="0" errors="0">
-<testcase name="Complete Authentication and Onboarding Flow › complete happy path: school selection → login → onboarding → dashboard" classname="auth-flow-complete.spec.ts" time="0">
+<testcase name="Onboarding Flow › should validate handle availability and format" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Complete Authentication and Onboarding Flow › handles validation errors during onboarding" classname="auth-flow-complete.spec.ts" time="0">
+<testcase name="Onboarding Flow › should handle taken handles" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Complete Authentication and Onboarding Flow › handles handle availability checking" classname="auth-flow-complete.spec.ts" time="0">
+<testcase name="Onboarding Flow › should allow skipping optional steps" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Complete Authentication and Onboarding Flow › handles API failures gracefully" classname="auth-flow-complete.spec.ts" time="0">
+<testcase name="Onboarding Flow › should show progress correctly" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Complete Authentication and Onboarding Flow › supports faculty onboarding flow" classname="auth-flow-complete.spec.ts" time="0">
+<testcase name="Onboarding Flow › should handle back navigation" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Complete Authentication and Onboarding Flow › maintains state during navigation" classname="auth-flow-complete.spec.ts" time="0">
+<testcase name="Onboarding Flow › should prevent access to onboarding for completed users" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Complete Authentication and Onboarding Flow › shows progress correctly throughout flow" classname="auth-flow-complete.spec.ts" time="0">
+<testcase name="Onboarding Flow › should work on mobile devices" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Complete Authentication and Onboarding Flow › handles network errors during onboarding submission" classname="auth-flow-complete.spec.ts" time="0">
+<testcase name="Onboarding Flow › should handle network errors during onboarding completion" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="auth-onboarding-flow.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="Mobile Chrome" tests="10" failures="0" skipped="10" time="0" errors="0">
-<testcase name="Authentication and Onboarding E2E Flow › completes full new user flow: landing → auth → onboarding → dashboard" classname="auth-onboarding-flow.spec.ts" time="0">
+<testsuite name="smoke-tests.spec.ts" timestamp="2025-08-30T04:17:40.881Z" hostname="chromium" tests="10" failures="0" skipped="10" time="0" errors="0">
+<testcase name="Smoke Tests - Critical User Journeys › should load the landing page" classname="smoke-tests.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Authentication and Onboarding E2E Flow › handles existing user login flow" classname="auth-onboarding-flow.spec.ts" time="0">
+<testcase name="Smoke Tests - Critical User Journeys › should handle app health check" classname="smoke-tests.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Authentication and Onboarding E2E Flow › validates email domain restrictions" classname="auth-onboarding-flow.spec.ts" time="0">
+<testcase name="Smoke Tests - Critical User Journeys › should complete happy path: auth → onboarding → dashboard" classname="smoke-tests.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Authentication and Onboarding E2E Flow › handles onboarding form validation" classname="auth-onboarding-flow.spec.ts" time="0">
+<testcase name="Smoke Tests - Critical User Journeys › should show error boundaries on critical failures" classname="smoke-tests.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Authentication and Onboarding E2E Flow › allows onboarding step navigation" classname="auth-onboarding-flow.spec.ts" time="0">
+<testcase name="Smoke Tests - Critical User Journeys › should be responsive on mobile" classname="smoke-tests.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Authentication and Onboarding E2E Flow › handles onboarding progress tracking" classname="auth-onboarding-flow.spec.ts" time="0">
+<testcase name="Smoke Tests - Critical User Journeys › should handle JavaScript disabled gracefully" classname="smoke-tests.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Authentication and Onboarding E2E Flow › supports keyboard navigation throughout onboarding" classname="auth-onboarding-flow.spec.ts" time="0">
+<testcase name="Smoke Tests - Critical User Journeys › should persist data across page refreshes" classname="smoke-tests.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Authentication and Onboarding E2E Flow › handles session management during onboarding" classname="auth-onboarding-flow.spec.ts" time="0">
+<testcase name="Smoke Tests - Critical User Journeys › should handle concurrent user sessions" classname="smoke-tests.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Authentication and Onboarding E2E Flow › handles onboarding interruption and resumption" classname="auth-onboarding-flow.spec.ts" time="0">
+<testcase name="Smoke Tests - Critical User Journeys › should handle network connectivity issues" classname="smoke-tests.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Authentication and Onboarding E2E Flow › provides accessibility features throughout auth flow" classname="auth-onboarding-flow.spec.ts" time="0">
+<testcase name="Smoke Tests - Critical User Journeys › should maintain accessibility standards" classname="smoke-tests.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="complete-user-journey.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="Mobile Chrome" tests="7" failures="0" skipped="7" time="0" errors="0">
-<testcase name="Complete HIVE User Journey › complete new user onboarding to active platform usage" classname="complete-user-journey.spec.ts" time="0">
+<testsuite name="auth-flow.spec.ts" timestamp="2025-08-30T04:17:40.881Z" hostname="firefox" tests="9" failures="0" skipped="9" time="0" errors="0">
+<testcase name="Authentication Flow › should complete full auth flow: school selection → login → magic link" classname="auth-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Complete HIVE User Journey › faculty user gets simplified onboarding flow" classname="complete-user-journey.spec.ts" time="0">
+<testcase name="Authentication Flow › should handle invalid school domain" classname="auth-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Complete HIVE User Journey › handles network failures gracefully" classname="complete-user-journey.spec.ts" time="0">
+<testcase name="Authentication Flow › should handle expired magic links" classname="auth-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Complete HIVE User Journey › maintains state during browser refresh" classname="complete-user-journey.spec.ts" time="0">
+<testcase name="Authentication Flow › should prevent rapid magic link requests (rate limiting)" classname="auth-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Complete HIVE User Journey › cross-browser compatibility" classname="complete-user-journey.spec.ts" time="0">
+<testcase name="Authentication Flow › should redirect authenticated users away from auth pages" classname="auth-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Complete HIVE User Journey › accessibility compliance throughout journey" classname="complete-user-journey.spec.ts" time="0">
+<testcase name="Authentication Flow › should handle network errors gracefully" classname="auth-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Complete HIVE User Journey › performance under load" classname="complete-user-journey.spec.ts" time="0">
+<testcase name="Authentication Flow › should work on mobile devices" classname="auth-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-</testsuite>
-<testsuite name="debug-hooks.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="Mobile Chrome" tests="1" failures="0" skipped="1" time="0" errors="0">
-<testcase name="Debug Hooks Error › simple page load test" classname="debug-hooks.spec.ts" time="0">
+<testcase name="Authentication Flow › should persist auth state across page reloads" classname="auth-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-</testsuite>
-<testsuite name="debug-providers.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="Mobile Chrome" tests="1" failures="0" skipped="1" time="0" errors="0">
-<testcase name="Debug Providers › test HiveLogo specifically" classname="debug-providers.spec.ts" time="0">
+<testcase name="Authentication Flow › should handle logout correctly" classname="auth-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="feed-social-interactions.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="Mobile Chrome" tests="8" failures="0" skipped="8" time="0" errors="0">
-<testcase name="Feed and Social Interactions E2E Flow › completes full social interaction flow: post → like → comment → share → follow" classname="feed-social-interactions.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Feed and Social Interactions E2E Flow › handles feed personalization and algorithm preferences" classname="feed-social-interactions.spec.ts" time="0">
+<testsuite name="onboarding-flow.spec.ts" timestamp="2025-08-30T04:17:40.881Z" hostname="firefox" tests="12" failures="0" skipped="12" time="0" errors="0">
+<testcase name="Onboarding Flow › should complete full student onboarding flow" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Feed and Social Interactions E2E Flow › manages social connections and network building" classname="feed-social-interactions.spec.ts" time="0">
+<testcase name="Onboarding Flow › should complete faculty onboarding flow (simplified)" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Feed and Social Interactions E2E Flow › handles content creation with rich media and formatting" classname="feed-social-interactions.spec.ts" time="0">
+<testcase name="Onboarding Flow › should validate required fields" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Feed and Social Interactions E2E Flow › handles content moderation and reporting" classname="feed-social-interactions.spec.ts" time="0">
+<testcase name="Onboarding Flow › should handle invalid graduation years" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Feed and Social Interactions E2E Flow › supports real-time notifications and activity updates" classname="feed-social-interactions.spec.ts" time="0">
+<testcase name="Onboarding Flow › should validate handle availability and format" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Feed and Social Interactions E2E Flow › handles feed filtering and content discovery" classname="feed-social-interactions.spec.ts" time="0">
+<testcase name="Onboarding Flow › should handle taken handles" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Feed and Social Interactions E2E Flow › provides accessibility features for social interactions" classname="feed-social-interactions.spec.ts" time="0">
+<testcase name="Onboarding Flow › should allow skipping optional steps" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-</testsuite>
-<testsuite name="onboarding-complete.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="Mobile Chrome" tests="5" failures="0" skipped="5" time="0" errors="0">
-<testcase name="Complete Onboarding E2E Flow › completes full new user onboarding with all features" classname="onboarding-complete.spec.ts" time="0">
+<testcase name="Onboarding Flow › should show progress correctly" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Complete Onboarding E2E Flow › handles onboarding interruption and resumption" classname="onboarding-complete.spec.ts" time="0">
+<testcase name="Onboarding Flow › should handle back navigation" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Complete Onboarding E2E Flow › validates comprehensive form validation during onboarding" classname="onboarding-complete.spec.ts" time="0">
+<testcase name="Onboarding Flow › should prevent access to onboarding for completed users" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Complete Onboarding E2E Flow › supports accessibility throughout onboarding" classname="onboarding-complete.spec.ts" time="0">
+<testcase name="Onboarding Flow › should work on mobile devices" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Complete Onboarding E2E Flow › handles error recovery and retry mechanisms" classname="onboarding-complete.spec.ts" time="0">
+<testcase name="Onboarding Flow › should handle network errors during onboarding completion" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="profile-management.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="Mobile Chrome" tests="7" failures="0" skipped="7" time="0" errors="0">
-<testcase name="Profile Management E2E Flow › completes comprehensive profile setup and customization" classname="profile-management.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Profile Management E2E Flow › manages profile connections and networking" classname="profile-management.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Profile Management E2E Flow › handles profile analytics and insights" classname="profile-management.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Profile Management E2E Flow › manages profile content and digital presence" classname="profile-management.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Profile Management E2E Flow › handles profile customization and themes" classname="profile-management.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Profile Management E2E Flow › handles profile verification and credibility" classname="profile-management.spec.ts" time="0">
+<testsuite name="smoke-tests.spec.ts" timestamp="2025-08-30T04:17:40.881Z" hostname="firefox" tests="10" failures="0" skipped="10" time="0" errors="0">
+<testcase name="Smoke Tests - Critical User Journeys › should load the landing page" classname="smoke-tests.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Profile Management E2E Flow › provides accessibility features for profile management" classname="profile-management.spec.ts" time="0">
+<testcase name="Smoke Tests - Critical User Journeys › should handle app health check" classname="smoke-tests.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-</testsuite>
-<testsuite name="profile-networking-complete.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="Mobile Chrome" tests="3" failures="0" skipped="3" time="0" errors="0">
-<testcase name="Profile and Networking Complete E2E Flow › completes comprehensive profile management workflow" classname="profile-networking-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Profile and Networking Complete E2E Flow › handles advanced networking features and relationship management" classname="profile-networking-complete.spec.ts" time="0">
+<testcase name="Smoke Tests - Critical User Journeys › should complete happy path: auth → onboarding → dashboard" classname="smoke-tests.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Profile and Networking Complete E2E Flow › handles profile accessibility and inclusive networking" classname="profile-networking-complete.spec.ts" time="0">
+<testcase name="Smoke Tests - Critical User Journeys › should show error boundaries on critical failures" classname="smoke-tests.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-</testsuite>
-<testsuite name="simple-navigation.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="Mobile Chrome" tests="3" failures="0" skipped="3" time="0" errors="0">
-<testcase name="Simple Navigation Tests › can navigate to homepage" classname="simple-navigation.spec.ts" time="0">
+<testcase name="Smoke Tests - Critical User Journeys › should be responsive on mobile" classname="smoke-tests.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Simple Navigation Tests › can navigate to profile page" classname="simple-navigation.spec.ts" time="0">
+<testcase name="Smoke Tests - Critical User Journeys › should handle JavaScript disabled gracefully" classname="smoke-tests.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Simple Navigation Tests › can navigate to schools page" classname="simple-navigation.spec.ts" time="0">
+<testcase name="Smoke Tests - Critical User Journeys › should persist data across page refreshes" classname="smoke-tests.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-</testsuite>
-<testsuite name="social-feed-engagement.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="Mobile Chrome" tests="3" failures="0" skipped="3" time="0" errors="0">
-<testcase name="Social Feed Engagement E2E Flow › completes comprehensive social feed interaction workflow" classname="social-feed-engagement.spec.ts" time="0">
+<testcase name="Smoke Tests - Critical User Journeys › should handle concurrent user sessions" classname="smoke-tests.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Social Feed Engagement E2E Flow › handles feed performance with infinite scroll and content loading" classname="social-feed-engagement.spec.ts" time="0">
+<testcase name="Smoke Tests - Critical User Journeys › should handle network connectivity issues" classname="smoke-tests.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Social Feed Engagement E2E Flow › handles social feed accessibility and screen reader support" classname="social-feed-engagement.spec.ts" time="0">
+<testcase name="Smoke Tests - Critical User Journeys › should maintain accessibility standards" classname="smoke-tests.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="space-collaboration-complete.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="Mobile Chrome" tests="4" failures="0" skipped="4" time="0" errors="0">
-<testcase name="Space Collaboration Complete E2E Flow › completes comprehensive space creation and management workflow" classname="space-collaboration-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Space Collaboration Complete E2E Flow › handles space member interactions and collaborative workflows" classname="space-collaboration-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Space Collaboration Complete E2E Flow › handles space moderation and community management" classname="space-collaboration-complete.spec.ts" time="0">
+<testsuite name="auth-flow.spec.ts" timestamp="2025-08-30T04:17:40.881Z" hostname="webkit" tests="9" failures="0" skipped="9" time="0" errors="0">
+<testcase name="Authentication Flow › should complete full auth flow: school selection → login → magic link" classname="auth-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Space Collaboration Complete E2E Flow › handles space accessibility and inclusive design" classname="space-collaboration-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="spaces-lifecycle.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="Mobile Chrome" tests="8" failures="0" skipped="8" time="0" errors="0">
-<testcase name="Spaces Lifecycle E2E Flow › completes full space lifecycle: create → customize → invite → manage → archive" classname="spaces-lifecycle.spec.ts" time="0">
+<testcase name="Authentication Flow › should handle invalid school domain" classname="auth-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Spaces Lifecycle E2E Flow › handles space discovery and joining flow" classname="spaces-lifecycle.spec.ts" time="0">
+<testcase name="Authentication Flow › should handle expired magic links" classname="auth-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Spaces Lifecycle E2E Flow › validates space creation form and handles errors" classname="spaces-lifecycle.spec.ts" time="0">
+<testcase name="Authentication Flow › should prevent rapid magic link requests (rate limiting)" classname="auth-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Spaces Lifecycle E2E Flow › handles space member management and permissions" classname="spaces-lifecycle.spec.ts" time="0">
+<testcase name="Authentication Flow › should redirect authenticated users away from auth pages" classname="auth-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Spaces Lifecycle E2E Flow › supports space content creation and moderation" classname="spaces-lifecycle.spec.ts" time="0">
+<testcase name="Authentication Flow › should handle network errors gracefully" classname="auth-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Spaces Lifecycle E2E Flow › handles space privacy settings and visibility" classname="spaces-lifecycle.spec.ts" time="0">
+<testcase name="Authentication Flow › should work on mobile devices" classname="auth-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Spaces Lifecycle E2E Flow › supports real-time space activity and notifications" classname="spaces-lifecycle.spec.ts" time="0">
+<testcase name="Authentication Flow › should persist auth state across page reloads" classname="auth-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Spaces Lifecycle E2E Flow › provides accessibility features throughout spaces" classname="spaces-lifecycle.spec.ts" time="0">
+<testcase name="Authentication Flow › should handle logout correctly" classname="auth-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="tool-development-complete.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="Mobile Chrome" tests="4" failures="0" skipped="4" time="0" errors="0">
-<testcase name="Tool Development Complete E2E Flow › completes full tool creation and development workflow" classname="tool-development-complete.spec.ts" time="0">
+<testsuite name="onboarding-flow.spec.ts" timestamp="2025-08-30T04:17:40.881Z" hostname="webkit" tests="12" failures="0" skipped="12" time="0" errors="0">
+<testcase name="Onboarding Flow › should complete full student onboarding flow" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Tool Development Complete E2E Flow › handles tool development with collaboration features" classname="tool-development-complete.spec.ts" time="0">
+<testcase name="Onboarding Flow › should complete faculty onboarding flow (simplified)" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Tool Development Complete E2E Flow › handles tool development error recovery and validation" classname="tool-development-complete.spec.ts" time="0">
+<testcase name="Onboarding Flow › should validate required fields" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Tool Development Complete E2E Flow › handles tool deployment and marketplace submission" classname="tool-development-complete.spec.ts" time="0">
+<testcase name="Onboarding Flow › should handle invalid graduation years" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-</testsuite>
-<testsuite name="tools-development.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="Mobile Chrome" tests="7" failures="0" skipped="7" time="0" errors="0">
-<testcase name="Tools Development E2E Flow › completes full tool development lifecycle: create → develop → test → deploy → share" classname="tools-development.spec.ts" time="0">
+<testcase name="Onboarding Flow › should validate handle availability and format" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Tools Development E2E Flow › handles collaborative tool development" classname="tools-development.spec.ts" time="0">
+<testcase name="Onboarding Flow › should handle taken handles" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Tools Development E2E Flow › validates tool code and provides development assistance" classname="tools-development.spec.ts" time="0">
+<testcase name="Onboarding Flow › should allow skipping optional steps" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Tools Development E2E Flow › handles tool marketplace and discovery" classname="tools-development.spec.ts" time="0">
+<testcase name="Onboarding Flow › should show progress correctly" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Tools Development E2E Flow › supports tool analytics and performance monitoring" classname="tools-development.spec.ts" time="0">
+<testcase name="Onboarding Flow › should handle back navigation" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Tools Development E2E Flow › handles tool versioning and deployment management" classname="tools-development.spec.ts" time="0">
+<testcase name="Onboarding Flow › should prevent access to onboarding for completed users" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Tools Development E2E Flow › provides accessibility features for tool development" classname="tools-development.spec.ts" time="0">
+<testcase name="Onboarding Flow › should work on mobile devices" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-</testsuite>
-<testsuite name="waitlist.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="Mobile Chrome" tests="1" failures="0" skipped="1" time="0" errors="0">
-<testcase name="Waitlist Flow › a user can join the waitlist for a non-active school" classname="waitlist.spec.ts" time="0">
+<testcase name="Onboarding Flow › should handle network errors during onboarding completion" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="auth-edge-cases.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="Mobile Safari" tests="15" failures="0" skipped="15" time="0" errors="0">
-<testcase name="Authentication Edge Cases and Error Handling › handles missing school parameters gracefully" classname="auth-edge-cases.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles expired or invalid magic links" classname="auth-edge-cases.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles malformed email addresses" classname="auth-edge-cases.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles domain validation for non-dev schools" classname="auth-edge-cases.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles session expiration during onboarding" classname="auth-edge-cases.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles corrupted session data" classname="auth-edge-cases.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles network timeouts during magic link sending" classname="auth-edge-cases.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles duplicate onboarding completion" classname="auth-edge-cases.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles handle conflicts during onboarding" classname="auth-edge-cases.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles invalid graduation years" classname="auth-edge-cases.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles concurrent onboarding sessions" classname="auth-edge-cases.spec.ts" time="0">
+<testsuite name="smoke-tests.spec.ts" timestamp="2025-08-30T04:17:40.881Z" hostname="webkit" tests="10" failures="0" skipped="10" time="0" errors="0">
+<testcase name="Smoke Tests - Critical User Journeys › should load the landing page" classname="smoke-tests.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles browser back/forward during onboarding" classname="auth-edge-cases.spec.ts" time="0">
+<testcase name="Smoke Tests - Critical User Journeys › should handle app health check" classname="smoke-tests.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles page refresh during onboarding" classname="auth-edge-cases.spec.ts" time="0">
+<testcase name="Smoke Tests - Critical User Journeys › should complete happy path: auth → onboarding → dashboard" classname="smoke-tests.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles localStorage quota exceeded" classname="auth-edge-cases.spec.ts" time="0">
+<testcase name="Smoke Tests - Critical User Journeys › should show error boundaries on critical failures" classname="smoke-tests.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Authentication Edge Cases and Error Handling › handles authentication with disabled JavaScript" classname="auth-edge-cases.spec.ts" time="0">
+<testcase name="Smoke Tests - Critical User Journeys › should be responsive on mobile" classname="smoke-tests.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-</testsuite>
-<testsuite name="auth-flow-complete.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="Mobile Safari" tests="8" failures="0" skipped="8" time="0" errors="0">
-<testcase name="Complete Authentication and Onboarding Flow › complete happy path: school selection → login → onboarding → dashboard" classname="auth-flow-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Complete Authentication and Onboarding Flow › handles validation errors during onboarding" classname="auth-flow-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Complete Authentication and Onboarding Flow › handles handle availability checking" classname="auth-flow-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Complete Authentication and Onboarding Flow › handles API failures gracefully" classname="auth-flow-complete.spec.ts" time="0">
+<testcase name="Smoke Tests - Critical User Journeys › should handle JavaScript disabled gracefully" classname="smoke-tests.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Complete Authentication and Onboarding Flow › supports faculty onboarding flow" classname="auth-flow-complete.spec.ts" time="0">
+<testcase name="Smoke Tests - Critical User Journeys › should persist data across page refreshes" classname="smoke-tests.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Complete Authentication and Onboarding Flow › maintains state during navigation" classname="auth-flow-complete.spec.ts" time="0">
+<testcase name="Smoke Tests - Critical User Journeys › should handle concurrent user sessions" classname="smoke-tests.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Complete Authentication and Onboarding Flow › shows progress correctly throughout flow" classname="auth-flow-complete.spec.ts" time="0">
+<testcase name="Smoke Tests - Critical User Journeys › should handle network connectivity issues" classname="smoke-tests.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Complete Authentication and Onboarding Flow › handles network errors during onboarding submission" classname="auth-flow-complete.spec.ts" time="0">
+<testcase name="Smoke Tests - Critical User Journeys › should maintain accessibility standards" classname="smoke-tests.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="auth-onboarding-flow.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="Mobile Safari" tests="10" failures="0" skipped="10" time="0" errors="0">
-<testcase name="Authentication and Onboarding E2E Flow › completes full new user flow: landing → auth → onboarding → dashboard" classname="auth-onboarding-flow.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication and Onboarding E2E Flow › handles existing user login flow" classname="auth-onboarding-flow.spec.ts" time="0">
+<testsuite name="auth-flow.spec.ts" timestamp="2025-08-30T04:17:40.881Z" hostname="Mobile Chrome" tests="9" failures="0" skipped="9" time="0" errors="0">
+<testcase name="Authentication Flow › should complete full auth flow: school selection → login → magic link" classname="auth-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Authentication and Onboarding E2E Flow › validates email domain restrictions" classname="auth-onboarding-flow.spec.ts" time="0">
+<testcase name="Authentication Flow › should handle invalid school domain" classname="auth-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Authentication and Onboarding E2E Flow › handles onboarding form validation" classname="auth-onboarding-flow.spec.ts" time="0">
+<testcase name="Authentication Flow › should handle expired magic links" classname="auth-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Authentication and Onboarding E2E Flow › allows onboarding step navigation" classname="auth-onboarding-flow.spec.ts" time="0">
+<testcase name="Authentication Flow › should prevent rapid magic link requests (rate limiting)" classname="auth-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Authentication and Onboarding E2E Flow › handles onboarding progress tracking" classname="auth-onboarding-flow.spec.ts" time="0">
+<testcase name="Authentication Flow › should redirect authenticated users away from auth pages" classname="auth-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Authentication and Onboarding E2E Flow › supports keyboard navigation throughout onboarding" classname="auth-onboarding-flow.spec.ts" time="0">
+<testcase name="Authentication Flow › should handle network errors gracefully" classname="auth-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Authentication and Onboarding E2E Flow › handles session management during onboarding" classname="auth-onboarding-flow.spec.ts" time="0">
+<testcase name="Authentication Flow › should work on mobile devices" classname="auth-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Authentication and Onboarding E2E Flow › handles onboarding interruption and resumption" classname="auth-onboarding-flow.spec.ts" time="0">
+<testcase name="Authentication Flow › should persist auth state across page reloads" classname="auth-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Authentication and Onboarding E2E Flow › provides accessibility features throughout auth flow" classname="auth-onboarding-flow.spec.ts" time="0">
+<testcase name="Authentication Flow › should handle logout correctly" classname="auth-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="complete-user-journey.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="Mobile Safari" tests="7" failures="0" skipped="7" time="0" errors="0">
-<testcase name="Complete HIVE User Journey › complete new user onboarding to active platform usage" classname="complete-user-journey.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Complete HIVE User Journey › faculty user gets simplified onboarding flow" classname="complete-user-journey.spec.ts" time="0">
+<testsuite name="onboarding-flow.spec.ts" timestamp="2025-08-30T04:17:40.881Z" hostname="Mobile Chrome" tests="12" failures="0" skipped="12" time="0" errors="0">
+<testcase name="Onboarding Flow › should complete full student onboarding flow" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Complete HIVE User Journey › handles network failures gracefully" classname="complete-user-journey.spec.ts" time="0">
+<testcase name="Onboarding Flow › should complete faculty onboarding flow (simplified)" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Complete HIVE User Journey › maintains state during browser refresh" classname="complete-user-journey.spec.ts" time="0">
+<testcase name="Onboarding Flow › should validate required fields" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Complete HIVE User Journey › cross-browser compatibility" classname="complete-user-journey.spec.ts" time="0">
+<testcase name="Onboarding Flow › should handle invalid graduation years" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Complete HIVE User Journey › accessibility compliance throughout journey" classname="complete-user-journey.spec.ts" time="0">
+<testcase name="Onboarding Flow › should validate handle availability and format" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Complete HIVE User Journey › performance under load" classname="complete-user-journey.spec.ts" time="0">
+<testcase name="Onboarding Flow › should handle taken handles" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-</testsuite>
-<testsuite name="debug-hooks.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="Mobile Safari" tests="1" failures="0" skipped="1" time="0" errors="0">
-<testcase name="Debug Hooks Error › simple page load test" classname="debug-hooks.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="debug-providers.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="Mobile Safari" tests="1" failures="0" skipped="1" time="0" errors="0">
-<testcase name="Debug Providers › test HiveLogo specifically" classname="debug-providers.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="feed-social-interactions.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="Mobile Safari" tests="8" failures="0" skipped="8" time="0" errors="0">
-<testcase name="Feed and Social Interactions E2E Flow › completes full social interaction flow: post → like → comment → share → follow" classname="feed-social-interactions.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Feed and Social Interactions E2E Flow › handles feed personalization and algorithm preferences" classname="feed-social-interactions.spec.ts" time="0">
+<testcase name="Onboarding Flow › should allow skipping optional steps" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Feed and Social Interactions E2E Flow › manages social connections and network building" classname="feed-social-interactions.spec.ts" time="0">
+<testcase name="Onboarding Flow › should show progress correctly" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Feed and Social Interactions E2E Flow › handles content creation with rich media and formatting" classname="feed-social-interactions.spec.ts" time="0">
+<testcase name="Onboarding Flow › should handle back navigation" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Feed and Social Interactions E2E Flow › handles content moderation and reporting" classname="feed-social-interactions.spec.ts" time="0">
+<testcase name="Onboarding Flow › should prevent access to onboarding for completed users" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Feed and Social Interactions E2E Flow › supports real-time notifications and activity updates" classname="feed-social-interactions.spec.ts" time="0">
+<testcase name="Onboarding Flow › should work on mobile devices" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Feed and Social Interactions E2E Flow › handles feed filtering and content discovery" classname="feed-social-interactions.spec.ts" time="0">
+<testcase name="Onboarding Flow › should handle network errors during onboarding completion" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Feed and Social Interactions E2E Flow › provides accessibility features for social interactions" classname="feed-social-interactions.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
 </testsuite>
-<testsuite name="onboarding-complete.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="Mobile Safari" tests="5" failures="0" skipped="5" time="0" errors="0">
-<testcase name="Complete Onboarding E2E Flow › completes full new user onboarding with all features" classname="onboarding-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Complete Onboarding E2E Flow › handles onboarding interruption and resumption" classname="onboarding-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Complete Onboarding E2E Flow › validates comprehensive form validation during onboarding" classname="onboarding-complete.spec.ts" time="0">
+<testsuite name="smoke-tests.spec.ts" timestamp="2025-08-30T04:17:40.881Z" hostname="Mobile Chrome" tests="10" failures="0" skipped="10" time="0" errors="0">
+<testcase name="Smoke Tests - Critical User Journeys › should load the landing page" classname="smoke-tests.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Complete Onboarding E2E Flow › supports accessibility throughout onboarding" classname="onboarding-complete.spec.ts" time="0">
+<testcase name="Smoke Tests - Critical User Journeys › should handle app health check" classname="smoke-tests.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Complete Onboarding E2E Flow › handles error recovery and retry mechanisms" classname="onboarding-complete.spec.ts" time="0">
+<testcase name="Smoke Tests - Critical User Journeys › should complete happy path: auth → onboarding → dashboard" classname="smoke-tests.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-</testsuite>
-<testsuite name="profile-management.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="Mobile Safari" tests="7" failures="0" skipped="7" time="0" errors="0">
-<testcase name="Profile Management E2E Flow › completes comprehensive profile setup and customization" classname="profile-management.spec.ts" time="0">
+<testcase name="Smoke Tests - Critical User Journeys › should show error boundaries on critical failures" classname="smoke-tests.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Profile Management E2E Flow › manages profile connections and networking" classname="profile-management.spec.ts" time="0">
+<testcase name="Smoke Tests - Critical User Journeys › should be responsive on mobile" classname="smoke-tests.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Profile Management E2E Flow › handles profile analytics and insights" classname="profile-management.spec.ts" time="0">
+<testcase name="Smoke Tests - Critical User Journeys › should handle JavaScript disabled gracefully" classname="smoke-tests.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Profile Management E2E Flow › manages profile content and digital presence" classname="profile-management.spec.ts" time="0">
+<testcase name="Smoke Tests - Critical User Journeys › should persist data across page refreshes" classname="smoke-tests.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Profile Management E2E Flow › handles profile customization and themes" classname="profile-management.spec.ts" time="0">
+<testcase name="Smoke Tests - Critical User Journeys › should handle concurrent user sessions" classname="smoke-tests.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Profile Management E2E Flow › handles profile verification and credibility" classname="profile-management.spec.ts" time="0">
+<testcase name="Smoke Tests - Critical User Journeys › should handle network connectivity issues" classname="smoke-tests.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Profile Management E2E Flow › provides accessibility features for profile management" classname="profile-management.spec.ts" time="0">
+<testcase name="Smoke Tests - Critical User Journeys › should maintain accessibility standards" classname="smoke-tests.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="profile-networking-complete.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="Mobile Safari" tests="3" failures="0" skipped="3" time="0" errors="0">
-<testcase name="Profile and Networking Complete E2E Flow › completes comprehensive profile management workflow" classname="profile-networking-complete.spec.ts" time="0">
+<testsuite name="auth-flow.spec.ts" timestamp="2025-08-30T04:17:40.881Z" hostname="Mobile Safari" tests="9" failures="0" skipped="9" time="0" errors="0">
+<testcase name="Authentication Flow › should complete full auth flow: school selection → login → magic link" classname="auth-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Profile and Networking Complete E2E Flow › handles advanced networking features and relationship management" classname="profile-networking-complete.spec.ts" time="0">
+<testcase name="Authentication Flow › should handle invalid school domain" classname="auth-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Profile and Networking Complete E2E Flow › handles profile accessibility and inclusive networking" classname="profile-networking-complete.spec.ts" time="0">
+<testcase name="Authentication Flow › should handle expired magic links" classname="auth-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-</testsuite>
-<testsuite name="simple-navigation.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="Mobile Safari" tests="3" failures="0" skipped="3" time="0" errors="0">
-<testcase name="Simple Navigation Tests › can navigate to homepage" classname="simple-navigation.spec.ts" time="0">
+<testcase name="Authentication Flow › should prevent rapid magic link requests (rate limiting)" classname="auth-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Simple Navigation Tests › can navigate to profile page" classname="simple-navigation.spec.ts" time="0">
+<testcase name="Authentication Flow › should redirect authenticated users away from auth pages" classname="auth-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Simple Navigation Tests › can navigate to schools page" classname="simple-navigation.spec.ts" time="0">
+<testcase name="Authentication Flow › should handle network errors gracefully" classname="auth-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-</testsuite>
-<testsuite name="social-feed-engagement.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="Mobile Safari" tests="3" failures="0" skipped="3" time="0" errors="0">
-<testcase name="Social Feed Engagement E2E Flow › completes comprehensive social feed interaction workflow" classname="social-feed-engagement.spec.ts" time="0">
+<testcase name="Authentication Flow › should work on mobile devices" classname="auth-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Social Feed Engagement E2E Flow › handles feed performance with infinite scroll and content loading" classname="social-feed-engagement.spec.ts" time="0">
+<testcase name="Authentication Flow › should persist auth state across page reloads" classname="auth-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Social Feed Engagement E2E Flow › handles social feed accessibility and screen reader support" classname="social-feed-engagement.spec.ts" time="0">
+<testcase name="Authentication Flow › should handle logout correctly" classname="auth-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="space-collaboration-complete.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="Mobile Safari" tests="4" failures="0" skipped="4" time="0" errors="0">
-<testcase name="Space Collaboration Complete E2E Flow › completes comprehensive space creation and management workflow" classname="space-collaboration-complete.spec.ts" time="0">
+<testsuite name="onboarding-flow.spec.ts" timestamp="2025-08-30T04:17:40.881Z" hostname="Mobile Safari" tests="12" failures="0" skipped="12" time="0" errors="0">
+<testcase name="Onboarding Flow › should complete full student onboarding flow" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Space Collaboration Complete E2E Flow › handles space member interactions and collaborative workflows" classname="space-collaboration-complete.spec.ts" time="0">
+<testcase name="Onboarding Flow › should complete faculty onboarding flow (simplified)" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Space Collaboration Complete E2E Flow › handles space moderation and community management" classname="space-collaboration-complete.spec.ts" time="0">
+<testcase name="Onboarding Flow › should validate required fields" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Space Collaboration Complete E2E Flow › handles space accessibility and inclusive design" classname="space-collaboration-complete.spec.ts" time="0">
+<testcase name="Onboarding Flow › should handle invalid graduation years" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-</testsuite>
-<testsuite name="spaces-lifecycle.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="Mobile Safari" tests="8" failures="0" skipped="8" time="0" errors="0">
-<testcase name="Spaces Lifecycle E2E Flow › completes full space lifecycle: create → customize → invite → manage → archive" classname="spaces-lifecycle.spec.ts" time="0">
+<testcase name="Onboarding Flow › should validate handle availability and format" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Spaces Lifecycle E2E Flow › handles space discovery and joining flow" classname="spaces-lifecycle.spec.ts" time="0">
+<testcase name="Onboarding Flow › should handle taken handles" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Spaces Lifecycle E2E Flow › validates space creation form and handles errors" classname="spaces-lifecycle.spec.ts" time="0">
+<testcase name="Onboarding Flow › should allow skipping optional steps" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Spaces Lifecycle E2E Flow › handles space member management and permissions" classname="spaces-lifecycle.spec.ts" time="0">
+<testcase name="Onboarding Flow › should show progress correctly" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Spaces Lifecycle E2E Flow › supports space content creation and moderation" classname="spaces-lifecycle.spec.ts" time="0">
+<testcase name="Onboarding Flow › should handle back navigation" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Spaces Lifecycle E2E Flow › handles space privacy settings and visibility" classname="spaces-lifecycle.spec.ts" time="0">
+<testcase name="Onboarding Flow › should prevent access to onboarding for completed users" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Spaces Lifecycle E2E Flow › supports real-time space activity and notifications" classname="spaces-lifecycle.spec.ts" time="0">
+<testcase name="Onboarding Flow › should work on mobile devices" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Spaces Lifecycle E2E Flow › provides accessibility features throughout spaces" classname="spaces-lifecycle.spec.ts" time="0">
+<testcase name="Onboarding Flow › should handle network errors during onboarding completion" classname="onboarding-flow.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="tool-development-complete.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="Mobile Safari" tests="4" failures="0" skipped="4" time="0" errors="0">
-<testcase name="Tool Development Complete E2E Flow › completes full tool creation and development workflow" classname="tool-development-complete.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Tool Development Complete E2E Flow › handles tool development with collaboration features" classname="tool-development-complete.spec.ts" time="0">
+<testsuite name="smoke-tests.spec.ts" timestamp="2025-08-30T04:17:40.881Z" hostname="Mobile Safari" tests="10" failures="0" skipped="10" time="0" errors="0">
+<testcase name="Smoke Tests - Critical User Journeys › should load the landing page" classname="smoke-tests.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Tool Development Complete E2E Flow › handles tool development error recovery and validation" classname="tool-development-complete.spec.ts" time="0">
+<testcase name="Smoke Tests - Critical User Journeys › should handle app health check" classname="smoke-tests.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Tool Development Complete E2E Flow › handles tool deployment and marketplace submission" classname="tool-development-complete.spec.ts" time="0">
+<testcase name="Smoke Tests - Critical User Journeys › should complete happy path: auth → onboarding → dashboard" classname="smoke-tests.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-</testsuite>
-<testsuite name="tools-development.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="Mobile Safari" tests="7" failures="0" skipped="7" time="0" errors="0">
-<testcase name="Tools Development E2E Flow › completes full tool development lifecycle: create → develop → test → deploy → share" classname="tools-development.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Tools Development E2E Flow › handles collaborative tool development" classname="tools-development.spec.ts" time="0">
+<testcase name="Smoke Tests - Critical User Journeys › should show error boundaries on critical failures" classname="smoke-tests.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Tools Development E2E Flow › validates tool code and provides development assistance" classname="tools-development.spec.ts" time="0">
+<testcase name="Smoke Tests - Critical User Journeys › should be responsive on mobile" classname="smoke-tests.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Tools Development E2E Flow › handles tool marketplace and discovery" classname="tools-development.spec.ts" time="0">
+<testcase name="Smoke Tests - Critical User Journeys › should handle JavaScript disabled gracefully" classname="smoke-tests.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Tools Development E2E Flow › supports tool analytics and performance monitoring" classname="tools-development.spec.ts" time="0">
+<testcase name="Smoke Tests - Critical User Journeys › should persist data across page refreshes" classname="smoke-tests.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Tools Development E2E Flow › handles tool versioning and deployment management" classname="tools-development.spec.ts" time="0">
+<testcase name="Smoke Tests - Critical User Journeys › should handle concurrent user sessions" classname="smoke-tests.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Tools Development E2E Flow › provides accessibility features for tool development" classname="tools-development.spec.ts" time="0">
+<testcase name="Smoke Tests - Critical User Journeys › should handle network connectivity issues" classname="smoke-tests.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-</testsuite>
-<testsuite name="waitlist.spec.ts" timestamp="2025-08-04T07:56:55.565Z" hostname="Mobile Safari" tests="1" failures="0" skipped="1" time="0" errors="0">
-<testcase name="Waitlist Flow › a user can join the waitlist for a non-active school" classname="waitlist.spec.ts" time="0">
+<testcase name="Smoke Tests - Critical User Journeys › should maintain accessibility standards" classname="smoke-tests.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>

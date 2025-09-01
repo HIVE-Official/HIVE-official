@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, Button, Checkbox } from '@hive/ui';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, Button, CheckboxEnhanced } from '@hive/ui';
 import { useOnboardingStore } from '@/lib/stores/onboarding';
 import { FileCheck, Loader2, ExternalLink } from 'lucide-react';
 import { logger } from '@hive/core';
@@ -75,7 +75,7 @@ export function OnboardingLegalStep() {
             </div>
 
             <div className="flex items-start space-x-3">
-              <Checkbox
+              <CheckboxEnhanced
                 id="accept-terms"
                 checked={acceptTerms}
                 onCheckedChange={(checked) => setAcceptTerms(checked as boolean)}
@@ -111,7 +111,7 @@ export function OnboardingLegalStep() {
             </div>
 
             <div className="flex items-start space-x-3">
-              <Checkbox
+              <CheckboxEnhanced
                 id="accept-privacy"
                 checked={acceptPrivacy}
                 onCheckedChange={(checked) => setAcceptPrivacy(checked as boolean)}

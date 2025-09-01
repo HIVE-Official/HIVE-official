@@ -1,7 +1,7 @@
 'use client';
 import { jsx as _jsx } from "react/jsx-runtime";
-import { motion } from '../../components/framer-motion-proxy';
-import { cn } from '../../lib/utils';
+import { motion } from '../../components/framer-motion-proxy.js';
+import { cn } from '../../lib/utils.js';
 const cardVariants = {
     variant: {
         // PRD-Aligned: Semantic tokens only
@@ -55,13 +55,14 @@ export const Card = ({ variant = 'default', padding = 'md', rounded = 'xl', hove
         'focus:outline-none focus:ring-2 focus:ring-[var(--hive-interactive-focus)] focus:ring-offset-2 focus:ring-offset-[var(--hive-background-primary)]'
     ].join(' ');
     if (hoverable || variant === 'interactive') {
+        const { onDrag, onDragStart, onDragEnd, onAnimationStart, ...filteredProps } = props;
         return (_jsx(motion.div, { className: cn(baseClasses, className), whileHover: {
                 scale: 1.02,
                 y: -2
             }, whileTap: { scale: 0.98 }, transition: {
                 duration: 0.2,
                 ease: 'easeOut'
-            }, ...props, children: children }));
+            }, ...filteredProps, children: children }));
     }
     return (_jsx("div", { className: cn(baseClasses, className), ...props, children: children }));
 };

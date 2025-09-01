@@ -230,7 +230,7 @@ const SpaceExplorationStep = ({ onComplete, userInterests, userGoals }: any) => 
     <div className="space-y-6">
       <div className="text-center mb-8">
         <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-hive-brand-secondary to-purple-500 rounded-full flex items-center justify-center">
-          <Compass className="h-10 w-10 text-white" />
+          <Compass className="h-10 w-10 text-[var(--hive-text-inverse)]" />
         </div>
         <h3 className="text-2xl font-bold text-hive-text-primary mb-2">
           Discover Your Communities
@@ -297,7 +297,7 @@ const SpaceExplorationStep = ({ onComplete, userInterests, userGoals }: any) => 
                         isSelected ? 'bg-hive-gold' : 'bg-hive-brand-secondary'
                       }`}>
                         <IconComponent className={`h-6 w-6 ${
-                          isSelected ? 'text-hive-obsidian' : 'text-white'
+                          isSelected ? 'text-hive-obsidian' : 'text-[var(--hive-text-inverse)]'
                         }`} />
                       </div>
                       <div>
@@ -457,7 +457,7 @@ export function RitualDiscoverWorkflow({
       <div className={`space-y-8 ${className}`}>
         <Card className="p-8 text-center bg-gradient-to-br from-hive-brand-secondary/10 to-purple-500/10 border-hive-brand-secondary/30">
           <div className="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-hive-brand-secondary to-purple-500 rounded-full flex items-center justify-center">
-            <CheckCircle className="h-12 w-12 text-white" />
+            <CheckCircle className="h-12 w-12 text-[var(--hive-text-inverse)]" />
           </div>
           
           <h2 className="text-3xl font-bold text-hive-text-primary mb-4">

@@ -1,29 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { logger, generateHandleVariants, generateBaseHandle } from '@hive/core'
 import { dbAdmin } from '@/lib/firebase-admin'
-
-// Simple in-memory rate limiting (in production, use Redis or similar)
-const rateLimitMap = new Map<string, { count: number; resetTime: number }>()
-const RATE_LIMIT = 20 // requests per minute
-const RATE_WINDOW = 60 * 1000 // 1 minute in milliseconds
-
-function checkRateLimit(ip: string): boolean {
-  const now = Date.now()
-  const userLimit = rateLimitMap.get(ip)
-  
-  if (!userLimit || now > userLimit.resetTime) {
-    // Reset or create new limit window
-    rateLimitMap.set(ip, { count: 1, resetTime: now + RATE_WINDOW })
-    return true
-  }
-  
-  if (userLimit.count >= RATE_LIMIT) {
-    return false
-  }
-  
-  userLimit.count++
-  return true
-}
+import { authRateLimiter, RATE_LIMITS } from '@/lib/auth-rate-limiter'
 
 async function generateSuggestions(baseHandle: string): Promise<string[]> {
   const variants = generateHandleVariants(baseHandle).slice(1, 6); // Get up to 5 suggestions
@@ -51,16 +29,30 @@ async function generateSuggestions(baseHandle: string): Promise<string[]> {
 
 export async function POST(request: NextRequest) {
   try {
-    // Rate limiting
-    const ip = request.headers.get('x-forwarded-for') || 
-               request.headers.get('x-real-ip') || 
-               'unknown'
-    
-    if (!checkRateLimit(ip)) {
+    // Rate limiting - prevent handle checking abuse
+    const clientKey = authRateLimiter.getClientKey(request);
+    const rateLimit = authRateLimiter.checkLimit(
+      `check-handle:${clientKey}`,
+      RATE_LIMITS.HANDLE_CHECK.maxRequests,
+      RATE_LIMITS.HANDLE_CHECK.windowMs
+    );
+
+    if (!rateLimit.allowed) {
       return NextResponse.json(
-        { message: 'Too many requests. Please wait before checking another handle.' },
-        { status: 429 }
-      )
+        { 
+          available: false,
+          message: 'Too many handle checks. Please wait before trying again.',
+          retryAfter: rateLimit.retryAfter 
+        },
+        { 
+          status: 429,
+          headers: {
+            'Retry-After': rateLimit.retryAfter?.toString() || '60',
+            'X-RateLimit-Remaining': '0',
+            'X-RateLimit-Reset': rateLimit.resetTime?.toString() || ''
+          }
+        }
+      );
     }
 
     const { handle } = await request.json()

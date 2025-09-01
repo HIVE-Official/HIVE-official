@@ -59,9 +59,9 @@ export declare function useStandardElementBehavior(config: {
         maxLength?: number;
     };
     ariaAttributes: {
-        'aria-required': true;
-        'aria-disabled': true;
-        'aria-readonly': true;
+        'aria-required': true | undefined;
+        'aria-disabled': true | undefined;
+        'aria-readonly': true | undefined;
     };
 };
 //# sourceMappingURL=use-standard-element-styles.d.ts.map

@@ -1,6 +1,6 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { motion } from '../../framer-motion-proxy';
+import { motion } from '../../framer-motion-proxy.js';
 import { Settings, User, Bell, Shield, Palette, Moon, Globe, Smartphone } from 'lucide-react';
 export const ProfileSettingsWidget = ({ onPrivacyClick, onNotificationsClick, onThemeClick, onAccountClick }) => {
     const settings = [

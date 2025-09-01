@@ -2,8 +2,12 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
 import { motion } from '../../design-system/tokens/motion';
 
-const meta: Meta = {
+// Mock component for Storybook CSF compliance
+const MotionSystemFoundation = () => <div>Motion System Foundation</div>;
+
+const meta: Meta<typeof MotionSystemFoundation> = {
   title: '00-Foundation/Motion System',
+  component: MotionSystemFoundation,
   parameters: {
     layout: 'padded',
     docs: {

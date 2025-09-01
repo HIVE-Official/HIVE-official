@@ -25,7 +25,7 @@ export declare function useQuickActionsMenu(): {
     position: {
         x: number;
         y: number;
-    };
+    } | null;
     open: (pos?: {
         x: number;
         y: number;

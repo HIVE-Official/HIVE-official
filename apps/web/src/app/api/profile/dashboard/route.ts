@@ -130,8 +130,8 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
       return NextResponse.json(cached.data);
     }
     
-    // For development mode only, return mock dashboard data
-    if ((userId === 'test-user' || userId === 'dev_user_123') && process.env.NODE_ENV === 'development') {
+    // Development mock data (disabled in production)
+    if (process.env.NODE_ENV === 'development' && process.env.ENABLE_MOCK_DASHBOARD === 'true') {
       const mockDashboard = {
           user: {
             id: userId,
@@ -310,7 +310,8 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
             generatedAt: new Date().toISOString(),
             includeRecommendations: true,
             // SECURITY: Development mode removed for production safety,
-          } });
+          }
+        });
     }
 
     const { searchParams } = new URL(request.url);

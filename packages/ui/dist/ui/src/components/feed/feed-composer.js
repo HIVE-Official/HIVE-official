@@ -1,13 +1,13 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useState, useRef, useEffect } from "react";
-import { Button } from "../../atomic/atoms/button-enhanced";
-import { Textarea } from "../../atomic/atoms/textarea-enhanced";
-import { Avatar, AvatarFallback, AvatarImage } from "../../atomic/atoms/avatar";
-import { Card, CardContent, CardHeader, CardTitle } from "../../atomic/molecules/card";
-import { Badge } from "../../atomic/atoms/badge";
+import { Button } from "../../atomic/atoms/button-enhanced.js";
+import { Textarea } from "../../atomic/atoms/textarea-enhanced.js";
+import { Avatar, AvatarFallback, AvatarImage } from "../../atomic/atoms/avatar.js";
+import { Card, CardContent, CardHeader, CardTitle } from "../../atomic/molecules/card.js";
+import { Badge } from "../../atomic/atoms/badge.js";
 import { Image, BarChart3, Calendar, Wrench, Loader2, AlertCircle, SendIcon, } from "lucide-react";
-import { cn } from "../../lib/utils";
+import { cn } from "../../lib/utils.js";
 const POST_TYPE_CONFIG = {
     text: { icon: null, label: "Text", color: "default" },
     image: { icon: Image, label: "Image", color: "blue" },
@@ -194,6 +194,6 @@ export const FeedComposer = ({ spaceId, currentUser, onPostCreated, className, }
                                                                                 .join("")
                                                                                 .toUpperCase() })] }), _jsxs("div", { children: [_jsx("div", { className: "font-medium text-sm", children: user.fullName }), _jsxs("div", { className: "text-xs text-muted-foreground", children: ["@", user.handle] })] })] }, user.id))) }) }))] }), error && (_jsxs("div", { className: "flex items-center gap-2 text-sm text-destructive", children: [_jsx(AlertCircle, { className: "h-4 w-4" }), error] }))] })] }), _jsxs("div", { className: "flex items-center justify-between", children: [_jsxs("div", { className: "flex items-center gap-4", children: [_jsx("div", { className: cn("text-sm", remainingChars < 50
                                                 ? "text-orange-500"
-                                                : "text-muted-foreground", remainingChars < 0 ? "text-destructive" : ""), children: remainingChars }), content.trim() && (_jsx(Badge, { variant: "outline", className: "text-xs", children: "Draft saved" }))] }), _jsx(Button, { type: "submit", disabled: !canSubmit, size: "sm", className: "min-w-20", children: isSubmitting ? (_jsxs(_Fragment, { children: [_jsx(Loader2, { className: "h-4 w-4 mr-2 animate-spin" }), "Posting..."] })) : (_jsxs(_Fragment, { children: [_jsx(SendIcon, { className: "w-4 h-4 mr-2" }), "Post"] })) })] })] }) })] }));
+                                                : "text-muted-foreground", remainingChars < 0 ? "text-destructive" : ""), children: remainingChars }), content.trim() && (_jsx(Badge, { variant: "secondary", className: "text-xs", children: "Draft saved" }))] }), _jsx(Button, { type: "submit", disabled: !canSubmit, size: "sm", className: "min-w-20", children: isSubmitting ? (_jsxs(_Fragment, { children: [_jsx(Loader2, { className: "h-4 w-4 mr-2 animate-spin" }), "Posting..."] })) : (_jsxs(_Fragment, { children: [_jsx(SendIcon, { className: "w-4 h-4 mr-2" }), "Post"] })) })] })] }) })] }));
 };
 //# sourceMappingURL=feed-composer.js.map
